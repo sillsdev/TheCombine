@@ -1,6 +1,7 @@
-import Temp from "./Temp";
+import Temp from "./TempComponent";
 import * as actions from "./TempActions";
 import { StoreState } from "../../types";
+
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 
@@ -15,7 +16,7 @@ export function mapDispatchToProps(
 ) {
   return {
     buttonClicked: () => {
-      console.log("clicked button!");
+      //console.log("clicked test!");
       dispatch(actions.pressButton());
     }
   };
