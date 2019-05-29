@@ -1,3 +1,5 @@
+import { TempState } from "../components/Temp/TempReducer";
+
 export interface StoreState {
-    tempText: string;
+  tempState: TempState;
 }
