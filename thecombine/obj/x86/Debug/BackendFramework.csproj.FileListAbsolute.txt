@@ -1,0 +1,2 @@
+C:\Users\FullerM\BackendFramework1\thecombine\thecombine\obj\x86\Debug\BackendFramework.csprojAssemblyReference.cache
+C:\Users\FullerM\BackendFramework1\thecombine\thecombine\obj\x86\Debug\BackendFramework.csproj.CoreCompileInputs.cache
