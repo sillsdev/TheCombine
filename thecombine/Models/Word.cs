@@ -5,6 +5,7 @@ namespace BackendFramework.ValueModels
 {
     public class Word
     {
+       
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
@@ -20,5 +21,6 @@ namespace BackendFramework.ValueModels
 
         [BsonElement("Timestamp")]
         public string Timestamp { get; set; }
+        
     }
 }

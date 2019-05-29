@@ -1,78 +1,14 @@
-﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{E4CCA3D4-1019-4569-83F2-2BECD4695214}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <NoStandardLibraries>false</NoStandardLibraries>
-    <AssemblyName>ConsoleApplication</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RootNamespace>BackendFramework</RootNamespace>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include=".gitignore" />
-    <None Include="package-lock.json" />
-    <None Include="package.json" />
-    <None Include="public\manifest.json" />
-    <None Include="README.md" />
-    <None Include="tsconfig.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="public\favicon.ico" />
-    <Content Include="public\index.html" />
-    <Content Include="src\components\App\App.css" />
-    <Content Include="src\components\Temp\Temp.css" />
-    <Content Include="src\index.css" />
-    <Content Include="src\logo.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="src\components\App\App.test.tsx" />
-    <TypeScriptCompile Include="src\components\App\App.tsx" />
-    <TypeScriptCompile Include="src\components\common_actions.tsx" />
-    <TypeScriptCompile Include="src\components\Temp\Temp.tsx" />
-    <TypeScriptCompile Include="src\constants\index.tsx" />
-    <TypeScriptCompile Include="src\index.tsx" />
-    <TypeScriptCompile Include="src\react-app-env.d.ts" />
-    <TypeScriptCompile Include="src\serviceWorker.ts" />
-    <TypeScriptCompile Include="src\types\index.tsx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include=".vs\BackendFramework\v15\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
-  <ProjectExtensions>
-    <VisualStudio AllowExistingFolder="true" />
-  </ProjectExtensions>
+
 </Project>

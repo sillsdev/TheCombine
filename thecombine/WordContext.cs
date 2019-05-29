@@ -9,6 +9,7 @@ namespace BackendFramework.Context
     public class WordContext : IWordContext
     {
         private readonly IMongoDatabase _db;
+
         public WordContext(IOptions<Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
@@ -17,8 +18,5 @@ namespace BackendFramework.Context
 
         public IMongoCollection<Word> Words => _db.GetCollection<Word>("Database");
     }
-    public interface IWordContext
-    {
-        IMongoCollection<Word> Words { get; }
-    }
+    
 }
