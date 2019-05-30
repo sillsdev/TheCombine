@@ -10,9 +10,9 @@ export interface TempProps {
 }
 
 //interface for component state
-interface State {}
+interface TempState {}
 
-class Temp extends React.Component<TempProps, State> {
+class Temp extends React.Component<TempProps, TempState> {
   constructor(props: TempProps) {
     super(props);
     this.state = { demo: "" };

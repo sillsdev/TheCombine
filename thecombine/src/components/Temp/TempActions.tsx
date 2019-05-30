@@ -8,17 +8,17 @@ export interface ButtonPressed {
   type: PRESS_BUTTON;
 }
 
-//action creators
+//thunk action creator
 export function asyncPressButton() {
   return async (dispatch: Dispatch<ButtonPressed>) => {
-    //console.log("asyncPressButton called");
+    //console.log('asyncPressButton called');
     dispatch(pressButton());
   };
 }
 
-//pure action creator
+//pure action creator. LEAVE PURE!
 export function pressButton(): ButtonPressed {
-  //console.log("PressButton called");
+  //console.log('PressButton called');
   return {
     type: PRESS_BUTTON
   };

@@ -16,7 +16,7 @@ export function mapDispatchToProps(
 ) {
   return {
     buttonClicked: () => {
-      //console.log("clicked test!");
+      //console.log('clicked test!');
       dispatch(actions.pressButton());
     }
   };

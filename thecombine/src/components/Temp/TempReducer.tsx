@@ -10,15 +10,18 @@ const defaultState: TempState = {
 };
 
 export const tempReducer = (
-  state: TempState | undefined,
+  state: TempState | undefined, //createStore() calls each reducer with undefined state
   action: TempAction
 ): TempState => {
-  //console.log("reducer reached");
+  //console.log('reducer reached');
   if (!state) return defaultState;
   switch (action.type) {
     case PRESS_BUTTON:
       return { ...state, tempText: "BUTTON PRESSED! REDUX WORKING!" };
     default:
+      console.log(
+        "Unexpected action of type " + action.type + " passed into tempReducer."
+      );
       return state;
   }
 };
