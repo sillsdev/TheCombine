@@ -1,12 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './components/App/App';
-import * as serviceWorker from './serviceWorker';
+//external modules
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { renderToStaticMarkup } from "react-dom/server";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+//TC modules
+import App from "./components/App/App";
+import * as serviceWorker from "./serviceWorker";
+import { store } from "./store";
+import { LocalizeProvider } from "react-localize-redux";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
+//additional files
+import "./index.css";
+import globalTranslations from "./resources/translations.json";
+
+const localizeInit = {
+  languages: [{ name: "English", code: "en" }, { name: "French", code: "fr" }],
+  translation: globalTranslations,
+  options: { renderToStaticMarkup }
+};
+
+//Provider connects store to component containers
+ReactDOM.render(
+  <Provider store={store}>
+    <LocalizeProvider store={store} initialize={localizeInit}>
+      <App />
+    </LocalizeProvider>
+  </Provider>,
+  document.getElementById("root")
+);
+
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register();

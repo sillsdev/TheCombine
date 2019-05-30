@@ -1,6 +1,8 @@
+//external modules
 import * as React from "react";
 import Button from "@material-ui/core/Button";
 
+//additional files
 import "./Temp.css";
 
 //interface for component props
@@ -15,10 +17,9 @@ interface TempState {}
 class Temp extends React.Component<TempProps, TempState> {
   constructor(props: TempProps) {
     super(props);
+
     this.state = { demo: "" };
   }
-
-  //defining method calls as properties
 
   render() {
     //extract text from props

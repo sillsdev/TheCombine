@@ -1,1 +1,5 @@
-{}
+{
+  "temp": {
+    "buttonText": ["This is a button.", "Est un button."]
+  }
+}
