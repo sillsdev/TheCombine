@@ -14,7 +14,7 @@ namespace BackendFramework.ValueModels
         public string Vernacular { get; set; }
 
         [BsonElement("Gloss")]
-        public decimal Gloss { get; set; }
+        public string Gloss { get; set; }
 
         [BsonElement("Audio")]
         public string Audio { get; set; }

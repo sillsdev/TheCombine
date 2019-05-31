@@ -11,7 +11,7 @@ using BackendFramework.Interfaces;
 
 namespace BackendFramework.Controllers
 {
-    //[Produces("application/")]
+    [Produces("application/json")]
     [Route("v1/Collection")]
     public class WordController : Controller
     {
@@ -42,13 +42,13 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Post([FromBody]Word word) //tskes the word content from the http req body not from the path or 
         {
             Console.WriteLine("Post: " + word);
-            await _wordService.Create(word);
-            return new OkObjectResult(word.Id);
+            //await _wordService.Create(word);
+            return new OkObjectResult("");
         }
 
         // PUT: v1/collection/5
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, [FromBody]Word word)   //also I dont think we need this
+        public async Task<IActionResult> Put(string Id, Word word)   //also I dont think we need this
         {
             var document = await _wordService.GetWord(Id);
             if (document == null)

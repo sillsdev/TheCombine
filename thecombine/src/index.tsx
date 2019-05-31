@@ -27,7 +27,12 @@ var server = axios.create({
   headers: { "Content-Type": "application/json" }
 });
 
-server.post("/collection", { word: { vern: "test", gloss: "test2" } });
+server.post("/collection", {
+  Vernacular: "test",
+  Gloss: "test2",
+  Audio: "sound",
+  Timestamp: "now"
+});
 
 //Provider connects store to component containers
 ReactDOM.render(
