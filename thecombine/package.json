@@ -19,6 +19,8 @@
     "typescript": "3.4.5"
   },
   "scripts": {
+    "mongo": "mongod --dbpath mongo_database",
+    "api": "dotnet run --project BackendFramework/BackendFramework.csproj",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
