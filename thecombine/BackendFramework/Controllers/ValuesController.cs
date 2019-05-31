@@ -28,7 +28,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _wordService.GetAllWords());
         }
         // GET: v1/collection/name
-        [HttpGet("{name}", Name = "Get")]
+        [HttpGet("{Id}", Name = "Get")]
         public async Task<IActionResult> Get(string Id)
         {
             var word = await _wordService.GetWord(Id);
@@ -42,8 +42,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Post([FromBody]Word word) //tskes the word content from the http req body not from the path or 
         {
             Console.WriteLine("Post: " + word);
-            //await _wordService.Create(word);
-            return new OkObjectResult("");
+            await _wordService.Create(word);
+            return new OkObjectResult(word.Id);
         }
 
         // PUT: v1/collection/5
@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(word.Id);
         }
         // DELETE: v1/ApiWithActions/5
-        [HttpDelete("{name}")]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
             if (await _wordService.Delete(Id))
