@@ -11,11 +11,10 @@ import { store } from "./store";
 import { LocalizeProvider } from "react-localize-redux";
 
 //additional files
-import "./index.css";
 import globalTranslations from "./resources/translations.json";
 
 const localizeInit = {
-  languages: [{ name: "English", code: "en" }, { name: "French", code: "fr" }],
+  languages: [{ name: "English", code: "en" }, { name: "Spanish", code: "es" }],
   translation: globalTranslations,
   options: { renderToStaticMarkup }
 };

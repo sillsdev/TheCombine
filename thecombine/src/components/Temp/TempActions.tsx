@@ -1,4 +1,5 @@
 import { Dispatch } from "react";
+import { setActiveLanguage } from "react-localize-redux";
 
 export const PRESS_BUTTON = "PRESS_BUTTON";
 export type PRESS_BUTTON = typeof PRESS_BUTTON;

@@ -1,5 +1,11 @@
 {
   "temp": {
-    "buttonText": ["This is a button.", "Est un button."]
+    "buttonText": ["This is a button.", "Este es un botón."],
+    "labelText": ["This is a label", "Esto es una etiqueta."],
+    "makeSpanish": ["Make Spanish", "Hacer español."],
+    "wasPassedInFromStore": [
+      "was passed into this test object.",
+      " fue pasado a este objeto de prueba."
+    ]
   }
 }
