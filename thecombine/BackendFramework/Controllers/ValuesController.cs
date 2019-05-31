@@ -7,6 +7,7 @@ using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
+using BackendFramework.Interfaces;
 
 namespace BackendFramework.Controllers
 {

@@ -5,17 +5,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using BackendFramework.ValueModels;
+using BackendFramework.Interfaces;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using BackendFramework.Context;
-using System.Threading.Tasks;
 using BackendFramework.Services;
+using System.Threading.Tasks;
+using BackendFramework.Interfaces;
 using MongoDB.Bson;
 using System;
 
 namespace BackendFramework.Services
 {
-   
+
 
     public class WordService : IWordService
     {
@@ -26,25 +28,26 @@ namespace BackendFramework.Services
         {
             _wordDatabase = collectionSettings;
         }
-      
-        async Task<List<Word>> IWordService.GetAllWords()
+
+        public async Task<List<Word>> GetAllWords()
         {
             return await _wordDatabase.Words.Find(_ => true).ToListAsync();
         }
 
-        async Task<List<Word>> IWordService.GetWord(string identificaton)
+        public async Task<List<Word>> GetWord(string identificaton)
         {
             var cursor = await _wordDatabase.Words.FindAsync(x => x.Id == identificaton);
             return cursor.ToList();
         }
 
-        async Task IWordService.Create(Word word)
+        public async Task<Word> Create(Word word)
         {
             await _wordDatabase.Words.InsertOneAsync(word);
-            
+            return word;
+
         }
 
-        async Task<bool> IWordService.Delete(string Id)
+        public async Task<bool> Delete(string Id)
         {
             var deleted = await _wordDatabase.Words.DeleteOneAsync(Id);
             return deleted.DeletedCount > 0;
@@ -55,7 +58,7 @@ namespace BackendFramework.Services
 
         public async Task<bool> Update(string Id)
         {
-            FilterDefinition<Word> filter = Builders<Word>.Filter.Eq(m => m.Id, Id );
+            FilterDefinition<Word> filter = Builders<Word>.Filter.Eq(m => m.Id, Id);
 
             DeleteResult deleteResult = await _wordDatabase.Words.DeleteOneAsync(filter);
 
@@ -63,5 +66,5 @@ namespace BackendFramework.Services
         }
     }
 
-    
+
 }
