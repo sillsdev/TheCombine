@@ -6,8 +6,5 @@
     "build": "cd ./thecombine && npm run build",
     "test": "cd ./thecombine && npm run test",
     "eject": "cd ./thecombine && npm run eject"
-  },
-  "dependencies": {
-    "react-scripts": "^3.0.1"
   }
 }
