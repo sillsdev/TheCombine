@@ -1,0 +1,13 @@
+{
+  "name": "thecombine",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "cd ./thecombine && npm start",
+    "build": "cd ./thecombine && react-scripts build",
+    "test": "cd ./thecombine && react-scripts test",
+    "eject": "cd ./thecombine && react-scripts eject"
+  },
+  "dependencies": {
+    "react-scripts": "^3.0.1"
+  }
+}
