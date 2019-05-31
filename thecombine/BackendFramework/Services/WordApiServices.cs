@@ -58,7 +58,7 @@ namespace BackendFramework.Services
 
         public async Task<bool> Delete(string Id)
         {
-            var deleted = await _wordDatabase.Words.DeleteManyAsync(x => x.Id == Id);
+            var deleted = await _wordDatabase.Words.DeleteOneAsync(x => x.Id == Id);
             return deleted.DeletedCount > 0;
         }
 
