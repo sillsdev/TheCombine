@@ -14,5 +14,6 @@ namespace BackendFramework.Interfaces
         Task<Word> Create(Word word);
         Task<bool> Update(string Id);
         Task<bool> Delete(string Id);
+        Task<bool> DeleteAllWords();
     }
 }

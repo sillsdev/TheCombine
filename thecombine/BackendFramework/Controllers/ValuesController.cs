@@ -12,7 +12,7 @@ using BackendFramework.Interfaces;
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/Collection")]
+    [Route("v1")]
     public class WordController : Controller
     {
         private readonly IWordService _wordService;
@@ -20,15 +20,31 @@ namespace BackendFramework.Controllers
         {
             _wordService = wordService;
         }
+
+        public async Task<string> Message()
+        {
+            return "this is the database mainpage";
+        }
+
         // GET: v1/collection
         [EnableCors("AllowAll")]
-        [HttpGet]
+        [HttpGet("Collection")]
         public async Task<IActionResult> Get()
         {
-            return new ObjectResult(await _wordService.GetAllWords());
+                return new ObjectResult(await _wordService.GetAllWords());
+        }
+        [HttpDelete("Collection")]
+        public async Task<IActionResult> Delete()
+        {
+           // if( isTrue == true)
+           // {
+                return new ObjectResult(await _wordService.DeleteAllWords());
+           // }
+           // return new ObjectResult(isTrue);
+           
         }
         // GET: v1/collection/name
-        [HttpGet("{Id}", Name = "Get")]
+        [HttpGet("Collection/{Id}", Name = "Get")]
         public async Task<IActionResult> Get(string Id)
         {
             var word = await _wordService.GetWord(Id);
@@ -38,7 +54,7 @@ namespace BackendFramework.Controllers
         }
 
         // POST: v1/collection
-        [HttpPost]
+        [HttpPost("Collection")]
         public async Task<IActionResult> Post([FromBody]Word word) //tskes the word content from the http req body not from the path or 
         {
             Console.WriteLine("Post: " + word);
@@ -47,7 +63,7 @@ namespace BackendFramework.Controllers
         }
 
         // PUT: v1/collection/5
-        [HttpPut("{Id}")]
+        [HttpPut("Collection/{Id}")]
         public async Task<IActionResult> Put(string Id, Word word)   //also I dont think we need this
         {
             var document = await _wordService.GetWord(Id);
@@ -58,7 +74,7 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(word.Id);
         }
         // DELETE: v1/ApiWithActions/5
-        [HttpDelete("{Id}")]
+        [HttpDelete("Collection/{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
             if (await _wordService.Delete(Id))
