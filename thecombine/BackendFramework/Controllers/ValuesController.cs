@@ -31,18 +31,27 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-                return new ObjectResult(await _wordService.GetAllWords());
+            return new ObjectResult(await _wordService.GetAllWords());
         }
+
+        // GET: v1/project/words/frontier
+        [HttpGet("frontier")]
+        public async Task<IActionResult> GetFrontier()
+        {
+            return new ObjectResult("This can't be written until the frontier exists");
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-           // if( isTrue == true)
-           // {
-                return new ObjectResult(await _wordService.DeleteAllWords());
-           // }
-           // return new ObjectResult(isTrue);
-           
+            // if( isTrue == true)
+            // {
+            return new ObjectResult(await _wordService.DeleteAllWords());
+            // }
+            // return new ObjectResult(isTrue);
+
         }
+
         // GET: v1/collection/name
         [HttpGet("{Id}", Name = "Get")]
         public async Task<IActionResult> Get(string Id)
