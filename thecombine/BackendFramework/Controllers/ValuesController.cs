@@ -73,6 +73,45 @@ namespace BackendFramework.Controllers
             await _wordService.Update(Id);
             return new OkObjectResult(word.Id);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Put(MergeWords mergeVals)
+        {
+            try
+            {
+                var parent = mergeVals.parent;
+                List<Word> children = mergeVals.children;
+                state changes = mergeVals.mergeType;
+
+                foreach (Word child in children)
+                {
+                    //create duplicate nodes
+                    Word newChild = child;
+                    Word newParent = parent;
+                    //set as deleted
+                    newChild.Accessability = state.deleted;
+                    //add to database to set ID
+                    await _wordService.Create(newChild);
+                    //add child to history of new child
+                    newChild.History.Add(child.Id);
+
+                    //connect parent to child
+                    newParent.History.Add(newChild.Id);
+                    //add newparent to collection
+                    await _wordService.Create(newParent);
+
+                    //upadate fronteir
+                    //fronteir.remove(child);
+                    //fronteir.remove(parent);
+                    //fronteir.add(newParent);
+                }
+            }catch (Exception)
+            {
+                return new NotFoundResult() ;
+            }
+
+            return new OkResult();
+        }
         // DELETE: v1/ApiWithActions/5
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)

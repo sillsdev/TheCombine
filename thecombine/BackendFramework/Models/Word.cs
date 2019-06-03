@@ -4,17 +4,15 @@ using System.Collections.Generic;
 
 namespace BackendFramework.ValueModels
 {
+    public enum state
+    {
+        active,
+        deleted,
+        sense,
+        duplicate
+    }
     public class Word
     {
-
-        public enum state
-        {
-            active,
-            deleted,
-            sense,
-            duplicate
-        }
-
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
@@ -51,5 +49,12 @@ namespace BackendFramework.ValueModels
 
         [BsonElement("OtherField")]
         public string OtherField { get; set; }
+    }
+    public class MergeWords
+    {
+        public Word parent { get; set; }
+        public List<Word> children { get; set; } 
+        public state mergeType { get; set; }
+        public string time { get; set; }
     }
 }
