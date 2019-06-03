@@ -26,6 +26,9 @@ namespace BackendFramework.ValueModels
         [BsonElement("Audio")]
         public string Audio { get; set; }
 
+        [BsonElement("Timestamp")]
+        public string Timestamp { get; set; }
+
         [BsonElement("Created")]
         public string Created { get; set; }
 
@@ -45,7 +48,7 @@ namespace BackendFramework.ValueModels
         public List<Users> EditedBy { get; set; }
 
         [BsonElement("Accessability")]
-        public state Accessability { get; set; }
+        public int Accessability { get; set; }
 
         [BsonElement("OtherField")]
         public string OtherField { get; set; }

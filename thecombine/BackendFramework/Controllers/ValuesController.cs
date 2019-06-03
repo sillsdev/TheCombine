@@ -98,7 +98,7 @@ namespace BackendFramework.Controllers
                     Word newChild = child;
                     Word newParent = parent;
                     //set as deleted
-                    newChild.Accessability = state.deleted;
+                    //newChild.Accessability = state.deleted;
                     //add to database to set ID
                     await _wordService.Create(newChild);
                     //add child to history of new child
