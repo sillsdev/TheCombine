@@ -2,6 +2,8 @@
 
 ## Role
 
+- Name
+
 ## User
 
 - Avatar - makes it easier to distinguish users from one another when collaborating. We will look into automatically generating avatars for users.
@@ -67,6 +69,10 @@
 - History - We are storing the history of a word in a linked tree. Each word will point to the previous word in its history.
 
 ## Semantic Domain
+
+- Name
+
+- Number
 
 ## File
 
