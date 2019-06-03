@@ -22,12 +22,12 @@ const localizeInit = {
 };
 
 var server = axios.create({
-  baseURL: "https://localhost:5001/v1",
+  baseURL: "https://localhost:5001/v1/Project",
   timeout: 1000,
   headers: { "Content-Type": "application/json" }
 });
 
-server.post("/collection", {
+server.post("/words", {
   Vernacular: "test",
   Gloss: "test2",
   Audio: "sound",
