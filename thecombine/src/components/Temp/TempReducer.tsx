@@ -5,7 +5,7 @@ export interface TempState {
   tempText: string;
 }
 
-const defaultState: TempState = {
+export const defaultState: TempState = {
   tempText: "default text from reducer"
 };
 
