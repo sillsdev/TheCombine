@@ -45,7 +45,7 @@ namespace BackendFramework.ValueModels
         public string PartOfSpeech { get; set; }
 
         [BsonElement("EditedBy")]
-        public List<Users> EditedBy { get; set; }
+        public List<string> EditedBy { get; set; }
 
         [BsonElement("Accessability")]
         public int Accessability { get; set; }
