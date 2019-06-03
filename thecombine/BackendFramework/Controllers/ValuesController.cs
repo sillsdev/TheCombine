@@ -27,7 +27,6 @@ namespace BackendFramework.Controllers
         }
 
         // GET: v1/collection
-        [EnableCors("AllowAll")]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -38,7 +37,25 @@ namespace BackendFramework.Controllers
         [HttpGet("frontier")]
         public async Task<IActionResult> GetFrontier()
         {
-            return new ObjectResult("This can't be written until the frontier exists");
+            return new ObjectResult(await _wordService.GetFrontier());
+        }
+
+        [HttpPost("frontier")]
+        public async Task<IActionResult> PostFrontier([FromBody]Word word)
+        {
+            await _wordService.AddFrontier(word);
+            return new OkObjectResult(word.Id);
+        }
+
+        [HttpDelete("frontier/{Id}")]
+        public async Task<IActionResult> DeleteFrontier(string Id)
+        {
+            if (await _wordService.DeleteFrontier(Id))
+            {
+                return new OkResult();
+            }
+
+            return new NotFoundResult();
         }
 
         [HttpDelete]

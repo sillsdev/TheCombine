@@ -17,5 +17,9 @@ namespace BackendFramework.Interfaces
         Task<bool> Update(string Id);
         Task<bool> Delete(string Id);
         Task<bool> DeleteAllWords();
+
+        Task<List<Word>> GetFrontier();
+        Task<Word> AddFrontier(Word word);
+        Task<bool> DeleteFrontier(string id);
     }
 }

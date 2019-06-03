@@ -17,6 +17,7 @@ namespace BackendFramework.Context
         }
 
         public IMongoCollection<Word> Words => _db.GetCollection<Word>("Database");
+        public IMongoCollection<Word> Frontier => _db.GetCollection<Word>("Frontier");
     }
-    
+
 }

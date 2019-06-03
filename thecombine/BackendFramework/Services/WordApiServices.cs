@@ -77,6 +77,21 @@ namespace BackendFramework.Services
 
             return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
         }
+
+        public async Task<List<Word>> GetFrontier()
+        {
+            return await _wordDatabase.Frontier.Find(_ => true).ToListAsync();
+        }
+        public async Task<Word> AddFrontier(Word word)
+        {
+            await _wordDatabase.Frontier.InsertOneAsync(word);
+            return word;
+        }
+        public async Task<bool> DeleteFrontier(string Id)
+        {
+            var deleted = await _wordDatabase.Frontier.DeleteManyAsync(x => x.Id == Id);
+            return deleted.DeletedCount > 0;
+        }
     }
 
 
