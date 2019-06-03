@@ -33,6 +33,11 @@ namespace BackendFramework.Services
             return await _wordDatabase.Words.Find(_ => true).ToListAsync();
         }
 
+        public async Task<List<Word>> GetWords(System.Linq.Expressions.Expression<Func<Word, bool>> filter)
+        {
+            return await _wordDatabase.Words.Find(filter).ToListAsync();
+        }
+
         public async Task<bool> DeleteAllWords()
         {
              var deleted = await _wordDatabase.Words.DeleteManyAsync(_ => true);
