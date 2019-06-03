@@ -87,6 +87,7 @@ namespace BackendFramework.Services
             await _wordDatabase.Frontier.InsertOneAsync(word);
             return word;
         }
+
         public async Task<bool> DeleteFrontier(string Id)
         {
             var deleted = await _wordDatabase.Frontier.DeleteManyAsync(x => x.Id == Id);
