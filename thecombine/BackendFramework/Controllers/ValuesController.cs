@@ -32,32 +32,6 @@ namespace BackendFramework.Controllers
         {
             return new ObjectResult(await _wordService.GetAllWords());
         }
-
-        // GET: v1/project/words/frontier
-        [HttpGet("frontier")]
-        public async Task<IActionResult> GetFrontier()
-        {
-            return new ObjectResult(await _wordService.GetFrontier());
-        }
-
-        [HttpPost("frontier")]
-        public async Task<IActionResult> PostFrontier([FromBody]Word word)
-        {
-            await _wordService.AddFrontier(word);
-            return new OkObjectResult(word.Id);
-        }
-
-        [HttpDelete("frontier/{Id}")]
-        public async Task<IActionResult> DeleteFrontier(string Id)
-        {
-            if (await _wordService.DeleteFrontier(Id))
-            {
-                return new OkResult();
-            }
-
-            return new NotFoundResult();
-        }
-
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
@@ -98,45 +72,6 @@ namespace BackendFramework.Controllers
             word.Id = document[0].Id;               //this is sloppy and it should be fixed
             await _wordService.Update(Id);
             return new OkObjectResult(word.Id);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Put(MergeWords mergeVals)
-        {
-            try
-            {
-                var parent = mergeVals.parent;
-                List<Word> children = mergeVals.children;
-                state changes = mergeVals.mergeType;
-
-                foreach (Word child in children)
-                {
-                    //create duplicate nodes
-                    Word newChild = child;
-                    Word newParent = parent;
-                    //set as deleted
-                    //newChild.Accessability = state.deleted;
-                    //add to database to set ID
-                    await _wordService.Create(newChild);
-                    //add child to history of new child
-                    newChild.History.Add(child.Id);
-
-                    //connect parent to child
-                    newParent.History.Add(newChild.Id);
-                    //add newparent to collection
-                    await _wordService.Create(newParent);
-
-                    //upadate fronteir
-                    //fronteir.remove(child);
-                    //fronteir.remove(parent);
-                    //fronteir.add(newParent);
-                }
-            }catch (Exception)
-            {
-                return new NotFoundResult() ;
-            }
-
-            return new OkResult();
         }
         // DELETE: v1/ApiWithActions/5
         [HttpDelete("{Id}")]
