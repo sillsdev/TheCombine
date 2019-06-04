@@ -24,8 +24,6 @@ yarn-error.log*
 
 # npm
 package-lock.json
-# Mongo
-mongo_database/*
 
 # Visual Studio
 .vs/*
