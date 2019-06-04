@@ -13,10 +13,10 @@ namespace BackendFramework.Context
         public WordContext(IOptions<Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.Database);
+            _db = client.GetDatabase(options.Value.WordsDatabase);
         }
 
-        public IMongoCollection<Word> Words => _db.GetCollection<Word>("Database");
+        public IMongoCollection<Word> Words => _db.GetCollection<Word>("WordsDatabase");
         public IMongoCollection<Word> Frontier => _db.GetCollection<Word>("Frontier");
     }
 
