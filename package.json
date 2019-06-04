@@ -1,10 +1,51 @@
 {
   "name": "thecombine",
   "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.0.1",
+    "@material-ui/styles": "^4.0.1",
+    "@types/jest": "24.0.13",
+    "@types/node": "12.0.3",
+    "@types/react": "16.8.19",
+    "@types/react-dom": "16.8.4",
+    "@types/react-redux": "^7.0.9",
+    "@types/redux-thunk": "^2.1.0",
+    "axios": "^0.19.0",
+    "make-dir": "^3.0.0",
+    "npm-run-all": "^4.1.5",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-localize-redux": "^3.5.3",
+    "react-redux": "^7.0.3",
+    "react-scripts": "3.0.1",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "typescript": "3.4.5"
+  },
   "scripts": {
-    "start": "cd ./thecombine && npm start",
-    "build": "cd ./thecombine && npm run build",
-    "test": "cd ./thecombine && npm run test",
-    "eject": "cd ./thecombine && npm run eject"
+    "predatabase": "tsc setupMongo.ts && node setupMongo.js",
+    "database": "mongod --dbpath=../mongo_database",
+    "frontend": "react-scripts start",
+    "start": "npm update && npm-run-all --parallel frontend database api",
+    "api": "dotnet run --project Backend/BackendFramework.csproj",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

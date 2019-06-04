@@ -25,3 +25,10 @@ yarn-error.log*
 # npm
 package-lock.json
 /thecombine/package-lock.json 
+# Mongo
+mongo_database/*
+
+# Visual Studio
+.vs/*
+Backend/bin
+Backend/obj

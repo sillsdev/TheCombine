@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/thecombine/BackendFramework/bin/Debug/netcoreapp2.2/BackendFramework.dll",
+            "program": "${workspaceFolder}/BackendFramework/bin/Debug/netcoreapp2.2/BackendFramework.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/thecombine/BackendFramework",
+            "cwd": "${workspaceFolder}/BackendFramework",
             "stopAtEntry": false,
             "launchBrowser": {
                 "enabled": true

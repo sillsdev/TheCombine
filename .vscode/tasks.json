@@ -1,36 +1,43 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/thecombine/BackendFramework/BackendFramework.csproj"
-            ],
-            "problemMatcher": "$tsc"
-        },
-        {
-            "label": "publish",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/thecombine/BackendFramework/BackendFramework.csproj"
-            ],
-            "problemMatcher": "$tsc"
-        },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "${workspaceFolder}/thecombine/BackendFramework/BackendFramework.csproj"
-            ],
-            "problemMatcher": "$tsc"
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/BackendFramework/BackendFramework.csproj"
+      ],
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "publish",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "publish",
+        "${workspaceFolder}/BackendFramework/BackendFramework.csproj"
+      ],
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "run-server",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/BackendFramework/BackendFramework.csproj"
+      ],
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "run-mongo",
+      "command": "mongod",
+      "type": "process",
+      "args": ["--dbpath", "${workspaceFolder}/mongo_database"],
+      "problemMatcher": "$tsc"
+    }
+  ]
 }
