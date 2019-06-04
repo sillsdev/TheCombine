@@ -10,7 +10,7 @@ namespace BackendFramework.Interfaces
     public interface IWordService
     {
         Task<List<Word>> GetAllWords();
-        Task<List<Word>> GetWord(string Id);
+        Task<Word> GetWord(string Id);
 
         Task<List<Word>> GetWords(System.Linq.Expressions.Expression<Func<Word, bool>> filter);
         Task<Word> Create(Word word);

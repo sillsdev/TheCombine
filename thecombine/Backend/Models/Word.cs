@@ -48,16 +48,20 @@ namespace BackendFramework.ValueModels
         public List<string> EditedBy { get; set; }
 
         [BsonElement("Accessability")]
-        public int Accessability { get; set; }
+        public state Accessability { get; set; }
 
         [BsonElement("OtherField")]
         public string OtherField { get; set; }
     }
     public class MergeWords
     {
-        public Word parent { get; set; }
-        public List<Word> children { get; set; } 
+        [BsonElement("parent")]
+        public string parent { get; set; }
+        [BsonElement("children")]
+        public List<string> children { get; set; }
+        [BsonElement("mergetype")]
         public state mergeType { get; set; }
+        [BsonElement("time")]
         public string time { get; set; }
     }
 }

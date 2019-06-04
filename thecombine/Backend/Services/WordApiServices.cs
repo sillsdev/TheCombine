@@ -40,18 +40,18 @@ namespace BackendFramework.Services
 
         public async Task<bool> DeleteAllWords()
         {
-             var deleted = await _wordDatabase.Words.DeleteManyAsync(_ => true);
-            if(deleted.DeletedCount != 0)
+            var deleted = await _wordDatabase.Words.DeleteManyAsync(_ => true);
+            if (deleted.DeletedCount != 0)
             {
                 return true;
             }
             return false;
         }
 
-        public async Task<List<Word>> GetWord(string identificaton)
+        public async Task<Word> GetWord(string identificaton)
         {
             var cursor = await _wordDatabase.Words.FindAsync(x => x.Id == identificaton);
-            return cursor.ToList();
+            return cursor.ToList()[0];
         }
 
         public async Task<Word> Create(Word word)
@@ -63,7 +63,7 @@ namespace BackendFramework.Services
 
         public async Task<bool> Delete(string Id)
         {
-            var deleted = await _wordDatabase.Words.DeleteOneAsync(x => x.Id == Id);
+            var deleted = await _wordDatabase.Words.DeleteManyAsync(x => x.Id == Id);
             return deleted.DeletedCount > 0;
         }
 

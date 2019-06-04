@@ -21,7 +21,7 @@ namespace BackendFramework.Controllers
             _wordService = wordService;
         }
 
-        public async Task<string> Message()
+        public string Message()
         {
             return "this is the database mainpage";
         }
@@ -70,31 +70,36 @@ namespace BackendFramework.Controllers
             var document = await _wordService.GetWord(Id);
             if (document == null)
                 return new NotFoundResult();
-            word.Id = document[0].Id;               //this is sloppy and it should be fixed
+            word.Id = document.Id;               //this is sloppy and it should be fixed
             await _wordService.Update(Id);
             return new OkObjectResult(word.Id);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Put(MergeWords mergeVals)
+        [HttpPut("dave/donald")]
+        public async Task<IActionResult> Put([FromBody]MergeWords mergeVals)
         {
             try
             {
                 var parent = mergeVals.parent;
-                List<Word> children = mergeVals.children;
+                List<string> children = mergeVals.children;
                 state changes = mergeVals.mergeType;
 
-                foreach (Word child in children)
+                foreach (string child in children)
                 {
+                    var childWord = await _wordService.GetWord(child);
+                    var parentWord = await _wordService.GetWord(parent);
                     //create duplicate nodes
-                    Word newChild = child;
-                    Word newParent = parent;
+                    Word newChild = childWord;
+                    Word newParent = parentWord;
+
+                    newChild.Id = null;
+                    newParent.Id = null;
                     //set as deleted
-                    //newChild.Accessability = state.deleted;
+                    newChild.Accessability = state.deleted;
                     //add to database to set ID
                     await _wordService.Create(newChild);
                     //add child to history of new child
-                    newChild.History.Add(child.Id);
+                    newChild.History.Add(childWord.Id);
 
                     //connect parent to child
                     newParent.History.Add(newChild.Id);
@@ -102,13 +107,14 @@ namespace BackendFramework.Controllers
                     await _wordService.Create(newParent);
 
                     //upadate fronteir
-                    await _wordService.DeleteFrontier(child.Id);
-                    await _wordService.DeleteFrontier(parent.Id);
+                    await _wordService.DeleteFrontier(childWord.Id);
+                    await _wordService.DeleteFrontier(parentWord.Id);
                     await _wordService.AddFrontier(newParent);
                 }
-            }catch (Exception)
+            }
+            catch (Exception)
             {
-                return new NotFoundResult() ;
+                return new NotFoundResult();
             }
 
             return new OkResult();
