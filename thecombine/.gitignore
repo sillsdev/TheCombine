@@ -27,5 +27,5 @@ mongo_database/*
 
 # Visual Studio
 .vs/*
-BackendFramework/bin
-BackendFramework/obj
+Backend/bin
+Backend/obj
