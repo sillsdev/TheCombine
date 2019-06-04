@@ -6,7 +6,6 @@
       "command": "dotnet",
       "type": "process",
       "args": ["build", "${workspaceFolder}/Backend/BackendFramework.csproj"],
-        "${workspaceFolder}/Backend/BackendFramework.csproj"
       "problemMatcher": "$tsc"
     },
     {
@@ -14,7 +13,6 @@
       "command": "dotnet",
       "type": "process",
       "args": ["publish", "${workspaceFolder}/Backend/BackendFramework.csproj"],
-        "${workspaceFolder}/Backend/BackendFramework.csproj"
       "problemMatcher": "$tsc"
     },
     {
