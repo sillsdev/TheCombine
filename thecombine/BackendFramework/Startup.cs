@@ -16,7 +16,6 @@ using Microsoft.Extensions.Options;
 
 namespace BackendFramework
 {
-    //public IConfiguration Configuration { get; }
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -30,7 +29,6 @@ namespace BackendFramework
         {
             public string ConnectionString { get; set; }
             public string Database { get; set; }
-            public string NamesCollectionLanguage { get; set; }
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -52,7 +50,6 @@ namespace BackendFramework
         {
             options.ConnectionString = Configuration.GetSection("MongoDB:ConnectionString").Value;
             options.Database = Configuration.GetSection("MongoDB:Database").Value;
-            options.NamesCollectionLanguage = Configuration.GetSection("MongoDB:NamesCollectionLanguage").Value;
         });
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordService, WordService>();

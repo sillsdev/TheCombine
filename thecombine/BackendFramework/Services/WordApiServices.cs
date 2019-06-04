@@ -48,10 +48,10 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<Word> GetWord(string identificaton)
+        public async Task<List<Word>> GetWord(string identificaton)
         {
             var cursor = await _wordDatabase.Words.FindAsync(x => x.Id == identificaton);
-            return cursor.ToList()[0];
+            return cursor.ToList();
         }
 
         public async Task<Word> Create(Word word)
@@ -87,7 +87,6 @@ namespace BackendFramework.Services
             await _wordDatabase.Frontier.InsertOneAsync(word);
             return word;
         }
-
         public async Task<bool> DeleteFrontier(string Id)
         {
             var deleted = await _wordDatabase.Frontier.DeleteManyAsync(x => x.Id == Id);
