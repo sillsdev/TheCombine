@@ -19,6 +19,8 @@ We have broken cards into a hierarchy which helps facilitate workflow:
 - `Units` break tasks into discrete actions.
 - `Exercises` accomplish tasks on manageable subsets of the complete dataset.
 
+> As of 5-31, these categories have been renamed to `Tools`, `Goals` and `Steps`.
+
 ## Card Ordering
 
 Our basic consensus for card ordering was this:
