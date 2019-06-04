@@ -26,7 +26,7 @@ namespace BackendFramework.Controllers
             return "this is the database mainpage";
         }
 
-        public bool helperFunction(Word x, List<string> Ids)
+        // GET: v1/Project/Words
         {
             foreach (string id in Ids)
             {
@@ -39,7 +39,6 @@ namespace BackendFramework.Controllers
         }
 
 
-        // GET: v1/collection
         [HttpGet]
         public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
@@ -60,7 +59,7 @@ namespace BackendFramework.Controllers
 
         }
 
-        // GET: v1/collection/name
+        // GET: v1/Project/Words/name
         [HttpGet("{Id}", Name = "Get")]
         public async Task<IActionResult> Get(string Id)
         {
@@ -70,7 +69,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(word);
         }
 
-        // POST: v1/collection
+        // POST: v1/Project/Words
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Word word)
         {
@@ -79,16 +78,16 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(word.Id);
         }
 
-        // PUT: v1/collection/{Id}
+        // PUT: v1/Project/Words/5
         //Implements Update(), Arguments: string id of target word, new word from body
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, Word word)
+        public async Task<IActionResult> Put(string Id, [FromBody] Word word)   
         {
             var document = await _wordService.GetWord(Id);
             if (document == null)
                 return new NotFoundResult();
             word.Id = document[0].Id;               //this is sloppy and it should be fixed
-            await _wordService.Update(Id);
+            await _wordService.Update(Id, word);
             return new OkObjectResult(word.Id);
         }
         // DELETE: v1/ApiWithActions/{Id}
