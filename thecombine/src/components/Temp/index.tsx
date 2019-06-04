@@ -4,7 +4,6 @@ import { StoreState } from "../../types";
 
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { setActiveLanguage } from "react-localize-redux";
 
 //Temp Container Component
 
@@ -20,7 +19,7 @@ export function mapDispatchToProps(
   return {
     buttonClicked: () => {
       //console.log('clicked test!');
-      dispatch(actions.pressButton());
+      dispatch(actions.asyncPressButton());
     }
   };
 }
