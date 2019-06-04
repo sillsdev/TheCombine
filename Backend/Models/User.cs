@@ -1,10 +1,15 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace BackendFramework.ValueModels
 {
-    public class Users
+    public class User
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+
         [BsonElement("Avatar")]
         public string Avatar { get; set; }
 
@@ -15,7 +20,7 @@ namespace BackendFramework.ValueModels
         public string Email { get; set; }
 
         [BsonElement("OtherConnectionField")]
-        public string OtherConnecitonField { get; set; }
+        public string OtherConnectionField { get; set; }
 
         [BsonElement("WorkedProjects")]
         public List<string> WorkedProjects { get; set; }
