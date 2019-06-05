@@ -56,7 +56,7 @@ class Login extends React.Component<
     if (user == "" || pass == "") {
       // notify the user they need both a username and password
       alert("Username and password cannot be blank");
-    } else if (this.props.login && user != "" && pass != "") {
+    } else if (this.props.login) {
       this.props.login(user, pass);
     }
   }
