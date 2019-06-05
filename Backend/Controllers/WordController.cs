@@ -27,12 +27,16 @@ namespace BackendFramework.Controllers
         }
 
         [EnableCors("AllowAll")]
+
+        // GET: v1/Project/Words
+        // Implements GetAllWords(), 
+        // Arguments: list of string ids of target word (if given, else returns all words)
+        // Default: null
         [HttpGet]
         public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
             if (Ids != null)
             {
-
                 var wordList = await _wordService.GetWords(Ids);
                 if (wordList.Count != Ids.Count)
                 {

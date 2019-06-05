@@ -26,11 +26,12 @@ namespace BackendFramework.Controllers
             return "this is the user database mainpage";
         }
 
+        [EnableCors("AllowAll")]
+        
         // GET: v1/Users
         // Implements GetAllUsers(), 
         // Arguments: list of string ids of target users (if given, else returns all users),
         // Default: null
-        [EnableCors("AllowAll")]
         [HttpGet]
         public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
