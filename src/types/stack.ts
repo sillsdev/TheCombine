@@ -5,8 +5,9 @@ export class Stack<T> {
     this.stack = t;
   }
 
-  push(t: T) {
+  push(t: T): Stack<T> {
     this.stack.push(t);
+    return this; // return a new copy instead?
   }
 
   pop(): T | undefined {
