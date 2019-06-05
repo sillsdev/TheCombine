@@ -1,7 +1,7 @@
 import { LOGIN, UserAction, REGISTER } from "./LoginActions";
 
 export interface LoginState {
-  user: String;
+  user: string;
   success: boolean;
 }
 

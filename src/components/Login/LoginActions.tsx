@@ -7,8 +7,8 @@ export const REGISTER = "REGISTER";
 export type REGISTER = typeof REGISTER;
 
 export interface LoginData {
-  user: String;
-  password: String;
+  user: string;
+  password: string;
 }
 type LoginType = LOGIN | REGISTER;
 
@@ -21,8 +21,8 @@ export interface UserAction {
 
 //thunk action creator
 export function asyncLogin(
-  user: String,
-  password: String,
+  user: string,
+  password: string,
   type: LoginType = LOGIN
 ) {
   return async (dispatch: Dispatch<UserAction>) => {
@@ -33,8 +33,8 @@ export function asyncLogin(
 
 //pure action creator. LEAVE PURE!
 export function login(
-  user: String,
-  password: String,
+  user: string,
+  password: string,
   type: LoginType = LOGIN
 ): UserAction {
   //console.log('PressButton called');
