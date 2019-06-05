@@ -7,5 +7,11 @@
       "was passed into this test object.",
       " fue pasado a este objeto de prueba."
     ]
+  },
+  "login": {
+    "username": ["Username", "Nombre de usuario"],
+    "password": ["Password", "Contraseña"],
+    "login": ["Login", "Iniciar sesión"],
+    "register": ["Register", "Registro"]
   }
 }
