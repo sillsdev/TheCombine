@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using BackendFramework.ValueModels;
 using BackendFramework.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +34,7 @@ namespace BackendFramework.Services
             return await _wordDatabase.Words.Find(_ => true).ToListAsync();
         }
 
-        public async Task<List<Word>> GetWords(System.Linq.Expressions.Expression<Func<Word, bool>> filter)
+        public async Task<List<Word>> GetWords(Expression<Func<Word, bool>> filter)
         {
             return await _wordDatabase.Words.Find(filter).ToListAsync();
         }

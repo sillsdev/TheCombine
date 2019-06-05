@@ -26,10 +26,27 @@ namespace BackendFramework.Controllers
             return "this is the database mainpage";
         }
 
+        public bool helperFunction(Word x, List<string> Ids)
+        {
+            foreach (string id in Ids)
+            {
+                if (id == x.Id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
         // GET: v1/collection
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
+            if (Ids.Count > 0)
+            {
+                return new ObjectResult(await _wordService.GetWords(x => helperFunction(x, Ids)));
+            }
             return new ObjectResult(await _wordService.GetAllWords());
         }
         [HttpDelete]
@@ -55,16 +72,17 @@ namespace BackendFramework.Controllers
 
         // POST: v1/collection
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Word word) //tskes the word content from the http req body not from the path or 
+        public async Task<IActionResult> Post([FromBody]Word word)
         {
             Console.WriteLine("Post: " + word);
             await _wordService.Create(word);
             return new OkObjectResult(word.Id);
         }
 
-        // PUT: v1/collection/5
+        // PUT: v1/collection/{Id}
+        //Implements Update(), Arguments: string id of target word, new word from body
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, Word word)   //also I dont think we need this
+        public async Task<IActionResult> Put(string Id, Word word)
         {
             var document = await _wordService.GetWord(Id);
             if (document == null)
@@ -73,7 +91,8 @@ namespace BackendFramework.Controllers
             await _wordService.Update(Id);
             return new OkObjectResult(word.Id);
         }
-        // DELETE: v1/ApiWithActions/5
+        // DELETE: v1/ApiWithActions/{Id}
+        //Implements Delete(), Arguments: string id of target word
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {

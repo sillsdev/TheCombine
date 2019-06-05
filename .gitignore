@@ -29,3 +29,10 @@ package-lock.json
 .vs/*
 Backend/bin
 Backend/obj
+testingdata/testingdata.lift
+.gitignore
+testingdata/testingdata.lift-ranges
+testingdata/WritingSystems/en.ldml
+testingdata/WritingSystems/seh.ldml
+testingdata/WritingSystems/seh-fonipa-x-etic.ldml
+testingdata/WritingSystems/pt.ldml
