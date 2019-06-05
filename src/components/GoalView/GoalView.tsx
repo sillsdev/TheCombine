@@ -6,7 +6,7 @@ import GoalFuture from "./GoalFuture";
 import { Goals } from "../../types/goals";
 import { User } from "../../types/user";
 import { TempGoal } from "../../goals/tempGoal";
-import { Stack } from "../../types/stack";
+import Stack from "../../types/stack";
 
 let tempUser: User = { name: "Joe", username: "JoeUsername", id: 5 };
 let possibleGoals: Goals[] = [];

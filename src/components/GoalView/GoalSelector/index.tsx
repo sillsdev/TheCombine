@@ -1,12 +1,12 @@
 import { GoalsState, Goals } from "../../../types/goals";
 import { GoalSelector } from "./GoalSelectorComponent";
-import * as actions from "../GoalUIActions";
+import * as actions from "../GoalViewActions";
 
 import { connect } from "react-redux";
 import { Dispatch } from "react";
 
 export function mapStateToProps(state: GoalsState) {
-  return state;
+  return { ...state };
 }
 
 export function mapDispatchToProps(

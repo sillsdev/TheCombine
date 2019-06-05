@@ -2,7 +2,7 @@ import { combineReducers, Reducer } from "redux";
 
 import { StoreState } from "./types";
 import { tempReducer } from "./components/Temp/TempReducer";
-import { goalsReducer } from "./components/GoalView/GoalUIReducer";
+import { goalsReducer } from "./components/GoalView/GoalViewReducers";
 import { localizeReducer } from "react-localize-redux";
 import { loginReducer } from "./components/Login/LoginReducer";
 import { createProjectReducer } from "./components/CreateProject/CreateProjectReducer";

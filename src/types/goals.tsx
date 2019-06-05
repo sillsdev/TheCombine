@@ -1,7 +1,7 @@
 import * as React from "react";
 import { User } from "./user";
 import { TempData, TempStep } from "../goals/tempGoal";
-import { Stack } from "./stack";
+import Stack from "./stack";
 
 export enum GoalOption {
   Complete,
@@ -22,16 +22,8 @@ export type Steps = TempStep; // | OtherTypes
 export interface GoalViewState {}
 
 export interface GoalsState {
-  history: GoalsHistoryState;
-  suggestions: SuggestedGoalsState;
-}
-
-export interface GoalsHistoryState {
-  goals: Stack<Goals>;
-}
-
-export interface SuggestedGoalsState {
-  goals: Stack<Goals>;
+  history: Stack<Goals>;
+  suggestions: Stack<Goals>;
 }
 
 export interface Goals {

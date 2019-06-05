@@ -1,24 +1,25 @@
 import React from "react";
 
-import { Goals } from "../../../types/goals";
-import { Stack } from "../../../types/stack";
+import { Goals, GoalsState } from "../../../types/goals";
+import Stack from "../../../types/stack";
 import { Goal } from "../GoalComponent/GoalComponent";
 
-export interface GoalHistoryProps {
-  goals: Stack<Goals>;
+export interface GoalsStateProps {
+  history: Stack<Goals>;
+  suggestions: Stack<Goals>;
 }
 
-export class GoalHistory extends React.Component<GoalHistoryProps> {
-  constructor(props: GoalHistoryProps) {
+export class GoalHistory extends React.Component<GoalsState> {
+  constructor(props: GoalsState) {
     super(props);
   }
 
   render() {
     return (
       <div className="App">
-        {/* {this.props.goals.stack.map(goal => (
+        {this.props.history.stack.map(goal => (
           <Goal key={goal.id} goal={goal} />
-        ))} */}
+        ))}
       </div>
     );
   }

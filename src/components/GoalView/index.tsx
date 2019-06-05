@@ -3,7 +3,7 @@ import { GoalView } from "./GoalView";
 import { connect } from "react-redux";
 
 export function mapStateToProps(state: GoalViewState) {
-  return state;
+  return { ...state };
 }
 
 export default connect(mapStateToProps)(GoalView);
