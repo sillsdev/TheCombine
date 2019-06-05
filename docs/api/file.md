@@ -1,6 +1,6 @@
 # File
 
-Generic type for represnting auxillary files in a project
+Generic type for representing auxillary files in a project
 
 **data** :
 
