@@ -1,6 +1,6 @@
 # Merge words
 
-Used to add a word to a language project
+Merge words into a parent
 
 **URL** : `/v1/projects/{project}/words`
 
