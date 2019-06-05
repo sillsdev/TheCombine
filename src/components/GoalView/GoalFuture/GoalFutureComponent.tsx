@@ -5,7 +5,7 @@ import { Stack } from "../../../types/stack";
 import { Goal } from "../GoalComponent/GoalComponent";
 
 export interface GoalFutureProps {
-  suggestedGoals: Stack<Goals>;
+  goals: Stack<Goals>;
 }
 
 export interface GoalFutureState {}
@@ -20,9 +20,9 @@ export class GoalFuture extends React.Component<
   render() {
     return (
       <div className="GoalPicker">
-        {this.props.suggestedGoals.stack.map(goal => (
+        {/* {this.props.goals.stack.map(goal => (
           <Goal key={goal.id} goal={goal} />
-        ))}
+        ))} */}
       </div>
     );
   }

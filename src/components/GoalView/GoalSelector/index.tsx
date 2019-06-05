@@ -1,5 +1,5 @@
 import { GoalsState, Goals } from "../../../types/goals";
-import { GoalSelector } from "./GoalSelector";
+import { GoalSelector } from "./GoalSelectorComponent";
 import * as actions from "../GoalUIActions";
 
 import { connect } from "react-redux";

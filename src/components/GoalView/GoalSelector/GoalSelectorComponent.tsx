@@ -108,12 +108,7 @@ export interface GoalSelectorProps {
   addToHistory: (goal: Goals) => void;
 }
 
-export interface GoalSelectorState {}
-
-export class GoalSelector extends React.Component<
-  GoalSelectorProps,
-  GoalSelectorState
-> {
+export class GoalSelector extends React.Component<GoalSelectorProps> {
   constructor(props: GoalSelectorProps) {
     super(props);
     this.handleChange = this.handleChange.bind(this);

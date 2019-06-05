@@ -26,11 +26,11 @@ export interface GoalsState {
   suggestions: SuggestedGoalsState;
 }
 
-interface GoalsHistoryState {
+export interface GoalsHistoryState {
   goals: Stack<Goals>;
 }
 
-interface SuggestedGoalsState {
+export interface SuggestedGoalsState {
   goals: Stack<Goals>;
 }
 

@@ -5,7 +5,7 @@ import { Stack } from "../../../types/stack";
 import { Goal } from "../GoalComponent/GoalComponent";
 
 export interface GoalHistoryProps {
-  chosenGoals: Stack<Goals>;
+  goals: Stack<Goals>;
 }
 
 export class GoalHistory extends React.Component<GoalHistoryProps> {
@@ -16,9 +16,9 @@ export class GoalHistory extends React.Component<GoalHistoryProps> {
   render() {
     return (
       <div className="App">
-        {this.props.chosenGoals.stack.map(goal => (
+        {/* {this.props.goals.stack.map(goal => (
           <Goal key={goal.id} goal={goal} />
-        ))}
+        ))} */}
       </div>
     );
   }
