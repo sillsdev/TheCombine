@@ -27,12 +27,14 @@ namespace BackendFramework.Controllers
         }
 
         // GET: v1/Users
+        // Implements GetAllUsers(), 
+        // Arguments: list of string ids of target users (if given, else returns all users),
+        // Default: null
         [EnableCors("AllowAll")]
         [HttpGet]
         public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
             if(Ids != null){
-
                 var userList = await _userService.GetUsers(Ids);
                 if (userList.Count != Ids.Count){
                     return new NotFoundResult();
@@ -42,12 +44,16 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _userService.GetAllUsers());       
         }
 
+        // DELETE: v1/users
+        // Implements DeleteAllUsers()
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
             return new ObjectResult(await _userService.DeleteAllUsers());
         }
+
         // GET: v1/Users/name
+        // Implements GetUser(), Arguments: string id of target user
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
@@ -61,17 +67,20 @@ namespace BackendFramework.Controllers
         }
 
         // POST: v1/Users
+        // Implements Create(), Arguments: new user object from body
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]User user) //tskes the user content from the http req body not from the path or 
+        public async Task<IActionResult> Post([FromBody]User user) 
         {
             Console.WriteLine("Post: " + user);
             await _userService.Create(user);
             return new OkObjectResult(user.Id);
         }
 
-        // PUT: v1/Users/5
+        // PUT: v1/Users/{Id}
+        // Implements Update(), 
+        // Arguments: string id of target user, user object with updates from body
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, [FromBody] User user)   //also I dont think we need this
+        public async Task<IActionResult> Put(string Id, [FromBody] User user)
         {
             List<string> ids = new List<string>();
             ids.Add(Id);
@@ -83,7 +92,8 @@ namespace BackendFramework.Controllers
             await _userService.Update(Id,user);
             return new OkObjectResult(user.Id);
         }
-        // DELETE: v1/ApiWithActions/5
+        // DELETE: v1/ApiWithActions/{Id}
+        // Implements Delete(), Arguments: string id of target user
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {

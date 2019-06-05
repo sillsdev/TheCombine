@@ -32,6 +32,8 @@ namespace BackendFramework.Controllers
         {
             if (Ids != null)
             {
+            if (Ids != null)
+            {
 
                 var wordList = await _wordService.GetWords(Ids);
                 if (wordList.Count != Ids.Count)
@@ -73,7 +75,7 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(word.Id);
         }
 
-        // PUT: v1/Project/Words/5
+        // PUT: v1/Project/Words/{Id}
         //Implements Update(), Arguments: string id of target word, new word from body
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] Word word)   
