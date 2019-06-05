@@ -20,26 +20,34 @@ export interface UserAction {
 }
 
 //thunk action creator
-export function asyncLogin(
-  user: string,
-  password: string,
-  type: LoginType = LOGIN
-) {
+export function asyncLogin(user: string, password: string) {
   return async (dispatch: Dispatch<UserAction>) => {
     //console.log('asyncPressButton called');
-    dispatch(login(user, password, type));
+    dispatch(login(user, password));
   };
 }
 
 //pure action creator. LEAVE PURE!
-export function login(
-  user: string,
-  password: string,
-  type: LoginType = LOGIN
-): UserAction {
+export function login(user: string, password: string): UserAction {
   //console.log('PressButton called');
   return {
-    type: type,
+    type: LOGIN,
+    payload: { user, password }
+  };
+}
+
+export function asyncRegister(user: string, password: string) {
+  return async (dispatch: Dispatch<UserAction>) => {
+    //console.log('asyncPressButton called');
+    dispatch(login(user, password));
+  };
+}
+
+//pure action creator. LEAVE PURE!
+export function register(user: string, password: string): UserAction {
+  //console.log('PressButton called');
+  return {
+    type: REGISTER,
     payload: { user, password }
   };
 }

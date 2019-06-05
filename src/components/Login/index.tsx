@@ -3,19 +3,19 @@ import { StoreState } from "../../types";
 
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { login, UserAction, REGISTER } from "./LoginActions";
+import { login, UserAction, register } from "./LoginActions";
 
 export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, UserAction>
 ) {
   return {
-    login: (user: string, password: String) => {
+    login: (user: string, password: string) => {
       //console.log('clicked test!');
       dispatch(login(user, password));
     },
-    register: (user: string, password: String) => {
+    register: (user: string, password: string) => {
       //console.log('clicked test!');
-      dispatch(login(user, password, REGISTER));
+      dispatch(register(user, password));
     }
   };
 }

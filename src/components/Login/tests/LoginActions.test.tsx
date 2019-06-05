@@ -24,9 +24,7 @@ describe("LoginAction Tests", () => {
   });
 
   test("register returns correct value", () => {
-    expect(action.login(user.user, user.password, action.REGISTER)).toEqual(
-      register
-    );
+    expect(action.register(user.user, user.password)).toEqual(register);
   });
 
   test("asyncLogin correctly affects state", () => {
@@ -45,7 +43,7 @@ describe("LoginAction Tests", () => {
   test("asyncRegister correctly affects state", () => {
     const mockStore = createMockStore(mockState);
     const mockDispatch = mockStore.dispatch<any>(
-      action.asyncLogin(user.user, user.password, action.REGISTER)
+      action.asyncRegister(user.user, user.password)
     );
 
     mockDispatch
