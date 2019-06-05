@@ -1,4 +1,4 @@
-# Get all users
+# Get multiple users
 
 **URL** : `/v1/users`
 
@@ -8,7 +8,8 @@
 
 **Data type** : `ids: string[] | undefined`
 
-> If `undefined` it will return all users
+> All users with ids in `ids` will be returned.
+> if the body is empty it will return all users
 
 ## Success response
 

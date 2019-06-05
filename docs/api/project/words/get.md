@@ -1,4 +1,4 @@
-# Get all words
+# Get multiple words
 
 Gets all words in the project
 
@@ -10,7 +10,8 @@ Gets all words in the project
 
 **Data type** : `ids: string[] | undefined`
 
-> If `undefined` it will return all words
+> All words with ids in `ids` will be returned.
+> if the body is empty it will return all words
 
 ## Success Response
 

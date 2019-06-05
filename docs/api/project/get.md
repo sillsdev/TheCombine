@@ -1,4 +1,4 @@
-# Get all projects
+# Get multiple projects
 
 **URL** : `/v1/projects`
 
@@ -8,7 +8,8 @@
 
 **Data type** : `ids: string[] | undefined`
 
-> If `undefined` it will return all projects
+> All projects with ids in `ids` will be returned.
+> if the body is empty it will return all projects
 
 ## Success response
 
