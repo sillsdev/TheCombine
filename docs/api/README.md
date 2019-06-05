@@ -20,4 +20,5 @@
 - [Merge words](project/words/put.md) : `PUT: /v1/projects/{project}/words`
 - [Get all words](project/words/get.md) : `GET: /v1/projects/{project}/words`
 - [Get word](project/words/get_id.md) : `GET: /v1/projects/{project}/words/{id}`
+- [Update word](project/words/put_id.md) : `PUT: /v1/projects/{project}/words/{id}`
 - [Get frontier words](project/words/frontier.md) : `GET: /v1/projects/{project}/words/frontier`
