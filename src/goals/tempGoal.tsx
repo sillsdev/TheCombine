@@ -12,7 +12,7 @@ export interface TempStep {}
 
 export class TempGoal implements Goals {
   id: number;
-  name: String;
+  name: string;
 
   display: React.FC;
   displaySelectorItem: React.FC;

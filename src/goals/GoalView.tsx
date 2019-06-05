@@ -1,7 +1,7 @@
 import React from "react";
 
 // import { GoalHistory } from "./GoalHistory";
-// import { GoalSelector } from "./GoalSelector";
+import { GoalSelector } from "./GoalSelector";
 // import { GoalFuture } from "./GoalFuture";
 import { Goals } from "../types/goals";
 import { User } from "../types/user";
@@ -65,7 +65,7 @@ export class GoalView extends React.Component<GoalViewProps, GoalViewState> {
     return (
       <div className="GoalView">
         {/* <GoalHistory chosenGoals={this.state.goalHistory} /> */}
-        {/* <GoalSelector addToHistory={this.addGoal} /> */}
+        <GoalSelector addToHistory={this.addGoal} />
         {/* <GoalFuture suggestedGoals={this.state.goalSuggestions} /> */}
       </div>
     );

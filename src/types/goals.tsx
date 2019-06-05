@@ -20,7 +20,7 @@ export type Steps = TempStep; // | OtherTypes
 
 export interface Goals {
   id: number;
-  name: String;
+  name: string;
   user: User;
 
   steps: React.Component[];
