@@ -10,8 +10,7 @@ import {
   FormControlLabel,
   DialogContent,
   FormControl,
-  MenuItem,
-  Button
+  MenuItem
 } from "@material-ui/core";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
@@ -36,7 +35,7 @@ allTheGoals.push(goal2);
 
 export interface SimpleDialogProps {
   open: boolean;
-  possibleGoals: Array<Goals>;
+  possibleGoals: Goals[];
 }
 
 export class SimpleDialog extends React.Component<SimpleDialogProps> {
@@ -66,7 +65,7 @@ export class SimpleDialog extends React.Component<SimpleDialogProps> {
 }
 
 export interface GoalSelectorDropdownProps {
-  possibleGoals: Array<Goals>;
+  possibleGoals: Goals[];
   handleChange: (
     event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => void;
