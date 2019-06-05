@@ -9,15 +9,15 @@
 
 ## Project
 
-- [Add language project](project/post.md) : `POST: /v1/{project}`
-- [Get all projects](project/get.md) : `GET: /v1`
-- [Update settings](project/settings/put.md) : `PUT: /v1/{project}/settings`
-- [Get settings](project/settings/get.md) : `GET: /v1/{project}/settings`
+- [Add language project](project/post.md) : `POST: /v1/projects/{project}`
+- [Get all projects](project/get.md) : `GET: /v1/projects`
+- [Update settings](project/settings/put.md) : `PUT: /v1/projects/{project}/settings`
+- [Get settings](project/settings/get.md) : `GET: /v1/projects/{project}/settings`
 
 ### Words
 
-- [Add word](project/words/post.md) : `POST: /v1/{project}/words`
-- [Merge words](project/words/put.md) : `PUT: /v1/{project}/words`
-- [Get all words](project/words/get.md) : `GET: /v1/{project}/words`
-- [Get word](project/words/get_id.md) : `GET: /v1/{project}/words/{id}`
-- [Get frontier words](project/words/frontier.md) : `GET: /v1/{project}/words/frontier`
+- [Add word](project/words/post.md) : `POST: /v1/projects/{project}/words`
+- [Merge words](project/words/put.md) : `PUT: /v1/projects/{project}/words`
+- [Get all words](project/words/get.md) : `GET: /v1/projects/{project}/words`
+- [Get word](project/words/get_id.md) : `GET: /v1/projects/{project}/words/{id}`
+- [Get frontier words](project/words/frontier.md) : `GET: /v1/projects/{project}/words/frontier`

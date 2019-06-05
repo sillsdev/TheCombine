@@ -1,6 +1,6 @@
 # Get word by ID
 
-**URL** : `/v1/{project}/words/{id}`
+**URL** : `/v1/projects/{project}/words/{id}`
 
 **Method** : `GET`
 

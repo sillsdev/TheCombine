@@ -1,6 +1,6 @@
 # Update project settings
 
-**URL** : `/v1/{project}/settings`
+**URL** : `/v1/projects/{project}/settings`
 
 **Method** : `PUT`
 

@@ -1,6 +1,6 @@
 # Get all projects
 
-**URL** : `/v1`
+**URL** : `/v1/projects`
 
 **Method** : `GET`
 

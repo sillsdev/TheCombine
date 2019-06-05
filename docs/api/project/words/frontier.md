@@ -6,7 +6,7 @@ In Figure1 the frontier would return `ab` and `c_deleted`
 
 ![Sample word tree](word_tree.png)
 
-**URL** : `/v1/{project}/words/frontier`
+**URL** : `/v1/projects/{project}/words/frontier`
 
 **Method** : `GET`
 

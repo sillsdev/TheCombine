@@ -2,7 +2,7 @@
 
 Used to add a word to a language project
 
-**URL** : `/v1/{project}/words`
+**URL** : `/v1/projects/{project}/words`
 
 **Method** : `POST`
 
