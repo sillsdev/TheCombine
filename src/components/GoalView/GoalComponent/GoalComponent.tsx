@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Goals } from "../types/goals";
+import { Goals } from "../../../types/goals";
 
 export interface GoalProps {
   goal: Goals;

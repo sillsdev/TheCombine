@@ -5,7 +5,7 @@ import React from "react";
 import Temp from "../Temp";
 import Login from "../Login";
 import CreateProject from "../CreateProject";
-import { GoalView } from "../../goals/GoalView";
+import { GoalView } from "../GoalView/GoalView";
 
 const App: React.FC = () => {
   return (

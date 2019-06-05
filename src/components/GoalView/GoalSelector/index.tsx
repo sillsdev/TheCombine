@@ -1,6 +1,6 @@
-import { GoalsState, Goals } from "../types/goals";
+import { GoalsState, Goals } from "../../../types/goals";
 import { GoalSelector } from "./GoalSelector";
-import * as actions from "./GoalUIActions";
+import * as actions from "../GoalUIActions";
 
 import { connect } from "react-redux";
 import { Dispatch } from "react";

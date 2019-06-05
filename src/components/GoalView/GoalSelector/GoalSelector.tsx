@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Goals } from "../types/goals";
-import { TempGoal } from "./tempGoal";
-import { User } from "../types/user";
+import { Goals } from "../../../types/goals";
+import { TempGoal } from "../../../goals/tempGoal";
+import { User } from "../../../types/user";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Select from "@material-ui/core/Select";

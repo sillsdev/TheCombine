@@ -1,6 +1,7 @@
+import { GoalsState } from "../../types/goals";
+import { Stack } from "../../types/stack";
+import { Goals } from "../../types/goals";
 import { ADD_GOAL_TO_HISTORY, AddGoalToHistoryAction } from "./GoalUIActions";
-import { GoalsState, Goals } from "../types/goals";
-import { Stack } from "../types/stack";
 
 export const defaultState: GoalsState = {
   history: {

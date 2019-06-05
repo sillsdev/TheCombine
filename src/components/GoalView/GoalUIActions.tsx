@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { Action } from "redux";
-import { Goals } from "../types/goals";
+import { Goals } from "../../types/goals";
 
 export const ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY";
 export type ADD_GOAL_TO_HISTORY = typeof ADD_GOAL_TO_HISTORY;

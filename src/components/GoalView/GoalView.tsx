@@ -1,12 +1,12 @@
 import React from "react";
 
-import { GoalHistory } from "./GoalHistory";
-import { GoalSelector } from "./GoalSelector";
-import { GoalFuture } from "./GoalFuture";
-import { Goals } from "../types/goals";
-import { User } from "../types/user";
-import { TempGoal } from "./tempGoal";
-import { Stack } from "../types/stack";
+import { GoalHistory } from "./GoalHistory/GoalHistory";
+import GoalSelector from "./GoalSelector";
+import { GoalFuture } from "./GoalFuture/GoalFuture";
+import { Goals } from "../../types/goals";
+import { User } from "../../types/user";
+import { TempGoal } from "../../goals/tempGoal";
+import { Stack } from "../../types/stack";
 
 let tempUser: User = { name: "Joe", username: "JoeUsername", id: 5 };
 let possibleGoals: Goals[] = [];
@@ -75,7 +75,7 @@ export class GoalView extends React.Component<GoalViewProps, GoalViewState> {
     return (
       <div className="GoalView">
         <GoalHistory chosenGoals={this.state.goalHistory} />
-        <GoalSelector addToHistory={this.addGoal} />
+        <GoalSelector />
         <GoalFuture suggestedGoals={this.state.goalSuggestions} />
       </div>
     );

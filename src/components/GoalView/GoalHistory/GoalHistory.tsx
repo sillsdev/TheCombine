@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Goals } from "../types/goals";
-import { Stack } from "../types/stack";
-import { Goal } from "./GoalComponent";
+import { Goals } from "../../../types/goals";
+import { Stack } from "../../../types/stack";
+import { Goal } from "../GoalComponent/GoalComponent";
 
 export interface GoalHistoryProps {
   chosenGoals: Stack<Goals>;

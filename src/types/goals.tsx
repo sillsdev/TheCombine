@@ -19,6 +19,8 @@ export enum Tools {
 export type GoalData = TempData; // | OtherTypes
 export type Steps = TempStep; // | OtherTypes
 
+export interface GoalViewState {}
+
 export interface GoalsState {
   history: GoalsHistoryState;
   suggestions: SuggestedGoalsState;
