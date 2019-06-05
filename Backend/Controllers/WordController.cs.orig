@@ -26,13 +26,23 @@ namespace BackendFramework.Controllers
             return "this is the database mainpage";
         }
 
+<<<<<<< HEAD
+=======
+        // GET: v1/Project/Words
+        // Implements GetAllWords(), 
+        // Arguments: list of string ids of target word (if given, else returns all words)
+        // Default: null
+>>>>>>> 0d09fc8... Add comments to controllers
         [EnableCors("AllowAll")]
         [HttpGet]
         public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
             if (Ids != null)
             {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d09fc8... Add comments to controllers
                 var wordList = await _wordService.GetWords(Ids);
                 if (wordList.Count != Ids.Count)
                 {
@@ -57,10 +67,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
-            List<string> Ids = new List<string>();
-            Ids.Add(Id);
-
-            var word = await _wordService.GetWords(Ids);
+            var word = await _wordService.GetWord(Id);
             if (word.Count == 0)
                 return new NotFoundResult();
             return new ObjectResult(word);
@@ -79,16 +86,12 @@ namespace BackendFramework.Controllers
         // PUT: v1/Project/Words/{Id}
         //Implements Update(), Arguments: string id of target word, new word from body
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, [FromBody] Word word)
+        public async Task<IActionResult> Put(string Id, [FromBody] Word word)   
         {
-            List<string> ids = new List<string>();
-            ids.Add(Id);
-            var document = await _wordService.GetWords(ids);
+            var document = await _wordService.GetWord(Id);
             if (document.Count == 0)
-            {
                 return new NotFoundResult();
-            }
-            word.Id = (document.First()).Id;
+            word.Id = document[0].Id;               //this is sloppy and it should be fixed
             await _wordService.Update(Id, word);
             return new OkObjectResult(word.Id);
         }
