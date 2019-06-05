@@ -26,13 +26,19 @@ namespace BackendFramework.Controllers
             return "this is the database mainpage";
         }
 
-
+        [EnableCors("AllowAll")]
         [HttpGet]
         public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
-            if (Ids.Count > 0)
+            if (Ids != null)
             {
-                return new ObjectResult(await _wordService.GetWords(x => helperFunction(x, Ids)));
+
+                var wordList = await _wordService.GetWords(Ids);
+                if (wordList.Count != Ids.Count)
+                {
+                    return new NotFoundResult();
+                }
+                return new ObjectResult(wordList);
             }
             return new ObjectResult(await _wordService.GetAllWords());
         }

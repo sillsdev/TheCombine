@@ -13,7 +13,7 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> GetAllWords();
         Task<List<Word>> GetWord(string Id);
 
-        Task<List<Word>> GetWords(Expression<Func<Word, bool>> filter);
+        Task<List<Word>> GetWords(List<string> Ids);
         Task<Word> Create(Word word);
         Task<bool> Update(string Id, Word word);
         Task<bool> Delete(string Id);

@@ -34,9 +34,13 @@ namespace BackendFramework.Services
             return await _wordDatabase.Words.Find(_ => true).ToListAsync();
         }
 
-        public async Task<List<Word>> GetWords(Expression<Func<Word, bool>> filter)
+        public async Task<List<Word>> GetWords(List<string> Ids)
         {
-            return await _wordDatabase.Words.Find(filter).ToListAsync();
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.In(x => x.Id, Ids);
+            var wordList = await _wordDatabase.Words.Find(filter).ToListAsync();
+
+            return wordList;
         }
 
         public async Task<bool> DeleteAllWords()
@@ -78,7 +82,7 @@ namespace BackendFramework.Services
             deletedTag.Accessability = 1;
 
             var updateDef = Builders<Word>.Update.Set(x => x.Accessability, deletedTag.Accessability);
-                
+
             var updateResult = _wordDatabase.Words.UpdateOne(filter, updateDef);
 
             word.Id = null;
