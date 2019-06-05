@@ -29,27 +29,34 @@ namespace BackendFramework.Controllers
         // GET: v1/Users
         [EnableCors("AllowAll")]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
-                return new ObjectResult(await _userService.GetAllUsers());
+            if(Ids != null){
+
+                var userList = await _userService.GetUsers(Ids);
+                if (userList.Count != Ids.Count){
+                    return new NotFoundResult();
+                }
+                return new ObjectResult(userList);
+            }
+            return new ObjectResult(await _userService.GetAllUsers());       
         }
+
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-           // if( isTrue == true)
-           // {
-                return new ObjectResult(await _userService.DeleteAllUsers());
-           // }
-           // return new ObjectResult(isTrue);
-           
+            return new ObjectResult(await _userService.DeleteAllUsers());
         }
         // GET: v1/Users/name
-        [HttpGet("{Id}", Name = "UserGet")]
+        [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
-            var user = await _userService.GetUser(Id);
-            if (user == null)
+            List<string> ids = new List<string>();
+            ids.Add(Id);
+            var user = await _userService.GetUsers(ids);
+            if (user.Count == 0){
                 return new NotFoundResult();
+            }
             return new ObjectResult(user);
         }
 
@@ -66,10 +73,13 @@ namespace BackendFramework.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] User user)   //also I dont think we need this
         {
-            var document = await _userService.GetUser(Id);
-            if (document.Count == 0)
+            List<string> ids = new List<string>();
+            ids.Add(Id);
+            var document = await _userService.GetUsers(ids);
+            if (document.Count == 0){
                 return new NotFoundResult();
-            user.Id = document[0].Id;               //this is sloppy and it should be fixed
+            }
+            user.Id = (document.First()).Id;              
             await _userService.Update(Id,user);
             return new OkObjectResult(user.Id);
         }

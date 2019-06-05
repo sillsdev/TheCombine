@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using BackendFramework.ValueModels;
 using BackendFramework.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -43,10 +44,13 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<List<User>> GetUser(string identificaton)
+        public async Task<List<User>> GetUsers(List<string> Ids)
         {
-            var cursor = await _userDatabase.Users.FindAsync(x => x.Id == identificaton);
-            return cursor.ToList();
+            var filterDef = new FilterDefinitionBuilder<User>();
+            var filter = filterDef.In(x=>x.Id , Ids);
+            var userList = await _userDatabase.Users.Find(filter).ToListAsync();
+                        
+            return userList;
         }
 
         public async Task<User> Create(User user)

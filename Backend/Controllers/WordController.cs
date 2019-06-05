@@ -26,18 +26,6 @@ namespace BackendFramework.Controllers
             return "this is the database mainpage";
         }
 
-        // GET: v1/Project/Words
-        {
-            foreach (string id in Ids)
-            {
-                if (id == x.Id)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
 
         [HttpGet]
         public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
@@ -48,28 +36,29 @@ namespace BackendFramework.Controllers
             }
             return new ObjectResult(await _wordService.GetAllWords());
         }
+
+
+        // DELETE v1/Project/Words
+        // Implements DeleteAllWords()
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            // if( isTrue == true)
-            // {
             return new ObjectResult(await _wordService.DeleteAllWords());
-            // }
-            // return new ObjectResult(isTrue);
-
         }
 
-        // GET: v1/Project/Words/name
-        [HttpGet("{Id}", Name = "Get")]
+        // GET: v1/Project/Words/{Id}
+        // Implements GetWord(), Arguments: string id of target word
+        [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
             var word = await _wordService.GetWord(Id);
-            if (word == null)
+            if (word.Count == 0)
                 return new NotFoundResult();
             return new ObjectResult(word);
         }
 
         // POST: v1/Project/Words
+        // Implements Create(), Arguments: new word from body
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Word word)
         {
@@ -84,7 +73,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Put(string Id, [FromBody] Word word)   
         {
             var document = await _wordService.GetWord(Id);
-            if (document == null)
+            if (document.Count == 0)
                 return new NotFoundResult();
             word.Id = document[0].Id;               //this is sloppy and it should be fixed
             await _wordService.Update(Id, word);
