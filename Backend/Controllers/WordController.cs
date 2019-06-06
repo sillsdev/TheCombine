@@ -26,54 +26,78 @@ namespace BackendFramework.Controllers
             return "this is the database mainpage";
         }
 
-        // GET: v1/collection
+        [EnableCors("AllowAll")]
+
+        // GET: v1/Project/Words
+        // Implements GetAllWords(), 
+        // Arguments: list of string ids of target word (if given, else returns all words)
+        // Default: null
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
+            if (Ids != null)
+            {
+                var wordList = await _wordService.GetWords(Ids);
+                if (wordList.Count != Ids.Count)
+                {
+                    return new NotFoundResult();
+                }
+                return new ObjectResult(wordList);
+            }
             return new ObjectResult(await _wordService.GetAllWords());
         }
+
+
+        // DELETE v1/Project/Words
+        // Implements DeleteAllWords()
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            // if( isTrue == true)
-            // {
             return new ObjectResult(await _wordService.DeleteAllWords());
-            // }
-            // return new ObjectResult(isTrue);
-
         }
 
-        // GET: v1/collection/name
-        [HttpGet("{Id}", Name = "Get")]
+        // GET: v1/Project/Words/{Id}
+        // Implements GetWord(), Arguments: string id of target word
+        [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
-            var word = await _wordService.GetWord(Id);
-            if (word == null)
+            List<string> Ids = new List<string>();
+            Ids.Add(Id);
+
+            var word = await _wordService.GetWords(Ids);
+            if (word.Count == 0)
                 return new NotFoundResult();
             return new ObjectResult(word);
         }
 
-        // POST: v1/collection
+        // POST: v1/Project/Words
+        // Implements Create(), Arguments: new word from body
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Word word) //tskes the word content from the http req body not from the path or 
+        public async Task<IActionResult> Post([FromBody]Word word)
         {
             Console.WriteLine("Post: " + word);
             await _wordService.Create(word);
             return new OkObjectResult(word.Id);
         }
 
-        // PUT: v1/collection/5
+        // PUT: v1/Project/Words/{Id}
+        //Implements Update(), Arguments: string id of target word, new word from body
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, Word word)   //also I dont think we need this
+        public async Task<IActionResult> Put(string Id, [FromBody] Word word)
         {
-            var document = await _wordService.GetWord(Id);
-            if (document == null)
+            List<string> ids = new List<string>();
+            ids.Add(Id);
+            var document = await _wordService.GetWords(ids);
+            if (document.Count == 0)
+            {
                 return new NotFoundResult();
-            word.Id = document[0].Id;               //this is sloppy and it should be fixed
-            await _wordService.Update(Id);
+            }
+            word.Id = (document.First()).Id;
+            await _wordService.Update(Id, word);
             return new OkObjectResult(word.Id);
         }
-        // DELETE: v1/ApiWithActions/5
+        // DELETE: v1/ApiWithActions/{Id}
+        //Implements Delete(), Arguments: string id of target word
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {

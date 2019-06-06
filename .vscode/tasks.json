@@ -5,20 +5,14 @@
       "label": "build",
       "command": "dotnet",
       "type": "process",
-      "args": [
-        "build",
-        "${workspaceFolder}/BackendFramework/BackendFramework.csproj"
-      ],
+      "args": ["build", "${workspaceFolder}/Backend/BackendFramework.csproj"],
       "problemMatcher": "$tsc"
     },
     {
       "label": "publish",
       "command": "dotnet",
       "type": "process",
-      "args": [
-        "publish",
-        "${workspaceFolder}/BackendFramework/BackendFramework.csproj"
-      ],
+      "args": ["publish", "${workspaceFolder}/Backend/BackendFramework.csproj"],
       "problemMatcher": "$tsc"
     },
     {
@@ -28,7 +22,7 @@
       "args": [
         "run",
         "--project",
-        "${workspaceFolder}/BackendFramework/BackendFramework.csproj"
+        "${workspaceFolder}/Backend/BackendFramework.csproj"
       ],
       "problemMatcher": "$tsc"
     },
