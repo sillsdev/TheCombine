@@ -21,11 +21,7 @@ namespace BackendFramework.Controllers
             _userService = userService;
         }
 
-        public async Task<string> Message()
-        {
-            return "this is the user database mainpage";
-        }
-
+        
         [EnableCors("AllowAll")]
         
         // GET: v1/Users
