@@ -1,6 +1,6 @@
 import * as React from "react";
 import { LocalizeContextProps } from "react-localize-redux";
-import { Goal, DefaultDisplay } from "../../types/goals";
+import { Goal } from "../../types/goals";
 
 //interface for component state
 interface MergeDupState {}
@@ -16,7 +16,5 @@ class MergeDupComponent extends React.Component<
 > {
   constructor(props: MergeDupProps & LocalizeContextProps) {
     super(props);
-
-    this.props.goal.display = DefaultDisplay;
   }
 }
