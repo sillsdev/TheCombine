@@ -10,11 +10,9 @@ export function mapDispatchToProps(
 ) {
   return {
     login: (user: string, password: string) => {
-      //console.log('clicked test!');
       dispatch(login(user, password));
     },
     register: (user: string, password: string) => {
-      //console.log('clicked test!');
       dispatch(register(user, password));
     }
   };
