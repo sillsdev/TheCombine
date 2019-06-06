@@ -12,14 +12,13 @@ namespace BackendFramework.Interfaces
     {
         //calls for collection
         Task<List<Word>> GetAllWords();
-        //Task<List<Word>> GetWord(string Id);
-
         //called on collection, returns a list of words
         Task<List<Word>> GetWords(List<string> Ids);
         Task<Word> Create(Word word);
         Task<bool> Update(string Id, Word word);
         Task<bool> Delete(string Id);
         Task<bool> DeleteAllWords();
+        Task<Word> Merge(MergeWords mergeWords);
 
         Task<List<Word>> GetFrontier();
         Task<Word> AddFrontier(Word word);
