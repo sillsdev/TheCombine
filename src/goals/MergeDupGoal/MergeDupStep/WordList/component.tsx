@@ -8,6 +8,8 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
 import { isTemplateElement } from "@babel/types";
 import { dragWord } from "../../../DraggableWord/actions";
+import { CardContent, Typography, Card } from "@material-ui/core";
+import classes from "*.module.css";
 
 //interface for component props
 export interface WordListProps {
@@ -38,9 +40,9 @@ class WordList extends React.Component<
     return (
       <div>
         {this.props.words.map((item, index) => (
-          <div draggable={true} onDragStart={_ => this.drag(item)}>
-            {item.vernacular}
-          </div>
+          <Card draggable={true} onDragStart={_ => this.drag(item)}>
+            <CardContent>{item.vernacular}</CardContent>
+          </Card>
         ))}
       </div>
     );

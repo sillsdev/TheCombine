@@ -7,7 +7,7 @@ import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
 import { minHeight, minWidth } from "@material-ui/system";
-import { Box } from "@material-ui/core";
+import { Box, CardContent, Card } from "@material-ui/core";
 
 //interface for component props
 export interface MergeStackProps {
@@ -48,18 +48,14 @@ class MergeStack extends React.Component<
     }
     //visual definition
     return (
-      <Box
-        minWidth={100}
-        minHeight={100}
-        bgcolor={"#555555"}
-        className="MergeStack"
+      <Card
         onDragOver={e => e.preventDefault()}
         onDrop={e => {
           this.dragDrop(e);
         }}
       >
-        {display}
-      </Box>
+        <CardContent>{display}</CardContent>
+      </Card>
     );
   }
 }
