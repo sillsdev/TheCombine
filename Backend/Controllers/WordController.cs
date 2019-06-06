@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using BackendFramework.ValueModels;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,6 @@ namespace BackendFramework.Controllers
         public WordController(IWordService wordService)
         {
             _wordService = wordService;
-        }
-
-        public async Task<string> Message()
-        {
-            return "this is the database mainpage";
         }
 
         [EnableCors("AllowAll")]
@@ -47,13 +43,17 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _wordService.GetAllWords());
         }
 
-
         // DELETE v1/Project/Words
         // Implements DeleteAllWords()
+        // DEBUG ONLY
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
+            #if DEBUG
             return new ObjectResult(await _wordService.DeleteAllWords());
+            #else
+            return new UnauthorizedResult();
+            #endif
         }
 
         // GET: v1/Project/Words/{Id}
@@ -66,7 +66,9 @@ namespace BackendFramework.Controllers
 
             var word = await _wordService.GetWords(Ids);
             if (word.Count == 0)
+            {
                 return new NotFoundResult();
+            }
             return new ObjectResult(word);
         }
 
@@ -75,39 +77,51 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Word word)
         {
-            Console.WriteLine("Post: " + word);
             await _wordService.Create(word);
             return new OkObjectResult(word.Id);
         }
 
         // PUT: v1/Project/Words/{Id}
-        //Implements Update(), Arguments: string id of target word, new word from body
+        // Implements Update(), Arguments: string id of target word, new word from body
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] Word word)
         {
-            List<string> ids = new List<string>();
-            ids.Add(Id);
-            var document = await _wordService.GetWords(ids);
-            if (document.Count == 0)
+            if (await _wordService.Update(Id, word))
             {
-                return new NotFoundResult();
+                return new OkObjectResult(word.Id);
             }
-            word.Id = (document.First()).Id;
-            await _wordService.Update(Id, word);
-            return new OkObjectResult(word.Id);
+            return new NotFoundResult();
         }
-        // DELETE: v1/ApiWithActions/{Id}
-        //Implements Delete(), Arguments: string id of target word
+        // DELETE: v1/Project/Words/{Id}
+        // Implements Delete(), Arguments: string id of target word
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
-        {
+        { 
             if (await _wordService.Delete(Id))
             {
                 return new OkResult();
             }
-
             return new NotFoundResult();
         }
-    }
 
+        // PUT: v1/Project/Words
+        // Implements Merge(), Arguments: MergeWords object
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] MergeWords mergeWords)
+        {
+            List<string> ids = new List<string>();
+            foreach (string childId in mergeWords.children)
+            {
+                ids.Add(childId);
+            }
+            ids.Add(mergeWords.parent);
+            var document = await _wordService.GetWords(ids);
+            if (document.Count != ids.Count)
+            {
+                return new NotFoundResult();
+            }
+            var mergedWord = await _wordService.Merge(mergeWords);
+            return new ObjectResult(mergedWord.Id);
+        }
+    }
 }
