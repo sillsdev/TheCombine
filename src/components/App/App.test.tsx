@@ -8,7 +8,12 @@ import { Provider } from "react-redux";
 const createMockStore = configureMockStore([]);
 
 it("renders without crashing", () => {
-  const mockStore = createMockStore(defaultState);
+  const mockStore = createMockStore({
+    // Missing localize
+    tempState: {
+      ...defaultState
+    }
+  });
   const div = document.createElement("div");
   ReactDOM.render(
     <Provider store={mockStore}>
