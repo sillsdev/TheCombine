@@ -66,8 +66,6 @@ namespace BackendFramework.Services
             return deleted.DeletedCount > 0;
         }
 
-
-
         public async Task<bool> Update(string Id, User user)
         {
             FilterDefinition<User> filter = Builders<User>.Filter.Eq(x => x.Id, Id);

@@ -18,7 +18,6 @@ using System;
 namespace BackendFramework.Services
 {
 
-
     public class WordService : IWordService
     {
 
@@ -56,7 +55,7 @@ namespace BackendFramework.Services
         public async Task<Word> Create(Word word)
         {
             await _wordDatabase.Words.InsertOneAsync(word);
-            AddFrontier(word);
+            await AddFrontier(word);
             return word;
         }
 
@@ -68,9 +67,9 @@ namespace BackendFramework.Services
                 ids.Add(Id);
                 Word wordToDelete = GetWords(ids).Result.First();
                 wordToDelete.Id = null;
-                wordToDelete.Accessability = 1; //deleted
+                wordToDelete.Accessability = (int) state.deleted;
                 wordToDelete.History = ids;
-                Create(wordToDelete);
+                await Create(wordToDelete);
             }
             return wordIsInFrontier;
         }
@@ -80,9 +79,9 @@ namespace BackendFramework.Services
             var wordIsInFrontier = DeleteFrontier(Id).Result;
             if (wordIsInFrontier) {
                 word.Id = null;
-                word.Accessability = 0; //active
+                word.Accessability = (int) state.active;
                 word.History = new List<string>{Id};
-                Create(word);
+                await Create(word);
             }
             return wordIsInFrontier;
         }
@@ -92,7 +91,7 @@ namespace BackendFramework.Services
             List<string> parentHistory = new List<string>();
             foreach(string childId in mergeWords.children)
             {
-                DeleteFrontier(childId);
+                await DeleteFrontier(childId);
                 Word childWord = GetWords(new List<string>(){childId}).Result.First();
                 childWord.History = new List<string>{childId};
                 childWord.Accessability = (int) mergeWords.mergeType; // 2: sense or 3: duplicate
@@ -101,13 +100,13 @@ namespace BackendFramework.Services
                 parentHistory.Add(childWord.Id);
             }
             string parentId = mergeWords.parent;
-            DeleteFrontier(parentId);
+            await DeleteFrontier(parentId);
             parentHistory.Add(parentId);
             Word parentWord = GetWords(new List<string>(){parentId}).Result.First();
             parentWord.History = parentHistory;
-            parentWord.Accessability = 0; //active
+            parentWord.Accessability = (int) state.active;
             parentWord.Id = null;
-            Create(parentWord);
+            await Create(parentWord);
             return parentWord;
         }
 

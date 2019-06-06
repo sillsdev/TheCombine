@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using BackendFramework.ValueModels;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,6 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _wordService.GetAllWords());
         }
 
-
         // DELETE v1/Project/Words
         // Implements DeleteAllWords()
         // DEBUG ONLY
@@ -51,6 +51,8 @@ namespace BackendFramework.Controllers
         {
             #if DEBUG
             return new ObjectResult(await _wordService.DeleteAllWords());
+            #else
+            return new UnauthorizedResult();
             #endif
         }
 
