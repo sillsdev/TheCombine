@@ -29,6 +29,10 @@ export interface GoalsState {
   suggestions: Stack<Goals>;
 }
 
+export interface GoalSelectorDropdownState {
+  possibleGoals: Goals[];
+}
+
 export interface Goals {
   id: number;
   name: string;

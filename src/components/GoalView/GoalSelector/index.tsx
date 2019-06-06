@@ -4,9 +4,14 @@ import * as actions from "../GoalViewActions";
 
 import { connect } from "react-redux";
 import { Dispatch } from "react";
+import { StoreState } from "../../../types";
 
-export function mapStateToProps(state: GoalsState) {
-  return { ...state };
+export function mapStateToProps(state: StoreState): GoalsState {
+  return {
+    history: state.goalsState.history,
+    all: state.goalsState.all,
+    suggestions: state.goalsState.suggestions
+  };
 }
 
 export function mapDispatchToProps(dispatch: Dispatch<actions.AddGoal>) {
