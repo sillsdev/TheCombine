@@ -14,7 +14,7 @@ export class Goal extends React.Component<GoalProps> {
   render() {
     return (
       <div className="Goal">
-        <h1>{this.props.goal.data.words}</h1>
+        <h1>{this.props.goal.name}</h1>
       </div>
     );
   }

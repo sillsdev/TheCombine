@@ -19,14 +19,11 @@ export const goalsReducer = (
   switch (action.type) {
     case ADD_GOAL_TO_HISTORY:
       state.history.push(action.payload);
-      state = {
+      return {
         history: state.history.makeCopy(),
         all: state.all,
         suggestions: state.suggestions
       };
-      console.log(state);
-
-      return state;
     default:
       return state;
   }

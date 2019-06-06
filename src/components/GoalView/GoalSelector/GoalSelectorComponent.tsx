@@ -25,12 +25,12 @@ let allTheGoals: Goals[] = [];
 let goal1: Goals = new TempGoal(tempUser);
 let goal1Message = "A goal";
 goal1.id = 1;
-goal1.name = "The goal";
+goal1.name = "Handle duplicates";
 goal1.data = { words: goal1Message.split(" "), step: 1 };
 let goal2: Goals = new TempGoal(tempUser);
 let goal2Message = "Another goal";
 goal1.id = 2;
-goal2.name = "The second goal";
+goal2.name = "Handle flags";
 goal2.data = { words: goal2Message.split(" "), step: 2 };
 allTheGoals.push(goal1);
 allTheGoals.push(goal2);
@@ -94,10 +94,9 @@ export class GoalSelectorDropdown extends React.Component<
       <form autoComplete="off">
         <FormControl>
           <Select value={this.state.value} onChange={this.props.handleChange}>
-            {console.log(this.props.possibleGoals)}
             {this.props.possibleGoals.map(goal => (
-              <MenuItem key={goal.id} value={goal.data.words.join(" ")}>
-                {goal.data.words}
+              <MenuItem key={goal.id} value={goal.name}>
+                {goal.name}
               </MenuItem>
             ))}
           </Select>
@@ -118,12 +117,20 @@ export class GoalSelector extends React.Component<GoalSelectorProps> {
   }
 
   handleChange(event: React.ChangeEvent<{ name?: string; value: unknown }>) {
-    let theGoal: Goals = new TempGoal(tempUser);
-    theGoal.data = {
-      words: (event.target.value as string).split(" "),
-      step: 1
-    };
-    this.props.addToHistory(theGoal);
+    // Find goal based on value of item user selected
+    let name = event.target.value as string;
+    let goal: Goals | undefined = this.findGoalByName(allTheGoals, name);
+    if (goal) {
+      this.props.addToHistory(goal);
+    }
+  }
+
+  findGoalByName(goals: Goals[], name: string): Goals | undefined {
+    for (var goal of goals) {
+      if (goal.name === name) {
+        return goal;
+      }
+    }
   }
 
   render() {
