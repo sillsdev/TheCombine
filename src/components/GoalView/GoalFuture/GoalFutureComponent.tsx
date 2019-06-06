@@ -6,6 +6,7 @@ import { Goal } from "../GoalComponent/GoalComponent";
 
 export interface GoalFutureProps {
   history: Stack<Goals>;
+  all: Goals[];
   suggestions: Stack<Goals>;
 }
 

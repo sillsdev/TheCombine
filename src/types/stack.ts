@@ -5,9 +5,12 @@ export default class Stack<T> {
     this.stack = t;
   }
 
-  push(t: T): Stack<T> {
+  makeCopy() {
+    return new Stack<T>(this.stack);
+  }
+
+  push(t: T) {
     this.stack.push(t);
-    return this; // return a new copy instead?
   }
 
   pop(): T | undefined {

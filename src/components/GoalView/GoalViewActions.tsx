@@ -24,5 +24,6 @@ export function asyncAddGoalToHistory(goal: Goals) {
 }
 
 export function addGoalToHistory(goal: Goals): AddGoalToHistory {
+  console.log(goal);
   return { type: ADD_GOAL_TO_HISTORY, payload: goal };
 }

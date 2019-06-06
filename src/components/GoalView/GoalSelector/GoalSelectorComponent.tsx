@@ -25,10 +25,12 @@ let allTheGoals: Goals[] = [];
 let goal1: Goals = new TempGoal(tempUser);
 let goal1Message = "A goal";
 goal1.id = 1;
+goal1.name = "The goal";
 goal1.data = { words: goal1Message.split(" "), step: 1 };
 let goal2: Goals = new TempGoal(tempUser);
 let goal2Message = "Another goal";
 goal1.id = 2;
+goal2.name = "The second goal";
 goal2.data = { words: goal2Message.split(" "), step: 2 };
 allTheGoals.push(goal1);
 allTheGoals.push(goal2);
@@ -92,6 +94,7 @@ export class GoalSelectorDropdown extends React.Component<
       <form autoComplete="off">
         <FormControl>
           <Select value={this.state.value} onChange={this.props.handleChange}>
+            {console.log(this.props.possibleGoals)}
             {this.props.possibleGoals.map(goal => (
               <MenuItem key={goal.id} value={goal.data.words.join(" ")}>
                 {goal.data.words}
