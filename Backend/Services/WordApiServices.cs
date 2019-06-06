@@ -79,7 +79,7 @@ namespace BackendFramework.Services
             FilterDefinition<Word> filter = Builders<Word>.Filter.Eq(m => m.Id, Id);
 
             Word deletedTag = new Word();
-            deletedTag.Accessability = 1;
+            deletedTag.Accessability = state.deleted;
 
             var updateDef = Builders<Word>.Update.Set(x => x.Accessability, deletedTag.Accessability);
 

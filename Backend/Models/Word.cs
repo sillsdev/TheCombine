@@ -48,7 +48,7 @@ namespace BackendFramework.ValueModels
         public List<string> EditedBy { get; set; }
 
         [BsonElement("Accessability")]
-        public int Accessability { get; set; }
+        public state Accessability { get; set; }
 
         [BsonElement("OtherField")]
         public string OtherField { get; set; }
