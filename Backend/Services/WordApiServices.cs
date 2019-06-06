@@ -39,13 +39,13 @@ namespace BackendFramework.Services
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.In(x => x.Id, Ids);
             var wordList = await _wordDatabase.Words.Find(filter).ToListAsync();
-
             return wordList;
         }
 
         public async Task<bool> DeleteAllWords()
         {
             var deleted = await _wordDatabase.Words.DeleteManyAsync(_ => true);
+            await _wordDatabase.Frontier.DeleteManyAsync(_ => true);
             if (deleted.DeletedCount != 0)
             {
                 return true;
@@ -53,42 +53,62 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<List<Word>> GetWord(string identificaton)
-        {
-            var cursor = await _wordDatabase.Words.FindAsync(x => x.Id == identificaton);
-            return cursor.ToList();
-        }
-
         public async Task<Word> Create(Word word)
         {
             await _wordDatabase.Words.InsertOneAsync(word);
+            AddFrontier(word);
             return word;
-
         }
 
         public async Task<bool> Delete(string Id)
         {
-            var deleted = await _wordDatabase.Words.DeleteManyAsync(x => x.Id == Id);
-            return deleted.DeletedCount > 0;
+            var wordIsInFrontier = DeleteFrontier(Id).Result;
+            if (wordIsInFrontier) {
+                List<string> ids = new List<string>();
+                ids.Add(Id);
+                Word wordToDelete = GetWords(ids).Result.First();
+                wordToDelete.Id = null;
+                wordToDelete.Accessability = 1; //deleted
+                wordToDelete.History = ids;
+                Create(wordToDelete);
+            }
+            return wordIsInFrontier;
         }
-
-
 
         public async Task<bool> Update(string Id, Word word)
         {
-            FilterDefinition<Word> filter = Builders<Word>.Filter.Eq(m => m.Id, Id);
+            var wordIsInFrontier = DeleteFrontier(Id).Result;
+            if (wordIsInFrontier) {
+                word.Id = null;
+                word.Accessability = 0; //active
+                word.History = new List<string>{Id};
+                Create(word);
+            }
+            return wordIsInFrontier;
+        }
 
-            Word deletedTag = new Word();
-            deletedTag.Accessability = 1;
-
-            var updateDef = Builders<Word>.Update.Set(x => x.Accessability, deletedTag.Accessability);
-
-            var updateResult = _wordDatabase.Words.UpdateOne(filter, updateDef);
-
-            word.Id = null;
-            await Create(word);
-
-            return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
+        public async Task<Word> Merge(MergeWords mergeWords)
+        {
+            List<string> parentHistory = new List<string>();
+            foreach(string childId in mergeWords.children)
+            {
+                DeleteFrontier(childId);
+                Word childWord = GetWords(new List<string>(){childId}).Result.First();
+                childWord.History = new List<string>{childId};
+                childWord.Accessability = (int) mergeWords.mergeType; // 2: sense or 3: duplicate
+                childWord.Id = null;
+                await _wordDatabase.Words.InsertOneAsync(childWord);
+                parentHistory.Add(childWord.Id);
+            }
+            string parentId = mergeWords.parent;
+            DeleteFrontier(parentId);
+            parentHistory.Add(parentId);
+            Word parentWord = GetWords(new List<string>(){parentId}).Result.First();
+            parentWord.History = parentHistory;
+            parentWord.Accessability = 0; //active
+            parentWord.Id = null;
+            Create(parentWord);
+            return parentWord;
         }
 
         public async Task<List<Word>> GetFrontier()
