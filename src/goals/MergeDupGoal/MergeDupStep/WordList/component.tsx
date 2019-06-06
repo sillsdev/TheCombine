@@ -1,3 +1,7 @@
+/* THIS COMPONENT IS INTENDED TO BE AN EXAMPLE ONLY. 
+  IT WILL NOT BE USED IN THE APPLICATION.
+*/
+
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
