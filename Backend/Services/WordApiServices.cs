@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using BackendFramework.ValueModels;
 using BackendFramework.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -33,9 +34,13 @@ namespace BackendFramework.Services
             return await _wordDatabase.Words.Find(_ => true).ToListAsync();
         }
 
-        public async Task<List<Word>> GetWords(System.Linq.Expressions.Expression<Func<Word, bool>> filter)
+        public async Task<List<Word>> GetWords(List<string> Ids)
         {
-            return await _wordDatabase.Words.Find(filter).ToListAsync();
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.In(x => x.Id, Ids);
+            var wordList = await _wordDatabase.Words.Find(filter).ToListAsync();
+
+            return wordList;
         }
 
         public async Task<bool> DeleteAllWords()
@@ -69,13 +74,21 @@ namespace BackendFramework.Services
 
 
 
-        public async Task<bool> Update(string Id)
+        public async Task<bool> Update(string Id, Word word)
         {
             FilterDefinition<Word> filter = Builders<Word>.Filter.Eq(m => m.Id, Id);
 
-            DeleteResult deleteResult = await _wordDatabase.Words.DeleteOneAsync(filter);
+            Word deletedTag = new Word();
+            deletedTag.Accessability = state.deleted;
 
-            return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
+            var updateDef = Builders<Word>.Update.Set(x => x.Accessability, deletedTag.Accessability);
+
+            var updateResult = _wordDatabase.Words.UpdateOne(filter, updateDef);
+
+            word.Id = null;
+            await Create(word);
+
+            return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
         }
 
         public async Task<List<Word>> GetFrontier()
