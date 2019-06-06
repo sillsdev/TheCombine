@@ -14,11 +14,7 @@ const mockAxios = axios as jest.Mocked<typeof axios>;
 
 describe("TempAction Tests", () => {
   let mockState = {
-<<<<<<< HEAD
-    // Missing localize
-=======
     // Missing localize variable, but that's fine for our test
->>>>>>> Repair front end unit tests
     tempState: {
       ...defaultState
     }
@@ -36,14 +32,6 @@ describe("TempAction Tests", () => {
   test("asyncButtonPress correctly affects state", () => {
     // Create a mock store to act on
     const mockStore = createMockStore(mockState);
-<<<<<<< HEAD
-    const mockDispatch = mockStore.dispatch<any>(action.asyncPressButton());
-
-    mockDispatch
-      .then(() => {
-        expect(mockStore.getActions()).toEqual([bP]);
-        expect(axios.post).toHaveBeenCalled();
-=======
 
     // This just simplifies syntax. dispatch asyncPressButton to mockStore
     // (<any> flag sidesteps type errors)
@@ -60,7 +48,6 @@ describe("TempAction Tests", () => {
         // call to function. For us, saying y=0 will let us check what route was called on post.
         expect(mockAxios.post).toHaveBeenCalled();
         expect(mockAxios.post.mock.calls[0][0]).toEqual("/words");
->>>>>>> Repair front end unit tests
       })
       .catch(() => {
         console.error("Error: dispatch failed");
