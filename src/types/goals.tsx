@@ -61,27 +61,3 @@ export interface Goal {
   result: GoalOption;
 }
 
-
-export const DefaultDisplay: React.FC<React.Component> = (
-  step: React.Component
-) => {
-  return (
-    <div>
-      <DefaultHeaderDisplay />
-      <DefaultProgDisplay />
-      {step.render}
-    </div>
-  );
-};
-
-const DefaultProgDisplay: React.FC = () => {
-  return (
-    <div /> //empty placeholder while defining structure.
-  );
-};
-
-const DefaultHeaderDisplay: React.FC = () => {
-  return (
-    <div /> //empty placeholder while defining structure.
-  );
-};
