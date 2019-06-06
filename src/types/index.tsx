@@ -4,6 +4,7 @@ import { TempState } from "../components/Temp/TempReducer";
 import { TempAction } from "../components/Temp/TempActions";
 import { LocalizeState } from "react-localize-redux";
 import { LoginState } from "../components/Login/LoginReducer";
+import { WordDragState } from "../goals/DraggableWord/reducer";
 import { CreateProjectState } from "../components/CreateProject/CreateProjectReducer";
 import { GoalsState } from "./goals";
 
@@ -12,6 +13,7 @@ export interface StoreState {
   localize: LocalizeState;
   tempState: TempState;
   loginState: LoginState;
+  draggedWord: WordDragState;
   createProjectState: CreateProjectState;
   goalsState: GoalsState;
 }
