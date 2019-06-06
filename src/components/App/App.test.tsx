@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../GoalView/GoalViewReducers";
+import { defaultState } from "../GoalView/TempDefaultState";
 import { Provider } from "react-redux";
 
 const createMockStore = configureMockStore([]);

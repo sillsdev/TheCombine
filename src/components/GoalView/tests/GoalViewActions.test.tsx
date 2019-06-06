@@ -3,7 +3,7 @@ import { Goals } from "../../../types/goals";
 import { TempGoal } from "../../../goals/tempGoal";
 import { User } from "../../../types/user";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../GoalView/GoalViewReducers";
+import { defaultState } from "../../GoalView/TempDefaultState";
 import thunk from "redux-thunk";
 
 it("should create an action to add a goal", () => {
