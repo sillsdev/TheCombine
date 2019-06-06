@@ -107,7 +107,7 @@ export class GoalSelectorDropdown extends React.Component<
 }
 
 export interface GoalSelectorProps {
-  addToHistory: (goal: Goals) => void;
+  addGoal: (goal: Goals) => void;
 }
 
 export class GoalSelector extends React.Component<GoalSelectorProps> {
@@ -117,11 +117,10 @@ export class GoalSelector extends React.Component<GoalSelectorProps> {
   }
 
   handleChange(event: React.ChangeEvent<{ name?: string; value: unknown }>) {
-    // Find goal based on value of item user selected
     let name = event.target.value as string;
     let goal: Goals | undefined = this.findGoalByName(allTheGoals, name);
     if (goal) {
-      this.props.addToHistory(goal);
+      this.props.addGoal(goal);
     }
   }
 

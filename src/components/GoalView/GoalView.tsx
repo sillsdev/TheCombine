@@ -22,40 +22,7 @@ export class GoalView extends React.Component<GoalViewProps, GoalViewState> {
       all: [],
       goalSuggestions: new Stack<Goals>([])
     };
-
-    // this.addGoal = this.addGoal.bind(this);
   }
-
-  // addGoal(goal: Goals) {
-  //   this.addToHistory(goal);
-  //   this.removeGoalFromFuture(goal);
-  // }
-
-  // addToHistory(goal: Goals) {
-  //   this.state.goalHistory.push(goal);
-  //   this.setState({
-  //     goalHistory: this.state.goalHistory,
-  //     goalSuggestions: this.state.goalSuggestions
-  //   });
-  // }
-
-  // removeGoalFromFuture(goal: Goals) {
-  //   let nextSuggestion = this.state.goalSuggestions.peekFirst();
-  //   if (
-  //     nextSuggestion &&
-  //     nextSuggestion.data.words.join() === goal.data.words.join()
-  //   ) {
-  //     let newSuggestions = new Stack<Goals>(
-  //       this.state.goalSuggestions.stack.filter(
-  //         goal => nextSuggestion.data.words.join() != goal.data.words.join()
-  //       )
-  //     );
-  //     this.setState({
-  //       goalHistory: this.state.goalHistory,
-  //       goalSuggestions: newSuggestions
-  //     });
-  //   }
-  // }
 
   render() {
     return (

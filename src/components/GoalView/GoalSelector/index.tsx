@@ -9,11 +9,9 @@ export function mapStateToProps(state: GoalsState) {
   return { ...state };
 }
 
-export function mapDispatchToProps(
-  dispatch: Dispatch<actions.AddGoalToHistory>
-) {
+export function mapDispatchToProps(dispatch: Dispatch<actions.AddGoal>) {
   return {
-    addToHistory: (goal: Goals) => dispatch(actions.addGoalToHistory(goal))
+    addGoal: (goal: Goals) => dispatch(actions.addGoal(goal))
   };
 }
 

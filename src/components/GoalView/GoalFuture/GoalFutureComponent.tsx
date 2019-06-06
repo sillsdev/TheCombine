@@ -14,6 +14,7 @@ export class GoalFuture extends React.Component<GoalFutureProps> {
   constructor(props: GoalFutureProps) {
     super(props);
   }
+
   render() {
     return (
       <div className="GoalPicker">
