@@ -17,7 +17,7 @@ export const createProjectReducer = (
   if (!state) return defaultState;
   switch (action.type) {
     case CREATE_PROJECT:
-      console.log("LOGIN METHOD");
+      console.log("CREATE PROJECT METHOD");
       return { name: action.payload.name, success: true };
     default:
       return state;

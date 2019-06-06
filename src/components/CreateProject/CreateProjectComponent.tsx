@@ -10,12 +10,13 @@ import TextField from "@material-ui/core/TextField";
 import { Grid } from "@material-ui/core";
 
 export interface CreateProjectProps {
-  createProject?: (name: string, languageData: string) => void;
+  createProject?: (name: string, languageData: File) => void;
 }
 
 interface CreateProjectState {
   name: string;
-  languageData: string;
+  languageData?: File;
+  fileName?: string;
 }
 
 class CreateProject extends React.Component<
@@ -24,7 +25,7 @@ class CreateProject extends React.Component<
 > {
   constructor(props: CreateProjectProps & LocalizeContextProps) {
     super(props);
-    this.state = { name: "", languageData: "" };
+    this.state = { name: "" };
   }
 
   updateName(
@@ -34,29 +35,26 @@ class CreateProject extends React.Component<
   ) {
     const name = evt.target.value;
     const languageData = this.state.languageData;
-    this.setState({ name: name, languageData: languageData });
+    this.setState({ languageData, name });
   }
 
-  updateLanguageData(
-    e: React.ChangeEvent<
-      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
-    >
-  ) {
-    const languageData = e.target.value;
+  updateLanguageData(files: FileList) {
+    const languageData = files[0];
+    const fileName = languageData.name;
     const name = this.state.name;
-    this.setState({ languageData: languageData, name: name });
+    this.setState({ languageData, name, fileName });
   }
 
   createProject(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
 
-    var name = this.state.name.trim();
-    var languageData = this.state.languageData.trim();
+    const name = this.state.name.trim();
+    const languageData = this.state.languageData;
     if (name == "") {
       // notify the user they need a project name
       alert("Username and password cannot be blank");
     } else if (this.props.createProject) {
-      this.props.createProject(name, languageData);
+      this.props.createProject(name, languageData as File);
     }
   }
 
@@ -77,7 +75,7 @@ class CreateProject extends React.Component<
             type="file"
             name="name"
             accept=".lift"
-            onChange={e => this.updateLanguageData(e)}
+            onChange={e => this.updateLanguageData(e.target.files as FileList)}
             style={{ display: "none" }}
           />
           <Button>
@@ -85,6 +83,7 @@ class CreateProject extends React.Component<
               <Translate id="createProject.browse" />
             </label>
           </Button>
+          <label>{this.state.fileName}</label>
           <br />
 
           <Button type="submit">

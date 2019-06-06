@@ -9,7 +9,7 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CreateProjectAction>
 ) {
   return {
-    createProject: (name: string, languageData: string) => {
+    createProject: (name: string, languageData: File) => {
       dispatch(createProject(name, languageData));
     }
   };
