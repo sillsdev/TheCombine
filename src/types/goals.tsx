@@ -48,10 +48,34 @@ export interface Goal {
 
   steps: React.Component[];
   data: GoalData; // The data required to load/reload this exact goal
-  display: React.FC;
+  display: React.FC<React.Component>; //takes in a step
   displaySelectorItem: React.FC;
 
   tool: Tools;
   completed: boolean;
   result: GoalOption;
 }
+
+export const DefaultDisplay: React.FC<React.Component> = (
+  step: React.Component
+) => {
+  return (
+    <div>
+      <DefaultHeaderDisplay />
+      <DefaultProgDisplay />
+      {step.render}
+    </div>
+  );
+};
+
+const DefaultProgDisplay: React.FC = () => {
+  return (
+    <div /> //empty placeholder while defining structure.
+  );
+};
+
+const DefaultHeaderDisplay: React.FC = () => {
+  return (
+    <div /> //empty placeholder while defining structure.
+  );
+};
