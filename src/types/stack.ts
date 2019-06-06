@@ -6,7 +6,8 @@ export default class Stack<T> {
   }
 
   makeCopy() {
-    return new Stack<T>(this.stack);
+    let newStack = Object.assign([], this.stack);
+    return new Stack<T>(newStack);
   }
 
   push(t: T) {

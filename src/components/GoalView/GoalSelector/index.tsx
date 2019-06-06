@@ -5,6 +5,7 @@ import * as actions from "../GoalViewActions";
 import { connect } from "react-redux";
 import { Dispatch } from "react";
 import { StoreState } from "../../../types";
+import { ThunkDispatch } from "redux-thunk";
 
 export function mapStateToProps(state: StoreState): GoalsState {
   return {
@@ -14,9 +15,11 @@ export function mapStateToProps(state: StoreState): GoalsState {
   };
 }
 
-export function mapDispatchToProps(dispatch: Dispatch<actions.AddGoal>) {
+export function mapDispatchToProps(
+  dispatch: ThunkDispatch<StoreState, any, actions.AddGoal>
+) {
   return {
-    addGoal: (goal: Goals) => dispatch(actions.addGoal(goal))
+    addGoal: (goal: Goals) => dispatch(actions.asyncAddGoal(goal))
   };
 }
 

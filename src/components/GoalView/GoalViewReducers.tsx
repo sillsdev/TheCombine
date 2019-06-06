@@ -1,7 +1,7 @@
 import { GoalsState } from "../../types/goals";
 import Stack from "../../types/stack";
 import { Goals } from "../../types/goals";
-import { ADD_GOAL, AddGoalAction } from "./GoalViewActions";
+import { ADD_GOAL, AddGoalAction, ActionWithPayload } from "./GoalViewActions";
 import { User } from "../../types/user";
 import { TempGoal } from "../../goals/tempGoal";
 
@@ -47,7 +47,7 @@ export const defaultState: GoalsState = {
 
 export const goalsReducer = (
   state: GoalsState | undefined,
-  action: AddGoalAction
+  action: ActionWithPayload<Goals>
 ): GoalsState => {
   if (!state) {
     return defaultState;
@@ -66,12 +66,12 @@ export const goalsReducer = (
   }
 };
 
-function addGoalToHistory(state: GoalsState, goal: Goals): Stack<Goals> {
+export function addGoalToHistory(state: GoalsState, goal: Goals): Stack<Goals> {
   state.history.push(goal);
   return state.history;
 }
 
-function removeGoalFromSuggestions(
+export function removeGoalFromSuggestions(
   state: GoalsState,
   goal: Goals
 ): Stack<Goals> {
