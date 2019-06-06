@@ -38,6 +38,7 @@ namespace BackendFramework.Services
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.In(x => x.Id, Ids);
             var wordList = await _wordDatabase.Words.Find(filter).ToListAsync();
+
             return wordList;
         }
 
