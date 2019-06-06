@@ -19,10 +19,8 @@ export const dragWordReducer = (
   if (!state) return defaultState;
   switch (action.type) {
     case DRAG_WORD:
-      console.log(action.payload + " has been dragged");
       return { ...state, draggedWord: action.payload };
     case DROP_WORD:
-      console.log("dropping dragged word");
       return { ...state, draggedWord: undefined };
     default:
       return state;

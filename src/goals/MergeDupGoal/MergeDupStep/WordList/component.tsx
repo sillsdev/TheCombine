@@ -8,7 +8,14 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
 import { isTemplateElement } from "@babel/types";
 import { dragWord } from "../../../DraggableWord/actions";
-import { CardContent, Typography, Card } from "@material-ui/core";
+import {
+  CardContent,
+  Typography,
+  Card,
+  List,
+  ListItem,
+  ListSubheader
+} from "@material-ui/core";
 import classes from "*.module.css";
 
 //interface for component props
@@ -29,7 +36,6 @@ class WordList extends React.Component<
   }
 
   drag(word: Word) {
-    console.log("Starting drag of: " + word.vernacular);
     if (this.props.dragWord) {
       this.props.dragWord(word);
     }
@@ -38,13 +44,20 @@ class WordList extends React.Component<
   render() {
     //visual definition
     return (
-      <div>
+      <List subheader={<ListSubheader> Duplicates</ListSubheader>}>
         {this.props.words.map((item, index) => (
-          <Card draggable={true} onDragStart={_ => this.drag(item)}>
-            <CardContent>{item.vernacular}</CardContent>
-          </Card>
+          <ListItem>
+            <Card
+              style={{ flex: 1 }}
+              draggable={true}
+              onDragStart={_ => this.drag(item)}
+            >
+              <CardContent>{item.vernacular}</CardContent>
+              <CardContent>{item.gloss}</CardContent>
+            </Card>
+          </ListItem>
         ))}
-      </div>
+      </List>
     );
   }
 }

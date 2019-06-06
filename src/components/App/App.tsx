@@ -18,12 +18,11 @@ const App: React.FC = () => {
     <div className="App">
       <Temp />
       <LogoutButton />
-      {/* <Router history={history}>
+      <Router history={history}>
         <PrivateRoute exact path="/" component={CreateProject} />
         <PrivateRoute exact path="/" component={GoalView} />
         <Route path="/login" component={Login} />
-      </Router> */}
-      <CreateProject/>
+      </Router>
     </div>
   );
 };

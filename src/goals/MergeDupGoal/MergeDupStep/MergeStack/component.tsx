@@ -13,11 +13,12 @@ import { Box, CardContent, Card } from "@material-ui/core";
 export interface MergeStackProps {
   draggedWord?: Word;
   dropWord?: () => void;
+  startingWords?: Word[];
 }
 
 //interface for component state
 interface MergeStackState {
-  cards: Word[];
+  words: Word[];
 }
 
 class MergeStack extends React.Component<
@@ -26,22 +27,30 @@ class MergeStack extends React.Component<
 > {
   constructor(props: MergeStackProps & LocalizeContextProps) {
     super(props);
+    this.state = { words: [] };
+    if (props.startingWords) {
+      this.state = { words: props.startingWords };
+    }
+  }
 
-    this.state = { cards: [] };
+  addWord(word: Word) {
+    var stack = this.state.words;
+    stack.push(word);
+    this.setState({ words: stack });
   }
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
-    if (this.props.draggedWord) {
-      var stack = this.state.cards;
-      stack.push(this.props.draggedWord);
-      this.setState({ cards: stack });
+
+    if (this.props.draggedWord && this.props.dropWord) {
+      this.addWord(this.props.draggedWord);
+      this.props.dropWord();
     }
   }
 
   render() {
     // get last card
-    var card = this.state.cards[this.state.cards.length - 1];
+    var card = this.state.words[this.state.words.length - 1];
     var display = "";
     if (card) {
       display = card.gloss;
