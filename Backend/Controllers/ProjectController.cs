@@ -102,13 +102,23 @@ namespace BackendFramework.Controllers
         // POST: v1/Project/
         // Implements Create(), Arguments: new project from body
         [HttpPost("{Id}/Upload")]
-        public async Task<HttpResponseMessage> PostFormData(string Id)
+        public async Task<IActionResult> Post()
         {
-            // Check if the request contains multipart/form-data.
-            if (!Request.Content.IsMimeMultipartContent())
-                var stream = await Request.Content.ReadAsStreamAsync();
+            try
             {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                var stream = await Request.Content.ReadAsStreamAsync();
+
+                var xmlDocument = new XmlDocument();
+                xmlDocument.Load(stream);
+
+                //call lift parsing funcitons
+
+            }
+            catch (exception e)
+            {
+                return view("Error");
+            }
+            return new OkObjectResult();
             }
 
             string root = HttpContext.Current.Server.MapPath("~/App_Data");
