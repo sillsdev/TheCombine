@@ -9,9 +9,14 @@ const createMockStore = configureMockStore([]);
 
 it("renders without crashing", () => {
   const mockStore = createMockStore({
-    // Missing localize
     goalsState: {
-      ...defaultState
+      historyState: {
+        history: defaultState.historyState.history
+      },
+      goalOptions: defaultState.goalOptions,
+      suggestionsState: {
+        suggestions: defaultState.suggestionsState.suggestions
+      }
     }
   });
   const div = document.createElement("div");

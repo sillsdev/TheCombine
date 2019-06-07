@@ -13,33 +13,45 @@ export const goalsReducer = (
   }
   switch (action.type) {
     case ADD_GOAL:
-      let newHistory = addGoalToHistory(state, action.payload);
-      let newSuggestions = removeGoalFromSuggestions(state, action.payload);
+      let newHistory = state.historyState.history.makeCopy();
+      newHistory = addGoalToHistory(newHistory, action.payload);
+      let newSuggestions = state.suggestionsState.suggestions.makeCopy();
+      newSuggestions = removeGoalFromSuggestions(
+        newSuggestions,
+        action.payload
+      );
       return {
-        history: newHistory.makeCopy(),
+        historyState: {
+          history: newHistory
+        },
         goalOptions: state.goalOptions,
-        suggestions: newSuggestions.makeCopy()
+        suggestionsState: {
+          suggestions: newSuggestions
+        }
       };
     default:
       return state;
   }
 };
 
-export function addGoalToHistory(state: GoalsState, goal: Goal): Stack<Goal> {
-  state.history.push(goal);
-  return state.history;
+export function addGoalToHistory(
+  history: Stack<Goal>,
+  goal: Goal
+): Stack<Goal> {
+  history.push(goal);
+  return history;
 }
 
 export function removeGoalFromSuggestions(
-  state: GoalsState,
+  suggestions: Stack<Goal>,
   goal: Goal
 ): Stack<Goal> {
-  let nextSuggestion = state.suggestions.peekFirst();
+  let nextSuggestion = suggestions.peekFirst();
   if (nextSuggestion && nextSuggestion.name === goal.name) {
     let newSuggestions = new Stack<Goal>(
-      state.suggestions.stack.filter(goal => nextSuggestion.name != goal.name)
+      suggestions.stack.filter(goal => nextSuggestion.name != goal.name)
     );
     return newSuggestions;
   }
-  return state.suggestions;
+  return suggestions;
 }

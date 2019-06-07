@@ -24,12 +24,20 @@ export interface GoalViewState {
 }
 
 export interface GoalsState {
-  history: Stack<Goal>;
+  historyState: GoalHistoryState;
   goalOptions: Goal[];
+  suggestionsState: GoalSuggestionsState;
+}
+
+export interface GoalHistoryState {
+  history: Stack<Goal>;
+}
+
+export interface GoalSuggestionsState {
   suggestions: Stack<Goal>;
 }
 
-export interface GoalSelectorDropdownState {
+export interface GoalSelectorState {
   goalOptions: Goal[];
 }
 

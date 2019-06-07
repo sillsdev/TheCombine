@@ -1,14 +1,12 @@
-import { GoalsState } from "../../../types/goals";
-import { GoalHistory } from "./GoalHistoryComponent";
+import { GoalHistoryState } from "../../../types/goals";
+import GoalHistory from "./GoalHistoryComponent";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../../types";
 
-export function mapStateToProps(state: StoreState): GoalsState {
+export function mapStateToProps(state: StoreState): GoalHistoryState {
   return {
-    history: state.goalsState.history,
-    goalOptions: state.goalsState.goalOptions,
-    suggestions: state.goalsState.suggestions
+    history: state.goalsState.historyState.history
   };
 }
 

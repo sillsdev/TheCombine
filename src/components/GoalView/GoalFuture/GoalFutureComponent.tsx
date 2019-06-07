@@ -2,16 +2,17 @@ import React from "react";
 
 import { Goal } from "../../../types/goals";
 import Stack from "../../../types/stack";
-import { GoalComponent } from "../GoalComponent/GoalComponent";
+import GoalComponent from "../GoalComponent/GoalComponent";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 export interface GoalFutureProps {
-  history: Stack<Goal>;
-  goalOptions: Goal[];
   suggestions: Stack<Goal>;
 }
 
-export class GoalFuture extends React.Component<GoalFutureProps> {
-  constructor(props: GoalFutureProps) {
+export class GoalFuture extends React.Component<
+  GoalFutureProps & LocalizeContextProps
+> {
+  constructor(props: GoalFutureProps & LocalizeContextProps) {
     super(props);
   }
 
@@ -25,3 +26,5 @@ export class GoalFuture extends React.Component<GoalFutureProps> {
     );
   }
 }
+
+export default withLocalize(GoalFuture);

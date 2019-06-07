@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { GoalComponent } from "../GoalComponent";
+import GoalComponent from "../GoalComponent";
 import { TempGoal } from "../../../../goals/tempGoal";
 import { User } from "../../../../types/user";
 import { Goal } from "../../../../types/goals";

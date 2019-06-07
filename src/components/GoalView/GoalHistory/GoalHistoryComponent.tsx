@@ -1,17 +1,18 @@
 import React from "react";
 
-import { Goal, GoalsState } from "../../../types/goals";
+import { Goal } from "../../../types/goals";
 import Stack from "../../../types/stack";
-import { GoalComponent } from "../GoalComponent/GoalComponent";
+import GoalComponent from "../GoalComponent/GoalComponent";
+import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 export interface GoalsStateProps {
   history: Stack<Goal>;
-  goalOptions: Goal[];
-  suggestions: Stack<Goal>;
 }
 
-export class GoalHistory extends React.Component<GoalsState> {
-  constructor(props: GoalsState) {
+export class GoalHistory extends React.Component<
+  GoalsStateProps & LocalizeContextProps
+> {
+  constructor(props: GoalsStateProps & LocalizeContextProps) {
     super(props);
   }
 
@@ -25,3 +26,5 @@ export class GoalHistory extends React.Component<GoalsState> {
     );
   }
 }
+
+export default withLocalize(GoalHistory);

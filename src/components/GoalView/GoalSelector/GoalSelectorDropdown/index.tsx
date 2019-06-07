@@ -1,10 +1,10 @@
-import { GoalSelectorDropdownState } from "../../../../types/goals";
-import { GoalSelectorDropdown } from "./GoalSelectorDropdown";
+import { GoalSelectorState } from "../../../../types/goals";
+import GoalSelectorDropdown from "./GoalSelectorDropdown";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../../../types";
 
-export function mapStateToProps(state: StoreState): GoalSelectorDropdownState {
+export function mapStateToProps(state: StoreState): GoalSelectorState {
   return {
     goalOptions: state.goalsState.goalOptions
   };

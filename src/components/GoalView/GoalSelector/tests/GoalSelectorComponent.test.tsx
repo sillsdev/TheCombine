@@ -11,7 +11,13 @@ const createMockStore = configureMockStore([]);
 it("renders without crashing", () => {
   const mockStore = createMockStore({
     goalsState: {
-      ...defaultState
+      historyState: {
+        history: defaultState.historyState.history
+      },
+      goalOptions: defaultState.goalOptions,
+      suggestionsState: {
+        suggestions: defaultState.suggestionsState.suggestions
+      }
     }
   });
   const container = document.createElement("div");
