@@ -11,22 +11,6 @@ using BackendFramework.Interfaces;
 
 namespace BackendFramework.Controllers
 {
-    public class ProjectController : Controller
-    {
-        [EnableCors("AllowAll")]
-        [Produces("application/json")]
-        [Route("v1/projects")]
-
-        [HttpPost]
-        public async Task<string> Post()
-        {
-            return "HELLO:)";
-        }
-    }
-}
-
-namespace BackendFramework.Controllers
-{
     [Produces("application/json")]
     [Route("v1/Users")]
     public class UserController : Controller
