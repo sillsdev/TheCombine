@@ -21,6 +21,7 @@
       "archivo de datos de idioma .lift"
     ],
     "browse": ["Browse Computer", "Navegar por la Computadora"],
-    "create": ["Create Project", "Crear Proyecto"]
+    "create": ["Create Project", "Crear Proyecto"],
+    "fileSelected": ["File selected", "Archivo seleccionado"]
   }
 }

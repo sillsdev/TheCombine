@@ -85,7 +85,9 @@ class CreateProject extends React.Component<
             </label>
           </Button>
           <br />
-          <p>File selected: {this.state.fileName}</p>
+          <p>
+            <Translate id="createProject.fileSelected" />: {this.state.fileName}
+          </p>
           <br />
 
           <Button type="submit">
