@@ -15,7 +15,8 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   tempState: tempReducer,
   mergeDupStepProps: mergeDupStepReducer,
   loginState: loginReducer,
-  draggedWord: dragWordReducer
+  draggedWord: dragWordReducer,
+  mergeDupStepProps: mergeDupStepReducer
   createProjectState: createProjectReducer,
   goalsState: goalsReducer,
   navState: navReducer
