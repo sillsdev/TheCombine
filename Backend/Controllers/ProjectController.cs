@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
+using System.Xml;
+using System.Net.Http;
 
 namespace BackendFramework.Controllers
 {
@@ -19,7 +21,7 @@ namespace BackendFramework.Controllers
         private readonly IProjectService _projectService;
         public ProjectController(IProjectService projectService)
         {
-            _projService = projectService;
+            _projectService = projectService;
         }
 
         [EnableCors("AllowAll")]
@@ -29,11 +31,11 @@ namespace BackendFramework.Controllers
         // Arguments: 
         // Default: null
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
             if (Ids != null)
             {
-                var projectList = await _projectService.GetWords(Ids);
+                var projectList = await _projectService.GetProjects(Ids);
                 if (projectList.Count != Ids.Count)
                 {
                     return new NotFoundResult();
@@ -50,7 +52,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-                return new ObjectResult(await _projectService.DeleteAllWords());
+                return new ObjectResult(await _projectService.DeleteAllProjects());
 #else
             return new UnauthorizedResult();
 #endif
@@ -75,40 +77,31 @@ namespace BackendFramework.Controllers
 
         // POST: v1/Project/
         // Implements Create(), Arguments: new project from body
-        [HttpPost("{Id}")]
-        public async Task<IActionResult> Post()
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody]Project project)
         {
-            if (await _wordService.Update(Id, word))
-            {
-                return new OkObjectResult(word.Id);
-            }
-            return new NotFoundResult();
+            await _projectService.Create(project);
+            return new OkObjectResult(project.Id);
         }
 
         // POST: v1/Project/
         // Implements Create(), Arguments: new project from body
         [HttpPost("{Id}/Upload")]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(string Id, [FromBody] HttpRequestMessage request)
         {
-            try
-            {
-                var stream = await Request.Content.ReadAsStreamAsync();
 
-                var xmlDocument = new XmlDocument();
-                xmlDocument.Load(stream);
+                var doc = new XmlDocument();
+                doc.Load(request.Content.ReadAsStreamAsync().Result);
+                string dave = doc.DocumentElement.OuterXml;
 
                 //call lift parsing funcitons
 
-            }
-            catch (exception e)
-            {
-                return view("Error");
-            }
-            return new OkObjectResult();
+
+            return new OkObjectResult(dave);
         }
 
         // PUT: v1/Project/{Id}
-        // Implements Update(), Arguments: string id of target word, new word from body
+        // Implements Update(), Arguments: string id of target project, new project from body
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] Project project)
         {
@@ -119,7 +112,7 @@ namespace BackendFramework.Controllers
             return new NotFoundResult();
         }
         // DELETE: v1/Project/Words/{Id}
-        // Implements Delete(), Arguments: string id of target word
+        // Implements Delete(), Arguments: string id of target project
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
@@ -131,9 +124,9 @@ namespace BackendFramework.Controllers
         }
 
         // PUT: v1/Project/
-        [HttpPut]
-        public async Task<IActionResult> Put([FromBody] MergeWords mergeWords)
-        {
-        }
+        // [HttpPut]
+        // public async Task<IActionResult> Put([FromBody] MergeWords mergeWords)
+        // {
+        // }
     }
 }

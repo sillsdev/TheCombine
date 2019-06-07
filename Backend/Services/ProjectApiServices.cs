@@ -86,7 +86,7 @@ namespace BackendFramework.Services
 
         public async Task<bool> Upload()
         {
-            return new NotImplementedException();
+            return false;
         }
     }
 }
