@@ -63,11 +63,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-#if DEBUG
+            #if DEBUG
             return new ObjectResult(await _projectService.DeleteAllProjects());
-#else
-            return new UnauthorizedResult();
-#endif
+            #else
+                return new UnauthorizedResult();
+            #endif
         }
 
         // GET: v1/Project/{id}

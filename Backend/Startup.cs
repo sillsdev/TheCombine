@@ -33,6 +33,7 @@ namespace BackendFramework
             public string UserRolesDatabase { get; set; }
             public string ProjectsDatabase { get; set; }
             public string UserRolesDatabase { get; set; }
+            public string ProjectsDatabase { get; set; }
             public string NamesCollectionLanguage { get; set; }
         }
 
@@ -70,6 +71,8 @@ namespace BackendFramework
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IUserRoleContext, UserRoleContext>();
             services.AddTransient<IUserRoleService, UserRoleService>();
+            services.AddTransient<IProjectContext, ProjectContext>();
+            services.AddTransient<IProjectService, ProjectService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
