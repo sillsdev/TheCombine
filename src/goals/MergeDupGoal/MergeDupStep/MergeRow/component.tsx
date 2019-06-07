@@ -6,7 +6,7 @@
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
-import { ListSubheader, Box, Grid } from "@material-ui/core";
+import { ListSubheader, Box, Grid, Container } from "@material-ui/core";
 import MergeStack from "../MergeStack";
 
 //interface for component props
@@ -45,8 +45,13 @@ export class MergeRow extends React.Component<
     //visual definition
     return (
       <Box style={{ flex: 1 }}>
-        <ListSubheader>{this.props.merges[0].vernacular}</ListSubheader>
-        <Grid container>
+        <ListSubheader>
+          <div style={{ textAlign: "center" }}>
+            {this.props.merges[0].vernacular}
+          </div>
+          <hr />
+        </ListSubheader>
+        <Grid container direction="row-reverse">
           {this.props.merges.map(item => (
             <Grid item>
               <MergeStack parent={item} />
