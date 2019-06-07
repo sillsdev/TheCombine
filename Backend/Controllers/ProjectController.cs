@@ -63,11 +63,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            #if DEBUG
+#if DEBUG
             return new ObjectResult(await _projectService.DeleteAllProjects());
-            #else
-                return new UnauthorizedResult();
-            #endif
+#else
+            return new UnauthorizedResult();
+#endif
         }
 
         // GET: v1/Project/{id}
@@ -92,8 +92,33 @@ namespace BackendFramework.Controllers
         [HttpPost()]
         public async Task<IActionResult> Post([FromBody] Project project)
         {
-            await _projectService.Create(project);
-            return new OkObjectResult(project.Id);
+            if (await _wordService.Update(Id, word))
+            {
+                return new OkObjectResult(word.Id);
+            }
+            return new NotFoundResult();
+        }
+
+        // POST: v1/Project/
+        // Implements Create(), Arguments: new project from body
+        [HttpPost("{Id}/Upload")]
+        public async Task<IActionResult> Post()
+        {
+            try
+            {
+                var stream = await Request.Content.ReadAsStreamAsync();
+
+                var xmlDocument = new XmlDocument();
+                xmlDocument.Load(stream);
+
+                //call lift parsing funcitons
+
+            }
+            catch (exception e)
+            {
+                return view("Error");
+            }
+            return new OkObjectResult();
         }
 
         // POST: v1/Project/
