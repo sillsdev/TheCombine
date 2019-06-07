@@ -50,9 +50,9 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
             #if DEBUG
-            return new ObjectResult(await _wordService.DeleteAllWords());
+                return new ObjectResult(await _wordService.DeleteAllWords());
             #else
-            return new UnauthorizedResult();
+                return new UnauthorizedResult();
             #endif
         }
 
