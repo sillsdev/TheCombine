@@ -7,7 +7,11 @@ import { StoreState } from "../../../../types";
 import { WordDrag, dropWord, dragWord } from "../../../DraggableWord/actions";
 import { Word } from "../../../../types/word";
 
-//Temp Container Component
+export function mapStateToProps(state: StoreState) {
+  return {
+    draggedWord: state.draggedWord.draggedWord
+  };
+}
 
 export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, WordDrag>
@@ -15,11 +19,14 @@ export function mapDispatchToProps(
   return {
     dragWord: (word: Word) => {
       dispatch(dragWord(word));
+    },
+    dropWord: () => {
+      dispatch(dropWord());
     }
   };
 }
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(WordListComponent);

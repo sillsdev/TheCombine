@@ -2,26 +2,26 @@
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
-import { isTemplateElement } from "@babel/types";
-import { dragWord } from "../../../DraggableWord/actions";
 import {
   CardContent,
-  Typography,
   Card,
   List,
   ListItem,
   ListSubheader
 } from "@material-ui/core";
-import classes from "*.module.css";
 
 //interface for component props
 export interface WordListProps {
   words: Word[];
   dragWord?: (word: Word) => void;
+  dropWord?: () => void;
+  draggedWord?: Word;
 }
 
 //interface for component state
-interface WordListState {}
+interface WordListState {
+  words: Word[];
+}
 
 class WordList extends React.Component<
   WordListProps & LocalizeContextProps,
@@ -29,6 +29,7 @@ class WordList extends React.Component<
 > {
   constructor(props: WordListProps & LocalizeContextProps) {
     super(props);
+    this.state = { words: props.words };
   }
 
   drag(word: Word) {
@@ -37,16 +38,37 @@ class WordList extends React.Component<
     }
   }
 
+  dragEnd(word: Word) {
+    var index = this.state.words.indexOf(word);
+    this.setState({
+      words: this.state.words.filter((_, i) => i != index)
+    });
+  }
+
+  drop() {
+    if (this.props.draggedWord && this.props.dropWord) {
+      var words = this.state.words;
+      words.push(this.props.draggedWord);
+      this.setState({ words });
+      this.props.dropWord();
+    }
+  }
+
   render() {
     //visual definition
     return (
-      <List subheader={<ListSubheader> Duplicates</ListSubheader>}>
-        {this.props.words.map((item, index) => (
+      <List
+        onDragOver={e => e.preventDefault()}
+        onDrop={_ => this.drop()}
+        subheader={<ListSubheader> Duplicates</ListSubheader>}
+      >
+        {this.state.words.map(item => (
           <ListItem>
             <Card
               style={{ flex: 1 }}
               draggable={true}
               onDragStart={_ => this.drag(item)}
+              onDragEnd={_ => this.dragEnd(item)}
             >
               <CardContent>{item.vernacular}</CardContent>
               <CardContent>{item.gloss}</CardContent>
