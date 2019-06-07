@@ -21,9 +21,9 @@ namespace BackendFramework.Controllers
             _userService = userService;
         }
 
-        
+
         [EnableCors("AllowAll")]
-        
+
         // GET: v1/Users
         // Implements GetAllUsers(), 
         // Arguments: list of string ids of target users (if given, else returns all users),
@@ -31,14 +31,16 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
         {
-            if(Ids != null){
+            if (Ids != null)
+            {
                 var userList = await _userService.GetUsers(Ids);
-                if (userList.Count != Ids.Count){
+                if (userList.Count != Ids.Count)
+                {
                     return new NotFoundResult();
                 }
                 return new ObjectResult(userList);
             }
-            return new ObjectResult(await _userService.GetAllUsers());       
+            return new ObjectResult(await _userService.GetAllUsers());
         }
 
         // DELETE: v1/users
@@ -61,7 +63,8 @@ namespace BackendFramework.Controllers
             List<string> ids = new List<string>();
             ids.Add(Id);
             var user = await _userService.GetUsers(ids);
-            if (user.Count == 0){
+            if (user.Count == 0)
+            {
                 return new NotFoundResult();
             }
             return new ObjectResult(user);
@@ -70,7 +73,7 @@ namespace BackendFramework.Controllers
         // POST: v1/Users
         // Implements Create(), Arguments: new user object from body
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]User user) 
+        public async Task<IActionResult> Post([FromBody]User user)
         {
             Console.WriteLine("Post: " + user);
             await _userService.Create(user);
@@ -86,11 +89,12 @@ namespace BackendFramework.Controllers
             List<string> ids = new List<string>();
             ids.Add(Id);
             var document = await _userService.GetUsers(ids);
-            if (document.Count == 0){
+            if (document.Count == 0)
+            {
                 return new NotFoundResult();
             }
-            user.Id = (document.First()).Id;              
-            await _userService.Update(Id,user);
+            user.Id = (document.First()).Id;
+            await _userService.Update(Id, user);
             return new OkObjectResult(user.Id);
         }
         // DELETE: v1/ApiWithActions/{Id}

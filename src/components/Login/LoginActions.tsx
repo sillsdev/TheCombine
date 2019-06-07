@@ -36,7 +36,7 @@ export function login(user: string, password: string): UserAction {
 
 export function asyncRegister(user: string, password: string) {
   return async (dispatch: Dispatch<UserAction>) => {
-    dispatch(login(user, password));
+    dispatch(register(user, password));
   };
 }
 

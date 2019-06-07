@@ -19,9 +19,6 @@ export const tempReducer = (
     case PRESS_BUTTON:
       return { ...state, tempText: "BUTTON PRESSED! REDUX WORKING!" };
     default:
-      console.log(
-        "Unexpected action of type " + action.type + " passed into tempReducer."
-      );
       return state;
   }
 };
