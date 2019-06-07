@@ -1,36 +1,49 @@
 import { Word, Merge, simpleWord } from "../../../types/word";
 
-export const ADD_MERGE = "ADD_MERGE";
-export type ADD_MERGE = typeof ADD_MERGE;
+// Args: (word: Word)
+export const ADD_PARENT = "ADD_PARENT";
+export type ADD_PARENT = typeof ADD_PARENT;
 
-export const UPDATE_MERGE = "UPDATE_MERGE";
-export type UPDATE_MERGE = typeof UPDATE_MERGE;
+// Args: (word: Word, parent: Word)
+export const ADD_SENSE = "ADD_SENSE";
+export type ADD_SENSE = typeof ADD_SENSE;
 
-export const CLEAR_MERGES = "CLEAR_MERGES";
-export type CLEAR_MERGES = typeof CLEAR_MERGES;
+// Args: (word: Word, parent: Word)
+export const ADD_DUPLICATE = "ADD_DUPLICATE";
+export type ADD_DUPLICATE = typeof ADD_DUPLICATE;
+
+export const APPLY_MERGES = "APPLY_MERGES";
+export type APPLY_MERGES = typeof APPLY_MERGES;
 
 export interface MergeAction {
-  type: ADD_MERGE | UPDATE_MERGE | CLEAR_MERGES;
-  payload: { merge: Word; parent?: Word[] };
+  type: ADD_PARENT | ADD_SENSE | ADD_DUPLICATE | APPLY_MERGES;
+  payload: { merge: Word; parent?: Word };
 }
 
-export function addMerge(merge: Word): MergeAction {
+export function addParent(merge: Word): MergeAction {
   return {
-    type: ADD_MERGE,
+    type: ADD_PARENT,
     payload: { merge }
   };
 }
 
-export function addWordToMerge(word: Word, parent: Word[]): MergeAction {
+export function addSense(word: Word, parent: Word): MergeAction {
   return {
-    type: UPDATE_MERGE,
+    type: ADD_SENSE,
     payload: { merge: word, parent }
   };
 }
 
-export function clearMerges(): MergeAction {
+export function addDuplicate(word: Word, parent: Word): MergeAction {
   return {
-    type: CLEAR_MERGES,
+    type: ADD_DUPLICATE,
+    payload: { merge: word, parent }
+  };
+}
+
+export function applyMerges(): MergeAction {
+  return {
+    type: APPLY_MERGES,
     payload: { merge: simpleWord("", "") }
   };
 }

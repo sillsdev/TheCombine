@@ -1,11 +1,16 @@
-import { MergeAction, CLEAR_MERGES } from "./actions";
-import { ADD_MERGE, UPDATE_MERGE } from "./actions";
+import {
+  MergeAction,
+  APPLY_MERGES,
+  ADD_PARENT,
+  ADD_SENSE,
+  ADD_DUPLICATE
+} from "./actions";
 import { WebkitBorderBeforeWidthProperty } from "csstype";
 import { MergeDupStepState, MergeDupStepProps } from "./component";
 import { arrowFunctionExpression } from "@babel/types";
 
 export const defaultState: MergeDupStepProps = {
-  merges: []
+  parentWords: []
 };
 
 export const mergeDupStepReducer = (
@@ -15,24 +20,54 @@ export const mergeDupStepReducer = (
   //console.log('reducer reached');
   if (!state) return defaultState;
   switch (action.type) {
-    case ADD_MERGE:
-      var merges = state.merges;
-      merges.push([action.payload.merge]);
-      return { ...state, merges };
-    case UPDATE_MERGE:
+    case ADD_PARENT:
+      var parentWords = state.parentWords;
+      var word = action.payload.merge;
+      parentWords.push({ word, senses: [{ parent: word, dups: [word] }] });
       return {
         ...state,
-        merges: state.merges.map(item => {
-          if (item == action.payload.parent) {
-            item.push(action.payload.merge);
+        parentWords
+      };
+    case ADD_SENSE:
+      var parentWords = state.parentWords;
+      var { merge, parent } = action.payload;
+      if (parent) {
+        console.log(
+          "Trying to add sense {" + merge.gloss + "} to " + parent.vernacular
+        );
+      }
+      parentWords = parentWords.map(item => {
+        if (item.word == parent) {
+          console.log("Found : " + item.word.vernacular);
+          item.senses.push({
+            parent: merge,
+            dups: [merge]
+          });
+        }
+        return item;
+      });
+      return {
+        ...state,
+        parentWords
+      };
+    case ADD_DUPLICATE:
+      var { merge, parent } = action.payload;
+      var parentWords = state.parentWords;
+      parentWords = parentWords.map(item => {
+        item.senses = item.senses.map(item => {
+          if (item.parent == parent) {
+            item.dups.push(merge);
           }
           return item;
-        })
-      };
-    case CLEAR_MERGES:
+        });
+        return item;
+      });
+      console.log(parentWords);
+      return { ...state, parentWords };
+    case APPLY_MERGES:
       return {
         ...state,
-        merges: []
+        parentWords: []
       };
     default:
       return state;

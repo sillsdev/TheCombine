@@ -4,12 +4,13 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
 import { ListSubheader, Box, Grid, Container } from "@material-ui/core";
 import MergeStack from "../MergeStack";
+import { Sense, ParentWord } from "../component";
 
 //interface for component props
 export interface MergeRowProps {
   draggedWord?: Word;
-  merges: Word[];
-  addWordToMerge?: (word: Word, parent: Word[]) => void;
+  parent: ParentWord;
+  addSense?: (word: Word, parent: Word) => void;
   dropWord?: () => void;
 }
 
@@ -25,8 +26,8 @@ export class MergeRow extends React.Component<
   }
 
   add_sense(word: Word) {
-    if (this.props.addWordToMerge) {
-      this.props.addWordToMerge(word, this.props.merges);
+    if (this.props.addSense) {
+      this.props.addSense(word, this.props.parent.word);
     }
   }
 
@@ -43,14 +44,14 @@ export class MergeRow extends React.Component<
       <Box style={{ flex: 1 }}>
         <ListSubheader>
           <div style={{ textAlign: "center" }}>
-            {this.props.merges[0].vernacular}
+            {this.props.parent.word.vernacular}
           </div>
           <hr />
         </ListSubheader>
         <Grid container direction="row-reverse">
-          {this.props.merges.map(item => (
+          {this.props.parent.senses.map(item => (
             <Grid item>
-              <MergeStack parent={item} />
+              <MergeStack sense={item} />
             </Grid>
           ))}
           <Grid

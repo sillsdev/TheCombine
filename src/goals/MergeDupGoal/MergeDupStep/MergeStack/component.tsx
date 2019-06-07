@@ -1,12 +1,16 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word } from "../../../../types/word";
+import { Word, simpleWord } from "../../../../types/word";
 import { Box, CardContent, Card } from "@material-ui/core";
+import { Sense } from "../component";
 
 //interface for component props
 export interface MergeStackProps {
-  parent: Word;
+  sense: Sense;
+  addDuplicate?: (word: Word, parent: Word) => void;
+  dropWord?: () => void;
+  draggedWord?: Word;
 }
 
 //interface for component state
@@ -21,17 +25,26 @@ class MergeStack extends React.Component<
   }
 
   addWord(word: Word) {
-    console.log("UNIMPLEMENTED");
+    if (this.props.addDuplicate && this.props.dropWord) {
+      console.log("Trying to add dup: " + word.vernacular);
+      this.props.addDuplicate(word, this.props.sense.parent);
+      this.props.dropWord();
+    }
   }
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
-
-    console.log("UNIMPLEMENTED");
+    if (this.props.draggedWord) {
+      this.addWord(this.props.draggedWord);
+    }
   }
 
   render() {
     // get last card
+    var lastCard = this.props.sense.dups[this.props.sense.dups.length - 1];
+    if (!lastCard) {
+      lastCard = simpleWord("Missing Word", "");
+    }
     //visual definition
     return (
       <Box style={{ width: 200 }}>
@@ -41,8 +54,8 @@ class MergeStack extends React.Component<
             this.dragDrop(e);
           }}
         >
-          <CardContent>{this.props.parent.vernacular}</CardContent>
-          <CardContent>{this.props.parent.gloss}</CardContent>
+          <CardContent>{lastCard.vernacular}</CardContent>
+          <CardContent>{lastCard.gloss}</CardContent>
         </Card>
       </Box>
     );

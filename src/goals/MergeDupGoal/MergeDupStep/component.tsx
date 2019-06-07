@@ -4,13 +4,21 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Box, Grid, Button } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
-import { addMerge } from "./actions";
-import { blockStatement } from "@babel/types";
+
+// Internal merge memory model
+export interface ParentWord {
+  word: Word;
+  senses: Sense[];
+}
+export interface Sense {
+  parent: Word;
+  dups: Word[];
+}
 
 //interface for component props
 export interface MergeDupStepProps {
-  merges: Word[][];
-  addMerge?: (word: Word) => void;
+  parentWords: ParentWord[];
+  addParent?: (word: Word) => void;
   dropWord?: () => void;
   clearMerges?: () => void;
   draggedWord?: Word;
@@ -31,8 +39,8 @@ class MergeDupStep extends React.Component<
   }
 
   dragDrop() {
-    if (this.props.addMerge && this.props.draggedWord && this.props.dropWord) {
-      this.props.addMerge(this.props.draggedWord);
+    if (this.props.addParent && this.props.draggedWord && this.props.dropWord) {
+      this.props.addParent(this.props.draggedWord);
       this.props.dropWord();
     }
   }
@@ -55,8 +63,8 @@ class MergeDupStep extends React.Component<
             <WordList words={testWords} />
           </Grid>
           <Grid item style={{ flex: 1 }}>
-            {this.props.merges.map((item, _) => (
-              <MergeRow merges={item} />
+            {this.props.parentWords.map((item, _) => (
+              <MergeRow parent={item} />
             ))}
             <Button style={{ float: "right" }} onClick={_ => this.next()}>
               Next
