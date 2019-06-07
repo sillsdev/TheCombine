@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../GoalView/TempDefaultState";
+import { defaultState } from "../TempDefaultState";
 import { Provider } from "react-redux";
+import { GoalView } from "../GoalView";
 
 const createMockStore = configureMockStore([]);
 
@@ -22,7 +22,7 @@ it("renders without crashing", () => {
   const div = document.createElement("div");
   ReactDOM.render(
     <Provider store={mockStore}>
-      <App />
+      <GoalView />
     </Provider>,
     div
   );
