@@ -10,7 +10,7 @@ import { Sense, ParentWord } from "../component";
 export interface MergeRowProps {
   draggedWord?: Word;
   parent: ParentWord;
-  addSense?: (word: Word, parent: Word) => void;
+  addSense?: (word: Word, parent: number) => void;
   dropWord?: () => void;
 }
 
@@ -25,15 +25,21 @@ export class MergeRow extends React.Component<
     super(props);
   }
 
+  update() {
+    this.setState({});
+  }
+
   add_sense(word: Word) {
     if (this.props.addSense) {
-      this.props.addSense(word, this.props.parent.word);
+      this.props.addSense(word, this.props.parent.id);
     }
   }
 
   drop() {
     if (this.props.draggedWord && this.props.dropWord) {
-      this.add_sense(this.props.draggedWord);
+      var word = this.props.draggedWord;
+      word.modified = Date.now().toString();
+      this.add_sense(word);
       this.props.dropWord();
     }
   }
@@ -42,16 +48,19 @@ export class MergeRow extends React.Component<
     //visual definition
     return (
       <Box style={{ flex: 1 }}>
-        <ListSubheader>
+        <ListSubheader
+          onDragOver={e => e.preventDefault()}
+          onDrop={_ => this.drop()}
+        >
           <div style={{ textAlign: "center" }}>
-            {this.props.parent.word.vernacular}
+            {this.props.parent.senses[0].dups[0].vernacular}
           </div>
           <hr />
         </ListSubheader>
         <Grid container direction="row-reverse">
           {this.props.parent.senses.map(item => (
             <Grid item>
-              <MergeStack sense={item} />
+              <MergeStack updateRow={() => this.update()} sense={item} />
             </Grid>
           ))}
           <Grid

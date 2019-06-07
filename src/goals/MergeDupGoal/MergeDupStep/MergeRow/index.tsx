@@ -18,7 +18,7 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, MergeAction | WordDrag>
 ) {
   return {
-    addSense: (word: Word, parent: Word) => {
+    addSense: (word: Word, parent: number) => {
       dispatch(addSense(word, parent));
     },
     dropWord: () => {

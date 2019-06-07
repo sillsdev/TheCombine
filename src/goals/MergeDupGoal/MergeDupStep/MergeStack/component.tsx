@@ -8,8 +8,11 @@ import { Sense } from "../component";
 //interface for component props
 export interface MergeStackProps {
   sense: Sense;
-  addDuplicate?: (word: Word, parent: Word) => void;
+  addDuplicate?: (word: Word, sense: number) => void;
+  removeDuplicate?: (word: Word, sense: number) => void;
   dropWord?: () => void;
+  dragWord?: (word: Word) => void;
+  updateRow?: () => void;
   draggedWord?: Word;
 }
 
@@ -27,7 +30,7 @@ class MergeStack extends React.Component<
   addWord(word: Word) {
     if (this.props.addDuplicate && this.props.dropWord) {
       console.log("Trying to add dup: " + word.vernacular);
-      this.props.addDuplicate(word, this.props.sense.parent);
+      this.props.addDuplicate(word, this.props.sense.id);
       this.props.dropWord();
     }
   }
@@ -36,6 +39,19 @@ class MergeStack extends React.Component<
     event.preventDefault();
     if (this.props.draggedWord) {
       this.addWord(this.props.draggedWord);
+    }
+  }
+
+  drag(word: Word) {
+    if (this.props.dragWord) {
+      this.props.dragWord(word);
+    }
+  }
+
+  removeCard(word: Word) {
+    if (this.props.removeDuplicate && this.props.updateRow) {
+      this.props.removeDuplicate(word, this.props.sense.id);
+      this.props.updateRow();
     }
   }
 
@@ -49,6 +65,9 @@ class MergeStack extends React.Component<
     return (
       <Box style={{ width: 200 }}>
         <Card
+          draggable={true}
+          onDragStart={_ => this.drag(lastCard)}
+          onDragEnd={_ => this.removeCard(lastCard)}
           onDragOver={e => e.preventDefault()}
           onDrop={e => {
             this.dragDrop(e);

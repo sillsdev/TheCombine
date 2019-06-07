@@ -7,11 +7,11 @@ import MergeRow from "./MergeRow";
 
 // Internal merge memory model
 export interface ParentWord {
-  word: Word;
+  id: number;
   senses: Sense[];
 }
 export interface Sense {
-  parent: Word;
+  id: number;
   dups: Word[];
 }
 
