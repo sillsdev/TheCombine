@@ -1,4 +1,4 @@
-import { MergeAction } from "./actions";
+import { MergeAction, CLEAR_MERGES } from "./actions";
 import { ADD_MERGE, UPDATE_MERGE } from "./actions";
 import { WebkitBorderBeforeWidthProperty } from "csstype";
 import { MergeDupStepState, MergeDupStepProps } from "./component";
@@ -28,6 +28,11 @@ export const mergeDupStepReducer = (
           }
           return item;
         })
+      };
+    case CLEAR_MERGES:
+      return {
+        ...state,
+        merges: []
       };
     default:
       return state;

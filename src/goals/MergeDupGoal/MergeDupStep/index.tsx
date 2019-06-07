@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { StoreState } from "../../../types";
 import MergeDupStepComponent from "./component";
 import { ThunkDispatch } from "redux-thunk";
-import { MergeAction, addMerge } from "./actions";
+import { MergeAction, addMerge, clearMerges } from "./actions";
 import { WordDrag, dropWord } from "../../DraggableWord/actions";
 import { Word } from "../../../types/word";
 
@@ -22,6 +22,9 @@ export function mapDispatchToProps(
     },
     dropWord: () => {
       dispatch(dropWord());
+    },
+    clearMerges: () => {
+      dispatch(clearMerges());
     }
   };
 }

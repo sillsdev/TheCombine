@@ -1,7 +1,7 @@
 import { Word, Merge, testWordList } from "../../../types/word";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Box, Grid } from "@material-ui/core";
+import { Box, Grid, Button } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
 import { addMerge } from "./actions";
@@ -12,6 +12,7 @@ export interface MergeDupStepProps {
   merges: Word[][];
   addMerge?: (word: Word) => void;
   dropWord?: () => void;
+  clearMerges?: () => void;
   draggedWord?: Word;
 }
 
@@ -36,6 +37,12 @@ class MergeDupStep extends React.Component<
     }
   }
 
+  next() {
+    if (this.props.clearMerges) {
+      this.props.clearMerges();
+    }
+  }
+
   render() {
     var testWords: Word[] = testWordList();
     //visual definition
@@ -51,6 +58,9 @@ class MergeDupStep extends React.Component<
             {this.props.merges.map((item, _) => (
               <MergeRow merges={item} />
             ))}
+            <Button style={{ float: "right" }} onClick={_ => this.next()}>
+              Next
+            </Button>
             <Box
               style={{ height: "100%" }}
               onDragOver={e => e.preventDefault()}
