@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Hosting;
 using BackendFramework.Interfaces;
 using System.Xml;
 using System.Net.Http;
+using System.IO;
+using System.Net;
 
 namespace BackendFramework.Controllers
 {
@@ -92,23 +94,47 @@ namespace BackendFramework.Controllers
         // POST: v1/Project/
         // Implements Create(), Arguments: new project from body
         [HttpPost("{Id}/Upload")]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(string Id, [FromBody]IFormFile files)
         {
-            try
+            long size = files.Length;
             {
                 var stream = await Request.Content.ReadAsStreamAsync();
 
-                var xmlDocument = new XmlDocument();
-                xmlDocument.Load(stream);
+            // full path to file in temp location
+            var filePath = Path.GetTempFileName();
 
-                //call lift parsing funcitons
+            
+                if (files.Length > 0)
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await files.CopyToAsync(stream);
+                    }
+                }
+            
 
-            }
-            catch (exception e)
+            // process uploaded files
+            var filenameExt = files.FileName.Substring(Math.Max(0, files.FileName.Length - 5));
+            if(filenameExt == ".lift")
             {
-                return view("Error");
+                //woop
+                if ( await _projectService.Upload(files.FileName))
+                {
+                    return new OkObjectResult("yes");
+                }
+                else
+                {
+                    return new NotFoundResult();
+                }
             }
-            return new OkObjectResult();
+            else
+            {
+                //womp
+                return new NotFoundResult(); 
+            }
+
+
+            //return Ok(new { count = files.Count, size, filePath; })
         }
 
         // PUT: v1/Project/{Id}

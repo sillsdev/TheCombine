@@ -1,7 +1,10 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BackendFramework.ValueModels
 {
@@ -17,6 +20,17 @@ namespace BackendFramework.ValueModels
         public string projectName { get; set; }
         // public string source { get; set; }
         // public string Extension { get; set; }
+    public interface IFormFile
+    {
+        string ContentType { get; }
+        string ContentDisposition { get; }
+        IHeaderDictionary Headers { get; }
+        long Length { get; }
+        string Name { get; }
+        string FileName { get; }
+        Stream OpenReadStream();
+        void CopyTo(Stream target);
+        Task CopyToAsync(Stream target, CancellationToken cancellationToken = default);
     }
 
     public class Project
