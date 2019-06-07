@@ -23,10 +23,16 @@ export function asyncCreateProject(name: string, languageData: File) {
     const data = new FormData();
     data.append("languageData", languageData);
     data.append("name", name);
-    const response = await axios.post("v1/projects", data, {});
-
-    console.log("response.statusText");
-    dispatch(createProject(name, languageData));
+    const response = await axios
+      .post("v1/projects", data, {})
+      .then(res => {
+        console.log(res.statusText);
+        dispatch(createProject(name, languageData));
+      })
+      .catch(err => {
+        alert("Failed to create project");
+        console.log(err);
+      });
   };
 }
 
