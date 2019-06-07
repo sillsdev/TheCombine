@@ -49,9 +49,13 @@ class MergeStack extends React.Component<
   }
 
   removeCard(word: Word) {
-    if (this.props.removeDuplicate && this.props.updateRow) {
-      this.props.removeDuplicate(word, this.props.sense.id);
-      this.props.updateRow();
+    if (this.props.draggedWord && this.props.dropWord) {
+      this.props.dropWord();
+    } else {
+      if (this.props.removeDuplicate && this.props.updateRow) {
+        this.props.removeDuplicate(word, this.props.sense.id);
+        this.props.updateRow();
+      }
     }
   }
 

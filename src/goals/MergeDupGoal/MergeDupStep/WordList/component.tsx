@@ -9,6 +9,7 @@ import {
   ListItem,
   ListSubheader
 } from "@material-ui/core";
+import { dropWord } from "../../../DraggableWord/actions";
 
 //interface for component props
 export interface WordListProps {
@@ -39,10 +40,14 @@ class WordList extends React.Component<
   }
 
   dragEnd(word: Word) {
-    var index = this.state.words.indexOf(word);
-    this.setState({
-      words: this.state.words.filter((_, i) => i != index)
-    });
+    if (this.props.draggedWord && this.props.dropWord) {
+      this.props.dropWord();
+    } else {
+      var index = this.state.words.indexOf(word);
+      this.setState({
+        words: this.state.words.filter((_, i) => i != index)
+      });
+    }
   }
 
   drop() {
