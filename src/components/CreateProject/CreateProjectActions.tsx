@@ -24,7 +24,7 @@ export function asyncCreateProject(name: string, languageData: File) {
     data.append("languageData", languageData);
     data.append("name", name);
     const response = await axios
-      .post("v1/projects", data, {})
+      .post("https://localhost:5001/v1/projects", data, {})
       .then(res => {
         console.log(res.statusText);
         dispatch(createProject(name, languageData));
