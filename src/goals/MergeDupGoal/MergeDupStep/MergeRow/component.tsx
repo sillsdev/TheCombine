@@ -5,33 +5,22 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word, Merge } from "../../../../types/word";
-import { isTemplateElement } from "@babel/types";
-import { dragWord } from "../../../DraggableWord/actions";
-import {
-  CardContent,
-  Typography,
-  Card,
-  List,
-  ListItem,
-  ListSubheader,
-  Box,
-  Grid
-} from "@material-ui/core";
-import classes from "*.module.css";
+import { Word } from "../../../../types/word";
+import { ListSubheader, Box, Grid } from "@material-ui/core";
 import MergeStack from "../MergeStack";
 
 //interface for component props
 export interface MergeRowProps {
-  parent: Word;
+  draggedWord?: Word;
+  merges: Word[];
+  addWordToMerge?: (word: Word, parent: Word[]) => void;
+  dropWord?: () => void;
 }
 
 //interface for component state
-interface MergeRowState {
-  merges: Merge[];
-}
+interface MergeRowState {}
 
-class MergeRow extends React.Component<
+export class MergeRow extends React.Component<
   MergeRowProps & LocalizeContextProps,
   MergeRowState
 > {
@@ -39,15 +28,36 @@ class MergeRow extends React.Component<
     super(props);
   }
 
+  add_sense(word: Word) {
+    if (this.props.addWordToMerge) {
+      this.props.addWordToMerge(word, this.props.merges);
+    }
+  }
+
+  drop() {
+    if (this.props.draggedWord && this.props.dropWord) {
+      this.add_sense(this.props.draggedWord);
+      this.props.dropWord();
+    }
+  }
+
   render() {
     //visual definition
     return (
-      <Box>
-        <ListSubheader>{this.props.parent.vernacular}</ListSubheader>
-        <Grid>
-          {this.state.merges.map((item, index) => (
-            <MergeStack startingWords={item.chidren} />
+      <Box style={{ flex: 1 }}>
+        <ListSubheader>{this.props.merges[0].vernacular}</ListSubheader>
+        <Grid container>
+          {this.props.merges.map(item => (
+            <Grid item>
+              <MergeStack parent={item} />
+            </Grid>
           ))}
+          <Grid
+            item
+            style={{ flex: 1 }}
+            onDragOver={e => e.preventDefault()}
+            onDrop={_ => this.drop()}
+          />
         </Grid>
       </Box>
     );

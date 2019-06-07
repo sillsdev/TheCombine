@@ -2,29 +2,14 @@
 import React from "react";
 
 //TC modules
-import CreateProject from "../CreateProject";
-import { Route, Router } from "react-router-dom";
-import { createBrowserHistory } from "history";
-import { PrivateRoute } from "../PrivateRoute";
-import { LogoutButton } from "../Login/LogoutButton";
-import { GoalView } from "../GoalView/GoalView";
-import Login from "../Login";
-import Temp from "../Temp";
-
-export const history = createBrowserHistory();
-
+import WordList from "../../goals/MergeDupGoal/MergeDupStep/WordList";
+import MergeStack from "../../goals/MergeDupGoal/MergeDupStep/MergeStack";
+import { testWordList, Word } from "../../types/word";
+import { Grid, Box } from "@material-ui/core";
+import MergeRow from "../../goals/MergeDupGoal/MergeDupStep/MergeRow";
+import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
 const App: React.FC = () => {
-  return (
-    <div className="App">
-      <Temp />
-      <LogoutButton />
-      <Router history={history}>
-        <PrivateRoute exact path="/" component={CreateProject} />
-        <PrivateRoute exact path="/" component={GoalView} />
-        <Route path="/login" component={Login} />
-      </Router>
-    </div>
-  );
+  return <MergeDupStep />;
 };
 
 export default App;

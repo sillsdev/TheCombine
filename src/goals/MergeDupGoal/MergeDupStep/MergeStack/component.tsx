@@ -6,20 +6,15 @@
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
-import { minHeight, minWidth } from "@material-ui/system";
 import { Box, CardContent, Card } from "@material-ui/core";
 
 //interface for component props
 export interface MergeStackProps {
-  draggedWord?: Word;
-  dropWord?: () => void;
-  startingWords?: Word[];
+  parent: Word;
 }
 
 //interface for component state
-interface MergeStackState {
-  words: Word[];
-}
+interface MergeStackState {}
 
 class MergeStack extends React.Component<
   MergeStackProps & LocalizeContextProps,
@@ -27,44 +22,33 @@ class MergeStack extends React.Component<
 > {
   constructor(props: MergeStackProps & LocalizeContextProps) {
     super(props);
-    this.state = { words: [] };
-    if (props.startingWords) {
-      this.state = { words: props.startingWords };
-    }
   }
 
   addWord(word: Word) {
-    var stack = this.state.words;
-    stack.push(word);
-    this.setState({ words: stack });
+    console.log("UNIMPLEMENTED");
   }
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
 
-    if (this.props.draggedWord && this.props.dropWord) {
-      this.addWord(this.props.draggedWord);
-      this.props.dropWord();
-    }
+    console.log("UNIMPLEMENTED");
   }
 
   render() {
     // get last card
-    var card = this.state.words[this.state.words.length - 1];
-    var display = "";
-    if (card) {
-      display = card.gloss;
-    }
     //visual definition
     return (
-      <Card
-        onDragOver={e => e.preventDefault()}
-        onDrop={e => {
-          this.dragDrop(e);
-        }}
-      >
-        <CardContent>{display}</CardContent>
-      </Card>
+      <Box style={{ width: 200 }}>
+        <Card
+          onDragOver={e => e.preventDefault()}
+          onDrop={e => {
+            this.dragDrop(e);
+          }}
+        >
+          <CardContent>{this.props.parent.vernacular}</CardContent>
+          <CardContent>{this.props.parent.gloss}</CardContent>
+        </Card>
+      </Box>
     );
   }
 }
