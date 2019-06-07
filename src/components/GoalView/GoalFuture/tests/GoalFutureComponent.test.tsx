@@ -10,6 +10,7 @@ const createMockStore = configureMockStore([]);
 it("renders without crashing", () => {
   const mockStore = createMockStore({
     goalsState: {
+<<<<<<< HEAD
       historyState: {
         history: defaultState.historyState.history
       },
@@ -17,6 +18,11 @@ it("renders without crashing", () => {
       suggestionsState: {
         suggestions: defaultState.suggestionsState.suggestions
       }
+=======
+      historyState: defaultState.historyState,
+      goalOptions: defaultState.goalOptions,
+      suggestionsState: defaultState.suggestionsState
+>>>>>>> Implement additional code review suggestions
     }
   });
   const div = document.createElement("div");
