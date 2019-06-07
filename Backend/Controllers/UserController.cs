@@ -15,7 +15,7 @@ namespace BackendFramework.Controllers
     {
         [EnableCors("AllowAll")]
         [Produces("application/json")]
-        [Route("v1/project")]
+        [Route("v1/projects")]
 
         [HttpPost]
         public async Task<string> Post()
