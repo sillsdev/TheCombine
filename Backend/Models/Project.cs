@@ -4,6 +4,18 @@ using System.Collections.Generic;
 
 namespace BackendFramework.ValueModels
 {
+    public class SemanticDomain
+    {
+        public string Name { get; set; }
+        public string Number { get; set; }
+    }
+
+    public class CustomField
+    {
+        public string Name { get; set; }
+        public string Type { get; set; }
+    }
+
     public class Project
     {
         [BsonId]
