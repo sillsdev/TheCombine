@@ -31,19 +31,26 @@ namespace BackendFramework.Controllers
         [HttpPost()]
         public async Task<IActionResult> PostFrontier([FromBody]Word word)
         {
-            await _wordService.AddFrontier(word);
-            return new OkObjectResult(word.Id);
+            #if DEBUG
+                await _wordService.AddFrontier(word);
+                return new OkObjectResult(word.Id);
+            #else
+                return new UnauthorizedResult();
+            #endif
         }
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteFrontier(string Id)
         {
-            if (await _wordService.DeleteFrontier(Id))
-            {
-                return new OkResult();
-            }
-
-            return new NotFoundResult();
+            #if DEBUG
+                if (await _wordService.DeleteFrontier(Id))
+                {
+                    return new OkResult();
+                }
+                return new NotFoundResult();
+            #else
+                return new UnauthorizedResult();
+            #endif
         }
 
     }
