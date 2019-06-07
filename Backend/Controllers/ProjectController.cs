@@ -49,11 +49,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-#if DEBUG
-            return new ObjectResult(await _projectService.DeleteAllWords());
-#else
-            return new UnauthorizedResult();
-#endif
+            #if DEBUG
+                return new ObjectResult(await _projectService.DeleteAllWords());
+            #else
+                return new UnauthorizedResult();
+            #endif
         }
 
         // GET: v1/Project/{id}
