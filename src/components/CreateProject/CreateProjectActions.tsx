@@ -23,9 +23,9 @@ export function asyncCreateProject(name: string, languageData: File) {
     const data = new FormData();
     data.append("languageData", languageData);
     data.append("name", name);
-    axios.post("http://localhost:3000/upload", data, {}).then(res => {
-      console.log(res.statusText);
-    });
+    const response = await axios.post("v1/projects", data, {});
+
+    console.log("response.statusText");
     dispatch(createProject(name, languageData));
   };
 }

@@ -11,6 +11,7 @@ import { Grid } from "@material-ui/core";
 
 export interface CreateProjectProps {
   createProject?: (name: string, languageData: File) => void;
+  asyncCreateProject?: (name: string, languageData: File) => void;
 }
 
 interface CreateProjectState {
@@ -50,11 +51,11 @@ class CreateProject extends React.Component<
 
     const name = this.state.name.trim();
     const languageData = this.state.languageData;
-    if (name == "") {
-      // notify the user they need a project name
-      alert("Username and password cannot be blank");
-    } else if (this.props.createProject) {
-      this.props.createProject(name, languageData as File);
+    if (name === "") {
+      // notify the user they need a project name (this won't translate)
+      alert("Project name cannot be blank");
+    } else if (this.props.asyncCreateProject) {
+      this.props.asyncCreateProject(name, languageData as File);
     }
   }
 
@@ -83,7 +84,8 @@ class CreateProject extends React.Component<
               <Translate id="createProject.browse" />
             </label>
           </Button>
-          <label>{this.state.fileName}</label>
+          <br />
+          <label>File selected: {this.state.fileName}</label>
           <br />
 
           <Button type="submit">
