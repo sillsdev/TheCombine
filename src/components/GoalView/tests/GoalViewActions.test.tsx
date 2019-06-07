@@ -1,5 +1,5 @@
 import * as actions from "../GoalViewActions";
-import { Goals } from "../../../types/goals";
+import { Goal } from "../../../types/goals";
 import { TempGoal } from "../../../goals/tempGoal";
 import { User } from "../../../types/user";
 import configureMockStore from "redux-mock-store";
@@ -12,7 +12,7 @@ it("should create an action to add a goal", () => {
     username: "Test username",
     id: 0
   };
-  const goal: Goals = new TempGoal(user);
+  const goal: Goal = new TempGoal(user);
   const expectedAction = {
     type: actions.ADD_GOAL,
     payload: goal
@@ -34,7 +34,7 @@ it("should create an async action to add a goal", () => {
     username: "Test username",
     id: 0
   };
-  const goal: Goals = new TempGoal(user);
+  const goal: Goal = new TempGoal(user);
   const expectedAction = {
     type: actions.ADD_GOAL,
     payload: goal

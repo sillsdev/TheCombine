@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Goals, Tools, GoalOption } from "../types/goals";
+import { Goal, Tools, GoalOption } from "../types/goals";
 import Temp from "../components/Temp";
 import { User } from "../types/user";
 
@@ -10,7 +10,7 @@ export interface TempData {
 
 export interface TempStep {}
 
-export class TempGoal implements Goals {
+export class TempGoal implements Goal {
   id: number;
   name: string;
 

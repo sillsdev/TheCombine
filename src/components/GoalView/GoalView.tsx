@@ -3,24 +3,24 @@ import React from "react";
 import GoalHistory from "./GoalHistory";
 import GoalSelector from "./GoalSelector";
 import GoalFuture from "./GoalFuture";
-import { Goals } from "../../types/goals";
+import { Goal } from "../../types/goals";
 import Stack from "../../types/stack";
 
 export interface GoalViewProps {}
 
 export interface GoalViewState {
-  goalHistory: Stack<Goals>;
-  all: Goals[];
-  goalSuggestions: Stack<Goals>;
+  goalHistory: Stack<Goal>;
+  all: Goal[];
+  goalSuggestions: Stack<Goal>;
 }
 
 export class GoalView extends React.Component<GoalViewProps, GoalViewState> {
   constructor(props: GoalViewProps) {
     super(props);
     this.state = {
-      goalHistory: new Stack<Goals>([]),
+      goalHistory: new Stack<Goal>([]),
       all: [],
-      goalSuggestions: new Stack<Goals>([])
+      goalSuggestions: new Stack<Goal>([])
     };
   }
 

@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Goals } from "../../../types/goals";
+import { Goal } from "../../../types/goals";
 
 export interface GoalProps {
-  goal: Goals;
+  goal: Goal;
 }
 
-export class Goal extends React.Component<GoalProps> {
+export class GoalComponent extends React.Component<GoalProps> {
   constructor(props: GoalProps) {
     super(props);
   }

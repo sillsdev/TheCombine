@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Goals } from "../../../../types/goals";
+import { Goal } from "../../../../types/goals";
 import Select from "@material-ui/core/Select";
 import { FormControl, MenuItem } from "@material-ui/core";
 
 export interface GoalSelectorDropdownProps {
-  possibleGoals: Goals[];
+  goalOptions: Goal[];
   handleChange: (
     event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => void;
@@ -32,7 +32,7 @@ export class GoalSelectorDropdown extends React.Component<
       <form autoComplete="off">
         <FormControl>
           <Select value={this.state.value} onChange={this.props.handleChange}>
-            {this.props.possibleGoals.map(goal => (
+            {this.props.goalOptions.map(goal => (
               <MenuItem key={goal.id} value={goal.name}>
                 {goal.name}
               </MenuItem>

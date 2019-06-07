@@ -1,12 +1,12 @@
 import { GoalsState } from "../../types/goals";
 import Stack from "../../types/stack";
-import { Goals } from "../../types/goals";
-import { ADD_GOAL, AddGoalAction, ActionWithPayload } from "./GoalViewActions";
+import { Goal } from "../../types/goals";
+import { ADD_GOAL, ActionWithPayload } from "./GoalViewActions";
 import { defaultState } from "./TempDefaultState";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
-  action: ActionWithPayload<Goals>
+  action: ActionWithPayload<Goal>
 ): GoalsState => {
   if (!state) {
     return defaultState;
@@ -17,7 +17,7 @@ export const goalsReducer = (
       let newSuggestions = removeGoalFromSuggestions(state, action.payload);
       return {
         history: newHistory.makeCopy(),
-        all: state.all,
+        goalOptions: state.goalOptions,
         suggestions: newSuggestions.makeCopy()
       };
     default:
@@ -25,18 +25,18 @@ export const goalsReducer = (
   }
 };
 
-export function addGoalToHistory(state: GoalsState, goal: Goals): Stack<Goals> {
+export function addGoalToHistory(state: GoalsState, goal: Goal): Stack<Goal> {
   state.history.push(goal);
   return state.history;
 }
 
 export function removeGoalFromSuggestions(
   state: GoalsState,
-  goal: Goals
-): Stack<Goals> {
+  goal: Goal
+): Stack<Goal> {
   let nextSuggestion = state.suggestions.peekFirst();
   if (nextSuggestion && nextSuggestion.name === goal.name) {
-    let newSuggestions = new Stack<Goals>(
+    let newSuggestions = new Stack<Goal>(
       state.suggestions.stack.filter(goal => nextSuggestion.name != goal.name)
     );
     return newSuggestions;

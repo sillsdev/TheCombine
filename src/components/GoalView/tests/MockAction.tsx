@@ -1,12 +1,12 @@
-import { Goals } from "../../../types/goals";
+import { Goal } from "../../../types/goals";
 import { ActionWithPayload } from "../GoalViewActions";
 
 export const MOCK_GOAL = "MOCK_GOAL";
 export type MOCK_GOAL = typeof MOCK_GOAL;
 
-export interface MockGoal extends ActionWithPayload<Goals> {
+export interface MockGoal extends ActionWithPayload<Goal> {
   type: MOCK_GOAL;
-  payload: Goals;
+  payload: Goal;
 }
 
 export type MockGoalAction = MockGoal;

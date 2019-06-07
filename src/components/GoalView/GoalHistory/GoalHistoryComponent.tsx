@@ -1,13 +1,13 @@
 import React from "react";
 
-import { Goals, GoalsState } from "../../../types/goals";
+import { Goal, GoalsState } from "../../../types/goals";
 import Stack from "../../../types/stack";
-import { Goal } from "../GoalComponent/GoalComponent";
+import { GoalComponent } from "../GoalComponent/GoalComponent";
 
 export interface GoalsStateProps {
-  history: Stack<Goals>;
-  all: Goals[];
-  suggestions: Stack<Goals>;
+  history: Stack<Goal>;
+  goalOptions: Goal[];
+  suggestions: Stack<Goal>;
 }
 
 export class GoalHistory extends React.Component<GoalsState> {
@@ -19,7 +19,7 @@ export class GoalHistory extends React.Component<GoalsState> {
     return (
       <div className="App">
         {this.props.history.stack.map(goal => (
-          <Goal key={goal.id} goal={goal} />
+          <GoalComponent key={goal.id} goal={goal} />
         ))}
       </div>
     );

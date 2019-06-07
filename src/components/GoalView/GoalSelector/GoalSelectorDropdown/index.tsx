@@ -6,7 +6,7 @@ import { StoreState } from "../../../../types";
 
 export function mapStateToProps(state: StoreState): GoalSelectorDropdownState {
   return {
-    possibleGoals: state.goalsState.all
+    goalOptions: state.goalsState.goalOptions
   };
 }
 

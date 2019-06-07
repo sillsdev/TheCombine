@@ -24,16 +24,16 @@ export interface GoalViewState {
 }
 
 export interface GoalsState {
-  history: Stack<Goals>;
-  all: Goals[];
-  suggestions: Stack<Goals>;
+  history: Stack<Goal>;
+  goalOptions: Goal[];
+  suggestions: Stack<Goal>;
 }
 
 export interface GoalSelectorDropdownState {
-  possibleGoals: Goals[];
+  goalOptions: Goal[];
 }
 
-export interface Goals {
+export interface Goal {
   id: number;
   name: string;
   user: User;
