@@ -24,7 +24,7 @@ export function asyncCreateProject(name: string, languageData: File) {
     const data = new FormData();
     data.append("languageData", languageData);
     data.append("name", name);
-    const response = await axios
+    await axios
       .post("https://localhost:5001/v1/projects", data, {
         headers: authHeader()
       })

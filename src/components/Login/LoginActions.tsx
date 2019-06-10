@@ -3,7 +3,6 @@ import axios from "axios";
 //import axios from "./tests/__mocks__/axios";
 import { history } from "../App/App";
 import { authHeader } from "./AuthHeaders";
-import { breakpoints } from "@material-ui/system";
 
 export const LOGIN = "LOGIN";
 export type LOGIN = typeof LOGIN;
@@ -46,7 +45,7 @@ export interface UserAction {
 export function asyncLogin(user: string, password: string) {
   return async (dispatch: Dispatch<UserAction>) => {
     dispatch(loginAttempt(user));
-    await new Promise(resolve => setTimeout(resolve, 2000)); // Remove before pull request
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Remove before pull request
     //attempt to login with server
     await axios
       .post(

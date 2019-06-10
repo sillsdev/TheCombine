@@ -8,6 +8,7 @@ import CreateProject from "../CreateProject";
 import { Route, Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { PrivateRoute } from "../PrivateRoute";
+import { LogoutButton } from "../Login/LogoutButton";
 
 export const history = createBrowserHistory();
 
@@ -15,6 +16,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Temp />
+      <LogoutButton />
       <Router history={history}>
         <PrivateRoute exact path="/" component={CreateProject} />
         <Route path="/login" component={Login} />

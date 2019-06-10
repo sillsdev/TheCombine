@@ -61,7 +61,7 @@ class Login extends React.Component<
 
     var user = this.state.user.trim();
     var pass = this.state.password.trim();
-    if (user == "" || pass == "") {
+    if (user === "" || pass === "") {
       // notify the user they need both a username and password
       alert("Username and password cannot be blank");
     } else if (this.props.login) {
@@ -72,7 +72,7 @@ class Login extends React.Component<
   register() {
     var user = this.state.user.trim();
     var pass = this.state.password.trim();
-    if (user == "" || pass == "") {
+    if (user === "" || pass === "") {
       // notify the user they need both a username and password
       alert("Username and password cannot be blank");
     } else if (this.props.register) {
@@ -98,7 +98,7 @@ class Login extends React.Component<
             onChange={evt => this.updatePassword(evt)}
           />
           <br />
-          <Button onClick={_ => this.register()}>
+          <Button onClick={() => this.register()}>
             <Translate id="login.register" />
           </Button>
           <Button type="submit">
