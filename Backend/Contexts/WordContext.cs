@@ -16,8 +16,8 @@ namespace BackendFramework.Context
             _db = client.GetDatabase(options.Value.WordsDatabase);
         }
 
-        public IMongoCollection<Word> Words => _db.GetCollection<Word>("WordsDatabase");
-        public IMongoCollection<Word> Frontier => _db.GetCollection<Word>("Frontier");
+        public IMongoCollection<Word> Words => _db.GetCollection<Word>("WordsCollection");
+        public IMongoCollection<Word> Frontier => _db.GetCollection<Word>("FrontierCollection");
     }
 
 }

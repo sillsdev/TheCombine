@@ -15,11 +15,19 @@ using System.Xml;
 using System.Net.Http;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
 
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/Project/")]
+    [Route("v1/projects")]
+
     public class ProjectController : Controller
     {
         private readonly IProjectService _projectService;
@@ -94,48 +102,94 @@ namespace BackendFramework.Controllers
         // POST: v1/Project/
         // Implements Create(), Arguments: new project from body
         [HttpPost("{Id}/Upload")]
-        public async Task<IActionResult> Post(string Id, [FromBody]IFormFile files)
+        public async Task<HttpResponseMessage> PostFormData(string Id)
         {
-            long size = files.Length;
-            {
+            // Check if the request contains multipart/form-data.
+            if (!Request.Content.IsMimeMultipartContent())
                 var stream = await Request.Content.ReadAsStreamAsync();
-
-            // full path to file in temp location
-            var filePath = Path.GetTempFileName();
-
-            
-                if (files.Length > 0)
-                {
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await files.CopyToAsync(stream);
-                    }
-                }
-            
-
-            // process uploaded files
-            var filenameExt = files.FileName.Substring(Math.Max(0, files.FileName.Length - 5));
-            if(filenameExt == ".lift")
             {
-                //woop
-                if ( await _projectService.Upload(files.FileName))
-                {
-                    return new OkObjectResult("yes");
-                }
-                else
-                {
-                    return new NotFoundResult();
-                }
-            }
-            else
-            {
-                //womp
-                return new NotFoundResult(); 
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
+            string root = HttpContext.Current.Server.MapPath("~/App_Data");
+            var provider = new MultipartFormDataStreamProvider(root);
 
-            //return Ok(new { count = files.Count, size, filePath; })
+            try
+            {
+                // Read the form data.
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                // This illustrates how to get the file names.
+                foreach (MultipartFileData file in provider.FileData)
+                {
+                    Trace.WriteLine(file.Headers.ContentDisposition.FileName);//get FileName
+                    Trace.WriteLine("Server file path: " + file.LocalFileName);//get File Path
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, "pass upload file successed!");
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+            }
         }
+
+        // public async Task<IActionResult> Post(RecieveFile fileContents, string Id)
+        // {
+        //     if (HttpContext.Request.Form.Files[0] != null)
+        //     {
+        //         var file = HttpContext.Request.Form.Files[0];
+        //         using (FileStream fs = new FileStream("", FileMode.CreateNew, FileAccess.Write, FileShare.Write))
+        //         {
+        //             file.CopyTo(fs);
+        //         }
+        //     }
+        //     return View();
+        // }
+        // public async Task<string> Post([FromForm] testClass file, string Id)
+        // {
+        //     long size = file.Length;
+        //     string filePath = Path.GetTempFileName();
+
+        //     // full path to file in temp location windows vs linux
+        //     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        //     {
+        //         filePath = "/var/thecombine/uploads";
+        //     }
+
+
+        //     if (file.Length > 0)
+        //     {
+        //         using (var stream = new FileStream(filePath, FileMode.Create))
+        //         {
+        //             await file.CopyToAsync(stream);
+        //         }
+        //     }
+
+
+        //     // process uploaded files
+        //     var filenameExt = file.FileName.Substring(Math.Max(0, file.FileName.Length - 5));
+        //     if (filenameExt == ".lift")
+        //     {
+        //         //woop
+        //         if (await _projectService.Upload(file.FileName))
+        //         {
+        //             _projectService.Upload(file.FileName);
+        //             return "yes";
+        //             //return new OkObjectResult("yes");
+        //         }
+        //         else
+        //         {
+        //             return "no";
+        //             //return new NotFoundResult();
+        //         }
+        //     }
+        //     else
+        //     {
+        //         //womp
+        //         return "nope";
+        //     }
+        //     //return Ok(new { count = file.Count, size, filePath; })
+        // }
 
         // PUT: v1/Project/{Id}
         // Implements Update(), Arguments: string id of target project, new project from body
