@@ -7,22 +7,23 @@ import {
   Card,
   List,
   ListItem,
-  ListSubheader
+  ListSubheader,
+  Button
 } from "@material-ui/core";
-import { Z_FIXED } from "zlib";
+import { backend } from "../../../..";
 
 //interface for component props
 export interface WordListProps {
   words: Word[];
   dragWord?: (word: Word) => void;
   dropWord?: () => void;
+  addListWord?: (word: Word) => void;
+  removeListWord?: (word: Word) => void;
   draggedWord?: Word;
 }
 
 //interface for component state
-interface WordListState {
-  words: Word[];
-}
+interface WordListState {}
 
 class WordList extends React.Component<
   WordListProps & LocalizeContextProps,
@@ -30,7 +31,6 @@ class WordList extends React.Component<
 > {
   constructor(props: WordListProps & LocalizeContextProps) {
     super(props);
-    this.state = { words: props.words };
   }
 
   drag(word: Word) {
@@ -42,19 +42,18 @@ class WordList extends React.Component<
   dragEnd(word: Word) {
     if (this.props.draggedWord && this.props.dropWord) {
       this.props.dropWord();
-    } else {
-      var index = this.state.words.indexOf(word);
-      this.setState({
-        words: this.state.words.filter((_, i) => i != index)
-      });
+    } else if (this.props.removeListWord) {
+      this.props.removeListWord(word);
     }
   }
 
   drop() {
-    if (this.props.draggedWord && this.props.dropWord) {
-      var words = this.state.words;
-      words.push(this.props.draggedWord);
-      this.setState({ words });
+    if (
+      this.props.draggedWord &&
+      this.props.dropWord &&
+      this.props.addListWord
+    ) {
+      this.props.addListWord(this.props.draggedWord);
       this.props.dropWord();
     }
   }
@@ -68,7 +67,7 @@ class WordList extends React.Component<
         onDrop={_ => this.drop()}
       >
         <List subheader={<ListSubheader> Duplicates</ListSubheader>}>
-          {this.state.words.map(item => (
+          {this.props.words.map(item => (
             <ListItem>
               <Card
                 style={{ flex: 1 }}

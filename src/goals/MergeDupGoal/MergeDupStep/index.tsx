@@ -2,14 +2,21 @@ import { connect } from "react-redux";
 import { StoreState } from "../../../types";
 import MergeDupStepComponent from "./component";
 import { ThunkDispatch } from "redux-thunk";
-import { MergeAction, applyMerges, addParent } from "./actions";
+import {
+  MergeAction,
+  applyMerges,
+  addParent,
+  addListWord,
+  clearListWords
+} from "./actions";
 import { WordDrag, dropWord } from "../../DraggableWord/actions";
-import { Word } from "../../../types/word";
+import { Word, testWordList } from "../../../types/word";
 
 export function mapStateToProps(state: StoreState) {
   return {
     parentWords: state.mergeDupStepProps.parentWords,
-    draggedWord: state.draggedWord.draggedWord
+    draggedWord: state.draggedWord.draggedWord,
+    words: state.mergeDupStepProps.words
   };
 }
 
@@ -25,6 +32,12 @@ export function mapDispatchToProps(
     },
     clearMerges: () => {
       dispatch(applyMerges());
+    },
+    addListWord: (word: Word) => {
+      dispatch(addListWord(word));
+    },
+    clearListWords: () => {
+      dispatch(clearListWords());
     }
   };
 }

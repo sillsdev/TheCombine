@@ -64,9 +64,8 @@ class MergeStack extends React.Component<
     return this.props.sense.dups[this.props.sense.dups.length - 1];
   }
 
-  render() {
+  render_single() {
     var lastCard = this.topCard();
-    //visual definition
     return (
       <Box style={{ width: 200 }}>
         <Card
@@ -83,6 +82,23 @@ class MergeStack extends React.Component<
         </Card>
       </Box>
     );
+  }
+
+  render_stack() {
+    return (
+      <Card style={{ paddingBottom: 2, paddingRight: 2 }}>
+        {this.render_single()}
+      </Card>
+    );
+  }
+
+  render() {
+    //visual definition
+    if (this.props.sense.dups.length > 1) {
+      return this.render_stack();
+    } else {
+      return this.render_single();
+    }
   }
 }
 
