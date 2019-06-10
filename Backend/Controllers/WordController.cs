@@ -25,21 +25,10 @@ namespace BackendFramework.Controllers
         [EnableCors("AllowAll")]
 
         // GET: v1/Project/Words
-        // Implements GetAllWords(), 
-        // Arguments: list of string ids of target word (if given, else returns all words)
-        // Default: null
+        // Implements GetAllWords(),
         [HttpGet]
-        public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
+        public async Task<IActionResult> Get()
         {
-            if (Ids != null)
-            {
-                var wordList = await _wordService.GetWords(Ids);
-                if (wordList.Count != Ids.Count)
-                {
-                    return new NotFoundResult();
-                }
-                return new ObjectResult(wordList);
-            }
             return new ObjectResult(await _wordService.GetAllWords());
         }
 
@@ -49,11 +38,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            #if DEBUG
+#if DEBUG
                 return new ObjectResult(await _wordService.DeleteAllWords());
-            #else
-                return new UnauthorizedResult();
-            #endif
+#else
+            return new UnauthorizedResult();
+#endif
         }
 
         // GET: v1/Project/Words/{Id}
@@ -96,7 +85,7 @@ namespace BackendFramework.Controllers
         // Implements Delete(), Arguments: string id of target word
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
-        { 
+        {
             if (await _wordService.Delete(Id))
             {
                 return new OkResult();

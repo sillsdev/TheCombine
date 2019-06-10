@@ -6,8 +6,6 @@
 
 **Auth required** :
 
-**Data type** : `ids: String[] | undefined`
-
 ## Success response
 
 **Code** : `200 OK`
