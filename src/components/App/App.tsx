@@ -9,7 +9,7 @@ import { Route, Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { PrivateRoute } from "../PrivateRoute";
 
-const history = createBrowserHistory();
+export const history = createBrowserHistory();
 
 const App: React.FC = () => {
   return (

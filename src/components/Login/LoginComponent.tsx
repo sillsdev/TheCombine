@@ -11,6 +11,7 @@ import { Grid } from "@material-ui/core";
 
 export interface LoginProps {
   login?: (user: string, password: string) => void;
+  logout: () => void;
   register?: (user: string, password: string) => void;
 }
 
@@ -25,6 +26,7 @@ class Login extends React.Component<
 > {
   constructor(props: LoginProps & LocalizeContextProps) {
     super(props);
+    this.props.logout();
     this.state = { user: "", password: "" };
   }
 
