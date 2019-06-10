@@ -7,5 +7,28 @@
       "was passed into this test object.",
       " fue pasado a este objeto de prueba."
     ]
+  },
+  "login": {
+    "username": ["Username", "Nombre de usuario"],
+    "password": ["Password", "Contraseña"],
+    "login": ["Login", "Iniciar sesión"],
+    "register": ["Register", "Registro"]
+  },
+  "createProject": {
+    "name": ["Project Name", "Nombre del Proyecto"],
+    "languageData": [
+      ".lift language data file",
+      "archivo de datos de idioma .lift"
+    ],
+    "browse": ["Browse Computer", "Navegar por la Computadora"],
+    "create": ["Create Project", "Crear Proyecto"],
+    "fileSelected": ["File selected", "Archivo seleccionado"]
+  },
+  "goal": {
+    "name": {
+      "handleDuplicates": ["Handle Duplicates"],
+      "handleFlags": ["Handle Flags"],
+      "grammarCheck": ["Grammar Check"]
+    }
   }
 }
