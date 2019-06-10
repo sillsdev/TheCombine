@@ -98,25 +98,34 @@ export const mergeDupStepReducer = (
 
       return { ...state, parentWords };
     case APPLY_MERGES:
-      state.parentWords.forEach(parent => {
+      state.parentWords.forEach(async parent => {
         var ids: string[] = [];
-        parent.senses.forEach(sense => {
-          var root = sense.dups[0];
-          var merge: Merge = {
-            parent: root.id,
-            children: sense.dups
-              .map(item => item.id)
-              .filter(id => id != root.id),
-            mergeType: State.duplicate,
-            time: Date.now().toString()
-          };
-          if (merge.children.length > 0) {
-            backend.put("project/words", merge);
-            ids.push(generateID().toString());
-          } else {
-            ids.push(root.id);
-          }
-        });
+        var merges: number = 0;
+        await Promise.all(
+          parent.senses.map(async sense => {
+            var root = sense.dups[0];
+            var merge: Merge = {
+              parent: root.id,
+              children: sense.dups
+                .map(item => item.id)
+                .filter(id => id != root.id),
+              mergeType: State.duplicate,
+              time: Date.now().toString()
+            };
+            if (merge.children.length > 0) {
+              merges++;
+              ids.push(
+                await backend
+                  .put("project/words", merge)
+                  .then(resp => resp.data)
+              );
+            } else {
+              merges++;
+              ids.push(root.id);
+            }
+          })
+        );
+
         var merge: Merge = {
           parent: ids[0],
           children: ids.filter(id => id != ids[0]),
@@ -124,8 +133,9 @@ export const mergeDupStepReducer = (
           time: Date.now().toString()
         };
         if (merge.children.length > 0) {
-          console.log(merge);
-          backend.put("project/words", merge);
+          backend.put("project/words", merge).catch(err => {
+            console.log(err);
+          });
         }
       });
       return {
