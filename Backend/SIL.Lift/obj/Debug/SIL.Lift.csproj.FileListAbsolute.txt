@@ -1,0 +1,9 @@
+C:\Users\FullerM\Documents\LiftTest\libpalaso\output\Debug\SIL.Lift.xml
+C:\Users\FullerM\Documents\LiftTest\libpalaso\output\Debug\SIL.Lift.dll
+C:\Users\FullerM\Documents\LiftTest\libpalaso\output\Debug\SIL.Lift.pdb
+C:\Users\FullerM\Documents\LiftTest\libpalaso\SIL.Lift\obj\Debug\SIL.Lift.csprojAssemblyReference.cache
+C:\Users\FullerM\Documents\LiftTest\libpalaso\SIL.Lift\obj\Debug\SIL.Lift.csproj.CoreCompileInputs.cache
+C:\Users\FullerM\Documents\LiftTest\libpalaso\SIL.Lift\obj\Debug\SIL.Lift.csproj.CopyComplete
+C:\Users\FullerM\Documents\LiftTest\libpalaso\SIL.Lift\obj\Debug\SIL.Lift.dll
+C:\Users\FullerM\Documents\LiftTest\libpalaso\SIL.Lift\obj\Debug\SIL.Lift.pdb
+C:\Users\FullerM\Documents\LiftTest\libpalaso\output\Debug\SIL.Lift.dll.config

@@ -102,104 +102,11 @@ namespace BackendFramework.Controllers
         // POST: v1/Project/
         // Implements Create(), Arguments: new project from body
         [HttpPost("{Id}/Upload")]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(string Id)
         {
-            try
-            {
-                var stream = await Request.Content.ReadAsStreamAsync();
-
-                var xmlDocument = new XmlDocument();
-                xmlDocument.Load(stream);
-
-                //call lift parsing funcitons
-
-            }
-            catch (exception e)
-            {
-                return view("Error");
-            }
-            return new OkObjectResult();
-            }
-
-            string root = HttpContext.Current.Server.MapPath("~/App_Data");
-            var provider = new MultipartFormDataStreamProvider(root);
-
-            try
-            {
-                // Read the form data.
-                await Request.Content.ReadAsMultipartAsync(provider);
-
-                // This illustrates how to get the file names.
-                foreach (MultipartFileData file in provider.FileData)
-                {
-                    Trace.WriteLine(file.Headers.ContentDisposition.FileName);//get FileName
-                    Trace.WriteLine("Server file path: " + file.LocalFileName);//get File Path
-                }
-                return Request.CreateResponse(HttpStatusCode.OK, "pass upload file successed!");
-            }
-            catch (System.Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
+            string ok = "ok";
+            return new OkObjectResult(ok);
         }
-
-        // public async Task<IActionResult> Post(RecieveFile fileContents, string Id)
-        // {
-        //     if (HttpContext.Request.Form.Files[0] != null)
-        //     {
-        //         var file = HttpContext.Request.Form.Files[0];
-        //         using (FileStream fs = new FileStream("", FileMode.CreateNew, FileAccess.Write, FileShare.Write))
-        //         {
-        //             file.CopyTo(fs);
-        //         }
-        //     }
-        //     return View();
-        // }
-        // public async Task<string> Post([FromForm] testClass file, string Id)
-        // {
-        //     long size = file.Length;
-        //     string filePath = Path.GetTempFileName();
-
-        //     // full path to file in temp location windows vs linux
-        //     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        //     {
-        //         filePath = "/var/thecombine/uploads";
-        //     }
-
-
-        //     if (file.Length > 0)
-        //     {
-        //         using (var stream = new FileStream(filePath, FileMode.Create))
-        //         {
-        //             await file.CopyToAsync(stream);
-        //         }
-        //     }
-
-
-        //     // process uploaded files
-        //     var filenameExt = file.FileName.Substring(Math.Max(0, file.FileName.Length - 5));
-        //     if (filenameExt == ".lift")
-        //     {
-        //         //woop
-        //         if (await _projectService.Upload(file.FileName))
-        //         {
-        //             _projectService.Upload(file.FileName);
-        //             return "yes";
-        //             //return new OkObjectResult("yes");
-        //         }
-        //         else
-        //         {
-        //             return "no";
-        //             //return new NotFoundResult();
-        //         }
-        //     }
-        //     else
-        //     {
-        //         //womp
-        //         return "nope";
-        //     }
-        //     //return Ok(new { count = file.Count, size, filePath; })
-        // }
 
         // PUT: v1/Project/{Id}
         // Implements Update(), Arguments: string id of target project, new project from body

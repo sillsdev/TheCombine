@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
+    <PackageReference Include="SIL.Core" Version="7.0.0-alpha0816" />
   </ItemGroup>
 
 </Project>
