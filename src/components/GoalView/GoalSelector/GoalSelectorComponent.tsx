@@ -6,6 +6,7 @@ import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 export interface GoalSelectorProps {
   addGoal: (goal: Goal) => void;
+  displayGoal: (goal: Goal) => void;
   goalOptions: Goal[];
 }
 
@@ -25,7 +26,7 @@ export class GoalSelector extends React.Component<
     );
     if (goal) {
       this.props.addGoal(goal);
-      this.displayGoal(goal);
+      this.props.displayGoal(goal);
     }
   }
 
@@ -36,14 +37,6 @@ export class GoalSelector extends React.Component<
       }
     }
   }
-
-  displayGoal = (goal: Goal) => {
-    return (
-      <div>
-        <goal.display />
-      </div>
-    );
-  };
 
   render() {
     return (
