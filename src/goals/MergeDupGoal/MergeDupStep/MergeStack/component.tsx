@@ -1,10 +1,9 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word, simpleWord } from "../../../../types/word";
+import { Word } from "../../../../types/word";
 import { Box, CardContent, Card } from "@material-ui/core";
 import { Sense } from "../component";
-import { thisExpression } from "@babel/types";
 
 //interface for component props
 export interface MergeStackProps {
@@ -78,7 +77,21 @@ class MergeStack extends React.Component<
           }}
         >
           <CardContent>{lastCard.vernacular}</CardContent>
-          <CardContent>{lastCard.gloss}</CardContent>
+          <CardContent>
+            {lastCard.gloss}
+            <div
+              style={{
+                float: "right",
+                position: "relative",
+                bottom: 0,
+                right: 0
+              }}
+            >
+              {this.props.sense.dups.length > 1
+                ? this.props.sense.dups.length
+                : ""}
+            </div>
+          </CardContent>
         </Card>
       </Box>
     );
