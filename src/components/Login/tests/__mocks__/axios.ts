@@ -10,7 +10,7 @@ export default {
   }),
 
   // post: when axios.post is called within parent directory, instead call this function
-  post: jest.fn((route: string) => {
+  post: jest.fn((route: string, data: any, config: object) => {
     return Promise.resolve({
       types: "post"
     });

@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
 /**
- * Redirects to /login if there is no user token in localStorage
+ * Redirects to /login if there is no `user` in localStorage
  */
 export const PrivateRoute = ({ component: Component, ...rest }: any) => (
   <Route

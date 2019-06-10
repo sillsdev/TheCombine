@@ -9,10 +9,14 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Grid } from "@material-ui/core";
 
-export interface LoginProps {
+export interface LoginDispatchProps {
   login?: (user: string, password: string) => void;
   logout: () => void;
   register?: (user: string, password: string) => void;
+}
+
+export interface LoginStateProps {
+  loginAttempt: boolean | undefined;
 }
 
 interface LoginState {
@@ -21,10 +25,12 @@ interface LoginState {
 }
 
 class Login extends React.Component<
-  LoginProps & LocalizeContextProps,
+  LoginDispatchProps & LoginStateProps & LocalizeContextProps,
   LoginState
 > {
-  constructor(props: LoginProps & LocalizeContextProps) {
+  constructor(
+    props: LoginDispatchProps & LoginStateProps & LocalizeContextProps
+  ) {
     super(props);
     this.props.logout();
     this.state = { user: "", password: "" };
@@ -98,6 +104,8 @@ class Login extends React.Component<
           <Button type="submit">
             <Translate id="login.login" />
           </Button>
+          <br />
+          {this.props.loginAttempt && <p>Logging in...</p>}
         </form>
       </Grid>
     );

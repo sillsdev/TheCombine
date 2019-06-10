@@ -1,6 +1,9 @@
 import { Dispatch } from "react";
 import axios from "axios";
+//import axios from "./tests/__mocks__/axios";
 import { history } from "../App/App";
+import { authHeader } from "./AuthHeaders";
+import { breakpoints } from "@material-ui/system";
 
 export const LOGIN = "LOGIN";
 export type LOGIN = typeof LOGIN;
@@ -42,23 +45,24 @@ export interface UserAction {
 //thunk action creator
 export function asyncLogin(user: string, password: string) {
   return async (dispatch: Dispatch<UserAction>) => {
-    console.log("attempting to log in...");
     dispatch(loginAttempt(user));
+    await new Promise(resolve => setTimeout(resolve, 2000)); // Remove before pull request
     //attempt to login with server
     await axios
       .post(
         "https://localhost:5001/v1/login",
-        JSON.stringify({ user, password })
+        JSON.stringify({ user, password }),
+        { headers: authHeader() }
       )
-      .then(res => {
+      .then((res: any) => {
         console.log(res);
-        //TODO: store tokens
-        localStorage.setItem("user", "Jamie");
+        localStorage.setItem("user", JSON.stringify(res.data)); //Store tokens
         dispatch(loginSuccess(user));
         history.push("/");
       })
       .catch(err => {
         console.log(err);
+        alert("Failed to log in. Please check your username and password.");
         dispatch(loginFailure(user));
       });
   };
