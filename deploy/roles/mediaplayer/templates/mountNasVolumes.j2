@@ -1,0 +1,20 @@
+
+# Mount Music volume
+
+mountpoint -q $HOME/Music
+if [ "$?" != "0" ] ; then
+    ip address | grep "10\.0\.0\." 2>&1 > /dev/null
+    if [ "$?" == "0" ] ; then
+        mount $HOME/Music
+    fi
+fi
+
+# Mount Photo volume
+
+mountpoint -q $HOME/Photo
+if [ "$?" != "0" ] ; then
+    ip address | grep "10\.0\.0\." 2>&1 > /dev/null
+    if [ "$?" == "0" ] ; then
+        mount $HOME/Photo
+    fi
+fi

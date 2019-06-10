@@ -1,0 +1,64 @@
+---
+
+- name: Copy key
+  command: rsync -i --checksum "{{item.1.ssl_store | default(apache_ssl_store)}}/{{item.1.store_key_file | default(item.1.key_file)}}" "{{item.1.ssl_path | default(apache_ssl_path)}}/{{item.1.key_file}}"
+  register: result
+  changed_when: result.stdout
+  notify: Restart apache
+  with_subelements:
+   - "{{apache_vhosts}}"
+   - virtual_hosts
+  when: apache_vhosts != false and item.1.has_ssl == true and {{item.1.copy_mode | default('copy') == 'copy'}}
+
+- name: Link key
+  file: state=link src="{{item.1.ssl_store | default(apache_ssl_store)}}/{{item.1.store_key_file | default(item.1.key_file)}}" dest="{{item.1.ssl_path | default(apache_ssl_path)}}/{{item.1.key_file}}"
+  notify: Restart apache
+  with_subelements:
+   - "{{apache_vhosts}}"
+   - virtual_hosts
+  when: apache_vhosts != false and item.1.has_ssl == true and {{item.1.copy_mode | default('copy') == 'link'}}
+
+- name: Fix key permissions
+  file: path="{{item.1.ssl_path | default(apache_ssl_path)}}/{{item.1.key_file}}" mode=0600 state=file
+  with_subelements:
+   - "{{apache_vhosts}}"
+   - virtual_hosts
+  when: apache_vhosts != false and item.1.has_ssl == true and {{item.1.copy_mode | default('copy') == 'copy'}}
+
+- name: Copy certificate
+  copy:
+    src: "site_files/certificates/{{item.1.certificate_file}}"
+    dest: "{{item.1.ssl_path | default(apache_ssl_path)}}"
+    mode: 0600
+  notify: Restart apache
+  with_subelements:
+   - "{{apache_vhosts}}"
+   - virtual_hosts
+  when: apache_vhosts != false and item.1.has_ssl == true and {{item.1.copy_mode | default('copy') == 'copy'}}
+
+- name: Link certificate
+  file: state=link src="{{item.1.ssl_store | default(apache_ssl_store)}}/{{item.1.store_certificate_file | default(item.1.certificate_file)}}" dest="{{item.1.ssl_path | default(apache_ssl_path)}}/{{item.1.certificate_file}}"
+  notify: Restart apache
+  with_subelements:
+   - "{{apache_vhosts}}"
+   - virtual_hosts
+  when: apache_vhosts != false and item.1.has_ssl == true and {{item.1.copy_mode | default('copy') == 'link'}}
+
+- name: Copy chain certificate if present
+  copy:
+    src: "site_files/certificates/{{item.1.chain_file}}"
+    dest: "{{item.1.ssl_path | default(apache_ssl_path)}}"
+    mode: 0600
+  notify: Restart apache
+  with_subelements:
+   - "{{apache_vhosts}}"
+   - virtual_hosts
+  when: apache_vhosts != false and item.1.has_ssl == true and item.1.chain_file is defined and {{item.1.copy_mode | default('copy') == 'copy'}}
+
+- name: Link chain certificate if present
+  file: state=link src="{{item.1.ssl_store | default(apache_ssl_store)}}/{{item.1.store_chain_file | default(item.1.chain_file)}}" dest="{{item.1.ssl_path | default(apache_ssl_path)}}/{{item.1.chain_file}}"
+  notify: Restart apache
+  with_subelements:
+   - "{{apache_vhosts}}"
+   - virtual_hosts
+  when: apache_vhosts != false and item.1.has_ssl == true and item.1.chain_file is defined and {{item.1.copy_mode | default('copy') == 'link'}}

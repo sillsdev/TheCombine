@@ -1,0 +1,12 @@
+---
+
+################################
+# Playbook to test the role for deploying the application
+#
+
+- name:  Deploy application
+  hosts: all
+  become: yes
+
+  roles:
+    - role: setup_application

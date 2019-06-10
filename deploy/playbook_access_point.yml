@@ -1,0 +1,8 @@
+---
+
+- name: Install WiFi Access Point
+  hosts: all
+  become: yes
+
+  roles:
+    - { role: wifi_ap, tags: [ 'server', 'desktop' ] }

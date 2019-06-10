@@ -1,0 +1,12 @@
+---
+
+- name: Ansible test playbook
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: populate service facts
+    service_facts:
+
+  - debug:
+      var: ansible_facts.services

@@ -1,0 +1,22 @@
+---
+
+- name: Setup Ubuntu Server
+  hosts: all
+  become: yes
+
+  roles:
+    - role: ansible-depends
+    - role: headless
+    - role: nodejs
+    - role: setup_mongodb
+    - role: setup_dotnet_core
+    - role: setup_apache
+    - role: wifi_ap
+    - role: setup_application
+
+  tasks:
+    - name: Install the One True Editor
+      apt:
+        name: emacs-nox
+        state: present
+      tags: server
