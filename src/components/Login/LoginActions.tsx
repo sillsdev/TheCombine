@@ -1,6 +1,5 @@
 import { Dispatch } from "react";
 import axios from "axios";
-//import axios from "../Temp/tests/__mocks__/axios";
 import { history } from "../App/App";
 
 export const LOGIN = "LOGIN";
@@ -42,11 +41,11 @@ export interface UserAction {
 
 //thunk action creator
 export function asyncLogin(user: string, password: string) {
-  return (dispatch: Dispatch<UserAction>) => {
+  return async (dispatch: Dispatch<UserAction>) => {
     console.log("attempting to log in...");
     dispatch(loginAttempt(user));
     //attempt to login with server
-    axios
+    await axios
       .post(
         "https://localhost:5001/v1/login",
         JSON.stringify({ user, password })
