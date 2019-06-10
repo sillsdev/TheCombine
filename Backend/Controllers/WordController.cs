@@ -124,6 +124,16 @@ namespace BackendFramework.Controllers
         }
 
         // POST: v1/Project/Words/upload
+        // Implements: Upload(), Arguments: ?
+        [HttpPost("upload")]
+        public async Task<IActionResult> Post()
+        {
+            string path = "C:\\Users\\SkinnerS\\.lift-importation\\LiftTest\\testingdata\\testingdata.lift";
+            var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+            return new ObjectResult(parser.ReadLiftFile(path));
+        }
+
+        // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
         [HttpPost("upload")]
         public async Task<IActionResult> Post()

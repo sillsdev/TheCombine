@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 using System.Threading;
 using System.Threading.Tasks;

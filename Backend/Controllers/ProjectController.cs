@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using BackendFramework.ValueModels;
@@ -86,7 +87,6 @@ namespace BackendFramework.Controllers
             return new ObjectResult(project);
         }
 
-
         // POST: v1/Project/
         // Implements Create(), Arguments: new project from body
         [HttpPost()]
@@ -97,28 +97,6 @@ namespace BackendFramework.Controllers
                 return new OkObjectResult(word.Id);
             }
             return new NotFoundResult();
-        }
-
-        // POST: v1/Project/
-        // Implements Create(), Arguments: new project from body
-        [HttpPost("{Id}/Upload")]
-        public async Task<IActionResult> Post()
-        {
-            try
-            {
-                var stream = await Request.Content.ReadAsStreamAsync();
-
-                var xmlDocument = new XmlDocument();
-                xmlDocument.Load(stream);
-
-                //call lift parsing funcitons
-
-            }
-            catch (exception e)
-            {
-                return view("Error");
-            }
-            return new OkObjectResult();
         }
 
         // POST: v1/Project/
