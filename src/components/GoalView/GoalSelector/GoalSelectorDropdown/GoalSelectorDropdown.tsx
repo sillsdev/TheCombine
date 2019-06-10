@@ -30,7 +30,8 @@ export class GoalSelectorDropdown extends React.Component<
           <Select onChange={this.props.handleChange} value={""}>
             {this.props.goalOptions.map(goal => (
               <MenuItem key={goal.id} value={goal.name}>
-                <Translate id={"goal.name." + goal.name} />
+                <goal.select />
+                {/* <Translate id={"goal.name." + goal.name} /> */}
               </MenuItem>
             ))}
           </Select>

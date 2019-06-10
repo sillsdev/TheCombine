@@ -25,6 +25,7 @@ export class GoalSelector extends React.Component<
     );
     if (goal) {
       this.props.addGoal(goal);
+      this.displayGoal(goal);
     }
   }
 
@@ -35,6 +36,14 @@ export class GoalSelector extends React.Component<
       }
     }
   }
+
+  displayGoal = (goal: Goal) => {
+    return (
+      <div>
+        <goal.display />
+      </div>
+    );
+  };
 
   render() {
     return (
