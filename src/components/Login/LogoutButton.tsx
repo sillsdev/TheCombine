@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@material-ui/core";
 
 /**
- * A simple button that logs out by redirecting to the login page
+ * A button that logs the user out by redirecting to the login page
  */
 export class LogoutButton extends React.Component<{}, {}> {
   render() {

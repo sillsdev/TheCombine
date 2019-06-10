@@ -8,7 +8,7 @@ import { asyncLogin, UserAction, register, logout } from "./LoginActions";
 function mapStateToProps(state: StoreState): LoginStateProps {
   console.log(state);
   return {
-    loginAttempt: state.loginState.loginAttempt
+    loginAttempt: state.loginState && state.loginState.loginAttempt
   };
 }
 
