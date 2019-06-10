@@ -81,7 +81,7 @@ namespace BackendFramework.Services
                 .Set(x => x.WorkedProjects, user.WorkedProjects)
                 .Set(x => x.Agreement, user.Agreement)
                 .Set(x => x.Password, user.Password)
-                .Set(x => x.UserName, user.UserName)
+                .Set(x => x.Username, user.Username)
                 .Set(x => x.UILang, user.UILang);
 
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
