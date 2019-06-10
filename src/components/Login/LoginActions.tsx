@@ -4,9 +4,6 @@ import axios from "axios";
 import { history } from "../App/App";
 import { authHeader } from "./AuthHeaders";
 
-export const LOGIN = "LOGIN";
-export type LOGIN = typeof LOGIN;
-
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
 
@@ -27,12 +24,7 @@ export interface LoginData {
   password?: string;
 }
 
-type LoginType =
-  | LOGIN
-  | LOGIN_ATTEMPT
-  | LOGIN_FAILURE
-  | LOGIN_SUCCESS
-  | REGISTER;
+type LoginType = LOGIN_ATTEMPT | LOGIN_FAILURE | LOGIN_SUCCESS | REGISTER;
 
 //action types
 
@@ -45,7 +37,7 @@ export interface UserAction {
 export function asyncLogin(user: string, password: string) {
   return async (dispatch: Dispatch<UserAction>) => {
     dispatch(loginAttempt(user));
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Remove before pull request
+
     //attempt to login with server
     await axios
       .post(
@@ -64,13 +56,6 @@ export function asyncLogin(user: string, password: string) {
         alert("Failed to log in. Please check your username and password.");
         dispatch(loginFailure(user));
       });
-  };
-}
-
-export function login(user: string, password: string): UserAction {
-  return {
-    type: LOGIN,
-    payload: { user, password }
   };
 }
 

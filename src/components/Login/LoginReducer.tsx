@@ -1,5 +1,4 @@
 import {
-  LOGIN,
   UserAction,
   REGISTER,
   LOGIN_ATTEMPT,
@@ -24,9 +23,6 @@ export const loginReducer = (
 ): LoginState => {
   if (!state) return defaultState;
   switch (action.type) {
-    case LOGIN:
-      console.log("LOGIN METHOD");
-      return { user: action.payload.user, success: true };
     case LOGIN_ATTEMPT:
       console.log("Attempting to log in...");
       return { user: action.payload.user, success: false, loginAttempt: true };

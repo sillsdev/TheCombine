@@ -1,5 +1,10 @@
 import * as reducer from "../LoginReducer";
-import { UserAction, LOGIN, REGISTER } from "../LoginActions";
+import {
+  UserAction,
+  REGISTER,
+  LOGIN_ATTEMPT,
+  LOGIN_FAILURE
+} from "../LoginActions";
 
 const user = { user: "testUser", password: "testPass" };
 
@@ -10,8 +15,25 @@ describe("tempReducer Tests", () => {
     success: true
   };
 
-  let login: UserAction = {
-    type: LOGIN,
+  //The state while attempting to log in
+  let loginAttemptState: reducer.LoginState = {
+    user: user.user,
+    success: false,
+    loginAttempt: true
+  };
+
+  let loginFailureState: reducer.LoginState = {
+    user: user.user,
+    success: false
+  };
+
+  let loginAttempt: UserAction = {
+    type: LOGIN_ATTEMPT,
+    payload: user
+  };
+
+  let loginFailure: UserAction = {
+    type: LOGIN_FAILURE,
     payload: user
   };
 
@@ -22,13 +44,21 @@ describe("tempReducer Tests", () => {
 
   // Test with no state
   test("no state, expecting default state", () => {
-    expect(reducer.loginReducer(undefined, login)).toEqual(
+    expect(reducer.loginReducer(undefined, loginAttempt)).toEqual(
       reducer.defaultState
     );
   });
 
-  test("default state, expecting login", () => {
-    expect(reducer.loginReducer(dummySt, login)).toEqual(resultState);
+  test("default state, expecting login attempt", () => {
+    expect(reducer.loginReducer(dummySt, loginAttempt)).toEqual(
+      loginAttemptState
+    );
+  });
+
+  test("failed login, expecting no success", () => {
+    expect(reducer.loginReducer(dummySt, loginFailure)).toEqual(
+      loginFailureState
+    );
   });
 
   test("default state, expecting register", () => {

@@ -32,7 +32,7 @@ class Login extends React.Component<
     props: LoginDispatchProps & LoginStateProps & LocalizeContextProps
   ) {
     super(props);
-    this.props.logout();
+    this.props.logout(); //Hitting the login page will log a user out (doubles as a logout page, essentially)
     this.state = { user: "", password: "" };
   }
 

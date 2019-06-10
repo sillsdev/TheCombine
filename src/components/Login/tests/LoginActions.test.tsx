@@ -9,8 +9,9 @@ const user = { user: "testUser", password: "testPass" };
 
 describe("LoginAction Tests", () => {
   let mockState: reducer.LoginState = reducer.defaultState;
-  let login: action.UserAction = {
-    type: action.LOGIN,
+
+  let loginAttempt: action.UserAction = {
+    type: action.LOGIN_ATTEMPT,
     payload: user
   };
 
@@ -18,10 +19,6 @@ describe("LoginAction Tests", () => {
     type: action.REGISTER,
     payload: user
   };
-
-  test("login returns correct value", () => {
-    expect(action.login(user.user, user.password)).toEqual(login);
-  });
 
   test("register returns correct value", () => {
     expect(action.register(user.user, user.password)).toEqual(register);
@@ -35,7 +32,7 @@ describe("LoginAction Tests", () => {
 
     mockDispatch
       .then(() => {
-        expect(mockStore.getActions()).toEqual([login]);
+        expect(mockStore.getActions()).toEqual([loginAttempt]);
       })
       .catch(() => fail());
   });
