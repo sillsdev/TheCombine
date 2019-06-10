@@ -10,6 +10,9 @@ using BackendFramework.Services;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using System;
+using SIL.Lift.Parsing;
+using System.Text.RegularExpressions;
+using BackendFramework.Controllers;
 
 namespace BackendFramework.Services
 {
@@ -32,7 +35,7 @@ namespace BackendFramework.Services
         public async Task<bool> DeleteAllProjects()
         {
             var deleted = await _projectDatabase.Projects.DeleteManyAsync(_ => true);
-            if(deleted.DeletedCount != 0)
+            if (deleted.DeletedCount != 0)
             {
                 return true;
             }
@@ -42,9 +45,9 @@ namespace BackendFramework.Services
         public async Task<List<Project>> GetProjects(List<string> Ids)
         {
             var filterDef = new FilterDefinitionBuilder<Project>();
-            var filter = filterDef.In(x=>x.Id , Ids);
+            var filter = filterDef.In(x => x.Id, Ids);
             var projectList = await _projectDatabase.Projects.Find(filter).ToListAsync();
-                        
+
             return projectList;
         }
 
@@ -82,11 +85,6 @@ namespace BackendFramework.Services
             var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 
             return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
-        }
-
-        public async Task<bool> Upload()
-        {
-            return false;
         }
     }
 }

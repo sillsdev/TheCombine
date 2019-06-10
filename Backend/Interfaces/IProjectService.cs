@@ -16,6 +16,5 @@ namespace BackendFramework.Interfaces
         Task<bool> Update(string Id, Project project);
         Task<bool> Delete(string Id);
         Task<bool> DeleteAllProjects();
-        Task<bool> Upload();
     }
 }

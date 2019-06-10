@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using BackendFramework.ValueModels;
@@ -8,6 +9,7 @@ using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Hosting;
 using BackendFramework.Interfaces;
 using System.Xml;
 using System.Net.Http;
@@ -52,7 +54,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-                return new ObjectResult(await _projectService.DeleteAllProjects());
+            return new ObjectResult(await _projectService.DeleteAllProjects());
 #else
             return new UnauthorizedResult();
 #endif
@@ -74,7 +76,6 @@ namespace BackendFramework.Controllers
             return new ObjectResult(project);
         }
 
-
         // POST: v1/Project/
         // Implements Create(), Arguments: new project from body
         [HttpPost]
@@ -82,22 +83,6 @@ namespace BackendFramework.Controllers
         {
             await _projectService.Create(project);
             return new OkObjectResult(project.Id);
-        }
-
-        // POST: v1/Project/
-        // Implements Create(), Arguments: new project from body
-        [HttpPost("{Id}/Upload")]
-        public async Task<IActionResult> Post(string Id, [FromBody] HttpRequestMessage request)
-        {
-
-                var doc = new XmlDocument();
-                doc.Load(request.Content.ReadAsStreamAsync().Result);
-                string dave = doc.DocumentElement.OuterXml;
-
-                //call lift parsing funcitons
-
-
-            return new OkObjectResult(dave);
         }
 
         // PUT: v1/Project/{Id}
@@ -111,6 +96,7 @@ namespace BackendFramework.Controllers
             }
             return new NotFoundResult();
         }
+
         // DELETE: v1/Project/Words/{Id}
         // Implements Delete(), Arguments: string id of target project
         [HttpDelete("{Id}")]
@@ -122,11 +108,5 @@ namespace BackendFramework.Controllers
             }
             return new NotFoundResult();
         }
-
-        // PUT: v1/Project/
-        // [HttpPut]
-        // public async Task<IActionResult> Put([FromBody] MergeWords mergeWords)
-        // {
-        // }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
+using SIL.Lift.Parsing;
 
 namespace BackendFramework.Controllers
 {
@@ -16,10 +17,13 @@ namespace BackendFramework.Controllers
     [Route("v1/Project/Words")]
     public class WordController : Controller
     {
-        private readonly IWordService _wordService;
+        public readonly IWordService _wordService;
+        public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
+
         public WordController(IWordService wordService)
         {
             _wordService = wordService;
+            _merger = (ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>)wordService;
         }
 
         [EnableCors("AllowAll")]
@@ -86,6 +90,7 @@ namespace BackendFramework.Controllers
             await _wordService.Update(Id, word);
             return new OkObjectResult(word.Id);
         }
+
         // DELETE: v1/Project/Words/{Id}
         // Implements Delete(), Arguments: string id of target word
         [HttpDelete("{Id}")]
@@ -116,6 +121,16 @@ namespace BackendFramework.Controllers
             }
             var mergedWord = await _wordService.Merge(mergeWords);
             return new ObjectResult(mergedWord.Id);
+        }
+
+        // POST: v1/Project/Words/upload
+        // Implements: Upload(), Arguments: ?
+        [HttpPost("upload")]
+        public async Task<IActionResult> Post()
+        {
+            string path = "C:\\Users\\SkinnerS\\.lift-importation\\LiftTest\\testingdata\\testingdata.lift";
+            var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+            return new ObjectResult(parser.ReadLiftFile(path));
         }
     }
 }
