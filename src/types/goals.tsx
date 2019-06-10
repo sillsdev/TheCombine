@@ -45,6 +45,9 @@ export interface Goal {
   name: string;
   user: User;
 
+  display: React.FC;
+  select: React.FC;
+
   steps: React.Component[];
   curNdx: number;
   data: GoalData; // The data required to load/reload this exact goal
@@ -58,6 +61,9 @@ export class BaseGoal implements Goal {
   id: number;
   name: string;
   user: User;
+
+  display: React.FC;
+  select: React.FC;
 
   steps: React.Component[];
   curNdx: number;
@@ -75,6 +81,8 @@ export class BaseGoal implements Goal {
       username: "",
       id: -1
     };
+    this.display = () => <div>{this.name}</div>;
+    this.select = () => <div>{this.name}</div>;
     this.steps = [];
     this.curNdx = -1;
     this.data = {};

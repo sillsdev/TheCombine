@@ -2,7 +2,6 @@ import React from "react";
 
 import { Goal } from "../../../types/goals";
 import Stack from "../../../types/stack";
-import BaseGoalSelect from "../../../goals/DefaultGoal/BaseGoalSelect";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 export interface GoalsStateProps {
@@ -20,7 +19,7 @@ export class GoalHistory extends React.Component<
     return (
       <div className="App">
         {this.props.history.stack.map(goal => (
-          <BaseGoalSelect key={goal.id} goal={goal} />
+          <goal.select key={goal.id} />
         ))}
       </div>
     );

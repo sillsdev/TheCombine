@@ -2,7 +2,6 @@ import React from "react";
 
 import { Goal } from "../../../types/goals";
 import Stack from "../../../types/stack";
-import BaseGoalSelect from "../../../goals/DefaultGoal/BaseGoalSelect";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 export interface GoalFutureProps {
@@ -20,7 +19,7 @@ export class GoalFuture extends React.Component<
     return (
       <div className="GoalPicker">
         {this.props.suggestions.stack.map(goal => (
-          <BaseGoalSelect key={goal.id} goal={goal} />
+          <goal.select key={goal.id} />
         ))}
       </div>
     );
