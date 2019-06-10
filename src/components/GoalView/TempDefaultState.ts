@@ -1,5 +1,5 @@
 import { User } from "../../types/user";
-import { TempGoal } from "../../goals/tempGoal";
+import { BaseGoal } from "../../types/goals";
 import { Goal, GoalsState } from "../../types/goals";
 import Stack from "../../types/stack";
 
@@ -10,26 +10,31 @@ const tempUser: User = {
 };
 
 let allTheGoals: Goal[] = [];
-let goal1: Goal = new TempGoal(tempUser);
+let goal1: Goal = new BaseGoal();
 goal1.id = 1;
 goal1.name = "handleDuplicates";
-let goal2: Goal = new TempGoal(tempUser);
+goal1.user = tempUser;
+let goal2: Goal = new BaseGoal();
 goal2.id = 2;
 goal2.name = "handleFlags";
-let goal3: Goal = new TempGoal(tempUser);
-goal3.name = "grammarCheck";
+goal2.user = tempUser;
+let goal3: Goal = new BaseGoal();
 goal3.id = 3;
+goal3.name = "grammarCheck";
+goal3.user = tempUser;
 allTheGoals.push(goal1);
 allTheGoals.push(goal2);
 allTheGoals.push(goal3);
 
 let suggestionsArray: Goal[] = [];
-let suggestion1: Goal = new TempGoal(tempUser);
-suggestion1.name = "handleDuplicates";
+let suggestion1: Goal = new BaseGoal();
 suggestion1.id = 4;
-let suggestion2: Goal = new TempGoal(tempUser);
-suggestion2.name = "grammarCheck";
+suggestion1.name = "handleDuplicates";
+suggestion1.user = tempUser;
+let suggestion2: Goal = new BaseGoal();
 suggestion2.id = 5;
+suggestion2.name = "grammarCheck";
+suggestion2.user = tempUser;
 suggestionsArray.push(suggestion1);
 suggestionsArray.push(suggestion2);
 

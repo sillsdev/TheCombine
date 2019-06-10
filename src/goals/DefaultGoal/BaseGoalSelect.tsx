@@ -2,13 +2,19 @@ import { Goal } from "../../types/goals";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-class BaseGoalSelect extends React.Component<Goal & LocalizeContextProps> {
-  constructor(props: Goal & LocalizeContextProps) {
+export interface BaseGoalSelectProps {
+  goal: Goal;
+}
+
+class BaseGoalSelect extends React.Component<
+  BaseGoalSelectProps & LocalizeContextProps
+> {
+  constructor(props: BaseGoalSelectProps & LocalizeContextProps) {
     super(props);
   }
 
   render() {
-    return <div>{this.props.name}</div>;
+    return <div>{this.props.goal.name}</div>;
   }
 }
 
