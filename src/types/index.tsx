@@ -7,6 +7,7 @@ import { LoginState } from "../components/Login/LoginReducer";
 import { WordDragState } from "../goals/DraggableWord/reducer";
 import { CreateProjectState } from "../components/CreateProject/CreateProjectReducer";
 import { GoalsState } from "./goals";
+import { NavState } from "./nav";
 
 //root store structure
 export interface StoreState {
@@ -16,6 +17,7 @@ export interface StoreState {
   draggedWord: WordDragState;
   createProjectState: CreateProjectState;
   goalsState: GoalsState;
+  navState: NavState;
 }
 
 //root action type

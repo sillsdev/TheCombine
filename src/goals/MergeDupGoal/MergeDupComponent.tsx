@@ -6,7 +6,7 @@ import { Goal, DefaultDisplay } from "../../types/goals";
 interface MergeDupState {}
 
 //interface for component state
-interface MergeDupProps {
+export interface MergeDupProps {
   goal: Goal;
 }
 

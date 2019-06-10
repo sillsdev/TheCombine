@@ -1,9 +1,9 @@
 import React from "react";
-import { GoalView } from "../GoalView/GoalView";
 import { Goal } from "../../types/goals";
 
 export interface NavComponentProps {
-  // defaultDisplay: React.FC;
+  displayGoal: (goal: Goal) => void;
+  CurrentComponent: JSX.Element;
 }
 
 export class NavComponent extends React.Component<NavComponentProps> {
@@ -12,18 +12,10 @@ export class NavComponent extends React.Component<NavComponentProps> {
   }
 
   displayGoal(goal: Goal) {
-    return (
-      <div className={goal.name}>
-        <goal.display />
-      </div>
-    );
+    this.displayGoal(goal);
   }
 
   render() {
-    return (
-      <div className="NavComponent">
-        <GoalView displayGoal={this.displayGoal} />
-      </div>
-    );
+    return <div className="NavComponent">{this.props.CurrentComponent}</div>;
   }
 }

@@ -18,9 +18,7 @@ export class GoalFuture extends React.Component<
   render() {
     return (
       <div className="GoalPicker">
-        {this.props.suggestions.stack.map(goal => (
-          <goal.select key={goal.id} />
-        ))}
+        {this.props.suggestions.stack.map(goal => goal.select)}
       </div>
     );
   }

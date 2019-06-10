@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { BaseGoal } from "../../../types/goals";
 import { User } from "../../../types/user";
 import { Goal } from "../../../types/goals";
-import BaseGoalSelect from "../BaseGoalSelect";
+import BaseGoalSelect from "../BaseGoalSelect/BaseGoalSelect";
 
 it("renders without crashing", () => {
   const div = document.createElement("div");

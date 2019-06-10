@@ -1,6 +1,11 @@
 import * as React from "react";
 import { User } from "./user";
+import { MergeDupData, MergeDupStepProps } from "../goals/MergeDupGoal";
 import Stack from "./stack";
+import BaseGoalScreen from "../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
+import BaseGoalSelect from "../goals/DefaultGoal/BaseGoalSelect/BaseGoalSelect";
+import { LocalizeContextProps } from "react-localize-redux";
+import { MergeDupProps } from "../goals/MergeDupGoal/MergeDupComponent";
 
 export enum GoalOption {
   Complete,
@@ -15,9 +20,11 @@ export enum Tools {
   CharCreate
 }
 
-export type GoalData = TempData; // | OtherTypes
-export type Steps = TempStep; // | OtherTypes
+export type GoalProps = MergeDupProps;
 
+export type GoalData = MergeDupData; // | OtherTypes
+
+export type GoalStep = MergeDupStepProps; // | OtherTypes
 export interface GoalViewState {
   state: GoalsState;
 }
@@ -45,8 +52,8 @@ export interface Goal {
   name: string;
   user: User;
 
-  display: React.FC;
-  select: React.FC;
+  display: JSX.Element;
+  select: JSX.Element;
 
   steps: React.Component[];
   curNdx: number;
@@ -62,8 +69,8 @@ export class BaseGoal implements Goal {
   name: string;
   user: User;
 
-  display: React.FC;
-  select: React.FC;
+  display: JSX.Element;
+  select: JSX.Element;
 
   steps: React.Component[];
   curNdx: number;
@@ -81,8 +88,8 @@ export class BaseGoal implements Goal {
       username: "",
       id: -1
     };
-    this.display = () => <div>{this.name}</div>;
-    this.select = () => <div>{this.name}</div>;
+    this.display = <BaseGoalScreen goal={this} />;
+    this.select = <BaseGoalSelect goal={this} />;
     this.steps = [];
     this.curNdx = -1;
     this.data = {};

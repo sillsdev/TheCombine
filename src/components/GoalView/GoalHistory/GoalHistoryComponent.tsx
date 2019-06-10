@@ -18,9 +18,7 @@ export class GoalHistory extends React.Component<
   render() {
     return (
       <div className="App">
-        {this.props.history.stack.map(goal => (
-          <goal.select key={goal.id} />
-        ))}
+        {this.props.history.stack.map(goal => goal.select)}
       </div>
     );
   }

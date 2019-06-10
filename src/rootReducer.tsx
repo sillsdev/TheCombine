@@ -3,6 +3,7 @@ import { combineReducers, Reducer } from "redux";
 import { StoreState } from "./types";
 import { tempReducer } from "./components/Temp/TempReducer";
 import { goalsReducer } from "./components/GoalView/GoalViewReducers";
+import { navReducer } from "./components/Nav/navReducer";
 import { localizeReducer } from "react-localize-redux";
 import { dragWordReducer } from "./goals/DraggableWord/reducer";
 import { mergeDupStepReducer } from "./goals/MergeDupGoal/MergeDupStep/reducer";
@@ -16,5 +17,6 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   loginState: loginReducer,
   draggedWord: dragWordReducer
   createProjectState: createProjectReducer,
-  goalsState: goalsReducer
+  goalsState: goalsReducer,
+  navState: navReducer
 });
