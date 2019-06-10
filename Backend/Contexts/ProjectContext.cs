@@ -16,7 +16,7 @@ namespace BackendFramework.Context
             _db = client.GetDatabase(options.Value.ProjectsDatabase);
         }
 
-        public IMongoCollection<Project> Projects => _db.GetCollection<Project>("ProjectsDatabase");
+        public IMongoCollection<Project> Projects => _db.GetCollection<Project>("ProjectsCollection");
     }
 
 }
