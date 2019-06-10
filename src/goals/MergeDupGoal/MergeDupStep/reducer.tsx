@@ -7,6 +7,7 @@ import {
   REMOVE_DUPLICATE
 } from "./actions";
 import { MergeDupStepProps } from "./component";
+import { State, Merge } from "../../../types/word";
 
 export const defaultState: MergeDupStepProps = {
   parentWords: []
@@ -20,12 +21,11 @@ export const mergeDupStepReducer = (
   state: MergeDupStepProps | undefined, //createStore() calls each reducer with undefined state
   action: MergeAction
 ): MergeDupStepProps => {
-  //console.log('reducer reached');
   if (!state) return defaultState;
   switch (action.type) {
     case ADD_PARENT:
       var parentWords = state.parentWords;
-      var word = action.payload.merge;
+      var word = action.payload.word;
       parentWords.push({
         id: generateID(),
         senses: [{ id: generateID(), dups: [word] }]
@@ -36,7 +36,7 @@ export const mergeDupStepReducer = (
       };
     case ADD_SENSE:
       var parentWords = state.parentWords;
-      var { merge, parent } = action.payload;
+      var { word: merge, parent } = action.payload;
       if (parent) {
       }
       parentWords = parentWords.map(item => {
@@ -53,8 +53,7 @@ export const mergeDupStepReducer = (
         parentWords
       };
     case ADD_DUPLICATE:
-      var { merge, parent } = action.payload;
-      //merge.modified = Date.now().toString();
+      var { word: merge, parent } = action.payload;
       var parentWords = state.parentWords;
       parentWords = parentWords.map(item => {
         item.senses = item.senses.map(item => {
@@ -67,7 +66,7 @@ export const mergeDupStepReducer = (
       });
       return { ...state, parentWords };
     case REMOVE_DUPLICATE:
-      var { merge, parent: root } = action.payload;
+      var { word: merge, parent: root } = action.payload;
       var parentWords = state.parentWords;
 
       parentWords = parentWords.map(parent => {
@@ -84,6 +83,27 @@ export const mergeDupStepReducer = (
 
       return { ...state, parentWords };
     case APPLY_MERGES:
+      state.parentWords.forEach(parent => {
+        var ids: string[] = [];
+        parent.senses.forEach(sense => {
+          var root = sense.dups[0];
+          var merge: Merge = {
+            parent: root.id,
+            children: sense.dups.map(item => item.id),
+            mergeType: State.duplicate,
+            time: Date.now().toString()
+          };
+          console.log(merge);
+          ids.push(generateID().toString());
+        });
+        var merge: Merge = {
+          parent: ids[0],
+          children: ids,
+          mergeType: State.sense,
+          time: Date.now().toString()
+        };
+        console.log(merge);
+      });
       return {
         ...state,
         parentWords: []

@@ -9,7 +9,7 @@ import {
   ListItem,
   ListSubheader
 } from "@material-ui/core";
-import { dropWord } from "../../../DraggableWord/actions";
+import { Z_FIXED } from "zlib";
 
 //interface for component props
 export interface WordListProps {
@@ -62,25 +62,27 @@ class WordList extends React.Component<
   render() {
     //visual definition
     return (
-      <List
+      <div
+        style={{ height: "100%" }}
         onDragOver={e => e.preventDefault()}
         onDrop={_ => this.drop()}
-        subheader={<ListSubheader> Duplicates</ListSubheader>}
       >
-        {this.state.words.map(item => (
-          <ListItem>
-            <Card
-              style={{ flex: 1 }}
-              draggable={true}
-              onDragStart={_ => this.drag(item)}
-              onDragEnd={_ => this.dragEnd(item)}
-            >
-              <CardContent>{item.vernacular}</CardContent>
-              <CardContent>{item.gloss}</CardContent>
-            </Card>
-          </ListItem>
-        ))}
-      </List>
+        <List subheader={<ListSubheader> Duplicates</ListSubheader>}>
+          {this.state.words.map(item => (
+            <ListItem>
+              <Card
+                style={{ flex: 1 }}
+                draggable={true}
+                onDragStart={_ => this.drag(item)}
+                onDragEnd={_ => this.dragEnd(item)}
+              >
+                <CardContent>{item.vernacular}</CardContent>
+                <CardContent>{item.gloss}</CardContent>
+              </Card>
+            </ListItem>
+          ))}
+        </List>
+      </div>
     );
   }
 }

@@ -1,5 +1,3 @@
-import WordList from "./component";
-
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import WordListComponent from "./component";

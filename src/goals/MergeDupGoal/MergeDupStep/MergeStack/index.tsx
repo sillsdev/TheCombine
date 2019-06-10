@@ -6,8 +6,6 @@ import { WordDrag, dropWord, dragWord } from "../../../DraggableWord/actions";
 import { MergeAction, addDuplicate, removeDuplicate } from "../actions";
 import { Word } from "../../../../types/word";
 
-//Temp Container Component
-
 export function mapStateToProps(state: StoreState) {
   return {
     draggedWord: state.draggedWord.draggedWord

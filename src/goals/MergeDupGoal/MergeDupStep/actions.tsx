@@ -1,4 +1,4 @@
-import { Word, Merge, simpleWord } from "../../../types/word";
+import { Word, simpleWord } from "../../../types/word";
 
 // Args: (word: Word)
 export const ADD_PARENT = "ADD_PARENT";
@@ -25,40 +25,40 @@ export interface MergeAction {
     | ADD_DUPLICATE
     | APPLY_MERGES
     | REMOVE_DUPLICATE;
-  payload: { merge: Word; parent?: number };
+  payload: { word: Word; parent?: number };
 }
 
-export function addParent(merge: Word): MergeAction {
+export function addParent(word: Word): MergeAction {
   return {
     type: ADD_PARENT,
-    payload: { merge }
+    payload: { word }
   };
 }
 
 export function addSense(word: Word, parent: number): MergeAction {
   return {
     type: ADD_SENSE,
-    payload: { merge: word, parent }
+    payload: { word, parent }
   };
 }
 
 export function addDuplicate(word: Word, parent: number): MergeAction {
   return {
     type: ADD_DUPLICATE,
-    payload: { merge: word, parent }
+    payload: { word, parent }
   };
 }
 
 export function applyMerges(): MergeAction {
   return {
     type: APPLY_MERGES,
-    payload: { merge: simpleWord("", "") }
+    payload: { word: simpleWord("", "") }
   };
 }
 
 export function removeDuplicate(word: Word, parent: number): MergeAction {
   return {
     type: REMOVE_DUPLICATE,
-    payload: { merge: word, parent }
+    payload: { word, parent }
   };
 }

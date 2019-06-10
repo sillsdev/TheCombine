@@ -2,7 +2,14 @@
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
-import { ListSubheader, Box, Grid, Container } from "@material-ui/core";
+import {
+  ListSubheader,
+  Box,
+  Grid,
+  Container,
+  Card,
+  CardContent
+} from "@material-ui/core";
 import MergeStack from "../MergeStack";
 import { Sense, ParentWord } from "../component";
 
@@ -25,6 +32,8 @@ export class MergeRow extends React.Component<
     super(props);
   }
 
+  // this function is used to force this component to redraw itself when
+  // the contents of parent change from the removeWord action in MergeStack
   update() {
     this.setState({});
   }
@@ -63,6 +72,16 @@ export class MergeRow extends React.Component<
               <MergeStack updateRow={() => this.update()} sense={item} />
             </Grid>
           ))}
+          <Grid
+            item
+            onDragOver={e => e.preventDefault()}
+            onDrop={_ => this.drop()}
+          >
+            <Card style={{ width: 200 }}>
+              <CardContent>Drag new sense</CardContent>
+              <CardContent>Here</CardContent>
+            </Card>
+          </Grid>
           <Grid
             item
             style={{ flex: 1 }}

@@ -4,6 +4,7 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word, simpleWord } from "../../../../types/word";
 import { Box, CardContent, Card } from "@material-ui/core";
 import { Sense } from "../component";
+import { thisExpression } from "@babel/types";
 
 //interface for component props
 export interface MergeStackProps {
@@ -29,7 +30,6 @@ class MergeStack extends React.Component<
 
   addWord(word: Word) {
     if (this.props.addDuplicate && this.props.dropWord) {
-      console.log("Trying to add dup: " + word.vernacular);
       this.props.addDuplicate(word, this.props.sense.id);
       this.props.dropWord();
     }
@@ -37,7 +37,7 @@ class MergeStack extends React.Component<
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
-    if (this.props.draggedWord) {
+    if (this.props.draggedWord && this.props.draggedWord != this.topCard()) {
       this.addWord(this.props.draggedWord);
     }
   }
@@ -54,17 +54,18 @@ class MergeStack extends React.Component<
     } else {
       if (this.props.removeDuplicate && this.props.updateRow) {
         this.props.removeDuplicate(word, this.props.sense.id);
+        // force MergeRow to update even though react think we didn't update any of MergeWord's props
         this.props.updateRow();
       }
     }
   }
 
+  topCard(): Word {
+    return this.props.sense.dups[this.props.sense.dups.length - 1];
+  }
+
   render() {
-    // get last card
-    var lastCard = this.props.sense.dups[this.props.sense.dups.length - 1];
-    if (!lastCard) {
-      lastCard = simpleWord("Missing Word", "");
-    }
+    var lastCard = this.topCard();
     //visual definition
     return (
       <Box style={{ width: 200 }}>

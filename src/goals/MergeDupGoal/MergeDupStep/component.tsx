@@ -1,7 +1,7 @@
-import { Word, Merge, testWordList } from "../../../types/word";
+import { Word, testWordList } from "../../../types/word";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Box, Grid, Button } from "@material-ui/core";
+import { Box, Grid, Button, Card, CardContent } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
 
@@ -26,9 +26,6 @@ export interface MergeDupStepProps {
 
 //interface for component state
 export interface MergeDupStepState {}
-
-//interface for component state
-interface WordListState {}
 
 class MergeDupStep extends React.Component<
   MergeDupStepProps & LocalizeContextProps,
@@ -55,9 +52,7 @@ class MergeDupStep extends React.Component<
     var testWords: Word[] = testWordList();
     //visual definition
     return (
-      //we really shouldn't be manually changing colors but you can't see pure white
-      // cards on a pure white background so I am **temporarily** changing the bg here
-      <Box bgcolor="#eee">
+      <Box style={{ maxHeight: "100%" }}>
         <Grid container>
           <Grid item>
             <WordList words={testWords} />
@@ -66,14 +61,24 @@ class MergeDupStep extends React.Component<
             {this.props.parentWords.map((item, _) => (
               <MergeRow parent={item} />
             ))}
-            <Button style={{ float: "right" }} onClick={_ => this.next()}>
-              Next
-            </Button>
+
             <Box
               style={{ height: "100%" }}
               onDragOver={e => e.preventDefault()}
               onDrop={_ => this.dragDrop()}
-            />
+            >
+              <hr />
+              <Grid container direction="row-reverse">
+                <Grid item />
+                <Card style={{ width: 200 }}>
+                  <CardContent>Drag new root word</CardContent>
+                  <CardContent> Here</CardContent>
+                </Card>
+              </Grid>
+              <Button style={{ float: "right" }} onClick={_ => this.next()}>
+                Next
+              </Button>
+            </Box>
           </Grid>
         </Grid>
       </Box>
