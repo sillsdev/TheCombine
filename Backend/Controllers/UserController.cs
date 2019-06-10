@@ -37,11 +37,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            #if DEBUG
+#if DEBUG
                 return new ObjectResult(await _userService.DeleteAllUsers());
-            #else
-                return new UnauthorizedResult();
-            #endif
+#else
+            return new UnauthorizedResult();
+#endif
         }
 
         // GET: v1/Users/name
@@ -91,15 +91,15 @@ namespace BackendFramework.Controllers
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
-            #if DEBUG
+#if DEBUG
                 if (await _userService.Delete(Id))
                 {
                     return new OkResult();
                 }
                 return new NotFoundResult();
-            #else
-                return new UnauthorizedResult();
-            #endif
+#else
+            return new UnauthorizedResult();
+#endif
         }
     }
 

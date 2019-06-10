@@ -45,7 +45,7 @@ namespace BackendFramework.Controllers
 #if DEBUG
                 return new ObjectResult(await _wordService.DeleteAllWords());
 #else
-                return new UnauthorizedResult();
+            return new UnauthorizedResult();
 #endif
         }
 
