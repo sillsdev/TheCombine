@@ -3,13 +3,24 @@ import React from "react";
 
 //TC modules
 import CreateProject from "../CreateProject";
+import { Route, Router } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import { PrivateRoute } from "../PrivateRoute";
+import { LogoutButton } from "../Login/LogoutButton";
 import { GoalView } from "../GoalView/GoalView";
+        
+export const history = createBrowserHistory();
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <CreateProject />
-      <GoalView />
+      <Temp />
+      <LogoutButton />
+      <Router history={history}>
+        <PrivateRoute exact path="/" component={CreateProject} />
+        <PrivateRoute exact path="/" component={GoalView} />
+        <Route path="/login" component={Login} />
+      </Router>
     </div>
   );
 };

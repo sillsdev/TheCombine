@@ -1,5 +1,6 @@
 import { Dispatch } from "react";
 import axios from "axios";
+import { authHeader } from "../Login/AuthHeaders";
 
 export const CREATE_PROJECT = "CREATE_PROJECT";
 export type CREATE_PROJECT = typeof CREATE_PROJECT;
@@ -23,8 +24,10 @@ export function asyncCreateProject(name: string, languageData: File) {
     const data = new FormData();
     data.append("languageData", languageData);
     data.append("name", name);
-    const response = await axios
-      .post("https://localhost:5001/v1/projects", data, {})
+    await axios
+      .post("https://localhost:5001/v1/projects", data, {
+        headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
+      })
       .then(res => {
         console.log(res.statusText);
         dispatch(createProject(name, languageData));

@@ -12,7 +12,13 @@
     "username": ["Username", "Nombre de usuario"],
     "password": ["Password", "Contraseña"],
     "login": ["Login", "Iniciar sesión"],
-    "register": ["Register", "Registro"]
+    "register": ["Register", "Registro"],
+    "failed": [
+      "Failed to log in. Please check your username and password.",
+      "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
+    ],
+    "loggingIn": ["Logging in...", "Iniciar sesión..."],
+    "logout": ["Log out", "cerrar sesión"]
   },
   "createProject": {
     "name": ["Project Name", "Nombre del Proyecto"],

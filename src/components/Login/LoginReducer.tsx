@@ -1,8 +1,15 @@
-import { LOGIN, UserAction, REGISTER } from "./LoginActions";
+import {
+  UserAction,
+  REGISTER,
+  LOGIN_ATTEMPT,
+  LOGIN_FAILURE,
+  LOGIN_SUCCESS
+} from "./LoginActions";
 
 export interface LoginState {
   user: string;
   success: boolean;
+  loginAttempt?: boolean;
 }
 
 export const defaultState: LoginState = {
@@ -16,11 +23,13 @@ export const loginReducer = (
 ): LoginState => {
   if (!state) return defaultState;
   switch (action.type) {
-    case LOGIN:
-      console.log("LOGIN METHOD");
+    case LOGIN_ATTEMPT:
+      return { user: action.payload.user, success: false, loginAttempt: true };
+    case LOGIN_FAILURE:
+      return { user: action.payload.user, success: false };
+    case LOGIN_SUCCESS:
       return { user: action.payload.user, success: true };
     case REGISTER:
-      console.log("REGISTER METHOD");
       return { user: action.payload.user, success: true };
     default:
       return state;

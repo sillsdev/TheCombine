@@ -4,8 +4,9 @@ import App from "./App";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../GoalView/TempDefaultState";
 import { Provider } from "react-redux";
+import thunk from "redux-thunk";
 
-const createMockStore = configureMockStore([]);
+const createMockStore = configureMockStore([thunk]);
 
 it("renders without crashing", () => {
   const mockStore = createMockStore({

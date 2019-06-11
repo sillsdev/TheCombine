@@ -9,9 +9,14 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { Grid } from "@material-ui/core";
 
-export interface LoginProps {
+export interface LoginDispatchProps {
   login?: (user: string, password: string) => void;
+  logout: () => void;
   register?: (user: string, password: string) => void;
+}
+
+export interface LoginStateProps {
+  loginAttempt: boolean | undefined;
 }
 
 interface LoginState {
@@ -20,11 +25,14 @@ interface LoginState {
 }
 
 class Login extends React.Component<
-  LoginProps & LocalizeContextProps,
+  LoginDispatchProps & LoginStateProps & LocalizeContextProps,
   LoginState
 > {
-  constructor(props: LoginProps & LocalizeContextProps) {
+  constructor(
+    props: LoginDispatchProps & LoginStateProps & LocalizeContextProps
+  ) {
     super(props);
+    this.props.logout(); //Hitting the login page will log a user out (doubles as a logout page, essentially)
     this.state = { user: "", password: "" };
   }
 
@@ -53,7 +61,7 @@ class Login extends React.Component<
 
     var user = this.state.user.trim();
     var pass = this.state.password.trim();
-    if (user == "" || pass == "") {
+    if (user === "" || pass === "") {
       // notify the user they need both a username and password
       alert("Username and password cannot be blank");
     } else if (this.props.login) {
@@ -64,7 +72,7 @@ class Login extends React.Component<
   register() {
     var user = this.state.user.trim();
     var pass = this.state.password.trim();
-    if (user == "" || pass == "") {
+    if (user === "" || pass === "") {
       // notify the user they need both a username and password
       alert("Username and password cannot be blank");
     } else if (this.props.register) {
@@ -90,12 +98,18 @@ class Login extends React.Component<
             onChange={evt => this.updatePassword(evt)}
           />
           <br />
-          <Button onClick={_ => this.register()}>
+          <Button onClick={() => this.register()}>
             <Translate id="login.register" />
           </Button>
           <Button type="submit">
             <Translate id="login.login" />
           </Button>
+          <br />
+          {this.props.loginAttempt && (
+            <p>
+              <Translate id="login.loggingIn" />
+            </p>
+          )}
         </form>
       </Grid>
     );
