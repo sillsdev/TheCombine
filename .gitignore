@@ -29,4 +29,6 @@ package-lock.json
 .vs/*
 Backend/bin
 Backend/obj
+Backend.Tests/bin
+Backend.Tests/obj
 

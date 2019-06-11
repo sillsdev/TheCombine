@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendFramework", "BackendFramework\BackendFramework.csproj", "{C030E637-1A27-4104-A10A-B884A2EA5486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackendFramework", "Backend\BackendFramework.csproj", "{68C41523-5902-451D-9468-D4CFB9B78E2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend.Tests", "Backend.Tests\Backend.Tests.csproj", "{92D24914-3CAF-4CB5-A020-729A9F53158D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C030E637-1A27-4104-A10A-B884A2EA5486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C030E637-1A27-4104-A10A-B884A2EA5486}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C030E637-1A27-4104-A10A-B884A2EA5486}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C030E637-1A27-4104-A10A-B884A2EA5486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68C41523-5902-451D-9468-D4CFB9B78E2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68C41523-5902-451D-9468-D4CFB9B78E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68C41523-5902-451D-9468-D4CFB9B78E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68C41523-5902-451D-9468-D4CFB9B78E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92D24914-3CAF-4CB5-A020-729A9F53158D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92D24914-3CAF-4CB5-A020-729A9F53158D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92D24914-3CAF-4CB5-A020-729A9F53158D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92D24914-3CAF-4CB5-A020-729A9F53158D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
