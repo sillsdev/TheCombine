@@ -128,7 +128,17 @@ namespace BackendFramework.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> Post()
         {
-            string path = "Controllers\\testingdata.lift";
+            var file = model.file;
+
+            if (file.Length > 0)
+            {
+                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
+                using (var fs = new FileStream(model.filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fs);
+                }
+            }
+
             var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
             return new ObjectResult(parser.ReadLiftFile(path));
         }

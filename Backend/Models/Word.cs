@@ -1,9 +1,17 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace BackendFramework.ValueModels
 {
+    public class FileUpload
+    {
+        public IFormFile file { get; set; }
+        public string name { get; set; }
+        public string filePath { get; set; }
+    }
+
     public enum state
     {
         active,
