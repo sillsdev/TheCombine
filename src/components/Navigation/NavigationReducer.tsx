@@ -22,7 +22,10 @@ export const navReducer = (
   switch (action.type) {
     case NAVIGATE_BACK:
       return {
-        VisibleComponent: setVisibleComponent(state),
+        VisibleComponent: setVisibleToPreviousDisplay(
+          state.VisibleComponent,
+          state.DisplayHistory
+        ),
         DisplayHistory: removeDisplayFromHistory(state.DisplayHistory)
       };
     case NAVIGATE_FORWARD:
@@ -54,10 +57,13 @@ export function removeDisplayFromHistory(
   return history;
 }
 
-function setVisibleComponent(state: NavState): JSX.Element {
-  let previousElement = state.DisplayHistory.pop();
+export function setVisibleToPreviousDisplay(
+  visibleDisplay: JSX.Element,
+  history: Stack<JSX.Element>
+): JSX.Element {
+  let previousElement = history.pop();
   if (previousElement) {
     return previousElement;
   }
-  return state.VisibleComponent;
+  return visibleDisplay;
 }

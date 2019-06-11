@@ -4,7 +4,8 @@ import {
   navReducer,
   defaultState,
   addDisplayToHistory,
-  removeDisplayFromHistory
+  removeDisplayFromHistory,
+  setVisibleToPreviousDisplay
 } from "../NavigationReducer";
 import { NavState } from "../../../types/nav";
 import { MockActionInstance } from "../../../types/action";
@@ -13,17 +14,8 @@ import Stack from "../../../types/stack";
 import BaseGoalScreen from "../../../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 import { GoalTimeline } from "../../GoalView/GoalTimelineComponent";
 
-it("Should return the default state if state is undefined", () => {
-  const expectedState = defaultState;
-
-  const goal: Goal = new BaseGoal();
-
-  const changeDisplayAction: actions.NavigateForwardAction = {
-    type: actions.NAVIGATE_FORWARD,
-    payload: goal
-  };
-
-  expect(navReducer(undefined, changeDisplayAction)).toEqual(expectedState);
+it("Should return the default state", () => {
+  expect(navReducer(undefined, MockActionInstance)).toEqual(defaultState);
 });
 
 it("Should return the current state given a non-existent action", () => {
@@ -106,6 +98,23 @@ it("Should return an empty history given an empty history", () => {
   expect(removeDisplayFromHistory(displayHistory)).toEqual(expectedHistory);
 });
 
-it("Should return the default state", () => {
-  expect(navReducer(undefined, MockActionInstance)).toEqual(defaultState);
+it("Should set the visible component to the previous display", () => {
+  const previousDisplay = <GoalTimeline />;
+  const displayHistory = new Stack<JSX.Element>([previousDisplay]);
+
+  const currentDisplay = <BaseGoalScreen goal={new BaseGoal()} />;
+  const expectedDisplay = previousDisplay;
+  expect(setVisibleToPreviousDisplay(currentDisplay, displayHistory)).toEqual(
+    expectedDisplay
+  );
+});
+
+it("Should leave the visible display unchanged", () => {
+  const currentDisplay = <GoalTimeline />;
+  const displayHistory = new Stack<JSX.Element>([]);
+  const expectedDisplay = <GoalTimeline />;
+
+  expect(setVisibleToPreviousDisplay(currentDisplay, displayHistory)).toEqual(
+    expectedDisplay
+  );
 });
