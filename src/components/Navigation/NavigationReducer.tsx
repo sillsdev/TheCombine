@@ -4,9 +4,13 @@ import { CHANGE_DISPLAY } from "./NavigationActions";
 import { ActionWithPayload } from "../../types/action";
 import { Goal } from "../../types/goals";
 import { GoalTimeline } from "../GoalView/GoalTimelineComponent";
+import Stack from "../../types/stack";
 
 export const defaultState: NavState = {
-  VisibleComponent: <GoalTimeline />
+  PreviousComponent: <GoalTimeline />,
+  VisibleComponent: <GoalTimeline />,
+  DisplayHistory: new Stack<JSX.Element>([]),
+  GoBack: () => console.log("Go Back")
 };
 
 export const navReducer = (
@@ -19,7 +23,10 @@ export const navReducer = (
   switch (action.type) {
     case CHANGE_DISPLAY:
       return {
-        VisibleComponent: action.payload.display
+        PreviousComponent: state.PreviousComponent,
+        VisibleComponent: action.payload.display,
+        DisplayHistory: state.DisplayHistory,
+        GoBack: state.GoBack
       };
     default:
       return state;

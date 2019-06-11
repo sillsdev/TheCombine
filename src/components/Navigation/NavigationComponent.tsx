@@ -1,7 +1,12 @@
 import React from "react";
+import Stack from "../../types/stack";
+import { NavigationBar } from "./NavigationBar/NavigationBarComponent";
 
 export interface NavComponentProps {
+  PreviousComponent: JSX.Element;
   VisibleComponent: JSX.Element;
+  DisplayHistory: Stack<JSX.Element>;
+  GoBack: () => void;
 }
 
 export class Navigation extends React.Component<NavComponentProps> {
@@ -11,7 +16,13 @@ export class Navigation extends React.Component<NavComponentProps> {
 
   render() {
     return (
-      <div className="VisibleComponent">{this.props.VisibleComponent}</div>
+      <div className="NavigationComponent">
+        <NavigationBar
+          PreviousComponent={this.props.PreviousComponent}
+          GoBack={this.props.GoBack}
+        />
+        {this.props.VisibleComponent}
+      </div>
     );
   }
 }
