@@ -27,6 +27,7 @@ package-lock.json
 
 # Visual Studio
 .vs/*
+Backend/.vs/*
 Backend/bin
 Backend/obj
 
