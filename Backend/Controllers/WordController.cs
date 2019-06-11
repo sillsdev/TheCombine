@@ -75,11 +75,16 @@ namespace BackendFramework.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] Word word)
         {
-            if (await _wordService.Update(Id, word))
+            List<string> ids = new List<string>();
+            ids.Add(Id);
+            var document = await _wordService.GetWords(ids);
+            if (document.Count == 0)
             {
-                return new OkObjectResult(word.Id);
+                return new NotFoundResult();
             }
-            return new NotFoundResult();
+            word.Id = (document.First()).Id;
+            await _wordService.Update(Id, word);
+            return new OkObjectResult(word.Id);
         }
         // DELETE: v1/Project/Words/{Id}
         // Implements Delete(), Arguments: string id of target word
