@@ -33,9 +33,9 @@
   },
   "goal": {
     "name": {
-      "handleDuplicates": ["Handle Duplicates", "Manejar duplicados"],
-      "handleFlags": ["Handle Flags", "Banderas de la manija"],
-      "grammarCheck": ["Grammar Check", "Chequeo de gramática"]
+      "handleDuplicates": ["Handle Duplicates"],
+      "handleFlags": ["Handle Flags"],
+      "grammarCheck": ["Grammar Check"]
     }
   }
 }
