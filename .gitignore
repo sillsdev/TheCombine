@@ -32,3 +32,6 @@ Backend/obj
 
 # Vagrant
 deploy/.vagrant
+
+# Python
+*.pyc
