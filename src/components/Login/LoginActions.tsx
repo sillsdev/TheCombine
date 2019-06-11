@@ -54,7 +54,6 @@ export function asyncLogin(user: string, password: string) {
       })
       .catch(err => {
         console.log(err);
-        alert(getTranslate(getState().localize)("login.failed")); // TODO alerts should probably be implemented with a material-ui element
         dispatch(loginFailure(user));
       });
   };
