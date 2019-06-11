@@ -76,7 +76,7 @@ export async function updateUser(user: User): Promise<User> {
 }
 
 export async function createProject(project: Project): Promise<Project> {
-  return await backendServer.post("projects").then(resp => {
+  return await backendServer.post("projects", project).then(resp => {
     return { ...project, id: resp.data };
   });
 }
@@ -90,7 +90,7 @@ export async function getProject(id: string): Promise<Project> {
 }
 
 export async function updateProject(project: Project) {
-  await backendServer.put("projects/" + project.id);
+  await backendServer.put("projects/" + project.id, project);
 }
 
 export async function uploadLift(project: Project, lift: File) {
