@@ -12,6 +12,7 @@ namespace BackendFramework.ValueModels
         public string filePath { get; set; }
     }
 
+
     public enum state
     {
         active,

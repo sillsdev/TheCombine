@@ -43,7 +43,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-                return new ObjectResult(await _wordService.DeleteAllWords());
+            return new ObjectResult(await _wordService.DeleteAllWords());
 #else
             return new UnauthorizedResult();
 #endif
@@ -126,11 +126,20 @@ namespace BackendFramework.Controllers
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: ?
         [HttpPost("upload")]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Upload(FileUpload model)
         {
-            string path = "Controllers\\testingdata.lift";
+            var file = model.File;
+
+            if (file.Length > 0)
+            {
+                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
+                using (var fs = new FileStream(Path.Combine(model.filePath, file.FileName), FileMode.Create))
+                {
+                    await file.CopyToAsync(fs);
+                }
+            }
             var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-            return new ObjectResult(parser.ReadLiftFile(path));
+            return new ObjectResult(parser.ReadLiftFile(model.filePath));
         }
 
         // POST: v1/Project/Words/upload

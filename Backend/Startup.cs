@@ -34,7 +34,7 @@ namespace BackendFramework
             public string ProjectsDatabase { get; set; }
             public string UserRolesDatabase { get; set; }
             public string ProjectsDatabase { get; set; }
-            public string NamesCollectionLanguage { get; set; }
+            //public string NamesCollectionLanguage { get; set; }
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.

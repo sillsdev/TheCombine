@@ -19,7 +19,7 @@ export interface CreateProjectAction {
 }
 
 //thunk action creator
-export function asyncCreateProject(name: string, languageData: File) {
+export function asyncCreateProject(name: string, file: File) {
   return async (dispatch: Dispatch<CreateProjectAction>) => {
     var proj = {
       Name: name,
@@ -37,15 +37,15 @@ export function asyncCreateProject(name: string, languageData: File) {
       .post("https://localhost:5001/v1/projects", proj)
       .then(id => id.data);
     const data = new FormData();
-    data.append("languageData", languageData);
+    data.append("file", file);
     data.append("name", name);
     await axios
       .post("https://localhost:5001/v1/projects/words/upload", data, {
-              headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
+        headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
       })
       .then(res => {
         console.log(res.statusText);
-        dispatch(createProject(name, languageData));
+        dispatch(createProject(name, file));
       })
       .catch(err => {
         alert("Failed to create project");
