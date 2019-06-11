@@ -1,6 +1,6 @@
 import React from "react";
 import Stack from "../../types/stack";
-import { NavigationBar } from "./NavigationBar/NavigationBarComponent";
+import NavigationBar from "./NavigationBar/";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 export interface NavComponentProps {
@@ -19,7 +19,7 @@ export class Navigation extends React.Component<
   render() {
     return (
       <div className="NavigationComponent">
-        <NavigationBar GoBack={this.props.GoBack} />
+        <NavigationBar />
         {this.props.VisibleComponent}
       </div>
     );

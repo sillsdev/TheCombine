@@ -10,7 +10,10 @@ import * as actions from "./NavigationActions";
 export function mapStateToProps(state: StoreState): NavState {
   return {
     VisibleComponent: state.navState.VisibleComponent,
-    DisplayHistory: new Stack<JSX.Element>([])
+    DisplayHistory: new Stack<JSX.Element>([]),
+    NavBarState: {
+      ShouldRenderBackButton: false
+    }
   };
 }
 

@@ -5,7 +5,8 @@ import {
   defaultState,
   addDisplayToHistory,
   removeDisplayFromHistory,
-  setVisibleToPreviousDisplay
+  setVisibleToPreviousDisplay,
+  shouldRenderBackButton
 } from "../NavigationReducer";
 import { NavState } from "../../../types/nav";
 import { MockActionInstance } from "../../../types/action";
@@ -37,17 +38,20 @@ it("Should change the visible component to the one provided", () => {
 
   const goal: Goal = new BaseGoal();
 
-  const changeDisplayAction: actions.NavigateForwardAction = {
+  const navigateForwardAction: actions.NavigateForwardAction = {
     type: actions.NAVIGATE_FORWARD,
     payload: goal
   };
 
   const newState: NavState = {
-    VisibleComponent: changeDisplayAction.payload.display,
-    DisplayHistory: new Stack<JSX.Element>([defaultState.VisibleComponent])
+    VisibleComponent: navigateForwardAction.payload.display,
+    DisplayHistory: new Stack<JSX.Element>([defaultState.VisibleComponent]),
+    NavBarState: {
+      ShouldRenderBackButton: true
+    }
   };
 
-  expect(navReducer(state, changeDisplayAction)).toEqual(newState);
+  expect(navReducer(state, navigateForwardAction)).toEqual(newState);
 });
 
 it("Should navigate back to the previous display", () => {
@@ -56,7 +60,10 @@ it("Should navigate back to the previous display", () => {
 
   const state: NavState = {
     VisibleComponent: <BaseGoalScreen goal={new BaseGoal()} />,
-    DisplayHistory: new Stack<JSX.Element>(displayHistory)
+    DisplayHistory: new Stack<JSX.Element>(displayHistory),
+    NavBarState: {
+      ShouldRenderBackButton: false
+    }
   };
 
   const navigateBackAction: actions.NavigateBackAction = {
@@ -65,7 +72,10 @@ it("Should navigate back to the previous display", () => {
 
   const newState: NavState = {
     VisibleComponent: previousElement,
-    DisplayHistory: new Stack<JSX.Element>([])
+    DisplayHistory: new Stack<JSX.Element>([]),
+    NavBarState: {
+      ShouldRenderBackButton: false
+    }
   };
 
   expect(navReducer(state, navigateBackAction)).toEqual(newState);
@@ -117,4 +127,17 @@ it("Should leave the visible display unchanged", () => {
   expect(setVisibleToPreviousDisplay(currentDisplay, displayHistory)).toEqual(
     expectedDisplay
   );
+});
+
+it("Should return true when display history is non-empty", () => {
+  const previousDisplay = <GoalTimeline />;
+  const displayHistory = new Stack<JSX.Element>([previousDisplay]);
+
+  expect(shouldRenderBackButton(displayHistory)).toEqual(true);
+});
+
+it("Should return false when display history is empty", () => {
+  const displayHistory = new Stack<JSX.Element>([]);
+
+  expect(shouldRenderBackButton(displayHistory)).toEqual(false);
 });

@@ -9,7 +9,10 @@ import { Action } from "redux";
 
 export const defaultState: NavState = {
   VisibleComponent: <GoalTimeline />,
-  DisplayHistory: new Stack<JSX.Element>([])
+  DisplayHistory: new Stack<JSX.Element>([]),
+  NavBarState: {
+    ShouldRenderBackButton: false
+  }
 };
 
 export const navReducer = (
@@ -26,7 +29,10 @@ export const navReducer = (
           state.VisibleComponent,
           state.DisplayHistory
         ),
-        DisplayHistory: removeDisplayFromHistory(state.DisplayHistory)
+        DisplayHistory: removeDisplayFromHistory(state.DisplayHistory),
+        NavBarState: {
+          ShouldRenderBackButton: shouldRenderBackButton(state.DisplayHistory)
+        }
       };
     case NAVIGATE_FORWARD:
       let actionWithPayload = action as ActionWithPayload<Goal>; // TODO: Seems bad. Change?
@@ -35,7 +41,10 @@ export const navReducer = (
         DisplayHistory: addDisplayToHistory(
           state.VisibleComponent,
           state.DisplayHistory
-        )
+        ),
+        NavBarState: {
+          ShouldRenderBackButton: shouldRenderBackButton(state.DisplayHistory)
+        }
       };
     default:
       return state;
@@ -66,4 +75,8 @@ export function setVisibleToPreviousDisplay(
     return previousElement;
   }
   return visibleDisplay;
+}
+
+export function shouldRenderBackButton(history: Stack<JSX.Element>): boolean {
+  return history.size() > 0;
 }
