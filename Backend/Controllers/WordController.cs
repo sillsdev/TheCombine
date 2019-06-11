@@ -124,7 +124,7 @@ namespace BackendFramework.Controllers
         }
 
         // POST: v1/Project/Words/upload
-        // Implements: Upload(), Arguments: ?
+        // Implements: Upload(), Arguments: FileUpload model
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(FileUpload model)
         {
@@ -138,8 +138,16 @@ namespace BackendFramework.Controllers
                     await file.CopyToAsync(fs);
                 }
             }
-            var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-            return new ObjectResult(parser.ReadLiftFile(model.filePath));
+            try
+            {
+
+                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+                return new ObjectResult(parser.ReadLiftFile(model.filePath));
+            }
+            catch (exception)
+            {
+                return new InvalidDataException();
+            }
         }
 
         // POST: v1/Project/Words/upload
