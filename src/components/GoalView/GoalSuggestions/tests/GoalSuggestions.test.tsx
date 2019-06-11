@@ -1,18 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "./DefaultState";
+import GoalSuggestions from "..";
+import { defaultState } from "../../GoalTimelineReducers";
 import { Provider } from "react-redux";
 
 const createMockStore = configureMockStore([]);
 
 it("renders without crashing", () => {
-  const mockStore = createMockStore(defaultState);
+  const mockStore = createMockStore({
+    goalsState: {
+      ...defaultState
+    }
+  });
   const div = document.createElement("div");
   ReactDOM.render(
     <Provider store={mockStore}>
-      <App />
+      <GoalSuggestions />
     </Provider>,
     div
   );

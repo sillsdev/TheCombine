@@ -1,9 +1,9 @@
-import * as actions from "../GoalViewActions";
+import * as actions from "../GoalTimelineActions";
 import {
   addGoalToHistory,
   removeGoalFromSuggestions,
   goalsReducer
-} from "../GoalViewReducers";
+} from "../GoalTimelineReducers";
 import { Goal, GoalsState } from "../../../types/goals";
 import { BaseGoal } from "../../../types/goals";
 import { User } from "../../../types/user";

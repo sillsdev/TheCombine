@@ -4,7 +4,6 @@ import { MergeDupData, MergeDupStepProps } from "../goals/MergeDupGoal";
 import Stack from "./stack";
 import BaseGoalScreen from "../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 import BaseGoalSelect from "../goals/DefaultGoal/BaseGoalSelect/BaseGoalSelect";
-import { LocalizeContextProps } from "react-localize-redux";
 import { MergeDupProps } from "../goals/MergeDupGoal/MergeDupComponent";
 
 export enum GoalOption {
@@ -53,7 +52,7 @@ export interface Goal {
   user: User;
 
   display: JSX.Element;
-  select: JSX.Element;
+  goalWidget: JSX.Element;
 
   steps: React.Component[];
   curNdx: number;
@@ -70,7 +69,7 @@ export class BaseGoal implements Goal {
   user: User;
 
   display: JSX.Element;
-  select: JSX.Element;
+  goalWidget: JSX.Element;
 
   steps: React.Component[];
   curNdx: number;
@@ -89,7 +88,7 @@ export class BaseGoal implements Goal {
       id: -1
     };
     this.display = <BaseGoalScreen goal={this} />;
-    this.select = <BaseGoalSelect goal={this} />;
+    this.goalWidget = <BaseGoalSelect goal={this} />;
     this.steps = [];
     this.curNdx = -1;
     this.data = {};

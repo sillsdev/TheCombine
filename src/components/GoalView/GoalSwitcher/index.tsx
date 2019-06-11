@@ -1,6 +1,7 @@
 import { Goal, GoalSelectorState } from "../../../types/goals";
-import GoalSelector from "./GoalSelectorComponent";
-import * as actions from "../GoalViewActions";
+import GoalSwitcher from "./GoalSwitcherComponent";
+import * as actions from "../GoalTimelineActions";
+import * as navActions from "../../Nav/NavActions";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../../types";
@@ -16,11 +17,14 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, actions.AddGoal>
 ) {
   return {
-    addGoal: (goal: Goal) => dispatch(actions.asyncAddGoal(goal))
+    chooseGoal: (goal: Goal) => {
+      dispatch(actions.asyncAddGoal(goal));
+      dispatch(navActions.asyncChangeDisplay(goal));
+    }
   };
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(GoalSelector);
+)(GoalSwitcher);

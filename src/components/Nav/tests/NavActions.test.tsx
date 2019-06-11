@@ -1,12 +1,12 @@
-import * as actions from "../GoalViewActions";
+import * as actions from "../NavActions";
 import { Goal } from "../../../types/goals";
 import { BaseGoal } from "../../../types/goals";
 import { User } from "../../../types/user";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../GoalView/TempDefaultState";
+import { defaultState } from "../NavReducer";
 import thunk from "redux-thunk";
 
-it("should create an action to add a goal", () => {
+it("should create an action to change the display", () => {
   const user: User = {
     name: "Test user",
     username: "Test username",
@@ -15,15 +15,15 @@ it("should create an action to add a goal", () => {
   const goal: Goal = new BaseGoal();
   goal.user = user;
   const expectedAction = {
-    type: actions.ADD_GOAL,
+    type: actions.CHANGE_DISPLAY,
     payload: goal
   };
-  expect(actions.addGoal(goal)).toEqual(expectedAction);
+  expect(actions.changeDisplay(goal)).toEqual(expectedAction);
 });
 
 const createMockStore = configureMockStore([thunk]);
 
-it("should create an async action to add a goal", () => {
+it("should create an async action to change the display", () => {
   const mockStore = createMockStore({
     goalsState: {
       ...defaultState
@@ -38,11 +38,11 @@ it("should create an async action to add a goal", () => {
   const goal: Goal = new BaseGoal();
   goal.user = user;
   const expectedAction = {
-    type: actions.ADD_GOAL,
+    type: actions.CHANGE_DISPLAY,
     payload: goal
   };
 
-  mockStore.dispatch<any>(actions.asyncAddGoal(goal)).then(() => {
+  mockStore.dispatch<any>(actions.asyncChangeDisplay(goal)).then(() => {
     expect(mockStore.getActions()).toEqual([expectedAction]);
   });
 });

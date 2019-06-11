@@ -1,7 +1,12 @@
+import React from "react";
 import { NavState } from "../../types/nav";
-import { CHANGE_DISPLAY, ActionWithPayload } from "./navActions";
-import { defaultState } from "./defaultState";
+import { CHANGE_DISPLAY, ActionWithPayload } from "./NavActions";
 import { Goal } from "../../types/goals";
+import { GoalTimeline } from "../GoalView/GoalTimelineComponent";
+
+export const defaultState: NavState = {
+  VisibleComponent: <GoalTimeline />
+};
 
 export const navReducer = (
   state: NavState | undefined,
@@ -13,7 +18,7 @@ export const navReducer = (
   switch (action.type) {
     case CHANGE_DISPLAY:
       return {
-        CurrentComponent: action.payload.display
+        VisibleComponent: action.payload.display
       };
     default:
       return state;

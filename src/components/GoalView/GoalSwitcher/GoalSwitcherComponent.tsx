@@ -1,19 +1,18 @@
 import React from "react";
 
 import { Goal } from "../../../types/goals";
-import GoalSelectorDropdown from "./GoalSelectorDropdown/";
+import GoalSelectorDropdown from "./GoalSelectorDropdown";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
-export interface GoalSelectorProps {
-  addGoal: (goal: Goal) => void;
-  displayGoal: (goal: Goal) => void;
+export interface GoalSwitcherProps {
+  chooseGoal: (goal: Goal) => void;
   goalOptions: Goal[];
 }
 
-export class GoalSelector extends React.Component<
-  GoalSelectorProps & LocalizeContextProps
+export class GoalSwitcher extends React.Component<
+  GoalSwitcherProps & LocalizeContextProps
 > {
-  constructor(props: GoalSelectorProps & LocalizeContextProps) {
+  constructor(props: GoalSwitcherProps & LocalizeContextProps) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -25,8 +24,7 @@ export class GoalSelector extends React.Component<
       name
     );
     if (goal) {
-      this.props.addGoal(goal);
-      this.props.displayGoal(goal);
+      this.props.chooseGoal(goal);
     }
   }
 
@@ -47,4 +45,4 @@ export class GoalSelector extends React.Component<
   }
 }
 
-export default withLocalize(GoalSelector);
+export default withLocalize(GoalSwitcher);

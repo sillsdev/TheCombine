@@ -4,24 +4,24 @@ import { Goal } from "../../../types/goals";
 import Stack from "../../../types/stack";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-export interface GoalFutureProps {
+export interface GoalSuggestionsProps {
   suggestions: Stack<Goal>;
 }
 
-export class GoalFuture extends React.Component<
-  GoalFutureProps & LocalizeContextProps
+export class GoalSuggestions extends React.Component<
+  GoalSuggestionsProps & LocalizeContextProps
 > {
-  constructor(props: GoalFutureProps & LocalizeContextProps) {
+  constructor(props: GoalSuggestionsProps & LocalizeContextProps) {
     super(props);
   }
 
   render() {
     return (
       <div className="GoalPicker">
-        {this.props.suggestions.stack.map(goal => goal.select)}
+        {this.props.suggestions.stack.map(goal => goal.goalWidget)}
       </div>
     );
   }
 }
 
-export default withLocalize(GoalFuture);
+export default withLocalize(GoalSuggestions);

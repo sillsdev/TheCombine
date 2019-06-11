@@ -1,5 +1,5 @@
 import { GoalSuggestionsState } from "../../../types/goals";
-import GoalFuture from "./GoalFutureComponent";
+import GoalSuggestions from "./GoalSuggestionsComponent";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../../types";
@@ -10,4 +10,4 @@ export function mapStateToProps(state: StoreState): GoalSuggestionsState {
   };
 }
 
-export default connect(mapStateToProps)(GoalFuture);
+export default connect(mapStateToProps)(GoalSuggestions);

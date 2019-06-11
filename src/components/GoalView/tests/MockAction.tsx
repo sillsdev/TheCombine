@@ -1,5 +1,5 @@
 import { Goal } from "../../../types/goals";
-import { ActionWithPayload } from "../GoalViewActions";
+import { ActionWithPayload } from "../GoalTimelineActions";
 
 export const MOCK_GOAL = "MOCK_GOAL";
 export type MOCK_GOAL = typeof MOCK_GOAL;

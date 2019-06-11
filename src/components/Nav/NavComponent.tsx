@@ -1,21 +1,17 @@
 import React from "react";
-import { Goal } from "../../types/goals";
 
 export interface NavComponentProps {
-  displayGoal: (goal: Goal) => void;
-  CurrentComponent: JSX.Element;
+  VisibleComponent: JSX.Element;
 }
 
-export class NavComponent extends React.Component<NavComponentProps> {
+export class Navigation extends React.Component<NavComponentProps> {
   constructor(props: NavComponentProps) {
     super(props);
   }
 
-  displayGoal(goal: Goal) {
-    this.displayGoal(goal);
-  }
-
   render() {
-    return <div className="NavComponent">{this.props.CurrentComponent}</div>;
+    return (
+      <div className="VisibleComponent">{this.props.VisibleComponent}</div>
+    );
   }
 }

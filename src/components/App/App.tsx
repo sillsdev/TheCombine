@@ -1,10 +1,10 @@
 //external modules
 import React from "react";
 
-import NavComponent from "../Nav";
+import Navigation from "../Nav";
 
 const App: React.FC = () => {
-  return <NavComponent />;
+  return <Navigation />;
 };
 
 export default App;

@@ -1,3 +1,3 @@
 export interface NavState {
-  CurrentComponent: JSX.Element;
+  VisibleComponent: JSX.Element;
 }
