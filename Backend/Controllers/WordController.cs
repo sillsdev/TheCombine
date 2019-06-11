@@ -128,7 +128,7 @@ namespace BackendFramework.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> Post()
         {
-            string path = "C:\\Users\\SkinnerS\\.lift-importation\\LiftTest\\testingdata\\testingdata.lift";
+            string path = "Controllers\\testingdata.lift";
             var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
             return new ObjectResult(parser.ReadLiftFile(path));
         }
