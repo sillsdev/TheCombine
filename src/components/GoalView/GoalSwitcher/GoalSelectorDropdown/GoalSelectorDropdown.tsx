@@ -31,7 +31,6 @@ export class GoalSelectorDropdown extends React.Component<
             {this.props.goalOptions.map(goal => (
               <MenuItem key={goal.id} value={goal.name}>
                 {goal.goalWidget}
-                {/* <Translate id={"goal.name." + goal.name} /> */}
               </MenuItem>
             ))}
           </Select>

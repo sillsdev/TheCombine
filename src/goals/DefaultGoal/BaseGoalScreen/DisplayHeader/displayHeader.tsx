@@ -1,6 +1,10 @@
 import { GoalProps } from "../../../../types/goals";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  withLocalize,
+  Translate
+} from "react-localize-redux";
 
 export class DisplayHeader extends React.Component<
   GoalProps & LocalizeContextProps
@@ -12,7 +16,9 @@ export class DisplayHeader extends React.Component<
   render() {
     return (
       <div>
-        <h1>{this.props.goal.name}</h1>
+        <h1>
+          <Translate id={"goal.name." + this.props.goal.name} />
+        </h1>
       </div>
     );
   }
