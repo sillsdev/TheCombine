@@ -5,7 +5,6 @@ import IconButton from "@material-ui/core/IconButton";
 import KeyboardBackspace from "@material-ui/icons/KeyboardBackspace";
 
 export interface NavBarProps {
-  PreviousComponent: JSX.Element;
   GoBack: () => void;
 }
 
@@ -20,7 +19,7 @@ export class NavigationBar extends React.Component<NavBarProps> {
         <AppBar position="static">
           <Toolbar>
             <IconButton edge="start">
-              <KeyboardBackspace />
+              <KeyboardBackspace onClick={this.props.GoBack} />
             </IconButton>
           </Toolbar>
         </AppBar>

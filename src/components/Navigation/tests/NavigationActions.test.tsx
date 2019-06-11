@@ -1,48 +1,57 @@
 import * as actions from "../NavigationActions";
-import { Goal } from "../../../types/goals";
-import { BaseGoal } from "../../../types/goals";
-import { User } from "../../../types/user";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../NavigationReducer";
 import thunk from "redux-thunk";
+import { Goal, BaseGoal } from "../../../types/goals";
 
-it("should create an action to change the display", () => {
-  const user: User = {
-    name: "Test user",
-    username: "Test username",
-    id: 0
-  };
-  const goal: Goal = new BaseGoal();
-  goal.user = user;
+it("should create an action to navigate back", () => {
   const expectedAction = {
-    type: actions.CHANGE_DISPLAY,
-    payload: goal
+    type: actions.NAVIGATE_BACK
   };
-  expect(actions.changeDisplay(goal)).toEqual(expectedAction);
+  expect(actions.navigateBack()).toEqual(expectedAction);
 });
 
 const createMockStore = configureMockStore([thunk]);
 
-it("should create an async action to change the display", () => {
+it("should create an async action to navigate back", () => {
   const mockStore = createMockStore({
     goalsState: {
       ...defaultState
     }
   });
 
-  const user: User = {
-    name: "Test user",
-    username: "Test username",
-    id: 0
-  };
-  const goal: Goal = new BaseGoal();
-  goal.user = user;
   const expectedAction = {
-    type: actions.CHANGE_DISPLAY,
+    type: actions.NAVIGATE_BACK
+  };
+
+  mockStore.dispatch<any>(actions.asyncNavigateBack()).then(() => {
+    expect(mockStore.getActions()).toEqual([expectedAction]);
+  });
+});
+
+it("should create an action to navigate forwards", () => {
+  const goal: Goal = new BaseGoal();
+  const expectedAction = {
+    type: actions.NAVIGATE_FORWARD,
+    payload: goal
+  };
+  expect(actions.navigateForward(goal)).toEqual(expectedAction);
+});
+
+it("should create an async action to navigate forwards", () => {
+  const mockStore = createMockStore({
+    goalsState: {
+      ...defaultState
+    }
+  });
+
+  const goal: Goal = new BaseGoal();
+  const expectedAction = {
+    type: actions.NAVIGATE_FORWARD,
     payload: goal
   };
 
-  mockStore.dispatch<any>(actions.asyncChangeDisplay(goal)).then(() => {
+  mockStore.dispatch<any>(actions.asyncNavigateForward(goal)).then(() => {
     expect(mockStore.getActions()).toEqual([expectedAction]);
   });
 });

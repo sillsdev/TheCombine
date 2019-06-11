@@ -1,28 +1,29 @@
 import React from "react";
 import Stack from "../../types/stack";
 import { NavigationBar } from "./NavigationBar/NavigationBarComponent";
+import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 export interface NavComponentProps {
-  PreviousComponent: JSX.Element;
   VisibleComponent: JSX.Element;
   DisplayHistory: Stack<JSX.Element>;
   GoBack: () => void;
 }
 
-export class Navigation extends React.Component<NavComponentProps> {
-  constructor(props: NavComponentProps) {
+export class Navigation extends React.Component<
+  NavComponentProps & LocalizeContextProps
+> {
+  constructor(props: NavComponentProps & LocalizeContextProps) {
     super(props);
   }
 
   render() {
     return (
       <div className="NavigationComponent">
-        <NavigationBar
-          PreviousComponent={this.props.PreviousComponent}
-          GoBack={this.props.GoBack}
-        />
+        <NavigationBar GoBack={this.props.GoBack} />
         {this.props.VisibleComponent}
       </div>
     );
   }
 }
+
+export default withLocalize(Navigation);

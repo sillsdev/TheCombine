@@ -1,34 +1,63 @@
 import React from "react";
 import { NavState } from "../../types/nav";
-import { CHANGE_DISPLAY } from "./NavigationActions";
+import { NAVIGATE_BACK, NAVIGATE_FORWARD } from "./NavigationActions";
 import { ActionWithPayload } from "../../types/action";
 import { Goal } from "../../types/goals";
 import { GoalTimeline } from "../GoalView/GoalTimelineComponent";
 import Stack from "../../types/stack";
+import { Action } from "redux";
 
 export const defaultState: NavState = {
-  PreviousComponent: <GoalTimeline />,
   VisibleComponent: <GoalTimeline />,
-  DisplayHistory: new Stack<JSX.Element>([]),
-  GoBack: () => console.log("Go Back")
+  DisplayHistory: new Stack<JSX.Element>([])
 };
 
 export const navReducer = (
   state: NavState | undefined,
-  action: ActionWithPayload<Goal>
+  action: Action
 ): NavState => {
   if (!state) {
     return defaultState;
   }
   switch (action.type) {
-    case CHANGE_DISPLAY:
+    case NAVIGATE_BACK:
       return {
-        PreviousComponent: state.PreviousComponent,
-        VisibleComponent: action.payload.display,
-        DisplayHistory: state.DisplayHistory,
-        GoBack: state.GoBack
+        VisibleComponent: setVisibleComponent(state),
+        DisplayHistory: removeDisplayFromHistory(state.DisplayHistory)
+      };
+    case NAVIGATE_FORWARD:
+      let actionWithPayload = action as ActionWithPayload<Goal>; // TODO: Seems bad. Change?
+      return {
+        VisibleComponent: actionWithPayload.payload.display,
+        DisplayHistory: addDisplayToHistory(
+          state.VisibleComponent,
+          state.DisplayHistory
+        )
       };
     default:
       return state;
   }
 };
+
+export function addDisplayToHistory(
+  display: JSX.Element,
+  history: Stack<JSX.Element>
+): Stack<JSX.Element> {
+  history.push(display);
+  return history;
+}
+
+export function removeDisplayFromHistory(
+  history: Stack<JSX.Element>
+): Stack<JSX.Element> {
+  history.pop();
+  return history;
+}
+
+function setVisibleComponent(state: NavState): JSX.Element {
+  let previousElement = state.DisplayHistory.pop();
+  if (previousElement) {
+    return previousElement;
+  }
+  return state.VisibleComponent;
+}

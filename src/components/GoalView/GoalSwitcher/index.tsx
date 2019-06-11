@@ -19,7 +19,7 @@ export function mapDispatchToProps(
   return {
     chooseGoal: (goal: Goal) => {
       dispatch(actions.asyncAddGoal(goal));
-      dispatch(navActions.asyncChangeDisplay(goal));
+      dispatch(navActions.asyncNavigateForward(goal));
     }
   };
 }
