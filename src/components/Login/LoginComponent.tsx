@@ -22,6 +22,7 @@ export interface LoginStateProps {
 interface LoginState {
   user: string;
   password: string;
+  error: { password: boolean; username: boolean };
 }
 
 class Login extends React.Component<
@@ -33,7 +34,11 @@ class Login extends React.Component<
   ) {
     super(props);
     this.props.logout(); //Hitting the login page will log a user out (doubles as a logout page, essentially)
-    this.state = { user: "", password: "" };
+    this.state = {
+      user: "",
+      password: "",
+      error: { password: false, username: false }
+    };
   }
 
   updateUser(
@@ -53,28 +58,34 @@ class Login extends React.Component<
   ) {
     const password = evt.target.value;
     const user = this.state.user;
-    this.setState({ password, user });
+    let error = { ...this.state.error };
+    error.password = false;
+    this.setState({ password, user, error });
   }
 
   login(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
 
-    var user = this.state.user.trim();
-    var pass = this.state.password.trim();
-    if (user === "" || pass === "") {
-      // notify the user they need both a username and password
-      alert("Username and password cannot be blank");
+    let user = this.state.user.trim();
+    let pass = this.state.password.trim();
+    let error = { ...this.state.error };
+    error.password = pass === "";
+    error.username = user === "";
+    if (error.password || error.username) {
+      this.setState({ error });
     } else if (this.props.login) {
       this.props.login(user, pass);
     }
   }
 
   register() {
-    var user = this.state.user.trim();
-    var pass = this.state.password.trim();
-    if (user === "" || pass === "") {
-      // notify the user they need both a username and password
-      alert("Username and password cannot be blank");
+    let user = this.state.user.trim();
+    let pass = this.state.password.trim();
+    let error = { ...this.state.error };
+    error.password = pass === "";
+    error.username = user === "";
+    if (error.password || error.username) {
+      this.setState({ error });
     } else if (this.props.register) {
       this.props.register(user, pass);
     }
@@ -89,6 +100,12 @@ class Login extends React.Component<
             label={<Translate id="login.username" />}
             value={this.state.user}
             onChange={evt => this.updateUser(evt)}
+            error={this.state.error["username"]}
+            helperText={
+              this.state.error["username"] ? (
+                <Translate id="login.required" />
+              ) : null
+            }
           />
           <br />
           <TextField
@@ -96,6 +113,12 @@ class Login extends React.Component<
             type="password"
             value={this.state.password}
             onChange={evt => this.updatePassword(evt)}
+            error={this.state.error["password"]}
+            helperText={
+              this.state.error["username"] ? (
+                <Translate id="login.required" />
+              ) : null
+            }
           />
           <br />
           <Button onClick={() => this.register()}>

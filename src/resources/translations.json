@@ -18,7 +18,8 @@
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
     ],
     "loggingIn": ["Logging in...", "Iniciar sesión..."],
-    "logout": ["Log out", "cerrar sesión"]
+    "logout": ["Log out", "cerrar sesión"],
+    "required": ["Required", "necesario"]
   },
   "createProject": {
     "name": ["Project Name", "Nombre del Proyecto"],
