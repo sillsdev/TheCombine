@@ -24,16 +24,12 @@ export const loginReducer = (
   if (!state) return defaultState;
   switch (action.type) {
     case LOGIN_ATTEMPT:
-      console.log("Attempting to log in...");
       return { user: action.payload.user, success: false, loginAttempt: true };
     case LOGIN_FAILURE:
-      console.log("Failed to log in");
       return { user: action.payload.user, success: false };
     case LOGIN_SUCCESS:
-      console.log("Successfully logged in");
       return { user: action.payload.user, success: true };
     case REGISTER:
-      console.log("REGISTER METHOD");
       return { user: action.payload.user, success: true };
     default:
       return state;

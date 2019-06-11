@@ -105,7 +105,11 @@ class Login extends React.Component<
             <Translate id="login.login" />
           </Button>
           <br />
-          {this.props.loginAttempt && <p>Logging in...</p>}
+          {this.props.loginAttempt && (
+            <p>
+              <Translate id="login.loggingIn" />
+            </p>
+          )}
         </form>
       </Grid>
     );

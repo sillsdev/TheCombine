@@ -53,7 +53,7 @@ export function asyncLogin(user: string, password: string) {
       })
       .catch(err => {
         console.log(err);
-        alert("Failed to log in. Please check your username and password.");
+        alert("Failed to log in. Please check your username and password."); // TODO Needs internationalizing
         dispatch(loginFailure(user));
       });
   };
