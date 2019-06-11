@@ -10,6 +10,7 @@ export interface LoginState {
   user: string;
   success: boolean;
   loginAttempt?: boolean;
+  loginFailure?: boolean;
 }
 
 export const defaultState: LoginState = {
@@ -26,7 +27,12 @@ export const loginReducer = (
     case LOGIN_ATTEMPT:
       return { user: action.payload.user, success: false, loginAttempt: true };
     case LOGIN_FAILURE:
-      return { user: action.payload.user, success: false };
+      return {
+        user: action.payload.user,
+        success: false,
+        loginAttempt: false,
+        loginFailure: true
+      };
     case LOGIN_SUCCESS:
       return { user: action.payload.user, success: true };
     case REGISTER:

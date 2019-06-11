@@ -8,7 +8,9 @@ import { createBrowserHistory } from "history";
 import { PrivateRoute } from "../PrivateRoute";
 import { LogoutButton } from "../Login/LogoutButton";
 import { GoalView } from "../GoalView/GoalView";
-        
+import Login from "../Login";
+import Temp from "../Temp";
+
 export const history = createBrowserHistory();
 
 const App: React.FC = () => {
