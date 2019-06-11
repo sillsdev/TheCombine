@@ -8,7 +8,7 @@ import { Goal, GoalsState } from "../../../types/goals";
 import { BaseGoal } from "../../../types/goals";
 import { User } from "../../../types/user";
 import Stack from "../../../types/stack";
-import { MockGoalAction, MOCK_GOAL } from "./MockAction";
+import { MockActionInstance } from "../../../types/action";
 
 it("Should return the current state", () => {
   const suggestionsArray: Goal[] = [];
@@ -41,12 +41,7 @@ it("Should return the current state", () => {
     }
   };
 
-  const mockGoalAction: MockGoalAction = {
-    type: MOCK_GOAL,
-    payload: goal
-  };
-
-  expect(goalsReducer(state, mockGoalAction)).toEqual(newState);
+  expect(goalsReducer(state, MockActionInstance)).toEqual(newState);
 });
 
 it("Should add a goal to history and remove it from suggestions", () => {

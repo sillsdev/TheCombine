@@ -1,14 +1,9 @@
 import { Dispatch } from "react";
-import { Action } from "redux";
 import { Goal } from "../../types/goals";
+import { ActionWithPayload } from "../../types/action";
 
 export const ADD_GOAL = "ADD_GOAL";
 export type ADD_GOAL = typeof ADD_GOAL;
-
-// action types
-export interface ActionWithPayload<T> extends Action {
-  payload: T;
-}
 
 export interface AddGoal extends ActionWithPayload<Goal> {
   type: ADD_GOAL;

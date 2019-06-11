@@ -1,7 +1,7 @@
 import * as actions from "../NavActions";
 import { navReducer, defaultState } from "../NavReducer";
 import { NavState } from "../../../types/nav";
-import { MockAction, MOCK_ACTION_TYPE } from "./MockAction";
+import { MockActionInstance } from "../../../types/action";
 import { BaseGoal, Goal } from "../../../types/goals";
 
 it("Should return the current state", () => {
@@ -13,13 +13,7 @@ it("Should return the current state", () => {
     ...defaultState
   };
 
-  const goal: Goal = new BaseGoal();
-  const mockGoalAction: MockAction = {
-    type: MOCK_ACTION_TYPE,
-    payload: goal
-  };
-
-  expect(navReducer(state, mockGoalAction)).toEqual(newState);
+  expect(navReducer(state, MockActionInstance)).toEqual(newState);
 });
 
 it("Should change the visible component", () => {
@@ -42,11 +36,5 @@ it("Should change the visible component", () => {
 });
 
 it("Should return the default state", () => {
-  const goal: Goal = new BaseGoal();
-  const mockGoalAction: MockAction = {
-    type: MOCK_ACTION_TYPE,
-    payload: goal
-  };
-
-  expect(navReducer(undefined, mockGoalAction)).toEqual(defaultState);
+  expect(navReducer(undefined, MockActionInstance)).toEqual(defaultState);
 });
