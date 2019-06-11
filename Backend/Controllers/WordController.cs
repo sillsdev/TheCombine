@@ -128,12 +128,12 @@ namespace BackendFramework.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(FileUpload model)
         {
-            var file = model.File;
+            var file = model.file;
 
             if (file.Length > 0)
             {
                 model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
-                using (var fs = new FileStream(Path.Combine(model.filePath, file.FileName), FileMode.Create))
+                using (var fs = new FileStream(model.filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
                 }
