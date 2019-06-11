@@ -40,7 +40,7 @@ export function asyncCreateProject(name: string, languageData: File) {
     data.append("languageData", languageData);
     data.append("name", name);
     await axios
-      .post("https://localhost:5001/v1/projects/" + id + "/Upload", data, {
+      .post("https://localhost:5001/v1/projects/words/upload", data, {
               headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
       })
       .then(res => {
