@@ -1,9 +1,9 @@
-import * as actions from "../NavActions";
+import * as actions from "../NavigationActions";
 import { Goal } from "../../../types/goals";
 import { BaseGoal } from "../../../types/goals";
 import { User } from "../../../types/user";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../NavReducer";
+import { defaultState } from "../NavigationReducer";
 import thunk from "redux-thunk";
 
 it("should create an action to change the display", () => {

@@ -1,6 +1,6 @@
 import { simpleWord, Word } from "../../types/word";
 import { defaultState as goalTimelineState } from "../GoalView/GoalTimelineReducers";
-import { defaultState as navigationState } from "../Nav/NavReducer";
+import { defaultState as navigationState } from "../Navigation/NavigationReducer";
 
 export const defaultState = {
   draggedWord: {

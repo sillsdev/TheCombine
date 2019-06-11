@@ -1,5 +1,5 @@
-import * as actions from "../NavActions";
-import { navReducer, defaultState } from "../NavReducer";
+import * as actions from "../NavigationActions";
+import { navReducer, defaultState } from "../NavigationReducer";
 import { NavState } from "../../../types/nav";
 import { MockActionInstance } from "../../../types/action";
 import { BaseGoal, Goal } from "../../../types/goals";

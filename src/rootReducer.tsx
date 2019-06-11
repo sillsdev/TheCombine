@@ -3,7 +3,7 @@ import { combineReducers, Reducer } from "redux";
 import { StoreState } from "./types";
 import { tempReducer } from "./components/Temp/TempReducer";
 import { goalsReducer } from "./components/GoalView/GoalTimelineReducers";
-import { navReducer } from "./components/Nav/NavReducer";
+import { navReducer } from "./components/Navigation/NavigationReducer";
 import { localizeReducer } from "react-localize-redux";
 import { dragWordReducer } from "./goals/DraggableWord/reducer";
 import { mergeDupStepReducer } from "./goals/MergeDupGoal/MergeDupStep/reducer";

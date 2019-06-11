@@ -1,4 +1,4 @@
-import { Navigation } from "./NavComponent";
+import { Navigation } from "./NavigationComponent";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../types/index";

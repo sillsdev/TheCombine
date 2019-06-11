@@ -1,6 +1,7 @@
 import React from "react";
 import { NavState } from "../../types/nav";
-import { CHANGE_DISPLAY, ActionWithPayload } from "./NavActions";
+import { CHANGE_DISPLAY } from "./NavigationActions";
+import { ActionWithPayload } from "../../types/action";
 import { Goal } from "../../types/goals";
 import { GoalTimeline } from "../GoalView/GoalTimelineComponent";
 

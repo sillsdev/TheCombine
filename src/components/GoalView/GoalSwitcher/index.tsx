@@ -1,7 +1,7 @@
 import { Goal, GoalSelectorState } from "../../../types/goals";
 import GoalSwitcher from "./GoalSwitcherComponent";
 import * as actions from "../GoalTimelineActions";
-import * as navActions from "../../Nav/NavActions";
+import * as navActions from "../../Navigation/NavigationActions";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../../types";

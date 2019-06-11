@@ -1,7 +1,8 @@
 import { GoalsState, BaseGoal } from "../../types/goals";
 import Stack from "../../types/stack";
 import { Goal } from "../../types/goals";
-import { ADD_GOAL, ActionWithPayload } from "./GoalTimelineActions";
+import { ADD_GOAL } from "./GoalTimelineActions";
+import { ActionWithPayload } from "../../types/action";
 import { User } from "../../types/user";
 
 const tempUser: User = {
