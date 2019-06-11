@@ -3,6 +3,7 @@ import axios from "axios";
 //import axios from "./tests/__mocks__/axios";
 import { history } from "../App/App";
 import { authHeader } from "./AuthHeaders";
+import { getTranslate } from "react-localize-redux";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
@@ -35,7 +36,7 @@ export interface UserAction {
 
 //thunk action creator
 export function asyncLogin(user: string, password: string) {
-  return async (dispatch: Dispatch<UserAction>) => {
+  return async (dispatch: Dispatch<UserAction>, getState: any) => {
     dispatch(loginAttempt(user));
 
     //attempt to login with server
@@ -53,7 +54,7 @@ export function asyncLogin(user: string, password: string) {
       })
       .catch(err => {
         console.log(err);
-        alert("Failed to log in. Please check your username and password."); // TODO Needs internationalizing
+        alert(getTranslate(getState().localize)("login.failed")); // TODO alerts should probably be implemented with a material-ui element
         dispatch(loginFailure(user));
       });
   };
