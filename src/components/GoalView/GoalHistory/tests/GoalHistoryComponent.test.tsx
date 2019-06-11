@@ -1,12 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../GoalView/TempDefaultState";
+import GoalHistory from "../";
+import { defaultState } from "../../TempDefaultState";
 import { Provider } from "react-redux";
-import thunk from "redux-thunk";
 
-const createMockStore = configureMockStore([thunk]);
+const createMockStore = configureMockStore([]);
 
 it("renders without crashing", () => {
   const mockStore = createMockStore({
@@ -23,7 +22,7 @@ it("renders without crashing", () => {
   const div = document.createElement("div");
   ReactDOM.render(
     <Provider store={mockStore}>
-      <App />
+      <GoalHistory />
     </Provider>,
     div
   );

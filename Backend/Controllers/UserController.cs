@@ -25,21 +25,10 @@ namespace BackendFramework.Controllers
         [EnableCors("AllowAll")]
 
         // GET: v1/Users
-        // Implements GetAllUsers(), 
-        // Arguments: list of string ids of target users (if given, else returns all users),
-        // Default: null
+        // Implements GetAllUsers()
         [HttpGet]
-        public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
+        public async Task<IActionResult> Get()
         {
-            if (Ids != null)
-            {
-                var userList = await _userService.GetUsers(Ids);
-                if (userList.Count != Ids.Count)
-                {
-                    return new NotFoundResult();
-                }
-                return new ObjectResult(userList);
-            }
             return new ObjectResult(await _userService.GetAllUsers());
         }
 
@@ -48,11 +37,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            #if DEBUG
+#if DEBUG
                 return new ObjectResult(await _userService.DeleteAllUsers());
-            #else
-                return new UnauthorizedResult();
-            #endif
+#else
+            return new UnauthorizedResult();
+#endif
         }
 
         // GET: v1/Users/name
@@ -102,15 +91,15 @@ namespace BackendFramework.Controllers
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
-            #if DEBUG
+#if DEBUG
                 if (await _userService.Delete(Id))
                 {
                     return new OkResult();
                 }
                 return new NotFoundResult();
-            #else
-                return new UnauthorizedResult();
-            #endif
+#else
+            return new UnauthorizedResult();
+#endif
         }
     }
 

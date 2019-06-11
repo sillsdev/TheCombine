@@ -29,5 +29,12 @@
     "browse": ["Browse Computer", "Navegar por la Computadora"],
     "create": ["Create Project", "Crear Proyecto"],
     "fileSelected": ["File selected", "Archivo seleccionado"]
+  },
+  "goal": {
+    "name": {
+      "handleDuplicates": ["Handle Duplicates"],
+      "handleFlags": ["Handle Flags"],
+      "grammarCheck": ["Grammar Check"]
+    }
   }
 }
