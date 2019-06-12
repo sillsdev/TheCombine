@@ -2,7 +2,7 @@ import React from "react";
 import { Goal, GoalsState } from "../../types/goals";
 import Stack from "../../types/stack";
 import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
-import { MergeDups } from "../../goals/MergeDups/MergeDups";
+import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";

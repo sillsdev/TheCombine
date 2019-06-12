@@ -9,7 +9,7 @@ import Stack from "../../../types/stack";
 import { MockActionInstance } from "../../../types/action";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
-import { MergeDups } from "../../../goals/MergeDups/MergeDups";
+import { MergeDups } from "../../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../../goals/SpellCheckGloss/SpellCheckGloss";
 
 it("Should return the current state", () => {
