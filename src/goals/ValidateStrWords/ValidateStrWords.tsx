@@ -1,6 +1,6 @@
 import React from "react";
 import { Goal, GoalData, Tools, GoalOption } from "../../types/goals";
-import { User } from "../../types/User";
+import { User } from "../../types/user";
 import BaseGoalScreen from "../../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 import BaseGoalSelect from "../../goals/DefaultGoal/BaseGoalSelect/BaseGoalSelect";
 

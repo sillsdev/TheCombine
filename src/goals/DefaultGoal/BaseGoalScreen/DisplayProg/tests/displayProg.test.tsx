@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { User } from "../../../../../types/User";
+import { User } from "../../../../../types/user";
 import { Goal } from "../../../../../types/goals";
 import DisplayProg from "../displayProg";
 import { CreateCharInv } from "../../../../CreateCharInv/CreateCharInv";
