@@ -123,33 +123,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(mergedWord.Id);
         }
 
-        // POST: v1/Project/Words/upload
-        // Implements: Upload(), Arguments: FileUpload model
-        [HttpPost("upload")]
-        public async Task<IActionResult> Upload(FileUpload model)
-        {
-            var file = model.file;
-
-            if (file.Length > 0)
-            {
-                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
-                using (var fs = new FileStream(model.filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fs);
-                }
-            }
-            try
-            {
-
-                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                return new ObjectResult(parser.ReadLiftFile(model.filePath));
-            }
-            catch (exception)
-            {
-                return new InvalidDataException();
-            }
-        }
-
+       
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
         [HttpPost("upload")]
@@ -165,9 +139,14 @@ namespace BackendFramework.Controllers
                     await file.CopyToAsync(fs);
                 }
             }
+            //try
+            //{
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
                 return new ObjectResult(parser.ReadLiftFile(model.filePath));
-                return new InvalidDataException();
-        }
+           //}
+            //catch (exception)
+            //{
+            //    return new InvalidDataException();
+            //}
     }
 }
