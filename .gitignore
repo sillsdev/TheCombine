@@ -35,5 +35,6 @@ Backend/obj
 Backend/BackendFramework.csproj.user
 Backend/*.xml
 Backend/Controllers/*.xml
+**/*.lift
 *.orig
 Backend/SIL.Lift/**
