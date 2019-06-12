@@ -62,12 +62,13 @@ namespace BackendFramework.Services
         public async Task<bool> Delete(string Id)
         {
             var wordIsInFrontier = DeleteFrontier(Id).Result;
-            if (wordIsInFrontier) {
+            if (wordIsInFrontier)
+            {
                 List<string> ids = new List<string>();
                 ids.Add(Id);
                 Word wordToDelete = GetWords(ids).Result.First();
                 wordToDelete.Id = null;
-                wordToDelete.Accessability = (int) state.deleted;
+                wordToDelete.Accessability = (int)state.deleted;
                 wordToDelete.History = ids;
                 await Create(wordToDelete);
             }
@@ -77,37 +78,14 @@ namespace BackendFramework.Services
         public async Task<bool> Update(string Id, Word word)
         {
             var wordIsInFrontier = DeleteFrontier(Id).Result;
-            if (wordIsInFrontier) {
+            if (wordIsInFrontier)
+            {
                 word.Id = null;
-                word.Accessability = (int) state.active;
-                word.History = new List<string>{Id};
+                word.Accessability = (int)state.active;
+                word.History = new List<string> { Id };
                 await Create(word);
             }
             return wordIsInFrontier;
-        }
-
-        public async Task<Word> Merge(MergeWords mergeWords)
-        {
-            List<string> parentHistory = new List<string>();
-            foreach(string childId in mergeWords.children)
-            {
-                await DeleteFrontier(childId);
-                Word childWord = GetWords(new List<string>(){childId}).Result.First();
-                childWord.History = new List<string>{childId};
-                childWord.Accessability = (int) mergeWords.mergeType; // 2: sense or 3: duplicate
-                childWord.Id = null;
-                await _wordDatabase.Words.InsertOneAsync(childWord);
-                parentHistory.Add(childWord.Id);
-            }
-            string parentId = mergeWords.parent;
-            await DeleteFrontier(parentId);
-            parentHistory.Add(parentId);
-            Word parentWord = GetWords(new List<string>(){parentId}).Result.First();
-            parentWord.History = parentHistory;
-            parentWord.Accessability = (int) state.active;
-            parentWord.Id = null;
-            await Create(parentWord);
-            return parentWord;
         }
 
         public async Task<List<Word>> GetFrontier()

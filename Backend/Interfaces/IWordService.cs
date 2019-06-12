@@ -18,7 +18,6 @@ namespace BackendFramework.Interfaces
         Task<bool> Update(string Id, Word word);
         Task<bool> Delete(string Id);
         Task<bool> DeleteAllWords();
-        Task<Word> Merge(MergeWords mergeWords);
 
         Task<List<Word>> GetFrontier();
         Task<Word> AddFrontier(Word word);
