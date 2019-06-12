@@ -147,9 +147,6 @@ class Login extends React.Component<
               <br />
               {this.props.loginAttempt && <CircularProgress size={30} />}
             </CardActions>
-              <Translate id="login.loggingIn" />
-            </p>
-          )}
           </form>
         </Card>
       </Grid>

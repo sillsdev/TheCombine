@@ -12,8 +12,6 @@ import Login from "../Login";
 import Temp from "../Temp";
 
 export const history = createBrowserHistory();
-        
-export const history = createBrowserHistory();
 
 const App: React.FC = () => {
   return (
