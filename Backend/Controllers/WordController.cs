@@ -12,6 +12,7 @@ using BackendFramework.Interfaces;
 using SIL.Lift.Parsing;
 using System.IO;
 using System;
+using System.Net;
 
 namespace BackendFramework.Controllers
 {
@@ -148,7 +149,7 @@ namespace BackendFramework.Controllers
             }
             catch (Exception)
             {
-                return new NotFoundResult();
+                return new UnsupportedMediaTypeResult();
             }
         }
     }
