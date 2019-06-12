@@ -279,53 +279,29 @@ namespace BackendFramework.Services
             return new EmptyLiftObject();
         }
 
-        public void EntryWasDeleted(Extensible info, DateTime dateDeleted)
-        {
-        }
+        public void EntryWasDeleted(Extensible info, DateTime dateDeleted) {}
 
-        public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText)
-        {
-        }
+        public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText) {}
 
-        public void MergeInExampleForm(LiftExample example, LiftMultiText multiText)
-        {
-        }
+        public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) {}
 
-        public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits)
-        {
-        }
+        public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) {}
 
-        public void MergeInMedia(LiftObject pronunciation, string href, LiftMultiText caption)
-        {
-        }
+        public void MergeInMedia(LiftObject pronunciation, string href, LiftMultiText caption) {}
 
-        public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml)
-        {
-        }
+        public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml) {}
 
-        public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption)
-        {
-        }
+        public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) {}
 
-        public void MergeInRelation(LiftObject extensible, string relationTypeName, string targetId, string rawXml)
-        {
-        }
+        public void MergeInRelation(LiftObject extensible, string relationTypeName, string targetId, string rawXml) {}
 
-        public void MergeInSource(LiftExample example, string source)
-        {
-        }
+        public void MergeInSource(LiftExample example, string source) {}
 
-        public void MergeInTranslationForm(LiftExample example, string type, LiftMultiText multiText, string rawXml)
-        {
-        }
+        public void MergeInTranslationForm(LiftExample example, string type, LiftMultiText multiText, string rawXml) {}
 
-        public void ProcessFieldDefinition(string tag, LiftMultiText description)
-        {
-        }
+        public void ProcessFieldDefinition(string tag, LiftMultiText description) {}
 
-        public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
-        {
-        }
+        public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml) {}
     }
     public class EmptyLiftObject : LiftObject
     {
