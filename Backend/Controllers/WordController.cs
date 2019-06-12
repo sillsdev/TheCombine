@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace BackendFramework.Controllers
 {
@@ -116,6 +117,12 @@ namespace BackendFramework.Controllers
             }
             var mergedWord = await _wordService.Merge(mergeWords);
             return new ObjectResult(mergedWord.Id);
+        }
+
+        [HttpGet("{Regex}")]
+        public async Task<IActionResult> SearchRegex(Regex reg)
+        {
+            return new ObjectResult(await _wordService.GetRegexSearch(reg));
         }
     }
 }

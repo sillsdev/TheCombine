@@ -14,6 +14,7 @@ using BackendFramework.Services;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using System;
+using System.Text.RegularExpressions;
 
 namespace BackendFramework.Services
 {
@@ -39,6 +40,13 @@ namespace BackendFramework.Services
             var filter = filterDef.In(x => x.Id, Ids);
             var wordList = await _wordDatabase.Words.Find(filter).ToListAsync();
             return wordList;
+        }
+
+        public async Task<List<Word>> GetRegexSearch(Regex reg)
+        {
+            var regex = new BsonRegularExpression(reg);
+            var query = Query<Word>.Matches(p => p.Item, regex);
+            MongoCursor<Product> cursor = collection.Find(query);
         }
 
         public async Task<bool> DeleteAllWords()
