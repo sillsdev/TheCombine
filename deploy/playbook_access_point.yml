@@ -5,4 +5,4 @@
   become: yes
 
   roles:
-    - { role: wifi_ap, tags: [ 'server', 'desktop' ] }
+    - role: wifi_ap

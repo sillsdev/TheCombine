@@ -1,0 +1,32 @@
+---
+
+- name: Read version of node (and strip leading 'v')
+  shell: node --version | sed "s/^v//"
+  register: node_version
+  changed_when: false
+
+- name: verify node version is 10.16.n
+  assert:
+    that:
+      - node_version.stdout is version("10.16", ">=")
+      - node_version.stdout is version("10.17", "<")
+
+- name: Read version of npm
+  shell: npm --version
+  register: npm_version
+  changed_when: false
+
+- name: verify npm version is > 6.9
+  assert:
+    that:
+      - npm_version.stdout is version("6.9", ">=")
+
+- name: Read version of yarn
+  shell: yarn --version
+  register: yarn_version
+  changed_when: false
+
+- name: verify yarn version is > 1.16
+  assert:
+    that:
+      - yarn_version.stdout is version("1.16", ">=")

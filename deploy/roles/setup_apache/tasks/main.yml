@@ -1,6 +1,8 @@
 ---
 
 - { include: install.yml, tags: [ install ] }
+- { include: test.yml, tags: [ test ] }
+
 #- { include: vhost.yml }
 #- { include: ssl.yml, tags: [ apache_ssl ] }
 #- { include: module.yml, tags: [ apache_module ] }

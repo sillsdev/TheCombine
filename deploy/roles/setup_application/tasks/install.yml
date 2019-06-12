@@ -1,0 +1,25 @@
+---
+
+- name: create uploads directory
+  file:
+    name: "{{ www_uploads_dir }}"
+    state: directory
+    owner: "{{ www_uploads_owner }}"
+    group: "{{ www_uploads_group }}"
+    mode:  0775
+
+- name: install the build
+  copy:
+    src: ../build
+    dest: "{{ www_app_dir }}"
+    owner: "{{ www_app_owner }}"
+    group: "{{ www_app_group }}"
+
+- name: update Apache configuration
+  template:
+    src: default-site.conf.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+    owner: root
+    group: root
+    mode:  0644
+  notify: restart apache server

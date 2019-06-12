@@ -5,8 +5,6 @@
   become: yes
 
   tasks:
-  - name: populate service facts
-    service_facts:
-
-  - debug:
-      var: ansible_facts.services
+    - name: just the facts, ma'am
+      debug:
+        var: ansible_facts
