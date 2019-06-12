@@ -15,8 +15,6 @@ namespace BackendFramework.Interfaces
         //called on collection, returns a list of words
         Task<List<Word>> GetWords(List<string> Ids);
         Task<Word> Create(Word word);
-        Task<bool> Update(string Id, Word word);
-        Task<bool> Delete(string Id);
         Task<bool> DeleteAllWords();
 
         Task<List<Word>> GetFrontier();

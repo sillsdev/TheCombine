@@ -55,37 +55,11 @@ namespace BackendFramework.Services
         public async Task<Word> Create(Word word)
         {
             await _wordDatabase.Words.InsertOneAsync(word);
-            await AddFrontier(word);
+            if (word.Accessability == (int)state.active || word.Accessability == (int)state.deleted)
+            {
+                await AddFrontier(word);
+            }
             return word;
-        }
-
-        public async Task<bool> Delete(string Id)
-        {
-            var wordIsInFrontier = DeleteFrontier(Id).Result;
-            if (wordIsInFrontier)
-            {
-                List<string> ids = new List<string>();
-                ids.Add(Id);
-                Word wordToDelete = GetWords(ids).Result.First();
-                wordToDelete.Id = null;
-                wordToDelete.Accessability = (int)state.deleted;
-                wordToDelete.History = ids;
-                await Create(wordToDelete);
-            }
-            return wordIsInFrontier;
-        }
-
-        public async Task<bool> Update(string Id, Word word)
-        {
-            var wordIsInFrontier = DeleteFrontier(Id).Result;
-            if (wordIsInFrontier)
-            {
-                word.Id = null;
-                word.Accessability = (int)state.active;
-                word.History = new List<string> { Id };
-                await Create(word);
-            }
-            return wordIsInFrontier;
         }
 
         public async Task<List<Word>> GetFrontier()

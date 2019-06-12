@@ -83,7 +83,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundResult();
             }
             word.Id = (document.First()).Id;
-            await _wordService.Update(Id, word);
+            await Update(Id, word);
             return new OkObjectResult(word.Id);
         }
         // DELETE: v1/Project/Words/{Id}
@@ -91,7 +91,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
-            if (await _wordService.Delete(Id))
+            if (await RemoveWord(Id))
             {
                 return new OkResult();
             }
@@ -114,32 +114,65 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundResult();
             }
-            var mergedWord = await _wordService.Merge(mergeWords);
+            var mergedWord = await Merge(mergeWords);
             return new ObjectResult(mergedWord.Id);
         }
 
+        // The following three functions should probably be moved into their own class
+        // they were removed from WordService because that function should only contain
+        // our atomic database operations. These are helper functions for our more complex
+        // operations.
         async Task<Word> Merge(MergeWords mergeWords)
         {
             List<string> parentHistory = new List<string>();
             foreach (string childId in mergeWords.children)
             {
-                await DeleteFrontier(childId);
-                Word childWord = GetWords(new List<string>() { childId }).Result.First();
+                await _wordService.DeleteFrontier(childId);
+                Word childWord = _wordService.GetWords(new List<string>() { childId }).Result.First();
                 childWord.History = new List<string> { childId };
                 childWord.Accessability = (int)mergeWords.mergeType; // 2: sense or 3: duplicate
                 childWord.Id = null;
-                await _wordDatabase.Words.InsertOneAsync(childWord);
+                await _wordService.Create(childWord);
                 parentHistory.Add(childWord.Id);
             }
             string parentId = mergeWords.parent;
-            await DeleteFrontier(parentId);
+            await _wordService.DeleteFrontier(parentId);
             parentHistory.Add(parentId);
-            Word parentWord = GetWords(new List<string>() { parentId }).Result.First();
+            Word parentWord = _wordService.GetWords(new List<string>() { parentId }).Result.First();
             parentWord.History = parentHistory;
             parentWord.Accessability = (int)state.active;
             parentWord.Id = null;
-            await Create(parentWord);
+            await _wordService.Create(parentWord);
             return parentWord;
+        }
+
+        async Task<bool> Update(string Id, Word word)
+        {
+            var wordIsInFrontier = _wordService.DeleteFrontier(Id).Result;
+            if (wordIsInFrontier)
+            {
+                word.Id = null;
+                word.Accessability = (int)state.active;
+                word.History = new List<string> { Id };
+                await _wordService.Create(word);
+            }
+            return wordIsInFrontier;
+        }
+
+        async Task<bool> RemoveWord(string Id)
+        {
+            var wordIsInFrontier = _wordService.DeleteFrontier(Id).Result;
+            if (wordIsInFrontier)
+            {
+                List<string> ids = new List<string>();
+                ids.Add(Id);
+                Word wordToDelete = _wordService.GetWords(ids).Result.First();
+                wordToDelete.Id = null;
+                wordToDelete.Accessability = (int)state.deleted;
+                wordToDelete.History = ids;
+                await _wordService.Create(wordToDelete);
+            }
+            return wordIsInFrontier;
         }
     }
 }
