@@ -1,4 +1,6 @@
-# Rapid Word Collection Tool
+# The Combine
+
+A rapid word collection tool.
 
 ## Getting Started with Development
 
@@ -6,7 +8,7 @@
 2. Install: 
     * [Node.js](https://nodejs.org/en/) (LTS)
     * [.NET Core Runtime](https://dotnet.microsoft.com/download)
-    * MongoDB ?
+    * [MongoDB Server](https://www.mongodb.com/download-center/community)
     * [VS Code](https://code.visualstudio.com/download) (recommended)
 3. Run `npm certify` and `npm start` from the project directory to install dependencies and start the project
 
@@ -16,7 +18,7 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
+Installs the necessary packages and runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
