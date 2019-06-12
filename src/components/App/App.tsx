@@ -3,7 +3,7 @@ import React from "react";
 
 import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
 import { store } from "../../store";
-import { backend } from "../..";
+import { backend } from "../../goals/MergeDupGoal/MergeDupStep/component";
 import { Word, testWordList } from "../../types/word";
 import { addListWord } from "../../goals/MergeDupGoal/MergeDupStep/actions";
 import Navigation from "../Navigation/";

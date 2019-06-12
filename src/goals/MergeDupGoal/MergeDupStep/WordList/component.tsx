@@ -10,7 +10,7 @@ import {
   ListSubheader,
   Button
 } from "@material-ui/core";
-import { backend } from "../../../..";
+import { backend } from "../component";
 
 //interface for component props
 export interface WordListProps {

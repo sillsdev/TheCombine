@@ -11,7 +11,7 @@ import {
 } from "./actions";
 import { MergeDupStepProps } from "./component";
 import { State, Merge, testWordList } from "../../../types/word";
-import { backend } from "../../..";
+import { backend } from "./component";
 
 export const defaultState: MergeDupStepProps = {
   parentWords: [],

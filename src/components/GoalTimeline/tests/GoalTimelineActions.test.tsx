@@ -1,7 +1,7 @@
 import * as actions from "../GoalTimelineActions";
 import { Goal } from "../../../types/goals";
 import { BaseGoal } from "../../../types/baseGoal";
-import { User } from "../../../types/user";
+import { User } from "../../../types/User";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../DefaultState";
 import thunk from "redux-thunk";

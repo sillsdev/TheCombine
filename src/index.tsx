@@ -19,8 +19,6 @@ const localizeInit = {
   options: { renderToStaticMarkup }
 };
 
-export const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
-
 //Provider connects store to component containers
 ReactDOM.render(
   <Provider store={store}>

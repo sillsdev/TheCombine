@@ -4,7 +4,9 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Box, Grid, Button, Card, CardContent } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
-import { backend } from "../../..";
+import axios from "axios";
+
+export const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
 
 // Internal merge memory model
 export interface ParentWord {
