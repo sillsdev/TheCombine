@@ -63,15 +63,17 @@ namespace Tests
 
         public Task<List<Word>> GetFrontier()
         {
-            return Task.FromResult(frontier);
+            return Task.FromResult(frontier.Select(word => word.Copy()).ToList());
         }
 
-        public Task<Word> AddFrontier(Word word) {
+        public Task<Word> AddFrontier(Word word)
+        {
             frontier.Add(word.Copy());
             return Task.FromResult(word.Copy());
         }
 
-        public Task<bool> DeleteFrontier(string id) {
+        public Task<bool> DeleteFrontier(string id)
+        {
             var origLength = frontier.Count;
             frontier.RemoveAll(word => word.Id == id);
             return Task.FromResult(origLength != frontier.Count);
