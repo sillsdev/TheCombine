@@ -12,7 +12,7 @@ export class BaseGoal implements Goal {
   display: JSX.Element;
   goalWidget: JSX.Element;
 
-  steps: React.Component[];
+  steps: JSX.Element[];
   curNdx: number;
   data: GoalData; // The data required to load/reload this exact goal
 
@@ -31,7 +31,7 @@ export class BaseGoal implements Goal {
     this.display = <BaseGoalScreen goal={this} />;
     this.goalWidget = <BaseGoalSelect goal={this} />;
     this.steps = [];
-    this.curNdx = -1;
+    this.curNdx = 0;
     this.data = {};
     this.tool = Tools.TempTool;
     this.completed = false;

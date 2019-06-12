@@ -1,5 +1,5 @@
 import { simpleWord, Word } from "../../types/word";
-import { defaultState as goalTimelineState } from "../GoalView/DefaultState";
+import { defaultState as goalTimelineState } from "../GoalTimeline/DefaultState";
 import { defaultState as navigationState } from "../Navigation/NavigationReducer";
 
 export const defaultState = {

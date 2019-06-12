@@ -13,7 +13,7 @@ import { MockActionInstance } from "../../../types/action";
 import { Goal } from "../../../types/goals";
 import Stack from "../../../types/stack";
 import BaseGoalScreen from "../../../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
-import { GoalTimeline } from "../../GoalView/GoalTimelineComponent";
+import { GoalTimeline } from "../../GoalTimeline/GoalTimelineComponent";
 import { BaseGoal } from "../../../types/baseGoal";
 
 it("Should return the default state", () => {

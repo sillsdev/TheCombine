@@ -3,7 +3,7 @@ import { NavState } from "../../types/nav";
 import { NAVIGATE_BACK, NAVIGATE_FORWARD } from "./NavigationActions";
 import { ActionWithPayload } from "../../types/action";
 import { Goal } from "../../types/goals";
-import { GoalTimeline } from "../GoalView/GoalTimelineComponent";
+import { GoalTimeline } from "../GoalTimeline/GoalTimelineComponent";
 import Stack from "../../types/stack";
 import { Action } from "redux";
 

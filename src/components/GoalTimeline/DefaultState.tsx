@@ -5,6 +5,7 @@ import BaseGoalScreen from "../../goals/DefaultGoal/BaseGoalScreen/BaseGoalScree
 import BaseGoalSelect from "../../goals/DefaultGoal/BaseGoalSelect/BaseGoalSelect";
 import Stack from "../../types/stack";
 import { BaseGoal } from "../../types/baseGoal";
+import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
 
 const tempUser: User = {
   name: "Chewbacca",
@@ -18,8 +19,8 @@ let goal1: Goal = {
   user: tempUser,
   display: <BaseGoalScreen goal={new BaseGoal()} />,
   goalWidget: <BaseGoalSelect goal={new BaseGoal()} />,
-  steps: [],
-  curNdx: -1,
+  steps: [<MergeDupStep />],
+  curNdx: 0,
   data: {},
   tool: Tools.TempTool,
   completed: false,
@@ -36,7 +37,7 @@ let goal2: Goal = {
   display: <BaseGoalScreen goal={new BaseGoal()} />,
   goalWidget: <BaseGoalSelect goal={new BaseGoal()} />,
   steps: [],
-  curNdx: -1,
+  curNdx: 0,
   data: {},
   tool: Tools.TempTool,
   completed: false,
@@ -53,7 +54,7 @@ let goal3: Goal = {
   display: <BaseGoalScreen goal={new BaseGoal()} />,
   goalWidget: <BaseGoalSelect goal={new BaseGoal()} />,
   steps: [],
-  curNdx: -1,
+  curNdx: 0,
   data: {},
   tool: Tools.TempTool,
   completed: false,
@@ -72,7 +73,7 @@ let suggestion1: Goal = {
   display: <BaseGoalScreen goal={new BaseGoal()} />,
   goalWidget: <BaseGoalSelect goal={new BaseGoal()} />,
   steps: [],
-  curNdx: -1,
+  curNdx: 0,
   data: {},
   tool: Tools.TempTool,
   completed: false,
@@ -89,7 +90,7 @@ let suggestion2: Goal = {
   display: <BaseGoalScreen goal={new BaseGoal()} />,
   goalWidget: <BaseGoalSelect goal={new BaseGoal()} />,
   steps: [],
-  curNdx: -1,
+  curNdx: 0,
   data: {},
   tool: Tools.TempTool,
   completed: false,

@@ -52,7 +52,7 @@ export interface Goal {
   display: JSX.Element;
   goalWidget: JSX.Element;
 
-  steps: React.Component[];
+  steps: JSX.Element[];
   curNdx: number;
   data: GoalData; // The data required to load/reload this exact goal
 

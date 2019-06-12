@@ -10,7 +10,7 @@ import {
   clearListWords
 } from "./actions";
 import { WordDrag, dropWord } from "../../DraggableWord/actions";
-import { Word, testWordList } from "../../../types/word";
+import { Word } from "../../../types/word";
 
 export function mapStateToProps(state: StoreState) {
   return {

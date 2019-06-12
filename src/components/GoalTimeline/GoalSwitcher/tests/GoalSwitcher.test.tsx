@@ -1,9 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { act } from "react-dom/test-utils";
 import configureMockStore from "redux-mock-store";
-import GoalSuggestions from "..";
 import { defaultState } from "../../DefaultState";
 import { Provider } from "react-redux";
+import GoalSwitcher from "../../GoalSwitcher";
 
 const createMockStore = configureMockStore([]);
 
@@ -13,12 +14,15 @@ it("renders without crashing", () => {
       ...defaultState
     }
   });
-  const div = document.createElement("div");
-  ReactDOM.render(
-    <Provider store={mockStore}>
-      <GoalSuggestions />
-    </Provider>,
-    div
-  );
-  ReactDOM.unmountComponentAtNode(div);
+  const container = document.createElement("div");
+  act(() => {
+    ReactDOM.render(
+      <Provider store={mockStore}>
+        <GoalSwitcher />
+      </Provider>,
+      container
+    );
+  });
+
+  ReactDOM.unmountComponentAtNode(container);
 });
