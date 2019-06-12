@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 
 import { StoreState } from "../../types";
-import BaseGoalScreen from "../DefaultGoal/BaseGoalScreen";
-import BaseGoalSelect from "../DefaultGoal/BaseGoalSelect";
+import BaseGoalSelect from "../DefaultGoal/BaseGoalSelect/BaseGoalSelect";
+import BaseGoalScreen from "../DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 
 //placeholder interfacees
 export interface MergeDupData {}

@@ -21,7 +21,6 @@ export type GoalProps = MergeDupProps;
 export type GoalData = MergeDupData; // | OtherTypes
 export type GoalStep = MergeDupStepProps; // | OtherTypes
 
-export type GoalStep = MergeDupStepProps; // | OtherTypes
 export interface GoalViewState {
   state: GoalsState;
 }
@@ -61,4 +60,3 @@ export interface Goal {
   completed: boolean;
   result: GoalOption;
 }
-
