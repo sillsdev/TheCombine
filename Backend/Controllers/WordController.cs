@@ -10,11 +10,12 @@ using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
 using SIL.Lift.Parsing;
+using System.IO;
 
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/Project/Words")]
+    [Route("v1/Projects/Words")]
     public class WordController : Controller
     {
         public readonly IWordService _wordService;
@@ -123,11 +124,11 @@ namespace BackendFramework.Controllers
             return new ObjectResult(mergedWord.Id);
         }
 
-       
+
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
         [HttpPost("upload")]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post([FromForm] FileUpload model)
         {
             var file = model.file;
 
@@ -141,12 +142,13 @@ namespace BackendFramework.Controllers
             }
             //try
             //{
-                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                return new ObjectResult(parser.ReadLiftFile(model.filePath));
-           //}
+            var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+            return new ObjectResult(parser.ReadLiftFile(model.filePath));
+            //}
             //catch (exception)
             //{
             //    return new InvalidDataException();
             //}
+        }
     }
 }

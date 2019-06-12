@@ -32,7 +32,6 @@ namespace BackendFramework
             public string UsersDatabase { get; set; }
             public string UserRolesDatabase { get; set; }
             public string ProjectsDatabase { get; set; }
-            public string UserRolesDatabase { get; set; }
             //public string NamesCollectionLanguage { get; set; }
         }
 
