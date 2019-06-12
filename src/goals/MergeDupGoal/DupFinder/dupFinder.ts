@@ -1,4 +1,4 @@
-//Sam Delaney, 6/11/19
+//Sam Delaney, 6/12/19
 
 import { Word, testWordList } from "../../../types/word";
 

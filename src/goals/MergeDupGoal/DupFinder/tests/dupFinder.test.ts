@@ -1,10 +1,12 @@
+//Sam Delaney, 6/12/19
+
 import DupFinder, { ScoredWord } from "../DupFinder";
 import { Word, simpleWord } from "../../../../types/word";
 
 describe("dupFinder Tests", () => {
   let Finder = new DupFinder();
 
-  //TEST UTILS
+  //TEST UTILITIES
 
   //put here instead of importing because testWordList will eventually be removed from types/word.
   let testWordList: Word[] = [
