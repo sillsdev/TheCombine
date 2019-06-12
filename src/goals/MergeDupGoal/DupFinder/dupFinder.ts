@@ -12,7 +12,7 @@ export interface ScoredCollection {
   score: number;
 }
 
-export default class dupFinder {
+export default class DupFinder {
   constructor(
     searchLim: number = 500,
     maxScore: number = 6,

@@ -5,6 +5,7 @@ import { Box, Grid, Button, Card, CardContent } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
 import axios from "axios";
+import DupFinder from "../DupFinder/DupFinder";
 
 export const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
 

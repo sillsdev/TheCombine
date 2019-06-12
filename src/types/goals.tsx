@@ -1,4 +1,4 @@
-import { User } from "./User";
+import { User } from "./user";
 import { MergeDupData, MergeDupStepProps } from "../goals/MergeDupGoal";
 import Stack from "./stack";
 import { MergeDupProps } from "../goals/MergeDupGoal/MergeDupComponent";
