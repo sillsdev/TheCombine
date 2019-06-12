@@ -1,5 +1,3 @@
-import { access } from "fs";
-
 export enum State {
   active,
   deleted,

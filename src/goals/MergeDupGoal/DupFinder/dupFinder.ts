@@ -87,7 +87,7 @@ export default class dupFinder {
   }
 
   //temporary placeholder TODO
-  //returns a set of
+  //returns a set of words from the database
   getWordsFromDB(): Word[] {
     return testWordList();
   }
@@ -126,7 +126,7 @@ export default class dupFinder {
 
     //step through each word and compare it to the parent
     words.forEach(word => {
-      //check for automatic qualifiiers
+      //check for automatic qualifiers
       if (
         word.vernacular === parent.vernacular ||
         word.gloss === parent.gloss

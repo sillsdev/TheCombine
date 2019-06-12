@@ -188,28 +188,24 @@ describe("dupFinder Tests", () => {
     }
   });
 
-  //test that scoreWords scores a collection as expected
   test("test scoreWords algorithm", () => {
     let testOutput = Finder.scoreWords(testWordList[3], testWordList);
     for (let i = 0; i < testOutput.length; i++)
       expect(testOutput[i].score).toEqual(scoredYank[i].score);
   });
 
-  //test that quicksort orders a collection as expected
   test("test QuickSort algorithm against ordered collection", () => {
     let testOutput = Finder.quicksort(scoredYank);
     for (let i = 0; i < testOutput.length; i++)
       expect(testOutput[i].score).toEqual(orderedYank[i].score);
   });
 
-  //test that quicksort orders a collection
   test("test QuickSort algorithm for ordering", () => {
     let testOutput = Finder.quicksort(scoredYank);
     for (let i = 1; i < testOutput.length; i++)
       expect(testOutput[i].score <= testOutput[i - 1].score);
   });
 
-  //test Levenshtein Distance method with same Word
   test("Levenshtein Distance with same Word", () => {
     expect(
       Finder.getLevenshteinDistance(
@@ -219,7 +215,6 @@ describe("dupFinder Tests", () => {
     ).toEqual(0);
   });
 
-  //test Levenshtein Distance method with similar Word
   test("Levenshtein Distance with similar Word", () => {
     expect(
       Finder.getLevenshteinDistance(
@@ -229,7 +224,6 @@ describe("dupFinder Tests", () => {
     ).toEqual(2);
   });
 
-  //test Levenshtein Distance method with distinct Word
   test("Levenshtein Distance with distinct Word", () => {
     expect(
       Finder.getLevenshteinDistance(
