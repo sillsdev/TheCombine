@@ -1,4 +1,4 @@
-# Get multiple projects
+# Get a single project
 
 **URL** : `/v1/projects/{Id}`
 

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
 using SIL.Lift.Parsing;
 using System.IO;
+using System;
 
 namespace BackendFramework.Controllers
 {
@@ -140,15 +141,15 @@ namespace BackendFramework.Controllers
                     await file.CopyToAsync(fs);
                 }
             }
-            //try
-            //{
-            var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-            return new ObjectResult(parser.ReadLiftFile(model.filePath));
-            //}
-            //catch (exception)
-            //{
-            //    return new InvalidDataException();
-            //}
+            try
+            {
+                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+                return new ObjectResult(parser.ReadLiftFile(model.filePath));
+            }
+            catch (Exception)
+            {
+                return new NotFoundResult();
+            }
         }
     }
 }

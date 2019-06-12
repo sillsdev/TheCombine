@@ -246,104 +246,85 @@ namespace BackendFramework.Services
         // The following are unused and are not implemented, but must stay to satisfy the needs of the ILexiconMerger 
         public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
         {
-            //throw new NotImplementedException();
             return new EmptyLiftExample();
         }
 
         public LiftObject GetOrMakeParentReversal(LiftObject parent, LiftMultiText contents, string type)
         {
-            //throw new NotImplementedException();
             return new EmptyLiftObject();
         }
 
         public LiftSense GetOrMakeSubsense(LiftSense sense, Extensible info, string rawXml)
         {
-            //throw new NotImplementedException();
             return new EmptyLiftSense(info, new Guid(), sense);
         }
 
         public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form, LiftMultiText gloss, string rawXml)
         {
-            //throw new NotImplementedException();
             return new EmptyLiftObject();
         }
 
         public LiftObject MergeInPronunciation(LiftEntry entry, LiftMultiText contents, string rawXml)
         {
-            //throw new NotImplementedException();
             return new EmptyLiftObject();
         }
 
         public LiftObject MergeInReversal(LiftSense sense, LiftObject parent, LiftMultiText contents, string type, string rawXml)
         {
-            //throw new NotImplementedException();
             return new EmptyLiftObject();
         }
 
         public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml)
         {
-            //throw new NotImplementedException();
             return new EmptyLiftObject();
         }
 
         public void EntryWasDeleted(Extensible info, DateTime dateDeleted)
         {
-            //throw new NotImplementedException();
         }
 
         public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText)
         {
-            //throw new NotImplementedException();
         }
 
         public void MergeInExampleForm(LiftExample example, LiftMultiText multiText)
         {
-            //throw new NotImplementedException();
         }
 
         public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits)
         {
-            //throw new NotImplementedException();
         }
 
         public void MergeInMedia(LiftObject pronunciation, string href, LiftMultiText caption)
         {
-            //throw new NotImplementedException();
         }
 
         public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml)
         {
-            //throw new NotImplementedException();
         }
 
         public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption)
         {
-            //throw new NotImplementedException();
         }
 
         public void MergeInRelation(LiftObject extensible, string relationTypeName, string targetId, string rawXml)
         {
-            //throw new NotImplementedException();
         }
 
         public void MergeInSource(LiftExample example, string source)
         {
-            //throw new NotImplementedException();
         }
 
         public void MergeInTranslationForm(LiftExample example, string type, LiftMultiText multiText, string rawXml)
         {
-            //throw new NotImplementedException();
         }
 
         public void ProcessFieldDefinition(string tag, LiftMultiText description)
         {
-            //throw new NotImplementedException();
         }
 
         public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
         {
-            //throw new NotImplementedException();
         }
     }
     public class EmptyLiftObject : LiftObject

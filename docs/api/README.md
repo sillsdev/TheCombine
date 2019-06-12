@@ -1,8 +1,7 @@
 # Combine API docs
 
-### The `{project}` element of these routes in not currently functional, to use a route with this field, remove it completely.
-
-    /v1/projects/{project}/words/frontier → /v1/projects/words/frontier
+> **The `{project}` element of these routes in not currently functional, to use a route with this field, remove it completely.**  
+> /v1/projects/{project}/words/frontier → /v1/projects/words/frontier
 
 ## User
 
