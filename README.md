@@ -8,8 +8,8 @@ A rapid word collection tool.
 2. Install: 
     * [Node.js](https://nodejs.org/en/) (LTS)
     * [.NET Core Runtime](https://dotnet.microsoft.com/download)
-    * [MongoDB Server](https://www.mongodb.com/download-center/community)
-    * [VS Code](https://code.visualstudio.com/download) (recommended)
+    * [MongoDB Server](https://www.mongodb.com/download-center/community) and add it to PATH
+    * [VS Code](https://code.visualstudio.com/download) (recommended) and add "Prettier" code formatting extension
 3. Run `npm certify` and `npm start` from the project directory to install dependencies and start the project
 
 ## Available Scripts
