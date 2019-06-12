@@ -14,7 +14,7 @@ import { Goal } from "../../../types/goals";
 import Stack from "../../../types/stack";
 import BaseGoalScreen from "../../../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 import { GoalTimeline } from "../../GoalTimeline/GoalTimelineComponent";
-import { BaseGoal } from "../../../types/baseGoal";
+import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 
 it("Should return the default state", () => {
   expect(navReducer(undefined, MockActionInstance)).toEqual(defaultState);
@@ -37,7 +37,7 @@ it("Should change the visible component to the one provided", () => {
     ...defaultState
   };
 
-  const goal: Goal = new BaseGoal();
+  const goal: Goal = new CreateCharInv([]);
 
   const navigateForwardAction: actions.NavigateForwardAction = {
     type: actions.NAVIGATE_FORWARD,
@@ -60,7 +60,7 @@ it("Should navigate back to the previous display", () => {
   const displayHistory: JSX.Element[] = [previousElement];
 
   const state: NavState = {
-    VisibleComponent: <BaseGoalScreen goal={new BaseGoal()} />,
+    VisibleComponent: <BaseGoalScreen goal={new CreateCharInv([])} />,
     DisplayHistory: new Stack<JSX.Element>(displayHistory),
     NavBarState: {
       ShouldRenderBackButton: false
@@ -113,7 +113,7 @@ it("Should set the visible component to the previous display", () => {
   const previousDisplay = <GoalTimeline />;
   const displayHistory = new Stack<JSX.Element>([previousDisplay]);
 
-  const currentDisplay = <BaseGoalScreen goal={new BaseGoal()} />;
+  const currentDisplay = <BaseGoalScreen goal={new CreateCharInv([])} />;
   const expectedDisplay = previousDisplay;
   expect(setVisibleToPreviousDisplay(currentDisplay, displayHistory)).toEqual(
     expectedDisplay

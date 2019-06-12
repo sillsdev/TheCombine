@@ -1,10 +1,10 @@
 import React from "react";
-import { Goal, GoalData, Tools, GoalOption } from "./goals";
-import { User } from "./User";
-import BaseGoalScreen from "../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
-import BaseGoalSelect from "../goals/DefaultGoal/BaseGoalSelect/BaseGoalSelect";
+import { Goal, GoalData, Tools, GoalOption } from "../../types/goals";
+import { User } from "../../types/User";
+import BaseGoalScreen from "../DefaultGoal/BaseGoalScreen/BaseGoalScreen";
+import BaseGoalSelect from "../DefaultGoal/BaseGoalSelect/BaseGoalSelect";
 
-export class ValidateStrWords implements Goal {
+export class SpellCheckGloss implements Goal {
   id: number;
   name: string;
   user: User;
@@ -19,7 +19,7 @@ export class ValidateStrWords implements Goal {
 
   constructor(steps: JSX.Element[]) {
     this.id = 0;
-    this.name = "validateStrWords";
+    this.name = "spellCheckGloss";
     this.user = new User("", "", 1);
     this.display = <BaseGoalScreen goal={this} />;
     this.goalWidget = <BaseGoalSelect goal={this} />;

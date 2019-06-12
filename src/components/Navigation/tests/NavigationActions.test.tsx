@@ -3,7 +3,7 @@ import configureMockStore from "redux-mock-store";
 import { defaultState } from "../NavigationReducer";
 import thunk from "redux-thunk";
 import { Goal } from "../../../types/goals";
-import { BaseGoal } from "../../../types/baseGoal";
+import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 
 it("should create an action to navigate back", () => {
   const expectedAction = {
@@ -31,7 +31,7 @@ it("should create an async action to navigate back", () => {
 });
 
 it("should create an action to navigate forwards", () => {
-  const goal: Goal = new BaseGoal();
+  const goal: Goal = new CreateCharInv([]);
   const expectedAction = {
     type: actions.NAVIGATE_FORWARD,
     payload: goal
@@ -46,7 +46,7 @@ it("should create an async action to navigate forwards", () => {
     }
   });
 
-  const goal: Goal = new BaseGoal();
+  const goal: Goal = new CreateCharInv([]);
   const expectedAction = {
     type: actions.NAVIGATE_FORWARD,
     payload: goal

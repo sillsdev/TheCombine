@@ -1,8 +1,8 @@
 import React from "react";
-import { Goal, GoalData, Tools, GoalOption } from "./goals";
-import { User } from "./User";
-import BaseGoalScreen from "../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
-import BaseGoalSelect from "../goals/DefaultGoal/BaseGoalSelect/BaseGoalSelect";
+import { Goal, GoalData, Tools, GoalOption } from "../../types/goals";
+import { User } from "../../types/User";
+import BaseGoalScreen from "../DefaultGoal/BaseGoalScreen/BaseGoalScreen";
+import BaseGoalSelect from "../DefaultGoal/BaseGoalSelect/BaseGoalSelect";
 
 export class HandleFlags implements Goal {
   id: number;
