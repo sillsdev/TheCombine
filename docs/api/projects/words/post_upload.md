@@ -11,6 +11,14 @@ Used to add many words to a language project from a .lift file
 
 **Data type**: [`FormData()`](https://developer.mozilla.org/en-US/docs/Web/API/FormData/FormData) - Binary Stream
 
+```
+FormData()
+{
+    LanguageData : File
+    name : string
+}
+```
+
 ## Success Response
 
 **Code** : `200 OK`
