@@ -25,21 +25,10 @@ namespace BackendFramework.Controllers
         [EnableCors("AllowAll")]
 
         // GET: v1/Project/Words
-        // Implements GetAllWords(), 
-        // Arguments: list of string ids of target word (if given, else returns all words)
-        // Default: null
+        // Implements GetAllWords(),
         [HttpGet]
-        public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
+        public async Task<IActionResult> Get()
         {
-            if (Ids != null)
-            {
-                var wordList = await _wordService.GetWords(Ids);
-                if (wordList.Count != Ids.Count)
-                {
-                    return new NotFoundResult();
-                }
-                return new ObjectResult(wordList);
-            }
             return new ObjectResult(await _wordService.GetAllWords());
         }
 
@@ -49,11 +38,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            #if DEBUG
+#if DEBUG
                 return new ObjectResult(await _wordService.DeleteAllWords());
-            #else
-                return new UnauthorizedResult();
-            #endif
+#else
+            return new UnauthorizedResult();
+#endif
         }
 
         // GET: v1/Project/Words/{Id}
@@ -86,17 +75,22 @@ namespace BackendFramework.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] Word word)
         {
-            if (await _wordService.Update(Id, word))
+            List<string> ids = new List<string>();
+            ids.Add(Id);
+            var document = await _wordService.GetWords(ids);
+            if (document.Count == 0)
             {
-                return new OkObjectResult(word.Id);
+                return new NotFoundResult();
             }
-            return new NotFoundResult();
+            word.Id = (document.First()).Id;
+            await _wordService.Update(Id, word);
+            return new OkObjectResult(word.Id);
         }
         // DELETE: v1/Project/Words/{Id}
         // Implements Delete(), Arguments: string id of target word
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
-        { 
+        {
             if (await _wordService.Delete(Id))
             {
                 return new OkResult();
