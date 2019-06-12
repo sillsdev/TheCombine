@@ -9,6 +9,10 @@ export interface GoalSwitcherProps {
   goalOptions: Goal[];
 }
 
+/*
+ * Holds a component that provides the user with a choice for the next goal
+ * they want to work on.
+ */
 export class GoalSwitcher extends React.Component<
   GoalSwitcherProps & LocalizeContextProps
 > {
@@ -17,6 +21,8 @@ export class GoalSwitcher extends React.Component<
     this.handleChange = this.handleChange.bind(this);
   }
 
+  // Given a change event, find which goal the user selected, and choose it
+  // as the next goal to work on.
   handleChange(event: React.ChangeEvent<{ name?: string; value: unknown }>) {
     let name = event.target.value as string;
     let goal: Goal | undefined = this.findGoalByName(
@@ -28,6 +34,8 @@ export class GoalSwitcher extends React.Component<
     }
   }
 
+  // Search through the list of possible goals, and find which one the user
+  // selected
   findGoalByName(goals: Goal[], name: string): Goal | undefined {
     for (var goal of goals) {
       if (goal.name === name) {

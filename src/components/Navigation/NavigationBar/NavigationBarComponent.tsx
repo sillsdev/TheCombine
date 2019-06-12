@@ -10,6 +10,9 @@ export interface NavBarProps {
   GoBack: () => void;
 }
 
+/*
+ * The navigation bar provides the UI for navigating around The Combine.
+ */
 export class NavigationBar extends React.Component<
   NavBarProps & LocalizeContextProps
 > {
@@ -17,7 +20,9 @@ export class NavigationBar extends React.Component<
     super(props);
   }
 
-  renderNavigationBarButtons(): JSX.Element {
+  // Render the different UI elements in the nav bar based on this
+  // component's props
+  renderNavigationBar(): JSX.Element {
     if (this.props.ShouldRenderBackButton) {
       return (
         <AppBar position="static">
@@ -37,11 +42,7 @@ export class NavigationBar extends React.Component<
   }
 
   render() {
-    return (
-      <div className="VisibleComponent">
-        {this.renderNavigationBarButtons()}
-      </div>
-    );
+    return <div className="VisibleComponent">{this.renderNavigationBar()}</div>;
   }
 }
 

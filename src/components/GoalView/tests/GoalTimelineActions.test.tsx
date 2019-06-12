@@ -1,9 +1,9 @@
 import * as actions from "../GoalTimelineActions";
 import { Goal } from "../../../types/goals";
-import { BaseGoal } from "../../../types/goals";
+import { BaseGoal } from "../../../types/baseGoal";
 import { User } from "../../../types/user";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../GoalTimelineReducers";
+import { defaultState } from "../DefaultState";
 import thunk from "redux-thunk";
 
 it("should create an action to add a goal", () => {
@@ -18,7 +18,7 @@ it("should create an action to add a goal", () => {
     type: actions.ADD_GOAL,
     payload: goal
   };
-  expect(actions.addGoal(goal)).toEqual(expectedAction);
+  expect(actions.addGoalToHistory(goal)).toEqual(expectedAction);
 });
 
 const createMockStore = configureMockStore([thunk]);
@@ -42,7 +42,7 @@ it("should create an async action to add a goal", () => {
     payload: goal
   };
 
-  mockStore.dispatch<any>(actions.asyncAddGoal(goal)).then(() => {
+  mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal)).then(() => {
     expect(mockStore.getActions()).toEqual([expectedAction]);
   });
 });

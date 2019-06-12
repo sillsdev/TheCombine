@@ -10,10 +10,11 @@ import {
 } from "../NavigationReducer";
 import { NavState } from "../../../types/nav";
 import { MockActionInstance } from "../../../types/action";
-import { BaseGoal, Goal } from "../../../types/goals";
+import { Goal } from "../../../types/goals";
 import Stack from "../../../types/stack";
 import BaseGoalScreen from "../../../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 import { GoalTimeline } from "../../GoalView/GoalTimelineComponent";
+import { BaseGoal } from "../../../types/baseGoal";
 
 it("Should return the default state", () => {
   expect(navReducer(undefined, MockActionInstance)).toEqual(defaultState);

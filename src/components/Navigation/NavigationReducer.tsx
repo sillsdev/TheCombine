@@ -37,7 +37,7 @@ export const navReducer = (
     case NAVIGATE_FORWARD:
       let actionWithPayload = action as ActionWithPayload<Goal>; // TODO: Seems bad. Change?
       return {
-        VisibleComponent: actionWithPayload.payload.display,
+        VisibleComponent: setVisibleToGivenInAction(actionWithPayload),
         DisplayHistory: addDisplayToHistory(
           state.VisibleComponent,
           state.DisplayHistory
@@ -51,6 +51,7 @@ export const navReducer = (
   }
 };
 
+// Add a React component to the display history
 export function addDisplayToHistory(
   display: JSX.Element,
   history: Stack<JSX.Element>
@@ -59,6 +60,7 @@ export function addDisplayToHistory(
   return history;
 }
 
+// Remove a React component from the display history
 export function removeDisplayFromHistory(
   history: Stack<JSX.Element>
 ): Stack<JSX.Element> {
@@ -66,6 +68,7 @@ export function removeDisplayFromHistory(
   return history;
 }
 
+// Replace the visible component with the previous component that was displayed
 export function setVisibleToPreviousDisplay(
   visibleDisplay: JSX.Element,
   history: Stack<JSX.Element>
@@ -75,6 +78,12 @@ export function setVisibleToPreviousDisplay(
     return previousElement;
   }
   return visibleDisplay;
+}
+
+export function setVisibleToGivenInAction(
+  action: ActionWithPayload<Goal>
+): JSX.Element {
+  return action.payload.display;
 }
 
 export function shouldRenderBackButton(history: Stack<JSX.Element>): boolean {

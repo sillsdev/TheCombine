@@ -3,11 +3,7 @@ import React from "react";
 import { Goal } from "../../../../types/goals";
 import Select from "@material-ui/core/Select";
 import { FormControl, MenuItem } from "@material-ui/core";
-import {
-  withLocalize,
-  LocalizeContextProps,
-  Translate
-} from "react-localize-redux";
+import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 export interface GoalSelectorDropdownProps {
   goalOptions: Goal[];

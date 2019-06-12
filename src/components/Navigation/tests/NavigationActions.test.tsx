@@ -2,7 +2,8 @@ import * as actions from "../NavigationActions";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../NavigationReducer";
 import thunk from "redux-thunk";
-import { Goal, BaseGoal } from "../../../types/goals";
+import { Goal } from "../../../types/goals";
+import { BaseGoal } from "../../../types/baseGoal";
 
 it("should create an action to navigate back", () => {
   const expectedAction = {

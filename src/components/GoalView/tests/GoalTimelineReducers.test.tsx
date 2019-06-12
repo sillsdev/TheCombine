@@ -5,7 +5,7 @@ import {
   goalsReducer
 } from "../GoalTimelineReducers";
 import { Goal, GoalsState } from "../../../types/goals";
-import { BaseGoal } from "../../../types/goals";
+import { BaseGoal } from "../../../types/baseGoal";
 import { User } from "../../../types/user";
 import Stack from "../../../types/stack";
 import { MockActionInstance } from "../../../types/action";

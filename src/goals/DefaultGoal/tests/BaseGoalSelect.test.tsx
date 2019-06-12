@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BaseGoal } from "../../../types/goals";
+import { BaseGoal } from "../../../types/baseGoal";
 import { User } from "../../../types/user";
 import { Goal } from "../../../types/goals";
 import BaseGoalSelect from "../BaseGoalSelect/BaseGoalSelect";

@@ -2,32 +2,12 @@ import Navigation from "./NavigationComponent";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../types/index";
-import { NavState } from "../../types/nav";
-import Stack from "../../types/stack";
-import { ThunkDispatch } from "redux-thunk";
-import * as actions from "./NavigationActions";
+import { NavComponentState } from "../../types/nav";
 
-export function mapStateToProps(state: StoreState): NavState {
+export function mapStateToProps(state: StoreState): NavComponentState {
   return {
-    VisibleComponent: state.navState.VisibleComponent,
-    DisplayHistory: new Stack<JSX.Element>([]),
-    NavBarState: {
-      ShouldRenderBackButton: false
-    }
+    VisibleComponent: state.navState.VisibleComponent
   };
 }
 
-export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, actions.NavigateBack>
-) {
-  return {
-    GoBack: () => {
-      dispatch(actions.asyncNavigateBack());
-    }
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Navigation);
+export default connect(mapStateToProps)(Navigation);

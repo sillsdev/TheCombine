@@ -1,14 +1,16 @@
 import React from "react";
-import Stack from "../../types/stack";
 import NavigationBar from "./NavigationBar/";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 export interface NavComponentProps {
   VisibleComponent: JSX.Element;
-  DisplayHistory: Stack<JSX.Element>;
-  GoBack: () => void;
 }
 
+/*
+ * Every other component besides App is rendered inside this component.
+ * It displays the current visible component and other UI that should be
+ * displayed on every screen of The Combine.
+ */
 export class Navigation extends React.Component<
   NavComponentProps & LocalizeContextProps
 > {

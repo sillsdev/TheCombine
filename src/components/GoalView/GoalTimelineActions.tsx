@@ -12,12 +12,12 @@ export interface AddGoal extends ActionWithPayload<Goal> {
 
 export type AddGoalAction = AddGoal;
 
-export function asyncAddGoal(goal: Goal) {
+export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: Dispatch<AddGoal>) => {
-    dispatch(addGoal(goal));
+    dispatch(addGoalToHistory(goal));
   };
 }
 
-export function addGoal(goal: Goal): AddGoal {
+export function addGoalToHistory(goal: Goal): AddGoal {
   return { type: ADD_GOAL, payload: goal };
 }
