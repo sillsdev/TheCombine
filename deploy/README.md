@@ -1,20 +1,24 @@
-# ubuntu-setup #
+# How To Deploy TheCombine Application #
 
-**ubuntu-setup** is a collection of Ansible playbooks that can be use to configure a new installation of Ubuntu Server.  Each playbook uses a set of Ansible roles to drive the configurations.  Some roles are also appropriate for Ubuntu Desktop.
+The ```deploy``` folder of TheCombine project is a collection of Ansible playbooks that can be use to configure a new installation of Ubuntu Server.  Each playbook uses a set of Ansible roles to drive the configurations.
 
-## Setup Script ##
-A setup script, setup-target.sh is provided to perform the installation.  Its usage is:
+## Running the playbook ##
+A setup script, ```setup-target.sh```, is provided to perform the installation.  Its usage is:
 ```
-./setup-target.sh [-c|--copyid-h|--help|-t] user@machinename
+./setup-target.sh [options] user@machinename
 ```
 
-### Arguments: ###
+### options: ###
 
 **```-c or --copyid```** causes the script to use ```ssh-copy-id``` to copy your ssh id to the target machine before running the playbook to setup the machine.  This obviates the need to enter your password every time that you connect to the machine.
 
 **```-h or --help```** print the basic usage message.  The usage message is also printed if the script is run without a user@machine name argument.
 
-**```-t```** for *testing*.  Prints internal script variables after parsing the arguments and exits.  No set up will be done if the -t option is specified.
+**```-i or --install``` only run the tasks for installing TheCombine
+
+**```-t or --test```**  only run the tasks for testing the installation of TheCombine.
+
+*if neither the -i nor the -t options are specified, the install and the test tasks will be run.*
 
 ## Setting up a Virtual Machine ##
 
@@ -73,18 +77,18 @@ A setup script, setup-target.sh is provided to perform the installation.  Its us
 
         1. You will want the installer to format the entire (virtual) disk and use LVM (that's the default)
 
-        1. *Make sure that you select the OpenSSH server when prompted to select the software for your server:*  
+        1. *Make sure that you select the OpenSSH server when prompted to select the software for your server:*
         ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
 
 
-  1. When installation is complete, log in to the virtual machine and setup the network connection for the second adapter.
+  6. When installation is complete, log in to the virtual machine and setup the network connection for the second adapter.
 
      1. Run ```ip address``` to list the available interfaces.  There will be one ethernet interface that is up and has an IP address, e.g. enp0s3.  There will be a second ethernet interface that is down, e.g. enp0s8.  Note the name of this interface.
 
-     1. Edit /etc/netplan/01-netcfg.yaml  
+     1. Edit /etc/netplan/01-netcfg.yaml
         ```sudo nano /etc/netplan/01-netcfg.yaml```
 
-     1. Edit the file so that it contains:  
+     1. Edit the file so that it contains:
         ```
         # This file describes the network interfaces available on your system
         # For more information, see netplan(5).
@@ -105,14 +109,15 @@ A setup script, setup-target.sh is provided to perform the installation.  Its us
 
      1. Run: ```sudo netplan apply```
 
-     1. Add the VM's IP address to the ```/etc/hosts``` file on the host computer *(optional)*:  
-     ```
-     # Virtual Machines
-     192.168.56.10	nuc-vm
+     1. Add the VM's IP address to the ```/etc/hosts``` file on the host computer *(optional)*:
 
-        ```
+       ```
+       # Virtual Machines
+       192.168.56.10	nuc-vm
 
-  1. Now you can run the setup-target.sh to install the required packages.
+       ```
+
+  1. Now you can run the setup-target.sh to install the required packages.  Use ```192.168.56.10``` as the target IP address.
 
 
 ## Roles ##
@@ -122,11 +127,15 @@ If you need to create a playbook to run individual roles, the following roles ar
   **ansible-depends** - installs the packages required to run subsequent Ansible
   modules
 
-  **headless** - sets configuration options that make sense when the device will be used as a headless node, such as, configuring the power button to shutdown when there is no display to confirm or to choose between Shutdown, Restart and Cancel.  This is intended for a Server installation.
+  **headless** - sets configuration options that make sense when the device will be used as a headless node.  It currently updates the ```grub``` configuration so that there is not a 30 second wait during bootup when Ubuntu is installed with the Logical Volume Manager.  This is intended for a Server installation.
 
-  **mediaplayer** - installs various media tools, such as spotify and clementine.  This role requires a Desktop installation.
+  **nodejs** - installs node.js, npm, and yarn
 
   **setup_apache** - installs the apache2 web server
+
+  **setup_application** - installs TheCombine application from the ```build``` directory.  The application must be built first; it is not built by the ansible playbook.
+
+  **setup_dotnet_core** - installs the ASP.NET Core 2.2 Runtime.  It does *not* install the SDK.
 
   **setup_mongodb** - installs the MongoDB database (from mongodb.org, *not* the Ubuntu package) and installs it as a service
 
