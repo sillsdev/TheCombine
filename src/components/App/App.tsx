@@ -1,15 +1,16 @@
 //external modules
 import React from "react";
 
-import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
-import { store } from "../../store";
-import { backend } from "../../goals/MergeDupGoal/MergeDupStep/component";
-import { Word, testWordList } from "../../types/word";
-import { addListWord } from "../../goals/MergeDupGoal/MergeDupStep/actions";
-import Navigation from "../Navigation/";
-const App: React.FC = () => {
-  // add words from database
-  return <Navigation />;
-};
+export interface AppProps {
+  VisibleComponent: JSX.Element;
+}
 
-export default App;
+export default class App extends React.Component<AppProps> {
+  constructor(props: AppProps) {
+    super(props);
+  }
+
+  render() {
+    return <div className="App">{this.props.VisibleComponent}</div>;
+  }
+}

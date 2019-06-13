@@ -54,8 +54,8 @@ class CreateProject extends React.Component<
     if (name === "") {
       // notify the user they need a project name (this won't translate)
       alert("Project name cannot be blank");
-    } else if (this.props.asyncCreateProject) {
-      this.props.asyncCreateProject(name, languageData as File);
+    } else if (this.props.createProject) {
+      this.props.createProject(name, languageData as File);
     }
   }
 
