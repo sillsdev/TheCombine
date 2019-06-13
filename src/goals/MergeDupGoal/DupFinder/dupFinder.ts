@@ -1,14 +1,11 @@
 //Sam Delaney, 6/12/19
 
 import { Word, testWordList } from "../../../types/word";
+import axios from "axios";
+const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
 
 export interface ScoredWord {
   word: Word;
-  score: number;
-}
-
-export interface ScoredCollection {
-  words: Word[];
   score: number;
 }
 
@@ -54,42 +51,46 @@ export default class DupFinder {
   subsitutionCost: number;
 
   // get list of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
-  getNextDups(): Word[] {
-    let outputCollection: Word[] = [];
-
-    //iterate until getDupsFromWordList loop returns more than one Word
-    for (
-      this.searchCount = 0;
-      this.searchCount <= this.searchLimit;
-      this.searchCount++
-    ) {
-      //iterate until getWordsFromDB returns more than one Word
-      for (
-        ;
-        outputCollection.length <= 1 && this.searchCount <= this.searchLimit;
-        this.searchCount++
-      ) {
-        outputCollection = this.getWordsFromDB();
+  async getNextDups(): Promise<Word[]> {
+    let wordsFromDB: Promise<Word[]> = this.getWordsFromDB().then(words => {
+      let foundWords: Word[] = [];
+      for (let i = 0; i < words.length; i++) {
+        let iterDups: Word[] = this.getDupsFromWordList(words[i], words);
+        if (foundWords.length < iterDups.length) foundWords = iterDups;
       }
+      return foundWords;
+    });
+    return wordsFromDB;
+    /*
+    console.log(wordsFromDB);
 
-      //find the parent that returns the highest number of duplicates
-      let parent: ScoredCollection = { words: [], score: 0 }; //index, count
-      for (let i = 0; i < outputCollection.length; i++) {
-        let iterDups: ScoredCollection = {
-          score: i,
-          words: this.getDupsFromWordList(outputCollection[i], outputCollection)
-        };
-        if (parent.score < iterDups.score) parent = iterDups;
-      }
-      outputCollection = parent.words;
+    //find the parent that returns the highest number of duplicates
+    let parent: Word[] = []; //index, count
+    for (let i = 0; i < wordsFromDB.length; i++) {
+      let iterDups: Word[] = this.getDupsFromWordList(
+        wordsFromDB[i],
+        wordsFromDB
+      );
+      if (parent.length < iterDups.length) parent = iterDups;
     }
-    return outputCollection;
+
+    console.log(wordsFromDB);
+    return wordsFromDB;*/
   }
 
   //temporary placeholder TODO
   //returns a set of words from the database
-  getWordsFromDB(): Word[] {
-    return testWordList();
+  async getWordsFromDB(): Promise<Word[]> {
+    var wordCollection = backend
+      .get("project/words/frontier")
+      .then(async resp => await resp.data);
+    /*
+    backend.get("project/words/frontier").then(words =>
+      (words.data as Word[]).map(element => {
+        await element;
+      })
+    );*/
+    return wordCollection;
   }
 
   //scores a collection and returns

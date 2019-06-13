@@ -50,18 +50,18 @@ class MergeDupStep extends React.Component<
     }
   }
 
-  refresh() {
+  async refresh() {
+    let Finder = new DupFinder();
     if (this.props.clearListWords) {
       this.props.clearListWords();
     }
-    backend.get("project/words/frontier").then(words =>
-      (words.data as Word[]).map(word => {
-        if (this.props.addListWord) {
-          this.props.addListWord(word);
-          //this.forceUpdate();
-        }
-      })
-    );
+    let temp = await Finder.getNextDups();
+    console.log(temp);
+    temp.map(word => {
+      if (this.props.addListWord) {
+        this.props.addListWord(word);
+      }
+    });
   }
 
   async clear_database() {
