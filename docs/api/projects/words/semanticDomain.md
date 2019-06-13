@@ -19,7 +19,7 @@ These words are nested by their number.
 
 ```typescript
 {
-    name: String,
-    number: String,
+    Name: String,
+    Number: String,
 }
 ```

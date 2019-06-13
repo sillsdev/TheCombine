@@ -31,7 +31,7 @@ namespace BackendFramework
             public string WordsDatabase { get; set; }
             public string UsersDatabase { get; set; }
             public string UserRolesDatabase { get; set; }
-            public string NamesCollectionLanguage { get; set; }
+            public string ProjectsDatabase { get; set; }
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -55,7 +55,8 @@ namespace BackendFramework
             options.WordsDatabase = Configuration.GetSection("MongoDB:WordsDatabase").Value;
             options.UsersDatabase = Configuration.GetSection("MongoDB:UsersDatabase").Value;
             options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
-            options.NamesCollectionLanguage = Configuration.GetSection("MongoDB:NamesCollectionLanguage").Value;
+            options.ProjectsDatabase = Configuration.GetSection("MongoDB:ProjectsDatabase").Value;
+            options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
         });
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordService, WordService>();
@@ -63,6 +64,10 @@ namespace BackendFramework
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IUserRoleContext, UserRoleContext>();
             services.AddTransient<IUserRoleService, UserRoleService>();
+            services.AddTransient<IProjectContext, ProjectContext>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IUserRoleContext, UserRoleContext>();
+            services.AddTransient<IUserRoleService, UserRoleService>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,9 +1,18 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace BackendFramework.ValueModels
 {
+    public class FileUpload
+    {
+        public IFormFile file { get; set; }
+        public string name { get; set; }
+        public string filePath { get; set; }
+    }
+
+
     public enum state
     {
         active,
@@ -17,41 +26,40 @@ namespace BackendFramework.ValueModels
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [BsonElement("Vernacular")]
+        [BsonElement("vernacular")]
         public string Vernacular { get; set; }
 
-        [BsonElement("Gloss")]
-        public string Gloss { get; set; }
+        [BsonElement("plural")]
+        public string Plural { get; set; }
 
-        [BsonElement("Audio")]
+        [BsonElement("senses")]
+        public List<Sense> Senses { get; set; }
+
+        [BsonElement("audio")]
         public string Audio { get; set; }
 
-        [BsonElement("Timestamp")]
-        public string Timestamp { get; set; }
-
-        [BsonElement("Created")]
+        [BsonElement("created")]
         public string Created { get; set; }
 
-        [BsonElement("Modified")]
+        [BsonElement("modified")]
         public string Modified { get; set; }
 
-        [BsonElement("History")]
+        [BsonElement("history")]
         public List<string> History { get; set; }
 
-        [BsonElement("AudioFile")]
-        public string AudioFile { get; set; }
-
-        [BsonElement("PartOfSpeech")]
+        [BsonElement("partOfSpeech")]
         public string PartOfSpeech { get; set; }
 
-        [BsonElement("EditedBy")]
+        [BsonElement("editedBy")]
         public List<string> EditedBy { get; set; }
 
-        [BsonElement("Accessability")]
+        [BsonElement("accessability")]
         public int Accessability { get; set; }
 
-        [BsonElement("OtherField")]
+        [BsonElement("otherField")]
         public string OtherField { get; set; }
+
+
     }
     public class MergeWords
     {
@@ -60,5 +68,23 @@ namespace BackendFramework.ValueModels
         public state mergeType { get; set; }
         public User mergedBy { get; set; }
         public string time { get; set; }
+    }
+
+    public class Sense
+    {
+        public List<Gloss> Glosses { get; set; }
+        public List<SemanticDomain> SemanticDomains { get; set; }
+    }
+
+    public class SemanticDomain
+    {
+        public string Name { get; set; }
+        public string Number { get; set; }
+    }
+
+    public class Gloss
+    {
+        public string Language { get; set; }
+        public string Def { get; set; }
     }
 }
