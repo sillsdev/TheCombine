@@ -6,18 +6,17 @@ using BackendFramework.Interfaces;
 namespace BackendFramework.Context
 {
 
-    public class WordContext : IWordContext
+    public class ProjectContext : IProjectContext
     {
         private readonly IMongoDatabase _db;
 
-        public WordContext(IOptions<Settings> options)
+        public ProjectContext(IOptions<Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.WordsDatabase);
+            _db = client.GetDatabase(options.Value.ProjectsDatabase);
         }
 
-        public IMongoCollection<Word> Words => _db.GetCollection<Word>("WordsCollection");
-        public IMongoCollection<Word> Frontier => _db.GetCollection<Word>("FrontierCollection");
+        public IMongoCollection<Project> Projects => _db.GetCollection<Project>("ProjectsCollection");
     }
 
 }

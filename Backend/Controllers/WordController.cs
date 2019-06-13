@@ -9,18 +9,24 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
-using System.Text.RegularExpressions;
+using SIL.Lift.Parsing;
+using System.IO;
+using System;
+using System.Net;
 
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/Project/Words")]
+    [Route("v1/Projects/Words")]
     public class WordController : Controller
     {
-        private readonly IWordService _wordService;
+        public readonly IWordService _wordService;
+        public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
+
         public WordController(IWordService wordService)
         {
             _wordService = wordService;
+            _merger = (ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>)wordService;
         }
 
         [EnableCors("AllowAll")]
@@ -40,7 +46,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-                return new ObjectResult(await _wordService.DeleteAllWords());
+            return new ObjectResult(await _wordService.DeleteAllWords());
 #else
             return new UnauthorizedResult();
 #endif
@@ -87,6 +93,7 @@ namespace BackendFramework.Controllers
             await _wordService.Update(Id, word);
             return new OkObjectResult(word.Id);
         }
+
         // DELETE: v1/Project/Words/{Id}
         // Implements Delete(), Arguments: string id of target word
         [HttpDelete("{Id}")]
@@ -119,10 +126,31 @@ namespace BackendFramework.Controllers
             return new ObjectResult(mergedWord.Id);
         }
 
-        [HttpGet("{Regex}")]
-        public async Task<IActionResult> SearchRegex(Regex reg)
+
+        // POST: v1/Project/Words/upload
+        // Implements: Upload(), Arguments: FileUpload model
+        [HttpPost("upload")]
+        public async Task<IActionResult> Post([FromForm] FileUpload model)
         {
-            return new ObjectResult(await _wordService.GetRegexSearch(reg));
+            var file = model.file;
+
+            if (file.Length > 0)
+            {
+                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
+                using (var fs = new FileStream(model.filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fs);
+                }
+            }
+            try
+            {
+                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+                return new ObjectResult(parser.ReadLiftFile(model.filePath));
+            }
+            catch (Exception)
+            {
+                return new UnsupportedMediaTypeResult();
+            }
         }
     }
 }

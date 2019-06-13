@@ -8,11 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BackendFramework.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
-    [Route("v1/Users")]
+    [Route("v1/users")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -21,7 +24,7 @@ namespace BackendFramework.Controllers
             _userService = userService;
         }
 
-
+        [AllowAnonymous]
         [EnableCors("AllowAll")]
 
         // GET: v1/Users
@@ -44,6 +47,21 @@ namespace BackendFramework.Controllers
 #endif
         }
 
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody]Credentials cred)
+        {
+            
+            var user = await _userService.Authenticate(cred.Username, cred.Password);
+
+            if (user == null)
+            {
+                return new UnauthorizedResult();
+            }
+
+            return new OkObjectResult(user);
+        }
+
         // GET: v1/Users/name
         // Implements GetUser(), Arguments: string id of target user
         [HttpGet("{Id}")]
@@ -61,6 +79,7 @@ namespace BackendFramework.Controllers
 
         // POST: v1/Users
         // Implements Create(), Arguments: new user object from body
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]User user)
         {

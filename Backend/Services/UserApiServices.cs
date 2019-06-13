@@ -14,6 +14,12 @@ using BackendFramework.Services;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using System;
+using BackendFramework.Helper;
+using Microsoft.Extensions.Options;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace BackendFramework.Services
 {
@@ -23,11 +29,58 @@ namespace BackendFramework.Services
     {
 
         private readonly IUserContext _userDatabase;
+        private readonly AppSettings _appSettings;
 
-        public UserService(IUserContext collectionSettings)
+        public UserService(IUserContext collectionSettings, IOptions<AppSettings> appSettings)
         {
             _userDatabase = collectionSettings;
+            _appSettings = appSettings.Value;
         }
+        
+
+       
+        public async Task<User> Authenticate(string username, string password)
+        {
+            try
+            {
+                var user = await _userDatabase.Users.FindAsync(x => (x.Username == username &&  x.Password == password));
+                User foundUser = user.Single();
+
+                // return null if user not found
+                if (foundUser == null)
+                {
+                    return null;
+                }
+
+                // authentication successful so generate jwt token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                    new Claim(ClaimTypes.Name, foundUser.Id)
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                foundUser.Token = tokenHandler.WriteToken(token);
+
+                // remove password before returning
+                foundUser.Password = null;
+                return foundUser;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            catch (MongoInternalException)
+            {
+                return null;
+            }
+        }
+
 
         public async Task<List<User>> GetAllUsers()
         {
@@ -81,7 +134,7 @@ namespace BackendFramework.Services
                 .Set(x => x.WorkedProjects, user.WorkedProjects)
                 .Set(x => x.Agreement, user.Agreement)
                 .Set(x => x.Password, user.Password)
-                .Set(x => x.UserName, user.UserName)
+                .Set(x => x.Username, user.Username)
                 .Set(x => x.UILang, user.UILang);
 
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
@@ -89,6 +142,8 @@ namespace BackendFramework.Services
             return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
            
         }
+
+        
     }
 
 

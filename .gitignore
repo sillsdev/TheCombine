@@ -29,4 +29,5 @@ package-lock.json
 .vs/*
 Backend/bin
 Backend/obj
+Backend/.vs/*
 

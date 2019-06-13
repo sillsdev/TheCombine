@@ -14,6 +14,10 @@ using BackendFramework.Services;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using System;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using BackendFramework.Helper;
+using Microsoft.Extensions.Options;
 
 namespace BackendFramework.Services
 {
