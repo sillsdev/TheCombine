@@ -1,6 +1,6 @@
 //Sam Delaney, 6/12/19
 
-import DupFinder, { ScoredWord } from "../DupFinder";
+import DupFinder, { ScoredWord } from "../DuplicateFinder";
 import { Word, simpleWord } from "../../../../types/word";
 
 describe("dupFinder Tests", () => {
@@ -30,15 +30,16 @@ describe("dupFinder Tests", () => {
       word: {
         id: "6212061",
         vernacular: "Yank",
-        gloss: "No",
-        audioFile: "",
+        senses: ["No"],
+        audio: "",
         created: "now",
         modified: "",
         history: [],
         partOfSpeech: "",
         editedBy: [],
         accessability: 0,
-        otherField: ""
+        otherField: "",
+        plural: ""
       },
       score: 0
     },
@@ -46,15 +47,16 @@ describe("dupFinder Tests", () => {
       word: {
         id: "7518701",
         vernacular: "Yang",
-        gloss: "Die",
-        audioFile: "",
+        senses: ["Die"],
+        audio: "",
         created: "now",
         modified: "",
         history: [],
         partOfSpeech: "",
         editedBy: [],
         accessability: 0,
-        otherField: ""
+        otherField: "",
+        plural: ""
       },
       score: 2
     },
@@ -62,15 +64,16 @@ describe("dupFinder Tests", () => {
       word: {
         id: "921780",
         vernacular: "Yank",
-        gloss: "Please god help me",
-        audioFile: "",
+        senses: ["Please god help me"],
+        audio: "",
         created: "now",
         modified: "",
         history: [],
         partOfSpeech: "",
         editedBy: [],
         accessability: 0,
-        otherField: ""
+        otherField: "",
+        plural: ""
       },
       score: 0
     }
@@ -80,15 +83,16 @@ describe("dupFinder Tests", () => {
       word: {
         id: "6212061",
         vernacular: "Yank",
-        gloss: "No",
-        audioFile: "",
+        senses: ["No"],
+        audio: "",
         created: "now",
         modified: "",
         history: [],
         partOfSpeech: "",
         editedBy: [],
         accessability: 0,
-        otherField: ""
+        otherField: "",
+        plural: ""
       },
       score: 0
     },
@@ -96,15 +100,16 @@ describe("dupFinder Tests", () => {
       word: {
         id: "921780",
         vernacular: "Yank",
-        gloss: "Please god help me",
-        audioFile: "",
+        senses: ["Please god help me"],
+        audio: "",
         created: "now",
         modified: "",
         history: [],
         partOfSpeech: "",
         editedBy: [],
         accessability: 0,
-        otherField: ""
+        otherField: "",
+        plural: ""
       },
       score: 0
     },
@@ -112,15 +117,16 @@ describe("dupFinder Tests", () => {
       word: {
         id: "7518701",
         vernacular: "Yang",
-        gloss: "Die",
-        audioFile: "",
+        senses: ["Die"],
+        audio: "",
         created: "now",
         modified: "",
         history: [],
         partOfSpeech: "",
         editedBy: [],
         accessability: 0,
-        otherField: ""
+        otherField: "",
+        plural: ""
       },
       score: 2
     }
@@ -129,41 +135,44 @@ describe("dupFinder Tests", () => {
     {
       id: "921780",
       vernacular: "Yank",
-      gloss: "Please god help me",
-      audioFile: "",
+      senses: ["Please god help me"],
+      audio: "",
       created: "now",
       modified: "",
       history: [],
       partOfSpeech: "",
       editedBy: [],
       accessability: 0,
-      otherField: ""
+      otherField: "",
+      plural: ""
     },
     {
       id: "6212061",
       vernacular: "Yank",
-      gloss: "No",
-      audioFile: "",
+      senses: ["No"],
+      audio: "",
       created: "now",
       modified: "",
       history: [],
       partOfSpeech: "",
       editedBy: [],
       accessability: 0,
-      otherField: ""
+      otherField: "",
+      plural: ""
     },
     {
       id: "7518701",
       vernacular: "Yang",
-      gloss: "Die",
-      audioFile: "",
+      senses: ["Die"],
+      audio: "",
       created: "now",
       modified: "",
       history: [],
       partOfSpeech: "",
       editedBy: [],
       accessability: 0,
-      otherField: ""
+      otherField: "",
+      plural: ""
     }
   ];
 
@@ -177,7 +186,7 @@ describe("dupFinder Tests", () => {
     let testOutput = Finder.getDupsFromWordList(testWordList[3], testWordList);
     for (let i = 0; i < testOutput.length; i++) {
       expect(testOutput[i].vernacular).toEqual(acceptedYank[i].vernacular);
-      expect(testOutput[i].gloss).toEqual(acceptedYank[i].gloss);
+      expect(testOutput[i].senses[0]).toEqual(acceptedYank[i].senses[0]);
     }
   });
 
@@ -186,7 +195,7 @@ describe("dupFinder Tests", () => {
     let testOutput = Finder.getAcceptedWords(scoredYank);
     for (let i = 0; i < testOutput.length; i++) {
       expect(testOutput[i].vernacular).toEqual(acceptedYank[i].vernacular);
-      expect(testOutput[i].gloss).toEqual(acceptedYank[i].gloss);
+      expect(testOutput[i].senses[0]).toEqual(acceptedYank[i].senses[0]);
     }
   });
 
@@ -229,8 +238,8 @@ describe("dupFinder Tests", () => {
   test("Levenshtein Distance with distinct Word", () => {
     expect(
       Finder.getLevenshteinDistance(
-        testWordList[8].gloss,
-        testWordList[12].gloss
+        testWordList[8].senses[0],
+        testWordList[12].senses[0]
       )
     ).toEqual(14);
   });

@@ -5,7 +5,7 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word } from "../../../../types/word";
+import { Word, hasSenses } from "../../../../types/word";
 import { Box, CardContent, Card } from "@material-ui/core";
 import { Sense } from "../component";
 
@@ -82,7 +82,7 @@ class MergeStack extends React.Component<
         >
           <CardContent>{lastCard.vernacular}</CardContent>
           <CardContent>
-            {lastCard.gloss}
+            {hasSenses(lastCard) ? lastCard.senses[0] : "no gloss"}
             <div
               style={{
                 float: "right",

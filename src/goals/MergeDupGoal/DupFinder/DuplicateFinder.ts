@@ -1,6 +1,6 @@
 //Sam Delaney, 6/12/19
 
-import { Word, testWordList } from "../../../types/word";
+import { Word, hasSenses } from "../../../types/word";
 import axios from "axios";
 const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
 
@@ -130,7 +130,9 @@ export default class DupFinder {
       //check for automatic qualifiers
       if (
         word.vernacular === parent.vernacular ||
-        word.gloss === parent.gloss
+        (hasSenses(word) &&
+          hasSenses(parent) &&
+          word.senses[0] === parent.senses[0])
       ) {
         scoredWords.push({ word, score: 0 });
       } else {
@@ -139,8 +141,12 @@ export default class DupFinder {
           parent.vernacular,
           word.vernacular
         );
-
-        score *= this.getLevenshteinDistance(parent.gloss, word.gloss);
+        if (hasSenses(word) && hasSenses(parent)) {
+          score *= this.getLevenshteinDistance(
+            parent.senses[0],
+            word.senses[0]
+          );
+        }
 
         //apply score threshold
         if (score < this.maxScore) scoredWords.push({ word, score });

@@ -8,8 +8,8 @@ export enum State {
 export interface Word {
   id: string;
   vernacular: string;
-  gloss: string;
-  audioFile: string;
+  senses: string[];
+  audio: string;
   created: string;
   modified: string;
   history: string[];
@@ -17,6 +17,7 @@ export interface Word {
   editedBy: string[];
   accessability: State;
   otherField: string;
+  plural: string;
 }
 
 export interface Merge {
@@ -26,19 +27,24 @@ export interface Merge {
   time: string;
 }
 
+export function hasSenses(word: Word) {
+  return word.senses && word.senses.length > 0;
+}
+
 export function simpleWord(vern: string, gloss: string): Word {
   return {
     id: Math.floor(Math.random() * 9999999).toString(),
     vernacular: vern,
-    gloss,
-    audioFile: "",
+    senses: [gloss],
+    audio: "",
     created: "now",
     modified: "",
     history: [],
     partOfSpeech: "",
     editedBy: [],
     accessability: State.active,
-    otherField: ""
+    otherField: "",
+    plural: ""
   };
 }
 

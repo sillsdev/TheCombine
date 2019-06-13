@@ -65,8 +65,6 @@ namespace BackendFramework
             services.AddTransient<IUserRoleService, UserRoleService>();
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<IUserRoleContext, UserRoleContext>();
-            services.AddTransient<IUserRoleService, UserRoleService>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -13,6 +13,7 @@ import { createProjectReducer } from "./components/CreateProject/CreateProjectRe
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   localize: localizeReducer,
   tempState: tempReducer,
+  draggedWord: dragWordReducer,
   mergeDupStepProps: mergeDupStepReducer,
   loginState: loginReducer,
   createProjectState: createProjectReducer,

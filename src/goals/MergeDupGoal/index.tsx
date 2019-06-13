@@ -6,7 +6,6 @@ import BaseGoalScreen from "../DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 
 //placeholder interfacees
 export interface MergeDupData {}
-export interface MergeDupStepProps {}
 
 export function mapStateToProps(state: StoreState) {
   return {};

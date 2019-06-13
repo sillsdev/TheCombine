@@ -5,7 +5,7 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word } from "../../../../types/word";
+import { Word, hasSenses } from "../../../../types/word";
 import {
   CardContent,
   Card,
@@ -80,7 +80,9 @@ class WordList extends React.Component<
                 onDragEnd={_ => this.dragEnd(item)}
               >
                 <CardContent>{item.vernacular}</CardContent>
-                <CardContent>{item.gloss}</CardContent>
+                <CardContent>
+                  {hasSenses(item) ? item.senses[0] : "no gloss"}
+                </CardContent>
               </Card>
             </ListItem>
           ))}
