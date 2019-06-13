@@ -1,7 +1,11 @@
 ---
 
 - name: Read version of node (and strip leading 'v')
-  shell: node --version | sed "s/^v//"
+  shell: |
+    set -o pipefail
+    node --version | sed "s/^v//"
+  args:
+    executable: /bin/bash
   register: node_version
   changed_when: false
 
@@ -12,7 +16,7 @@
       - node_version.stdout is version("10.17", "<")
 
 - name: Read version of npm
-  shell: npm --version
+  command: npm --version
   register: npm_version
   changed_when: false
 
@@ -20,13 +24,3 @@
   assert:
     that:
       - npm_version.stdout is version("6.9", ">=")
-
-- name: Read version of yarn
-  shell: yarn --version
-  register: yarn_version
-  changed_when: false
-
-- name: verify yarn version is > 1.16
-  assert:
-    that:
-      - yarn_version.stdout is version("1.16", ">=")

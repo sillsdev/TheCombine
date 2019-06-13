@@ -17,26 +17,13 @@
 
 - name: Add Mondo DB repository
   apt_repository:
-    repo: "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu {{ansible_distribution_release}}/mongodb-org/{{mongodb_version}} multiverse"
-    filename: mongodb-org-{{mongodb_version}}
+    repo: "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse"
+    filename: mongodb-org-{{ mongodb_version }}
     update_cache: yes
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'bionic'
 
 - name: Install mongodb-org
   apt:
     name: mongodb-org
-    state: latest
-  notify: Restart mongod
-
-- name: reload systemd unit configuration
-  command: systemctl daemon-reload
-
-- name: Enable service
-  service:
-    name: mongod
-    enabled: yes
-
-- name: Start service
-  service:
-    name: mongod
-    state: started
+    state: present
+  notify: Start mongod

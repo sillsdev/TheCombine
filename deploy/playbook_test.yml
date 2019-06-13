@@ -5,6 +5,11 @@
   become: yes
 
   tasks:
-    - name: just the facts, ma'am
-      debug:
-        var: ansible_facts
+  - name: Wait for service create_ap
+    service_facts:
+    register: services_state
+    until:
+      - services_state.ansible_facts.services["create_ap.service"] is defined
+      - services_state.ansible_facts.services["create_ap.service"].status == "started"
+    retries: 6
+    delay: 5

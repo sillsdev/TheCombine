@@ -8,11 +8,11 @@
     - role: ansible-depends
     - role: headless
     - role: nodejs
-    - role: setup_mongodb
-    - role: setup_dotnet_core
-    - role: setup_apache
+    - role: mongodb
+    - role: dotnet_core
+    - role: apache
     - role: wifi_ap
-    - role: setup_application
+    - role: the_combine_app
 
   tasks:
     - name: See if ubuntu-desktop is installed

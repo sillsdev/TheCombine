@@ -12,12 +12,12 @@
 
 - name: Add repository for node.js
   apt_repository:
-    repo: deb https://deb.nodesource.com/{{nodejs_repo}} {{ansible_distribution_release}} main
+    repo: deb https://deb.nodesource.com/{{ nodejs_repo }} {{ ansible_distribution_release }} main
     state: present
 
 - name: Add src repository for node.js
   apt_repository:
-    repo: deb-src https://deb.nodesource.com/{{nodejs_repo}} {{ansible_distribution_release}} main
+    repo: deb-src https://deb.nodesource.com/{{ nodejs_repo }} {{ ansible_distribution_release }} main
     state: present
 
 - name: Add repository for yarn package manager
@@ -29,8 +29,3 @@
   apt:
     name: "{{ nodejs_pkg }}"
     state: present
-
-- name: Install Yarn package manager
-  apt:
-    name: yarn
-    state: latest

@@ -6,6 +6,7 @@
     update_cache=yes
     cache_valid_time=3600
     state=present
+  notify: Start create_ap
 
 - name: populate service facts
   service_facts:
@@ -27,6 +28,7 @@
     owner: root
     group: root
     mode: 0755
+  notify: Start create_ap
 
 - name: Create service configuration directory
   file:
@@ -35,6 +37,7 @@
     owner: root
     group: root
     mode: 0755
+  notify: Start create_ap
 
 - name: Add access point configuration
   template:
@@ -62,6 +65,7 @@
     owner: root
     group: root
     mode: 0755
+  notify: Start create_ap
 
 - name: Setup create_ap service files
   copy:
@@ -70,7 +74,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: Restart create_ap
+  notify: Start create_ap
 
 - name: Create bash command completion directory
   file:
@@ -103,16 +107,3 @@
     owner: root
     group: root
     mode: 0644
-
-- name: reload systemd unit configuration
-  command: systemctl daemon-reload
-
-- name: Enable service
-  service:
-    name=create_ap
-    enabled=yes
-
-- name: Start service
-  service:
-    name=create_ap
-    state=started

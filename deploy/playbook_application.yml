@@ -4,9 +4,9 @@
 # Playbook to test the role for deploying the application
 #
 
-- name:  Deploy application
+- name:  Deploy TheCombine application
   hosts: all
   become: yes
 
   roles:
-    - role: setup_application
+    - role: the_combine_app

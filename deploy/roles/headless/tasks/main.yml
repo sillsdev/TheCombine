@@ -7,11 +7,7 @@
     owner: root
     group: root
     mode:  0644
-  register: grubdefaults
-
-- name: Commit new grub config
-  command: update-grub
-  when: grubdefaults.changed
+  notify: commit new grub config
 
 ###################################################################
 #

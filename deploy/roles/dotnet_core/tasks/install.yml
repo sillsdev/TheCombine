@@ -2,7 +2,7 @@
 
 - name: Get package to setup for installation of dotnet core
   get_url:
-    url:   https://packages.microsoft.com/config/{{ansible_distribution|lower}}/{{ansible_distribution_version}}/packages-microsoft-prod.deb
+    url:   https://packages.microsoft.com/config/{{ ansible_distribution | lower }}/{{ ansible_distribution_version }}/packages-microsoft-prod.deb
     dest:  /tmp/packages-microsoft-prod.deb
 
 - name: Install dotnet package info
@@ -13,5 +13,5 @@
 - name: Install .NET Core 2.2 Runtime
   apt:
     name: aspnetcore-runtime-2.2
-    state: latest
+    state: present
     update_cache: yes
