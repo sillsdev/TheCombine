@@ -2,15 +2,15 @@
 
 Generic type for representing auxillary files in a project
 
-**data** :
+**File** : Typescript Type File: Contains the file
 
-**author** :
+**name** : String: contains the name of the file
 
 ## Raw type :
 
 ```typescript
 {
-    data: String,
-    author: String
+    file: File,
+    name: String
 }
 ```

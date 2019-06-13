@@ -27,7 +27,18 @@ package-lock.json
 
 # Visual Studio
 .vs/*
+
+#Backend
+Backend/.vs/*
 Backend/bin
 Backend/obj
 Backend/.vs/*
 
+Backend/BackendFramework.csproj.user
+Backend/*.xml
+Backend/Controllers/*.xml
+**/*.lift
+Backend/.vscode/*
+*.orig
+Backend/SIL.Lift/**
+**/*.orig

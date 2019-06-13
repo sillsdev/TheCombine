@@ -85,7 +85,7 @@ namespace BackendFramework
                 options.UsersDatabase = Configuration.GetSection("MongoDB:UsersDatabase").Value;
                 options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
                 options.ProjectsDatabase = Configuration.GetSection("MongoDB:ProjectsDatabase").Value;
-              
+
             });
 
             services.AddTransient<IWordContext, WordContext>();

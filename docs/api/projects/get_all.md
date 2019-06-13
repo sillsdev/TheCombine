@@ -1,6 +1,6 @@
 # Get multiple projects
 
-**URL** : `/v1/projects`
+**URL** : `/v1/projects/`
 
 **Method** : `GET`
 
@@ -10,4 +10,4 @@
 
 **Code** : `200 OK`
 
-**Data Content** : [`Project`](project.md)`[]`
+**Data Content** : [`Project`](../projects\project.md)`[]`
