@@ -1,6 +1,6 @@
 # Add language project
 
-**URL** : `/v1/projects/{project}`
+**URL** : `/v1/projects/`
 
 **Method** : `POST`
 

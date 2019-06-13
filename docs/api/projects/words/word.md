@@ -2,9 +2,11 @@
 
 **vernacular** :
 
-**gloss** :
+**plural** :
 
-**audioFile** : Link to recording of word spoken
+**senses**:
+
+**audio** : Link to recording of word spoken
 
 **created** : Time word was initially created
 
@@ -25,11 +27,12 @@
 <pre>
 {
   verncaular: String;
-  gloss: String;
-  audioFile: String;
+  plural: String;
+  senses: <a href=sense.md>Sense</a>[];
+  audio: String;
   created: String;
   modified: String;
-  history: String;
+  history: String[];
   partOfSpeech: String;
   editedBy: String;
   accessability: <a href=state.md>State</a>;

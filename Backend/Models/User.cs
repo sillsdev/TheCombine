@@ -10,34 +10,34 @@ namespace BackendFramework.ValueModels
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [BsonElement("Avatar")]
+        [BsonElement("avatar")]
         public string Avatar { get; set; }
 
-        [BsonElement("Name")]
+        [BsonElement("name")]
         public string Name { get; set; }
 
-        [BsonElement("Email")]
+        [BsonElement("email")]
         public string Email { get; set; }
 
-        [BsonElement("OtherConnectionField")]
+        [BsonElement("phone")]
+        public string Phone { get; set; }
+
+        [BsonElement("otherConnectionField")]
         public string OtherConnectionField { get; set; }
 
-        [BsonElement("WorkedProjects")]
+        [BsonElement("workedProjects")]
         public List<string> WorkedProjects { get; set; }
 
-        [BsonElement("Agreement")]
+        [BsonElement("agreement")]
         public bool Agreement { get; set; }
 
-        [BsonElement("Password")]
+        [BsonElement("password")]
         public string Password { get; set; }
 
-        [BsonElement("UserName")]
-        public string UserName { get; set; }
+        [BsonElement("username")]
+        public string Username { get; set; }
 
-        [BsonElement("UILang")]
+        [BsonElement("uiLang")]
         public string UILang { get; set; }
-    
-
-
     }
 }
