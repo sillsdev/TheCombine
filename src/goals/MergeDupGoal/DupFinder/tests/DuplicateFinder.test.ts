@@ -1,7 +1,7 @@
 //Sam Delaney, 6/12/19
 
 import DupFinder, { ScoredWord } from "../DuplicateFinder";
-import { Word, simpleWord } from "../../../../types/word";
+import { Word, simpleWord, makeSense } from "../../../../types/word";
 
 describe("dupFinder Tests", () => {
   let Finder = new DupFinder();
@@ -30,7 +30,7 @@ describe("dupFinder Tests", () => {
       word: {
         id: "6212061",
         vernacular: "Yank",
-        senses: ["No"],
+        senses: [makeSense("No")],
         audio: "",
         created: "now",
         modified: "",
@@ -47,7 +47,7 @@ describe("dupFinder Tests", () => {
       word: {
         id: "7518701",
         vernacular: "Yang",
-        senses: ["Die"],
+        senses: [makeSense("Die")],
         audio: "",
         created: "now",
         modified: "",
@@ -64,7 +64,7 @@ describe("dupFinder Tests", () => {
       word: {
         id: "921780",
         vernacular: "Yank",
-        senses: ["Please god help me"],
+        senses: [makeSense("Please god help me")],
         audio: "",
         created: "now",
         modified: "",
@@ -83,7 +83,7 @@ describe("dupFinder Tests", () => {
       word: {
         id: "6212061",
         vernacular: "Yank",
-        senses: ["No"],
+        senses: [makeSense("No")],
         audio: "",
         created: "now",
         modified: "",
@@ -100,7 +100,7 @@ describe("dupFinder Tests", () => {
       word: {
         id: "921780",
         vernacular: "Yank",
-        senses: ["Please god help me"],
+        senses: [makeSense("Please god help me")],
         audio: "",
         created: "now",
         modified: "",
@@ -117,7 +117,7 @@ describe("dupFinder Tests", () => {
       word: {
         id: "7518701",
         vernacular: "Yang",
-        senses: ["Die"],
+        senses: [makeSense("Die")],
         audio: "",
         created: "now",
         modified: "",
@@ -135,7 +135,7 @@ describe("dupFinder Tests", () => {
     {
       id: "921780",
       vernacular: "Yank",
-      senses: ["Please god help me"],
+      senses: [makeSense("Please god help me")],
       audio: "",
       created: "now",
       modified: "",
@@ -149,7 +149,7 @@ describe("dupFinder Tests", () => {
     {
       id: "6212061",
       vernacular: "Yank",
-      senses: ["No"],
+      senses: [makeSense("No")],
       audio: "",
       created: "now",
       modified: "",
@@ -163,7 +163,7 @@ describe("dupFinder Tests", () => {
     {
       id: "7518701",
       vernacular: "Yang",
-      senses: ["Die"],
+      senses: [makeSense("Die")],
       audio: "",
       created: "now",
       modified: "",
@@ -238,8 +238,8 @@ describe("dupFinder Tests", () => {
   test("Levenshtein Distance with distinct Word", () => {
     expect(
       Finder.getLevenshteinDistance(
-        testWordList[8].senses[0],
-        testWordList[12].senses[0]
+        testWordList[8].senses[0].glosses[0].def,
+        testWordList[12].senses[0].glosses[0].def
       )
     ).toEqual(14);
   });

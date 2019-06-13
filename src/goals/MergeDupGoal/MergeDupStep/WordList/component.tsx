@@ -81,7 +81,7 @@ class WordList extends React.Component<
               >
                 <CardContent>{item.vernacular}</CardContent>
                 <CardContent>
-                  {hasSenses(item) ? item.senses[0] : "no gloss"}
+                  {hasSenses(item) ? item.senses[0].glosses[0].def : "no gloss"}
                 </CardContent>
               </Card>
             </ListItem>

@@ -143,8 +143,8 @@ export default class DupFinder {
         );
         if (hasSenses(word) && hasSenses(parent)) {
           score *= this.getLevenshteinDistance(
-            parent.senses[0],
-            word.senses[0]
+            parent.senses[0].glosses[0].def,
+            word.senses[0].glosses[0].def
           );
         }
 

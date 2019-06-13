@@ -82,7 +82,9 @@ class MergeStack extends React.Component<
         >
           <CardContent>{lastCard.vernacular}</CardContent>
           <CardContent>
-            {hasSenses(lastCard) ? lastCard.senses[0] : "no gloss"}
+            {hasSenses(lastCard)
+              ? lastCard.senses[0].glosses[0].def
+              : "no gloss"}
             <div
               style={{
                 float: "right",

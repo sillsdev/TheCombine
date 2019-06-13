@@ -5,10 +5,28 @@ export enum State {
   duplicate
 }
 
+export interface Gloss {
+  language: string;
+  def: string;
+}
+
+export interface SemanticDomain {
+  Name: string;
+  Number: string;
+}
+export interface Sense {
+  glosses: Gloss[];
+  semanticDomains: SemanticDomain[];
+}
+
+export function makeSense(val: string) {
+  return { glosses: [{ language: "", def: val }], semanticDomains: [] };
+}
+
 export interface Word {
   id: string;
   vernacular: string;
-  senses: string[];
+  senses: Sense[];
   audio: string;
   created: string;
   modified: string;
@@ -27,15 +45,22 @@ export interface Merge {
   time: string;
 }
 
-export function hasSenses(word: Word) {
-  return word.senses && word.senses.length > 0;
+export function hasSenses(word: Word): boolean {
+  console.log(word.senses);
+  let returnval =
+    word.senses &&
+    word.senses.length > 0 &&
+    word.senses[0].glosses &&
+    word.senses[0].glosses.length > 0;
+  console.log(returnval);
+  return returnval;
 }
 
 export function simpleWord(vern: string, gloss: string): Word {
   return {
     id: Math.floor(Math.random() * 9999999).toString(),
     vernacular: vern,
-    senses: [gloss],
+    senses: [makeSense(gloss)],
     audio: "",
     created: "now",
     modified: "",
