@@ -30,7 +30,6 @@ obj/**
 #Backend
 Backend/.vs/
 Backend/bin
-Backend/obj
 
 Backend/obj/**
 Backend/BackendFramework.csproj.user

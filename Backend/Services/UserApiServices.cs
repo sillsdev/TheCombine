@@ -80,6 +80,35 @@ namespace BackendFramework.Services
             {
                 return null;
             }
+                }
+
+                // authentication successful so generate jwt token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                    new Claim(ClaimTypes.Name, foundUser.Id)
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                foundUser.Token = tokenHandler.WriteToken(token);
+
+                // remove password before returning
+                foundUser.Password = null;
+                return foundUser;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            catch (MongoInternalException)
+            {
+                return null;
+            }
         }
 
 
@@ -158,7 +187,7 @@ namespace BackendFramework.Services
                 .Set(x => x.WorkedProjects, user.WorkedProjects)
                 .Set(x => x.Agreement, user.Agreement)
                 .Set(x => x.Password, user.Password)
-                .Set(x => x.UserName, user.UserName)
+                .Set(x => x.Username, user.Username)
                 .Set(x => x.UILang, user.UILang)
                 .Set(x => x.Token, user.Token);
 

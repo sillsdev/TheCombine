@@ -83,8 +83,9 @@ namespace BackendFramework
                 options.ConnectionString = Configuration.GetSection("MongoDB:ConnectionString").Value;
                 options.WordsDatabase = Configuration.GetSection("MongoDB:WordsDatabase").Value;
                 options.UsersDatabase = Configuration.GetSection("MongoDB:UsersDatabase").Value;
-                options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
                 options.ProjectsDatabase = Configuration.GetSection("MongoDB:ProjectsDatabase").Value;
+                options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
+              
 
             });
 

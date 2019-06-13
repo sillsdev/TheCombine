@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BackendFramework.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
     public class UserController : Controller
@@ -20,6 +22,7 @@ namespace BackendFramework.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [EnableCors("AllowAll")]
 
         // GET: v1/Users
