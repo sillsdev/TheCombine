@@ -20,6 +20,28 @@ A setup script, ```setup-target.sh```, is provided to perform the installation. 
 
 *if neither the -i nor the -t options are specified, the install and the test tasks will be run.*
 
+## Roles ##
+
+If you need to create a playbook to run individual roles, the following roles are available in this project.
+
+  **ansible-depends** - installs the packages required to run subsequent Ansible
+  modules
+
+  **apache** - installs the apache2 web server
+
+  **dotnet_core** - installs the ASP.NET Core 2.2 Runtime.  It does *not* install the SDK.
+
+  **headless** - sets configuration options that make sense when the device will be used as a headless node.  It currently updates the ```grub``` configuration so that there is not a 30 second wait during bootup when Ubuntu is installed with the Logical Volume Manager.  This is intended for a Server installation.
+
+  **mongodb** - installs the MongoDB database (from mongodb.org, *not* the Ubuntu package) and installs it as a service
+
+  **nodejs** - installs node.js, npm, and yarn
+
+  **the_combine_app** - installs TheCombine application from the ```build``` directory.  The application must be built first; it is not built by the ansible playbook.
+
+  **wifi_ap** - sets up the wifi interface as a wifi access point (hotspot)
+
+
 ## Setting up a Virtual Machine ##
 
 ```setup-target.sh``` can be used setup a Virtual Machine (VM) as well.  The following instructions describe how to install Ubuntu Server on a virtual machine and how to set it up so that you can use ```ssh``` to connect to it:
@@ -118,25 +140,3 @@ A setup script, ```setup-target.sh```, is provided to perform the installation. 
        ```
 
   1. Now you can run the setup-target.sh to install the required packages.  Use ```192.168.56.10``` as the target IP address.
-
-
-## Roles ##
-
-If you need to create a playbook to run individual roles, the following roles are available in this project.
-
-  **ansible-depends** - installs the packages required to run subsequent Ansible
-  modules
-
-  **headless** - sets configuration options that make sense when the device will be used as a headless node.  It currently updates the ```grub``` configuration so that there is not a 30 second wait during bootup when Ubuntu is installed with the Logical Volume Manager.  This is intended for a Server installation.
-
-  **nodejs** - installs node.js, npm, and yarn
-
-  **setup_apache** - installs the apache2 web server
-
-  **setup_application** - installs TheCombine application from the ```build``` directory.  The application must be built first; it is not built by the ansible playbook.
-
-  **setup_dotnet_core** - installs the ASP.NET Core 2.2 Runtime.  It does *not* install the SDK.
-
-  **setup_mongodb** - installs the MongoDB database (from mongodb.org, *not* the Ubuntu package) and installs it as a service
-
-  **wifi_ap** - sets up the wifi interface as a wifi access point (hotspot)
