@@ -1,30 +1,31 @@
 //external modules
 import React from "react";
-import { createBrowserHistory } from "history";
 
-export interface AppProps {
-  VisibleComponent: JSX.Element;
-}
+//TC modules
+import CreateProject from "../CreateProject";
+import { Route, Router } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import { PrivateRoute } from "../PrivateRoute";
+import { LogoutButton } from "../Login/LogoutButton";
+import { GoalView } from "../GoalView/GoalView";
+import Login from "../Login";
+import Temp from "../Temp";
 import axios from "axios";
 import { authHeader } from "../Login/AuthHeaders";
 import { Button } from "@material-ui/core";
 
 export const history = createBrowserHistory();
 
-export default class App extends React.Component<AppProps> {
-  constructor(props: AppProps) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="App">
-        {this.props.VisibleComponent}
-        {/* <Router history={history}>
-    <PrivateRoute exact path="/" component={CreateProject} />
-    <PrivateRoute exact path="/" component={GoalView} />
-    <Route path="/login" component={Login} />
-  </Router> */}
+const App: React.FC = () => {
+  return (
+    <div className="App">
+      <Temp />
+      <LogoutButton />
+      <Router history={history}>
+        <PrivateRoute exact path="/" component={CreateProject} />
+        <PrivateRoute exact path="/" component={GoalView} />
+        <Route path="/login" component={Login} />
+      </Router>
       <Button
         onClick={() => {
           axios
@@ -37,7 +38,8 @@ export default class App extends React.Component<AppProps> {
       >
         Log users to console
       </Button>
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default App;

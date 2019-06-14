@@ -52,9 +52,9 @@ export function asyncLogin(user: string, password: string) {
     //attempt to login with server
     await axios
       .post(
-        "https://localhost:5001/v1/login",
-        JSON.stringify({ user, password }),
-        { headers: authHeader() }
+        "https://localhost:5001/v1/users/authenticate",
+        JSON.stringify({ Username: user, Password: password }),
+        { headers: { "content-type": "application/json", ...authHeader() } }
       )
       .then((res: any) => {
         console.log(res);
