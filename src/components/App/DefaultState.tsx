@@ -28,5 +28,9 @@ export const defaultState = {
   },
   navState: {
     ...navigationState
+  },
+  createProjectState: {
+    name: "Test",
+    success: true
   }
 };
