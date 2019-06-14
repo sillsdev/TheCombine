@@ -120,6 +120,9 @@ namespace BackendFramework
                     .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod());
+
+            app.UseAuthentication();
+
             app.UseMvc();
         }
     }

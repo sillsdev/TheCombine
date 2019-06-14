@@ -61,14 +61,19 @@ namespace BackendFramework.Services
                     {
                     new Claim(ClaimTypes.Name, foundUser.Id)
                     }),
-                    Expires = DateTime.UtcNow.AddDays(7),
+                    Expires = DateTime.UtcNow.AddDays(365),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 foundUser.Token = tokenHandler.WriteToken(token);
 
                 // remove password before returning
+                if(!await Update(foundUser.Id, foundUser))
+                {
+                    throw (new KeyNotFoundException());
+                }
                 foundUser.Password = null;
+
                 return foundUser;
             }
             catch (InvalidOperationException)
@@ -135,7 +140,8 @@ namespace BackendFramework.Services
                 .Set(x => x.Agreement, user.Agreement)
                 .Set(x => x.Password, user.Password)
                 .Set(x => x.Username, user.Username)
-                .Set(x => x.UILang, user.UILang);
+                .Set(x => x.UILang, user.UILang)
+                .Set(x => x.Token, user.Token);
 
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
 

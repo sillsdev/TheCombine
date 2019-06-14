@@ -24,7 +24,6 @@ namespace BackendFramework.Controllers
             _userService = userService;
         }
 
-        [AllowAnonymous]
         [EnableCors("AllowAll")]
 
         // GET: v1/Users
@@ -51,12 +50,18 @@ namespace BackendFramework.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]Credentials cred)
         {
-            
-            var user = await _userService.Authenticate(cred.Username, cred.Password);
-
-            if (user == null)
+            User user;
+            try
             {
-                return new UnauthorizedResult();
+                user = await _userService.Authenticate(cred.Username, cred.Password);
+                if (user == null)
+                {
+                    return new UnauthorizedResult();
+                }
+            }
+            catch (KeyNotFoundException)
+            {
+                return new NotFoundResult();
             }
 
             return new OkObjectResult(user);

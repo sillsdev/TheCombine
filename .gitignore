@@ -29,10 +29,9 @@ package-lock.json
 .vs/*
 
 #Backend
-Backend/.vs/*
+Backend/.vs/
 Backend/bin
 Backend/obj
-Backend/.vs/*
 
 Backend/BackendFramework.csproj.user
 Backend/*.xml
