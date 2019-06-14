@@ -22,7 +22,6 @@ namespace BackendFramework.Controllers
             _userService = userService;
         }
 
-        [AllowAnonymous]
         [EnableCors("AllowAll")]
 
         // GET: v1/Users

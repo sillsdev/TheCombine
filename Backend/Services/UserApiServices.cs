@@ -91,14 +91,18 @@ namespace BackendFramework.Services
                     {
                     new Claim(ClaimTypes.Name, foundUser.Id)
                     }),
-                    Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 foundUser.Token = tokenHandler.WriteToken(token);
 
                 // remove password before returning
+                if(!await Update(foundUser.Id, foundUser))
+                {
+                    throw (new KeyNotFoundException());
+                }
                 foundUser.Password = null;
+
                 return foundUser;
             }
             catch (InvalidOperationException)
