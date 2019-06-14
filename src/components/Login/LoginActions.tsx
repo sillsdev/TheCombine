@@ -4,6 +4,8 @@ import axios from "axios";
 import { history } from "../App/App";
 import { authHeader } from "./AuthHeaders";
 import { getTranslate } from "react-localize-redux";
+import { ThunkAction } from "redux-thunk";
+import { AnyAction } from "redux";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
@@ -42,9 +44,9 @@ export function asyncLogin(user: string, password: string) {
     //attempt to login with server
     await axios
       .post(
-        "https://localhost:5001/v1/login",
-        JSON.stringify({ user, password }),
-        { headers: authHeader() }
+        "https://localhost:5001/v1/users/authenticate",
+        JSON.stringify({ Username: user, Password: password }),
+        { headers: { "content-type": "application/json", ...authHeader() } }
       )
       .then((res: any) => {
         console.log(res);
@@ -87,8 +89,33 @@ export function logout() {
 }
 
 export function asyncRegister(user: string, password: string) {
-  return async (dispatch: Dispatch<UserAction>) => {
+  return async (
+    dispatch: Dispatch<UserAction | ThunkAction<any, {}, {}, AnyAction>>
+  ) => {
     dispatch(register(user, password));
+    // Create new user
+    let newUser = {
+      avatar: "avatar1",
+      name: "name1",
+      email: "email1@sil.org",
+      otherConnectionField: "connectionField1",
+      workedProjects: ["project1", "project2"],
+      agreement: false,
+      password: password,
+      username: user,
+      uiLang: "lang1",
+      token: ""
+    };
+    await axios.post(
+      "https://localhost:5001/v1/users",
+      JSON.stringify(newUser),
+      {
+        headers: { ...authHeader(), "Content-Type": "application/json" }
+      }
+    );
+
+    //login
+    dispatch(asyncLogin(user, password));
   };
 }
 

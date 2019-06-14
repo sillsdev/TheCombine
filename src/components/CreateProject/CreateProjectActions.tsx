@@ -22,7 +22,6 @@ export interface CreateProjectAction {
 //thunk action creator
 export function asyncCreateProject(name: string, languageData: File) {
   return async (dispatch: Dispatch<CreateProjectAction>) => {
-
     // Create project
     let project = {
       id: "",
@@ -35,18 +34,23 @@ export function asyncCreateProject(name: string, languageData: File) {
       customFields: [],
       wordFields: [],
       partsOfSpeech: []
-    }
-    await axios.post("https://localhost:5001/v1/projects", JSON.stringify(project), {
-      headers: { ...authHeader(), "Content-Type": "application/json" }
-    });
+    };
+    await axios.post(
+      "https://localhost:5001/v1/projects",
+      JSON.stringify(project),
+      {
+        headers: { ...authHeader(), "Content-Type": "application/json" }
+      }
+    );
 
     // Upload words
     const data = new FormData();
     data.append("file", languageData);
     data.append("name", name);
-    await axios.post("https://localhost:5001/v1/projects/words/upload", data, {
-      headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
-    })
+    await axios
+      .post("https://localhost:5001/v1/projects/words/upload", data, {
+        headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
+      })
       .then(res => {
         console.log(res.statusText);
         dispatch(createProject(name, languageData));
