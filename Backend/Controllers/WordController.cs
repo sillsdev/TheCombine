@@ -9,25 +9,30 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
+using SIL.Lift.Parsing;
+using System.IO;
+using System;
+using System.Net;
 
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/Project/Words")]
+    [Route("v1/Projects/Words")]
     public class WordController : Controller
     {
-        private readonly IWordService _wordService;
+        public readonly IWordService _wordService;
+        public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
+
         public WordController(IWordService wordService)
         {
             _wordService = wordService;
+            _merger = (ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>)wordService;
         }
 
         [EnableCors("AllowAll")]
 
         // GET: v1/Project/Words
-        // Implements GetAllWords(), 
-        // Arguments: list of string ids of target word (if given, else returns all words)
-        // Default: null
+        // Implements GetAllWords(),
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -68,7 +73,6 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Word word)
         {
-            word.Id = null;
             await _wordService.Create(word);
             return new OkObjectResult(word.Id);
         }
@@ -78,12 +82,18 @@ namespace BackendFramework.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] Word word)
         {
-            if (await _wordService.Update(Id, word))
+            List<string> ids = new List<string>();
+            ids.Add(Id);
+            var document = await _wordService.GetWords(ids);
+            if (document.Count == 0)
             {
-                return new OkObjectResult(word.Id);
+                return new NotFoundResult();
             }
-            return new NotFoundResult();
+            word.Id = (document.First()).Id;
+            await _wordService.Update(Id, word);
+            return new OkObjectResult(word.Id);
         }
+
         // DELETE: v1/Project/Words/{Id}
         // Implements Delete(), Arguments: string id of target word
         [HttpDelete("{Id}")]
@@ -114,6 +124,33 @@ namespace BackendFramework.Controllers
             }
             var mergedWord = await _wordService.Merge(mergeWords);
             return new ObjectResult(mergedWord.Id);
+        }
+
+
+        // POST: v1/Project/Words/upload
+        // Implements: Upload(), Arguments: FileUpload model
+        [HttpPost("upload")]
+        public async Task<IActionResult> Post([FromForm] FileUpload model)
+        {
+            var file = model.file;
+
+            if (file.Length > 0)
+            {
+                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
+                using (var fs = new FileStream(model.filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fs);
+                }
+            }
+            try
+            {
+                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+                return new ObjectResult(parser.ReadLiftFile(model.filePath));
+            }
+            catch (Exception)
+            {
+                return new UnsupportedMediaTypeResult();
+            }
         }
     }
 }
