@@ -30,5 +30,5 @@ GRUB_GFXMODE=640x480
 # Uncomment to disable generation of recovery mode menu entries
 #GRUB_DISABLE_RECOVERY="true"
 
-# Uncomment to get a beep at grub start
+# Comment to disable beep at grub start
 GRUB_INIT_TUNE="480 440 1"
