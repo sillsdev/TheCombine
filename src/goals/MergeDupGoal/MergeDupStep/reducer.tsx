@@ -10,7 +10,7 @@ import {
   CLEAR_LIST_WORDS
 } from "./actions";
 import { MergeDupStepProps } from "./component";
-import { State, Merge, testWordList } from "../../../types/word";
+import { State, Merge } from "../../../types/word";
 import { backend } from "./component";
 
 export const defaultState: MergeDupStepProps = {
@@ -18,6 +18,7 @@ export const defaultState: MergeDupStepProps = {
   words: []
 };
 
+//ID assigned to parents as senses to help differentiate between them.
 function generateID(): number {
   return Math.floor(Math.random() * Math.pow(2, 16));
 }
@@ -28,7 +29,7 @@ export const mergeDupStepReducer = (
 ): MergeDupStepProps => {
   if (!state) return defaultState;
   switch (action.type) {
-    case ADD_LIST_WORD:
+    case ADD_LIST_WORD: //_LIST_WORD actions affect the list of possible duplicates
       var words = state.words;
       words = words.concat(action.payload.word);
       return { ...state, words };
@@ -53,16 +54,16 @@ export const mergeDupStepReducer = (
       var parentWords = state.parentWords;
       var { word: merge, parent } = action.payload;
       if (parent) {
+        parentWords = parentWords.map(item => {
+          if (item.id == parent) {
+            item.senses.push({
+              id: generateID(),
+              dups: [merge]
+            });
+          }
+          return item;
+        });
       }
-      parentWords = parentWords.map(item => {
-        if (item.id == parent) {
-          item.senses.push({
-            id: generateID(),
-            dups: [merge]
-          });
-        }
-        return item;
-      });
       return {
         ...state,
         parentWords
@@ -100,7 +101,6 @@ export const mergeDupStepReducer = (
     case APPLY_MERGES:
       state.parentWords.forEach(async parent => {
         var ids: string[] = [];
-        var merges: number = 0;
         await Promise.all(
           parent.senses.map(async sense => {
             var root = sense.dups[0];
@@ -113,14 +113,12 @@ export const mergeDupStepReducer = (
               time: Date.now().toString()
             };
             if (merge.children.length > 0) {
-              merges++;
               ids.push(
                 await backend
-                  .put("project/words", merge)
+                  .put("projects/words", merge)
                   .then(resp => resp.data)
               );
             } else {
-              merges++;
               ids.push(root.id);
             }
           })
@@ -133,7 +131,7 @@ export const mergeDupStepReducer = (
           time: Date.now().toString()
         };
         if (merge.children.length > 0) {
-          backend.put("project/words", merge).catch(err => {
+          backend.put("projects/words", merge).catch(err => {
             console.log(err);
           });
         }

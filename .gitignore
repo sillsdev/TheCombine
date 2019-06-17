@@ -22,6 +22,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+obj/**
+
 # Visual Studio
 .vs/*
 
@@ -29,6 +31,7 @@ yarn-error.log*
 Backend/.vs/*
 Backend/bin
 Backend/obj
+Backend/obj/**
 Backend/BackendFramework.csproj.user
 Backend/*.xml
 Backend/Controllers/*.xml

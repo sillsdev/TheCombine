@@ -22,8 +22,6 @@ export interface CreateProjectAction {
 //thunk action creator
 export function asyncCreateProject(name: string, languageData: File) {
   return async (dispatch: Dispatch<CreateProjectAction>) => {
-    debugger;
-
     // Create project
     let project = {
       id: "",

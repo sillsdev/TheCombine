@@ -46,13 +46,11 @@ export interface Merge {
 }
 
 export function hasSenses(word: Word): boolean {
-  console.log(word.senses);
   let returnval =
     word.senses &&
     word.senses.length > 0 &&
     word.senses[0].glosses &&
     word.senses[0].glosses.length > 0;
-  console.log(returnval);
   return returnval;
 }
 

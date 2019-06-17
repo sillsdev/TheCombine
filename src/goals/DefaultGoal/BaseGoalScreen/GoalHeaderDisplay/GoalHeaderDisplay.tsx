@@ -6,7 +6,7 @@ import {
   Translate
 } from "react-localize-redux";
 
-export class DisplayHeader extends React.Component<
+export class GoalHeaderDisplay extends React.Component<
   GoalProps & LocalizeContextProps
 > {
   constructor(props: GoalProps & LocalizeContextProps) {
@@ -24,4 +24,4 @@ export class DisplayHeader extends React.Component<
   }
 }
 
-export default withLocalize(DisplayHeader);
+export default withLocalize(GoalHeaderDisplay);

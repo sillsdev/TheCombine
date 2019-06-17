@@ -8,7 +8,7 @@ import { Word } from "../../../../types/word";
 
 export function mapStateToProps(state: StoreState) {
   return {
-    draggedWord: state.draggedWord.draggedWord
+    draggedWord: state.draggedWordState.draggedWord
   };
 }
 

@@ -1,7 +1,3 @@
-/* THIS COMPONENT IS INTENDED TO BE AN EXAMPLE ONLY. 
-  IT WILL NOT BE USED IN THE APPLICATION.
-*/
-
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
@@ -14,7 +10,6 @@ import {
   ListSubheader,
   Button
 } from "@material-ui/core";
-import { backend } from "../component";
 
 //interface for component props
 export interface WordListProps {
@@ -81,7 +76,9 @@ class WordList extends React.Component<
               >
                 <CardContent>{item.vernacular}</CardContent>
                 <CardContent>
-                  {hasSenses(item) ? item.senses[0].glosses[0].def : "no gloss"}
+                  {hasSenses(item)
+                    ? item.senses[0].glosses[0].def
+                    : "{no gloss}"}
                 </CardContent>
               </Card>
             </ListItem>

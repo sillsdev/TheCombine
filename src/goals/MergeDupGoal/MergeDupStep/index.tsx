@@ -15,7 +15,7 @@ import { Word } from "../../../types/word";
 export function mapStateToProps(state: StoreState) {
   return {
     parentWords: state.mergeDupStepProps.parentWords,
-    draggedWord: state.draggedWord.draggedWord,
+    draggedWord: state.draggedWordState.draggedWord,
     words: state.mergeDupStepProps.words
   };
 }

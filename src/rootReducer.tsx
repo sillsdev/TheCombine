@@ -11,12 +11,21 @@ import { loginReducer } from "./components/Login/LoginReducer";
 import { createProjectReducer } from "./components/CreateProject/CreateProjectReducer";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
+  //handles localization through react-localize-redux utilities
   localize: localizeReducer,
-  tempState: tempReducer,
-  draggedWord: dragWordReducer,
-  mergeDupStepProps: mergeDupStepReducer,
+
+  //intro windows
   loginState: loginReducer,
   createProjectState: createProjectReducer,
+
+  //general cleanup tools
   goalsState: goalsReducer,
-  navState: navReducer
+  navState: navReducer,
+
+  //merge duplicates goal
+  draggedWordState: dragWordReducer,
+  mergeDupStepProps: mergeDupStepReducer,
+
+  //temporary
+  tempState: tempReducer
 });

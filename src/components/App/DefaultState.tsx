@@ -3,7 +3,7 @@ import { defaultState as goalTimelineState } from "../GoalTimeline/DefaultState"
 import { defaultState as navigationState } from "../Navigation/NavigationReducer";
 
 export const defaultState = {
-  draggedWord: {
+  draggedWordState: {
     draggedWord: simpleWord("Ye", "You")
   },
   mergeDupStepProps: {

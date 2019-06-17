@@ -1,7 +1,7 @@
 import { User } from "./user";
 import { MergeDupData } from "../goals/MergeDupGoal";
 import Stack from "./stack";
-import { MergeDupProps } from "../goals/MergeDupGoal/MergeDupComponent";
+import { MergeDupProps } from "../goals/MergeDupGoal/MergeDups";
 import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/component";
 
 export enum GoalOption {

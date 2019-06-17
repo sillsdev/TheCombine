@@ -8,7 +8,7 @@ import { addListWord, removeListWord, MergeAction } from "../actions";
 
 export function mapStateToProps(state: StoreState) {
   return {
-    draggedWord: state.draggedWord.draggedWord,
+    draggedWord: state.draggedWordState.draggedWord,
     words: state.mergeDupStepProps.words
   };
 }

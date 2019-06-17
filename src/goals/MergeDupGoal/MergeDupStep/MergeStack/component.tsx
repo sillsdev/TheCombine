@@ -1,7 +1,3 @@
-/* THIS COMPONENT IS INTENDED TO BE AN EXAMPLE ONLY. 
-  IT WILL NOT BE USED IN THE APPLICATION.
-*/
-
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
@@ -84,7 +80,7 @@ class MergeStack extends React.Component<
           <CardContent>
             {hasSenses(lastCard)
               ? lastCard.senses[0].glosses[0].def
-              : "no gloss"}
+              : "{no gloss}"}
             <div
               style={{
                 float: "right",

@@ -4,6 +4,11 @@ import { User } from "../../types/user";
 import BaseGoalScreen from "../DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 import BaseGoalSelect from "../DefaultGoal/BaseGoalSelect/BaseGoalSelect";
 
+//interface for component state
+export interface MergeDupProps {
+  goal: Goal;
+}
+
 export class MergeDups implements Goal {
   id: number;
   name: string;

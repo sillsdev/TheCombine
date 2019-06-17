@@ -15,7 +15,7 @@ export interface StoreState {
   localize: LocalizeState;
   tempState: TempState;
   loginState: LoginState;
-  draggedWord: WordDragState;
+  draggedWordState: WordDragState;
   createProjectState: CreateProjectState;
   mergeDupStepProps: MergeDupStepProps;
   goalsState: GoalsState;

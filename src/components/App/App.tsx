@@ -14,6 +14,15 @@ export default class App extends React.Component<AppProps> {
   }
 
   render() {
-    return <div className="App">{this.props.VisibleComponent}</div>;
+    return (
+      <div className="App">
+        {this.props.VisibleComponent}
+        {/* <Router history={history}>
+    <PrivateRoute exact path="/" component={CreateProject} />
+    <PrivateRoute exact path="/" component={GoalView} />
+    <Route path="/login" component={Login} />
+  </Router> */}
+      </div>
+    );
   }
 }
