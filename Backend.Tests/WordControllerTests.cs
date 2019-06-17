@@ -37,7 +37,7 @@ namespace Tests
             repo.Create(testWord());
             repo.Create(testWord());
 
-            var words = (Action as ObjectResult).Value as List<WordControllerTests>;
+            var words = (controller.Get().Result as ObjectResult).Value as List<WordControllerTests>;
             Assert.That(words, Has.Count.EqualTo(3));
             repo.GetAllWords().Result.ForEach(word => Assert.Contains(word, words));
         }
