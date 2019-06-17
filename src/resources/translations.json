@@ -37,9 +37,26 @@
   },
   "goal": {
     "name": {
-      "handleDuplicates": ["Handle Duplicates"],
-      "handleFlags": ["Handle Flags"],
-      "grammarCheck": ["Grammar Check"]
+      "createCharInv": [
+        "Create Character Inventory",
+        "Crear inventario de personajes"
+      ],
+      "createStrWordInv": [
+        "Create Structural Word Inventory",
+        "Crear inventario de palabras estructurales"
+      ],
+      "handleFlags": ["Handle Flags", "Banderas de la manija"],
+      "mergeDups": ["Merge Duplicates", "Fusionar duplicados"],
+      "spellCheckGloss": [
+        "Spell Check Glossary",
+        "Glosario de corrección ortográfica"
+      ],
+      "validateChars": ["Validate Characters", "Validar caracteres"],
+      "validateStrWords": [
+        "Validate Structural Characters",
+        "Validar caracteres estructurales"
+      ],
+      "viewFinal": ["View Final", "Ver final"]
     }
   }
 }

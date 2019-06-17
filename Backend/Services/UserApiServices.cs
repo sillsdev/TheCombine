@@ -90,8 +90,8 @@ namespace BackendFramework.Services
 
         public async Task<bool> DeleteAllUsers()
         {
-             var deleted = await _userDatabase.Users.DeleteManyAsync(_ => true);
-            if(deleted.DeletedCount != 0)
+            var deleted = await _userDatabase.Users.DeleteManyAsync(_ => true);
+            if (deleted.DeletedCount != 0)
             {
                 return true;
             }
@@ -101,9 +101,9 @@ namespace BackendFramework.Services
         public async Task<List<User>> GetUsers(List<string> Ids)
         {
             var filterDef = new FilterDefinitionBuilder<User>();
-            var filter = filterDef.In(x=>x.Id , Ids);
+            var filter = filterDef.In(x => x.Id, Ids);
             var userList = await _userDatabase.Users.Find(filter).ToListAsync();
-                        
+
             return userList;
         }
 
@@ -158,14 +158,14 @@ namespace BackendFramework.Services
                 .Set(x => x.WorkedProjects, user.WorkedProjects)
                 .Set(x => x.Agreement, user.Agreement)
                 .Set(x => x.Password, user.Password)
-                .Set(x => x.Username, user.Username)
+                .Set(x => x.UserName, user.UserName)
                 .Set(x => x.UILang, user.UILang)
                 .Set(x => x.Token, user.Token);
 
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
 
             return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
-           
+
         }
 
         

@@ -23,6 +23,8 @@ describe("tempReducer Tests", () => {
   };
 
   let loginFailureState: reducer.LoginState = {
+    loginAttempt: false,
+    loginFailure: true,
     user: user.user,
     success: false
   };
