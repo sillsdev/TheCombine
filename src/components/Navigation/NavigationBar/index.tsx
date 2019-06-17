@@ -2,9 +2,9 @@ import NavigationBar from "./NavigationBarComponent";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../../types/index";
-import { ThunkDispatch } from "redux-thunk";
 import * as actions from "../NavigationActions";
 import { NavBarState } from "../../../types/nav";
+import { Dispatch } from "redux";
 
 export function mapStateToProps(state: StoreState): NavBarState {
   return {
@@ -12,12 +12,10 @@ export function mapStateToProps(state: StoreState): NavBarState {
   };
 }
 
-export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, actions.NavigateBack>
-) {
+export function mapDispatchToProps(dispatch: Dispatch<actions.NavigateBack>) {
   return {
     GoBack: () => {
-      dispatch(actions.asyncNavigateBack());
+      dispatch(actions.navigateBack());
     }
   };
 }

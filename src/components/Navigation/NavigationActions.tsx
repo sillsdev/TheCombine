@@ -1,4 +1,3 @@
-import { Dispatch } from "react";
 import { Goal } from "../../types/goals";
 import { ActionWithPayload } from "../../types/action";
 import { Action } from "redux";
@@ -20,18 +19,6 @@ export interface NavigateForward extends ActionWithPayload<Goal> {
 
 export type NavigateBackAction = NavigateBack;
 export type NavigateForwardAction = NavigateForward;
-
-export function asyncNavigateBack() {
-  return async (dispatch: Dispatch<NavigateBack>) => {
-    dispatch(navigateBack());
-  };
-}
-
-export function asyncNavigateForward(goal: Goal) {
-  return async (dispatch: Dispatch<NavigateForward>) => {
-    dispatch(navigateForward(goal));
-  };
-}
 
 export function navigateBack(): NavigateBack {
   return { type: NAVIGATE_BACK };

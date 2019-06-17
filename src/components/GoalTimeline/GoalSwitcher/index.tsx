@@ -14,12 +14,16 @@ export function mapStateToProps(state: StoreState): GoalSwitcherState {
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, timelineActions.AddGoal>
+  dispatch: ThunkDispatch<
+    StoreState,
+    any,
+    timelineActions.AddGoal | navActions.NavigateForward
+  >
 ) {
   return {
     chooseGoal: (goal: Goal) => {
       dispatch(timelineActions.asyncAddGoalToHistory(goal));
-      dispatch(navActions.asyncNavigateForward(goal));
+      dispatch(navActions.navigateForward(goal));
     }
   };
 }
