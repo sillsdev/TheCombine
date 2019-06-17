@@ -22,12 +22,10 @@ namespace BackendFramework.Controllers
     {
         public readonly IWordService _wordService;
         public readonly IWordRepository _wordRepo;
-        public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
 
-        public WordController(IWordService wordService, IWordRepository repo, ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger)
+        public WordController(IWordService wordService, IWordRepository repo)
         {
             _wordService = wordService;
-            _merger = merger;
             _wordRepo = repo;
         }
 
@@ -126,33 +124,6 @@ namespace BackendFramework.Controllers
             }
             var mergedWord = await _wordService.Merge(mergeWords);
             return new ObjectResult(mergedWord.Id);
-        }
-
-
-        // POST: v1/Project/Words/upload
-        // Implements: Upload(), Arguments: FileUpload model
-        [HttpPost("upload")]
-        public async Task<IActionResult> Post([FromForm] FileUpload model)
-        {
-            var file = model.file;
-
-            if (file.Length > 0)
-            {
-                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
-                using (var fs = new FileStream(model.filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fs);
-                }
-            }
-            try
-            {
-                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                return new ObjectResult(parser.ReadLiftFile(model.filePath));
-            }
-            catch (Exception)
-            {
-                return new UnsupportedMediaTypeResult();
-            }
         }
     }
 }
