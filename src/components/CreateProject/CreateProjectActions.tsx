@@ -8,7 +8,7 @@ export type CREATE_PROJECT = typeof CREATE_PROJECT;
 
 export interface CreateProjectData {
   name: string;
-  languageData: File;
+  languageData?: File;
 }
 type CreateProjectType = CREATE_PROJECT;
 
@@ -20,7 +20,7 @@ export interface CreateProjectAction {
 }
 
 //thunk action creator
-export function asyncCreateProject(name: string, languageData: File) {
+export function asyncCreateProject(name: string, languageData?: File) {
   return async (dispatch: Dispatch<CreateProjectAction>) => {
     // Create project
     let project = {
@@ -44,28 +44,32 @@ export function asyncCreateProject(name: string, languageData: File) {
     );
 
     // Upload words
-    const data = new FormData();
-    data.append("file", languageData);
-    data.append("name", name);
-    await axios
-      .post("https://localhost:5001/v1/projects/words/upload/", data, {
-        headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
-      })
-      .then(res => {
-        console.log(res.statusText);
-        dispatch(createProject(name, languageData));
-      })
-      .catch(err => {
-        alert("Failed to create project");
-        console.log(err);
-      });
+    if (languageData) {
+      const data = new FormData();
+      data.append("file", languageData);
+      data.append("name", name);
+      await axios
+        .post("https://localhost:5001/v1/projects/words/upload/", data, {
+          headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
+        })
+        .then(res => {
+          console.log(res.statusText);
+          dispatch(createProject(name, languageData));
+        })
+        .catch(err => {
+          alert("Failed to create project");
+          console.log(err);
+        });
+    } else {
+      dispatch(createProject(name));
+    }
   };
 }
 
 //pure action creator. LEAVE PURE!
 export function createProject(
   name: string,
-  languageData: File
+  languageData?: File
 ): CreateProjectAction {
   return {
     type: CREATE_PROJECT,
