@@ -87,18 +87,26 @@ namespace BackendFramework
                 options.ProjectsDatabase = Configuration.GetSection("MongoDB:ProjectsDatabase").Value;
                 options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
             });
+            // Register concrete types for dependency injection
 
+            // Word Types
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordService, WordService>();
-
-            services.AddScoped<IUserService, UserService>();
-            services.AddTransient<IUserContext, UserContext>();
-            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IWordRepository, WordRepository>();
+
+            // User types
+            services.AddTransient<IUserContext, UserContext>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddTransient<IUserService, UserService>();
+
+            // Lift types
             services.AddTransient<ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>, LiftService>();
+
+            // User role types
             services.AddTransient<IUserRoleContext, UserRoleContext>();
             services.AddTransient<IUserRoleService, UserRoleService>();
 
+            // Project types
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectService, ProjectService>();
         }
