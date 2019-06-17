@@ -1,4 +1,3 @@
-import { Dispatch } from "react";
 import { Goal } from "../../types/goals";
 import { ActionWithPayload } from "../../types/action";
 
@@ -11,12 +10,6 @@ export interface AddGoal extends ActionWithPayload<Goal> {
 }
 
 export type AddGoalAction = AddGoal;
-
-export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: Dispatch<AddGoal>) => {
-    dispatch(addGoalToHistory(goal));
-  };
-}
 
 export function addGoalToHistory(goal: Goal): AddGoal {
   return { type: ADD_GOAL, payload: goal };
