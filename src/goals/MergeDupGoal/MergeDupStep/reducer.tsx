@@ -35,7 +35,10 @@ export const mergeDupStepReducer = (
       return { ...state, words };
     case REMOVE_LIST_WORD:
       var words = state.words;
-      words = words.filter(word => word.id != action.payload.word.id);
+      var foundIndex = words.findIndex(
+        word => word.id == action.payload.word.id
+      );
+      words = words.filter((_, index) => index != foundIndex);
       return { ...state, words };
     case CLEAR_LIST_WORDS:
       return { ...state, words: [] };
