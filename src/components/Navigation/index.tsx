@@ -1,12 +1,11 @@
-import Navigation from "./NavigationComponent";
+import Navigation, { NavComponentProps } from "./NavigationComponent";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../types/index";
-import { NavComponentState } from "../../types/nav";
 
-export function mapStateToProps(state: StoreState): NavComponentState {
+export function mapStateToProps(state: StoreState): NavComponentProps {
   return {
-    VisibleComponent: state.navState.VisibleComponent
+    VisibleComponentName: state.navState.VisibleComponentName
   };
 }
 

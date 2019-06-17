@@ -1,9 +1,10 @@
 import React from "react";
 import NavigationBar from "./NavigationBar/";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import { ComponentMap } from "./ComponentMap";
 
 export interface NavComponentProps {
-  VisibleComponent: JSX.Element;
+  VisibleComponentName: string;
 }
 
 /*
@@ -22,7 +23,7 @@ export class Navigation extends React.Component<
     return (
       <div className="NavigationComponent">
         <NavigationBar />
-        {this.props.VisibleComponent}
+        {ComponentMap.get(this.props.VisibleComponentName)}
       </div>
     );
   }
