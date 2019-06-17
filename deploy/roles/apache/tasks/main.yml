@@ -1,0 +1,4 @@
+---
+
+- { include: install.yml, tags: [ install ] }
+- { include: test.yml, tags: [ test ] }

@@ -1,0 +1,26 @@
+---
+
+- name: Read version of node (and strip leading 'v')
+  shell: |
+    set -o pipefail
+    node --version | sed "s/^v//"
+  args:
+    executable: /bin/bash
+  register: node_version
+  changed_when: false
+
+- name: verify node version is 10.16.n
+  assert:
+    that:
+      - node_version.stdout is version("10.16", ">=")
+      - node_version.stdout is version("10.17", "<")
+
+- name: Read version of npm
+  command: npm --version
+  register: npm_version
+  changed_when: false
+
+- name: verify npm version is > 6.9
+  assert:
+    that:
+      - npm_version.stdout is version("6.9", ">=")

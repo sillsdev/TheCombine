@@ -1,0 +1,5 @@
+---
+
+nodejs_repo: node_10.x
+nodejs_name: "Node.js 10.x"
+nodejs_pkg:  nodejs=10.16.0-1nodesource1
