@@ -54,7 +54,6 @@ namespace BackendFramework
             options.ConnectionString = Configuration.GetSection("MongoDB:ConnectionString").Value;
             options.WordsDatabase = Configuration.GetSection("MongoDB:WordsDatabase").Value;
             options.UsersDatabase = Configuration.GetSection("MongoDB:UsersDatabase").Value;
-            options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
             options.ProjectsDatabase = Configuration.GetSection("MongoDB:ProjectsDatabase").Value;
             options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
         });
@@ -66,8 +65,6 @@ namespace BackendFramework
             services.AddTransient<IUserRoleService, UserRoleService>();
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<IUserRoleContext, UserRoleContext>();
-            services.AddTransient<IUserRoleService, UserRoleService>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

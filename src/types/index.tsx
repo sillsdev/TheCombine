@@ -6,14 +6,20 @@ import { LocalizeState } from "react-localize-redux";
 import { LoginState } from "../components/Login/LoginReducer";
 import { CreateProjectState } from "../components/CreateProject/CreateProjectReducer";
 import { GoalsState } from "./goals";
+import { NavState } from "./nav";
+import { WordDragState } from "../goals/DraggableWord/reducer";
+import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/component";
 
 //root store structure
 export interface StoreState {
   localize: LocalizeState;
   tempState: TempState;
   loginState: LoginState;
+  draggedWordState: WordDragState;
   createProjectState: CreateProjectState;
+  mergeDupStepProps: MergeDupStepProps;
   goalsState: GoalsState;
+  navState: NavState;
 }
 
 //root action type
