@@ -2,12 +2,12 @@ import React from "react";
 import { StoreState } from "../../types";
 
 import { connect } from "react-redux";
-import App, { AppProps } from "./App";
+import App from "./App";
 import { CreateProjectState } from "../CreateProject/CreateProjectReducer";
 import Navigation from "../Navigation";
 import CreateProject from "../CreateProject";
 
-export function mapStateToProps(state: StoreState): AppProps {
+export function mapStateToProps(state: StoreState) {
   return {
     VisibleComponent: renderComponent(state.createProjectState)
   };
