@@ -25,12 +25,12 @@ namespace BackendFramework.Services
     {
 
         private readonly IUserContext _userDatabase;
-        private readonly AppSettings _appSettings;
+        private readonly AppSettings _jwtsettings;
 
         public UserService(IUserContext collectionSettings, IOptions<AppSettings> appSettings)
         {
             _userDatabase = collectionSettings;
-            _appSettings = appSettings.Value;
+            _jwtsettings = appSettings.Value;
         }
         
 
@@ -50,14 +50,23 @@ namespace BackendFramework.Services
 
                 // authentication successful so generate jwt token
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+                var key = Encoding.ASCII.GetBytes(_jwtsettings.Secret);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                     new Claim(ClaimTypes.Name, foundUser.Id)
                     }),
-                    Expires = DateTime.UtcNow.AddDays(365),
+
+                    /*************************************************
+                     * This line herer will cause serious 
+                     * debugging problems if not kept in mind
+                     *************************************************/
+                    Expires = DateTime.UtcNow.AddMinutes(30),
+                    /*************************************************
+                     * This line herer will cause serious 
+                     * debugging problems if not kept in mind
+                     *************************************************/
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -113,12 +122,7 @@ namespace BackendFramework.Services
             {
                 //check if collection is not empty
                 var users = await GetAllUsers();
-                if (users.Count == 0)
-                {
-                //    throw new InvalidOperationException();
-                }
-
-
+                
                 //ckeck to see if username is taken
                 if (_userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
                 {
@@ -134,7 +138,6 @@ namespace BackendFramework.Services
             {
                 return null;
             }
-
         }
 
         public async Task<bool> Delete(string Id)
