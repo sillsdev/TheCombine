@@ -25,6 +25,7 @@ export interface LoginDispatchProps {
 export interface LoginStateProps {
   loginAttempt: boolean | undefined;
   loginFailure: boolean | undefined;
+  registerFailure: boolean | undefined;
 }
 
 interface LoginState {
@@ -134,6 +135,11 @@ class Login extends React.Component<
               {this.props.loginFailure && (
                 <p>
                   <Translate id="login.failed" />
+                </p>
+              )}
+              {this.props.registerFailure && (
+                <p>
+                  <Translate id="login.registerFailed" />
                 </p>
               )}
             </CardContent>

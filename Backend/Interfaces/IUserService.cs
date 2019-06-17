@@ -16,5 +16,6 @@ namespace BackendFramework.Interfaces
         Task<bool> Update(string Id, User user);
         Task<bool> Delete(string Id);
         Task<bool> DeleteAllUsers();
+        Task<User> Authenticate(string username, string password);
     }
 }
