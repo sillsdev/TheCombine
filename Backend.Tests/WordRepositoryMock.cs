@@ -46,7 +46,7 @@ namespace Backend.Tests
 
         public Task<Word> Create(Word word)
         {
-            word.Id = Guid.NewGuid().ToString("N");
+            word.Id = Guid.NewGuid().ToString();
             words.Add(word.Clone());
             AddFrontier(word.Clone());
             return Task.FromResult(word.Clone());
@@ -79,7 +79,7 @@ namespace Backend.Tests
 
         public Task<Word> Add(Word word)
         {
-            word.Id = Guid.NewGuid().ToString("N");
+            word.Id = Guid.NewGuid().ToString();
             words.Add(word.Clone());
             return Task.FromResult(word.Clone());
         }

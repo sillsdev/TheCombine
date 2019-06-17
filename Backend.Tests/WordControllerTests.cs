@@ -25,7 +25,7 @@ namespace Tests
         Word testWord()
         {
             Word word = new Word();
-            // lets add some random data
+            // let's add some random data
             word.Vernacular = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
             return word;
         }
@@ -37,13 +37,9 @@ namespace Tests
             repo.Create(testWord());
             repo.Create(testWord());
 
-            var action = controller.Get().Result;
-
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
-
-            var result = action as ObjectResult;
-            Assert.That(result.Value, Has.Count.EqualTo(3));
-            repo.GetAllWords().Result.ForEach(word => Assert.Contains(word, result.Value as List<Word>));
+            var words = (Action as ObjectResult).Value as List<WordControllerTests>;
+            Assert.That(words, Has.Count.EqualTo(3));
+            repo.GetAllWords().Result.ForEach(word => Assert.Contains(word, words));
         }
 
         [Test]
@@ -59,7 +55,7 @@ namespace Tests
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
             var foundWords = (action as ObjectResult).Value as List<Word>;
-            Assert.AreEqual(1, foundWords.Count);
+            Assert.That(foundWords, Has.Count.EqualTo(1));
             Assert.AreEqual(word, foundWords[0]);
         }
 
@@ -78,8 +74,6 @@ namespace Tests
         {
             Word origWord = repo.Create(testWord()).Result;
 
-
-
             Word modWord = origWord.Clone();
             modWord.Vernacular = "Yoink";
 
@@ -91,6 +85,7 @@ namespace Tests
 
             Assert.Contains(origWord, repo.GetAllWords().Result);
             Assert.Contains(finalWord, repo.GetAllWords().Result);
+
             Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
             Assert.Contains(finalWord, repo.GetFrontier().Result);
         }
@@ -129,6 +124,7 @@ namespace Tests
             Assert.Contains(parent, words);
             Assert.Contains(child1, words);
             Assert.Contains(child2, words);
+
             // find the dups
             Word dup1 = child1.Clone();
             dup1.Accessability = (int)state.duplicate;
@@ -154,7 +150,7 @@ namespace Tests
             Assert.Contains(end, words);
             Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
             Assert.Contains(end, repo.GetFrontier().Result);
-            
+
         }
     }
 }
