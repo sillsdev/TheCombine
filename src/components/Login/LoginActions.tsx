@@ -22,12 +22,20 @@ export type LOGOUT = typeof LOGOUT;
 export const REGISTER = "REGISTER";
 export type REGISTER = typeof REGISTER;
 
+export const REGISTER_FAILURE = "REGISTER_FAILURE";
+export type REGISTER_FAILURE = typeof REGISTER_FAILURE;
+
 export interface LoginData {
   user: string;
   password?: string;
 }
 
-type LoginType = LOGIN_ATTEMPT | LOGIN_FAILURE | LOGIN_SUCCESS | REGISTER;
+type LoginType =
+  | LOGIN_ATTEMPT
+  | LOGIN_FAILURE
+  | LOGIN_SUCCESS
+  | REGISTER
+  | REGISTER_FAILURE;
 
 //action types
 
@@ -106,16 +114,18 @@ export function asyncRegister(user: string, password: string) {
       uiLang: "lang1",
       token: ""
     };
-    await axios.post(
-      "https://localhost:5001/v1/users",
-      JSON.stringify(newUser),
-      {
+    await axios
+      .post("https://localhost:5001/v1/users", JSON.stringify(newUser), {
         headers: { ...authHeader(), "Content-Type": "application/json" }
-      }
-    );
-
-    //login
-    dispatch(asyncLogin(user, password));
+      })
+      .then(res => {
+        //login
+        dispatch(asyncLogin(user, password));
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch(registerFailure(user));
+      });
   };
 }
 
@@ -124,5 +134,12 @@ export function register(user: string, password: string): UserAction {
   return {
     type: REGISTER,
     payload: { user, password }
+  };
+}
+
+export function registerFailure(user: string): UserAction {
+  return {
+    type: REGISTER_FAILURE,
+    payload: { user }
   };
 }

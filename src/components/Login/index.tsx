@@ -15,7 +15,8 @@ function mapStateToProps(state: StoreState): LoginStateProps {
   console.log(state);
   return {
     loginAttempt: state.loginState && state.loginState.loginAttempt,
-    loginFailure: state.loginState && state.loginState.loginFailure
+    loginFailure: state.loginState && state.loginState.loginFailure,
+    registerFailure: state.loginState && state.loginState.registerFailure
   };
 }
 
