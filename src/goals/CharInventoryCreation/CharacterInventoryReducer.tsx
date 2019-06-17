@@ -18,7 +18,6 @@ export const characterInventoryReducer = (
   if (!state) return defaultState;
   switch (action.type) {
     case SET_CHARACTER_INVENTORY:
-      console.log("SET_CHARACTER_INVENTORY METHOD");
       let inv = [...new Set([...action.inventory])];
       return { inventory: inv };
     default:

@@ -10,7 +10,6 @@ import {
 import { CharacterInventoryState } from "./CharacterInventoryReducer";
 
 function mapStateToProps(state: StoreState): CharacterInventoryState {
-  console.log(state);
   return {
     inventory:
       state.characterInventoryState && state.characterInventoryState.inventory
