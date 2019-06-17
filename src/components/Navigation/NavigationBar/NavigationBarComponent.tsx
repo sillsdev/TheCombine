@@ -22,27 +22,22 @@ export class NavigationBar extends React.Component<
 
   // Render the different UI elements in the nav bar based on this
   // component's props
-  renderNavigationBar(): JSX.Element {
-    if (this.props.ShouldRenderBackButton) {
-      return (
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton edge="start" onClick={this.props.GoBack}>
-              <KeyboardBackspace />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-      );
-    }
-    return (
-      <AppBar position="static">
-        <Toolbar />
-      </AppBar>
-    );
-  }
-
   render() {
-    return <div className="VisibleComponent">{this.renderNavigationBar()}</div>;
+    return (
+      <div className="VisibleComponent">
+        {
+          <AppBar position="static">
+            <Toolbar>
+              {this.props.ShouldRenderBackButton ? (
+                <IconButton edge="start" onClick={this.props.GoBack}>
+                  <KeyboardBackspace />
+                </IconButton>
+              ) : null}
+            </Toolbar>
+          </AppBar>
+        }
+      </div>
+    );
   }
 }
 
