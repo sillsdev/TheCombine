@@ -65,6 +65,8 @@
       "addButton": ["Add Chars", "Añadir caracteres"],
       "deleteButton": ["Delete Selected", "Eliminar seleccionados"],
       "input": ["Enter Characters...", "Ingresar caracteres..."]
-    }
+    },
+    "save": ["Save", "Guardar"],
+    "cancel": ["Cancel", "Cancelar"]
   }
 }
