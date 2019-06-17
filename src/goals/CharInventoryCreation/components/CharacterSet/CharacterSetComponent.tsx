@@ -91,7 +91,7 @@ class CharacterSet extends React.Component<
       return;
     }
 
-    let inv = this.props.inventory;
+    let inv = [...this.props.inventory];
     let dragIndex = inv.indexOf(this.state.dragChar);
     let dropIndex = inv.indexOf(this.state.dropChar);
 
