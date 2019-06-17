@@ -101,6 +101,7 @@ namespace Tests
             delWord.History = new List<string> { origWord.Id };
             Assert.Contains(origWord, repo.GetAllWords().Result);
             Assert.Contains(delWord, repo.GetAllWords().Result);
+
             Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
             Assert.Contains(delWord, repo.GetFrontier().Result);
         }
