@@ -12,6 +12,7 @@ import Temp from "../Temp";
 import axios from "axios";
 import { authHeader } from "../Login/AuthHeaders";
 import { Button } from "@material-ui/core";
+import CharInventoryCreation from "../../goals/CharInventoryCreation";
 
 export interface AppProps {
   VisibleComponent: JSX.Element;
@@ -30,7 +31,7 @@ export default class App extends React.Component<AppProps> {
         <Temp />
         <LogoutButton />
         <Router history={history}>
-          <PrivateRoute exact path="/" component={CreateProject} />
+          <PrivateRoute exact path="/" component={CharInventoryCreation} />
           <Route path="/login" component={Login} />
         </Router>
       </div>
