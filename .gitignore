@@ -40,3 +40,9 @@ Backend/.vscode/*
 *.orig
 Backend/SIL.Lift/**
 **/*.orig
+
+# Vagrant instances
+.vagrant/
+
+# Python
+*.pyc

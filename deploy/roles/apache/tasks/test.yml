@@ -1,0 +1,5 @@
+---
+
+- name: Test Apache installation
+  debug:
+    msg: "TO DO: Apache installation tests"

@@ -1,0 +1,5 @@
+---
+
+  - name: Test .NET Core installation
+    debug:
+      msg: "TO DO: .NET Core installation tests"
