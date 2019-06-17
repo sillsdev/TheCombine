@@ -103,15 +103,15 @@ export function asyncRegister(user: string, password: string) {
     dispatch(register(user, password));
     // Create new user
     let newUser = {
-      avatar: "avatar1",
-      name: "name1",
-      email: "email1@sil.org",
-      otherConnectionField: "connectionField1",
-      workedProjects: ["project1", "project2"],
+      avatar: "",
+      name: "",
+      email: "",
+      otherConnectionField: "",
+      workedProjects: ["", ""],
       agreement: false,
       password: password,
       username: user,
-      uiLang: "lang1",
+      uiLang: "",
       token: ""
     };
     await axios
