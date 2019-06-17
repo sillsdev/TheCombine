@@ -3,13 +3,20 @@ import { StoreState } from "../../types";
 
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { asyncLogin, UserAction, register, logout } from "./LoginActions";
+import {
+  asyncLogin,
+  UserAction,
+  register,
+  logout,
+  asyncRegister
+} from "./LoginActions";
 
 function mapStateToProps(state: StoreState): LoginStateProps {
   console.log(state);
   return {
     loginAttempt: state.loginState && state.loginState.loginAttempt,
-    loginFailure: state.loginState && state.loginState.loginFailure
+    loginFailure: state.loginState && state.loginState.loginFailure,
+    registerFailure: state.loginState && state.loginState.registerFailure
   };
 }
 
@@ -24,7 +31,7 @@ export function mapDispatchToProps(
       dispatch(logout());
     },
     register: (user: string, password: string) => {
-      dispatch(register(user, password));
+      dispatch(asyncRegister(user, password));
     }
   };
 }
