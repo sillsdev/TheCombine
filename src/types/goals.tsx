@@ -1,6 +1,5 @@
 import { User } from "./user";
 import { MergeDupData } from "../goals/MergeDupGoal";
-import Stack from "./stack";
 import { MergeDupProps } from "../goals/MergeDupGoal/MergeDups";
 import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/component";
 
@@ -34,11 +33,11 @@ export interface GoalsState {
 }
 
 export interface GoalHistoryState {
-  history: Stack<Goal>;
+  history: Goal[];
 }
 
 export interface GoalSuggestionsState {
-  suggestions: Stack<Goal>;
+  suggestions: Goal[];
 }
 
 export interface GoalSwitcherState {

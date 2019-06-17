@@ -1,11 +1,10 @@
 import React from "react";
 
 import { Goal } from "../../../types/goals";
-import Stack from "../../../types/stack";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 export interface GoalHistoryProps {
-  history: Stack<Goal>;
+  history: Goal[];
 }
 
 export class GoalHistory extends React.Component<
@@ -18,7 +17,7 @@ export class GoalHistory extends React.Component<
   render() {
     return (
       <div className="App">
-        {this.props.history.stack.map(goal => goal.goalWidget)}
+        {this.props.history.map(goal => goal.goalWidget)}
       </div>
     );
   }

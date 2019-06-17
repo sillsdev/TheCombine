@@ -5,7 +5,6 @@ import {
   goalsReducer
 } from "../GoalTimelineReducers";
 import { Goal, GoalsState } from "../../../types/goals";
-import Stack from "../../../types/stack";
 import { MockActionInstance } from "../../../types/action";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
@@ -18,21 +17,21 @@ it("Should return the current state", () => {
 
   const state: GoalsState = {
     historyState: {
-      history: new Stack<Goal>([])
+      history: []
     },
     goalOptions: [],
     suggestionsState: {
-      suggestions: new Stack<Goal>(suggestionsArray)
+      suggestions: suggestionsArray
     }
   };
 
   const newState: GoalsState = {
     historyState: {
-      history: new Stack<Goal>([])
+      history: []
     },
     goalOptions: [],
     suggestionsState: {
-      suggestions: new Stack<Goal>(suggestionsArray)
+      suggestions: suggestionsArray
     }
   };
 
@@ -42,11 +41,11 @@ it("Should return the current state", () => {
 it("Should add a goal to history and remove it from suggestions", () => {
   const state: GoalsState = {
     historyState: {
-      history: new Stack<Goal>([])
+      history: []
     },
     goalOptions: [],
     suggestionsState: {
-      suggestions: new Stack<Goal>([])
+      suggestions: []
     }
   };
 
@@ -59,11 +58,11 @@ it("Should add a goal to history and remove it from suggestions", () => {
   };
   const newState: GoalsState = {
     historyState: {
-      history: new Stack<Goal>(suggestionsArray)
+      history: suggestionsArray
     },
     goalOptions: [],
     suggestionsState: {
-      suggestions: new Stack<Goal>([])
+      suggestions: []
     }
   };
   expect(goalsReducer(state, addGoalAction)).toEqual(newState);
@@ -72,16 +71,16 @@ it("Should add a goal to history and remove it from suggestions", () => {
 it("Should add goal to history", () => {
   const state: GoalsState = {
     historyState: {
-      history: new Stack<Goal>([])
+      history: []
     },
     goalOptions: [],
     suggestionsState: {
-      suggestions: new Stack<Goal>([])
+      suggestions: []
     }
   };
 
   const goal: Goal = new CreateCharInv([]);
-  const newGoalHistory = state.historyState.history.makeCopy();
+  const newGoalHistory = state.historyState.history;
   newGoalHistory.push(goal);
   expect(addGoalToHistory(state.historyState.history, goal)).toEqual(
     newGoalHistory
@@ -94,11 +93,11 @@ it("Should remove next goal from suggestions", () => {
   const goal3: Goal = new MergeDups([]);
 
   const suggestionsArray: Goal[] = [goal1, goal2, goal3];
-  const suggestionsStack: Stack<Goal> = new Stack<Goal>(suggestionsArray);
+  const suggestionsStack: Goal[] = suggestionsArray;
 
   const state: GoalsState = {
     historyState: {
-      history: new Stack<Goal>([])
+      history: []
     },
     goalOptions: [],
     suggestionsState: {
@@ -107,8 +106,8 @@ it("Should remove next goal from suggestions", () => {
   };
 
   const removedGoal: Goal = new HandleFlags([]);
-  const newGoalSuggestions = state.suggestionsState.suggestions.makeCopy();
-  newGoalSuggestions.stack.filter(goal => goal1.name !== goal.name);
+  const newGoalSuggestions = state.suggestionsState.suggestions;
+  newGoalSuggestions.filter(goal => goal1.name != goal.name);
   expect(
     removeGoalFromSuggestions(state.suggestionsState.suggestions, removedGoal)
   ).toEqual(newGoalSuggestions);
@@ -120,21 +119,20 @@ it("Should not remove nonexistent goal from suggestions", () => {
   const goal3: Goal = new MergeDups([]);
 
   const suggestionsArray: Goal[] = [goal1, goal2, goal3];
-  const suggestionsStack: Stack<Goal> = new Stack<Goal>(suggestionsArray);
 
   const state: GoalsState = {
     historyState: {
-      history: new Stack<Goal>([])
+      history: []
     },
     goalOptions: [],
     suggestionsState: {
-      suggestions: suggestionsStack
+      suggestions: suggestionsArray
     }
   };
 
   const removedGoal: Goal = new SpellCheckGloss([]);
-  const newGoalSuggestions = state.suggestionsState.suggestions.makeCopy();
-  newGoalSuggestions.stack.filter(goal => goal1.name !== goal.name);
+  const newGoalSuggestions = state.suggestionsState.suggestions;
+  newGoalSuggestions.filter(goal => goal1.name != goal.name);
   expect(
     removeGoalFromSuggestions(state.suggestionsState.suggestions, removedGoal)
   ).toEqual(newGoalSuggestions);
@@ -146,21 +144,20 @@ it("Should not remove last goal from suggestions", () => {
   const goal3: Goal = new MergeDups([]);
 
   const suggestionsArray: Goal[] = [goal1, goal2, goal3];
-  const suggestionsStack: Stack<Goal> = new Stack<Goal>(suggestionsArray);
 
   const state: GoalsState = {
     historyState: {
-      history: new Stack<Goal>([])
+      history: []
     },
     goalOptions: [],
     suggestionsState: {
-      suggestions: suggestionsStack
+      suggestions: suggestionsArray
     }
   };
 
   const removedGoal: Goal = new MergeDups([]);
-  const newGoalSuggestions = state.suggestionsState.suggestions.makeCopy();
-  newGoalSuggestions.stack.filter(goal => goal1.name !== goal.name);
+  const newGoalSuggestions = state.suggestionsState.suggestions;
+  newGoalSuggestions.filter(goal => goal1.name != goal.name);
   expect(
     removeGoalFromSuggestions(state.suggestionsState.suggestions, removedGoal)
   ).toEqual(newGoalSuggestions);

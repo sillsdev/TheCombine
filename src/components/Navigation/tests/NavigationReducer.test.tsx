@@ -11,7 +11,6 @@ import {
 import { NavState } from "../../../types/nav";
 import { MockActionInstance } from "../../../types/action";
 import { Goal } from "../../../types/goals";
-import Stack from "../../../types/stack";
 import BaseGoalScreen from "../../../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 import { GoalTimeline } from "../../GoalTimeline/GoalTimelineComponent";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
@@ -46,7 +45,7 @@ it("Should change the visible component to the one provided", () => {
 
   const newState: NavState = {
     VisibleComponent: navigateForwardAction.payload.display,
-    DisplayHistory: new Stack<JSX.Element>([defaultState.VisibleComponent]),
+    DisplayHistory: [defaultState.VisibleComponent],
     NavBarState: {
       ShouldRenderBackButton: true
     }
@@ -57,11 +56,10 @@ it("Should change the visible component to the one provided", () => {
 
 it("Should navigate back to the previous display", () => {
   const previousElement: JSX.Element = <GoalTimeline />;
-  const displayHistory: JSX.Element[] = [previousElement];
 
   const state: NavState = {
     VisibleComponent: <BaseGoalScreen goal={new CreateCharInv([])} />,
-    DisplayHistory: new Stack<JSX.Element>(displayHistory),
+    DisplayHistory: [previousElement],
     NavBarState: {
       ShouldRenderBackButton: false
     }
@@ -73,7 +71,7 @@ it("Should navigate back to the previous display", () => {
 
   const newState: NavState = {
     VisibleComponent: previousElement,
-    DisplayHistory: new Stack<JSX.Element>([]),
+    DisplayHistory: [],
     NavBarState: {
       ShouldRenderBackButton: false
     }
@@ -84,9 +82,9 @@ it("Should navigate back to the previous display", () => {
 
 it("Should add a goal to the empty display history", () => {
   const currentDisplay: JSX.Element = <GoalTimeline />;
-  const displayHistory = new Stack<JSX.Element>([]);
+  const displayHistory: JSX.Element[] = [];
 
-  const expectedHistory = new Stack<JSX.Element>([currentDisplay]);
+  const expectedHistory = [currentDisplay];
 
   expect(addDisplayToHistory(currentDisplay, displayHistory)).toEqual(
     expectedHistory
@@ -95,23 +93,23 @@ it("Should add a goal to the empty display history", () => {
 
 it("Should remove a goal from the non-empty display history", () => {
   const previousDisplay = <GoalTimeline />;
-  const displayHistory = new Stack<JSX.Element>([previousDisplay]);
+  const displayHistory: JSX.Element[] = [previousDisplay];
 
-  const expectedHistory = new Stack<JSX.Element>([]);
+  const expectedHistory: JSX.Element[] = [];
 
   expect(removeDisplayFromHistory(displayHistory)).toEqual(expectedHistory);
 });
 
 it("Should return an empty history given an empty history", () => {
-  const displayHistory = new Stack<JSX.Element>([]);
-  const expectedHistory = new Stack<JSX.Element>([]);
+  const displayHistory: JSX.Element[] = [];
+  const expectedHistory: JSX.Element[] = [];
 
   expect(removeDisplayFromHistory(displayHistory)).toEqual(expectedHistory);
 });
 
 it("Should set the visible component to the previous display", () => {
   const previousDisplay = <GoalTimeline />;
-  const displayHistory = new Stack<JSX.Element>([previousDisplay]);
+  const displayHistory: JSX.Element[] = [previousDisplay];
 
   const currentDisplay = <BaseGoalScreen goal={new CreateCharInv([])} />;
   const expectedDisplay = previousDisplay;
@@ -122,7 +120,7 @@ it("Should set the visible component to the previous display", () => {
 
 it("Should leave the visible display unchanged", () => {
   const currentDisplay = <GoalTimeline />;
-  const displayHistory = new Stack<JSX.Element>([]);
+  const displayHistory: JSX.Element[] = [];
   const expectedDisplay = <GoalTimeline />;
 
   expect(setVisibleToPreviousDisplay(currentDisplay, displayHistory)).toEqual(
@@ -132,13 +130,13 @@ it("Should leave the visible display unchanged", () => {
 
 it("Should return true when display history is non-empty", () => {
   const previousDisplay = <GoalTimeline />;
-  const displayHistory = new Stack<JSX.Element>([previousDisplay]);
+  const displayHistory: JSX.Element[] = [previousDisplay];
 
   expect(shouldRenderBackButton(displayHistory)).toEqual(true);
 });
 
 it("Should return false when display history is empty", () => {
-  const displayHistory = new Stack<JSX.Element>([]);
+  const displayHistory: JSX.Element[] = [];
 
   expect(shouldRenderBackButton(displayHistory)).toEqual(false);
 });
