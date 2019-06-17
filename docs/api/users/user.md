@@ -1,38 +1,38 @@
 # User
 
-**Avatar** : Link to an image resource
+**avatar** : Link to an image resource
 
-**Name** :
+**name** :
 
-**Email** : Valid email address
+**email** : Valid email address
 
-**Phone** : Valid phone number
+**phone** : Valid phone number
 
-**OtherConnectionField** : Fallback communication method if there is no email or phone
+**otherConnectionField** : Fallback communication method if there is no email or phone
 
-**WorkedProjects** :
+**workedProjects** :
 
-**Agreement** :
+**agreement** :
 
-**Password** :
+**password** :
 
-**UserName** :
+**username** :
 
-**UILang** :
+**uiLang** :
 
 ## Raw type
 
 ```typescript
 {
-    Avatar: String,
-    Name: String,
-    Email: String,
-    Phone: String,
-    OtherConnnectionField: String,
-    WorkedProjects: String[],
-    Agreement: boolean,
-    Password: String,
-    UserName: String,
-    UILang: String
+    avatar: String,
+    name: String,
+    email: String,
+    phone: String,
+    otherConnnectionField: String,
+    workedProjects: String[],
+    agreement: boolean,
+    password: String,
+    username: String,
+    uiLang: String
 }
 ```

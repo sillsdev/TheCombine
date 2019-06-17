@@ -32,8 +32,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> PostFrontier([FromBody]Word word)
         {
             #if DEBUG
-                await _wordService.AddFrontier(word);
-                return new OkObjectResult(word.Id);
+            await _wordService.AddFrontier(word);
+            return new OkObjectResult(word.Id);
             #else
                 return new UnauthorizedResult();
             #endif
@@ -43,11 +43,11 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> DeleteFrontier(string Id)
         {
             #if DEBUG
-                if (await _wordService.DeleteFrontier(Id))
-                {
-                    return new OkResult();
-                }
-                return new NotFoundResult();
+            if (await _wordService.DeleteFrontier(Id))
+            {
+                return new OkResult();
+            }
+            return new NotFoundResult();
             #else
                 return new UnauthorizedResult();
             #endif
