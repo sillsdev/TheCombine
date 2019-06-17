@@ -45,6 +45,13 @@ export interface GoalSwitcherState {
   goalOptions: Goal[];
 }
 
+export interface GoalSelectorState {
+  ndx: number;
+  goalOptions: Goal[];
+  iX: number;
+  end: number;
+}
+
 export interface Goal {
   id: number;
   name: string;

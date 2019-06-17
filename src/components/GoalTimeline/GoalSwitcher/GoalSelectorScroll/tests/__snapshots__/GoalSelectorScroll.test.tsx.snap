@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
+<div
+  className="scrollRoot"
+  onMouseDown={[Function]}
+  style={
+    Object {
+      "display": "flex",
+      "flexWrap": "nowrap",
+      "overflow": "hidden",
+    }
+  }
+>
+  <button
+    className="MuiButtonBase-root MuiButton-root leftArrow MuiButton-text"
+    disabled={false}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={0}
+    type="button"
+  >
+    <span
+      className="MuiButton-label"
+    >
+      &lt;
+    </span>
+  </button>
+  <div
+    className="scrollPane"
+    id="scrollPane"
+    style={
+      Object {
+        "display": "flex",
+        "flexWrap": "nowrap",
+        "overflow": "hidden",
+        "padding": 10,
+        "userselect": "none",
+        "width": 600,
+      }
+    }
+  >
+    <div
+      className="scrollCont"
+      id="scrollCont"
+      style={
+        Object {
+          "display": "flex",
+          "flexWrap": "nowrap",
+          "width": 1000,
+        }
+      }
+    >
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        style={
+          Object {
+            "width": 200,
+          }
+        }
+      />
+      <div
+        className="MuiPaper-root MuiPaper-elevation7 MuiCard-root scrollCard MuiPaper-rounded"
+        onDoubleClick={[Function]}
+        style={
+          Object {
+            "backgroundColor": "cyan",
+            "width": 200,
+          }
+        }
+      >
+        Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+      </div>
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard MuiPaper-rounded"
+        onDoubleClick={[Function]}
+        style={
+          Object {
+            "width": 200,
+          }
+        }
+      >
+        Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+      </div>
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard MuiPaper-rounded"
+        onDoubleClick={[Function]}
+        style={
+          Object {
+            "width": 200,
+          }
+        }
+      >
+        Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+      </div>
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        style={
+          Object {
+            "width": 200,
+          }
+        }
+      />
+    </div>
+  </div>
+  <button
+    className="MuiButtonBase-root MuiButton-root rightArrow MuiButton-text"
+    disabled={false}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={0}
+    type="button"
+  >
+    <span
+      className="MuiButton-label"
+    >
+      &gt;
+    </span>
+  </button>
+</div>
+`;

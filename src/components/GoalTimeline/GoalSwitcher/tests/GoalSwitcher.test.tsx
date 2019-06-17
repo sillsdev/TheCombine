@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../../DefaultState";
+import { defaultState as selectorState } from "../GoalSelectorScroll/GoalSelectorReducer";
 import { Provider } from "react-redux";
 import GoalSwitcher from "../../GoalSwitcher";
 
@@ -12,6 +13,9 @@ it("renders without crashing", () => {
   const mockStore = createMockStore({
     goalsState: {
       ...defaultState
+    },
+    gsState: {
+      ...selectorState
     }
   });
   const container = document.createElement("div");
