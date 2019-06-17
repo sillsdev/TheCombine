@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SIL.Lift.Parsing;
 
 namespace BackendFramework
 {
@@ -86,18 +87,26 @@ namespace BackendFramework
                 options.ProjectsDatabase = Configuration.GetSection("MongoDB:ProjectsDatabase").Value;
                 options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
             });
+            // Register concrete types for dependency injection
 
-            //dependency injection 
+            // Word Types
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordService, WordService>();
+            services.AddTransient<IWordRepository, WordRepository>();
 
-            services.AddScoped<IUserService, UserService>();
+            // User types
             services.AddTransient<IUserContext, UserContext>();
+            services.AddScoped<IUserService, UserService>();
             services.AddTransient<IUserService, UserService>();
 
+            // Lift types
+            services.AddTransient<ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>, LiftService>();
+
+            // User role types
             services.AddTransient<IUserRoleContext, UserRoleContext>();
             services.AddTransient<IUserRoleService, UserRoleService>();
 
+            // Project types
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectService, ProjectService>();
         }
