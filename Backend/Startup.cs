@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SIL.Lift.Parsing;
 
 namespace BackendFramework
 {
@@ -87,14 +88,14 @@ namespace BackendFramework
                 options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
             });
 
-            //dependency injection 
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordService, WordService>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IUserContext, UserContext>();
             services.AddTransient<IUserService, UserService>();
-
+            services.AddTransient<IWordRepository, WordRepository>();
+            services.AddTransient<ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>, LiftService>();
             services.AddTransient<IUserRoleContext, UserRoleContext>();
             services.AddTransient<IUserRoleService, UserRoleService>();
 
