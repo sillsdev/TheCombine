@@ -4,15 +4,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using BackendFramework.ValueModels;
 using BackendFramework.Interfaces;
-using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using BackendFramework.Context;
-using BackendFramework.Services;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 using System;
 using BackendFramework.Helper;
 using Microsoft.Extensions.Options;
@@ -20,6 +15,7 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+
 
 namespace BackendFramework.Services
 {
@@ -113,8 +109,31 @@ namespace BackendFramework.Services
 
         public async Task<User> Create(User user)
         {
-            await _userDatabase.Users.InsertOneAsync(user);
-            return user;
+            try
+            {
+                //check if collection is not empty
+                var users = await GetAllUsers();
+                if (users.Count == 0)
+                {
+                //    throw new InvalidOperationException();
+                }
+
+
+                //ckeck to see if username is taken
+                if (_userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
+                {
+                    throw new InvalidCastException();
+                }
+
+                //insert user
+                await _userDatabase.Users.InsertOneAsync(user);
+  
+                return user;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
 
         }
 

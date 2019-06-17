@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.ValueModels;
-using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
 namespace BackendFramework.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
     public class UserController : Controller
@@ -88,8 +84,11 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]User user)
         {
-            Console.WriteLine("Post: " + user);
-            await _userService.Create(user);
+            var returnuser = await _userService.Create(user);
+            if (returnuser == null)
+            {
+                return BadRequest();
+            }
             return new OkObjectResult(user.Id);
         }
 
