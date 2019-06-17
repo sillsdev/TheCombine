@@ -1,0 +1,6 @@
+---
+
+
+- name: Test TheCombine application installation
+  debug:
+    msg: "TO DO: TheCombine application installation tests"

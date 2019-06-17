@@ -1,0 +1,15 @@
+---
+
+- name: Setup Ubuntu Server
+  hosts: all
+  become: yes
+
+  roles:
+    - role: ansible-depends
+    - role: headless
+    - role: nodejs
+    - role: mongodb
+    - role: dotnet_core
+    - role: apache
+    - role: wifi_ap
+    - role: the_combine_app

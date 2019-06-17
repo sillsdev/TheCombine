@@ -1,0 +1,14 @@
+---
+
+################################
+# Configure device for headless operation. This currently consists of
+# updating the grub configuration so that it does not set the timeout
+# to 30 seconds when Ubuntu is installed with LVM
+#
+
+- name:  Configure for headless operation
+  hosts: all
+  become: yes
+
+  roles:
+    - role: headless

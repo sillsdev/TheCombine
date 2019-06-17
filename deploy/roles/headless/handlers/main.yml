@@ -1,0 +1,4 @@
+---
+
+- name: commit new grub config
+  command: update-grub
