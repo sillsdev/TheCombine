@@ -32,6 +32,8 @@ Backend/.vs/*
 Backend/bin
 Backend/obj
 Backend/obj/**
+Backend.Tests/bin
+Backend.Tests/obj
 Backend/BackendFramework.csproj.user
 Backend/*.xml
 Backend/Controllers/*.xml
