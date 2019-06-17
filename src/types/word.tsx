@@ -5,11 +5,29 @@ export enum State {
   duplicate
 }
 
+export interface Gloss {
+  language: string;
+  def: string;
+}
+
+export interface SemanticDomain {
+  Name: string;
+  Number: string;
+}
+export interface Sense {
+  glosses: Gloss[];
+  semanticDomains: SemanticDomain[];
+}
+
+export function makeSense(val: string) {
+  return { glosses: [{ language: "", def: val }], semanticDomains: [] };
+}
+
 export interface Word {
   id: string;
   vernacular: string;
-  gloss: string;
-  audioFile: string;
+  senses: Sense[];
+  audio: string;
   created: string;
   modified: string;
   history: string[];
@@ -17,6 +35,7 @@ export interface Word {
   editedBy: string[];
   accessability: State;
   otherField: string;
+  plural: string;
 }
 
 export interface Merge {
@@ -26,19 +45,29 @@ export interface Merge {
   time: string;
 }
 
+export function hasSenses(word: Word): boolean {
+  let returnval =
+    word.senses &&
+    word.senses.length > 0 &&
+    word.senses[0].glosses &&
+    word.senses[0].glosses.length > 0;
+  return returnval;
+}
+
 export function simpleWord(vern: string, gloss: string): Word {
   return {
     id: Math.floor(Math.random() * 9999999).toString(),
     vernacular: vern,
-    gloss,
-    audioFile: "",
+    senses: [makeSense(gloss)],
+    audio: "",
     created: "now",
     modified: "",
     history: [],
     partOfSpeech: "",
     editedBy: [],
     accessability: State.active,
-    otherField: ""
+    otherField: "",
+    plural: ""
   };
 }
 

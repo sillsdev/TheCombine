@@ -1,7 +1,8 @@
-import * as React from "react";
 import { User } from "./user";
-import { TempData, TempStep } from "../goals/tempGoal";
+import { MergeDupData } from "../goals/MergeDupGoal";
 import Stack from "./stack";
+import { MergeDupProps } from "../goals/MergeDupGoal/MergeDups";
+import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/component";
 
 export enum GoalOption {
   Complete,
@@ -16,13 +17,16 @@ export enum Tools {
   CharCreate
 }
 
-export type GoalData = TempData; // | OtherTypes
-export type Steps = TempStep; // | OtherTypes
+export type GoalProps = MergeDupProps;
+
+export type GoalData = MergeDupData; // | OtherTypes
+export type GoalStep = MergeDupStepProps; // | OtherTypes
 
 export interface GoalViewState {
   state: GoalsState;
 }
 
+// The representation of goals in the redux store
 export interface GoalsState {
   historyState: GoalHistoryState;
   goalOptions: Goal[];
@@ -37,7 +41,7 @@ export interface GoalSuggestionsState {
   suggestions: Stack<Goal>;
 }
 
-export interface GoalSelectorState {
+export interface GoalSwitcherState {
   goalOptions: Goal[];
 }
 
@@ -46,10 +50,12 @@ export interface Goal {
   name: string;
   user: User;
 
-  steps: React.Component[];
+  display: JSX.Element;
+  goalWidget: JSX.Element;
+
+  steps: JSX.Element[];
+  curNdx: number;
   data: GoalData; // The data required to load/reload this exact goal
-  display: React.FC;
-  displaySelectorItem: React.FC;
 
   tool: Tools;
   completed: boolean;
