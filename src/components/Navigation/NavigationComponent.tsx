@@ -20,6 +20,7 @@ export class Navigation extends React.Component<
   }
 
   render() {
+    console.log(this.props.VisibleComponentName);
     return (
       <div className="NavigationComponent">
         <NavigationBar />

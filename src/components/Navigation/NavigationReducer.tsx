@@ -41,7 +41,7 @@ export const navReducer = (
       ];
 
       return Object.assign({}, state, {
-        VisibleComponentName: actionWithPayload.payload.display,
+        VisibleComponentName: actionWithPayload.payload.name,
         DisplayHistory: newDisplayHistory,
         NavBarState: {
           ShouldRenderBackButton: shouldRenderBackButton(newDisplayHistory)
