@@ -120,12 +120,13 @@ class MergeDupStep extends React.Component<
               onDrop={_ => this.dragDrop()}
             >
               <hr />
-              <Grid container direction="row-reverse">
+              <Grid container>
                 <Grid item />
-                <Card style={{ width: 200 }}>
-                  <CardContent>Drag new root word</CardContent>
-                  <CardContent> Here</CardContent>
-                </Card>
+                {this.props.draggedWord && (
+                  <Card style={{ width: 200, backgroundColor: "#eee" }}>
+                    <CardContent>Drag new root word Here</CardContent>
+                  </Card>
+                )}
               </Grid>
               <Button
                 variant="contained"
