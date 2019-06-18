@@ -2,22 +2,23 @@ import axios from "axios";
 import { Word, State, Merge } from "../types/word";
 import { User } from "../types/user";
 import { Project } from "../types/project";
-import { async } from "q";
 
 const backendServer = axios.create({ baseURL: "https://localhost:5001/v1" });
 
 export async function createWord(word: Word): Promise<Word> {
-  return await backendServer.post("project/words", word).then(resp => {
+  return await backendServer.post("projects/words", word).then(resp => {
     return { ...word, id: resp.data };
   });
 }
 
 export async function getWord(id: string): Promise<Word> {
-  return await backendServer.get("project/words/" + id).then(resp => resp.data);
+  return await backendServer
+    .get("projects/words/" + id)
+    .then(resp => resp.data);
 }
 
 export async function getAllWords(): Promise<Word[]> {
-  return await backendServer.get("project/words").then(resp => resp.data);
+  return await backendServer.get("projects/words").then(resp => resp.data);
 }
 
 export async function mergeWords(words: Word[], type: State): Promise<string> {
@@ -31,27 +32,27 @@ export async function mergeWords(words: Word[], type: State): Promise<string> {
     time: Date.now().toString()
   };
   return await backendServer
-    .put("project/words", merge)
+    .put("projects/words", merge)
     .then(resp => resp.data);
 }
 
 export async function updateWord(word: Word): Promise<Word> {
   return await backendServer
-    .put("project/words/" + word.id, word)
+    .put("projects/words/" + word.id, word)
     .then(resp => {
       return { ...word, id: resp.data };
     });
 }
 
 export async function deleteWord(word: Word): Promise<Word> {
-  return await backendServer.delete("project/words/" + word.id).then(resp => {
+  return await backendServer.delete("projects/words/" + word.id).then(resp => {
     return { ...word, id: resp.data };
   });
 }
 
 export async function getFrontierWords(): Promise<Word[]> {
   return await backendServer
-    .get("project/words/frontier")
+    .get("projects/words/frontier")
     .then(resp => resp.data);
 }
 
