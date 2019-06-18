@@ -9,7 +9,7 @@
     "start": "npm install && npm-run-all --parallel frontend database api",
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "dotnet test && react-scripts test",
     "test:ci": "set CI=true react-scripts test",
     "eject": "react-scripts eject"
   },
