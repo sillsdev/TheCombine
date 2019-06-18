@@ -67,7 +67,7 @@ class WordList extends React.Component<
       >
         <List subheader={<ListSubheader> Possible Duplicates</ListSubheader>}>
           {this.props.words.map(item => (
-            <ListItem>
+            <ListItem key={item.id}>
               <Card
                 style={{ flex: 1 }}
                 draggable={true}

@@ -9,6 +9,7 @@ import { PrivateRoute } from "../PrivateRoute";
 import { LogoutButton } from "../Login/LogoutButton";
 import Login from "../Login";
 import Navigation from "../Navigation";
+import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
 
 export const history = createBrowserHistory();
 
@@ -20,6 +21,7 @@ export default class App extends React.Component {
           <PrivateRoute exact path="/nav" component={Navigation} />
           <PrivateRoute exact path="/" component={CreateProject} />
           <Route path="/login" component={Login} />
+          <Route path="/merge" component={MergeDupStep} />
         </Router>
         <LogoutButton />
       </div>

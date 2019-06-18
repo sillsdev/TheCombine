@@ -58,6 +58,7 @@ class WordCard extends React.Component<
           {this.props.word.vernacular}{" "}
           {this.props.word.plural && ", " + this.props.word.plural}
         </Typography>
+        <Typography variant="caption">Glosses:</Typography>
         <Tabs
           value={this.state.sense}
           onChange={(event, val) => this.handleChange(val)}
@@ -66,7 +67,11 @@ class WordCard extends React.Component<
             <SenseTab label={this.getGlosses(sense)} />
           ))}
         </Tabs>
-        {this.getDomains(this.props.word.senses[this.state.sense])}
+        {this.getDomains(
+          this.props.word.senses[
+            this.state.sense % this.props.word.senses.length
+          ]
+        )}
       </div>
     );
   }
