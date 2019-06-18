@@ -57,6 +57,9 @@
         "Validar caracteres estructurales"
       ],
       "viewFinal": ["View Final", "Ver final"]
+    },
+    "mergeDups": {
+      "done": ["I'm Done", "Soy el fin"]
     }
   },
   "charInventory": {

@@ -1,6 +1,10 @@
 import { Word, testWordList } from "../../../types/word";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  withLocalize,
+  Translate
+} from "react-localize-redux";
 import { Box, Grid, Button, Card, CardContent } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
@@ -123,8 +127,13 @@ class MergeDupStep extends React.Component<
                   <CardContent> Here</CardContent>
                 </Card>
               </Grid>
-              <Button style={{ float: "right" }} onClick={_ => this.next()}>
-                Next
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ float: "right", margin: 10 }}
+                onClick={_ => this.next()}
+              >
+                <Translate id="goal.mergeDups.done" />
               </Button>
             </Box>
           </Grid>
