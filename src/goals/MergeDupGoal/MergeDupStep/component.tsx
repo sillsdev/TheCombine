@@ -77,7 +77,8 @@ class MergeDupStep extends React.Component<
     await Promise.all(
       testWordList().map(async word => {
         if (this.props.addListWord) {
-          await backend.post("project/words", word);
+          word.id = "";
+          await backend.post("projects/words", word);
         }
       })
     );

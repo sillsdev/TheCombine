@@ -20,7 +20,10 @@ export interface Sense {
 }
 
 export function makeSense(val: string) {
-  return { glosses: [{ language: "", def: val }], semanticDomains: [] };
+  return {
+    glosses: [{ def: val, language: "" }],
+    semanticDomains: []
+  };
 }
 
 export interface Word {
@@ -71,6 +74,23 @@ export function simpleWord(vern: string, gloss: string): Word {
   };
 }
 
+export function multiGlossWord(vern: string, glosses: string[]) {
+  return {
+    id: Math.floor(Math.random() * 9999999).toString(),
+    vernacular: vern,
+    senses: glosses.map(gloss => makeSense(gloss)),
+    audio: "",
+    created: "now",
+    modified: "",
+    history: [],
+    partOfSpeech: "",
+    editedBy: [],
+    accessability: State.active,
+    otherField: "",
+    plural: ""
+  };
+}
+
 export function testWordList(): Word[] {
   return [
     simpleWord("Yoink", "Hello"),
@@ -82,8 +102,8 @@ export function testWordList(): Word[] {
     simpleWord("Yeet", "Please"),
     simpleWord("Yeet", "Mandatory"),
     simpleWord("Yang", "Die"),
-    simpleWord("Yuino", "Love"),
-    simpleWord("Yuino", "Boba Fett"),
+    multiGlossWord("Yuino", ["Love", "Boba Fett", "Life"]),
+    multiGlossWord("Yuilo", ["Sadness", "Tree bark"]),
     simpleWord("Yes", "Wumbo"),
     simpleWord("Yes", "Mayonnaise")
   ];

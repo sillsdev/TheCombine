@@ -86,7 +86,9 @@ class MergeStack extends React.Component<
               backgroundColor: "#eee"
             }}
           >
-            {this.props.draggedWord && "Drag new duplicate word here"}
+            {this.props.draggedWord &&
+              this.props.draggedWord.id != lastCard.id &&
+              "Drag new duplicate word here"}
           </div>
           <CardContent>
             <WordCard word={lastCard} />
