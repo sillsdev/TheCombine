@@ -1,9 +1,8 @@
 import { Dispatch } from "react";
 import axios from "axios";
 //import axios from "./tests/__mocks__/axios";
-import { history } from "../App/App";
+import { history } from "../App/component";
 import { authHeader } from "./AuthHeaders";
-import { getTranslate } from "react-localize-redux";
 import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 

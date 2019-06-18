@@ -2,7 +2,7 @@ import { Dispatch } from "react";
 import axios from "axios";
 import { authHeader } from "../Login/AuthHeaders";
 import { breakpoints } from "@material-ui/system";
-import { history } from "../App/App";
+import { history } from "../App/component";
 
 export const CREATE_PROJECT = "CREATE_PROJECT";
 export type CREATE_PROJECT = typeof CREATE_PROJECT;

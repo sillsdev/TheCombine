@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import App from "./component";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "./DefaultState";
 import { Provider } from "react-redux";
