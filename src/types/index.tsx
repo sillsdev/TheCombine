@@ -9,6 +9,7 @@ import { GoalsState } from "./goals";
 import { NavState } from "./nav";
 import { WordDragState } from "../goals/DraggableWord/reducer";
 import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/component";
+import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";
 
 //root store structure
 export interface StoreState {
@@ -20,6 +21,7 @@ export interface StoreState {
   mergeDupStepProps: MergeDupStepProps;
   goalsState: GoalsState;
   navState: NavState;
+  characterInventoryState: CharacterInventoryState;
 }
 
 //root action type
