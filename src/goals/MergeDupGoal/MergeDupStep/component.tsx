@@ -123,8 +123,13 @@ class MergeDupStep extends React.Component<
                   <CardContent> Here</CardContent>
                 </Card>
               </Grid>
-              <Button style={{ float: "right" }} onClick={_ => this.next()}>
-                Next
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ float: "right", margin: 10 }}
+                onClick={_ => this.next()}
+              >
+                I'm Done
               </Button>
             </Box>
           </Grid>
