@@ -21,12 +21,12 @@ namespace BackendFramework.Controllers
     public class WordController : Controller
     {
         public readonly IWordService _wordService;
-        public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
+        public readonly IWordRepository _wordRepo;
 
-        public WordController(IWordService wordService)
+        public WordController(IWordService wordService, IWordRepository repo)
         {
             _wordService = wordService;
-            _merger = (ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>)wordService;
+            _wordRepo = repo;
         }
 
         [EnableCors("AllowAll")]
@@ -36,7 +36,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return new ObjectResult(await _wordService.GetAllWords());
+            return new ObjectResult(await _wordRepo.GetAllWords());
         }
 
         // DELETE v1/Project/Words
@@ -46,7 +46,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-            return new ObjectResult(await _wordService.DeleteAllWords());
+            return new ObjectResult(await _wordRepo.DeleteAllWords());
 #else
             return new UnauthorizedResult();
 #endif
@@ -60,7 +60,7 @@ namespace BackendFramework.Controllers
             List<string> Ids = new List<string>();
             Ids.Add(Id);
 
-            var word = await _wordService.GetWords(Ids);
+            var word = await _wordRepo.GetWords(Ids);
             if (word.Count == 0)
             {
                 return new NotFoundResult();
@@ -73,7 +73,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Word word)
         {
-            await _wordService.Create(word);
+            await _wordRepo.Create(word);
             return new OkObjectResult(word.Id);
         }
 
@@ -84,7 +84,7 @@ namespace BackendFramework.Controllers
         {
             List<string> ids = new List<string>();
             ids.Add(Id);
-            var document = await _wordService.GetWords(ids);
+            var document = await _wordRepo.GetWords(ids);
             if (document.Count == 0)
             {
                 return new NotFoundResult();
@@ -117,40 +117,13 @@ namespace BackendFramework.Controllers
                 ids.Add(childId);
             }
             ids.Add(mergeWords.parent);
-            var document = await _wordService.GetWords(ids);
+            var document = await _wordRepo.GetWords(ids);
             if (document.Count != ids.Count)
             {
                 return new NotFoundResult();
             }
             var mergedWord = await _wordService.Merge(mergeWords);
             return new ObjectResult(mergedWord.Id);
-        }
-
-
-        // POST: v1/Project/Words/upload
-        // Implements: Upload(), Arguments: FileUpload model
-        [HttpPost("upload")]
-        public async Task<IActionResult> Post([FromForm] FileUpload model)
-        {
-            var file = model.file;
-
-            if (file.Length > 0)
-            {
-                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
-                using (var fs = new FileStream(model.filePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fs);
-                }
-            }
-            try
-            {
-                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                return new ObjectResult(parser.ReadLiftFile(model.filePath));
-            }
-            catch (Exception)
-            {
-                return new UnsupportedMediaTypeResult();
-            }
         }
     }
 }

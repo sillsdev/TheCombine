@@ -15,42 +15,42 @@ namespace BackendFramework.Controllers
     [Route("v1/Project/Words/Frontier")]
     public class FrontierController : Controller
     {
-        private readonly IWordService _wordService;
-        public FrontierController(IWordService wordService)
+        private readonly IWordRepository _repo;
+        public FrontierController(IWordRepository repo)
         {
-            _wordService = wordService;
+            _repo = repo;
         }
 
         // GET: v1/project/words/frontier
         [HttpGet()]
         public async Task<IActionResult> GetFrontier()
         {
-            return new ObjectResult(await _wordService.GetFrontier());
+            return new ObjectResult(await _repo.GetFrontier());
         }
 
         [HttpPost()]
         public async Task<IActionResult> PostFrontier([FromBody]Word word)
         {
-            #if DEBUG
-            await _wordService.AddFrontier(word);
+#if DEBUG
+            await _repo.AddFrontier(word);
             return new OkObjectResult(word.Id);
-            #else
+#else
                 return new UnauthorizedResult();
-            #endif
+#endif
         }
 
         [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteFrontier(string Id)
         {
-            #if DEBUG
-            if (await _wordService.DeleteFrontier(Id))
+#if DEBUG
+            if (await _repo.DeleteFrontier(Id))
             {
                 return new OkResult();
             }
             return new NotFoundResult();
-            #else
+#else
                 return new UnauthorizedResult();
-            #endif
+#endif
         }
 
     }

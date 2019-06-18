@@ -3,7 +3,8 @@ import {
   REGISTER,
   LOGIN_ATTEMPT,
   LOGIN_FAILURE,
-  LOGIN_SUCCESS
+  LOGIN_SUCCESS,
+  REGISTER_FAILURE
 } from "./LoginActions";
 
 export interface LoginState {
@@ -11,6 +12,7 @@ export interface LoginState {
   success: boolean;
   loginAttempt?: boolean;
   loginFailure?: boolean;
+  registerFailure?: boolean;
 }
 
 export const defaultState: LoginState = {
@@ -25,7 +27,12 @@ export const loginReducer = (
   if (!state) return defaultState;
   switch (action.type) {
     case LOGIN_ATTEMPT:
-      return { user: action.payload.user, success: false, loginAttempt: true };
+      return {
+        user: action.payload.user,
+        success: false,
+        loginAttempt: true,
+        loginFailure: false
+      };
     case LOGIN_FAILURE:
       return {
         user: action.payload.user,
@@ -36,7 +43,17 @@ export const loginReducer = (
     case LOGIN_SUCCESS:
       return { user: action.payload.user, success: true };
     case REGISTER:
-      return { user: action.payload.user, success: true };
+      return {
+        user: action.payload.user,
+        success: true,
+        registerFailure: false
+      };
+    case REGISTER_FAILURE:
+      return {
+        user: action.payload.user,
+        success: false,
+        registerFailure: true
+      };
     default:
       return state;
   }

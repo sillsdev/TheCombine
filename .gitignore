@@ -22,24 +22,22 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-obj/**
+/**/obj/*
 
 # Visual Studio
-.vs/*
+/.vs/*
 
 #Backend
 Backend/.vs/*
 Backend/bin
-Backend/obj
-Backend/obj/**
+Backend.Tests/bin
+Backend.Tests/obj
 Backend/BackendFramework.csproj.user
-Backend/*.xml
-Backend/Controllers/*.xml
 **/*.lift
+/**/*.xml
+/**/*.orig
 Backend/.vscode/*
-*.orig
 Backend/SIL.Lift/**
-**/*.orig
 
 # Vagrant instances
 .vagrant/

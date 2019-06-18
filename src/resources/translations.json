@@ -17,6 +17,10 @@
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
     ],
+    "registerFailed": [
+      "Failed to register. Please use a unique username and password.",
+      "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
+    ],
     "loggingIn": ["Logging in...", "Iniciar sesión..."],
     "logout": ["Log out", "cerrar sesión"],
     "required": ["Required", "necesario"]
@@ -54,5 +58,15 @@
       ],
       "viewFinal": ["View Final", "Ver final"]
     }
+  },
+  "charInventory": {
+    "characterSet": {
+      "title": ["Character Set", "Conjunto de caracteres"],
+      "addButton": ["Add Chars", "Añadir caracteres"],
+      "deleteButton": ["Delete Selected", "Eliminar seleccionados"],
+      "input": ["Enter Characters...", "Ingresar caracteres..."]
+    },
+    "save": ["Save", "Guardar"],
+    "cancel": ["Cancel", "Cancelar"]
   }
 }
