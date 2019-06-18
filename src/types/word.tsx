@@ -11,8 +11,8 @@ export interface Gloss {
 }
 
 export interface SemanticDomain {
-  Name: string;
-  Number: string;
+  name: string;
+  number: string;
 }
 export interface Sense {
   glosses: Gloss[];
