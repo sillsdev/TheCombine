@@ -4,6 +4,12 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 const createMockStore = configureMockStore([thunk]);
+jest.mock("axios", () => {
+  return {
+    post: jest.fn().mockResolvedValue(""),
+    get: jest.fn().mockResolvedValue("")
+  };
+});
 
 const user = { user: "testUser", password: "testPass" };
 
@@ -12,6 +18,11 @@ describe("LoginAction Tests", () => {
 
   let loginAttempt: action.UserAction = {
     type: action.LOGIN_ATTEMPT,
+    payload: user
+  };
+
+  let loginSuccess: action.UserAction = {
+    type: action.LOGIN_SUCCESS,
     payload: user
   };
 

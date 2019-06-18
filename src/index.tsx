@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { renderToStaticMarkup } from "react-dom/server";
 
 //TC modules
-import App from "./components/App/";
+import App from "./components/App/App";
 import * as serviceWorker from "./serviceWorker";
 import { store } from "./store";
 import { LocalizeProvider } from "react-localize-redux";
