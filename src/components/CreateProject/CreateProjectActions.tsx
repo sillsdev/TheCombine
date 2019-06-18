@@ -2,6 +2,7 @@ import { Dispatch } from "react";
 import axios from "axios";
 import { authHeader } from "../Login/AuthHeaders";
 import { breakpoints } from "@material-ui/system";
+import { history } from "../App/component";
 
 export const CREATE_PROJECT = "CREATE_PROJECT";
 export type CREATE_PROJECT = typeof CREATE_PROJECT;
@@ -55,6 +56,7 @@ export function asyncCreateProject(name: string, languageData?: File) {
         .then(res => {
           console.log(res.statusText);
           dispatch(createProject(name, languageData));
+          history.push("/nav");
         })
         .catch(err => {
           alert("Failed to create project");
@@ -62,6 +64,7 @@ export function asyncCreateProject(name: string, languageData?: File) {
         });
     } else {
       dispatch(createProject(name));
+      history.push("/nav");
     }
   };
 }

@@ -9,17 +9,23 @@ import {
 const user = { user: "testUser", password: "testPass" };
 
 describe("tempReducer Tests", () => {
-  let dummySt: reducer.LoginState = reducer.defaultState;
+  let dummySt: reducer.LoginState = {
+    user: user.user,
+    success: false
+  };
+  //reducer.defaultState;
   let resultState: reducer.LoginState = {
     user: user.user,
-    success: true
+    success: true,
+    registerFailure: false
   };
 
   //The state while attempting to log in
   let loginAttemptState: reducer.LoginState = {
     user: user.user,
     success: false,
-    loginAttempt: true
+    loginAttempt: true,
+    loginFailure: false
   };
 
   let loginFailureState: reducer.LoginState = {
