@@ -3,6 +3,7 @@ import React from "react";
 import { Goal } from "../../../types/goals";
 import GoalSelectorDropdown from "./GoalSelectorDropdown";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import GoalSelectorScroll from "./GoalSelectorScroll";
 
 export interface GoalSwitcherProps {
   chooseGoal: (goal: Goal) => void;
@@ -23,8 +24,7 @@ export class GoalSwitcher extends React.Component<
 
   // Given a change event, find which goal the user selected, and choose it
   // as the next goal to work on.
-  handleChange(event: React.ChangeEvent<{ name?: string; value: unknown }>) {
-    let name = event.target.value as string;
+  handleChange(name: string) {
     let goal: Goal | undefined = this.findGoalByName(
       this.props.goalOptions,
       name
@@ -47,7 +47,7 @@ export class GoalSwitcher extends React.Component<
   render() {
     return (
       <div className="GoalPicker">
-        <GoalSelectorDropdown handleChange={this.handleChange} />
+        <GoalSelectorScroll handleChange={this.handleChange} />
       </div>
     );
   }
