@@ -61,11 +61,11 @@ class WordList extends React.Component<
     //visual definition
     return (
       <div
-        style={{ height: "100%" }}
+        style={{ height: "90vh", overflowY: "scroll" }}
         onDragOver={e => e.preventDefault()}
         onDrop={_ => this.drop()}
       >
-        <List subheader={<ListSubheader> Duplicates</ListSubheader>}>
+        <List subheader={<ListSubheader>Possible Duplicates</ListSubheader>}>
           {this.props.words.map(item => (
             <ListItem>
               <Card
