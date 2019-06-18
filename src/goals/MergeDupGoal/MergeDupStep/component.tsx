@@ -10,6 +10,7 @@ import WordList from "./WordList";
 import MergeRow from "./MergeRow";
 import axios from "axios";
 import DupFinder from "../DuplicateFinder/DuplicateFinder";
+import { SortStyle } from "../DupSorter/DupSorter";
 
 export const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
 
@@ -33,6 +34,10 @@ export interface MergeDupStepProps {
   addListWord?: (word: Word) => void;
   clearListWords?: () => void;
   draggedWord?: Word;
+
+  // Sorting props
+  sortStyle?: SortStyle;
+  switchSort?: (newStyle: SortStyle) => void;
 }
 
 //interface for component state

@@ -7,11 +7,13 @@ import {
   REMOVE_DUPLICATE,
   ADD_LIST_WORD,
   REMOVE_LIST_WORD,
-  CLEAR_LIST_WORDS
+  CLEAR_LIST_WORDS,
+  SORT_LIST_WORDS
 } from "./actions";
 import { MergeDupStepProps } from "./component";
 import { State, Merge } from "../../../types/word";
 import { backend } from "./component";
+import DupSorter from "../DupSorter/DupSorter";
 
 export const defaultState: MergeDupStepProps = {
   parentWords: [],
@@ -32,7 +34,9 @@ export const mergeDupStepReducer = (
     case ADD_LIST_WORD: //_LIST_WORD actions affect the list of possible duplicates
       var words = state.words;
       words = words.concat(action.payload.word);
+      words = new DupSorter(state.sortStyle).sort(words);
       return { ...state, words };
+
     case REMOVE_LIST_WORD:
       var words = state.words;
       // finds last matching by index
@@ -40,8 +44,10 @@ export const mergeDupStepReducer = (
       // remove previously found word
       words = words.filter((_, index) => index !== foundIndex);
       return { ...state, words };
+
     case CLEAR_LIST_WORDS:
       return { ...state, words: [] };
+
     case ADD_PARENT:
       var parentWords = state.parentWords;
       var word = action.payload.word;
@@ -53,6 +59,7 @@ export const mergeDupStepReducer = (
         ...state,
         parentWords
       };
+
     case ADD_SENSE:
       var parentWords = state.parentWords;
       var { word: merge, parent } = action.payload;
@@ -71,6 +78,7 @@ export const mergeDupStepReducer = (
         ...state,
         parentWords
       };
+
     case ADD_DUPLICATE:
       var { word: merge, parent } = action.payload;
       var parentWords = state.parentWords;
@@ -84,6 +92,7 @@ export const mergeDupStepReducer = (
         return item;
       });
       return { ...state, parentWords };
+
     case REMOVE_DUPLICATE:
       var { word: merge, parent: root } = action.payload;
       var parentWords = state.parentWords;
@@ -101,6 +110,7 @@ export const mergeDupStepReducer = (
       parentWords = parentWords.filter(parent => parent.senses.length > 0);
 
       return { ...state, parentWords };
+
     case APPLY_MERGES:
       state.parentWords.forEach(async parent => {
         var ids: string[] = [];
@@ -143,6 +153,13 @@ export const mergeDupStepReducer = (
         ...state,
         parentWords: []
       };
+
+    case SORT_LIST_WORDS:
+      return {
+        ...state,
+        words: new DupSorter(state.sortStyle).sort(state.words)
+      };
+
     default:
       return state;
   }

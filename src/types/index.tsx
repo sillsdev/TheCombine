@@ -10,6 +10,7 @@ import { NavState } from "./nav";
 import { WordDragState } from "../goals/DraggableWord/reducer";
 import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/component";
 import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";
+import { SortState } from "../goals/MergeDupGoal/DupSorter/reducer";
 
 //root store structure
 export interface StoreState {
@@ -19,6 +20,7 @@ export interface StoreState {
   draggedWordState: WordDragState;
   createProjectState: CreateProjectState;
   mergeDupStepProps: MergeDupStepProps;
+  sortState: SortState;
   goalsState: GoalsState;
   navState: NavState;
   characterInventoryState: CharacterInventoryState;

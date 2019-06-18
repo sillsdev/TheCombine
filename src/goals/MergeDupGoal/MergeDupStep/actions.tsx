@@ -27,6 +27,9 @@ export type REMOVE_LIST_WORD = typeof REMOVE_LIST_WORD;
 export const CLEAR_LIST_WORDS = "CLEAR_LIST_WORDS";
 export type CLEAR_LIST_WORDS = typeof CLEAR_LIST_WORDS;
 
+export const SORT_LIST_WORDS = "SORT_LIST_WORDS";
+export type SORT_LIST_WORDS = typeof SORT_LIST_WORDS;
+
 export interface MergeAction {
   type:
     | ADD_PARENT
@@ -36,7 +39,8 @@ export interface MergeAction {
     | REMOVE_DUPLICATE
     | ADD_LIST_WORD
     | REMOVE_LIST_WORD
-    | CLEAR_LIST_WORDS;
+    | CLEAR_LIST_WORDS
+    | SORT_LIST_WORDS;
   payload: { word: Word; parent?: number };
 }
 
@@ -93,5 +97,12 @@ export function removeDuplicate(word: Word, parent: number): MergeAction {
   return {
     type: REMOVE_DUPLICATE,
     payload: { word, parent }
+  };
+}
+
+export function sortWords(): MergeAction {
+  return {
+    type: SORT_LIST_WORDS,
+    payload: undefined as any
   };
 }
