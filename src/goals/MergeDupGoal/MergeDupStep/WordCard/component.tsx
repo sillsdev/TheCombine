@@ -67,11 +67,7 @@ class WordCard extends React.Component<
             <SenseTab label={this.getGlosses(sense)} />
           ))}
         </Tabs>
-        {this.getDomains(
-          this.props.word.senses[
-            this.state.sense % this.props.word.senses.length
-          ]
-        )}
+        {this.getDomains(this.props.word.senses[this.state.sense])}
       </div>
     );
   }
