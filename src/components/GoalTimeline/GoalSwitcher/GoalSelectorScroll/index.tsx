@@ -8,26 +8,23 @@ import {
 import { connect } from "react-redux";
 import { StoreState } from "../../../../types";
 import { GoalSelectorState } from "../../../../types/goals";
-import { ThunkDispatch } from "redux-thunk";
+import { Dispatch } from "redux";
 
-// TODO: Add in connection to the store
 export function mapStateToProps(state: StoreState): GoalSelectorState {
   return {
     goalOptions: state.goalsState.goalOptions,
-    ndx: state.gsState.ndx,
-    iX: state.gsState.iX,
-    end: state.goalsState.goalOptions.length - 1
+    selectedIndex: state.goalSelectorState.selectedIndex,
+    mouseX: state.goalSelectorState.mouseX,
+    lastIndex: state.goalsState.goalOptions.length - 1
   };
 }
 
-export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, ScrollAction>
-) {
+export function mapDispatchToProps(dispatch: Dispatch<ScrollAction>) {
   return {
-    swapNdx: (ndx: number) => {
+    swapSelectedIndex: (ndx: number) => {
       dispatch(scrollSelectorIndexAction(ndx));
     },
-    swapIX: (iX: number) => {
+    swapMouseX: (iX: number) => {
       dispatch(scrollSelectorMouseAction(iX));
     }
   };

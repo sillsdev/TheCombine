@@ -36,7 +36,7 @@ export const defaultState = {
     name: "Test",
     success: true
   },
-  gsState: {
+  goalSelectorState: {
     ...goalSelectorState
   }
 };

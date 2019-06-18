@@ -14,7 +14,7 @@ it("renders without crashing", () => {
     goalsState: {
       ...defaultState
     },
-    gsState: {
+    goalSelectorState: {
       ...selectorState
     }
   });

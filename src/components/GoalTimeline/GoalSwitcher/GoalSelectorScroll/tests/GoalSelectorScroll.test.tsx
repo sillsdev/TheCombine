@@ -21,7 +21,7 @@ const labels: string[] = ["handleDuplicates", "handleFlags", "grammarCheck"];
 // Create the mock store
 const gsState: GoalSelectorState = createTempState();
 const storeState: any = {
-  gsState: gsState,
+  goalSelectorState: gsState,
   goalsState: { goalOptions: gsState.goalOptions }
 };
 const createMockStore = configureMockStore([thunk]);
@@ -105,10 +105,10 @@ function createTempState(): GoalSelectorState {
     goals[i] = createBGoal(i, labels[i], tempUser);
 
   return {
-    ndx: 0,
+    selectedIndex: 0,
     goalOptions: [...goals],
-    iX: 0,
-    end: 3
+    mouseX: 0,
+    lastIndex: 3
   };
 }
 

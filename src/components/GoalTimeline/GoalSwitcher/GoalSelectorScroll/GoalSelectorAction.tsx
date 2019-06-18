@@ -14,17 +14,19 @@ export interface MouseMoveAct {
   payload: number;
 }
 
-export function scrollSelectorIndexAction(ndx: number): ScrollSelectorAct {
+export function scrollSelectorIndexAction(
+  selectedIndex: number
+): ScrollSelectorAct {
   return {
     type: SELECT_ACTION,
-    payload: ndx
+    payload: selectedIndex
   };
 }
 
-export function scrollSelectorMouseAction(iX: number): MouseMoveAct {
+export function scrollSelectorMouseAction(mouseX: number): MouseMoveAct {
   return {
     type: MOUSE_ACTION,
-    payload: iX
+    payload: mouseX
   };
 }
 

@@ -6,10 +6,10 @@ import {
 import { GoalSelectorState } from "../../../../types/goals";
 
 export const defaultState: GoalSelectorState = {
-  ndx: 0,
+  selectedIndex: 0,
   goalOptions: [],
-  iX: 0,
-  end: 0
+  mouseX: 0,
+  lastIndex: 0
 };
 
 export const goalSelectReducer = (
@@ -21,13 +21,13 @@ export const goalSelectReducer = (
     case SELECT_ACTION:
       return {
         ...state,
-        ndx: action.payload
+        selectedIndex: action.payload
       };
 
     case MOUSE_ACTION:
       return {
         ...state,
-        iX: action.payload
+        mouseX: action.payload
       };
 
     default:

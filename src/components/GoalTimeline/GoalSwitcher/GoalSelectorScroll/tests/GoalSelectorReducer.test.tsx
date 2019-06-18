@@ -12,20 +12,20 @@ const scrollAct: ScrollAction = {
   payload: VAL
 };
 const scrollResultStore: GoalSelectorState = {
-  ndx: VAL,
+  selectedIndex: VAL,
   goalOptions: [],
-  iX: 0,
-  end: 0
+  mouseX: 0,
+  lastIndex: 0
 };
 const mouseAct: ScrollAction = {
   type: MOUSE_ACTION,
   payload: VAL
 };
 const mouseResultStore: GoalSelectorState = {
-  ndx: 0,
+  selectedIndex: 0,
   goalOptions: [],
-  iX: VAL,
-  end: 0
+  mouseX: VAL,
+  lastIndex: 0
 };
 
 describe("Testing goal select reducer", () => {
