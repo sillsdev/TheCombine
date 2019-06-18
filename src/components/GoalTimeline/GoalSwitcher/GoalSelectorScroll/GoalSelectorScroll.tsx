@@ -194,13 +194,13 @@ export class GoalSelectorScroll extends React.Component<
         className={SCROLL_CARD}
         key={index}
         style={
-          this.props.selectedIndex == index
+          this.props.selectedIndex === index
             ? style.cardSelect
             : style.cardNormal
         }
-        elevation={this.props.selectedIndex == index ? 7 : 1}
+        elevation={this.props.selectedIndex === index ? 7 : 1}
         onDoubleClick={() => {
-          if (this.props.selectedIndex == index)
+          if (this.props.selectedIndex === index)
             this.props.handleChange(this.props.goalOptions[index].name);
         }}
       >

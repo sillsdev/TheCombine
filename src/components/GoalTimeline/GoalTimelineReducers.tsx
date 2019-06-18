@@ -50,7 +50,7 @@ export function removeGoalFromSuggestions(
   let nextSuggestion = suggestions.peekFirst();
   if (nextSuggestion && nextSuggestion.name === goal.name) {
     let newSuggestions = new Stack<Goal>(
-      suggestions.stack.filter(goal => nextSuggestion.name != goal.name)
+      suggestions.stack.filter(goal => nextSuggestion.name !== goal.name)
     );
     return newSuggestions;
   }

@@ -60,7 +60,6 @@ class MergeDupStep extends React.Component<
       this.props.clearListWords();
     }
     let temp = await Finder.getNextDups();
-    console.log(temp);
     temp.map(word => {
       if (this.props.addListWord) {
         this.props.addListWord(word);

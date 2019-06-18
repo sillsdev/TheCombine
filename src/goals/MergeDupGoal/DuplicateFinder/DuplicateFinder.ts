@@ -128,9 +128,12 @@ export default class DupFinder {
       ) {
         scoredWords.push({ word, score: 0 });
       } else {
+        //initial score
         let score = this.wordLevenshteinDistance(parent, word);
 
+        //adjust for bias
         score += this.sizeAdjust(parent, word);
+
         //apply score threshold
         if (score < this.maxScore) scoredWords.push({ word, score });
       }
@@ -149,7 +152,7 @@ export default class DupFinder {
     let greater = [];
 
     for (let i = 0; i < scoredwords.length; i++) {
-      if (i != pivotIndex) {
+      if (i !== pivotIndex) {
         scoredwords[i].score > pivot.score
           ? greater.push(scoredwords[i])
           : less.push(scoredwords[i]);
@@ -159,11 +162,12 @@ export default class DupFinder {
     return [...this.quicksort(less), pivot, ...this.quicksort(greater)];
   }
 
-  //adjust for levenshtein's
+  //adjust for levenshtein's bias toward short words
   sizeAdjust(a: Word, b: Word): number {
     return 3 - (a.vernacular.length + b.vernacular.length) / 4;
   }
 
+  //extra level of abstraction for readability
   wordLevenshteinDistance(a: Word, b: Word): number {
     //get current word score
     let score = this.getLevenshteinDistance(a.vernacular, b.vernacular);
@@ -188,19 +192,19 @@ export default class DupFinder {
       matrix[i] = [];
       for (let j = 0; j < b.length; j++) {
         //populate first column
-        if (i == 0) {
+        if (i === 0) {
           matrix[i][j] = j;
           continue;
         }
 
         //populate first row
-        if (j == 0) {
+        if (j === 0) {
           matrix[i][j] = i;
           continue;
         }
 
         let thisSubCost = 0;
-        if (a[i] != b[j]) thisSubCost = this.subsitutionCost;
+        if (a[i] !== b[j]) thisSubCost = this.subsitutionCost;
 
         matrix[i][j] = Math.min(
           matrix[i - 1][j] + this.deletionCost, //deletion
