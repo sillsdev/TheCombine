@@ -44,7 +44,7 @@ class WordCard extends React.Component<
   getDomains(sense: Sense): string {
     if (sense.semanticDomains.length > 0) {
       return sense.semanticDomains
-        .map(domain => domain.Number + " " + domain.Name)
+        .map(domain => domain.number + " " + domain.name)
         .reduce((acc, val) => acc + ", " + val);
     } else {
       return "{no semantic domain}";
