@@ -21,7 +21,6 @@ export default class App extends React.Component {
           <PrivateRoute exact path="/nav" component={Navigation} />
           <PrivateRoute exact path="/" component={CreateProject} />
           <Route path="/login" component={Login} />
-          <Route path="/merge" component={MergeDupStep} />
         </Router>
         <LogoutButton />
       </div>
