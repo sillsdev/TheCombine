@@ -68,7 +68,7 @@ export class MergeRow extends React.Component<
         </ListSubheader>
         <Grid container>
           {this.props.parent.senses.map(item => (
-            <Grid item>
+            <Grid item key={item.id}>
               <MergeStack updateRow={() => this.update()} sense={item} />
             </Grid>
           ))}

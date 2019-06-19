@@ -9,7 +9,7 @@ import { Box, Grid, Button, Card, CardContent } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
 import axios from "axios";
-import DupFinder from "../DupFinder/DuplicateFinder";
+import DupFinder from "../DuplicateFinder/DuplicateFinder";
 
 export const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
 
@@ -60,7 +60,6 @@ class MergeDupStep extends React.Component<
       this.props.clearListWords();
     }
     let temp = await Finder.getNextDups();
-    console.log(temp);
     temp.map(word => {
       if (this.props.addListWord) {
         this.props.addListWord(word);
@@ -77,7 +76,8 @@ class MergeDupStep extends React.Component<
     await Promise.all(
       testWordList().map(async word => {
         if (this.props.addListWord) {
-          await backend.post("project/words", word);
+          word.id = "";
+          await backend.post("projects/words", word);
         }
       })
     );
@@ -98,9 +98,9 @@ class MergeDupStep extends React.Component<
           <Grid item>
             <Button onClick={_ => this.refresh()}>Refresh</Button>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Button onClick={_ => this.fill_database()}>Fill Database</Button>
-          </Grid>
+          </Grid> */}
           {/* <Grid item>
             <Button onClick={_ => this.clear_database()}>Clear Database</Button>
           </Grid> */}

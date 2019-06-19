@@ -58,6 +58,7 @@ class WordCard extends React.Component<
           {this.props.word.vernacular}{" "}
           {this.props.word.plural && ", " + this.props.word.plural}
         </Typography>
+        <Typography variant="caption">Glosses:</Typography>
         <Tabs
           value={this.state.sense}
           onChange={(event, val) => this.handleChange(val)}

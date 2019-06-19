@@ -16,7 +16,7 @@ export default class Stack<T> {
 
   pop(): T | undefined {
     let tR: any = this.stack.pop();
-    if (tR != undefined) return tR;
+    if (tR !== undefined) return tR;
   }
 
   peek(): T | undefined {
