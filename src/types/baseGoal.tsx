@@ -2,7 +2,7 @@ import { Goal, GoalData, Tools, GoalOption } from "../types/goals";
 import { User } from "./user";
 
 export class BaseGoal implements Goal {
-  id: number;
+  id: string;
   name: string;
   user: User;
 
@@ -15,7 +15,7 @@ export class BaseGoal implements Goal {
   result: GoalOption;
 
   constructor() {
-    this.id = -1;
+    this.id = "-1";
     this.name = "";
     this.user = {
       name: "",

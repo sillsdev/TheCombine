@@ -53,7 +53,7 @@ export interface GoalSelectorState {
 }
 
 export interface Goal {
-  id: number;
+  id: string;
   name: string;
   user: User;
 

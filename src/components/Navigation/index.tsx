@@ -17,7 +17,7 @@ export function mapStateToProps(state: StoreState): NavComponentProps {
 // React component to contain it
 export function getComponentById(
   state: StoreState,
-  componentId: number
+  componentId: string
 ): JSX.Element {
   let allGoals: Goal[] = state.goalsState.goalOptions;
 

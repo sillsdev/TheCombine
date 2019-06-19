@@ -5,7 +5,7 @@ import { Goal } from "../../types/goals";
 import { Action } from "redux";
 
 export const defaultState: NavState = {
-  VisibleComponentId: 0,
+  VisibleComponentId: "0",
   DisplayHistory: [],
   NavBarState: {
     ShouldRenderBackButton: false
@@ -54,6 +54,6 @@ export const navReducer = (
   }
 };
 
-export function shouldRenderBackButton(history: number[]): boolean {
+export function shouldRenderBackButton(history: string[]): boolean {
   return history.length > 0;
 }
