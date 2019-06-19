@@ -10,7 +10,7 @@
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
     "test": "dotnet test && react-scripts test",
-    "test:ci": "set CI=true react-scripts test ; dotnet test",
+    "test:ci": "set CI=true react-scripts test && dotnet test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
