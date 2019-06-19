@@ -1,8 +1,7 @@
 //Sam Delaney, 6/12/19
 
 import { Word, hasSenses } from "../../../types/word";
-import axios from "axios";
-const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
+import * as backend from "../../../backend";
 
 export interface ScoredWord {
   word: Word;
@@ -65,9 +64,7 @@ export default class DupFinder {
 
   //returns a set of words from the database
   async getWordsFromDB(): Promise<Word[]> {
-    var wordCollection = backend
-      .get("project/words/frontier")
-      .then(async resp => await resp.data);
+    var wordCollection = backend.getFrontierWords();
     return wordCollection;
   }
 
