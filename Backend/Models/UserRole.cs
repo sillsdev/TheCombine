@@ -33,6 +33,7 @@ namespace BackendFramework.ValueModels
                 History = new List<History>()
             };
 
+            //Enums like Permission have no need to be cloned
             foreach(Permission permission in Permission)
             {
                 clone.Permission.Add(permission);
