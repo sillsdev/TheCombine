@@ -77,7 +77,7 @@ namespace BackendFramework.Services
                 {
                     throw (new KeyNotFoundException());
                 }
-                foundUser.Password = null;
+                foundUser.Password = "";
 
                 return foundUser;
             }
