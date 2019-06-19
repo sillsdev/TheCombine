@@ -51,15 +51,11 @@ export function asyncLogin(user: string, password: string) {
     dispatch(loginAttempt(user));
 
     //attempt to login with server
-    await axios
-      .post(
-        "https://localhost:5001/v1/users/authenticate",
-        JSON.stringify({ Username: user, Password: password }),
-        { headers: { "content-type": "application/json", ...authHeader() } }
-      )
+    await backend
+      .authenticateUser(user, password)
       .then((res: any) => {
         console.log(res);
-        localStorage.setItem("user", JSON.stringify(res.data)); //Store tokens
+        localStorage.setItem("user", res); //Store tokens
         dispatch(loginSuccess(user));
         history.push("/");
       })

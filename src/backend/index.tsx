@@ -65,6 +65,19 @@ export async function addUser(user: User): Promise<User> {
     });
 }
 
+export async function authenticateUser(
+  username: string,
+  password: string
+): Promise<string> {
+  return await backendServer
+    .post(
+      "users/authenticate",
+      { Username: username, Password: password },
+      { headers: authHeader }
+    )
+    .then(resp => JSON.stringify(resp.data));
+}
+
 export async function getAllUsers(): Promise<User[]> {
   return await backendServer.get("users").then(resp => resp.data);
 }
