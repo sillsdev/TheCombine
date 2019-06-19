@@ -68,7 +68,7 @@ namespace Tests
             User user = testUser();
             string id = (controller.Post(user).Result as ObjectResult).Value as string;
             user.Id = id;
-            Assert.AreEqual(user, _userService.GetAllUsers().Result[0]);
+            Assert.Contains(user, _userService.GetAllUsers().Result);
         }
 
         [Test]
@@ -97,19 +97,19 @@ namespace Tests
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
 
-        [Test]
-        public void TestAuthenticate()
-        {
-            Assert.IsNull(_userService.Authenticate("fake", "fake"));
+        //[Test]
+        //public void TestAuthenticate()
+        //{
+        //    Assert.IsNull(_userService.Authenticate("fake", "fake"));
 
-            User origUser = _userService.Create(testUser()).Result;
-            User nullPass = origUser.Clone();
-            nullPass.Password = "";
-            nullPass.Token = "thisIsAToken";
-            var result = _userService.Authenticate(origUser.Username, origUser.Password).Result;
+        //    User origUser = _userService.Create(testUser()).Result;
+        //    User nullPass = origUser.Clone();
+        //    nullPass.Password = "";
+        //    nullPass.Token = "thisIsAToken";
+        //    var result = _userService.Authenticate(origUser.Username, origUser.Password).Result;
 
-            Assert.AreEqual(nullPass, result);
-            Assert.IsNull(_userService.Authenticate(nullPass.Username, nullPass.Password));
-        }
+        //    Assert.AreEqual(nullPass, result);
+        //    Assert.IsNull(_userService.Authenticate(nullPass.Username, nullPass.Password));
+        //}
     }
 }
