@@ -8,10 +8,8 @@ import {
 import { Box, Grid, Button, Card, CardContent } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
-import axios from "axios";
 import DupFinder from "../DuplicateFinder/DuplicateFinder";
-
-export const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
+import * as backend from "../../../backend";
 
 // Internal merge memory model
 export interface ParentWord {
@@ -77,7 +75,7 @@ class MergeDupStep extends React.Component<
       testWordList().map(async word => {
         if (this.props.addListWord) {
           word.id = "";
-          await backend.post("projects/words", word);
+          await backend.createWord(word);
         }
       })
     );

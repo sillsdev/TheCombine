@@ -1,8 +1,9 @@
 import { Dispatch } from "react";
-import axios from "axios";
 import { authHeader } from "../Login/AuthHeaders";
 import { breakpoints } from "@material-ui/system";
 import { history } from "../App/component";
+import * as backend from "../../backend";
+import { Project } from "../../types/project";
 
 export const CREATE_PROJECT = "CREATE_PROJECT";
 export type CREATE_PROJECT = typeof CREATE_PROJECT;
@@ -24,7 +25,7 @@ export interface CreateProjectAction {
 export function asyncCreateProject(name: string, languageData?: File) {
   return async (dispatch: Dispatch<CreateProjectAction>) => {
     // Create project
-    let project = {
+    let project: Project = {
       id: "",
       name: name,
       semanticDomains: [],
@@ -34,27 +35,16 @@ export function asyncCreateProject(name: string, languageData?: File) {
       characterSet: [],
       customFields: [],
       wordFields: [],
-      partsOfSpeech: []
+      partsOfSpeech: [],
+      words: []
     };
-    await axios.post(
-      "https://localhost:5001/v1/projects",
-      JSON.stringify(project),
-      {
-        headers: { ...authHeader(), "Content-Type": "application/json" }
-      }
-    );
+    await backend.createProject(project);
 
     // Upload words
     if (languageData) {
-      const data = new FormData();
-      data.append("file", languageData);
-      data.append("name", name);
-      await axios
-        .post("https://localhost:5001/v1/projects/words/upload/", data, {
-          headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
-        })
+      backend
+        .uploadLift(project, languageData)
         .then(res => {
-          console.log(res.statusText);
           dispatch(createProject(name, languageData));
           history.push("/nav");
         })
