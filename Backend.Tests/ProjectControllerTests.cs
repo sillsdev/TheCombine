@@ -92,5 +92,19 @@ namespace Tests
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
+
+        [Test]
+        public void TestDeleteAllProjects()
+        {
+            _projectService.Create(testProject());
+            _projectService.Create(testProject());
+            _projectService.Create(testProject());
+
+            Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(3));
+
+            var action = controller.Delete().Result;
+
+            Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
+        }
     }
 }
