@@ -97,5 +97,5 @@ export async function updateProject(project: Project) {
 export async function uploadLift(project: Project, lift: File) {
   let data = new FormData();
   data.append("file", lift);
-  await backendServer.post("projects/" + project.id + "/upload", data);
+  await backendServer.post("projects/" + "words/upload", data);
 }
