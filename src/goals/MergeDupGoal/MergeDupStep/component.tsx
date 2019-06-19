@@ -27,7 +27,7 @@ export interface MergeDupStepProps {
   words: Word[];
   addParent?: (word: Word) => void;
   dropWord?: () => void;
-  clearMerges?: () => void;
+  applyMerges?: () => void;
   addListWord?: (word: Word) => void;
   clearListWords?: () => void;
   draggedWord?: Word;
@@ -83,10 +83,9 @@ class MergeDupStep extends React.Component<
   }
 
   next() {
-    if (this.props.clearMerges) {
-      this.props.clearMerges();
-    }
-    this.refresh();
+    this.refresh().then(() => {
+      if (this.props.applyMerges) this.props.applyMerges();
+    });
   }
 
   render() {
