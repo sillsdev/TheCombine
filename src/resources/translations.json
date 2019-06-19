@@ -57,6 +57,9 @@
         "Validar caracteres estructurales"
       ],
       "viewFinal": ["View Final", "Ver final"]
+    },
+    "mergeDups": {
+      "done": ["Merge these words", "La resistencia es inútil"]
     }
   },
   "charInventory": {

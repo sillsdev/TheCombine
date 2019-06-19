@@ -1,9 +1,10 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word, hasSenses } from "../../../../types/word";
+import { Word } from "../../../../types/word";
 import { Box, CardContent, Card } from "@material-ui/core";
 import { Sense } from "../component";
+import WordCard from "../WordCard";
 
 //interface for component props
 export interface MergeStackProps {
@@ -36,7 +37,7 @@ class MergeStack extends React.Component<
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
-    if (this.props.draggedWord && this.props.draggedWord != this.topCard()) {
+    if (this.props.draggedWord && this.props.draggedWord !== this.topCard()) {
       this.addWord(this.props.draggedWord);
     }
   }
@@ -76,11 +77,21 @@ class MergeStack extends React.Component<
             this.dragDrop(e);
           }}
         >
-          <CardContent>{lastCard.vernacular}</CardContent>
+          <div
+            style={{
+              position: "relative",
+              float: "left",
+              top: 0,
+              left: 0,
+              backgroundColor: "#eee"
+            }}
+          >
+            {this.props.draggedWord &&
+              this.props.draggedWord.id !== lastCard.id &&
+              "Drag new duplicate word here"}
+          </div>
           <CardContent>
-            {hasSenses(lastCard)
-              ? lastCard.senses[0].glosses[0].def
-              : "{no gloss}"}
+            <WordCard word={lastCard} />
             <div
               style={{
                 float: "right",

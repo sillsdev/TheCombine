@@ -12,8 +12,8 @@ export interface ScoredWord {
 export default class DupFinder {
   constructor(
     searchLim: number = 500,
-    maxScore: number = 6,
-    maxCount: number = 20,
+    maxScore: number = 4,
+    maxCount: number = 8,
     subCost: number = 1,
     insCost: number = 1,
     delCost: number = 1,
@@ -61,45 +61,37 @@ export default class DupFinder {
       return foundWords;
     });
     return wordsFromDB;
-    /*
-    console.log(wordsFromDB);
-
-    //find the parent that returns the highest number of duplicates
-    let parent: Word[] = []; //index, count
-    for (let i = 0; i < wordsFromDB.length; i++) {
-      let iterDups: Word[] = this.getDupsFromWordList(
-        wordsFromDB[i],
-        wordsFromDB
-      );
-      if (parent.length < iterDups.length) parent = iterDups;
-    }
-
-    console.log(wordsFromDB);
-    return wordsFromDB;*/
   }
 
-  //temporary placeholder TODO
   //returns a set of words from the database
   async getWordsFromDB(): Promise<Word[]> {
     var wordCollection = backend
       .get("project/words/frontier")
       .then(async resp => await resp.data);
-    /*
-    backend.get("project/words/frontier").then(words =>
-      (words.data as Word[]).map(element => {
-        await element;
-      })
-    );*/
     return wordCollection;
   }
 
   //scores a collection and returns
   getDupsFromWordList(parent: Word, words: Word[]): Word[] {
+    //narrow down very different words
+    words = this.quickscore(parent, words);
+
+    //thorough scoring
     let scoredWords: ScoredWord[] = this.scoreWords(parent, words);
 
-    let outputCollection: Word[] = this.getAcceptedWords(scoredWords);
+    //apply thresholds
+    words = this.getAcceptedWords(scoredWords);
 
-    return outputCollection;
+    return words;
+  }
+
+  //remove words that are more than one longer or shorter than parent
+  quickscore(parent: Word, words: Word[]): Word[] {
+    words.forEach(word => {
+      if (Math.abs(parent.vernacular.length - word.vernacular.length) > 1)
+        words.filter(w => w !== word);
+    });
+    return words;
   }
 
   //removes words which do not fit the quality thresholds and returns a reordered collection of the accepted words
@@ -136,17 +128,11 @@ export default class DupFinder {
       ) {
         scoredWords.push({ word, score: 0 });
       } else {
-        //get current word score
-        let score = this.getLevenshteinDistance(
-          parent.vernacular,
-          word.vernacular
-        );
-        if (hasSenses(word) && hasSenses(parent)) {
-          score *= this.getLevenshteinDistance(
-            parent.senses[0].glosses[0].def,
-            word.senses[0].glosses[0].def
-          );
-        }
+        //initial score
+        let score = this.wordLevenshteinDistance(parent, word);
+
+        //adjust for bias
+        score += this.sizeAdjust(parent, word);
 
         //apply score threshold
         if (score < this.maxScore) scoredWords.push({ word, score });
@@ -166,7 +152,7 @@ export default class DupFinder {
     let greater = [];
 
     for (let i = 0; i < scoredwords.length; i++) {
-      if (i != pivotIndex) {
+      if (i !== pivotIndex) {
         scoredwords[i].score > pivot.score
           ? greater.push(scoredwords[i])
           : less.push(scoredwords[i]);
@@ -174,6 +160,24 @@ export default class DupFinder {
     }
 
     return [...this.quicksort(less), pivot, ...this.quicksort(greater)];
+  }
+
+  //adjust for levenshtein's bias toward short words
+  sizeAdjust(a: Word, b: Word): number {
+    return 3 - (a.vernacular.length + b.vernacular.length) / 4;
+  }
+
+  //extra level of abstraction for readability
+  wordLevenshteinDistance(a: Word, b: Word): number {
+    //get current word score
+    let score = this.getLevenshteinDistance(a.vernacular, b.vernacular);
+    if (hasSenses(a) && hasSenses(b)) {
+      score *= this.getLevenshteinDistance(
+        a.senses[0].glosses[0].def,
+        b.senses[0].glosses[0].def
+      );
+    }
+    return score;
   }
 
   //controls the scoring of a particular child by calculating the Levenshtein distance in O(n^(1 + ε)
@@ -188,19 +192,19 @@ export default class DupFinder {
       matrix[i] = [];
       for (let j = 0; j < b.length; j++) {
         //populate first column
-        if (i == 0) {
+        if (i === 0) {
           matrix[i][j] = j;
           continue;
         }
 
         //populate first row
-        if (j == 0) {
+        if (j === 0) {
           matrix[i][j] = i;
           continue;
         }
 
         let thisSubCost = 0;
-        if (a[i] != b[j]) thisSubCost = this.subsitutionCost;
+        if (a[i] !== b[j]) thisSubCost = this.subsitutionCost;
 
         matrix[i][j] = Math.min(
           matrix[i - 1][j] + this.deletionCost, //deletion

@@ -66,9 +66,9 @@ export class MergeRow extends React.Component<
           </div>
           <hr />
         </ListSubheader>
-        <Grid container direction="row-reverse">
+        <Grid container>
           {this.props.parent.senses.map(item => (
-            <Grid item>
+            <Grid item key={item.id}>
               <MergeStack updateRow={() => this.update()} sense={item} />
             </Grid>
           ))}
@@ -77,10 +77,12 @@ export class MergeRow extends React.Component<
             onDragOver={e => e.preventDefault()}
             onDrop={_ => this.drop()}
           >
-            <Card style={{ width: 200 }}>
-              <CardContent>Drag new sense</CardContent>
-              <CardContent>Here</CardContent>
-            </Card>
+            {this.props.draggedWord && (
+              <Card style={{ width: 200, backgroundColor: "#eee" }}>
+                <CardContent>Drag new sense</CardContent>
+                <CardContent>Here</CardContent>
+              </Card>
+            )}
           </Grid>
           <Grid
             item

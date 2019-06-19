@@ -1,15 +1,15 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word, hasSenses } from "../../../../types/word";
+import { Word } from "../../../../types/word";
 import {
   CardContent,
   Card,
   List,
   ListItem,
-  ListSubheader,
-  Button
+  ListSubheader
 } from "@material-ui/core";
+import WordCard from "../WordCard";
 
 //interface for component props
 export interface WordListProps {
@@ -61,24 +61,21 @@ class WordList extends React.Component<
     //visual definition
     return (
       <div
-        style={{ height: "100%" }}
+        style={{ height: "90vh", overflowY: "scroll" }}
         onDragOver={e => e.preventDefault()}
         onDrop={_ => this.drop()}
       >
-        <List subheader={<ListSubheader> Duplicates</ListSubheader>}>
+        <List subheader={<ListSubheader> Possible Duplicates</ListSubheader>}>
           {this.props.words.map(item => (
-            <ListItem>
+            <ListItem key={item.id}>
               <Card
                 style={{ flex: 1 }}
                 draggable={true}
                 onDragStart={_ => this.drag(item)}
                 onDragEnd={_ => this.dragEnd(item)}
               >
-                <CardContent>{item.vernacular}</CardContent>
                 <CardContent>
-                  {hasSenses(item)
-                    ? item.senses[0].glosses[0].def
-                    : "{no gloss}"}
+                  <WordCard word={item} />
                 </CardContent>
               </Card>
             </ListItem>

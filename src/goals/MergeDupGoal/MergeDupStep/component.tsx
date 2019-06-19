@@ -1,11 +1,15 @@
 import { Word, testWordList } from "../../../types/word";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  withLocalize,
+  Translate
+} from "react-localize-redux";
 import { Box, Grid, Button, Card, CardContent } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
 import axios from "axios";
-import DupFinder from "../DupFinder/DuplicateFinder";
+import DupFinder from "../DuplicateFinder/DuplicateFinder";
 
 export const backend = axios.create({ baseURL: "https://localhost:5001/v1" });
 
@@ -56,7 +60,6 @@ class MergeDupStep extends React.Component<
       this.props.clearListWords();
     }
     let temp = await Finder.getNextDups();
-    console.log(temp);
     temp.map(word => {
       if (this.props.addListWord) {
         this.props.addListWord(word);
@@ -73,7 +76,8 @@ class MergeDupStep extends React.Component<
     await Promise.all(
       testWordList().map(async word => {
         if (this.props.addListWord) {
-          await backend.post("project/words", word);
+          word.id = "";
+          await backend.post("projects/words", word);
         }
       })
     );
@@ -94,9 +98,9 @@ class MergeDupStep extends React.Component<
           <Grid item>
             <Button onClick={_ => this.refresh()}>Refresh</Button>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Button onClick={_ => this.fill_database()}>Fill Database</Button>
-          </Grid>
+          </Grid> */}
           {/* <Grid item>
             <Button onClick={_ => this.clear_database()}>Clear Database</Button>
           </Grid> */}
@@ -116,15 +120,21 @@ class MergeDupStep extends React.Component<
               onDrop={_ => this.dragDrop()}
             >
               <hr />
-              <Grid container direction="row-reverse">
+              <Grid container>
                 <Grid item />
-                <Card style={{ width: 200 }}>
-                  <CardContent>Drag new root word</CardContent>
-                  <CardContent> Here</CardContent>
-                </Card>
+                {this.props.draggedWord && (
+                  <Card style={{ width: 200, backgroundColor: "#eee" }}>
+                    <CardContent>Drag new root word Here</CardContent>
+                  </Card>
+                )}
               </Grid>
-              <Button style={{ float: "right" }} onClick={_ => this.next()}>
-                Next
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ float: "right", margin: 10 }}
+                onClick={_ => this.next()}
+              >
+                <Translate id="goal.mergeDups.done" />
               </Button>
             </Box>
           </Grid>

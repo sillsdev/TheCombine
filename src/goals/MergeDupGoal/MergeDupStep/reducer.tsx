@@ -35,7 +35,10 @@ export const mergeDupStepReducer = (
       return { ...state, words };
     case REMOVE_LIST_WORD:
       var words = state.words;
-      words = words.filter(word => word.id != action.payload.word.id);
+      // finds last matching by index
+      var foundIndex = words.lastIndexOf(action.payload.word);
+      // remove previously found word
+      words = words.filter((_, index) => index !== foundIndex);
       return { ...state, words };
     case CLEAR_LIST_WORDS:
       return { ...state, words: [] };
@@ -55,7 +58,7 @@ export const mergeDupStepReducer = (
       var { word: merge, parent } = action.payload;
       if (parent) {
         parentWords = parentWords.map(item => {
-          if (item.id == parent) {
+          if (item.id === parent) {
             item.senses.push({
               id: generateID(),
               dups: [merge]
@@ -73,7 +76,7 @@ export const mergeDupStepReducer = (
       var parentWords = state.parentWords;
       parentWords = parentWords.map(item => {
         item.senses = item.senses.map(item => {
-          if (item.id == parent) {
+          if (item.id === parent) {
             item.dups.push(merge);
           }
           return item;
@@ -87,7 +90,7 @@ export const mergeDupStepReducer = (
 
       parentWords = parentWords.map(parent => {
         parent.senses = parent.senses.map(sense => {
-          if (sense.id == root) {
+          if (sense.id === root) {
             sense.dups = sense.dups.filter(word => word !== merge);
           }
           return sense;
@@ -108,7 +111,7 @@ export const mergeDupStepReducer = (
               parent: root.id,
               children: sense.dups
                 .map(item => item.id)
-                .filter(id => id != root.id),
+                .filter(id => id !== root.id),
               mergeType: State.duplicate,
               time: Date.now().toString()
             };
@@ -126,7 +129,7 @@ export const mergeDupStepReducer = (
 
         var merge: Merge = {
           parent: ids[0],
-          children: ids.filter(id => id != ids[0]),
+          children: ids.filter(id => id !== ids[0]),
           mergeType: State.sense,
           time: Date.now().toString()
         };
