@@ -12,7 +12,7 @@ import {
 } from "./LoginActions";
 
 function mapStateToProps(state: StoreState): LoginStateProps {
-  console.log(state);
+  //console.log(state);
   return {
     loginAttempt: state.loginState && state.loginState.loginAttempt,
     loginFailure: state.loginState && state.loginState.loginFailure,
