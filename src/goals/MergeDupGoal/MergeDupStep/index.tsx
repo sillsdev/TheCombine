@@ -30,7 +30,7 @@ export function mapDispatchToProps(
     dropWord: () => {
       dispatch(dropWord());
     },
-    clearMerges: () => {
+    applyMerges: () => {
       dispatch(applyMerges());
     },
     addListWord: (word: Word) => {
