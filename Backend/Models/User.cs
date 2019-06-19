@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BackendFramework.ValueModels
 {
@@ -47,5 +48,78 @@ namespace BackendFramework.ValueModels
 
         [BsonElement("token")]
         public string Token { get; set; }
+
+        public User()
+        {
+            Id = "";
+            Avatar = "";
+            Name = "";
+            Email = "";
+            Phone = "";
+            OtherConnectionField = "";
+            Agreement = false;
+            Password = "";
+            Username = "";
+            UILang = "";
+            Token = "";
+            WorkedProjects = new List<string>();
+        }
+
+        public User Clone()
+        {
+            User clone = new User
+            {
+                Id = Id.Clone() as string,
+                Avatar = Avatar.Clone() as string,
+                Name = Name.Clone() as string,
+                Email = Email.Clone() as string,
+                Phone = Phone.Clone() as string,
+                OtherConnectionField = OtherConnectionField.Clone() as string,
+                Agreement = Agreement,
+                Password = Password.Clone() as string,
+                Username = Username.Clone() as string,
+                UILang = UILang.Clone() as string,
+                Token = Token.Clone() as string,
+                WorkedProjects = new List<string>()
+            };
+
+            foreach (string proj in WorkedProjects)
+            {
+                clone.WorkedProjects.Add(proj.Clone() as string);
+            }
+
+            return clone;
+        }
+
+        public bool ContentEquals(User other)
+        {
+            return
+                other.Id.Equals(Id) &&
+                other.Avatar.Equals(Avatar) &&
+                other.Name.Equals(Name) &&
+                other.Email.Equals(Email) &&
+                other.Phone.Equals(Phone) &&
+                other.OtherConnectionField.Equals(OtherConnectionField) &&
+                other.Agreement.Equals(Agreement) &&
+                other.Password.Equals(Password) &&
+                other.Username.Equals(Username) &&
+                other.UILang.Equals(UILang) &&
+                other.Token.Equals(Token) &&
+                other.WorkedProjects.Count == WorkedProjects.Count &&
+                other.WorkedProjects.All(WorkedProjects.Contains);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                User other = obj as User;
+                return other.Id.Equals(Id) && ContentEquals(other);
+            }
+        }
     }
 }
