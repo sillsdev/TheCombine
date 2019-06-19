@@ -50,7 +50,7 @@ it("Should change the visible component to the one provided", () => {
 });
 
 it("Should still display the back button after navigating forward again", () => {
-  let history: number[] = [0];
+  let history: string[] = ["0"];
 
   let visibleGoal: Goal = new CreateCharInv([]);
   let visibleComponentId = visibleGoal.id;
@@ -82,10 +82,10 @@ it("Should still display the back button after navigating forward again", () => 
 });
 
 it("Should navigate back to the previous display", () => {
-  const previousElementId = 0;
+  const previousElementId = "0";
 
   const state: NavState = {
-    VisibleComponentId: 1,
+    VisibleComponentId: "1",
     DisplayHistory: [previousElementId],
     NavBarState: {
       ShouldRenderBackButton: true
@@ -108,7 +108,7 @@ it("Should navigate back to the previous display", () => {
 });
 
 it("Should leave the visible display unchanged", () => {
-  let visibleComponentId = 0;
+  let visibleComponentId = "0";
 
   const state: NavState = {
     VisibleComponentId: visibleComponentId,
@@ -134,13 +134,13 @@ it("Should leave the visible display unchanged", () => {
 });
 
 it("Should return true when display history is non-empty", () => {
-  const displayHistory: number[] = [0];
+  const displayHistory: string[] = ["0"];
 
   expect(shouldRenderBackButton(displayHistory)).toEqual(true);
 });
 
 it("Should return false when display history is empty", () => {
-  const displayHistory: number[] = [];
+  const displayHistory: string[] = [];
 
   expect(shouldRenderBackButton(displayHistory)).toEqual(false);
 });
