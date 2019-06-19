@@ -42,6 +42,7 @@ export interface GoalSuggestionsState {
 
 export interface GoalSwitcherState {
   goalOptions: Goal[];
+  chooseGoal: (goal: Goal) => void;
 }
 
 export interface GoalSelectorState {

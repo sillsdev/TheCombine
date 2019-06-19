@@ -62,7 +62,7 @@ it("Should add a goal to history and remove it from suggestions", () => {
   expect(goalsReducer(state, addGoalAction)).toEqual(newState);
 });
 
-it("Should add a goal to history but not remove any goals from suggestions", () => {
+it("Should add a goal to history but not remove any goals from non-existent suggestions", () => {
   const goal: Goal = new CreateCharInv([]);
 
   const state: GoalsState = {
