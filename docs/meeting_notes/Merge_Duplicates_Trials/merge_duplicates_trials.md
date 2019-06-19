@@ -55,7 +55,7 @@ We found 7 improvements:
 - Add Stack Display Dialogue
 
   - Allows reordering
-  - Allows dragging out
+  - Allows removal from stack
 
 - Allow Multi-Card Selection
 
@@ -79,7 +79,7 @@ We found 7 improvements:
 
 - Work out Browser History
 
-  - The back button is behaving in a way which makes sense to the user. This should be examined.
+  - The back button is not behaving in a way which makes sense to the user. This should be examined.
 
   ## Eventually
 
