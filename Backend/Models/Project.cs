@@ -2,23 +2,10 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
-using System;
-
 using System.Linq;
-using System.Text;
-
-using System.ComponentModel;
-using System.Diagnostics;
-
-using System.Text.RegularExpressions;
-
-using System.Xml;
-using SIL.Lift.Parsing;
 
 namespace BackendFramework.ValueModels
 {
@@ -73,7 +60,7 @@ namespace BackendFramework.ValueModels
         public string UserRoles { get; set; }
 
         [BsonElement("words")]
-        public List<Project> Words { get; set; }
+        public List<Word> Words { get; set; }
 
         [BsonElement("vernacularWritingSystem")]
         public string VernacularWritingSystem { get; set; }
@@ -93,14 +80,13 @@ namespace BackendFramework.ValueModels
         [BsonElement("partsOfSpeech")]
         public List<string> PartsOfSpeech { get; set; }
 
-
         public Project()
         {
             Id = "";
             Name = "";
             UserRoles = "";
             VernacularWritingSystem = "";
-            Words = new List<Project>();
+            Words = new List<Word>();
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<string>();
             CharacterSet = new List<string>();
@@ -117,54 +103,6 @@ namespace BackendFramework.ValueModels
                 Name = Name.Clone() as string,
                 UserRoles = UserRoles.Clone() as string,
                 VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
-                Words = new List<Project>(),
-                SemanticDomains = new List<SemanticDomain>(),
-                AnalysisWritingSystems = new List<string>(),
-                CharacterSet = new List<string>(),
-                CustomFields = new List<CustomField>(),
-                WordFields = new List<string>(),
-                PartsOfSpeech = new List<string>()
-        };
-
-            foreach (Project proj in Words)
-            {
-                clone.Words.Add(proj.Clone());
-            }
-            foreach (SemanticDomain proj in SemanticDomains)
-            {
-                clone.SemanticDomains.Add(proj.Clone());
-            }
-            foreach (string proj in AnalysisWritingSystems)
-            {
-                clone.AnalysisWritingSystems.Add(proj.Clone() as string);
-            }
-            foreach (string proj in CharacterSet)
-            {
-                clone.CharacterSet.Add(proj.Clone() as string);
-            }
-            foreach (CustomField proj in CustomFields)
-            {
-                clone.CustomFields.Add(proj.Clone());
-            }
-            foreach (string proj in WordFields)
-            {
-                clone.WordFields.Add(proj.Clone() as string);
-            }
-            foreach (string proj in PartsOfSpeech)
-            {
-                clone.PartsOfSpeech.Add(proj.Clone() as string);
-            }
-
-
-            return clone;
-        }
-
-        /*
-         * Id = Id.Clone() as string,
-                Name = Name.Clone() as string,
-                UserRoles = UserRoles.Clone() as string,
-                VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
-
                 Words = new List<Word>(),
                 SemanticDomains = new List<SemanticDomain>(),
                 AnalysisWritingSystems = new List<string>(),
@@ -172,15 +110,46 @@ namespace BackendFramework.ValueModels
                 CustomFields = new List<CustomField>(),
                 WordFields = new List<string>(),
                 PartsOfSpeech = new List<string>()
-         * */
+            };
 
+            foreach (Word word in Words)
+            {
+                clone.Words.Add(word.Clone());
+            }
+            foreach (SemanticDomain sd in SemanticDomains)
+            {
+                clone.SemanticDomains.Add(sd.Clone());
+            }
+            foreach (string aws in AnalysisWritingSystems)
+            {
+                clone.AnalysisWritingSystems.Add(aws.Clone() as string);
+            }
+            foreach (string cs in CharacterSet)
+            {
+                clone.CharacterSet.Add(cs.Clone() as string);
+            }
+            foreach (CustomField cf in CustomFields)
+            {
+                clone.CustomFields.Add(cf.Clone());
+            }
+            foreach (string wf in WordFields)
+            {
+                clone.WordFields.Add(wf.Clone() as string);
+            }
+            foreach (string pos in PartsOfSpeech)
+            {
+                clone.PartsOfSpeech.Add(pos.Clone() as string);
+            }
+
+            return clone;
+        }
 
         public bool ContentEquals(Project other)
         {
             return
-                other.Name.Equals(Words) &&
-                other.UserRoles.Equals(SemanticDomains) &&
-                other.VernacularWritingSystem.Equals(AnalysisWritingSystems) &&
+                other.Name.Equals(Name) &&
+                other.UserRoles.Equals(UserRoles) &&
+                other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
                 other.Words.Count == Words.Count &&
                 other.Words.All(Words.Contains) &&

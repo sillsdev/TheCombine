@@ -9,7 +9,7 @@ namespace BackendFramework.Interfaces
 {
     public interface IWordContext
     {
-        IMongoCollection<Project> Words { get; }
-        IMongoCollection<Project> Frontier { get; }
+        IMongoCollection<Word> Words { get; }
+        IMongoCollection<Word> Frontier { get; }
     }
 }

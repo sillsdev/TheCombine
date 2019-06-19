@@ -12,7 +12,7 @@ using BackendFramework.Interfaces;
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/Project/Words/Frontier")]
+    [Route("v1/Projects/Words/Frontier")]
     public class FrontierController : Controller
     {
         private readonly IWordRepository _repo;
@@ -29,7 +29,7 @@ namespace BackendFramework.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> PostFrontier([FromBody]Project word)
+        public async Task<IActionResult> PostFrontier([FromBody]Word word)
         {
 #if DEBUG
             await _repo.AddFrontier(word);

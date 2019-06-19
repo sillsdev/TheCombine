@@ -25,7 +25,7 @@ namespace BackendFramework.Services
         }
         public async void FinishEntry(LiftEntry entry)
         {
-            Project newWord = new Project();
+            Word newWord = new Word();
 
             //add vernacular
             string LexicalForm = entry.LexicalForm.FirstValue.Value.Text;

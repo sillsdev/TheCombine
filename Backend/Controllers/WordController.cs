@@ -71,7 +71,7 @@ namespace BackendFramework.Controllers
         // POST: v1/Project/Words
         // Implements Create(), Arguments: new word from body
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Project word)
+        public async Task<IActionResult> Post([FromBody]Word word)
         {
             await _wordRepo.Create(word);
             return new OkObjectResult(word.Id);
@@ -80,7 +80,7 @@ namespace BackendFramework.Controllers
         // PUT: v1/Project/Words/{Id}
         // Implements Update(), Arguments: string id of target word, new word from body
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, [FromBody] Project word)
+        public async Task<IActionResult> Put(string Id, [FromBody] Word word)
         {
             List<string> ids = new List<string>();
             ids.Add(Id);

@@ -10,8 +10,8 @@ namespace BackendFramework.Interfaces
 {
     public interface IWordService
     {
-        Task<bool> Update(string Id, Project word);
+        Task<bool> Update(string Id, Word word);
         Task<bool> Delete(string Id);
-        Task<Project> Merge(MergeWords mergeWords);
+        Task<Word> Merge(MergeWords mergeWords);
     }
 }

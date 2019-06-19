@@ -11,15 +11,15 @@ namespace BackendFramework.Interfaces
     public interface IWordRepository
     {
         //calls for collection
-        Task<List<Project>> GetAllWords();
+        Task<List<Word>> GetAllWords();
         //called on collection, returns a list of words
-        Task<List<Project>> GetWords(List<string> Ids);
-        Task<Project> Create(Project word);
-        Task<Project> Add(Project word);
+        Task<List<Word>> GetWords(List<string> Ids);
+        Task<Word> Create(Word word);
+        Task<Word> Add(Word word);
         Task<bool> DeleteAllWords();
 
-        Task<List<Project>> GetFrontier();
-        Task<Project> AddFrontier(Project word);
+        Task<List<Word>> GetFrontier();
+        Task<Word> AddFrontier(Word word);
         Task<bool> DeleteFrontier(string id);
     }
 }

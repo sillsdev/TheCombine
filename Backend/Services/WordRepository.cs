@@ -14,14 +14,14 @@ namespace BackendFramework.Services
         {
             _wordDatabase = collectionSettings;
         }
-        public async Task<List<Project>> GetAllWords()
+        public async Task<List<Word>> GetAllWords()
         {
             return await _wordDatabase.Words.Find(_ => true).ToListAsync();
         }
 
-        public async Task<List<Project>> GetWords(List<string> Ids)
+        public async Task<List<Word>> GetWords(List<string> Ids)
         {
-            var filterDef = new FilterDefinitionBuilder<Project>();
+            var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.In(x => x.Id, Ids);
             var wordList = await _wordDatabase.Words.Find(filter).ToListAsync();
 
@@ -39,24 +39,24 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<Project> Create(Project word)
+        public async Task<Word> Create(Word word)
         {
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
         }
 
-        public async Task<Project> Add(Project word)
+        public async Task<Word> Add(Word word)
         {
             await _wordDatabase.Words.InsertOneAsync(word);
             return word;
         }
 
-        public async Task<List<Project>> GetFrontier()
+        public async Task<List<Word>> GetFrontier()
         {
             return await _wordDatabase.Frontier.Find(_ => true).ToListAsync();
         }
-        public async Task<Project> AddFrontier(Project word)
+        public async Task<Word> AddFrontier(Word word)
         {
             await _wordDatabase.Frontier.InsertOneAsync(word);
             return word;

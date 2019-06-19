@@ -22,7 +22,7 @@ namespace BackendFramework.ValueModels
         sense,
         duplicate
     }
-    public class Project
+    public class Word
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -61,7 +61,7 @@ namespace BackendFramework.ValueModels
         [BsonElement("otherField")]
         public string OtherField { get; set; }
 
-        public Project()
+        public Word()
         {
             Id = "";
             Vernacular = "";
@@ -77,9 +77,9 @@ namespace BackendFramework.ValueModels
             Senses = new List<Sense>();
         }
 
-        public Project Clone()
+        public Word Clone()
         { 
-            Project clone = new Project
+            Word clone = new Word
             {
                 Id = Id.Clone() as string,
                 Vernacular = Vernacular.Clone() as string,
@@ -113,7 +113,7 @@ namespace BackendFramework.ValueModels
             return clone;
         }
 
-        public bool ContentEquals(Project other)
+        public bool ContentEquals(Word other)
         {
             return
                 other.Vernacular.Equals(Vernacular) &&
@@ -140,7 +140,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                Project other = obj as Project;
+                Word other = obj as Word;
                 return other.Id.Equals(Id) && this.ContentEquals(other);
             }
         }
