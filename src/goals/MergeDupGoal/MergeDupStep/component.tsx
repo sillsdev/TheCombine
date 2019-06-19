@@ -86,6 +86,7 @@ class MergeDupStep extends React.Component<
     if (this.props.clearMerges) {
       this.props.clearMerges();
     }
+    this.refresh();
   }
 
   render() {
@@ -93,9 +94,6 @@ class MergeDupStep extends React.Component<
     return (
       <Box style={{ maxHeight: "100%" }}>
         <Grid container>
-          <Grid item>
-            <Button onClick={_ => this.refresh()}>Refresh</Button>
-          </Grid>
           {/* <Grid item>
             <Button onClick={_ => this.fill_database()}>Fill Database</Button>
           </Grid> */}
