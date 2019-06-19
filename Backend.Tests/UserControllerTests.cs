@@ -97,6 +97,20 @@ namespace Tests
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
 
+        [Test]
+        public void TestDeleteAllUsers()
+        {
+            _userService.Create(testUser());
+            _userService.Create(testUser());
+            _userService.Create(testUser());
+
+            Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(3));
+
+            var action = controller.Delete().Result;
+
+            Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
+        }
+
         //[Test]
         //public void TestAuthenticate()
         //{
