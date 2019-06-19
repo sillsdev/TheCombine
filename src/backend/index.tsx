@@ -2,6 +2,7 @@ import axios from "axios";
 import { Word, State, Merge } from "../types/word";
 import { User } from "../types/user";
 import { Project } from "../types/project";
+import { authHeader } from "../components/Login/AuthHeaders";
 
 const backendServer = axios.create({ baseURL: "https://localhost:5001/v1" });
 
@@ -24,7 +25,7 @@ export async function getAllWords(): Promise<Word[]> {
 export async function mergeWords(words: Word[], type: State): Promise<string> {
   let ids = words.map(word => word.id);
   let root = ids[0];
-  let children = ids.filter(word => word != root);
+  let children = ids.filter(word => word !== root);
   let merge: Merge = {
     parent: root,
     children,
@@ -57,9 +58,24 @@ export async function getFrontierWords(): Promise<Word[]> {
 }
 
 export async function addUser(user: User): Promise<User> {
-  return await backendServer.post("users", user).then(resp => {
-    return { ...user, id: resp.data };
-  });
+  return await backendServer
+    .post("users", user, { headers: authHeader() })
+    .then(resp => {
+      return { ...user, id: resp.data };
+    });
+}
+
+export async function authenticateUser(
+  username: string,
+  password: string
+): Promise<string> {
+  return await backendServer
+    .post(
+      "users/authenticate",
+      { Username: username, Password: password },
+      { headers: authHeader() }
+    )
+    .then(resp => JSON.stringify(resp.data));
 }
 
 export async function getAllUsers(): Promise<User[]> {
@@ -77,9 +93,11 @@ export async function updateUser(user: User): Promise<User> {
 }
 
 export async function createProject(project: Project): Promise<Project> {
-  return await backendServer.post("projects", project).then(resp => {
-    return { ...project, id: resp.data };
-  });
+  return await backendServer
+    .post("projects", project, { headers: authHeader() })
+    .then(resp => {
+      return { ...project, id: resp.data };
+    });
 }
 
 export async function getAllProjects(): Promise<Project[]> {
@@ -97,5 +115,7 @@ export async function updateProject(project: Project) {
 export async function uploadLift(project: Project, lift: File) {
   let data = new FormData();
   data.append("file", lift);
-  await backendServer.post("projects/words/upload", data);
+  await backendServer.post("projects/words/upload", data, {
+    headers: authHeader()
+  });
 }

@@ -45,7 +45,6 @@ var makeMongoDirectory = function () { return __awaiter(_this, void 0, void 0, f
             case 0: return [4 /*yield*/, makeDir(directory)];
             case 1:
                 path = _a.sent();
-                console.log(path);
                 return [2 /*return*/];
         }
     });

@@ -1,5 +1,4 @@
 import { Dispatch } from "react";
-import axios from "axios";
 import { authHeader } from "../../components/Login/AuthHeaders";
 
 export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
