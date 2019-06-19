@@ -57,9 +57,6 @@ export interface Goal {
   name: string;
   user: User;
 
-  display: JSX.Element;
-  goalWidget: JSX.Element;
-
   steps: JSX.Element[];
   curNdx: number;
   data: GoalData; // The data required to load/reload this exact goal

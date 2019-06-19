@@ -6,8 +6,7 @@ import thunk from "redux-thunk";
 const createMockStore = configureMockStore([thunk]);
 jest.mock("axios", () => {
   return {
-    post: jest.fn().mockResolvedValue(""),
-    get: jest.fn().mockResolvedValue("")
+    post: jest.fn(() => Promise.resolve({ data: {} }))
   };
 });
 
