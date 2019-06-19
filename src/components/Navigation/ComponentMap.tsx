@@ -18,35 +18,26 @@ import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 
-export const ComponentMap: Map<string, JSX.Element> = new Map();
+export const ComponentMap: Map<number, JSX.Element> = new Map();
 
-ComponentMap.set("goalTimeline", <GoalTimeline />);
+ComponentMap.set(0, <GoalTimeline />);
+ComponentMap.set(1, <CreateCharInvComponent goal={new CreateCharInv([])} />);
 ComponentMap.set(
-  "createCharInv",
-  <CreateCharInvComponent goal={new CreateCharInv([])} />
-);
-ComponentMap.set(
-  "createStrWordInv",
+  2,
   <CreateStrWordInvComponent goal={new CreateStrWordInv([])} />
 );
+ComponentMap.set(3, <HandleFlagsComponent goal={new HandleFlags([])} />);
 ComponentMap.set(
-  "handleFlags",
-  <HandleFlagsComponent goal={new HandleFlags([])} />
-);
-ComponentMap.set(
-  "mergeDups",
+  4,
   <MergeDupComponent goal={new MergeDups([<MergeDupStep />])} />
 );
 ComponentMap.set(
-  "spellCheckGloss",
+  5,
   <SpellCheckGlossComponent goal={new SpellCheckGloss([])} />
 );
+ComponentMap.set(6, <ValidateCharsComponent goal={new ValidateChars([])} />);
 ComponentMap.set(
-  "validateChars",
-  <ValidateCharsComponent goal={new ValidateChars([])} />
-);
-ComponentMap.set(
-  "validateStrWords",
+  7,
   <ValidateStrWordsComponent goal={new ValidateStrWords([])} />
 );
-ComponentMap.set("viewFinal", <ViewFinalComponent goal={new ViewFinal([])} />);
+ComponentMap.set(8, <ViewFinalComponent goal={new ViewFinal([])} />);

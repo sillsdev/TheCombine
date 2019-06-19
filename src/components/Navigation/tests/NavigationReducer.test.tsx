@@ -1,4 +1,3 @@
-import React from "react";
 import * as actions from "../NavigationActions";
 import {
   navReducer,
@@ -8,8 +7,6 @@ import {
 import { NavState } from "../../../types/nav";
 import { MockActionInstance } from "../../../types/action";
 import { Goal } from "../../../types/goals";
-import BaseGoalScreen from "../../../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
-import { GoalTimeline } from "../../GoalTimeline/GoalTimelineComponent";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 
@@ -42,8 +39,8 @@ it("Should change the visible component to the one provided", () => {
   };
 
   const newState: NavState = {
-    VisibleComponentName: navigateForwardAction.payload.display,
-    DisplayHistory: [defaultState.VisibleComponentName],
+    VisibleComponentId: navigateForwardAction.payload.id,
+    DisplayHistory: [defaultState.VisibleComponentId],
     NavBarState: {
       ShouldRenderBackButton: true
     }
@@ -53,13 +50,13 @@ it("Should change the visible component to the one provided", () => {
 });
 
 it("Should still display the back button after navigating forward again", () => {
-  let history = [<GoalTimeline />];
+  let history: number[] = [0];
 
   let visibleGoal: Goal = new CreateCharInv([]);
-  let visibleComponent: JSX.Element = visibleGoal.display;
+  let visibleComponentId = visibleGoal.id;
 
   const state: NavState = {
-    VisibleComponentName: visibleComponent,
+    VisibleComponentId: 0,
     DisplayHistory: history,
     NavBarState: {
       ShouldRenderBackButton: true
@@ -74,8 +71,8 @@ it("Should still display the back button after navigating forward again", () => 
   };
 
   const newState: NavState = {
-    VisibleComponentName: navigateForwardAction.payload.display,
-    DisplayHistory: [...history, visibleComponent],
+    VisibleComponentId: navigateForwardAction.payload.id,
+    DisplayHistory: [...history, visibleComponentId],
     NavBarState: {
       ShouldRenderBackButton: true
     }
@@ -85,11 +82,11 @@ it("Should still display the back button after navigating forward again", () => 
 });
 
 it("Should navigate back to the previous display", () => {
-  const previousElement: JSX.Element = <GoalTimeline />;
+  const previousElementId = 0;
 
   const state: NavState = {
-    VisibleComponentName: <BaseGoalScreen goal={new CreateCharInv([])} />,
-    DisplayHistory: [previousElement],
+    VisibleComponentId: 1,
+    DisplayHistory: [previousElementId],
     NavBarState: {
       ShouldRenderBackButton: true
     }
@@ -100,7 +97,7 @@ it("Should navigate back to the previous display", () => {
   };
 
   const newState: NavState = {
-    VisibleComponentName: previousElement,
+    VisibleComponentId: previousElementId,
     DisplayHistory: [],
     NavBarState: {
       ShouldRenderBackButton: false
@@ -111,10 +108,10 @@ it("Should navigate back to the previous display", () => {
 });
 
 it("Should leave the visible display unchanged", () => {
-  let visibleComponent = <GoalTimeline />;
+  let visibleComponentId = 0;
 
   const state: NavState = {
-    VisibleComponentName: visibleComponent,
+    VisibleComponentId: visibleComponentId,
     DisplayHistory: [],
     NavBarState: {
       ShouldRenderBackButton: false
@@ -126,7 +123,7 @@ it("Should leave the visible display unchanged", () => {
   };
 
   const newState: NavState = {
-    VisibleComponentName: visibleComponent,
+    VisibleComponentId: visibleComponentId,
     DisplayHistory: [],
     NavBarState: {
       ShouldRenderBackButton: false
@@ -137,14 +134,13 @@ it("Should leave the visible display unchanged", () => {
 });
 
 it("Should return true when display history is non-empty", () => {
-  const previousDisplay = <GoalTimeline />;
-  const displayHistory: JSX.Element[] = [previousDisplay];
+  const displayHistory: number[] = [0];
 
   expect(shouldRenderBackButton(displayHistory)).toEqual(true);
 });
 
 it("Should return false when display history is empty", () => {
-  const displayHistory: JSX.Element[] = [];
+  const displayHistory: number[] = [];
 
   expect(shouldRenderBackButton(displayHistory)).toEqual(false);
 });

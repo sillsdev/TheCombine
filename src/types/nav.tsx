@@ -1,7 +1,7 @@
 // The representation of navigation state in the redux store.
 export interface NavState {
-  VisibleComponentName: string;
-  DisplayHistory: string[];
+  VisibleComponentId: number;
+  DisplayHistory: number[];
   NavBarState: NavBarState;
 }
 

@@ -5,7 +5,7 @@ import { Goal } from "../../types/goals";
 import { Action } from "redux";
 
 export const defaultState: NavState = {
-  VisibleComponentName: "goalTimeline",
+  VisibleComponentId: 0,
   DisplayHistory: [],
   NavBarState: {
     ShouldRenderBackButton: false
@@ -25,9 +25,10 @@ export const navReducer = (
       let previousDisplay = displayHistoryCopy.pop();
 
       return Object.assign({}, state, {
-        VisibleComponentName: previousDisplay
-          ? previousDisplay
-          : state.VisibleComponentName,
+        VisibleComponentId:
+          previousDisplay != undefined
+            ? previousDisplay
+            : state.VisibleComponentId,
         DisplayHistory: displayHistoryCopy,
         NavBarState: {
           ShouldRenderBackButton: shouldRenderBackButton(displayHistoryCopy)
@@ -37,11 +38,11 @@ export const navReducer = (
       let actionWithPayload = action as ActionWithPayload<Goal>; // TODO: Seems bad. Change?
       let newDisplayHistory = [
         ...state.DisplayHistory,
-        state.VisibleComponentName
+        state.VisibleComponentId
       ];
 
       return Object.assign({}, state, {
-        VisibleComponentName: actionWithPayload.payload.name,
+        VisibleComponentId: actionWithPayload.payload.id,
         DisplayHistory: newDisplayHistory,
         NavBarState: {
           ShouldRenderBackButton: shouldRenderBackButton(newDisplayHistory)
@@ -52,6 +53,6 @@ export const navReducer = (
   }
 };
 
-export function shouldRenderBackButton(history: string[]): boolean {
+export function shouldRenderBackButton(history: number[]): boolean {
   return history.length > 0;
 }
