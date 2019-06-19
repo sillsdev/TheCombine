@@ -15,7 +15,7 @@ export class ViewFinal implements Goal {
   constructor(steps: JSX.Element[]) {
     this.id = "-1";
     this.name = "viewFinal";
-    this.user = new User("", "", 1);
+    this.user = new User("", "", "");
     this.steps = steps;
     this.curNdx = 0;
     this.data = {};

@@ -20,7 +20,7 @@ export class MergeDups implements Goal {
   constructor(steps: JSX.Element[]) {
     this.id = "-1";
     this.name = "mergeDups";
-    this.user = new User("", "", 1);
+    this.user = new User("", "", "");
     this.steps = steps;
     this.curNdx = 0;
     this.data = {};

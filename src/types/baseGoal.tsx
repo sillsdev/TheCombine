@@ -17,11 +17,7 @@ export class BaseGoal implements Goal {
   constructor() {
     this.id = "-1";
     this.name = "";
-    this.user = {
-      name: "",
-      username: "",
-      id: -1
-    };
+    this.user = new User("", "", "");
     this.steps = [];
     this.curNdx = 0;
     this.data = {};

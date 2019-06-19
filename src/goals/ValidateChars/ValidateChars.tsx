@@ -15,7 +15,7 @@ export class ValidateChars implements Goal {
   constructor(steps: JSX.Element[]) {
     this.id = "-1";
     this.name = "validateChars";
-    this.user = new User("", "", 1);
+    this.user = new User("", "", "");
     this.steps = steps;
     this.curNdx = 0;
     this.data = {};
