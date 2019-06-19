@@ -25,7 +25,7 @@ export class MergeDups implements Goal {
   constructor(steps: JSX.Element[]) {
     this.id = 0;
     this.name = "mergeDups";
-    this.user = new User("", "", 1);
+    this.user = new User("", "", "");
     this.display = <BaseGoalScreen goal={this} />;
     this.goalWidget = <BaseGoalSelect goal={this} />;
     this.steps = steps;

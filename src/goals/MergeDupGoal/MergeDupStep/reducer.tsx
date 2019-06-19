@@ -10,8 +10,8 @@ import {
   CLEAR_LIST_WORDS
 } from "./actions";
 import { MergeDupStepProps } from "./component";
-import { State, Merge } from "../../../types/word";
-import { backend } from "./component";
+import { State, Word } from "../../../types/word";
+import * as backend from "../../../backend";
 
 export const defaultState: MergeDupStepProps = {
   parentWords: [],
@@ -103,40 +103,22 @@ export const mergeDupStepReducer = (
       return { ...state, parentWords };
     case APPLY_MERGES:
       state.parentWords.forEach(async parent => {
-        var ids: string[] = [];
+        var senses: Word[] = [];
         await Promise.all(
           parent.senses.map(async sense => {
-            var root = sense.dups[0];
-            var merge: Merge = {
-              parent: root.id,
-              children: sense.dups
-                .map(item => item.id)
-                .filter(id => id !== root.id),
-              mergeType: State.duplicate,
-              time: Date.now().toString()
-            };
-            if (merge.children.length > 0) {
-              ids.push(
-                await backend
-                  .put("projects/words", merge)
-                  .then(resp => resp.data)
-              );
+            if (sense.dups.length > 1) {
+              senses.push({
+                ...sense.dups[0],
+                id: await backend.mergeWords(sense.dups, State.duplicate)
+              });
             } else {
-              ids.push(root.id);
+              // Should never be 0
+              senses.push(sense.dups[0]);
             }
           })
         );
-
-        var merge: Merge = {
-          parent: ids[0],
-          children: ids.filter(id => id !== ids[0]),
-          mergeType: State.sense,
-          time: Date.now().toString()
-        };
-        if (merge.children.length > 0) {
-          backend.put("projects/words", merge).catch(err => {
-            console.log(err);
-          });
+        if (senses.length > 0) {
+          backend.mergeWords(senses, State.sense);
         }
       });
       return {
