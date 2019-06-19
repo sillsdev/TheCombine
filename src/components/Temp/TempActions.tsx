@@ -28,7 +28,7 @@ export function asyncPressButton() {
         Timestamp: "now"
       })
       .then(function(response) {
-        console.log(response);
+        //console.log(response);
       });
   };
 }

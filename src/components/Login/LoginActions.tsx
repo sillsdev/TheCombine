@@ -54,13 +54,11 @@ export function asyncLogin(user: string, password: string) {
     await backend
       .authenticateUser(user, password)
       .then((res: any) => {
-        console.log(res);
         localStorage.setItem("user", res); //Store tokens
         dispatch(loginSuccess(user));
         history.push("/");
       })
       .catch(err => {
-        console.log(err);
         dispatch(loginFailure(user));
       });
   };
@@ -107,7 +105,7 @@ export function asyncRegister(user: string, password: string) {
         dispatch(asyncLogin(user, password));
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
         dispatch(registerFailure(user));
       });
   };

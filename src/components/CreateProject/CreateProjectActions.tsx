@@ -50,7 +50,7 @@ export function asyncCreateProject(name: string, languageData?: File) {
         })
         .catch(err => {
           alert("Failed to create project");
-          console.log(err);
+          //console.log(err);
         });
     } else {
       dispatch(createProject(name));

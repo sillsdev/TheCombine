@@ -25,7 +25,7 @@ export async function getAllWords(): Promise<Word[]> {
 export async function mergeWords(words: Word[], type: State): Promise<string> {
   let ids = words.map(word => word.id);
   let root = ids[0];
-  let children = ids.filter(word => word != root);
+  let children = ids.filter(word => word !== root);
   let merge: Merge = {
     parent: root,
     children,
@@ -73,7 +73,7 @@ export async function authenticateUser(
     .post(
       "users/authenticate",
       { Username: username, Password: password },
-      { headers: authHeader }
+      { headers: authHeader() }
     )
     .then(resp => JSON.stringify(resp.data));
 }

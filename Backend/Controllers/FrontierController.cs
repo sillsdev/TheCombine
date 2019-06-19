@@ -12,7 +12,7 @@ using BackendFramework.Interfaces;
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/Project/Words/Frontier")]
+    [Route("v1/Projects/Words/Frontier")]
     public class FrontierController : Controller
     {
         private readonly IWordRepository _repo;
@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
             await _repo.AddFrontier(word);
             return new OkObjectResult(word.Id);
 #else
-                return new UnauthorizedResult();
+            return new UnauthorizedResult();
 #endif
         }
 
@@ -49,7 +49,7 @@ namespace BackendFramework.Controllers
             }
             return new NotFoundResult();
 #else
-                return new UnauthorizedResult();
+            return new UnauthorizedResult();
 #endif
         }
 
