@@ -56,7 +56,7 @@ it("Should still display the back button after navigating forward again", () => 
   let visibleComponentId = visibleGoal.id;
 
   const state: NavState = {
-    VisibleComponentId: 0,
+    VisibleComponentId: visibleComponentId,
     DisplayHistory: history,
     NavBarState: {
       ShouldRenderBackButton: true

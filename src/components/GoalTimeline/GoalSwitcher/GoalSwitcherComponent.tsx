@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Goal } from "../../../types/goals";
-import GoalSelectorDropdown from "./GoalSelectorDropdown";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import GoalSelectorScroll from "./GoalSelectorScroll";
 

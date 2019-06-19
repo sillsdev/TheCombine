@@ -19,8 +19,9 @@ export type ChooseGoalAction = ChooseGoal;
 
 export function asyncChooseGoal(goal: Goal) {
   return async (dispatch: Dispatch<ChooseGoal>) => {
-    dispatch(timelineActions.addGoalToHistory(goal));
+    goal.id = Math.floor(Math.random() * 100000 + 1);
     dispatch(navActions.navigateForward(goal));
+    dispatch(timelineActions.addGoalToHistory(goal));
   };
 }
 

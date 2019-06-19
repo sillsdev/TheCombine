@@ -3,22 +3,28 @@ import Navigation, { NavComponentProps } from "./NavigationComponent";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../types/index";
-import { ComponentMap } from "./ComponentMap";
 import { GoalTimeline } from "../GoalTimeline/GoalTimelineComponent";
+import { Goal } from "../../types/goals";
+import BaseGoalScreen from "../../goals/DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 
 export function mapStateToProps(state: StoreState): NavComponentProps {
   return {
-    VisibleComponent: getComponentById(state.navState.VisibleComponentId)
+    VisibleComponent: getComponentById(state, state.navState.VisibleComponentId)
   };
 }
 
-// Get a component from the hash table of active components
-// If a component is not found, return a default component (like a 404 page)
-// For now, return GoalTimeline
-export function getComponentById(id: number): JSX.Element {
-  let component = ComponentMap.get(id);
-  if (component) {
-    return component;
+// Find the goal referenced by navState.VisibleComponentId and create a
+// React component to contain it
+export function getComponentById(
+  state: StoreState,
+  componentId: number
+): JSX.Element {
+  let allGoals: Goal[] = state.goalsState.goalOptions;
+
+  for (var goal of allGoals) {
+    if (goal.id === componentId) {
+      return <BaseGoalScreen goal={goal} />;
+    }
   }
   return <GoalTimeline />;
 }

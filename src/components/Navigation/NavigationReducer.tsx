@@ -24,11 +24,12 @@ export const navReducer = (
       let displayHistoryCopy = [...state.DisplayHistory];
       let previousDisplay = displayHistoryCopy.pop();
 
+      let visibleComponentId = !!(previousDisplay != undefined)
+        ? previousDisplay
+        : state.VisibleComponentId;
+
       return Object.assign({}, state, {
-        VisibleComponentId:
-          previousDisplay != undefined
-            ? previousDisplay
-            : state.VisibleComponentId,
+        VisibleComponentId: visibleComponentId,
         DisplayHistory: displayHistoryCopy,
         NavBarState: {
           ShouldRenderBackButton: shouldRenderBackButton(displayHistoryCopy)

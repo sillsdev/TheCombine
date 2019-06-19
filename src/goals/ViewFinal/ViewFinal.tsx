@@ -18,7 +18,7 @@ export class ViewFinal implements Goal {
   result: GoalOption;
 
   constructor(steps: JSX.Element[]) {
-    this.id = 0;
+    this.id = -1;
     this.name = "viewFinal";
     this.user = new User("", "", "");
     this.display = <BaseGoalScreen goal={this} />;
