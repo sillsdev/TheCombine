@@ -29,7 +29,7 @@ namespace BackendFramework.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> PostFrontier([FromBody]Word word)
+        public async Task<IActionResult> PostFrontier([FromBody]Project word)
         {
 #if DEBUG
             await _repo.AddFrontier(word);

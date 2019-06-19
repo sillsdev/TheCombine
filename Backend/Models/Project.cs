@@ -26,6 +26,15 @@ namespace BackendFramework.ValueModels
     {
         public string Name { get; set; }
         public string Type { get; set; }
+
+        public CustomField Clone()
+        {
+            return new CustomField
+            {
+                Name = Name.Clone() as string,
+                Type = Type.Clone() as string
+            };
+        }
     }
 
     public class ProjectCreation
@@ -64,7 +73,7 @@ namespace BackendFramework.ValueModels
         public string UserRoles { get; set; }
 
         [BsonElement("words")]
-        public List<Word> Words { get; set; }
+        public List<Project> Words { get; set; }
 
         [BsonElement("vernacularWritingSystem")]
         public string VernacularWritingSystem { get; set; }
@@ -83,5 +92,129 @@ namespace BackendFramework.ValueModels
 
         [BsonElement("partsOfSpeech")]
         public List<string> PartsOfSpeech { get; set; }
+
+
+        public Project()
+        {
+            Id = "";
+            Name = "";
+            UserRoles = "";
+            VernacularWritingSystem = "";
+            Words = new List<Project>();
+            SemanticDomains = new List<SemanticDomain>();
+            AnalysisWritingSystems = new List<string>();
+            CharacterSet = new List<string>();
+            CustomFields = new List<CustomField>();
+            WordFields = new List<string>();
+            PartsOfSpeech = new List<string>();
+        }
+
+        public Project Clone()
+        {
+            Project clone = new Project
+            {
+                Id = Id.Clone() as string,
+                Name = Name.Clone() as string,
+                UserRoles = UserRoles.Clone() as string,
+                VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
+                Words = new List<Project>(),
+                SemanticDomains = new List<SemanticDomain>(),
+                AnalysisWritingSystems = new List<string>(),
+                CharacterSet = new List<string>(),
+                CustomFields = new List<CustomField>(),
+                WordFields = new List<string>(),
+                PartsOfSpeech = new List<string>()
+        };
+
+            foreach (Project proj in Words)
+            {
+                clone.Words.Add(proj.Clone());
+            }
+            foreach (SemanticDomain proj in SemanticDomains)
+            {
+                clone.SemanticDomains.Add(proj.Clone());
+            }
+            foreach (string proj in AnalysisWritingSystems)
+            {
+                clone.AnalysisWritingSystems.Add(proj.Clone() as string);
+            }
+            foreach (string proj in CharacterSet)
+            {
+                clone.CharacterSet.Add(proj.Clone() as string);
+            }
+            foreach (CustomField proj in CustomFields)
+            {
+                clone.CustomFields.Add(proj.Clone());
+            }
+            foreach (string proj in WordFields)
+            {
+                clone.WordFields.Add(proj.Clone() as string);
+            }
+            foreach (string proj in PartsOfSpeech)
+            {
+                clone.PartsOfSpeech.Add(proj.Clone() as string);
+            }
+
+
+            return clone;
+        }
+
+        /*
+         * Id = Id.Clone() as string,
+                Name = Name.Clone() as string,
+                UserRoles = UserRoles.Clone() as string,
+                VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
+
+                Words = new List<Word>(),
+                SemanticDomains = new List<SemanticDomain>(),
+                AnalysisWritingSystems = new List<string>(),
+                CharacterSet = new List<string>(),
+                CustomFields = new List<CustomField>(),
+                WordFields = new List<string>(),
+                PartsOfSpeech = new List<string>()
+         * */
+
+
+        public bool ContentEquals(Project other)
+        {
+            return
+                other.Name.Equals(Words) &&
+                other.UserRoles.Equals(SemanticDomains) &&
+                other.VernacularWritingSystem.Equals(AnalysisWritingSystems) &&
+
+                other.Words.Count == Words.Count &&
+                other.Words.All(Words.Contains) &&
+
+                other.SemanticDomains.Count == SemanticDomains.Count &&
+                other.SemanticDomains.All(SemanticDomains.Contains) &&
+
+                other.AnalysisWritingSystems.Count == AnalysisWritingSystems.Count &&
+                other.AnalysisWritingSystems.All(AnalysisWritingSystems.Contains) &&
+
+                other.CharacterSet.Count == CharacterSet.Count &&
+                other.CharacterSet.All(CharacterSet.Contains) &&
+
+                other.CustomFields.Count == CustomFields.Count &&
+                other.CustomFields.All(CustomFields.Contains) &&
+
+                other.WordFields.Count == WordFields.Count &&
+                other.WordFields.All(WordFields.Contains) &&
+
+                other.PartsOfSpeech.Count == PartsOfSpeech.Count &&
+                other.PartsOfSpeech.All(PartsOfSpeech.Contains);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Project other = obj as Project;
+                return other.Id.Equals(Id) && ContentEquals(other);
+            }
+        }
     }
 }

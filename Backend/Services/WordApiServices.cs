@@ -35,7 +35,7 @@ namespace BackendFramework.Services
             {
                 List<string> ids = new List<string>();
                 ids.Add(Id);
-                Word wordToDelete = _repo.GetWords(ids).Result.First();
+                Project wordToDelete = _repo.GetWords(ids).Result.First();
                 wordToDelete.Id = null;
                 wordToDelete.Accessability = (int)state.deleted;
                 wordToDelete.History = ids;
@@ -44,7 +44,7 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        public async Task<bool> Update(string Id, Word word)
+        public async Task<bool> Update(string Id, Project word)
         {
             var wordIsInFrontier = _repo.DeleteFrontier(Id).Result;
             if (wordIsInFrontier)
@@ -57,13 +57,13 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        public async Task<Word> Merge(MergeWords mergeWords)
+        public async Task<Project> Merge(MergeWords mergeWords)
         {
             List<string> parentHistory = new List<string>();
             foreach (string childId in mergeWords.children)
             {
                 await _repo.DeleteFrontier(childId);
-                Word childWord = _repo.GetWords(new List<string>() { childId }).Result.First();
+                Project childWord = _repo.GetWords(new List<string>() { childId }).Result.First();
                 childWord.History = new List<string> { childId };
                 childWord.Accessability = (int)mergeWords.mergeType; // 2: sense or 3: duplicate
                 childWord.Id = null;
@@ -73,7 +73,7 @@ namespace BackendFramework.Services
             string parentId = mergeWords.parent;
             await _repo.DeleteFrontier(parentId);
             parentHistory.Add(parentId);
-            Word parentWord = _repo.GetWords(new List<string>() { parentId }).Result.First();
+            Project parentWord = _repo.GetWords(new List<string>() { parentId }).Result.First();
             parentWord.History = parentHistory;
             parentWord.Accessability = (int)state.active;
             parentWord.Id = null;
