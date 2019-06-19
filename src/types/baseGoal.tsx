@@ -23,11 +23,7 @@ export class BaseGoal implements Goal {
   constructor() {
     this.id = -1;
     this.name = "";
-    this.user = {
-      name: "",
-      username: "",
-      id: -1
-    };
+    this.user = new User("", "", "");
     this.display = <BaseGoalScreen goal={this} />;
     this.goalWidget = <BaseGoalSelect goal={this} />;
     this.steps = [];
