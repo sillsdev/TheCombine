@@ -37,7 +37,7 @@ class MergeStack extends React.Component<
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
-    if (this.props.draggedWord && this.props.draggedWord != this.topCard()) {
+    if (this.props.draggedWord && this.props.draggedWord !== this.topCard()) {
       this.addWord(this.props.draggedWord);
     }
   }
@@ -87,7 +87,7 @@ class MergeStack extends React.Component<
             }}
           >
             {this.props.draggedWord &&
-              this.props.draggedWord.id != lastCard.id &&
+              this.props.draggedWord.id !== lastCard.id &&
               "Drag new duplicate word here"}
           </div>
           <CardContent>

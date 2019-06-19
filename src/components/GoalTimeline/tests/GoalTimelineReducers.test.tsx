@@ -108,7 +108,7 @@ it("Should remove next goal from suggestions", () => {
 
   const removedGoal: Goal = new HandleFlags([]);
   const newGoalSuggestions = state.suggestionsState.suggestions.makeCopy();
-  newGoalSuggestions.stack.filter(goal => goal1.name != goal.name);
+  newGoalSuggestions.stack.filter(goal => goal1.name !== goal.name);
   expect(
     removeGoalFromSuggestions(state.suggestionsState.suggestions, removedGoal)
   ).toEqual(newGoalSuggestions);
@@ -134,7 +134,7 @@ it("Should not remove nonexistent goal from suggestions", () => {
 
   const removedGoal: Goal = new SpellCheckGloss([]);
   const newGoalSuggestions = state.suggestionsState.suggestions.makeCopy();
-  newGoalSuggestions.stack.filter(goal => goal1.name != goal.name);
+  newGoalSuggestions.stack.filter(goal => goal1.name !== goal.name);
   expect(
     removeGoalFromSuggestions(state.suggestionsState.suggestions, removedGoal)
   ).toEqual(newGoalSuggestions);
@@ -160,7 +160,7 @@ it("Should not remove last goal from suggestions", () => {
 
   const removedGoal: Goal = new MergeDups([]);
   const newGoalSuggestions = state.suggestionsState.suggestions.makeCopy();
-  newGoalSuggestions.stack.filter(goal => goal1.name != goal.name);
+  newGoalSuggestions.stack.filter(goal => goal1.name !== goal.name);
   expect(
     removeGoalFromSuggestions(state.suggestionsState.suggestions, removedGoal)
   ).toEqual(newGoalSuggestions);
