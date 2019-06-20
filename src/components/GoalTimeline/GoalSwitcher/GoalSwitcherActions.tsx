@@ -7,9 +7,6 @@ export type ChooseGoal = timelineActions.AddGoal | navActions.NavigationAction;
 
 export function chooseGoal(goal: Goal) {
   return (dispatch: Dispatch<ChooseGoal>) => {
-    console.error(
-      "Goal ids should be assigned through a call to the database."
-    );
     goal.id = Math.floor(Math.random() * 100000 + 1).toString();
     dispatch(navActions.navigateForward(goal));
     dispatch(timelineActions.addGoalToHistory(goal));

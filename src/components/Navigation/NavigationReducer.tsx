@@ -47,13 +47,13 @@ export const navReducer = (
         state.VisibleComponentId
       ];
 
-      return Object.assign({}, state, {
+      return {
         VisibleComponentId: payload.id,
         DisplayHistory: newDisplayHistory,
         NavBarState: {
           ShouldRenderBackButton: shouldRenderBackButton(newDisplayHistory)
         }
-      });
+      };
     default:
       return state;
   }
