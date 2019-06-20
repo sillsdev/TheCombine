@@ -4,13 +4,21 @@ import GoalSelectorScroll from "../";
 import { Goal, GoalSelectorState } from "../../../../../types/goals";
 import { BaseGoal } from "../../../../../types/baseGoal";
 import { User } from "../../../../../types/user";
-import { GoalSelectorScroll as GSScroll } from "../GoalSelectorScroll";
-import { SELECT_ACTION } from "../GoalSelectorAction";
+import {
+  GoalSelectorScroll as GSScroll,
+  WIDTH,
+  WRAP_AROUND_THRESHHOLD
+} from "../GoalSelectorScroll";
+import {
+  GoalScrollAction,
+  SELECT_ACTION,
+  MOUSE_ACTION
+} from "../GoalSelectorAction";
 
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-import { act } from "react-dom/test-utils";
+import { act, Simulate } from "react-dom/test-utils";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer
@@ -30,15 +38,40 @@ const store = createMockStore(storeState);
 // Mock the DOM
 jest.autoMockOn();
 
+// Bypass getScroll relying on refs, which fail in jest testing
+var scroller: any = {
+  scrollLeft: WRAP_AROUND_THRESHHOLD
+};
+GSScroll.prototype.getScroll = jest.fn(() => {
+  return scroller as HTMLElement;
+});
+
+window = {
+  ...window,
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn()
+};
+
 // Variables used in testing: contain various parts of the UI
 var scrollMaster: ReactTestRenderer;
 var scrollHandle: ReactTestInstance;
+
+// Action constants
+const select: GoalScrollAction = {
+  type: SELECT_ACTION,
+  payload: 0
+};
+const mouse: GoalScrollAction = {
+  type: MOUSE_ACTION,
+  payload: 0
+};
 
 beforeEach(() => {
   // Reset store actions
   store.clearActions();
 
   // Here, use the act block to be able to render our GoalState into the DOM
+  // Re-created each time to prevent actions from previous runs from affecting future runs
   act(() => {
     scrollMaster = renderer.create(
       <Provider store={store}>
@@ -47,6 +80,8 @@ beforeEach(() => {
     );
     scrollHandle = scrollMaster.root.findByType(GSScroll);
   });
+
+  scroller.scrollLeft = WRAP_AROUND_THRESHHOLD;
 });
 
 // Actual tests
@@ -56,36 +91,111 @@ describe("Testing the goal selector scroll ui", () => {
     snapTest("default view");
   });
 
-  it("Dispatches ndx to store on left click", () => {
-    try {
-      // This relies on the dispatch to the store getting called before the call to
-      // getScroll(), which fails in the testing environment
-      // Yes, it's jank, but we couldn't find a better way.
-      scrollHandle.instance.scrollLeft();
-    } catch (e) {
-      expect(store.getActions()).toEqual([
-        {
-          type: SELECT_ACTION,
-          payload: 2
-        }
-      ]);
-    }
+  it("Dispatches ndx to store on navigate left", () => {
+    let action: GoalScrollAction = {
+      type: SELECT_ACTION,
+      payload: 2
+    };
+    scrollHandle.instance.scrollLeft();
+    expect(store.getActions()).toEqual([action]);
   });
 
-  it("Dispatches ndx to store on right click", () => {
-    try {
-      // Same as scrollLeft
-      scrollHandle.instance.scrollRight();
-    } catch (e) {
-      expect(store.getActions()).toEqual([
-        {
-          type: SELECT_ACTION,
-          payload: 1
-        }
-      ]);
-    }
+  it("Dispatches a ScrollSelectorAct to store on navigate right", () => {
+    scrollHandle.instance.scrollRight();
+    expect(store.getActions()).toEqual([
+      {
+        type: SELECT_ACTION,
+        payload: 1
+      }
+    ]);
+  });
+
+  it("Dispatches a MouseMoveAct to the store on scrollStart", () => {
+    scrollHandle.instance.scrollStart({
+      screenX: mouse.payload
+    });
+    expect(store.getActions()).toEqual([mouse]);
+
+    // Remove extra listeners
+    scrollHandle.instance.scrollEnd({
+      screenX: 0
+    });
+  });
+
+  it("Dispatches a MouseMoveAct on scrollDur-short stroke", () => {
+    let shortStroke: GoalScrollAction = {
+      type: MOUSE_ACTION,
+      payload: -1
+    };
+    scrollHandle.instance.scrollDur({
+      screenX: shortStroke.payload
+    });
+    expect(store.getActions()).toEqual([shortStroke]);
+  });
+
+  it("Dispatches a MouseMoveAct and a ScrollSelectorAct on scrollDur-long stroke", () => {
+    let newMouse: GoalScrollAction = {
+      type: MOUSE_ACTION,
+      payload: -WIDTH
+    };
+    let newSelect: GoalScrollAction = {
+      type: SELECT_ACTION,
+      payload: 1
+    };
+    scrollHandle.instance.scrollDur({
+      screenX: newMouse.payload
+    });
+    expect(store.getActions()).toEqual([newMouse, newSelect]);
+  });
+
+  it("Dispatches a MouseMoveAct 1 out of every 2 times scrollDur is called", () => {
+    let shortStroke: GoalScrollAction = {
+      type: MOUSE_ACTION,
+      payload: -1
+    };
+    for (let i: number = 0; i < 4; i++)
+      scrollHandle.instance.scrollDur({
+        screenX: shortStroke.payload
+      });
+    expect(store.getActions()).toEqual([shortStroke, shortStroke]);
+  });
+
+  it("Dispatches a ScrollSelectorAct on scrollEnd", () => {
+    scrollHandle.instance.scrollEnd({
+      screenX: mouse.payload
+    });
+    expect(store.getActions()).toEqual([select]);
+  });
+
+  it("Calls handleChange on click to the active card", () => {
+    scrollHandle.instance.cardHandleClick(
+      {
+        type: "click"
+      },
+      gsState.selectedIndex
+    );
+    expect(scrollHandle.instance.props.handleChange).toHaveBeenCalledWith(
+      gsState.goalOptions[gsState.selectedIndex].name
+    );
+  });
+
+  it("Swaps index on click to a non-active card", () => {
+    scrollHandle.instance.cardHandleClick(
+      {
+        type: "click"
+      },
+      gsState.selectedIndex + 1
+    );
+    expect(store.getActions()).toEqual([
+      {
+        type: SELECT_ACTION,
+        payload: gsState.selectedIndex + 1
+      }
+    ]);
   });
 });
+
+// Utility functions ----------------------------------------------------------------
 
 // Perform a snapshot test
 function snapTest(name: string) {
@@ -94,11 +204,7 @@ function snapTest(name: string) {
 
 // Create a usable temporary state, as opposed to a dummy state
 function createTempState(): GoalSelectorState {
-  let tempUser: User = {
-    name: "Robbie",
-    username: "NumbrOne",
-    id: 1
-  };
+  let tempUser: User = new User("Robbie", "NumberOne", "password");
   let goals: Goal[] = [];
 
   for (let i: number = 0; i < labels.length; i++)
