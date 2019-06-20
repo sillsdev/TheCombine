@@ -6,8 +6,10 @@ import thunk from "redux-thunk";
 const createMockStore = configureMockStore([thunk]);
 jest.mock("axios", () => {
   return {
-    post: jest.fn().mockResolvedValue(""),
-    get: jest.fn().mockResolvedValue("")
+    post: jest.fn().mockResolvedValue({ data: {} }),
+    create: jest.fn(() => {
+      return jest.fn().mockReturnThis();
+    })
   };
 });
 
@@ -56,7 +58,7 @@ describe("LoginAction Tests", () => {
 
     mockDispatch
       .then(() => {
-        expect(mockStore.getActions()).toEqual([register]);
+        expect(mockStore.getActions()).toEqual([register, action.asyncLogin]);
       })
       .catch(() => fail());
   });

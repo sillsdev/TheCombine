@@ -58,7 +58,7 @@ describe("dupFinder Tests", () => {
         otherField: "",
         plural: ""
       },
-      score: 2
+      score: 3
     },
     {
       word: {
@@ -128,7 +128,7 @@ describe("dupFinder Tests", () => {
         otherField: "",
         plural: ""
       },
-      score: 2
+      score: 3
     }
   ];
   let acceptedYank: Word[] = [

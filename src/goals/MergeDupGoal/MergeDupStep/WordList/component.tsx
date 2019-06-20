@@ -16,8 +16,8 @@ export interface WordListProps {
   words: Word[];
   dragWord?: (word: Word) => void;
   dropWord?: () => void;
-  addListWord?: (word: Word) => void;
-  removeListWord?: (word: Word) => void;
+  addListWord?: (word: Word[]) => void;
+  removeListWord?: (word: Word[]) => void;
   draggedWord?: Word;
 }
 
@@ -28,10 +28,6 @@ class WordList extends React.Component<
   WordListProps & LocalizeContextProps,
   WordListState
 > {
-  constructor(props: WordListProps & LocalizeContextProps) {
-    super(props);
-  }
-
   drag(word: Word) {
     if (this.props.dragWord) {
       this.props.dragWord(word);
@@ -42,7 +38,7 @@ class WordList extends React.Component<
     if (this.props.draggedWord && this.props.dropWord) {
       this.props.dropWord();
     } else if (this.props.removeListWord) {
-      this.props.removeListWord(word);
+      this.props.removeListWord([word]);
     }
   }
 
@@ -52,7 +48,7 @@ class WordList extends React.Component<
       this.props.dropWord &&
       this.props.addListWord
     ) {
-      this.props.addListWord(this.props.draggedWord);
+      this.props.addListWord([this.props.draggedWord]);
       this.props.dropWord();
     }
   }

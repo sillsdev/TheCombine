@@ -1,8 +1,10 @@
 import { CREATE_PROJECT, CreateProjectAction } from "./CreateProjectActions";
+import { Project } from "../../types/project";
 
 export interface CreateProjectState {
   name: string;
   success: boolean;
+  project?: Project;
 }
 
 export const defaultState: CreateProjectState = {
@@ -17,7 +19,6 @@ export const createProjectReducer = (
   if (!state) return defaultState;
   switch (action.type) {
     case CREATE_PROJECT:
-      //console.log("CREATE PROJECT METHOD");
       return { name: action.payload.name, success: true };
     default:
       return state;

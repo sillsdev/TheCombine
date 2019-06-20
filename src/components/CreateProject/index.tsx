@@ -9,6 +9,12 @@ import {
   asyncCreateProject
 } from "./CreateProjectActions";
 
+function mapStateToProps(state: StoreState) {
+  return {
+    project: state.currentProject
+  };
+}
+
 export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CreateProjectAction>
 ) {
@@ -23,6 +29,6 @@ export function mapDispatchToProps(
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(CreateProject);

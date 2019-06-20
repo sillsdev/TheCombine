@@ -1,5 +1,10 @@
 import { Dispatch } from "react";
-import { authHeader } from "../../components/Login/AuthHeaders";
+import { StoreState } from "../../types";
+import {
+  setCurrentProject,
+  ProjectAction
+} from "../../components/Project/ProjectActions";
+import { updateProject } from "../../backend";
 
 export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
 export type SET_CHARACTER_INVENTORY = typeof SET_CHARACTER_INVENTORY;
@@ -17,7 +22,19 @@ export interface CharacterInventoryAction {
 
 // sends the character inventory to the server
 export function uploadInventory() {
-  alert("Uploading inventory");
+  return async (
+    dispatch: Dispatch<CharacterInventoryAction | ProjectAction>,
+    getState: () => StoreState
+  ) => {
+    let project = getState().currentProject;
+    let inv = getState().characterInventoryState.inventory;
+    project.characterSet = inv;
+
+    updateProject(project);
+
+    dispatch(setCurrentProject(project));
+    //alert("Uploading inventory");
+  };
 }
 
 export function setInventory(inventory: string[]): CharacterInventoryAction {

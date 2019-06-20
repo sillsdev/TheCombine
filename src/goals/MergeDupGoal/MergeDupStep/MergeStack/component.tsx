@@ -24,10 +24,6 @@ class MergeStack extends React.Component<
   MergeStackProps & LocalizeContextProps,
   MergeStackState
 > {
-  constructor(props: MergeStackProps & LocalizeContextProps) {
-    super(props);
-  }
-
   addWord(word: Word) {
     if (this.props.addDuplicate && this.props.dropWord) {
       this.props.addDuplicate(word, this.props.sense.id);
