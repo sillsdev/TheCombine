@@ -8,7 +8,8 @@ import { Word } from "../../../types/word";
 import {
   addListWord,
   clearListWords,
-  WordListAction
+  WordListAction,
+  refreshListWords
 } from "./WordList/actions";
 
 export function mapStateToProps(state: StoreState) {
@@ -41,6 +42,9 @@ export function mapDispatchToProps(
     },
     clearListWords: () => {
       dispatch(clearListWords());
+    },
+    refreshListWords: () => {
+      dispatch(refreshListWords());
     }
   };
 }
