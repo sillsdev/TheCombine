@@ -8,8 +8,7 @@ import { ThunkDispatch } from "redux-thunk";
 
 export function mapStateToProps(state: StoreState): GoalSwitcherState {
   return {
-    goalOptions: state.goalsState.goalOptions,
-    chooseGoal: (goal: Goal) => chooseGoal(goal)
+    goalOptions: state.goalsState.goalOptions
   };
 }
 
