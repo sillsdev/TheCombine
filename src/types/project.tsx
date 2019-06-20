@@ -24,7 +24,7 @@ export interface Project {
   customFields: CustomField[];
 }
 
-export let defaultProject = {
+export const defaultProject = {
   id: "",
   name: "",
   semanticDomains: [],
