@@ -53,6 +53,7 @@ class MergeDupStep extends React.Component<
     }
   }
 
+    temp[0].map(word => {
   async clear_database() {
     // await backend.delete("projects/words");
     if (this.props.refreshListWords) {
@@ -82,14 +83,6 @@ class MergeDupStep extends React.Component<
     //visual definition
     return (
       <Box style={{ maxHeight: "100%" }}>
-        <Grid container>
-          {/* <Grid item>
-            <Button onClick={_ => this.fill_database()}>Fill Database</Button>
-          </Grid> */}
-          {/* <Grid item>
-            <Button onClick={_ => this.clear_database()}>Clear Database</Button>
-          </Grid> */}
-        </Grid>
         <Grid container>
           <Grid item>
             <WordList />

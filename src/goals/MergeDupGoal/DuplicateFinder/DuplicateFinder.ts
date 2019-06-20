@@ -1,5 +1,3 @@
-//Sam Delaney, 6/12/19
-
 import { Word, hasSenses } from "../../../types/word";
 import * as backend from "../../../backend";
 
@@ -49,13 +47,20 @@ export default class DupFinder {
   deletionCost: number;
   subsitutionCost: number;
 
-  // get list of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
-  async getNextDups(): Promise<Word[]> {
-    let wordsFromDB: Promise<Word[]> = this.getWordsFromDB().then(words => {
-      let foundWords: Word[] = [];
+  // get n lists of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
+  async getNextDups(num: number = 1): Promise<Word[][]> {
+    let wordsFromDB: Promise<Word[][]> = this.getWordsFromDB().then(words => {
+      let foundWords: Word[][] = [];
       for (let i = 0; i < words.length; i++) {
         let iterDups: Word[] = this.getDupsFromWordList(words[i], words);
-        if (foundWords.length < iterDups.length) foundWords = iterDups;
+        if (foundWords.length < num) foundWords.push(iterDups);
+        else if (foundWords[foundWords.length - 1].length < iterDups.length) {
+          foundWords.push(iterDups);
+          foundWords.sort(function(a, b): number {
+            return b.length - a.length;
+          });
+          foundWords.pop();
+        }
       }
       return foundWords;
     });
