@@ -3,7 +3,7 @@ import { ThunkDispatch } from "redux-thunk";
 import MergeStackComponent from "./component";
 import { StoreState } from "../../../../types";
 import { WordDrag, dropWord, dragWord } from "../../../DraggableWord/actions";
-import { MergeAction, addDuplicate, removeDuplicate } from "../actions";
+import { MergeTreeAction, addDuplicate, removeDuplicate } from "../actions";
 import { Word } from "../../../../types/word";
 
 export function mapStateToProps(state: StoreState) {
@@ -13,7 +13,7 @@ export function mapStateToProps(state: StoreState) {
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, MergeAction | WordDrag>
+  dispatch: ThunkDispatch<StoreState, any, MergeTreeAction | WordDrag>
 ) {
   return {
     addDuplicate: (word: Word, sense: number) => {
