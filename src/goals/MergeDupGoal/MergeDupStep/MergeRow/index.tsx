@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../../types";
-import { MergeAction, addSense } from "../actions";
+import { MergeTreeAction, addSense } from "../actions";
 import { Word } from "../../../../types/word";
 import { dropWord, WordDrag } from "../../../DraggableWord/actions";
 import MergeRowComponent from "./component";
@@ -13,7 +13,7 @@ export function mapStateToProps(state: StoreState) {
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, MergeAction | WordDrag>
+  dispatch: ThunkDispatch<StoreState, any, MergeTreeAction | WordDrag>
 ) {
   return {
     addSense: (word: Word, parent: number) => {
