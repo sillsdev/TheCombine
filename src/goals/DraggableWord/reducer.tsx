@@ -11,15 +11,16 @@ export const defaultState: WordDragState = {
 };
 
 export const dragWordReducer = (
-  state: WordDragState | undefined, //createStore() calls each reducer with undefined state
+  state: WordDragState = defaultState, //createStore() calls each reducer with undefined state
   action: WordDrag
 ): WordDragState => {
-  if (!state) return defaultState;
   switch (action.type) {
     case DRAG_WORD:
       if (action.payload) {
         action.payload.modified = Date.now().toString();
         return { ...state, draggedWord: action.payload };
+      } else {
+        return state;
       }
     case DROP_WORD:
       return { ...state, draggedWord: undefined };

@@ -1,12 +1,7 @@
-import { Word, simpleWord, Merge, State } from "../../../types/word";
-import { Dispatch } from "react";
+import { Word, simpleWord, State } from "../../../types/word";
 import { StoreState } from "../../../types";
 import * as backend from "../../../backend";
-import {
-  WordListAction,
-  clearListWords,
-  refreshListWords
-} from "./WordList/actions";
+import { WordListAction, refreshListWords } from "./WordList/actions";
 import { ThunkDispatch } from "redux-thunk";
 
 // Args: (word: Word)
