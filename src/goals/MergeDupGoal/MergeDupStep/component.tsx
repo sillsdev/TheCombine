@@ -8,9 +8,7 @@ import {
 import { Box, Grid, Button, Card, CardContent } from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
-import DupFinder from "../DuplicateFinder/DuplicateFinder";
 import * as backend from "../../../backend";
-import { refreshListWords } from "./WordList/actions";
 
 // Internal merge memory model
 export interface ParentWord {
@@ -42,10 +40,6 @@ class MergeDupStep extends React.Component<
   MergeDupStepProps & LocalizeContextProps,
   MergeDupStepState
 > {
-  constructor(props: MergeDupStepProps & LocalizeContextProps) {
-    super(props);
-  }
-
   componentDidMount() {
     if (this.props.refreshListWords) {
       this.props.refreshListWords();

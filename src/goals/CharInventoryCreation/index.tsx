@@ -10,7 +10,6 @@ import {
   uploadInventory
 } from "./CharacterInventoryActions";
 import { CharacterInventoryState } from "./CharacterInventoryReducer";
-import { setCurrentProject } from "../../components/Project/ProjectActions";
 
 function mapStateToProps(
   state: StoreState

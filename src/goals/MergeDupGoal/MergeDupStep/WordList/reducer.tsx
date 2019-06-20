@@ -1,4 +1,3 @@
-import { MergeDupStepProps } from "../component";
 import {
   WordListAction,
   ADD_LIST_WORD,
@@ -16,17 +15,17 @@ export const defaultState: WordListState = {
 };
 
 export const wordListReducer = (
-  state: WordListState | undefined, //createStore() calls each reducer with undefined state
+  state: WordListState = defaultState, //createStore() calls each reducer with undefined state
   action: WordListAction
 ): WordListState => {
-  if (!state) return defaultState;
+  let words: Word[];
   switch (action.type) {
     case ADD_LIST_WORD: //_LIST_WORD actions affect the list of possible duplicates
-      var words = state.words;
+      words = state.words;
       words = words.concat(action.payload);
       return { ...state, words };
     case REMOVE_LIST_WORD:
-      var words = state.words;
+      words = state.words;
       action.payload.forEach(word => {
         // finds last matching by index
         var foundIndex = words.lastIndexOf(word);

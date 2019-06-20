@@ -8,7 +8,6 @@ import { createBrowserHistory } from "history";
 import { PrivateRoute } from "../PrivateRoute";
 import { LogoutButton } from "../Login/LogoutButton";
 import Login from "../Login";
-import Navigation from "../Navigation";
 import CharInventoryCreation from "../../goals/CharInventoryCreation";
 
 export const history = createBrowserHistory();
