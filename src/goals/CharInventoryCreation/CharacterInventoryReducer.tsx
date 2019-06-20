@@ -18,7 +18,7 @@ export const characterInventoryReducer = (
   if (!state) return defaultState;
   switch (action.type) {
     case SET_CHARACTER_INVENTORY:
-      let inv = [...new Set([...action.inventory])];
+      let inv = [...new Set([...action.inventory])]; // Prevents duplicate characters
       return { inventory: inv };
     default:
       return state;
