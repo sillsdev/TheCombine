@@ -1,6 +1,5 @@
 import React from "react";
 import { Goal, GoalsState } from "../../types/goals";
-import Stack from "../../types/stack";
 import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
 import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
@@ -37,10 +36,10 @@ let suggestionsArray: Goal[] = [suggestion1, suggestion2];
 
 export const defaultState: GoalsState = {
   historyState: {
-    history: new Stack<Goal>([])
+    history: []
   },
   goalOptions: allTheGoals,
   suggestionsState: {
-    suggestions: new Stack<Goal>(suggestionsArray)
+    suggestions: suggestionsArray
   }
 };

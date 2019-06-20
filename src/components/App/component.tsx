@@ -9,7 +9,6 @@ import { PrivateRoute } from "../PrivateRoute";
 import { LogoutButton } from "../Login/LogoutButton";
 import Login from "../Login";
 import Navigation from "../Navigation";
-import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
 
 export const history = createBrowserHistory();
 
