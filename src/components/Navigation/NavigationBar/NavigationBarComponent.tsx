@@ -24,15 +24,15 @@ export class NavigationBar extends React.Component<
   // component's props
   render() {
     return (
-      <div className="VisibleComponent">
+      <div className="NavigationBar">
         {
           <AppBar position="static">
             <Toolbar>
-              {this.props.ShouldRenderBackButton ? (
+              {this.props.ShouldRenderBackButton && (
                 <IconButton edge="start" onClick={this.props.GoBack}>
                   <KeyboardBackspace />
                 </IconButton>
-              ) : null}
+              )}
             </Toolbar>
           </AppBar>
         }

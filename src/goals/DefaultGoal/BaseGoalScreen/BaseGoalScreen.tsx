@@ -11,7 +11,7 @@ class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
 
   render() {
     return (
-      <div>
+      <div className={"GoalDisplay" + this.props.goal.id}>
         <GoalHeaderDisplay goal={this.props.goal} />
         <DisplayProg goal={this.props.goal} />
         {this.props.goal.steps[this.props.goal.curNdx]}

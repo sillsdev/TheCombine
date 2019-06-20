@@ -12,7 +12,9 @@ export function mapStateToProps(state: StoreState): NavBarState {
   };
 }
 
-export function mapDispatchToProps(dispatch: Dispatch<actions.NavigateBack>) {
+export function mapDispatchToProps(
+  dispatch: Dispatch<actions.NavigationAction>
+) {
   return {
     GoBack: () => {
       dispatch(actions.navigateBack());

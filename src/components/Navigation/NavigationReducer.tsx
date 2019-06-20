@@ -1,8 +1,9 @@
 import { NavState } from "../../types/nav";
-import { NAVIGATE_BACK, NAVIGATE_FORWARD } from "./NavigationActions";
-import { ActionWithPayload } from "../../types/action";
-import { Goal } from "../../types/goals";
-import { Action } from "redux";
+import {
+  NAVIGATE_BACK,
+  NAVIGATE_FORWARD,
+  NavigationAction
+} from "./NavigationActions";
 
 export const defaultState: NavState = {
   VisibleComponentId: "0",
@@ -14,7 +15,7 @@ export const defaultState: NavState = {
 
 export const navReducer = (
   state: NavState | undefined,
-  action: Action
+  action: NavigationAction
 ): NavState => {
   if (!state) {
     return defaultState;
@@ -24,26 +25,30 @@ export const navReducer = (
       let displayHistoryCopy = [...state.DisplayHistory];
       let previousDisplay = displayHistoryCopy.pop();
 
-      let visibleComponentId = !!(previousDisplay != undefined)
+      let visibleComponentId = previousDisplay
         ? previousDisplay
         : state.VisibleComponentId;
 
-      return Object.assign({}, state, {
+      return {
         VisibleComponentId: visibleComponentId,
         DisplayHistory: displayHistoryCopy,
         NavBarState: {
           ShouldRenderBackButton: shouldRenderBackButton(displayHistoryCopy)
         }
-      });
+      };
     case NAVIGATE_FORWARD:
-      let actionWithPayload = action as ActionWithPayload<Goal>; // TODO: Seems bad. Change?
+      let payload = action.payload;
+      if (!payload) {
+        return state;
+      }
+
       let newDisplayHistory = [
         ...state.DisplayHistory,
         state.VisibleComponentId
       ];
 
       return Object.assign({}, state, {
-        VisibleComponentId: actionWithPayload.payload.id,
+        VisibleComponentId: payload.id,
         DisplayHistory: newDisplayHistory,
         NavBarState: {
           ShouldRenderBackButton: shouldRenderBackButton(newDisplayHistory)

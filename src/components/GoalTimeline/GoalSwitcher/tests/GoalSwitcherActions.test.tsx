@@ -11,7 +11,7 @@ const createMockStore = configureMockStore([thunk]);
 
 it("dispatches actions to choose a goal to navigate to", () => {
   let goal: Goal = new CreateCharInv([]);
-  let NavigateForward: navActions.NavigateForward = {
+  let NavigateForward: navActions.NavigationAction = {
     type: navActions.NAVIGATE_FORWARD,
     payload: goal
   };

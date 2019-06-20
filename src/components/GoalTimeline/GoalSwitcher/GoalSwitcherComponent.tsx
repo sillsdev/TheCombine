@@ -45,7 +45,7 @@ export class GoalSwitcher extends React.Component<
 
   render() {
     return (
-      <div className="GoalPicker">
+      <div className="GoalSwitcher">
         <GoalSelectorScroll handleChange={this.handleChange} />
       </div>
     );

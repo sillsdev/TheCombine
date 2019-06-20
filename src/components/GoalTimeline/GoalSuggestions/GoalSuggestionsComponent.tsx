@@ -17,9 +17,9 @@ export class GoalSuggestions extends React.Component<
 
   render() {
     return (
-      <div className="GoalPicker">
+      <div className="GoalSuggestions">
         {this.props.suggestions.map(goal => (
-          <BaseGoalSelect goal={goal} />
+          <BaseGoalSelect key={goal.id} goal={goal} />
         ))}
       </div>
     );

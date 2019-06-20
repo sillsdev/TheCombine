@@ -5,26 +5,9 @@ import {
   shouldRenderBackButton
 } from "../NavigationReducer";
 import { NavState } from "../../../types/nav";
-import { MockActionInstance } from "../../../types/action";
 import { Goal } from "../../../types/goals";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
-
-it("Should return the default state", () => {
-  expect(navReducer(undefined, MockActionInstance)).toEqual(defaultState);
-});
-
-it("Should return the current state given a non-existent action", () => {
-  const state: NavState = {
-    ...defaultState
-  };
-
-  const newState: NavState = {
-    ...defaultState
-  };
-
-  expect(navReducer(state, MockActionInstance)).toEqual(newState);
-});
 
 it("Should change the visible component to the one provided", () => {
   const state: NavState = {
@@ -33,13 +16,13 @@ it("Should change the visible component to the one provided", () => {
 
   const goal: Goal = new CreateCharInv([]);
 
-  const navigateForwardAction: actions.NavigateForwardAction = {
+  const navigateForwardAction: actions.NavigationAction = {
     type: actions.NAVIGATE_FORWARD,
     payload: goal
   };
 
   const newState: NavState = {
-    VisibleComponentId: navigateForwardAction.payload.id,
+    VisibleComponentId: goal.id,
     DisplayHistory: [defaultState.VisibleComponentId],
     NavBarState: {
       ShouldRenderBackButton: true
@@ -50,9 +33,10 @@ it("Should change the visible component to the one provided", () => {
 });
 
 it("Should still display the back button after navigating forward again", () => {
-  let history: string[] = ["0"];
+  let history: string[] = ["1"];
 
   let visibleGoal: Goal = new CreateCharInv([]);
+  visibleGoal.id = "0";
   let visibleComponentId = visibleGoal.id;
 
   const state: NavState = {
@@ -65,13 +49,13 @@ it("Should still display the back button after navigating forward again", () => 
 
   let goalToAdd: Goal = new HandleFlags([]);
 
-  const navigateForwardAction: actions.NavigateForwardAction = {
+  const navigateForwardAction: actions.NavigationAction = {
     type: actions.NAVIGATE_FORWARD,
     payload: goalToAdd
   };
 
   const newState: NavState = {
-    VisibleComponentId: navigateForwardAction.payload.id,
+    VisibleComponentId: goalToAdd.id,
     DisplayHistory: [...history, visibleComponentId],
     NavBarState: {
       ShouldRenderBackButton: true
@@ -92,8 +76,9 @@ it("Should navigate back to the previous display", () => {
     }
   };
 
-  const navigateBackAction: actions.NavigateBackAction = {
-    type: actions.NAVIGATE_BACK
+  const navigateBackAction: actions.NavigationAction = {
+    type: actions.NAVIGATE_BACK,
+    payload: undefined
   };
 
   const newState: NavState = {
@@ -118,8 +103,9 @@ it("Should leave the visible display unchanged", () => {
     }
   };
 
-  const navigateBackAction: actions.NavigateBackAction = {
-    type: actions.NAVIGATE_BACK
+  const navigateBackAction: actions.NavigationAction = {
+    type: actions.NAVIGATE_BACK,
+    payload: undefined
   };
 
   const newState: NavState = {

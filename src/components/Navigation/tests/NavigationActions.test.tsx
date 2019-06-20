@@ -11,7 +11,7 @@ it("should create an action to navigate back", () => {
 
 it("should create an action to navigate forwards", () => {
   const goal: Goal = new CreateCharInv([]);
-  const expectedAction = {
+  const expectedAction: actions.NavigationAction = {
     type: actions.NAVIGATE_FORWARD,
     payload: goal
   };

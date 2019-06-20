@@ -14,25 +14,20 @@ export const goalsReducer = (
   switch (action.type) {
     case ADD_GOAL: // Remove top suggestion if same as goal to add
       let suggestions = state.suggestionsState.suggestions;
-
-      let nextSuggestion = suggestions[0];
       let goalToAdd = action.payload;
-
-      let newSuggestions: Goal[] =
-        /* If the next suggestion is the same as the goal being added, remove the suggestion */
-        nextSuggestion && nextSuggestion.name === goalToAdd.name
-          ? suggestions.filter(goal => nextSuggestion.name != goal.name)
-          : suggestions;
-
-      return Object.assign({}, state, {
+      return {
         historyState: {
           history: [...state.historyState.history, goalToAdd]
         },
         goalOptions: state.goalOptions,
         suggestionsState: {
-          suggestions: newSuggestions
+          suggestions: suggestions.filter(
+            (goal, index) =>
+              index != 0 || (index == 0 && goalToAdd.name != goal.name)
+          )
         }
-      });
+      };
+
     default:
       return state;
   }
