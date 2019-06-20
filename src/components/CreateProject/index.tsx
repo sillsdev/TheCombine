@@ -10,7 +10,6 @@ import {
 } from "./CreateProjectActions";
 
 function mapStateToProps(state: StoreState) {
-  //console.log(state);
   return {
     project: state.currentProject
   };
