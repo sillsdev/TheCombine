@@ -26,6 +26,7 @@ export function asyncCreateProject(name: string, languageData?: File) {
   return async (dispatch: Dispatch<CreateProjectAction | ProjectAction>) => {
     // Create project
     let project: Project = { ...defaultProject };
+    project.name = name;
     let createdProject = await backend.createProject(project);
     dispatch(setCurrentProject(createdProject));
 
