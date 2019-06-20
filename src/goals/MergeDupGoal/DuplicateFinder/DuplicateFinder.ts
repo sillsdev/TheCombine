@@ -84,11 +84,12 @@ export default class DupFinder {
 
   //remove words that are more than one longer or shorter than parent
   quickscore(parent: Word, words: Word[]): Word[] {
+    let filteredWords: Word[] = [];
     words.forEach(word => {
       if (Math.abs(parent.vernacular.length - word.vernacular.length) > 1)
-        words.filter(w => w !== word);
+        filteredWords.push(word);
     });
-    return words;
+    return filteredWords;
   }
 
   //removes words which do not fit the quality thresholds and returns a reordered collection of the accepted words
