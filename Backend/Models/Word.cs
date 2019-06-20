@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -9,6 +10,13 @@ namespace BackendFramework.ValueModels
 {
     public class FileUpload
     {
+        public FileUpload(FormFile fmfl, string v)
+        {
+            this.file = fmfl;
+            this.name = v;
+            this.filePath = "";
+        }
+
         public IFormFile file { get; set; }
         public string name { get; set; }
         public string filePath { get; set; }
