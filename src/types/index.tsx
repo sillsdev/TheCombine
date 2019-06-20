@@ -10,6 +10,7 @@ import { NavState } from "./nav";
 import { WordDragState } from "../goals/DraggableWord/reducer";
 import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/component";
 import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";
+import { Project } from "./project";
 import { WordListState } from "../goals/MergeDupGoal/MergeDupStep/WordList/reducer";
 import { MergeTreeState } from "../goals/MergeDupGoal/MergeDupStep/reducer";
 
@@ -26,6 +27,7 @@ export interface StoreState {
   navState: NavState;
   characterInventoryState: CharacterInventoryState;
   goalSelectorState: GoalSelectorState;
+  currentProject: Project;
 }
 
 //root action type

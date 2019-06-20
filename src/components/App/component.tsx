@@ -9,6 +9,7 @@ import { PrivateRoute } from "../PrivateRoute";
 import { LogoutButton } from "../Login/LogoutButton";
 import Login from "../Login";
 import Navigation from "../Navigation";
+import CharInventoryCreation from "../../goals/CharInventoryCreation";
 
 export const history = createBrowserHistory();
 
@@ -17,7 +18,7 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Router history={history}>
-          <PrivateRoute exact path="/nav" component={Navigation} />
+          <PrivateRoute exact path="/nav" component={CharInventoryCreation} />
           <PrivateRoute exact path="/" component={CreateProject} />
           <Route path="/login" component={Login} />
         </Router>
