@@ -28,10 +28,6 @@ class WordList extends React.Component<
   WordListProps & LocalizeContextProps,
   WordListState
 > {
-  constructor(props: WordListProps & LocalizeContextProps) {
-    super(props);
-  }
-
   drag(word: Word) {
     if (this.props.dragWord) {
       this.props.dragWord(word);

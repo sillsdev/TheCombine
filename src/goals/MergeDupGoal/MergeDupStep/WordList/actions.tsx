@@ -1,4 +1,4 @@
-import { Word, simpleWord } from "../../../../types/word";
+import { Word } from "../../../../types/word";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../../types";
 import DupFinder from "../../DuplicateFinder/DuplicateFinder";
