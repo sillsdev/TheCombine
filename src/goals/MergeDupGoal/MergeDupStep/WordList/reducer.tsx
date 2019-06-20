@@ -7,15 +7,30 @@ import {
 } from "./actions";
 import { Word } from "../../../../types/word";
 
+export enum SortStyle {
+  VERN_ASC,
+  VERN_DEC
+}
+
+function sortFunction(style: SortStyle): (a: Word, b: Word) => number {
+  switch (style) {
+    case SortStyle.VERN_ASC:
+      return (a: Word, b: Word): number =>
+        a.vernacular.localeCompare(b.vernacular);
+    case SortStyle.VERN_DEC:
+      return (a: Word, b: Word): number =>
+        b.vernacular.localeCompare(a.vernacular);
+  }
+}
+
 export interface WordListState {
   words: Word[];
-  sortComparison: (wordA: Word, wordB: Word) => number;
+  sortStyle: SortStyle;
 }
 
 export const defaultState: WordListState = {
   words: [],
-  sortComparison: (a: Word, b: Word): number =>
-    a.vernacular.localeCompare(b.vernacular)
+  sortStyle: SortStyle.VERN_ASC
 };
 
 export const wordListReducer = (
@@ -25,14 +40,14 @@ export const wordListReducer = (
   switch (action.type) {
     case SET_LIST_WORDS_SORT:
       if (action.payload.sort) {
-        return { ...state, sortComparison: action.payload.sort };
+        return { ...state, sortStyle: action.payload.sort };
       } else {
         return state;
       }
     case ADD_LIST_WORD: //_LIST_WORD actions affect the list of possible duplicates
       var words = state.words;
       words = words.concat(action.payload.words);
-      words = words.sort(state.sortComparison);
+      words = words.sort(sortFunction(state.sortStyle));
       return { ...state, words };
     case REMOVE_LIST_WORD:
       var words = state.words;

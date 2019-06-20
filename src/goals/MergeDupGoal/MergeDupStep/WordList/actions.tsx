@@ -2,6 +2,7 @@ import { Word } from "../../../../types/word";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../../types";
 import DupFinder from "../../DuplicateFinder/DuplicateFinder";
+import { SortStyle } from "./reducer";
 
 // wordlist actions
 
@@ -23,12 +24,10 @@ export interface WordListAction {
     | REMOVE_LIST_WORD
     | CLEAR_LIST_WORDS
     | SET_LIST_WORDS_SORT;
-  payload: { words: Word[]; sort?: (a: Word, b: Word) => number };
+  payload: { words: Word[]; sort?: SortStyle };
 }
 
-export function setListWordsSort(
-  sort: (a: Word, b: Word) => number
-): WordListAction {
+export function setListWordsSort(sort: SortStyle): WordListAction {
   return {
     type: SET_LIST_WORDS_SORT,
     payload: { words: [], sort }
