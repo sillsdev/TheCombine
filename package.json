@@ -9,8 +9,8 @@
     "start": "npm install && npm-run-all --parallel frontend database api",
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
-    "test": "dotnet test && react-scripts test",
-    "test:ci": "set CI=true ; react-scripts test --ci --watchAll --testResultsProcessor jest-teamcity-reporter && dotnet test",
+    "test": "dotnet test Backend.Tests/Backend.Tests.csproj && react-scripts test",
+    "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
     "eject": "react-scripts eject"
   },
   "dependencies": {
