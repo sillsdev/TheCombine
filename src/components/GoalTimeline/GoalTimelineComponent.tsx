@@ -12,7 +12,7 @@ import GoalSuggestions from "./GoalSuggestions";
 export class GoalTimeline extends React.Component {
   render() {
     return (
-      <div className="GoalView">
+      <div className="GoalTimeline">
         <GoalHistory />
         <GoalSwitcher />
         <GoalSuggestions />
