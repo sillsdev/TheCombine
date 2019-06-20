@@ -74,7 +74,7 @@ namespace BackendFramework.Services
                 .Set(x => x.Name, project.Name)
                 .Set(x => x.SemanticDomains, project.SemanticDomains)
                 .Set(x => x.UserRoles, project.UserRoles)
-                //.Set(x => x.Words, project.Words)
+                .Set(x => x.Words, project.Words)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
                 .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)
                 .Set(x => x.CharacterSet, project.CharacterSet)

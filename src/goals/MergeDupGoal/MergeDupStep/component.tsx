@@ -27,7 +27,7 @@ export interface MergeDupStepProps {
   words: Word[];
   addParent?: (word: Word) => void;
   dropWord?: () => void;
-  clearMerges?: () => void;
+  applyMerges?: () => void;
   addListWord?: (word: Word) => void;
   clearListWords?: () => void;
   draggedWord?: Word;
@@ -83,9 +83,9 @@ class MergeDupStep extends React.Component<
   }
 
   next() {
-    if (this.props.clearMerges) {
-      this.props.clearMerges();
-    }
+    this.refresh().then(() => {
+      if (this.props.applyMerges) this.props.applyMerges();
+    });
   }
 
   render() {
@@ -93,9 +93,6 @@ class MergeDupStep extends React.Component<
     return (
       <Box style={{ maxHeight: "100%" }}>
         <Grid container>
-          <Grid item>
-            <Button onClick={_ => this.refresh()}>Refresh</Button>
-          </Grid>
           {/* <Grid item>
             <Button onClick={_ => this.fill_database()}>Fill Database</Button>
           </Grid> */}
