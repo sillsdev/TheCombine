@@ -33,7 +33,7 @@ export function uploadInventory() {
     updateProject(project);
 
     dispatch(setCurrentProject(project));
-    alert("Uploading inventory");
+    //alert("Uploading inventory");
   };
 }
 
