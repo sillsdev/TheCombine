@@ -1,14 +1,11 @@
 import { Dispatch } from "react";
 import { history } from "../App/component";
 import * as backend from "../../backend";
-import { Project } from "../../types/project";
+import { Project, defaultProject } from "../../types/project";
 import { setCurrentProject, ProjectAction } from "../Project/ProjectActions";
 
 export const CREATE_PROJECT = "CREATE_PROJECT";
 export type CREATE_PROJECT = typeof CREATE_PROJECT;
-
-export const SET_CURRENT_PROJECT = "SET_CURRENT_PROJECT";
-export type SET_CURRENT_PROJECT = typeof SET_CURRENT_PROJECT;
 
 export interface CreateProjectData {
   name: string;
@@ -28,19 +25,7 @@ export interface CreateProjectAction {
 export function asyncCreateProject(name: string, languageData?: File) {
   return async (dispatch: Dispatch<CreateProjectAction | ProjectAction>) => {
     // Create project
-    let project: Project = {
-      id: "",
-      name: name,
-      semanticDomains: [],
-      userRoles: "",
-      vernacularWritingSystem: "",
-      analysisWritingSystems: [],
-      characterSet: [],
-      customFields: [],
-      wordFields: [],
-      partsOfSpeech: [],
-      words: []
-    };
+    let project: Project = { ...defaultProject };
     let createdProject = await backend.createProject(project);
     dispatch(setCurrentProject(createdProject));
 
