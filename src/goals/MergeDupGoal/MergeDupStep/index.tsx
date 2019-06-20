@@ -6,7 +6,7 @@ import { MergeTreeAction, applyMerges, addParent } from "./actions";
 import { WordDrag, dropWord } from "../../DraggableWord/actions";
 import { Word } from "../../../types/word";
 import {
-  addListWord,
+  addListWords,
   clearListWords,
   WordListAction,
   refreshListWords
@@ -37,8 +37,8 @@ export function mapDispatchToProps(
     applyMerges: () => {
       dispatch(applyMerges());
     },
-    addListWord: (word: Word) => {
-      dispatch(addListWord(word));
+    addListWord: (word: Word[]) => {
+      dispatch(addListWords(word));
     },
     clearListWords: () => {
       dispatch(clearListWords());

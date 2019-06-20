@@ -29,7 +29,7 @@ export interface MergeDupStepProps {
   addParent?: (word: Word) => void;
   dropWord?: () => void;
   applyMerges?: () => void;
-  addListWord?: (word: Word) => void;
+  addListWord?: (word: Word[]) => void;
   clearListWords?: () => void;
   refreshListWords?: () => void;
   draggedWord?: Word;

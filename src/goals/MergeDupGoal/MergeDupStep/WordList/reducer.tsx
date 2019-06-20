@@ -27,10 +27,12 @@ export const wordListReducer = (
       return { ...state, words };
     case REMOVE_LIST_WORD:
       var words = state.words;
-      // finds last matching by index
-      var foundIndex = words.lastIndexOf(action.payload);
-      // remove previously found word
-      words = words.filter((_, index) => index !== foundIndex);
+      action.payload.forEach(word => {
+        // finds last matching by index
+        var foundIndex = words.lastIndexOf(word);
+        // remove previously found word
+        words = words.filter((_, index) => index !== foundIndex);
+      });
       return { ...state, words };
     case CLEAR_LIST_WORDS:
       return { ...state, words: [] };

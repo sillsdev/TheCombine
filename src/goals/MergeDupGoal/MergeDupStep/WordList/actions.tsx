@@ -16,27 +16,27 @@ export type CLEAR_LIST_WORDS = typeof CLEAR_LIST_WORDS;
 
 export interface WordListAction {
   type: ADD_LIST_WORD | REMOVE_LIST_WORD | CLEAR_LIST_WORDS;
-  payload: Word;
+  payload: Word[];
 }
 
 export function clearListWords(): WordListAction {
   return {
     type: CLEAR_LIST_WORDS,
-    payload: simpleWord("", "")
+    payload: []
   };
 }
 
-export function addListWord(word: Word): WordListAction {
+export function addListWords(words: Word[]): WordListAction {
   return {
     type: ADD_LIST_WORD,
-    payload: word
+    payload: words
   };
 }
 
-export function removeListWord(word: Word): WordListAction {
+export function removeListWords(words: Word[]): WordListAction {
   return {
     type: REMOVE_LIST_WORD,
-    payload: word
+    payload: words
   };
 }
 
@@ -49,8 +49,6 @@ export function refreshListWords() {
     dispatch(clearListWords());
 
     let temp = await Finder.getNextDups();
-    temp.map(word => {
-      dispatch(addListWord(word));
-    });
+    dispatch(addListWords(temp));
   };
 }

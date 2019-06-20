@@ -4,7 +4,7 @@ import WordListComponent from "./component";
 import { StoreState } from "../../../../types";
 import { WordDrag, dropWord, dragWord } from "../../../DraggableWord/actions";
 import { Word } from "../../../../types/word";
-import { WordListAction, addListWord, removeListWord } from "./actions";
+import { WordListAction, addListWords, removeListWords } from "./actions";
 
 export function mapStateToProps(state: StoreState) {
   return {
@@ -23,11 +23,11 @@ export function mapDispatchToProps(
     dropWord: () => {
       dispatch(dropWord());
     },
-    addListWord: (word: Word) => {
-      dispatch(addListWord(word));
+    addListWord: (word: Word[]) => {
+      dispatch(addListWords(word));
     },
-    removeListWord: (word: Word) => {
-      dispatch(removeListWord(word));
+    removeListWord: (word: Word[]) => {
+      dispatch(removeListWords(word));
     }
   };
 }
