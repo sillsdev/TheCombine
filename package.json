@@ -10,7 +10,7 @@
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
     "test": "dotnet test && react-scripts test",
-    "test:ci": "set CI=true react-scripts test --testResultsProcessor jest-teamcity-reporter",
+    "test:tc": "set CI=true react-scripts test --testResultsProcessor jest-teamcity-reporter",
     "eject": "react-scripts eject"
   },
   "dependencies": {
