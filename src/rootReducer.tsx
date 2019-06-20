@@ -33,7 +33,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //character inventory goal
   characterInventoryState: characterInventoryReducer,
 
-  currentProjectState: projectReducer,
+  currentProject: projectReducer,
 
   //temporary
   tempState: tempReducer

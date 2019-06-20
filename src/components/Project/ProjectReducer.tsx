@@ -6,7 +6,7 @@ export interface ProjectState {
 }
 
 export const projectReducer = (
-  state: ProjectState | undefined, //createStore() calls each reducer with undefined state
+  state: ProjectState | undefined,
   action: ProjectAction
 ): ProjectState => {
   if (!state) return {};
