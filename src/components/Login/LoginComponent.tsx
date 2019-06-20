@@ -12,8 +12,7 @@ import {
   Card,
   CardActions,
   CardContent,
-  CircularProgress,
-  LinearProgress
+  CircularProgress
 } from "@material-ui/core";
 
 export interface LoginDispatchProps {

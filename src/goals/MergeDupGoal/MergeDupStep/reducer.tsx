@@ -6,7 +6,8 @@ import {
   REMOVE_DUPLICATE,
   CLEAR_MERGES
 } from "./actions";
-import { MergeDupStepProps, ParentWord } from "./component";
+import { ParentWord } from "./component";
+import { Word } from "../../../types/word";
 
 export const defaultState: MergeTreeState = {
   parentWords: []
@@ -22,13 +23,13 @@ function generateID(): number {
 }
 
 export const mergeDupStepReducer = (
-  state: MergeTreeState | undefined, //createStore() calls each reducer with undefined state
+  state: MergeTreeState = defaultState, //createStore() calls each reducer with undefined state
   action: MergeTreeAction
 ): MergeTreeState => {
-  if (!state) return defaultState;
+  let parentWords: ParentWord[];
   switch (action.type) {
     case ADD_PARENT:
-      var parentWords = state.parentWords;
+      parentWords = state.parentWords;
       var word = action.payload.word;
       parentWords.push({
         id: generateID(),
@@ -39,7 +40,7 @@ export const mergeDupStepReducer = (
         parentWords
       };
     case ADD_SENSE:
-      var parentWords = state.parentWords;
+      parentWords = state.parentWords;
       var { word: merge, parent } = action.payload;
       if (parent) {
         parentWords = parentWords.map(item => {
@@ -58,7 +59,7 @@ export const mergeDupStepReducer = (
       };
     case ADD_DUPLICATE:
       var { word: merge, parent } = action.payload;
-      var parentWords = state.parentWords;
+      parentWords = state.parentWords;
       parentWords = parentWords.map(item => {
         item.senses = item.senses.map(item => {
           if (item.id === parent) {
@@ -71,7 +72,7 @@ export const mergeDupStepReducer = (
       return { ...state, parentWords };
     case REMOVE_DUPLICATE:
       var { word: merge, parent: root } = action.payload;
-      var parentWords = state.parentWords;
+      parentWords = state.parentWords;
 
       parentWords = parentWords.map(parent => {
         parent.senses = parent.senses.map(sense => {

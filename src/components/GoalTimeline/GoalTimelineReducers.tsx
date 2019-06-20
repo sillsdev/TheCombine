@@ -23,7 +23,7 @@ export const goalsReducer = (
         suggestionsState: {
           suggestions: suggestions.filter(
             (goal, index) =>
-              index != 0 || (index == 0 && goalToAdd.name != goal.name)
+              index !== 0 || (index === 0 && goalToAdd.name !== goal.name)
           )
         }
       };
