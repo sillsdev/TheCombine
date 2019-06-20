@@ -60,6 +60,7 @@ class MergeDupStep extends React.Component<
     let temp = await Finder.getNextDups();
     temp.map(word => {
       if (this.props.addListWord) {
+        console.log("Adding list word");
         this.props.addListWord(word);
       }
     });
@@ -83,9 +84,7 @@ class MergeDupStep extends React.Component<
   }
 
   next() {
-    this.refresh().then(() => {
-      if (this.props.applyMerges) this.props.applyMerges();
-    });
+    if (this.props.applyMerges) this.props.applyMerges();
   }
 
   render() {

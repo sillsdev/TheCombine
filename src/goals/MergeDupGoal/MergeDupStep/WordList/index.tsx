@@ -4,17 +4,17 @@ import WordListComponent from "./component";
 import { StoreState } from "../../../../types";
 import { WordDrag, dropWord, dragWord } from "../../../DraggableWord/actions";
 import { Word } from "../../../../types/word";
-import { addListWord, removeListWord, MergeAction } from "../actions";
+import { WordListAction, addListWord, removeListWord } from "./actions";
 
 export function mapStateToProps(state: StoreState) {
   return {
     draggedWord: state.draggedWordState.draggedWord,
-    words: state.mergeDupStepProps.words
+    words: state.possibleDuplicateList.words
   };
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, WordDrag | MergeAction>
+  dispatch: ThunkDispatch<StoreState, any, WordDrag | WordListAction>
 ) {
   return {
     dragWord: (word: Word) => {
