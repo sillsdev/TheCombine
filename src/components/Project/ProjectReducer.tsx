@@ -1,18 +1,13 @@
 import { ProjectAction, SET_CURRENT_PROJECT } from "./ProjectActions";
-import { Project } from "../../types/project";
-
-export interface ProjectState {
-  project?: Project;
-}
+import { Project, defaultProject } from "../../types/project";
 
 export const projectReducer = (
-  state: ProjectState | undefined,
+  state: Project = defaultProject,
   action: ProjectAction
-): ProjectState => {
-  if (!state) return {};
+): Project => {
   switch (action.type) {
     case SET_CURRENT_PROJECT:
-      return { ...state, project: action.project };
+      return action.project;
     default:
       return state;
   }

@@ -9,7 +9,7 @@ type ProjectType = SET_CURRENT_PROJECT;
 
 export interface ProjectAction {
   type: ProjectType;
-  project?: Project;
+  project: Project;
 }
 
 export function setCurrentProject(project: Project): ProjectAction {

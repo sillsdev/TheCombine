@@ -6,11 +6,13 @@ import {
 } from "react-localize-redux";
 import CharacterSet from "./components/CharacterSet";
 import { Grid, Button } from "@material-ui/core";
+import { Project } from "../../types/project";
 
 export interface CharacterInventoryProps {
   setInventory: (inventory: string[]) => void;
   uploadInventory: () => void;
   inventory: string[];
+  currentProject: Project;
 }
 
 interface CharacterInventoryState {}
@@ -22,7 +24,7 @@ class CharacterInventory extends React.Component<
   constructor(props: CharacterInventoryProps & LocalizeContextProps) {
     super(props);
     // Load inventory from server
-    this.props.setInventory(["a", "b", "c"]);
+    this.props.setInventory(this.props.currentProject.characterSet);
   }
 
   render() {

@@ -41,13 +41,13 @@ export function asyncCreateProject(name: string, languageData?: File) {
       partsOfSpeech: [],
       words: []
     };
-    project = await backend.createProject(project);
-    dispatch(setCurrentProject(project));
+    let createdProject = await backend.createProject(project);
+    dispatch(setCurrentProject(createdProject));
 
     // Upload words
     if (languageData) {
       backend
-        .uploadLift(project, languageData)
+        .uploadLift(createdProject, languageData)
         .then(res => {
           dispatch(createProject(name, languageData));
           history.push("/nav");

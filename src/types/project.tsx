@@ -23,3 +23,17 @@ export interface Project {
   words: Word[];
   customFields: CustomField[];
 }
+
+export let defaultProject = {
+  id: "",
+  name: "",
+  semanticDomains: [],
+  userRoles: "",
+  vernacularWritingSystem: "",
+  analysisWritingSystems: [],
+  characterSet: [],
+  customFields: [],
+  wordFields: [],
+  partsOfSpeech: [],
+  words: []
+} as Project;
