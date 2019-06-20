@@ -2,7 +2,9 @@ import { Word } from "../../../../types/word";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../../types";
 import DupFinder from "../../DuplicateFinder/DuplicateFinder";
+
 import { SortStyle } from "./reducer";
+
 
 // wordlist actions
 
@@ -14,6 +16,7 @@ export type REMOVE_LIST_WORD = typeof REMOVE_LIST_WORD;
 
 export const CLEAR_LIST_WORDS = "CLEAR_LIST_WORDS";
 export type CLEAR_LIST_WORDS = typeof CLEAR_LIST_WORDS;
+
 
 export const SET_LIST_WORDS_SORT = "SET_LIST_WORDS_SORT";
 export type SET_LIST_WORDS_SORT = typeof SET_LIST_WORDS_SORT;
@@ -37,6 +40,7 @@ export function setListWordsSort(sort: SortStyle): WordListAction {
 export function clearListWords(): WordListAction {
   return {
     type: CLEAR_LIST_WORDS,
+
     payload: { words: [] }
   };
 }
@@ -44,6 +48,7 @@ export function clearListWords(): WordListAction {
 export function addListWords(words: Word[]): WordListAction {
   return {
     type: ADD_LIST_WORD,
+
     payload: { words }
   };
 }
@@ -51,6 +56,7 @@ export function addListWords(words: Word[]): WordListAction {
 export function removeListWords(words: Word[]): WordListAction {
   return {
     type: REMOVE_LIST_WORD,
+
     payload: { words }
   };
 }

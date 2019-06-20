@@ -2,6 +2,7 @@ import {
   WordListAction,
   ADD_LIST_WORD,
   REMOVE_LIST_WORD,
+
   CLEAR_LIST_WORDS,
   SET_LIST_WORDS_SORT
 } from "./actions";
@@ -37,6 +38,7 @@ export const wordListReducer = (
   state: WordListState = defaultState, //createStore() calls each reducer with undefined state
   action: WordListAction
 ): WordListState => {
+
   switch (action.type) {
     case SET_LIST_WORDS_SORT:
       if (action.payload.sort) {
