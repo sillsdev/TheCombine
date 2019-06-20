@@ -12,6 +12,7 @@ import { createProjectReducer } from "./components/CreateProject/CreateProjectRe
 import { characterInventoryReducer } from "./goals/CharInventoryCreation/CharacterInventoryReducer";
 import { goalSelectReducer } from "./components/GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
 import { projectReducer } from "./components/Project/ProjectReducer";
+import { wordListReducer } from "./goals/MergeDupGoal/MergeDupStep/WordList/reducer";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //handles localization through react-localize-redux utilities
@@ -29,6 +30,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //merge duplicates goal
   draggedWordState: dragWordReducer,
   mergeDupStepProps: mergeDupStepReducer,
+  possibleDuplicateList: wordListReducer,
 
   //character inventory goal
   characterInventoryState: characterInventoryReducer,

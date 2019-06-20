@@ -1,4 +1,13 @@
-import { Word, simpleWord, Merge } from "../../../types/word";
+import { Word, simpleWord, Merge, State } from "../../../types/word";
+import { Dispatch } from "react";
+import { StoreState } from "../../../types";
+import * as backend from "../../../backend";
+import {
+  WordListAction,
+  clearListWords,
+  refreshListWords
+} from "./WordList/actions";
+import { ThunkDispatch } from "redux-thunk";
 
 // Args: (word: Word)
 export const ADD_PARENT = "ADD_PARENT";
@@ -15,81 +24,80 @@ export type ADD_DUPLICATE = typeof ADD_DUPLICATE;
 export const REMOVE_DUPLICATE = "REMOVE_DUPLICATE";
 export type REMOVE_DUPLICATE = typeof REMOVE_DUPLICATE;
 
-export const APPLY_MERGES = "APPLY_MERGES";
-export type APPLY_MERGES = typeof APPLY_MERGES;
+export const CLEAR_MERGES = "CLEAR_MERGES";
+export type CLEAR_MERGES = typeof CLEAR_MERGES;
 
-export const ADD_LIST_WORD = "ADD_LIST_WORD";
-export type ADD_LIST_WORD = typeof ADD_LIST_WORD;
-
-export const REMOVE_LIST_WORD = "REMOVE_LIST_WORD";
-export type REMOVE_LIST_WORD = typeof REMOVE_LIST_WORD;
-
-export const CLEAR_LIST_WORDS = "CLEAR_LIST_WORDS";
-export type CLEAR_LIST_WORDS = typeof CLEAR_LIST_WORDS;
-
-export interface MergeAction {
+export interface MergeTreeAction {
   type:
     | ADD_PARENT
+    | CLEAR_MERGES
     | ADD_SENSE
     | ADD_DUPLICATE
-    | APPLY_MERGES
-    | REMOVE_DUPLICATE
-    | ADD_LIST_WORD
-    | REMOVE_LIST_WORD
-    | CLEAR_LIST_WORDS;
+    | REMOVE_DUPLICATE;
   payload: { word: Word; parent?: number };
 }
 
-export function clearListWords(): MergeAction {
-  return {
-    type: CLEAR_LIST_WORDS,
-    payload: { word: simpleWord("", "") }
-  };
-}
-
-export function addListWord(word: Word): MergeAction {
-  return {
-    type: ADD_LIST_WORD,
-    payload: { word }
-  };
-}
-
-export function removeListWord(word: Word): MergeAction {
-  return {
-    type: REMOVE_LIST_WORD,
-    payload: { word }
-  };
-}
-
-export function addParent(word: Word): MergeAction {
+export function addParent(word: Word): MergeTreeAction {
   return {
     type: ADD_PARENT,
     payload: { word }
   };
 }
 
-export function addSense(word: Word, parent: number): MergeAction {
+export function addSense(word: Word, parent: number): MergeTreeAction {
   return {
     type: ADD_SENSE,
     payload: { word, parent }
   };
 }
 
-export function addDuplicate(word: Word, parent: number): MergeAction {
+export function addDuplicate(word: Word, parent: number): MergeTreeAction {
   return {
     type: ADD_DUPLICATE,
     payload: { word, parent }
   };
 }
 
-export function applyMerges(): MergeAction {
+export function applyMerges() {
+  return async (
+    dispatch: ThunkDispatch<any, any, MergeTreeAction | WordListAction>,
+    getState: () => StoreState
+  ) => {
+    var merges = getState().mergeDupStepProps.parentWords;
+    Promise.all(
+      merges.map(async parent => {
+        var senses: Word[] = [];
+        await Promise.all(
+          parent.senses.map(async sense => {
+            if (sense.dups.length > 1) {
+              senses.push({
+                ...sense.dups[0],
+                id: await backend.mergeWords(sense.dups, State.duplicate)
+              });
+            } else {
+              // Should never be 0
+              senses.push(sense.dups[0]);
+            }
+          })
+        );
+        if (senses.length > 0) {
+          return await backend.mergeWords(senses, State.sense);
+        }
+      })
+    )
+      .then(() => dispatch(clearMerges()))
+      .then(() => dispatch(refreshListWords()));
+  };
+}
+
+export function clearMerges(): MergeTreeAction {
   return {
-    type: APPLY_MERGES,
+    type: CLEAR_MERGES,
     payload: { word: simpleWord("", "") }
   };
 }
 
-export function removeDuplicate(word: Word, parent: number): MergeAction {
+export function removeDuplicate(word: Word, parent: number): MergeTreeAction {
   return {
     type: REMOVE_DUPLICATE,
     payload: { word, parent }

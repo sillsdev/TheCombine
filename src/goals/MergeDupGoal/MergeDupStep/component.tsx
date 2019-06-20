@@ -10,6 +10,7 @@ import WordList from "./WordList";
 import MergeRow from "./MergeRow";
 import DupFinder from "../DuplicateFinder/DuplicateFinder";
 import * as backend from "../../../backend";
+import { refreshListWords } from "./WordList/actions";
 
 // Internal merge memory model
 export interface ParentWord {
@@ -28,8 +29,9 @@ export interface MergeDupStepProps {
   addParent?: (word: Word) => void;
   dropWord?: () => void;
   applyMerges?: () => void;
-  addListWord?: (word: Word) => void;
+  addListWord?: (word: Word[]) => void;
   clearListWords?: () => void;
+  refreshListWords?: () => void;
   draggedWord?: Word;
 }
 
@@ -42,7 +44,12 @@ class MergeDupStep extends React.Component<
 > {
   constructor(props: MergeDupStepProps & LocalizeContextProps) {
     super(props);
-    this.refresh();
+  }
+
+  componentDidMount() {
+    if (this.props.refreshListWords) {
+      this.props.refreshListWords();
+    }
   }
 
   dragDrop() {
@@ -52,22 +59,11 @@ class MergeDupStep extends React.Component<
     }
   }
 
-  async refresh() {
-    let Finder = new DupFinder();
-    if (this.props.clearListWords) {
-      this.props.clearListWords();
-    }
-    let temp = await Finder.getNextDups();
-    temp.map(word => {
-      if (this.props.addListWord) {
-        this.props.addListWord(word);
-      }
-    });
-  }
-
   async clear_database() {
     // await backend.delete("projects/words");
-    this.refresh();
+    if (this.props.refreshListWords) {
+      this.props.refreshListWords();
+    }
   }
 
   async fill_database() {
@@ -79,13 +75,13 @@ class MergeDupStep extends React.Component<
         }
       })
     );
-    this.refresh();
+    if (this.props.refreshListWords) {
+      this.props.refreshListWords();
+    }
   }
 
   next() {
-    this.refresh().then(() => {
-      if (this.props.applyMerges) this.props.applyMerges();
-    });
+    if (this.props.applyMerges) this.props.applyMerges();
   }
 
   render() {
