@@ -10,7 +10,7 @@
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
     "test": "dotnet test && react-scripts test",
-    "test:tc": "set CI=true react-scripts test --testResultsProcessor jest-teamcity-reporter",
+    "test:ci": "set CI=true ; react-scripts test --ci --watchAll --testResultsProcessor jest-teamcity-reporter",
     "eject": "react-scripts eject"
   },
   "dependencies": {
@@ -53,8 +53,8 @@
     "@types/react-test-renderer": "^16.8.2",
     "@types/redux-mock-store": "^1.0.1",
     "@types/redux-thunk": "^2.1.0",
-    "npm-run-all": "^4.1.5",
     "jest-teamcity-reporter": "^0.9.0",
+    "npm-run-all": "^4.1.5",
     "react-test-renderer": "^16.8.6",
     "redux-mock-store": "^1.5.3",
     "typescript": "3.4.5"
