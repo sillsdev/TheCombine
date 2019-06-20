@@ -18,7 +18,7 @@ export interface MergeTreeState {
 
 //ID assigned to parents as senses to help differentiate between them.
 function generateID(): number {
-  return Math.floor(Math.random() * Math.pow(2, 16));
+  return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }
 
 export const mergeDupStepReducer = (
