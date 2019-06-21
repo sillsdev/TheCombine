@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Goal } from "../../../types/goals";
-import GoalSelectorDropdown from "./GoalSelectorDropdown";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import GoalSelectorScroll from "./GoalSelectorScroll";
 
@@ -46,7 +45,7 @@ export class GoalSwitcher extends React.Component<
 
   render() {
     return (
-      <div className="GoalPicker">
+      <div className="GoalSwitcher">
         <GoalSelectorScroll handleChange={this.handleChange} />
       </div>
     );

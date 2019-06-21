@@ -1,4 +1,6 @@
-import CharacterInventory from "./CharacterInventoryComponent";
+import CharacterInventory, {
+  CharacterInventoryProps
+} from "./CharacterInventoryComponent";
 import { connect } from "react-redux";
 import { StoreState } from "../../types";
 import { ThunkDispatch } from "redux-thunk";
@@ -9,10 +11,13 @@ import {
 } from "./CharacterInventoryActions";
 import { CharacterInventoryState } from "./CharacterInventoryReducer";
 
-function mapStateToProps(state: StoreState): CharacterInventoryState {
+function mapStateToProps(
+  state: StoreState
+): CharacterInventoryState | CharacterInventoryProps {
   return {
     inventory:
-      state.characterInventoryState && state.characterInventoryState.inventory
+      state.characterInventoryState && state.characterInventoryState.inventory,
+    currentProject: state.currentProject
   };
 }
 
@@ -24,7 +29,7 @@ export function mapDispatchToProps(
       dispatch(setInventory(inventory));
     },
     uploadInventory: () => {
-      uploadInventory();
+      dispatch(uploadInventory());
     }
   };
 }

@@ -13,7 +13,7 @@ class BaseGoalSelect extends React.Component<GoalProps & LocalizeContextProps> {
 
   render() {
     return (
-      <div>
+      <div className={"GoalWidget" + this.props.goal.id}>
         <Translate id={"goal.name." + this.props.goal.name} />
       </div>
     );

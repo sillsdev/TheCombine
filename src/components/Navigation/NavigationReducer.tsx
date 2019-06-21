@@ -1,15 +1,13 @@
-import React from "react";
 import { NavState } from "../../types/nav";
-import { NAVIGATE_BACK, NAVIGATE_FORWARD } from "./NavigationActions";
-import { ActionWithPayload } from "../../types/action";
-import { Goal } from "../../types/goals";
-import { GoalTimeline } from "../GoalTimeline/GoalTimelineComponent";
-import Stack from "../../types/stack";
-import { Action } from "redux";
+import {
+  NAVIGATE_BACK,
+  NAVIGATE_FORWARD,
+  NavigationAction
+} from "./NavigationActions";
 
 export const defaultState: NavState = {
-  VisibleComponent: <GoalTimeline />,
-  DisplayHistory: new Stack<JSX.Element>([]),
+  VisibleComponentId: "0",
+  DisplayHistory: [],
   NavBarState: {
     ShouldRenderBackButton: false
   }
@@ -17,33 +15,43 @@ export const defaultState: NavState = {
 
 export const navReducer = (
   state: NavState | undefined,
-  action: Action
+  action: NavigationAction
 ): NavState => {
   if (!state) {
     return defaultState;
   }
   switch (action.type) {
     case NAVIGATE_BACK:
+      let displayHistoryCopy = [...state.DisplayHistory];
+      let previousDisplay = displayHistoryCopy.pop();
+
+      let visibleComponentId = previousDisplay
+        ? previousDisplay
+        : state.VisibleComponentId;
+
       return {
-        VisibleComponent: setVisibleToPreviousDisplay(
-          state.VisibleComponent,
-          state.DisplayHistory
-        ),
-        DisplayHistory: removeDisplayFromHistory(state.DisplayHistory),
+        VisibleComponentId: visibleComponentId,
+        DisplayHistory: displayHistoryCopy,
         NavBarState: {
-          ShouldRenderBackButton: shouldRenderBackButton(state.DisplayHistory)
+          ShouldRenderBackButton: shouldRenderBackButton(displayHistoryCopy)
         }
       };
     case NAVIGATE_FORWARD:
-      let actionWithPayload = action as ActionWithPayload<Goal>; // TODO: Seems bad. Change?
+      let payload = action.payload;
+      if (!payload) {
+        return state;
+      }
+
+      let newDisplayHistory = [
+        ...state.DisplayHistory,
+        state.VisibleComponentId
+      ];
+
       return {
-        VisibleComponent: setVisibleToGivenInAction(actionWithPayload),
-        DisplayHistory: addDisplayToHistory(
-          state.VisibleComponent,
-          state.DisplayHistory
-        ),
+        VisibleComponentId: payload.id,
+        DisplayHistory: newDisplayHistory,
         NavBarState: {
-          ShouldRenderBackButton: shouldRenderBackButton(state.DisplayHistory)
+          ShouldRenderBackButton: shouldRenderBackButton(newDisplayHistory)
         }
       };
     default:
@@ -51,41 +59,6 @@ export const navReducer = (
   }
 };
 
-// Add a React component to the display history
-export function addDisplayToHistory(
-  display: JSX.Element,
-  history: Stack<JSX.Element>
-): Stack<JSX.Element> {
-  history.push(display);
-  return history;
-}
-
-// Remove a React component from the display history
-export function removeDisplayFromHistory(
-  history: Stack<JSX.Element>
-): Stack<JSX.Element> {
-  history.pop();
-  return history;
-}
-
-// Replace the visible component with the previous component that was displayed
-export function setVisibleToPreviousDisplay(
-  visibleDisplay: JSX.Element,
-  history: Stack<JSX.Element>
-): JSX.Element {
-  let previousElement = history.pop();
-  if (previousElement) {
-    return previousElement;
-  }
-  return visibleDisplay;
-}
-
-export function setVisibleToGivenInAction(
-  action: ActionWithPayload<Goal>
-): JSX.Element {
-  return action.payload.display;
-}
-
-export function shouldRenderBackButton(history: Stack<JSX.Element>): boolean {
-  return history.size() > 0;
+export function shouldRenderBackButton(history: string[]): boolean {
+  return history.length > 0;
 }

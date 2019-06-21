@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -9,6 +10,13 @@ namespace BackendFramework.ValueModels
 {
     public class FileUpload
     {
+        public FileUpload(FormFile file, string name)
+        {
+            this.file = file;
+            this.name = name;
+            this.filePath = "";
+        }
+
         public IFormFile file { get; set; }
         public string name { get; set; }
         public string filePath { get; set; }
@@ -70,7 +78,7 @@ namespace BackendFramework.ValueModels
             Created = "";
             Modified = "";
             PartOfSpeech = "";
-            Accessability = (int) state.active;
+            Accessability = (int)state.active;
             OtherField = "";
             EditedBy = new List<string>();
             History = new List<string>();
@@ -78,7 +86,7 @@ namespace BackendFramework.ValueModels
         }
 
         public Word Clone()
-        { 
+        {
             Word clone = new Word
             {
                 Id = Id.Clone() as string,
@@ -100,12 +108,12 @@ namespace BackendFramework.ValueModels
                 clone.EditedBy.Add(id.Clone() as string);
             }
 
-            foreach(string id in History)
+            foreach (string id in History)
             {
                 clone.History.Add(id.Clone() as string);
             }
 
-            foreach(Sense sense in Senses)
+            foreach (Sense sense in Senses)
             {
                 clone.Senses.Add(sense.Clone());
             }
@@ -171,7 +179,7 @@ namespace BackendFramework.ValueModels
             {
                 clone.Glosses.Add(gloss.Clone());
             }
-            foreach(SemanticDomain sd in SemanticDomains)
+            foreach (SemanticDomain sd in SemanticDomains)
             {
                 clone.SemanticDomains.Add(sd.Clone());
             }

@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Goal } from "../../../types/goals";
-import Stack from "../../../types/stack";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import BaseGoalSelect from "../../../goals/DefaultGoal/BaseGoalSelect/BaseGoalSelect";
 
 export interface GoalHistoryProps {
-  history: Stack<Goal>;
+  history: Goal[];
 }
 
 export class GoalHistory extends React.Component<
@@ -17,8 +17,10 @@ export class GoalHistory extends React.Component<
 
   render() {
     return (
-      <div className="App">
-        {this.props.history.stack.map(goal => goal.goalWidget)}
+      <div className="GoalHistory">
+        {this.props.history.map(goal => (
+          <BaseGoalSelect key={goal.id} goal={goal} />
+        ))}
       </div>
     );
   }

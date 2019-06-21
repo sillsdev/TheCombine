@@ -1,4 +1,3 @@
-// Backend still needs to implement returning and accepting jwt tokens
 /**
  * Returns authorization header with jwt token
  *
