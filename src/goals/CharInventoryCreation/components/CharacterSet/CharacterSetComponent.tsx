@@ -176,6 +176,11 @@ class CharacterSet extends React.Component<
             variant="contained"
             color="primary"
             onClick={() => this.addChars()}
+            title={
+              this.props.translate(
+                "charInventory.characterSet.addButtonTitle"
+              ) as string
+            }
             style={{ margin: 10 }} // remove when we can add theme
           >
             <Add /> <Translate id="charInventory.characterSet.addButton" />
@@ -185,6 +190,11 @@ class CharacterSet extends React.Component<
             color="secondary"
             onClick={() => this.deleteSelected()}
             disabled={this.state.selected.length === 0}
+            title={
+              this.props.translate(
+                "charInventory.characterSet.deleteButtonTitle"
+              ) as string
+            }
             style={{ margin: 10 }}
           >
             <DeleteIcon />{" "}

@@ -66,8 +66,28 @@
     "characterSet": {
       "title": ["Character Set", "Conjunto de caracteres"],
       "addButton": ["Add Chars", "Añadir caracteres"],
+      "addButtonTitle": [
+        "Add the characters in the box to the character set",
+        ""
+      ],
       "deleteButton": ["Delete Selected", "Eliminar seleccionados"],
+      "deleteButtonTitle": [
+        "Remove the selected characters from the character set",
+        ""
+      ],
       "input": ["Enter Characters...", "Ingresar caracteres..."]
+    },
+    "sampleWords": {
+      "title": ["Sample Words", "Palabras de muestra"],
+      "description": [
+        "Here are some words that don't fit your current character set:",
+        "Aquí hay algunas palabras que no se ajustan a tu conjunto de caracteres actual:"
+      ],
+      "ignore": ["Ignore for now", "Ignorar por ahora"],
+      "add": [
+        "Add characters in this word to the set",
+        "Añadir caracteres en esta palabra al conjunto."
+      ]
     },
     "save": ["Save", "Guardar"],
     "cancel": ["Cancel", "Cancelar"]

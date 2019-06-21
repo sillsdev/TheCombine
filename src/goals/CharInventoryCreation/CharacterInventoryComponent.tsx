@@ -2,17 +2,20 @@ import * as React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
+  TranslateFunction
 } from "react-localize-redux";
 import CharacterSet from "./components/CharacterSet";
 import { Grid, Button } from "@material-ui/core";
 import { Project } from "../../types/project";
+import SampleWords from "./components/SampleWords";
 
 export interface CharacterInventoryProps {
   setInventory: (inventory: string[]) => void;
   uploadInventory: () => void;
   inventory: string[];
   currentProject: Project;
+  translate: TranslateFunction;
 }
 
 interface CharacterInventoryState {}
@@ -37,7 +40,10 @@ class CharacterInventory extends React.Component<
           />
         </Grid>
         <Grid item xs={6}>
-          {/* William, put the other component here */}
+          <SampleWords
+            setInventory={inventory => this.props.setInventory(inventory)}
+            inventory={this.props.inventory}
+          />
         </Grid>
         <Grid item xs={12}>
           {/* submission buttons */}
