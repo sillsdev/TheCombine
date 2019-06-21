@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Produces("application/json")]
-    [Route("v1/Projects/Words")]
+    [Route("v1/projects/words")]
     public class UploadContoller : Controller
     {
         public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
@@ -21,7 +21,7 @@ namespace BackendFramework.Controllers
 
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
-        [HttpPost("Upload")]
+        [HttpPost("upload")]
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
             var file = model.file;
@@ -45,7 +45,7 @@ namespace BackendFramework.Controllers
             }
         }
 
-        [HttpPost("/Upload/Audio")]
+        [HttpPost("upload/audio")]
         public async Task<IActionResult> UploadAudioFile([FromForm] FileUpload model)
         {
             var file = model.File;
