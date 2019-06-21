@@ -103,6 +103,7 @@ class MergeDupStep extends React.Component<
               style={{ height: "100%" }}
               onDragOver={e => e.preventDefault()}
               onDrop={_ => this.dragDrop()}
+              title={"Drag words here to start merging them"}
             >
               <hr />
               <Grid container>
@@ -118,6 +119,7 @@ class MergeDupStep extends React.Component<
                 color="primary"
                 style={{ float: "right", margin: 10 }}
                 onClick={_ => this.next()}
+                title={"Merge these words"}
               >
                 <Translate id="goal.mergeDups.done" />
               </Button>

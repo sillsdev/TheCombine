@@ -72,6 +72,7 @@ class MergeStack extends React.Component<
           onDrop={e => {
             this.dragDrop(e);
           }}
+          title={"Drag duplicate words here"}
         >
           <div
             style={{

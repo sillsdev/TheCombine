@@ -69,6 +69,9 @@ class WordList extends React.Component<
                 draggable={true}
                 onDragStart={_ => this.drag(item)}
                 onDragEnd={_ => this.dragEnd(item)}
+                title={
+                  "Drag this word to the right to start merging it with other words"
+                }
               >
                 <CardContent>
                   <WordCard word={item} />
