@@ -26,8 +26,7 @@ namespace Backend.Tests
         public Task<Word> GetWord(string id)
         {
             var foundWord = words.Where(word => word.Id == id).Single();
-            var copiedWord = foundWord.Clone();
-            return Task.FromResult(copiedWord);
+            return Task.FromResult(foundWord.Clone());
         }
 
         public Task<Word> Create(Word word)

@@ -90,14 +90,14 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<List<User>> GetUsers(List<string> Ids)
+        public async Task<User> GetUser(string Id)
         {
             var filterDef = new FilterDefinitionBuilder<User>();
-            var filter = filterDef.In(x => x.Id, Ids);
+            var filter = filterDef.Eq(x => x.Id, Id);
 
-            var userList = await _userDatabase.Users.Find(filter).ToListAsync();
+            var userList = await _userDatabase.Users.FindAsync(filter);
 
-            return userList;
+            return userList.FirstOrDefault();
         }
 
         public async Task<User> Create(User user)

@@ -7,7 +7,7 @@ namespace BackendFramework.Interfaces
     public interface IUserService
     {
         Task<List<User>> GetAllUsers();
-        Task<List<User>> GetUsers(List<string> Ids);
+        Task<User> GetUser(string Id);
         Task<User> Create(User user);
         Task<bool> Update(string Id, User user);
         Task<bool> Delete(string Id);

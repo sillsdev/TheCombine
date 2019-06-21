@@ -22,23 +22,10 @@ namespace Backend.Tests
             return Task.FromResult(userRoles.Select(userRole => userRole.Clone()).ToList());
         }
 
-        bool IDInList(string Id, List<string> Ids)
+        public Task<UserRole> GetUserRole(string id)
         {
-            foreach (string cur_id in Ids)
-            {
-                if (cur_id.Equals(Id))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public Task<List<UserRole>> GetUserRoles(List<string> ids)
-        {
-            var foundUserRoles = userRoles.Where(userRole => IDInList(userRole.Id, ids)).ToList();
-            var copiedUserRoles = foundUserRoles.Select(userRole => userRole.Clone()).ToList();
-            return Task.FromResult(copiedUserRoles);
+            var foundUserRole = userRoles.Where(userRole => userRole.Id == id).Single();
+            return Task.FromResult(foundUserRole.Clone());
         }
 
         public Task<UserRole> Create(UserRole userRole)

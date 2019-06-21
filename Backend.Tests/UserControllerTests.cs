@@ -53,9 +53,8 @@ namespace Tests
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
-            var foundUsers = (action as ObjectResult).Value as List<User>;
-            Assert.That(foundUsers, Has.Count.EqualTo(1));
-            Assert.AreEqual(user, foundUsers[0]);
+            var foundUser = (action as ObjectResult).Value as User;
+            Assert.AreEqual(user, foundUser);
         }
 
         [Test]

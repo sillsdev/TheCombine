@@ -7,7 +7,7 @@ namespace BackendFramework.Interfaces
     public interface IProjectService
     {
         Task<List<Project>> GetAllProjects();
-        Task<List<Project>> GetProjects(List<string> Ids);
+        Task<Project> GetProject(string Id);
         Task<Project> Create(Project project);
         Task<bool> Update(string Id, Project project);
         Task<bool> Delete(string Id);

@@ -69,11 +69,9 @@ namespace BackendFramework.Controllers
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
-            List<string> ids = new List<string>();
-            ids.Add(Id);
-            var user = await _userService.GetUsers(ids);
+            var user = await _userService.GetUser(Id);
 
-            if (user.Count == 0)
+            if (user == null)
             {
                 return new NotFoundResult();
             }
@@ -101,14 +99,12 @@ namespace BackendFramework.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] User user)
         {
-            List<string> ids = new List<string>();
-            ids.Add(Id);
-            var document = await _userService.GetUsers(ids);
-            if (document.Count == 0)
+            var document = await _userService.GetUser(Id);
+            if (document == null)
             {
                 return new NotFoundResult();
             }
-            user.Id = (document.First()).Id;
+            user.Id = document.Id;
             await _userService.Update(Id, user);
             return new OkObjectResult(user.Id);
         }

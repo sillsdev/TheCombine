@@ -25,17 +25,8 @@ namespace BackendFramework.Controllers
         // Arguments: 
         // Default: null
         [HttpGet]
-        public async Task<IActionResult> Get([FromBody] List<string> Ids = null)
+        public async Task<IActionResult> Get()
         {
-            if (Ids != null)
-            {
-                var projectList = await _projectService.GetProjects(Ids);
-                if (projectList.Count != Ids.Count)
-                {
-                    return new NotFoundResult();
-                }
-                return new ObjectResult(projectList);
-            }
             return new ObjectResult(await _projectService.GetAllProjects());
         }
 
@@ -57,11 +48,8 @@ namespace BackendFramework.Controllers
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
-            List<string> Ids = new List<string>();
-            Ids.Add(Id);
-
-            var project = await _projectService.GetProjects(Ids);
-            if (project.Count == 0)
+            var project = await _projectService.GetProject(Id);
+            if (project == null)
             {
                 return new NotFoundResult();
             }

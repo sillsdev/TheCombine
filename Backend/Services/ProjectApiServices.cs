@@ -32,14 +32,14 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<List<Project>> GetProjects(List<string> Ids)
+        public async Task<Project> GetProject(string Id)
         {
             var filterDef = new FilterDefinitionBuilder<Project>();
-            var filter = filterDef.In(x => x.Id, Ids);
+            var filter = filterDef.Eq(x => x.Id, Id);
 
-            var projectList = await _projectDatabase.Projects.Find(filter).ToListAsync();
+            var projectList = await _projectDatabase.Projects.FindAsync(filter);
 
-            return projectList;
+            return projectList.FirstOrDefault();
         }
 
         public async Task<Project> Create(Project project)

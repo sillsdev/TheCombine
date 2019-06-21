@@ -52,9 +52,8 @@ namespace Tests
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
-            var foundProjects = (action as ObjectResult).Value as List<Project>;
-            Assert.That(foundProjects, Has.Count.EqualTo(1));
-            Assert.AreEqual(project, foundProjects[0]);
+            var foundProjects = (action as ObjectResult).Value as Project;
+            Assert.AreEqual(project, foundProjects);
         }
 
         [Test]

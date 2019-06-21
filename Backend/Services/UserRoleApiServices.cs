@@ -30,14 +30,14 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<List<UserRole>> GetUserRoles(List<string> Ids)
+        public async Task<UserRole> GetUserRole(string Id)
         {
             var filterDef = new FilterDefinitionBuilder<UserRole>();
-            var filter = filterDef.In(x=>x.Id , Ids);
+            var filter = filterDef.Eq(x => x.Id, Id);
 
-            var userRoleList = await _userRoleDatabase.UserRoles.Find(filter).ToListAsync();
+            var userRoleList = await _userRoleDatabase.UserRoles.FindAsync(filter);
                         
-            return userRoleList;
+            return userRoleList.FirstOrDefault();
         }
 
         public async Task<UserRole> Create(UserRole userRole)
