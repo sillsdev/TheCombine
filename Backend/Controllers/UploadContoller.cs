@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
-    [Route("v1/Projects/Words/Upload")]
+    [Route("v1/Projects/Words")]
     public class UploadContoller : Controller
     {
         public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
@@ -20,7 +21,31 @@ namespace BackendFramework.Controllers
 
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
-        [HttpPost]
+        [HttpPost("Upload")]
+        public async Task<IActionResult> Post([FromForm] FileUpload model)
+        {
+            var file = model.file;
+
+            if (file.Length > 0)
+            {
+                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
+                using (var fs = new FileStream(model.filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fs);
+                }
+            }
+            try
+            {
+                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+                return new ObjectResult(parser.ReadLiftFile(model.filePath));
+            }
+            catch (Exception)
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+        }
+
+        [HttpPost("{Id}/Upload/Audio")]
         public async Task<IActionResult> Post([FromForm] FileUpload model)
         {
             var file = model.File;
