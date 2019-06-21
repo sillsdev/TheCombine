@@ -32,14 +32,19 @@ class CharacterInventory extends React.Component<
 
   render() {
     return (
-      <Grid container justify="center" alignItems="center">
-        <Grid item xs={6}>
+      <Grid
+        container
+        justify="center"
+        spacing={2}
+        style={{ background: "#eee" }}
+      >
+        <Grid item sm={6} xs={12}>
           <CharacterSet
             setInventory={inventory => this.props.setInventory(inventory)}
             inventory={this.props.inventory}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item sm={6} xs={12}>
           <SampleWords
             setInventory={inventory => this.props.setInventory(inventory)}
             inventory={this.props.inventory}
@@ -47,26 +52,28 @@ class CharacterInventory extends React.Component<
         </Grid>
         <Grid item xs={12}>
           {/* submission buttons */}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              this.props.uploadInventory();
-            }}
-            style={{ margin: 10 }} // remove when we can add theme
-          >
-            <Translate id="charInventory.save" />
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              alert("are you sure?"); //obviously this needs to be a dialog
-            }}
-            style={{ margin: 10 }} // remove when we can add theme
-          >
-            {" "}
-            <Translate id="charInventory.cancel" />
-          </Button>
+          <Grid container justify="center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                this.props.uploadInventory();
+              }}
+              style={{ margin: 10 }} // remove when we can add theme
+            >
+              <Translate id="charInventory.save" />
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                alert("are you sure?"); //obviously this needs to be a dialog
+              }}
+              style={{ margin: 10 }} // remove when we can add theme
+            >
+              {" "}
+              <Translate id="charInventory.cancel" />
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     );

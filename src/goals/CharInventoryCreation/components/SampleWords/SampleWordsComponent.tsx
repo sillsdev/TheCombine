@@ -4,8 +4,10 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography, TextField, Button, Paper } from "@material-ui/core";
-import { Delete as DeleteIcon, Add } from "@material-ui/icons";
+import { Grid, Typography, Paper, Button } from "@material-ui/core";
+import { Refresh as RefreshIcon } from "@material-ui/icons";
+import { Word } from "../../../../types/word";
+import * as backend from "../../../../backend";
 
 export interface SampleWordsProps {
   setInventory: (inventory: string[]) => void;
@@ -13,7 +15,7 @@ export interface SampleWordsProps {
 }
 
 interface SampleWordsState {
-  chars: string; // characters in the textbox
+  words: string[];
   selected: string[];
   dragChar: string;
   dropChar: string;
@@ -25,47 +27,31 @@ class SampleWords extends React.Component<
 > {
   constructor(props: SampleWordsProps & LocalizeContextProps) {
     super(props);
-    this.state = { chars: "", selected: [], dragChar: "", dropChar: "" };
+    this.state = {
+      words: [],
+      selected: [],
+      dragChar: "",
+      dropChar: ""
+    };
   }
 
-  handleChange(
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) {
-    this.setState({ chars: e.target.value.replace(/\s/g, "") }); // removes whitespace
-  }
-
-  handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === "Enter") {
-      this.addChars();
-    }
+  componentDidMount() {
+    this.getWords();
   }
 
   // toggles selection (for deletion) of a character
-  toggleSelected(char: string) {
+  toggleSelected(word: string) {
     let selected = this.state.selected;
-    let index = selected.indexOf(char);
+    let index = selected.indexOf(word);
 
     if (index === -1) {
-      selected.push(char);
+      selected.push(word);
     } else {
       selected.splice(index, 1);
     }
 
     this.setState({
       selected
-    });
-  }
-
-  // adds characters in the textbox to the inventory
-  addChars() {
-    this.props.setInventory([
-      ...this.props.inventory,
-      ...this.state.chars.split("")
-    ]);
-    this.setState({
-      chars: ""
     });
   }
 
@@ -105,6 +91,31 @@ class SampleWords extends React.Component<
     this.props.setInventory(inv);
   }
 
+  /**
+   * Gets the words that don't fit the character inventory
+   */
+  async getWords() {
+    let inv = [...this.props.inventory];
+    let sampleWords: string[] = [];
+    let allWords: Word[] = await backend.getFrontierWords();
+
+    let word;
+    for (let i: number = 0; i < allWords.length; i++) {
+      if (sampleWords.length >= 5) break;
+      word = allWords[i].vernacular;
+      for (let j: number = 0; j < word.length; j++) {
+        if (inv.indexOf(word[j]) === -1 && word[j] !== " ") {
+          sampleWords.push(word);
+          break;
+        }
+      }
+    }
+
+    this.setState({
+      words: [...sampleWords]
+    });
+  }
+
   render() {
     return (
       <Grid
@@ -113,7 +124,6 @@ class SampleWords extends React.Component<
         direction="row"
         justify="flex-start"
         alignItems="center"
-        style={{ background: "#eee" }}
       >
         <Grid item xs={12}>
           <Typography component="h1" variant="h4">
@@ -122,78 +132,36 @@ class SampleWords extends React.Component<
           <Typography variant="subtitle1">
             <Translate id="charInventory.sampleWords.description" />
           </Typography>
-        </Grid>
-        {this.props.inventory.map(char => [
-          this.state.dropChar === char && this.state.dragChar !== char ? (
-            <Grid item xs={1} />
-          ) : null, // Creates a blank space where the tile will be dropped
-          <Grid
-            item
-            xs={1}
-            onDragOver={e => {
-              e.preventDefault();
-              e.dataTransfer.dropEffect = "move";
+          <Button
+            onClick={() => {
+              this.getWords();
             }}
-            key={"char_" + char}
           >
-            <Paper
-              className="classes.paper"
-              style={{
-                minWidth: 40,
-                textAlign: "center",
-                background: this.state.selected.includes(char) ? "#fcc" : "#fff"
-              }}
-              draggable={true}
-              onDragStart={e => {
-                this.setState({ dragChar: char });
-                e.dataTransfer.effectAllowed = "move";
-              }}
-              onDragEnd={e => {
-                e.preventDefault();
-                this.moveChar();
-              }}
-              onDragOver={e => {
-                if (this.state.dropChar !== char)
-                  this.setState({ dropChar: char });
-              }}
-              onClick={() => this.toggleSelected(char)}
-            >
-              {char}
-            </Paper>
+            <RefreshIcon />
+          </Button>
+        </Grid>
+        {this.state.words.map(word => (
+          <Grid item xs={12} key={word}>
+            <Grid container justify="flex-start">
+              <Paper
+                className="classes.paper"
+                style={{
+                  minWidth: 40,
+                  textAlign: "center",
+                  padding: "5px 10px",
+                  cursor: "pointer",
+                  background: this.state.selected.includes(word)
+                    ? "#cfc"
+                    : "#fff"
+                }}
+                onClick={() => this.toggleSelected(word)}
+              >
+                {word}
+              </Paper>
+            </Grid>
           </Grid>
-        ])}
+        ))}
         <Grid item xs={12} />
-        <Grid item xs={6}>
-          <TextField
-            value={this.state.chars}
-            fullWidth
-            variant="outlined"
-            name="chracters"
-            label={<Translate id="charInventory.characterSet.input" />}
-            onChange={e => this.handleChange(e)}
-            onKeyDown={e => this.handleKeyDown(e)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => this.addChars()}
-            style={{ margin: 10 }} // remove when we can add theme
-          >
-            <Add /> <Translate id="charInventory.characterSet.addButton" />
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => this.deleteSelected()}
-            disabled={this.state.selected.length === 0}
-            style={{ margin: 10 }}
-          >
-            <DeleteIcon />{" "}
-            <Translate id="charInventory.characterSet.deleteButton" />
-          </Button>
-        </Grid>
       </Grid>
     );
   }

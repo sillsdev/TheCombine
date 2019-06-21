@@ -20,7 +20,9 @@ export interface CharacterInventoryAction {
   inventory: string[];
 }
 
-// sends the character inventory to the server
+/**
+ * Sends the character inventory to the server
+ */
 export function uploadInventory() {
   return async (
     dispatch: Dispatch<CharacterInventoryAction | ProjectAction>,
@@ -43,3 +45,8 @@ export function setInventory(inventory: string[]): CharacterInventoryAction {
     inventory
   };
 }
+
+/**
+ * Gets words that don't fit the character inventory
+ */
+export function getSampleWords() {}
