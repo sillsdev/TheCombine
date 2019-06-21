@@ -15,13 +15,15 @@ namespace BackendFramework.Controllers
     {
         public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
         public readonly IWordService _wordService;
+        private readonly IUserService _userService;
         public readonly IWordRepository _wordRepo;
 
-        public UploadContoller(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService service)
+        public UploadContoller(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService wordService, IUserService userService)
         {
             _merger = merger;
             _wordRepo = repo;
-            _wordService = service;
+            _userService = userService;
+            _wordService = wordService;
         }
 
         // POST: v1/Project/Words/upload
@@ -50,6 +52,35 @@ namespace BackendFramework.Controllers
             catch (Exception)
             {
                 return new UnsupportedMediaTypeResult();
+            }
+        }
+
+        [HttpPost("{Id}/Upload/Avatar")]
+        public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload model)
+        {
+            var file = model.file;
+            string extention = Path.GetExtension(file.FileName);
+
+            if (file.Length > 0)
+            {
+                //TODO: how to keep actual file ending
+                model.filePath = Path.Combine("./Avatar/" + userId + extention);
+                using (var fs = new FileStream(model.filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fs);
+                }
+            }
+            User gotUser = _userService.GetUsers(userId);
+            if (gotUser == null)
+            {
+                gotUser.Avatar = model.filePath;
+                bool success = await _userService.Update(userId, gotUser);
+
+                return new OkObjectResult(success);
+            }
+            else
+            {
+                return new NotFoundObjectResult(userId);
             }
         }
 
