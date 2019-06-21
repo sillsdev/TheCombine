@@ -95,7 +95,9 @@ namespace Tests
             FileStream fstream = File.OpenRead("testFile.lift");
 
             FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
-            FileUpload fileUpload = new FileUpload(formFile, "FileName");
+            FileUpload fileUpload = new FileUpload();
+            fileUpload.name = "FileName";
+            fileUpload.file = formFile;
             var numberofelements = controller.Post(fileUpload).Result;
 
             var allWords = _wordrepo.GetAllWords();
