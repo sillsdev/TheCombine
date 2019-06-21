@@ -23,18 +23,6 @@ namespace Backend.Tests
             return Task.FromResult(words.Select(word => word.Clone()).ToList());
         }
 
-        bool IDInList(string Id, List<string> Ids)
-        {
-            foreach (string cur_id in Ids)
-            {
-                if (cur_id.Equals(Id))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public Task<Word> GetWord(string id)
         {
             var foundWord = words.Where(word => word.Id == id).Single();

@@ -49,9 +49,6 @@ namespace BackendFramework.Controllers
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
-            //List<string> Ids = new List<string>();
-            //Ids.Add(Id);
-
             var word = await _wordRepo.GetWord(Id);
             if (word == null)
             {

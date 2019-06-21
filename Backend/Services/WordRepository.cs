@@ -22,8 +22,12 @@ namespace BackendFramework.Services
 
         public async Task<Word> GetWord(string Id)
         {
-            var wordList =  await _wordDatabase.Words.Find(Id).ToListAsync();
-            return wordList[0];
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.Eq(x => x.Id, Id);
+
+            var wordList =  await _wordDatabase.Words.FindAsync(filter);
+
+            return wordList.FirstOrDefault();
         }
 
         public async Task<bool> DeleteAllWords()
