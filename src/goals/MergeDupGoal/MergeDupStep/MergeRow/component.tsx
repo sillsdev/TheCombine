@@ -65,7 +65,6 @@ export class MergeRow extends React.Component<
             item
             onDragOver={e => e.preventDefault()}
             onDrop={_ => this.drop()}
-            title={"Drag new senses here"}
           >
             {this.props.draggedWord && (
               <Card style={{ width: 200, backgroundColor: "#eee" }}>
@@ -79,7 +78,7 @@ export class MergeRow extends React.Component<
             style={{ flex: 1 }}
             onDragOver={e => e.preventDefault()}
             onDrop={_ => this.drop()}
-            title={"Drag new senses here"}
+            title={this.props.translate("mergeDups.helpText.sense") as string}
           />
         </Grid>
       </Box>

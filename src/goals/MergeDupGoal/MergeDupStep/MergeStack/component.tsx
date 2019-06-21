@@ -1,10 +1,11 @@
 //external modules
 import * as React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { Translate, LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
 import { Box, CardContent, Card } from "@material-ui/core";
 import { Sense } from "../component";
 import WordCard from "../WordCard";
+
 
 //interface for component props
 export interface MergeStackProps {
@@ -72,7 +73,7 @@ class MergeStack extends React.Component<
           onDrop={e => {
             this.dragDrop(e);
           }}
-          title={"Drag duplicate words here"}
+          title={this.props.translate("mergeDups.helpText.dups") as string}
         >
           <div
             style={{
@@ -85,7 +86,7 @@ class MergeStack extends React.Component<
           >
             {this.props.draggedWord &&
               this.props.draggedWord.id !== lastCard.id &&
-              "Drag new duplicate word here"}
+              <Translate id="mergeDups.helpText.dups"/>}
           </div>
           <CardContent>
             <WordCard word={lastCard} />

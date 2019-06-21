@@ -70,7 +70,7 @@ class WordList extends React.Component<
                 onDragStart={_ => this.drag(item)}
                 onDragEnd={_ => this.dragEnd(item)}
                 title={
-                  "Drag this word to the right to start merging it with other words"
+                  this.props.translate("mergeDups.helpText.list") as string
                 }
               >
                 <CardContent>
