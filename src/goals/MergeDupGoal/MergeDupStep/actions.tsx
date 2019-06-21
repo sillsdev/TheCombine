@@ -25,6 +25,17 @@ export type CLEAR_MERGES = typeof CLEAR_MERGES;
 export const SWAP_DUPLICATE = "SWAP_DUPLICATE";
 export type SWAP_DUPLICATE = typeof SWAP_DUPLICATE;
 
+export const MERGE_DUPLICATE_STEP_GENERIC =
+  ADD_DUPLICATE || REMOVE_DUPLICATE || CLEAR_MERGES;
+export type MERGE_DUPLICATE_STEP_GENERIC =
+  | ADD_DUPLICATE
+  | REMOVE_DUPLICATE
+  | CLEAR_MERGES;
+
+export interface MergeTreePayload {
+  word: Word;
+  parent?: number;
+}
 export interface MergeTreeAction {
   type:
   | ADD_PARENT
@@ -33,7 +44,7 @@ export interface MergeTreeAction {
   | ADD_DUPLICATE
   | REMOVE_DUPLICATE
   | SWAP_DUPLICATE;
-  payload: {word: Word; parent?: number};
+  payload: MergeTreePayload;
 }
 
 export function moveDuplicate(word: Word, dest: number): MergeTreeAction {
