@@ -119,3 +119,11 @@ export async function uploadLift(project: Project, lift: File) {
     headers: authHeader()
   });
 }
+
+export async function uploadMp3(project: Project, mp3: File) {
+  let data = new FormData();
+  data.append("file", mp3);
+  await backendServer.post("projects/words/upload/audio", data, {
+    headers: authHeader()
+  });
+}
