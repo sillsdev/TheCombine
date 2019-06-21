@@ -22,7 +22,7 @@ namespace BackendFramework.Controllers
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
         [HttpPost("Upload")]
-        public async Task<IActionResult> Post([FromForm] FileUpload model)
+        public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
             var file = model.file;
 
@@ -45,28 +45,23 @@ namespace BackendFramework.Controllers
             }
         }
 
-        [HttpPost("{Id}/Upload/Audio")]
-        public async Task<IActionResult> Post([FromForm] FileUpload model)
+        [HttpPost("/Upload/Audio")]
+        public async Task<IActionResult> UploadAudioFile([FromForm] FileUpload model)
         {
             var file = model.File;
 
             if (file.Length > 0)
             {
-                model.FilePath = Path.Combine("./uploadFile-" + model.Name + ".xml");
+                model.FilePath = Path.Combine("./uploadAudioFile-" + model.Name + ".mp3");
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
                 }
+                //TODO: add audiofile path to word database entry
+                //      
+                return new ObjectResult(model.FilePath);
             }
-            try
-            {
-                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                return new ObjectResult(parser.ReadLiftFile(model.FilePath));
-            }
-            catch (Exception)
-            {
-                return new UnsupportedMediaTypeResult();
-            }
+            return new UnsupportedMediaTypeResult();
         }
     }
 }
