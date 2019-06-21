@@ -34,7 +34,7 @@ class MergeStack extends React.Component<
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
-    if (this.props.draggedWord && this.props.draggedWord !== this.topCard()) {
+    if (this.props.draggedWord && this.props.draggedWord !== this.parentCard()) {
       this.addWord(this.props.draggedWord);
     }
   }
@@ -57,12 +57,12 @@ class MergeStack extends React.Component<
     }
   }
 
-  topCard(): Word {
-    return this.props.sense.dups[this.props.sense.dups.length - 1];
+  parentCard(): Word {
+    return this.props.sense.dups[0];
   }
 
   render_single() {
-    var lastCard = this.topCard();
+    var lastCard = this.parentCard();
     return (
       <Box style={{ width: 200 }}>
         <Card
