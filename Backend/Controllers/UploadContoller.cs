@@ -1,4 +1,5 @@
-﻿using BackendFramework.ValueModels;
+﻿using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
 using System;
@@ -13,10 +14,14 @@ namespace BackendFramework.Controllers
     public class UploadContoller : Controller
     {
         public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
+        public readonly IWordService _wordService;
+        public readonly IWordRepository _wordRepo;
 
-        public UploadContoller(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger)
+        public UploadContoller(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService service)
         {
             _merger = merger;
+            _wordRepo = repo;
+            _wordService = service;
         }
 
         // POST: v1/Project/Words/upload
@@ -28,7 +33,7 @@ namespace BackendFramework.Controllers
 
             if (file.Length > 0)
             {
-                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
+                model.filePath = Path.Combine("./Words/uploadFile-" + model.name + ".xml");
                 using (var fs = new FileStream(model.filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
@@ -45,20 +50,24 @@ namespace BackendFramework.Controllers
             }
         }
 
-        [HttpPost("upload/audio")]
-        public async Task<IActionResult> UploadAudioFile([FromForm] FileUpload model)
+        [HttpPost("{Id}/upload/audio")]
+        public async Task<IActionResult> UploadAudioFile(string wordId, [FromForm] FileUpload model)
         {
             var file = model.File;
 
             if (file.Length > 0)
             {
-                model.FilePath = Path.Combine("./uploadAudioFile-" + model.Name + ".mp3");
+                model.FilePath = Path.Combine("./Audio/" + wordId + ".mp3");
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
                 }
-                //TODO: add audiofile path to word database entry
-                //      
+                //add the relative path to the audio field of 
+                Word gotWord = _words.GetWords(wordId);
+                gotWord.Audio = model.FilePath;
+                //update the entry
+                _wordService.Update(wordId, gotWord);
+
                 return new ObjectResult(model.FilePath);
             }
             return new UnsupportedMediaTypeResult();

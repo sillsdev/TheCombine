@@ -35,6 +35,7 @@ Backend.Tests/obj
 Backend/BackendFramework.csproj.user
 Backend/.vscode/**/*
 Backend/SIL.Lift/**/*
+start_mongo.bat
 /**/*.xml
 /**/*.lift
 /**/*.orig
