@@ -39,7 +39,11 @@ class SampleWords extends React.Component<
     this.getWords();
   }
 
-  // toggles selection (for deletion) of a character
+  componentWillReceiveProps() {
+    this.getWords();
+  }
+
+  // toggles selection (for deletion) of a word (not used right now)
   toggleSelected(word: string) {
     let selected = this.state.selected;
     let index = selected.indexOf(word);
@@ -55,7 +59,7 @@ class SampleWords extends React.Component<
     });
   }
 
-  // deletes selected chraracters
+  // deletes selected word (not used right now)
   deleteSelected() {
     this.props.setInventory([
       ...this.props.inventory.filter(
@@ -67,34 +71,11 @@ class SampleWords extends React.Component<
     });
   }
 
-  // reorders the character inventory by moving one char
-  moveChar() {
-    if (this.state.dragChar === this.state.dropChar) {
-      this.setState({
-        dragChar: "",
-        dropChar: ""
-      });
-      return;
-    }
-
-    let inv = [...this.props.inventory];
-    let dragIndex = inv.indexOf(this.state.dragChar);
-    let dropIndex = inv.indexOf(this.state.dropChar);
-
-    inv.splice(dragIndex, 1);
-    inv.splice(dropIndex, 0, this.state.dragChar);
-
-    this.setState({
-      dragChar: "",
-      dropChar: ""
-    });
-    this.props.setInventory(inv);
-  }
-
   /**
    * Gets the words that don't fit the character inventory
    */
   async getWords() {
+    console.log("hya");
     let inv = [...this.props.inventory];
     let sampleWords: string[] = [];
     let allWords: Word[] = await backend.getFrontierWords();
