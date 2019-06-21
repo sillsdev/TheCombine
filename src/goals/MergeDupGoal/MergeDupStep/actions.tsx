@@ -22,14 +22,25 @@ export type REMOVE_DUPLICATE = typeof REMOVE_DUPLICATE;
 export const CLEAR_MERGES = "CLEAR_MERGES";
 export type CLEAR_MERGES = typeof CLEAR_MERGES;
 
+export const SWAP_DUPLICATE = "SWAP_DUPLICATE";
+export type SWAP_DUPLICATE = typeof SWAP_DUPLICATE;
+
 export interface MergeTreeAction {
   type:
     | ADD_PARENT
     | CLEAR_MERGES
     | ADD_SENSE
     | ADD_DUPLICATE
-    | REMOVE_DUPLICATE;
+    | REMOVE_DUPLICATE
+	  | SWAP_DUPLICATE;
   payload: { word: Word; parent?: number };
+}
+
+export function swapDuplicates(word: Word, dest: number): MergeTreeAction {
+	return {
+		type: SWAP_DUPLICATE,
+		payload: { word, parent: dest}
+	};
 }
 
 export function addParent(word: Word): MergeTreeAction {
