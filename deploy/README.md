@@ -1,14 +1,120 @@
-# How To Deploy TheCombine Application #
+# How To Deploy TheCombine Application
+
+This document describes how to install a build from *TheCombine* project for
+development work or for production use.  There are two methods described below.
+The first method, [Vagrant VM Setup](#vagrant-vm-setup), is the simplest method
+and is appropriate for testing the application in an environment that matches the
+production systems.
+
+The second method, [Stand Up a New Machine](#stand-up-a-new-machine), describes
+how to install Ubuntu 18.04 Server on a new PC or virtual machine and then run
+the Ansible playbooks to install and configure *TheCombine* and its dependencies.
+Setting up a virtual machine has some additional steps that are required in order
+to connect to it over the network.
+
+## Vagrant VM Setup
+
+TO DO.
+
+## Stand Up a New Machine
+
+### Install Ubuntu Bionic Server
+
+  1. Download the ISO image for Ubuntu Server from Ubuntu (currently at http://cdimage.ubuntu.com/releases/18.04.2/release/ubuntu-18.04.2-server-amd64.iso)
+
+  1. To install on a PC, copy the .iso file to a bootable USB stick.  See the following tutorials for how to do that on [Ubuntu](https://tutorials.ubuntu.com/tutorial/tutorial-create-a-usb-stick-on-ubuntu) or [Windows](https://tutorials.ubuntu.com/tutorial/tutorial-create-a-usb-stick-on-windows).
+
+  1. If you wish to create a Virtual Machine,
+     1. install [VirtualBox](https://www.virtualbox.org/) from Oracle.
+     2. open *VirtualBox* and create a new virtual machine.
+     3. Start the Virtual Machine.  *VirtualBox* will prompt you to select the .iso file that you downloaded above.
+
+  1. Boot the PC/Virtual Machine from the bootable media and follow the installation instructions.  In particular,
+     1. You will want the installer to format the entire (virtual) disk and use LVM (that's the default)
+
+     1. *Make sure that you select the OpenSSH server when prompted to select the software for your server:*
+  ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
+
+  1. Once installation is complete, you will need to setup networking for a Virtual Machine.  If you are installing Ubuntu on a PC, you can skip to [Installing the App](#installing-the-app).
+     1. Open *VirtualBox*.
+
+     1. Create a virual network interface:
+
+        1. Click on the *File* menu and select *Host Network Manager...*
+
+        1. Click the *Create* button to create a new Host Network Adapter.  If it is the first such adapter created it will have the following attributes:
+
+           | Field         | Value           |
+           | ------------- | :-------------: |
+           | Name:         | vboxnet0        |
+           | Addresses:    | 192.168.56.1/24 |
+           | DHCP Enabled: | No              |
+
+        1. *Close* the *Host Network Manager* dialog box.
+
+    1. Select the new VM and click on the *Settings* button;
+
+    1. Click on the Adapter 2 tab and set it up as follows:
+
+           | Field                   | Value             |
+           | ----------------------- | :---------------: |
+           | Enable Network Adapter: | Checked           |
+           | Attached to:            | Host-only Adapter |
+           | Name:                   | vboxnet0 (linux)<br>VirtualBox Host-Only Ethernet Adapter (windows)   |
+
+    1. For linux hosts, make sure your account is a member of the vboxusers group.
+
+    1. Start the virtual machine and log in.  Setup the network connection for the second adapter as follows:
+
+       1. Run ```ip address``` to list the available interfaces.  There will be one ethernet interface that is up and has an IP address, e.g. enp0s3.  There will be a second ethernet interface that is down, e.g. enp0s8.  Note the name of this interface.
+
+       1. Edit /etc/netplan/01-netcfg.yaml
+          ```sudo nano /etc/netplan/01-netcfg.yaml```
+
+       1. Edit the file so that it contains:
+          ```
+          # This file describes the network interfaces available on your system
+          # For more information, see netplan(5).
+          network:
+            version: 2
+            renderer: networkd
+            ethernets:
+              enp0s3:
+                dhcp4: yes
+              enp0s8:
+                addresses: [192.168.56.10/24]
+                gateway4: 192.168.1.1
+                nameservers:
+                  addresses: [8.8.8.8,8.8.4.4]
+                dhcp4: no
+          ```
+          ... substituting the names of your adapters, of course.  Also make sure that the address you assign is in the subnet specified by the Host Network Adapter.  Unfortunately, you will have to type it.  You will not be able to cut & paste to the VM.
+
+       1. Run: ```sudo netplan apply```
+
+       1. Add the VM's IP address to the ```/etc/hosts``` file on the host computer *(optional)*:
+
+         ```
+         # Virtual Machines
+         192.168.56.10	nuc-vm
+
+         ```
+
+    1. Now you can access the virtual machine (e.g. ssh, http,) at ```192.168.56.10```.
+
+
+
+
+### Installing the App
 
 The ```deploy``` folder of TheCombine project is a collection of Ansible playbooks that can be use to configure a new installation of Ubuntu Server.  Each playbook uses a set of Ansible roles to drive the configurations.
 
-## Running the playbook ##
 A setup script, ```setup-target.sh```, is provided to perform the installation.  Its usage is:
 ```
 ./setup-target.sh [options] user@machinename
 ```
 
-### options: ###
+### options:
 
 **```-c or --copyid```** causes the script to use ```ssh-copy-id``` to copy your ssh id to the target machine before running the playbook to setup the machine.  This obviates the need to enter your password every time that you connect to the machine.
 
@@ -20,7 +126,7 @@ A setup script, ```setup-target.sh```, is provided to perform the installation. 
 
 *if neither the -i nor the -t options are specified, the install and the test tasks will be run.*
 
-## Roles ##
+## Roles
 
 If you need to create a playbook to run individual roles, the following roles are available in this project.
 
@@ -40,103 +146,3 @@ If you need to create a playbook to run individual roles, the following roles ar
   **the_combine_app** - installs TheCombine application from the ```build``` directory.  The application must be built first; it is not built by the ansible playbook.
 
   **wifi_ap** - sets up the wifi interface as a wifi access point (hotspot)
-
-
-## Setting up a Virtual Machine ##
-
-```setup-target.sh``` can be used setup a Virtual Machine (VM) as well.  The following instructions describe how to install Ubuntu Server on a virtual machine and how to set it up so that you can use ```ssh``` to connect to it:
-
-  1. Download the ISO image for Ubuntu Server from Ubuntu (currently at http://cdimage.ubuntu.com/releases/18.04.2/release/ubuntu-18.04.2-server-amd64.iso)
-
-  1. Open Oracle's *VirtualBox*.
-
-  1. Create a virual network interface:
-
-     1. Click on the *File* menu and select *Host Network Manager...*
-
-     1. Click the *Create* button to create a new Host Network Adapter.  If it is the first such adapter created it will have the following attributes:
-
-        | Field         | Value           |
-        | ------------- | :-------------: |
-        | Name:         | vboxnet0        |
-        | Addresses:    | 192.168.56.1/24 |
-        | DHCP Enabled: | No              |
-
-  1. Create the VM
-     1.  Click the *New* button to create a new VM.
-
-     1. Give the new VM a name and set the OS Type to ```Linux``` and the Version to ```Ubuntu (64-bit)```; click *Next*.
-
-     1. Select the amount of memory you want for your VM; click *Next*.
-
-     1. In the next few screens, you will setup the hard disk:
-        1. Create a new virtual hard disk,
-        1. Use a VirtualBox Disk Image (VDI),
-        1. Select dynamically allocated,
-        1. and set the size to 10 GB.
-
-  1. Setup DVD image and Networking
-
-     1. Select the new VM and click on the *Settings* button;
-
-     1. Load the Ubuntu Server ISO image into the optical drive:
-        1. Click on the *Storage* section in the pane on the left side;
-        1. click on the optical disk drive under *Controller: IDE* in the storage devices;
-        1. Click on the optical disk icon on the dropdown menu (circled in red in the image below) and select the Ubuntu Server ISO image downloaded above.
-           ![alt text](./images/vbox-storage-settings.png "Virtual Box Storage Settings")
-
-     1. Click on the *Network* section.
-
-     1. Click on the Adapter 2 tab and set it up as follows:
-
-         | Field                   | Value             |
-         | ----------------------- | :---------------: |
-         | Enable Network Adapter: | Checked           |
-         | Attached to:            | Host-only Adapter |
-         | Name:                   | vboxnet0          |
-
-     1. Start the virtual machine and follow the prompts to install Ubuntu Server.  Some things to note are:
-
-        1. You will want the installer to format the entire (virtual) disk and use LVM (that's the default)
-
-        1. *Make sure that you select the OpenSSH server when prompted to select the software for your server:*
-        ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
-
-
-  6. When installation is complete, log in to the virtual machine and setup the network connection for the second adapter.
-
-     1. Run ```ip address``` to list the available interfaces.  There will be one ethernet interface that is up and has an IP address, e.g. enp0s3.  There will be a second ethernet interface that is down, e.g. enp0s8.  Note the name of this interface.
-
-     1. Edit /etc/netplan/01-netcfg.yaml
-        ```sudo nano /etc/netplan/01-netcfg.yaml```
-
-     1. Edit the file so that it contains:
-        ```
-        # This file describes the network interfaces available on your system
-        # For more information, see netplan(5).
-        network:
-          version: 2
-          renderer: networkd
-          ethernets:
-            enp0s3:
-              dhcp4: yes
-            enp0s8:
-              addresses: [192.168.56.10/24]
-              gateway4: 192.168.1.1
-              nameservers:
-                addresses: [8.8.8.8,8.8.4.4]
-              dhcp4: no
-        ```
-        ... substituting the names of your adapters, of course.  Also make sure that the address you assign is in the subnet specified by the Host Network Adapter.  Unfortunately, you will have to type it.  You will not be able to cut & paste to the VM.
-
-     1. Run: ```sudo netplan apply```
-
-     1. Add the VM's IP address to the ```/etc/hosts``` file on the host computer *(optional)*:
-
-       ```
-       # Virtual Machines
-       192.168.56.10	nuc-vm
-
-       ```
-
-  1. Now you can run the setup-target.sh to install the required packages.  Use ```192.168.56.10``` as the target IP address.
