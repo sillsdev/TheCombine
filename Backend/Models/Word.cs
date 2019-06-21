@@ -10,13 +10,6 @@ namespace BackendFramework.ValueModels
 {
     public class FileUpload
     {
-        public FileUpload(FormFile file, string name)
-        {
-            this.file = file;
-            this.name = name;
-            this.filePath = "";
-        }
-
         public IFormFile file { get; set; }
         public string name { get; set; }
         public string filePath { get; set; }
