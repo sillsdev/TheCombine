@@ -39,10 +39,6 @@ class SampleWords extends React.Component<
     this.getWords();
   }
 
-  componentWillReceiveProps() {
-    this.getWords();
-  }
-
   // toggles selection (for deletion) of a word (not used right now)
   toggleSelected(word: string) {
     let selected = this.state.selected;
