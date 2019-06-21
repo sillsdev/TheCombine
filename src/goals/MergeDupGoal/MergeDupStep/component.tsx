@@ -103,6 +103,7 @@ class MergeDupStep extends React.Component<
               style={{ height: "100%" }}
               onDragOver={e => e.preventDefault()}
               onDrop={_ => this.dragDrop()}
+              title={this.props.translate("mergeDups.helpText.root") as string}
             >
               <hr />
               <Grid container>
@@ -118,6 +119,7 @@ class MergeDupStep extends React.Component<
                 color="primary"
                 style={{ float: "right", margin: 10 }}
                 onClick={_ => this.next()}
+                title={this.props.translate("mergeDups.helpText.next") as string}
               >
                 <Translate id="goal.mergeDups.done" />
               </Button>

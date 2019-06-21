@@ -78,6 +78,7 @@ export class MergeRow extends React.Component<
             style={{ flex: 1 }}
             onDragOver={e => e.preventDefault()}
             onDrop={_ => this.drop()}
+            title={this.props.translate("mergeDups.helpText.sense") as string}
           />
         </Grid>
       </Box>

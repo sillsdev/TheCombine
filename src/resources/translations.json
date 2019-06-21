@@ -71,5 +71,14 @@
     },
     "save": ["Save", "Guardar"],
     "cancel": ["Cancel", "Cancelar"]
+  },
+  "mergeDups":{
+	"helpText": {
+		"root": ["Drag words here to start merging them", "Arrastra las palabras aquí para comenzar a fusionarlas"],
+		"dups": ["Drag duplicate words here", "Arrastra palabras duplicadas aquí"],
+		"sense":["Drag new sense here", "Arrastra un nuevo sentido aquí"],
+		"next": ["Merge all these words and load a new set of words","Combina todas estas palabras y carga un nuevo conjunto de palabras"],
+		"list": ["Drag this word to the right to start merging it with other words", "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras"]
+	}
   }
 }
