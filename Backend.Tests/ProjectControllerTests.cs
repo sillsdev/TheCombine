@@ -21,10 +21,9 @@ namespace Tests
             controller = new ProjectController(_projectService);
         }
 
-        Project testProject()
+        Project RandomProject()
         {
             Project project = new Project();
-            // let's add some random data
             project.Name = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
             return project;
         }
@@ -32,9 +31,9 @@ namespace Tests
         [Test]
         public void TestGetAllProjects()
         {
-            _projectService.Create(testProject());
-            _projectService.Create(testProject());
-            _projectService.Create(testProject());
+            _projectService.Create(RandomProject());
+            _projectService.Create(RandomProject());
+            _projectService.Create(RandomProject());
 
             var projects = (controller.Get().Result as ObjectResult).Value as List<Project>;
             Assert.That(projects, Has.Count.EqualTo(3));
@@ -44,10 +43,10 @@ namespace Tests
         [Test]
         public void TestGetProject()
         {
-            Project project = _projectService.Create(testProject()).Result;
+            Project project = _projectService.Create(RandomProject()).Result;
 
-            _projectService.Create(testProject());
-            _projectService.Create(testProject());
+            _projectService.Create(RandomProject());
+            _projectService.Create(RandomProject());
 
             var action = controller.Get(project.Id).Result;
 
@@ -61,7 +60,7 @@ namespace Tests
         [Test]
         public void TestCreateProject()
         {
-            Project project = testProject();
+            Project project = RandomProject();
             string id = (controller.Post(project).Result as ObjectResult).Value as string;
             project.Id = id;
             Assert.Contains(project, _projectService.GetAllProjects().Result);
@@ -70,12 +69,12 @@ namespace Tests
         [Test]
         public void TestUpdateProject()
         {
-            Project origProject = _projectService.Create(testProject()).Result;
+            Project origProject = _projectService.Create(RandomProject()).Result;
 
             Project modProject = origProject.Clone();
             modProject.Name = "Mark";
 
-            var action = controller.Put(modProject.Id, modProject);
+            _ = controller.Put(modProject.Id, modProject);
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(1));
             Assert.Contains(modProject, _projectService.GetAllProjects().Result);
@@ -84,11 +83,11 @@ namespace Tests
         [Test]
         public void TestDeleteProject()
         {
-            Project origProject = _projectService.Create(testProject()).Result;
+            Project origProject = _projectService.Create(RandomProject()).Result;
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(1));
 
-            var action = controller.Delete(origProject.Id).Result;
+            _ = controller.Delete(origProject.Id).Result;
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
@@ -96,13 +95,13 @@ namespace Tests
         [Test]
         public void TestDeleteAllProjects()
         {
-            _projectService.Create(testProject());
-            _projectService.Create(testProject());
-            _projectService.Create(testProject());
+            _projectService.Create(RandomProject());
+            _projectService.Create(RandomProject());
+            _projectService.Create(RandomProject());
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(3));
 
-            var action = controller.Delete().Result;
+            _ = controller.Delete().Result;
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
         }

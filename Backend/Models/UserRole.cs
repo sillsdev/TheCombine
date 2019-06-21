@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,9 +34,9 @@ namespace BackendFramework.ValueModels
                 History = new List<History>()
             };
 
-            //Enums like Permission have no need to be cloned
             foreach(Permission permission in Permission)
             {
+                //Enums like Permission have no need to be cloned
                 clone.Permission.Add(permission);
             }
 
@@ -52,6 +53,7 @@ namespace BackendFramework.ValueModels
             return
                 other.Permission.Count == Permission.Count &&
                 other.Permission.All(Permission.Contains) &&
+
                 other.History.Count == History.Count &&
                 other.History.All(History.Contains);
         }
@@ -68,11 +70,16 @@ namespace BackendFramework.ValueModels
                 return other.Id.Equals(Id) && ContentEquals(other);
             }
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Permission, History);
+        }
     }
 
     public enum Permission
     {
-        //placeholders
+        //placeholder names
         permission1,
         permission2,
         permission3

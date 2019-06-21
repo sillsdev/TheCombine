@@ -14,6 +14,7 @@ namespace Tests
     {
         IWordRepository repo;
         WordController controller;
+
         [SetUp]
         public void Setup()
         {
@@ -22,10 +23,9 @@ namespace Tests
             controller = new WordController(service, repo);
         }
 
-        Word testWord()
+        Word RandomWord()
         {
             Word word = new Word();
-            // let's add some random data
             word.Vernacular = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
             return word;
         }
@@ -33,9 +33,9 @@ namespace Tests
         [Test]
         public void TestGetAllWords()
         {
-            repo.Create(testWord());
-            repo.Create(testWord());
-            repo.Create(testWord());
+            repo.Create(RandomWord());
+            repo.Create(RandomWord());
+            repo.Create(RandomWord());
 
             var words = (controller.Get().Result as ObjectResult).Value as List<Word>;
             Assert.That(words, Has.Count.EqualTo(3));
@@ -45,26 +45,27 @@ namespace Tests
         [Test]
         public void TestGetWord()
         {
-            Word word = repo.Create(testWord()).Result;
+            Word word = repo.Create(RandomWord()).Result;
 
-            repo.Create(testWord());
-            repo.Create(testWord());
+            repo.Create(RandomWord());
+            repo.Create(RandomWord());
 
             var action = controller.Get(word.Id).Result;
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
-            var foundWords = (action as ObjectResult).Value as List<Word>;
-            Assert.That(foundWords, Has.Count.EqualTo(1));
-            Assert.AreEqual(word, foundWords[0]);
+            var foundWord = (action as ObjectResult).Value as Word;
+            Assert.AreEqual(word, foundWord);
         }
 
         [Test]
         public void AddWord()
         {
-            Word word = testWord();
+            Word word = RandomWord();
+
             string id = (controller.Post(word).Result as ObjectResult).Value as string;
             word.Id = id;
+
             Assert.AreEqual(word, repo.GetAllWords().Result[0]);
             Assert.AreEqual(word, repo.GetFrontier().Result[0]);
         }
@@ -72,7 +73,7 @@ namespace Tests
         [Test]
         public void UpdateWord()
         {
-            Word origWord = repo.Create(testWord()).Result;
+            Word origWord = repo.Create(RandomWord()).Result;
 
             Word modWord = origWord.Clone();
             modWord.Vernacular = "Yoink";
@@ -93,12 +94,15 @@ namespace Tests
         [Test]
         public void DeleteWord()
         {
-            Word origWord = repo.Create(testWord()).Result;
+            Word origWord = repo.Create(RandomWord()).Result;
+
             var action = controller.Delete(origWord.Id).Result;
+
             Word delWord = origWord.Clone();
             delWord.Accessability = (int)state.deleted;
             delWord.Id = repo.GetAllWords().Result.Find(word => word.Accessability == (int)state.deleted).Id;
             delWord.History = new List<string> { origWord.Id };
+
             Assert.Contains(origWord, repo.GetAllWords().Result);
             Assert.Contains(delWord, repo.GetAllWords().Result);
 
@@ -109,14 +113,14 @@ namespace Tests
         [Test]
         public void MergeWords()
         {
-            Word parent = repo.Create(testWord()).Result;
-            Word child1 = repo.Create(testWord()).Result;
-            Word child2 = repo.Create(testWord()).Result;
+            Word parent = repo.Create(RandomWord()).Result;
+            Word child1 = repo.Create(RandomWord()).Result;
+            Word child2 = repo.Create(RandomWord()).Result;
 
             MergeWords merge = new MergeWords();
-            merge.parent = parent.Id;
-            merge.children = new List<string> { child1.Id, child2.Id };
-            merge.mergeType = state.duplicate;
+            merge.Parent = parent.Id;
+            merge.Children = new List<string> { child1.Id, child2.Id };
+            merge.MergeType = state.duplicate;
             string id = (controller.Put(merge).Result as ObjectResult).Value as string;
 
             List<Word> words = repo.GetAllWords().Result;
@@ -151,7 +155,6 @@ namespace Tests
             Assert.Contains(end, words);
             Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
             Assert.Contains(end, repo.GetFrontier().Result);
-
         }
     }
 }

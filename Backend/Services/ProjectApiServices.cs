@@ -1,25 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using BackendFramework.ValueModels;
 using BackendFramework.Interfaces;
-using Microsoft.Extensions.Configuration;
+using BackendFramework.ValueModels;
 using MongoDB.Driver;
-using BackendFramework.Context;
-using BackendFramework.Services;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Bson;
-using System;
-using SIL.Lift.Parsing;
-using System.Text.RegularExpressions;
-using BackendFramework.Controllers;
 
 namespace BackendFramework.Services
 {
-
     public class ProjectService : IProjectService
     {
-
         private readonly IProjectContext _projectDatabase;
 
         public ProjectService(IProjectContext collectionSettings)
@@ -35,10 +23,12 @@ namespace BackendFramework.Services
         public async Task<bool> DeleteAllProjects()
         {
             var deleted = await _projectDatabase.Projects.DeleteManyAsync(_ => true);
+
             if (deleted.DeletedCount != 0)
             {
                 return true;
             }
+
             return false;
         }
 
@@ -46,6 +36,7 @@ namespace BackendFramework.Services
         {
             var filterDef = new FilterDefinitionBuilder<Project>();
             var filter = filterDef.In(x => x.Id, Ids);
+
             var projectList = await _projectDatabase.Projects.Find(filter).ToListAsync();
 
             return projectList;

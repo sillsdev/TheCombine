@@ -1,14 +1,10 @@
-﻿using System;
+﻿using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using BackendFramework.ValueModels;
-using BackendFramework.Services;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using Microsoft.AspNetCore.Cors;
-using BackendFramework.Interfaces;
 
 namespace BackendFramework.Controllers
 {
@@ -17,6 +13,7 @@ namespace BackendFramework.Controllers
     public class UserRoleController : Controller
     {
         private readonly IUserRoleService _userRoleService;
+
         public UserRoleController(IUserRoleService userRoleService)
         {
             _userRoleService = userRoleService;
@@ -39,7 +36,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-                return new ObjectResult(await _userRoleService.DeleteAllUserRoles());
+            return new ObjectResult(await _userRoleService.DeleteAllUserRoles());
 #else
             return new UnauthorizedResult();
 #endif
@@ -78,13 +75,16 @@ namespace BackendFramework.Controllers
         {
             List<string> ids = new List<string>();
             ids.Add(Id);
+
             var document = await _userRoleService.GetUserRoles(ids);
             if (document.Count == 0)
             {
                 return new NotFoundResult();
             }
+
             userRole.Id = (document.First()).Id;
             await _userRoleService.Update(Id, userRole);
+
             return new OkObjectResult(userRole.Id);
         }
 

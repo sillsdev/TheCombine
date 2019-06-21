@@ -1,11 +1,8 @@
 ﻿using Backend.Tests;
 using BackendFramework.Controllers;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
-using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -24,10 +21,9 @@ namespace Tests
             controller = new UserController(_userService);
         }
 
-        User testUser()
+        User RandomUser()
         {
             User user = new User();
-            // let's add some random data
             user.Username = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
             user.Password = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
             return user;
@@ -36,9 +32,9 @@ namespace Tests
         [Test]
         public void TestGetAllUsers()
         {
-            _userService.Create(testUser());
-            _userService.Create(testUser());
-            _userService.Create(testUser());
+            _userService.Create(RandomUser());
+            _userService.Create(RandomUser());
+            _userService.Create(RandomUser());
 
             var users = (controller.Get().Result as ObjectResult).Value as List<User>;
             Assert.That(users, Has.Count.EqualTo(3));
@@ -48,10 +44,10 @@ namespace Tests
         [Test]
         public void TestGetUser()
         {
-            User user = _userService.Create(testUser()).Result;
+            User user = _userService.Create(RandomUser()).Result;
 
-            _userService.Create(testUser());
-            _userService.Create(testUser());
+            _userService.Create(RandomUser());
+            _userService.Create(RandomUser());
 
             var action = controller.Get(user.Id).Result;
 
@@ -65,7 +61,7 @@ namespace Tests
         [Test]
         public void TestCreateUser()
         {
-            User user = testUser();
+            User user = RandomUser();
             string id = (controller.Post(user).Result as ObjectResult).Value as string;
             user.Id = id;
             Assert.Contains(user, _userService.GetAllUsers().Result);
@@ -74,12 +70,12 @@ namespace Tests
         [Test]
         public void TestUpdateUser()
         {
-            User origUser = _userService.Create(testUser()).Result;
+            User origUser = _userService.Create(RandomUser()).Result;
 
             User modUser = origUser.Clone();
             modUser.Username = "Mark";
 
-            var action = controller.Put(modUser.Id, modUser);
+            _ = controller.Put(modUser.Id, modUser);
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(1));
             Assert.Contains(modUser, _userService.GetAllUsers().Result);
@@ -88,11 +84,11 @@ namespace Tests
         [Test]
         public void TestDeleteUser()
         {
-            User origUser = _userService.Create(testUser()).Result;
+            User origUser = _userService.Create(RandomUser()).Result;
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(1));
 
-            var action = controller.Delete(origUser.Id).Result;
+            _ = controller.Delete(origUser.Id).Result;
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
@@ -100,30 +96,15 @@ namespace Tests
         [Test]
         public void TestDeleteAllUsers()
         {
-            _userService.Create(testUser());
-            _userService.Create(testUser());
-            _userService.Create(testUser());
+            _userService.Create(RandomUser());
+            _userService.Create(RandomUser());
+            _userService.Create(RandomUser());
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(3));
 
-            var action = controller.Delete().Result;
+            _ = controller.Delete().Result;
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
-
-        //[Test]
-        //public void TestAuthenticate()
-        //{
-        //    Assert.IsNull(_userService.Authenticate("fake", "fake"));
-
-        //    User origUser = _userService.Create(testUser()).Result;
-        //    User nullPass = origUser.Clone();
-        //    nullPass.Password = "";
-        //    nullPass.Token = "thisIsAToken";
-        //    var result = _userService.Authenticate(origUser.Username, origUser.Password).Result;
-
-        //    Assert.AreEqual(nullPass, result);
-        //    Assert.IsNull(_userService.Authenticate(nullPass.Username, nullPass.Password));
-        //}
     }
 }

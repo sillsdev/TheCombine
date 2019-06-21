@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using BackendFramework.ValueModels;
 using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
 using MongoDB.Driver;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Services
@@ -14,18 +14,16 @@ namespace BackendFramework.Services
         {
             _wordDatabase = collectionSettings;
         }
+
         public async Task<List<Word>> GetAllWords()
         {
             return await _wordDatabase.Words.Find(_ => true).ToListAsync();
         }
 
-        public async Task<List<Word>> GetWords(List<string> Ids)
+        public async Task<Word> GetWord(string Id)
         {
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.In(x => x.Id, Ids);
-            var wordList = await _wordDatabase.Words.Find(filter).ToListAsync();
-
-            return wordList;
+            var wordList =  await _wordDatabase.Words.Find(Id).ToListAsync();
+            return wordList[0];
         }
 
         public async Task<bool> DeleteAllWords()
@@ -56,11 +54,13 @@ namespace BackendFramework.Services
         {
             return await _wordDatabase.Frontier.Find(_ => true).ToListAsync();
         }
+
         public async Task<Word> AddFrontier(Word word)
         {
             await _wordDatabase.Frontier.InsertOneAsync(word);
             return word;
         }
+
         public async Task<bool> DeleteFrontier(string Id)
         {
             var deleted = await _wordDatabase.Frontier.DeleteManyAsync(x => x.Id == Id);

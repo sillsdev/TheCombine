@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BackendFramework.ValueModels;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Cors;
-using BackendFramework.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BackendFramework.Controllers
 {
@@ -17,6 +15,7 @@ namespace BackendFramework.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -38,7 +37,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-                return new ObjectResult(await _userService.DeleteAllUsers());
+            return new ObjectResult(await _userService.DeleteAllUsers());
 #else
             return new UnauthorizedResult();
 #endif
@@ -73,6 +72,7 @@ namespace BackendFramework.Controllers
             List<string> ids = new List<string>();
             ids.Add(Id);
             var user = await _userService.GetUsers(ids);
+
             if (user.Count == 0)
             {
                 return new NotFoundResult();
@@ -86,8 +86,9 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]User user)
         {
-            var returnuser = await _userService.Create(user);
-            if (returnuser == null)
+            var returnUser = await _userService.Create(user);
+
+            if (returnUser == null)
             {
                 return BadRequest();
             }
@@ -111,21 +112,21 @@ namespace BackendFramework.Controllers
             await _userService.Update(Id, user);
             return new OkObjectResult(user.Id);
         }
+
         // DELETE: v1/ApiWithActions/{Id}
         // Implements Delete(), Arguments: string id of target user
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
 #if DEBUG
-                if (await _userService.Delete(Id))
-                {
-                    return new OkResult();
-                }
-                return new NotFoundResult();
+            if (await _userService.Delete(Id))
+            {
+                return new OkResult();
+            }
+            return new NotFoundResult();
 #else
             return new UnauthorizedResult();
 #endif
         }
     }
-
 }
