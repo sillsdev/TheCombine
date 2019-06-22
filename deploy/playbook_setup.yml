@@ -12,4 +12,5 @@
     - role: dotnet_core
     - role: apache
     - role: wifi_ap
+      when: ansible_system_vendor != "innotek GmbH"
     - role: the_combine_app
