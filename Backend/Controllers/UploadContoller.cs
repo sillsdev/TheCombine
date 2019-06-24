@@ -101,7 +101,10 @@ namespace BackendFramework.Controllers
 
             if (file.Length > 0)
             {
-                model.FilePath = Path.Combine("./Audio/" + wordId + ".mp3");
+                string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                System.IO.Directory.CreateDirectory(wanted_path + "/Audio");
+
+                model.FilePath = Path.Combine(wanted_path + "/Audio/" + wordId + ".mp3");
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
