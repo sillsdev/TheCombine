@@ -87,7 +87,7 @@ describe("Tests characterInventoryComponent", () => {
     let actions = mockStore.getActions();
     expect(actions[actions.length - 1]).toEqual({
       type: SET_CHARACTER_INVENTORY,
-      inventory: ["w"]
+      payload: ["w"]
     });
   });
 });
