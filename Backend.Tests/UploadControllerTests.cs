@@ -15,6 +15,7 @@ namespace Tests
     public class UploadControllerTests
     {
         IWordRepository _wordrepo;
+        private WordService _wordService;
         ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
         UploadContoller controller;
 
@@ -22,8 +23,10 @@ namespace Tests
         public void Setup()
         {
             _wordrepo = new WordRepositoryMock();
+            _wordService = new WordService(_wordrepo);
             _merger = new LiftService(_wordrepo);
-            controller = new UploadContoller(_merger);
+            controller = new UploadContoller(_merger, _wordrepo, _wordService);
+
         }
 
         public void RandomFile()
@@ -98,7 +101,7 @@ namespace Tests
             fileUpload.Name = "FileName";
             fileUpload.File = formFile;
 
-            _ = controller.Post(fileUpload).Result;
+            _ = controller.UploadLiftFile(fileUpload).Result;
 
             var allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
