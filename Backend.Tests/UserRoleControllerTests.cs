@@ -1,13 +1,9 @@
 ﻿using Backend.Tests;
 using BackendFramework.Controllers;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
-using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace Tests
@@ -24,10 +20,9 @@ namespace Tests
             controller = new UserRoleController(_userRoleService);
         }
 
-        UserRole testUserRole()
+        UserRole RandomUserRole()
         {
             UserRole userRole = new UserRole();
-            // let's add some random data
             userRole.Permission = new List<Permission>() { Permission.permission1 };
             return userRole;
         }
@@ -35,9 +30,9 @@ namespace Tests
         [Test]
         public void TestGetAllUserRoles()
         {
-            _userRoleService.Create(testUserRole());
-            _userRoleService.Create(testUserRole());
-            _userRoleService.Create(testUserRole());
+            _userRoleService.Create(RandomUserRole());
+            _userRoleService.Create(RandomUserRole());
+            _userRoleService.Create(RandomUserRole());
 
             var userRoles = (controller.Get().Result as ObjectResult).Value as List<UserRole>;
             Assert.That(userRoles, Has.Count.EqualTo(3));
@@ -47,24 +42,23 @@ namespace Tests
         [Test]
         public void TestGetUserRole()
         {
-            UserRole userRole = _userRoleService.Create(testUserRole()).Result;
+            UserRole userRole = _userRoleService.Create(RandomUserRole()).Result;
 
-            _userRoleService.Create(testUserRole());
-            _userRoleService.Create(testUserRole());
+            _userRoleService.Create(RandomUserRole());
+            _userRoleService.Create(RandomUserRole());
 
             var action = controller.Get(userRole.Id).Result;
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
-            var foundUserRoles = (action as ObjectResult).Value as List<UserRole>;
-            Assert.That(foundUserRoles, Has.Count.EqualTo(1));
-            Assert.AreEqual(userRole, foundUserRoles[0]);
+            var foundUserRole = (action as ObjectResult).Value as UserRole;
+            Assert.AreEqual(userRole, foundUserRole);
         }
 
         [Test]
         public void TestCreateUserRole()
         {
-            UserRole userRole = testUserRole();
+            UserRole userRole = RandomUserRole();
             string id = (controller.Post(userRole).Result as ObjectResult).Value as string;
             userRole.Id = id;
             Assert.Contains(userRole, _userRoleService.GetAllUserRoles().Result);
@@ -73,7 +67,7 @@ namespace Tests
         [Test]
         public void TestUpdateUserRole()
         {
-            UserRole origUserRole = _userRoleService.Create(testUserRole()).Result;
+            UserRole origUserRole = _userRoleService.Create(RandomUserRole()).Result;
 
             UserRole modUserRole = origUserRole.Clone();
             modUserRole.Permission = new List<Permission>() { Permission.permission2 };
@@ -87,11 +81,11 @@ namespace Tests
         [Test]
         public void TestDeleteUserRole()
         {
-            UserRole origUserRole = _userRoleService.Create(testUserRole()).Result;
+            UserRole origUserRole = _userRoleService.Create(RandomUserRole()).Result;
 
             Assert.That(_userRoleService.GetAllUserRoles().Result, Has.Count.EqualTo(1));
 
-            var action = controller.Delete(origUserRole.Id).Result;
+            _ = controller.Delete(origUserRole.Id).Result;
 
             Assert.That(_userRoleService.GetAllUserRoles().Result, Has.Count.EqualTo(0));
         }
@@ -99,13 +93,13 @@ namespace Tests
         [Test]
         public void TestDeleteAllUserRoles()
         {
-            _userRoleService.Create(testUserRole());
-            _userRoleService.Create(testUserRole());
-            _userRoleService.Create(testUserRole());
+            _userRoleService.Create(RandomUserRole());
+            _userRoleService.Create(RandomUserRole());
+            _userRoleService.Create(RandomUserRole());
 
             Assert.That(_userRoleService.GetAllUserRoles().Result, Has.Count.EqualTo(3));
 
-            var action = controller.Delete().Result;
+            _ = controller.Delete().Result;
 
             Assert.That(_userRoleService.GetAllUserRoles().Result, Has.Count.EqualTo(0));
         }

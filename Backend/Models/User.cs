@@ -1,15 +1,11 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace BackendFramework.ValueModels
 {
-    public class Credentials
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
     public class User
     {
         [BsonId]
@@ -105,6 +101,7 @@ namespace BackendFramework.ValueModels
                 other.Username.Equals(Username) &&
                 other.UILang.Equals(UILang) &&
                 other.Token.Equals(Token) &&
+
                 other.WorkedProjects.Count == WorkedProjects.Count &&
                 other.WorkedProjects.All(WorkedProjects.Contains);
         }
@@ -121,5 +118,29 @@ namespace BackendFramework.ValueModels
                 return other.Id.Equals(Id) && ContentEquals(other);
             }
         }
+
+        public override int GetHashCode()
+        {
+            var hash = new HashCode();
+            hash.Add(Id);
+            hash.Add(Avatar);
+            hash.Add(Name);
+            hash.Add(Email);
+            hash.Add(Phone);
+            hash.Add(OtherConnectionField);
+            hash.Add(WorkedProjects);
+            hash.Add(Agreement);
+            hash.Add(Password);
+            hash.Add(Username);
+            hash.Add(UILang);
+            hash.Add(Token);
+            return hash.ToHashCode();
+        }
+    }
+
+    public class Credentials
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

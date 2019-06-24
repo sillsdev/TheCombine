@@ -3,15 +3,13 @@ using BackendFramework.ValueModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Backend.Tests
 {
     public class UserServiceMock : IUserService
     {
-
-        List<User> users;
+        readonly List<User> users;
 
         public UserServiceMock()
         {
@@ -23,23 +21,10 @@ namespace Backend.Tests
             return Task.FromResult(users.Select(user => user.Clone()).ToList());
         }
 
-        bool IDInList(string Id, List<string> Ids)
+        public Task<User> GetUser(string id)
         {
-            foreach (string cur_id in Ids)
-            {
-                if (cur_id.Equals(Id))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public Task<List<User>> GetUsers(List<string> ids)
-        {
-            var foundUsers = users.Where(user => IDInList(user.Id, ids)).ToList();
-            var copiedUsers = foundUsers.Select(user => user.Clone()).ToList();
-            return Task.FromResult(copiedUsers);
+            var foundUser = users.Where(user => user.Id == id).Single();
+            return Task.FromResult(foundUser.Clone());
         }
 
         public Task<User> Create(User user)

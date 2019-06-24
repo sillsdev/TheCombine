@@ -1,18 +1,10 @@
-﻿using System;
+﻿using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using BackendFramework.ValueModels;
-using BackendFramework.Services;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using Microsoft.AspNetCore.Cors;
-using BackendFramework.Interfaces;
-using SIL.Lift.Parsing;
-using System.IO;
-using System;
-using System.Net;
 
 namespace BackendFramework.Controllers
 {
@@ -57,11 +49,8 @@ namespace BackendFramework.Controllers
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
-            List<string> Ids = new List<string>();
-            Ids.Add(Id);
-
-            var word = await _wordRepo.GetWords(Ids);
-            if (word.Count == 0)
+            var word = await _wordRepo.GetWord(Id);
+            if (word == null)
             {
                 return new NotFoundResult();
             }
@@ -82,15 +71,15 @@ namespace BackendFramework.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] Word word)
         {
-            List<string> ids = new List<string>();
-            ids.Add(Id);
-            var document = await _wordRepo.GetWords(ids);
-            if (document.Count == 0)
+            var document = await _wordRepo.GetWord(Id);
+            if (document == null)
             {
                 return new NotFoundResult();
             }
-            word.Id = (document.First()).Id;
+
+            word.Id = document.Id;
             await _wordService.Update(Id, word);
+
             return new OkObjectResult(word.Id);
         }
 
@@ -111,19 +100,36 @@ namespace BackendFramework.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] MergeWords mergeWords)
         {
+            //make deep copy of children and add the parent
             List<string> ids = new List<string>();
-            foreach (string childId in mergeWords.children)
+            foreach (string childId in mergeWords.Children)
             {
                 ids.Add(childId);
             }
-            ids.Add(mergeWords.parent);
-            var document = await _wordRepo.GetWords(ids);
-            if (document.Count != ids.Count)
+            ids.Add(mergeWords.Parent);
+
+            //make sure that there are no duplicates among the parent and children
+            HashSet<string> set = new HashSet<string>(mergeWords.Children);
+            set.Add(mergeWords.Parent);
+            if (set.Count != ids.Count)
             {
                 return new NotFoundResult();
             }
-            var mergedWord = await _wordService.Merge(mergeWords);
-            return new ObjectResult(mergedWord.Id);
+
+            //make sure all the ids given to us are valid
+            List<Word> foundWords = new List<Word>();
+            foreach (string id in ids)
+            {
+                var document = await _wordRepo.GetWord(id);
+                if (document == null)
+                {
+                    return new NotFoundResult();
+                }
+                foundWords.Add(document);
+            }
+
+           var mergedWord = await _wordService.Merge(mergeWords);
+           return new ObjectResult(mergedWord.Id);
         }
     }
 }

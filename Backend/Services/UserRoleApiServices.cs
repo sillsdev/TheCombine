@@ -1,27 +1,13 @@
-/* Mark Fuller
- * Mongo to c# api. 
- */
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using BackendFramework.ValueModels;
 using BackendFramework.Interfaces;
-using Microsoft.Extensions.Configuration;
+using BackendFramework.ValueModels;
 using MongoDB.Driver;
-using BackendFramework.Context;
-using BackendFramework.Services;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Bson;
-using System;
 
 namespace BackendFramework.Services
 {
-
-
     public class UserRoleService : IUserRoleService
     {
-
         private readonly IUserRoleContext _userRoleDatabase;
 
         public UserRoleService(IUserRoleContext collectionSettings)
@@ -44,13 +30,14 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<List<UserRole>> GetUserRoles(List<string> Ids)
+        public async Task<UserRole> GetUserRole(string Id)
         {
             var filterDef = new FilterDefinitionBuilder<UserRole>();
-            var filter = filterDef.In(x=>x.Id , Ids);
-            var userRoleList = await _userRoleDatabase.UserRoles.Find(filter).ToListAsync();
+            var filter = filterDef.Eq(x => x.Id, Id);
+
+            var userRoleList = await _userRoleDatabase.UserRoles.FindAsync(filter);
                         
-            return userRoleList;
+            return userRoleList.FirstOrDefault();
         }
 
         public async Task<UserRole> Create(UserRole userRole)
