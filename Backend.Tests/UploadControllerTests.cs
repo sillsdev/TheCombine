@@ -19,7 +19,6 @@ namespace Tests
         IWordRepository _wordrepo;
         private WordService _wordService;
         ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
-        //private _userContext _appsettings;
         IUserService _userService;
         UploadContoller controller;
 
