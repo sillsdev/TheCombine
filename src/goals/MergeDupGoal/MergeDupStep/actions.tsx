@@ -80,7 +80,7 @@ export function applyMerges() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction | WordListAction>,
     getState: () => StoreState
   ) => {
-    var merges = getState().mergeDupStepProps.parentWords;
+    var merges = getState().mergeDuplicateGoal.mergeTreeState.parentWords;
     Promise.all(
       merges.map(async parent => {
         var senses: Word[] = [];

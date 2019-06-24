@@ -39,9 +39,9 @@ export function uploadInventory() {
   };
 }
 
-export function setInventory(inventory: string[]): CharacterInventoryAction {
+export function setInventory(payload: string[]): CharacterInventoryAction {
   return {
     type: SET_CHARACTER_INVENTORY,
-    payload: inventory
+    payload
   };
 }
