@@ -24,3 +24,9 @@ FormData()
 **Code** : `200 OK`
 
 **Data content** : `num: int` - Number of successful entries
+
+## Error response
+
+**Condition** : Invalid lift file
+
+**Code** : `415 UNSUPPORTED MEDIA TYPE`

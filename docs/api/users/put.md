@@ -4,7 +4,7 @@
 
 **Method** : `PUT`
 
-**Auth required** :
+**Auth required** : Yes
 
 **Data type**: [`User`](user.md)
 
