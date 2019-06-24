@@ -17,7 +17,7 @@ type CharacterInventoryType = SET_CHARACTER_INVENTORY;
 
 export interface CharacterInventoryAction {
   type: CharacterInventoryType;
-  inventory: string[];
+  payload: string[];
 }
 
 /**
@@ -42,6 +42,6 @@ export function uploadInventory() {
 export function setInventory(inventory: string[]): CharacterInventoryAction {
   return {
     type: SET_CHARACTER_INVENTORY,
-    inventory
+    payload: inventory
   };
 }
