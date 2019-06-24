@@ -57,11 +57,9 @@ class SampleWords extends React.Component<
 
   // deletes selected word (not used right now)
   deleteSelected() {
-    this.props.setInventory([
-      ...this.props.inventory.filter(
-        char => !this.state.selected.includes(char)
-      )
-    ]);
+    this.props.setInventory(
+      this.props.inventory.filter(char => !this.state.selected.includes(char))
+    );
     this.setState({
       selected: []
     });
@@ -71,14 +69,15 @@ class SampleWords extends React.Component<
    * Gets the words that don't fit the character inventory
    */
   async getWords() {
-    console.log("hya");
+    const NUM_WORDS = 5;
+
     let inv = [...this.props.inventory];
     let sampleWords: string[] = [];
     let allWords: Word[] = await backend.getFrontierWords();
 
     let word;
     for (let i: number = 0; i < allWords.length; i++) {
-      if (sampleWords.length >= 5) break;
+      if (sampleWords.length >= NUM_WORDS) break;
       word = allWords[i].vernacular;
       for (let j: number = 0; j < word.length; j++) {
         if (inv.indexOf(word[j]) === -1 && word[j] !== " ") {

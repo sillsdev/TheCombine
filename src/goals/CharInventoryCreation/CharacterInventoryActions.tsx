@@ -45,8 +45,3 @@ export function setInventory(inventory: string[]): CharacterInventoryAction {
     inventory
   };
 }
-
-/**
- * Gets words that don't fit the character inventory
- */
-export function getSampleWords() {}
