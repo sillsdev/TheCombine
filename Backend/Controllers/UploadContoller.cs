@@ -15,13 +15,15 @@ namespace BackendFramework.Controllers
     {
         public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
         public readonly IWordService _wordService;
+        private readonly IUserService _userService;
         public readonly IWordRepository _wordRepo;
 
-        public UploadContoller(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService service)
+        public UploadContoller(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService wordService, IUserService userService)
         {
             _merger = merger;
             _wordRepo = repo;
-            _wordService = service;
+            _userService = userService;
+            _wordService = wordService;
         }
 
         // POST: v1/Project/Words/upload
@@ -48,6 +50,45 @@ namespace BackendFramework.Controllers
                 return new ObjectResult(parser.ReadLiftFile(model.FilePath));
             }
             catch (Exception)
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+        }
+
+        [HttpPost("{Id}/Upload/Avatar")]
+        public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload model)
+        {
+            var file = model.File;
+            string extention = Path.GetExtension(file.FileName);
+
+            if (file.Length > 0)
+            {
+                User gotUser = await _userService.GetUser(userId);
+
+                string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                System.IO.Directory.CreateDirectory(wanted_path + "/Avatars");
+
+                model.FilePath = Path.Combine(wanted_path + "/Avatars/" + userId + extention);
+
+                using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
+                {
+                    await file.CopyToAsync(fs);
+                }
+
+
+                if (gotUser != null)
+                {
+                    gotUser.Avatar = model.FilePath;
+                    bool success = await _userService.Update(userId, gotUser);
+
+                    return new OkObjectResult(success);
+                }
+                else
+                {
+                    return new NotFoundObjectResult(gotUser.Id);
+                }  
+            }
+            else
             {
                 return new UnsupportedMediaTypeResult();
             }

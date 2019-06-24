@@ -1,9 +1,11 @@
 ﻿using Backend.Tests;
 using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using SIL.Lift.Parsing;
 using System;
@@ -17,6 +19,7 @@ namespace Tests
         IWordRepository _wordrepo;
         private WordService _wordService;
         ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
+        IUserService _userService;
         UploadContoller controller;
 
         [SetUp]
@@ -25,7 +28,8 @@ namespace Tests
             _wordrepo = new WordRepositoryMock();
             _wordService = new WordService(_wordrepo);
             _merger = new LiftService(_wordrepo);
-            controller = new UploadContoller(_merger, _wordrepo, _wordService);
+            _userService = new UserServiceMock();
+            controller = new UploadContoller(_merger, _wordrepo, _wordService, _userService);
 
         }
 

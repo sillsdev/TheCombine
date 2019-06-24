@@ -42,6 +42,7 @@ start_mongo.bat
 /**/*.lift
 /**/*.orig
 /**/*.mp3
+/**/*.bat
 
 # Vagrant instances
 .vagrant/
