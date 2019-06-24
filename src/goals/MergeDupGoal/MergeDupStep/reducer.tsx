@@ -89,16 +89,6 @@ export const mergeDupStepReducer = (
 
       return { ...state, parentWords };
     case CLEAR_MERGES:
-        var senses: Word[] = [];
-            if (sense.dups.length > 1) {
-              senses.push({
-                ...sense.dups[0],
-                id: await backend.mergeWords(sense.dups, State.duplicate)
-              });
-              // Should never be 0
-              senses.push(sense.dups[0]);
-        if (senses.length > 0) {
-          backend.mergeWords(senses, State.sense);
       return {
         ...state,
         parentWords: []

@@ -53,7 +53,6 @@ class MergeDupStep extends React.Component<
     }
   }
 
-    temp[0].map(word => {
   async clear_database() {
     // await backend.delete("projects/words");
     if (this.props.refreshListWords) {
@@ -112,7 +111,9 @@ class MergeDupStep extends React.Component<
                 color="primary"
                 style={{ float: "right", margin: 10 }}
                 onClick={_ => this.next()}
-                title={this.props.translate("mergeDups.helpText.next") as string}
+                title={
+                  this.props.translate("mergeDups.helpText.next") as string
+                }
               >
                 <Translate id="goal.mergeDups.done" />
               </Button>
