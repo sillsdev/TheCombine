@@ -19,9 +19,6 @@ export type CLEAR_LIST_WORDS = typeof CLEAR_LIST_WORDS;
 export const SET_LIST_WORDS_SORT = "SET_LIST_WORDS_SORT";
 export type SET_LIST_WORDS_SORT = typeof SET_LIST_WORDS_SORT;
 
-export const WORD_LIST_GENERIC =
-  ADD_LIST_WORD || REMOVE_LIST_WORD || CLEAR_LIST_WORDS || SET_LIST_WORDS_SORT;
-// export const IsWordListAction = (input: string): boolean => { return input === ADD_LIST_WORD || input === CLEAR_LIST_WORDS || input === SET_LIST_WORDS_SORT}
 export type WORD_LIST_GENERIC =
   | ADD_LIST_WORD
   | REMOVE_LIST_WORD
