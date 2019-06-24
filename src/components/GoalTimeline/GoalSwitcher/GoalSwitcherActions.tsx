@@ -9,9 +9,10 @@ export type ChooseGoal = timelineActions.AddGoal | navActions.NavigationAction;
 export function chooseGoal(goal: Goal) {
   return (dispatch: Dispatch<ChooseGoal>) => {
     goal.id = Math.floor(Math.random() * 100000 + 1).toString();
-    const goalName = goal.name;
     dispatch(navActions.navigateForward(goal));
     dispatch(timelineActions.addGoalToHistory(goal));
-    history.push("/goals");
+    const path = `/goals/${goal.name}`;
+    history.push(path);
+    console.log(path);
   };
 }

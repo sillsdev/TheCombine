@@ -36,7 +36,7 @@ export function asyncCreateProject(name: string, languageData?: File) {
         .uploadLift(createdProject, languageData)
         .then(res => {
           dispatch(createProject(name, languageData));
-          history.push("/timeline");
+          history.push("/goals");
         })
         .catch(err => {
           alert("Failed to create project");
@@ -44,7 +44,7 @@ export function asyncCreateProject(name: string, languageData?: File) {
         });
     } else {
       dispatch(createProject(name));
-      history.push("/timeline");
+      history.push("/goals");
     }
   };
 }

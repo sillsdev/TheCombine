@@ -3,8 +3,6 @@ import React from "react";
 import { Goal } from "../../../types/goals";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import GoalSelectorScroll from "./GoalSelectorScroll";
-import { Route } from "react-router-dom";
-import CreateProject from "../../CreateProject";
 
 export interface GoalSwitcherProps {
   chooseGoal: (goal: Goal) => void;

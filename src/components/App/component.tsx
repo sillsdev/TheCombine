@@ -18,16 +18,21 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Router history={history}>
-          <Switch>
-            <PrivateRoute exact path="/" component={CreateProject} />
-            <PrivateRoute exact path="/timeline" component={GoalTimeline} />
-            <Route path="/login" component={Login} />
-            <Route component={Always} />
-          </Switch>
-        </Router>
-
-        <hr />
+        <Switch>
+          <PrivateRoute exact path="/" component={CreateProject} />
+          <Route exact path="/goals" component={GoalTimeline} />
+          <Route exact path="/goals/charInvCreation" component={GoalWrapper} />
+          <Route exact path="/goals/createCharInv" component={GoalWrapper} />
+          <Route exact path="/goals/createStrWordInv" component={GoalWrapper} />
+          <Route exact path="/goals/handleFlags" component={GoalWrapper} />
+          <Route exact path="/goals/mergeDups" component={GoalWrapper} />
+          <Route exact path="/goals/spellCheckGloss" component={GoalWrapper} />
+          <Route exact path="/goals/validateChars" component={GoalWrapper} />
+          <Route exact path="/goals/validateStrWords" component={GoalWrapper} />
+          <Route exact path="/goals/viewFinal" component={GoalWrapper} />
+          <Route path="/login" component={Login} />
+          <Route component={Always} />
+        </Switch>
         <LogoutButton />
       </div>
     );

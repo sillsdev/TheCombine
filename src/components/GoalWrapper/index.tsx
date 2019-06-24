@@ -18,7 +18,6 @@ export function mapStateToProps(state: StoreState): GoalWrapperProps {
 export function getGoalById(goalOptions: Goal[], componentId: string): Goal {
   for (var goal of goalOptions) {
     if (goal.id === componentId) {
-      console.log(goal.id === componentId);
       return goal;
     }
   }
