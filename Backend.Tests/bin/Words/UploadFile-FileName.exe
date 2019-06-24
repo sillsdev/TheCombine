@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+                <lift producer = "SIL.FLEx 8.3.12.43172" version = "0.13">
+                <header>
+                <ranges>
+                <range id = "semantic-domain-ddp4" href = "file://C:/Users/DelaneyS/TheCombine/testingdata/testingdata.lift-ranges"/>
+                </ranges>
+                <fields>
+                <field tag = "Plural">
+                <form lang = "en"><text></text></form>
+                <form lang = "qaa-x-spec"><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+                </field>
+                </fields>
+                </header><entry dateCreated = "I2YlsfXfkUmH1cfU6euI" dateModified = "Q391v93g5EaxbZj30nvr" id = "+aeW6TpY/0aNE6qhUTSKJA==" guid = "U3nW6N1JhE2RWULyl+kjYw==">
+                    <lexical-unit>
+                    <form lang = "+cL"><text> zfiXOD </text></form>
+                    </lexical-unit>
+                    <field type = "Plural">
+                    <form lang = "+cL"><text> 0js8KjOQ </text></form>
+                    </field>
+                    <sense id = "PPGG1p8S+UmUoUylKGXcQA==">
+                    <gloss lang = "U9v"><text> Y1x66/ </text></gloss>
+                    <gloss lang = "t4K"><text> Fs/ADUmj </text></gloss>
+                    <trait name = "semantic-domain-ddp4" value = "5af+ vRBm"/> 
+                    </sense> 
+                    </entry><entry dateCreated = "7fx6N8cMIUOE4XZeGiWA" dateModified = "0PA5A8ImhUuDQnjNhgy0" id = "8zAmFFr4SEaKbJmU6GrmeA==" guid = "ND6JJRo9tUKF/LoBndSelg==">
+                    <lexical-unit>
+                    <form lang = "S2G"><text> 6nFa8B </text></form>
+                    </lexical-unit>
+                    <field type = "Plural">
+                    <form lang = "S2G"><text> 5akkEsN0 </text></form>
+                    </field>
+                    <sense id = "hbVPOLxk0kKNKrQcW/c/9w==">
+                    <gloss lang = "2bF"><text> skJgmZ </text></gloss>
+                    <gloss lang = "Fi6"><text> /oKnIQMZ </text></gloss>
+                    <trait name = "semantic-domain-ddp4" value = "UrM2 oKGq"/> 
+                    </sense> 
+                    </entry><entry dateCreated = "LsmccyLJsUO/OJv9cZc1" dateModified = "iK0VIsI44Uu4IvfafuOX" id = "6MkY4q7E70CYeXSMpssXRg==" guid = "HQhhJ4BpqkuststQx7gfVQ==">
+                    <lexical-unit>
+                    <form lang = "nCi"><text> voLfx7 </text></form>
+                    </lexical-unit>
+                    <field type = "Plural">
+                    <form lang = "nCi"><text> DsYanRxe </text></form>
+                    </field>
+                    <sense id = "M+NtI23Pe02TCc2q2W5f+Q==">
+                    <gloss lang = "rr4"><text> f03ar2 </text></gloss>
+                    <gloss lang = "bYe"><text> oY4MhWRu </text></gloss>
+                    <trait name = "semantic-domain-ddp4" value = "khvm XaNj"/> 
+                    </sense> 
+                    </entry></lift>
