@@ -29,12 +29,12 @@ namespace BackendFramework.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
-            var file = model.file;
+            var file = model.File;
 
             if (file.Length > 0)
             {
-                model.filePath = Path.Combine("./Words/uploadFile-" + model.name + ".xml");
-                using (var fs = new FileStream(model.filePath, FileMode.Create))
+                model.FilePath = Path.Combine("./Words/uploadFile-" + model.Name + ".xml");
+                using (var fs = new FileStream(model.FilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
                 }
@@ -42,7 +42,7 @@ namespace BackendFramework.Controllers
             try
             {
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                return new ObjectResult(parser.ReadLiftFile(model.filePath));
+                return new ObjectResult(parser.ReadLiftFile(model.FilePath));
             }
             catch (Exception)
             {
@@ -63,10 +63,10 @@ namespace BackendFramework.Controllers
                     await file.CopyToAsync(fs);
                 }
                 //add the relative path to the audio field of 
-                Word gotWord = _words.GetWords(wordId);
+                Word gotWord = await _wordRepo.GetWord(wordId);
                 gotWord.Audio = model.FilePath;
                 //update the entry
-                _wordService.Update(wordId, gotWord);
+                _ = await _wordService.Update(wordId, gotWord);
 
                 return new ObjectResult(model.FilePath);
             }
