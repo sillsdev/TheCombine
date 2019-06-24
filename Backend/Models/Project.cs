@@ -1,49 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BackendFramework.ValueModels
 {
-    public class CustomField
-    {
-        public string Name { get; set; }
-        public string Type { get; set; }
-
-        public CustomField Clone()
-        {
-            return new CustomField
-            {
-                Name = Name.Clone() as string,
-                Type = Type.Clone() as string
-            };
-        }
-    }
-
-    public class ProjectCreation
-    {
-        public IFormFile File { get; set; }
-        public string projectName { get; set; }
-        // public string source { get; set; }
-        // public string Extension { get; set; }
-        public interface IFormFile
-        {
-            string ContentType { get; }
-            string ContentDisposition { get; }
-            IHeaderDictionary Headers { get; }
-            long Length { get; }
-            string Name { get; }
-            string FileName { get; }
-            Stream OpenReadStream();
-            void CopyTo(Stream target);
-            Task CopyToAsync(Stream target, CancellationToken cancellationToken = default);
-        }
-    }
-
     public class Project
     {
         [BsonId]
@@ -184,6 +150,38 @@ namespace BackendFramework.ValueModels
                 Project other = obj as Project;
                 return other.Id.Equals(Id) && ContentEquals(other);
             }
+        }
+
+        public override int GetHashCode()
+        {
+            var hash = new HashCode();
+            hash.Add(Id);
+            hash.Add(Name);
+            hash.Add(SemanticDomains);
+            hash.Add(UserRoles);
+            hash.Add(Words);
+            hash.Add(VernacularWritingSystem);
+            hash.Add(AnalysisWritingSystems);
+            hash.Add(CharacterSet);
+            hash.Add(CustomFields);
+            hash.Add(WordFields);
+            hash.Add(PartsOfSpeech);
+            return hash.ToHashCode();
+        }
+    }
+
+    public class CustomField
+    {
+        public string Name { get; set; }
+        public string Type { get; set; }
+
+        public CustomField Clone()
+        {
+            return new CustomField
+            {
+                Name = Name.Clone() as string,
+                Type = Type.Clone() as string
+            };
         }
     }
 }

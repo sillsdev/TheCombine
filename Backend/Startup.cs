@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BackendFramework.Context;
+﻿using BackendFramework.Context;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SIL.Lift.Parsing;
+using System.Text;
 
 namespace BackendFramework
 {
@@ -87,8 +80,8 @@ namespace BackendFramework
                 options.ProjectsDatabase = Configuration.GetSection("MongoDB:ProjectsDatabase").Value;
                 options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
             });
-            // Register concrete types for dependency injection
 
+            // Register concrete types for dependency injection
             // Word Types
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordService, WordService>();

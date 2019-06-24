@@ -1,28 +1,23 @@
+using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
+using MongoDB.Driver;
+using SIL.Lift.Parsing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using BackendFramework.ValueModels;
-using BackendFramework.Interfaces;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
-using BackendFramework.Context;
-using BackendFramework.Services;
-using System.Threading.Tasks;
-using MongoDB.Bson;
-using System;
-using SIL.Lift.Parsing;
 using System.Text.RegularExpressions;
 
 namespace BackendFramework.Services
 {
     public class LiftService : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
-        IWordRepository _repo;
+        private readonly IWordRepository _repo;
 
         public LiftService(IWordRepository repo)
         {
             _repo = repo;
         }
+
         public async void FinishEntry(LiftEntry entry)
         {
             Word newWord = new Word();
@@ -62,13 +57,16 @@ namespace BackendFramework.Services
                 foreach (var SemanticDomainString in SemanticDomainStrings)
                 {
                     string[] words = SemanticDomainString.Split(" ");
+
                     SemanticDomain newSemanticDomain = new SemanticDomain();
                     newSemanticDomain.Number = words[0];
+
                     for (int i = 1; i < words.Length - 1; i++)
                     {
                         newSemanticDomain.Name += words[i] + " ";
                     }
                     newSemanticDomain.Name += words.Last();
+
                     newSense.SemanticDomains.Add(newSemanticDomain);
                 }
 
@@ -78,6 +76,7 @@ namespace BackendFramework.Services
                     Gloss newGloss = new Gloss();
                     newGloss.Language = gloss.Key;
                     newGloss.Def = gloss.Value.Text;
+
                     newSense.Glosses.Add(newGloss);
                 }
 
@@ -198,6 +197,7 @@ namespace BackendFramework.Services
 
         public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml) { }
     }
+
     public class EmptyLiftObject : LiftObject
     {
         public EmptyLiftObject() : base()
@@ -207,6 +207,7 @@ namespace BackendFramework.Services
 
         public override string XmlTag => throw new NotImplementedException();
     }
+
     public class EmptyLiftEntry : LiftEntry
     {
         public EmptyLiftEntry(Extensible info, Guid guid, int order) : base(info, guid, order)
@@ -217,6 +218,7 @@ namespace BackendFramework.Services
 
         public override string XmlTag => throw new NotImplementedException();
     }
+
     public class EmptyLiftSense : LiftSense
     {
         public EmptyLiftSense(Extensible info, Guid guid, LiftObject owner) : base(info, guid, owner)
@@ -226,6 +228,7 @@ namespace BackendFramework.Services
 
         public override string XmlTag => throw new NotImplementedException();
     }
+
     public class EmptyLiftExample : LiftExample
     {
         public EmptyLiftExample() : base()
