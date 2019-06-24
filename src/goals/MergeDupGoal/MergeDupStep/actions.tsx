@@ -36,7 +36,7 @@ export interface MergeTreeAction {
   payload: { word: Word; parent?: number };
 }
 
-export function swapDuplicates(word: Word, dest: number): MergeTreeAction {
+export function moveDuplicate(word: Word, dest: number): MergeTreeAction {
 	return {
 		type: SWAP_DUPLICATE,
 		payload: { word, parent: dest}

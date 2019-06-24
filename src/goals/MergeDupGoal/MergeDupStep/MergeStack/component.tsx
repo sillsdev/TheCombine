@@ -76,7 +76,7 @@ class MergeStack extends React.Component<
 	}
 
 	closeDisplay() {
-		this.setState({...this.state, anchorEl: undefined});
+		this.setState({ ...this.state, anchorEl: undefined });
 	}
 
 	render_single() {
@@ -128,7 +128,7 @@ class MergeStack extends React.Component<
 				<ClickAwayListener onClickAway={() => this.closeDisplay()}>
 					<Popper id={id} open={open} anchorEl={this.state.anchorEl} transition>
 						<div>
-							<StackDisplay words={this.props.sense.dups} />
+							<StackDisplay sense={this.props.sense} />
 						</div>
 					</Popper>
 				</ClickAwayListener>

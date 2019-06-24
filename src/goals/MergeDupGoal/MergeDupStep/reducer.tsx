@@ -36,9 +36,15 @@ export const mergeDupStepReducer = (
 			parentWords = parentWords.map(parent => {
 				parent.senses = parent.senses.map(sense => {
 					if (sense.dups.includes(word) && dest) {
-						var src = sense.dups.findIndex(dup => dup.id == word.id);
-						sense.dups[src] = sense.dups[dest];
-						sense.dups[dest] = word;
+						// split array at dest
+						console.log(dest);
+						var ends = [sense.dups.slice(0, dest), sense.dups.slice(dest)];
+						// remove word from both ends;
+						ends  = ends.map(end => end.filter(el => el.id != word.id));
+						console.log(ends);
+						// splice together
+						sense.dups = ends[0].concat(word, ends[1]);
+						console.log(sense.dups);
 					}
 					return sense;
 				});
