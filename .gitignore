@@ -32,6 +32,7 @@ Backend/obj
 /**/obj/**/*
 Backend.Tests/bin/Debug
 Backend.Tests/bin/Release
+Backend.Tests/bin/Words/*
 Backend.Tests/obj
 Backend/BackendFramework.csproj.user
 Backend/.vscode/**/*
