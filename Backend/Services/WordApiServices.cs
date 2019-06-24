@@ -1,27 +1,15 @@
-/* Mark Fuller
- * Mongo to c# api. 
- */
-
+using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using BackendFramework.ValueModels;
-using BackendFramework.Interfaces;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
-using BackendFramework.Context;
-using BackendFramework.Services;
 using System.Threading.Tasks;
-using MongoDB.Bson;
-using System;
-using SIL.Lift.Parsing;
-using System.Text.RegularExpressions;
 
 namespace BackendFramework.Services
 {
     public class WordService : IWordService
     {
-        IWordRepository _repo;
+        private readonly IWordRepository _repo;
 
         public WordService(IWordRepository repo)
         {
@@ -31,14 +19,14 @@ namespace BackendFramework.Services
         public async Task<bool> Delete(string Id)
         {
             var wordIsInFrontier = _repo.DeleteFrontier(Id).Result;
+
             if (wordIsInFrontier)
             {
-                List<string> ids = new List<string>();
-                ids.Add(Id);
-                Word wordToDelete = _repo.GetWords(ids).Result.First();
+                Word wordToDelete = _repo.GetWord(Id).Result;
                 wordToDelete.Id = null;
                 wordToDelete.Accessability = (int)state.deleted;
-                wordToDelete.History = ids;
+                wordToDelete.History.Add(Id);
+
                 await _repo.Create(wordToDelete);
             }
             return wordIsInFrontier;
@@ -52,6 +40,7 @@ namespace BackendFramework.Services
                 word.Id = null;
                 word.Accessability = (int)state.active;
                 word.History = new List<string> { Id };
+
                 await _repo.Create(word);
             }
             return wordIsInFrontier;
@@ -60,23 +49,30 @@ namespace BackendFramework.Services
         public async Task<Word> Merge(MergeWords mergeWords)
         {
             List<string> parentHistory = new List<string>();
-            foreach (string childId in mergeWords.children)
+            foreach (string childId in mergeWords.Children)
             {
                 await _repo.DeleteFrontier(childId);
-                Word childWord = _repo.GetWords(new List<string>() { childId }).Result.First();
+
+                Word childWord = _repo.GetWord(childId).Result;
                 childWord.History = new List<string> { childId };
-                childWord.Accessability = (int)mergeWords.mergeType; // 2: sense or 3: duplicate
+                childWord.Accessability = (int)mergeWords.MergeType; // 2: sense or 3: duplicate
                 childWord.Id = null;
+
                 await _repo.Add(childWord);
                 parentHistory.Add(childWord.Id);
             }
-            string parentId = mergeWords.parent;
+
+            string parentId = mergeWords.Parent;
+
             await _repo.DeleteFrontier(parentId);
+
             parentHistory.Add(parentId);
-            Word parentWord = _repo.GetWords(new List<string>() { parentId }).Result.First();
+
+            Word parentWord = _repo.GetWord(parentId).Result;
             parentWord.History = parentHistory;
             parentWord.Accessability = (int)state.active;
             parentWord.Id = null;
+
             await _repo.Create(parentWord);
             return parentWord;
         }

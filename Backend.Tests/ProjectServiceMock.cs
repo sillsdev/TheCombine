@@ -3,15 +3,13 @@ using BackendFramework.ValueModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Backend.Tests
 {
     public class ProjectServiceMock : IProjectService
     {
-
-        List<Project> projects;
+        readonly List<Project> projects;
 
         public ProjectServiceMock()
         {
@@ -23,23 +21,10 @@ namespace Backend.Tests
             return Task.FromResult(projects.Select(project => project.Clone()).ToList());
         }
 
-        bool IDInList(string Id, List<string> Ids)
+        public Task<Project> GetProject(string id)
         {
-            foreach (string cur_id in Ids)
-            {
-                if (cur_id.Equals(Id))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public Task<List<Project>> GetProjects(List<string> ids)
-        {
-            var foundProjects = projects.Where(project => IDInList(project.Id, ids)).ToList();
-            var copiedProjects = foundProjects.Select(project => project.Clone()).ToList();
-            return Task.FromResult(copiedProjects);
+            var foundProjects = projects.Where(project => project.Id == id).Single();
+            return Task.FromResult(foundProjects.Clone());
         }
 
         public Task<Project> Create(Project project)

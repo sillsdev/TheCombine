@@ -1,21 +1,16 @@
 ﻿using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Backend.Tests
 {
     public class WordRepositoryMock : IWordRepository
     {
-
-        List<Word> words;
-        List<Word> frontier;
+        readonly List<Word> words;
+        readonly List<Word> frontier;
 
         public WordRepositoryMock()
         {
@@ -28,23 +23,10 @@ namespace Backend.Tests
             return Task.FromResult(words.Select(word => word.Clone()).ToList());
         }
 
-        bool IDInList(string Id, List<string> Ids)
+        public Task<Word> GetWord(string id)
         {
-            foreach (string cur_id in Ids)
-            {
-                if (cur_id.Equals(Id))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public Task<List<Word>> GetWords(List<string> ids)
-        {
-            var foundWords = words.Where(word => IDInList(word.Id, ids)).ToList();
-            var copiedWords = foundWords.Select(word => word.Clone()).ToList();
-            return Task.FromResult(copiedWords);
+            var foundWord = words.Where(word => word.Id == id).Single();
+            return Task.FromResult(foundWord.Clone());
         }
 
         public Task<Word> Create(Word word)
