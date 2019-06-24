@@ -69,6 +69,9 @@ class WordList extends React.Component<
                 draggable={true}
                 onDragStart={_ => this.drag(item)}
                 onDragEnd={_ => this.dragEnd(item)}
+                title={
+                  this.props.translate("mergeDups.helpText.list") as string
+                }
               >
                 <CardContent>
                   <WordCard word={item} />

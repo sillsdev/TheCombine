@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BackendFramework.ValueModels;
-using BackendFramework.Services;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using Microsoft.AspNetCore.Cors;
 using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
@@ -16,6 +10,7 @@ namespace BackendFramework.Controllers
     public class FrontierController : Controller
     {
         private readonly IWordRepository _repo;
+
         public FrontierController(IWordRepository repo)
         {
             _repo = repo;
@@ -28,6 +23,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _repo.GetFrontier());
         }
 
+        // POST: v1/project/words/frontier
         [HttpPost()]
         public async Task<IActionResult> PostFrontier([FromBody]Word word)
         {
@@ -39,6 +35,7 @@ namespace BackendFramework.Controllers
 #endif
         }
 
+        // DELETE: v1/project/words/frontier/{Id}
         [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteFrontier(string Id)
         {
@@ -52,7 +49,5 @@ namespace BackendFramework.Controllers
             return new UnauthorizedResult();
 #endif
         }
-
     }
-
 }

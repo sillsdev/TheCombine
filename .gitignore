@@ -38,7 +38,7 @@ Backend/SIL.Lift/**/*
 /**/*.xml
 /**/*.lift
 /**/*.orig
-
+/**/*.mp3
 
 # Vagrant instances
 .vagrant/

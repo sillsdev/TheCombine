@@ -1,14 +1,10 @@
-﻿using System;
+﻿using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using BackendFramework.ValueModels;
-using BackendFramework.Services;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using Microsoft.AspNetCore.Cors;
-using BackendFramework.Interfaces;
 
 namespace BackendFramework.Controllers
 {
@@ -17,6 +13,7 @@ namespace BackendFramework.Controllers
     public class UserRoleController : Controller
     {
         private readonly IUserRoleService _userRoleService;
+
         public UserRoleController(IUserRoleService userRoleService)
         {
             _userRoleService = userRoleService;
@@ -39,7 +36,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-                return new ObjectResult(await _userRoleService.DeleteAllUserRoles());
+            return new ObjectResult(await _userRoleService.DeleteAllUserRoles());
 #else
             return new UnauthorizedResult();
 #endif
@@ -50,11 +47,8 @@ namespace BackendFramework.Controllers
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
-            List<string> Ids = new List<string>();
-            Ids.Add(Id);
-
-            var userRole = await _userRoleService.GetUserRoles(Ids);
-            if (userRole.Count == 0)
+            var userRole = await _userRoleService.GetUserRole(Id);
+            if (userRole == null)
             {
                 return new NotFoundResult();
             }
@@ -76,15 +70,15 @@ namespace BackendFramework.Controllers
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] UserRole userRole)
         {
-            List<string> ids = new List<string>();
-            ids.Add(Id);
-            var document = await _userRoleService.GetUserRoles(ids);
-            if (document.Count == 0)
+            var document = await _userRoleService.GetUserRole(Id);
+            if (document == null)
             {
                 return new NotFoundResult();
             }
-            userRole.Id = (document.First()).Id;
+
+            userRole.Id = document.Id;
             await _userRoleService.Update(Id, userRole);
+
             return new OkObjectResult(userRole.Id);
         }
 

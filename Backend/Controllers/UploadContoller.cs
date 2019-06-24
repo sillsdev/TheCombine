@@ -1,11 +1,8 @@
 ﻿using BackendFramework.ValueModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
@@ -23,16 +20,15 @@ namespace BackendFramework.Controllers
 
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
-
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] FileUpload model)
         {
-            var file = model.file;
+            var file = model.File;
 
             if (file.Length > 0)
             {
-                model.filePath = Path.Combine("./uploadFile-" + model.name + ".xml");
-                using (var fs = new FileStream(model.filePath, FileMode.Create))
+                model.FilePath = Path.Combine("./uploadFile-" + model.Name + ".xml");
+                using (var fs = new FileStream(model.FilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
                 }
@@ -40,7 +36,7 @@ namespace BackendFramework.Controllers
             try
             {
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                return new ObjectResult(parser.ReadLiftFile(model.filePath));
+                return new ObjectResult(parser.ReadLiftFile(model.FilePath));
             }
             catch (Exception)
             {

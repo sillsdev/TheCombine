@@ -1,29 +1,21 @@
-/* Mark Fuller
- * Mongo to c# api. 
- */
-
-using System.Collections.Generic;
-using System.Linq;
-using BackendFramework.ValueModels;
-using BackendFramework.Interfaces;
-using MongoDB.Driver;
-using System.Threading.Tasks;
-using System;
 using BackendFramework.Helper;
+using BackendFramework.Interfaces;
+using BackendFramework.ValueModels;
 using Microsoft.Extensions.Options;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
-
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BackendFramework.Services
 {
-
-
     public class UserService : IUserService
     {
-
         private readonly IUserContext _userDatabase;
         private readonly AppSettings _jwtsettings;
 
@@ -33,8 +25,6 @@ namespace BackendFramework.Services
             _jwtsettings = appSettings.Value;
         }
         
-
-       
         public async Task<User> Authenticate(string username, string password)
         {
             try
@@ -58,15 +48,9 @@ namespace BackendFramework.Services
                     new Claim(ClaimTypes.Name, foundUser.Id)
                     }),
 
-                    /*************************************************
-                     * This line herer will cause serious 
-                     * debugging problems if not kept in mind
-                     *************************************************/
+                    //This line here will cause serious debugging problems if not kept in mind
                     Expires = DateTime.UtcNow.AddMinutes(30),
-                    /*************************************************
-                     * This line herer will cause serious 
-                     * debugging problems if not kept in mind
-                     *************************************************/
+
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -91,7 +75,6 @@ namespace BackendFramework.Services
             }
         }
 
-
         public async Task<List<User>> GetAllUsers()
         {
             return await _userDatabase.Users.Find(_ => true).ToListAsync();
@@ -107,13 +90,14 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<List<User>> GetUsers(List<string> Ids)
+        public async Task<User> GetUser(string Id)
         {
             var filterDef = new FilterDefinitionBuilder<User>();
-            var filter = filterDef.In(x => x.Id, Ids);
-            var userList = await _userDatabase.Users.Find(filter).ToListAsync();
+            var filter = filterDef.Eq(x => x.Id, Id);
 
-            return userList;
+            var userList = await _userDatabase.Users.FindAsync(filter);
+
+            return userList.FirstOrDefault();
         }
 
         public async Task<User> Create(User user)
@@ -157,6 +141,7 @@ namespace BackendFramework.Services
                 .Set(x => x.Avatar, user.Avatar)
                 .Set(x => x.Name, user.Name)
                 .Set(x => x.Email, user.Email)
+                .Set(x => x.Phone, user.Phone)
                 .Set(x => x.OtherConnectionField, user.OtherConnectionField)
                 .Set(x => x.WorkedProjects, user.WorkedProjects)
                 .Set(x => x.Agreement, user.Agreement)

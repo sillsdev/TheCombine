@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -8,28 +7,6 @@ using System.Linq;
 
 namespace BackendFramework.ValueModels
 {
-    public class FileUpload
-    {
-        public FileUpload(FormFile file, string name)
-        {
-            this.file = file;
-            this.name = name;
-            this.filePath = "";
-        }
-
-        public IFormFile file { get; set; }
-        public string name { get; set; }
-        public string filePath { get; set; }
-    }
-
-
-    public enum state
-    {
-        active,
-        deleted,
-        sense,
-        duplicate
-    }
     public class Word
     {
         [BsonId]
@@ -107,12 +84,10 @@ namespace BackendFramework.ValueModels
             {
                 clone.EditedBy.Add(id.Clone() as string);
             }
-
             foreach (string id in History)
             {
                 clone.History.Add(id.Clone() as string);
             }
-
             foreach (Sense sense in Senses)
             {
                 clone.Senses.Add(sense.Clone());
@@ -132,10 +107,13 @@ namespace BackendFramework.ValueModels
                 other.PartOfSpeech.Equals(PartOfSpeech) &&
                 other.Accessability.Equals(Accessability) &&
                 other.OtherField.Equals(OtherField) &&
+
                 other.EditedBy.Count == EditedBy.Count &&
                 other.EditedBy.All(EditedBy.Contains) &&
+
                 other.History.Count == History.Count &&
                 other.History.All(History.Contains) &&
+
                 other.Senses.Count == Senses.Count &&
                 other.Senses.All(Senses.Contains);
         }
@@ -152,14 +130,32 @@ namespace BackendFramework.ValueModels
                 return other.Id.Equals(Id) && this.ContentEquals(other);
             }
         }
+
+        public override int GetHashCode()
+        {
+            var hash = new HashCode();
+            hash.Add(Id);
+            hash.Add(Vernacular);
+            hash.Add(Plural);
+            hash.Add(Senses);
+            hash.Add(Audio);
+            hash.Add(Created);
+            hash.Add(Modified);
+            hash.Add(History);
+            hash.Add(PartOfSpeech);
+            hash.Add(EditedBy);
+            hash.Add(Accessability);
+            hash.Add(OtherField);
+            return hash.ToHashCode();
+        }
     }
     public class MergeWords
     {
-        public string parent { get; set; }
-        public List<string> children { get; set; }
-        public state mergeType { get; set; }
-        public User mergedBy { get; set; }
-        public string time { get; set; }
+        public string Parent { get; set; }
+        public List<string> Children { get; set; }
+        public state MergeType { get; set; }
+        public User MergedBy { get; set; }
+        public string Time { get; set; }
     }
 
     public class Sense
@@ -183,6 +179,7 @@ namespace BackendFramework.ValueModels
             {
                 clone.SemanticDomains.Add(sd.Clone());
             }
+
             return clone;
         }
 
@@ -198,9 +195,15 @@ namespace BackendFramework.ValueModels
                 return
                     other.Glosses.Count == Glosses.Count &&
                     other.Glosses.All(Glosses.Contains) &&
+
                     other.SemanticDomains.Count == SemanticDomains.Count &&
                     other.SemanticDomains.All(SemanticDomains.Contains);
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Glosses, SemanticDomains);
         }
     }
 
@@ -230,6 +233,11 @@ namespace BackendFramework.ValueModels
                 return Name.Equals(other.Name) && Number.Equals(other.Number);
             }
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Number);
+        }
     }
 
     public class Gloss
@@ -258,5 +266,25 @@ namespace BackendFramework.ValueModels
                 return Language.Equals(other.Language) && Def.Equals(other.Def);
             }
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Language, Def);
+        }
+    }
+
+    public class FileUpload
+    {
+        public IFormFile File { get; set; }
+        public string Name { get; set; }
+        public string FilePath { get; set; }
+    }
+
+    public enum state
+    {
+        active,
+        deleted,
+        sense,
+        duplicate
     }
 }
