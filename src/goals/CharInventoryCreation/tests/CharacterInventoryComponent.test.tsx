@@ -90,4 +90,46 @@ describe("Tests characterInventoryComponent", () => {
       payload: ["w"]
     });
   });
+
+  it("Adds multiple characters", () => {
+    // Creates the tree
+    let charMaster: ReactTestRenderer;
+    let charHandle: ReactTestInstance;
+    act(() => {
+      charMaster = renderer.create(
+        <Provider store={mockStore}>
+          <CharacterInventory currentProject={state.currentProject} />
+        </Provider>
+      );
+      charHandle = charMaster.root.findByType(CharSetClass);
+      charHandle.instance.setState({ chars: "asdf" });
+      charHandle.instance.addChars();
+    });
+    let actions = mockStore.getActions();
+    expect(actions[actions.length - 1]).toEqual({
+      type: SET_CHARACTER_INVENTORY,
+      payload: ["a", "s", "d", "f"]
+    });
+  });
+
+  it("Adds non-latin characters", () => {
+    // Creates the tree
+    let charMaster: ReactTestRenderer;
+    let charHandle: ReactTestInstance;
+    act(() => {
+      charMaster = renderer.create(
+        <Provider store={mockStore}>
+          <CharacterInventory currentProject={state.currentProject} />
+        </Provider>
+      );
+      charHandle = charMaster.root.findByType(CharSetClass);
+      charHandle.instance.setState({ chars: "ʔʃжψض" });
+      charHandle.instance.addChars();
+    });
+    let actions = mockStore.getActions();
+    expect(actions[actions.length - 1]).toEqual({
+      type: SET_CHARACTER_INVENTORY,
+      payload: ["ʔ", "ʃ", "ж", "ψ", "ض"]
+    });
+  });
 });

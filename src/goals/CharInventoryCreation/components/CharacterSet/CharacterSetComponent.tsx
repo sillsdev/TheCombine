@@ -119,6 +119,8 @@ export class CharacterSet extends React.Component<
             <Translate id="charInventory.characterSet.title" />
           </Typography>
         </Grid>
+
+        {/* The grid of character tiles */}
         {this.props.inventory.map(char => [
           this.state.dropChar === char && this.state.dragChar !== char ? (
             <Grid
@@ -171,7 +173,10 @@ export class CharacterSet extends React.Component<
             </Grid>
           </Grid>
         ])}
+
         <Grid item xs={12} />
+
+        {/* The text area for character input */}
         <Grid item xs={6}>
           <TextField
             value={this.state.chars}
@@ -183,6 +188,8 @@ export class CharacterSet extends React.Component<
             onKeyDown={e => this.handleKeyDown(e)}
           />
         </Grid>
+
+        {/* The add characters and delete character buttons */}
         <Grid item xs={6}>
           <Button
             variant="contained"
