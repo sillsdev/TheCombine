@@ -17,10 +17,12 @@ type CharacterInventoryType = SET_CHARACTER_INVENTORY;
 
 export interface CharacterInventoryAction {
   type: CharacterInventoryType;
-  inventory: string[];
+  payload: string[];
 }
 
-// sends the character inventory to the server
+/**
+ * Sends the character inventory to the server
+ */
 export function uploadInventory() {
   return async (
     dispatch: Dispatch<CharacterInventoryAction | ProjectAction>,
@@ -40,6 +42,6 @@ export function uploadInventory() {
 export function setInventory(inventory: string[]): CharacterInventoryAction {
   return {
     type: SET_CHARACTER_INVENTORY,
-    inventory
+    payload: inventory
   };
 }
