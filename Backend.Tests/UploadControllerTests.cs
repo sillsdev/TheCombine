@@ -33,7 +33,6 @@ namespace Tests
             _merger = new LiftService(_wordrepo);
             _userService = new UserServiceMock();
 
-
             userController = new UserController(_userService);
             wordController = new WordController(_wordService, _wordrepo);
             controller = new UploadContoller(_merger, _wordrepo, _wordService, _userService);
@@ -46,6 +45,7 @@ namespace Tests
             user.Password = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
             return user;
         }
+
         Word RandomWord()
         {
             Word word = new Word();
