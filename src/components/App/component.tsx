@@ -3,12 +3,13 @@ import React from "react";
 
 //TC modules
 import CreateProject from "../CreateProject";
-import { Route, Router } from "react-router-dom";
+import { Route, Router, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { PrivateRoute } from "../PrivateRoute";
 import { LogoutButton } from "../Login/LogoutButton";
 import Login from "../Login";
-import Navigation from "../Navigation";
+import { Always } from "../Always";
+import { GoalTimeline } from "../GoalTimeline/GoalTimelineComponent";
 
 export const history = createBrowserHistory();
 
@@ -17,10 +18,12 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Router history={history}>
-          <PrivateRoute exact path="/nav" component={Navigation} />
-          <PrivateRoute exact path="/" component={CreateProject} />
-
-          <Route path="/login" component={Login} />
+          <Switch>
+            <PrivateRoute exact path="/" component={CreateProject} />
+            <PrivateRoute exact path="/timeline" component={GoalTimeline} />
+            <Route path="/login" component={Login} />
+            <Route component={Always} />
+          </Switch>
         </Router>
 
         <hr />

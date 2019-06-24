@@ -3,6 +3,7 @@ import React from "react";
 import GoalHistory from "./GoalHistory";
 import GoalSwitcher from "./GoalSwitcher";
 import GoalSuggestions from "./GoalSuggestions";
+import NavigationBar from "../Navigation/NavigationBar/";
 
 const timelineStyle = {
   centerDisplays: {
