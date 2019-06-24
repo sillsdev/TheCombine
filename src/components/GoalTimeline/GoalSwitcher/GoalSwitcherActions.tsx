@@ -11,8 +11,6 @@ export function chooseGoal(goal: Goal) {
     goal.id = Math.floor(Math.random() * 100000 + 1).toString();
     dispatch(navActions.navigateForward(goal));
     dispatch(timelineActions.addGoalToHistory(goal));
-    const path = `/goals/${goal.name}`;
-    history.push(path);
-    console.log(path);
+    history.push(`/goals/${goal.name}`);
   };
 }

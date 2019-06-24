@@ -1,6 +1,6 @@
 import React from "react";
 
-export class Always extends React.Component {
+export class PageNotFound extends React.Component {
   render() {
     return (
       <div>
