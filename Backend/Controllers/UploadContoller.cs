@@ -66,9 +66,9 @@ namespace BackendFramework.Controllers
                 User gotUser = await _userService.GetUser(userId);
 
                 string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-                System.IO.Directory.CreateDirectory(wanted_path + "\\Avatars");
+                System.IO.Directory.CreateDirectory(wanted_path + "/Avatars");
 
-                model.FilePath = Path.Combine(wanted_path + "\\Avatars\\" + userId + extention);
+                model.FilePath = Path.Combine(wanted_path + "/Avatars/" + userId + extention);
 
                 using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
                 {
