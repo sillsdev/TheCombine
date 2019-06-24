@@ -63,13 +63,18 @@ namespace BackendFramework.Controllers
 
             if (file.Length > 0)
             {
-                //TODO: how to keep actual file ending
-                model.FilePath = Path.Combine("./Avatars/" + userId + extention);
-                using (var fs = new FileStream(model.FilePath, FileMode.Create))
+                User gotUser = await _userService.GetUser(userId);
+
+                string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                System.IO.Directory.CreateDirectory(wanted_path + "\\Avatars");
+
+                model.FilePath = Path.Combine(wanted_path + "\\Avatars\\" + userId + extention);
+
+                using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
                 {
                     await file.CopyToAsync(fs);
                 }
-                User gotUser = await _userService.GetUser(userId);
+
 
                 if (gotUser != null)
                 {
