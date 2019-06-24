@@ -8,7 +8,7 @@ Merge words into a parent
 
 **Auth required** :
 
-**Data type** :
+**Data type** : MergeWords
 
 <pre>
 {
@@ -24,3 +24,10 @@ Merge words into a parent
 **Code** : `200 OK`
 
 **Data content** : `id: String`
+
+## Error response
+
+**Condition** : If any id is not found or if there are duplicates among the parent and children
+
+**Code** : `404 NOT FOUND`
+

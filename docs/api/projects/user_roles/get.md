@@ -1,6 +1,6 @@
 # Get a single project
 
-**URL** : `/v1/projects/{Id}`
+**URL** : `/v1/projects/userroles/{Id}`
 
 **Method** : `GET`
 
@@ -10,10 +10,10 @@
 
 **Code** : `200 OK`
 
-**Data Content** : [`Project`](project.md)
+**Data Content** : [`UserRole`](user_role.md)
 
 ## Error response
 
-**Condition** : Project not found
+**Condition** : Id not found
 
 **Code** : `404 NOT FOUND`

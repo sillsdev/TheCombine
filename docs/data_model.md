@@ -1,9 +1,5 @@
 # Data Model
 
-## Role
-
-- Name
-
 ## User
 
 - Avatar - makes it easier to distinguish users from one another when collaborating. We will look into automatically generating avatars for users.
@@ -14,9 +10,11 @@
 
 - Phone
 
-- Other
+- Other Connection Field
 
 - Projects - A user may be involved with more than one project at a time.
+
+- Agreement
 
 - Password
 
@@ -24,13 +22,15 @@
 
 - UI Language - The language the user wants used for the user interface of The Combine.
 
-## Project
+- Token - stored JWT token to permit access to certain features.
 
-- User roles
+## Project
 
 - Name
 
 - Semantic Domains
+
+- User Roles
 
 - Words (Frontier)
 
@@ -48,19 +48,13 @@
 
 ## Word
 
-- Vern
+- Vernacular
 
-- Gloss(es)
+- Plural
 
-- File references - Currently, SIL does not store audio and video files of people speaking a specific word. We want to add that ability should SIL want to do that in the future.
+- Senses - consists of glosses and semantic domains
 
-- Semantic Domain
-
-- Users
-
-- Part of Speech
-
-- Custom Field[^1]
+- Audio - Currently, SIL does not store audio and video files of people speaking a specific word. We want to add that ability should SIL want to do that in the future.
 
 - Created
 
@@ -68,17 +62,53 @@
 
 - History - We are storing the history of a word in a linked tree. Each word will point to the previous word in its history.
 
+- Part of Speech
+
+- Edited By
+
+- Accessability 
+
+- Other Field[^1]
+
+## User Role
+
+- Permission
+
+- History
+
+## Sense
+
+- Glosses
+
+- Semantic Domains
+
+## Gloss
+
+- Language
+
+- Definition
+
 ## Semantic Domain
 
 - Name
 
 - Number
 
-## File
+## File Upload
 
-- User data
+- File
 
-- Speaker user
+- Name
+
+- File Path
+
+## History
+
+- Goal Id
+
+- Number of Steps
+
+- Step Data
 
 ## Custom Field[^1]
 

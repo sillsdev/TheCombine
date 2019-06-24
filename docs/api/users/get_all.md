@@ -1,10 +1,10 @@
-# Get multiple users
+# Get all users
 
 **URL** : `/v1/users`
 
 **Method** : `GET`
 
-**Auth required** :
+**Auth required** : Yes
 
 ## Success response
 

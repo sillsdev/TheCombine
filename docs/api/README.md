@@ -14,17 +14,24 @@
 
 - [Add language project](projects/post.md) : `POST: /v1/projects/`
 - [Get all projects](projects/get_all.md) : `GET: /v1/projects`
-- [Update settings](projects/settings/put.md) : `PUT: /v1/projects/{project}/settings`
-- [Get settings](projects/settings/get.md) : `GET: /v1/projects/{project}/settings`
 - [Get one project](projects/get.md) : `GET: /v1/projects/{id}`
 - [Update a project](projects/put.md) : `PUT: /v1/projects/{id}`
 
-### Words
+### Word
 
 - [Add word](projects/words/post.md) : `POST: /v1/projects/{project}/words`
 - [Merge words](projects/words/put.md) : `PUT: /v1/projects/{project}/words`
 - [Get all words](projects/words/get.md) : `GET: /v1/projects/{project}/words`
 - [Get word](projects/words/get_id.md) : `GET: /v1/projects/{project}/words/{id}`
 - [Update word](projects/words/put_id.md) : `PUT: /v1/projects/{project}/words/{id}`
+- [Delete word](projects/words/delete_id.md) : `DELETE: /v1/projects/{project}/words/{id}`
+- [Merge words](projects/words/put.md) : `PUT: /v1/projects/{project}/words`
 - [Get frontier words](projects/words/frontier.md) : `GET: /v1/projects/{project}/words/frontier`
-- [Upload Lift File](projects/words/upload.md) : `POST: /v1/projects/{project}/words/upload`
+- [Upload Lift File](projects/words/post_upload.md) : `POST: /v1/projects/{project}/words/upload`
+
+### User Role
+
+- [Add user role](projects/user_roles/post.md) : `POST /v1/projects/userroles`
+- [Get all users](projects/user_roles/get_all.md) : `GET /v1/projects/userroles`
+- [Update user info](projects/user_roles/put.md) : `PUT /v1/projects/userroles/{id}`
+- [Get user](projects/user_roles/get.md) : `GET /v1/projects/userroles/{id}`
