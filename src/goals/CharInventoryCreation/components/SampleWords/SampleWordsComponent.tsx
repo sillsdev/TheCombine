@@ -4,10 +4,19 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography, Paper, Button } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  Paper,
+  Button,
+  IconButton,
+  Tooltip
+} from "@material-ui/core";
 import { Refresh as RefreshIcon } from "@material-ui/icons";
 import { Word } from "../../../../types/word";
 import * as backend from "../../../../backend";
+import { Add, Block } from "@material-ui/icons";
+import WordTile from "./WordTileComponent";
 
 export interface SampleWordsProps {
   setInventory: (inventory: string[]) => void;
@@ -19,6 +28,7 @@ interface SampleWordsState {
   selected: string[];
   dragChar: string;
   dropChar: string;
+  ignoreList: string[]; // A list of words we don't want to see right now
 }
 
 class SampleWords extends React.Component<
@@ -31,7 +41,8 @@ class SampleWords extends React.Component<
       words: [],
       selected: [],
       dragChar: "",
-      dropChar: ""
+      dropChar: "",
+      ignoreList: []
     };
   }
 
@@ -69,7 +80,7 @@ class SampleWords extends React.Component<
    * Gets the words that don't fit the character inventory
    */
   async getWords() {
-    const NUM_WORDS = 5;
+    const NUM_WORDS = 5; // The max number of words we want to display on the page
 
     let inv = [...this.props.inventory];
     let sampleWords: string[] = [];
@@ -79,17 +90,30 @@ class SampleWords extends React.Component<
     for (let i: number = 0; i < allWords.length; i++) {
       if (sampleWords.length >= NUM_WORDS) break;
       word = allWords[i].vernacular;
-      for (let j: number = 0; j < word.length; j++) {
-        if (inv.indexOf(word[j]) === -1 && word[j] !== " ") {
-          sampleWords.push(word);
-          break;
+      if (this.state.ignoreList.indexOf(word) === -1)
+        // don't check word if it's in the ignore list
+        for (let j: number = 0; j < word.length; j++) {
+          if (inv.indexOf(word[j]) === -1 && word[j] !== " ") {
+            sampleWords.push(word);
+            break;
+          }
         }
-      }
     }
 
     this.setState({
       words: [...sampleWords]
     });
+  }
+
+  addWordToCharSet(word: string) {
+    this.props.setInventory([
+      ...this.props.inventory,
+      ...word.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
+    ]);
+  }
+
+  addWordToIgnoreList(word: string) {
+    this.setState({ ignoreList: [...this.state.ignoreList, word] });
   }
 
   render() {
@@ -117,25 +141,13 @@ class SampleWords extends React.Component<
           </Button>
         </Grid>
         {this.state.words.map(word => (
-          <Grid item xs={12} key={word}>
-            <Grid container justify="flex-start">
-              <Paper
-                className="classes.paper"
-                style={{
-                  minWidth: 40,
-                  textAlign: "center",
-                  padding: "5px 10px",
-                  cursor: "pointer",
-                  background: this.state.selected.includes(word)
-                    ? "#cfc"
-                    : "#fff"
-                }}
-                onClick={() => this.toggleSelected(word)}
-              >
-                {word}
-              </Paper>
-            </Grid>
-          </Grid>
+          <WordTile
+            word={word}
+            selected={this.state.selected}
+            toggleSelected={word => this.toggleSelected(word)}
+            addWordToCharSet={word => this.addWordToCharSet(word)}
+            addWordToIgnoreList={word => this.addWordToIgnoreList(word)}
+          />
         ))}
         <Grid item xs={12} />
       </Grid>
