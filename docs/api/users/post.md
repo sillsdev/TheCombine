@@ -6,7 +6,7 @@ Used to add a user to the server.
 
 **Method** : `POST`
 
-**Auth required** :
+**Auth required** : No
 
 **Data type**: [`User`](user.md)
 
@@ -15,3 +15,9 @@ Used to add a user to the server.
 **Code** : `200 OK`
 
 **Data content** : `id: string`
+
+## Error Response
+
+**Condition** : If user is null
+
+**Code** : `400 BAD REQUEST`

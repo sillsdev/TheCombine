@@ -1,10 +1,10 @@
 # Get user
 
-**URL** : `/v1/users`
+**URL** : `/v1/users/{Id}`
 
 **Method** : `GET`
 
-**Auth required** :
+**Auth required** : Yes
 
 ## Success Response
 

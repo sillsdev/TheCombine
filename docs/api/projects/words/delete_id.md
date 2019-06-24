@@ -1,18 +1,14 @@
-# Update word
+# Delete word
 
 **URL** : `/v1/projects/{project}/words/{id}`
 
-**Method** : `PUT`
+**Method** : `DELETE`
 
 **Auth required** :
-
-**Data type** : [`Word`](word.md)
 
 ## Success response
 
 **Code** : `200 OK`
-
-**Data content** : `id: string`
 
 ## Error response
 
