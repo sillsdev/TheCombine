@@ -72,7 +72,7 @@
 
 ## User Role
 
-- Permission
+- Permissions
 
 - History
 

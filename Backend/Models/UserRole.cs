@@ -13,7 +13,7 @@ namespace BackendFramework.ValueModels
         public string Id { get; set; }
 
         [BsonElement("permission")]
-        public List<Permission> Permission { get; set; }
+        public List<Permission> Permissions { get; set; }
 
         [BsonElement("history")]
         public List<History> History { get; set; }
@@ -21,7 +21,7 @@ namespace BackendFramework.ValueModels
         public UserRole()
         {
             Id = "";
-            Permission = new List<Permission>();
+            Permissions = new List<Permission>();
             History = new List<History>();
         }
 
@@ -30,14 +30,14 @@ namespace BackendFramework.ValueModels
             UserRole clone = new UserRole
             {
                 Id = Id.Clone() as string,
-                Permission = new List<Permission>(),
+                Permissions = new List<Permission>(),
                 History = new List<History>()
             };
 
-            foreach(Permission permission in Permission)
+            foreach(Permission permission in Permissions)
             {
                 //Enums like Permission have no need to be cloned
-                clone.Permission.Add(permission);
+                clone.Permissions.Add(permission);
             }
 
             foreach(History history in History)
@@ -51,8 +51,8 @@ namespace BackendFramework.ValueModels
         public bool ContentEquals(UserRole other)
         {
             return
-                other.Permission.Count == Permission.Count &&
-                other.Permission.All(Permission.Contains) &&
+                other.Permissions.Count == Permissions.Count &&
+                other.Permissions.All(Permissions.Contains) &&
 
                 other.History.Count == History.Count &&
                 other.History.All(History.Contains);
@@ -73,7 +73,7 @@ namespace BackendFramework.ValueModels
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Permission, History);
+            return HashCode.Combine(Id, Permissions, History);
         }
     }
 

@@ -23,7 +23,7 @@ namespace Tests
         UserRole RandomUserRole()
         {
             UserRole userRole = new UserRole();
-            userRole.Permission = new List<Permission>() { Permission.permission1 };
+            userRole.Permissions = new List<Permission>() { Permission.permission1 };
             return userRole;
         }
 
@@ -70,7 +70,7 @@ namespace Tests
             UserRole origUserRole = _userRoleService.Create(RandomUserRole()).Result;
 
             UserRole modUserRole = origUserRole.Clone();
-            modUserRole.Permission = new List<Permission>() { Permission.permission2 };
+            modUserRole.Permissions = new List<Permission>() { Permission.permission2 };
 
             var action = controller.Put(modUserRole.Id, modUserRole);
 

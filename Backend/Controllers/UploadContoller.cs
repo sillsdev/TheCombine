@@ -10,7 +10,7 @@ namespace BackendFramework.Controllers
 {
     //[Authorize]
     [Produces("application/json")]
-    [Route("v1/projects/words")]
+    [Route("v1")]
     public class UploadContoller : Controller
     {
         public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
@@ -28,7 +28,7 @@ namespace BackendFramework.Controllers
 
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
-        [HttpPost("upload")]
+        [HttpPost("projects/words/upload")]
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
             var file = model.File;
@@ -55,7 +55,7 @@ namespace BackendFramework.Controllers
             }
         }
 
-        [HttpPost("{Id}/Upload/Avatar")]
+        [HttpPost("users/{Id}/upload/avatar")]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload model)
         {
             var file = model.File;
@@ -94,7 +94,7 @@ namespace BackendFramework.Controllers
             }
         }
 
-        [HttpPost("{Id}/upload/audio")]
+        [HttpPost("projects/words/{Id}/upload/audio")]
         public async Task<IActionResult> UploadAudioFile(string wordId, [FromForm] FileUpload model)
         {
             var file = model.File;

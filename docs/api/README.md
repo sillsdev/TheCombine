@@ -9,6 +9,8 @@
 - [Get all users](users/get_all.md) : `GET /v1/users`
 - [Update user info](users/put.md) : `PUT /v1/users/{id}`
 - [Get user](users/get.md) : `GET /v1/users/{id}`
+- [Upload Avatar](users/post_upload_avatar.md) : `POST /v1/users/{id}/upload/avatar`
+- [Authenticate](users/authenticate.md) : `POST /v1/users/authenticate`
 
 ## Project
 
@@ -27,7 +29,8 @@
 - [Delete word](projects/words/delete_id.md) : `DELETE: /v1/projects/{project}/words/{id}`
 - [Merge words](projects/words/put.md) : `PUT: /v1/projects/{project}/words`
 - [Get frontier words](projects/words/frontier.md) : `GET: /v1/projects/{project}/words/frontier`
-- [Upload Lift File](projects/words/post_upload.md) : `POST: /v1/projects/{project}/words/upload`
+- [Upload Lift File](projects/words/post_upload_lift.md) : `POST: /v1/projects/{project}/words/upload`
+- [Upload Audio](users/post_upload_audio.md) : `POST /v1/projects/{project}/words/{Id}/upload/audio`
 
 ### User Role
 

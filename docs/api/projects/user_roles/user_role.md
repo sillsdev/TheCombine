@@ -1,8 +1,8 @@
 # User Role
 
-**permission** :
+**permissions** : What a user can do in a project
 
-**history** :
+**history** : What a user has done in a project
 
 ## Raw Type
 
