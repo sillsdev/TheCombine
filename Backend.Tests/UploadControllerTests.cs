@@ -38,6 +38,7 @@ namespace Tests
             controller = new UploadContoller(_merger, _wordrepo, _wordService, _userService);
 
         }
+
         User RandomUser()
         {
             User user = new User();
