@@ -19,7 +19,7 @@ interface CharacterSetState {
   dropChar: string;
 }
 
-class CharacterSet extends React.Component<
+export class CharacterSet extends React.Component<
   CharacterSetProps & LocalizeContextProps,
   CharacterSetState
 > {
@@ -141,7 +141,7 @@ class CharacterSet extends React.Component<
           >
             <Grid container justify="center">
               <Paper
-                className="classes.paper"
+                id={"charTile_" + char}
                 style={{
                   minWidth: 20,
                   textAlign: "center",

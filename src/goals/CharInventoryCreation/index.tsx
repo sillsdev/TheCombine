@@ -23,7 +23,7 @@ function mapStateToProps(
   };
 }
 
-export function mapDispatchToProps(
+function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>
 ) {
   return {
