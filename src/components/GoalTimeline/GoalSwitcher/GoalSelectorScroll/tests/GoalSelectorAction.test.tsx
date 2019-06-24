@@ -1,9 +1,8 @@
 import {
   SELECT_ACTION,
-  ScrollSelectorAct,
+  GoalScrollAction,
   scrollSelectorIndexAction,
   scrollSelectorMouseAction,
-  MouseMoveAct,
   MOUSE_ACTION
 } from "../GoalSelectorAction";
 
@@ -11,20 +10,18 @@ const VAL = 5;
 
 describe("Goal select action test", () => {
   it("Should create the correct select action", () => {
-    var result: ScrollSelectorAct = {
+    let result: GoalScrollAction = {
       type: SELECT_ACTION,
       payload: VAL
     };
-
     expect(scrollSelectorIndexAction(VAL)).toEqual(result);
   });
 
   it("Should create the correct mouse action", () => {
-    var result: MouseMoveAct = {
+    let result: GoalScrollAction = {
       type: MOUSE_ACTION,
       payload: VAL
     };
-
     expect(scrollSelectorMouseAction(VAL)).toEqual(result);
   });
 });

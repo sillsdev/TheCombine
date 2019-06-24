@@ -1,5 +1,5 @@
 import {
-  ScrollAction,
+  GoalScrollAction,
   SELECT_ACTION,
   MOUSE_ACTION
 } from "./GoalSelectorAction";
@@ -14,7 +14,7 @@ export const defaultState: GoalSelectorState = {
 
 export const goalSelectReducer = (
   state: GoalSelectorState | undefined,
-  action: ScrollAction
+  action: GoalScrollAction
 ): GoalSelectorState => {
   if (!state) return defaultState;
   switch (action.type) {
