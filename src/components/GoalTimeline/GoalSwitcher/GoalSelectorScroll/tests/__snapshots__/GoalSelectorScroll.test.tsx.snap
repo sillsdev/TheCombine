@@ -44,9 +44,10 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
         "overflow": "hidden",
         "padding": 10,
         "userselect": "none",
-        "width": 600,
+        "width": 1000,
       }
     }
+    tabIndex={0}
   >
     <div
       className="scrollCont"
@@ -55,62 +56,174 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
         Object {
           "display": "flex",
           "flexWrap": "nowrap",
-          "width": 1000,
         }
       }
     >
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard0Wraparound MuiPaper-rounded"
+        onClick={[Function]}
+        onContextMenu={[Function]}
         style={
           Object {
-            "opacity": 0.01,
-            "width": 200,
-          }
-        }
-      />
-      <div
-        className="MuiPaper-root MuiPaper-elevation7 MuiCard-root scrollCard MuiPaper-rounded"
-        onDoubleClick={[Function]}
-        style={
-          Object {
-            "backgroundColor": "cyan",
+            "backgroundColor": "white",
             "width": 200,
           }
         }
       >
-        Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+        <div
+          className="MuiCardContent-root"
+        >
+          Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+        </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard MuiPaper-rounded"
-        onDoubleClick={[Function]}
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard1Wraparound MuiPaper-rounded"
+        onClick={[Function]}
+        onContextMenu={[Function]}
         style={
           Object {
+            "backgroundColor": "lightGray",
+            "color": "gray",
+            "margin": 10,
+            "width": 180,
+          }
+        }
+      >
+        <div
+          className="MuiCardContent-root"
+        >
+          Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+        </div>
+      </div>
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard2Wraparound MuiPaper-rounded"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        style={
+          Object {
+            "backgroundColor": "lightGray",
+            "color": "gray",
+            "margin": 10,
+            "width": 180,
+          }
+        }
+      >
+        <div
+          className="MuiCardContent-root"
+        >
+          Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+        </div>
+      </div>
+      <div
+        className="MuiPaper-root MuiPaper-elevation7 MuiCard-root scrollCard0 MuiPaper-rounded"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        style={
+          Object {
+            "backgroundColor": "white",
             "width": 200,
           }
         }
       >
-        Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+        <div
+          className="MuiCardContent-root"
+        >
+          Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+        </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard MuiPaper-rounded"
-        onDoubleClick={[Function]}
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard1 MuiPaper-rounded"
+        onClick={[Function]}
+        onContextMenu={[Function]}
         style={
           Object {
+            "backgroundColor": "lightGray",
+            "color": "gray",
+            "margin": 10,
+            "width": 180,
+          }
+        }
+      >
+        <div
+          className="MuiCardContent-root"
+        >
+          Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+        </div>
+      </div>
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard2 MuiPaper-rounded"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        style={
+          Object {
+            "backgroundColor": "lightGray",
+            "color": "gray",
+            "margin": 10,
+            "width": 180,
+          }
+        }
+      >
+        <div
+          className="MuiCardContent-root"
+        >
+          Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+        </div>
+      </div>
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard0Wraparound MuiPaper-rounded"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        style={
+          Object {
+            "backgroundColor": "white",
             "width": 200,
           }
         }
       >
-        Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+        <div
+          className="MuiCardContent-root"
+        >
+          Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+        </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard1Wraparound MuiPaper-rounded"
+        onClick={[Function]}
+        onContextMenu={[Function]}
         style={
           Object {
-            "opacity": 0.01,
-            "width": 200,
+            "backgroundColor": "lightGray",
+            "color": "gray",
+            "margin": 10,
+            "width": 180,
           }
         }
-      />
+      >
+        <div
+          className="MuiCardContent-root"
+        >
+          Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+        </div>
+      </div>
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard2Wraparound MuiPaper-rounded"
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        style={
+          Object {
+            "backgroundColor": "lightGray",
+            "color": "gray",
+            "margin": 10,
+            "width": 180,
+          }
+        }
+      >
+        <div
+          className="MuiCardContent-root"
+        >
+          Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+        </div>
+      </div>
     </div>
   </div>
   <button

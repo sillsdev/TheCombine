@@ -58,6 +58,9 @@
       ],
       "viewFinal": ["View Final", "Ver final"]
     },
+    "selector": {
+      "selectOption": ["Select this goal", "Selecciona este objectivo"]
+    },
     "mergeDups": {
       "done": ["Merge these words", "La resistencia es inútil"]
     }

@@ -1,6 +1,6 @@
 import GoalSelectorScroll from "./GoalSelectorScroll";
 import {
-  ScrollAction,
+  GoalScrollAction,
   scrollSelectorIndexAction,
   scrollSelectorMouseAction
 } from "./GoalSelectorAction";
@@ -19,7 +19,7 @@ export function mapStateToProps(state: StoreState): GoalSelectorState {
   };
 }
 
-export function mapDispatchToProps(dispatch: Dispatch<ScrollAction>) {
+export function mapDispatchToProps(dispatch: Dispatch<GoalScrollAction>) {
   return {
     swapSelectedIndex: (ndx: number) => {
       dispatch(scrollSelectorIndexAction(ndx));
