@@ -29,5 +29,6 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-// Learn more about service workers: https://bit.ly/CRA-PWA
+// Learn more about service workers: https://developers.google.com/web/fundamentals/primers/service-workers/
+// https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 serviceWorker.register();
