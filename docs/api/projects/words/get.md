@@ -1,4 +1,4 @@
-# Get multiple words
+# Get all words
 
 Gets all words in the project
 
