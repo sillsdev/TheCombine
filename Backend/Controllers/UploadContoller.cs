@@ -58,29 +58,34 @@ namespace BackendFramework.Controllers
         [HttpPost("{Id}/Upload/Avatar")]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload model)
         {
-            var file = model.file;
+            var file = model.File;
             string extention = Path.GetExtension(file.FileName);
 
             if (file.Length > 0)
             {
                 //TODO: how to keep actual file ending
-                model.filePath = Path.Combine("./Avatar/" + userId + extention);
-                using (var fs = new FileStream(model.filePath, FileMode.Create))
+                model.FilePath = Path.Combine("./Avatars/" + userId + extention);
+                using (var fs = new FileStream(model.FilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
                 }
-            }
-            User gotUser = _userService.GetUsers(userId);
-            if (gotUser == null)
-            {
-                gotUser.Avatar = model.filePath;
-                bool success = await _userService.Update(userId, gotUser);
+                User gotUser = await _userService.GetUser(userId);
 
-                return new OkObjectResult(success);
+                if (gotUser != null)
+                {
+                    gotUser.Avatar = model.FilePath;
+                    bool success = await _userService.Update(userId, gotUser);
+
+                    return new OkObjectResult(success);
+                }
+                else
+                {
+                    return new NotFoundObjectResult(gotUser.Id);
+                }  
             }
             else
             {
-                return new NotFoundObjectResult(userId);
+                return new UnsupportedMediaTypeResult();
             }
         }
 
