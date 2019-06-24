@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 //import axios from "./tests/__mocks__/axios";
-import { history } from "../App/component";
+import { history } from "../../index";
 import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 import * as backend from "../../backend";

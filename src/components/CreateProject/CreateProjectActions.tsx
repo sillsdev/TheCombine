@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { history } from "../App/component";
+import { history } from "../../index";
 import * as backend from "../../backend";
 import { Project, defaultProject } from "../../types/project";
 import { setCurrentProject, ProjectAction } from "../Project/ProjectActions";

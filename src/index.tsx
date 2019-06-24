@@ -12,6 +12,8 @@ import { LocalizeProvider } from "react-localize-redux";
 
 //additional files
 import globalTranslations from "./resources/translations.json";
+import { Router } from "react-router-dom";
+import { createBrowserHistory } from "history";
 
 const localizeInit = {
   languages: [{ name: "English", code: "en" }, { name: "Spanish", code: "es" }],
@@ -19,11 +21,15 @@ const localizeInit = {
   options: { renderToStaticMarkup }
 };
 
+export const history = createBrowserHistory();
+
 //Provider connects store to component containers
 ReactDOM.render(
   <Provider store={store}>
     <LocalizeProvider store={store} initialize={localizeInit}>
-      <App />
+      <Router history={history}>
+        <App />
+      </Router>
     </LocalizeProvider>
   </Provider>,
   document.getElementById("root")

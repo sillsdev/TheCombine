@@ -1,4 +1,4 @@
-import { history } from "../App/component";
+import { history } from "../../index";
 import React from "react";
 import { Button } from "@material-ui/core";
 import { Translate } from "react-localize-redux";

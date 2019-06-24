@@ -3,8 +3,7 @@ import React from "react";
 
 //TC modules
 import CreateProject from "../CreateProject";
-import { Route, Router, Switch } from "react-router-dom";
-import { createBrowserHistory } from "history";
+import { Route, Switch, Router } from "react-router-dom";
 import { PrivateRoute } from "../PrivateRoute";
 import { LogoutButton } from "../Login/LogoutButton";
 import Login from "../Login";
@@ -12,6 +11,8 @@ import { Always } from "../Always";
 import { GoalTimeline } from "../GoalTimeline/GoalTimelineComponent";
 
 export const history = createBrowserHistory();
+import GoalWrapper from "../GoalWrapper/";
+import { createBrowserHistory } from "history";
 
 export default class App extends React.Component {
   render() {
