@@ -1,5 +1,3 @@
-//Sam Delaney, 6/12/19
-
 import { Word, hasSenses } from "../../../types/word";
 import * as backend from "../../../backend";
 
@@ -11,11 +9,11 @@ export interface ScoredWord {
 export default class DupFinder {
   constructor(
     searchLim: number = 500,
-    maxScore: number = 4,
+    maxScore: number = 3,
     maxCount: number = 8,
     subCost: number = 1,
-    insCost: number = 1,
-    delCost: number = 1,
+    insCost: number = 2,
+    delCost: number = 2,
     qualVal: number = 0
   ) {
     this.searchLimit = searchLim;
@@ -49,15 +47,45 @@ export default class DupFinder {
   deletionCost: number;
   subsitutionCost: number;
 
-  // get list of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
-  async getNextDups(): Promise<Word[]> {
-    let wordsFromDB: Promise<Word[]> = this.getWordsFromDB().then(words => {
-      let foundWords: Word[] = [];
+  // get n lists of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
+  async getNextDups(n: number = 1): Promise<Word[][]> {
+    let wordsFromDB: Promise<Word[][]> = this.getWordsFromDB().then(words => {
+      //[wordlist, list score]
+      let currentWords: [Word[], number][] = [];
+
+      //use each word as a parent and compare the resulting lists against each other
       for (let i = 0; i < words.length; i++) {
-        let iterDups: Word[] = this.getDupsFromWordList(words[i], words);
-        if (foundWords.length < iterDups.length) foundWords = iterDups;
+        //word list to compare against current words
+        let newWordList: [Word[], number] = this.getDupsFromWordList(
+          words[i],
+          words
+        );
+
+        //ignore wordlists with less than 2 words
+        if (newWordList[0].length <= 1) {
+          continue;
+        }
+
+        //add wordlist if currentWords is not full yet
+        if (currentWords.length < n) {
+          currentWords.push(newWordList);
+          continue;
+        }
+
+        //add wordlist if it scores lower than the last element in currentWords
+        // and resort currentWords
+        if (currentWords[currentWords.length - 1].length < newWordList.length) {
+          currentWords.push(newWordList);
+          currentWords.sort(function(a, b): number {
+            return a[1] - b[1];
+          });
+          currentWords.pop();
+        }
       }
-      return foundWords;
+      //return the wordlist from the scored list
+      return currentWords.map(function(scoredList) {
+        return scoredList[0];
+      });
     });
     return wordsFromDB;
   }
@@ -69,31 +97,32 @@ export default class DupFinder {
   }
 
   //scores a collection and returns
-  getDupsFromWordList(parent: Word, words: Word[]): Word[] {
+  getDupsFromWordList(parent: Word, words: Word[]): [Word[], number] {
     //narrow down very different words
-    words = this.quickscore(parent, words);
+    words = this.filter(parent, words);
 
     //thorough scoring
     let scoredWords: ScoredWord[] = this.scoreWords(parent, words);
 
     //apply thresholds
-    words = this.getAcceptedWords(scoredWords);
+    let scoredList: [Word[], number] = this.getAcceptedWords(scoredWords);
 
-    return words;
+    return scoredList;
   }
 
   //remove words that are more than one longer or shorter than parent
-  quickscore(parent: Word, words: Word[]): Word[] {
+  filter(parent: Word, words: Word[]): Word[] {
+    let filteredWords: Word[] = [];
     words.forEach(word => {
-      if (Math.abs(parent.vernacular.length - word.vernacular.length) > 1)
-        words.filter(w => w !== word);
+      if (Math.abs(parent.vernacular.length - word.vernacular.length) < 2)
+        filteredWords.push(word);
     });
-    return words;
+    return filteredWords;
   }
 
   //removes words which do not fit the quality thresholds and returns a reordered collection of the accepted words
-  getAcceptedWords(words: ScoredWord[]): Word[] {
-    let outputCollection: Word[] = [];
+  getAcceptedWords(words: ScoredWord[]): [Word[], number] {
+    let outputCollection: [Word[], number] = [[], 0];
 
     words = this.quicksort(words);
 
@@ -101,9 +130,10 @@ export default class DupFinder {
     words.forEach(scoredword => {
       if (
         scoredword.score <= this.maxScore &&
-        outputCollection.length <= this.maxCount
+        outputCollection[0].length <= this.maxCount
       ) {
-        outputCollection.push(scoredword.word);
+        outputCollection[0].push(scoredword.word);
+        outputCollection[1] += scoredword.score;
       }
     });
 
@@ -129,7 +159,7 @@ export default class DupFinder {
         let score = this.wordLevenshteinDistance(parent, word);
 
         //adjust for bias
-        score += this.sizeAdjust(parent, word);
+        score *= 5 / word.vernacular.length; // this.sizeAdjust(parent, word);
 
         //apply score threshold
         if (score < this.maxScore) scoredWords.push({ word, score });
@@ -137,7 +167,6 @@ export default class DupFinder {
     });
     return scoredWords;
   }
-
   //quicksort implmentation O(n log n)
   quicksort(scoredwords: ScoredWord[]): ScoredWord[] {
     if (scoredwords.length <= 1) return scoredwords;
@@ -161,20 +190,27 @@ export default class DupFinder {
 
   //adjust for levenshtein's bias toward short words
   sizeAdjust(a: Word, b: Word): number {
-    return 3 - (a.vernacular.length + b.vernacular.length) / 4;
+    return Math.max(
+      this.maxScore - (a.vernacular.length + b.vernacular.length) / 3,
+      0
+    );
   }
 
   //extra level of abstraction for readability
   wordLevenshteinDistance(a: Word, b: Word): number {
     //get current word score
-    let score = this.getLevenshteinDistance(a.vernacular, b.vernacular);
+    let vernScore = this.getLevenshteinDistance(a.vernacular, b.vernacular);
+    let glossScore = 0;
     if (hasSenses(a) && hasSenses(b)) {
-      score *= this.getLevenshteinDistance(
+      glossScore = this.getLevenshteinDistance(
         a.senses[0].glosses[0].def,
         b.senses[0].glosses[0].def
       );
+      if (glossScore === 0) return 1;
     }
-    return score;
+    if (vernScore <= 1) return vernScore;
+
+    return vernScore + glossScore * 3;
   }
 
   //controls the scoring of a particular child by calculating the Levenshtein distance in O(n^(1 + ε)
