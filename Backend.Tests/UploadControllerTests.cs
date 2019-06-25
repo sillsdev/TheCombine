@@ -39,7 +39,7 @@ namespace Tests
 
         }
 
-        string RandomWord(int length)
+        string RandomWord(int length = 0)
         {
             if (length == 0)
             {
