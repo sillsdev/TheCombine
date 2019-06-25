@@ -54,10 +54,10 @@ namespace Tests
             return word;
         }
 
-        public void RandomLiftFile()
+        public string RandomLiftFile()
         {
-            File.Delete("testFile.lift");
-            FileStream fs = File.OpenWrite("testFile.lift");
+            string name = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4) + ".lift";
+            FileStream fs = File.OpenWrite(name);
 
             string header = @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
@@ -113,13 +113,14 @@ namespace Tests
             fs.Write(close);
 
             fs.Close();
+            return name;
         }
 
         [Test]
         public void TestLiftImport()
         {
-            RandomLiftFile();
-            FileStream fstream = File.OpenRead("testFile.lift");
+            string name = RandomLiftFile();
+            FileStream fstream = File.OpenRead(name);
 
             FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
             FileUpload fileUpload = new FileUpload();
