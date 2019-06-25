@@ -36,13 +36,19 @@ export const mergeDupStepReducer = (
       parentWords = parentWords.map(parent => {
         parent.senses = parent.senses.map(sense => {
           if (sense.dups.includes(word)) {
+            // if dest is undefined make it 0
+            // We should always have a number in the payload
+            // but the action doesn't know that so we need to
+            // remove the undefined from dest's type signature
             dest = dest ? dest : 0;
             // find location of src word
             var src = sense.dups.findIndex(el => word.id == el.id);
             // split array at dest
             if (src > dest) {
+              // if moving card upward in stack push dest card down
               var ends = [sense.dups.slice(0, dest), sense.dups.slice(dest)];
             } else {
+              // if moving card downward in stack push dest card up
               var ends = [
                 sense.dups.slice(0, dest + 1),
                 sense.dups.slice(dest + 1)
