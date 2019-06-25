@@ -135,7 +135,7 @@ namespace Tests
         [Test]
         public void TestAvatarImport()
         {
-            string filePath = "..\\..\\..\\Assets\\combine.png";
+            string filePath = "../../../Assets/combine.png";
 
             FileStream fstream = File.OpenRead(filePath);
 
@@ -157,7 +157,7 @@ namespace Tests
         [Test]
         public void TestAudioImport()
         {
-            string filePath = "..\\..\\..\\Assets\\sound.mp3";
+            string filePath = "../../../Assets/sound.mp3";
 
             FileStream fstream = File.OpenRead(filePath);
 
