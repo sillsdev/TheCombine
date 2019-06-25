@@ -11,8 +11,8 @@ const createMockStore = configureMockStore([thunk]);
 
 it("dispatches actions to choose a goal to navigate to", () => {
   let goal: Goal = new CreateCharInv([]);
-  let NavigateForward: navActions.NavigationAction = {
-    type: navActions.NAVIGATE_FORWARD,
+  let ChangeVisibleComponent: navActions.NavigationAction = {
+    type: navActions.CHANGE_VISIBLE_COMPONENT,
     payload: goal
   };
 
@@ -23,5 +23,5 @@ it("dispatches actions to choose a goal to navigate to", () => {
 
   const mockStore = createMockStore(defaultState);
   mockStore.dispatch<any>(actions.chooseGoal(goal));
-  expect(mockStore.getActions()).toEqual([NavigateForward, AddGoal]);
+  expect(mockStore.getActions()).toEqual([ChangeVisibleComponent, AddGoal]);
 });

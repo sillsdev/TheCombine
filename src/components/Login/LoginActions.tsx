@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 //import axios from "./tests/__mocks__/axios";
-import { history } from "../../index";
+import { history } from "../../history";
 import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 import * as backend from "../../backend";
@@ -47,7 +47,6 @@ export interface UserAction {
 export function asyncLogin(user: string, password: string) {
   return async (dispatch: Dispatch<UserAction>, getState: any) => {
     dispatch(loginAttempt(user));
-
     //attempt to login with server
     await backend
       .authenticateUser(user, password)

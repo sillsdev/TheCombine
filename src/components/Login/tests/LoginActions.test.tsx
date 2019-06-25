@@ -13,6 +13,18 @@ jest.mock("axios", () => {
   };
 });
 
+// jest.mock("history", () => {
+//   console.log("Create browser history");
+
+//   return {
+//     createBrowserHistory: jest.fn(() => {
+//       return {
+//         push: jest.fn()
+//       };
+//     })
+//   };
+// });
+
 const user = { user: "testUser", password: "testPass" };
 
 describe("LoginAction Tests", () => {

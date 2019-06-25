@@ -1,13 +1,10 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import KeyboardBackspace from "@material-ui/icons/KeyboardBackspace";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 export interface NavBarProps {
-  ShouldRenderBackButton: boolean;
-  GoBack: () => void;
+  Title: string;
 }
 
 /*
@@ -27,13 +24,7 @@ export class NavigationBar extends React.Component<
       <div className="NavigationBar">
         {
           <AppBar position="static">
-            <Toolbar>
-              {this.props.ShouldRenderBackButton && (
-                <IconButton edge="start" onClick={this.props.GoBack}>
-                  <KeyboardBackspace />
-                </IconButton>
-              )}
-            </Toolbar>
+            <Toolbar />
           </AppBar>
         }
       </div>

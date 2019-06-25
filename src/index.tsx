@@ -13,15 +13,13 @@ import { LocalizeProvider } from "react-localize-redux";
 //additional files
 import globalTranslations from "./resources/translations.json";
 import { Router } from "react-router-dom";
-import { createBrowserHistory } from "history";
+import { history } from "./history";
 
 const localizeInit = {
   languages: [{ name: "English", code: "en" }, { name: "Spanish", code: "es" }],
   translation: globalTranslations,
   options: { renderToStaticMarkup }
 };
-
-export const history = createBrowserHistory();
 
 //Provider connects store to component containers
 ReactDOM.render(

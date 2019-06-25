@@ -2,11 +2,12 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import GoalWrapper from "../GoalWrapper";
 import { GoalTimeline } from "../GoalTimeline/GoalTimelineComponent";
-import { PageNotFound } from "../PageNotFound";
+import PageNotFound from "../PageNotFound/component";
 import { PrivateRoute } from "../PrivateRoute";
 
 /*
- * Render either the goal timeline or the goal the user is currently working on.
+ * Navigate to routes specific to goals. This includes the goal timeline, as well
+ * as components for all goal types.
  */
 export class GoalRoute extends React.Component {
   render() {
@@ -46,7 +47,7 @@ export class GoalRoute extends React.Component {
           component={GoalWrapper}
         />
         <PrivateRoute exact path="/goals/viewFinal" component={GoalWrapper} />
-        <PrivateRoute component={PageNotFound} />
+        <Route component={PageNotFound} />
       </Switch>
     );
   }
