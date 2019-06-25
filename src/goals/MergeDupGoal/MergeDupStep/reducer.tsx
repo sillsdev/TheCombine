@@ -51,10 +51,8 @@ export const mergeDupStepReducer = (
 
             // remove word from both ends;
             ends = ends.map(end => end.filter(el => el.id != word.id));
-            console.log(ends);
             // splice together
             sense.dups = ends[0].concat(word, ends[1]);
-            console.log(sense.dups);
           }
           return sense;
         });
