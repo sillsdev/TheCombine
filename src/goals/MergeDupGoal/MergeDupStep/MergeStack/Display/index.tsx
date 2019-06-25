@@ -1,13 +1,13 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import StackDisplayComponent from "./component";
 import {
   dropWord,
   dragWord,
   WordDrag
 } from "../../../../DraggableWord/actions";
-import { Word } from "../../../../../types/word";
-import { StoreState } from "../../../../../types";
-import { ThunkDispatch } from "redux-thunk";
+import {Word} from "../../../../../types/word";
+import {StoreState} from "../../../../../types";
+import {ThunkDispatch} from "redux-thunk";
 import {
   moveDuplicate,
   removeDuplicate,

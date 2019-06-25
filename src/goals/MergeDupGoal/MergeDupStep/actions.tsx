@@ -1,8 +1,8 @@
-import { Word, simpleWord, State } from "../../../types/word";
-import { StoreState } from "../../../types";
+import {Word, simpleWord, State} from "../../../types/word";
+import {StoreState} from "../../../types";
 import * as backend from "../../../backend";
-import { WordListAction, refreshListWords } from "./WordList/actions";
-import { ThunkDispatch } from "redux-thunk";
+import {WordListAction, refreshListWords} from "./WordList/actions";
+import {ThunkDispatch} from "redux-thunk";
 
 // Args: (word: Word)
 export const ADD_PARENT = "ADD_PARENT";
@@ -27,40 +27,40 @@ export type SWAP_DUPLICATE = typeof SWAP_DUPLICATE;
 
 export interface MergeTreeAction {
   type:
-    | ADD_PARENT
-    | CLEAR_MERGES
-    | ADD_SENSE
-    | ADD_DUPLICATE
-    | REMOVE_DUPLICATE
-	  | SWAP_DUPLICATE;
-  payload: { word: Word; parent?: number };
+  | ADD_PARENT
+  | CLEAR_MERGES
+  | ADD_SENSE
+  | ADD_DUPLICATE
+  | REMOVE_DUPLICATE
+  | SWAP_DUPLICATE;
+  payload: {word: Word; parent?: number};
 }
 
 export function moveDuplicate(word: Word, dest: number): MergeTreeAction {
-	return {
-		type: SWAP_DUPLICATE,
-		payload: { word, parent: dest}
-	};
+  return {
+    type: SWAP_DUPLICATE,
+    payload: {word, parent: dest}
+  };
 }
 
 export function addParent(word: Word): MergeTreeAction {
   return {
     type: ADD_PARENT,
-    payload: { word }
+    payload: {word}
   };
 }
 
 export function addSense(word: Word, parent: number): MergeTreeAction {
   return {
     type: ADD_SENSE,
-    payload: { word, parent }
+    payload: {word, parent}
   };
 }
 
 export function addDuplicate(word: Word, parent: number): MergeTreeAction {
   return {
     type: ADD_DUPLICATE,
-    payload: { word, parent }
+    payload: {word, parent}
   };
 }
 
@@ -99,13 +99,13 @@ export function applyMerges() {
 export function clearMerges(): MergeTreeAction {
   return {
     type: CLEAR_MERGES,
-    payload: { word: simpleWord("", "") }
+    payload: {word: simpleWord("", "")}
   };
 }
 
 export function removeDuplicate(word: Word, parent: number): MergeTreeAction {
   return {
     type: REMOVE_DUPLICATE,
-    payload: { word, parent }
+    payload: {word, parent}
   };
 }

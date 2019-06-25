@@ -7,8 +7,7 @@ import {
   CLEAR_MERGES,
   SWAP_DUPLICATE
 } from "./actions";
-import { ParentWord } from "./component";
-import { Word } from "../../../types/word";
+import {ParentWord} from "./component";
 
 export const defaultState: MergeTreeState = {
   parentWords: []
@@ -31,7 +30,7 @@ export const mergeDupStepReducer = (
   switch (action.type) {
     case SWAP_DUPLICATE:
       parentWords = state.parentWords;
-      var { word, parent: dest } = action.payload;
+      var {word, parent: dest} = action.payload;
 
       // find sense containing word
       parentWords = parentWords.map(parent => {
@@ -61,13 +60,13 @@ export const mergeDupStepReducer = (
         });
         return parent;
       });
-      return { ...state, parentWords: parentWords };
+      return {...state, parentWords: parentWords};
     case ADD_PARENT:
       parentWords = state.parentWords;
       var word = action.payload.word;
       parentWords.push({
         id: generateID(),
-        senses: [{ id: generateID(), dups: [word] }]
+        senses: [{id: generateID(), dups: [word]}]
       });
       return {
         ...state,
@@ -75,7 +74,7 @@ export const mergeDupStepReducer = (
       };
     case ADD_SENSE:
       parentWords = state.parentWords;
-      var { word: merge, parent } = action.payload;
+      var {word: merge, parent} = action.payload;
       if (parent) {
         parentWords = parentWords.map(item => {
           if (item.id === parent) {
@@ -92,7 +91,7 @@ export const mergeDupStepReducer = (
         parentWords
       };
     case ADD_DUPLICATE:
-      var { word: merge, parent } = action.payload;
+      var {word: merge, parent} = action.payload;
       parentWords = state.parentWords;
       parentWords = parentWords.map(item => {
         item.senses = item.senses.map(item => {
@@ -103,9 +102,9 @@ export const mergeDupStepReducer = (
         });
         return item;
       });
-      return { ...state, parentWords };
+      return {...state, parentWords};
     case REMOVE_DUPLICATE:
-      var { word: merge, parent: root } = action.payload;
+      var {word: merge, parent: root} = action.payload;
       parentWords = state.parentWords;
 
       parentWords = parentWords.map(parent => {
@@ -120,7 +119,7 @@ export const mergeDupStepReducer = (
       });
       parentWords = parentWords.filter(parent => parent.senses.length > 0);
 
-      return { ...state, parentWords };
+      return {...state, parentWords};
     case CLEAR_MERGES:
       return {
         ...state,
