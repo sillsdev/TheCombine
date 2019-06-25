@@ -1,11 +1,22 @@
 //external modules
 import * as React from "react";
-import { Translate, LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word } from "../../../../types/word";
-import { Box, CardContent, Card } from "@material-ui/core";
-import { Sense } from "../component";
+import {
+  Translate,
+  LocalizeContextProps,
+  withLocalize
+} from "react-localize-redux";
+import {Word} from "../../../../types/word";
+import {
+  Box,
+  CardContent,
+  Card,
+  Popper,
+  ClickAwayListener,
+  Popover
+} from "@material-ui/core";
+import {Sense} from "../component";
 import WordCard from "../WordCard";
-
+import StackDisplay from "./Display";
 
 //interface for component props
 export interface MergeStackProps {
@@ -19,12 +30,20 @@ export interface MergeStackProps {
 }
 
 //interface for component state
-interface MergeStackState {}
+interface MergeStackState {
+  anchorEl?: HTMLElement;
+}
 
 class MergeStack extends React.Component<
   MergeStackProps & LocalizeContextProps,
   MergeStackState
-> {
+  > {
+
+  constructor(props: MergeStackProps & LocalizeContextProps) {
+    super(props);
+    this.state = {};
+  }
+
   addWord(word: Word) {
     if (this.props.addDuplicate && this.props.dropWord) {
       this.props.addDuplicate(word, this.props.sense.id);
@@ -34,7 +53,10 @@ class MergeStack extends React.Component<
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
-    if (this.props.draggedWord && this.props.draggedWord !== this.topCard()) {
+    if (
+      this.props.draggedWord &&
+      this.props.draggedWord !== this.parentCard()
+    ) {
       this.addWord(this.props.draggedWord);
     }
   }
@@ -57,14 +79,29 @@ class MergeStack extends React.Component<
     }
   }
 
-  topCard(): Word {
-    return this.props.sense.dups[this.props.sense.dups.length - 1];
+  parentCard(): Word {
+    return this.props.sense.dups[0];
+  }
+
+  spawnDisplay(e: React.MouseEvent<HTMLElement>) {
+    if (this.props.sense.dups.length > 1) {
+      this.setState({
+        ...this.state,
+        anchorEl: this.state.anchorEl ? undefined : e.currentTarget
+      });
+    }
+  }
+
+  closeDisplay() {
+    this.setState({...this.state, anchorEl: undefined});
   }
 
   render_single() {
-    var lastCard = this.topCard();
+    var lastCard = this.parentCard();
+    const open = Boolean(this.state.anchorEl);
+    const id = open ? "simple-popper" : undefined;
     return (
-      <Box style={{ width: 200 }}>
+      <Box style={{width: 200}}>
         <Card
           draggable={true}
           onDragStart={_ => this.drag(lastCard)}
@@ -73,6 +110,7 @@ class MergeStack extends React.Component<
           onDrop={e => {
             this.dragDrop(e);
           }}
+          onClick={e => this.spawnDisplay(e)}
           title={this.props.translate("mergeDups.helpText.dups") as string}
         >
           <div
@@ -85,11 +123,12 @@ class MergeStack extends React.Component<
             }}
           >
             {this.props.draggedWord &&
-              this.props.draggedWord.id !== lastCard.id &&
-              <Translate id="mergeDups.helpText.dups"/>}
+              this.props.draggedWord.id !== lastCard.id && (
+                <Translate id="mergeDups.helpText.dups" />
+              )}
           </div>
           <CardContent>
-            <WordCard word={lastCard} />
+            <WordCard key={lastCard.id} word={lastCard} />
             <div
               style={{
                 float: "right",
@@ -104,13 +143,35 @@ class MergeStack extends React.Component<
             </div>
           </CardContent>
         </Card>
+        <ClickAwayListener onClickAway={() => this.closeDisplay()}>
+          <Popper
+            id={id}
+            open={open}
+            anchorEl={this.state.anchorEl}
+            disablePortal={true}
+            placement="bottom"
+            modifiers=
+            {{
+              preventOverflow:
+              {
+                enabled: false,
+                boundriesElement: 'scrollParent'
+              },
+              flip: {
+                enabled: false,
+              }
+            }}
+            style={{zIndex: 200}}>
+            <StackDisplay closePopper={() => this.closeDisplay()} sense={this.props.sense} />
+          </Popper>
+        </ClickAwayListener>
       </Box>
     );
   }
 
   render_stack() {
     return (
-      <Card style={{ paddingBottom: 2, paddingRight: 2 }}>
+      <Card style={{paddingBottom: 2, paddingRight: 2}}>
         {this.render_single()}
       </Card>
     );

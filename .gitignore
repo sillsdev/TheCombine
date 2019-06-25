@@ -41,7 +41,7 @@ start_mongo.bat
 /**/*.xml
 /**/*.lift
 /**/*.orig
-/**/*.mp3
+Backend.Tests/bin/**/*.mp3
 /**/*.bat
 
 # Vagrant instances
