@@ -67,7 +67,7 @@
   },
   "charInventory": {
     "characterSet": {
-      "title": ["Character Set", "Conjunto de caracteres"],
+      "title": ["Character Set:", "Conjunto de caracteres:"],
       "addButton": ["Add Chars", "Añadir caracteres"],
       "addButtonTitle": [
         "Add the characters in the box to the character set",
@@ -78,7 +78,11 @@
         "Remove the selected characters from the character set",
         ""
       ],
-      "input": ["Enter Characters...", "Ingresar caracteres..."]
+      "input": ["Enter Characters...", "Ingresar caracteres..."],
+      "noCharacters": [
+        "No characters yet! Type characters into the box below to get started.",
+        "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar."
+      ]
     },
     "sampleWords": {
       "title": ["Sample Words", "Palabras de muestra"],
@@ -86,22 +90,43 @@
         "Here are some words that don't fit your current character set:",
         "Aquí hay algunas palabras que no se ajustan a tu conjunto de caracteres actual:"
       ],
-      "ignore": ["Ignore for now", "Ignorar por ahora"],
+      "ignore": ["Ignore this word for now", "Ignorar esta palabra por ahora"],
       "add": [
         "Add characters in this word to the set",
         "Añadir caracteres en esta palabra al conjunto."
       ]
     },
     "save": ["Save", "Guardar"],
-    "cancel": ["Cancel", "Cancelar"]
+    "cancel": ["Cancel", "Cancelar"],
+    "dialog": {
+      "title": ["Unsaved changes", "Cambios no guardados"],
+      "content": [
+        "Discard your changes to the character set?",
+        "Descarta tus cambios en el conjunto de caracteres"
+      ],
+      "yes": ["yes", "si"],
+      "no": ["no", "no"]
+    }
   },
-  "mergeDups":{
-	"helpText": {
-		"root": ["Drag words here to start merging them", "Arrastra las palabras aquí para comenzar a fusionarlas"],
-		"dups": ["Drag duplicate words here", "Arrastra palabras duplicadas aquí"],
-		"sense":["Drag new sense here", "Arrastra un nuevo sentido aquí"],
-		"next": ["Merge all these words and load a new set of words","Combina todas estas palabras y carga un nuevo conjunto de palabras"],
-		"list": ["Drag this word to the right to start merging it with other words", "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras"]
-	}
+  "mergeDups": {
+    "helpText": {
+      "root": [
+        "Drag words here to start merging them",
+        "Arrastra las palabras aquí para comenzar a fusionarlas"
+      ],
+      "dups": [
+        "Drag duplicate words here",
+        "Arrastra palabras duplicadas aquí"
+      ],
+      "sense": ["Drag new sense here", "Arrastra un nuevo sentido aquí"],
+      "next": [
+        "Merge all these words and load a new set of words",
+        "Combina todas estas palabras y carga un nuevo conjunto de palabras"
+      ],
+      "list": [
+        "Drag this word to the right to start merging it with other words",
+        "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras"
+      ]
+    }
   }
 }
