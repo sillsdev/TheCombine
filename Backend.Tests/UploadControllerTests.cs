@@ -5,6 +5,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using SIL.Lift.Parsing;
@@ -20,6 +21,8 @@ namespace Tests
         private WordService _wordService;
         ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
         IUserService _userService;
+        UserController userController;
+        WordController wordController;
         UploadContoller controller;
 
         [SetUp]
@@ -29,11 +32,29 @@ namespace Tests
             _wordService = new WordService(_wordrepo);
             _merger = new LiftService(_wordrepo);
             _userService = new UserServiceMock();
+
+            userController = new UserController(_userService);
+            wordController = new WordController(_wordService, _wordrepo);
             controller = new UploadContoller(_merger, _wordrepo, _wordService, _userService);
 
         }
 
-        public void RandomFile()
+        User RandomUser()
+        {
+            User user = new User();
+            user.Username = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
+            user.Password = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
+            return user;
+        }
+
+        Word RandomWord()
+        {
+            Word word = new Word();
+            word.Vernacular = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
+            return word;
+        }
+
+        public void RandomLiftFile()
         {
             File.Delete("testFile.lift");
             FileStream fs = File.OpenWrite("testFile.lift");
@@ -97,7 +118,7 @@ namespace Tests
         [Test]
         public void TestLiftImport()
         {
-            RandomFile();
+            RandomLiftFile();
             FileStream fstream = File.OpenRead("testFile.lift");
 
             FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
@@ -109,6 +130,50 @@ namespace Tests
 
             var allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
+        }
+
+        [Test]
+        public void TestAvatarImport()
+        {
+            string filePath = "../../../Assets/combine.png";
+
+            FileStream fstream = File.OpenRead(filePath);
+
+            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
+            FileUpload fileUpload = new FileUpload();
+            fileUpload.Name = "FileName";
+            fileUpload.File = formFile;
+
+            User user = _userService.Create(RandomUser()).Result;
+
+            _ = controller.UploadAvatar(user.Id, fileUpload).Result;
+
+            var action = userController.Get(user.Id).Result;
+
+            var foundUser = (action as ObjectResult).Value as User;
+            Assert.IsNotNull(foundUser.Avatar);
+        }
+
+        [Test]
+        public void TestAudioImport()
+        {
+            string filePath = "../../../Assets/sound.mp3";
+
+            FileStream fstream = File.OpenRead(filePath);
+
+            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
+            FileUpload fileUpload = new FileUpload();
+            fileUpload.Name = "FileName";
+            fileUpload.File = formFile;
+
+            Word word = _wordrepo.Create(RandomWord()).Result;
+
+            _ = controller.UploadAudioFile(word.Id, fileUpload).Result;
+
+            var action = wordController.Get(word.Id).Result;
+
+            var foundWord = (action as ObjectResult).Value as Word;
+            Assert.IsNotNull(foundWord.Audio);
         }
     }
 }
