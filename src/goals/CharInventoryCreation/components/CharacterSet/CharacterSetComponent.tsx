@@ -95,11 +95,11 @@ export class CharacterSet extends React.Component<
     let dragIndex = inv.indexOf(this.state.dragChar);
     let dropIndex = inv.indexOf(this.state.dropChar);
 
+    inv.splice(dragIndex, 1);
+
     if (dragIndex >= dropIndex) {
-      inv.splice(dragIndex, 1);
       inv.splice(dropIndex, 0, this.state.dragChar);
     } else {
-      inv.splice(dragIndex, 1);
       inv.splice(dropIndex - 1, 0, this.state.dragChar);
     }
 
@@ -147,11 +147,13 @@ export class CharacterSet extends React.Component<
             <Grid
               item
               xs={1}
+              key={"char_" + char}
               onDragOver={e => {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = "move";
+                if (this.state.dropChar !== char)
+                  this.setState({ dropChar: char });
               }}
-              key={"char_" + char}
             >
               <Grid container justify="center">
                 <Paper
@@ -174,10 +176,6 @@ export class CharacterSet extends React.Component<
                     e.preventDefault();
                     this.moveChar();
                   }}
-                  onDragOver={e => {
-                    if (this.state.dropChar !== char)
-                      this.setState({ dropChar: char });
-                  }}
                   onClick={() => this.toggleSelected(char)}
                 >
                   {char}
@@ -199,6 +197,7 @@ export class CharacterSet extends React.Component<
             label={<Translate id="charInventory.characterSet.input" />}
             onChange={e => this.handleChange(e)}
             onKeyDown={e => this.handleKeyDown(e)}
+            autoComplete="off"
           />
         </Grid>
 
