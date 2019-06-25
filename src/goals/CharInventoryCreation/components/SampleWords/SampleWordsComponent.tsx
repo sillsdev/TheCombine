@@ -25,7 +25,6 @@ export interface SampleWordsProps {
 
 interface SampleWordsState {
   words: string[];
-  selected: string[];
   dragChar: string;
   dropChar: string;
   ignoreList: string[]; // A list of words we don't want to see right now
@@ -39,7 +38,6 @@ class SampleWords extends React.Component<
     super(props);
     this.state = {
       words: [],
-      selected: [],
       dragChar: "",
       dropChar: "",
       ignoreList: []
@@ -48,32 +46,6 @@ class SampleWords extends React.Component<
 
   componentDidMount() {
     this.getWords();
-  }
-
-  // toggles selection (for deletion) of a word (not used right now)
-  toggleSelected(word: string) {
-    let selected = this.state.selected;
-    let index = selected.indexOf(word);
-
-    if (index === -1) {
-      selected.push(word);
-    } else {
-      selected.splice(index, 1);
-    }
-
-    this.setState({
-      selected
-    });
-  }
-
-  // deletes selected word (not used right now)
-  deleteSelected() {
-    this.props.setInventory(
-      this.props.inventory.filter(char => !this.state.selected.includes(char))
-    );
-    this.setState({
-      selected: []
-    });
   }
 
   /**
@@ -105,15 +77,24 @@ class SampleWords extends React.Component<
     });
   }
 
+  /**
+   * Adds all characters from the word into the character inventory
+   */
   addWordToCharSet(word: string) {
     this.props.setInventory([
       ...this.props.inventory,
       ...word.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
     ]);
+
+    this.getWords(); // refresh the list
   }
 
+  /**
+   * Adds a word to the list of words that won't show up
+   */
   addWordToIgnoreList(word: string) {
     this.setState({ ignoreList: [...this.state.ignoreList, word] });
+    this.getWords(); // refresh the list
   }
 
   render() {
@@ -143,8 +124,6 @@ class SampleWords extends React.Component<
         {this.state.words.map(word => (
           <WordTile
             word={word}
-            selected={this.state.selected}
-            toggleSelected={word => this.toggleSelected(word)}
             addWordToCharSet={word => this.addWordToCharSet(word)}
             addWordToIgnoreList={word => this.addWordToIgnoreList(word)}
           />

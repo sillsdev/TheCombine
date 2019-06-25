@@ -22,8 +22,6 @@ const TRANSITION =
 
 export interface WordTileProps {
   word: string;
-  selected: string[];
-  toggleSelected: (arg0: string) => void;
   addWordToCharSet: (arg0: string) => void;
   addWordToIgnoreList: (arg0: string) => void;
 }
@@ -58,10 +56,8 @@ export class WordTile extends React.Component<
               minWidth: 40,
               textAlign: "center",
               padding: "5px 10px",
-              cursor: "pointer",
-              background: this.props.selected.includes(word) ? "#cfc" : "#fff"
+              cursor: "pointer"
             }}
-            onClick={() => this.props.toggleSelected(word)}
           >
             {word + " "}
             <Tooltip
@@ -81,9 +77,9 @@ export class WordTile extends React.Component<
                       }
                     : {
                         transition: TRANSITION,
-                        width: "1px",
-                        opacity: 0,
-                        padding: 0
+                        width: "0",
+                        opacity: 0.01,
+                        padding: "auto 0"
                       }
                 }
                 size="small"
