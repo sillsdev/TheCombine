@@ -23,7 +23,6 @@ namespace Tests
         IUserService _userService;
         UserController userController;
         WordController wordController;
-        UploadContoller controller;
 
         [SetUp]
         public void Setup()
@@ -32,10 +31,9 @@ namespace Tests
             _wordService = new WordService(_wordrepo);
             _merger = new LiftService(_wordrepo);
             _userService = new UserServiceMock();
-
+            controller = new FileIOController(_merger, _wordrepo, _wordService, _userService);
             userController = new UserController(_userService);
             wordController = new WordController(_wordService, _wordrepo);
-            controller = new UploadContoller(_merger, _wordrepo, _wordService, _userService);
 
         }
 

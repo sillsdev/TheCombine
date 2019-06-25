@@ -11,12 +11,18 @@ namespace BackendFramework.Services
 {
     public class LiftService : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
+
+        
         private readonly IWordRepository _repo;
 
         public LiftService(IWordRepository repo)
         {
             _repo = repo;
         }
+
+        /**************************************
+         * Import Lift File from Http req
+         * ***********************************/
 
         public async void FinishEntry(LiftEntry entry)
         {
@@ -196,6 +202,12 @@ namespace BackendFramework.Services
         public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
 
         public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml) { }
+
+        /********************************
+         * LIft Export Implementation
+         ********************************/
+
+
     }
 
     public class EmptyLiftObject : LiftObject

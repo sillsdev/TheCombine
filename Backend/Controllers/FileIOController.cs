@@ -11,14 +11,14 @@ namespace BackendFramework.Controllers
     //[Authorize]
     [Produces("application/json")]
     [Route("v1")]
-    public class UploadContoller : Controller
+    public class FileIOController : Controller
     {
         public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
         public readonly IWordService _wordService;
         private readonly IUserService _userService;
         public readonly IWordRepository _wordRepo;
 
-        public UploadContoller(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService wordService, IUserService userService)
+        public FileIOController(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService wordService, IUserService userService)
         {
             _merger = merger;
             _wordRepo = repo;
@@ -118,6 +118,19 @@ namespace BackendFramework.Controllers
                 return new ObjectResult(model.FilePath);
             }
             return new UnsupportedMediaTypeResult();
+        }
+
+        [HttpGet("project")]
+        public async Task<IActionResult> ExportLiftLiftFile()
+        {
+            var words = await _wordRepo.GetAllWords();
+            if(words.Count == 0)
+            {
+                return new BadRequestResult();
+            }
+           // int success = liftExport(words);
+
+            return new OkObjectResult(words);
         }
     }
 }
