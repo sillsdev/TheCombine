@@ -149,12 +149,16 @@ class MergeStack extends React.Component<
 						open={open}
 						anchorEl={this.state.anchorEl}
 						disablePortal={true}
+						placement="bottom"
 						modifiers=
 						{{
 							preventOverflow:
 							{
 								enabled: false,
 								boundriesElement: 'scrollParent'
+							},
+							flip: {
+								enabled: false,
 							}
 						}}
 						style={{zIndex: 200}}>
