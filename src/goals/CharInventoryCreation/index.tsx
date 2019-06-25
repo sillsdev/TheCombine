@@ -10,6 +10,7 @@ import {
   uploadInventory
 } from "./CharacterInventoryActions";
 import { CharacterInventoryState } from "./CharacterInventoryReducer";
+import { getTranslate } from "react-localize-redux";
 
 function mapStateToProps(
   state: StoreState
@@ -17,11 +18,12 @@ function mapStateToProps(
   return {
     inventory:
       state.characterInventoryState && state.characterInventoryState.inventory,
-    currentProject: state.currentProject
+    currentProject: state.currentProject,
+    translate: getTranslate(state.localize)
   };
 }
 
-export function mapDispatchToProps(
+function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>
 ) {
   return {

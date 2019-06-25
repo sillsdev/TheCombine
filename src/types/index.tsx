@@ -8,7 +8,6 @@ import { CreateProjectState } from "../components/CreateProject/CreateProjectRed
 import { GoalsState, GoalSelectorState } from "./goals";
 import { NavState } from "./nav";
 import { WordDragState } from "../goals/DraggableWord/reducer";
-import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/component";
 import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";
 import { Project } from "./project";
 import { WordListState } from "../goals/MergeDupGoal/MergeDupStep/WordList/reducer";

@@ -60,7 +60,7 @@ namespace BackendFramework.Services
 
             //Note: Nulls out values not in update body
             var updateDef = Builders<UserRole>.Update
-                .Set(x => x.Permission, userRole.Permission)
+                .Set(x => x.Permissions, userRole.Permissions)
                 .Set(x => x.History, userRole.History);
 
             var updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);

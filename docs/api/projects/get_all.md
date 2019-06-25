@@ -1,4 +1,4 @@
-# Get multiple projects
+# Get all projects
 
 **URL** : `/v1/projects/`
 
