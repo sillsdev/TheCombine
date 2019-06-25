@@ -50,27 +50,41 @@ export default class DupFinder {
   // get n lists of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
   async getNextDups(n: number = 1): Promise<Word[][]> {
     let wordsFromDB: Promise<Word[][]> = this.getWordsFromDB().then(words => {
-      let foundWords: [Word[], number][] = [];
+      //[wordlist, list score]
+      let currentWords: [Word[], number][] = [];
+
+      //use each word as a parent and compare the resulting lists against each other
       for (let i = 0; i < words.length; i++) {
-        let iterDups: [Word[], number] = this.getDupsFromWordList(
+        //word list to compare against current words
+        let newWordList: [Word[], number] = this.getDupsFromWordList(
           words[i],
           words
         );
-        if (iterDups[0].length <= 1) {
+
+        //ignore wordlists with less than 2 words
+        if (newWordList[0].length <= 1) {
           continue;
         }
-        if (foundWords.length < n) {
-          foundWords.push(iterDups);
-        } else if (foundWords[foundWords.length - 1].length < iterDups.length) {
-          foundWords.push(iterDups);
-          foundWords.sort(function(a, b): number {
+
+        //add wordlist if currentWords is not full yet
+        if (currentWords.length < n) {
+          currentWords.push(newWordList);
+          continue;
+        }
+
+        //add wordlist if it scores lower than the last element in currentWords
+        // and resort currentWords
+        if (currentWords[currentWords.length - 1].length < newWordList.length) {
+          currentWords.push(newWordList);
+          currentWords.sort(function(a, b): number {
             return a[1] - b[1];
           });
-          foundWords.pop();
+          currentWords.pop();
         }
       }
-      return foundWords.map(function(coll) {
-        return coll[0];
+      //return the wordlist from the scored list
+      return currentWords.map(function(scoredList) {
+        return scoredList[0];
       });
     });
     return wordsFromDB;
