@@ -67,7 +67,7 @@
   },
   "charInventory": {
     "characterSet": {
-      "title": ["Character Set", "Conjunto de caracteres"],
+      "title": ["Character Set:", "Conjunto de caracteres:"],
       "addButton": ["Add Chars", "Añadir caracteres"],
       "addButtonTitle": [
         "Add the characters in the box to the character set",
@@ -78,7 +78,11 @@
         "Remove the selected characters from the character set",
         ""
       ],
-      "input": ["Enter Characters...", "Ingresar caracteres..."]
+      "input": ["Enter Characters...", "Ingresar caracteres..."],
+      "noCharacters": [
+        "No characters yet! Type characters into the box below to get started.",
+        "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar."
+      ]
     },
     "sampleWords": {
       "title": ["Sample Words", "Palabras de muestra"],
@@ -93,7 +97,16 @@
       ]
     },
     "save": ["Save", "Guardar"],
-    "cancel": ["Cancel", "Cancelar"]
+    "cancel": ["Cancel", "Cancelar"],
+    "dialog": {
+      "title": ["Unsaved changes", "Cambios no guardados"],
+      "content": [
+        "Discard your changes to the character set?",
+        "Descarta tus cambios en el conjunto de caracteres"
+      ],
+      "yes": ["yes", "si"],
+      "no": ["no", "no"]
+    }
   },
   "mergeDups": {
     "helpText": {

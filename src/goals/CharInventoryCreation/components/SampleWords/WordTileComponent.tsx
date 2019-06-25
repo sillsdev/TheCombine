@@ -28,22 +28,17 @@ export class WordTile extends React.Component<
   render() {
     let word = this.props.word;
     return (
-      <Grid
-        item
-        xs={12}
-        key={word}
-        onMouseEnter={() => this.setState({ hover: true })}
-        onMouseLeave={() => this.setState({ hover: false })}
-      >
+      <Grid item xs={12} key={word}>
         <Grid container justify="flex-start">
           <Paper
             className="classes.paper"
             style={{
-              minWidth: 40,
               textAlign: "center",
               padding: "5px 10px",
               cursor: "pointer"
             }}
+            onMouseEnter={() => this.setState({ hover: true })}
+            onMouseLeave={() => this.setState({ hover: false })}
           >
             {word + " "}
             <Tooltip

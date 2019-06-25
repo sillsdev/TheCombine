@@ -120,9 +120,25 @@ export class CharacterSet extends React.Component<
           </Typography>
         </Grid>
 
-        {/* The grid of character tiles */}
-        {this.props.inventory.map(char => [
-          this.state.dropChar === char && this.state.dragChar !== char ? (
+        {this.props.inventory.length <= 0 ? (
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" style={{ color: "#999" }}>
+              <Translate id="charInventory.characterSet.noCharacters" />
+            </Typography>
+          </Grid>
+        ) : (
+          /* The grid of character tiles */
+          this.props.inventory.map(char => [
+            this.state.dropChar === char && this.state.dragChar !== char ? (
+              <Grid
+                item
+                xs={1}
+                onDragOver={e => {
+                  e.preventDefault();
+                  e.dataTransfer.dropEffect = "move";
+                }}
+              />
+            ) : null, // Creates a blank space where the tile will be dropped
             <Grid
               item
               xs={1}
@@ -130,49 +146,41 @@ export class CharacterSet extends React.Component<
                 e.preventDefault();
                 e.dataTransfer.dropEffect = "move";
               }}
-            />
-          ) : null, // Creates a blank space where the tile will be dropped
-          <Grid
-            item
-            xs={1}
-            onDragOver={e => {
-              e.preventDefault();
-              e.dataTransfer.dropEffect = "move";
-            }}
-            key={"char_" + char}
-          >
-            <Grid container justify="center">
-              <Paper
-                id={"charTile_" + char}
-                style={{
-                  minWidth: 20,
-                  textAlign: "center",
-                  padding: "5px 10px",
-                  cursor: "pointer",
-                  background: this.state.selected.includes(char)
-                    ? "#fcc"
-                    : "#fff"
-                }}
-                draggable={true}
-                onDragStart={e => {
-                  this.setState({ dragChar: char });
-                  e.dataTransfer.effectAllowed = "move";
-                }}
-                onDragEnd={e => {
-                  e.preventDefault();
-                  this.moveChar();
-                }}
-                onDragOver={e => {
-                  if (this.state.dropChar !== char)
-                    this.setState({ dropChar: char });
-                }}
-                onClick={() => this.toggleSelected(char)}
-              >
-                {char}
-              </Paper>
+              key={"char_" + char}
+            >
+              <Grid container justify="center">
+                <Paper
+                  id={"charTile_" + char}
+                  style={{
+                    minWidth: 20,
+                    textAlign: "center",
+                    padding: "5px 10px",
+                    cursor: "pointer",
+                    background: this.state.selected.includes(char)
+                      ? "#fcc"
+                      : "#fff"
+                  }}
+                  draggable={true}
+                  onDragStart={e => {
+                    this.setState({ dragChar: char });
+                    e.dataTransfer.effectAllowed = "move";
+                  }}
+                  onDragEnd={e => {
+                    e.preventDefault();
+                    this.moveChar();
+                  }}
+                  onDragOver={e => {
+                    if (this.state.dropChar !== char)
+                      this.setState({ dropChar: char });
+                  }}
+                  onClick={() => this.toggleSelected(char)}
+                >
+                  {char}
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
-        ])}
+          ])
+        )}
 
         <Grid item xs={12} />
 

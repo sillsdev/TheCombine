@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 import { Project } from "../../types/project";
 import SampleWords from "./components/SampleWords";
+import { Save } from "@material-ui/icons";
 
 export interface CharacterInventoryProps {
   setInventory: (inventory: string[]) => void;
@@ -52,7 +53,7 @@ class CharacterInventory extends React.Component<
           container
           justify="center"
           spacing={2}
-          style={{ background: "#eee" }}
+          style={{ background: "#fff" }}
         >
           <Grid item sm={6} xs={12}>
             <CharacterSet
@@ -77,7 +78,7 @@ class CharacterInventory extends React.Component<
                 }}
                 style={{ margin: 10 }} // remove when we can add theme
               >
-                <Translate id="charInventory.save" />
+                <Save /> <Translate id="charInventory.save" />
               </Button>
               <Button
                 variant="contained"
@@ -92,6 +93,8 @@ class CharacterInventory extends React.Component<
             </Grid>
           </Grid>
         </Grid>
+
+        {/* "Are you sure?" dialog for the cancel button */}
         <Dialog
           open={this.state.cancelDialogOpen}
           onClose={() => this.handleClose()}
@@ -99,11 +102,11 @@ class CharacterInventory extends React.Component<
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {"Discard changes?"}
+            <Translate id="charInventory.dialog.title" />
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Do you want to discard your modifications to the character set?
+              <Translate id="charInventory.dialog.content" />
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -113,10 +116,10 @@ class CharacterInventory extends React.Component<
               color="secondary"
               autoFocus
             >
-              Yes, Discard Changes
+              <Translate id="charInventory.dialog.yes" />
             </Button>
             <Button onClick={() => this.handleClose()} color="primary">
-              No
+              <Translate id="charInventory.dialog.no" />
             </Button>
           </DialogActions>
         </Dialog>

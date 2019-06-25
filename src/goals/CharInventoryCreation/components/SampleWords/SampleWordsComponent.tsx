@@ -4,8 +4,7 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography, Button } from "@material-ui/core";
-import { Refresh as RefreshIcon } from "@material-ui/icons";
+import { Grid, Typography } from "@material-ui/core";
 import { Word } from "../../../../types/word";
 import * as backend from "../../../../backend";
 import WordTile from "./WordTileComponent";
@@ -109,13 +108,6 @@ class SampleWords extends React.Component<
           <Typography variant="subtitle1">
             <Translate id="charInventory.sampleWords.description" />
           </Typography>
-          <Button
-            onClick={() => {
-              this.getWords();
-            }}
-          >
-            <RefreshIcon />
-          </Button>
         </Grid>
         {this.state.words.map(word => (
           <WordTile
