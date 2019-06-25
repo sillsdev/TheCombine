@@ -4,10 +4,10 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography, Paper, Button } from "@material-ui/core";
-import { Refresh as RefreshIcon } from "@material-ui/icons";
+import { Grid, Typography } from "@material-ui/core";
 import { Word } from "../../../../types/word";
 import * as backend from "../../../../backend";
+import WordTile from "./WordTileComponent";
 
 export interface SampleWordsProps {
   setInventory: (inventory: string[]) => void;
@@ -16,9 +16,9 @@ export interface SampleWordsProps {
 
 interface SampleWordsState {
   words: string[];
-  selected: string[];
   dragChar: string;
   dropChar: string;
+  ignoreList: string[]; // A list of words we don't want to see right now
 }
 
 class SampleWords extends React.Component<
@@ -29,9 +29,9 @@ class SampleWords extends React.Component<
     super(props);
     this.state = {
       words: [],
-      selected: [],
       dragChar: "",
-      dropChar: ""
+      dropChar: "",
+      ignoreList: []
     };
   }
 
@@ -39,37 +39,15 @@ class SampleWords extends React.Component<
     this.getWords();
   }
 
-  // toggles selection (for deletion) of a word (not used right now)
-  toggleSelected(word: string) {
-    let selected = this.state.selected;
-    let index = selected.indexOf(word);
-
-    if (index === -1) {
-      selected.push(word);
-    } else {
-      selected.splice(index, 1);
-    }
-
-    this.setState({
-      selected
-    });
-  }
-
-  // deletes selected word (not used right now)
-  deleteSelected() {
-    this.props.setInventory(
-      this.props.inventory.filter(char => !this.state.selected.includes(char))
-    );
-    this.setState({
-      selected: []
-    });
+  componentDidUpdate(prevProps: SampleWordsProps & LocalizeContextProps) {
+    if (prevProps.inventory !== this.props.inventory) this.getWords();
   }
 
   /**
    * Gets the words that don't fit the character inventory
    */
   async getWords() {
-    const NUM_WORDS = 5;
+    const NUM_WORDS = 5; // The max number of words we want to display on the page
 
     let inv = [...this.props.inventory];
     let sampleWords: string[] = [];
@@ -79,17 +57,39 @@ class SampleWords extends React.Component<
     for (let i: number = 0; i < allWords.length; i++) {
       if (sampleWords.length >= NUM_WORDS) break;
       word = allWords[i].vernacular;
-      for (let j: number = 0; j < word.length; j++) {
-        if (inv.indexOf(word[j]) === -1 && word[j] !== " ") {
-          sampleWords.push(word);
-          break;
+      if (this.state.ignoreList.indexOf(word) === -1)
+        // don't check word if it's in the ignore list
+        for (let j: number = 0; j < word.length; j++) {
+          if (inv.indexOf(word[j]) === -1 && word[j] !== " ") {
+            sampleWords.push(word);
+            break;
+          }
         }
-      }
     }
 
     this.setState({
       words: [...sampleWords]
     });
+  }
+
+  /**
+   * Adds all characters from the word into the character inventory
+   */
+  addWordToCharSet(word: string) {
+    this.props.setInventory([
+      ...this.props.inventory,
+      ...word.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
+    ]);
+
+    this.getWords(); // refresh the list
+  }
+
+  /**
+   * Adds a word to the list of words that won't show up
+   */
+  addWordToIgnoreList(word: string) {
+    this.setState({ ignoreList: [...this.state.ignoreList, word] });
+    this.getWords(); // refresh the list
   }
 
   render() {
@@ -108,34 +108,13 @@ class SampleWords extends React.Component<
           <Typography variant="subtitle1">
             <Translate id="charInventory.sampleWords.description" />
           </Typography>
-          <Button
-            onClick={() => {
-              this.getWords();
-            }}
-          >
-            <RefreshIcon />
-          </Button>
         </Grid>
         {this.state.words.map(word => (
-          <Grid item xs={12} key={word}>
-            <Grid container justify="flex-start">
-              <Paper
-                className="classes.paper"
-                style={{
-                  minWidth: 40,
-                  textAlign: "center",
-                  padding: "5px 10px",
-                  cursor: "pointer",
-                  background: this.state.selected.includes(word)
-                    ? "#cfc"
-                    : "#fff"
-                }}
-                onClick={() => this.toggleSelected(word)}
-              >
-                {word}
-              </Paper>
-            </Grid>
-          </Grid>
+          <WordTile
+            word={word}
+            addWordToCharSet={word => this.addWordToCharSet(word)}
+            addWordToIgnoreList={word => this.addWordToIgnoreList(word)}
+          />
         ))}
         <Grid item xs={12} />
       </Grid>

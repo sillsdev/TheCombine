@@ -10,8 +10,6 @@ import { LogoutButton } from "../Login/LogoutButton";
 import Login from "../Login";
 import Navigation from "../Navigation";
 
-import UploadMp3 from "../TempAudioFileUpload";
-
 export const history = createBrowserHistory();
 
 export default class App extends React.Component {
@@ -20,13 +18,12 @@ export default class App extends React.Component {
       <div className="App">
         <Router history={history}>
           <PrivateRoute exact path="/nav" component={Navigation} />
-          {/* <PrivateRoute exact path="/" component={CreateProject} />  */}
-
-          {/* Temporary! For Mark's Backend development */}
-          <PrivateRoute exact path="/" component={UploadMp3} />
+          <PrivateRoute exact path="/" component={CreateProject} />
 
           <Route path="/login" component={Login} />
         </Router>
+
+        <hr />
         <LogoutButton />
       </div>
     );
