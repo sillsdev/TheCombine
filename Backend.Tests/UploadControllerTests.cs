@@ -87,19 +87,19 @@ namespace Tests
 
             for (int i = 0; i < 3; i++)
             {
-                string dateCreated = "\"" + RandomWord(20) + "\"";
-                string dateModified = "\"" + RandomWord(20) + "\"";
-                string id = "\"" + RandomWord() + "\"";
-                string guid = "\"" + RandomWord() + "\"";
-                string vernLang = "\"" + RandomWord(3) + "\"";
+                string dateCreated = $"\"{RandomWord(20)}\"";
+                string dateModified = $"\"{RandomWord(20)}\"";
+                string id = $"\"{RandomWord()}\"";
+                string guid = $"\"{RandomWord()}\"";
+                string vernLang = $"\"{RandomWord(3)}\"";
                 string vern = RandomWord(6);
                 string plural = RandomWord(8);
-                string senseId = "\"" + RandomWord() + "\"";
-                string transLang1 = "\"" + RandomWord(3) + "\"";
-                string transLang2 = "\"" + RandomWord(3) + "\"";
+                string senseId = $"\"{RandomWord()}\"";
+                string transLang1 = $"\"{RandomWord(3)}\"";
+                string transLang2 = $"\"{RandomWord(3)}\"";
                 string trans1 = RandomWord(6);
                 string trans2 = RandomWord(8);
-                string sdValue = "\"" + RandomWord(4) + " " + RandomWord(4) + "\"";
+                string sdValue = $"\"{RandomWord(4)} {RandomWord(4)}\"";
 
                 string entry = $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
                     <lexical-unit>
