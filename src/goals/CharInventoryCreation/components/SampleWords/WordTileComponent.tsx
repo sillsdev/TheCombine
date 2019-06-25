@@ -1,20 +1,6 @@
 import * as React from "react";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate
-} from "react-localize-redux";
-import {
-  Grid,
-  Typography,
-  Paper,
-  Button,
-  IconButton,
-  Tooltip
-} from "@material-ui/core";
-import { Refresh as RefreshIcon } from "@material-ui/icons";
-import { Word } from "../../../../types/word";
-import * as backend from "../../../../backend";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { Grid, Paper, IconButton, Tooltip } from "@material-ui/core";
 import { Add, Block } from "@material-ui/icons";
 
 const TRANSITION =

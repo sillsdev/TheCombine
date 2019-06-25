@@ -4,18 +4,10 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import {
-  Grid,
-  Typography,
-  Paper,
-  Button,
-  IconButton,
-  Tooltip
-} from "@material-ui/core";
+import { Grid, Typography, Button } from "@material-ui/core";
 import { Refresh as RefreshIcon } from "@material-ui/icons";
 import { Word } from "../../../../types/word";
 import * as backend from "../../../../backend";
-import { Add, Block } from "@material-ui/icons";
 import WordTile from "./WordTileComponent";
 
 export interface SampleWordsProps {
@@ -46,6 +38,10 @@ class SampleWords extends React.Component<
 
   componentDidMount() {
     this.getWords();
+  }
+
+  componentDidUpdate(prevProps: SampleWordsProps & LocalizeContextProps) {
+    if (prevProps.inventory !== this.props.inventory) this.getWords();
   }
 
   /**
