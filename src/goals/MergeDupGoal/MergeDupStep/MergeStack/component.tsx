@@ -11,7 +11,8 @@ import {
 	CardContent,
 	Card,
 	Popper,
-	ClickAwayListener
+	ClickAwayListener,
+	Popover
 } from "@material-ui/core";
 import {Sense} from "../component";
 import WordCard from "../WordCard";
@@ -37,6 +38,11 @@ class MergeStack extends React.Component<
 	MergeStackProps & LocalizeContextProps,
 	MergeStackState
 	> {
+
+	constructor(props: MergeStackProps & LocalizeContextProps) {
+		super(props);
+		this.state = {};
+	}
 
 	addWord(word: Word) {
 		if (this.props.addDuplicate && this.props.dropWord) {
@@ -122,7 +128,7 @@ class MergeStack extends React.Component<
 							)}
 					</div>
 					<CardContent>
-						<WordCard word={lastCard} />
+						<WordCard key={lastCard.id} word={lastCard} />
 						<div
 							style={{
 								float: "right",
@@ -138,10 +144,21 @@ class MergeStack extends React.Component<
 					</CardContent>
 				</Card>
 				<ClickAwayListener onClickAway={() => this.closeDisplay()}>
-					<Popper id={id} open={open} anchorEl={this.state.anchorEl} transition>
-						<div>
-							<StackDisplay closePopper={() => this.closeDisplay()} sense={this.props.sense} />
-						</div>
+					<Popper
+						id={id}
+						open={open}
+						anchorEl={this.state.anchorEl}
+						disablePortal={true}
+						modifiers=
+						{{
+							preventOverflow:
+							{
+								enabled: false,
+								boundriesElement: 'scrollParent'
+							}
+						}}
+						style={{zIndex: 200}}>
+						<StackDisplay closePopper={() => this.closeDisplay()} sense={this.props.sense} />
 					</Popper>
 				</ClickAwayListener>
 			</Box>
