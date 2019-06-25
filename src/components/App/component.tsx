@@ -7,11 +7,8 @@ import { Route, Switch, Router } from "react-router-dom";
 import { PrivateRoute } from "../PrivateRoute";
 import { LogoutButton } from "../Login/LogoutButton";
 import Login from "../Login";
-import { createBrowserHistory } from "history";
 import PageNotFound from "../PageNotFound/component";
 import { GoalRoute } from "../GoalRoute/component";
-
-export const history = createBrowserHistory();
 
 export default class App extends React.Component {
   render() {

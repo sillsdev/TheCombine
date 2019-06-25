@@ -7,13 +7,12 @@ export interface GoalWrapperProps {
   goal: Goal;
 }
 
+/*
+ * Wraps a goal object in a React component.
+ */
 export class GoalWrapper extends React.Component<
   GoalProps & LocalizeContextProps
 > {
-  constructor(props: GoalProps & LocalizeContextProps) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
