@@ -19,7 +19,7 @@ export const goalsReducer = (
         historyState: {
           history: [...state.historyState.history, goalToAdd]
         },
-        goalOptions: state.goalOptions,
+        allPossibleGoals: state.allPossibleGoals,
         suggestionsState: {
           suggestions: suggestions.filter(
             (goal, index) =>

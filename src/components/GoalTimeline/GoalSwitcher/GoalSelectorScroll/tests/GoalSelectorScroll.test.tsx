@@ -30,7 +30,9 @@ const labels: string[] = ["handleDuplicates", "handleFlags", "grammarCheck"];
 const gsState: GoalSelectorState = createTempState();
 const storeState: any = {
   goalSelectorState: gsState,
-  goalsState: { goalOptions: gsState.goalOptions }
+  goalsState: {
+    allPossibleGoals: gsState.allPossibleGoals
+  }
 };
 const createMockStore = configureMockStore([thunk]);
 const store = createMockStore(storeState);
@@ -175,7 +177,7 @@ describe("Testing the goal selector scroll ui", () => {
       gsState.selectedIndex
     );
     expect(scrollHandle.instance.props.handleChange).toHaveBeenCalledWith(
-      gsState.goalOptions[gsState.selectedIndex].name
+      gsState.allPossibleGoals[gsState.selectedIndex].name
     );
   });
 
@@ -208,18 +210,18 @@ function createTempState(): GoalSelectorState {
   let goals: Goal[] = [];
 
   for (let i: number = 0; i < labels.length; i++)
-    goals[i] = createBGoal(i, labels[i], tempUser);
+    goals[i] = createBGoal(i.toString(), labels[i], tempUser);
 
   return {
     selectedIndex: 0,
-    goalOptions: [...goals],
+    allPossibleGoals: [...goals],
     mouseX: 0,
     lastIndex: 3
   };
 }
 
 // Creates a BaseGoal with the specified attributes
-function createBGoal(id: number, name: string, user: User): Goal {
+function createBGoal(id: string, name: string, user: User): Goal {
   let goal: Goal = new BaseGoal();
   goal.id = id;
   goal.name = name;

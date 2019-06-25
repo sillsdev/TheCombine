@@ -7,9 +7,7 @@ export interface NavBarProps {
   Title: string;
 }
 
-/*
- * The navigation bar provides the UI for navigating around The Combine.
- */
+/** The navigation bar provides the UI for navigating around The Combine. */
 export class NavigationBar extends React.Component<
   NavBarProps & LocalizeContextProps
 > {

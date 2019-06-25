@@ -2,7 +2,7 @@ import { Goal } from "../../../types/goals";
 import * as timelineActions from "../GoalTimelineActions";
 import * as navActions from "../../Navigation/NavigationActions";
 import { Dispatch } from "redux";
-import { history } from "../../../history";
+import history from "../../../history";
 
 export type ChooseGoal = timelineActions.AddGoal | navActions.NavigationAction;
 

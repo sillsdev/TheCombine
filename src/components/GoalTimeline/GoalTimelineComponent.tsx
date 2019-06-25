@@ -12,7 +12,7 @@ const timelineStyle = {
   }
 };
 
-/*
+/**
  * Displays the list of goals the user has decided they will work on, their
  * choices for the next goal, and suggestions for which goals they should choose
  * to work on.

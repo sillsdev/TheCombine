@@ -2,7 +2,7 @@ import { Dispatch } from "react";
 import * as backend from "../../backend";
 import { Project, defaultProject } from "../../types/project";
 import { setCurrentProject, ProjectAction } from "../Project/ProjectActions";
-import { history } from "../../history";
+import history from "../../history";
 
 export const CREATE_PROJECT = "CREATE_PROJECT";
 export type CREATE_PROJECT = typeof CREATE_PROJECT;

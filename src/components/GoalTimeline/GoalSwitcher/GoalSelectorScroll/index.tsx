@@ -12,10 +12,10 @@ import { Dispatch } from "redux";
 
 export function mapStateToProps(state: StoreState): GoalSelectorState {
   return {
-    goalOptions: state.goalsState.goalOptions,
+    allPossibleGoals: state.goalsState.allPossibleGoals,
     selectedIndex: state.goalSelectorState.selectedIndex,
     mouseX: state.goalSelectorState.mouseX,
-    lastIndex: state.goalsState.goalOptions.length - 1
+    lastIndex: state.goalsState.allPossibleGoals.length - 1
   };
 }
 

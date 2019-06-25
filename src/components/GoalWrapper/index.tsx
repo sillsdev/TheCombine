@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 export function mapStateToProps(state: StoreState): GoalWrapperProps {
   return {
     goal: getGoalById(
-      state.goalsState.goalOptions,
+      state.goalsState.allPossibleGoals,
       state.navState.VisibleComponentId
     )
   };

@@ -6,7 +6,7 @@ import PageNotFound from "../PageNotFound/component";
 import { PrivateRoute } from "../PrivateRoute";
 import NavigationBar from "../NavigationBar";
 
-/*
+/**
  * Navigate to routes specific to goals. This includes the goal timeline, as well
  * as components for all goal types.
  */
