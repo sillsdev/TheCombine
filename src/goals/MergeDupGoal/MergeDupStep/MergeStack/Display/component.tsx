@@ -11,7 +11,8 @@ export interface StackDisplayProps {
   dropWord?: () => void;
   moveWord?: (word: Word, index: number) => void;
   addDuplicate?: (word: Word, parent: number) => void;
-  removeDuplicate?: (word: Word, parent: number) => void;
+	removeDuplicate?: (word: Word, parent: number) => void;
+	closePopper?: () => void;
   draggedWord?: Word;
 }
 
@@ -59,8 +60,11 @@ class StackDisplay extends React.Component<
       this.props.dropWord();
     } else {
       if (this.props.removeDuplicate) {
-        this.props.removeDuplicate(word, this.props.sense.id);
-      }
+				this.props.removeDuplicate(word, this.props.sense.id);
+			}
+			if (this.props.sense.dups.length <= 1){
+				if (this.props.closePopper) this.props.closePopper();
+			}
     }
     this.setState({});
   }

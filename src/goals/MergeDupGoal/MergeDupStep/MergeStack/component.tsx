@@ -71,7 +71,7 @@ class MergeStack extends React.Component<
       this.props.dropWord();
     } else {
       if (this.props.removeDuplicate && this.props.updateRow) {
-        this.props.removeDuplicate(word, this.props.sense.id);
+				this.props.removeDuplicate(word, this.props.sense.id);
         // force MergeRow to update even though react think we didn't update any of MergeWord's props
         this.props.updateRow();
       }
@@ -82,15 +82,17 @@ class MergeStack extends React.Component<
     return this.props.sense.dups[0];
   }
 
-  spawnDisplay(e: React.MouseEvent<HTMLElement>) {
+	spawnDisplay(e: React.MouseEvent<HTMLElement>) {
+		if (this.props.sense.dups.length > 1 ){
     this.setState({
       ...this.state,
       anchorEl: this.state.anchorEl ? undefined : e.currentTarget
-    });
+		});
+		}
   }
 
-  closeDisplay() {
-    this.setState({ ...this.state, anchorEl: undefined });
+	closeDisplay() {
+			this.setState({ ...this.state, anchorEl: undefined });
   }
 
   render_single() {
@@ -143,7 +145,7 @@ class MergeStack extends React.Component<
         <ClickAwayListener onClickAway={() => this.closeDisplay()}>
           <Popper id={id} open={open} anchorEl={this.state.anchorEl} transition>
             <div>
-              <StackDisplay sense={this.props.sense} />
+							<StackDisplay closePopper={() => this.closeDisplay()} sense={this.props.sense} />
             </div>
           </Popper>
         </ClickAwayListener>
@@ -159,11 +161,11 @@ class MergeStack extends React.Component<
     );
   }
 
-  render() {
+	render() {
     //visual definition
     if (this.props.sense.dups.length > 1) {
       return this.render_stack();
-    } else {
+		} else {
       return this.render_single();
     }
   }
