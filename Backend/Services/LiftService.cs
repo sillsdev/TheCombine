@@ -1,14 +1,39 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
 using SIL.Lift.Parsing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using static SIL.DictionaryServices.Lift.LiftWriter;
 
 namespace BackendFramework.Services
 {
+    public class CombineLiftWriter : LiftWriter
+    {
+        public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle)
+        {
+        }
+
+        public CombineLiftWriter(StringBuilder builder, bool produceFragmentOnly) : base(builder, produceFragmentOnly)
+        {
+        }
+
+        protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
+        {
+            LexPhonetic lexPhonetic = new LexPhonetic();
+            LexTrait lexTrait = new LexTrait("media", propertiesAlreadyOutput.First());
+            lexPhonetic.Traits.Add(lexTrait);
+            entry.Pronunciations.Add(lexPhonetic);
+        }
+    }
+
     public class LiftService : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
 
@@ -18,6 +43,57 @@ namespace BackendFramework.Services
         public LiftService(IWordRepository repo)
         {
             _repo = repo;
+
+        }
+
+        /********************************
+        * LIft Export Implementation
+        ********************************/
+        public int LiftExport()
+        {
+            string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+            string filepath = wanted_path + "/EXAMPLE.lift";
+            StringBuilder bob = new StringBuilder();
+            CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
+
+            string header = @"<ranges>
+                <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/FullerM/Documents/TheCombine/Backend.Tests/bin/testingdata.lift-ranges""/>
+                </ranges>
+                <fields>
+                <field tag = ""Plural"">
+                <form lang = ""en""><text></text></form>
+                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+                </field>
+                </fields>";
+
+            writer.WriteHeader(header);
+
+            var allWords = _repo.GetAllWords().Result;
+
+            foreach (Word wordEntry in allWords )
+            {
+                LexEntry entry = new LexEntry();
+                LiftMultiText mText = new LiftMultiText();
+                foreach (Sense sense in wordEntry.Senses)
+                {
+                    foreach (Gloss gloss in sense.Glosses)
+                    {
+                        mText.Add(gloss.Language, gloss.Def);
+                        if(entry.LexicalForm.Count == 0)
+                        {
+                            entry.LexicalForm.Add(MultiText.Create(mText));
+                        }
+                        entry.GetOrCreateSenseWithMeaning(MultiText.Create(mText));
+                    }
+                }
+                if(!string.IsNullOrEmpty(wordEntry.Audio))
+                {
+                    
+                }
+                writer.Add(entry);
+            }
+            writer.End();
+            return 1;
         }
 
         /**************************************
@@ -202,12 +278,7 @@ namespace BackendFramework.Services
         public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
 
         public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml) { }
-
-        /********************************
-         * LIft Export Implementation
-         ********************************/
-
-
+        
     }
 
     public class EmptyLiftObject : LiftObject

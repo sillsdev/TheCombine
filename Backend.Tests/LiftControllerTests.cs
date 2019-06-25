@@ -12,17 +12,16 @@ using SIL.Lift.Parsing;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace Tests
 {
-    public class UploadControllerTests
+    public class LiftControllerTests
     {
         IWordRepository _wordrepo;
         private WordService _wordService;
         ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
-        IUserService _userService;
-        UserController userController;
-        WordController wordController;
+        private LiftController liftController;
 
         [SetUp]
         public void Setup()
@@ -30,11 +29,7 @@ namespace Tests
             _wordrepo = new WordRepositoryMock();
             _wordService = new WordService(_wordrepo);
             _merger = new LiftService(_wordrepo);
-            _userService = new UserServiceMock();
-            controller = new FileIOController(_merger, _wordrepo, _wordService, _userService);
-            userController = new UserController(_userService);
-            wordController = new WordController(_wordService, _wordrepo);
-
+            liftController = new LiftController(_merger, _wordrepo, _wordService);
         }
 
         User RandomUser()
@@ -114,8 +109,7 @@ namespace Tests
             return name;
         }
 
-        [Test]
-        public void TestLiftImport()
+        public FileUpload initFile()
         {
             string name = RandomLiftFile();
             FileStream fstream = File.OpenRead(name);
@@ -125,54 +119,37 @@ namespace Tests
             fileUpload.Name = "FileName";
             fileUpload.File = formFile;
 
-            _ = controller.UploadLiftFile(fileUpload).Result;
+            return fileUpload;
+        }
+
+        [Test]
+        public void TestLiftImport()
+        {
+            var fileUpload = initFile();
+            _ = liftController.UploadLiftFile(fileUpload).Result;
 
             var allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
         }
 
         [Test]
-        public void TestAvatarImport()
+        public void TestLiftExport()
         {
-            string filePath = "../../../Assets/combine.png";
+            var fileUpload = initFile();
 
-            FileStream fstream = File.OpenRead(filePath);
+            _ = liftController.UploadLiftFile(fileUpload).Result;
 
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
-            FileUpload fileUpload = new FileUpload();
-            fileUpload.Name = "FileName";
-            fileUpload.File = formFile;
+            var foundWord = _wordrepo.GetAllWords().Result[0];
+            foundWord.Audio = "sound.mp3";
 
-            User user = _userService.Create(RandomUser()).Result;
+            _ = _wordService.Update(foundWord.Id, foundWord);
 
-            _ = controller.UploadAvatar(user.Id, fileUpload).Result;
+            //export
+            _ = liftController.ExportLiftFile().Result;
+            
+            //assert if the file is missing
 
-            var action = userController.Get(user.Id).Result;
-
-            var foundUser = (action as ObjectResult).Value as User;
-            Assert.IsNotNull(foundUser.Avatar);
-        }
-
-        [Test]
-        public void TestAudioImport()
-        {
-            string filePath = "../../../Assets/sound.mp3";
-
-            FileStream fstream = File.OpenRead(filePath);
-
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
-            FileUpload fileUpload = new FileUpload();
-            fileUpload.Name = "FileName";
-            fileUpload.File = formFile;
-
-            Word word = _wordrepo.Create(RandomWord()).Result;
-
-            _ = controller.UploadAudioFile(word.Id, fileUpload).Result;
-
-            var action = wordController.Get(word.Id).Result;
-
-            var foundWord = (action as ObjectResult).Value as Word;
-            Assert.IsNotNull(foundWord.Audio);
+            //assert if import fails
         }
     }
 }
