@@ -43,22 +43,16 @@ export const mergeDupStepReducer = (
             dest = dest ? dest : 0;
             // find location of src word
             var src = sense.dups.findIndex(el => word.id == el.id);
+
+            sense.dups.splice(src, 1);
             // split array at dest
             if (src > dest) {
               // if moving card upward in stack push dest card down
-              var ends = [sense.dups.slice(0, dest), sense.dups.slice(dest)];
+              sense.dups.splice(dest, 0, word);
             } else {
               // if moving card downward in stack push dest card up
-              var ends = [
-                sense.dups.slice(0, dest + 1),
-                sense.dups.slice(dest + 1)
-              ];
+              sense.dups.splice(dest+1, 0, word);
             }
-
-            // remove word from both ends;
-            ends = ends.map(end => end.filter(el => el.id != word.id));
-            // splice together
-            sense.dups = ends[0].concat(word, ends[1]);
           }
           return sense;
         });
