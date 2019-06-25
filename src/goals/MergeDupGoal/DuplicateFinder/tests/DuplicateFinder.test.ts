@@ -58,7 +58,7 @@ describe("dupFinder Tests", () => {
         otherField: "",
         plural: ""
       },
-      score: 3
+      score: 1.25
     },
     {
       word: {
@@ -128,7 +128,7 @@ describe("dupFinder Tests", () => {
         otherField: "",
         plural: ""
       },
-      score: 3
+      score: 1.25
     }
   ];
   let acceptedYank: Word[] = [
@@ -205,8 +205,8 @@ describe("dupFinder Tests", () => {
   test("test getAcceptedWords", () => {
     let testOutput = Finder.getAcceptedWords(scoredYank);
     for (let i = 0; i < testOutput.length; i++) {
-      expect(testOutput[i].vernacular).toEqual(acceptedYank[i].vernacular);
-      expect(testOutput[i].senses[0]).toEqual(acceptedYank[i].senses[0]);
+      expect(testOutput[0][i].vernacular).toEqual(acceptedYank[i].vernacular);
+      expect(testOutput[0][i].senses[0]).toEqual(acceptedYank[i].senses[0]);
     }
   });
 
@@ -243,7 +243,7 @@ describe("dupFinder Tests", () => {
         testWordList[4].vernacular,
         testWordList[8].vernacular
       )
-    ).toEqual(2);
+    ).toEqual(3);
   });
 
   test("Levenshtein Distance with distinct Word", () => {
@@ -252,6 +252,6 @@ describe("dupFinder Tests", () => {
         testWordList[8].senses[0].glosses[0].def,
         testWordList[12].senses[0].glosses[0].def
       )
-    ).toEqual(14);
+    ).toEqual(16);
   });
 });
