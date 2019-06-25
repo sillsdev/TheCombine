@@ -95,8 +95,13 @@ export class CharacterSet extends React.Component<
     let dragIndex = inv.indexOf(this.state.dragChar);
     let dropIndex = inv.indexOf(this.state.dropChar);
 
-    inv.splice(dragIndex, 1);
-    inv.splice(dropIndex, 0, this.state.dragChar);
+    if (dragIndex >= dropIndex) {
+      inv.splice(dragIndex, 1);
+      inv.splice(dropIndex, 0, this.state.dragChar);
+    } else {
+      inv.splice(dragIndex, 1);
+      inv.splice(dropIndex - 1, 0, this.state.dragChar);
+    }
 
     this.setState({
       dragChar: "",
