@@ -83,14 +83,6 @@ class MergeDupStep extends React.Component<
     return (
       <Box style={{ maxHeight: "100%" }}>
         <Grid container>
-          {/* <Grid item>
-            <Button onClick={_ => this.fill_database()}>Fill Database</Button>
-          </Grid> */}
-          {/* <Grid item>
-            <Button onClick={_ => this.clear_database()}>Clear Database</Button>
-          </Grid> */}
-        </Grid>
-        <Grid container>
           <Grid item>
             <WordList />
           </Grid>
@@ -119,7 +111,9 @@ class MergeDupStep extends React.Component<
                 color="primary"
                 style={{ float: "right", margin: 10 }}
                 onClick={_ => this.next()}
-                title={this.props.translate("mergeDups.helpText.next") as string}
+                title={
+                  this.props.translate("mergeDups.helpText.next") as string
+                }
               >
                 <Translate id="goal.mergeDups.done" />
               </Button>
