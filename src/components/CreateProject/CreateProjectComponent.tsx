@@ -41,9 +41,11 @@ class CreateProject extends React.Component<
 
   updateLanguageData(files: FileList) {
     const languageData = files[0];
-    const fileName = languageData.name;
-    const name = this.state.name;
-    this.setState({ languageData, name, fileName });
+    if (languageData) {
+      const fileName = languageData.name;
+      const name = this.state.name;
+      this.setState({ languageData, name, fileName });
+    }
   }
 
   createProject(e: React.FormEvent<EventTarget>) {
