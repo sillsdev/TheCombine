@@ -12,13 +12,12 @@ export const defaultState: CharacterInventoryState = {
 };
 
 export const characterInventoryReducer = (
-  state: CharacterInventoryState | undefined, //createStore() calls each reducer with undefined state
+  state: CharacterInventoryState = defaultState,
   action: CharacterInventoryAction
 ): CharacterInventoryState => {
-  if (!state) return defaultState;
   switch (action.type) {
     case SET_CHARACTER_INVENTORY:
-      let inv = [...new Set([...action.inventory])]; // Prevents duplicate characters
+      let inv = [...new Set([...action.payload])]; // Prevents duplicate characters
       return { inventory: inv };
     default:
       return state;

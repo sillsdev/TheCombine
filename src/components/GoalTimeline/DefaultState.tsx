@@ -38,7 +38,7 @@ export const defaultState: GoalsState = {
   historyState: {
     history: []
   },
-  goalOptions: allTheGoals,
+  allPossibleGoals: allTheGoals,
   suggestionsState: {
     suggestions: suggestionsArray
   }

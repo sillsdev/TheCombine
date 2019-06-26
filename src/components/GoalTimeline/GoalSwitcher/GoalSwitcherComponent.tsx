@@ -6,7 +6,7 @@ import GoalSelectorScroll from "./GoalSelectorScroll";
 
 export interface GoalSwitcherProps {
   chooseGoal: (goal: Goal) => void;
-  goalOptions: Goal[];
+  allPossibleGoals: Goal[];
 }
 
 /*
@@ -25,7 +25,7 @@ export class GoalSwitcher extends React.Component<
   // as the next goal to work on.
   handleChange(name: string) {
     let goal: Goal | undefined = this.findGoalByName(
-      this.props.goalOptions,
+      this.props.allPossibleGoals,
       name
     );
     if (goal) {

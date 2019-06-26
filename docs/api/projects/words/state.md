@@ -1,6 +1,6 @@
 # Accessibility State
 
-Acccessibility state is an enum representing on of four states
+Acccessibility state is an enum representing one of four states
 
 **Active** : Standard Node type
 

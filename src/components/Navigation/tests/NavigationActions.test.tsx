@@ -2,18 +2,11 @@ import * as actions from "../NavigationActions";
 import { Goal } from "../../../types/goals";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 
-it("should create an action to navigate back", () => {
-  const expectedAction = {
-    type: actions.NAVIGATE_BACK
-  };
-  expect(actions.navigateBack()).toEqual(expectedAction);
-});
-
-it("should create an action to navigate forwards", () => {
+it("should create an action to change the visible component", () => {
   const goal: Goal = new CreateCharInv([]);
   const expectedAction: actions.NavigationAction = {
-    type: actions.NAVIGATE_FORWARD,
+    type: actions.CHANGE_VISIBLE_COMPONENT,
     payload: goal
   };
-  expect(actions.navigateForward(goal)).toEqual(expectedAction);
+  expect(actions.changeVisibleComponent(goal)).toEqual(expectedAction);
 });

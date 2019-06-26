@@ -13,7 +13,7 @@ it("Should return the current state", () => {
     historyState: {
       history: []
     },
-    goalOptions: [],
+    allPossibleGoals: [],
     suggestionsState: {
       suggestions: suggestionsArray
     }
@@ -23,7 +23,7 @@ it("Should return the current state", () => {
     historyState: {
       history: []
     },
-    goalOptions: [],
+    allPossibleGoals: [],
     suggestionsState: {
       suggestions: suggestionsArray
     }
@@ -40,7 +40,7 @@ it("Should add a goal to history and remove it from suggestions", () => {
     historyState: {
       history: []
     },
-    goalOptions: [],
+    allPossibleGoals: [],
     suggestionsState: {
       suggestions: suggestionsArray
     }
@@ -54,7 +54,7 @@ it("Should add a goal to history and remove it from suggestions", () => {
     historyState: {
       history: suggestionsArray
     },
-    goalOptions: [],
+    allPossibleGoals: [],
     suggestionsState: {
       suggestions: []
     }
@@ -69,7 +69,7 @@ it("Should add a goal to history but not remove any goals from non-existent sugg
     historyState: {
       history: []
     },
-    goalOptions: [],
+    allPossibleGoals: [],
     suggestionsState: {
       suggestions: []
     }
@@ -83,7 +83,7 @@ it("Should add a goal to history but not remove any goals from non-existent sugg
     historyState: {
       history: [goal]
     },
-    goalOptions: [],
+    allPossibleGoals: [],
     suggestionsState: {
       suggestions: []
     }
@@ -99,7 +99,7 @@ it("Should add a goal to history but not remove it from suggestions", () => {
     historyState: {
       history: []
     },
-    goalOptions: [],
+    allPossibleGoals: [],
     suggestionsState: {
       suggestions: suggestionsArray
     }
@@ -115,7 +115,7 @@ it("Should add a goal to history but not remove it from suggestions", () => {
     historyState: {
       history: [chosenGoal]
     },
-    goalOptions: [],
+    allPossibleGoals: [],
     suggestionsState: {
       suggestions: suggestionsArray
     }

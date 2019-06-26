@@ -7,7 +7,8 @@ import {
   CLEAR_MERGES
 } from "./actions";
 import { ParentWord } from "./component";
-import { Word } from "../../../types/word";
+import { State, Word } from "../../../types/word";
+import * as backend from "../../../backend";
 
 export const defaultState: MergeTreeState = {
   parentWords: []

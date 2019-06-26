@@ -1,31 +1,27 @@
 import { goalSelectReducer, defaultState } from "../GoalSelectorReducer";
 import {
   SELECT_ACTION,
-  ScrollAction,
+  GoalScrollAction,
   MOUSE_ACTION
 } from "../GoalSelectorAction";
 import { GoalSelectorState } from "../../../../../types/goals";
 
 const VAL = 5;
-const scrollAct: ScrollAction = {
+const scrollAct: GoalScrollAction = {
   type: SELECT_ACTION,
   payload: VAL
 };
 const scrollResultStore: GoalSelectorState = {
-  selectedIndex: VAL,
-  goalOptions: [],
-  mouseX: 0,
-  lastIndex: 0
+  ...defaultState,
+  selectedIndex: VAL
 };
-const mouseAct: ScrollAction = {
+const mouseAct: GoalScrollAction = {
   type: MOUSE_ACTION,
   payload: VAL
 };
 const mouseResultStore: GoalSelectorState = {
-  selectedIndex: 0,
-  goalOptions: [],
-  mouseX: VAL,
-  lastIndex: 0
+  ...defaultState,
+  mouseX: VAL
 };
 
 describe("Testing goal select reducer", () => {
@@ -48,7 +44,7 @@ describe("Testing goal select reducer", () => {
       goalSelectReducer(scrollResultStore, ({
         type: "",
         payload: 0
-      } as unknown) as ScrollAction)
+      } as unknown) as GoalScrollAction)
     ).toEqual(scrollResultStore);
   });
 });

@@ -16,8 +16,6 @@
 
 ## Error response
 
-**Condition** : If project or id is not found
+**Condition** : If id is not found
 
 **Code** : `404 NOT FOUND`
-
-**Data content** : `missingItem: string`
