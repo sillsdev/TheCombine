@@ -8,6 +8,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
       "display": "flex",
       "flexWrap": "nowrap",
       "overflow": "hidden",
+      "padding": "2vw",
     }
   }
 >
@@ -31,7 +32,11 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
     <span
       className="MuiButton-label"
     >
-      &lt;
+      <h1
+        className="MuiTypography-root MuiTypography-h1"
+      >
+        &lt;
+      </h1>
     </span>
   </button>
   <div
@@ -42,9 +47,9 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
         "display": "flex",
         "flexWrap": "nowrap",
         "overflow": "hidden",
-        "padding": 10,
+        "padding": "2vw",
         "userselect": "none",
-        "width": 1000,
+        "width": "70vw",
       }
     }
     tabIndex={0}
@@ -60,168 +65,219 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
       }
     >
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard0Wraparound MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        id="scrollCard0Wraparound"
         onClick={[Function]}
         onContextMenu={[Function]}
         style={
           Object {
-            "backgroundColor": "white",
-            "width": 200,
+            "justifyContent": "center",
+            "width": "14vw",
           }
         }
       >
         <div
           className="MuiCardContent-root"
         >
-          Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+          <h6
+            className="MuiTypography-root MuiTypography-h6"
+          >
+            Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+          </h6>
         </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard1Wraparound MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        id="scrollCard1Wraparound"
         onClick={[Function]}
         onContextMenu={[Function]}
         style={
           Object {
-            "backgroundColor": "lightGray",
-            "color": "gray",
-            "margin": 10,
-            "width": 180,
+            "backgroundColor": "#bdbdbd",
+            "color": "#757575",
+            "justifyContent": "center",
+            "margin": "0.7000000000000002vw",
+            "width": "12.6vw",
           }
         }
       >
         <div
           className="MuiCardContent-root"
         >
-          Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+          <h6
+            className="MuiTypography-root MuiTypography-h6"
+          >
+            Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+          </h6>
         </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard2Wraparound MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        id="scrollCard2Wraparound"
         onClick={[Function]}
         onContextMenu={[Function]}
         style={
           Object {
-            "backgroundColor": "lightGray",
-            "color": "gray",
-            "margin": 10,
-            "width": 180,
+            "backgroundColor": "#bdbdbd",
+            "color": "#757575",
+            "justifyContent": "center",
+            "margin": "0.7000000000000002vw",
+            "width": "12.6vw",
           }
         }
       >
         <div
           className="MuiCardContent-root"
         >
-          Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+          <h6
+            className="MuiTypography-root MuiTypography-h6"
+          >
+            Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+          </h6>
         </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation7 MuiCard-root scrollCard0 MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation7 MuiCard-root MuiPaper-rounded"
+        color="secondary"
+        id="scrollCard0"
         onClick={[Function]}
         onContextMenu={[Function]}
         style={
           Object {
-            "backgroundColor": "white",
-            "width": 200,
+            "width": "14vw",
           }
         }
       >
         <div
           className="MuiCardContent-root"
         >
-          Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+          <h6
+            className="MuiTypography-root MuiTypography-h6"
+          >
+            Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+          </h6>
         </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard1 MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        color="default"
+        id="scrollCard1"
         onClick={[Function]}
         onContextMenu={[Function]}
         style={
           Object {
-            "backgroundColor": "lightGray",
-            "color": "gray",
-            "margin": 10,
-            "width": 180,
+            "backgroundColor": "#bdbdbd",
+            "color": "#757575",
+            "margin": "0.7000000000000002vw",
+            "width": "12.6vw",
           }
         }
       >
         <div
           className="MuiCardContent-root"
         >
-          Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+          <h6
+            className="MuiTypography-root MuiTypography-h6"
+          >
+            Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+          </h6>
         </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard2 MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        color="default"
+        id="scrollCard2"
         onClick={[Function]}
         onContextMenu={[Function]}
         style={
           Object {
-            "backgroundColor": "lightGray",
-            "color": "gray",
-            "margin": 10,
-            "width": 180,
+            "backgroundColor": "#bdbdbd",
+            "color": "#757575",
+            "margin": "0.7000000000000002vw",
+            "width": "12.6vw",
           }
         }
       >
         <div
           className="MuiCardContent-root"
         >
-          Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+          <h6
+            className="MuiTypography-root MuiTypography-h6"
+          >
+            Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+          </h6>
         </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard0Wraparound MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        id="scrollCard0Wraparound"
         onClick={[Function]}
         onContextMenu={[Function]}
         style={
           Object {
-            "backgroundColor": "white",
-            "width": 200,
+            "justifyContent": "center",
+            "width": "14vw",
           }
         }
       >
         <div
           className="MuiCardContent-root"
         >
-          Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+          <h6
+            className="MuiTypography-root MuiTypography-h6"
+          >
+            Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+          </h6>
         </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard1Wraparound MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        id="scrollCard1Wraparound"
         onClick={[Function]}
         onContextMenu={[Function]}
         style={
           Object {
-            "backgroundColor": "lightGray",
-            "color": "gray",
-            "margin": 10,
-            "width": 180,
+            "backgroundColor": "#bdbdbd",
+            "color": "#757575",
+            "justifyContent": "center",
+            "margin": "0.7000000000000002vw",
+            "width": "12.6vw",
           }
         }
       >
         <div
           className="MuiCardContent-root"
         >
-          Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+          <h6
+            className="MuiTypography-root MuiTypography-h6"
+          >
+            Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+          </h6>
         </div>
       </div>
       <div
-        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root scrollCard2Wraparound MuiPaper-rounded"
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+        id="scrollCard2Wraparound"
         onClick={[Function]}
         onContextMenu={[Function]}
         style={
           Object {
-            "backgroundColor": "lightGray",
-            "color": "gray",
-            "margin": 10,
-            "width": 180,
+            "backgroundColor": "#bdbdbd",
+            "color": "#757575",
+            "justifyContent": "center",
+            "margin": "0.7000000000000002vw",
+            "width": "12.6vw",
           }
         }
       >
         <div
           className="MuiCardContent-root"
         >
-          Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+          <h6
+            className="MuiTypography-root MuiTypography-h6"
+          >
+            Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+          </h6>
         </div>
       </div>
     </div>
@@ -246,7 +302,11 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
     <span
       className="MuiButton-label"
     >
-      &gt;
+      <h1
+        className="MuiTypography-root MuiTypography-h1"
+      >
+        &gt;
+      </h1>
     </span>
   </button>
 </div>
