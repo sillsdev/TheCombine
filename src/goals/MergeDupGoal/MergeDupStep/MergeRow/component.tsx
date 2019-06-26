@@ -55,32 +55,42 @@ export class MergeRow extends React.Component<
           </div>
           <hr />
         </ListSubheader>
-        <Grid container>
-          {this.props.parent.senses.map(item => (
-            <Grid item key={item.id}>
+        <div>
+          <Grid container style={{ display: "flex", flexFlow: "row wrap" }}>
+            {this.props.parent.senses.map(item => (
+              //<Grid item key={item.id}>
               <MergeStack updateRow={() => this.update()} sense={item} />
+              //</Grid>
+            ))}
+            <Grid
+              item
+              onDragOver={e => e.preventDefault()}
+              onDrop={_ => this.drop()}
+              style={{
+                position: "relative",
+                flex: "1 0 10vw"
+              }}
+            >
+              {
+                <Card style={{ width: "10vw", backgroundColor: "#eee" }}>
+                  {
+                    <Card style={{ width: 200, backgroundColor: "#eee" }}>
+                      <CardContent>Drag new sense</CardContent>
+                      <CardContent>Here</CardContent>
+                    </Card>
+                  }
+                </Card>
+              }
             </Grid>
-          ))}
-          <Grid
-            item
-            onDragOver={e => e.preventDefault()}
-            onDrop={_ => this.drop()}
-          >
-            {this.props.draggedWord && (
-              <Card style={{ width: 200, backgroundColor: "#eee" }}>
-                <CardContent>Drag new sense</CardContent>
-                <CardContent>Here</CardContent>
-              </Card>
-            )}
+            <Grid
+              item
+              style={{ flex: 1 }}
+              onDragOver={e => e.preventDefault()}
+              onDrop={_ => this.drop()}
+              title={this.props.translate("mergeDups.helpText.sense") as string}
+            />
           </Grid>
-          <Grid
-            item
-            style={{ flex: 1 }}
-            onDragOver={e => e.preventDefault()}
-            onDrop={_ => this.drop()}
-            title={this.props.translate("mergeDups.helpText.sense") as string}
-          />
-        </Grid>
+        </div>
       </Box>
     );
   }
