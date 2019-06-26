@@ -1,13 +1,13 @@
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import StackDisplayComponent from "./component";
 import {
   dropWord,
   dragWord,
-  WordDrag
-} from "../../../../DraggableWord/actions";
-import {Word} from "../../../../../types/word";
-import {StoreState} from "../../../../../types";
-import {ThunkDispatch} from "redux-thunk";
+  WordDragAction
+} from "../../../../../components/DraggableWord/actions";
+import { Word } from "../../../../../types/word";
+import { StoreState } from "../../../../../types";
+import { ThunkDispatch } from "redux-thunk";
 import {
   moveDuplicate,
   removeDuplicate,
@@ -17,12 +17,12 @@ import {
 
 export function mapStateToProps(state: StoreState) {
   return {
-    draggedWord: state.draggedWordState.draggedWord
+    draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord
   };
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, MergeTreeAction | WordDrag>
+  dispatch: ThunkDispatch<StoreState, any, MergeTreeAction | WordDragAction>
 ) {
   return {
     removeDuplicate: (word: Word, sense: number) => {
