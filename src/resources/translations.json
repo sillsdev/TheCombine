@@ -26,12 +26,14 @@
     "required": ["Required", "necesario"]
   },
   "createProject": {
+    "title": ["Create Project", "Crear Proyecto"],
     "name": ["Project Name", "Nombre del Proyecto"],
     "languageData": [
       ".lift language data file",
       "archivo de datos de idioma .lift"
     ],
-    "browse": ["Browse Computer", "Navegar por la Computadora"],
+    "upload?": ["Upload .lift file?", "Uploado .lift filada?"],
+    "browse": ["Browse", "Navegar"],
     "create": ["Create Project", "Crear Proyecto"],
     "fileSelected": ["File selected", "Archivo seleccionado"]
   },
