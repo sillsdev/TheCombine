@@ -9,7 +9,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 
-namespace Tests
+namespace Backend.Tests
 {
     public class AudioControllerTests
     {

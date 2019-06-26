@@ -64,21 +64,35 @@ namespace BackendFramework.Services
         /********************************
         * LIft Export Implementation
         ********************************/
-        public int LiftExport(string Id)
+        public void LiftExport(string Id)
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
             string filepath = wanted_path + "/EXAMPLE.lift";
             CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
 
-            string header = @"<ranges>
-                <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/FullerM/Documents/TheCombine/Backend.Tests/bin/testingdata.lift-ranges""/>
-                </ranges>
-                <fields>
-                <field tag = ""Plural"">
-                <form lang = ""en""><text></text></form>
-                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
-                </field>
-                </fields>";
+            //no longer uses @ for sake of indentation
+            //very messy
+            string header =
+                "\n\t\t<ranges>\n" +
+                "\t\t\t<range id = \"semantic-domain-ddp4\" href = \"file://C:/Users/FullerM/Documents/TheCombine/Backend.Tests/bin/testingdata.lift-ranges\"/>\n" +
+                "\t\t</ranges>\n" +
+                "\t\t<fields>\n" +
+                "\t\t\t<field tag = \"Plural\">\n" +
+                "\t\t\t\t<form lang = \"en\"><text></text></form>\n" +
+                "\t\t\t\t<form lang = \"qaa-x-spec\"><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>\n" +
+                "\t\t\t</field>\n" +
+                "\t\t</fields>\n\t";
+            //@"
+            //        <ranges>
+            //            <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/FullerM/Documents/TheCombine/Backend.Tests/bin/testingdata.lift-ranges""/>
+            //        </ranges>
+            //        <fields>
+            //            <field tag = ""Plural"">
+            //                <form lang = ""en""><text></text></form>
+            //                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+            //            </field>
+            //        </fields>
+            //";
 
             writer.WriteHeader(header);
 
@@ -90,14 +104,13 @@ namespace BackendFramework.Services
 
                 //add vernacular (lexical form)
                 LiftMultiText lexMultiText = new LiftMultiText();
-                var verWS = _projService.GetProject(Id).Result.VernacularWritingSystem;
-                lexMultiText.Add(verWS, wordEntry.Vernacular);
+                string lang = _projService.GetProject(Id).Result.VernacularWritingSystem;
+                lexMultiText.Add(lang, wordEntry.Vernacular);
                 entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
 
                 //add audio (pronunciation media)
                 LexPhonetic lexPhonetic = new LexPhonetic();
-                LiftMultiText proMultiText = new LiftMultiText();
-                proMultiText.Add("href",wordEntry.Audio);
+                LiftMultiText proMultiText = new LiftMultiText{ { "href", wordEntry.Audio } };
                 lexPhonetic.MergeIn(MultiText.Create(proMultiText));
                 entry.Pronunciations.Add(lexPhonetic);
 
@@ -115,15 +128,13 @@ namespace BackendFramework.Services
                     foreach (Gloss gloss in sense.Glosses)
                     {
                         //add gloss/def
-                        LiftMultiText senseMultiText = new LiftMultiText();
-                        senseMultiText.Add(gloss.Language, gloss.Def);
+                        LiftMultiText senseMultiText = new LiftMultiText{ { gloss.Language, gloss.Def } };
                         entry.GetOrCreateSenseWithMeaning(MultiText.Create(senseMultiText));
                     }
                 }
                 writer.Add(entry);
             }
             writer.End();
-            return 1;
         }
 
         /**************************************

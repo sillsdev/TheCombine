@@ -64,7 +64,8 @@ namespace BackendFramework.Controllers
             {
                 return new BadRequestResult();
             }
-            int success = _liftService.LiftExport(Id);
+
+            _liftService.LiftExport(Id);
 
             return new OkObjectResult(words);
         }

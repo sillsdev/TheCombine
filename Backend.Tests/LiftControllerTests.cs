@@ -10,7 +10,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Tests
+namespace Backend.Tests
 {
     public class LiftControllerTests
     {
@@ -28,21 +28,6 @@ namespace Tests
             _wordService = new WordService(_wordrepo);
             _merger = new LiftService(_wordrepo, _projServ);
             liftController = new LiftController(_merger, _wordrepo, _wordService, _projServ);
-        }
-
-        User RandomUser()
-        {
-            User user = new User();
-            user.Username = Util.randString();
-            user.Password = Util.randString();
-            return user;
-        }
-
-        Word RandomWord()
-        {
-            Word word = new Word();
-            word.Vernacular = Util.randString();
-            return word;
         }
 
         Project RandomProject()
@@ -114,7 +99,7 @@ namespace Tests
             return name;
         }
 
-        public FileUpload initFile()
+        public FileUpload InitFile()
         {
             string name = RandomLiftFile();
             FileStream fstream = File.OpenRead(name);
@@ -130,7 +115,7 @@ namespace Tests
         [Test]
         public void TestLiftImport()
         {
-            var fileUpload = initFile();
+            var fileUpload = InitFile();
             _ = liftController.UploadLiftFile(fileUpload).Result;
 
             var allWords = _wordrepo.GetAllWords();
@@ -140,9 +125,13 @@ namespace Tests
         [Test]
         public void TestLiftExport()
         {
-            var fileUpload = initFile();
+            string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+            string filepath = wanted_path + "/EXAMPLE.lift";
+            File.Delete(filepath);
+
+            var fileUpload = InitFile();
             var proj = RandomProject();
-            proj.VernacularWritingSystem = "seh";
+            proj.VernacularWritingSystem = Util.randString(3);
             _projServ.Create(proj);
 
             _ = liftController.UploadLiftFile(fileUpload).Result;
@@ -154,10 +143,24 @@ namespace Tests
 
             //export
             _ = liftController.ExportLiftFile(proj.Id).Result;
-            
-            //assert if the file is missing
 
-            //assert if import fails
+            //assert file was created
+            Assert.IsTrue(File.Exists(filepath));
+
+            //assert words can be properly imported
+            _ = _wordrepo.DeleteAllWords().Result;
+
+            FileStream fstream = File.OpenRead(filepath);
+
+            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
+            FileUpload fileUpload2 = new FileUpload();
+            fileUpload2.Name = "FileName";
+            fileUpload2.File = formFile;
+
+            _ = liftController.UploadLiftFile(fileUpload2).Result;
+
+            var allWords = _wordrepo.GetAllWords();
+            Assert.NotZero(allWords.Result.Count);
         }
     }
 }
