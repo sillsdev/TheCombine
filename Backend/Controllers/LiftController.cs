@@ -4,7 +4,6 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 

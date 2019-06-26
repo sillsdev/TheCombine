@@ -1,18 +1,14 @@
 ﻿using Backend.Tests;
 using BackendFramework.Controllers;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using SIL.Lift.Parsing;
 using System;
 using System.IO;
 using System.Text;
-using System.Threading;
 
 namespace Tests
 {
@@ -141,8 +137,9 @@ namespace Tests
 
             var foundWord = _wordrepo.GetAllWords().Result[0];
             foundWord.Audio = "sound.mp3";
+            foundWord.Id = null;
 
-            _ = _wordService.Update(foundWord.Id, foundWord);
+            _ = _wordService.Update(foundWord.Id, foundWord).Result;
 
             //export
             _ = liftController.ExportLiftFile().Result;

@@ -27,9 +27,12 @@ namespace BackendFramework.Services
 
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
+            //not quite working...
             LexPhonetic lexPhonetic = new LexPhonetic();
-            LexTrait lexTrait = new LexTrait("media", propertiesAlreadyOutput.First());
-            lexPhonetic.Traits.Add(lexTrait);
+            LexField lexField = new LexField("media");
+            LexTrait lexTrait = new LexTrait("href", "sound.mp3");
+            lexField.Traits.Add(lexTrait);
+            lexPhonetic.Fields.Add(lexField);
             entry.Pronunciations.Add(lexPhonetic);
         }
     }
@@ -53,7 +56,6 @@ namespace BackendFramework.Services
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
             string filepath = wanted_path + "/EXAMPLE.lift";
-            StringBuilder bob = new StringBuilder();
             CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
 
             string header = @"<ranges>
@@ -73,22 +75,20 @@ namespace BackendFramework.Services
             foreach (Word wordEntry in allWords )
             {
                 LexEntry entry = new LexEntry();
-                LiftMultiText mText = new LiftMultiText();
+
+                LiftMultiText lexMultiText = new LiftMultiText();
+                //how do we access language here?
+                lexMultiText.Add("oop", wordEntry.Vernacular);
+                entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
+
                 foreach (Sense sense in wordEntry.Senses)
                 {
                     foreach (Gloss gloss in sense.Glosses)
                     {
-                        mText.Add(gloss.Language, gloss.Def);
-                        if(entry.LexicalForm.Count == 0)
-                        {
-                            entry.LexicalForm.Add(MultiText.Create(mText));
-                        }
-                        entry.GetOrCreateSenseWithMeaning(MultiText.Create(mText));
+                        LiftMultiText senseMultiText = new LiftMultiText();
+                        senseMultiText.Add(gloss.Language, gloss.Def);
+                        entry.GetOrCreateSenseWithMeaning(MultiText.Create(senseMultiText));
                     }
-                }
-                if(!string.IsNullOrEmpty(wordEntry.Audio))
-                {
-                    
                 }
                 writer.Add(entry);
             }

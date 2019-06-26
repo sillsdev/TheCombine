@@ -1,17 +1,12 @@
 ﻿using Backend.Tests;
 using BackendFramework.Controllers;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
-using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using SIL.Lift.Parsing;
 using System;
 using System.IO;
-using System.Text;
 
 namespace Tests
 {
