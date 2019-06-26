@@ -11,6 +11,9 @@ import {
 } from "@material-ui/core";
 import WordCard from "../WordCard";
 
+// Constants
+const OPACITY_GRAYED = 0.5;
+
 //interface for component props
 export interface WordListProps {
   words: Word[];
@@ -22,12 +25,37 @@ export interface WordListProps {
 }
 
 //interface for component state
-interface WordListState {}
+interface WordListState {
+  draggingFrom: boolean;
+}
 
 class WordList extends React.Component<
   WordListProps & LocalizeContextProps,
   WordListState
 > {
+  constructor(props: WordListProps & LocalizeContextProps) {
+    super(props);
+
+    // Bind functions
+    this.obscureList = this.obscureList.bind(this);
+    this.brightenList = this.brightenList.bind(this);
+    this.state = { draggingFrom: false };
+  }
+
+  // Handles grayed-out options
+
+  obscureList() {
+    this.setState({ ...this.state, draggingFrom: true });
+    window.addEventListener("dragend", this.brightenList);
+  }
+
+  brightenList() {
+    this.setState({ ...this.state, draggingFrom: false });
+    window.removeEventListener("dragend", this.brightenList);
+  }
+
+  // Handles word manipulation
+
   drag(word: Word) {
     if (this.props.dragWord) {
       this.props.dragWord(word);
@@ -57,7 +85,7 @@ class WordList extends React.Component<
     //visual definition
     return (
       <div
-        style={{ height: "90vh", overflowY: "scroll" }}
+        onDragStart={_ => this.obscureList()}
         onDragOver={e => e.preventDefault()}
         onDrop={_ => this.drop()}
       >
@@ -65,7 +93,10 @@ class WordList extends React.Component<
           {this.props.words.map(item => (
             <ListItem key={item.id}>
               <Card
-                style={{ flex: 1 }}
+                style={{
+                  flex: 1,
+                  opacity: this.state.draggingFrom ? OPACITY_GRAYED : 1.0
+                }}
                 draggable={true}
                 onDragStart={_ => this.drag(item)}
                 onDragEnd={_ => this.dragEnd(item)}

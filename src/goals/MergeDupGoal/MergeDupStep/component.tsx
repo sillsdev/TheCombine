@@ -5,10 +5,26 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Box, Grid, Button, Card, CardContent } from "@material-ui/core";
+import {
+  Box,
+  Grid,
+  Button,
+  Card,
+  CardContent,
+  GridList,
+  GridListTile
+} from "@material-ui/core";
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
 import * as backend from "../../../backend";
+
+// Constants
+const MIN_VIEW: string = "60vh";
+const MAX_VIEW: string = "75vh";
+const HEIGHT_STYLE: React.CSSProperties = {
+  //minHeight: MIN_VIEW,
+  height: MAX_VIEW
+};
 
 // Internal merge memory model
 export interface ParentWord {
@@ -83,43 +99,74 @@ class MergeDupStep extends React.Component<
     return (
       <Box style={{ maxHeight: "100%" }}>
         <Grid container>
-          <Grid item>
-            <WordList />
-          </Grid>
-          <Grid item style={{ flex: 1 }}>
-            {this.props.parentWords.map((item, _) => (
-              <MergeRow parent={item} />
-            ))}
-
-            <Box
-              style={{ height: "100%" }}
-              onDragOver={e => e.preventDefault()}
-              onDrop={_ => this.dragDrop()}
-              title={this.props.translate("mergeDups.helpText.root") as string}
-            >
-              <hr />
-              <Grid container>
-                <Grid item />
-                {this.props.draggedWord && (
-                  <Card style={{ width: 200, backgroundColor: "#eee" }}>
-                    <CardContent>Drag new root word Here</CardContent>
-                  </Card>
-                )}
-              </Grid>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ float: "right", margin: 10 }}
-                onClick={_ => this.next()}
-                title={
-                  this.props.translate("mergeDups.helpText.next") as string
-                }
-              >
-                <Translate id="goal.mergeDups.done" />
-              </Button>
-            </Box>
-          </Grid>
+          {/* <Grid item>
+            <Button onClick={_ => this.fill_database()}>Fill Database</Button>
+          </Grid> */}
+          {/* <Grid item>
+            <Button onClick={_ => this.clear_database()}>Clear Database</Button>
+          </Grid> */}
         </Grid>
+        <GridList cols={5}>
+          {/* WordList */}
+          <GridListTile
+            cols={1}
+            style={{
+              ...HEIGHT_STYLE,
+              minWidth: "15vw",
+              maxWidth: "20vw"
+            }}
+          >
+            <div style={{ ...HEIGHT_STYLE, overflowY: "scroll" }}>
+              <WordList />
+            </div>
+          </GridListTile>
+
+          {/* Merging pane */}
+          <GridListTile
+            cols={4}
+            style={{ ...HEIGHT_STYLE, minWidth: "65vw", maxWidth: "75vw" }}
+          >
+            <div style={{ ...HEIGHT_STYLE, overflowY: "scroll" }}>
+              <Grid item style={{ flex: 1 }}>
+                {this.props.parentWords.map((item, _) => (
+                  <MergeRow parent={item} />
+                ))}
+
+                <Box
+                  style={{ height: "100%" }}
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={_ => this.dragDrop()}
+                  title={
+                    this.props.translate("mergeDups.helpText.root") as string
+                  }
+                >
+                  <hr />
+                  <Grid container>
+                    <Grid item />
+                    {
+                      <Card style={{ width: 200, backgroundColor: "#eee" }}>
+                        <CardContent>Drag new root word Here</CardContent>
+                      </Card>
+                    }
+                  </Grid>
+                </Box>
+              </Grid>
+            </div>
+          </GridListTile>
+
+          {/* Merge button */}
+          <GridListTile cols={5} style={{ borderTop: "1px solid gray" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ float: "right", margin: 10 }}
+              onClick={_ => this.next()}
+              title={this.props.translate("mergeDups.helpText.next") as string}
+            >
+              <Translate id="goal.mergeDups.done" />
+            </Button>
+          </GridListTile>
+        </GridList>
       </Box>
     );
   }

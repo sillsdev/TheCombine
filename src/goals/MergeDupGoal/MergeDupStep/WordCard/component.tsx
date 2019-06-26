@@ -1,7 +1,7 @@
 import { Word, Sense } from "../../../../types/word";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import React from "react";
-import { Typography, Tabs, Tab } from "@material-ui/core";
+import { Typography, Tabs, Tab, CardHeader } from "@material-ui/core";
 import { styled } from "@material-ui/styles";
 
 const SenseTab = styled(Tab)({
@@ -54,11 +54,11 @@ class WordCard extends React.Component<
   render() {
     return (
       <div>
-        <Typography variant="h5">
-          {this.props.word.vernacular}{" "}
-          {this.props.word.plural && ", " + this.props.word.plural}
+        <Typography variant="h5">{this.props.word.vernacular}</Typography>
+        <Typography variant="subtitle2">
+          <i>{this.props.word.plural && "pl. " + this.props.word.plural}</i>
         </Typography>
-        <Typography variant="caption">Glosses:</Typography>
+        <Typography variant="subtitle2">Glosses:</Typography>
         <Tabs
           value={this.state.sense}
           onChange={(event, val) => this.handleChange(val)}
@@ -67,7 +67,9 @@ class WordCard extends React.Component<
             <SenseTab label={this.getGlosses(sense)} />
           ))}
         </Tabs>
-        {this.getDomains(this.props.word.senses[this.state.sense])}
+        <Typography variant="subtitle2">
+          {this.getDomains(this.props.word.senses[this.state.sense])}
+        </Typography>
       </div>
     );
   }
