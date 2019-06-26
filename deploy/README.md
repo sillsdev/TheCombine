@@ -14,9 +14,69 @@ to connect to it over the network.
 
 ## Vagrant VM Setup
 
-TO DO.
+The simplest way to test *TheCombine* application in an environment that mimics the production environment is to use a *Vagrant* virtual machine.
+
+### System Requirements
+  1. PC with a 64-bit Windows or Linux operating system.
+  2. Hardware virtualization enabled
+  3. At least 4 GB RAM
+
+### Installing the Environment
+  1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
+  2. Install [Vagrant](https://www.vagrantup.com/downloads.html).  Note that if you are installing Vagrant on an Ubuntu host, you should select the Debian package rather than the generic Linux package.
+  3. Clone the project repo, https://github.com/sillsdev/TheCombine
+
+### Creating the VM
+  1. open a command prompt and change directory to deploy/vagrant sub-folder of the cloned project directory, e.g.
+  ```
+  cd src/TheCombine/deploy/vagrant
+  ```
+  1. create and provision the VM:
+  ```
+  vagrant up
+  ```
+  Note that it may take some time for this to complete.  When finished, there will be a window displaying the console of the virtual machine:
+  ![alt text](images/vm-console.png "Ubuntu Server Virtual Machine Console")
+
+### Logging Into the VM
+
+#### At the VM Console
+
+By default, when you run ```vagrant up```, VirtualBox will display a window showing the console for the VM.
+You can login to the VM at the console window using the following credentials:
+
+     Username: vagrant
+     Password: vagrant
+
+#### Using a Secure Shell Client
+You can also connect using a secure shell client with the same credentials.  The host to use is:
+
+     host: localhost
+     port: 2222
+
+#### Using Vagrant
+Last of all, you can type
+```
+    vagrant ssh
+```
+at the command prompt where you launched the VM.
+
+### Building and Installing TheCombine
+
+To connect to the VM using one of the methods described in [Logging Into the VM](#logging-into-the-vm) and run the following commands from the command prompt:
+```
+cd src\TheCombine
+mkcombine
+```
+```mkcombine``` build the project and then run the ansible playbook for installing and configuring it.  Before running ```mkcombine``` consider updating your working directory by doing a ```git pull``` or by checking out your working branch.
+
+Once ```mkcombine``` completes, you can test the build by connecting to http://localhost:8088 from your web browser.
+
+*Note: The SSL module has not been setup for the apache server yet.  You will see the login screen but will not be able to proceed from there.*
 
 ## Stand Up a New Machine
+
+This section describes how to install Ubuntu Server and TheCombine application on a new PC or virtual machine.
 
 ### Install Ubuntu Bionic Server
 
