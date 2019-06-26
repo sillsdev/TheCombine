@@ -9,8 +9,9 @@ import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
+import CharInventoryCreation from "../../goals/CharInventoryCreation";
 
-let goal1: Goal = new CreateCharInv([]);
+let goal1: Goal = new CreateCharInv([<CharInventoryCreation />]);
 let goal2: Goal = new CreateStrWordInv([]);
 let goal3: Goal = new HandleFlags([]);
 let goal4: Goal = new MergeDups([<MergeDupStep />]);
