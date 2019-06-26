@@ -26,7 +26,7 @@ namespace Tests
         Word RandomWord()
         {
             Word word = new Word();
-            word.Vernacular = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
+            word.Vernacular = Util.randString();
             return word;
         }
 
