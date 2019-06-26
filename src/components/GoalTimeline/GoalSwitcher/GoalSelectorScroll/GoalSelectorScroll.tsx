@@ -42,7 +42,7 @@ const RIGHT_KEY: string = "ArrowRight";
 const ENTER_KEY: string = "Enter";
 
 export interface GoalSelectorScrollProps {
-  goalOptions: Goal[];
+  allPossibleGoals: Goal[];
   selectedIndex: number;
   mouseX: number;
   lastIndex: number;
@@ -102,9 +102,9 @@ export class GoalSelectorScroll extends React.Component<
     super(props);
 
     // Set LENGTH, TICKER_WIDTH, and padding arrays
-    this.LENGTH = props.goalOptions.length;
+    this.LENGTH = props.allPossibleGoals.length;
     this.TICKER_WIDTH = WIDTH * (this.LENGTH + AMT_OF_PADDING * 2 - 1);
-    this.LEAD_PADDING = props.goalOptions
+    this.LEAD_PADDING = props.allPossibleGoals
       .slice(this.LENGTH - AMT_OF_PADDING, this.LENGTH)
       .map((element: Goal, index: number) => {
         return [
@@ -113,7 +113,7 @@ export class GoalSelectorScroll extends React.Component<
           index + this.LENGTH - AMT_OF_PADDING
         ];
       });
-    this.END_PADDING = props.goalOptions
+    this.END_PADDING = props.allPossibleGoals
       .slice(0, AMT_OF_PADDING)
       .map((element: Goal, index: number) => {
         return [element.name, index, index];
@@ -199,7 +199,7 @@ export class GoalSelectorScroll extends React.Component<
     if (event.type == "click") {
       if (Math.abs(this.mouseStart - this.props.mouseX) < CLICK_SENSITIVITY)
         if (this.props.selectedIndex == index)
-          this.props.handleChange(this.props.goalOptions[index].name);
+          this.props.handleChange(this.props.allPossibleGoals[index].name);
         else this.scrollLockNdx(index);
     }
   }
@@ -212,7 +212,7 @@ export class GoalSelectorScroll extends React.Component<
       this.scrollRight();
     } else if (event.key === ENTER_KEY) {
       this.props.handleChange(
-        this.props.goalOptions[this.props.selectedIndex].name
+        this.props.allPossibleGoals[this.props.selectedIndex].name
       );
     }
   }
@@ -222,12 +222,15 @@ export class GoalSelectorScroll extends React.Component<
   // Scroll left one goal (w/ wrap)
   scrollLeft(): void {
     let newNdx = this.props.selectedIndex - 1;
-    this.scrollLockNdx(newNdx < 0 ? this.props.goalOptions.length - 1 : newNdx);
+    this.scrollLockNdx(
+      newNdx < 0 ? this.props.allPossibleGoals.length - 1 : newNdx
+    );
   }
 
   // Scroll right one goal (w/ wrap)
   scrollRight(): void {
-    let newNdx = (this.props.selectedIndex + 1) % this.props.goalOptions.length;
+    let newNdx =
+      (this.props.selectedIndex + 1) % this.props.allPossibleGoals.length;
     this.scrollLockNdx(newNdx);
   }
 
@@ -289,7 +292,9 @@ export class GoalSelectorScroll extends React.Component<
             [
               "goal.selector.selectOption",
               () => {
-                this.props.handleChange(this.props.goalOptions[index].name);
+                this.props.handleChange(
+                  this.props.allPossibleGoals[index].name
+                );
               }
             ]
           ]}
@@ -323,7 +328,7 @@ export class GoalSelectorScroll extends React.Component<
               "goal.selector.selectOption",
               () => {
                 this.props.handleChange(
-                  this.props.goalOptions[dummyGoal[2]].name
+                  this.props.allPossibleGoals[dummyGoal[2]].name
                 );
               }
             ]
@@ -373,7 +378,7 @@ export class GoalSelectorScroll extends React.Component<
             {/* This is set up without lambdas because, as of the writing of this code,
             usage of lambdas completely broke the ui's scrolling for unknown reasons */}
             {this.LEAD_PADDING.map(this.mapWraparoundCard)}
-            {this.props.goalOptions.map(this.mapScrollCard)}
+            {this.props.allPossibleGoals.map(this.mapScrollCard)}
             {this.END_PADDING.map(this.mapWraparoundCard)}
           </div>
         </div>

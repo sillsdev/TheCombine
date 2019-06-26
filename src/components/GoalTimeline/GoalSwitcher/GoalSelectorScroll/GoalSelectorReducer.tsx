@@ -7,7 +7,7 @@ import { GoalSelectorState } from "../../../../types/goals";
 
 export const defaultState: GoalSelectorState = {
   selectedIndex: 0,
-  goalOptions: [],
+  allPossibleGoals: [],
   mouseX: 0,
   lastIndex: 0
 };

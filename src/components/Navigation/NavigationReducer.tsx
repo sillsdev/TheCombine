@@ -1,15 +1,13 @@
 import { NavState } from "../../types/nav";
 import {
-  NAVIGATE_BACK,
-  NAVIGATE_FORWARD,
-  NavigationAction
+  NavigationAction,
+  CHANGE_VISIBLE_COMPONENT
 } from "./NavigationActions";
 
 export const defaultState: NavState = {
   VisibleComponentId: "0",
-  DisplayHistory: [],
   NavBarState: {
-    ShouldRenderBackButton: false
+    Title: "Default Title"
   }
 };
 
@@ -21,44 +19,14 @@ export const navReducer = (
     return defaultState;
   }
   switch (action.type) {
-    case NAVIGATE_BACK:
-      let displayHistoryCopy = [...state.DisplayHistory];
-      let previousDisplay = displayHistoryCopy.pop();
-
-      let visibleComponentId = previousDisplay
-        ? previousDisplay
-        : state.VisibleComponentId;
-
+    case CHANGE_VISIBLE_COMPONENT:
       return {
-        VisibleComponentId: visibleComponentId,
-        DisplayHistory: displayHistoryCopy,
+        VisibleComponentId: action.payload.id,
         NavBarState: {
-          ShouldRenderBackButton: shouldRenderBackButton(displayHistoryCopy)
-        }
-      };
-    case NAVIGATE_FORWARD:
-      let payload = action.payload;
-      if (!payload) {
-        return state;
-      }
-
-      let newDisplayHistory = [
-        ...state.DisplayHistory,
-        state.VisibleComponentId
-      ];
-
-      return {
-        VisibleComponentId: payload.id,
-        DisplayHistory: newDisplayHistory,
-        NavBarState: {
-          ShouldRenderBackButton: shouldRenderBackButton(newDisplayHistory)
+          Title: action.payload.name
         }
       };
     default:
       return state;
   }
 };
-
-export function shouldRenderBackButton(history: string[]): boolean {
-  return history.length > 0;
-}

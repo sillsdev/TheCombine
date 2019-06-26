@@ -1,8 +1,8 @@
 import { Dispatch } from "react";
-import { history } from "../App/component";
 import * as backend from "../../backend";
 import { Project, defaultProject } from "../../types/project";
 import { setCurrentProject, ProjectAction } from "../Project/ProjectActions";
+import history from "../../history";
 
 export const CREATE_PROJECT = "CREATE_PROJECT";
 export type CREATE_PROJECT = typeof CREATE_PROJECT;
@@ -36,15 +36,14 @@ export function asyncCreateProject(name: string, languageData?: File) {
         .uploadLift(createdProject, languageData)
         .then(res => {
           dispatch(createProject(name, languageData));
-          history.push("/nav");
+          history.push("/goals");
         })
         .catch(err => {
           alert("Failed to create project");
-          //console.log(err);
         });
     } else {
       dispatch(createProject(name));
-      history.push("/nav");
+      history.push("/goals");
     }
   };
 }
