@@ -4,7 +4,9 @@ using MongoDB.Driver;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
+using SIL.Lift.Options;
 using SIL.Lift.Parsing;
+using SIL.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,13 +29,19 @@ namespace BackendFramework.Services
 
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
-            //not quite working...
-            LexPhonetic lexPhonetic = new LexPhonetic();
-            LexField lexField = new LexField("media");
-            LexTrait lexTrait = new LexTrait("href", "sound.mp3");
-            lexField.Traits.Add(lexTrait);
-            lexPhonetic.Fields.Add(lexField);
-            entry.Pronunciations.Add(lexPhonetic);
+            if (entry.Pronunciations.First().Forms.Count() > 0)
+            {
+                Writer.WriteStartElement("pronunciation");
+                Writer.WriteStartElement("media");
+
+                foreach (var pro in entry.Pronunciations)
+                {
+                    Writer.WriteAttributeString("href", entry.Pronunciations.First().Forms.First().Form);
+                }
+
+                Writer.WriteEndElement();
+                Writer.WriteEndElement();
+            }
         }
     }
 
@@ -42,17 +50,18 @@ namespace BackendFramework.Services
 
         
         private readonly IWordRepository _repo;
+        private readonly IProjectService _projService;
 
-        public LiftService(IWordRepository repo)
+        public LiftService(IWordRepository repo, IProjectService projserv)
         {
             _repo = repo;
-
+            _projService = projserv;
         }
 
         /********************************
         * LIft Export Implementation
         ********************************/
-        public int LiftExport()
+        public int LiftExport(string Id)
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
             string filepath = wanted_path + "/EXAMPLE.lift";
@@ -77,12 +86,25 @@ namespace BackendFramework.Services
                 LexEntry entry = new LexEntry();
 
                 LiftMultiText lexMultiText = new LiftMultiText();
-                //how do we access language here?
-                lexMultiText.Add("oop", wordEntry.Vernacular);
+                var verWS = _projService.GetProject(Id).Result.VernacularWritingSystem;
+                lexMultiText.Add(verWS, wordEntry.Vernacular);
                 entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
+
+                LexPhonetic lexPhonetic = new LexPhonetic();
+                LiftMultiText proMultiText = new LiftMultiText();
+                proMultiText.Add("href",wordEntry.Audio);
+                lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+                entry.Pronunciations.Add(lexPhonetic);
 
                 foreach (Sense sense in wordEntry.Senses)
                 {
+                    foreach(var semdom in sense.SemanticDomains)
+                    {
+                        var orc = new OptionRefCollection();
+                        orc.Add(semdom.Number + " " + semdom.Name);
+                        entry.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
+                    }
+
                     foreach (Gloss gloss in sense.Glosses)
                     {
                         LiftMultiText senseMultiText = new LiftMultiText();

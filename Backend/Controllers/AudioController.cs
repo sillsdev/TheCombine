@@ -9,7 +9,7 @@ namespace BackendFramework.Controllers
     //[Authorize]
     [Produces("application/json")]
     [Route("v1")]
-    public class AudioController
+    public class AudioController : Controller
     {
         public readonly IWordService _wordService;
         public readonly IWordRepository _wordRepo;

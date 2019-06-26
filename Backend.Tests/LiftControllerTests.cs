@@ -15,17 +15,19 @@ namespace Tests
     public class LiftControllerTests
     {
         IWordRepository _wordrepo;
-        private WordService _wordService;
+        private IWordService _wordService;
         ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
         private LiftController liftController;
+        private IProjectService _projServ;
 
         [SetUp]
         public void Setup()
         {
+            _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
             _wordService = new WordService(_wordrepo);
-            _merger = new LiftService(_wordrepo);
-            liftController = new LiftController(_merger, _wordrepo, _wordService);
+            _merger = new LiftService(_wordrepo, _projServ);
+            liftController = new LiftController(_merger, _wordrepo, _wordService, _projServ);
         }
 
         User RandomUser()
@@ -41,6 +43,13 @@ namespace Tests
             Word word = new Word();
             word.Vernacular = Util.randString();
             return word;
+        }
+
+        Project RandomProject()
+        {
+            Project project = new Project();
+            project.Name = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
+            return project;
         }
 
         public string RandomLiftFile()
@@ -132,17 +141,19 @@ namespace Tests
         public void TestLiftExport()
         {
             var fileUpload = initFile();
+            var proj = RandomProject();
+            proj.VernacularWritingSystem = "seh";
+            _projServ.Create(proj);
 
             _ = liftController.UploadLiftFile(fileUpload).Result;
 
             var foundWord = _wordrepo.GetAllWords().Result[0];
             foundWord.Audio = "sound.mp3";
-            foundWord.Id = null;
 
             _ = _wordService.Update(foundWord.Id, foundWord).Result;
 
             //export
-            _ = liftController.ExportLiftFile().Result;
+            _ = liftController.ExportLiftFile(proj.Id).Result;
             
             //assert if the file is missing
 

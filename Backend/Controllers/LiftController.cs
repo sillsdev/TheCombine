@@ -19,12 +19,12 @@ namespace BackendFramework.Controllers
         public readonly IWordRepository _wordRepo;
         public readonly LiftService _liftService;
 
-        public LiftController(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService wordService)
+        public LiftController(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService wordService, IProjectService projServ)
         {
             _merger = merger;
             _wordRepo = repo;
             _wordService = wordService;
-            _liftService = new LiftService(_wordRepo);
+            _liftService = new LiftService(_wordRepo, projServ);
         }
 
         // POST: v1/Project/Words/upload
@@ -56,15 +56,15 @@ namespace BackendFramework.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ExportLiftFile()
+        [HttpGet("Id")]
+        public async Task<IActionResult> ExportLiftFile(string Id)
         {
             var words = await _wordRepo.GetAllWords();
             if(words.Count == 0)
             {
                 return new BadRequestResult();
             }
-            int success = _liftService.LiftExport();
+            int success = _liftService.LiftExport(Id);
 
             return new OkObjectResult(words);
         }

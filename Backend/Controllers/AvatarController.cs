@@ -9,7 +9,7 @@ namespace BackendFramework.Controllers
     //[Authorize]
     [Produces("application/json")]
     [Route("v1")]
-    public class AvatarController
+    public class AvatarController : Controller
     {
         private readonly IUserService _userService;
 
