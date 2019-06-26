@@ -43,7 +43,11 @@ class CreateProject extends React.Component<
   ) {
     const name = evt.target.value;
     const languageData = this.state.languageData;
-    this.setState({ languageData, name });
+    this.setState({
+      languageData,
+      name,
+      error: { name: name === "" }
+    });
   }
 
   updateLanguageData(files: FileList) {
