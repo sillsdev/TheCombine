@@ -10,7 +10,7 @@ export const defaultState: WordDragState = {
   draggedWord: undefined
 };
 
-export const dragWordReducer = (
+const dragWordReducer = (
   state: WordDragState = defaultState, //createStore() calls each reducer with undefined state
   action: WordDragAction
 ): WordDragState => {

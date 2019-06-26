@@ -33,7 +33,7 @@ export const defaultState: WordListState = {
   sortStyle: SortStyle.VERN_ASC
 };
 
-export const wordListReducer = (
+const wordListReducer = (
   state: WordListState = defaultState, //createStore() calls each reducer with undefined state
   action: WordListAction
 ): WordListState => {
