@@ -39,6 +39,9 @@ namespace BackendFramework.Services
                     Writer.WriteAttributeString("href", entry.Pronunciations.First().Forms.First().Form);
                 }
 
+                //makes sure the writer does not write it again
+                entry.Pronunciations.Clear();
+
                 Writer.WriteEndElement();
                 Writer.WriteEndElement();
             }
@@ -85,21 +88,25 @@ namespace BackendFramework.Services
             {
                 LexEntry entry = new LexEntry();
 
+                //add vernacular (lexical form)
                 LiftMultiText lexMultiText = new LiftMultiText();
                 var verWS = _projService.GetProject(Id).Result.VernacularWritingSystem;
                 lexMultiText.Add(verWS, wordEntry.Vernacular);
                 entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
 
+                //add audio (pronunciation media)
                 LexPhonetic lexPhonetic = new LexPhonetic();
                 LiftMultiText proMultiText = new LiftMultiText();
                 proMultiText.Add("href",wordEntry.Audio);
                 lexPhonetic.MergeIn(MultiText.Create(proMultiText));
                 entry.Pronunciations.Add(lexPhonetic);
 
+                //add sense
                 foreach (Sense sense in wordEntry.Senses)
                 {
                     foreach(var semdom in sense.SemanticDomains)
                     {
+                        //add semantic domain
                         var orc = new OptionRefCollection();
                         orc.Add(semdom.Number + " " + semdom.Name);
                         entry.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
@@ -107,6 +114,7 @@ namespace BackendFramework.Services
 
                     foreach (Gloss gloss in sense.Glosses)
                     {
+                        //add gloss/def
                         LiftMultiText senseMultiText = new LiftMultiText();
                         senseMultiText.Add(gloss.Language, gloss.Def);
                         entry.GetOrCreateSenseWithMeaning(MultiText.Create(senseMultiText));
