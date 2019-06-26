@@ -78,9 +78,12 @@ class CreateProject extends React.Component<
         <Card style={{ width: 450 }}>
           <form onSubmit={e => this.createProject(e)}>
             <CardContent>
+              {/* Title */}
               <Typography variant="h5" align="center" gutterBottom>
                 <Translate id="createProject.title" />
               </Typography>
+
+              {/* Project name field */}
               <TextField
                 label={<Translate id="createProject.name" />}
                 value={this.state.name}
@@ -96,6 +99,7 @@ class CreateProject extends React.Component<
                 }
               />
 
+              {/* File upload */}
               <Typography
                 variant="body1"
                 style={{ marginRight: 20 }}
@@ -103,6 +107,7 @@ class CreateProject extends React.Component<
               >
                 <Translate id="createProject.upload?" />
               </Typography>
+              {/* The actual file input element is hidden... */}
               <input
                 id="file-input"
                 type="file"
@@ -113,6 +118,7 @@ class CreateProject extends React.Component<
                 }
                 style={{ display: "none" }}
               />
+              {/* ... and this button is tied to it with the htmlFor property */}
               <Button variant="contained">
                 <label
                   htmlFor="file-input"
@@ -123,6 +129,7 @@ class CreateProject extends React.Component<
                   <Translate id="createProject.browse" />
                 </label>
               </Button>
+              {/* Displays the name of the selected file */}
               {this.state.fileName ? (
                 <Typography variant="body1" noWrap style={{ marginTop: 30 }}>
                   <Translate id="createProject.fileSelected" />:{" "}
@@ -130,6 +137,7 @@ class CreateProject extends React.Component<
                 </Typography>
               ) : null}
 
+              {/* Form submission button */}
               <Grid container justify="flex-end">
                 <Button
                   type="submit"
