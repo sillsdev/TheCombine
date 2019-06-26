@@ -1,22 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./component";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "./DefaultState";
+import { defaultState } from "../../App/DefaultState";
 import { Provider } from "react-redux";
-import thunk from "redux-thunk";
-import { MemoryRouter } from "react-router-dom";
+import { GoalRoute } from "../component";
+import { MemoryRouter } from "react-router";
 
-const createMockStore = configureMockStore([thunk]);
+const createMockStore = configureMockStore([]);
 
 it("renders without crashing", () => {
-  const mockStore = createMockStore(defaultState);
+  const mockStore = createMockStore({
+    ...defaultState
+  });
   const div = document.createElement("div");
-
   ReactDOM.render(
     <Provider store={mockStore}>
-      <MemoryRouter>
-        <App />
+      <MemoryRouter initialEntries={["/goals"]} initialIndex={0}>
+        <GoalRoute />
       </MemoryRouter>
     </Provider>,
     div

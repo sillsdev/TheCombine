@@ -28,7 +28,7 @@ export interface GoalViewState {
 // The representation of goals in the redux store
 export interface GoalsState {
   historyState: GoalHistoryState;
-  goalOptions: Goal[];
+  allPossibleGoals: Goal[];
   suggestionsState: GoalSuggestionsState;
 }
 
@@ -41,12 +41,12 @@ export interface GoalSuggestionsState {
 }
 
 export interface GoalSwitcherState {
-  goalOptions: Goal[];
+  allPossibleGoals: Goal[];
 }
 
 export interface GoalSelectorState {
   selectedIndex: number;
-  goalOptions: Goal[];
+  allPossibleGoals: Goal[];
   mouseX: number;
   lastIndex: number;
 }

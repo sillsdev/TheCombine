@@ -1,23 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./component";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "./DefaultState";
 import { Provider } from "react-redux";
-import thunk from "redux-thunk";
-import { MemoryRouter } from "react-router-dom";
+import PageNotFound from "../component";
 
-const createMockStore = configureMockStore([thunk]);
+const createMockStore = configureMockStore([]);
 
 it("renders without crashing", () => {
-  const mockStore = createMockStore(defaultState);
+  const mockStore = createMockStore();
   const div = document.createElement("div");
-
   ReactDOM.render(
     <Provider store={mockStore}>
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
+      <PageNotFound />
     </Provider>,
     div
   );
