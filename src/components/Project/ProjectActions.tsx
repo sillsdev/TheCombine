@@ -9,12 +9,12 @@ type ProjectType = SET_CURRENT_PROJECT;
 
 export interface ProjectAction {
   type: ProjectType;
-  project: Project;
+  payload: Project;
 }
 
-export function setCurrentProject(project: Project): ProjectAction {
+export function setCurrentProject(payload: Project): ProjectAction {
   return {
     type: SET_CURRENT_PROJECT,
-    project
+    payload
   };
 }
