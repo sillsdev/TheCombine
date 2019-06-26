@@ -1,4 +1,4 @@
-import { WordDrag } from "./actions";
+import { WordDragAction } from "./actions";
 import { DRAG_WORD, DROP_WORD } from "./actions";
 import { Word } from "../../types/word";
 
@@ -10,9 +10,9 @@ export const defaultState: WordDragState = {
   draggedWord: undefined
 };
 
-export const dragWordReducer = (
+const dragWordReducer = (
   state: WordDragState = defaultState, //createStore() calls each reducer with undefined state
-  action: WordDrag
+  action: WordDragAction
 ): WordDragState => {
   switch (action.type) {
     case DRAG_WORD:
@@ -28,3 +28,5 @@ export const dragWordReducer = (
       return state;
   }
 };
+
+export default dragWordReducer;

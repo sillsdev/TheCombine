@@ -23,7 +23,6 @@ class StackDisplay extends React.Component<
   StackDisplayState
   > {
   dragDrop(event: React.DragEvent<HTMLElement>, index: number) {
-    console.log(index);
     event.preventDefault();
     event.stopPropagation();
     if (this.props.draggedWord) {

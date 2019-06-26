@@ -4,11 +4,10 @@ import {
   ADD_SENSE,
   ADD_DUPLICATE,
   REMOVE_DUPLICATE,
-  CLEAR_MERGES
+  CLEAR_MERGES,
+  SWAP_DUPLICATE
 } from "./actions";
 import { ParentWord } from "./component";
-import { State, Word } from "../../../types/word";
-import * as backend from "../../../backend";
 
 export const defaultState: MergeTreeState = {
   parentWords: []
@@ -23,12 +22,37 @@ function generateID(): number {
   return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }
 
-export const mergeDupStepReducer = (
+const mergeDupStepReducer = (
   state: MergeTreeState = defaultState, //createStore() calls each reducer with undefined state
   action: MergeTreeAction
 ): MergeTreeState => {
   let parentWords: ParentWord[];
   switch (action.type) {
+    case SWAP_DUPLICATE:
+      parentWords = state.parentWords;
+      var { word, parent: dest } = action.payload;
+      // find sense containing word
+      parentWords = parentWords.map(parent => {
+        parent.senses = parent.senses.map(sense => {
+          if (sense.dups.includes(word)) {
+            /*
+             * if dest is undefined make it 0
+             * We should always have a number in the payload
+             * but the action doesn't know that so we need to
+             * remove the undefined from dest's type signature
+             */
+            dest = dest ? dest : 0;
+            // find location of src word
+            var src = sense.dups.findIndex(el => word.id == el.id);
+
+            sense.dups.splice(src, 1);
+            sense.dups.splice(dest, 0, word);
+          }
+          return sense;
+        });
+        return parent;
+      });
+      return { ...state, parentWords: parentWords };
     case ADD_PARENT:
       parentWords = state.parentWords;
       var word = action.payload.word;
@@ -78,7 +102,8 @@ export const mergeDupStepReducer = (
       parentWords = parentWords.map(parent => {
         parent.senses = parent.senses.map(sense => {
           if (sense.id === root) {
-            sense.dups = sense.dups.filter(word => word !== merge);
+            var index = sense.dups.lastIndexOf(merge);
+            sense.dups.splice(index, 1);
           }
           return sense;
         });
@@ -97,3 +122,4 @@ export const mergeDupStepReducer = (
       return state;
   }
 };
+export default mergeDupStepReducer;

@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
 
 import { StoreState } from "../../types";
-import BaseGoalSelect from "../DefaultGoal/BaseGoalSelect/BaseGoalSelect";
+import BaseGoalSelect from "../DefaultGoal/BaseGoalWidget/BaseGoalWidget";
 import BaseGoalScreen from "../DefaultGoal/BaseGoalScreen/BaseGoalScreen";
 
-//placeholder interfacees
+//placeholder interfaces
 export interface MergeDupData {}
 
 export function mapStateToProps(state: StoreState) {

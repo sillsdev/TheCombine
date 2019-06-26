@@ -24,7 +24,7 @@ namespace Tests
         Project RandomProject()
         {
             Project project = new Project();
-            project.Name = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
+            project.Name = Util.randString();
             return project;
         }
 

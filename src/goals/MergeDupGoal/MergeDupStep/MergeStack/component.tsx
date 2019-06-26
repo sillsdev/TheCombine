@@ -152,11 +152,6 @@ class MergeStack extends React.Component<
             placement="bottom"
             modifiers=
             {{
-              preventOverflow:
-              {
-                enabled: false,
-                boundriesElement: 'scrollParent'
-              },
               flip: {
                 enabled: false,
               }

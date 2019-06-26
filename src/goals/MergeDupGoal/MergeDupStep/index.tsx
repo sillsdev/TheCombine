@@ -3,7 +3,10 @@ import { StoreState } from "../../../types";
 import MergeDupStepComponent from "./component";
 import { ThunkDispatch } from "redux-thunk";
 import { MergeTreeAction, applyMerges, addParent } from "./actions";
-import { WordDrag, dropWord } from "../../DraggableWord/actions";
+import {
+  WordDragAction,
+  dropWord
+} from "../../../components/DraggableWord/actions";
 import { Word } from "../../../types/word";
 import {
   addListWords,
@@ -14,9 +17,9 @@ import {
 
 export function mapStateToProps(state: StoreState) {
   return {
-    parentWords: state.mergeDupStepProps.parentWords,
-    draggedWord: state.draggedWordState.draggedWord,
-    words: state.possibleDuplicateList.words
+    parentWords: state.mergeDuplicateGoal.mergeTreeState.parentWords,
+    draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord,
+    words: state.mergeDuplicateGoal.wordListState.words
   };
 }
 
@@ -24,7 +27,7 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<
     StoreState,
     any,
-    MergeTreeAction | WordDrag | WordListAction
+    MergeTreeAction | WordDragAction | WordListAction
   >
 ) {
   return {
