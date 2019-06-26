@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { User } from "../../../../types/user";
 import { Goal } from "../../../../types/goals";
-import BaseGoalSelect from "../BaseGoalSelect";
+import BaseGoalWidget from "../BaseGoalWidget";
 import { CreateCharInv } from "../../../CreateCharInv/CreateCharInv";
 
 it("renders without crashing", () => {
@@ -10,6 +10,6 @@ it("renders without crashing", () => {
   let user: User = new User("TestUser", "TestUsername", "password");
   let goal: Goal = new CreateCharInv([]);
   goal.user = user;
-  ReactDOM.render(<BaseGoalSelect goal={goal} />, div);
+  ReactDOM.render(<BaseGoalWidget goal={goal} />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
