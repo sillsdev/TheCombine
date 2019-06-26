@@ -74,7 +74,7 @@ class CreateProject extends React.Component<
         <Card style={{ width: 450 }}>
           <form onSubmit={e => this.createProject(e)}>
             <CardContent>
-              <Typography variant="h4" align="center" gutterBottom>
+              <Typography variant="h5" align="center" gutterBottom>
                 <Translate id="createProject.title" />
               </Typography>
               <TextField
@@ -82,11 +82,15 @@ class CreateProject extends React.Component<
                 value={this.state.name}
                 onChange={e => this.updateName(e)}
                 variant="outlined"
-                style={{ width: "100%" }}
+                style={{ width: "100%", marginBottom: 30 }}
+                margin="normal"
               />
-              <br />
 
-              <Typography variant="body1">
+              <Typography
+                variant="body1"
+                style={{ marginRight: 20 }}
+                display="inline"
+              >
                 <Translate id="createProject.upload?" />
               </Typography>
               <input
@@ -99,22 +103,33 @@ class CreateProject extends React.Component<
                 }
                 style={{ display: "none" }}
               />
-              <Button>
-                <label htmlFor="file-input">
+              <Button variant="contained">
+                <label
+                  htmlFor="file-input"
+                  style={{
+                    cursor: "pointer"
+                  }}
+                >
                   <Translate id="createProject.browse" />
                 </label>
               </Button>
-              <br />
               {this.state.fileName ? (
-                <Typography variant="body1" noWrap>
+                <Typography variant="body1" noWrap style={{ marginTop: 30 }}>
                   <Translate id="createProject.fileSelected" />:{" "}
                   {this.state.fileName}
                 </Typography>
               ) : null}
-              <br />
-              <Button type="submit">
-                <Translate id="createProject.create" />
-              </Button>
+
+              <Grid container justify="flex-end">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: 30 }}
+                >
+                  <Translate id="createProject.create" />
+                </Button>
+              </Grid>
             </CardContent>
           </form>
         </Card>
