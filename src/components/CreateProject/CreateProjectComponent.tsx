@@ -24,6 +24,7 @@ interface CreateProjectState {
   name: string;
   languageData?: File;
   fileName?: string;
+  error: { name: boolean };
 }
 
 class CreateProject extends React.Component<
@@ -32,7 +33,7 @@ class CreateProject extends React.Component<
 > {
   constructor(props: CreateProjectProps & LocalizeContextProps) {
     super(props);
-    this.state = { name: "" };
+    this.state = { name: "", error: { name: false } };
   }
 
   updateName(
@@ -60,8 +61,7 @@ class CreateProject extends React.Component<
     const name = this.state.name.trim();
     const languageData = this.state.languageData;
     if (name === "") {
-      // notify the user they need a project name (this won't translate)
-      alert("Project name cannot be blank");
+      this.setState({ error: { name: true } });
     } else if (this.props.asyncCreateProject) {
       this.props.asyncCreateProject(name, languageData as File);
     }
@@ -84,6 +84,12 @@ class CreateProject extends React.Component<
                 variant="outlined"
                 style={{ width: "100%", marginBottom: 30 }}
                 margin="normal"
+                error={this.state.error["name"]}
+                helperText={
+                  this.state.error["name"] ? (
+                    <Translate id="login.required" />
+                  ) : null
+                }
               />
 
               <Typography
