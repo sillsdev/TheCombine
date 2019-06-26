@@ -28,15 +28,15 @@ The simplest way to test *TheCombine* application in an environment that mimics 
 
 ### Creating the VM
   1. open a command prompt and change directory to deploy/vagrant sub-folder of the cloned project directory, e.g.
-  ```
-  cd src/TheCombine/deploy/vagrant
-  ```
+    ```
+    cd src/TheCombine/deploy/vagrant
+    ```
   1. create and provision the VM:
-  ```
-  vagrant up
-  ```
-  Note that it may take some time for this to complete.  When finished, there will be a window displaying the console of the virtual machine:
-  ![alt text](images/vm-console.png "Ubuntu Server Virtual Machine Console")
+    ```
+    vagrant up
+    ```
+    Note that it may take some time for this to complete.  When finished, there will be a window displaying the console of the virtual machine:
+    ![alt text](images/vm-console.png "Ubuntu Server Virtual Machine Console")
 
 ### Logging Into the VM
 
