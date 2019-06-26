@@ -24,8 +24,8 @@ namespace Tests
         User RandomUser()
         {
             User user = new User();
-            user.Username = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
-            user.Password = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
+            user.Username = Util.randString();
+            user.Password = Util.randString();
             return user;
         }
 

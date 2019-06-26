@@ -39,33 +39,24 @@ namespace Tests
 
         }
 
-        string RandomWord(int length = 0)
-        {
-            if (length == 0)
-            {
-                return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-            }
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, length);
-        }
-
         User RandomUser()
         {
             User user = new User();
-            user.Username = RandomWord(4);
-            user.Password = RandomWord(4);
+            user.Username = Util.randString();
+            user.Password = Util.randString();
             return user;
         }
 
         Word RandomWord()
         {
             Word word = new Word();
-            word.Vernacular = RandomWord(4);
+            word.Vernacular = Util.randString();
             return word;
         }
 
         public string RandomLiftFile()
         {
-            string name = RandomWord(4) + ".lift";
+            string name = Util.randString() + ".lift";
             FileStream fs = File.OpenWrite(name);
 
             string header = @"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -87,19 +78,19 @@ namespace Tests
 
             for (int i = 0; i < 3; i++)
             {
-                string dateCreated = $"\"{RandomWord(20)}\"";
-                string dateModified = $"\"{RandomWord(20)}\"";
-                string id = $"\"{RandomWord()}\"";
-                string guid = $"\"{RandomWord()}\"";
-                string vernLang = $"\"{RandomWord(3)}\"";
-                string vern = RandomWord(6);
-                string plural = RandomWord(8);
-                string senseId = $"\"{RandomWord()}\"";
-                string transLang1 = $"\"{RandomWord(3)}\"";
-                string transLang2 = $"\"{RandomWord(3)}\"";
-                string trans1 = RandomWord(6);
-                string trans2 = RandomWord(8);
-                string sdValue = $"\"{RandomWord(4)} {RandomWord(4)}\"";
+                string dateCreated = $"\"{Util.randString(20)}\"";
+                string dateModified = $"\"{Util.randString(20)}\"";
+                string id = $"\"{Util.randString()}\"";
+                string guid = $"\"{Util.randString()}\"";
+                string vernLang = $"\"{Util.randString(3)}\"";
+                string vern = Util.randString(6);
+                string plural = Util.randString(8);
+                string senseId = $"\"{Util.randString()}\"";
+                string transLang1 = $"\"{Util.randString(3)}\"";
+                string transLang2 = $"\"{Util.randString(3)}\"";
+                string trans1 = Util.randString(6);
+                string trans2 = Util.randString(8);
+                string sdValue = $"\"{Util.randString(4)} {Util.randString(4)}\"";
 
                 string entry = $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
                     <lexical-unit>

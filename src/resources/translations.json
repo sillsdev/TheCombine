@@ -62,7 +62,7 @@
       "selectOption": ["Select this goal", "Selecciona este objectivo"]
     },
     "mergeDups": {
-      "done": ["Merge these words", "La resistencia es inútil"]
+      "done": ["Save & Continue", "Ahorrar y Continuar"]
     }
   },
   "charInventory": {

@@ -7,7 +7,7 @@ export const projectReducer = (
 ): Project => {
   switch (action.type) {
     case SET_CURRENT_PROJECT:
-      return action.project;
+      return action.payload;
     default:
       return state;
   }

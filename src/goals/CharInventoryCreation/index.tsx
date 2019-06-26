@@ -1,6 +1,4 @@
-import CharacterInventory, {
-  CharacterInventoryProps
-} from "./CharacterInventoryComponent";
+import CharacterInventory from "./CharacterInventoryComponent";
 import { connect } from "react-redux";
 import { StoreState } from "../../types";
 import { ThunkDispatch } from "redux-thunk";
@@ -9,12 +7,9 @@ import {
   setInventory,
   uploadInventory
 } from "./CharacterInventoryActions";
-import { CharacterInventoryState } from "./CharacterInventoryReducer";
 import { getTranslate } from "react-localize-redux";
 
-function mapStateToProps(
-  state: StoreState
-): CharacterInventoryState | CharacterInventoryProps {
+function mapStateToProps(state: StoreState) {
   return {
     inventory:
       state.characterInventoryState && state.characterInventoryState.inventory,
