@@ -154,7 +154,7 @@ class MergeStack extends React.Component<
             {{
               preventOverflow:
               {
-                enabled: false,
+                enabled: true,
                 boundriesElement: 'scrollParent'
               },
               flip: {
