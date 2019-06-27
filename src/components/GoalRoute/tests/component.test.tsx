@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../../App/DefaultState";
 import { Provider } from "react-redux";
-import { GoalRoute } from "../component";
+import GoalRoute from "../";
 import { MemoryRouter } from "react-router";
 
 const createMockStore = configureMockStore([]);
