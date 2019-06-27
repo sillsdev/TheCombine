@@ -13,8 +13,13 @@
     "name": ["Your Name", ""],
     "username": ["Username", "Nombre de usuario"],
     "password": ["Password", "Contraseña"],
+    "passwordRequirements": [
+      "Password must be 8 characters or longer.",
+      "La contraseña debe tener 8 caracteres o más."
+    ],
     "forgotPassword": ["Forgot password?", "¿Se te olvidó tu contraseña?"],
     "login": ["Login", "Iniciar sesión"],
+    "backToLogin": ["Back to login", "Atrás para iniciar sesión"],
     "register": ["Register", "Registro"],
     "registerNew": ["Register New User", "Registrar nuevo usuario"],
     "failed": [

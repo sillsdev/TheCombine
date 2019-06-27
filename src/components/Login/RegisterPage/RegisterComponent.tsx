@@ -5,9 +5,16 @@ import {
   LocalizeContextProps,
   withLocalize
 } from "react-localize-redux";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { Grid, Card, CardContent, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Link,
+  TextField
+} from "@material-ui/core";
+import history from "../../../history";
 
 export interface RegisterDispatchProps {
   register?: (name: string, user: string, password: string) => void;
@@ -117,7 +124,7 @@ class Register extends React.Component<
     // error checking
     let error = { ...this.state.error };
     error.name = name === "";
-    error.password = pass === "";
+    error.password = pass.length < 8;
     error.username = user === "";
     error.confirmPassword = pass !== confPass;
     error.email = email === "";
@@ -149,6 +156,7 @@ class Register extends React.Component<
               {/* Name field */}
               <TextField
                 required
+                autoFocus
                 autoComplete="name"
                 label={<Translate id="login.name" />}
                 value={this.state.name}
@@ -212,8 +220,10 @@ class Register extends React.Component<
                 error={this.state.error["password"]}
                 helperText={
                   this.state.error["password"] ? (
-                    <Translate id="login.required" />
-                  ) : null
+                    <Translate id="login.passwordRequirements" />
+                  ) : (
+                    <Translate id="login.passwordRequirements" />
+                  )
                 }
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -250,6 +260,16 @@ class Register extends React.Component<
 
               {/* Register and Login buttons */}
               <Grid container justify="flex-end" spacing={2}>
+                <Grid item>
+                  <Button
+                    type="submit"
+                    onClick={() => {
+                      history.push("/login");
+                    }}
+                  >
+                    <Translate id="login.backToLogin" />
+                  </Button>
+                </Grid>
                 <Grid item>
                   <Button type="submit" variant="contained" color="primary">
                     <Translate id="login.register" />
