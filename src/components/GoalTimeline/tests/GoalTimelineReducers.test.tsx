@@ -46,8 +46,8 @@ it("Should add a goal to history and remove it from suggestions", () => {
     }
   };
 
-  const addGoalAction: actions.AddGoalAction = {
-    type: actions.ADD_GOAL,
+  const addGoalAction: actions.AddGoalToHistoryAction = {
+    type: actions.ADD_GOAL_TO_HISTORY,
     payload: goal
   };
   const newState: GoalsState = {
@@ -75,8 +75,8 @@ it("Should add a goal to history but not remove any goals from non-existent sugg
     }
   };
 
-  const addGoalAction: actions.AddGoalAction = {
-    type: actions.ADD_GOAL,
+  const addGoalAction: actions.AddGoalToHistoryAction = {
+    type: actions.ADD_GOAL_TO_HISTORY,
     payload: goal
   };
   const newState: GoalsState = {
@@ -107,8 +107,8 @@ it("Should add a goal to history but not remove it from suggestions", () => {
 
   const chosenGoal: Goal = new HandleFlags([]);
 
-  const addGoalAction: actions.AddGoalAction = {
-    type: actions.ADD_GOAL,
+  const addGoalAction: actions.AddGoalToHistoryAction = {
+    type: actions.ADD_GOAL_TO_HISTORY,
     payload: chosenGoal
   };
   const newState: GoalsState = {

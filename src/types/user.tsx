@@ -5,7 +5,7 @@ export class User {
   avatar: string;
   email: string;
   otherConnectionField: string;
-  workedProjects: string[];
+  workedProjects: string[]; // string -> userrole map
   agreement: boolean;
   password: string;
   uiLang: string;

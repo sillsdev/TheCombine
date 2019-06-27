@@ -3,6 +3,7 @@ import { Word, State, Merge } from "../types/word";
 import { User } from "../types/user";
 import { Project } from "../types/project";
 import { authHeader } from "../components/Login/AuthHeaders";
+import { Goal } from "../types/goals";
 
 const backendServer = axios.create({ baseURL: "https://localhost:5001/v1" });
 
@@ -62,6 +63,17 @@ export async function addUser(user: User): Promise<User> {
     .post("users", user, { headers: authHeader() })
     .then(resp => {
       return { ...user, id: resp.data };
+    });
+}
+
+export async function addUserRole(
+  project: Project,
+  userrole: string
+): Promise<Project> {
+  return await backendServer
+    .post("projects/userroles", userrole, { headers: authHeader() })
+    .then(resp => {
+      return { ...project, userRoles: resp.data };
     });
 }
 
@@ -126,4 +138,21 @@ export async function uploadMp3(project: Project, mp3: File) {
   await backendServer.post("projects/words/upload/audio", data, {
     headers: { ...authHeader(), "content-type": "application/json" }
   });
+}
+
+export async function addGoal(goal: Goal): Promise<Goal> {
+  let userString = localStorage.getItem("user");
+  let userObject = userString ? JSON.parse(userString) : null;
+  return await backendServer
+    .get(`/projects/userroles/${userObject.id}`, { headers: authHeader() })
+    .then(resp => {
+      console.log(resp);
+      return backendServer
+        .put(`/projects/userroles/${resp.data}`, goal, {
+          headers: authHeader()
+        })
+        .then(resp => {
+          return { ...goal, id: resp.data };
+        });
+    });
 }

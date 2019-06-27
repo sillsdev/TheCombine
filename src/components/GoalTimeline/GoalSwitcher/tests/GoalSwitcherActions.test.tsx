@@ -16,8 +16,8 @@ it("dispatches actions to choose a goal to navigate to", () => {
     payload: goal
   };
 
-  let AddGoal: timelineActions.AddGoal = {
-    type: timelineActions.ADD_GOAL,
+  let AddGoal: timelineActions.AddGoalToHistory = {
+    type: timelineActions.ADD_GOAL_TO_HISTORY,
     payload: goal
   };
 
