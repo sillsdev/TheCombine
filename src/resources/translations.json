@@ -9,8 +9,10 @@
     ]
   },
   "login": {
-    "username": ["Username", "Nombre de usuario"],
-    "password": ["Password", "Contraseña"],
+    "title": ["Log In", "iniciar sesión"],
+    "username": ["Username *", "Nombre de usuario"],
+    "password": ["Password *", "Contraseña"],
+    "forgotPassword": ["Forgot password?", "¿Se te olvidó tu contraseña?"],
     "login": ["Login", "Iniciar sesión"],
     "register": ["Register", "Registro"],
     "failed": [
@@ -18,8 +20,8 @@
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
     ],
     "registerFailed": [
-      "Failed to register. Please use a unique username and password.",
-      "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
+      "Failed to register: That username is already in use.",
+      "Error al iniciar sesión: Ese nombre de usuario ya está en uso."
     ],
     "loggingIn": ["Logging in...", "Iniciar sesión..."],
     "logout": ["Log out", "cerrar sesión"],

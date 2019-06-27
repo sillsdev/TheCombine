@@ -12,7 +12,9 @@ import {
   Card,
   CardActions,
   CardContent,
-  CircularProgress
+  CircularProgress,
+  Typography,
+  Link
 } from "@material-ui/core";
 
 export interface LoginDispatchProps {
@@ -66,8 +68,7 @@ class Login extends React.Component<
   ) {
     const password = evt.target.value;
     const user = this.state.user;
-    let error = { ...this.state.error };
-    error.password = false;
+    let error = { ...this.state.error, password: false };
     this.setState({ password, user, error });
   }
 
@@ -102,10 +103,17 @@ class Login extends React.Component<
   render() {
     return (
       <Grid container justify="center">
-        <Card>
+        <Card style={{ width: 450 }}>
           <form onSubmit={evt => this.login(evt)}>
             <CardContent>
+              {/* Title */}
+              <Typography variant="h5" align="center" gutterBottom>
+                <Translate id="login.title" />
+              </Typography>
+
+              {/* Username field */}
               <TextField
+                autoComplete="username"
                 label={<Translate id="login.username" />}
                 value={this.state.user}
                 onChange={evt => this.updateUser(evt)}
@@ -115,33 +123,56 @@ class Login extends React.Component<
                     <Translate id="login.required" />
                   ) : null
                 }
+                variant="outlined"
+                style={{ width: "100%" }}
                 margin="normal"
               />
-              <br />
+
+              {/* Password field */}
               <TextField
+                autoComplete="current-password"
                 label={<Translate id="login.password" />}
                 type="password"
                 value={this.state.password}
                 onChange={evt => this.updatePassword(evt)}
                 error={this.state.error["password"]}
                 helperText={
-                  this.state.error["username"] ? (
+                  this.state.error["password"] ? (
                     <Translate id="login.required" />
                   ) : null
                 }
+                variant="outlined"
+                style={{ width: "100%" }}
                 margin="normal"
               />
+
+              {/* "Forgot password?" link to reset password */}
+              <Typography>
+                <Link href={"#"} variant="subtitle2">
+                  <Translate id="login.forgotPassword" />
+                </Link>
+              </Typography>
+
+              {/* "Failed to log in" */}
               {this.props.loginFailure && (
-                <p>
+                <Typography
+                  variant="body2"
+                  style={{ marginTop: 30, color: "red" }}
+                >
                   <Translate id="login.failed" />
-                </p>
+                </Typography>
               )}
               {this.props.registerFailure && (
-                <p>
+                <Typography
+                  variant="body2"
+                  style={{ marginTop: 30, color: "red" }}
+                >
                   <Translate id="login.registerFailed" />
-                </p>
+                </Typography>
               )}
             </CardContent>
+
+            {/* Register and Login buttons */}
             <CardActions>
               <Button onClick={() => this.register()}>
                 <Translate id="login.register" />
