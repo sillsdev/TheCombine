@@ -99,7 +99,7 @@ export function asyncRegister(name: string, user: string, password: string) {
     await backend
       .addUser(newUser)
       .then(res => {
-        // TODO: should notify user that registration was created successfully
+        alert(`User ${user} created`); // TODO: should notify user that registration was created successfully
         history.push("/login");
       })
       .catch(err => {
