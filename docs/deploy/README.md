@@ -29,7 +29,7 @@ The simplest way to test *TheCombine* application in an environment that mimics 
 ### Creating the VM
   1. open a command prompt and change directory to deploy/vagrant sub-folder of the cloned project directory, e.g.
     ```
-    cd src/TheCombine/deploy/vagrant
+    cd TheCombine/deploy/vagrant
     ```
   1. create and provision the VM:
     ```
