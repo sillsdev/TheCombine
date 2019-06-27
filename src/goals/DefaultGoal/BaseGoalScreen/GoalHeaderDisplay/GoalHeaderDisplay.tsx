@@ -5,6 +5,15 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
+import { AppBar, Toolbar, Typography, Button, Grid } from "@material-ui/core";
+import { LogoutButton } from "../../../../components/Login/LogoutButton";
+
+const styles = {
+  toolbarButtons: {
+    marginLeft: "auto",
+    marginRight: -12
+  }
+};
 
 export class GoalHeaderDisplay extends React.Component<
   GoalProps & LocalizeContextProps
@@ -16,9 +25,21 @@ export class GoalHeaderDisplay extends React.Component<
   render() {
     return (
       <div>
-        <h1>
-          <Translate id={"goal.name." + this.props.goal.name} />
-        </h1>
+        <AppBar position="static">
+          <Toolbar>
+            <Grid container justify="space-between" spacing={2}>
+              <Grid item>
+                <Typography variant="h6">
+                  <Translate id={"goal.name." + this.props.goal.name} />
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <LogoutButton />
+              </Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
       </div>
     );
   }

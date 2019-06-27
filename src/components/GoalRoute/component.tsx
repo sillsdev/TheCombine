@@ -14,7 +14,7 @@ export class GoalRoute extends React.Component {
   render() {
     return (
       <div>
-        <NavigationBar />
+        {/* <NavigationBar /> */}
         <Switch>
           <PrivateRoute exact path="/goals" component={GoalTimeline} />
           <PrivateRoute
