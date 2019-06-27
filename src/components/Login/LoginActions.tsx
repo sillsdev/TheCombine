@@ -88,18 +88,19 @@ export function logout() {
   };
 }
 
-export function asyncRegister(user: string, password: string) {
+export function asyncRegister(name: string, user: string, password: string) {
   return async (
     dispatch: Dispatch<UserAction | ThunkAction<any, {}, {}, AnyAction>>
   ) => {
     dispatch(register(user, password));
     // Create new user
     let newUser = new User("", user, password);
+    newUser.name = name;
     await backend
       .addUser(newUser)
       .then(res => {
-        //login
-        dispatch(asyncLogin(user, password));
+        // TODO: should notify user that registration was created successfully
+        history.push("/login");
       })
       .catch(err => {
         //console.log(err);

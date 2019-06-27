@@ -7,13 +7,7 @@ import {
 } from "react-localize-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import {
-  Grid,
-  Typography,
-  CardContent,
-  Card,
-  CardHeader
-} from "@material-ui/core";
+import { Grid, Typography, CardContent, Card } from "@material-ui/core";
 
 export interface CreateProjectProps {
   createProject?: (name: string, languageData: File) => void;

@@ -10,11 +10,13 @@
   },
   "login": {
     "title": ["Log In", "iniciar sesión"],
-    "username": ["Username *", "Nombre de usuario"],
-    "password": ["Password *", "Contraseña"],
+    "name": ["Your Name", ""],
+    "username": ["Username", "Nombre de usuario"],
+    "password": ["Password", "Contraseña"],
     "forgotPassword": ["Forgot password?", "¿Se te olvidó tu contraseña?"],
     "login": ["Login", "Iniciar sesión"],
     "register": ["Register", "Registro"],
+    "registerNew": ["Register New User", "Registrar nuevo usuario"],
     "failed": [
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
@@ -25,7 +27,11 @@
     ],
     "loggingIn": ["Logging in...", "Iniciar sesión..."],
     "logout": ["Log out", "cerrar sesión"],
-    "required": ["Required", "necesario"]
+    "required": ["Required", "necesario"],
+    "confirmPassword": ["Confirm Password", ""],
+    "confirmPasswordError": ["Passwords do not match", ""],
+    "email": ["Email", ""],
+    "emailError": ["Please enter a valid email", ""]
   },
   "createProject": {
     "title": ["Create Project", "Crear Proyecto"],
