@@ -42,19 +42,20 @@ namespace Backend.Tests
             string name = Util.randString() + ".lift";
             FileStream fs = File.OpenWrite(name);
 
-            string header = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            string header = 
+                @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
-                <header>
-                <ranges>
-                <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/DelaneyS/TheCombine/testingdata/testingdata.lift-ranges""/>
-                </ranges>
-                <fields>
-                <field tag = ""Plural"">
-                <form lang = ""en""><text></text></form>
-                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
-                </field>
-                </fields>
-                </header>";
+                    <header>
+                        <ranges>
+                            <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/DelaneyS/TheCombine/testingdata/testingdata.lift-ranges""/>
+                        </ranges>
+                        <fields>
+                            <field tag = ""Plural"">
+                                <form lang = ""en""><text></text></form>
+                                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+                            </field>
+                        </fields>
+                    </header>";
             byte[] headerArray = Encoding.ASCII.GetBytes(header);
 
             fs.Write(headerArray);
@@ -75,18 +76,20 @@ namespace Backend.Tests
                 string trans2 = Util.randString(8);
                 string sdValue = $"\"{Util.randString(4)} {Util.randString(4)}\"";
 
-                string entry = $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
-                    <lexical-unit>
-                    <form lang = {vernLang}><text> {vern} </text></form>
-                    </lexical-unit>
-                    <field type = ""Plural"">
-                    <form lang = {vernLang}><text> {plural} </text></form>
-                    </field>
-                    <sense id = {senseId}>
-                    <gloss lang = {transLang1}><text> {trans1} </text></gloss>
-                    <gloss lang = {transLang2}><text> {trans2} </text></gloss>
-                    <trait name = ""semantic-domain-ddp4"" value = {sdValue}/> 
-                    </sense> 
+                string entry = 
+                    $@"
+                    <entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
+                        <lexical-unit>
+                            <form lang = {vernLang}><text> {vern} </text></form>
+                        </lexical-unit>
+                        <field type = ""Plural"">
+                            <form lang = {vernLang}><text> {plural} </text></form>
+                        </field>
+                        <sense id = {senseId}>
+                            <gloss lang = {transLang1}><text> {trans1} </text></gloss>
+                            <gloss lang = {transLang2}><text> {trans2} </text></gloss>
+                            <trait name = ""semantic-domain-ddp4"" value = {sdValue}/> 
+                        </sense> 
                     </entry>";
                 byte[] entryArray = Encoding.ASCII.GetBytes(entry);
                 fs.Write(entryArray);
@@ -161,6 +164,8 @@ namespace Backend.Tests
 
             var allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
+
+            File.Delete(fileUpload.FilePath);
         }
     }
 }

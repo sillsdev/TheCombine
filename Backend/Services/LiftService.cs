@@ -1,3 +1,5 @@
+#define GlossMeaning
+
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
@@ -73,26 +75,17 @@ namespace BackendFramework.Services
             //no longer uses @ for sake of indentation
             //very messy
             string header =
-                "\n\t\t<ranges>\n" +
-                "\t\t\t<range id = \"semantic-domain-ddp4\" href = \"file://C:/Users/FullerM/Documents/TheCombine/Backend.Tests/bin/testingdata.lift-ranges\"/>\n" +
-                "\t\t</ranges>\n" +
-                "\t\t<fields>\n" +
-                "\t\t\t<field tag = \"Plural\">\n" +
-                "\t\t\t\t<form lang = \"en\"><text></text></form>\n" +
-                "\t\t\t\t<form lang = \"qaa-x-spec\"><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>\n" +
-                "\t\t\t</field>\n" +
-                "\t\t</fields>\n\t";
-            //@"
-            //        <ranges>
-            //            <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/FullerM/Documents/TheCombine/Backend.Tests/bin/testingdata.lift-ranges""/>
-            //        </ranges>
-            //        <fields>
-            //            <field tag = ""Plural"">
-            //                <form lang = ""en""><text></text></form>
-            //                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
-            //            </field>
-            //        </fields>
-            //";
+                @"
+                    <ranges>
+                        <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/FullerM/Documents/TheCombine/Backend.Tests/bin/testingdata.lift-ranges""/>
+                    </ranges>
+                    <fields>
+                        <field tag = ""Plural"">
+                            <form lang = ""en""><text></text></form>
+                             <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+                        </field>
+                    </fields>
+                ";
 
             writer.WriteHeader(header);
 
@@ -115,21 +108,28 @@ namespace BackendFramework.Services
                 entry.Pronunciations.Add(lexPhonetic);
 
                 //add sense
-                foreach (Sense sense in wordEntry.Senses)
+                for (int i = 0; i < wordEntry.Senses.Count; i++)
                 {
-                    foreach(var semdom in sense.SemanticDomains)
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
+                    foreach (Gloss gloss in wordEntry.Senses[i].Glosses)
+                    {
+                        //add gloss
+                       dict.Add(gloss.Language, gloss.Def);
+                    }
+                    //entry.GetOrCreateSenseWithMeaning(MultiText.Create(senseMultiText));
+                    LexSense lexSense = new LexSense();
+                    lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
+                    entry.Senses.Add(lexSense);
+
+
+                    foreach (var semdom in wordEntry.Senses[i].SemanticDomains)
                     {
                         //add semantic domain
                         var orc = new OptionRefCollection();
                         orc.Add(semdom.Number + " " + semdom.Name);
-                        entry.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
-                    }
 
-                    foreach (Gloss gloss in sense.Glosses)
-                    {
-                        //add gloss/def
-                        LiftMultiText senseMultiText = new LiftMultiText{ { gloss.Language, gloss.Def } };
-                        entry.GetOrCreateSenseWithMeaning(MultiText.Create(senseMultiText));
+                        entry.Senses[i].Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
+                        //entry.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
                     }
                 }
                 writer.Add(entry);
@@ -157,6 +157,12 @@ namespace BackendFramework.Services
                     string PluralForm = entry.Fields.First().Content.First().Value.Text;
                     newWord.Plural = PluralForm;
                 }
+            }
+
+            //add audio
+            foreach (var pro in entry.Pronunciations)
+            {
+                newWord.Audio = pro.Media.FirstOrDefault().Url;
             }
 
             //add senses
@@ -260,6 +266,16 @@ namespace BackendFramework.Services
             extensible.Traits.Add(newTrait);
         }
 
+        public LiftObject MergeInPronunciation(LiftEntry entry, LiftMultiText contents, string rawXml)
+        {
+            var audioFile = Regex.Split(rawXml, "\"")[1];
+            LiftPhonetic phonetic = new LiftPhonetic();
+            LiftUrlRef url = new LiftUrlRef{ Url = audioFile };
+            phonetic.Media.Add(url);
+            entry.Pronunciations.Add(phonetic);
+            return entry;
+        }
+
         // The following are unused and are not implemented, but must stay to satisfy the needs of the ILexiconMerger 
         public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
         {
@@ -277,11 +293,6 @@ namespace BackendFramework.Services
         }
 
         public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form, LiftMultiText gloss, string rawXml)
-        {
-            return new EmptyLiftObject();
-        }
-
-        public LiftObject MergeInPronunciation(LiftEntry entry, LiftMultiText contents, string rawXml)
         {
             return new EmptyLiftObject();
         }
