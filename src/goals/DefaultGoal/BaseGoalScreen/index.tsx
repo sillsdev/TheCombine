@@ -1,32 +1,28 @@
-<<<<<<< HEAD:src/goals/DefaultGoal/BaseGoalScreen/index.tsx
 import { StoreState } from "../../../types";
-import { Goal } from "../../../types/goals";
-import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
-import { connect } from "react-redux";
-import BaseGoalScreen from "./BaseGoalScreen";
-import { GoalProps } from "../../../types/goals";
-
-export function mapStateToProps(state: StoreState): GoalProps {
-=======
-import { StoreState } from "../../types";
-import GoalWrapper, { GoalWrapperProps, TParams } from "./component";
+import {
+  TParams,
+  GoalWrapperProps,
+  GoalWrapper
+} from "../../../components/GoalWrapper/component";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { LocalizeContextProps } from "react-localize-redux";
-import { Goal } from "../../types/goals";
+import { Goal, GoalProps } from "../../../types/goals";
+import BaseGoalScreen from "./BaseGoalScreen";
 
 export function mapStateToProps(
   state: StoreState,
-  ownProps: GoalWrapperProps &
-    RouteComponentProps<TParams> &
-    LocalizeContextProps
+  ownProps: GoalProps & RouteComponentProps<TParams> & LocalizeContextProps
 ): GoalWrapperProps {
   let goal;
   goal = findGoalById(
     ownProps.match.params.id,
     state.goalsState.allPossibleGoals
   );
->>>>>>> Allow parameters to be passed into a URL:src/components/GoalWrapper/index.tsx
+  if (goal) {
+    let relevantURL = getRelevantURL(ownProps.match.url);
+    goal = isGoalCorrectType(goal, relevantURL) ? goal : undefined;
+  }
   return {
     goal: goal
   };
@@ -41,4 +37,15 @@ function findGoalById(id: string, allPossibleGoals: Goal[]): Goal | undefined {
   }
 }
 
-export default connect(mapStateToProps)(BaseGoalScreen);
+function getRelevantURL(url: string): string {
+  let urlWithRemovedParameters = url.replace(/[0-9]/g, "");
+  return urlWithRemovedParameters.slice(
+    urlWithRemovedParameters.lastIndexOf("/") + 1
+  );
+}
+
+function isGoalCorrectType(goal: Goal, expectedType: string): boolean {
+  return goal.name === expectedType;
+}
+
+export default connect(mapStateToProps)(GoalWrapper);
