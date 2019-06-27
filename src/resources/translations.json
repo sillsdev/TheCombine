@@ -10,7 +10,7 @@
   },
   "login": {
     "title": ["Log In", "iniciar sesión"],
-    "name": ["Your Name", ""],
+    "name": ["Your Name", "Tu Nombre"],
     "username": ["Username", "Nombre de usuario"],
     "password": ["Password", "Contraseña"],
     "passwordRequirements": [
@@ -33,10 +33,16 @@
     "loggingIn": ["Logging in...", "Iniciar sesión..."],
     "logout": ["Log out", "cerrar sesión"],
     "required": ["Required", "necesario"],
-    "confirmPassword": ["Confirm Password", ""],
-    "confirmPasswordError": ["Passwords do not match", ""],
-    "email": ["Email", ""],
-    "emailError": ["Please enter a valid email", ""]
+    "confirmPassword": ["Confirm Password", "confirmar contraseña"],
+    "confirmPasswordError": [
+      "Passwords do not match",
+      "Las contraseñas no coinciden"
+    ],
+    "email": ["Email", "dirección de correo electrónico"],
+    "emailError": [
+      "Please enter a valid email",
+      "Por favor, introduce una dirección de correo electrónico válida"
+    ]
   },
   "createProject": {
     "title": ["Create Project", "Crear Proyecto"],
