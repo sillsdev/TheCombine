@@ -64,31 +64,31 @@ class Register extends React.Component<
   }
 
   updateName(
-    evt: React.ChangeEvent<
+    e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
   ) {
-    const name = evt.target.value;
+    const name = e.target.value;
     const error = { ...this.state.error, username: false };
     this.setState({ name, error });
   }
 
   updateUser(
-    evt: React.ChangeEvent<
+    e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
   ) {
-    const user = evt.target.value;
+    const user = e.target.value;
     const error = { ...this.state.error, username: false };
     this.setState({ user, error });
   }
 
   updateEmail(
-    evt: React.ChangeEvent<
+    e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
   ) {
-    const email = evt.target.value;
+    const email = e.target.value;
     const error = { ...this.state.error, email: false };
     this.setState({ email, error });
   }
