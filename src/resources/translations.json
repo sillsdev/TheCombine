@@ -9,21 +9,40 @@
     ]
   },
   "login": {
+    "title": ["Log In", "iniciar sesión"],
+    "name": ["Your Name", "Tu Nombre"],
     "username": ["Username", "Nombre de usuario"],
     "password": ["Password", "Contraseña"],
+    "passwordRequirements": [
+      "Password must be 8 characters or longer.",
+      "La contraseña debe tener 8 caracteres o más."
+    ],
+    "forgotPassword": ["Forgot password?", "¿Se te olvidó tu contraseña?"],
     "login": ["Login", "Iniciar sesión"],
+    "backToLogin": ["Back to login", "Atrás para iniciar sesión"],
     "register": ["Register", "Registro"],
+    "registerNew": ["Register New User", "Registrar nuevo usuario"],
     "failed": [
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
     ],
     "registerFailed": [
-      "Failed to register. Please use a unique username and password.",
-      "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
+      "Failed to register: That username is already in use.",
+      "Error al iniciar sesión: Ese nombre de usuario ya está en uso."
     ],
     "loggingIn": ["Logging in...", "Iniciar sesión..."],
     "logout": ["Log out", "cerrar sesión"],
-    "required": ["Required", "necesario"]
+    "required": ["Required", "necesario"],
+    "confirmPassword": ["Confirm Password", "confirmar contraseña"],
+    "confirmPasswordError": [
+      "Passwords do not match",
+      "Las contraseñas no coinciden"
+    ],
+    "email": ["Email", "dirección de correo electrónico"],
+    "emailError": [
+      "Please enter a valid email",
+      "Por favor, introduce una dirección de correo electrónico válida"
+    ]
   },
   "createProject": {
     "title": ["Create Project", "Crear Proyecto"],
