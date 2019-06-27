@@ -4,7 +4,6 @@ import GoalWrapper from "../GoalWrapper";
 import { GoalTimeline } from "../GoalTimeline/GoalTimelineComponent";
 import PageNotFound from "../PageNotFound/component";
 import { PrivateRoute } from "../PrivateRoute";
-import NavigationBar from "../NavigationBar";
 
 /**
  * Navigate to routes specific to goals. This includes the goal timeline, as well
@@ -14,7 +13,6 @@ export class GoalRoute extends React.Component {
   render() {
     return (
       <div>
-        {/* <NavigationBar /> */}
         <Switch>
           <PrivateRoute exact path="/goals" component={GoalTimeline} />
           <PrivateRoute

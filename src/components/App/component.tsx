@@ -22,7 +22,6 @@ export default class App extends React.Component {
           <Route path="/register" component={Register} />
           <Route component={PageNotFound} />
         </Switch>
-        <LogoutButton />
       </div>
     );
   }

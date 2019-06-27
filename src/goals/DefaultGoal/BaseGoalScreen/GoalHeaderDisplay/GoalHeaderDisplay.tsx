@@ -5,15 +5,8 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { AppBar, Toolbar, Typography, Button, Grid } from "@material-ui/core";
+import { AppBar, Toolbar, Typography, Grid } from "@material-ui/core";
 import { LogoutButton } from "../../../../components/Login/LogoutButton";
-
-const styles = {
-  toolbarButtons: {
-    marginLeft: "auto",
-    marginRight: -12
-  }
-};
 
 export class GoalHeaderDisplay extends React.Component<
   GoalProps & LocalizeContextProps
