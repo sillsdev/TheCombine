@@ -54,7 +54,8 @@
     "upload?": ["Upload .lift file?", "Uploado .lift filada?"],
     "browse": ["Browse", "Navegar"],
     "create": ["Create Project", "Crear Proyecto"],
-    "fileSelected": ["File selected", "Archivo seleccionado"]
+    "fileSelected": ["File selected", "Archivo seleccionado"],
+    "success": ["Project Created!", "Proyecto creado!"]
   },
   "goal": {
     "name": {

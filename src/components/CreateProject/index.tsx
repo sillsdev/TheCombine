@@ -4,14 +4,16 @@ import { StoreState } from "../../types";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
-  createProject,
   CreateProjectAction,
   asyncCreateProject
 } from "./CreateProjectActions";
 
 function mapStateToProps(state: StoreState) {
   return {
-    project: state.currentProject
+    project: state.currentProject,
+    inProgress: state.createProjectState.inProgress,
+    success: state.createProjectState.success,
+    errorMsg: state.createProjectState.errorMsg
   };
 }
 
@@ -19,9 +21,6 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CreateProjectAction>
 ) {
   return {
-    createProject: (name: string, languageData: File) => {
-      dispatch(createProject(name, languageData));
-    },
     asyncCreateProject: (name: string, languageData: File) => {
       dispatch(asyncCreateProject(name, languageData));
     }
