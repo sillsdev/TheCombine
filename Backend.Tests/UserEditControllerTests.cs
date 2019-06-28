@@ -23,11 +23,14 @@ namespace Tests
 
         UserEdit RandomUserEdit()
         {
+            Random rnd = new Random();
+            int count = rnd.Next(0, 7);
+
             UserEdit userEdit = new UserEdit();
             Edit edit = new Edit
             {
-                GoalType = GoalType.MergeDups,
-                StepData = new List<string>() { "test" }
+                GoalType = (GoalType)count,
+                StepData = new List<string>() { Util.randString() }
             };
             userEdit.Edits.Add(edit);
             return userEdit;
