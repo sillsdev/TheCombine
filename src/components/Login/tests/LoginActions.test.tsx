@@ -28,13 +28,13 @@ describe("LoginAction Tests", () => {
     payload: user
   };
 
-  let register: action.UserAction = {
-    type: action.REGISTER,
-    payload: user
+  let registerAttempt: action.UserAction = {
+    type: action.REGISTER_ATTEMPT,
+    payload: { user: user.user }
   };
 
   test("register returns correct value", () => {
-    expect(action.register(user.user, user.password)).toEqual(register);
+    expect(action.registerAttempt(user.user)).toEqual(registerAttempt);
   });
 
   test("asyncLogin correctly affects state", () => {
@@ -53,12 +53,15 @@ describe("LoginAction Tests", () => {
   test("asyncRegister correctly affects state", () => {
     const mockStore = createMockStore(mockState);
     const mockDispatch = mockStore.dispatch<any>(
-      action.asyncRegister(user.user, user.password)
+      action.asyncRegister("name", user.user, user.password)
     );
 
     mockDispatch
       .then(() => {
-        expect(mockStore.getActions()).toEqual([register, action.asyncLogin]);
+        expect(mockStore.getActions()).toEqual([
+          registerAttempt,
+          action.asyncLogin
+        ]);
       })
       .catch(() => fail());
   });
