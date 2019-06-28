@@ -66,17 +66,6 @@ export async function addUser(user: User): Promise<User> {
     });
 }
 
-export async function addUserRole(
-  project: Project,
-  userrole: string
-): Promise<Project> {
-  return await backendServer
-    .post("projects/userroles", userrole, { headers: authHeader() })
-    .then(resp => {
-      return { ...project, userRoles: resp.data };
-    });
-}
-
 export async function authenticateUser(
   username: string,
   password: string
@@ -141,18 +130,39 @@ export async function uploadMp3(project: Project, mp3: File) {
 }
 
 export async function addGoal(goal: Goal): Promise<Goal> {
-  let userString = localStorage.getItem("user");
-  let userObject = userString ? JSON.parse(userString) : null;
-  return await backendServer
-    .get(`/projects/userroles/${userObject.id}`, { headers: authHeader() })
-    .then(resp => {
-      console.log(resp);
-      return backendServer
-        .put(`/projects/userroles/${resp.data}`, goal, {
-          headers: authHeader()
-        })
-        .then(resp => {
-          return { ...goal, id: resp.data };
-        });
-    });
+  let goalName = goal.name;
+  let goalSteps = goal.steps;
+  let userEditTuple = { goalName, goalSteps };
+  return await backendServer.post("projects/useredits", userEditTuple, {
+    headers: { ...authHeader() }
+  });
+
+  // let userString = localStorage.getItem("user");
+  // let userObject = userString ? JSON.parse(userString) : null;
+  // return await backendServer
+  // // .get(`/projects/userroles/${userObject.id}`, { headers: authHeader() })
+  // .then(resp => {
+  //   console.log(resp);
+  //   return backendServer
+  //     .put(`/projects/userroles/${resp.data}`, goal, {
+  //       headers: authHeader()
+  //     })
+  //     .then(resp => {
+  //       return { ...goal, id: resp.data };
+  //     });
+  // });
+}
+
+export async function getGoal(index: number): Promise<Goal> {
+  return await backendServer.get(`projects/useredits/${index}`).then(resp => {
+    console.log(resp.data);
+    return resp.data;
+  });
+}
+
+export async function getAllGoals(): Promise<Goal[]> {
+  return await backendServer.get("projects/useredits").then(resp => {
+    console.log(resp.data);
+    return resp.data;
+  });
 }
