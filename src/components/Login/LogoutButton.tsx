@@ -10,6 +10,7 @@ export class LogoutButton extends React.Component<{}, {}> {
   render() {
     return (
       <Button
+        variant="contained"
         onClick={() => {
           history.push("/login");
         }}

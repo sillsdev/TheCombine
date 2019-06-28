@@ -3,6 +3,7 @@ import React from "react";
 import GoalHistory from "./GoalHistory";
 import GoalSwitcher from "./GoalSwitcher";
 import GoalSuggestions from "./GoalSuggestions";
+import AppBarComponent from "../AppBar/AppBarComponent";
 
 const timelineStyle = {
   centerDisplays: {
@@ -21,6 +22,7 @@ export class GoalTimeline extends React.Component {
   render() {
     return (
       <div className="GoalView">
+        <AppBarComponent />
         <div style={timelineStyle.centerDisplays}>
           <GoalHistory />
         </div>

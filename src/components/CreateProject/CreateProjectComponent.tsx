@@ -7,7 +7,14 @@ import {
 } from "react-localize-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import { Grid, Typography, CardContent, Card } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  CardContent,
+  Card,
+  CardHeader
+} from "@material-ui/core";
+import AppBarComponent from "../AppBar/AppBarComponent";
 
 export interface CreateProjectProps {
   createProject?: (name: string, languageData: File) => void;
@@ -68,84 +75,87 @@ class CreateProject extends React.Component<
   render() {
     //visual definition
     return (
-      <Grid container justify="center">
-        <Card style={{ width: 450 }}>
-          <form onSubmit={e => this.createProject(e)}>
-            <CardContent>
-              {/* Title */}
-              <Typography variant="h5" align="center" gutterBottom>
-                <Translate id="createProject.title" />
-              </Typography>
-
-              {/* Project name field */}
-              <TextField
-                label={<Translate id="createProject.name" />}
-                value={this.state.name}
-                onChange={e => this.updateName(e)}
-                variant="outlined"
-                style={{ width: "100%", marginBottom: 30 }}
-                margin="normal"
-                error={this.state.error["name"]}
-                helperText={
-                  this.state.error["name"] ? (
-                    <Translate id="login.required" />
-                  ) : null
-                }
-              />
-
-              {/* File upload */}
-              <Typography
-                variant="body1"
-                style={{ marginRight: 20 }}
-                display="inline"
-              >
-                <Translate id="createProject.upload?" />
-              </Typography>
-              {/* The actual file input element is hidden... */}
-              <input
-                id="file-input"
-                type="file"
-                name="name"
-                accept=".lift"
-                onChange={e =>
-                  this.updateLanguageData(e.target.files as FileList)
-                }
-                style={{ display: "none" }}
-              />
-              {/* ... and this button is tied to it with the htmlFor property */}
-              <Button variant="contained">
-                <label
-                  htmlFor="file-input"
-                  style={{
-                    cursor: "pointer"
-                  }}
-                >
-                  <Translate id="createProject.browse" />
-                </label>
-              </Button>
-              {/* Displays the name of the selected file */}
-              {this.state.fileName ? (
-                <Typography variant="body1" noWrap style={{ marginTop: 30 }}>
-                  <Translate id="createProject.fileSelected" />:{" "}
-                  {this.state.fileName}
+      <div>
+        <AppBarComponent />
+        <Grid container justify="center">
+          <Card style={{ width: 450 }}>
+            <form onSubmit={e => this.createProject(e)}>
+              <CardContent>
+                {/* Title */}
+                <Typography variant="h5" align="center" gutterBottom>
+                  <Translate id="createProject.title" />
                 </Typography>
-              ) : null}
 
-              {/* Form submission button */}
-              <Grid container justify="flex-end">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  style={{ marginTop: 30 }}
+                {/* Project name field */}
+                <TextField
+                  label={<Translate id="createProject.name" />}
+                  value={this.state.name}
+                  onChange={e => this.updateName(e)}
+                  variant="outlined"
+                  style={{ width: "100%", marginBottom: 30 }}
+                  margin="normal"
+                  error={this.state.error["name"]}
+                  helperText={
+                    this.state.error["name"] ? (
+                      <Translate id="login.required" />
+                    ) : null
+                  }
+                />
+
+                {/* File upload */}
+                <Typography
+                  variant="body1"
+                  style={{ marginRight: 20 }}
+                  display="inline"
                 >
-                  <Translate id="createProject.create" />
+                  <Translate id="createProject.upload?" />
+                </Typography>
+                {/* The actual file input element is hidden... */}
+                <input
+                  id="file-input"
+                  type="file"
+                  name="name"
+                  accept=".lift"
+                  onChange={e =>
+                    this.updateLanguageData(e.target.files as FileList)
+                  }
+                  style={{ display: "none" }}
+                />
+                {/* ... and this button is tied to it with the htmlFor property */}
+                <Button variant="contained">
+                  <label
+                    htmlFor="file-input"
+                    style={{
+                      cursor: "pointer"
+                    }}
+                  >
+                    <Translate id="createProject.browse" />
+                  </label>
                 </Button>
-              </Grid>
-            </CardContent>
-          </form>
-        </Card>
-      </Grid>
+                {/* Displays the name of the selected file */}
+                {this.state.fileName ? (
+                  <Typography variant="body1" noWrap style={{ marginTop: 30 }}>
+                    <Translate id="createProject.fileSelected" />:{" "}
+                    {this.state.fileName}
+                  </Typography>
+                ) : null}
+
+                {/* Form submission button */}
+                <Grid container justify="flex-end">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    style={{ marginTop: 30 }}
+                  >
+                    <Translate id="createProject.create" />
+                  </Button>
+                </Grid>
+              </CardContent>
+            </form>
+          </Card>
+        </Grid>
+      </div>
     );
   }
 }

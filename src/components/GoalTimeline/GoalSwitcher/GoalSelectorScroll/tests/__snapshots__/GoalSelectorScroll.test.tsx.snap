@@ -82,7 +82,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
           <h6
             className="MuiTypography-root MuiTypography-h6"
           >
-            Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+            Missing translationId: handleDuplicates.title for language: \${ languageCode }
           </h6>
         </div>
       </div>
@@ -107,7 +107,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
           <h6
             className="MuiTypography-root MuiTypography-h6"
           >
-            Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+            Missing translationId: handleFlags.title for language: \${ languageCode }
           </h6>
         </div>
       </div>
@@ -132,7 +132,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
           <h6
             className="MuiTypography-root MuiTypography-h6"
           >
-            Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+            Missing translationId: grammarCheck.title for language: \${ languageCode }
           </h6>
         </div>
       </div>
@@ -154,7 +154,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
           <h6
             className="MuiTypography-root MuiTypography-h6"
           >
-            Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+            Missing translationId: handleDuplicates.title for language: \${ languageCode }
           </h6>
         </div>
       </div>
@@ -179,7 +179,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
           <h6
             className="MuiTypography-root MuiTypography-h6"
           >
-            Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+            Missing translationId: handleFlags.title for language: \${ languageCode }
           </h6>
         </div>
       </div>
@@ -204,7 +204,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
           <h6
             className="MuiTypography-root MuiTypography-h6"
           >
-            Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+            Missing translationId: grammarCheck.title for language: \${ languageCode }
           </h6>
         </div>
       </div>
@@ -226,7 +226,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
           <h6
             className="MuiTypography-root MuiTypography-h6"
           >
-            Missing translationId: goal.name.handleDuplicates for language: \${ languageCode }
+            Missing translationId: handleDuplicates.title for language: \${ languageCode }
           </h6>
         </div>
       </div>
@@ -251,7 +251,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
           <h6
             className="MuiTypography-root MuiTypography-h6"
           >
-            Missing translationId: goal.name.handleFlags for language: \${ languageCode }
+            Missing translationId: handleFlags.title for language: \${ languageCode }
           </h6>
         </div>
       </div>
@@ -276,7 +276,7 @@ exports[`Testing the goal selector scroll ui Constructs correctly 1`] = `
           <h6
             className="MuiTypography-root MuiTypography-h6"
           >
-            Missing translationId: goal.name.grammarCheck for language: \${ languageCode }
+            Missing translationId: grammarCheck.title for language: \${ languageCode }
           </h6>
         </div>
       </div>
