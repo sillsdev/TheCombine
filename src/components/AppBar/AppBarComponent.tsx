@@ -1,7 +1,11 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import {
+  withLocalize,
+  LocalizeContextProps,
+  Translate
+} from "react-localize-redux";
 import { Grid, Typography } from "@material-ui/core";
 import { LogoutButton } from "../Login/LogoutButton";
 
@@ -27,8 +31,7 @@ export class AppBarComponent extends React.Component<
             <Grid container justify="space-between" spacing={2}>
               <Grid item>
                 <Typography variant="h6">
-                  {this.props.title} {/* Translations will be added later */}
-                  {/* <Translate id={"goal.name." + this.props.title} /> */}
+                  <Translate id={this.props.title + ".title"} />
                 </Typography>
               </Grid>
 

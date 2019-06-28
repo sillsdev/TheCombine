@@ -57,28 +57,6 @@
     "fileSelected": ["File selected", "Archivo seleccionado"]
   },
   "goal": {
-    "name": {
-      "createCharInv": [
-        "Create Character Inventory",
-        "Crear inventario de personajes"
-      ],
-      "createStrWordInv": [
-        "Create Structural Word Inventory",
-        "Crear inventario de palabras estructurales"
-      ],
-      "handleFlags": ["Handle Flags", "Banderas de la manija"],
-      "mergeDups": ["Merge Duplicates", "Fusionar duplicados"],
-      "spellCheckGloss": [
-        "Spell Check Glossary",
-        "Glosario de corrección ortográfica"
-      ],
-      "validateChars": ["Validate Characters", "Validar caracteres"],
-      "validateStrWords": [
-        "Validate Structural Characters",
-        "Validar caracteres estructurales"
-      ],
-      "viewFinal": ["View Final", "Ver final"]
-    },
     "selector": {
       "selectOption": ["Select this goal", "Selecciona este objectivo"]
     },
@@ -86,7 +64,32 @@
       "done": ["Save & Continue", "Ahorrar y Continuar"]
     }
   },
+  "createStrWordInv": {
+    "title": [
+      "Create Structural Word Inventory",
+      "Crear inventario de palabras estructurales"
+    ]
+  },
+  "handleFlags": {
+    "title": ["Handle Flags", "Banderas de la manija"]
+  },
+  "spellCheckGloss": {
+    "title": ["Spell Check Glossary", "Glosario de corrección ortográfica"]
+  },
+  "validateChars": {
+    "title": ["Validate Characters", "Validar caracteres"]
+  },
+  "validateStrWords": {
+    "title": [
+      "Validate Structural Characters",
+      "Validar caracteres estructurales"
+    ]
+  },
+  "viewFinal": {
+    "title": ["View Final", "Ver final"]
+  },
   "charInventory": {
+    "title": ["Create Character Inventory", "Crear inventario de personajes"],
     "characterSet": {
       "title": ["Character Set:", "Conjunto de caracteres:"],
       "addButton": ["Add Chars", "Añadir caracteres"],
@@ -130,6 +133,7 @@
     }
   },
   "mergeDups": {
+    "title": ["Merge Duplicates", "Fusionar duplicados"],
     "helpText": {
       "root": [
         "Drag words here to start merging them",
@@ -149,5 +153,8 @@
         "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras"
       ]
     }
+  },
+  "goalTimeline": {
+    "title": ["Goal Timeline", "Línea de tiempo de la meta"]
   }
 }

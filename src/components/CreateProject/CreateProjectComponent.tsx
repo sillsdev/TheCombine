@@ -76,7 +76,7 @@ class CreateProject extends React.Component<
     //visual definition
     return (
       <div>
-        <AppBarComponent title="Create Project" />
+        <AppBarComponent title="createProject" />
         <Grid container justify="center">
           <Card style={{ width: 450 }}>
             <form onSubmit={e => this.createProject(e)}>

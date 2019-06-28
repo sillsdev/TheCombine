@@ -17,7 +17,7 @@ export class GoalRoute extends React.Component {
           <PrivateRoute exact path="/goals" component={GoalTimeline} />
           <PrivateRoute
             exact
-            path="/goals/charInvCreation"
+            path="/goals/charInventory"
             component={GoalWrapper}
           />
           <PrivateRoute

@@ -299,9 +299,7 @@ export class GoalSelectorScroll extends React.Component<
         }}
       >
         <CardContent>
-          <Typography variant="h6">
-            <Translate id={"goal.name." + goal.name} />
-          </Typography>
+          <Translate id={goal.name + ".title"} />
         </CardContent>
 
         <ContextMenu
@@ -336,9 +334,7 @@ export class GoalSelectorScroll extends React.Component<
         }}
       >
         <CardContent>
-          <Typography variant="h6">
-            <Translate id={"goal.name." + dummyGoal[0]} />
-          </Typography>
+          <Translate id={dummyGoal[0] + ".title"} />
         </CardContent>
 
         <ContextMenu
