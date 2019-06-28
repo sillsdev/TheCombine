@@ -14,7 +14,7 @@ export class CreateCharInv implements Goal {
 
   constructor(steps: JSX.Element[]) {
     this.id = "-1";
-    this.name = "createCharInv";
+    this.name = "charInventory";
     this.user = new User("", "", "");
     this.steps = steps;
     this.curNdx = 0;

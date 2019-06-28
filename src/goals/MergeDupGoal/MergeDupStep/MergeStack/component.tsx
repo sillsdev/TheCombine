@@ -128,6 +128,7 @@ class MergeStack extends React.Component<
               this.props.draggedWord.id !== lastCard.id && (
                 <Card
                   style={{
+                    backgroundColor: "secondary",
                     position: "absolute",
                     float: "left",
                     top: 0,

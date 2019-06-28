@@ -7,7 +7,7 @@ import {
   CLEAR_MERGES,
   SWAP_DUPLICATE
 } from "./actions";
-import { ParentWord } from "./component";
+import {ParentWord} from "./component";
 
 export const defaultState: MergeTreeState = {
   parentWords: []
@@ -29,8 +29,8 @@ const mergeDupStepReducer = (
   let parentWords: ParentWord[];
   switch (action.type) {
     case SWAP_DUPLICATE:
-      parentWords = state.parentWords;
-      var { word, parent: dest } = action.payload;
+      parentWords = state.parentWords.slice();
+      var {word, parent: dest} = action.payload;
       // find sense containing word
       parentWords = parentWords.map(parent => {
         parent.senses = parent.senses.map(sense => {
@@ -48,25 +48,25 @@ const mergeDupStepReducer = (
             sense.dups.splice(src, 1);
             sense.dups.splice(dest, 0, word);
           }
-          return sense;
+          return {...sense};
         });
-        return parent;
+        return {...parent};
       });
-      return { ...state, parentWords: parentWords };
+      return {...state, parentWords};
     case ADD_PARENT:
-      parentWords = state.parentWords;
+      parentWords = state.parentWords.slice();
       var word = action.payload.word;
       parentWords.push({
         id: generateID(),
-        senses: [{ id: generateID(), dups: [word] }]
+        senses: [{id: generateID(), dups: [word]}]
       });
       return {
         ...state,
         parentWords
       };
     case ADD_SENSE:
-      parentWords = state.parentWords;
-      var { word: merge, parent } = action.payload;
+      parentWords = state.parentWords.slice();
+      var {word: merge, parent} = action.payload;
       if (parent) {
         parentWords = parentWords.map(item => {
           if (item.id === parent) {
@@ -75,7 +75,7 @@ const mergeDupStepReducer = (
               dups: [merge]
             });
           }
-          return item;
+          return {...item};
         });
       }
       return {
@@ -83,21 +83,21 @@ const mergeDupStepReducer = (
         parentWords
       };
     case ADD_DUPLICATE:
-      var { word: merge, parent } = action.payload;
-      parentWords = state.parentWords;
+      var {word: merge, parent} = action.payload;
+      parentWords = state.parentWords.slice();
       parentWords = parentWords.map(item => {
         item.senses = item.senses.map(item => {
           if (item.id === parent) {
             item.dups.push(merge);
           }
-          return item;
+          return {...item};
         });
-        return item;
+        return {...item};
       });
-      return { ...state, parentWords };
+      return {...state, parentWords};
     case REMOVE_DUPLICATE:
-      var { word: merge, parent: root } = action.payload;
-      parentWords = state.parentWords;
+      var {word: merge, parent: root} = action.payload;
+      parentWords = state.parentWords.slice();
 
       parentWords = parentWords.map(parent => {
         parent.senses = parent.senses.map(sense => {
@@ -105,14 +105,14 @@ const mergeDupStepReducer = (
             var index = sense.dups.lastIndexOf(merge);
             sense.dups.splice(index, 1);
           }
-          return sense;
+          return {...sense};
         });
         parent.senses = parent.senses.filter(sense => sense.dups.length > 0);
-        return parent;
+        return {...parent};
       });
       parentWords = parentWords.filter(parent => parent.senses.length > 0);
 
-      return { ...state, parentWords };
+      return {...state, parentWords};
     case CLEAR_MERGES:
       return {
         ...state,

@@ -5,6 +5,7 @@ import { Word } from "../../../../types/word";
 import { ListSubheader, Box, Grid, Card, CardContent } from "@material-ui/core";
 import MergeStack from "../MergeStack";
 import { ParentWord } from "../component";
+import { styleAddendum } from "../../../../types/theme";
 
 //interface for component props
 export interface MergeRowProps {
@@ -72,13 +73,9 @@ export class MergeRow extends React.Component<
               }}
             >
               {
-                <Card style={{ width: "10vw", backgroundColor: "#eee" }}>
-                  {
-                    <Card style={{ width: 200, backgroundColor: "#eee" }}>
-                      <CardContent>Drag new sense</CardContent>
-                      <CardContent>Here</CardContent>
-                    </Card>
-                  }
+                <Card style={{ ...styleAddendum.inactive, width: "10vw" }}>
+                  <CardContent>Drag new sense</CardContent>
+                  <CardContent>Here</CardContent>
                 </Card>
               }
             </Grid>

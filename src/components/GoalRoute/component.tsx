@@ -1,59 +1,65 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import GoalWrapper from "../GoalWrapper";
 import { GoalTimeline } from "../GoalTimeline/GoalTimelineComponent";
 import PageNotFound from "../PageNotFound/component";
 import { PrivateRoute } from "../PrivateRoute";
-import NavigationBar from "../NavigationBar";
+import BaseGoalScreen from "../../goals/DefaultGoal/BaseGoalScreen";
 
 /**
- * Navigate to routes specific to goals. This includes the goal timeline, as well
- * as components for all goal types.
+ * A wrapper on all goal components. The component that will be displayed will
+ * be selected based on the URL specified in the browser address bar.
  */
 export class GoalRoute extends React.Component {
   render() {
     return (
       <div>
-        <NavigationBar />
         <Switch>
           <PrivateRoute exact path="/goals" component={GoalTimeline} />
           <PrivateRoute
             exact
-            path="/goals/charInvCreation"
-            component={GoalWrapper}
+            path="/goals/charInventory"
+            component={BaseGoalScreen}
           />
           <PrivateRoute
             exact
             path="/goals/createCharInv"
-            component={GoalWrapper}
+            component={BaseGoalScreen}
           />
           <PrivateRoute
             exact
             path="/goals/createStrWordInv"
-            component={GoalWrapper}
+            component={BaseGoalScreen}
           />
           <PrivateRoute
             exact
             path="/goals/handleFlags"
-            component={GoalWrapper}
+            component={BaseGoalScreen}
           />
-          <PrivateRoute exact path="/goals/mergeDups" component={GoalWrapper} />
+          <PrivateRoute
+            exact
+            path="/goals/mergeDups"
+            component={BaseGoalScreen}
+          />
           <PrivateRoute
             exact
             path="/goals/spellCheckGloss"
-            component={GoalWrapper}
+            component={BaseGoalScreen}
           />
           <PrivateRoute
             exact
             path="/goals/validateChars"
-            component={GoalWrapper}
+            component={BaseGoalScreen}
           />
           <PrivateRoute
             exact
             path="/goals/validateStrWords"
-            component={GoalWrapper}
+            component={BaseGoalScreen}
           />
-          <PrivateRoute exact path="/goals/viewFinal" component={GoalWrapper} />
+          <PrivateRoute
+            exact
+            path="/goals/viewFinal"
+            component={BaseGoalScreen}
+          />
           <Route component={PageNotFound} />
         </Switch>
       </div>
