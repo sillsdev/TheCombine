@@ -48,15 +48,16 @@ namespace Backend.Tests
             return Task.FromResult(success);
         }
 
-        public Task<bool> Update(string Id, UserEdit userEdit)
+        public Task<bool> Update(string Id, int goalIndex, string stepUpdate)
         {
             var foundUserEdit = userEdits.Single(u => u.Id == Id);
-            var success = userEdits.Remove(foundUserEdit);
-            if (success)
+
+            if (foundUserEdit != null)
             {
-                userEdits.Add(userEdit.Clone());
+                foundUserEdit.Edits[goalIndex].StepData.Add(stepUpdate);
+                return Task.FromResult(true);
             }
-            return Task.FromResult(success);
+            return Task.FromResult(false);
         }
     }
 }

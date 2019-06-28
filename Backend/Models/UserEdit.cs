@@ -62,6 +62,22 @@ namespace BackendFramework.ValueModels
             return HashCode.Combine(Id, Edits);
         }
     }
+
+    public class UserEditObjectWrapper
+    {
+        [BsonElement("goalIndex")]
+        public int goalIndex { get; set; }
+
+        [BsonElement("newEdit")]
+        public string newEdit { get; set; }
+
+        public UserEditObjectWrapper(int goalI, string newE)
+        {
+            goalIndex = goalI;
+            newEdit = newE;
+        }
+    }
+
     public class Edit
     {
         [BsonElement("goalType")]

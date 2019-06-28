@@ -4,6 +4,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Tests
@@ -72,17 +73,30 @@ namespace Tests
         [Test]
         public void TestUpdateUserEdit()
         {
+            //generate db entry to test
+            Random rnd = new Random();
+            int count = rnd.Next(1, 13);
+            
+            for (int i = 0; i < count; i++)
+            {
+                _ = _userEditService.Create(RandomUserEdit()).Result;
+            }
             UserEdit origUserEdit = _userEditService.Create(RandomUserEdit()).Result;
 
-            UserEdit modUserEdit = origUserEdit.Clone();
-            var edits = new List<Edit>();
-            edits.Add(new Edit() { GoalType = GoalType.CreateCharInv, StepData = new List<string>() { "test" } });
-            modUserEdit.Edits = edits;
+            //generate correct result for comparison
+            var modUserEdit = origUserEdit.Clone();
+            string stringUserEdit = "This is another step added";
+            modUserEdit.Edits[modUserEdit.Edits.Count - 1].StepData.Add(stringUserEdit);
+            
+            //create wrapper object
+            int modGoalIndex = 0;
+            UserEditObjectWrapper wrapperobj = new UserEditObjectWrapper(modGoalIndex, stringUserEdit);
 
-            var action = controller.Put(modUserEdit.Id, modUserEdit);
+            
+            var action = controller.Put(origUserEdit.Id, wrapperobj);
 
-            Assert.That(_userEditService.GetAllUserEdits().Result, Has.Count.EqualTo(1));
-            Assert.Contains(modUserEdit, _userEditService.GetAllUserEdits().Result);
+            Assert.That(_userEditService.GetAllUserEdits().Result, Has.Count.EqualTo(count + 1));
+            Assert.Contains(stringUserEdit, _userEditService.GetUserEdit(origUserEdit.Id).Result.Edits[0].StepData);
         }
 
         [Test]

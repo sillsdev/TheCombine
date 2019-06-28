@@ -52,16 +52,15 @@ namespace BackendFramework.Services
             return deleted.DeletedCount > 0;
         }
 
-        public async Task<bool> Update(string Id, UserEdit userEdit)
+        public async Task<bool> Update(string Id, int goalIndex, string userEdit)
         {
             FilterDefinition<UserEdit> filter = Builders<UserEdit>.Filter.Eq(x => x.Id, Id);
 
-            UserEdit updatedUserEdit = new UserEdit();
+            UserEdit AddUserEdit = await GetUserEdit(Id);
 
-            //Note: Nulls out values not in update body
-            var updateDef = Builders<UserEdit>.Update.Set(x => x.Edits, userEdit.Edits);
+            AddUserEdit.Edits[goalIndex].StepData.Add(userEdit);
 
-            var updateResult = await _userEditDatabase.UserEdits.UpdateOneAsync(filter, updateDef);
+            var updateResult = _userEditDatabase.UserEdits.ReplaceOne(filter, AddUserEdit);
 
             return updateResult.IsAcknowledged && updateResult.ModifiedCount == 1;
            

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/Projects/UserEdits")]
+    [Route("v1/projects/useredits")]
     public class UserEditController : Controller
     {
         private readonly IUserEditService _userEditService;
@@ -60,15 +60,16 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]UserEdit userEdit)
         {
-            userEdit.Id = null;
+            userEdit.Id = "";
             await _userEditService.Create(userEdit);
             return new OkObjectResult(userEdit.Id);
         }
 
         // PUT: v1/Project/UserEdits/{Id}
-        // Implements Update(), Arguments: string id of target userEdit, new userEdit from body
+        // Implements Update(), Arguments: string id of target userEdit, 
+        // wrapper object to hold the goal index and the step to add to the goal history
         [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, [FromBody] UserEdit userEdit)
+        public async Task<IActionResult> Put(string Id, [FromBody] UserEditObjectWrapper userEdit)
         {
             var document = await _userEditService.GetUserEdit(Id);
             if (document == null)
@@ -76,10 +77,9 @@ namespace BackendFramework.Controllers
                 return new NotFoundResult();
             }
 
-            userEdit.Id = document.Id;
-            await _userEditService.Update(Id, userEdit);
+            await _userEditService.Update(Id, userEdit.goalIndex, userEdit.newEdit);
 
-            return new OkObjectResult(userEdit.Id);
+            return new OkObjectResult(document.Edits[userEdit.goalIndex].StepData.Count);
         }
 
         // DELETE: v1/Project/UserEdits/{Id}
