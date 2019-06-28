@@ -6,20 +6,12 @@ import { Grid } from "@material-ui/core";
 import { LogoutButton } from "../Login/LogoutButton";
 import logo from "../../resources/CombineLogoV1.png";
 
-export interface AppBarProps {
-  title: string;
-}
-
-/** The navigation bar provides the UI for navigating around The Combine. */
-export class AppBarComponent extends React.Component<
-  AppBarProps & LocalizeContextProps
-> {
-  constructor(props: AppBarProps & LocalizeContextProps) {
+/** An app bar shown at the top of almost every page of The Combine */
+export class AppBarComponent extends React.Component<LocalizeContextProps> {
+  constructor(props: LocalizeContextProps) {
     super(props);
   }
 
-  // Render the different UI elements in the nav bar based on this
-  // component's props
   render() {
     return (
       <div className="NavigationBar">

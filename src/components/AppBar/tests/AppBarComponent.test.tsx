@@ -12,7 +12,7 @@ it("renders without crashing", () => {
   const div = document.createElement("div");
   ReactDOM.render(
     <Provider store={mockStore}>
-      <AppBarComponent title="" />
+      <AppBarComponent />
     </Provider>,
     div
   );

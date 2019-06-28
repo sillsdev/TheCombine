@@ -22,7 +22,7 @@ export class GoalTimeline extends React.Component {
   render() {
     return (
       <div className="GoalView">
-        <AppBarComponent title="goalTimeline" />
+        <AppBarComponent />
         <div style={timelineStyle.centerDisplays}>
           <GoalHistory />
         </div>
