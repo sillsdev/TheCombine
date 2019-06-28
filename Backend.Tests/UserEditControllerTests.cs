@@ -79,7 +79,6 @@ namespace Tests
             //generate db entry to test
             Random rnd = new Random();
             int count = rnd.Next(1, 13);
-            
             for (int i = 0; i < count; i++)
             {
                 _ = _userEditService.Create(RandomUserEdit()).Result;
