@@ -11,7 +11,9 @@ export class GoToHomeButton extends React.Component {
     return (
       <Button
         onClick={() => {
-          history.push("/goals");
+          history.location.pathname === "/"
+            ? history.push("/")
+            : history.push("/goals");
         }}
       >
         <img src={logo} height="50" alt="Logo" />
