@@ -8,7 +8,9 @@ import { asyncLogin, UserAction, logout, asyncRegister } from "../LoginActions";
 function mapStateToProps(state: StoreState): RegisterStateProps {
   //console.log(state);
   return {
-    registerFailure: state.loginState && state.loginState.registerFailure
+    inProgress: state.loginState.registerAttempt,
+    success: state.loginState.registerSuccess,
+    failure: state.loginState.registerFailure
   };
 }
 

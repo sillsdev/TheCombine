@@ -12,16 +12,21 @@ import {
   Typography,
   Button,
   Link,
-  TextField
+  TextField,
+  CircularProgress
 } from "@material-ui/core";
 import history from "../../../history";
+import { green } from "@material-ui/core/colors";
+import { Check } from "@material-ui/icons";
 
 export interface RegisterDispatchProps {
   register?: (name: string, user: string, password: string) => void;
 }
 
 export interface RegisterStateProps {
-  registerFailure: boolean | undefined;
+  inProgress: boolean;
+  success: boolean;
+  failure: boolean | undefined;
 }
 
 interface RegisterState {
@@ -249,7 +254,7 @@ class Register extends React.Component<
               />
 
               {/* "Failed to register" */}
-              {this.props.registerFailure && (
+              {this.props.failure && (
                 <Typography
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}
@@ -271,8 +276,38 @@ class Register extends React.Component<
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button type="submit" variant="contained" color="primary">
-                    <Translate id="login.register" />
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={this.props.inProgress}
+                    style={{
+                      backgroundColor: this.props.success
+                        ? green[500]
+                        : undefined
+                    }}
+                  >
+                    {this.props.success ? (
+                      <React.Fragment>
+                        <Check />
+                        <Translate id="login.registerSuccess" />
+                      </React.Fragment>
+                    ) : (
+                      <Translate id="login.register" />
+                    )}
+                    {this.props.inProgress && (
+                      <CircularProgress
+                        size={24}
+                        style={{
+                          color: green[500],
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          marginTop: -12,
+                          marginLeft: -12
+                        }}
+                      />
+                    )}
                   </Button>
                 </Grid>
               </Grid>

@@ -4,16 +4,16 @@ import { Project, defaultProject } from "../../types/project";
 import { setCurrentProject, ProjectAction } from "../Project/ProjectActions";
 import history from "../../history";
 
-export const IN_PROGRESS = "IN_PROGRESS";
+export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;
 
-export const SUCCESS = "SUCCESS";
+export const SUCCESS = "CREATE_PROJECT_SUCCESS";
 export type SUCCESS = typeof SUCCESS;
 
-export const FAILURE = "FAILURE";
+export const FAILURE = "CREATE_PROJECT_FAILURE";
 export type FAILURE = typeof FAILURE;
 
-export const RESET = "RESET";
+export const RESET = "CREATE_PROJECT_RESET";
 export type RESET = typeof RESET;
 
 export interface CreateProjectData {

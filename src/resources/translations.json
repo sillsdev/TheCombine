@@ -22,6 +22,7 @@
     "backToLogin": ["Back to login", "Atrás para iniciar sesión"],
     "register": ["Register", "Registro"],
     "registerNew": ["Register New User", "Registrar nuevo usuario"],
+    "registerSuccess": ["User Created", "creado por el usuario"],
     "failed": [
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
