@@ -68,7 +68,11 @@ To connect to the VM using one of the methods described in [Logging Into the VM]
 cd src\TheCombine
 mkcombine
 ```
-```mkcombine``` build the project and then run the ansible playbook for installing and configuring it.  Before running ```mkcombine``` consider updating your working directory by doing a ```git pull``` or by checking out your working branch.
+```mkcombine``` will build the project and then run the ansible playbook for installing and configuring it.
+
+*When* ```mkcombine``` *runs the installation scripts, you will be prompted for the BECOME password.  The BECOME password is* ```vagrant```
+
+Before running ```mkcombine``` consider updating your working directory by doing a ```git pull``` or by checking out your working branch.
 
 Once ```mkcombine``` completes, you can test the build by connecting to http://localhost:8088 from your web browser.
 
