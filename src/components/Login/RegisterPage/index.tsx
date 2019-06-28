@@ -6,7 +6,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { asyncLogin, UserAction, logout, asyncRegister } from "../LoginActions";
 
 function mapStateToProps(state: StoreState): RegisterStateProps {
-  //console.log(state);
   return {
     inProgress: state.loginState.registerAttempt,
     success: state.loginState.registerSuccess,
