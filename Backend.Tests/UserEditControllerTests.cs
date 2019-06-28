@@ -79,6 +79,7 @@ namespace Tests
             //generate db entry to test
             Random rnd = new Random();
             int count = rnd.Next(1, 13);
+
             for (int i = 0; i < count; i++)
             {
                 _ = _userEditService.Create(RandomUserEdit()).Result;
@@ -89,11 +90,11 @@ namespace Tests
             var modUserEdit = origUserEdit.Clone();
             string stringUserEdit = "This is another step added";
             modUserEdit.Edits[modUserEdit.Edits.Count - 1].StepData.Add(stringUserEdit);
-            
+
             //create wrapper object
             int modGoalIndex = 0;
             UserEditObjectWrapper wrapperobj = new UserEditObjectWrapper(modGoalIndex, stringUserEdit);
-            
+
             var action = controller.Put(origUserEdit.Id, wrapperobj);
 
             Assert.That(_userEditService.GetAllUserEdits().Result, Has.Count.EqualTo(count + 1));
