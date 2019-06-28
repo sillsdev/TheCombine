@@ -93,3 +93,54 @@ We found 7 improvements:
   - Stack View
 
 The tester also requested an undo button. We determined this was unnecessary.
+
+# Wednesday, June 26
+
+- Tweak Character Inventory
+
+  - Clarify purpose
+  - Disable 'Add Characters' button until characters have been typed in.
+  - Save button should give feedback
+
+- Bugfix
+
+  - Allow cards to be dropped anywhere on wordlist
+
+- Add Register Dialogue
+
+  - User was expecting register to be a seperate dialogue
+
+- Add way to Explicitly Return to Goal Navigation
+
+  - User had to ask to figure out how to get back to the goal navigator from a goal
+  - Separate button
+  - Hamburger with nav return and logout
+
+- Rework Duplicate Rows Scrolling
+
+  - User had to scroll to bottom to view new row
+  - Resize cards based on number of rows
+
+- Deal with Non-Duplicates in Word List
+
+  - Make title/goal purpose clearer
+  - Add way for user to acknowledge non-duplicates
+  - Add precision
+
+- Rework Goal Navigation UI
+
+  - Remove decision dimension
+  - Make horizontal
+  - Make suggestions selectable and scrollable
+  - Make cards vertical
+
+- Greater Granularity of Control in Merge Duplicate Goal
+
+  - Add way to add as plural
+  - Add way to edit word in merge tool
+  - Add button to expand stack
+
+- Improve User Guidance in Merge Duplicate Goal
+  - Make stacking mechanic and purpose clearer
+  - Make dragging mechanic more quickly evident
+  - Disable right-click for now
