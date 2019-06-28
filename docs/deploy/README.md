@@ -116,55 +116,55 @@ This section describes how to install Ubuntu Server and TheCombine application o
 
         1. *Close* the *Host Network Manager* dialog box.
 
-    1. Select the new VM and click on the *Settings* button;
+     1. Select the new VM and click on the *Settings* button;
 
-    1. Click on the Adapter 2 tab and set it up as follows:
+     1. Click on the Adapter 2 tab and set it up as follows:
 
-           | Field                   | Value             |
-           | ----------------------- | :---------------: |
-           | Enable Network Adapter: | Checked           |
-           | Attached to:            | Host-only Adapter |
-           | Name:                   | vboxnet0 (linux)<br>VirtualBox Host-Only Ethernet Adapter (windows)   |
+        | Field                   | Value             |
+        | ----------------------- | :---------------: |
+        | Enable Network Adapter: | Checked           |
+        | Attached to:            | Host-only Adapter |
+        | Name:                   | vboxnet0 (linux)<br>VirtualBox Host-Only Ethernet Adapter (windows)   |
 
-    1. For linux hosts, make sure your account is a member of the vboxusers group.
+     1. For linux hosts, make sure your account is a member of the vboxusers group.
 
-    1. Start the virtual machine and log in.  Setup the network connection for the second adapter as follows:
+     1. Start the virtual machine and log in.  Setup the network connection for the second adapter as follows:
 
-       1. Run ```ip address``` to list the available interfaces.  There will be one ethernet interface that is up and has an IP address, e.g. enp0s3.  There will be a second ethernet interface that is down, e.g. enp0s8.  Note the name of this interface.
+        1. Run ```ip address``` to list the available interfaces.  There will be one ethernet interface that is up and has an IP address, e.g. enp0s3.  There will be a second ethernet interface that is down, e.g. enp0s8.  Note the name of this interface.
 
-       1. Edit /etc/netplan/01-netcfg.yaml
-          ```sudo nano /etc/netplan/01-netcfg.yaml```
+        1. Edit /etc/netplan/01-netcfg.yaml
+           ```sudo nano /etc/netplan/01-netcfg.yaml```
 
-       1. Edit the file so that it contains:
+        1. Edit the file so that it contains:
+           ```
+           # This file describes the network interfaces available on your system
+           # For more information, see netplan(5).
+           network:
+             version: 2
+             renderer: networkd
+             ethernets:
+               enp0s3:
+                 dhcp4: yes
+               enp0s8:
+                 addresses: [192.168.56.10/24]
+                 gateway4: 192.168.1.1
+                 nameservers:
+                   addresses: [8.8.8.8,8.8.4.4]
+                 dhcp4: no
+           ```
+           ... substituting the names of your adapters, of course.  Also make sure that the address you assign is in the subnet specified by the Host Network Adapter.  Unfortunately, you will have to type it.  You will not be able to cut & paste to the VM.
+
+        1. Run: ```sudo netplan apply```
+
+        1. Add the VM's IP address to the ```/etc/hosts``` file on the host computer *(optional)*:
+
           ```
-          # This file describes the network interfaces available on your system
-          # For more information, see netplan(5).
-          network:
-            version: 2
-            renderer: networkd
-            ethernets:
-              enp0s3:
-                dhcp4: yes
-              enp0s8:
-                addresses: [192.168.56.10/24]
-                gateway4: 192.168.1.1
-                nameservers:
-                  addresses: [8.8.8.8,8.8.4.4]
-                dhcp4: no
+          # Virtual Machines
+          192.168.56.10	nuc-vm
+
           ```
-          ... substituting the names of your adapters, of course.  Also make sure that the address you assign is in the subnet specified by the Host Network Adapter.  Unfortunately, you will have to type it.  You will not be able to cut & paste to the VM.
 
-       1. Run: ```sudo netplan apply```
-
-       1. Add the VM's IP address to the ```/etc/hosts``` file on the host computer *(optional)*:
-
-         ```
-         # Virtual Machines
-         192.168.56.10	nuc-vm
-
-         ```
-
-    1. Now you can access the virtual machine (e.g. ssh, http,) at ```192.168.56.10```.
+     1. Now you can access the virtual machine (e.g. ssh, http,) at ```192.168.56.10```.
 
 
 
@@ -184,7 +184,7 @@ A setup script, ```setup-target.sh```, is provided to perform the installation. 
 
 **```-h or --help```** print the basic usage message.  The usage message is also printed if the script is run without a user@machine name argument.
 
-**```-i or --install``` only run the tasks for installing TheCombine
+**```-i or --install```** only run the tasks for installing TheCombine
 
 **```-t or --test```**  only run the tasks for testing the installation of TheCombine.
 
