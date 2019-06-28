@@ -6,6 +6,7 @@ import { BaseGoal } from "../../../../../types/baseGoal";
 import { User } from "../../../../../types/user";
 import {
   GoalSelectorScroll as GSScroll,
+  percentToPixels,
   WIDTH,
   WRAP_AROUND_THRESHHOLD
 } from "../GoalSelectorScroll";
@@ -29,6 +30,7 @@ const labels: string[] = ["handleDuplicates", "handleFlags", "grammarCheck"];
 // Create the mock store
 const gsState: GoalSelectorState = createTempState();
 const storeState: any = {
+  innerWidth: 500,
   goalSelectorState: gsState,
   goalsState: {
     allPossibleGoals: gsState.allPossibleGoals
@@ -69,9 +71,6 @@ const mouse: GoalScrollAction = {
 };
 
 beforeEach(() => {
-  // Reset store actions
-  store.clearActions();
-
   // Here, use the act block to be able to render our GoalState into the DOM
   // Re-created each time to prevent actions from previous runs from affecting future runs
   act(() => {
@@ -82,12 +81,18 @@ beforeEach(() => {
     );
     scrollHandle = scrollMaster.root.findByType(GSScroll);
   });
+  scroller.scrollLeft = percentToPixels(WRAP_AROUND_THRESHHOLD);
 
-  scroller.scrollLeft = WRAP_AROUND_THRESHHOLD;
+  // Reset store actions
+  store.clearActions();
 });
 
 // Actual tests
 describe("Testing the goal selector scroll ui", () => {
+  test("Basic functions work as expected", () => {
+    expect(percentToPixels(10)).toEqual(window.innerWidth * 0.1);
+  });
+
   it("Constructs correctly", () => {
     // Default snapshot test
     snapTest("default view");
@@ -138,7 +143,7 @@ describe("Testing the goal selector scroll ui", () => {
   it("Dispatches a MouseMoveAct and a ScrollSelectorAct on scrollDur-long stroke", () => {
     let newMouse: GoalScrollAction = {
       type: MOUSE_ACTION,
-      payload: -WIDTH
+      payload: -percentToPixels(WIDTH)
     };
     let newSelect: GoalScrollAction = {
       type: SELECT_ACTION,
