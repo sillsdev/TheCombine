@@ -91,12 +91,11 @@ namespace Tests
             //create wrapper object
             int modGoalIndex = 0;
             UserEditObjectWrapper wrapperobj = new UserEditObjectWrapper(modGoalIndex, stringUserEdit);
-
             
             var action = controller.Put(origUserEdit.Id, wrapperobj);
 
             Assert.That(_userEditService.GetAllUserEdits().Result, Has.Count.EqualTo(count + 1));
-            Assert.Contains(stringUserEdit, _userEditService.GetUserEdit(origUserEdit.Id).Result.Edits[0].StepData);
+            Assert.Contains(stringUserEdit, _userEditService.GetUserEdit(origUserEdit.Id).Result.Edits[modGoalIndex].StepData);
         }
 
         [Test]
