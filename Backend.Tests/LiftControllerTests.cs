@@ -14,11 +14,11 @@ namespace Backend.Tests
 {
     public class LiftControllerTests
     {
-        IWordRepository _wordrepo;
+        private IWordRepository _wordrepo;
         private IWordService _wordService;
-        ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
-        private LiftController liftController;
         private IProjectService _projServ;
+        private ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
+        private LiftController liftController;
 
         [SetUp]
         public void Setup()
@@ -55,9 +55,10 @@ namespace Backend.Tests
                                 <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
                             </field>
                         </fields>
-                    </header>";
-            byte[] headerArray = Encoding.ASCII.GetBytes(header);
+                    </header>
+                ";
 
+            byte[] headerArray = Encoding.ASCII.GetBytes(header);
             fs.Write(headerArray);
 
             for (int i = 0; i < 3; i++)
@@ -69,6 +70,7 @@ namespace Backend.Tests
                 string vernLang = $"\"{Util.randString(3)}\"";
                 string vern = Util.randString(6);
                 string plural = Util.randString(8);
+                string audio = $"\"{Util.randString(3)}.mp3\"";
                 string senseId = $"\"{Util.randString()}\"";
                 string transLang1 = $"\"{Util.randString(3)}\"";
                 string transLang2 = $"\"{Util.randString(3)}\"";
@@ -77,20 +79,23 @@ namespace Backend.Tests
                 string sdValue = $"\"{Util.randString(4)} {Util.randString(4)}\"";
 
                 string entry = 
-                    $@"
-                    <entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
-                        <lexical-unit>
-                            <form lang = {vernLang}><text> {vern} </text></form>
-                        </lexical-unit>
-                        <field type = ""Plural"">
-                            <form lang = {vernLang}><text> {plural} </text></form>
-                        </field>
-                        <sense id = {senseId}>
-                            <gloss lang = {transLang1}><text> {trans1} </text></gloss>
-                            <gloss lang = {transLang2}><text> {trans2} </text></gloss>
-                            <trait name = ""semantic-domain-ddp4"" value = {sdValue}/> 
-                        </sense> 
-                    </entry>";
+                    $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
+                            <lexical-unit>
+                                <form lang = {vernLang}><text> {vern} </text></form>
+                            </lexical-unit>
+                            <field type = ""Plural"">
+                                <form lang = {vernLang}><text> {plural} </text></form>
+                            </field>
+                            <pronunciation>
+			                    <media href= {audio}/>
+                            </pronunciation>
+                            <sense id = {senseId}>
+                                <gloss lang = {transLang1}><text> {trans1} </text></gloss>
+                                <gloss lang = {transLang2}><text> {trans2} </text></gloss>
+                                <trait name = ""semantic-domain-ddp4"" value = {sdValue}/> 
+                            </sense> 
+                        </entry>
+                        ";
                 byte[] entryArray = Encoding.ASCII.GetBytes(entry);
                 fs.Write(entryArray);
             }
@@ -107,7 +112,7 @@ namespace Backend.Tests
             string name = RandomLiftFile();
             FileStream fstream = File.OpenRead(name);
 
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
+            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", "fileName");
             FileUpload fileUpload = new FileUpload();
             fileUpload.Name = "FileName";
             fileUpload.File = formFile;
@@ -116,33 +121,22 @@ namespace Backend.Tests
         }
 
         [Test]
-        public void TestLiftImport()
-        {
-            var fileUpload = InitFile();
-            _ = liftController.UploadLiftFile(fileUpload).Result;
-
-            var allWords = _wordrepo.GetAllWords();
-            Assert.NotZero(allWords.Result.Count);
-        }
-
-        [Test]
-        public void TestLiftExport()
+        public void TestRoundtrip()
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
             string filepath = wanted_path + "/EXAMPLE.lift";
             File.Delete(filepath);
 
             var fileUpload = InitFile();
+
             var proj = RandomProject();
             proj.VernacularWritingSystem = Util.randString(3);
             _projServ.Create(proj);
 
             _ = liftController.UploadLiftFile(fileUpload).Result;
 
-            var foundWord = _wordrepo.GetAllWords().Result[0];
-            foundWord.Audio = "sound.mp3";
-
-            _ = _wordService.Update(foundWord.Id, foundWord).Result;
+            var allWords = _wordrepo.GetAllWords();
+            Assert.NotZero(allWords.Result.Count);
 
             //export
             _ = liftController.ExportLiftFile(proj.Id).Result;
@@ -162,7 +156,7 @@ namespace Backend.Tests
 
             _ = liftController.UploadLiftFile(fileUpload2).Result;
 
-            var allWords = _wordrepo.GetAllWords();
+            allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
 
             File.Delete(fileUpload.FilePath);
