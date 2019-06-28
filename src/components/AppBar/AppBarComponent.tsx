@@ -4,7 +4,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import { Grid } from "@material-ui/core";
 import { LogoutButton } from "../Login/LogoutButton";
-import logo from "../../resources/CombineLogoV1.png";
+import { GoToHomeButton } from "../GoToHomeButton/GoToHomeButtonComponent";
 
 /** An app bar shown at the top of almost every page of The Combine */
 export class AppBarComponent extends React.Component<LocalizeContextProps> {
@@ -23,8 +23,8 @@ export class AppBarComponent extends React.Component<LocalizeContextProps> {
               spacing={2}
               alignItems="center"
             >
-              <Grid item xs={10}>
-                <img src={logo} width="15%" alt="Logo" />
+              <Grid item>
+                <GoToHomeButton />
               </Grid>
               <Grid item>
                 <LogoutButton />
