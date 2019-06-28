@@ -1,13 +1,10 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import {
-  withLocalize,
-  LocalizeContextProps,
-  Translate
-} from "react-localize-redux";
-import { Grid, Typography } from "@material-ui/core";
+import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import { Grid } from "@material-ui/core";
 import { LogoutButton } from "../Login/LogoutButton";
+import logo from "../../resources/CombineLogoV1.png";
 
 export interface AppBarProps {
   title: string;
@@ -28,13 +25,15 @@ export class AppBarComponent extends React.Component<
       <div className="NavigationBar">
         <AppBar position="static">
           <Toolbar>
-            <Grid container justify="space-between" spacing={2}>
-              <Grid item>
-                <Typography variant="h6">
-                  <Translate id={this.props.title + ".title"} />
-                </Typography>
+            <Grid
+              container
+              justify="space-between"
+              spacing={2}
+              alignItems="center"
+            >
+              <Grid item xs={10}>
+                <img src={logo} width="15%" alt="Logo" />
               </Grid>
-
               <Grid item>
                 <LogoutButton />
               </Grid>
