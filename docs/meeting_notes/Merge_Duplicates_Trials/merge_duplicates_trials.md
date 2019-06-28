@@ -50,9 +50,9 @@ We found 7 improvements:
   - Make instructions larger and brighter. Make overly visible. We can make classier later
   - Display instruction cards when no cards have been dragged into rows
 
-- Add Merge Confirmation Dialogue
+- Add Merge Confirmation Dialog
 
-- Add Stack Display Dialogue
+- Add Stack Display Dialog
 
   - Allows reordering
   - Allows removal from stack
@@ -106,9 +106,9 @@ The tester also requested an undo button. We determined this was unnecessary.
 
   - Allow cards to be dropped anywhere on wordlist
 
-- Add Register Dialogue
+- Add Register Dialog
 
-  - User was expecting register to be a seperate dialogue
+  - User was expecting register to be a seperate dialog
 
 - Add way to Explicitly Return to Goal Navigation
 
@@ -125,7 +125,7 @@ The tester also requested an undo button. We determined this was unnecessary.
 
   - Make title/goal purpose clearer
   - Add way for user to acknowledge non-duplicates
-  - Add precision
+  - Improve accuracy in duplicate finder
 
 - Rework Goal Navigation UI
 
@@ -141,6 +141,7 @@ The tester also requested an undo button. We determined this was unnecessary.
   - Add button to expand stack
 
 - Improve User Guidance in Merge Duplicate Goal
+
   - Make stacking mechanic and purpose clearer
   - Make dragging mechanic more quickly evident
   - Disable right-click for now
