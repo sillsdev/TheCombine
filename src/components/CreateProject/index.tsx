@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
   CreateProjectAction,
-  asyncCreateProject
+  asyncCreateProject,
+  reset
 } from "./CreateProjectActions";
 
 function mapStateToProps(state: StoreState) {
@@ -23,6 +24,9 @@ export function mapDispatchToProps(
   return {
     asyncCreateProject: (name: string, languageData: File) => {
       dispatch(asyncCreateProject(name, languageData));
+    },
+    reset: () => {
+      dispatch(reset());
     }
   };
 }

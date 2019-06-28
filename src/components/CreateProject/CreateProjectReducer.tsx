@@ -2,6 +2,7 @@ import {
   IN_PROGRESS,
   SUCCESS,
   FAILURE,
+  RESET,
   CreateProjectAction
 } from "./CreateProjectActions";
 import { Project } from "../../types/project";
@@ -47,6 +48,8 @@ export const createProjectReducer = (
         inProgress: false,
         errorMsg: action.payload.errorMsg || ""
       };
+    case RESET:
+      return defaultState;
     default:
       return state;
   }

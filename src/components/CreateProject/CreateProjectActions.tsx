@@ -13,12 +13,15 @@ export type SUCCESS = typeof SUCCESS;
 export const FAILURE = "FAILURE";
 export type FAILURE = typeof FAILURE;
 
+export const RESET = "RESET";
+export type RESET = typeof RESET;
+
 export interface CreateProjectData {
   name: string;
   languageData?: File;
   errorMsg?: string;
 }
-type CreateProjectType = IN_PROGRESS | SUCCESS | FAILURE;
+type CreateProjectType = IN_PROGRESS | SUCCESS | FAILURE | RESET;
 
 //action types
 
@@ -35,63 +38,62 @@ export function asyncCreateProject(name: string, languageData?: File) {
     // Create project
     let project: Project = { ...defaultProject };
     project.name = name;
-    let createdProject = await backend.createProject(project);
-    dispatch(setCurrentProject(createdProject));
+    backend
+      .createProject(project)
+      .then(createdProject => {
+        dispatch(setCurrentProject(createdProject));
 
-    // Upload words
-    if (languageData) {
-      backend
-        .uploadLift(createdProject, languageData)
-        .then(res => {
+        // Upload words
+        if (languageData) {
+          backend
+            .uploadLift(createdProject, languageData)
+            .then(res => {
+              dispatch(success(name));
+              // we manually pause so they have a chance to see the success message
+              setTimeout(() => {
+                history.push("/goals");
+              }, 1000);
+            })
+            .catch(err => {
+              dispatch(failure(name, err.response.statusText));
+            });
+        } else {
+          dispatch(success(name));
           setTimeout(() => {
-            // we manually pause so they have a chance to see the success message
-            dispatch(success(name, languageData));
-            setTimeout(() => {
-              history.push("/goals");
-            }, 1000);
-          }, 500);
-        })
-        .catch(err => {
-          dispatch(failure(name, languageData));
-          alert("Failed to create project");
-        });
-    } else {
-      setTimeout(() => {
-        dispatch(success(name));
-        setTimeout(() => {
-          history.push("/goals");
-        }, 1000);
-      }, 500);
-    }
+            history.push("/goals");
+          }, 1000);
+        }
+      })
+      .catch(err => {
+        dispatch(failure(name, err.response.statusText));
+      });
   };
 }
-export function inProgress(
-  name: string,
-  languageData?: File
-): CreateProjectAction {
+
+export function inProgress(name: string): CreateProjectAction {
   return {
     type: IN_PROGRESS,
-    payload: { name, languageData }
+    payload: { name }
   };
 }
 
-export function success(
-  name: string,
-  languageData?: File
-): CreateProjectAction {
+export function success(name: string): CreateProjectAction {
   return {
     type: SUCCESS,
-    payload: { name, languageData }
+    payload: { name }
   };
 }
 
 export function failure(
   name: string,
-  languageData?: File,
   errorMsg: string = ""
 ): CreateProjectAction {
   return {
     type: FAILURE,
-    payload: { name, languageData, errorMsg }
+    payload: { name, errorMsg }
   };
+}
+
+export function reset(): CreateProjectAction {
+  return { type: RESET, payload: { name: "" } };
 }
