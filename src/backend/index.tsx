@@ -133,9 +133,14 @@ export async function addGoal(goal: Goal): Promise<Goal> {
   let goalName = goal.name;
   let goalSteps = goal.steps;
   let userEditTuple = { goalName, goalSteps };
-  return await backendServer.post("projects/useredits", userEditTuple, {
-    headers: { ...authHeader() }
-  });
+  return await backendServer
+    .post("projects/useredits", userEditTuple, {
+      headers: { ...authHeader() }
+    })
+    .then(resp => {
+      console.log(resp);
+      return resp.data;
+    });
 
   // let userString = localStorage.getItem("user");
   // let userObject = userString ? JSON.parse(userString) : null;

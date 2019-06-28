@@ -24,13 +24,13 @@ export type AddGoalAction = AddGoal;
 export type AddGoalToHistoryAction = AddGoalToHistory;
 
 export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: Dispatch<AddGoalAction>, getState: any) => {
+  return async (dispatch: Dispatch<AddGoalToHistoryAction>, getState: any) => {
     await backend
       .addGoal(goal)
       .then(resp => {
         console.log("Added goal successfully");
-        goal = resp;
-        dispatch(addGoal(goal));
+        //goal = resp;
+        dispatch(addGoalToHistory(goal));
         history.push(`/goals/${goal.name}${goal.id}`);
       })
       .catch(err => {
