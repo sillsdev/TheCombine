@@ -17,16 +17,19 @@ to connect to it over the network.
 The simplest way to test *TheCombine* application in an environment that mimics the production environment is to use a *Vagrant* virtual machine.
 
 ### System Requirements
+
   1. PC with a 64-bit Windows or Linux operating system.
   2. Hardware virtualization enabled
   3. At least 4 GB RAM
 
 ### Installing the Environment
+
   1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
   2. Install [Vagrant](https://www.vagrantup.com/downloads.html).  Note that if you are installing Vagrant on an Ubuntu host, you should select the Debian package rather than the generic Linux package.
   3. Clone the project repo, https://github.com/sillsdev/TheCombine
 
 ### Creating the VM
+
   1. open a command prompt and change directory to deploy/vagrant sub-folder of the cloned project directory, e.g.
     ```
     cd TheCombine/deploy/vagrant
@@ -49,12 +52,14 @@ You can login to the VM at the console window using the following credentials:
      Password: vagrant
 
 #### Using a Secure Shell Client
+
 You can also connect using a secure shell client with the same credentials.  The host to use is:
 
      host: localhost
      port: 2222
 
 #### Using Vagrant
+
 Last of all, you can type
 ```
     vagrant ssh
@@ -165,9 +170,6 @@ This section describes how to install Ubuntu Server and TheCombine application o
           ```
 
      1. Now you can access the virtual machine (e.g. ssh, http,) at ```192.168.56.10```.
-
-
-
 
 ### Installing the App
 
