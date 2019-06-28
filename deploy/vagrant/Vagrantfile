@@ -73,7 +73,7 @@ Vagrant.configure("2") do |config|
     fi
     cd /home/vagrant/src
     if [ ! -d TheCombine ] ; then
-       git clone https://github.com/sillsdev/TheCombine.git
+       git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
     fi
   SHELL
 end
