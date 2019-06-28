@@ -64,7 +64,6 @@ namespace BackendFramework.Services
             var updateDef = Builders<Project>.Update
                 .Set(x => x.Name, project.Name)
                 .Set(x => x.SemanticDomains, project.SemanticDomains)
-                .Set(x => x.UserRoles, project.UserRoles)
                 .Set(x => x.Words, project.Words)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
                 .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)
