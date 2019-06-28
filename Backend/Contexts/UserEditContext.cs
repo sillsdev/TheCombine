@@ -7,17 +7,17 @@ using static BackendFramework.Startup;
 namespace BackendFramework.Context
 {
 
-    public class UserRoleContext : IUserRoleContext
+    public class UserEditContext : IUserEditContext
     {
         private readonly IMongoDatabase _db;
 
-        public UserRoleContext(IOptions<Settings> options)
+        public UserEditContext(IOptions<Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.UserRolesDatabase);
+            _db = client.GetDatabase(options.Value.UserEditsDatabase);
         }
 
-        public IMongoCollection<UserRole> UserRoles => _db.GetCollection<UserRole>("UserRolesDatabase");
+        public IMongoCollection<UserEdit> UserEdits => _db.GetCollection<UserEdit>("UserEditsDatabase");
     }
     
 }
