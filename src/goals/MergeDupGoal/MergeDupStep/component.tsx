@@ -17,6 +17,7 @@ import {
 import WordList from "./WordList";
 import MergeRow from "./MergeRow";
 import * as backend from "../../../backend";
+import { styleAddendum } from "../../../types/theme";
 
 // Constants
 const MIN_VIEW: string = "60vh";
@@ -144,7 +145,7 @@ class MergeDupStep extends React.Component<
                   <Grid container>
                     <Grid item />
                     {
-                      <Card style={{ width: 200, backgroundColor: "#eee" }}>
+                      <Card style={{ ...styleAddendum.inactive, width: 200 }}>
                         <CardContent>Drag new root word Here</CardContent>
                       </Card>
                     }
@@ -157,8 +158,6 @@ class MergeDupStep extends React.Component<
           {/* Merge button */}
           <GridListTile cols={5} style={{ borderTop: "1px solid gray" }}>
             <Button
-              variant="contained"
-              color="primary"
               style={{ float: "right", margin: 10 }}
               onClick={_ => this.next()}
               title={this.props.translate("mergeDups.helpText.next") as string}

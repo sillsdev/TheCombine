@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 
 import Card from "@material-ui/core/Card";
-import { Button, CardContent, Menu, MenuItem } from "@material-ui/core";
+import { Button, CardContent, Typography, withStyles } from "@material-ui/core";
 import { Goal } from "../../../../types/goals";
 import {
   LocalizeContextProps,
@@ -9,12 +9,13 @@ import {
   Translate
 } from "react-localize-redux";
 import ContextMenu from "../../../ContextMenu/ContextMenu";
+import theme, { styleAddendum } from "../../../../types/theme";
 
 const CLICK_SENSITIVITY: number = 10;
 
 // Defines relations of scroller to allow resizing
 const NUM_PANES: number = 5; // Number of panes present in the ui. Must be odd
-export const WIDTH: number = 200; // Width of each card
+export const WIDTH: number = Math.floor(100 / (NUM_PANES + 2)); // Width of each card
 const SCALE_FACTOR_FOR_DESELECTED = 0.9; // The percent of regular size that deselected cards shrink to
 
 // Constants derived from scroller relations
@@ -33,7 +34,6 @@ const SCROLL_CONT: string = "scrollCont";
 export const SCROLL_CARD: string = "scrollCard"; // Exported for testing
 
 // Style constants
-const PADDING: number = 10;
 const VIEW_WIDTH: number = WIDTH * NUM_PANES; // Width of the screen's view
 
 // Keyboard constants
@@ -63,31 +63,30 @@ export class GoalSelectorScroll extends React.Component<
   // The set of styles used to make this UI work
   readonly style = {
     container: {
+      padding: "2vw",
       display: "flex",
       flexWrap: "nowrap",
       overflow: "hidden"
     },
     pane: {
-      padding: PADDING,
+      padding: "2vw",
       userselect: "none",
       display: "flex",
       flexWrap: "nowrap",
       overflow: "hidden",
-      width: VIEW_WIDTH
+      width: VIEW_WIDTH + "vw"
     },
     scroll: {
       flexWrap: "nowrap",
       display: "flex"
     },
     selectedCard: {
-      width: WIDTH,
-      backgroundColor: "white"
+      width: WIDTH + "vw"
     },
     inactiveCard: {
-      width: DESELECTED_WIDTH,
-      margin: (WIDTH - DESELECTED_WIDTH) / 2,
-      backgroundColor: "lightGray",
-      color: "gray"
+      ...styleAddendum.inactive,
+      width: DESELECTED_WIDTH + "vw",
+      margin: (WIDTH - DESELECTED_WIDTH) / 2 + "vw"
     }
   };
 
@@ -125,6 +124,7 @@ export class GoalSelectorScroll extends React.Component<
     this.mapScrollCard = this.mapScrollCard.bind(this);
     this.mapWraparoundCard = this.mapWraparoundCard.bind(this);
     this.keyboardListener = this.keyboardListener.bind(this);
+    this.resizeListener = this.resizeListener.bind(this);
 
     // Create scroll ref so that we can programmatically scroll
     this.scrollRef = React.createRef();
@@ -141,15 +141,17 @@ export class GoalSelectorScroll extends React.Component<
   componentDidMount() {
     this.centerUI(this.props.selectedIndex);
     window.addEventListener("keydown", this.keyboardListener);
+    window.addEventListener("resize", this.resizeListener);
   }
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.keyboardListener);
+    window.removeEventListener("resize", this.resizeListener);
   }
 
   // Chooses an index based on the screen's current scroll
   selectNewIndex() {
-    let w: number = this.getScroll().scrollLeft / WIDTH - 1;
+    let w: number = this.getScroll().scrollLeft / percentToPixels(WIDTH) - 1;
     if (w < 0) w = 0;
     return Math.round(w);
   }
@@ -217,6 +219,11 @@ export class GoalSelectorScroll extends React.Component<
     }
   }
 
+  // Adds the resize listener
+  resizeListener(event: UIEvent) {
+    this.centerUI(this.props.selectedIndex);
+  }
+
   // Scrolling mechanics ===================================================================================
 
   // Scroll left one goal (w/ wrap)
@@ -242,21 +249,28 @@ export class GoalSelectorScroll extends React.Component<
 
   // Centers the UI on the selected goal
   centerUI(centerIndex: number) {
-    this.getScroll().scrollLeft = WIDTH * (centerIndex + 1);
+    this.getScroll().scrollLeft = percentToPixels(WIDTH) * (centerIndex + 1);
   }
 
   // Scroll the pane freely w/o locking on to goals
   scrollFreeform(amount: number): void {
     var el: HTMLElement = this.getScroll();
-    var newScrollLeft = el.scrollLeft + amount;
-    if (newScrollLeft < WRAP_AROUND_THRESHHOLD)
+    var newScrollLeft: number = el.scrollLeft + amount;
+    var threshhold: number = percentToPixels(WRAP_AROUND_THRESHHOLD);
+
+    if (newScrollLeft < threshhold)
       newScrollLeft =
-        this.TICKER_WIDTH - VIEW_WIDTH + WRAP_AROUND_THRESHHOLD - 1;
+        percentToPixels(this.TICKER_WIDTH) -
+        percentToPixels(VIEW_WIDTH) +
+        threshhold -
+        1;
     else if (
       newScrollLeft >
-      this.TICKER_WIDTH - VIEW_WIDTH + WRAP_AROUND_THRESHHOLD
+      percentToPixels(this.TICKER_WIDTH) -
+        percentToPixels(VIEW_WIDTH) +
+        threshhold
     )
-      newScrollLeft = WRAP_AROUND_THRESHHOLD + 1;
+      newScrollLeft = threshhold + 1;
     el.scrollLeft = newScrollLeft;
   }
 
@@ -270,10 +284,12 @@ export class GoalSelectorScroll extends React.Component<
   mapScrollCard(goal: Goal, index: number): ReactElement {
     return (
       <Card
-        className={SCROLL_CARD + index}
+        color={index === this.props.selectedIndex ? "secondary" : "default"}
+        elevation={this.props.selectedIndex === index ? 7 : 1}
+        id={SCROLL_CARD + index}
         key={index}
         style={this.chooseStyle(index)}
-        elevation={this.props.selectedIndex === index ? 7 : 1}
+        //elevation={this.props.selectedIndex === index ? 7 : 1}
         // Menu
         onClick={(event: React.MouseEvent) => {
           this.cardHandleClick(event, index);
@@ -283,7 +299,9 @@ export class GoalSelectorScroll extends React.Component<
         }}
       >
         <CardContent>
-          <Translate id={"goal.name." + goal.name} />
+          <Typography variant="h6">
+            <Translate id={"goal.name." + goal.name} />
+          </Typography>
         </CardContent>
 
         <ContextMenu
@@ -307,8 +325,8 @@ export class GoalSelectorScroll extends React.Component<
   mapWraparoundCard(dummyGoal: [string, number, number], index: number) {
     return (
       <Card
-        className={SCROLL_CARD + dummyGoal[2] + "Wraparound"}
-        style={this.chooseStyle(dummyGoal[1])}
+        id={SCROLL_CARD + dummyGoal[2] + "Wraparound"}
+        style={{ ...this.chooseStyle(dummyGoal[1]), justifyContent: "center" }}
         key={index + this.LENGTH}
         onClick={(event: React.MouseEvent) => {
           this.cardHandleClick(event, dummyGoal[1]);
@@ -318,7 +336,9 @@ export class GoalSelectorScroll extends React.Component<
         }}
       >
         <CardContent>
-          <Translate id={"goal.name." + dummyGoal[0]} />
+          <Typography variant="h6">
+            <Translate id={"goal.name." + dummyGoal[0]} />
+          </Typography>
         </CardContent>
 
         <ContextMenu
@@ -355,12 +375,13 @@ export class GoalSelectorScroll extends React.Component<
       >
         {/* Scroll left button */}
         <Button
+          //style={styles.button}
           onClick={(e: React.MouseEvent) => {
             e.preventDefault();
             this.scrollLeft();
           }}
         >
-          {"<"}
+          <Typography variant={"h1"}>{"<"}</Typography>
         </Button>
         {/* Scroll pane */}
         <div
@@ -384,16 +405,23 @@ export class GoalSelectorScroll extends React.Component<
         </div>
         {/* Scroll right button */}
         <Button
+          //style={styles.button}
           onClick={(e: React.MouseEvent) => {
             e.preventDefault();
             this.scrollRight();
           }}
         >
-          {">"}
+          <Typography variant={"h1"}>{">"}</Typography>
         </Button>
       </div>
     );
   }
 }
 
+export function percentToPixels(scaleValue: number) {
+  return (scaleValue / 100) * window.innerWidth;
+}
+
+// const styled = withStyles(rootStyle)(GoalSelectorScroll);
+// export default withLocalize(styled);
 export default withLocalize(GoalSelectorScroll);
