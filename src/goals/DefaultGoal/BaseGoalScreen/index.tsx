@@ -1,10 +1,11 @@
-import { StoreState } from "../../types";
-import { Goal } from "../../types/goals";
-import { GoalWrapperProps, GoalWrapper } from "./component";
-import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
+import { StoreState } from "../../../types";
+import { Goal } from "../../../types/goals";
+import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { connect } from "react-redux";
+import BaseGoalScreen from "./BaseGoalScreen";
+import { GoalProps } from "../../../types/goals";
 
-export function mapStateToProps(state: StoreState): GoalWrapperProps {
+export function mapStateToProps(state: StoreState): GoalProps {
   return {
     goal: getGoalById(
       state.goalsState.allPossibleGoals,
@@ -24,4 +25,4 @@ export function getGoalById(goalOptions: Goal[], componentId: string): Goal {
   return new CreateCharInv([]);
 }
 
-export default connect(mapStateToProps)(GoalWrapper);
+export default connect(mapStateToProps)(BaseGoalScreen);
