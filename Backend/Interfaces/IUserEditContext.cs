@@ -3,8 +3,8 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Interfaces
 {
-    public interface IUserRoleContext
+    public interface IUserEditContext
     {
-        IMongoCollection<UserRole> UserRoles { get; }
+        IMongoCollection<UserEdit> UserEdits { get; }
     }
 }

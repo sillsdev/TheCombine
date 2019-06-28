@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BackendFramework.ValueModels
 {
@@ -21,9 +17,6 @@ namespace BackendFramework.ValueModels
 
         [BsonElement("semanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
-
-        [BsonElement("userRoles")]
-        public string UserRoles { get; set; }
 
         [BsonElement("words")]
         public List<Word> Words { get; set; }
@@ -50,7 +43,6 @@ namespace BackendFramework.ValueModels
         {
             Id = "";
             Name = "";
-            UserRoles = "";
             VernacularWritingSystem = "";
             Words = new List<Word>();
             SemanticDomains = new List<SemanticDomain>();
@@ -67,7 +59,6 @@ namespace BackendFramework.ValueModels
             {
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
-                UserRoles = UserRoles.Clone() as string,
                 VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
                 Words = new List<Word>(),
                 SemanticDomains = new List<SemanticDomain>(),
@@ -114,7 +105,6 @@ namespace BackendFramework.ValueModels
         {
             return
                 other.Name.Equals(Name) &&
-                other.UserRoles.Equals(UserRoles) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
                 other.Words.Count == Words.Count &&
@@ -158,7 +148,6 @@ namespace BackendFramework.ValueModels
             hash.Add(Id);
             hash.Add(Name);
             hash.Add(SemanticDomains);
-            hash.Add(UserRoles);
             hash.Add(Words);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
