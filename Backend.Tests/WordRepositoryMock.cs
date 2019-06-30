@@ -40,6 +40,7 @@ namespace Backend.Tests
         public Task<bool> DeleteAllWords()
         {
             words.Clear();
+            frontier.Clear();
             return Task.FromResult(true);
         }
 
