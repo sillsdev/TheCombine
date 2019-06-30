@@ -17,6 +17,7 @@ interface CharacterSetState {
   selected: string[];
   dragChar: string;
   dropChar: string;
+  error: boolean;
 }
 
 export class CharacterSet extends React.Component<
@@ -25,7 +26,13 @@ export class CharacterSet extends React.Component<
 > {
   constructor(props: CharacterSetProps & LocalizeContextProps) {
     super(props);
-    this.state = { chars: "", selected: [], dragChar: "", dropChar: "" };
+    this.state = {
+      chars: "",
+      selected: [],
+      dragChar: "",
+      dropChar: "",
+      error: false
+    };
   }
 
   handleChange(
@@ -33,7 +40,7 @@ export class CharacterSet extends React.Component<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) {
-    this.setState({ chars: e.target.value.replace(/\s/g, "") }); // removes whitespace
+    this.setState({ chars: e.target.value.replace(/\s/g, ""), error: false }); // removes whitespace
   }
 
   handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
@@ -60,13 +67,17 @@ export class CharacterSet extends React.Component<
 
   // adds characters in the textbox to the inventory
   addChars() {
-    this.props.setInventory([
-      ...this.props.inventory,
-      ...this.state.chars.split("")
-    ]);
-    this.setState({
-      chars: ""
-    });
+    if (this.state.chars === "") {
+      this.setState({ error: true });
+    } else {
+      this.props.setInventory([
+        ...this.props.inventory,
+        ...this.state.chars.split("")
+      ]);
+      this.setState({
+        chars: ""
+      });
+    }
   }
 
   // deletes selected chraracters
@@ -198,6 +209,12 @@ export class CharacterSet extends React.Component<
             onChange={e => this.handleChange(e)}
             onKeyDown={e => this.handleKeyDown(e)}
             autoComplete="off"
+            error={this.state.error}
+            helperText={
+              this.state.error && (
+                <Translate id="charInventory.characterSet.required" />
+              )
+            }
           />
         </Grid>
 
