@@ -44,15 +44,20 @@ namespace BackendFramework.Controllers
                 {
                     await file.CopyToAsync(fs);
                 }
+
+                try
+                {
+                    var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+                    return new ObjectResult(parser.ReadLiftFile(model.FilePath));
+                }
+                catch (Exception)
+                {
+                    return new UnsupportedMediaTypeResult();
+                }
             }
-            try
+            else
             {
-                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                return new ObjectResult(parser.ReadLiftFile(model.FilePath));
-            }
-            catch (Exception)
-            {
-                return new UnsupportedMediaTypeResult();
+                return new BadRequestObjectResult("Empty File");
             }
         }
 

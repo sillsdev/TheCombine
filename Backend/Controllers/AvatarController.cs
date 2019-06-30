@@ -53,7 +53,7 @@ namespace BackendFramework.Controllers
             }
             else
             {
-                return new BadRequestResult();
+                return new BadRequestObjectResult("Empty File");
             }
         }
     }
