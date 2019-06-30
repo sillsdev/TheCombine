@@ -2,6 +2,7 @@ import * as action from "../CreateProjectActions";
 import * as reducer from "../CreateProjectReducer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
+import { IN_PROGRESS } from "../CreateProjectActions";
 
 const createMockStore = configureMockStore([thunk]);
 
@@ -13,14 +14,15 @@ const project = {
 describe("CreateProjectAction Tests", () => {
   let mockState: reducer.CreateProjectState = reducer.defaultState;
   let CreateProject: action.CreateProjectAction = {
-    type: action.CREATE_PROJECT,
-    payload: project
+    type: action.IN_PROGRESS,
+    payload: { name: project.name }
   };
 
-  test("createProject returns correct value", () => {
-    expect(action.createProject(project.name, project.languageData)).toEqual(
-      CreateProject
-    );
+  test("inProgress returns correct value", () => {
+    expect(action.inProgress(project.name)).toEqual({
+      type: IN_PROGRESS,
+      payload: { name: project.name }
+    });
   });
 
   test("asyncCreateProject correctly affects state", () => {
