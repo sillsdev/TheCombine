@@ -14,7 +14,7 @@ namespace Backend.Tests
     public class AudioControllerTests
     {
         IWordRepository _wordrepo;
-        private WordService _wordService;
+        WordService _wordService;
         WordController wordController;
         AudioController audioController;
 
@@ -27,12 +27,8 @@ namespace Backend.Tests
             wordController = new WordController(_wordService, _wordrepo);
         }
 
-        string RandomString(int length = 0)
+        string RandomString(int length = 16)
         {
-            if (length == 0)
-            {
-                return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-            }
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, length);
         }
 
