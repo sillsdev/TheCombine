@@ -43,7 +43,7 @@ namespace BackendFramework.Controllers
 
                 return new ObjectResult(model.FilePath);
             }
-            return new UnsupportedMediaTypeResult();
+            return new BadRequestResult();
         }
     }
 }
