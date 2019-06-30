@@ -72,8 +72,6 @@ namespace BackendFramework.Services
             string filepath = wanted_path + "/EXAMPLE.lift";
             CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
 
-            //no longer uses @ for sake of indentation
-            //very messy
             string header =
                 @"
                     <ranges>
@@ -348,7 +346,6 @@ namespace BackendFramework.Services
         public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
 
         public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml) { }
-        
     }
 
     public class EmptyLiftObject : LiftObject
