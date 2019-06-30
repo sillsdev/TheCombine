@@ -56,7 +56,7 @@ namespace BackendFramework.Controllers
             }
         }
 
-        [HttpGet("Id")]
+        [HttpGet("words/download")]
         public async Task<IActionResult> ExportLiftFile(string Id)
         {
             var words = await _wordRepo.GetAllWords();

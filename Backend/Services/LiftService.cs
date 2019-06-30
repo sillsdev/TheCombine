@@ -96,46 +96,64 @@ namespace BackendFramework.Services
                 LexEntry entry = new LexEntry();
 
                 //add vernacular (lexical form)
-                LiftMultiText lexMultiText = new LiftMultiText();
-                string lang = _projService.GetProject(Id).Result.VernacularWritingSystem;
-                lexMultiText.Add(lang, wordEntry.Vernacular);
-                entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
+                addVern(Id, wordEntry, entry);
 
                 //add audio (pronunciation media)
-                LexPhonetic lexPhonetic = new LexPhonetic();
-                LiftMultiText proMultiText = new LiftMultiText{ { "href", wordEntry.Audio } };
-                lexPhonetic.MergeIn(MultiText.Create(proMultiText));
-                entry.Pronunciations.Add(lexPhonetic);
+                addAudio(entry, wordEntry);
 
                 //add sense
-                for (int i = 0; i < wordEntry.Senses.Count; i++)
-                {
-                    Dictionary<string, string> dict = new Dictionary<string, string>();
-                    foreach (Gloss gloss in wordEntry.Senses[i].Glosses)
-                    {
-                        //add gloss
-                       dict.Add(gloss.Language, gloss.Def);
-                    }
-                    //entry.GetOrCreateSenseWithMeaning(MultiText.Create(senseMultiText));
-                    LexSense lexSense = new LexSense();
-                    lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
-                    entry.Senses.Add(lexSense);
+                addSense(entry, wordEntry);
 
-
-                    foreach (var semdom in wordEntry.Senses[i].SemanticDomains)
-                    {
-                        //add semantic domain
-                        var orc = new OptionRefCollection();
-                        orc.Add(semdom.Number + " " + semdom.Name);
-
-                        entry.Senses[i].Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
-                        //entry.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
-                    }
-                }
                 writer.Add(entry);
             }
             writer.End();
         }
+
+        //add vernacular
+        public void addVern(string Id, Word wordEntry, LexEntry entry)
+        {
+            LiftMultiText lexMultiText = new LiftMultiText();
+            string lang = _projService.GetProject(Id).Result.VernacularWritingSystem;
+            lexMultiText.Add(lang, wordEntry.Vernacular);
+            entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
+        }
+
+        public void addAudio(LexEntry entry, Word wordEntry)
+        {
+            LexPhonetic lexPhonetic = new LexPhonetic();
+            LiftMultiText proMultiText = new LiftMultiText { { "href", wordEntry.Audio } };
+            lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+            entry.Pronunciations.Add(lexPhonetic);
+        }
+
+        public void addSense(LexEntry entry, Word wordEntry)
+        {
+            for (int i = 0; i < wordEntry.Senses.Count; i++)
+            {
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                foreach (Gloss gloss in wordEntry.Senses[i].Glosses)
+                {
+                    //add gloss
+                    dict.Add(gloss.Language, gloss.Def);
+                }
+
+                LexSense lexSense = new LexSense();
+                lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
+                entry.Senses.Add(lexSense);
+
+
+                foreach (var semdom in wordEntry.Senses[i].SemanticDomains)
+                {
+                    //add semantic domain
+                    var orc = new OptionRefCollection();
+                    orc.Add(semdom.Number + " " + semdom.Name);
+
+                    entry.Senses[i].Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
+
+                }
+            }
+        }
+
 
         /**************************************
          * Import Lift File from Http req
