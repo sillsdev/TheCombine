@@ -21,6 +21,7 @@ import { Check } from "@material-ui/icons";
 
 export interface RegisterDispatchProps {
   register?: (name: string, user: string, password: string) => void;
+  reset: () => void;
 }
 
 export interface RegisterStateProps {
@@ -66,6 +67,10 @@ class Register extends React.Component<
         email: false
       }
     };
+  }
+
+  componentDidMount() {
+    this.props.reset();
   }
 
   updateName(

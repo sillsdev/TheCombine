@@ -19,6 +19,7 @@ import { green } from "@material-ui/core/colors";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
+  reset: () => void;
   inProgress: boolean;
   success: boolean;
   errorMsg: string;
@@ -38,6 +39,10 @@ class CreateProject extends React.Component<
   constructor(props: CreateProjectProps & LocalizeContextProps) {
     super(props);
     this.state = { name: "", error: { name: false } };
+  }
+
+  componentDidMount() {
+    this.props.reset();
   }
 
   updateName(
@@ -149,7 +154,7 @@ class CreateProject extends React.Component<
                   disabled={this.props.inProgress}
                   style={{
                     marginTop: 30,
-                    backgroundColor: this.props.success ? green[500] : "auto"
+                    backgroundColor: this.props.success ? green[500] : undefined
                   }}
                 >
                   {this.props.success ? (
