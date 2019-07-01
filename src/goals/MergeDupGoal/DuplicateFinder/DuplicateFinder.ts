@@ -50,6 +50,11 @@ export default class DupFinder {
   // get n lists of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
   async getNextDups(n: number = 1): Promise<Word[][]> {
     let wordsFromDB: Promise<Word[][]> = this.getWordsFromDB().then(words => {
+      console.log(words);
+      if (words.length <= 0) {
+        console.log([words]);
+        return [words];
+      }
       //[wordlist, list score]
       let currentWords: [Word[], number][] = [];
 
