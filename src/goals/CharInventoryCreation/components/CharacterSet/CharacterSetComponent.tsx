@@ -4,8 +4,15 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography, TextField, Button, Paper } from "@material-ui/core";
-import { Delete as DeleteIcon, Add } from "@material-ui/icons";
+import {
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Tooltip
+} from "@material-ui/core";
+import { Delete as DeleteIcon, Add, Help } from "@material-ui/icons";
 
 export interface CharacterSetProps {
   setInventory: (inventory: string[]) => void;
@@ -132,7 +139,17 @@ export class CharacterSet extends React.Component<
       >
         <Grid item xs={12}>
           <Typography component="h1" variant="h4">
-            <Translate id="charInventory.characterSet.title" />
+            <Translate id="charInventory.characterSet.title" />{" "}
+            <Tooltip
+              title={
+                this.props.translate(
+                  "charInventory.characterSet.help"
+                ) as string
+              }
+              placement="bottom"
+            >
+              <Help />
+            </Tooltip>
           </Typography>
         </Grid>
 

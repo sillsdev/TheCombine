@@ -93,7 +93,11 @@
   "charInventory": {
     "title": ["Create Character Inventory", "Crear inventario de personajes"],
     "characterSet": {
-      "title": ["Character Set:", "Conjunto de caracteres:"],
+      "title": ["Vernacular Character Set:", "Conjunto de caracteres:"],
+      "help": [
+        "Define the characters that are valid for this language",
+        "Define los caracteres que son válidos para este idioma"
+      ],
       "addButton": ["Add Chars", "Añadir caracteres"],
       "addButtonTitle": [
         "Add the characters in the box to the character set",
