@@ -2,6 +2,7 @@
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,24 +51,42 @@ namespace BackendFramework.Controllers
             var userEdit = await _userEditService.GetUserEdit(Id);
             if (userEdit == null)
             {
-                return new NotFoundResult();
+                var newUserEdit = new UserEdit();
+                await _userEditService.Create(newUserEdit);
+                return new OkObjectResult(newUserEdit);
             }
             return new ObjectResult(userEdit);
         }
 
-        // POST: v1/Project/UserEdits
-        // Implements Create(), Arguments: new userEdit from body
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody]UserEdit userEdit)
+        // POST: v1/Project/UserEdits/{Id}
+        // Implements AddEditsToUserEdit(), Arguments: new userEdit from body
+        // Creates a goal
+        [HttpPost("{Id}")]
+        public async Task<IActionResult> Post(string Id, [FromBody]Edit newEdit)
         {
-            userEdit.Id = "";
-            await _userEditService.Create(userEdit);
-            return new OkObjectResult(userEdit.Id);
+            UserEdit toBeMod = await _userEditService.GetUserEdit(Id);
+
+            if (toBeMod == null)
+            {
+                return new NotFoundObjectResult(Id);
+            }
+
+            Tuple<bool, int> result = await _userEditService.AddEditsToUserEdit(Id, newEdit);
+
+            if (result.Item1)
+            {
+                return new OkObjectResult(result.Item2);
+            }
+            else
+            {
+                return new NotFoundObjectResult(result.Item2);
+            }
         }
 
         // PUT: v1/Project/UserEdits/{Id}
         // Implements Update(), Arguments: string id of target userEdit, 
         // wrapper object to hold the goal index and the step to add to the goal history
+        // Adds steps to a goal
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] UserEditObjectWrapper userEdit)
         {
@@ -77,9 +96,9 @@ namespace BackendFramework.Controllers
                 return new NotFoundResult();
             }
 
-            await _userEditService.Update(Id, userEdit.goalIndex, userEdit.newEdit);
+            await _userEditService.Update(Id, userEdit.GoalIndex, userEdit.NewEdit);
 
-            return new OkObjectResult(document.Edits[userEdit.goalIndex].StepData.Count);
+            return new OkObjectResult(document.Edits[userEdit.GoalIndex].StepData.Count);
         }
 
         // DELETE: v1/Project/UserEdits/{Id}

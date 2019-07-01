@@ -11,7 +11,7 @@ namespace BackendFramework.Controllers
 {
     //[Authorize]
     [Produces("application/json")]
-    [Route("v1")]
+    [Route("v1/projects")]
     public class LiftController : Controller
     {
         public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
@@ -29,7 +29,7 @@ namespace BackendFramework.Controllers
 
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
-        [HttpPost("projects/upload")]
+        [HttpPost("words/upload")]
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
             var file = model.File;
@@ -61,23 +61,17 @@ namespace BackendFramework.Controllers
             }
         }
 
-        [HttpGet("projects/download")]
-        public async Task<IActionResult> ExportLiftFile()
+        [HttpGet("words/download")]
+        public async Task<IActionResult> ExportLiftFile(string Id)
         {
             var words = await _wordRepo.GetAllWords();
             if(words.Count == 0)
             {
                 return new BadRequestResult();
             }
-            try
-            {
 
-                _liftService.LiftExport();
-            }
-            catch (FileNotFoundException)
-            {
-                return new BadRequestResult();
-            }
+            _liftService.LiftExport(Id);
+
             return new OkObjectResult(words);
         }
     }
