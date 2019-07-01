@@ -3,14 +3,14 @@
 
 export default {
   // get: when axios.get is called within parent directory, instead call this function
-  get: jest.fn((route: string) => {
+  get: jest.fn(route => {
     return Promise.resolve({
       types: "get"
     });
   }),
 
   // post: when axios.post is called within parent directory, instead call this function
-  post: jest.fn((route: string) => {
+  post: jest.fn(route => {
     return Promise.resolve({
       types: "post"
     });

@@ -55,13 +55,22 @@ export interface UserAction {
 export function asyncLogin(user: string, password: string) {
   return async (dispatch: Dispatch<UserAction>, getState: any) => {
     dispatch(loginAttempt(user));
+    console.log("Login attempt succeeded");
     //attempt to login with server
     await backend
       .authenticateUser(user, password)
       .then((res: any) => {
-        localStorage.setItem("user", res); //Store tokens
-        dispatch(loginSuccess(user));
-        history.push("/");
+        try {
+          console.log("Authenticate succeeded");
+          localStorage.setItem("user", res); //Store tokens
+          console.log("local storage succeeded");
+          dispatch(loginSuccess(user));
+          console.log("Login success succeeded");
+          history.push("/");
+          console.log("History succeeded");
+        } catch (err) {
+          console.log(err);
+        }
       })
       .catch(err => {
         dispatch(loginFailure(user));

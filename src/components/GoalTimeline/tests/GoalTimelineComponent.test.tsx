@@ -5,8 +5,9 @@ import { defaultState } from "../DefaultState";
 import { defaultState as selectorState } from "../DefaultState";
 import { Provider } from "react-redux";
 import { GoalTimeline } from "../GoalTimelineComponent";
+import thunk from "redux-thunk";
 
-const createMockStore = configureMockStore([]);
+const createMockStore = configureMockStore([thunk]);
 
 it("renders without crashing", () => {
   const mockStore = createMockStore({

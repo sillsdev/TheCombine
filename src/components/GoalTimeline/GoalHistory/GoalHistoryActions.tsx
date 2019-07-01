@@ -14,7 +14,7 @@ export interface LoadGoalHistory extends ActionWithPayload<Goal[]> {
 export type LoadGoalHistoryAction = LoadGoalHistory;
 
 export function asyncLoadGoalHistory() {
-  return async (dispatch: Dispatch<LoadGoalHistoryAction>, getState: any) => {
+  return async (dispatch: Dispatch<LoadGoalHistoryAction>) => {
     let history: Goal[] = [];
     await backend
       .getAllGoals()
