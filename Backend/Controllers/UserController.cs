@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
     public class UserController : Controller
@@ -84,9 +84,11 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]User user)
         {
+            //create a new user
             var returnUser = await _userService.Create(user);
 
-            if (returnUser == null)
+            //check if creations were valid
+            if (returnUser == null )
             {
                 return BadRequest();
             }

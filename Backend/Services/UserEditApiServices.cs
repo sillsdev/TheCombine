@@ -1,6 +1,7 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,6 +14,31 @@ namespace BackendFramework.Services
         public UserEditService(IUserEditContext collectionSettings)
         {
             _userEditDatabase = collectionSettings;
+        }
+
+        public async Task<Tuple<bool, int>> AddEditsToUserEdit(string Id, Edit edit)
+        {
+            //get userEdit to change
+            var userEntry = await GetUserEdit(Id);
+
+            //add the new goal index to Edits list
+            userEntry.Edits.Add(edit);
+
+            //replace the old UserEdit object with the new one that contains  the new list entry
+            FilterDefinition<UserEdit> filter = Builders<UserEdit>.Filter.Eq(x => x.Id, Id);
+            var updateResult = _userEditDatabase.UserEdits.ReplaceOne(filter, userEntry);
+
+            //ensure the replacement has been made
+            bool validation = updateResult.IsAcknowledged && updateResult.ModifiedCount == 1;
+            int indexOfNewestEdit = -1;
+
+            if (validation)
+            {
+                var newestEdit = await _userEditDatabase.UserEdits.FindAsync(filter);
+                indexOfNewestEdit = newestEdit.Single().Edits.Count -1;
+            }
+
+            return new Tuple<bool, int>(validation, indexOfNewestEdit);
         }
 
         public async Task<List<UserEdit>> GetAllUserEdits()

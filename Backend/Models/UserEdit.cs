@@ -66,15 +66,33 @@ namespace BackendFramework.ValueModels
     public class UserEditObjectWrapper
     {
         [BsonElement("goalIndex")]
-        public int goalIndex { get; set; }
+        public int GoalIndex { get; set; }
 
         [BsonElement("newEdit")]
-        public string newEdit { get; set; }
+        public string NewEdit { get; set; }
 
         public UserEditObjectWrapper(int goalI, string newE)
         {
-            goalIndex = goalI;
-            newEdit = newE;
+            GoalIndex = goalI;
+            NewEdit = newE;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                UserEditObjectWrapper other = obj as UserEditObjectWrapper;
+                return other.GoalIndex.Equals(GoalIndex) && other.NewEdit.Equals(NewEdit);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(GoalIndex, NewEdit);
         }
     }
 
@@ -85,6 +103,12 @@ namespace BackendFramework.ValueModels
 
         [BsonElement("stepData")]
         public List<string> StepData { get; set; }
+
+        public Edit()
+        {
+            GoalType = 0;
+            StepData = new List<string>();
+        }
 
         public Edit Clone()
         {
@@ -101,6 +125,7 @@ namespace BackendFramework.ValueModels
 
             return clone;
         }
+
         public override bool Equals(object obj)
         {
             if ((obj == null) || !this.GetType().Equals(obj.GetType()))

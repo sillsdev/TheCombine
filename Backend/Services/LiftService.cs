@@ -66,10 +66,10 @@ namespace BackendFramework.Services
         /********************************
         * LIft Export Implementation
         ********************************/
-        public void LiftExport()
+        public void LiftExport(string Id)
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            string filepath = Path.Combine(wanted_path,  "NewLiftFile.lift");
+            string filepath = wanted_path + "/EXAMPLE.lift";
             CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
 
             string header =
@@ -86,26 +86,15 @@ namespace BackendFramework.Services
                 ";
 
             writer.WriteHeader(header);
+
             var allWords = _repo.GetAllWords().Result;
-            var lang = _projService.GetAllProjects().Result;
-            string getProject;
-            if (lang.Count != 0)
-            {
-                //this next line is temporary until James and the rest of the backend 
-                //can implement multiple Projects per database
-                getProject = lang[0].VernacularWritingSystem;
-            }
-            else
-            {
-                throw new FileNotFoundException();
-            }
 
             foreach (Word wordEntry in allWords )
             {
                 LexEntry entry = new LexEntry();
 
                 //add vernacular (lexical form)
-                addVern(wordEntry, entry, getProject);
+                addVern(Id, wordEntry, entry);
 
                 //add audio (pronunciation media)
                 addAudio(entry, wordEntry);
@@ -119,14 +108,15 @@ namespace BackendFramework.Services
         }
 
         //add vernacular
-        private void addVern(Word wordEntry, LexEntry entry, string getProject)
+        public void addVern(string Id, Word wordEntry, LexEntry entry)
         {
-                LiftMultiText lexMultiText = new LiftMultiText();
-                lexMultiText.Add(getProject, wordEntry.Vernacular);
-                entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
+            LiftMultiText lexMultiText = new LiftMultiText();
+            string lang = _projService.GetProject(Id).Result.VernacularWritingSystem;
+            lexMultiText.Add(lang, wordEntry.Vernacular);
+            entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
         }
 
-        private void addAudio(LexEntry entry, Word wordEntry)
+        public void addAudio(LexEntry entry, Word wordEntry)
         {
             LexPhonetic lexPhonetic = new LexPhonetic();
             LiftMultiText proMultiText = new LiftMultiText { { "href", wordEntry.Audio } };
@@ -134,7 +124,7 @@ namespace BackendFramework.Services
             entry.Pronunciations.Add(lexPhonetic);
         }
 
-        private void addSense(LexEntry entry, Word wordEntry)
+        public void addSense(LexEntry entry, Word wordEntry)
         {
             for (int i = 0; i < wordEntry.Senses.Count; i++)
             {
