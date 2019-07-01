@@ -69,9 +69,15 @@ namespace BackendFramework.Controllers
             {
                 return new BadRequestResult();
             }
+            try
+            {
 
-            _liftService.LiftExport();
-
+                _liftService.LiftExport();
+            }
+            catch (FileNotFoundException e)
+            {
+                return new BadRequestResult();
+            }
             return new OkObjectResult(words);
         }
     }

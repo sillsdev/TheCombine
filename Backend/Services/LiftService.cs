@@ -111,10 +111,17 @@ namespace BackendFramework.Services
         public void addVern(Word wordEntry, LexEntry entry)
         {
             LiftMultiText lexMultiText = new LiftMultiText();
-            string lang = _projService.GetAllProjects().Result[0].VernacularWritingSystem;
-           
-            lexMultiText.Add(lang, wordEntry.Vernacular);
-            entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
+            var lang = _projService.GetAllProjects().Result;
+            if (lang.Count != 0)
+            {
+                var getProject = lang[0].VernacularWritingSystem;
+                lexMultiText.Add(getProject, wordEntry.Vernacular);
+                entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
+            }
+            else
+            {
+                throw new FileNotFoundException();
+            }
         }
 
         public void addAudio(LexEntry entry, Word wordEntry)
