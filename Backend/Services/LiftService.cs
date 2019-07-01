@@ -1,5 +1,3 @@
-#define GlossMeaning
-
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
@@ -64,7 +62,7 @@ namespace BackendFramework.Services
         }
 
         /********************************
-        * LIft Export Implementation
+        * Lift Export Implementation
         ********************************/
         public void LiftExport(string Id)
         {
