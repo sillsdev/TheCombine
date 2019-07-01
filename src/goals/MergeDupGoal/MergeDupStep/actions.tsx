@@ -1,78 +1,69 @@
-import { Word, simpleWord, State } from "../../../types/word";
-import { StoreState } from "../../../types";
+import {Word, simpleWord, State} from "../../../types/word";
+import {StoreState} from "../../../types";
 import * as backend from "../../../backend";
-import { WordListAction, refreshListWords } from "./WordList/actions";
-import { ThunkDispatch } from "redux-thunk";
+import {WordListAction, refreshListWords} from "./WordList/actions";
+import {ThunkDispatch} from "redux-thunk";
+import {MergeTree} from './MergeDupsTree';
 
-// Args: (word: Word)
-export const ADD_PARENT = "ADD_PARENT";
-export type ADD_PARENT = typeof ADD_PARENT;
-
-// Args: (word: Word, parent: Word)
-export const ADD_SENSE = "ADD_SENSE";
-export type ADD_SENSE = typeof ADD_SENSE;
-
-// Args: (word: Word, parent: Word)
-export const ADD_DUPLICATE = "ADD_DUPLICATE";
-export type ADD_DUPLICATE = typeof ADD_DUPLICATE;
-
-export const REMOVE_DUPLICATE = "REMOVE_DUPLICATE";
-export type REMOVE_DUPLICATE = typeof REMOVE_DUPLICATE;
-
-export const CLEAR_MERGES = "CLEAR_MERGES";
-export type CLEAR_MERGES = typeof CLEAR_MERGES;
-
-export const SWAP_DUPLICATE = "SWAP_DUPLICATE";
-export type SWAP_DUPLICATE = typeof SWAP_DUPLICATE;
-
-export type MERGE_DUPLICATE_STEP_GENERIC =
-  | ADD_DUPLICATE
-  | REMOVE_DUPLICATE
-  | CLEAR_MERGES;
-
-export interface MergeTreePayload {
-  word: Word;
-  parent?: number;
-}
-export interface MergeTreeAction {
-  type:
-    | ADD_PARENT
-    | CLEAR_MERGES
-    | ADD_SENSE
-    | ADD_DUPLICATE
-    | REMOVE_DUPLICATE
-    | SWAP_DUPLICATE;
-  payload: MergeTreePayload;
+export enum MergeTreeActions {
+  SET_VERNACULAR = "SET_VERNACULAR",
+  SET_PLURAL = "SET_PLURAL",
+  MOVE_SENSE = "MOVE_SENSE",
+  SET_SENSE = "SET_SENSE",
 }
 
-export function moveDuplicate(word: Word, dest: number): MergeTreeAction {
+export interface MergeTreeMoveAction {
+  type: MergeTreeActions.MOVE_SENSE;
+  payload: {src: MergeTree.Reference, dest: MergeTree.Reference};
+}
+
+export interface MergeTreeSetAction {
+  type: MergeTreeActions.SET_SENSE;
+  payload: {ref: MergeTree.Reference, data: number | undefined};
+}
+
+export interface MergeTreeWordAction {
+  type: MergeTreeActions.SET_VERNACULAR | MergeTreeActions.SET_PLURAL;
+  payload: {wordID: number, data: string};
+}
+
+export type MergeTreeAction = MergeTreeWordAction | MergeTreeMoveAction | MergeTreeSetAction;
+
+// action creators
+export function setVern(wordID: number, vern: string): MergeTreeAction {
   return {
-    type: SWAP_DUPLICATE,
-    payload: { word, parent: dest }
+    type: MergeTreeActions.SET_VERNACULAR,
+    payload: {wordID, data: vern}
   };
 }
 
-export function addParent(word: Word): MergeTreeAction {
+export function setPlural(wordID: number, plural: string): MergeTreeAction {
   return {
-    type: ADD_PARENT,
-    payload: { word }
+    type: MergeTreeActions.SET_PLURAL,
+    payload: {wordID, data: plural}
   };
 }
 
-export function addSense(word: Word, parent: number): MergeTreeAction {
+export function moveSense(src: MergeTree.Reference, dest: MergeTree.Reference): MergeTreeAction {
   return {
-    type: ADD_SENSE,
-    payload: { word, parent }
+    type: MergeTreeActions.MOVE_SENSE,
+    payload: {src, dest}
   };
 }
 
-export function addDuplicate(word: Word, parent: number): MergeTreeAction {
+export function setSense(ref: MergeTree.Reference, data: number | undefined): MergeTreeAction {
   return {
-    type: ADD_DUPLICATE,
-    payload: { word, parent }
+    type: MergeTreeActions.SET_SENSE,
+    payload: {ref, data}
   };
 }
 
+export function removeSense(ref: MergeTree.Reference): MergeTreeAction {
+  return setSense(ref, undefined);
+}
+
+
+// this is gross lets clean it up
 export function applyMerges() {
   return async (
     dispatch: ThunkDispatch<any, any, MergeTreeAction | WordListAction>,
@@ -102,19 +93,5 @@ export function applyMerges() {
     )
       .then(() => dispatch(clearMerges()))
       .then(() => dispatch(refreshListWords()));
-  };
-}
-
-export function clearMerges(): MergeTreeAction {
-  return {
-    type: CLEAR_MERGES,
-    payload: { word: simpleWord("", "") }
-  };
-}
-
-export function removeDuplicate(word: Word, parent: number): MergeTreeAction {
-  return {
-    type: REMOVE_DUPLICATE,
-    payload: { word, parent }
   };
 }
