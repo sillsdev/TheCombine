@@ -15,7 +15,7 @@ import {
   CircularProgress
 } from "@material-ui/core";
 import { Check } from "@material-ui/icons";
-import { green } from "@material-ui/core/colors";
+import { buttonSuccess } from "../../types/theme";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
