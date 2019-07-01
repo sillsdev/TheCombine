@@ -114,6 +114,8 @@ namespace BackendFramework.Services
             var lang = _projService.GetAllProjects().Result;
             if (lang.Count != 0)
             {
+                //this next line is temporary until James and the rest of the backend 
+                //can implement multiple Projects per database
                 var getProject = lang[0].VernacularWritingSystem;
                 lexMultiText.Add(getProject, wordEntry.Vernacular);
                 entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
