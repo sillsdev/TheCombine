@@ -24,7 +24,6 @@ namespace BackendFramework.Services
             {
                 Word wordToDelete = _repo.GetWord(Id).Result;
                 wordToDelete.Id = null;
-                wordToDelete.Accessability = (int)state.deleted;
                 wordToDelete.History.Add(Id);
 
                 await _repo.Create(wordToDelete);
@@ -38,7 +37,6 @@ namespace BackendFramework.Services
             if (wordIsInFrontier)
             {
                 word.Id = null;
-                word.Accessability = (int)state.active;
                 word.History = new List<string> { Id };
 
                 await _repo.Create(word);
@@ -55,7 +53,6 @@ namespace BackendFramework.Services
 
                 Word childWord = _repo.GetWord(childId).Result;
                 childWord.History = new List<string> { childId };
-                childWord.Accessability = (int)mergeWords.MergeType; // 2: sense or 3: duplicate
                 childWord.Id = null;
 
                 await _repo.Add(childWord);
@@ -70,7 +67,6 @@ namespace BackendFramework.Services
 
             Word parentWord = _repo.GetWord(parentId).Result;
             parentWord.History = parentHistory;
-            parentWord.Accessability = (int)state.active;
             parentWord.Id = null;
 
             await _repo.Create(parentWord);

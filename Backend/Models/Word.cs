@@ -40,9 +40,6 @@ namespace BackendFramework.ValueModels
         [BsonElement("editedBy")]
         public List<string> EditedBy { get; set; }
 
-        [BsonElement("accessability")]
-        public int Accessability { get; set; }
-
         [BsonElement("otherField")]
         public string OtherField { get; set; }
 
@@ -55,7 +52,6 @@ namespace BackendFramework.ValueModels
             Created = "";
             Modified = "";
             PartOfSpeech = "";
-            Accessability = (int)state.active;
             OtherField = "";
             EditedBy = new List<string>();
             History = new List<string>();
@@ -73,7 +69,6 @@ namespace BackendFramework.ValueModels
                 Created = Created.Clone() as string,
                 Modified = Modified.Clone() as string,
                 PartOfSpeech = PartOfSpeech.Clone() as string,
-                Accessability = Accessability,
                 OtherField = OtherField.Clone() as string,
                 EditedBy = new List<string>(),
                 History = new List<string>(),
@@ -105,7 +100,6 @@ namespace BackendFramework.ValueModels
                 other.Created.Equals(Created) &&
                 other.Modified.Equals(Modified) &&
                 other.PartOfSpeech.Equals(PartOfSpeech) &&
-                other.Accessability.Equals(Accessability) &&
                 other.OtherField.Equals(OtherField) &&
 
                 other.EditedBy.Count == EditedBy.Count &&
@@ -144,7 +138,6 @@ namespace BackendFramework.ValueModels
             hash.Add(History);
             hash.Add(PartOfSpeech);
             hash.Add(EditedBy);
-            hash.Add(Accessability);
             hash.Add(OtherField);
             return hash.ToHashCode();
         }
@@ -160,8 +153,14 @@ namespace BackendFramework.ValueModels
 
     public class Sense
     {
+        [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
+
+        [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
+
+        [BsonElement("accessability")]
+        public int Accessability { get; set; }
 
         public Sense Clone()
         {
