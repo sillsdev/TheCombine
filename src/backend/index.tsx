@@ -158,7 +158,7 @@ export async function addGoal(goal: Goal): Promise<Goal> {
   // });
 }
 
-export async function getGoal(index: number): Promise<Goal> {
+export async function getGoal(index: string): Promise<Goal> {
   return await backendServer.get(`projects/useredits/${index}`).then(resp => {
     console.log(resp.data);
     return resp.data;
