@@ -1,4 +1,4 @@
-import { Word } from "../../types/word";
+import {MergeTreeReference} from '../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree';
 
 export const DRAG_WORD = "DRAG_WORD";
 export type DRAG_WORD = typeof DRAG_WORD;
@@ -8,17 +8,17 @@ export type DROP_WORD = typeof DROP_WORD;
 
 export type DRAGGABLE_WORD_GENERIC = DRAG_WORD | DROP_WORD;
 
-export type WordDragPayload = Word | undefined;
+export type WordDragPayload = MergeTreeReference | undefined;
 
 export interface WordDragAction {
   type: DRAGGABLE_WORD_GENERIC;
   payload: WordDragPayload;
 }
 
-export function dragWord(word: Word): WordDragAction {
+export function dragWord(ref: MergeTreeReference): WordDragAction {
   return {
     type: DRAG_WORD,
-    payload: word
+    payload: ref
   };
 }
 

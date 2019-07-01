@@ -1,33 +1,14 @@
 //external modules
 import * as React from "react";
-import {
-  Translate,
-  LocalizeContextProps,
-  withLocalize
-} from "react-localize-redux";
-import { Word } from "../../../../types/word";
-import {
-  Box,
-  CardContent,
-  Card,
-  Popper,
-  ClickAwayListener,
-  Popover,
-  Typography
-} from "@material-ui/core";
-import { Sense } from "../component";
-import WordCard from "../WordCard";
-import StackDisplay from "./Display";
+import {LocalizeContextProps, withLocalize} from "react-localize-redux";
+import {Word} from "../../../../types/word";
+import {MergeTreeReference} from '../MergeDupsTree';
 
 //interface for component props
 export interface MergeStackProps {
-  sense: Sense;
-  addDuplicate?: (word: Word, sense: number) => void;
-  removeDuplicate?: (word: Word, sense: number) => void;
   dropWord?: () => void;
-  dragWord?: (word: Word) => void;
-  updateRow?: () => void;
-  draggedWord?: Word;
+  dragWord?: (ref: MergeTreeReference) => void;
+  draggedWord?: MergeTreeReference;
 }
 
 //interface for component state
@@ -42,20 +23,23 @@ const HEIGHT: string = "10vw"; // Height of each card
 class MergeStack extends React.Component<
   MergeStackProps & LocalizeContextProps,
   MergeStackState
-> {
+  > {
   constructor(props: MergeStackProps & LocalizeContextProps) {
     super(props);
     this.state = {};
   }
 
-  addWord(word: Word) {
+  addWord() {
+    /*
     if (this.props.addDuplicate && this.props.dropWord) {
       this.props.addDuplicate(word, this.props.sense.id);
       this.props.dropWord();
     }
+     */
   }
 
-  dragDrop(event: React.DragEvent<HTMLElement>) {
+  dragDrop(_event: React.DragEvent<HTMLElement>) {
+    /*
     event.preventDefault();
     if (
       this.props.draggedWord &&
@@ -63,15 +47,19 @@ class MergeStack extends React.Component<
     ) {
       this.addWord(this.props.draggedWord);
     }
+     */
   }
 
-  drag(word: Word) {
+  drag(_ref: MergeTreeReference) {
+    /*
     if (this.props.dragWord) {
       this.props.dragWord(word);
     }
+     */
   }
 
-  removeCard(word: Word) {
+  removeCard(_word: Word) {
+    /*
     if (this.props.draggedWord && this.props.dropWord) {
       this.props.dropWord();
     } else {
@@ -81,26 +69,28 @@ class MergeStack extends React.Component<
         this.props.updateRow();
       }
     }
+     */
   }
 
-  parentCard(): Word {
-    return this.props.sense.dups[0];
-  }
-
-  spawnDisplay(e: React.MouseEvent<HTMLElement>) {
+  spawnDisplay(_e: React.MouseEvent<HTMLElement>) {
+    /*
     if (this.props.sense.dups.length > 1) {
       this.setState({
         ...this.state,
         anchorEl: this.state.anchorEl ? undefined : e.currentTarget
       });
     }
+     */
   }
 
   closeDisplay() {
+    /*
     this.setState({ ...this.state, anchorEl: undefined });
+     */
   }
 
   render_single() {
+    /*
     var lastCard = this.parentCard();
     const open = Boolean(this.state.anchorEl);
     const id = open ? "simple-popper" : undefined;
@@ -180,23 +170,29 @@ class MergeStack extends React.Component<
         </ClickAwayListener>
       </div>
     );
+            */
   }
 
   render_stack() {
+    /*
     return (
       <Card style={{ paddingBottom: 2, paddingRight: 2 }}>
         {this.render_single()}
       </Card>
     );
+     */
   }
 
   render() {
+    return (<div> Hello Stack </div>);
+    /*
     //visual definition
     if (this.props.sense.dups.length > 1) {
       return this.render_stack();
     } else {
       return this.render_single();
     }
+     */
   }
 }
 
