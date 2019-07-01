@@ -18,6 +18,7 @@ import {
 import history from "../../../history";
 import { green } from "@material-ui/core/colors";
 import { Check } from "@material-ui/icons";
+import { buttonSuccess } from "../../../types/theme";
 
 export interface RegisterDispatchProps {
   register?: (name: string, user: string, password: string) => void;
@@ -288,7 +289,7 @@ class Register extends React.Component<
                     disabled={this.props.inProgress}
                     style={{
                       backgroundColor: this.props.success
-                        ? green[500]
+                        ? buttonSuccess
                         : undefined
                     }}
                   >
@@ -304,7 +305,7 @@ class Register extends React.Component<
                       <CircularProgress
                         size={24}
                         style={{
-                          color: green[500],
+                          color: buttonSuccess,
                           position: "absolute",
                           top: "50%",
                           left: "50%",

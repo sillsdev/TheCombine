@@ -8,7 +8,7 @@ import {
   Typography
 } from "@material-ui/core";
 import { Add, Block } from "@material-ui/icons";
-import { green, red } from "@material-ui/core/colors";
+import { greenHighlight } from "../../../../types/theme";
 
 const TRANSITION =
   "width 0.25s, opacity 0.25s, background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms";
@@ -55,7 +55,7 @@ export class WordTile extends React.Component<
                   this.props.inventory.includes(letter) ? (
                     letter
                   ) : (
-                    <span style={{ background: green[100] }}>{letter}</span>
+                    <span style={{ background: greenHighlight }}>{letter}</span>
                   )
                 )}{" "}
               <Tooltip
