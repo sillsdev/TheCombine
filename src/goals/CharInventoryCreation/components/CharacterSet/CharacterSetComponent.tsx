@@ -4,8 +4,15 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography, TextField, Button, Paper } from "@material-ui/core";
-import { Delete as DeleteIcon, Add } from "@material-ui/icons";
+import {
+  Grid,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Tooltip
+} from "@material-ui/core";
+import { Delete as DeleteIcon, Add, Help } from "@material-ui/icons";
 
 export interface CharacterSetProps {
   setInventory: (inventory: string[]) => void;
@@ -17,6 +24,7 @@ interface CharacterSetState {
   selected: string[];
   dragChar: string;
   dropChar: string;
+  textboxError: boolean;
 }
 
 export class CharacterSet extends React.Component<
@@ -25,7 +33,13 @@ export class CharacterSet extends React.Component<
 > {
   constructor(props: CharacterSetProps & LocalizeContextProps) {
     super(props);
-    this.state = { chars: "", selected: [], dragChar: "", dropChar: "" };
+    this.state = {
+      chars: "",
+      selected: [],
+      dragChar: "",
+      dropChar: "",
+      textboxError: false
+    };
   }
 
   handleChange(
@@ -33,7 +47,10 @@ export class CharacterSet extends React.Component<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) {
-    this.setState({ chars: e.target.value.replace(/\s/g, "") }); // removes whitespace
+    this.setState({
+      chars: e.target.value.replace(/\s/g, ""),
+      textboxError: false
+    }); // removes whitespace
   }
 
   handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
@@ -60,13 +77,17 @@ export class CharacterSet extends React.Component<
 
   // adds characters in the textbox to the inventory
   addChars() {
-    this.props.setInventory([
-      ...this.props.inventory,
-      ...this.state.chars.split("")
-    ]);
-    this.setState({
-      chars: ""
-    });
+    if (this.state.chars === "") {
+      this.setState({ textboxError: true });
+    } else {
+      this.props.setInventory([
+        ...this.props.inventory,
+        ...this.state.chars.split("")
+      ]);
+      this.setState({
+        chars: ""
+      });
+    }
   }
 
   // deletes selected chraracters
@@ -121,7 +142,17 @@ export class CharacterSet extends React.Component<
       >
         <Grid item xs={12}>
           <Typography component="h1" variant="h4">
-            <Translate id="charInventory.characterSet.title" />
+            <Translate id="charInventory.characterSet.title" />{" "}
+            <Tooltip
+              title={
+                this.props.translate(
+                  "charInventory.characterSet.help"
+                ) as string
+              }
+              placement="right"
+            >
+              <Help />
+            </Tooltip>
           </Typography>
         </Grid>
 
@@ -198,6 +229,12 @@ export class CharacterSet extends React.Component<
             onChange={e => this.handleChange(e)}
             onKeyDown={e => this.handleKeyDown(e)}
             autoComplete="off"
+            error={this.state.textboxError}
+            helperText={
+              this.state.textboxError && (
+                <Translate id="charInventory.characterSet.required" />
+              )
+            }
           />
         </Grid>
 
