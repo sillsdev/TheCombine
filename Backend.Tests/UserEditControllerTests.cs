@@ -99,10 +99,6 @@ namespace Backend.Tests
             updateEdit.Edits.Add(newEditStep);
 
             Assert.Contains(updateEdit, allUserEdits);
-
-            var allUserEdits = _userEditService.GetAllUserEdits().Result;
-            
-            Assert.Contains(updateEdit, allUserEdits);
         }
 
         [Test]

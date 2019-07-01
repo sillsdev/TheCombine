@@ -73,15 +73,5 @@ namespace Backend.Tests
             var result = new Tuple<bool, int>(true, 1);
             return Task.FromResult(result);
         }
-
-        public Task<Tuple<bool, int>> AddEditsToUserEdit(string Id, Edit edit)
-        {
-            UserEdit userEdit = GetUserEdit(Id).Result;
-            userEdits.Remove(userEdit);
-            userEdit.Edits.Add(edit);
-            userEdits.Add(userEdit);
-            var result = new Tuple<bool, int>(true, 1);
-            return Task.FromResult(result);
-        }
     }
 }
