@@ -52,8 +52,8 @@ namespace BackendFramework.Controllers
             if (userEdit == null)
             {
                 var newUserEdit = new UserEdit();
-                await _userEditService.Create(newUserEdit);
-                return new OkObjectResult(newUserEdit);
+                var result = await _userEditService.Create(newUserEdit);
+                return new OkObjectResult(result);
             }
             return new ObjectResult(userEdit);
         }
