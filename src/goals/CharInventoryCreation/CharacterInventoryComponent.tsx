@@ -18,6 +18,7 @@ import {
 import { Project } from "../../types/project";
 import SampleWords from "./components/SampleWords";
 import { Save } from "@material-ui/icons";
+import history from "../../history";
 
 export interface CharacterInventoryProps {
   setInventory: (inventory: string[]) => void;
@@ -75,6 +76,7 @@ class CharacterInventory extends React.Component<
                 color="primary"
                 onClick={() => {
                   this.props.uploadInventory();
+                  history.push("/goals");
                 }}
                 style={{ margin: 10 }} // remove when we can add theme
               >
@@ -111,7 +113,7 @@ class CharacterInventory extends React.Component<
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => this.handleClose()}
+              onClick={() => history.push("/goals")}
               variant="contained"
               color="secondary"
               autoFocus
