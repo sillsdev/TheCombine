@@ -7,7 +7,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace Tests
+namespace Backend.Tests
 {
     public class UserControllerTests
     {

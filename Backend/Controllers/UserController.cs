@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
     public class UserController : Controller
