@@ -74,7 +74,7 @@ namespace BackendFramework.Controllers
 
                 _liftService.LiftExport();
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 return new BadRequestResult();
             }
