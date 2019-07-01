@@ -8,13 +8,16 @@ import {
   SWAP_DUPLICATE
 } from "./actions";
 import {ParentWord} from "./component";
+import {MergeTree} from './MergeDupsTree';
 
 export const defaultState: MergeTreeState = {
-  parentWords: []
+  data: MergeTree.defaultData;
+  tree: MergeTree.defaultTree;
 };
 
 export interface MergeTreeState {
-  parentWords: ParentWord[];
+  data: MergeTree.MergeData;
+  tree: MergeTree.Tree;
 }
 
 //ID assigned to parents as senses to help differentiate between them.
