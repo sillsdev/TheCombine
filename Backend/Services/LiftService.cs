@@ -106,7 +106,7 @@ namespace BackendFramework.Services
 
                 //add vernacular (lexical form)
                 addVern(wordEntry, entry, getProject);
-                
+
                 //add audio (pronunciation media)
                 addAudio(entry, wordEntry);
 
