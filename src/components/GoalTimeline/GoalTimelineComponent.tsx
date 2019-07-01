@@ -1,6 +1,6 @@
 import React from "react";
 
-import GoalHistory from "./GoalHistory";
+import GoalHistory from "./GoalHistory/index";
 import GoalSwitcher from "./GoalSwitcher";
 import GoalSuggestions from "./GoalSuggestions";
 import AppBarComponent from "../AppBar/AppBarComponent";

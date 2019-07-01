@@ -6,6 +6,7 @@ import BaseGoalSelect from "../../../goals/DefaultGoal/BaseGoalWidget/BaseGoalWi
 
 export interface GoalHistoryProps {
   history: Goal[];
+  asyncLoadHistory: () => void;
 }
 
 export class GoalHistory extends React.Component<
@@ -13,6 +14,10 @@ export class GoalHistory extends React.Component<
 > {
   constructor(props: GoalHistoryProps & LocalizeContextProps) {
     super(props);
+  }
+
+  componentDidMount() {
+    this.props.asyncLoadHistory();
   }
 
   render() {
