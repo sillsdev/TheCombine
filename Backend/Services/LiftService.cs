@@ -1,22 +1,161 @@
+#define GlossMeaning
+
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
 using SIL.Lift.Parsing;
+using SIL.Text;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using static SIL.DictionaryServices.Lift.LiftWriter;
 
 namespace BackendFramework.Services
 {
+    public class CombineLiftWriter : LiftWriter
+    {
+        public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle)
+        {
+        }
+
+        public CombineLiftWriter(StringBuilder builder, bool produceFragmentOnly) : base(builder, produceFragmentOnly)
+        {
+        }
+
+        protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
+        {
+            if (entry.Pronunciations.First().Forms.Count() > 0)
+            {
+                Writer.WriteStartElement("pronunciation");
+                Writer.WriteStartElement("media");
+
+                foreach (var pro in entry.Pronunciations)
+                {
+                    Writer.WriteAttributeString("href", entry.Pronunciations.First().Forms.First().Form);
+                }
+
+                //makes sure the writer does not write it again
+                entry.Pronunciations.Clear();
+
+                Writer.WriteEndElement();
+                Writer.WriteEndElement();
+            }
+        }
+    }
+
     public class LiftService : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
-        private readonly IWordRepository _repo;
 
-        public LiftService(IWordRepository repo)
+        
+        private readonly IWordRepository _repo;
+        private readonly IProjectService _projService;
+
+        public LiftService(IWordRepository repo, IProjectService projserv)
         {
             _repo = repo;
+            _projService = projserv;
         }
+
+        /********************************
+        * LIft Export Implementation
+        ********************************/
+        public void LiftExport(string Id)
+        {
+            string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+            string filepath = wanted_path + "/EXAMPLE.lift";
+            CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
+
+            string header =
+                @"
+                    <ranges>
+                        <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/FullerM/Documents/TheCombine/Backend.Tests/bin/testingdata.lift-ranges""/>
+                    </ranges>
+                    <fields>
+                        <field tag = ""Plural"">
+                            <form lang = ""en""><text></text></form>
+                             <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+                        </field>
+                    </fields>
+                ";
+
+            writer.WriteHeader(header);
+
+            var allWords = _repo.GetAllWords().Result;
+
+            foreach (Word wordEntry in allWords )
+            {
+                LexEntry entry = new LexEntry();
+
+                //add vernacular (lexical form)
+                addVern(Id, wordEntry, entry);
+
+                //add audio (pronunciation media)
+                addAudio(entry, wordEntry);
+
+                //add sense
+                addSense(entry, wordEntry);
+
+                writer.Add(entry);
+            }
+            writer.End();
+        }
+
+        //add vernacular
+        public void addVern(string Id, Word wordEntry, LexEntry entry)
+        {
+            LiftMultiText lexMultiText = new LiftMultiText();
+            string lang = _projService.GetProject(Id).Result.VernacularWritingSystem;
+            lexMultiText.Add(lang, wordEntry.Vernacular);
+            entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
+        }
+
+        public void addAudio(LexEntry entry, Word wordEntry)
+        {
+            LexPhonetic lexPhonetic = new LexPhonetic();
+            LiftMultiText proMultiText = new LiftMultiText { { "href", wordEntry.Audio } };
+            lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+            entry.Pronunciations.Add(lexPhonetic);
+        }
+
+        public void addSense(LexEntry entry, Word wordEntry)
+        {
+            for (int i = 0; i < wordEntry.Senses.Count; i++)
+            {
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                foreach (Gloss gloss in wordEntry.Senses[i].Glosses)
+                {
+                    //add gloss
+                    dict.Add(gloss.Language, gloss.Def);
+                }
+
+                LexSense lexSense = new LexSense();
+                lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
+                entry.Senses.Add(lexSense);
+
+
+                foreach (var semdom in wordEntry.Senses[i].SemanticDomains)
+                {
+                    //add semantic domain
+                    var orc = new OptionRefCollection();
+                    orc.Add(semdom.Number + " " + semdom.Name);
+
+                    entry.Senses[i].Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
+
+                }
+            }
+        }
+
+
+        /**************************************
+         * Import Lift File from Http req
+         * ***********************************/
 
         public async void FinishEntry(LiftEntry entry)
         {
@@ -34,6 +173,12 @@ namespace BackendFramework.Services
                     string PluralForm = entry.Fields.First().Content.First().Value.Text;
                     newWord.Plural = PluralForm;
                 }
+            }
+
+            //add audio
+            foreach (var pro in entry.Pronunciations)
+            {
+                newWord.Audio = pro.Media.FirstOrDefault().Url;
             }
 
             //add senses
@@ -137,6 +282,16 @@ namespace BackendFramework.Services
             extensible.Traits.Add(newTrait);
         }
 
+        public LiftObject MergeInPronunciation(LiftEntry entry, LiftMultiText contents, string rawXml)
+        {
+            var audioFile = Regex.Split(rawXml, "\"")[1];
+            LiftPhonetic phonetic = new LiftPhonetic();
+            LiftUrlRef url = new LiftUrlRef{ Url = audioFile };
+            phonetic.Media.Add(url);
+            entry.Pronunciations.Add(phonetic);
+            return entry;
+        }
+
         // The following are unused and are not implemented, but must stay to satisfy the needs of the ILexiconMerger 
         public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
         {
@@ -154,11 +309,6 @@ namespace BackendFramework.Services
         }
 
         public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form, LiftMultiText gloss, string rawXml)
-        {
-            return new EmptyLiftObject();
-        }
-
-        public LiftObject MergeInPronunciation(LiftEntry entry, LiftMultiText contents, string rawXml)
         {
             return new EmptyLiftObject();
         }

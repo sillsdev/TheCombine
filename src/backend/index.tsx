@@ -116,7 +116,7 @@ export async function uploadLift(project: Project, lift: File) {
   let data = new FormData();
   data.append("file", lift);
   await backendServer.post("projects/words/upload", data, {
-    headers: { ...authHeader(), "content-type": "application/json" }
+    headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
   });
 }
 
