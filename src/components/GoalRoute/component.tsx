@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import BaseGoalScreen from "../../goals/DefaultGoal/BaseGoalScreen";
-import { GoalTimeline } from "../GoalTimeline/GoalTimelineComponent";
+import GoalTimeline from "../GoalTimeline/";
 import PageNotFound from "../PageNotFound/component";
 import { PrivateRoute } from "../PrivateRoute";
 

@@ -145,14 +145,14 @@ export async function addGoal(goal: Goal): Promise<Goal> {
 
 export async function getGoal(index: string): Promise<Goal> {
   return await backendServer.get(`projects/useredits/${index}`).then(resp => {
-    console.log(resp.data);
+    console.log(resp);
     return resp.data;
   });
 }
 
 export async function getAllGoals(): Promise<Goal[]> {
   return await backendServer.get("projects/useredits").then(resp => {
-    console.log(resp.data);
+    console.log(resp);
     return resp.data;
   });
 }

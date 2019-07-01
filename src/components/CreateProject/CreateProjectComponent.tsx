@@ -160,7 +160,7 @@ class CreateProject extends React.Component<
                     style={{
                       marginTop: 30,
                       backgroundColor: this.props.success
-                        ? green[500]
+                        ? buttonSuccess
                         : undefined
                     }}
                   >
@@ -176,7 +176,7 @@ class CreateProject extends React.Component<
                       <CircularProgress
                         size={24}
                         style={{
-                          color: green[500],
+                          color: buttonSuccess,
                           position: "absolute",
                           top: "50%",
                           left: "50%",

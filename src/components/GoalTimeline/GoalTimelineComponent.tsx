@@ -13,12 +13,24 @@ const timelineStyle = {
   }
 };
 
+export interface GoalTimelineProps {
+  loadUserEdits: (id: string) => void;
+}
+
 /**
  * Displays the list of goals the user has decided they will work on, their
  * choices for the next goal, and suggestions for which goals they should choose
  * to work on.
  */
-export class GoalTimeline extends React.Component {
+export class GoalTimeline extends React.Component<GoalTimelineProps> {
+  constructor(props: GoalTimelineProps) {
+    super(props);
+  }
+
+  componentDidMount() {
+    this.props.loadUserEdits("");
+  }
+
   render() {
     return (
       <div className="GoalView">
