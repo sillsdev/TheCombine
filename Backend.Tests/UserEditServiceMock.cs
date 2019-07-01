@@ -24,7 +24,11 @@ namespace Backend.Tests
 
         public Task<UserEdit> GetUserEdit(string id)
         {
-            var foundUserEdit = userEdits.Where(userEdit => userEdit.Id == id).Single();
+            var foundUserEdit = userEdits.Where(userEdit => userEdit.Id == id).FirstOrDefault();
+            if (foundUserEdit == null)
+            {
+                return Task.FromResult(foundUserEdit);
+            }
             return Task.FromResult(foundUserEdit.Clone());
         }
 
@@ -58,6 +62,16 @@ namespace Backend.Tests
                 return Task.FromResult(true);
             }
             return Task.FromResult(false);
+        }
+
+        public Task<Tuple<bool, int>> AddEditsToUserEdit(string Id, Edit edit)
+        {
+            UserEdit userEdit = GetUserEdit(Id).Result;
+            userEdits.Remove(userEdit);
+            userEdit.Edits.Add(edit);
+            userEdits.Add(userEdit);
+            var result = new Tuple<bool, int>(true, 1);
+            return Task.FromResult(result);
         }
     }
 }
