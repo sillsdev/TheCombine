@@ -11,7 +11,6 @@ import { combineReducers } from "redux";
 
 export interface MergeDuplicateState {
   mergeTreeState: MergeTreeState;
-  wordListState: WordListState;
   wordDragState: WordDragState;
 }
 
@@ -20,7 +19,6 @@ export const mergeDuplicateReducer: Reducer<
 > = combineReducers<MergeDuplicateState>({
   mergeTreeState: mergeStepReducer,
   wordDragState: draggableWordReducer,
-  wordListState: wordListReducer
 });
 
 export default mergeDuplicateReducer;
