@@ -24,7 +24,7 @@ interface CharacterSetState {
   selected: string[];
   dragChar: string;
   dropChar: string;
-  error: boolean;
+  textboxError: boolean;
 }
 
 export class CharacterSet extends React.Component<
@@ -38,7 +38,7 @@ export class CharacterSet extends React.Component<
       selected: [],
       dragChar: "",
       dropChar: "",
-      error: false
+      textboxError: false
     };
   }
 
@@ -47,7 +47,10 @@ export class CharacterSet extends React.Component<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) {
-    this.setState({ chars: e.target.value.replace(/\s/g, ""), error: false }); // removes whitespace
+    this.setState({
+      chars: e.target.value.replace(/\s/g, ""),
+      textboxError: false
+    }); // removes whitespace
   }
 
   handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
@@ -75,7 +78,7 @@ export class CharacterSet extends React.Component<
   // adds characters in the textbox to the inventory
   addChars() {
     if (this.state.chars === "") {
-      this.setState({ error: true });
+      this.setState({ textboxError: true });
     } else {
       this.props.setInventory([
         ...this.props.inventory,
@@ -146,7 +149,7 @@ export class CharacterSet extends React.Component<
                   "charInventory.characterSet.help"
                 ) as string
               }
-              placement="bottom"
+              placement="right"
             >
               <Help />
             </Tooltip>
@@ -226,9 +229,9 @@ export class CharacterSet extends React.Component<
             onChange={e => this.handleChange(e)}
             onKeyDown={e => this.handleKeyDown(e)}
             autoComplete="off"
-            error={this.state.error}
+            error={this.state.textboxError}
             helperText={
-              this.state.error && (
+              this.state.textboxError && (
                 <Translate id="charInventory.characterSet.required" />
               )
             }
