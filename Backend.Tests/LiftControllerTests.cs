@@ -124,7 +124,7 @@ namespace Backend.Tests
         public void TestRoundtrip()
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            string filepath = Path.Combine(wanted_path, "NewLiftFile.lift");
+            string filepath = wanted_path + "/EXAMPLE.lift";
             File.Delete(filepath);
 
             var fileUpload = InitFile();
@@ -139,7 +139,7 @@ namespace Backend.Tests
             Assert.NotZero(allWords.Result.Count);
 
             //export
-            _ = liftController.ExportLiftFile().Result;
+            _ = liftController.ExportLiftFile(proj.Id).Result;
 
             //assert file was created
             Assert.IsTrue(File.Exists(filepath));
