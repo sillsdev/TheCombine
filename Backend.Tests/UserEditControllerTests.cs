@@ -96,7 +96,6 @@ namespace Backend.Tests
             _ = userEditController.Post(userEdit.Id, newEditStep).Result;
 
             var allUserEdits = _userEditService.GetAllUserEdits().Result;
-            updateEdit.Edits.Add(newEditStep);
 
             Assert.Contains(updateEdit, allUserEdits);
         }
