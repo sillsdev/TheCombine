@@ -141,21 +141,6 @@ export async function addGoal(goal: Goal): Promise<Goal> {
       console.log(resp);
       return resp.data;
     });
-
-  // let userString = localStorage.getItem("user");
-  // let userObject = userString ? JSON.parse(userString) : null;
-  // return await backendServer
-  // // .get(`/projects/userroles/${userObject.id}`, { headers: authHeader() })
-  // .then(resp => {
-  //   console.log(resp);
-  //   return backendServer
-  //     .put(`/projects/userroles/${resp.data}`, goal, {
-  //       headers: authHeader()
-  //     })
-  //     .then(resp => {
-  //       return { ...goal, id: resp.data };
-  //     });
-  // });
 }
 
 export async function getGoal(index: string): Promise<Goal> {
