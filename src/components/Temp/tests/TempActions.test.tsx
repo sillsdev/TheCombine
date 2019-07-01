@@ -9,7 +9,7 @@ import axios from "axios";
 const createMockStore = configureMockStore([thunk]);
 
 // Required to check-up on what our mock Axios did during function calls
-jest.mock("axios");
+// jest.mock("axios");
 const mockAxios = axios as jest.Mocked<typeof axios>;
 
 describe("TempAction Tests", () => {

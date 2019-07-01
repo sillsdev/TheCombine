@@ -4,14 +4,6 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 const createMockStore = configureMockStore([thunk]);
-// jest.mock("axios", () => {
-//   return {
-//     post: jest.fn().mockResolvedValue({ data: {} }),
-//     create: jest.fn(() => {
-//       return jest.fn().mockReturnThis();
-//     })
-//   };
-// });
 
 const user = { user: "testUser", password: "testPass" };
 
@@ -20,16 +12,26 @@ describe("LoginAction Tests", () => {
 
   let loginAttempt: action.UserAction = {
     type: action.LOGIN_ATTEMPT,
-    payload: user
+    payload: { user: user.user }
   };
 
   let loginSuccess: action.UserAction = {
     type: action.LOGIN_SUCCESS,
-    payload: user
+    payload: { user: user.user }
   };
 
   let registerAttempt: action.UserAction = {
     type: action.REGISTER_ATTEMPT,
+    payload: { user: user.user }
+  };
+
+  let registerSuccess: action.UserAction = {
+    type: action.REGISTER_SUCCESS,
+    payload: { user: user.user }
+  };
+
+  let registerFailure: action.UserAction = {
+    type: action.REGISTER_FAILURE,
     payload: { user: user.user }
   };
 
@@ -43,10 +45,14 @@ describe("LoginAction Tests", () => {
       action.asyncLogin(user.user, user.password)
     );
 
-    mockDispatch.then(() => {
-      expect(mockStore.getActions()).toEqual([loginAttempt]);
-    });
-    // .catch(() => fail());
+    mockDispatch
+      .then(() => {
+        expect(mockStore.getActions()).toEqual([loginAttempt, loginSuccess]);
+      })
+      .catch((err: any) => {
+        console.log(err);
+        fail();
+      });
   });
 
   test("asyncRegister correctly affects state", () => {
@@ -55,12 +61,16 @@ describe("LoginAction Tests", () => {
       action.asyncRegister("name", user.user, user.password)
     );
 
-    mockDispatch.then(() => {
-      expect(mockStore.getActions()).toEqual([
-        registerAttempt,
-        action.asyncLogin
-      ]);
-    });
-    // .catch(() => fail());
+    mockDispatch
+      .then(() => {
+        expect(mockStore.getActions()).toEqual([
+          registerAttempt,
+          registerFailure
+        ]);
+      })
+      .catch((err: any) => {
+        console.log(err);
+        fail();
+      });
   });
 });
