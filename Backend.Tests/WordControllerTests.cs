@@ -99,8 +99,6 @@ namespace Backend.Tests
             var action = controller.Delete(origWord.Id).Result;
 
             Word delWord = origWord.Clone();
-            delWord.Accessability = (int)state.deleted;
-            delWord.Id = repo.GetAllWords().Result.Find(word => word.Accessability == (int)state.deleted).Id;
             delWord.History = new List<string> { origWord.Id };
 
             Assert.Contains(origWord, repo.GetAllWords().Result);
@@ -132,12 +130,10 @@ namespace Backend.Tests
 
             // find the dups
             Word dup1 = child1.Clone();
-            dup1.Accessability = (int)state.duplicate;
             dup1.History = new List<string> { child1.Id };
             dup1 = words.Find(word => word.ContentEquals(dup1));
 
             Word dup2 = child2.Clone();
-            dup2.Accessability = (int)state.duplicate;
             dup2.History = new List<string> { child2.Id };
             dup2 = words.Find(word => word.ContentEquals(dup2));
 
