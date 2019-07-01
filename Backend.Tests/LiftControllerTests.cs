@@ -124,7 +124,7 @@ namespace Backend.Tests
         public void TestRoundtrip()
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            string filepath = wanted_path + "/EXAMPLE.lift";
+            string filepath = Path.Combine(wanted_path, "NewLiftFile.lift");
             File.Delete(filepath);
 
             var fileUpload = InitFile();

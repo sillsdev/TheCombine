@@ -69,7 +69,7 @@ namespace BackendFramework.Services
         public void LiftExport()
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            string filepath = wanted_path + "\\NewLiftFile.lift";
+            string filepath = Path.Combine(wanted_path,  "NewLiftFile.lift");
             CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
 
             string header =
