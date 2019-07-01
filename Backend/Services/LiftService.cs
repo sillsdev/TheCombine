@@ -66,7 +66,7 @@ namespace BackendFramework.Services
         /********************************
         * LIft Export Implementation
         ********************************/
-        public void LiftExport(string Id)
+        public void LiftExport()
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
             string filepath = wanted_path + "/EXAMPLE.lift";
@@ -94,7 +94,7 @@ namespace BackendFramework.Services
                 LexEntry entry = new LexEntry();
 
                 //add vernacular (lexical form)
-                addVern(Id, wordEntry, entry);
+                addVern(wordEntry, entry);
 
                 //add audio (pronunciation media)
                 addAudio(entry, wordEntry);
@@ -108,10 +108,11 @@ namespace BackendFramework.Services
         }
 
         //add vernacular
-        public void addVern(string Id, Word wordEntry, LexEntry entry)
+        public void addVern(Word wordEntry, LexEntry entry)
         {
             LiftMultiText lexMultiText = new LiftMultiText();
-            string lang = _projService.GetProject(Id).Result.VernacularWritingSystem;
+            string lang = _projService.GetAllProjects().Result[0].VernacularWritingSystem;
+           
             lexMultiText.Add(lang, wordEntry.Vernacular);
             entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
         }

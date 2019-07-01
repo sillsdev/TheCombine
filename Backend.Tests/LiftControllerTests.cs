@@ -139,7 +139,7 @@ namespace Backend.Tests
             Assert.NotZero(allWords.Result.Count);
 
             //export
-            _ = liftController.ExportLiftFile(proj.Id).Result;
+            _ = liftController.ExportLiftFile().Result;
 
             //assert file was created
             Assert.IsTrue(File.Exists(filepath));

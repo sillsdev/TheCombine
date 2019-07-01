@@ -29,7 +29,7 @@ namespace BackendFramework.Controllers
 
         // POST: v1/Project/Words/upload
         // Implements: Upload(), Arguments: FileUpload model
-        [HttpPost("projects/words/upload")]
+        [HttpPost("projects/upload")]
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
             var file = model.File;
@@ -61,8 +61,8 @@ namespace BackendFramework.Controllers
             }
         }
 
-        [HttpGet("/projects/{Id}/words/download")]
-        public async Task<IActionResult> ExportLiftFile(string Id)
+        [HttpGet("projects/download")]
+        public async Task<IActionResult> ExportLiftFile()
         {
             var words = await _wordRepo.GetAllWords();
             if(words.Count == 0)
@@ -70,7 +70,7 @@ namespace BackendFramework.Controllers
                 return new BadRequestResult();
             }
 
-            _liftService.LiftExport(Id);
+            _liftService.LiftExport();
 
             return new OkObjectResult(words);
         }
