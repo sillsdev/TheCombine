@@ -1,18 +1,15 @@
 //external modules
 import * as React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word } from "../../../../types/word";
-import { ListSubheader, Box, Grid, Card, CardContent } from "@material-ui/core";
-import MergeStack from "../MergeStack";
-import { ParentWord } from "../component";
-import { styleAddendum } from "../../../../types/theme";
+import {LocalizeContextProps, withLocalize} from "react-localize-redux";
+import {uuid} from '../../../../utilities';
+import {MergeTreeReference} from '../MergeDupsTree';
 
 //interface for component props
 export interface MergeRowProps {
-  draggedWord?: Word;
-  parent: ParentWord;
-  addSense?: (word: Word, parent: number) => void;
+  draggedWord?: MergeTreeReference;
+  wordID: string;
   dropWord?: () => void;
+  moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
 }
 
 //interface for component state
@@ -28,17 +25,14 @@ export class MergeRow extends React.Component<
     this.setState({});
   }
 
-  add_sense(word: Word) {
-    if (this.props.addSense) {
-      this.props.addSense(word, this.props.parent.id);
-    }
-  }
-
   drop() {
-    if (this.props.draggedWord && this.props.dropWord) {
-      var word = this.props.draggedWord;
-      word.modified = Date.now().toString();
-      this.add_sense(word);
+    if (this.props.moveSense && this.props.draggedWord && this.props.dropWord) {
+      let dest = {
+        word: this.props.wordID,
+        sense: uuid(),
+        duplicate: uuid(),
+      };
+      this.props.moveSense(this.props.draggedWord, dest);
       this.props.dropWord();
     }
   }
@@ -46,6 +40,8 @@ export class MergeRow extends React.Component<
   render() {
     //visual definition
     return (
+      <div> ID: {this.props.wordID}
+      {/*
       <Box style={{ flex: 1 }}>
         <ListSubheader
           onDragOver={e => e.preventDefault()}
@@ -88,7 +84,7 @@ export class MergeRow extends React.Component<
             />
           </Grid>
         </div>
-      </Box>
+      </Box>*/} </div>
     );
   }
 }
