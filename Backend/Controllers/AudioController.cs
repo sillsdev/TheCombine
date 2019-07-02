@@ -27,7 +27,7 @@ namespace BackendFramework.Controllers
 
             if (file.Length > 0)
             {
-                string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                string wanted_path = System.IO.Directory.GetCurrentDirectory();
                 System.IO.Directory.CreateDirectory(wanted_path + "/Audio");
 
                 model.FilePath = Path.Combine(wanted_path + "/Audio/" + wordId + ".mp3");

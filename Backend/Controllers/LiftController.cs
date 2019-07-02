@@ -36,7 +36,7 @@ namespace BackendFramework.Controllers
 
             if (file.Length > 0)
             {
-                string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                string wanted_path = System.IO.Directory.GetCurrentDirectory();
                 System.IO.Directory.CreateDirectory(wanted_path + "/Words");
 
                 model.FilePath = Path.Combine(wanted_path + "/Words/UploadFile-" + model.Name + ".xml");

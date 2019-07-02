@@ -31,7 +31,7 @@ namespace BackendFramework.Controllers
                 if (gotUser != null)
                 {
 
-                    string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                    string wanted_path = System.IO.Directory.GetCurrentDirectory();
                     System.IO.Directory.CreateDirectory(wanted_path + "/Avatars");
 
                     model.FilePath = Path.Combine(wanted_path + "/Avatars/" + userId + extension);

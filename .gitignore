@@ -41,7 +41,7 @@ start_mongo.bat
 /**/*.xml
 /**/*.lift
 /**/*.orig
-Backend.Tests/bin/**/*.mp3
+Backend.Tests/bin/Audio/*.mp3
 /**/*.bat
 /**/*.~un
 /**/*.swp

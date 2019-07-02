@@ -70,7 +70,7 @@ namespace Backend.Tests
                 string vern = Util.randString(6);
                 string plural = Util.randString(8);
                 //string audio = $"\"{Util.randString(3)}.mp3\"";
-                string audio = $"\"sound.mp3\"";
+                string audio = $"\"fart{i + 1}.mp3\"";
                 string senseId = $"\"{Util.randString()}\"";
                 string transLang1 = $"\"{Util.randString(3)}\"";
                 string transLang2 = $"\"{Util.randString(3)}\"";
@@ -107,11 +107,8 @@ namespace Backend.Tests
             return name;
         }
 
-        public FileUpload InitFile()
+        private FileUpload InitFile(FileStream fstream)
         {
-            string name = RandomLiftFile();
-            FileStream fstream = File.OpenRead(name);
-
             FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", "fileName");
             FileUpload fileUpload = new FileUpload();
             fileUpload.Name = "FileName";
@@ -123,13 +120,13 @@ namespace Backend.Tests
         [Test]
         public void TestRoundtrip()
         {
-            string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            string zipdir = Path.Combine(wanted_path, "LiftExport");
-            Directory.CreateDirectory(zipdir);
-            string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
+            string wanted_path = System.IO.Directory.GetCurrentDirectory();
+            string filepath = Path.Combine(wanted_path, "LiftExport",  "NewLiftFile.lift");
             File.Delete(filepath);
 
-            var fileUpload = InitFile();
+            string name = RandomLiftFile();
+            FileStream fstream = File.OpenRead(name);
+            var fileUpload = InitFile(fstream);
 
             var proj = RandomProject();
             proj.VernacularWritingSystem = Util.randString(3);
@@ -140,6 +137,8 @@ namespace Backend.Tests
             var allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
 
+            fstream.Close();
+
             //export
             _ = liftController.ExportLiftFile(proj.Id).Result;
 
@@ -149,19 +148,16 @@ namespace Backend.Tests
             //assert words can be properly imported
             _ = _wordrepo.DeleteAllWords().Result;
 
-            FileStream fstream = File.OpenRead(filepath);
+            fstream = File.OpenRead(filepath);
+            fileUpload = InitFile(fstream);
 
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
-            FileUpload fileUpload2 = new FileUpload();
-            fileUpload2.Name = "FileName";
-            fileUpload2.File = formFile;
-
-            _ = liftController.UploadLiftFile(fileUpload2).Result;
+            _ = liftController.UploadLiftFile(fileUpload).Result;
 
             allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
 
             File.Delete(fileUpload.FilePath);
+            fstream.Close();
         }
     }
 }

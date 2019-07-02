@@ -65,9 +65,27 @@ namespace BackendFramework.Services
         /********************************
         * Lift Export Implementation
         ********************************/
+        private static bool IsLinux
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return (p == 4) || (p == 6) || (p == 128);
+            }
+        }
+
         public void LiftExport(string Id)
         {
-            string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+            string wanted_path;
+            if (IsLinux)
+            {
+                wanted_path = "/var/TheCombine/upload";
+            }
+            else
+            {
+                wanted_path = System.IO.Directory.GetCurrentDirectory();
+            }
+
             string zipdir = Path.Combine(wanted_path, "LiftExport");
             string audiodir = Path.Combine(zipdir, "Audio");
             Directory.CreateDirectory(audiodir);
