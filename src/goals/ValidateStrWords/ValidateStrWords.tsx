@@ -1,8 +1,8 @@
-import { Goal, GoalData, Tools, GoalOption } from "../../types/goals";
+import { Goal, GoalData, Tools, GoalOption, GoalType } from "../../types/goals";
 import { User } from "../../types/user";
 
 export class ValidateStrWords implements Goal {
-  id: string;
+  goalType: GoalType;
   name: string;
   user: User;
   steps: JSX.Element[];
@@ -13,7 +13,7 @@ export class ValidateStrWords implements Goal {
   result: GoalOption;
 
   constructor(steps: JSX.Element[]) {
-    this.id = "-1";
+    this.goalType = GoalType.ValidateStrWords;
     this.name = "validateStrWords";
     this.user = new User("", "", "");
     this.steps = steps;

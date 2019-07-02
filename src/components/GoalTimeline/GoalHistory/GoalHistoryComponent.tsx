@@ -15,7 +15,7 @@ export class GoalHistory extends React.Component<
     return (
       <div className="GoalHistory">
         {this.props.history.map(goal => (
-          <BaseGoalSelect key={goal.id} goal={goal} />
+          <BaseGoalSelect key={goal.goalType} goal={goal} />
         ))}
       </div>
     );

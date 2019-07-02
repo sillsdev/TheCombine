@@ -1,8 +1,8 @@
-import { Goal, GoalData, Tools, GoalOption } from "../types/goals";
+import { Goal, GoalData, Tools, GoalOption, GoalType } from "../types/goals";
 import { User } from "./user";
 
 export class BaseGoal implements Goal {
-  id: string;
+  goalType: GoalType;
   name: string;
   user: User;
 
@@ -15,7 +15,7 @@ export class BaseGoal implements Goal {
   result: GoalOption;
 
   constructor() {
-    this.id = "-1";
+    this.goalType = GoalType.CreateCharInv;
     this.name = "";
     this.user = new User("", "", "");
     this.steps = [];

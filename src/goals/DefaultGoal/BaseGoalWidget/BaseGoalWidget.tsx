@@ -23,8 +23,8 @@ class BaseGoalSelect extends React.Component<GoalProps & LocalizeContextProps> {
 
   render() {
     return this.props.goal ? (
-      <div className={"GoalWidget" + this.props.goal.id}>
-        <Card key={this.props.goal.id} style={this.style.inactiveCard}>
+      <div className={"GoalWidget" + this.props.goal.goalType}>
+        <Card key={this.props.goal.goalType} style={this.style.inactiveCard}>
           <CardContent>
             <Translate id={this.props.goal.name + ".title"} />
           </CardContent>
