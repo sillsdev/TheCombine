@@ -162,12 +162,10 @@ namespace BackendFramework.Services
             //add vernacular
             if (!entry.CitationForm.IsEmpty) //prefer citation form for vernacular
             {
-                string CitationForm = entry.CitationForm.FirstValue.Value.Text;
-                newWord.Vernacular = CitationForm;
+                newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
             } else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
             {
-                string LexicalForm = entry.LexicalForm.FirstValue.Value.Text;
-                newWord.Vernacular = LexicalForm;
+                newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
             }
             else //this is not a word
             {
