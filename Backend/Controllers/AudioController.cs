@@ -1,4 +1,5 @@
-﻿using BackendFramework.Interfaces;
+﻿using BackendFramework.Helper;
+using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -7,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
+    public class DesktopNotFoundExceoption : Exception
+    {
+        public DesktopNotFoundExceoption() { }
+    }
     //[Authorize]
     [Produces("application/json")]
     [Route("v1")]
@@ -29,11 +34,8 @@ namespace BackendFramework.Controllers
             if (file.Length > 0)
             {
                 //get path to desktop
-                string wanted_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                wanted_path = Path.Combine(wanted_path, ".CombineFiles");
-                //establish path to audio file dir
-                model.FilePath = Path.Combine(wanted_path, "Audio-", wordId + ".mp3");
-                System.IO.Directory.CreateDirectory(model.FilePath);
+                Utilities util = new Utilities();
+                model.FilePath = util.GenerateFilePath();
 
                 //copy the file data to the created file
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))

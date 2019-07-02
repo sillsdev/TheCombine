@@ -1,6 +1,8 @@
-﻿using BackendFramework.Interfaces;
+﻿using BackendFramework.Helper;
+using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -22,20 +24,20 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload model)
         {
             var file = model.File;
-            string extension = Path.GetExtension(file.FileName);
 
+            //ensure file is not empty
             if (file.Length > 0)
             {
+                //get user to apply avatar to
                 User gotUser = await _userService.GetUser(userId);
 
                 if (gotUser != null)
                 {
+                    //get path to desktop
+                    Utilities util = new Utilities();
+                    model.FilePath = util.GenerateFilePath();
 
-                    string wanted_path = System.IO.Directory.GetCurrentDirectory();
-                    System.IO.Directory.CreateDirectory(wanted_path + "/Avatars");
-
-                    model.FilePath = Path.Combine(wanted_path + "/Avatars/" + userId + extension);
-
+                    //copy stream to filepath
                     using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
                     {
                         await file.CopyToAsync(fs);
