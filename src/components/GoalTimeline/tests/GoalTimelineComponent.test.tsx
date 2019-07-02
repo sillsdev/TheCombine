@@ -4,7 +4,7 @@ import configureMockStore from "redux-mock-store";
 import { defaultState } from "../DefaultState";
 import { defaultState as selectorState } from "../DefaultState";
 import { Provider } from "react-redux";
-import { GoalTimeline } from "../GoalTimelineComponent";
+import GoalTimeline from "../";
 import thunk from "redux-thunk";
 
 const createMockStore = configureMockStore([thunk]);

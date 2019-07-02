@@ -134,38 +134,9 @@ export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
 ): Promise<Goal> {
-  let goalType: string;
-  switch (goal.name) {
-    case "CreateCharInv":
-      goalType = "0";
-      break;
-    case "ValidateChars":
-      goalType = "1";
-      break;
-    case "CreateStrWordInv":
-      goalType = "2";
-      break;
-    case "ValidateStrWords":
-      goalType = "3";
-      break;
-    case "MergeDups":
-      goalType = "4";
-      break;
-    case "SpellcheckGloss":
-      goalType = "5";
-      break;
-    case "ViewFinal":
-      goalType = "6";
-      break;
-    case "HandleFlags":
-      goalType = "7";
-      break;
-    default:
-      goalType = "8";
-      break;
-  }
+  let goalType: string = goalNameToGoalTypeId(goal.name);
   let stepData: string = goal.steps.toString();
-  let userEditTuple = { goalType, stepData };
+  let userEditTuple = { goalType: goalType, stepData: [stepData] };
   return await backendServer
     .post(`projects/useredits/${userEditId}`, userEditTuple, {
       headers: { ...authHeader() }
@@ -174,6 +145,41 @@ export async function addGoalToUserEdit(
       console.log(resp);
       return resp.data;
     });
+}
+
+function goalNameToGoalTypeId(goalName: string): string {
+  let goalType: string;
+  switch (goalName) {
+    case "charInventory":
+      goalType = "0";
+      break;
+    case "validateChars":
+      goalType = "1";
+      break;
+    case "createStrWordInv":
+      goalType = "2";
+      break;
+    case "validateStrWords":
+      goalType = "3";
+      break;
+    case "mergeDups":
+      goalType = "4";
+      break;
+    case "spellCheckGloss":
+      goalType = "5";
+      break;
+    case "viewFinal":
+      goalType = "6";
+      break;
+    case "handleFlags":
+      goalType = "7";
+      break;
+    default:
+      goalType = "8";
+      break;
+  }
+
+  return goalType;
 }
 
 export async function getUserEditById(index: string): Promise<UserEdit> {

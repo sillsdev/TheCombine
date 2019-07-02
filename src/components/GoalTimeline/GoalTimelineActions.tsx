@@ -12,6 +12,7 @@ import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
+import { Edit } from "../../types/userEdit";
 
 export const LOAD_USER_EDITS = "LOAD_USER_EDITS";
 export type LOAD_USER_EDITS = typeof LOAD_USER_EDITS;
@@ -37,50 +38,9 @@ export function asyncLoadUserEdits(id: string) {
     await backend
       .getUserEditById(id)
       .then(resp => {
-        // Update user object with id of user edits
-        let currentUserString = localStorage.getItem("user");
-        let currentUserObject: User;
-        if (currentUserString) {
-          currentUserObject = JSON.parse(currentUserString);
-          currentUserObject.userEditId = resp.id;
-          currentUserString = JSON.stringify(currentUserObject);
-          localStorage.setItem("user", currentUserString);
-        }
-
-        let history: Goal[] = [];
-        for (var edit of resp.edits) {
-          let nextGoal: Goal;
-          switch (edit.goalType) {
-            case 0:
-              nextGoal = new CreateCharInv([]);
-              break;
-            case 1:
-              nextGoal = new ValidateChars([]);
-              break;
-            case 2:
-              nextGoal = new CreateStrWordInv([]);
-              break;
-            case 3:
-              nextGoal = new ValidateStrWords([]);
-              break;
-            case 4:
-              nextGoal = new MergeDups([]);
-              break;
-            case 5:
-              nextGoal = new SpellCheckGloss([]);
-              break;
-            case 6:
-              nextGoal = new ViewFinal([]);
-              break;
-            case 7:
-              nextGoal = new HandleFlags([]);
-              break;
-            default:
-              nextGoal = new ViewFinal([]);
-              break;
-          }
-          history.push(nextGoal);
-        }
+        console.log(resp);
+        updateUserIfExists(resp.id);
+        let history: Goal[] = convertEditsToArrayOfGoals(resp.edits);
         dispatch(loadUserEdits(history));
         return resp;
       })
@@ -92,17 +52,13 @@ export function asyncLoadUserEdits(id: string) {
 
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: Dispatch<AddGoalToHistoryAction>, getState: any) => {
-    let userString = localStorage.getItem("user");
-    let userObject: User;
-    let userEditId: string = "";
-    if (userString) {
-      userObject = JSON.parse(userString);
-      userEditId = userObject.userEditId;
-    }
-
+    let userEditId: string = getUserEditId();
+    // console.log(userEditId);
+    // console.log(goal);
     await backend
       .addGoalToUserEdit(userEditId, goal)
       .then(resp => {
+        // console.log(resp);
         dispatch(addGoalToHistory(goal));
         history.push(`/goals/${resp}`);
       })
@@ -110,6 +66,81 @@ export function asyncAddGoalToHistory(goal: Goal) {
         console.log("Unsuccessfully added goal");
       });
   };
+}
+
+function getUserEditId(): string {
+  let userString = localStorage.getItem("user");
+  let userObject: User;
+  let userEditId: string = "";
+  if (userString) {
+    userObject = JSON.parse(userString);
+    userEditId = userObject.userEditId;
+  }
+  return userEditId;
+}
+
+function updateUserIfExists(userEditId: string) {
+  let currentUserString = localStorage.getItem("user");
+  if (currentUserString) {
+    let updatedUserString = updateUserWithUserEditId(
+      currentUserString,
+      userEditId
+    );
+    localStorage.setItem("user", updatedUserString);
+  }
+}
+
+function updateUserWithUserEditId(
+  userObjectString: string,
+  userEditId: string
+): string {
+  let currentUserObject: User = JSON.parse(userObjectString);
+  currentUserObject.userEditId = userEditId;
+  let updatedUserString = JSON.stringify(currentUserObject);
+  return updatedUserString;
+}
+
+function convertEditsToArrayOfGoals(edits: Edit[]): Goal[] {
+  let history: Goal[] = [];
+  for (var edit of edits) {
+    let nextGoal: Goal = idToGoal(edit.goalType);
+    history.push(nextGoal);
+  }
+  return history;
+}
+
+function idToGoal(id: number): Goal {
+  let nextGoal: Goal;
+  switch (id) {
+    case 0:
+      nextGoal = new CreateCharInv([]);
+      break;
+    case 1:
+      nextGoal = new ValidateChars([]);
+      break;
+    case 2:
+      nextGoal = new CreateStrWordInv([]);
+      break;
+    case 3:
+      nextGoal = new ValidateStrWords([]);
+      break;
+    case 4:
+      nextGoal = new MergeDups([]);
+      break;
+    case 5:
+      nextGoal = new SpellCheckGloss([]);
+      break;
+    case 6:
+      nextGoal = new ViewFinal([]);
+      break;
+    case 7:
+      nextGoal = new HandleFlags([]);
+      break;
+    default:
+      nextGoal = new ViewFinal([]);
+      break;
+  }
+  return nextGoal;
 }
 
 export function addGoalToHistory(goal: Goal): AddGoalToHistory {
