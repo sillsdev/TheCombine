@@ -52,7 +52,9 @@ namespace BackendFramework.Controllers
             if (userEdit == null)
             {
                 var newUserEdit = new UserEdit();
+
                 var result = await _repo.Create(newUserEdit);
+
                 return new OkObjectResult(result);
             }
             return new ObjectResult(userEdit);
