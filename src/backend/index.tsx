@@ -3,7 +3,7 @@ import { Word, State, Merge } from "../types/word";
 import { User } from "../types/user";
 import { Project } from "../types/project";
 import { authHeader } from "../components/Login/AuthHeaders";
-import { Goal } from "../types/goals";
+import { Goal, GoalType } from "../types/goals";
 import { UserEdit } from "../types/userEdit";
 
 const backendServer = axios.create({ baseURL: "https://localhost:5001/v1" });
@@ -147,38 +147,38 @@ export async function addGoalToUserEdit(
 }
 
 function goalNameToGoalTypeId(goalName: string): string {
-  let goalType: string;
+  let goalType: number;
   switch (goalName) {
     case "charInventory":
-      goalType = "0";
+      goalType = GoalType.CreateCharInv;
       break;
     case "validateChars":
-      goalType = "1";
+      goalType = GoalType.ValidateChars;
       break;
     case "createStrWordInv":
-      goalType = "2";
+      goalType = GoalType.CreateStrWordInv;
       break;
     case "validateStrWords":
-      goalType = "3";
+      goalType = GoalType.ValidateStrWords;
       break;
     case "mergeDups":
-      goalType = "4";
+      goalType = GoalType.MergeDups;
       break;
     case "spellCheckGloss":
-      goalType = "5";
+      goalType = GoalType.SpellcheckGloss;
       break;
     case "viewFinal":
-      goalType = "6";
+      goalType = GoalType.ViewFind;
       break;
     case "handleFlags":
-      goalType = "7";
+      goalType = GoalType.HandleFlags;
       break;
     default:
-      goalType = "8";
+      goalType = 8;
       break;
   }
 
-  return goalType;
+  return goalType.toString();
 }
 
 export async function getUserEditById(index: string): Promise<UserEdit> {

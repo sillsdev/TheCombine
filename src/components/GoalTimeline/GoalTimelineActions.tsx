@@ -13,6 +13,7 @@ import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
+import { GoalType } from "../../types/goals";
 
 export const LOAD_USER_EDITS = "LOAD_USER_EDITS";
 export type LOAD_USER_EDITS = typeof LOAD_USER_EDITS;
@@ -59,7 +60,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
         history.push(`/goals/${resp}`);
       })
       .catch(err => {
-        console.log("Unsuccessfully added goal");
+        console.log("Failed to add goal to history");
       });
   };
 }
@@ -99,44 +100,35 @@ function updateUserWithUserEditId(
 function convertEditsToArrayOfGoals(edits: Edit[]): Goal[] {
   let history: Goal[] = [];
   for (var edit of edits) {
-    let nextGoal: Goal = idToGoal(edit.goalType);
-    history.push(nextGoal);
+    let nextGoal: Goal | undefined = goalTypeToGoal(edit.goalType);
+    if (nextGoal) {
+      history.push(nextGoal);
+    }
   }
   return history;
 }
 
-function idToGoal(id: number): Goal {
-  let nextGoal: Goal;
-  switch (id) {
-    case 0:
-      nextGoal = new CreateCharInv([]);
-      break;
-    case 1:
-      nextGoal = new ValidateChars([]);
-      break;
-    case 2:
-      nextGoal = new CreateStrWordInv([]);
-      break;
-    case 3:
-      nextGoal = new ValidateStrWords([]);
-      break;
-    case 4:
-      nextGoal = new MergeDups([]);
-      break;
-    case 5:
-      nextGoal = new SpellCheckGloss([]);
-      break;
-    case 6:
-      nextGoal = new ViewFinal([]);
-      break;
-    case 7:
-      nextGoal = new HandleFlags([]);
-      break;
+function goalTypeToGoal(type: number): Goal | undefined {
+  switch (type) {
+    case GoalType.CreateCharInv:
+      return new CreateCharInv([]);
+    case GoalType.ValidateChars:
+      return new ValidateChars([]);
+    case GoalType.CreateStrWordInv:
+      return new CreateStrWordInv([]);
+    case GoalType.ValidateStrWords:
+      return new ValidateStrWords([]);
+    case GoalType.MergeDups:
+      return new MergeDups([]);
+    case GoalType.SpellcheckGloss:
+      return new SpellCheckGloss([]);
+    case GoalType.ViewFind:
+      return new ViewFinal([]);
+    case GoalType.HandleFlags:
+      return new HandleFlags([]);
     default:
-      nextGoal = new ViewFinal([]);
-      break;
+      return undefined;
   }
-  return nextGoal;
 }
 
 export function addGoalToHistory(goal: Goal): AddGoalToHistory {

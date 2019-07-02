@@ -5,8 +5,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { GoalTimeline } from "./GoalTimelineComponent";
 import { LoadUserEdits, asyncLoadUserEdits } from "./GoalTimelineActions";
 
-export function mapStateToProps(state: StoreState) {}
-
 export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, LoadUserEdits>
 ) {
@@ -18,6 +16,6 @@ export function mapDispatchToProps(
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(GoalTimeline);
