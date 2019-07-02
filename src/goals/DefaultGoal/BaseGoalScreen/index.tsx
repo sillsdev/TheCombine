@@ -25,11 +25,8 @@ export function mapStateToProps(
 
 // Find a goal by id. Return the goal if it exists.
 function findGoalById(id: string, goalHistory: Goal[]): Goal | undefined {
-  for (var goal of goalHistory) {
-    if (goal.id === id) {
-      return goal;
-    }
-  }
+  let idNumber: number = parseInt(id);
+  return goalHistory[idNumber];
 }
 
 export default connect(mapStateToProps)(BaseGoalScreen);
