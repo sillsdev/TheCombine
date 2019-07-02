@@ -38,7 +38,6 @@ export function asyncLoadUserEdits(id: string) {
     await backend
       .getUserEditById(id)
       .then(resp => {
-        console.log(resp);
         updateUserIfExists(resp.id);
         let history: Goal[] = convertEditsToArrayOfGoals(resp.edits);
         dispatch(loadUserEdits(history));
@@ -53,12 +52,9 @@ export function asyncLoadUserEdits(id: string) {
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: Dispatch<AddGoalToHistoryAction>, getState: any) => {
     let userEditId: string = getUserEditId();
-    // console.log(userEditId);
-    // console.log(goal);
     await backend
       .addGoalToUserEdit(userEditId, goal)
       .then(resp => {
-        // console.log(resp);
         dispatch(addGoalToHistory(goal));
         history.push(`/goals/${resp}`);
       })

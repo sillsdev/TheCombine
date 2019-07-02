@@ -142,7 +142,6 @@ export async function addGoalToUserEdit(
       headers: { ...authHeader() }
     })
     .then(resp => {
-      console.log(resp);
       return resp.data;
     });
 }
@@ -190,7 +189,6 @@ export async function getUserEditById(index: string): Promise<UserEdit> {
 
 export async function getAllUserEdits(): Promise<Goal[]> {
   return await backendServer.get("projects/useredits").then(resp => {
-    console.log(resp);
     return resp.data;
   });
 }
