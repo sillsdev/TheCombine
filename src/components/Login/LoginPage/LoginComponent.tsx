@@ -20,6 +20,7 @@ import history from "../../../history";
 export interface LoginDispatchProps {
   login?: (user: string, password: string) => void;
   logout: () => void;
+  reset: () => void;
 }
 
 export interface LoginStateProps {
@@ -47,6 +48,10 @@ export class Login extends React.Component<
       password: "",
       error: { password: false, username: false }
     };
+  }
+
+  componentDidMount() {
+    this.props.reset();
   }
 
   updateUser(

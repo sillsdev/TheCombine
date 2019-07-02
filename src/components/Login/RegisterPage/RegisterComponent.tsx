@@ -273,7 +273,7 @@ class Register extends React.Component<
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item>
                   <Button
-                    type="submit"
+                    type="button"
                     onClick={() => {
                       history.push("/login");
                     }}

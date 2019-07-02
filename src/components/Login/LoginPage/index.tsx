@@ -1,9 +1,15 @@
-import Login, { LoginStateProps } from "./LoginComponent";
+import Login, { LoginStateProps, LoginDispatchProps } from "./LoginComponent";
 import { StoreState } from "../../../types";
 
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { asyncLogin, UserAction, logout, asyncRegister } from "../LoginActions";
+import {
+  asyncLogin,
+  UserAction,
+  logout,
+  asyncRegister,
+  loginReset
+} from "../LoginActions";
 
 function mapStateToProps(state: StoreState): LoginStateProps {
   //console.log(state);
@@ -15,13 +21,16 @@ function mapStateToProps(state: StoreState): LoginStateProps {
 
 export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, UserAction>
-) {
+): LoginDispatchProps {
   return {
     login: (user: string, password: string) => {
       dispatch(asyncLogin(user, password));
     },
     logout: () => {
       dispatch(logout());
+    },
+    reset: () => {
+      dispatch(loginReset());
     }
   };
 }
