@@ -59,13 +59,9 @@ export function asyncLogin(user: string, password: string) {
     await backend
       .authenticateUser(user, password)
       .then((res: any) => {
-        try {
-          localStorage.setItem("user", res); //Store tokens
-          dispatch(loginSuccess(user));
-          history.push("/");
-        } catch (err) {
-          console.log(err);
-        }
+        localStorage.setItem("user", res); //Store tokens
+        dispatch(loginSuccess(user));
+        history.push("/");
       })
       .catch(err => {
         dispatch(loginFailure(user));

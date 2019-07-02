@@ -1,7 +1,7 @@
 import * as actions from "../GoalTimelineActions";
 import { goalsReducer } from "../GoalTimelineReducers";
 import { Goal, GoalsState } from "../../../types/goals";
-import { MockActionGoalArrayInstance } from "../../../types/action";
+import { MockActionGoalArrayInstance } from "../../../types/mockAction";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import { defaultState } from "../DefaultState";

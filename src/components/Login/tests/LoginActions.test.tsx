@@ -25,11 +25,6 @@ describe("LoginAction Tests", () => {
     payload: { user: user.user }
   };
 
-  let registerSuccess: action.UserAction = {
-    type: action.REGISTER_SUCCESS,
-    payload: { user: user.user }
-  };
-
   let registerFailure: action.UserAction = {
     type: action.REGISTER_FAILURE,
     payload: { user: user.user }

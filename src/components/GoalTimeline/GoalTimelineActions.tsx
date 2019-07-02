@@ -1,5 +1,5 @@
 import { Goal } from "../../types/goals";
-import { ActionWithPayload } from "../../types/action";
+import { ActionWithPayload } from "../../types/mockAction";
 import { Dispatch } from "react";
 import * as backend from "../../backend";
 import history from "../../history";
@@ -39,6 +39,7 @@ export function asyncLoadUserEdits(id: string) {
     await backend
       .getUserEditById(id)
       .then(resp => {
+        console.log(resp);
         updateUserIfExists(resp.id);
         let history: Goal[] = convertEditsToArrayOfGoals(resp.edits);
         dispatch(loadUserEdits(history));

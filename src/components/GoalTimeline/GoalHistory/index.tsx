@@ -1,4 +1,4 @@
-import { GoalHistoryState, Goal } from "../../../types/goals";
+import { GoalHistoryState } from "../../../types/goals";
 import GoalHistory from "./GoalHistoryComponent";
 
 import { connect } from "react-redux";

@@ -1,7 +1,7 @@
 import { GoalsState } from "../../types/goals";
 import { Goal } from "../../types/goals";
 import { ADD_GOAL_TO_HISTORY, LOAD_USER_EDITS } from "./GoalTimelineActions";
-import { ActionWithPayload } from "../../types/action";
+import { ActionWithPayload } from "../../types/mockAction";
 import { defaultState } from "./DefaultState";
 
 export const goalsReducer = (

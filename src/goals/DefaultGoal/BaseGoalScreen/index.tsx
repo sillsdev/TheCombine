@@ -13,20 +13,14 @@ export function mapStateToProps(
   state: StoreState,
   ownProps: GoalProps & RouteComponentProps<TParams> & LocalizeContextProps
 ): GoalProps {
+  let idNumber: number = parseInt(ownProps.match.params.id);
   let goal: Goal | undefined;
-  goal = findGoalById(
-    ownProps.match.params.id,
-    state.goalsState.historyState.history
-  );
+  if (!Number.isNaN(idNumber)) {
+    goal = state.goalsState.historyState.history[idNumber];
+  }
   return {
     goal: goal
   };
-}
-
-// Find a goal by id. Return the goal if it exists.
-function findGoalById(id: string, goalHistory: Goal[]): Goal | undefined {
-  let idNumber: number = parseInt(id);
-  return goalHistory[idNumber];
 }
 
 export default connect(mapStateToProps)(BaseGoalScreen);
