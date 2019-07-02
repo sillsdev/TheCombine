@@ -83,7 +83,7 @@ namespace BackendFramework.Services
             //}
             //else
             //{
-                string wanted_path = System.IO.Directory.GetCurrentDirectory();
+                string wanted_path = Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory());
             //}
 
             string zipdir = Path.Combine(wanted_path, "LiftExport");
