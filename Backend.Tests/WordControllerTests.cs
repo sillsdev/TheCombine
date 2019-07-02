@@ -94,18 +94,31 @@ namespace Backend.Tests
         [Test]
         public void DeleteWord()
         {
+            //fill test database
             Word origWord = repo.Create(RandomWord()).Result;
 
+            //test delete function
             var action = controller.Delete(origWord.Id).Result;
 
-            Word delWord = origWord.Clone();
-            delWord.History = new List<string> { origWord.Id };
-
+            //original word persists
             Assert.Contains(origWord, repo.GetAllWords().Result);
-            Assert.Contains(delWord, repo.GetAllWords().Result);
 
+            //get the new deleted word from the database
+            var wordRepo = repo.GetAllWords().Result;
+            wordRepo.Remove(origWord);
+
+            //ensure the word is valid
+            Assert.IsTrue(wordRepo.Count == 1);
+            Assert.IsTrue(wordRepo[0].Id != origWord.Id);
+            Assert.IsTrue(wordRepo[0].History.Count == 1);
+
+            //test the fronteir
             Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
-            Assert.Contains(delWord, repo.GetFrontier().Result);
+
+            //ensure the deleted word is in the fronteir
+            Assert.IsTrue(wordRepo.Count == 1);
+            Assert.IsTrue(wordRepo[0].Id != origWord.Id);
+            Assert.IsTrue(wordRepo[0].History.Count == 1);
         }
 
         [Test]
