@@ -3,8 +3,6 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
@@ -14,10 +12,12 @@ namespace BackendFramework.Controllers
     public class UserEditController : Controller
     {
         private readonly IUserEditService _userEditService;
+        private readonly IUserEditRepository _repo;
 
-        public UserEditController(IUserEditService userEditService)
+        public UserEditController(IUserEditService userEditService, IUserEditRepository repo)
         {
             _userEditService = userEditService;
+            _repo = repo;
         }
 
         [EnableCors("AllowAll")]
@@ -27,7 +27,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return new ObjectResult(await _userEditService.GetAllUserEdits());
+            return new ObjectResult(await _repo.GetAllUserEdits());
         }
 
         // DELETE v1/Project/UserEdits
@@ -37,7 +37,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-            return new ObjectResult(await _userEditService.DeleteAllUserEdits());
+            return new ObjectResult(await _repo.DeleteAllUserEdits());
 #else
             return new UnauthorizedResult();
 #endif
@@ -48,30 +48,30 @@ namespace BackendFramework.Controllers
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
         {
-            var userEdit = await _userEditService.GetUserEdit(Id);
+            var userEdit = await _repo.GetUserEdit(Id);
             if (userEdit == null)
             {
                 var newUserEdit = new UserEdit();
-                var result = await _userEditService.Create(newUserEdit);
+                var result = await _repo.Create(newUserEdit);
                 return new OkObjectResult(result);
             }
             return new ObjectResult(userEdit);
         }
 
         // POST: v1/Project/UserEdits/{Id}
-        // Implements AddEditsToUserEdit(), Arguments: new userEdit from body
+        // Implements AddGoalToUserEdit(), Arguments: new userEdit from body
         // Creates a goal
         [HttpPost("{Id}")]
         public async Task<IActionResult> Post(string Id, [FromBody]Edit newEdit)
         {
-            UserEdit toBeMod = await _userEditService.GetUserEdit(Id);
+            UserEdit toBeMod = await _repo.GetUserEdit(Id);
 
             if (toBeMod == null)
             {
                 return new NotFoundObjectResult(Id);
             }
 
-            Tuple<bool, int> result = await _userEditService.AddEditsToUserEdit(Id, newEdit);
+            Tuple<bool, int> result = await _userEditService.AddGoalToUserEdit(Id, newEdit);
 
             if (result.Item1)
             {
@@ -84,19 +84,19 @@ namespace BackendFramework.Controllers
         }
 
         // PUT: v1/Project/UserEdits/{Id}
-        // Implements Update(), Arguments: string id of target userEdit, 
+        // Implements AddStepToGoal(), Arguments: string id of target userEdit, 
         // wrapper object to hold the goal index and the step to add to the goal history
         // Adds steps to a goal
         [HttpPut("{Id}")]
         public async Task<IActionResult> Put(string Id, [FromBody] UserEditObjectWrapper userEdit)
         {
-            var document = await _userEditService.GetUserEdit(Id);
+            var document = await _repo.GetUserEdit(Id);
             if (document == null)
             {
                 return new NotFoundResult();
             }
 
-            await _userEditService.Update(Id, userEdit.GoalIndex, userEdit.NewEdit);
+            await _userEditService.AddStepToGoal(Id, userEdit.GoalIndex, userEdit.NewEdit);
 
             return new OkObjectResult(document.Edits[userEdit.GoalIndex].StepData.Count);
         }
@@ -106,7 +106,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
-            if (await _userEditService.Delete(Id))
+            if (await _repo.Delete(Id))
             {
                 return new OkResult();
             }
