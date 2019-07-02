@@ -10,6 +10,7 @@ using SIL.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -67,7 +68,9 @@ namespace BackendFramework.Services
         public void LiftExport(string Id)
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            string filepath = wanted_path + "/EXAMPLE.lift";
+            string zipdir = Path.Combine(wanted_path, "LiftExport");
+            Directory.CreateDirectory(zipdir);
+            string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
             CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
 
             string header =
@@ -103,9 +106,11 @@ namespace BackendFramework.Services
                 writer.Add(entry);
             }
             writer.End();
+
+            File.Delete("LiftExport.zip");
+            ZipFile.CreateFromDirectory(zipdir, "LiftExport.zip");
         }
 
-        //add vernacular
         public void addVern(string Id, Word wordEntry, LexEntry entry)
         {
             LiftMultiText lexMultiText = new LiftMultiText();

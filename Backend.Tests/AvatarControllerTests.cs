@@ -48,7 +48,7 @@ namespace Backend.Tests
 
             FileStream fstream = File.OpenRead(filePath);
 
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
+            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "combine.png");
             FileUpload fileUpload = new FileUpload();
             fileUpload.Name = "FileName";
             fileUpload.File = formFile;

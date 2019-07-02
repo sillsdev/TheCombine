@@ -124,7 +124,9 @@ namespace Backend.Tests
         public void TestRoundtrip()
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            string filepath = wanted_path + "/EXAMPLE.lift";
+            string zipdir = Path.Combine(wanted_path, "LiftExport");
+            Directory.CreateDirectory(zipdir);
+            string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
             File.Delete(filepath);
 
             var fileUpload = InitFile();
