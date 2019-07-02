@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Tests
 {
@@ -14,35 +15,45 @@ namespace Tests
     {
         IWordRepository repo;
         WordController controller;
+        IWordService service;
 
         [SetUp]
         public void Setup()
         {
             repo = new WordRepositoryMock();
-            IWordService service = new WordService(repo);
+            service = new WordService(repo);
             controller = new WordController(service, repo);
         }
 
         Word RandomWord()
         {
             Word word = new Word();
-            word.Vernacular = Util.randString();
-            word.Modified = Util.randString();
-            word.PartOfSpeech = Util.randString();
-            word.Plural = Util.randString();
 
             Random num = new Random();
             foreach (var sense in word.Senses)
             {
-                sense.Accessability = num.Next() % 4;
+                sense.Accessability = (int)state.active;
 
                 foreach (Gloss gloss in sense.Glosses) {
                     gloss.Def = Util.randString();
                     gloss.Language = Util.randString(3);
                 }
+
+                foreach(SemanticDomain semdom in sense.SemanticDomains)
+                {
+                    semdom.Name = Util.randString();
+                    semdom.Number = Util.randString();
+                }
             }
 
             word.Created = Util.randString();
+            word.Vernacular = Util.randString();
+            word.Modified = Util.randString();
+            word.PartOfSpeech = Util.randString();
+            word.Plural = Util.randString();
+            word.History = new List<string>();
+            word.Id = null;
+
             return word;
         }
 
@@ -140,8 +151,57 @@ namespace Tests
         [Test]
         public void MergeWords()
         {
-            Word CorrectParentWord = RandomWord();
+            MergeWords functionPerameter = new MergeWords();
+            functionPerameter.ChildrenWords = new List<Tuple<string, List<state>>>();
+            Random num = new Random();
+
+            //the parent word is inherently correct
+            functionPerameter.Parent = RandomWord();
+            Word[] childWords = { RandomWord(), RandomWord(),  };
+            functionPerameter.Time = Util.randString();
+
+            //set the child info 
+            int childCount = childWords.Count();
+            for (var i = 0; i < childCount; ++i)
+            {
+                //generate step info
+                state[] childStatesArr = new[] { (state)(num.Next() % 4), (state)(num.Next() % 4), (state)(num.Next() % 4) };
+                //convert to list
+                List<state> childStatesLst = childStatesArr.OfType<state>().ToList();
+
+                //generate tuple with new child ID and desired child state list 
+                Tuple<string, List<state>> childId = new Tuple<string, List<state>>(repo.Add(childWords[i]).Result.Id, childStatesLst);
+                functionPerameter.ChildrenWords.Add(childId);
+            }
+
+            var newParentId = service.Merge(functionPerameter).Result;
+
+            //2 * child number + 1, there are duplicate child nodes and one extra for the parent
+            Assert.AreEqual(repo.GetAllWords().Result.Count, 2 * childCount + 1);
+            //make sure the parent is in the db
+            Assert.AreEqual(functionPerameter.Parent, repo.GetWord(functionPerameter.Parent.Id).Result);
+
+            //assert the children are in the database
+            var dbWords = repo.GetAllWords().Result;
+            dbWords.RemoveAll(StartingChildren);
+
+            // 4 is the number of elements in the database - the childCOunt
+            Assert.AreEqual(4 , dbWords.Count);
             
+            for(int childIndex = 0; childIndex < childCount; ++childIndex)
+            {
+                //check for children in db
+                Assert.Contains(repo.GetWord(functionPerameter.ChildrenWords[childIndex].Item1).Result, repo.GetAllWords().Result);
+            }
+
+            
+
+        }
+
+        private static bool StartingChildren(Word word)
+        {
+            //in this test the histories of the original chil words are going to have no history
+            return word.History.Count <= 0;
         }
     }
 }
