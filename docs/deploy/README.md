@@ -85,91 +85,39 @@ Once ```mkcombine``` completes, you can test the build by connecting to http://l
 
 ## Stand Up a New Machine
 
-This section describes how to install Ubuntu Server and TheCombine application on a new PC or virtual machine.
+This section describes how to install Ubuntu Server and TheCombine application on a new PC.
+
+### Host System Requirements
+
+The following requirements are for the host system that is used to install the Combine application onto a new PC:
+  * Ubuntu 18.04 Desktop, 64-bit
+  * Git
+  * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
+  * [Nodejs](https://github.com/nodesource/distributions/blob/master/README.md#debinstall), install the LTS version, 10.x.
+  * [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/linux-package-manager/ubuntu18-04/sdk-2.2.300)
+  * [MongoDB Community Edition](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
+  * clone the project repo to the working folder of your choice, e.g. ```$HOME/src```
 
 ### Install Ubuntu Bionic Server
 
   1. Download the ISO image for Ubuntu Server from Ubuntu (currently at http://cdimage.ubuntu.com/releases/18.04.2/release/ubuntu-18.04.2-server-amd64.iso)
 
-  1. To install on a PC, copy the .iso file to a bootable USB stick.  See the following tutorials for how to do that on [Ubuntu](https://tutorials.ubuntu.com/tutorial/tutorial-create-a-usb-stick-on-ubuntu) or [Windows](https://tutorials.ubuntu.com/tutorial/tutorial-create-a-usb-stick-on-windows).
+  1. Use the *Startup Disk Creator* to copy the .iso file to a bootable USB stick.
 
-  1. If you wish to create a Virtual Machine,
-     1. install [VirtualBox](https://www.virtualbox.org/) from Oracle.
-     2. open *VirtualBox* and create a new virtual machine.
-     3. Start the Virtual Machine.  *VirtualBox* will prompt you to select the .iso file that you downloaded above.
-
-  1. Boot the PC/Virtual Machine from the bootable media and follow the installation instructions.  In particular,
+  1. Boot the PC from the bootable media and follow the installation instructions.  In particular,
      1. You will want the installer to format the entire (virtual) disk and use LVM (that's the default)
 
      1. *Make sure that you select the OpenSSH server when prompted to select the software for your server:*
   ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
 
-  1. Once installation is complete, you will need to setup networking for a Virtual Machine.  If you are installing Ubuntu on a PC, you can skip to [Installing the App](#installing-the-app).
-     1. Open *VirtualBox*.
+### Build the App
 
-     1. Create a virual network interface:
-
-        1. Click on the *File* menu and select *Host Network Manager...*
-
-        1. Click the *Create* button to create a new Host Network Adapter.  If it is the first such adapter created it will have the following attributes:
-
-           | Field         | Value           |
-           | ------------- | :-------------: |
-           | Name:         | vboxnet0        |
-           | Addresses:    | 192.168.56.1/24 |
-           | DHCP Enabled: | No              |
-
-        1. *Close* the *Host Network Manager* dialog box.
-
-     1. Select the new VM and click on the *Settings* button;
-
-     1. Click on the Adapter 2 tab and set it up as follows:
-
-        | Field                   | Value             |
-        | ----------------------- | :---------------: |
-        | Enable Network Adapter: | Checked           |
-        | Attached to:            | Host-only Adapter |
-        | Name:                   | vboxnet0 (linux)<br>VirtualBox Host-Only Ethernet Adapter (windows)   |
-
-     1. For linux hosts, make sure your account is a member of the vboxusers group.
-
-     1. Start the virtual machine and log in.  Setup the network connection for the second adapter as follows:
-
-        1. Run ```ip address``` to list the available interfaces.  There will be one ethernet interface that is up and has an IP address, e.g. enp0s3.  There will be a second ethernet interface that is down, e.g. enp0s8.  Note the name of this interface.
-
-        1. Edit /etc/netplan/01-netcfg.yaml
-           ```sudo nano /etc/netplan/01-netcfg.yaml```
-
-        1. Edit the file so that it contains:
-           ```
-           # This file describes the network interfaces available on your system
-           # For more information, see netplan(5).
-           network:
-             version: 2
-             renderer: networkd
-             ethernets:
-               enp0s3:
-                 dhcp4: yes
-               enp0s8:
-                 addresses: [192.168.56.10/24]
-                 gateway4: 192.168.1.1
-                 nameservers:
-                   addresses: [8.8.8.8,8.8.4.4]
-                 dhcp4: no
-           ```
-           ... substituting the names of your adapters, of course.  Also make sure that the address you assign is in the subnet specified by the Host Network Adapter.  Unfortunately, you will have to type it.  You will not be able to cut & paste to the VM.
-
-        1. Run: ```sudo netplan apply```
-
-        1. Add the VM's IP address to the ```/etc/hosts``` file on the host computer *(optional)*:
-
-          ```
-          # Virtual Machines
-          192.168.56.10	nuc-vm
-
-          ```
-
-     1. Now you can access the virtual machine (e.g. ssh, http,) at ```192.168.56.10```.
+To build the Combine application in the Ubuntu Environment, run the following command (assumes the repo was cloned into ```$HOME/src```):
+```
+cd ~/src/TheCombine
+npm install
+npm run build
+```
 
 ### Installing the App
 
