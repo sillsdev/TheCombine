@@ -31,6 +31,7 @@ describe("Testing login component", () => {
           logout={LOGOUT}
           loginAttempt={false}
           loginFailure={false}
+          reset={LOGOUT}
         />
       );
     });
@@ -45,6 +46,7 @@ describe("Testing login component", () => {
         logout={LOGOUT}
         loginAttempt={false}
         loginFailure={false}
+        reset={LOGOUT}
       />,
       div
     );
