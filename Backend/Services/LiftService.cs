@@ -79,7 +79,7 @@ namespace BackendFramework.Services
             string wanted_path;
             if (IsLinux)
             {
-                wanted_path = "/var/TheCombine/upload";
+                wanted_path = "/tmp/TheCombine/upload";
             }
             else
             {
