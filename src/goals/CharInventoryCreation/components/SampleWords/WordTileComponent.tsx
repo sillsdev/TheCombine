@@ -49,12 +49,14 @@ export class WordTile extends React.Component<
             onMouseLeave={() => this.setState({ hover: false })}
           >
             <Typography variant="body1">
-              {word.split("").map(letter =>
+              {word.split("").map((letter: string, index: number) =>
                 // Highlight character if not in the inventory (don't highlight " ")
                 [...this.props.inventory, " "].includes(letter) ? (
                   letter
                 ) : (
-                  <span style={{ background: greenHighlight }}>{letter}</span>
+                  <span key={index} style={{ background: greenHighlight }}>
+                    {letter}
+                  </span>
                 )
               )}{" "}
               {/* 'add to inventory' button */}

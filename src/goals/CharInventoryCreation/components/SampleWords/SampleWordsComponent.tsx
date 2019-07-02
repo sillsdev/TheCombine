@@ -21,7 +21,7 @@ interface SampleWordsState {
   ignoreList: string[]; // A list of words we don't want to see right now
 }
 
-class SampleWords extends React.Component<
+export class SampleWords extends React.Component<
   SampleWordsProps & LocalizeContextProps,
   SampleWordsState
 > {
@@ -33,23 +33,34 @@ class SampleWords extends React.Component<
       dropChar: "",
       ignoreList: []
     };
+    this.canGetWords = true;
   }
 
   allWords: Word[] = [];
+  private canGetWords: boolean;
 
   async componentDidMount() {
     this.allWords = await backend.getFrontierWords();
-    this.getWords();
+    /*
+      Bypass the situation where this async call outlives the object This prevents the component from being unmounted during the API call, then having getWords
+      (with setState) being called on an unmounted component. While that just creates a warning for now, it may become a full-fledged error in the future.
+    */
+    if (this.canGetWords) this.getWords();
   }
 
   componentDidUpdate(prevProps: SampleWordsProps & LocalizeContextProps) {
     if (prevProps.inventory !== this.props.inventory) this.getWords();
   }
 
+  componentWillUnmount() {
+    // Tell the program to not attempt running getWords (and thus setting state) after this point
+    this.canGetWords = false;
+  }
+
   /**
    * Gets the words that don't fit the character inventory
    */
-  async getWords() {
+  getWords() {
     const NUM_WORDS = 5; // The max number of words we want to display on the page
 
     let inv = [...this.props.inventory];
@@ -109,8 +120,9 @@ class SampleWords extends React.Component<
             <Translate id="charInventory.sampleWords.description" />
           </Typography>
         </Grid>
-        {this.state.words.map(word => (
+        {this.state.words.map((word: string, index: number) => (
           <WordTile
+            key={word + index + "tile"}
             word={word}
             inventory={this.props.inventory}
             addWordToCharSet={word => this.addWordToCharSet(word)}
