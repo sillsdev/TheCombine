@@ -76,15 +76,15 @@ namespace BackendFramework.Services
 
         public void LiftExport(string Id)
         {
-            string wanted_path;
-            if (IsLinux)
-            {
-                wanted_path = "/tmp/TheCombine/upload";
-            }
-            else
-            {
-                wanted_path = System.IO.Directory.GetCurrentDirectory();
-            }
+            //string wanted_path;
+            //if (IsLinux)
+            //{
+            //    wanted_path = "/tmp/TheCombine/upload";
+            //}
+            //else
+            //{
+                string wanted_path = System.IO.Directory.GetCurrentDirectory();
+            //}
 
             string zipdir = Path.Combine(wanted_path, "LiftExport");
             string audiodir = Path.Combine(zipdir, "Audio");
