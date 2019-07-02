@@ -1,14 +1,24 @@
 //external modules
 import * as React from "react";
-import {LocalizeContextProps, withLocalize} from "react-localize-redux";
-import {Word} from "../../../../types/word";
-import {MergeTreeReference} from '../MergeDupsTree';
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { Word } from "../../../../types/word";
+import {
+  MergeTreeReference,
+  Hash,
+  MergeTreeSense,
+  TreeDataSense
+} from "../MergeDupsTree";
+import Card from "@material-ui/core/Card/Card";
+import { CardContent, Typography, List, ListItem } from "@material-ui/core";
 
 //interface for component props
 export interface MergeStackProps {
   dropWord?: () => void;
   dragWord?: (ref: MergeTreeReference) => void;
   draggedWord?: MergeTreeReference;
+  senseID: string;
+  treeSenses: Hash<MergeTreeSense>;
+  senses: Hash<TreeDataSense>;
 }
 
 //interface for component state
@@ -23,7 +33,7 @@ const HEIGHT: string = "10vw"; // Height of each card
 class MergeStack extends React.Component<
   MergeStackProps & LocalizeContextProps,
   MergeStackState
-  > {
+> {
   constructor(props: MergeStackProps & LocalizeContextProps) {
     super(props);
     this.state = {};
@@ -184,7 +194,29 @@ class MergeStack extends React.Component<
   }
 
   render() {
-    return (<div> Hello Stack </div>);
+    let treeSense = this.props.treeSenses[this.props.senseID];
+    let displaySenseID = Object.values(treeSense.dups)[0];
+    let displaySense = this.props.senses[displaySenseID];
+    //TODO: Make language dynamic
+    let lang = "en";
+
+    // Find gloss
+    let gloss = displaySense.glosses.filter(gloss => gloss.language == lang)[0];
+
+    return (
+      <Card>
+        <CardContent>
+          <Typography variant={"h5"}>{gloss.def}</Typography>
+          {/* List semantic domains */}
+          <List dense={true}>
+            {displaySense.semanticDomains.length == 0 && "{ no semantic domain }"}
+            {displaySense.semanticDomains.map(dom => (
+              <ListItem> {dom.name + "\t" + dom.number} </ListItem>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
+    );
     /*
     //visual definition
     if (this.props.sense.dups.length > 1) {

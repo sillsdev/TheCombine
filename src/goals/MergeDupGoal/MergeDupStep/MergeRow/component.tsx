@@ -1,8 +1,11 @@
 //external modules
 import * as React from "react";
-import {LocalizeContextProps, withLocalize} from "react-localize-redux";
-import {uuid} from '../../../../utilities';
-import {MergeTreeReference} from '../MergeDupsTree';
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { uuid } from "../../../../utilities";
+import { MergeTreeReference, Hash, MergeTreeWord } from "../MergeDupsTree";
+import { Box, ListSubheader, Grid, Card, CardContent } from "@material-ui/core";
+import MergeStack from "../MergeStack";
+import { styleAddendum } from "../../../../types/theme";
 
 //interface for component props
 export interface MergeRowProps {
@@ -10,6 +13,8 @@ export interface MergeRowProps {
   wordID: string;
   dropWord?: () => void;
   moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
+  words: Hash<MergeTreeWord>;
+  portait: boolean;
 }
 
 //interface for component state
@@ -30,7 +35,7 @@ export class MergeRow extends React.Component<
       let dest = {
         word: this.props.wordID,
         sense: uuid(),
-        duplicate: uuid(),
+        duplicate: uuid()
       };
       this.props.moveSense(this.props.draggedWord, dest);
       this.props.dropWord();
@@ -40,25 +45,33 @@ export class MergeRow extends React.Component<
   render() {
     //visual definition
     return (
-      <div> ID: {this.props.wordID}
-      {/*
       <Box style={{ flex: 1 }}>
         <ListSubheader
           onDragOver={e => e.preventDefault()}
           onDrop={_ => this.drop()}
         >
           <div style={{ textAlign: "center" }}>
-            {this.props.parent.senses[0].dups[0].vernacular}
+            {this.props.words[this.props.wordID].vern}
+            <i> {"pl. " + this.props.words[this.props.wordID].plural} </i>
           </div>
           <hr />
         </ListSubheader>
         <div>
-          <Grid container style={{ display: "flex", flexFlow: "row wrap" }}>
-            {this.props.parent.senses.map(item => (
+          <Grid container direction={this.props.portait ? "column" : "row"}>
+            {/*this.props.parent.senses.map(item => (
               //<Grid item key={item.id}>
               <MergeStack updateRow={() => this.update()} sense={item} />
               //</Grid>
-            ))}
+            ))*/}
+            {Object.keys(this.props.words[this.props.wordID].senses).map(
+              senseID => (
+                <Grid item key={senseID}>
+                  <MergeStack
+                    senseID={this.props.words[this.props.wordID].senses[senseID]}
+                  />
+                </Grid>
+              )
+            )}
             <Grid
               item
               onDragOver={e => e.preventDefault()}
@@ -84,7 +97,7 @@ export class MergeRow extends React.Component<
             />
           </Grid>
         </div>
-      </Box>*/} </div>
+      </Box>
     );
   }
 }

@@ -2,13 +2,13 @@ import {connect} from "react-redux";
 import {ThunkDispatch} from "redux-thunk";
 import {dropWord, WordDragAction} from "../../../components/DraggableWord/actions";
 import {StoreState} from "../../../types";
-import {MergeTreeAction} from "./actions";
+import {MergeTreeAction, refreshWords} from "./actions";
 import MergeDupStepComponent from "./component";
 
 export function mapStateToProps(state: StoreState) {
   return {
     draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord,
-    words: {}
+    words: state.mergeDuplicateGoal.mergeTreeState.tree.words,
   };
 }
 
@@ -22,6 +22,9 @@ export function mapDispatchToProps(
   return {
     dropWord: () => {
       dispatch(dropWord());
+    },
+    refreshWords: () => {
+      dispatch(refreshWords());
     }
   };
 }
