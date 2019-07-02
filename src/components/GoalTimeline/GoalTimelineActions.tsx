@@ -39,7 +39,6 @@ export function asyncLoadUserEdits(id: string) {
     await backend
       .getUserEditById(id)
       .then(resp => {
-        console.log(resp);
         updateUserIfExists(resp.id);
         let history: Goal[] = convertEditsToArrayOfGoals(resp.edits);
         dispatch(loadUserEdits(history));
