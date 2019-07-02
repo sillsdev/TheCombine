@@ -3,6 +3,7 @@ import {
   LOGIN_ATTEMPT,
   LOGIN_FAILURE,
   LOGIN_SUCCESS,
+  LOGIN_RESET,
   REGISTER_FAILURE,
   REGISTER_ATTEMPT,
   REGISTER_SUCCESS,
@@ -79,6 +80,7 @@ export const loginReducer = (
         registerSuccess: false,
         registerFailure: true
       };
+    case LOGIN_RESET:
     case REGISTER_RESET:
       return defaultState;
     default:
