@@ -157,7 +157,7 @@ namespace Tests
 
             //the parent word is inherently correct
             functionPerameter.Parent = RandomWord();
-            Word[] childWords = { RandomWord(), RandomWord(),  };
+            Word[] childWords = { RandomWord(), RandomWord(), RandomWord() };
             functionPerameter.Time = Util.randString();
 
             //set the child info 
@@ -185,17 +185,14 @@ namespace Tests
             var dbWords = repo.GetAllWords().Result;
             dbWords.RemoveAll(StartingChildren);
 
-            // 4 is the number of elements in the database - the childCOunt
-            Assert.AreEqual(4 , dbWords.Count);
+            // 4 = the number of elements in the database - the childCOunt
+            Assert.AreEqual(4, dbWords.Count);
             
             for(int childIndex = 0; childIndex < childCount; ++childIndex)
             {
                 //check for children in db
                 Assert.Contains(repo.GetWord(functionPerameter.ChildrenWords[childIndex].Item1).Result, repo.GetAllWords().Result);
             }
-
-            
-
         }
 
         private static bool StartingChildren(Word word)
