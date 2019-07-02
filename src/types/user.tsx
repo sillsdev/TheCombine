@@ -2,6 +2,7 @@ export class User {
   name: string;
   username: string;
   id: string;
+  userEditId: string;
   avatar: string;
   email: string;
   otherConnectionField: string;
@@ -15,6 +16,7 @@ export class User {
     this.name = name;
     this.username = username;
     this.id = "";
+    this.userEditId = "";
     this.avatar = "";
     this.email = "";
     this.otherConnectionField = "";

@@ -3,8 +3,11 @@ import GoalSwitcher from "./GoalSwitcherComponent";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../../types";
-import { chooseGoal, ChooseGoal } from "./GoalSwitcherActions";
 import { ThunkDispatch } from "redux-thunk";
+import {
+  asyncAddGoalToHistory,
+  AddGoalToHistory
+} from "../GoalTimelineActions";
 
 export function mapStateToProps(state: StoreState): GoalSwitcherState {
   return {
@@ -13,11 +16,11 @@ export function mapStateToProps(state: StoreState): GoalSwitcherState {
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, ChooseGoal>
+  dispatch: ThunkDispatch<StoreState, any, AddGoalToHistory>
 ) {
   return {
     chooseGoal: (goal: Goal) => {
-      dispatch(chooseGoal(goal));
+      dispatch(asyncAddGoalToHistory(goal));
     }
   };
 }

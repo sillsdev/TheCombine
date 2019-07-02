@@ -11,10 +11,6 @@ export interface GoalHistoryProps {
 export class GoalHistory extends React.Component<
   GoalHistoryProps & LocalizeContextProps
 > {
-  constructor(props: GoalHistoryProps & LocalizeContextProps) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="GoalHistory">
