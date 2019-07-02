@@ -22,7 +22,7 @@ namespace BackendFramework.Controllers
 
         [EnableCors("AllowAll")]
 
-        // GET: v1/Project/UserEdits
+        // GET: v1/Projects/UserEdits
         // Implements GetAllUserEdits(),
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -30,7 +30,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _repo.GetAllUserEdits());
         }
 
-        // DELETE v1/Project/UserEdits
+        // DELETE v1/Projects/UserEdits
         // Implements DeleteAllUserEdits()
         // DEBUG ONLY
         [HttpDelete]
@@ -43,7 +43,7 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        // GET: v1/Project/UserEdits/{Id}
+        // GET: v1/Projects/UserEdits/{Id}
         // Implements GetUserEdit(), Arguments: string id of target userEdit
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(string Id)
@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(userEdit);
         }
 
-        // POST: v1/Project/UserEdits/{Id}
+        // POST: v1/Projects/UserEdits/{Id}
         // Implements AddGoalToUserEdit(), Arguments: new userEdit from body
         // Creates a goal
         [HttpPost("{Id}")]
@@ -83,7 +83,7 @@ namespace BackendFramework.Controllers
             }
         }
 
-        // PUT: v1/Project/UserEdits/{Id}
+        // PUT: v1/Projects/UserEdits/{Id}
         // Implements AddStepToGoal(), Arguments: string id of target userEdit, 
         // wrapper object to hold the goal index and the step to add to the goal history
         // Adds steps to a goal
@@ -101,7 +101,7 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(document.Edits[userEdit.GoalIndex].StepData.Count);
         }
 
-        // DELETE: v1/Project/UserEdits/{Id}
+        // DELETE: v1/Projects/UserEdits/{Id}
         // Implements Delete(), Arguments: string id of target userEdit
         [HttpDelete("{Id}")]
         public async Task<IActionResult> Delete(string Id)

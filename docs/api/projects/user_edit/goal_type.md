@@ -1,6 +1,6 @@
-# Goal Id
+# GoalType
 
-Goal Id is an enum
+GoalType is an enum describing the different types of goals 
 
 ## Raw type
 
