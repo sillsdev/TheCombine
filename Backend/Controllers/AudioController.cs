@@ -1,6 +1,7 @@
 ﻿using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -27,14 +28,19 @@ namespace BackendFramework.Controllers
 
             if (file.Length > 0)
             {
-                string wanted_path = System.IO.Directory.GetCurrentDirectory();
-                System.IO.Directory.CreateDirectory(wanted_path + "/Audio");
+                //get path to desktop
+                string wanted_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                wanted_path = Path.Combine(wanted_path, ".CombineFiles");
+                //establish path to audio file dir
+                model.FilePath = Path.Combine(wanted_path, "Audio-", wordId + ".mp3");
+                System.IO.Directory.CreateDirectory(model.FilePath);
 
-                model.FilePath = Path.Combine(wanted_path + "/Audio/" + wordId + ".mp3");
+                //copy the file data to the created file
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
                 }
+
                 //add the relative path to the audio field of 
                 Word gotWord = await _wordRepo.GetWord(wordId);
                 gotWord.Audio = model.FilePath;

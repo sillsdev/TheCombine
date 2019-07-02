@@ -76,18 +76,15 @@ namespace BackendFramework.Services
 
         public void LiftExport(string Id)
         {
-            //string wanted_path;
-            //if (IsLinux)
-            //{
-            //    wanted_path = "/tmp/TheCombine/upload";
-            //}
-            //else
-            //{
-                string wanted_path = Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory());
-            //}
+
+            string wanted_path;
+            wanted_path = Path.GetPathRoot(System.IO.Directory.GetCurrentDirectory());
+            wanted_path = Path.Combine(wanted_path, "CombineFiles");
+            Directory.CreateDirectory(wanted_path);
 
             string zipdir = Path.Combine(wanted_path, "LiftExport");
             string audiodir = Path.Combine(zipdir, "Audio");
+            Directory.CreateDirectory(zipdir);
             Directory.CreateDirectory(audiodir);
             string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
 
@@ -142,12 +139,13 @@ namespace BackendFramework.Services
         public void addAudio(LexEntry entry, Word wordEntry, string path)
         {
             LexPhonetic lexPhonetic = new LexPhonetic();
-            string dest = Path.Combine("Audio", wordEntry.Audio);
+            string dest = Path.Combine(path, wordEntry.Audio);
             LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
             lexPhonetic.MergeIn(MultiText.Create(proMultiText));
             entry.Pronunciations.Add(lexPhonetic);
 
             string targetPath = Path.Combine(path, wordEntry.Audio);
+            string filepath = Path.GetFullPath((new Uri("TheCombine/")).LocalPath);
             File.Copy(wordEntry.Audio, targetPath, true);
         }
 
