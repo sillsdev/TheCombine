@@ -28,7 +28,7 @@ export class GoalTimeline extends React.Component<GoalTimelineProps> {
   }
 
   componentDidMount() {
-    this.props.loadUserEdits("");
+    this.props.loadUserEdits("878611321567894156984651");
   }
 
   render() {

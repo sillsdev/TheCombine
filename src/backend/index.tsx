@@ -4,6 +4,7 @@ import { User } from "../types/user";
 import { Project } from "../types/project";
 import { authHeader } from "../components/Login/AuthHeaders";
 import { Goal } from "../types/goals";
+import { UserEdit } from "../types/userEdit";
 
 const backendServer = axios.create({ baseURL: "https://localhost:5001/v1" });
 
@@ -143,9 +144,8 @@ export async function addGoal(goal: Goal): Promise<Goal> {
     });
 }
 
-export async function getGoal(index: string): Promise<Goal> {
+export async function getGoal(index: string): Promise<UserEdit> {
   return await backendServer.get(`projects/useredits/${index}`).then(resp => {
-    console.log(resp);
     return resp.data;
   });
 }
