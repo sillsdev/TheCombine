@@ -6,7 +6,7 @@ import { defaultState } from "./DefaultState";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
-  action: ActionWithPayload<Goal>
+  action: ActionWithPayload<Goal[]>
 ): GoalsState => {
   if (!state) {
     return defaultState;
@@ -15,7 +15,7 @@ export const goalsReducer = (
     case LOAD_USER_EDITS:
       return {
         historyState: {
-          history: [...state.historyState.history, action.payload]
+          history: [...action.payload]
         },
         allPossibleGoals: state.allPossibleGoals,
         suggestionsState: {
@@ -24,7 +24,7 @@ export const goalsReducer = (
       };
     case ADD_GOAL_TO_HISTORY: // Remove top suggestion if same as goal to add
       let suggestions = state.suggestionsState.suggestions;
-      let goalToAdd = action.payload;
+      let goalToAdd = action.payload[0];
       return {
         historyState: {
           history: [...state.historyState.history, goalToAdd]

@@ -16,11 +16,11 @@ export class GoalHistory extends React.Component<
     super(props);
   }
 
-  componentDidMount() {
-    if (this.props.asyncLoadHistory) {
-      this.props.asyncLoadHistory();
-    }
-  }
+  // componentDidMount() {
+  //   if (this.props.asyncLoadHistory) {
+  //     this.props.asyncLoadHistory();
+  //   }
+  // }
 
   render() {
     return (

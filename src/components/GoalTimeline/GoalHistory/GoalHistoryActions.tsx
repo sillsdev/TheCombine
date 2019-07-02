@@ -15,17 +15,15 @@ export type LoadGoalHistoryAction = LoadGoalHistory;
 
 export function asyncLoadGoalHistory() {
   return async (dispatch: Dispatch<LoadGoalHistoryAction>) => {
-    let history: Goal[] = [];
-    await backend
-      .getAllGoals()
-      .then(resp => {
-        console.log(resp);
-        history = resp;
-        dispatch(loadGoalHistory(history));
-      })
-      .catch(err => console.log(err));
-
-    return history;
+    // let history: Goal[] = [];
+    // await backend
+    //   .getAllGoals()
+    //   .then(resp => {
+    //     history = resp;
+    //     dispatch(loadGoalHistory(history));
+    //   })
+    //   .catch(err => console.log(err));
+    // return history;
   };
 }
 
