@@ -144,9 +144,8 @@ namespace BackendFramework.ValueModels
     }
     public class MergeWords
     {
-        public string Parent { get; set; }
-        public List<string> Children { get; set; }
-        public state MergeType { get; set; }
+        public Word Parent { get; set; }
+        public List<Tuple<string, List<state>>> ChildrenWords { get; set; }
         public User MergedBy { get; set; }
         public string Time { get; set; }
     }
@@ -156,7 +155,7 @@ namespace BackendFramework.ValueModels
         [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
 
-        [BsonElement("SemanticDomains")]
+        [BsonElement("SemanticDomain s")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
         [BsonElement("accessability")]
