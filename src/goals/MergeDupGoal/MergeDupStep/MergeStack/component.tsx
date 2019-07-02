@@ -10,13 +10,16 @@ import {
 } from "../MergeDupsTree";
 import Card from "@material-ui/core/Card/Card";
 import { CardContent, Typography, List, ListItem } from "@material-ui/core";
+import {uuid} from '../../../../utilities';
 
 //interface for component props
 export interface MergeStackProps {
   dropWord?: () => void;
   dragWord?: (ref: MergeTreeReference) => void;
+  moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
   draggedWord?: MergeTreeReference;
   wordID: string;
+  senseRef: string;
   senseID: string;
   treeSenses: Hash<MergeTreeSense>;
   senses: Hash<TreeDataSense>;
@@ -49,16 +52,16 @@ class MergeStack extends React.Component<
      */
   }
 
-  dragDrop(_event: React.DragEvent<HTMLElement>) {
-    /*
+  dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
-    if (
-      this.props.draggedWord &&
-      this.props.draggedWord !== this.parentCard()
-    ) {
-      this.addWord(this.props.draggedWord);
+    if (this.props.draggedWord && this.props.moveSense) {
+      let ref = {
+        word: this.props.wordID,
+        sense: this.props.senseRef,
+        duplicate: uuid(),
+      };
+      this.props.moveSense(this.props.draggedWord, ref);
     }
-     */
   }
 
   drag(_ref: MergeTreeReference) {
@@ -196,6 +199,9 @@ class MergeStack extends React.Component<
 
   render() {
     let treeSense = this.props.treeSenses[this.props.senseID];
+    if (!treeSense) {
+      debugger;
+    }
     let displaySenseKey = Object.keys(treeSense.dups)[0];
     let displaySenseID = Object.values(treeSense.dups)[0];
     let displaySense = this.props.senses[displaySenseID];
@@ -212,10 +218,12 @@ class MergeStack extends React.Component<
           this.props.dragWord &&
           this.props.dragWord({
             word: this.props.wordID,
-            sense: this.props.senseID,
+            sense: this.props.senseRef,
             duplicate: displaySenseKey
           })
         }
+        onDragOver={e => e.preventDefault()}
+        onDrop={e => this.dragDrop(e)}
       >
         <CardContent>
           <Typography variant={"h5"}>{gloss.def}</Typography>

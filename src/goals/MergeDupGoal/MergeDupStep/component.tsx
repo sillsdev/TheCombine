@@ -96,7 +96,7 @@ class MergeDupStep extends React.Component<
                 <MergeRow portait={this.state.portait} wordID={key} />
               </Grid>
             ))}
-            {/*
+            {
             <Box
               style={{ height: "100%" }}
               onDragOver={e => e.preventDefault()}
@@ -112,7 +112,7 @@ class MergeDupStep extends React.Component<
                   </Card>
                 }
               </Grid>
-            </Box>*/}
+            </Box>}
           </Grid>
         </div>
         {/* Merge button */}

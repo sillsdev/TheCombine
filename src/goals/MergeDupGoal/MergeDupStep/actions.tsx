@@ -100,6 +100,16 @@ export function refreshWords() {
     dispatch(setWordData(words[0]));
   };
 }
+
+export function mergeWord(wordID: string){
+  return async (
+    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
+    getState: () => StoreState
+  ) => {
+    //  
+  }
+}
+
 /*
 // this is gross lets clean it up
 export function applyMerges() {

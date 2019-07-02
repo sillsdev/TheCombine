@@ -67,6 +67,7 @@ export class MergeRow extends React.Component<
               senseID => (
                 <Grid item key={senseID}>
                   <MergeStack
+                    senseRef={senseID}
                     wordID={this.props.wordID}
                     senseID={this.props.words[this.props.wordID].senses[senseID]}
                   />
