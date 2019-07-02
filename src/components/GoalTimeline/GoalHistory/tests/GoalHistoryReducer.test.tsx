@@ -1,5 +1,5 @@
 import { goalHistoryReducer } from "../GoalHistoryReducer";
-import { Goal, GoalHistoryState } from "../../../../types/goals";
+import { GoalHistoryState } from "../../../../types/goals";
 import { MockActionGoalArrayInstance } from "../../../../types/action";
 
 it("Should return the default state", () => {

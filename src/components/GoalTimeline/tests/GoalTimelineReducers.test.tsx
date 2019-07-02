@@ -1,35 +1,31 @@
 import * as actions from "../GoalTimelineActions";
 import { goalsReducer } from "../GoalTimelineReducers";
 import { Goal, GoalsState } from "../../../types/goals";
-import { MockActionInstance } from "../../../types/action";
+import { MockActionGoalArrayInstance } from "../../../types/action";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
+import { defaultState } from "../DefaultState";
 
-it("Should return the current state", () => {
-  const goal: Goal = new CreateCharInv([]);
-  const suggestionsArray: Goal[] = [goal];
+it("Should return the default state", () => {
+  expect(goalsReducer(undefined, MockActionGoalArrayInstance)).toEqual(
+    defaultState
+  );
+});
 
+it("Should return the default state", () => {
   const state: GoalsState = {
     historyState: {
-      history: []
+      history: [...defaultState.historyState.history]
     },
-    allPossibleGoals: [],
+    allPossibleGoals: [...defaultState.allPossibleGoals],
     suggestionsState: {
-      suggestions: suggestionsArray
+      suggestions: [...defaultState.suggestionsState.suggestions]
     }
   };
 
-  const newState: GoalsState = {
-    historyState: {
-      history: []
-    },
-    allPossibleGoals: [],
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
-
-  expect(goalsReducer(state, MockActionInstance)).toEqual(newState);
+  expect(goalsReducer(state, MockActionGoalArrayInstance)).toEqual(
+    defaultState
+  );
 });
 
 it("Should add a goal to history and remove it from suggestions", () => {
@@ -48,7 +44,7 @@ it("Should add a goal to history and remove it from suggestions", () => {
 
   const addGoalAction: actions.AddGoalToHistoryAction = {
     type: actions.ADD_GOAL_TO_HISTORY,
-    payload: goal
+    payload: [goal]
   };
   const newState: GoalsState = {
     historyState: {
@@ -77,7 +73,7 @@ it("Should add a goal to history but not remove any goals from non-existent sugg
 
   const addGoalAction: actions.AddGoalToHistoryAction = {
     type: actions.ADD_GOAL_TO_HISTORY,
-    payload: goal
+    payload: [goal]
   };
   const newState: GoalsState = {
     historyState: {
@@ -109,7 +105,7 @@ it("Should add a goal to history but not remove it from suggestions", () => {
 
   const addGoalAction: actions.AddGoalToHistoryAction = {
     type: actions.ADD_GOAL_TO_HISTORY,
-    payload: chosenGoal
+    payload: [chosenGoal]
   };
   const newState: GoalsState = {
     historyState: {
