@@ -45,6 +45,9 @@ namespace BackendFramework.ValueModels
         [BsonElement("token")]
         public string Token { get; set; }
 
+        [BsonElement("userEdits")]
+        public string UserEdits { get; set; }
+
         public User()
         {
             Id = "";

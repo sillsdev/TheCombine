@@ -15,7 +15,7 @@ import {
   CircularProgress
 } from "@material-ui/core";
 import { Check } from "@material-ui/icons";
-import { green } from "@material-ui/core/colors";
+import { buttonSuccess } from "../../types/theme";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
@@ -154,7 +154,9 @@ class CreateProject extends React.Component<
                   disabled={this.props.inProgress}
                   style={{
                     marginTop: 30,
-                    backgroundColor: this.props.success ? green[500] : undefined
+                    backgroundColor: this.props.success
+                      ? buttonSuccess
+                      : undefined
                   }}
                 >
                   {this.props.success ? (
@@ -169,7 +171,7 @@ class CreateProject extends React.Component<
                     <CircularProgress
                       size={24}
                       style={{
-                        color: green[500],
+                        color: buttonSuccess,
                         position: "absolute",
                         top: "50%",
                         left: "50%",

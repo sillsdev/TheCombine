@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace Backend.Tests
 {
-    public class UserEditServiceMock : IUserEditService
+    public class UserEditRepositoryMock : IUserEditRepository
     {
+        private readonly List<UserEdit> userEdits;
 
-        List<UserEdit> userEdits;
-
-        public UserEditServiceMock()
+        public UserEditRepositoryMock()
         {
             userEdits = new List<UserEdit>();
         }
@@ -24,7 +23,11 @@ namespace Backend.Tests
 
         public Task<UserEdit> GetUserEdit(string id)
         {
-            var foundUserEdit = userEdits.Where(userEdit => userEdit.Id == id).Single();
+            var foundUserEdit = userEdits.Where(userEdit => userEdit.Id == id).FirstOrDefault();
+            if (foundUserEdit == null)
+            {
+                return Task.FromResult(foundUserEdit);
+            }
             return Task.FromResult(foundUserEdit.Clone());
         }
 
@@ -48,16 +51,12 @@ namespace Backend.Tests
             return Task.FromResult(success);
         }
 
-        public Task<bool> Update(string Id, int goalIndex, string stepUpdate)
+        public Task<bool> Replace(string Id, UserEdit userEdit)
         {
-            var foundUserEdit = userEdits.Single(u => u.Id == Id);
-
-            if (foundUserEdit != null)
-            {
-                foundUserEdit.Edits[goalIndex].StepData.Add(stepUpdate);
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
+            var foundUserEdit = userEdits.Single(ue => ue.Id == Id);
+            var success = userEdits.Remove(foundUserEdit);
+            userEdits.Add(userEdit);
+            return Task.FromResult(success);
         }
     }
 }

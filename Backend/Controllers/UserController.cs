@@ -84,9 +84,11 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]User user)
         {
+            //create a new user
             var returnUser = await _userService.Create(user);
 
-            if (returnUser == null)
+            //check if creations were valid
+            if (returnUser == null )
             {
                 return BadRequest();
             }

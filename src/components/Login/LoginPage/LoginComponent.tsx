@@ -27,13 +27,13 @@ export interface LoginStateProps {
   loginFailure: boolean | undefined;
 }
 
-interface LoginState {
+export interface LoginState {
   user: string;
   password: string;
   error: { password: boolean; username: boolean };
 }
 
-class Login extends React.Component<
+export class Login extends React.Component<
   LoginDispatchProps & LoginStateProps & LocalizeContextProps,
   LoginState
 > {
