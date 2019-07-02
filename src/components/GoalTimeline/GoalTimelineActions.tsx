@@ -3,7 +3,6 @@ import { ActionWithPayload } from "../../types/action";
 import { Dispatch } from "react";
 import * as backend from "../../backend";
 import history from "../../history";
-import { UserEdit, Edit } from "../../types/userEdit";
 import { User } from "../../types/user";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
@@ -36,10 +35,9 @@ export type LoadUserEditsAction = LoadUserEdits;
 export function asyncLoadUserEdits(id: string) {
   return async (dispatch: Dispatch<LoadUserEditsAction>) => {
     await backend
-      .getGoal(id)
+      .getUserEditById(id)
       .then(resp => {
         // Update user object with id of user edits
-        let userEdits: UserEdit = resp;
         let currentUserString = localStorage.getItem("user");
         let currentUserObject: User;
         if (currentUserString) {
@@ -102,9 +100,8 @@ export function asyncAddGoalToHistory(goal: Goal) {
       userEditId = userObject.userEditId;
     }
 
-    // Decide what to send to the api as the edit
     await backend
-      .addGoal(userEditId, goal)
+      .addGoalToUserEdit(userEditId, goal)
       .then(resp => {
         dispatch(addGoalToHistory(goal));
         history.push(`/goals/${resp}`);

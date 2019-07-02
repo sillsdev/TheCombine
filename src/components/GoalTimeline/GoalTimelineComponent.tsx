@@ -35,7 +35,7 @@ export class GoalTimeline extends React.Component<GoalTimelineProps> {
       if (currentUserObject.userEditId) {
         this.props.loadUserEdits(currentUserObject.userEditId);
       } else {
-        this.props.loadUserEdits("878611321567894156984651");
+        this.props.loadUserEdits("878611321567894156984651"); // Pass a nonexistent id
       }
     }
   }

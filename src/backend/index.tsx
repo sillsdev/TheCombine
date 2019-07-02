@@ -130,10 +130,10 @@ export async function uploadMp3(project: Project, mp3: File) {
   });
 }
 
-export async function addGoal(userEditId: string, goal: Goal): Promise<Goal> {
-  // let goalName = goal.name;
-  // let goalSteps = goal.steps;
-
+export async function addGoalToUserEdit(
+  userEditId: string,
+  goal: Goal
+): Promise<Goal> {
   let goalType: string;
   switch (goal.name) {
     case "CreateCharInv":
@@ -176,13 +176,13 @@ export async function addGoal(userEditId: string, goal: Goal): Promise<Goal> {
     });
 }
 
-export async function getGoal(index: string): Promise<UserEdit> {
+export async function getUserEditById(index: string): Promise<UserEdit> {
   return await backendServer.get(`projects/useredits/${index}`).then(resp => {
     return resp.data;
   });
 }
 
-export async function getAllGoals(): Promise<Goal[]> {
+export async function getAllUserEdits(): Promise<Goal[]> {
   return await backendServer.get("projects/useredits").then(resp => {
     console.log(resp);
     return resp.data;
