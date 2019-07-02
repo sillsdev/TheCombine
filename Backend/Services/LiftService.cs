@@ -69,8 +69,10 @@ namespace BackendFramework.Services
         {
             string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
             string zipdir = Path.Combine(wanted_path, "LiftExport");
-            Directory.CreateDirectory(zipdir);
+            string audiodir = Path.Combine(zipdir, "Audio");
+            Directory.CreateDirectory(audiodir);
             string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
+
             CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
 
             string header =
@@ -90,7 +92,7 @@ namespace BackendFramework.Services
 
             var allWords = _repo.GetAllWords().Result;
 
-            foreach (Word wordEntry in allWords )
+            foreach (Word wordEntry in allWords)
             {
                 LexEntry entry = new LexEntry();
 
@@ -98,7 +100,7 @@ namespace BackendFramework.Services
                 addVern(Id, wordEntry, entry);
 
                 //add audio (pronunciation media)
-                addAudio(entry, wordEntry);
+                addAudio(entry, wordEntry, audiodir);
 
                 //add sense
                 addSense(entry, wordEntry);
@@ -119,12 +121,16 @@ namespace BackendFramework.Services
             entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
         }
 
-        public void addAudio(LexEntry entry, Word wordEntry)
+        public void addAudio(LexEntry entry, Word wordEntry, string path)
         {
             LexPhonetic lexPhonetic = new LexPhonetic();
-            LiftMultiText proMultiText = new LiftMultiText { { "href", wordEntry.Audio } };
+            string dest = Path.Combine("Audio", wordEntry.Audio);
+            LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
             lexPhonetic.MergeIn(MultiText.Create(proMultiText));
             entry.Pronunciations.Add(lexPhonetic);
+
+            string targetPath = Path.Combine(path, wordEntry.Audio);
+            File.Copy(wordEntry.Audio, targetPath, true);
         }
 
         public void addSense(LexEntry entry, Word wordEntry)

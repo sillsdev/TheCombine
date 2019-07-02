@@ -1,5 +1,4 @@
-﻿using Backend.Tests;
-using BackendFramework.Controllers;
+﻿using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
@@ -70,7 +69,8 @@ namespace Backend.Tests
                 string vernLang = $"\"{Util.randString(3)}\"";
                 string vern = Util.randString(6);
                 string plural = Util.randString(8);
-                string audio = $"\"{Util.randString(3)}.mp3\"";
+                //string audio = $"\"{Util.randString(3)}.mp3\"";
+                string audio = $"\"sound.mp3\"";
                 string senseId = $"\"{Util.randString()}\"";
                 string transLang1 = $"\"{Util.randString(3)}\"";
                 string transLang2 = $"\"{Util.randString(3)}\"";
