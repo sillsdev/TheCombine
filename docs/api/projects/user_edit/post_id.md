@@ -1,12 +1,12 @@
-# Add User Role
+# Add Goal to UserEdit
 
-**URL** : `/v1/projects/userroles/`
+**URL** : `/v1/projects/userroles/{Id}`
 
 **Method** : `POST`
 
 **Auth required** :
 
-**Data type** : [`UserRole`](user_role.md)
+**Data type** : [`UserEdit`](user_edit.md)
 
 ## Success response
 

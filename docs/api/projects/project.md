@@ -4,10 +4,6 @@
 
 **semanticDomains** :
 
-**userRoles** :
-
-> **Typing of this is uncertain**
-
 **words** : This should only contain [frontier](words/frontier.md) words
 
 **vernacularWritingSystem** :
@@ -45,7 +41,6 @@
 {
     name: String,
     semanticDomains: <a href=words/semanticDomain.md>semanticDomain</a>[],
-    userRoles: String,
     words: <a href=words/word.md>Word</a>[],
     vernacularWritingSystem: String,
     analysisWritingSystems: String[],
