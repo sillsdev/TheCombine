@@ -8,7 +8,9 @@ import {WordDragAction, dropWord, dragWord} from '../../../../components/Draggab
 
 export function mapStateToProps(state: StoreState) {
   return {
-    draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord
+    draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord,
+    treeSenses: state.mergeDuplicateGoal.mergeTreeState.tree.senses,
+    senses: state.mergeDuplicateGoal.mergeTreeState.data.senses,
   };
 }
 

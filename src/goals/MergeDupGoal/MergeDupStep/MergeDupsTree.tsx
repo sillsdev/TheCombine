@@ -1,8 +1,12 @@
-import * as Data from '../../../types/word';
+import * as Data from "../../../types/word";
+
+export type Hash<V> = { [key: string]: V };
+
+export type TreeDataSense = Data.Sense & { srcWord: string };
 
 export interface MergeData {
-  words: {[wordID: string]: Data.Word};
-  senses: {[senseID: string]: Data.Sense & {srcWord: string}};
+  words: Hash<Data.Word>;
+  senses: Hash<TreeDataSense>;
 }
 
 export interface MergeTreeReference {
@@ -12,18 +16,18 @@ export interface MergeTreeReference {
 }
 
 export interface MergeTreeSense {
-  dups: {[dupID: string]: string};
+  dups: Hash<string>;
 }
 
 export interface MergeTreeWord {
-  senses: {[senseID: string]: string};
+  senses: Hash<string>;
   vern: string;
   plural: string;
 }
 
 export interface MergeTree {
-  senses: {[senseID: string]: MergeTreeSense};
-  words: {[wordID: string]: MergeTreeWord};
+  senses: Hash<MergeTreeSense>;
+  words: Hash<MergeTreeWord>;
 }
 
 export const defaultTree = {
@@ -34,4 +38,4 @@ export const defaultTree = {
 export const defaultData = {
   words: {},
   senses: {}
-}
+};

@@ -7,7 +7,8 @@ import MergeRowComponent from "./component";
 
 export function mapStateToProps(state: StoreState) {
   return {
-    draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord
+    draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord,
+    words: state.mergeDuplicateGoal.mergeTreeState.tree.words,
   };
 }
 

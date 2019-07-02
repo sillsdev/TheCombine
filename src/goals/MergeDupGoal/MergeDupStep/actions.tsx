@@ -1,57 +1,75 @@
-import {StoreState} from "../../../types";
-import {ThunkDispatch} from "redux-thunk";
+import {StoreState} from '../../../types';
+import {ThunkDispatch} from 'redux-thunk';
 import {MergeTreeReference} from './MergeDupsTree';
+import DupFinder from '../DuplicateFinder/DuplicateFinder';
+import {Sense, Word} from '../../../types/word';
 
 export enum MergeTreeActions {
-  SET_VERNACULAR = "SET_VERNACULAR",
-  SET_PLURAL = "SET_PLURAL",
-  MOVE_SENSE = "MOVE_SENSE",
-  SET_SENSE = "SET_SENSE",
+  SET_VERNACULAR = 'SET_VERNACULAR',
+  SET_PLURAL = 'SET_PLURAL',
+  MOVE_SENSE = 'MOVE_SENSE',
+  SET_SENSE = 'SET_SENSE',
+  SET_DATA = 'SET_DATA',
+}
+
+interface MergeDataAction {
+  type: MergeTreeActions.SET_DATA,
+  payload: Word[],
 }
 
 interface MergeTreeMoveAction {
   type: MergeTreeActions.MOVE_SENSE;
-  payload: {src: MergeTreeReference, dest: MergeTreeReference};
+  payload: {src: MergeTreeReference; dest: MergeTreeReference};
 }
 
 interface MergeTreeSetAction {
   type: MergeTreeActions.SET_SENSE;
-  payload: {ref: MergeTreeReference, data: number | undefined};
+  payload: {ref: MergeTreeReference; data: number | undefined};
 }
 
 interface MergeTreeWordAction {
   type: MergeTreeActions.SET_VERNACULAR | MergeTreeActions.SET_PLURAL;
-  payload: {wordID: number, data: string};
+  payload: {wordID: number; data: string};
 }
 
-export type MergeTreeAction = MergeTreeWordAction | MergeTreeMoveAction | MergeTreeSetAction;
+export type MergeTreeAction =
+  | MergeTreeWordAction
+  | MergeTreeMoveAction
+  | MergeTreeSetAction
+  | MergeDataAction;
 
 // action creators
 export function setVern(wordID: number, vern: string): MergeTreeAction {
   return {
     type: MergeTreeActions.SET_VERNACULAR,
-    payload: {wordID, data: vern}
+    payload: {wordID, data: vern},
   };
 }
 
 export function setPlural(wordID: number, plural: string): MergeTreeAction {
   return {
     type: MergeTreeActions.SET_PLURAL,
-    payload: {wordID, data: plural}
+    payload: {wordID, data: plural},
   };
 }
 
-export function moveSense(src: MergeTreeReference, dest: MergeTreeReference): MergeTreeAction {
+export function moveSense(
+  src: MergeTreeReference,
+  dest: MergeTreeReference,
+): MergeTreeAction {
   return {
     type: MergeTreeActions.MOVE_SENSE,
-    payload: {src, dest}
+    payload: {src, dest},
   };
 }
 
-export function setSense(ref: MergeTreeReference, data: number | undefined): MergeTreeAction {
+export function setSense(
+  ref: MergeTreeReference,
+  data: number | undefined,
+): MergeTreeAction {
   return {
     type: MergeTreeActions.SET_SENSE,
-    payload: {ref, data}
+    payload: {ref, data},
   };
 }
 
@@ -59,15 +77,30 @@ export function removeSense(ref: MergeTreeReference): MergeTreeAction {
   return setSense(ref, undefined);
 }
 
+export function setWordData(words: Word[]): MergeDataAction {
+  return {
+    type: MergeTreeActions.SET_DATA,
+    payload: words
+  }
+}
+
 export function mergeSense() {
   return async (
     _dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    _getState: () => StoreState
+    _getState: () => StoreState,
   ) => {
-    // TODO: Merge all duplicates into sense and remove them from tree leaving new word on top 
+    // TODO: Merge all duplicates into sense and remove them from tree leaving new word on top
   };
 }
-  /*
+
+export function refreshWords() {
+  return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
+    let finder = new DupFinder();
+    let words = await finder.getNextDups();
+    dispatch(setWordData(words[0]));
+  };
+}
+/*
 // this is gross lets clean it up
 export function applyMerges() {
   return async (
