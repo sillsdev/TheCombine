@@ -19,7 +19,11 @@ export enum Tools {
 export type GoalProps = MergeDupProps;
 
 export type GoalData = MergeDupData; // | OtherTypes
-export type GoalStep = MergeDupStepProps; // | OtherTypes
+
+export interface MockGoalStep {}
+export type MockGoalStepType = MockGoalStep;
+
+export type GoalStep = MockGoalStepType; //MergeDupStepProps; // | OtherTypes
 
 export interface GoalViewState {
   state: GoalsState;
