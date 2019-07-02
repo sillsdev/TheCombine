@@ -189,8 +189,17 @@ namespace BackendFramework.Services
             Word newWord = new Word();
 
             //add vernacular
-            string LexicalForm = entry.LexicalForm.FirstValue.Value.Text;
-            newWord.Vernacular = LexicalForm;
+            if (!entry.CitationForm.IsEmpty) //prefer citation form for vernacular
+            {
+                newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
+            } else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
+            {
+                newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
+            }
+            else //this is not a word
+            {
+                return;
+            }
 
             //add plural
             foreach (var field in entry.Fields)
