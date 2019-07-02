@@ -20,6 +20,12 @@
 
 **uiLang** :
 
+**token** :
+
+**userEdits** : string
+
+> Will change to Dictionary<string, UserEdit>
+
 ## Raw type
 
 ```typescript
@@ -33,6 +39,8 @@
     agreement: boolean,
     password: String,
     username: String,
-    uiLang: String
+    uiLang: String,
+    token: String,
+    userEdits: String
 }
 ```

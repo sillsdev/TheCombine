@@ -28,7 +28,7 @@ namespace BackendFramework
             public string ConnectionString { get; set; }
             public string WordsDatabase { get; set; }
             public string UsersDatabase { get; set; }
-            public string UserRolesDatabase { get; set; }
+            public string UserEditsDatabase { get; set; }
             public string ProjectsDatabase { get; set; }
         }
 
@@ -78,7 +78,7 @@ namespace BackendFramework
                 options.WordsDatabase = Configuration.GetSection("MongoDB:WordsDatabase").Value;
                 options.UsersDatabase = Configuration.GetSection("MongoDB:UsersDatabase").Value;
                 options.ProjectsDatabase = Configuration.GetSection("MongoDB:ProjectsDatabase").Value;
-                options.UserRolesDatabase = Configuration.GetSection("MongoDB:UserRolesDatabase").Value;
+                options.UserEditsDatabase = Configuration.GetSection("MongoDB:UserEditsDatabase").Value;
             });
 
             // Register concrete types for dependency injection
@@ -96,8 +96,9 @@ namespace BackendFramework
             services.AddTransient<ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>, LiftService>();
 
             // User role types
-            services.AddTransient<IUserRoleContext, UserRoleContext>();
-            services.AddTransient<IUserRoleService, UserRoleService>();
+            services.AddTransient<IUserEditContext, UserEditContext>();
+            services.AddTransient<IUserEditService, UserEditService>();
+            services.AddTransient<IUserEditRepository, UserEditRepository>();
 
             // Project types
             services.AddTransient<IProjectContext, ProjectContext>();

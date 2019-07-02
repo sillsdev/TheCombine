@@ -9,21 +9,41 @@
     ]
   },
   "login": {
+    "title": ["Log In", "iniciar sesión"],
+    "name": ["Your Name", "Tu Nombre"],
     "username": ["Username", "Nombre de usuario"],
     "password": ["Password", "Contraseña"],
+    "passwordRequirements": [
+      "Password must be 8 characters or longer.",
+      "La contraseña debe tener 8 caracteres o más."
+    ],
+    "forgotPassword": ["Forgot password?", "¿Se te olvidó tu contraseña?"],
     "login": ["Login", "Iniciar sesión"],
+    "backToLogin": ["Back to login", "Atrás para iniciar sesión"],
     "register": ["Register", "Registro"],
+    "registerNew": ["Register New User", "Registrar nuevo usuario"],
+    "registerSuccess": ["User Created", "creado por el usuario"],
     "failed": [
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
     ],
     "registerFailed": [
-      "Failed to register. Please use a unique username and password.",
-      "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
+      "Failed to register: That username is already in use.",
+      "Error al iniciar sesión: Ese nombre de usuario ya está en uso."
     ],
     "loggingIn": ["Logging in...", "Iniciar sesión..."],
     "logout": ["Log out", "cerrar sesión"],
-    "required": ["Required", "necesario"]
+    "required": ["Required", "necesario"],
+    "confirmPassword": ["Confirm Password", "confirmar contraseña"],
+    "confirmPasswordError": [
+      "Passwords do not match",
+      "Las contraseñas no coinciden"
+    ],
+    "email": ["Email", "dirección de correo electrónico"],
+    "emailError": [
+      "Please enter a valid email",
+      "Por favor, introduce una dirección de correo electrónico válida"
+    ]
   },
   "createProject": {
     "title": ["Create Project", "Crear Proyecto"],
@@ -35,31 +55,10 @@
     "upload?": ["Upload .lift file?", "Uploado .lift filada?"],
     "browse": ["Browse", "Navegar"],
     "create": ["Create Project", "Crear Proyecto"],
-    "fileSelected": ["File selected", "Archivo seleccionado"]
+    "fileSelected": ["File selected", "Archivo seleccionado"],
+    "success": ["Project Created!", "Proyecto creado!"]
   },
   "goal": {
-    "name": {
-      "createCharInv": [
-        "Create Character Inventory",
-        "Crear inventario de personajes"
-      ],
-      "createStrWordInv": [
-        "Create Structural Word Inventory",
-        "Crear inventario de palabras estructurales"
-      ],
-      "handleFlags": ["Handle Flags", "Banderas de la manija"],
-      "mergeDups": ["Merge Duplicates", "Fusionar duplicados"],
-      "spellCheckGloss": [
-        "Spell Check Glossary",
-        "Glosario de corrección ortográfica"
-      ],
-      "validateChars": ["Validate Characters", "Validar caracteres"],
-      "validateStrWords": [
-        "Validate Structural Characters",
-        "Validar caracteres estructurales"
-      ],
-      "viewFinal": ["View Final", "Ver final"]
-    },
     "selector": {
       "selectOption": ["Select this goal", "Selecciona este objectivo"]
     },
@@ -67,9 +66,38 @@
       "done": ["Save & Continue", "Ahorrar y Continuar"]
     }
   },
+  "createStrWordInv": {
+    "title": [
+      "Create Structural Word Inventory",
+      "Crear inventario de palabras estructurales"
+    ]
+  },
+  "handleFlags": {
+    "title": ["Handle Flags", "Banderas de la manija"]
+  },
+  "spellCheckGloss": {
+    "title": ["Spell Check Glossary", "Glosario de corrección ortográfica"]
+  },
+  "validateChars": {
+    "title": ["Validate Characters", "Validar caracteres"]
+  },
+  "validateStrWords": {
+    "title": [
+      "Validate Structural Characters",
+      "Validar caracteres estructurales"
+    ]
+  },
+  "viewFinal": {
+    "title": ["View Final", "Ver final"]
+  },
   "charInventory": {
+    "title": ["Create Character Inventory", "Crear inventario de personajes"],
     "characterSet": {
-      "title": ["Character Set:", "Conjunto de caracteres:"],
+      "title": ["Vernacular Character Set:", "Conjunto de caracteres:"],
+      "help": [
+        "Define the characters that are valid for this language",
+        "Define los caracteres que son válidos para este idioma"
+      ],
       "addButton": ["Add Chars", "Añadir caracteres"],
       "addButtonTitle": [
         "Add the characters in the box to the character set",
@@ -84,6 +112,10 @@
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
         "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar."
+      ],
+      "required": [
+        "Add characters by entering them in this box",
+        "Agrega caracteres ingresándolos en este cuadro"
       ]
     },
     "sampleWords": {
@@ -111,6 +143,7 @@
     }
   },
   "mergeDups": {
+    "title": ["Merge Duplicates", "Fusionar duplicados"],
     "helpText": {
       "root": [
         "Drag words here to start merging them",
@@ -130,5 +163,14 @@
         "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras"
       ]
     }
+  },
+  "goalTimeline": {
+    "title": ["Goal Timeline", "Línea de tiempo de la meta"]
+  },
+  "emptyGoal": {
+    "message": [
+      "This goal has not been implemented yet",
+      "Este objetivo aún no se ha implementado"
+    ]
   }
 }

@@ -1,5 +1,9 @@
 import * as reducer from "../CreateProjectReducer";
-import { CreateProjectAction, CREATE_PROJECT } from "../CreateProjectActions";
+import {
+  CreateProjectAction,
+  IN_PROGRESS,
+  RESET
+} from "../CreateProjectActions";
 
 const project = {
   name: "testProjectName",
@@ -10,23 +14,28 @@ describe("createActionReducer Tests", () => {
   let dummySt: reducer.CreateProjectState = reducer.defaultState;
   let resultState: reducer.CreateProjectState = {
     name: project.name,
-    success: true
+    success: false,
+    inProgress: true,
+    errorMsg: ""
   };
 
-  let createProject: CreateProjectAction = {
-    type: CREATE_PROJECT,
+  let inProgress: CreateProjectAction = {
+    type: IN_PROGRESS,
     payload: project
   };
 
   // Test with no state
   test("no state, expecting default state", () => {
-    expect(reducer.createProjectReducer(undefined, createProject)).toEqual(
-      reducer.defaultState
-    );
+    expect(
+      reducer.createProjectReducer(undefined, {
+        type: RESET,
+        payload: project
+      })
+    ).toEqual(reducer.defaultState);
   });
 
   test("default state, expecting create project", () => {
-    expect(reducer.createProjectReducer(dummySt, createProject)).toEqual(
+    expect(reducer.createProjectReducer(dummySt, inProgress)).toEqual(
       resultState
     );
   });

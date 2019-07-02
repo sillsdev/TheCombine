@@ -4,10 +4,9 @@ using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 
-namespace Tests
+namespace Backend.Tests
 {
     public class UserControllerTests
     {
