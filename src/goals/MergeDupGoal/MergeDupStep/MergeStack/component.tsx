@@ -16,6 +16,7 @@ export interface MergeStackProps {
   dropWord?: () => void;
   dragWord?: (ref: MergeTreeReference) => void;
   draggedWord?: MergeTreeReference;
+  wordID: string;
   senseID: string;
   treeSenses: Hash<MergeTreeSense>;
   senses: Hash<TreeDataSense>;
@@ -195,6 +196,7 @@ class MergeStack extends React.Component<
 
   render() {
     let treeSense = this.props.treeSenses[this.props.senseID];
+    let displaySenseKey = Object.keys(treeSense.dups)[0];
     let displaySenseID = Object.values(treeSense.dups)[0];
     let displaySense = this.props.senses[displaySenseID];
     //TODO: Make language dynamic
@@ -204,12 +206,23 @@ class MergeStack extends React.Component<
     let gloss = displaySense.glosses.filter(gloss => gloss.language == lang)[0];
 
     return (
-      <Card>
+      <Card
+        draggable={true}
+        onDragStart={() =>
+          this.props.dragWord &&
+          this.props.dragWord({
+            word: this.props.wordID,
+            sense: this.props.senseID,
+            duplicate: displaySenseKey
+          })
+        }
+      >
         <CardContent>
           <Typography variant={"h5"}>{gloss.def}</Typography>
           {/* List semantic domains */}
           <List dense={true}>
-            {displaySense.semanticDomains.length == 0 && "{ no semantic domain }"}
+            {displaySense.semanticDomains.length == 0 &&
+              "{ no semantic domain }"}
             {displaySense.semanticDomains.map(dom => (
               <ListItem> {dom.name + "\t" + dom.number} </ListItem>
             ))}
