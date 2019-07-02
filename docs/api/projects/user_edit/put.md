@@ -1,16 +1,16 @@
-# Get a single user role
+# Add step to goal
 
-**URL** : `/v1/projects/userroles/{Id}`
+**URL** : `/v1/projects/userroles/{id}`
 
-**Method** : `GET`
+**Method** : `PUT`
 
 **Auth required** :
+
+**Data type** : [`UserEdit`](user_edit.md)
 
 ## Success response
 
 **Code** : `200 OK`
-
-**Data Content** : [`UserRole`](user_role.md)
 
 ## Error response
 
