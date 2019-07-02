@@ -1,5 +1,6 @@
 import React from "react";
 import AppBarComponent from "../AppBar/AppBarComponent";
+import { Typography } from "@material-ui/core";
 
 /**
  * A custom 404 page that should be displayed anytime the user tries to navigate
@@ -10,7 +11,7 @@ export default class PageNotFound extends React.Component {
     return (
       <div>
         <AppBarComponent />
-        <h1>Page not found</h1>
+        <Typography variant="h4">Page not found</Typography>
       </div>
     );
   }
