@@ -1,4 +1,11 @@
-import { Goal, GoalData, Tools, GoalOption, GoalType } from "../types/goals";
+import {
+  Goal,
+  GoalData,
+  Tools,
+  GoalOption,
+  GoalType,
+  GoalStep
+} from "../types/goals";
 import { User } from "./user";
 
 export class BaseGoal implements Goal {
@@ -6,7 +13,7 @@ export class BaseGoal implements Goal {
   name: string;
   user: User;
 
-  steps: JSX.Element[];
+  steps: GoalStep[];
   curNdx: number;
   data: GoalData; // The data required to load/reload this exact goal
 

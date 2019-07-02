@@ -1,4 +1,11 @@
-import { Goal, GoalData, Tools, GoalOption, GoalType } from "../../types/goals";
+import {
+  Goal,
+  GoalData,
+  Tools,
+  GoalOption,
+  GoalType,
+  GoalStep
+} from "../../types/goals";
 import { User } from "../../types/user";
 
 //interface for component state
@@ -10,14 +17,14 @@ export class MergeDups implements Goal {
   goalType: GoalType;
   name: string;
   user: User;
-  steps: JSX.Element[];
+  steps: GoalStep[];
   curNdx: number;
   data: GoalData;
   tool: Tools;
   completed: boolean;
   result: GoalOption;
 
-  constructor(steps: JSX.Element[]) {
+  constructor(steps: GoalStep[]) {
     this.goalType = GoalType.MergeDups;
     this.name = "mergeDups";
     this.user = new User("", "", "");

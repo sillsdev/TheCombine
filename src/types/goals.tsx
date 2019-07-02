@@ -56,7 +56,7 @@ export interface Goal {
   name: string;
   user: User;
 
-  steps: JSX.Element[];
+  steps: GoalStep[];
   curNdx: number;
   data: GoalData; // The data required to load/reload this exact goal
 
