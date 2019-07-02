@@ -5,7 +5,7 @@ namespace BackendFramework.Helper
 {
     public class Utilities
     {
-        enum filetype
+        public enum filetype
         {
             audio,
             avatar,
@@ -14,19 +14,24 @@ namespace BackendFramework.Helper
 
         public string GenerateFilePath(filetype type, string Id = "")
         {
+            //generate path to desktop
             string wanted_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-            if (wanted_path == null || wanted_path == "") /*I don't know what to expect*/
+            /*I don't know what to expect or if this will work so a very specific exception will help debugging*/
+            if (wanted_path == null || wanted_path == "") 
             {
                 throw (new DesktopNotFoundExceoption());
             }
 
+            //path to the base data folder
             wanted_path = Path.Combine(wanted_path, ".CombineFiles");
-            //establish path to audio file dir
-            string returnFilepath = Path.Combine(wanted_path, );
-            System.IO.Directory.CreateDirectory(returnFilepath);
 
-            returnFilepath = Path.Combine(wanted_path, Id + FileTypeExtension(type));
+            //establish path to the typed file in the base folder
+            string returnFilepath = Path.Combine(wanted_path, FileTypeFolder(type));
+            //if its the first time here it needs to be created
+            Directory.CreateDirectory(returnFilepath);
+
+            returnFilepath = Path.Combine(returnFilepath, Id + FileTypeExtension(type));
 
             return returnFilepath;
         }
@@ -34,15 +39,15 @@ namespace BackendFramework.Helper
         {
             switch (type)
             {
-                case audio:
-                    return "Audio";
-                    break;
-                case avatar:
-                    return ".jpg";
-                    break;
-                case avatar:
-                    return "lift";
-                    break;
+                case filetype.audio:
+                    return "Audios";
+
+                case filetype.avatar:
+                    return "Avatars";
+
+                case filetype.lift:
+                    return "lifts";
+
                 default:
                     throw new InvalidDataException();
             }
@@ -52,15 +57,15 @@ namespace BackendFramework.Helper
         {
             switch (type)
             {
-                case audio:
+                case filetype.audio:
                     return ".mp3";
-                    break;
-                case avatar:
+
+                case filetype.avatar:
                     return ".jpg";
-                    break;
-                case avatar:
-                    return "lift";
-                    break;
+
+                case filetype.lift:
+                    return ".lift";
+
                 default:
                     throw new InvalidDataException();
             }

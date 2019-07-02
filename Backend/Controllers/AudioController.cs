@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers
 {
@@ -35,7 +36,7 @@ namespace BackendFramework.Controllers
             {
                 //get path to desktop
                 Utilities util = new Utilities();
-                model.FilePath = util.GenerateFilePath();
+                model.FilePath = util.GenerateFilePath(filetype.audio, wordId);
 
                 //copy the file data to the created file
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))

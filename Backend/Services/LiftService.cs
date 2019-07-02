@@ -76,13 +76,11 @@ namespace BackendFramework.Services
 
         public void LiftExport(string Id)
         {
-
-            string wanted_path;
-            wanted_path = Path.GetPathRoot(System.IO.Directory.GetCurrentDirectory());
-            wanted_path = Path.Combine(wanted_path, "CombineFiles");
-            Directory.CreateDirectory(wanted_path);
-
-            string zipdir = Path.Combine(wanted_path, "LiftExport");
+            //the helper tag must be included because there are also SIL.Utilitites
+            Helper.Utilities util = new Helper.Utilities();
+            string filename = util.GenerateFilePath(Helper.Utilities.filetype.lift);
+             
+            string zipdir = Path.Combine(filename, "LiftExport");
             string audiodir = Path.Combine(zipdir, "Audio");
             Directory.CreateDirectory(zipdir);
             Directory.CreateDirectory(audiodir);

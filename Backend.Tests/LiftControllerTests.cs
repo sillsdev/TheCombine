@@ -1,4 +1,5 @@
 ﻿using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
@@ -69,8 +70,8 @@ namespace Backend.Tests
                 string vernLang = $"\"{Util.randString(3)}\"";
                 string vern = Util.randString(6);
                 string plural = Util.randString(8);
-                //string audio = $"\"{Util.randString(3)}.mp3\"";
-                string audio = $"\"fart{i + 1}.mp3\"";
+                string audio = $"\"{Util.randString(3)}.mp3\"";
+                //string audio = $"\"fart{i + 1}.mp3\"";
                 string senseId = $"\"{Util.randString()}\"";
                 string transLang1 = $"\"{Util.randString(3)}\"";
                 string transLang2 = $"\"{Util.randString(3)}\"";
@@ -120,8 +121,9 @@ namespace Backend.Tests
         [Test]
         public void TestRoundtrip()
         {
-            string wanted_path = System.IO.Directory.GetCurrentDirectory();
-            string filepath = Path.Combine(wanted_path, "LiftExport",  "NewLiftFile.lift");
+            //get path to desktop
+            Utilities util = new Utilities();
+            string filepath = util.GenerateFilePath(Utilities.filetype.lift);
             File.Delete(filepath);
 
             string name = RandomLiftFile();
@@ -131,6 +133,8 @@ namespace Backend.Tests
             var proj = RandomProject();
             proj.VernacularWritingSystem = Util.randString(3);
             _projServ.Create(proj);
+
+            fileUpload.FilePath = filepath;
 
             _ = liftController.UploadLiftFile(fileUpload).Result;
 

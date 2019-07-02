@@ -1,4 +1,5 @@
-﻿using BackendFramework.Interfaces;
+﻿using BackendFramework.Helper;
+using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using SIL.Lift.Parsing;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers
 {
@@ -36,10 +38,11 @@ namespace BackendFramework.Controllers
 
             if (file.Length > 0)
             {
-                string wanted_path = System.IO.Directory.GetCurrentDirectory();
-                System.IO.Directory.CreateDirectory(wanted_path + "/Words");
+                //get path to desktop
+                Utilities util = new Utilities();
+                model.FilePath = util.GenerateFilePath(filetype.lift);
 
-                model.FilePath = Path.Combine(wanted_path + "/Words/UploadFile-" + model.Name + ".xml");
+                //copy data into file
                 using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
                 {
                     await file.CopyToAsync(fs);
