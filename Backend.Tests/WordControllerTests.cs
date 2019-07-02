@@ -27,6 +27,22 @@ namespace Backend.Tests
         {
             Word word = new Word();
             word.Vernacular = Util.randString();
+            word.Modified = Util.randString();
+            word.PartOfSpeech = Util.randString();
+            word.Plural = Util.randString();
+
+            Random num = new Random();
+            foreach (var sense in word.Senses)
+            {
+                sense.Accessability = num.Next() % 4;
+
+                foreach (Gloss gloss in sense.Glosses) {
+                    gloss.Def = Util.randString();
+                    gloss.Language = Util.randString(3);
+                }
+            }
+
+            word.Created = Util.randString();
             return word;
         }
 
@@ -124,46 +140,8 @@ namespace Backend.Tests
         [Test]
         public void MergeWords()
         {
-            Word parent = repo.Create(RandomWord()).Result;
-            Word child1 = repo.Create(RandomWord()).Result;
-            Word child2 = repo.Create(RandomWord()).Result;
-
-            MergeWords merge = new MergeWords();
-            merge.Parent = parent.Id;
-            merge.Children = new List<string> { child1.Id, child2.Id };
-            merge.MergeType = state.duplicate;
-            string id = (controller.Put(merge).Result as ObjectResult).Value as string;
-
-            List<Word> words = repo.GetAllWords().Result;
-
-            // make sure we didn't remove anything
-            Assert.Contains(parent, words);
-            Assert.Contains(child1, words);
-            Assert.Contains(child2, words);
-
-            // find the dups
-            Word dup1 = child1.Clone();
-            dup1.History = new List<string> { child1.Id };
-            dup1 = words.Find(word => word.ContentEquals(dup1));
-
-            Word dup2 = child2.Clone();
-            dup2.History = new List<string> { child2.Id };
-            dup2 = words.Find(word => word.ContentEquals(dup2));
-
-            Assert.NotNull(dup1);
-            Assert.NotNull(dup2);
-            Assert.Contains(dup1, words);
-            Assert.Contains(dup2, words);
-
-            // find the endpoint
-            Word end = parent.Clone();
-            end.History = new List<string> { parent.Id, dup1.Id, dup2.Id };
-            end = words.Find(word => word.ContentEquals(end));
-
-            Assert.NotNull(end);
-            Assert.Contains(end, words);
-            Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
-            Assert.Contains(end, repo.GetFrontier().Result);
+            Word CorrectParentWord = RandomWord();
+            
         }
     }
 }
