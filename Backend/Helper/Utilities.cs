@@ -17,14 +17,14 @@ namespace BackendFramework.Helper
         {
             //generate path to desktop
             //if the os is windows then the next command will get valid path, otherwise...
-            string wanted_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //string wanted_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             
             //otherwise the os is linux and the desktop path is "/home/{user}/Desktop/
-            if (wanted_path == null || wanted_path == "") 
-            {
-                wanted_path = Path.Combine("home", Environment.GetEnvironmentVariable("HOME"), "Desktop");
+            //if (wanted_path == null || wanted_path == "") 
+            //{
+                string wanted_path = Path.Combine("home", Environment.GetEnvironmentVariable("HOME"), "Desktop");
                 //throw (new DesktopNotFoundExceoption());
-            }
+            //}
 
             //path to the base data folder
             wanted_path = Path.Combine(wanted_path, ".CombineFiles");
