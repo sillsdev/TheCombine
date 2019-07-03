@@ -36,7 +36,7 @@ namespace BackendFramework.Controllers
             {
                 //get path to desktop
                 Utilities util = new Utilities();
-                model.FilePath = util.GenerateFilePath(filetype.audio, wordId);
+                model.FilePath = util.GenerateFilePath(filetype.audio, false, wordId);
 
                 //copy the file data to the created file
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))

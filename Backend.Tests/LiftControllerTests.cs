@@ -37,9 +37,10 @@ namespace Backend.Tests
             return project;
         }
 
-        public string RandomLiftFile()
+        public string RandomLiftFile(string path)
         {
-            string name = Util.randString() + ".lift";
+            string name = "TEST-TO_BE_STREAMED-" + Util.randString() + ".lift";
+            name = Path.Combine(path, name);
             FileStream fs = File.OpenWrite(name);
 
             string header = 
@@ -123,10 +124,13 @@ namespace Backend.Tests
         {
             //get path to desktop
             Utilities util = new Utilities();
-            string filepath = util.GenerateFilePath(Utilities.filetype.lift);
-            File.Delete(filepath);
 
-            string name = RandomLiftFile();
+            //generates lifts in .CombineFiles
+            string filepath = util.GenerateFilePath(Utilities.filetype.lift, true);
+            //File.Delete(filepath);
+
+            //initializes the random imported lift file
+            string name = RandomLiftFile(filepath);
             FileStream fstream = File.OpenRead(name);
             var fileUpload = InitFile(fstream);
 
@@ -134,7 +138,7 @@ namespace Backend.Tests
             proj.VernacularWritingSystem = Util.randString(3);
             _projServ.Create(proj);
 
-            fileUpload.FilePath = filepath;
+            fileUpload.FilePath = name;
 
             _ = liftController.UploadLiftFile(fileUpload).Result;
 
@@ -147,12 +151,13 @@ namespace Backend.Tests
             _ = liftController.ExportLiftFile(proj.Id).Result;
 
             //assert file was created
-            Assert.IsTrue(File.Exists(filepath));
+            Assert.IsTrue(Directory.Exists(filepath));
 
             //assert words can be properly imported
             _ = _wordrepo.DeleteAllWords().Result;
 
-            fstream = File.OpenRead(filepath);
+            string uploadAgain = Path.Combine(util.GenerateFilePath(Utilities.filetype.dir, true), "LiftExport", "NewLiftFile.Lift");
+            fstream = File.OpenRead(uploadAgain);
             fileUpload = InitFile(fstream);
 
             _ = liftController.UploadLiftFile(fileUpload).Result;

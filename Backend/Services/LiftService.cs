@@ -78,9 +78,15 @@ namespace BackendFramework.Services
         {
             //the helper tag must be included because there are also SIL.Utilitites
             Helper.Utilities util = new Helper.Utilities();
-            string filename = util.GenerateFilePath(Helper.Utilities.filetype.lift);
-             
+
+            //generate the zip dir
+            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, false);
             string zipdir = Path.Combine(filename, "LiftExport");
+            Directory.CreateDirectory(zipdir);
+
+            //generates fil to be exported to
+            filename = Path.Combine(zipdir, "TEST-EXPORTED-" + Path.GetRandomFileName());
+           
             string audiodir = Path.Combine(zipdir, "Audio");
             Directory.CreateDirectory(zipdir);
             Directory.CreateDirectory(audiodir);
@@ -122,8 +128,8 @@ namespace BackendFramework.Services
             }
             writer.End();
 
-            File.Delete("LiftExport.zip");
-            ZipFile.CreateFromDirectory(zipdir, "LiftExport.zip");
+            //File.Delete("LiftExport.zip");
+            ZipFile.CreateFromDirectory(zipdir, Path.Combine(zipdir, Path.Combine("..", "LiftExportCompressed.zip")));
         }
 
         public void addVern(string Id, Word wordEntry, LexEntry entry)
@@ -137,14 +143,21 @@ namespace BackendFramework.Services
         public void addAudio(LexEntry entry, Word wordEntry, string path)
         {
             LexPhonetic lexPhonetic = new LexPhonetic();
+
             string dest = Path.Combine(path, wordEntry.Audio);
             LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
             lexPhonetic.MergeIn(MultiText.Create(proMultiText));
             entry.Pronunciations.Add(lexPhonetic);
-
-            string targetPath = Path.Combine(path, wordEntry.Audio);
-            string filepath = Path.GetFullPath((new Uri("TheCombine/")).LocalPath);
-            File.Copy(wordEntry.Audio, targetPath, true);
+            try
+            {
+                Helper.Utilities util = new Helper.Utilities();
+                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
+                File.Copy(src, dest, true);
+            }
+            catch (FileNotFoundException)
+            {
+                //do nothing
+            }
         }
 
         public void addSense(LexEntry entry, Word wordEntry)

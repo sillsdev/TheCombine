@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
                 {
                     //get path to desktop
                     Utilities util = new Utilities();
-                    model.FilePath = util.GenerateFilePath(Utilities.filetype.avatar, userId);
+                    model.FilePath = util.GenerateFilePath(Utilities.filetype.avatar, false, userId);
 
                     //copy stream to filepath
                     using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))

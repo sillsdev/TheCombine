@@ -40,7 +40,7 @@ namespace BackendFramework.Controllers
             {
                 //get path to desktop
                 Utilities util = new Utilities();
-                model.FilePath = util.GenerateFilePath(filetype.lift);
+                model.FilePath = util.GenerateFilePath(filetype.lift, false, "TEST-UPLOAD-" + Path.GetRandomFileName());
 
                 //copy data into file
                 using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))

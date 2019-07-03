@@ -9,10 +9,11 @@ namespace BackendFramework.Helper
         {
             audio,
             avatar,
-            lift
+            lift,
+            dir
         }
 
-        public string GenerateFilePath(filetype type, string Id = "")
+        public string GenerateFilePath(filetype type, bool directory, string fileExtension = "")
         {
             //generate path to desktop
             string wanted_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -28,10 +29,12 @@ namespace BackendFramework.Helper
 
             //establish path to the typed file in the base folder
             string returnFilepath = Path.Combine(wanted_path, FileTypeFolder(type));
+
             //if its the first time here it needs to be created
             Directory.CreateDirectory(returnFilepath);
-
-            returnFilepath = Path.Combine(returnFilepath, Id + FileTypeExtension(type));
+            
+            returnFilepath = Path.Combine(returnFilepath, fileExtension + (directory ? "" : FileTypeExtension(type)));
+            
 
             return returnFilepath;
         }
@@ -49,7 +52,7 @@ namespace BackendFramework.Helper
                     return "lifts";
 
                 default:
-                    throw new InvalidDataException();
+                    return "";
             }
         }
 
@@ -67,7 +70,7 @@ namespace BackendFramework.Helper
                     return ".lift";
 
                 default:
-                    throw new InvalidDataException();
+                    return ""; ;
             }
         }
 
