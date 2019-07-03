@@ -3,6 +3,8 @@ import { Word, State, Merge, MergeWord } from "../types/word";
 import { User } from "../types/user";
 import { Project } from "../types/project";
 import { authHeader } from "../components/Login/AuthHeaders";
+import { Goal, GoalType } from "../types/goals";
+import { UserEdit } from "../types/userEdit";
 
 const backendServer = axios.create({ baseURL: "https://localhost:5001/v1" });
 
@@ -116,7 +118,7 @@ export async function uploadLift(project: Project, lift: File) {
   let data = new FormData();
   data.append("file", lift);
   await backendServer.post("projects/words/upload", data, {
-    headers: { ...authHeader(), "content-type": "application/json" }
+    headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
   });
 }
 
@@ -125,5 +127,68 @@ export async function uploadMp3(project: Project, mp3: File) {
   data.append("file", mp3);
   await backendServer.post("projects/words/upload/audio", data, {
     headers: { ...authHeader(), "content-type": "application/json" }
+  });
+}
+
+export async function addGoalToUserEdit(
+  userEditId: string,
+  goal: Goal
+): Promise<Goal> {
+  let goalType: string = goalNameToGoalTypeId(goal.name);
+  let stepData: string = goal.steps.toString();
+  let userEditTuple = { goalType: goalType, stepData: [stepData] };
+  return await backendServer
+    .post(`projects/useredits/${userEditId}`, userEditTuple, {
+      headers: { ...authHeader() }
+    })
+    .then(resp => {
+      return resp.data;
+    });
+}
+
+function goalNameToGoalTypeId(goalName: string): string {
+  let goalType: number;
+  switch (goalName) {
+    case "charInventory":
+      goalType = GoalType.CreateCharInv;
+      break;
+    case "validateChars":
+      goalType = GoalType.ValidateChars;
+      break;
+    case "createStrWordInv":
+      goalType = GoalType.CreateStrWordInv;
+      break;
+    case "validateStrWords":
+      goalType = GoalType.ValidateStrWords;
+      break;
+    case "mergeDups":
+      goalType = GoalType.MergeDups;
+      break;
+    case "spellCheckGloss":
+      goalType = GoalType.SpellcheckGloss;
+      break;
+    case "viewFinal":
+      goalType = GoalType.ViewFind;
+      break;
+    case "handleFlags":
+      goalType = GoalType.HandleFlags;
+      break;
+    default:
+      goalType = 8;
+      break;
+  }
+
+  return goalType.toString();
+}
+
+export async function getUserEditById(index: string): Promise<UserEdit> {
+  return await backendServer.get(`projects/useredits/${index}`).then(resp => {
+    return resp.data;
+  });
+}
+
+export async function getAllUserEdits(): Promise<Goal[]> {
+  return await backendServer.get("projects/useredits").then(resp => {
+    return resp.data;
   });
 }

@@ -1,34 +1,43 @@
 import * as reducer from "../LoginReducer";
 import {
   UserAction,
-  REGISTER,
   LOGIN_ATTEMPT,
-  LOGIN_FAILURE
+  LOGIN_FAILURE,
+  REGISTER_ATTEMPT
 } from "../LoginActions";
 
 const user = { user: "testUser", password: "testPass" };
 
-describe("tempReducer Tests", () => {
+describe("LoginReducer Tests", () => {
   let dummySt: reducer.LoginState = {
+    ...reducer.defaultState,
     user: user.user,
     success: false
   };
   //reducer.defaultState;
   let resultState: reducer.LoginState = {
-    user: user.user,
-    success: true,
-    registerFailure: false
+    loginAttempt: false,
+    loginFailure: false,
+    registerAttempt: true,
+    registerFailure: false,
+    registerSuccess: false,
+    success: false,
+    user: "testUser"
   };
 
   //The state while attempting to log in
   let loginAttemptState: reducer.LoginState = {
-    user: user.user,
-    success: false,
     loginAttempt: true,
-    loginFailure: false
+    loginFailure: false,
+    registerAttempt: false,
+    registerFailure: false,
+    registerSuccess: false,
+    success: false,
+    user: "testUser"
   };
 
   let loginFailureState: reducer.LoginState = {
+    ...reducer.defaultState,
     loginAttempt: false,
     loginFailure: true,
     user: user.user,
@@ -45,15 +54,15 @@ describe("tempReducer Tests", () => {
     payload: user
   };
 
-  let register: UserAction = {
-    type: REGISTER,
+  let registerAttempt: UserAction = {
+    type: REGISTER_ATTEMPT,
     payload: user
   };
 
   // Test with no state
-  test("no state, expecting default state", () => {
+  test("no state, expecting login attempt", () => {
     expect(reducer.loginReducer(undefined, loginAttempt)).toEqual(
-      reducer.defaultState
+      loginAttemptState
     );
   });
 
@@ -70,6 +79,6 @@ describe("tempReducer Tests", () => {
   });
 
   test("default state, expecting register", () => {
-    expect(reducer.loginReducer(dummySt, register)).toEqual(resultState);
+    expect(reducer.loginReducer(dummySt, registerAttempt)).toEqual(resultState);
   });
 });

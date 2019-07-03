@@ -22,6 +22,7 @@
     "backToLogin": ["Back to login", "Atrás para iniciar sesión"],
     "register": ["Register", "Registro"],
     "registerNew": ["Register New User", "Registrar nuevo usuario"],
+    "registerSuccess": ["User Created", "creado por el usuario"],
     "failed": [
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
@@ -54,7 +55,8 @@
     "upload?": ["Upload .lift file?", "Uploado .lift filada?"],
     "browse": ["Browse", "Navegar"],
     "create": ["Create Project", "Crear Proyecto"],
-    "fileSelected": ["File selected", "Archivo seleccionado"]
+    "fileSelected": ["File selected", "Archivo seleccionado"],
+    "success": ["Project Created!", "Proyecto creado!"]
   },
   "goal": {
     "selector": {
@@ -91,7 +93,11 @@
   "charInventory": {
     "title": ["Create Character Inventory", "Crear inventario de personajes"],
     "characterSet": {
-      "title": ["Character Set:", "Conjunto de caracteres:"],
+      "title": ["Vernacular Character Set:", "Conjunto de caracteres:"],
+      "help": [
+        "Define the characters that are valid for this language",
+        "Define los caracteres que son válidos para este idioma"
+      ],
       "addButton": ["Add Chars", "Añadir caracteres"],
       "addButtonTitle": [
         "Add the characters in the box to the character set",
@@ -106,6 +112,10 @@
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
         "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar."
+      ],
+      "required": [
+        "Add characters by entering them in this box",
+        "Agrega caracteres ingresándolos en este cuadro"
       ]
     },
     "sampleWords": {

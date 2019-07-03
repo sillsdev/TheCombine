@@ -3,7 +3,7 @@ import { User } from "../../types/user";
 
 //interface for component state
 export interface MergeDupProps {
-  goal: Goal;
+  goal?: Goal;
 }
 
 export class MergeDups implements Goal {

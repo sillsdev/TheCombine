@@ -98,6 +98,7 @@ namespace BackendFramework
             // User role types
             services.AddTransient<IUserEditContext, UserEditContext>();
             services.AddTransient<IUserEditService, UserEditService>();
+            services.AddTransient<IUserEditRepository, UserEditRepository>();
 
             // Project types
             services.AddTransient<IProjectContext, ProjectContext>();

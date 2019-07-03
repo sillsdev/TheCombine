@@ -35,7 +35,10 @@ class SampleWords extends React.Component<
     };
   }
 
-  componentDidMount() {
+  allWords: Word[] = [];
+
+  async componentDidMount() {
+    this.allWords = await backend.getFrontierWords();
     this.getWords();
   }
 
@@ -51,12 +54,11 @@ class SampleWords extends React.Component<
 
     let inv = [...this.props.inventory];
     let sampleWords: string[] = [];
-    let allWords: Word[] = await backend.getFrontierWords();
 
     let word;
-    for (let i: number = 0; i < allWords.length; i++) {
+    for (let i: number = 0; i < this.allWords.length; i++) {
       if (sampleWords.length >= NUM_WORDS) break;
-      word = allWords[i].vernacular;
+      word = this.allWords[i].vernacular;
       if (this.state.ignoreList.indexOf(word) === -1)
         // don't check word if it's in the ignore list
         for (let j: number = 0; j < word.length; j++) {
@@ -112,6 +114,7 @@ class SampleWords extends React.Component<
         {this.state.words.map(word => (
           <WordTile
             word={word}
+            inventory={this.props.inventory}
             addWordToCharSet={word => this.addWordToCharSet(word)}
             addWordToIgnoreList={word => this.addWordToIgnoreList(word)}
           />

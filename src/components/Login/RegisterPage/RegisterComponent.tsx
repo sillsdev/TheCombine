@@ -12,16 +12,23 @@ import {
   Typography,
   Button,
   Link,
-  TextField
+  TextField,
+  CircularProgress
 } from "@material-ui/core";
 import history from "../../../history";
+import { green } from "@material-ui/core/colors";
+import { Check } from "@material-ui/icons";
+import { buttonSuccess } from "../../../types/theme";
 
 export interface RegisterDispatchProps {
   register?: (name: string, user: string, password: string) => void;
+  reset: () => void;
 }
 
 export interface RegisterStateProps {
-  registerFailure: boolean | undefined;
+  inProgress: boolean;
+  success: boolean;
+  failure: boolean | undefined;
 }
 
 interface RegisterState {
@@ -61,6 +68,10 @@ class Register extends React.Component<
         email: false
       }
     };
+  }
+
+  componentDidMount() {
+    this.props.reset();
   }
 
   updateName(
@@ -249,7 +260,7 @@ class Register extends React.Component<
               />
 
               {/* "Failed to register" */}
-              {this.props.registerFailure && (
+              {this.props.failure && (
                 <Typography
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}
@@ -262,7 +273,7 @@ class Register extends React.Component<
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item>
                   <Button
-                    type="submit"
+                    type="button"
                     onClick={() => {
                       history.push("/login");
                     }}
@@ -271,8 +282,38 @@ class Register extends React.Component<
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button type="submit" variant="contained" color="primary">
-                    <Translate id="login.register" />
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={this.props.inProgress}
+                    style={{
+                      backgroundColor: this.props.success
+                        ? buttonSuccess
+                        : undefined
+                    }}
+                  >
+                    {this.props.success ? (
+                      <React.Fragment>
+                        <Check />
+                        <Translate id="login.registerSuccess" />
+                      </React.Fragment>
+                    ) : (
+                      <Translate id="login.register" />
+                    )}
+                    {this.props.inProgress && (
+                      <CircularProgress
+                        size={24}
+                        style={{
+                          color: buttonSuccess,
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          marginTop: -12,
+                          marginLeft: -12
+                        }}
+                      />
+                    )}
                   </Button>
                 </Grid>
               </Grid>

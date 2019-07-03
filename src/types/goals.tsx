@@ -64,3 +64,14 @@ export interface Goal {
   completed: boolean;
   result: GoalOption;
 }
+
+export enum GoalType {
+  CreateCharInv,
+  ValidateChars,
+  CreateStrWordInv,
+  ValidateStrWords,
+  MergeDups,
+  SpellcheckGloss,
+  ViewFind,
+  HandleFlags
+}

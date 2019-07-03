@@ -4,57 +4,96 @@ import { Project, defaultProject } from "../../types/project";
 import { setCurrentProject, ProjectAction } from "../Project/ProjectActions";
 import history from "../../history";
 
-export const CREATE_PROJECT = "CREATE_PROJECT";
-export type CREATE_PROJECT = typeof CREATE_PROJECT;
+export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
+export type IN_PROGRESS = typeof IN_PROGRESS;
+
+export const SUCCESS = "CREATE_PROJECT_SUCCESS";
+export type SUCCESS = typeof SUCCESS;
+
+export const FAILURE = "CREATE_PROJECT_FAILURE";
+export type FAILURE = typeof FAILURE;
+
+export const RESET = "CREATE_PROJECT_RESET";
+export type RESET = typeof RESET;
 
 export interface CreateProjectData {
   name: string;
   languageData?: File;
+  errorMsg?: string;
 }
-type CreateProjectType = CREATE_PROJECT;
+type CreateProjectType = IN_PROGRESS | SUCCESS | FAILURE | RESET;
 
 //action types
 
 export interface CreateProjectAction {
   type: CreateProjectType;
   payload: CreateProjectData;
-  project?: Project;
 }
 
 //thunk action creator
 export function asyncCreateProject(name: string, languageData?: File) {
   return async (dispatch: Dispatch<CreateProjectAction | ProjectAction>) => {
+    dispatch(inProgress(name));
+
     // Create project
     let project: Project = { ...defaultProject };
     project.name = name;
-    let createdProject = await backend.createProject(project);
-    dispatch(setCurrentProject(createdProject));
+    backend
+      .createProject(project)
+      .then(createdProject => {
+        dispatch(setCurrentProject(createdProject));
 
-    // Upload words
-    if (languageData) {
-      backend
-        .uploadLift(createdProject, languageData)
-        .then(res => {
-          dispatch(createProject(name, languageData));
-          history.push("/goals");
-        })
-        .catch(err => {
-          alert("Failed to create project");
-        });
-    } else {
-      dispatch(createProject(name));
-      history.push("/goals");
-    }
+        // Upload words
+        if (languageData) {
+          backend
+            .uploadLift(createdProject, languageData)
+            .then(res => {
+              dispatch(success(name));
+              // we manually pause so they have a chance to see the success message
+              setTimeout(() => {
+                history.push("/goals");
+              }, 1000);
+            })
+            .catch(err => {
+              dispatch(failure(name, err.response.statusText));
+            });
+        } else {
+          dispatch(success(name));
+          setTimeout(() => {
+            history.push("/goals");
+          }, 1000);
+        }
+      })
+      .catch(err => {
+        dispatch(failure(name, err.response.statusText));
+      });
   };
 }
 
-//pure action creator. LEAVE PURE!
-export function createProject(
+export function inProgress(name: string): CreateProjectAction {
+  return {
+    type: IN_PROGRESS,
+    payload: { name }
+  };
+}
+
+export function success(name: string): CreateProjectAction {
+  return {
+    type: SUCCESS,
+    payload: { name }
+  };
+}
+
+export function failure(
   name: string,
-  languageData?: File
+  errorMsg: string = ""
 ): CreateProjectAction {
   return {
-    type: CREATE_PROJECT,
-    payload: { name, languageData }
+    type: FAILURE,
+    payload: { name, errorMsg }
   };
+}
+
+export function reset(): CreateProjectAction {
+  return { type: RESET, payload: { name: "" } };
 }

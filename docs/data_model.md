@@ -46,6 +46,12 @@
 
 - Parts of Speech
 
+### Custom Field[^1]
+
+- Name
+
+- Type
+
 ## Word
 
 - Vernacular
@@ -70,31 +76,25 @@
 
 - Other Field[^1]
 
-## User Role
-
-- Permissions
-
-- History
-
-## Sense
+### Sense
 
 - Glosses
 
 - Semantic Domains
 
-## Gloss
+### Gloss
 
 - Language
 
 - Definition
 
-## Semantic Domain
+### Semantic Domain
 
 - Name
 
 - Number
 
-## File Upload
+### File Upload
 
 - File
 
@@ -102,24 +102,14 @@
 
 - File Path
 
-## History
+## User Edit
 
-- Goal Id
+- Edits
 
-- Number of Steps
+### Edit
 
-- Step Data
+- GoalType
 
-## Custom Field[^1]
-
-- Name
-
-- Type
-
-## Goal
-
-- Tool - For now, tool will just be a string. Later, we might create an actual Tool type.
-
-- Steps - The steps necessary to reach the goal. Each step is an object. We have not fleshed out what exactly a step will look like.
+- StepData
 
 [^1]: These parts of our data model are optional at this point. We may or may not include them in our final design.

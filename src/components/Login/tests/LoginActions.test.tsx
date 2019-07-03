@@ -4,14 +4,6 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 const createMockStore = configureMockStore([thunk]);
-jest.mock("axios", () => {
-  return {
-    post: jest.fn().mockResolvedValue({ data: {} }),
-    create: jest.fn(() => {
-      return jest.fn().mockReturnThis();
-    })
-  };
-});
 
 const user = { user: "testUser", password: "testPass" };
 
@@ -20,21 +12,26 @@ describe("LoginAction Tests", () => {
 
   let loginAttempt: action.UserAction = {
     type: action.LOGIN_ATTEMPT,
-    payload: user
+    payload: { user: user.user }
   };
 
   let loginSuccess: action.UserAction = {
     type: action.LOGIN_SUCCESS,
-    payload: user
+    payload: { user: user.user }
   };
 
-  let register: action.UserAction = {
-    type: action.REGISTER,
-    payload: user
+  let registerAttempt: action.UserAction = {
+    type: action.REGISTER_ATTEMPT,
+    payload: { user: user.user }
+  };
+
+  let registerFailure: action.UserAction = {
+    type: action.REGISTER_FAILURE,
+    payload: { user: user.user }
   };
 
   test("register returns correct value", () => {
-    expect(action.register(user.user, user.password)).toEqual(register);
+    expect(action.registerAttempt(user.user)).toEqual(registerAttempt);
   });
 
   test("asyncLogin correctly affects state", () => {
@@ -45,21 +42,30 @@ describe("LoginAction Tests", () => {
 
     mockDispatch
       .then(() => {
-        expect(mockStore.getActions()).toEqual([loginAttempt]);
+        expect(mockStore.getActions()).toEqual([loginAttempt, loginSuccess]);
       })
-      .catch(() => fail());
+      .catch((err: any) => {
+        console.log(err);
+        fail();
+      });
   });
 
   test("asyncRegister correctly affects state", () => {
     const mockStore = createMockStore(mockState);
     const mockDispatch = mockStore.dispatch<any>(
-      action.asyncRegister(user.user, user.password)
+      action.asyncRegister("name", user.user, user.password)
     );
 
     mockDispatch
       .then(() => {
-        expect(mockStore.getActions()).toEqual([register, action.asyncLogin]);
+        expect(mockStore.getActions()).toEqual([
+          registerAttempt,
+          registerFailure
+        ]);
       })
-      .catch(() => fail());
+      .catch((err: any) => {
+        console.log(err);
+        fail();
+      });
   });
 });

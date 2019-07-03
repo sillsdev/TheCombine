@@ -15,14 +15,23 @@ export type LOGIN_FAILURE = typeof LOGIN_FAILURE;
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export type LOGIN_SUCCESS = typeof LOGIN_SUCCESS;
 
+export const LOGIN_RESET = "LOGIN_RESET";
+export type LOGIN_RESET = typeof LOGIN_RESET;
+
 export const LOGOUT = "LOGOUT";
 export type LOGOUT = typeof LOGOUT;
 
-export const REGISTER = "REGISTER";
-export type REGISTER = typeof REGISTER;
+export const REGISTER_ATTEMPT = "REGISTER_ATTEMPT";
+export type REGISTER_ATTEMPT = typeof REGISTER_ATTEMPT;
+
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export type REGISTER_SUCCESS = typeof REGISTER_SUCCESS;
 
 export const REGISTER_FAILURE = "REGISTER_FAILURE";
 export type REGISTER_FAILURE = typeof REGISTER_FAILURE;
+
+export const REGISTER_RESET = "REGISTER_RESET";
+export type REGISTER_RESET = typeof REGISTER_RESET;
 
 export interface LoginData {
   user: string;
@@ -33,8 +42,11 @@ type LoginType =
   | LOGIN_ATTEMPT
   | LOGIN_FAILURE
   | LOGIN_SUCCESS
-  | REGISTER
-  | REGISTER_FAILURE;
+  | LOGIN_RESET
+  | REGISTER_ATTEMPT
+  | REGISTER_SUCCESS
+  | REGISTER_FAILURE
+  | REGISTER_RESET;
 
 //action types
 
@@ -82,6 +94,13 @@ export function loginSuccess(user: string): UserAction {
   };
 }
 
+export function loginReset(): UserAction {
+  return {
+    type: LOGIN_RESET,
+    payload: { user: "" }
+  };
+}
+
 export function logout() {
   return () => {
     localStorage.removeItem("user");
@@ -92,28 +111,35 @@ export function asyncRegister(name: string, user: string, password: string) {
   return async (
     dispatch: Dispatch<UserAction | ThunkAction<any, {}, {}, AnyAction>>
   ) => {
-    dispatch(register(user, password));
+    dispatch(registerAttempt(user));
     // Create new user
     let newUser = new User("", user, password);
     newUser.name = name;
     await backend
       .addUser(newUser)
       .then(res => {
-        alert(`User ${user} created`); // TODO: should notify user that registration was created successfully
-        history.push("/login");
+        dispatch(registerSuccess(user));
+        setTimeout(() => {
+          dispatch(registerReset());
+          history.push("/login");
+        }, 1000);
       })
       .catch(err => {
-        //console.log(err);
         dispatch(registerFailure(user));
       });
   };
 }
-
-//pure action creator. LEAVE PURE!
-export function register(user: string, password: string): UserAction {
+export function registerAttempt(user: string): UserAction {
   return {
-    type: REGISTER,
-    payload: { user, password }
+    type: REGISTER_ATTEMPT,
+    payload: { user }
+  };
+}
+
+export function registerSuccess(user: string): UserAction {
+  return {
+    type: REGISTER_SUCCESS,
+    payload: { user }
   };
 }
 
@@ -121,5 +147,12 @@ export function registerFailure(user: string): UserAction {
   return {
     type: REGISTER_FAILURE,
     payload: { user }
+  };
+}
+
+export function registerReset(): UserAction {
+  return {
+    type: REGISTER_RESET,
+    payload: { user: "" }
   };
 }

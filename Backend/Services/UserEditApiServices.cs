@@ -1,71 +1,55 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
-using MongoDB.Driver;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Services
 {
     public class UserEditService : IUserEditService
     {
-        private readonly IUserEditContext _userEditDatabase;
+        private readonly IUserEditRepository _repo;
 
-        public UserEditService(IUserEditContext collectionSettings)
+        public UserEditService(IUserEditRepository repo)
         {
-            _userEditDatabase = collectionSettings;
+            _repo = repo;
         }
 
-        public async Task<List<UserEdit>> GetAllUserEdits()
+        public async Task<Tuple<bool, int>> AddGoalToUserEdit(string Id, Edit edit)
         {
-            return await _userEditDatabase.UserEdits.Find(_ => true).ToListAsync();
-        }
+            //get userEdit to change
+            var userEntry = await _repo.GetUserEdit(Id);
 
-        public async Task<bool> DeleteAllUserEdits()
-        {
-            var deleted = await _userEditDatabase.UserEdits.DeleteManyAsync(_ => true);
-            if(deleted.DeletedCount != 0)
+            UserEdit newUserEdit = userEntry.Clone();
+
+            //add the new goal index to Edits list
+            newUserEdit.Edits.Add(edit);
+
+            //replace the old UserEdit object with the new one that contains  the new list entryz
+            bool validation = _repo.Replace(Id, newUserEdit).Result;
+
+            int indexOfNewestEdit = -1;
+
+            if (validation)
             {
-                return true;
+                var newestEdit = _repo.GetUserEdit(Id).Result;
+                indexOfNewestEdit = newestEdit.Edits.Count -1;
             }
-            return false;
+
+            return new Tuple<bool, int>(validation, indexOfNewestEdit);
         }
 
-        public async Task<UserEdit> GetUserEdit(string Id)
+        public async Task<bool> AddStepToGoal(string Id, int goalIndex, string userEdit)
         {
-            var filterDef = new FilterDefinitionBuilder<UserEdit>();
-            var filter = filterDef.Eq(x => x.Id, Id);
+            UserEdit addUserEdit = await _repo.GetUserEdit(Id);
 
-            var userEditList = await _userEditDatabase.UserEdits.FindAsync(filter);
-                        
-            return userEditList.FirstOrDefault();
-        }
+            UserEdit newUserEdit = addUserEdit.Clone();
 
-        public async Task<UserEdit> Create(UserEdit userEdit)
-        {
-            await _userEditDatabase.UserEdits.InsertOneAsync(userEdit);
-            return userEdit;
-        }
+            newUserEdit.Edits[goalIndex].StepData.Add(userEdit);
 
-        public async Task<bool> Delete(string Id)
-        {
-            var deleted = await _userEditDatabase.UserEdits.DeleteManyAsync(x => x.Id == Id);
-            return deleted.DeletedCount > 0;
-        }
+            bool updateResult = _repo.Replace(Id, newUserEdit).Result;
 
-        public async Task<bool> Update(string Id, int goalIndex, string userEdit)
-        {
-            FilterDefinition<UserEdit> filter = Builders<UserEdit>.Filter.Eq(x => x.Id, Id);
-
-            UserEdit AddUserEdit = await GetUserEdit(Id);
-
-            AddUserEdit.Edits[goalIndex].StepData.Add(userEdit);
-
-            var updateResult = _userEditDatabase.UserEdits.ReplaceOne(filter, AddUserEdit);
-
-            return updateResult.IsAcknowledged && updateResult.ModifiedCount == 1;
+            return updateResult;
            
         }
     }
-
-
 }

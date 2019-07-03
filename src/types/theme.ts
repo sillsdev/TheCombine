@@ -1,9 +1,7 @@
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 // Import colors
-import blue from "@material-ui/core/colors/blue";
-import grey from "@material-ui/core/colors/grey";
-import red from "@material-ui/core/colors/red";
+import { blue, grey, red, green } from "@material-ui/core/colors";
 import { responsiveFontSizes } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
@@ -13,6 +11,9 @@ const secondary: string = grey[200];
 const accent: string = grey[900];
 const error: string = red[600];
 const hover: string = blue[100];
+
+export const buttonSuccess = green[500]; // createProjectComponent and RegisterComponent
+export const greenHighlight = green[100]; // goals/CharInventoryCreation/components/SampleWords/WordTileComponent.tsx
 
 // Constants used in multiple themes
 const palette = {
