@@ -20,8 +20,7 @@ export type GoalProps = MergeDupProps;
 
 export type GoalData = MergeDupData; // | OtherTypes
 
-export interface MockGoalStep {}
-export type MockGoalStepType = MockGoalStep;
+export type MockGoalStepType = {};
 
 export type GoalStep = MockGoalStepType; //MergeDupStepProps; // | OtherTypes
 
