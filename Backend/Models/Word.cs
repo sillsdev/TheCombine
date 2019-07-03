@@ -164,8 +164,8 @@ namespace BackendFramework.ValueModels
         [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
-        [BsonElement("accessability")]
-        public int Accessability { get; set; }
+        [BsonElement("accessibility")]
+        public int Accessibility { get; set; }
 
         public Sense Clone()
         {

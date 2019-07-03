@@ -28,16 +28,21 @@ namespace Backend.Tests
         Word RandomWord()
         {
             Word word = new Word();
-
             Random num = new Random();
-            foreach (var sense in word.Senses)
+            word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense()};
+
+            foreach (Sense sense in word.Senses)
             {
-                sense.Accessability = (int)state.active;
+
+                sense.Accessibility = (int)state.active;
+                sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss() , new Gloss() };
 
                 foreach (Gloss gloss in sense.Glosses) {
                     gloss.Def = Util.randString();
                     gloss.Language = Util.randString(3);
                 }
+
+                sense.SemanticDomains = new List<SemanticDomain>() { new SemanticDomain(), new SemanticDomain(), new SemanticDomain() };
 
                 foreach(SemanticDomain semdom in sense.SemanticDomains)
                 {
@@ -148,40 +153,45 @@ namespace Backend.Tests
             Assert.IsTrue(wordRepo[0].History.Count == 1);
         }
 
+        private state RandState()
+        {
+            Random num = new Random();
+            int numberOfStates = 4;
+            return (state)(num.Next() % numberOfStates);
+        }
+
         [Test]
         public void MergeWords()
         {
-            MergeWords functionPerameter = new MergeWords();
-            functionPerameter.ChildrenWords = new List<MergeSourceWord>();
-            Random num = new Random();
+            MergeWords parentChildMergeObject = new MergeWords();
+            parentChildMergeObject.ChildrenWords = new List<MergeSourceWord>();
+            
 
             //the parent word is inherently correct
-            functionPerameter.Parent = RandomWord();
-            Word[] childWords = { RandomWord(), RandomWord(), RandomWord() };
-            functionPerameter.Time = Util.randString();
+            parentChildMergeObject.Parent = RandomWord();
+            List<Word> childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
+            parentChildMergeObject.Time = Util.randString();
 
             //set the child info 
             int childCount = childWords.Count();
-            for (var i = 0; i < childCount; ++i)
+            foreach (Word child in childWords)
             {
-                //generate step info
-                state[] childStatesArr = new[] { (state)(num.Next() % 4), (state)(num.Next() % 4), (state)(num.Next() % 4) };
-                //convert to list
-                List<state> childStatesLst = childStatesArr.OfType<state>().ToList();
+                //generate state list of children
+                List<state> childStatesLst = new List<state> { RandState(), RandState(), RandState() };
 
                 //generate tuple with new child ID and desired child state list 
-                MergeSourceWord childId = new MergeSourceWord();
-                childId.SrcWordID = repo.Add(childWords[i]).Result.Id;
-                childId.SenseStates = childStatesLst;
-                functionPerameter.ChildrenWords.Add(childId);
+                MergeSourceWord newGenChild = new MergeSourceWord();
+                newGenChild.SrcWordID = repo.Add(child).Result.Id;
+                newGenChild.SenseStates = childStatesLst;
+                parentChildMergeObject.ChildrenWords.Add(newGenChild);
             }
 
-            var newParentId = service.Merge(functionPerameter).Result;
+            var newParentId = service.Merge(parentChildMergeObject).Result;
 
             //2 * child number + 1, there are duplicate child nodes and one extra for the parent
             Assert.AreEqual(repo.GetAllWords().Result.Count, 2 * childCount + 1);
             //make sure the parent is in the db
-            Assert.AreEqual(functionPerameter.Parent, repo.GetWord(functionPerameter.Parent.Id).Result);
+            Assert.AreEqual(parentChildMergeObject.Parent, repo.GetWord(parentChildMergeObject.Parent.Id).Result);
 
             //assert the children are in the database
             var dbWords = repo.GetAllWords().Result;
@@ -193,13 +203,13 @@ namespace Backend.Tests
             for(int childIndex = 0; childIndex < childCount; ++childIndex)
             {
                 //check for children in db
-                Assert.Contains(repo.GetWord(functionPerameter.ChildrenWords[childIndex].SrcWordID).Result, repo.GetAllWords().Result);
+                Assert.Contains(repo.GetWord(parentChildMergeObject.ChildrenWords[childIndex].SrcWordID).Result, repo.GetAllWords().Result);
             }
         }
 
         private static bool StartingChildren(Word word)
         {
-            //in this test the histories of the original chil words are going to have no history
+            //in this test the histories of the original child words are going to have no history
             return word.History.Count <= 0;
         }
     }

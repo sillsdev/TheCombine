@@ -25,10 +25,10 @@ namespace BackendFramework.Services
                 Word wordToDelete = _repo.GetWord(Id).Result;
                 wordToDelete.Id = null;
                 wordToDelete.History.Add(Id);
-                
+
                 foreach(var senseAcc in wordToDelete.Senses)
                 {
-                    senseAcc.Accessability = (int)state.deleted;
+                    senseAcc.Accessibility = (int)state.deleted;
                 }
 
                 await _repo.Create(wordToDelete);
@@ -60,7 +60,7 @@ namespace BackendFramework.Services
 
         public async Task<Word> Merge(MergeWords mergeWords)
         {
-            
+
             //generate new child words form child word field
             foreach(var newChildWordState in mergeWords.ChildrenWords)
             {
@@ -72,11 +72,11 @@ namespace BackendFramework.Services
                 //iterate through senses of that word and change to corresponding state in mergewords
                 for(int i = 0; i < currentChildWord.Senses.Count; i++)
                 {
-                    currentChildWord.Senses[i].Accessability = (int)newChildWordState.SenseStates[i];
+                    currentChildWord.Senses[i].Accessibility = (int)newChildWordState.SenseStates[i];
                 }
 
                 //change the child words history to its previous self
-                currentChildWord.History.Add(currentChildWord.Id);
+                currentChildWord.History = new List<string>() { newChildWordState.SrcWordID };
 
                 //add child word to the database
                 currentChildWord.Id = null;
