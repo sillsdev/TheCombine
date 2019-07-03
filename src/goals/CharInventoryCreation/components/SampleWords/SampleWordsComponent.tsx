@@ -59,8 +59,8 @@ class SampleWords extends React.Component<
     for (let i: number = 0; i < this.allWords.length; i++) {
       if (sampleWords.length >= NUM_WORDS) break;
       word = this.allWords[i].vernacular;
+      // don't check word if it's in the ignore list
       if (this.state.ignoreList.indexOf(word) === -1)
-        // don't check word if it's in the ignore list
         for (let j: number = 0; j < word.length; j++) {
           if (inv.indexOf(word[j]) === -1 && word[j] !== " ") {
             sampleWords.push(word);
@@ -74,9 +74,7 @@ class SampleWords extends React.Component<
     });
   }
 
-  /**
-   * Adds all characters from the word into the character inventory
-   */
+  /** Adds all characters from the word into the character inventory */
   addWordToCharSet(word: string) {
     this.props.setInventory([
       ...this.props.inventory,
@@ -86,12 +84,12 @@ class SampleWords extends React.Component<
     this.getWords(); // refresh the list
   }
 
-  /**
-   * Adds a word to the list of words that won't show up
-   */
+  /** Adds a word to the list of words that won't show up */
   addWordToIgnoreList(word: string) {
-    this.setState({ ignoreList: [...this.state.ignoreList, word] });
-    this.getWords(); // refresh the list
+    this.setState(
+      { ignoreList: [...this.state.ignoreList, word] },
+      () => this.getWords() // refresh the list
+    );
   }
 
   render() {
