@@ -65,14 +65,14 @@ namespace BackendFramework.Services
             foreach(var newChildWordState in mergeWords.ChildrenWords)
             {
                 //get child word
-                var currentChildWord = await _repo.GetWord(newChildWordState.Item1);
+                var currentChildWord = await _repo.GetWord(newChildWordState.SrcWordID);
                 //remove child from frontier
                 _repo.DeleteFrontier(currentChildWord.Id);
 
                 //iterate through senses of that word and change to corresponding state in mergewords
                 for(int i = 0; i < currentChildWord.Senses.Count; i++)
                 {
-                    currentChildWord.Senses[i].Accessability = (int)newChildWordState.Item2[i];
+                    currentChildWord.Senses[i].Accessability = (int)newChildWordState.SenseStates[i];
                 }
 
                 //change the child words history to its previous self
