@@ -1,33 +1,28 @@
 //external modules
 import * as React from "react";
-import {
-  Translate,
-  LocalizeContextProps,
-  withLocalize
-} from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Word } from "../../../../types/word";
 import {
-  Box,
-  CardContent,
-  Card,
-  Popper,
-  ClickAwayListener,
-  Popover,
-  Typography
-} from "@material-ui/core";
-import { Sense } from "../component";
-import WordCard from "../WordCard";
-import StackDisplay from "./Display";
+  MergeTreeReference,
+  Hash,
+  MergeTreeSense,
+  TreeDataSense
+} from "../MergeDupsTree";
+import Card from "@material-ui/core/Card/Card";
+import { CardContent, Typography, List, ListItem } from "@material-ui/core";
+import {uuid} from '../../../../utilities';
 
 //interface for component props
 export interface MergeStackProps {
-  sense: Sense;
-  addDuplicate?: (word: Word, sense: number) => void;
-  removeDuplicate?: (word: Word, sense: number) => void;
   dropWord?: () => void;
-  dragWord?: (word: Word) => void;
-  updateRow?: () => void;
-  draggedWord?: Word;
+  dragWord?: (ref: MergeTreeReference) => void;
+  moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
+  draggedWord?: MergeTreeReference;
+  wordID: string;
+  senseRef: string;
+  senseID: string;
+  treeSenses: Hash<MergeTreeSense>;
+  senses: Hash<TreeDataSense>;
 }
 
 //interface for component state
@@ -48,30 +43,37 @@ class MergeStack extends React.Component<
     this.state = {};
   }
 
-  addWord(word: Word) {
+  addWord() {
+    /*
     if (this.props.addDuplicate && this.props.dropWord) {
       this.props.addDuplicate(word, this.props.sense.id);
       this.props.dropWord();
     }
+     */
   }
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
-    if (
-      this.props.draggedWord &&
-      this.props.draggedWord !== this.parentCard()
-    ) {
-      this.addWord(this.props.draggedWord);
+    if (this.props.draggedWord && this.props.moveSense) {
+      let ref = {
+        word: this.props.wordID,
+        sense: this.props.senseRef,
+        duplicate: uuid(),
+      };
+      this.props.moveSense(this.props.draggedWord, ref);
     }
   }
 
-  drag(word: Word) {
+  drag(_ref: MergeTreeReference) {
+    /*
     if (this.props.dragWord) {
       this.props.dragWord(word);
     }
+     */
   }
 
-  removeCard(word: Word) {
+  removeCard(_word: Word) {
+    /*
     if (this.props.draggedWord && this.props.dropWord) {
       this.props.dropWord();
     } else {
@@ -81,26 +83,28 @@ class MergeStack extends React.Component<
         this.props.updateRow();
       }
     }
+     */
   }
 
-  parentCard(): Word {
-    return this.props.sense.dups[0];
-  }
-
-  spawnDisplay(e: React.MouseEvent<HTMLElement>) {
+  spawnDisplay(_e: React.MouseEvent<HTMLElement>) {
+    /*
     if (this.props.sense.dups.length > 1) {
       this.setState({
         ...this.state,
         anchorEl: this.state.anchorEl ? undefined : e.currentTarget
       });
     }
+     */
   }
 
   closeDisplay() {
+    /*
     this.setState({ ...this.state, anchorEl: undefined });
+     */
   }
 
   render_single() {
+    /*
     var lastCard = this.parentCard();
     const open = Boolean(this.state.anchorEl);
     const id = open ? "simple-popper" : undefined;
@@ -180,23 +184,65 @@ class MergeStack extends React.Component<
         </ClickAwayListener>
       </div>
     );
+            */
   }
 
   render_stack() {
+    /*
     return (
       <Card style={{ paddingBottom: 2, paddingRight: 2 }}>
         {this.render_single()}
       </Card>
     );
+     */
   }
 
   render() {
+    let treeSense = this.props.treeSenses[this.props.senseID];
+    let displaySenseKey = Object.keys(treeSense.dups)[0];
+    let displaySenseID = Object.values(treeSense.dups)[0];
+    let displaySense = this.props.senses[displaySenseID];
+    //TODO: Make language dynamic
+    let lang = "en";
+
+    // Find gloss
+    let gloss = displaySense.glosses.filter(gloss => gloss.language == lang)[0];
+
+    return (
+      <Card
+        draggable={true}
+        onDragStart={() =>
+          this.props.dragWord &&
+          this.props.dragWord({
+            word: this.props.wordID,
+            sense: this.props.senseRef,
+            duplicate: displaySenseKey
+          })
+        }
+        onDragOver={e => e.preventDefault()}
+        onDrop={e => this.dragDrop(e)}
+      >
+        <CardContent>
+          <Typography variant={"h5"}>{gloss ? gloss.def : "{ no gloss }" }</Typography>
+          {/* List semantic domains */}
+          <List dense={true}>
+            {displaySense.semanticDomains.length == 0 &&
+              "{ no semantic domain }"}
+            {displaySense.semanticDomains.map(dom => (
+              <ListItem> {dom.name + "\t" + dom.number} </ListItem>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
+    );
+    /*
     //visual definition
     if (this.props.sense.dups.length > 1) {
       return this.render_stack();
     } else {
       return this.render_single();
     }
+     */
   }
 }
 

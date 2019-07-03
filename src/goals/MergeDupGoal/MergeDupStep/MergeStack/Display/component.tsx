@@ -1,19 +1,12 @@
-import {Word} from "../../../../../types/word";
 import React from "react";
-import {withLocalize, LocalizeContextProps} from "react-localize-redux";
-import {Paper, Card, CardContent} from "@material-ui/core";
-import WordContent from "../../WordCard";
-import {Sense} from "../../component";
+import {LocalizeContextProps, withLocalize} from "react-localize-redux";
+import {Word} from "../../../../../types/word";
+import {MergeTreeReference} from '../../MergeDupsTree';
 
 export interface StackDisplayProps {
-  sense: Sense;
-  dragWord?: (word: Word) => void;
+  dragWord?: (ref: MergeTreeReference) => void;
   dropWord?: () => void;
-  moveWord?: (word: Word, index: number) => void;
-  addDuplicate?: (word: Word, parent: number) => void;
-  removeDuplicate?: (word: Word, parent: number) => void;
-  closePopper?: () => void;
-  draggedWord?: Word;
+  draggedWord?: MergeTreeReference;
 }
 
 export interface StackDisplayState {}
@@ -22,7 +15,8 @@ class StackDisplay extends React.Component<
   StackDisplayProps & LocalizeContextProps,
   StackDisplayState
   > {
-  dragDrop(event: React.DragEvent<HTMLElement>, index: number) {
+    /*
+    dragDrop(event: React.DragEvent<HTMLElement>, index: number) {
     event.preventDefault();
     event.stopPropagation();
     if (this.props.draggedWord) {
@@ -98,7 +92,7 @@ class StackDisplay extends React.Component<
         ))}
       </Paper>
     );
-  }
+  } */
 }
 
 export default withLocalize(StackDisplay);

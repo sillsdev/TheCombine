@@ -1,25 +1,15 @@
-import { connect } from "react-redux";
-import { StoreState } from "../../../types";
+import {connect} from "react-redux";
+import {ThunkDispatch} from "redux-thunk";
+import {dropWord, WordDragAction} from "../../../components/DraggableWord/actions";
+import {StoreState} from "../../../types";
+import {MergeTreeAction, refreshWords, moveSense, mergeAll} from "./actions";
 import MergeDupStepComponent from "./component";
-import { ThunkDispatch } from "redux-thunk";
-import { MergeTreeAction, applyMerges, addParent } from "./actions";
-import {
-  WordDragAction,
-  dropWord
-} from "../../../components/DraggableWord/actions";
-import { Word } from "../../../types/word";
-import {
-  addListWords,
-  clearListWords,
-  WordListAction,
-  refreshListWords
-} from "./WordList/actions";
+import {MergeTreeReference} from './MergeDupsTree';
 
 export function mapStateToProps(state: StoreState) {
   return {
-    parentWords: state.mergeDuplicateGoal.mergeTreeState.parentWords,
-    draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord,
-    words: state.mergeDuplicateGoal.wordListState.words
+    draggedSense: state.mergeDuplicateGoal.wordDragState.draggedWord,
+    words: state.mergeDuplicateGoal.mergeTreeState.tree.words,
   };
 }
 
@@ -27,27 +17,21 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<
     StoreState,
     any,
-    MergeTreeAction | WordDragAction | WordListAction
+    MergeTreeAction | WordDragAction 
   >
 ) {
   return {
-    addParent: (word: Word) => {
-      dispatch(addParent(word));
-    },
     dropWord: () => {
       dispatch(dropWord());
     },
-    applyMerges: () => {
-      dispatch(applyMerges());
+    refreshWords: () => {
+      dispatch(refreshWords());
     },
-    addListWord: (word: Word[]) => {
-      dispatch(addListWords(word));
+    moveSense: (src: MergeTreeReference, dest: MergeTreeReference) => {
+      dispatch(moveSense(src, dest));
     },
-    clearListWords: () => {
-      dispatch(clearListWords());
-    },
-    refreshListWords: () => {
-      dispatch(refreshListWords());
+    mergeAll: () => {
+      dispatch(mergeAll());
     }
   };
 }
