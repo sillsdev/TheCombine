@@ -167,7 +167,7 @@ namespace Backend.Tests
             parentChildMergeObject.ChildrenWords = new List<MergeSourceWord>();
             
 
-            //the parent word is inherently correct as it is calculated by the frontend as the desired result of teh merge
+            //the parent word is inherently correct as it is calculated by the frontend as the desired result of the merge
             parentChildMergeObject.Parent = RandomWord();
             List<Word> childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
             parentChildMergeObject.Time = Util.randString();
