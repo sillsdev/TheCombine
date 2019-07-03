@@ -9,10 +9,10 @@ import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 
-let goal1: Goal = new CreateCharInv([{}]);
+let goal1: Goal = new CreateCharInv([]);
 let goal2: Goal = new CreateStrWordInv([]);
 let goal3: Goal = new HandleFlags([]);
-let goal4: Goal = new MergeDups([{}]);
+let goal4: Goal = new MergeDups([]);
 let goal5: Goal = new SpellCheckGloss([]);
 let goal6: Goal = new ValidateChars([]);
 let goal7: Goal = new ValidateStrWords([]);
@@ -28,7 +28,7 @@ let allTheGoals: Goal[] = [
   goal8
 ];
 
-let suggestion1: Goal = new MergeDups([{}]);
+let suggestion1: Goal = new MergeDups([]);
 let suggestion2: Goal = new SpellCheckGloss([]);
 
 let suggestionsArray: Goal[] = [...allTheGoals];

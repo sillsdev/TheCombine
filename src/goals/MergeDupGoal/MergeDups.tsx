@@ -24,7 +24,7 @@ export class MergeDups implements Goal {
   completed: boolean;
   result: GoalOption;
 
-  constructor(steps: GoalStep[]) {
+  constructor(steps: GoalStep[] = []) {
     this.goalType = GoalType.MergeDups;
     this.name = "mergeDups";
     this.user = new User("", "", "");
