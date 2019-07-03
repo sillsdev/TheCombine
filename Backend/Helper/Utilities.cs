@@ -16,13 +16,15 @@ namespace BackendFramework.Helper
         public string GenerateFilePath(filetype type, bool directory, string fileExtension = "")
         {
             //generate path to desktop
+            //if the os is windows then the next command will get valid path, otherwise...
             string wanted_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            Directory.CreateDirectory(wanted_path);
-
-            /*I don't know what to expect or if this will work so a very specific exception will help debugging*/
+            
+            //otherwise the os is linux and the desktop path is "/home/{user}/Desktop/
             if (wanted_path == null || wanted_path == "") 
             {
-                throw (new DesktopNotFoundExceoption());
+                //~ is linux home
+                wanted_path = "~";
+                //throw (new DesktopNotFoundExceoption());
             }
 
             //path to the base data folder
