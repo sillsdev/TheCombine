@@ -100,36 +100,15 @@ namespace BackendFramework.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] MergeWords mergeWords)
         {
-            //make deep copy of children and add the parent
-            List<string> ids = new List<string>();
-            foreach (string childId in mergeWords.Children)
+            if (mergeWords != null && mergeWords.Parent != null)
             {
-                ids.Add(childId);
+                var newParent = await _wordService.Merge(mergeWords);
+                return new ObjectResult(newParent.Id);
             }
-            ids.Add(mergeWords.Parent);
-
-            //make sure that there are no duplicates among the parent and children
-            HashSet<string> set = new HashSet<string>(mergeWords.Children);
-            set.Add(mergeWords.Parent);
-            if (set.Count != ids.Count)
+            else
             {
-                return new NotFoundResult();
+                return new BadRequestResult();
             }
-
-            //make sure all the ids given to us are valid
-            List<Word> foundWords = new List<Word>();
-            foreach (string id in ids)
-            {
-                var document = await _wordRepo.GetWord(id);
-                if (document == null)
-                {
-                    return new NotFoundResult();
-                }
-                foundWords.Add(document);
-            }
-
-           var mergedWord = await _wordService.Merge(mergeWords);
-           return new ObjectResult(mergedWord.Id);
         }
     }
 }

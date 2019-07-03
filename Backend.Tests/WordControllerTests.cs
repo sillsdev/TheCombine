@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Backend.Tests
 {
@@ -14,19 +15,50 @@ namespace Backend.Tests
     {
         IWordRepository repo;
         WordController controller;
+        IWordService service;
 
         [SetUp]
         public void Setup()
         {
             repo = new WordRepositoryMock();
-            IWordService service = new WordService(repo);
+            service = new WordService(repo);
             controller = new WordController(service, repo);
         }
 
         Word RandomWord()
         {
             Word word = new Word();
+            Random num = new Random();
+            word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense()};
+
+            foreach (Sense sense in word.Senses)
+            {
+
+                sense.Accessibility = (int)state.active;
+                sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss() , new Gloss() };
+
+                foreach (Gloss gloss in sense.Glosses) {
+                    gloss.Def = Util.randString();
+                    gloss.Language = Util.randString(3);
+                }
+
+                sense.SemanticDomains = new List<SemanticDomain>() { new SemanticDomain(), new SemanticDomain(), new SemanticDomain() };
+
+                foreach(SemanticDomain semdom in sense.SemanticDomains)
+                {
+                    semdom.Name = Util.randString();
+                    semdom.Number = Util.randString();
+                }
+            }
+
+            word.Created = Util.randString();
             word.Vernacular = Util.randString();
+            word.Modified = Util.randString();
+            word.PartOfSpeech = Util.randString();
+            word.Plural = Util.randString();
+            word.History = new List<string>();
+            word.Id = null;
+
             return word;
         }
 
@@ -94,67 +126,91 @@ namespace Backend.Tests
         [Test]
         public void DeleteWord()
         {
+            //fill test database
             Word origWord = repo.Create(RandomWord()).Result;
 
+            //test delete function
             var action = controller.Delete(origWord.Id).Result;
 
-            Word delWord = origWord.Clone();
-            delWord.Accessability = (int)state.deleted;
-            delWord.Id = repo.GetAllWords().Result.Find(word => word.Accessability == (int)state.deleted).Id;
-            delWord.History = new List<string> { origWord.Id };
-
+            //original word persists
             Assert.Contains(origWord, repo.GetAllWords().Result);
-            Assert.Contains(delWord, repo.GetAllWords().Result);
 
+            //get the new deleted word from the database
+            var wordRepo = repo.GetFrontier().Result;
+            
+
+            //ensure the word is valid
+            Assert.IsTrue(wordRepo.Count == 1);
+            Assert.IsTrue(wordRepo[0].Id != origWord.Id);
+            Assert.IsTrue(wordRepo[0].History.Count == 1);
+
+            //test the fronteir
             Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
-            Assert.Contains(delWord, repo.GetFrontier().Result);
+
+            //ensure the deleted word is in the fronteir
+            Assert.IsTrue(wordRepo.Count == 1);
+            Assert.IsTrue(wordRepo[0].Id != origWord.Id);
+            Assert.IsTrue(wordRepo[0].History.Count == 1);
+        }
+
+        private state RandState()
+        {
+            Random num = new Random();
+            int numberOfStates = 4;
+            return (state)(num.Next() % numberOfStates);
         }
 
         [Test]
         public void MergeWords()
         {
-            Word parent = repo.Create(RandomWord()).Result;
-            Word child1 = repo.Create(RandomWord()).Result;
-            Word child2 = repo.Create(RandomWord()).Result;
+            MergeWords parentChildMergeObject = new MergeWords();
+            parentChildMergeObject.ChildrenWords = new List<MergeSourceWord>();
+            
 
-            MergeWords merge = new MergeWords();
-            merge.Parent = parent.Id;
-            merge.Children = new List<string> { child1.Id, child2.Id };
-            merge.MergeType = state.duplicate;
-            string id = (controller.Put(merge).Result as ObjectResult).Value as string;
+            //the parent word is inherently correct as it is calculated by the frontend as the desired result of the merge
+            parentChildMergeObject.Parent = RandomWord();
+            List<Word> childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
+            parentChildMergeObject.Time = Util.randString();
 
-            List<Word> words = repo.GetAllWords().Result;
+            //set the child info 
+            int childCount = childWords.Count();
+            foreach (Word child in childWords)
+            {
+                //generate state list of children
+                List<state> childStatesLst = new List<state> { RandState(), RandState(), RandState() };
 
-            // make sure we didn't remove anything
-            Assert.Contains(parent, words);
-            Assert.Contains(child1, words);
-            Assert.Contains(child2, words);
+                //generate mergeSourceWord with new child ID and desired child state list 
+                MergeSourceWord newGenChild = new MergeSourceWord();
+                newGenChild.SrcWordID = repo.Add(child).Result.Id;
+                newGenChild.SenseStates = childStatesLst;
+                parentChildMergeObject.ChildrenWords.Add(newGenChild);
+            }
 
-            // find the dups
-            Word dup1 = child1.Clone();
-            dup1.Accessability = (int)state.duplicate;
-            dup1.History = new List<string> { child1.Id };
-            dup1 = words.Find(word => word.ContentEquals(dup1));
+            var newParentId = service.Merge(parentChildMergeObject).Result;
 
-            Word dup2 = child2.Clone();
-            dup2.Accessability = (int)state.duplicate;
-            dup2.History = new List<string> { child2.Id };
-            dup2 = words.Find(word => word.ContentEquals(dup2));
+            //2 * child number + 1, there are duplicate child nodes and one extra for the parent
+            Assert.AreEqual(repo.GetAllWords().Result.Count, 2 * childCount + 1);
+            //make sure the parent is in the db
+            Assert.AreEqual(parentChildMergeObject.Parent, repo.GetWord(parentChildMergeObject.Parent.Id).Result);
 
-            Assert.NotNull(dup1);
-            Assert.NotNull(dup2);
-            Assert.Contains(dup1, words);
-            Assert.Contains(dup2, words);
+            //assert the children are in the database
+            var dbWords = repo.GetAllWords().Result;
+            dbWords.RemoveAll(StartingChildren);
 
-            // find the endpoint
-            Word end = parent.Clone();
-            end.History = new List<string> { parent.Id, dup1.Id, dup2.Id };
-            end = words.Find(word => word.ContentEquals(end));
+            // 4 = the number of elements in the database - the childCOunt
+            Assert.AreEqual(4, dbWords.Count);
+            
+            for(int childIndex = 0; childIndex < childCount; ++childIndex)
+            {
+                //check for children in db
+                Assert.Contains(repo.GetWord(parentChildMergeObject.ChildrenWords[childIndex].SrcWordID).Result, repo.GetAllWords().Result);
+            }
+        }
 
-            Assert.NotNull(end);
-            Assert.Contains(end, words);
-            Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
-            Assert.Contains(end, repo.GetFrontier().Result);
+        private static bool StartingChildren(Word word)
+        {
+            //in this test the histories of the original child words are going to have no history
+            return word.History.Count <= 0;
         }
     }
 }

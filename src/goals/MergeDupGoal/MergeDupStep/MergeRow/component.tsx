@@ -1,18 +1,20 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word } from "../../../../types/word";
-import { ListSubheader, Box, Grid, Card, CardContent } from "@material-ui/core";
+import { uuid } from "../../../../utilities";
+import { MergeTreeReference, Hash, MergeTreeWord } from "../MergeDupsTree";
+import { Box, ListSubheader, Grid, Card, CardContent } from "@material-ui/core";
 import MergeStack from "../MergeStack";
-import { ParentWord } from "../component";
 import { styleAddendum } from "../../../../types/theme";
 
 //interface for component props
 export interface MergeRowProps {
-  draggedWord?: Word;
-  parent: ParentWord;
-  addSense?: (word: Word, parent: number) => void;
+  draggedWord?: MergeTreeReference;
+  wordID: string;
   dropWord?: () => void;
+  moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
+  words: Hash<MergeTreeWord>;
+  portait: boolean;
 }
 
 //interface for component state
@@ -28,17 +30,14 @@ export class MergeRow extends React.Component<
     this.setState({});
   }
 
-  add_sense(word: Word) {
-    if (this.props.addSense) {
-      this.props.addSense(word, this.props.parent.id);
-    }
-  }
-
   drop() {
-    if (this.props.draggedWord && this.props.dropWord) {
-      var word = this.props.draggedWord;
-      word.modified = Date.now().toString();
-      this.add_sense(word);
+    if (this.props.moveSense && this.props.draggedWord && this.props.dropWord) {
+      let dest = {
+        word: this.props.wordID,
+        sense: uuid(),
+        duplicate: uuid()
+      };
+      this.props.moveSense(this.props.draggedWord, dest);
       this.props.dropWord();
     }
   }
@@ -51,18 +50,32 @@ export class MergeRow extends React.Component<
           onDragOver={e => e.preventDefault()}
           onDrop={_ => this.drop()}
         >
-          <div style={{ textAlign: "center" }}>
-            {this.props.parent.senses[0].dups[0].vernacular}
-          </div>
           <hr />
+          <div style={{ textAlign: "center" }}>
+            {this.props.words[this.props.wordID].vern}
+            <i> {"pl. " + this.props.words[this.props.wordID].plural} </i>
+          </div>
         </ListSubheader>
         <div>
-          <Grid container style={{ display: "flex", flexFlow: "row wrap" }}>
-            {this.props.parent.senses.map(item => (
+          <Grid container direction={this.props.portait ? "column" : "row"}>
+            {/*this.props.parent.senses.map(item => (
               //<Grid item key={item.id}>
               <MergeStack updateRow={() => this.update()} sense={item} />
               //</Grid>
-            ))}
+            ))*/}
+            {Object.keys(this.props.words[this.props.wordID].senses).map(
+              senseID => (
+                <Grid item key={senseID}>
+                  <MergeStack
+                    senseRef={senseID}
+                    wordID={this.props.wordID}
+                    senseID={
+                      this.props.words[this.props.wordID].senses[senseID]
+                    }
+                  />
+                </Grid>
+              )
+            )}
             <Grid
               item
               onDragOver={e => e.preventDefault()}
