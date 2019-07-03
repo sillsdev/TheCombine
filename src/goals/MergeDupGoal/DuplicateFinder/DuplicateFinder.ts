@@ -47,12 +47,14 @@ export default class DupFinder {
   deletionCost: number;
   subsitutionCost: number;
 
+  empty2dArray = [[]];
+
   // get n lists of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
   async getNextDups(n: number = 1): Promise<Word[][]> {
     let wordsFromDB: Promise<Word[][]> = this.getWordsFromDB().then(words => {
       //return no words if DB empty
       if (words.length <= 0) {
-        return [words];
+        return this.empty2dArray;
       }
       //[wordlist, list score]
       let currentWords: [Word[], number][] = [];
@@ -86,6 +88,11 @@ export default class DupFinder {
           currentWords.pop();
         }
       }
+
+      //return empty 2d array if no possible duplicates found
+      if(currentWords.length <= 0)
+        return this.empty2dArray;
+        
       //return the wordlist from the scored list
       return currentWords.map(function(scoredList) {
         return scoredList[0];
