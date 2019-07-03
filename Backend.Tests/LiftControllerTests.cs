@@ -156,7 +156,7 @@ namespace Backend.Tests
             //assert words can be properly imported
             _ = _wordrepo.DeleteAllWords().Result;
 
-            string uploadAgain = Path.Combine(util.GenerateFilePath(Utilities.filetype.dir, true), "LiftExport", "NewLiftFile.Lift");
+            string uploadAgain = Path.Combine(util.GenerateFilePath(Utilities.filetype.dir, true), "LiftExport", "NewLiftFile.lift");
             fstream = File.OpenRead(uploadAgain);
             fileUpload = InitFile(fstream);
 
