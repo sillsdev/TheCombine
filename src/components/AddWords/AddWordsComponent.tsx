@@ -30,7 +30,12 @@ export default class AddWords extends React.Component<
   constructor(props: AddWordsProps & LocalizeContextProps) {
     super(props);
     this.state = { words: [], newVern: "", newGloss: "" };
+    this.vernInput = React.createRef<HTMLDivElement>();
+    this.glossInput = React.createRef<HTMLDivElement>();
   }
+
+  vernInput: React.RefObject<HTMLDivElement>;
+  glossInput: React.RefObject<HTMLDivElement>;
 
   submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -67,8 +72,11 @@ export default class AddWords extends React.Component<
     let words = JSON.parse(JSON.stringify(this.state.words));
     words.push(word);
     this.setState({ words, newVern: "", newGloss: "" });
+
+    this.focusVernInput();
   }
 
+  /** Updates the state to match the value in a textbox */
   updateField<K extends keyof AddWordsState>(
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
@@ -80,6 +88,16 @@ export default class AddWords extends React.Component<
     this.setState({
       [field]: value
     } as Pick<AddWordsState, K>);
+  }
+
+  /** Moves the focus to the vernacular textbox */
+  focusVernInput() {
+    if (this.vernInput.current) this.vernInput.current.focus();
+  }
+
+  /** Moves the focus to the gloss textbox */
+  focusGlossInput() {
+    if (this.glossInput.current) this.glossInput.current.focus();
   }
 
   render() {
@@ -184,6 +202,16 @@ export default class AddWords extends React.Component<
                     onChange={e => {
                       this.updateField(e, "newVern");
                     }}
+                    inputRef={this.vernInput}
+                    // Move the focus to the next box when the right arrow key is pressed
+                    onKeyDown={e => {
+                      if (
+                        e.key === "ArrowRight" &&
+                        (e.target as HTMLInputElement).selectionStart ===
+                          this.state.newVern.length
+                      )
+                        this.focusGlossInput();
+                    }}
                   />
                 </Grid>
                 <Grid
@@ -201,6 +229,15 @@ export default class AddWords extends React.Component<
                     value={this.state.newGloss}
                     onChange={e => {
                       this.updateField(e, "newGloss");
+                    }}
+                    inputRef={this.glossInput}
+                    // Move the focus to the previous box when the left arrow key is pressed
+                    onKeyDown={e => {
+                      if (
+                        e.key === "ArrowLeft" &&
+                        (e.target as HTMLInputElement).selectionStart === 0
+                      )
+                        this.focusVernInput();
                     }}
                   />
                 </Grid>
