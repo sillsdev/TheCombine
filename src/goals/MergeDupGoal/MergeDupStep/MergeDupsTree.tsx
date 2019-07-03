@@ -2,7 +2,7 @@ import * as Data from "../../../types/word";
 
 export type Hash<V> = { [key: string]: V };
 
-export type TreeDataSense = Data.Sense & { srcWord: string };
+export type TreeDataSense = Data.Sense & { srcWord: string; order: number};
 
 export interface MergeData {
   words: Hash<Data.Word>;

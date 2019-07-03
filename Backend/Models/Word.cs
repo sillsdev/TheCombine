@@ -142,10 +142,16 @@ namespace BackendFramework.ValueModels
             return hash.ToHashCode();
         }
     }
+    
+    public class MergeSourceWord {
+      public string SrcWordID;
+      public List<state> SenseStates;
+    }
+
     public class MergeWords
     {
         public Word Parent { get; set; }
-        public List<Tuple<string, List<state>>> ChildrenWords { get; set; }
+        public List<MergeSourceWord> ChildrenWords { get; set; }
         public User MergedBy { get; set; }
         public string Time { get; set; }
     }
@@ -155,7 +161,7 @@ namespace BackendFramework.ValueModels
         [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
 
-        [BsonElement("SemanticDomain s")]
+        [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
         [BsonElement("accessability")]

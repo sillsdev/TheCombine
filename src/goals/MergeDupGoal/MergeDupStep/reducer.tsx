@@ -5,7 +5,9 @@ import {
   defaultTree,
   MergeData,
   MergeTreeWord,
-  MergeTreeSense
+  MergeTreeSense,
+  Hash,
+  TreeDataSense
 } from "./MergeDupsTree";
 import { Word, Sense } from "../../../types/word";
 import { uuid } from "../../../utilities";
@@ -76,7 +78,7 @@ const mergeDupStepReducer = (
         if (Object.keys(state.tree.senses[senseID].dups).length == 0) {
           delete state.tree.senses[senseID];
           delete state.tree.words[src.word].senses[src.sense];
-          state.tree.words[src.word] = {...state.tree.words[src.word]};
+          state.tree.words[src.word] = { ...state.tree.words[src.word] };
         }
 
         // check if we removed last sense in a word if so remove the word from the tree
@@ -86,8 +88,8 @@ const mergeDupStepReducer = (
         }
 
         state.tree.senses[destSenseID] = { ...state.tree.senses[destSenseID] };
-        state.tree.senses = {...state.tree.senses};
-        state.tree.words = {...state.tree.words};
+        state.tree.senses = { ...state.tree.senses };
+        state.tree.words = { ...state.tree.words };
 
         state.tree = { ...state.tree };
       }
@@ -95,17 +97,17 @@ const mergeDupStepReducer = (
       return { ...state };
     case MergeTreeActions.SET_DATA:
       let words: { [id: string]: Word } = {};
-      let senses: { [id: string]: Sense & { srcWord: string } } = {};
+      let senses: Hash<TreeDataSense> = {};
       let wordsTree: { [id: string]: MergeTreeWord } = {};
       let sensesTree: { [id: string]: MergeTreeSense } = {};
 
       action.payload.map(word => {
         words[word.id] = word;
         let treeSenses: { [id: string]: string } = {};
-        word.senses.map(sense => {
+        word.senses.map((sense, index) => {
           let id = uuid();
           let id2 = uuid();
-          senses[id] = { ...sense, srcWord: word.id };
+          senses[id] = { ...sense, srcWord: word.id, order: index };
           let mergeSense: MergeTreeSense = { dups: {} };
           mergeSense.dups[uuid()] = id;
           sensesTree[id2] = mergeSense;
@@ -122,6 +124,9 @@ const mergeDupStepReducer = (
         tree: { senses: sensesTree, words: wordsTree },
         data: { senses, words }
       };
+    case MergeTreeActions.CLEAR_TREE:
+      console.log("CLEARING TREE");
+      return { tree: {...defaultTree}, data: {...defaultData}};
     default:
       return state;
   }

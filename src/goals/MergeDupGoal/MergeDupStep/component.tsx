@@ -33,6 +33,7 @@ export interface MergeDupStepProps {
   dropWord?: () => void;
   draggedSense?: MergeTreeReference;
   moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
+  mergeAll?: () => void;
   refreshWords?: () => void;
 }
 
@@ -47,7 +48,7 @@ class MergeDupStep extends React.Component<
 > {
   constructor(props: MergeDupStepProps & LocalizeContextProps) {
     super(props);
-    this.state = { portait: false };
+    this.state = { portait: true };
   }
   componentDidMount() {
     if (this.props.refreshWords) {
@@ -72,7 +73,7 @@ class MergeDupStep extends React.Component<
   }
 
   next() {
-    //if (this.props.applyMerges) this.props.applyMerges();
+    if (this.props.mergeAll) this.props.mergeAll();
   }
 
   render() {

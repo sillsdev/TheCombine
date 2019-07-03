@@ -226,7 +226,7 @@ class MergeStack extends React.Component<
         onDrop={e => this.dragDrop(e)}
       >
         <CardContent>
-          <Typography variant={"h5"}>{gloss.def}</Typography>
+          <Typography variant={"h5"}>{gloss ? gloss.def : "{ no gloss }" }</Typography>
           {/* List semantic domains */}
           <List dense={true}>
             {displaySense.semanticDomains.length == 0 &&
