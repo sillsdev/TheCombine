@@ -136,8 +136,8 @@ namespace Backend.Tests
             Assert.Contains(origWord, repo.GetAllWords().Result);
 
             //get the new deleted word from the database
-            var wordRepo = repo.GetAllWords().Result;
-            wordRepo.Remove(origWord);
+            var wordRepo = repo.GetFrontier().Result;
+            
 
             //ensure the word is valid
             Assert.IsTrue(wordRepo.Count == 1);
@@ -167,7 +167,7 @@ namespace Backend.Tests
             parentChildMergeObject.ChildrenWords = new List<MergeSourceWord>();
             
 
-            //the parent word is inherently correct
+            //the parent word is inherently correct as it is calculated by the frontend as the desired result of teh merge
             parentChildMergeObject.Parent = RandomWord();
             List<Word> childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
             parentChildMergeObject.Time = Util.randString();
@@ -179,7 +179,7 @@ namespace Backend.Tests
                 //generate state list of children
                 List<state> childStatesLst = new List<state> { RandState(), RandState(), RandState() };
 
-                //generate tuple with new child ID and desired child state list 
+                //generate mergeSourceWord with new child ID and desired child state list 
                 MergeSourceWord newGenChild = new MergeSourceWord();
                 newGenChild.SrcWordID = repo.Add(child).Result.Id;
                 newGenChild.SenseStates = childStatesLst;
