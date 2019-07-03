@@ -199,9 +199,6 @@ class MergeStack extends React.Component<
 
   render() {
     let treeSense = this.props.treeSenses[this.props.senseID];
-    if (!treeSense) {
-      debugger;
-    }
     let displaySenseKey = Object.keys(treeSense.dups)[0];
     let displaySenseID = Object.values(treeSense.dups)[0];
     let displaySense = this.props.senses[displaySenseID];

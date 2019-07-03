@@ -50,11 +50,11 @@ export class MergeRow extends React.Component<
           onDragOver={e => e.preventDefault()}
           onDrop={_ => this.drop()}
         >
+          <hr />
           <div style={{ textAlign: "center" }}>
             {this.props.words[this.props.wordID].vern}
             <i> {"pl. " + this.props.words[this.props.wordID].plural} </i>
           </div>
-          <hr />
         </ListSubheader>
         <div>
           <Grid container direction={this.props.portait ? "column" : "row"}>
@@ -69,7 +69,9 @@ export class MergeRow extends React.Component<
                   <MergeStack
                     senseRef={senseID}
                     wordID={this.props.wordID}
-                    senseID={this.props.words[this.props.wordID].senses[senseID]}
+                    senseID={
+                      this.props.words[this.props.wordID].senses[senseID]
+                    }
                   />
                 </Grid>
               )

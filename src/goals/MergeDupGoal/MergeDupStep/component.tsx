@@ -39,7 +39,7 @@ export interface MergeDupStepProps {
 
 //interface for component state
 export interface MergeDupStepState {
-  portait: boolean;
+  portrait: boolean;
 }
 
 class MergeDupStep extends React.Component<
@@ -48,7 +48,7 @@ class MergeDupStep extends React.Component<
 > {
   constructor(props: MergeDupStepProps & LocalizeContextProps) {
     super(props);
-    this.state = { portait: true };
+    this.state = { portrait: true };
   }
   componentDidMount() {
     if (this.props.refreshWords) {
@@ -82,19 +82,19 @@ class MergeDupStep extends React.Component<
       <Box style={{ maxHeight: "100%" }}>
         Portrait
         <Switch
-          checked={this.state.portait}
-          onChange={e => this.setState({ portait: e.target.checked })}
+          checked={this.state.portrait}
+          onChange={e => this.setState({ portrait: e.target.checked })}
         />
         {/* Merging pane */}
         <div style={{ ...HEIGHT_STYLE, overflowY: "scroll" }}>
           <Grid
             container
-            direction={this.state.portait ? "row" : "column"}
+            direction={this.state.portrait ? "row" : "column"}
             style={{ flex: 1 }}
           >
             {Object.keys(this.props.words).map(key => (
               <Grid item>
-                <MergeRow portait={this.state.portait} wordID={key} />
+                <MergeRow portait={this.state.portrait} wordID={key} />
               </Grid>
             ))}
             {

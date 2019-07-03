@@ -27,7 +27,6 @@ const mergeDupStepReducer = (
   action: MergeTreeAction
 ): MergeTreeState => {
   switch (action.type) {
-    // This is clearly the best reducer ever written
     case MergeTreeActions.SET_VERNACULAR:
       return state;
     case MergeTreeActions.SET_PLURAL:
@@ -125,7 +124,6 @@ const mergeDupStepReducer = (
         data: { senses, words }
       };
     case MergeTreeActions.CLEAR_TREE:
-      console.log("CLEARING TREE");
       return { tree: {...defaultTree}, data: {...defaultData}};
     default:
       return state;

@@ -200,37 +200,3 @@ export function mergeAll() {
     await dispatch(refreshWords());
   };
 }
-
-/*
-// this is gross lets clean it up
-export function applyMerges() {
-  return async (
-    dispatch: ThunkDispatch<any, any, MergeTreeAction | WordListAction>,
-    getState: () => StoreState
-  ) => {
-    var merges = getState().mergeDuplicateGoal.mergeTreeState.parentWords;
-    Promise.all(
-      merges.map(async parent => {
-        var senses: Word[] = [];
-        await Promise.all(
-          parent.senses.map(async sense => {
-            if (sense.dups.length > 1) {
-              senses.push({
-                ...sense.dups[0],
-                id: await backend.mergeWords(sense.dups, State.duplicate)
-              });
-            } else {
-              // Should never be 0
-              senses.push(sense.dups[0]);
-            }
-          })
-        );
-        if (senses.length > 0) {
-          return await backend.mergeWords(senses, State.sense);
-        }
-      })
-    )
-      .then(() => dispatch(clearMerges()))
-      .then(() => dispatch(refreshListWords()));
-  };
-} */
