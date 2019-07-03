@@ -17,6 +17,7 @@ namespace BackendFramework.Helper
         {
             //generate path to desktop
             string wanted_path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            Directory.CreateDirectory(wanted_path);
 
             /*I don't know what to expect or if this will work so a very specific exception will help debugging*/
             if (wanted_path == null || wanted_path == "") 
