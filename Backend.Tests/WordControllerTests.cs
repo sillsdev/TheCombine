@@ -152,7 +152,7 @@ namespace Backend.Tests
         public void MergeWords()
         {
             MergeWords functionPerameter = new MergeWords();
-            functionPerameter.ChildrenWords = new List<Tuple<string, List<state>>>();
+            functionPerameter.ChildrenWords = new List<MergeSourceWord>();
             Random num = new Random();
 
             //the parent word is inherently correct
@@ -170,7 +170,9 @@ namespace Backend.Tests
                 List<state> childStatesLst = childStatesArr.OfType<state>().ToList();
 
                 //generate tuple with new child ID and desired child state list 
-                Tuple<string, List<state>> childId = new Tuple<string, List<state>>(repo.Add(childWords[i]).Result.Id, childStatesLst);
+                MergeSourceWord childId = new MergeSourceWord();
+                childId.SrcWordID = repo.Add(childWords[i]).Result.Id;
+                childId.SenseStates = childStatesLst;
                 functionPerameter.ChildrenWords.Add(childId);
             }
 
@@ -191,7 +193,7 @@ namespace Backend.Tests
             for(int childIndex = 0; childIndex < childCount; ++childIndex)
             {
                 //check for children in db
-                Assert.Contains(repo.GetWord(functionPerameter.ChildrenWords[childIndex].Item1).Result, repo.GetAllWords().Result);
+                Assert.Contains(repo.GetWord(functionPerameter.ChildrenWords[childIndex].SrcWordID).Result, repo.GetAllWords().Result);
             }
         }
 
