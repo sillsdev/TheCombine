@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Word, State, Merge } from "../types/word";
+import { Word, State, Merge, MergeWord } from "../types/word";
 import { User } from "../types/user";
 import { Project } from "../types/project";
 import { authHeader } from "../components/Login/AuthHeaders";
@@ -24,15 +24,15 @@ export async function getAllWords(): Promise<Word[]> {
   return await backendServer.get("projects/words").then(resp => resp.data);
 }
 
-export async function mergeWords(words: Word[], type: State): Promise<string> {
-  let ids = words.map(word => word.id);
-  let root = ids[0];
-  let children = ids.filter(word => word !== root);
-  let merge: Merge = {
-    parent: root,
-    children,
-    mergeType: type,
-    time: Date.now().toString()
+export async function mergeWords(parent: Word, children: MergeWord[]): Promise<string> {
+  parent.id = "";
+  let childrenWords = children.map(child => {
+    return { SrcWordID: child.wordID, SenseStates: child.senses};
+  })
+  let merge = {
+    Parent: parent,
+    ChildrenWords: childrenWords,
+    Time: Date.now().toString()
   };
   return await backendServer
     .put("projects/words", merge)

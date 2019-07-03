@@ -1,17 +1,15 @@
-import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { StoreState } from "../../../../types";
-import { MergeTreeAction, addSense } from "../actions";
-import { Word } from "../../../../types/word";
-import {
-  dropWord,
-  WordDragAction
-} from "../../../../components/DraggableWord/actions";
+import {connect} from "react-redux";
+import {ThunkDispatch} from "redux-thunk";
+import {dropWord, WordDragAction} from "../../../../components/DraggableWord/actions";
+import {StoreState} from "../../../../types";
+import {MergeTreeAction, moveSense} from "../actions";
 import MergeRowComponent from "./component";
+import {MergeTreeReference} from '../MergeDupsTree';
 
 export function mapStateToProps(state: StoreState) {
   return {
-    draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord
+    draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord,
+    words: state.mergeDuplicateGoal.mergeTreeState.tree.words,
   };
 }
 
@@ -19,11 +17,11 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, MergeTreeAction | WordDragAction>
 ) {
   return {
-    addSense: (word: Word, parent: number) => {
-      dispatch(addSense(word, parent));
-    },
     dropWord: () => {
       dispatch(dropWord());
+    },
+    moveSense: (src: MergeTreeReference, dest: MergeTreeReference) => {
+      dispatch(moveSense(src, dest));
     }
   };
 }

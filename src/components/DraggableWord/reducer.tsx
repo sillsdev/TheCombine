@@ -1,9 +1,9 @@
 import { WordDragAction } from "./actions";
 import { DRAG_WORD, DROP_WORD } from "./actions";
-import { Word } from "../../types/word";
+import {MergeTreeReference} from '../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree';
 
 export interface WordDragState {
-  draggedWord?: Word;
+  draggedWord?: MergeTreeReference;
 }
 
 export const defaultState: WordDragState = {
@@ -17,7 +17,6 @@ const dragWordReducer = (
   switch (action.type) {
     case DRAG_WORD:
       if (action.payload) {
-        action.payload.modified = Date.now().toString();
         return { ...state, draggedWord: action.payload };
       } else {
         return state;

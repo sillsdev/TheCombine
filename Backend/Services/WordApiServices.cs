@@ -24,8 +24,12 @@ namespace BackendFramework.Services
             {
                 Word wordToDelete = _repo.GetWord(Id).Result;
                 wordToDelete.Id = null;
-                wordToDelete.Accessability = (int)state.deleted;
                 wordToDelete.History.Add(Id);
+
+                foreach(var senseAcc in wordToDelete.Senses)
+                {
+                    senseAcc.Accessibility = (int)state.deleted;
+                }
 
                 await _repo.Create(wordToDelete);
             }
@@ -38,8 +42,16 @@ namespace BackendFramework.Services
             if (wordIsInFrontier)
             {
                 word.Id = null;
-                word.Accessability = (int)state.active;
-                word.History = new List<string> { Id };
+
+                //If the word already has a history you dont want to overwrite it
+                if (word.History == null)
+                {
+                    word.History = new List<string> { Id };
+                }
+                else
+                {
+                    word.History.Add(Id);
+                }
 
                 await _repo.Create(word);
             }
@@ -48,33 +60,37 @@ namespace BackendFramework.Services
 
         public async Task<Word> Merge(MergeWords mergeWords)
         {
-            List<string> parentHistory = new List<string>();
-            foreach (string childId in mergeWords.Children)
+
+            //generate new child words form child word field
+            foreach(var newChildWordState in mergeWords.ChildrenWords)
             {
-                await _repo.DeleteFrontier(childId);
+                //get child word
+                var currentChildWord = await _repo.GetWord(newChildWordState.SrcWordID);
+                //remove child from frontier
+                _repo.DeleteFrontier(currentChildWord.Id);
 
-                Word childWord = _repo.GetWord(childId).Result;
-                childWord.History = new List<string> { childId };
-                childWord.Accessability = (int)mergeWords.MergeType; // 2: sense or 3: duplicate
-                childWord.Id = null;
+                //iterate through senses of that word and change to corresponding state in mergewords
+                for(int i = 0; i < currentChildWord.Senses.Count; i++)
+                {
+                    currentChildWord.Senses[i].Accessibility = (int)newChildWordState.SenseStates[i];
+                }
 
-                await _repo.Add(childWord);
-                parentHistory.Add(childWord.Id);
+                //change the child words history to its previous self
+                currentChildWord.History = new List<string>() { newChildWordState.SrcWordID };
+
+                //add child word to the database
+                currentChildWord.Id = null;
+                var newChildWord = await _repo.Add(currentChildWord);
+
+                //add new child word to the parents history
+                mergeWords.Parent.History.Add(newChildWord.Id);
             }
 
-            string parentId = mergeWords.Parent;
+            //add parent with child history to the datbase
+            var newParent = await _repo.Add(mergeWords.Parent);
+            _repo.AddFrontier(newParent);
 
-            await _repo.DeleteFrontier(parentId);
-
-            parentHistory.Add(parentId);
-
-            Word parentWord = _repo.GetWord(parentId).Result;
-            parentWord.History = parentHistory;
-            parentWord.Accessability = (int)state.active;
-            parentWord.Id = null;
-
-            await _repo.Create(parentWord);
-            return parentWord;
+            return newParent;
         }
     }
 }
