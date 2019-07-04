@@ -7,94 +7,23 @@ import {
   Grid,
   Divider,
   Button,
-  IconButton
+  IconButton,
+  Tooltip
 } from "@material-ui/core";
 import theme from "../../types/theme";
 import { LocalizeContextProps } from "react-localize-redux";
 import { Word, State } from "../../types/word";
 import { Edit, Delete } from "@material-ui/icons";
+import * as Backend from "../../backend";
 
-let testdata: Word[] = [
-  {
-    id: "",
-    vernacular: "nihao",
-    senses: [
-      {
-        glosses: [
-          {
-            language: "",
-            def: "hello"
-          }
-        ],
-        semanticDomains: []
-      }
-    ],
-    audio: "",
-    created: "",
-    modified: "",
-    history: [],
-    partOfSpeech: "",
-    editedBy: [],
-    accessability: State.active,
-    otherField: "",
-    plural: ""
-  },
-  {
-    id: "",
-    vernacular: "tianqi",
-    senses: [
-      {
-        glosses: [
-          {
-            language: "",
-            def: "weather"
-          }
-        ],
-        semanticDomains: []
-      }
-    ],
-    audio: "",
-    created: "",
-    modified: "",
-    history: [],
-    partOfSpeech: "",
-    editedBy: [],
-    accessability: State.active,
-    otherField: "",
-    plural: ""
-  },
-  {
-    id: "",
-    vernacular: "yun",
-    senses: [
-      {
-        glosses: [
-          {
-            language: "",
-            def: "cloud"
-          }
-        ],
-        semanticDomains: []
-      }
-    ],
-    audio: "",
-    created: "",
-    modified: "",
-    history: [],
-    partOfSpeech: "",
-    editedBy: [],
-    accessability: State.active,
-    otherField: "",
-    plural: ""
-  }
-];
+let testdata = [["yun", "cloud"], ["tian", "sky"], ["taiyang", "sun"]];
 
 interface AddWordsProps {
   domain: string;
 }
 
 interface AddWordsState {
-  words: Word[];
+  fields: string[][];
   editing?: number;
   newVern: string;
   newGloss: string;
@@ -108,7 +37,11 @@ export default class AddWords extends React.Component<
 > {
   constructor(props: AddWordsProps & LocalizeContextProps) {
     super(props);
-    this.state = { words: testdata, newVern: "", newGloss: "" };
+    this.state = {
+      newVern: "",
+      newGloss: "",
+      fields: testdata
+    };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
   }
@@ -124,35 +57,17 @@ export default class AddWords extends React.Component<
 
     if (vernacular === "") return;
 
-    let word: Word = {
-      id: "",
-      vernacular: vernacular,
-      senses: [
-        {
-          glosses: [
-            {
-              language: "",
-              def: gloss
-            }
-          ],
-          semanticDomains: []
-        }
-      ],
-      audio: "",
-      created: "",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      accessability: State.active,
-      otherField: "",
-      plural: ""
-    };
-    let words = JSON.parse(JSON.stringify(this.state.words));
-    words.push(word);
-    this.setState({ words, newVern: "", newGloss: "" });
+    let words = [...this.state.fields];
+    words.push([vernacular, gloss]);
+    this.setState({ fields: words, newVern: "", newGloss: "" });
 
     this.focusVernInput();
+  }
+
+  updateWord(values: string[], index: number) {
+    let words = [...this.state.fields];
+    words.splice(index, 1, values);
+    this.setState({ fields: words });
   }
 
   /** Updates the state to match the value in a textbox */
@@ -180,30 +95,55 @@ export default class AddWords extends React.Component<
   }
 
   removeWord(index: number) {
-    let words = JSON.parse(JSON.stringify(this.state.words));
+    let words = [...this.state.fields];
     words.splice(index, 1);
-    this.setState({ words });
+    this.setState({ fields: words });
+  }
+
+  async uploadWords() {
+    let word: Word = {
+      id: "",
+      vernacular: "",
+      senses: [
+        {
+          glosses: [
+            {
+              language: "",
+              def: ""
+            }
+          ],
+          semanticDomains: []
+        }
+      ],
+      audio: "",
+      created: "",
+      modified: "",
+      history: [],
+      partOfSpeech: "",
+      editedBy: [],
+      accessability: State.active,
+      otherField: "",
+      plural: ""
+    };
+
+    for (let tuple of this.state.fields) {
+      word.vernacular = tuple[0];
+
+      word.senses[0].glosses = [];
+      let defs = tuple[1].split(",");
+      for (let def of defs) {
+        let gloss = {
+          language: "",
+          def
+        };
+        word.senses[0].glosses.push(gloss);
+      }
+
+      await Backend.createWord(word); // TODO: catch errors
+    }
   }
 
   render() {
-    let rows = [];
-    for (const word of this.state.words) {
-      rows.push(
-        <React.Fragment>
-          <Grid
-            item
-            xs={6}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2)
-            }}
-          >
-            {word.vernacular}
-          </Grid>
-        </React.Fragment>
-      );
-    }
-
     return (
       <Container>
         <Paper
@@ -224,8 +164,9 @@ export default class AddWords extends React.Component<
           <Divider />
           <form onSubmit={e => this.submit(e)}>
             <input type="submit" style={{ display: "none" }} />
+
+            {/* Table title */}
             <Grid container spacing={3}>
-              {/* Table title */}
               <Grid item xs={5}>
                 <Typography
                   variant="h5"
@@ -246,7 +187,7 @@ export default class AddWords extends React.Component<
               </Grid>
 
               {/* Rows of words */}
-              {this.state.words.map((word, index) => {
+              {this.state.fields.map((word, index) => {
                 return this.state.editWord === index ? (
                   "ok"
                 ) : (
@@ -262,43 +203,53 @@ export default class AddWords extends React.Component<
                         item
                         xs={5}
                         style={{
-                          paddingLeft: theme.spacing(3),
+                          paddingLeft: theme.spacing(2),
                           paddingRight: theme.spacing(2)
                         }}
                       >
-                        <Typography variant="body1" contentEditable>
-                          {word.vernacular}
-                        </Typography>
+                        <TextField
+                          fullWidth
+                          value={word[0]}
+                          onChange={e => {
+                            this.updateWord([e.target.value, word[1]], index);
+                          }}
+                        />
                       </Grid>
                       <Grid
                         item
                         xs={5}
                         style={{
-                          paddingLeft: theme.spacing(3),
+                          paddingLeft: theme.spacing(2),
                           paddingRight: theme.spacing(2)
                         }}
                       >
-                        <Typography variant="body1" contentEditable>
-                          {word.senses[0].glosses[0].def}
-                        </Typography>
+                        <TextField
+                          fullWidth
+                          value={word[1]}
+                          onChange={e => {
+                            this.updateWord([word[0], e.target.value], index);
+                          }}
+                        />
                       </Grid>
-                      <Grid item xs={2} style={{ position: "relative" }}>
+                      <Grid item xs={2}>
                         {this.state.hoverRow === index && (
                           <React.Fragment>
-                            <IconButton
-                              size="small"
-                              style={{ position: "absolute" }}
-                              onClick={() => this.setState({ editWord: index })}
+                            <Tooltip
+                              title={
+                                "Delete this row"
+                                // this.props.translate(
+                                //   "charInventory.sampleWords.add"
+                                // ) as string
+                              }
+                              placement="top"
                             >
-                              <Edit />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              style={{ position: "absolute", left: 32 }}
-                              onClick={() => this.removeWord(index)}
-                            >
-                              <Delete />
-                            </IconButton>
+                              <IconButton
+                                size="small"
+                                onClick={() => this.removeWord(index)}
+                              >
+                                <Delete />
+                              </IconButton>
+                            </Tooltip>
                           </React.Fragment>
                         )}
                       </Grid>
@@ -379,6 +330,7 @@ export default class AddWords extends React.Component<
                 variant="contained"
                 color="primary"
                 style={{ marginTop: theme.spacing(2) }}
+                onClick={() => this.uploadWords()}
               >
                 Next
               </Button>
