@@ -11,7 +11,11 @@ import {
   Tooltip
 } from "@material-ui/core";
 import theme from "../../types/theme";
-import { LocalizeContextProps } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  Translate,
+  TranslateFunction
+} from "react-localize-redux";
 import { Word, State } from "../../types/word";
 import { Edit, Delete } from "@material-ui/icons";
 import * as Backend from "../../backend";
@@ -20,6 +24,7 @@ let testdata = [["yun", "cloud"], ["tian", "sky"], ["taiyang", "sun"]];
 
 interface AddWordsProps {
   domain: string;
+  translate: TranslateFunction;
 }
 
 interface AddWordsState {
@@ -159,7 +164,7 @@ export default class AddWords extends React.Component<
             align="center"
             style={{ marginBottom: theme.spacing(2) }}
           >
-            Domain: Sky
+            <Translate id="addWords.domain" />: Sky
           </Typography>
           <Divider />
           <form onSubmit={e => this.submit(e)}>
@@ -173,7 +178,7 @@ export default class AddWords extends React.Component<
                   align="center"
                   style={{ marginTop: theme.spacing(2) }}
                 >
-                  Vernacular
+                  <Translate id="addWords.vernacular" />
                 </Typography>
               </Grid>
               <Grid item xs={5}>
@@ -182,7 +187,7 @@ export default class AddWords extends React.Component<
                   align="center"
                   style={{ marginTop: theme.spacing(2) }}
                 >
-                  Gloss
+                  <Translate id="addWords.glosses" />
                 </Typography>
               </Grid>
 
@@ -236,10 +241,9 @@ export default class AddWords extends React.Component<
                           <React.Fragment>
                             <Tooltip
                               title={
-                                "Delete this row"
-                                // this.props.translate(
-                                //   "charInventory.sampleWords.add"
-                                // ) as string
+                                this.props.translate(
+                                  "addWords.deleteRow"
+                                ) as string
                               }
                               placement="top"
                             >
@@ -272,7 +276,9 @@ export default class AddWords extends React.Component<
                     >
                       <TextField
                         autoFocus
-                        label={"Vernacular"}
+                        label={
+                          this.props.translate("addWords.vernacular") as string
+                        }
                         fullWidth
                         variant="outlined"
                         value={this.state.newVern}
@@ -300,7 +306,9 @@ export default class AddWords extends React.Component<
                       }}
                     >
                       <TextField
-                        label={"Gloss"}
+                        label={
+                          this.props.translate("addWords.glosses") as string
+                        }
                         fullWidth
                         variant="outlined"
                         value={this.state.newGloss}
@@ -332,7 +340,7 @@ export default class AddWords extends React.Component<
                 style={{ marginTop: theme.spacing(2) }}
                 onClick={() => this.uploadWords()}
               >
-                Next
+                <Translate id="addWords.next" />
               </Button>
             </Grid>
           </Grid>

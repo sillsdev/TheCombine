@@ -1,4 +1,11 @@
 {
+  "addWords": {
+    "domain": ["Domain", "Dominio"],
+    "vernacular": ["Vernacular", "Vernáculo"],
+    "glosses": ["Glosses", "Traducciones"],
+    "next": ["Next", "Siguiente"],
+    "deleteRow": ["Delete this row", "borrar esta fila"]
+  },
   "temp": {
     "buttonText": ["This is a button.", "Este es un botón."],
     "labelText": ["This is a label", "Esto es una etiqueta."],
