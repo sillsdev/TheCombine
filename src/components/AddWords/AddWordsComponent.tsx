@@ -133,61 +133,13 @@ export default class AddWords extends React.Component<
     this.setState({ rows });
   }
 
-  async uploadWords() {
-    let word: Word = {
-      id: "",
-      vernacular: "",
-      senses: [
-        {
-          glosses: [
-            {
-              language: "",
-              def: ""
-            }
-          ],
-          semanticDomains: []
-        }
-      ],
-      audio: "",
-      created: "",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      accessability: State.active,
-      otherField: "",
-      plural: ""
-    };
-
-    for (let row of this.state.rows) {
-      word.vernacular = row.vernacular;
-
-      word.senses[0].glosses = [];
-      let defs = row.glosses.split(",");
-      for (let def of defs) {
-        let gloss = {
-          language: "",
-          def
-        };
-        word.senses[0].glosses.push(gloss);
-      }
-
-      await Backend.createWord(word); // TODO: catch errors
-    }
-  }
-
   rowToWord(row: Row): Word {
     let word: Word = {
       id: row.id,
       vernacular: "",
       senses: [
         {
-          glosses: [
-            {
-              language: "",
-              def: ""
-            }
-          ],
+          glosses: [],
           semanticDomains: []
         }
       ],
@@ -207,7 +159,7 @@ export default class AddWords extends React.Component<
     let defs = row.glosses.split(",");
     for (let def of defs) {
       let gloss = {
-        language: "",
+        language: "en",
         def
       };
       word.senses[0].glosses.push(gloss);
@@ -434,7 +386,6 @@ export default class AddWords extends React.Component<
                 variant="contained"
                 color="primary"
                 style={{ marginTop: theme.spacing(2) }}
-                onClick={() => this.uploadWords()}
               >
                 <Translate id="addWords.next" />
               </Button>
