@@ -129,7 +129,7 @@ namespace BackendFramework.Services
             writer.End();
 
             //File.Delete("LiftExport.zip");
-            ZipFile.CreateFromDirectory(zipdir, Path.Combine(zipdir, Path.Combine("..", "LiftExportCompressed.zip")));
+            ZipFile.CreateFromDirectory(zipdir, Path.Combine(zipdir, Path.Combine("..", "LiftExportCompressed-" + Path.GetRandomFileName() + ".zip")));
         }
 
         public void addVern(string Id, Word wordEntry, LexEntry entry)

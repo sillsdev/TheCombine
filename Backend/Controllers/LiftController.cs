@@ -5,7 +5,11 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static BackendFramework.Helper.Utilities;
 
@@ -40,18 +44,64 @@ namespace BackendFramework.Controllers
             {
                 //get path to desktop
                 Utilities util = new Utilities();
-                model.FilePath = util.GenerateFilePath(filetype.lift, false, "TEST-UPLOAD-" + Path.GetRandomFileName());
+                //generate the file to put the filestream into
+                model.FilePath = util.GenerateFilePath(filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now));
 
-                //copy data into file
+                //copy stream into file
                 using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
                 {
                     await file.CopyToAsync(fs);
                 }
 
+                //extract the zip into another file
+                string zipDest = Path.GetDirectoryName(model.FilePath);
+                Directory.CreateDirectory(zipDest);
+                ZipFile.ExtractToDirectory(model.FilePath, zipDest);
+
+                //generate path to extracted .lift file for import
+                //first you need the filename of the extracted dir
+                var filesArr = Directory.GetDirectories(Directory.GetParent(model.FilePath).ToString());
+                
+                if(filesArr.Length != 1)
+                {
+                    //there should only be one files within the zips dir, the extracted dir
+                    throw new InvalidDataException("Your .zip file structure is incorrect");
+                }
+
+                //get a list of files within the extracted dir
+                string extractedDirPath = filesArr.FirstOrDefault();
+                var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
+                string extractedLiftName = "";
+                int successCount = 0;
+
+                //search for the lift file within the list
+                Regex reg = new Regex(".lift$");
+                foreach (var liftFile in extractedLiftNameArr)
+                {
+                    Match match = reg.Match(liftFile);
+                    if (match.Success)
+                    {
+                        extractedLiftName = liftFile;
+                        ++successCount;
+
+                        if(successCount >= 2)
+                        {
+                            //if there is more than one lift file
+                            throw new InvalidDataException("More than one .lift file detected");
+                        }
+                    }
+                }
+                if (successCount == 0)
+                {
+                    throw new InvalidDataException("No lift files detected");
+                }
+
+                string extractedLiftPath = Path.Combine(extractedDirPath, extractedLiftName);
+
                 try
                 {
                     var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                    return new ObjectResult(parser.ReadLiftFile(model.FilePath));
+                    return new ObjectResult(parser.ReadLiftFile(extractedLiftPath));
                 }
                 catch (Exception)
                 {

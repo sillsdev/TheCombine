@@ -10,16 +10,31 @@ namespace BackendFramework.Helper
             audio,
             avatar,
             lift,
+            zip,
             dir
         }
 
-        public string GenerateFilePath(filetype type, bool directory, string fileExtension = "")
+        public string GenerateFilePath(filetype type, bool directory, string customFileName = "")
         {
-            //generate path to desktop
-            string wanted_path = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "Desktop") ;
+            //generate path to home on linux
+            var pathToHome = Environment.GetEnvironmentVariable("HOME");
+
+            //generate home on windows
+            if (pathToHome == null)
+            {
+                pathToHome = Environment.GetEnvironmentVariable("UserProfile");
+            }
+
+            //something is wrong
+            if(pathToHome == null)
+            {
+                throw new DesktopNotFoundException();
+            }
+
+            //string wanted_path = Path.Combine(pathToHome, "Desktop") ;
             
             //path to the base data folder
-            wanted_path = Path.Combine(wanted_path, ".CombineFiles");
+            string wanted_path = Path.Combine(pathToHome, ".CombineFiles", "ProjectName");
 
             //establish path to the typed file in the base folder
             string returnFilepath = Path.Combine(wanted_path, FileTypeFolder(type));
@@ -27,7 +42,8 @@ namespace BackendFramework.Helper
             //if its the first time here it needs to be created
             Directory.CreateDirectory(returnFilepath);
             
-            returnFilepath = Path.Combine(returnFilepath, fileExtension + (directory ? "" : FileTypeExtension(type)));
+            //if the path being generated is to a dir not a file then dont add an extension
+            returnFilepath = Path.Combine(returnFilepath, customFileName + (directory ? "" : FileTypeExtension(type)));
             
 
             return returnFilepath;
@@ -44,6 +60,9 @@ namespace BackendFramework.Helper
 
                 case filetype.lift:
                     return "lifts";
+
+                case filetype.zip:
+                    return "zips";
 
                 default:
                     return "";
@@ -63,14 +82,17 @@ namespace BackendFramework.Helper
                 case filetype.lift:
                     return ".lift";
 
+                case filetype.zip:
+                    return ".zip";
+
                 default:
                     return ""; ;
             }
         }
 
-        public class DesktopNotFoundExceoption : Exception
+        public class DesktopNotFoundException : Exception
         {
-            public DesktopNotFoundExceoption() { }
+            public DesktopNotFoundException() { }
         }
     }
 }

@@ -72,7 +72,6 @@ namespace Backend.Tests
                 string vern = Util.randString(6);
                 string plural = Util.randString(8);
                 string audio = $"\"{Util.randString(3)}.mp3\"";
-                //string audio = $"\"fart{i + 1}.mp3\"";
                 string senseId = $"\"{Util.randString()}\"";
                 string transLang1 = $"\"{Util.randString(3)}\"";
                 string transLang2 = $"\"{Util.randString(3)}\"";
@@ -109,9 +108,9 @@ namespace Backend.Tests
             return name;
         }
 
-        private FileUpload InitFile(FileStream fstream)
+        private FileUpload InitFile(FileStream fstream, string filename)
         {
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", "fileName");
+            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
             FileUpload fileUpload = new FileUpload();
             fileUpload.Name = "FileName";
             fileUpload.File = formFile;
@@ -122,24 +121,30 @@ namespace Backend.Tests
         [Test]
         public void TestRoundtrip()
         {
-            //get path to desktop
-            Utilities util = new Utilities();
+            /*
+             * This test assumes you have the starting .zip included in your project files. It will be included in the pull request
+             */
 
-            //generates lifts in .CombineFiles
-            string filepath = util.GenerateFilePath(Utilities.filetype.lift, true);
-            //File.Delete(filepath);
+            //get path to the starting zip
+            //This is convoluted because the tests run in netcoreapp2.1 and the folder needed in in the great-grand-parent folder
+            string actuaFilename = "SingleEntryLiftWithSound.zip";
+            string pathToStartZip = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
+            pathToStartZip = Path.Combine(pathToStartZip, "Assets", actuaFilename);
 
-            //initializes the random imported lift file
-            string name = RandomLiftFile(filepath);
-            FileStream fstream = File.OpenRead(name);
-            var fileUpload = InitFile(fstream);
-
+            /*
+             * Upload the zip file 
+             */
+            //init the project the .zip info is added to 
             var proj = RandomProject();
             proj.VernacularWritingSystem = Util.randString(3);
             _projServ.Create(proj);
 
-            fileUpload.FilePath = name;
+            //generate api perameter with filestream
+            FileStream fstream = File.OpenRead(pathToStartZip);
+            
+            var fileUpload = InitFile(fstream, actuaFilename);
 
+            //make api call
             _ = liftController.UploadLiftFile(fileUpload).Result;
 
             var allWords = _wordrepo.GetAllWords();
@@ -167,6 +172,7 @@ namespace Backend.Tests
 
             File.Delete(fileUpload.FilePath);
             fstream.Close();
+            */
         }
     }
 }
