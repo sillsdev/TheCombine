@@ -120,15 +120,13 @@ export function mergeWord(wordID: string) {
       wordID
     ];
     if (word) {
-      const treeSenses = getState().mergeDuplicateGoal.mergeTreeState.tree
-        .senses;
       const data = getState().mergeDuplicateGoal.mergeTreeState.data;
 
       // create a list of all senses and add merge type tags slit by src word
       let senses: Hash<SenseWithState[]> = {};
 
       Object.values(word.senses).forEach(sense => {
-        let senseIDs = Object.values(treeSenses[sense].dups);
+        let senseIDs = Object.values(sense);
         let senseData = data.senses[senseIDs[0]];
         if (senses[senseData.srcWord]) {
           senses[senseData.srcWord].push({ ...senseData, state: State.sense });
