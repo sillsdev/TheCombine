@@ -1,135 +1,85 @@
-import React from "react";
-import ReactDOM, { render } from "react-dom";
-import configureMockStore from "redux-mock-store";
-import { Provider } from "react-redux";
-import thunk from "redux-thunk";
-import renderer, {
-  ReactTestRenderer,
-  ReactTestInstance
-} from "react-test-renderer";
-import { StoreState } from "../../../types";
-import { TranslateValue } from "react-localize-redux";
-import { act } from "react-dom/test-utils";
-import { TextField } from "@material-ui/core";
-
-import CharacterInventory from "../";
+import React, { ReactElement, ReactNode } from "react";
+import CharacterInventoryComponent, {
+  CharacterInventory,
+  SAVE,
+  CANCEL
+} from "../CharacterInventoryComponent";
+import ReactDOM from "react-dom";
 import { Project } from "../../../types/project";
-import CharacterSet, {
-  CharacterSet as CharSetClass
-} from "../components/CharacterSet/CharacterSetComponent";
-import { SET_CHARACTER_INVENTORY } from "../CharacterInventoryActions";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-// Mock getTranslate
-const MOCK_TRANSLATE = jest.fn(_ => {
-  return "dummy";
-});
-jest.mock("react-localize-redux", () => {
-  const localize = jest.requireActual("react-localize-redux");
+// Constants
+const SET_INV = jest.fn();
+const UPLOAD_INV = jest.fn();
+
+// Variables
+var charMaster: ReactTestRenderer;
+var charHandle: CharacterInventory;
+
+// This mock bypasses the fact that react-test-renderer does not support portals, with no clean solution. This bypasses the whole issue
+// by replacing the portal-creating object (the Dialog) with a lightweight, innocuous Material-Ui component with no such glitchy properties.
+jest.mock("@material-ui/core", () => {
+  const materialUiCore = jest.requireActual("@material-ui/core");
   return {
-    ...localize,
-    getTranslate: jest.fn(_ => {
-      return MOCK_TRANSLATE;
-    })
+    ...materialUiCore,
+    Dialog: materialUiCore.Container
   };
 });
 
-const createMockStore = configureMockStore([thunk]);
-const state: StoreState = {
-  characterInventoryState: {
-    inventory: [] as string[]
-  },
-  currentProject: {
-    id: "",
-    name: "",
-    semanticDomains: [],
-    userRoles: "",
-    vernacularWritingSystem: "",
-    analysisWritingSystems: [],
-    characterSet: [],
-    customFields: [],
-    wordFields: [],
-    partsOfSpeech: [],
-    words: []
-  } as Project
-} as StoreState;
-const mockStore = createMockStore(state);
-
 beforeAll(() => {
-  mockStore.clearActions();
+  renderer.act(() => {
+    charMaster = renderer.create(
+      <CharacterInventoryComponent
+        inventory={["a"]}
+        currentProject={{ characterSet: ["a"] } as Project}
+        setInventory={SET_INV}
+        uploadInventory={UPLOAD_INV}
+      />
+    );
+  });
+  charHandle = charMaster.root.findByType(CharacterInventory).instance;
 });
 
-describe("Tests characterInventoryComponent", () => {
-  it("renders without crashing", () => {
+beforeEach(() => {
+  SET_INV.mockClear();
+  UPLOAD_INV.mockClear();
+});
+
+describe("Testing Character Inventory Component", () => {
+  it("Renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
-      <Provider store={mockStore}>
-        <CharacterInventory currentProject={state.currentProject} />
-      </Provider>,
+      <CharacterInventoryComponent
+        inventory={["a"]}
+        currentProject={{ characterSet: ["a"] } as Project}
+        setInventory={SET_INV}
+        uploadInventory={UPLOAD_INV}
+      />,
       div
     );
-    ReactDOM.unmountComponentAtNode(div);
+    expect(ReactDOM.unmountComponentAtNode(div)).toBeTruthy();
   });
 
-  it("Adds characters", () => {
-    // Creates the tree
-    let charMaster: ReactTestRenderer;
-    let charHandle: ReactTestInstance;
-    act(() => {
-      charMaster = renderer.create(
-        <Provider store={mockStore}>
-          <CharacterInventory currentProject={state.currentProject} />
-        </Provider>
-      );
-      charHandle = charMaster.root.findByType(CharSetClass);
-      charHandle.instance.setState({ chars: "w" });
-      charHandle.instance.addChars();
-    });
-    let actions = mockStore.getActions();
-    expect(actions[actions.length - 1]).toEqual({
-      type: SET_CHARACTER_INVENTORY,
-      payload: ["w"]
-    });
+  it("Renders properly (snapshot test)", () => {
+    expect(charMaster.toJSON()).toMatchSnapshot();
   });
 
-  it("Adds multiple characters", () => {
-    // Creates the tree
-    let charMaster: ReactTestRenderer;
-    let charHandle: ReactTestInstance;
-    act(() => {
-      charMaster = renderer.create(
-        <Provider store={mockStore}>
-          <CharacterInventory currentProject={state.currentProject} />
-        </Provider>
-      );
-      charHandle = charMaster.root.findByType(CharSetClass);
-      charHandle.instance.setState({ chars: "asdf" });
-      charHandle.instance.addChars();
-    });
-    let actions = mockStore.getActions();
-    expect(actions[actions.length - 1]).toEqual({
-      type: SET_CHARACTER_INVENTORY,
-      payload: ["a", "s", "d", "f"]
-    });
+  it("Attempts to save progress on save", () => {
+    charMaster.root.findByProps({ id: SAVE }).props.onClick();
+
+    expect(UPLOAD_INV).toHaveBeenCalledTimes(1);
   });
 
-  it("Adds non-latin characters", () => {
-    // Creates the tree
-    let charMaster: ReactTestRenderer;
-    let charHandle: ReactTestInstance;
-    act(() => {
-      charMaster = renderer.create(
-        <Provider store={mockStore}>
-          <CharacterInventory currentProject={state.currentProject} />
-        </Provider>
-      );
-      charHandle = charMaster.root.findByType(CharSetClass);
-      charHandle.instance.setState({ chars: "ʔʃжψض" });
-      charHandle.instance.addChars();
-    });
-    let actions = mockStore.getActions();
-    expect(actions[actions.length - 1]).toEqual({
-      type: SET_CHARACTER_INVENTORY,
-      payload: ["ʔ", "ʃ", "ж", "ψ", "ض"]
-    });
+  it("Attempts to pop up a dialogue on cancel", () => {
+    charMaster.root.findByProps({ id: CANCEL }).props.onClick();
+
+    expect(charHandle.state.cancelDialogOpen).toBeTruthy();
+  });
+
+  it("Cancels dialog open on close", () => {
+    charHandle.setState({ cancelDialogOpen: true });
+    charHandle.handleClose();
+
+    expect(charHandle.state.cancelDialogOpen).toBeFalsy();
   });
 });

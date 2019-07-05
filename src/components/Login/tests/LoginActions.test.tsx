@@ -68,4 +68,64 @@ describe("LoginAction Tests", () => {
         fail();
       });
   });
+
+  test("loginAttempt returns correct value", () => {
+    testActionCreatorAgainst(action.loginAttempt, action.LOGIN_ATTEMPT);
+  });
+
+  test("loginFailure returns correct value", () => {
+    testActionCreatorAgainst(action.loginFailure, action.LOGIN_FAILURE);
+  });
+
+  test("loginSuccess returns correct value", () => {
+    testActionCreatorAgainst(action.loginSuccess, action.LOGIN_SUCCESS);
+  });
+
+  test("registerAttempt returns correct value", () => {
+    testActionCreatorAgainst(action.registerAttempt, action.REGISTER_ATTEMPT);
+  });
+
+  test("registerSuccess returns correct value", () => {
+    testActionCreatorAgainst(action.registerSuccess, action.REGISTER_SUCCESS);
+  });
+
+  test("registerFailure returns correct value", () => {
+    testActionCreatorAgainst(action.registerFailure, action.REGISTER_FAILURE);
+  });
+
+  test("loginReset returns correct value", () => {
+    expect(action.loginReset()).toEqual({
+      type: action.LOGIN_RESET,
+      payload: { user: "" }
+    });
+  });
+
+  test("registerReset returns correct value", () => {
+    expect(action.registerReset()).toEqual({
+      type: action.REGISTER_RESET,
+      payload: { user: "" }
+    });
+  });
+
+  test("loginAttempt returns correct value", () => {
+    testActionCreatorAgainst(action.loginAttempt, action.LOGIN_ATTEMPT);
+  });
+
+  test("logout creates a proper action", () => {
+    const logout = action.logout();
+    localStorage.setItem("user", "junk");
+    logout();
+
+    expect(localStorage.getItem("user")).toBe(null);
+  });
 });
+
+function testActionCreatorAgainst(
+  action: (name: string) => action.UserAction,
+  type: action.LoginType
+) {
+  expect(action(user.user)).toEqual({
+    type: type,
+    payload: { user: user.user }
+  });
+}
