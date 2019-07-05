@@ -1,4 +1,4 @@
-import { MergeTreeAction, MergeTreeActions } from "./actions";
+import { MergeTreeAction, MergeTreeActions } from "./MergeDupStepActions";
 import {
   MergeTree,
   defaultData,
@@ -124,7 +124,7 @@ const mergeDupStepReducer = (
         data: { senses, words }
       };
     case MergeTreeActions.CLEAR_TREE:
-      return { tree: {...defaultTree}, data: {...defaultData}};
+      return { tree: { ...defaultTree }, data: { ...defaultData } };
     default:
       return state;
   }
