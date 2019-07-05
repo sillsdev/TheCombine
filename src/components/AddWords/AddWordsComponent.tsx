@@ -154,7 +154,7 @@ export default class AddWords extends React.Component<
         <Paper
           style={{
             padding: theme.spacing(2),
-            width: 600,
+            maxWidth: 800,
             marginLeft: "auto",
             marginRight: "auto"
           }}
