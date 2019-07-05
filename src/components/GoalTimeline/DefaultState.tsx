@@ -12,12 +12,12 @@ import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 import CharInventoryCreation from "../../goals/CharInventoryCreation";
 
 let goal1: Goal = new CreateCharInv([<CharInventoryCreation />]);
-let goal2: Goal = new CreateStrWordInv([]);
-let goal3: Goal = new HandleFlags([]);
-let goal4: Goal = new MergeDups([<MergeDupStep />]);
-let goal5: Goal = new SpellCheckGloss([]);
-let goal6: Goal = new ValidateChars([]);
-let goal7: Goal = new ValidateStrWords([]);
+let goal2: Goal = new MergeDups([<MergeDupStep />]);
+let goal3: Goal = new ValidateChars([]);
+let goal4: Goal = new SpellCheckGloss([]);
+let goal5: Goal = new CreateStrWordInv([]);
+let goal6: Goal = new ValidateStrWords([]);
+let goal7: Goal = new HandleFlags([]);
 let goal8: Goal = new ViewFinal([]);
 let allTheGoals: Goal[] = [
   goal1,
@@ -33,7 +33,7 @@ let allTheGoals: Goal[] = [
 let suggestion1: Goal = new MergeDups([<MergeDupStep />]);
 let suggestion2: Goal = new SpellCheckGloss([]);
 
-let suggestionsArray: Goal[] = [suggestion1, suggestion2];
+let suggestionsArray: Goal[] = [...allTheGoals];
 
 export const defaultState: GoalsState = {
   historyState: {
