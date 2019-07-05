@@ -276,9 +276,7 @@ export default class AddWords extends React.Component<
                     >
                       <TextField
                         autoFocus
-                        label={
-                          this.props.translate("addWords.vernacular") as string
-                        }
+                        label={<Translate id="addWords.vernacular" />}
                         fullWidth
                         variant="outlined"
                         value={this.state.newVern}
@@ -306,9 +304,7 @@ export default class AddWords extends React.Component<
                       }}
                     >
                       <TextField
-                        label={
-                          this.props.translate("addWords.glosses") as string
-                        }
+                        label={<Translate id="addWords.glosses" />}
                         fullWidth
                         variant="outlined"
                         value={this.state.newGloss}
