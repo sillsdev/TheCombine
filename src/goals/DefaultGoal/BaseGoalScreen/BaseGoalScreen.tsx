@@ -24,13 +24,15 @@ const stepComponentDictionary: componentSteps[] = [
   { goal: GoalType.HandleFlags, steps: [] }
 ];
 
+const completeGoals: GoalType[] = [GoalType.MergeDups, GoalType.CreateCharInv];
+
 class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
   renderGoal(goal: Goal): JSX.Element {
     return (
       <div className="GoalDisplay content">
         <AppBarComponent />
         <DisplayProg goal={this.props.goal} />
-        {goal.steps.length > 0 ? (
+        {completeGoals.includes(goal.goalType) ? (
           stepComponentDictionary[goal.goalType].steps[goal.curNdx]
         ) : (
           <EmptyGoalComponent />

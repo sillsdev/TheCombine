@@ -15,6 +15,10 @@ import MergeDupStepComponent from "./MergeDupStepComponent";
 import { MergeTreeReference } from "./MergeDupsTree";
 
 export function mapStateToProps(state: StoreState) {
+  // let history: Goal[] = state.goalsState.historyState.history;
+  // let currentGoal: MergeDups = history[history.length - 1];
+  // let currentStep: MergeDupStepProps = currentGoal.steps[currentGoal.curNdx];
+
   return {
     draggedSense: state.mergeDuplicateGoal.wordDragState.draggedWord,
     words: state.mergeDuplicateGoal.mergeTreeState.tree.words

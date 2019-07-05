@@ -105,6 +105,8 @@ export function refreshWords() {
     let finder = new DupFinder();
     let words = await finder.getNextDups();
     dispatch(setWordData(words[0]));
+    //dispatch(nextStep())
+    //dispatch(setWordData())
   };
 }
 

@@ -8,12 +8,14 @@ import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDups, MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
 import { GoalType } from "../../types/goals";
+import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
 
 export const LOAD_USER_EDITS = "LOAD_USER_EDITS";
 export type LOAD_USER_EDITS = typeof LOAD_USER_EDITS;
@@ -53,6 +55,9 @@ export function asyncLoadUserEdits(id: string) {
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: Dispatch<AddGoalToHistoryAction>, getState: any) => {
     let userEditId: string = getUserEditId();
+
+    loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
+
     await backend
       .addGoalToUserEdit(userEditId, goal)
       .then(resp => {
@@ -63,6 +68,17 @@ export function asyncAddGoalToHistory(goal: Goal) {
         console.log("Failed to add goal to history");
       });
   };
+}
+
+async function loadGoalData(goal: Goal): Promise<Goal> {
+  switch (goal.goalType) {
+    case GoalType.MergeDups:
+      let finder = new DupFinder();
+      finder
+        .getNextDups()
+        .then(words => ((goal.data as MergeDupData) = { plannedWords: words }));
+  }
+  return goal;
 }
 
 function getUserEditId(): string {

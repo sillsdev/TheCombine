@@ -7,10 +7,20 @@ import {
   GoalStep
 } from "../../types/goals";
 import { User } from "../../types/user";
+import { Word } from "../../types/word";
+import DupFinder from "./DuplicateFinder/DuplicateFinder";
 
 //interface for component state
 export interface MergeDupProps {
   goal?: Goal;
+}
+
+export interface MergeDupData {
+  plannedWords: Word[][];
+}
+
+export interface MergeStepData {
+  words: Word[];
 }
 
 export class MergeDups implements Goal {
@@ -19,7 +29,7 @@ export class MergeDups implements Goal {
   user: User;
   steps: GoalStep[];
   curNdx: number;
-  data: GoalData;
+  data: MergeDupData;
   tool: Tools;
   completed: boolean;
   result: GoalOption;
@@ -30,7 +40,7 @@ export class MergeDups implements Goal {
     this.user = new User("", "", "");
     this.steps = steps;
     this.curNdx = 0;
-    this.data = {};
+    this.data = { plannedWords: [[]] };
     this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;

@@ -1,8 +1,9 @@
-import { GoalsState } from "../../types/goals";
+import { GoalsState, GoalType } from "../../types/goals";
 import { Goal } from "../../types/goals";
 import { ADD_GOAL_TO_HISTORY, LOAD_USER_EDITS } from "./GoalTimelineActions";
 import { ActionWithPayload } from "../../types/mockAction";
 import { defaultState } from "./DefaultState";
+import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
@@ -37,7 +38,6 @@ export const goalsReducer = (
           )
         }
       };
-
     default:
       return state;
   }
