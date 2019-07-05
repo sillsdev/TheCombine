@@ -13,7 +13,6 @@ import {
 export function mapStateToProps(state: StoreState) {
   return {
     draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord,
-    treeSenses: state.mergeDuplicateGoal.mergeTreeState.tree.senses,
     senses: state.mergeDuplicateGoal.mergeTreeState.data.senses
   };
 }
