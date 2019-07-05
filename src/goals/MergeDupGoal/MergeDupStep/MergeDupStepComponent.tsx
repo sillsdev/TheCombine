@@ -4,8 +4,6 @@ import {
   Card,
   CardContent,
   Grid,
-  GridList,
-  GridListTile,
   Switch
 } from "@material-ui/core";
 import React from "react";
@@ -98,22 +96,25 @@ class MergeDupStep extends React.Component<
               </Grid>
             ))}
             {
-            <Box
-              style={{ height: "100%" }}
-              onDragOver={e => e.preventDefault()}
-              onDrop={_ => this.dragDrop()}
-              title={this.props.translate("mergeDups.helpText.root") as string}
-            >
-              <hr />
-              <Grid container>
-                <Grid item />
-                {
-                  <Card style={{ ...styleAddendum.inactive, width: 200 }}>
-                    <CardContent>Drag new root word Here</CardContent>
-                  </Card>
+              <Box
+                style={{ height: "100%" }}
+                onDragOver={e => e.preventDefault()}
+                onDrop={_ => this.dragDrop()}
+                title={
+                  this.props.translate("mergeDups.helpText.root") as string
                 }
-              </Grid>
-            </Box>}
+              >
+                <hr />
+                <Grid container>
+                  <Grid item />
+                  {
+                    <Card style={{ ...styleAddendum.inactive, width: 200 }}>
+                      <CardContent>Drag new root word Here</CardContent>
+                    </Card>
+                  }
+                </Grid>
+              </Box>
+            }
           </Grid>
         </div>
         {/* Merge button */}

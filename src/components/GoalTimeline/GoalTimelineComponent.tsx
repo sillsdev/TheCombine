@@ -24,10 +24,6 @@ export interface GoalTimelineProps {
  * to work on.
  */
 export class GoalTimeline extends React.Component<GoalTimelineProps> {
-  constructor(props: GoalTimelineProps) {
-    super(props);
-  }
-
   componentDidMount() {
     let currentUserString = localStorage.getItem("user");
     if (currentUserString) {
