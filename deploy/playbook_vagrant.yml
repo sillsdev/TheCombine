@@ -1,6 +1,6 @@
 ---
 
-- name: Setup Ubuntu Server
+- name: Setup Ubuntu Server for Vagrant base VM
   hosts: all
   become: yes
 
@@ -11,6 +11,3 @@
     - role: mongodb
     - role: dotnet_core
     - role: apache
-    - role: wifi_ap
-      when: ansible_system_vendor != "innotek GmbH"
-    - role: the_combine_app

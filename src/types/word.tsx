@@ -41,10 +41,14 @@ export interface Word {
   plural: string;
 }
 
+export interface MergeWord{
+  wordID: string;
+  senses: State[];
+}
+
 export interface Merge {
-  parent: string;
-  children: string[];
-  mergeType: State;
+  parent: Word;
+  children: MergeWord[];
   time: string;
 }
 

@@ -31,6 +31,7 @@ describe("Testing login component", () => {
           logout={LOGOUT}
           loginAttempt={false}
           loginFailure={false}
+          reset={LOGOUT}
         />
       );
     });
@@ -45,6 +46,7 @@ describe("Testing login component", () => {
         logout={LOGOUT}
         loginAttempt={false}
         loginFailure={false}
+        reset={LOGOUT}
       />,
       div
     );
@@ -66,26 +68,6 @@ describe("Testing login component", () => {
 
   test("Login: all fields good", () => {
     testLogin("User", "Password", false, false);
-  });
-
-  test("updatePassword updates password + clears password error", () => {
-    loginHandle.instance.setState(ERROR_STATE);
-    loginHandle.instance.updatePassword(MOCK_EVENT);
-    expect(loginHandle.instance.state.password).toEqual(DATA);
-    expect(loginHandle.instance.state.error).toEqual({
-      password: false,
-      username: true
-    });
-  });
-
-  test("updateUser updates user + clears user error", () => {
-    loginHandle.instance.setState(ERROR_STATE);
-    loginHandle.instance.updateUser(MOCK_EVENT);
-    expect(loginHandle.instance.state.user).toEqual(DATA);
-    expect(loginHandle.instance.state.error).toEqual({
-      password: true,
-      username: false
-    });
   });
 });
 

@@ -3,7 +3,6 @@ import { LocalizeState } from "react-localize-redux";
 import { LoginState } from "../components/Login/LoginReducer";
 import { CreateProjectState } from "../components/CreateProject/CreateProjectReducer";
 import { GoalsState, GoalSelectorState } from "./goals";
-import { NavState } from "./nav";
 import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";
 import { Project } from "./project";
 import { MergeDuplicateState } from "../goals/MergeDupGoal/mergeDuplicateReducer";
@@ -20,7 +19,6 @@ export interface StoreState {
   //general cleanup tools
   goalSelectorState: GoalSelectorState;
   goalsState: GoalsState;
-  navState: NavState;
 
   //merge duplicates goal
   mergeDuplicateGoal: MergeDuplicateState;

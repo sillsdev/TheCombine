@@ -3,8 +3,7 @@ import { combineReducers, Reducer } from "redux";
 import { StoreState } from "./types";
 import { tempReducer } from "./components/Temp/TempReducer";
 import { goalsReducer } from "./components/GoalTimeline/GoalTimelineReducers";
-import { navReducer } from "./components/Navigation/NavigationReducer";
-import { localizeReducer, Action } from "react-localize-redux";
+import { localizeReducer } from "react-localize-redux";
 import { loginReducer } from "./components/Login/LoginReducer";
 import { createProjectReducer } from "./components/CreateProject/CreateProjectReducer";
 import { characterInventoryReducer } from "./goals/CharInventoryCreation/CharacterInventoryReducer";
@@ -23,7 +22,6 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //general cleanup tools
   goalSelectorState: goalSelectReducer,
   goalsState: goalsReducer,
-  navState: navReducer,
 
   //merge duplicates goal
   mergeDuplicateGoal: mergeDuplicateReducer,

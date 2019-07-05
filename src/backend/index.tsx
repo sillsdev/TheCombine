@@ -1,8 +1,10 @@
 import axios from "axios";
-import { Word, State, Merge } from "../types/word";
+import { Word, State, Merge, MergeWord } from "../types/word";
 import { User } from "../types/user";
 import { Project } from "../types/project";
 import { authHeader } from "../components/Login/AuthHeaders";
+import { Goal, GoalType } from "../types/goals";
+import { UserEdit } from "../types/userEdit";
 
 const backendServer = axios.create({ baseURL: "https://localhost:5001/v1" });
 
@@ -22,15 +24,15 @@ export async function getAllWords(): Promise<Word[]> {
   return await backendServer.get("projects/words").then(resp => resp.data);
 }
 
-export async function mergeWords(words: Word[], type: State): Promise<string> {
-  let ids = words.map(word => word.id);
-  let root = ids[0];
-  let children = ids.filter(word => word !== root);
-  let merge: Merge = {
-    parent: root,
-    children,
-    mergeType: type,
-    time: Date.now().toString()
+export async function mergeWords(parent: Word, children: MergeWord[]): Promise<string> {
+  parent.id = "";
+  let childrenWords = children.map(child => {
+    return { SrcWordID: child.wordID, SenseStates: child.senses};
+  })
+  let merge = {
+    Parent: parent,
+    ChildrenWords: childrenWords,
+    Time: Date.now().toString()
   };
   return await backendServer
     .put("projects/words", merge)
@@ -125,5 +127,68 @@ export async function uploadMp3(project: Project, mp3: File) {
   data.append("file", mp3);
   await backendServer.post("projects/words/upload/audio", data, {
     headers: { ...authHeader(), "content-type": "application/json" }
+  });
+}
+
+export async function addGoalToUserEdit(
+  userEditId: string,
+  goal: Goal
+): Promise<Goal> {
+  let goalType: string = goalNameToGoalTypeId(goal.name);
+  let stepData: string = goal.steps.toString();
+  let userEditTuple = { goalType: goalType, stepData: [stepData] };
+  return await backendServer
+    .post(`projects/useredits/${userEditId}`, userEditTuple, {
+      headers: { ...authHeader() }
+    })
+    .then(resp => {
+      return resp.data;
+    });
+}
+
+function goalNameToGoalTypeId(goalName: string): string {
+  let goalType: number;
+  switch (goalName) {
+    case "charInventory":
+      goalType = GoalType.CreateCharInv;
+      break;
+    case "validateChars":
+      goalType = GoalType.ValidateChars;
+      break;
+    case "createStrWordInv":
+      goalType = GoalType.CreateStrWordInv;
+      break;
+    case "validateStrWords":
+      goalType = GoalType.ValidateStrWords;
+      break;
+    case "mergeDups":
+      goalType = GoalType.MergeDups;
+      break;
+    case "spellCheckGloss":
+      goalType = GoalType.SpellcheckGloss;
+      break;
+    case "viewFinal":
+      goalType = GoalType.ViewFind;
+      break;
+    case "handleFlags":
+      goalType = GoalType.HandleFlags;
+      break;
+    default:
+      goalType = 8;
+      break;
+  }
+
+  return goalType.toString();
+}
+
+export async function getUserEditById(index: string): Promise<UserEdit> {
+  return await backendServer.get(`projects/useredits/${index}`).then(resp => {
+    return resp.data;
+  });
+}
+
+export async function getAllUserEdits(): Promise<Goal[]> {
+  return await backendServer.get("projects/useredits").then(resp => {
+    return resp.data;
   });
 }

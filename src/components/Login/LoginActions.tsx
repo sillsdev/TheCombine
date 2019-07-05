@@ -15,6 +15,9 @@ export type LOGIN_FAILURE = typeof LOGIN_FAILURE;
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export type LOGIN_SUCCESS = typeof LOGIN_SUCCESS;
 
+export const LOGIN_RESET = "LOGIN_RESET";
+export type LOGIN_RESET = typeof LOGIN_RESET;
+
 export const LOGOUT = "LOGOUT";
 export type LOGOUT = typeof LOGOUT;
 
@@ -39,6 +42,7 @@ type LoginType =
   | LOGIN_ATTEMPT
   | LOGIN_FAILURE
   | LOGIN_SUCCESS
+  | LOGIN_RESET
   | REGISTER_ATTEMPT
   | REGISTER_SUCCESS
   | REGISTER_FAILURE
@@ -87,6 +91,13 @@ export function loginSuccess(user: string): UserAction {
   return {
     type: LOGIN_SUCCESS,
     payload: { user }
+  };
+}
+
+export function loginReset(): UserAction {
+  return {
+    type: LOGIN_RESET,
+    payload: { user: "" }
   };
 }
 

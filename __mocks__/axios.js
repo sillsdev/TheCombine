@@ -3,14 +3,19 @@
 
 export default {
   // get: when axios.get is called within parent directory, instead call this function
-  get: jest.fn((route: string) => {
+  // The data stored here should be moved to a directory called __fixtures__.
+  // That will come in a later pull request.
+  get: jest.fn(route => {
     return Promise.resolve({
-      types: "get"
+      data: {
+        id: "1",
+        edits: []
+      }
     });
   }),
 
   // post: when axios.post is called within parent directory, instead call this function
-  post: jest.fn((route: string) => {
+  post: jest.fn(route => {
     return Promise.resolve({
       types: "post"
     });

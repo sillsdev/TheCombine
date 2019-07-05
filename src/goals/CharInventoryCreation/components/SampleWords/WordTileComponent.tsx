@@ -49,15 +49,15 @@ export class WordTile extends React.Component<
             onMouseLeave={() => this.setState({ hover: false })}
           >
             <Typography variant="body1">
-              {word
-                .split("")
-                .map(letter =>
-                  this.props.inventory.includes(letter) ? (
-                    letter
-                  ) : (
-                    <span style={{ background: greenHighlight }}>{letter}</span>
-                  )
-                )}{" "}
+              {word.split("").map(letter =>
+                // Highlight character if not in the inventory (don't highlight " ")
+                [...this.props.inventory, " "].includes(letter) ? (
+                  letter
+                ) : (
+                  <span style={{ background: greenHighlight }}>{letter}</span>
+                )
+              )}{" "}
+              {/* 'add to inventory' button */}
               <Tooltip
                 title={
                   this.props.translate(
@@ -90,6 +90,7 @@ export class WordTile extends React.Component<
                   <Add />
                 </IconButton>
               </Tooltip>
+              {/* 'ignore for now' button */}
               <Tooltip
                 title={
                   this.props.translate(

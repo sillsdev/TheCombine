@@ -20,6 +20,7 @@ import history from "../../../history";
 export interface LoginDispatchProps {
   login?: (user: string, password: string) => void;
   logout: () => void;
+  reset: () => void;
 }
 
 export interface LoginStateProps {
@@ -49,26 +50,22 @@ export class Login extends React.Component<
     };
   }
 
-  updateUser(
-    e: React.ChangeEvent<
-      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
-    >
-  ) {
-    const user = e.target.value;
-    const password = this.state.password;
-    let error = { ...this.state.error, username: false };
-    this.setState({ user, password, error });
+  componentDidMount() {
+    this.props.reset();
   }
 
-  updatePassword(
+  /** Updates the state to match the value in a textbox */
+  updateField<K extends keyof LoginState>(
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
-    >
+    >,
+    field: K
   ) {
-    const password = e.target.value;
-    const user = this.state.user;
-    let error = { ...this.state.error, password: false };
-    this.setState({ password, user, error });
+    const value = e.target.value;
+
+    this.setState({
+      [field]: value
+    } as Pick<LoginState, K>);
   }
 
   login(e: React.FormEvent<EventTarget>) {
@@ -103,7 +100,7 @@ export class Login extends React.Component<
                 autoComplete="username"
                 label={<Translate id="login.username" />}
                 value={this.state.user}
-                onChange={e => this.updateUser(e)}
+                onChange={e => this.updateField(e, "user")}
                 error={this.state.error["username"]}
                 helperText={
                   this.state.error["username"] ? (
@@ -114,6 +111,7 @@ export class Login extends React.Component<
                 style={{ width: "100%" }}
                 margin="normal"
                 autoFocus
+                inputProps={{ maxLength: 100 }}
               />
 
               {/* Password field */}
@@ -123,7 +121,7 @@ export class Login extends React.Component<
                 label={<Translate id="login.password" />}
                 type="password"
                 value={this.state.password}
-                onChange={e => this.updatePassword(e)}
+                onChange={e => this.updateField(e, "password")}
                 error={this.state.error["password"]}
                 helperText={
                   this.state.error["password"] ? (
@@ -133,6 +131,7 @@ export class Login extends React.Component<
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
+                inputProps={{ maxLength: 100 }}
               />
 
               {/* "Forgot password?" link to reset password */}
