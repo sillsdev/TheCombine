@@ -1,28 +1,26 @@
 import { StoreState } from "../../../types";
-import { Goal } from "../../../types/goals";
-import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router";
+import { LocalizeContextProps } from "react-localize-redux";
+import { Goal, GoalProps } from "../../../types/goals";
 import BaseGoalScreen from "./BaseGoalScreen";
-import { GoalProps } from "../../../types/goals";
 
-export function mapStateToProps(state: StoreState): GoalProps {
-  return {
-    goal: getGoalById(
-      state.goalsState.allPossibleGoals,
-      state.navState.VisibleComponentId
-    )
-  };
+export interface TParams {
+  id: string;
 }
 
-// Find the goal referenced by navState.VisibleComponentId and create a
-// React component to contain it
-export function getGoalById(goalOptions: Goal[], componentId: string): Goal {
-  for (var goal of goalOptions) {
-    if (goal.id === componentId) {
-      return goal;
-    }
+export function mapStateToProps(
+  state: StoreState,
+  ownProps: GoalProps & RouteComponentProps<TParams> & LocalizeContextProps
+): GoalProps {
+  let idNumber: number = parseInt(ownProps.match.params.id);
+  let goal: Goal | undefined;
+  if (!Number.isNaN(idNumber)) {
+    goal = state.goalsState.historyState.history[idNumber];
   }
-  return new CreateCharInv([]);
+  return {
+    goal: goal
+  };
 }
 
 export default connect(mapStateToProps)(BaseGoalScreen);
