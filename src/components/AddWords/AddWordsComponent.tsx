@@ -119,7 +119,6 @@ export default class AddWords extends React.Component<
   }
 
   removeWord(index: number) {
-    console.log(this.rowToWord(this.state.rows[index]));
     Backend.deleteWord(this.rowToWord(this.state.rows[index]))
       .catch(err => console.log(err))
       .then(res => {
