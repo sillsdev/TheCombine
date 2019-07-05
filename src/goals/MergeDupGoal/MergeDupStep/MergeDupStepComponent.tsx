@@ -25,11 +25,14 @@ const HEIGHT_STYLE: React.CSSProperties = {
   height: MAX_VIEW
 };
 
-//interface for component props
 export interface MergeDupStepProps {
   words: { [wordID: string]: MergeTreeWord };
-  dropWord?: () => void;
   draggedSense?: MergeTreeReference;
+}
+
+//interface for component props
+export interface MergeDupStepMethods {
+  dropWord?: () => void;
   moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
   mergeAll?: () => void;
   refreshWords?: () => void;
@@ -41,10 +44,12 @@ export interface MergeDupStepState {
 }
 
 class MergeDupStep extends React.Component<
-  MergeDupStepProps & LocalizeContextProps,
+  MergeDupStepProps & MergeDupStepMethods & LocalizeContextProps,
   MergeDupStepState
 > {
-  constructor(props: MergeDupStepProps & LocalizeContextProps) {
+  constructor(
+    props: MergeDupStepProps & MergeDupStepMethods & LocalizeContextProps
+  ) {
     super(props);
     this.state = { portrait: true };
   }

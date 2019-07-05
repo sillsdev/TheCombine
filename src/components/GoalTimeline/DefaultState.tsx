@@ -12,7 +12,7 @@ import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 let goal1: Goal = new CreateCharInv([]);
 let goal2: Goal = new CreateStrWordInv([]);
 let goal3: Goal = new HandleFlags([]);
-let goal4: Goal = new MergeDups([]);
+let goal4: Goal = new MergeDups([{ words: {} }]);
 let goal5: Goal = new SpellCheckGloss([]);
 let goal6: Goal = new ValidateChars([]);
 let goal7: Goal = new ValidateStrWords([]);
