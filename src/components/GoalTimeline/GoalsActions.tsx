@@ -1,6 +1,6 @@
 import { Goal } from "../../types/goals";
 import { ActionWithPayload } from "../../types/mockAction";
-import { Dispatch } from "react";
+import { Dispatch } from "redux";
 import * as backend from "../../backend";
 import history from "../../history";
 import { User } from "../../types/user";
@@ -15,7 +15,7 @@ import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
 import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import MergeDupStep from "../../goals/MergeDupGoal/MergeDupStep";
+import { Word } from "../../types/word";
 
 export const LOAD_USER_EDITS = "LOAD_USER_EDITS";
 export type LOAD_USER_EDITS = typeof LOAD_USER_EDITS;
@@ -31,6 +31,13 @@ export type ADD_GOAL_TO_HISTORY = typeof ADD_GOAL_TO_HISTORY;
 export interface AddGoalToHistory extends ActionWithPayload<Goal[]> {
   type: ADD_GOAL_TO_HISTORY;
   payload: Goal[];
+}
+
+export const NEXT_STEP = "NEXT_STEP";
+export type NEXT_STEP = typeof NEXT_STEP;
+
+export interface NextStep {
+  type: NEXT_STEP;
 }
 
 export type AddGoalToHistoryAction = AddGoalToHistory;
@@ -153,4 +160,8 @@ export function addGoalToHistory(goal: Goal): AddGoalToHistory {
 
 export function loadUserEdits(history: Goal[]): LoadUserEdits {
   return { type: LOAD_USER_EDITS, payload: history };
+}
+
+export function nextStep(): NextStep {
+  return { type: NEXT_STEP };
 }

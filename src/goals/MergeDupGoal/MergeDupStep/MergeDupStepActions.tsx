@@ -4,6 +4,11 @@ import { MergeTreeReference, Hash, TreeDataSense } from "./MergeDupsTree";
 import DupFinder from "../DuplicateFinder/DuplicateFinder";
 import { Word, State } from "../../../types/word";
 import * as backend from "../../../backend";
+import {
+  nextStep,
+  NextStep
+} from "../../../components/GoalTimeline/GoalsActions";
+import { Goal } from "../../../types/goals";
 
 export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
@@ -101,12 +106,15 @@ export function mergeSense() {
 }
 
 export function refreshWords() {
-  return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
-    let finder = new DupFinder();
-    let words = await finder.getNextDups();
-    dispatch(setWordData(words[0]));
-    //dispatch(nextStep())
-    //dispatch(setWordData())
+  return async (
+    dispatch: ThunkDispatch<any, any, MergeTreeAction | NextStep>,
+    getState: () => StoreState
+  ) => {
+    dispatch(nextStep());
+    let history: Goal[] = getState().goalsState.historyState.history;
+    let goal: Goal = history[history.length - 1];
+    let words: Word[] = goal.steps[goal.curNdx].words;
+    dispatch(setWordData(words));
   };
 }
 

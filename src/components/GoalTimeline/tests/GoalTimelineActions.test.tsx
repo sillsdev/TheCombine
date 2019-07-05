@@ -1,4 +1,4 @@
-import * as actions from "../GoalTimelineActions";
+import * as actions from "../GoalsActions";
 import { Goal } from "../../../types/goals";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { MergeDups } from "../../../goals/MergeDupGoal/MergeDups";

@@ -1,5 +1,5 @@
-import * as actions from "../GoalTimelineActions";
-import { goalsReducer } from "../GoalTimelineReducers";
+import * as actions from "../GoalsActions";
+import { goalsReducer } from "../GoalsReducer";
 import { Goal, GoalsState } from "../../../types/goals";
 import { MockActionGoalArrayInstance } from "../../../types/mockAction";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
