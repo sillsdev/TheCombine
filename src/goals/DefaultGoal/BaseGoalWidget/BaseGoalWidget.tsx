@@ -12,10 +12,6 @@ const SCALE_FACTOR_FOR_DESELECTED = 0.9; // The percent of regular size that des
 const DESELECTED_WIDTH: number = WIDTH * SCALE_FACTOR_FOR_DESELECTED; // Width of each not-selected card
 
 class BaseGoalSelect extends React.Component<GoalProps & LocalizeContextProps> {
-  constructor(props: GoalProps & LocalizeContextProps) {
-    super(props);
-  }
-
   readonly style = {
     inactiveCard: {
       width: DESELECTED_WIDTH,
