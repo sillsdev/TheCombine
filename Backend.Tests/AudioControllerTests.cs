@@ -42,11 +42,12 @@ namespace Backend.Tests
         [Test]
         public void TestAudioImport()
         {
+            //yell at mark if this makes it into the pull request
             string filePath = "../../../Assets/sound.mp3";
 
             FileStream fstream = File.OpenRead(filePath);
 
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
+            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
             FileUpload fileUpload = new FileUpload();
             fileUpload.Name = "FileName";
             fileUpload.File = formFile;

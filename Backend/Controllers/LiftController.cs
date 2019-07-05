@@ -45,7 +45,7 @@ namespace BackendFramework.Controllers
                 //get path to desktop
                 Utilities util = new Utilities();
                 //generate the file to put the filestream into
-                model.FilePath = util.GenerateFilePath(filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now));
+                model.FilePath = util.GenerateFilePath(filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine("AmbigProjectName", "Import"));
 
                 //copy stream into file
                 using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
@@ -56,20 +56,37 @@ namespace BackendFramework.Controllers
                 //extract the zip into another file
                 string zipDest = Path.GetDirectoryName(model.FilePath);
                 Directory.CreateDirectory(zipDest);
-                ZipFile.ExtractToDirectory(model.FilePath, zipDest);
+                try
+                {
+                    ZipFile.ExtractToDirectory(model.FilePath, zipDest);
+                }
+                catch (IOException)
+                {
+                    //is thrown if duplicate files are unzipped
+                    return new BadRequestObjectResult("That file has already been uploaded");
+                }
 
                 //generate path to extracted .lift file for import
                 //first you need the filename of the extracted dir
                 var filesArr = Directory.GetDirectories(Directory.GetParent(model.FilePath).ToString());
                 
-                if(filesArr.Length != 1)
+                if (filesArr.Length != 3)
                 {
                     //there should only be one files within the zips dir, the extracted dir
                     throw new InvalidDataException("Your .zip file structure is incorrect");
                 }
 
                 //get a list of files within the extracted dir
-                string extractedDirPath = filesArr.FirstOrDefault();
+                string extractedDirPath = "";
+                foreach(string path in filesArr)
+                {
+                    string[] split = path.Split( Path.DirectorySeparatorChar );
+                    if (split.Last() == Path.GetFileNameWithoutExtension(model.File.FileName))
+                    {
+                        extractedDirPath = path;
+                    }
+                }
+                
                 var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
                 string extractedLiftName = "";
                 int successCount = 0;

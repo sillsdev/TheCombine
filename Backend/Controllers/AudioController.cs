@@ -36,7 +36,7 @@ namespace BackendFramework.Controllers
             {
                 //get path to desktop
                 Utilities util = new Utilities();
-                model.FilePath = util.GenerateFilePath(filetype.audio, false, wordId);
+                model.FilePath = util.GenerateFilePath(filetype.audio, false, wordId, Path.Combine("AmbigProjectName", "Import", "Audio"));
 
                 //copy the file data to the created file
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))
@@ -45,8 +45,9 @@ namespace BackendFramework.Controllers
                 }
 
                 //add the relative path to the audio field of 
-                Word gotWord = await _wordRepo.GetWord(wordId);
+                Word gotWord = await _wordRepo.GetWord(wordId); //this isnt relative
                 gotWord.Audio = model.FilePath;
+
                 //update the entry
                 _ = await _wordService.Update(wordId, gotWord);
 

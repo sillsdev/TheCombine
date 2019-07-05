@@ -65,30 +65,22 @@ namespace BackendFramework.Services
         /********************************
         * Lift Export Implementation
         ********************************/
-        private static bool IsLinux
-        {
-            get
-            {
-                int p = (int)Environment.OSVersion.Platform;
-                return (p == 4) || (p == 6) || (p == 128);
-            }
-        }
-
+        
         public void LiftExport(string Id)
         {
             //the helper tag must be included because there are also SIL.Utilitites
             Helper.Utilities util = new Helper.Utilities();
 
             //generate the zip dir
-            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, false);
+            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, false, "", Path.Combine("AmbigProjectName", "Export"));
             string zipdir = Path.Combine(filename, "LiftExport");
             Directory.CreateDirectory(zipdir);
 
-            //generates fil to be exported to
-            filename = Path.Combine(zipdir, "TEST-EXPORTED-" + Path.GetRandomFileName());
-           
+            //generates file to be exported to
+            string exportFilePath = Path.Combine(zipdir, "TEST-EXPORTED-" + Path.GetRandomFileName());
+
+           //add audio dir inside zip dir
             string audiodir = Path.Combine(zipdir, "Audio");
-            Directory.CreateDirectory(zipdir);
             Directory.CreateDirectory(audiodir);
             string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
 
@@ -118,7 +110,8 @@ namespace BackendFramework.Services
                 //add vernacular (lexical form)
                 addVern(Id, wordEntry, entry);
 
-                //add audio (pronunciation media)
+                //add audio (pronunciation media) filename = //projectname
+                string audioSrc = Path.Combine(filename, "zips");
                 addAudio(entry, wordEntry, audiodir);
 
                 //add sense
