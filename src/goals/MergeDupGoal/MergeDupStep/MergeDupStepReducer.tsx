@@ -34,8 +34,6 @@ const mergeDupStepReducer = (
       let { src, dest } = action.payload;
       // only perform move if src and dest are different
       if (JSON.stringify(src) !== JSON.stringify(dest)) {
-        console.log(src);
-        console.log(dest);
         // perform move
         let srcSenseID =
           state.tree.words[src.word].senses[src.sense][src.duplicate];
@@ -94,8 +92,6 @@ const mergeDupStepReducer = (
         state.tree = { ...state.tree };
       }
 
-      console.log(state);
-
       return { ...state };
     case MergeTreeActions.SET_DATA:
       let words: { [id: string]: Word } = {};
@@ -116,10 +112,6 @@ const mergeDupStepReducer = (
           vern: word.vernacular,
           plural: word.plural
         };
-      });
-      console.log({
-        tree: { words: wordsTree },
-        data: { senses, words }
       });
       return {
         tree: { words: wordsTree },
