@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 
 import Card from "@material-ui/core/Card";
-import { Button, CardContent, Typography, withStyles } from "@material-ui/core";
+import { Button, CardContent, Typography } from "@material-ui/core";
 import { Goal } from "../../../../types/goals";
 import {
   LocalizeContextProps,
@@ -9,7 +9,7 @@ import {
   Translate
 } from "react-localize-redux";
 import ContextMenu from "../../../ContextMenu/ContextMenu";
-import theme, { styleAddendum } from "../../../../types/theme";
+import { styleAddendum } from "../../../../types/theme";
 
 const CLICK_SENSITIVITY: number = 10;
 
@@ -175,7 +175,7 @@ export class GoalSelectorScroll extends React.Component<
       this.props.swapMouseX(event.screenX);
 
       newIndex = this.selectNewIndex();
-      if (newIndex != this.props.selectedIndex)
+      if (newIndex !== this.props.selectedIndex)
         this.props.swapSelectedIndex(newIndex);
     }
     // Detect only every other mouseMove event
@@ -198,9 +198,9 @@ export class GoalSelectorScroll extends React.Component<
   // Handle clicks for the cards
   cardHandleClick(event: React.MouseEvent, index: number) {
     // Avoid detecting right-click
-    if (event.type == "click") {
+    if (event.type === "click") {
       if (Math.abs(this.mouseStart - this.props.mouseX) < CLICK_SENSITIVITY)
-        if (this.props.selectedIndex == index)
+        if (this.props.selectedIndex === index)
           this.props.handleChange(this.props.allPossibleGoals[index].name);
         else this.scrollLockNdx(index);
     }

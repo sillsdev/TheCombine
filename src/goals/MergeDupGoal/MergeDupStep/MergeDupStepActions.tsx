@@ -2,7 +2,7 @@ import { StoreState } from "../../../types";
 import { ThunkDispatch } from "redux-thunk";
 import { MergeTreeReference, Hash, TreeDataSense } from "./MergeDupsTree";
 import DupFinder from "../DuplicateFinder/DuplicateFinder";
-import { Sense, Word, MergeWord, State } from "../../../types/word";
+import { Word, State } from "../../../types/word";
 import * as backend from "../../../backend";
 
 export enum MergeTreeActions {
@@ -162,7 +162,7 @@ export function mergeWord(wordID: string) {
       // construct sense children
       let children = Object.values(senses).map(word => {
         word.forEach(sense => {
-          if (sense.state == State.sense || sense.state == State.active) {
+          if (sense.state === State.sense || sense.state === State.active) {
             parent.senses.push({
               glosses: sense.glosses,
               semanticDomains: sense.semanticDomains

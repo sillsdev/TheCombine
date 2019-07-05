@@ -7,10 +7,6 @@ import PageNotFound from "../../../components/PageNotFound/component";
 import EmptyGoalComponent from "../../../components/EmptyGoal/EmptyGoalComponent";
 
 class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
-  constructor(props: GoalProps & LocalizeContextProps) {
-    super(props);
-  }
-
   renderGoal(goal: Goal): JSX.Element {
     return (
       <div className="GoalDisplay content">
