@@ -222,9 +222,7 @@ export default class AddWords extends React.Component<
 
               {/* Rows of words */}
               {this.state.rows.map((row, index) => {
-                return this.state.editWord === index ? (
-                  "ok"
-                ) : (
+                return (
                   <Grid
                     item
                     xs={12}
