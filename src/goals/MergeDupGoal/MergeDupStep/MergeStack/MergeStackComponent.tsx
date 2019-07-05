@@ -1,7 +1,6 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word } from "../../../../types/word";
 import {
   MergeTreeReference,
   Hash,
@@ -71,7 +70,9 @@ class MergeStack extends React.Component<
     let lang = "en";
 
     // Find gloss
-    let gloss = displaySense.glosses.filter(gloss => gloss.language == lang)[0];
+    let gloss = displaySense.glosses.filter(
+      gloss => gloss.language === lang
+    )[0];
 
     return (
       <Card
@@ -98,7 +99,7 @@ class MergeStack extends React.Component<
           </Typography>
           {/* List semantic domains */}
           <List dense={true}>
-            {displaySense.semanticDomains.length == 0 &&
+            {displaySense.semanticDomains.length === 0 &&
               "{ no semantic domain }"}
             {displaySense.semanticDomains.map(dom => (
               <ListItem> {dom.name + "\t" + dom.number} </ListItem>

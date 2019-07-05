@@ -9,7 +9,7 @@ import {
   Hash,
   TreeDataSense
 } from "./MergeDupsTree";
-import { Word, Sense } from "../../../types/word";
+import { Word } from "../../../types/word";
 import { uuid } from "../../../utilities";
 
 export const defaultState: MergeTreeState = {
@@ -34,7 +34,7 @@ const mergeDupStepReducer = (
     case MergeTreeActions.MOVE_SENSE:
       let { src, dest } = action.payload;
       // only perform move if src and dest are different
-      if (JSON.stringify(src) != JSON.stringify(dest)) {
+      if (JSON.stringify(src) !== JSON.stringify(dest)) {
         console.log(src);
         console.log(dest);
         // perform move
@@ -74,7 +74,7 @@ const mergeDupStepReducer = (
 
         // check if we removed last dup in a sense if so remove the sense from the word
 
-        if (Object.keys(state.tree.senses[senseID].dups).length == 0) {
+        if (Object.keys(state.tree.senses[senseID].dups).length === 0) {
           delete state.tree.senses[senseID];
           delete state.tree.words[src.word].senses[src.sense];
           state.tree.words[src.word] = { ...state.tree.words[src.word] };
@@ -82,7 +82,7 @@ const mergeDupStepReducer = (
 
         // check if we removed last sense in a word if so remove the word from the tree
 
-        if (Object.keys(state.tree.words[src.word].senses).length == 0) {
+        if (Object.keys(state.tree.words[src.word].senses).length === 0) {
           delete state.tree.words[src.word];
         }
 
@@ -100,10 +100,10 @@ const mergeDupStepReducer = (
       let wordsTree: { [id: string]: MergeTreeWord } = {};
       let sensesTree: { [id: string]: MergeTreeSense } = {};
 
-      action.payload.map(word => {
+      action.payload.forEach(word => {
         words[word.id] = word;
         let treeSenses: { [id: string]: string } = {};
-        word.senses.map((sense, index) => {
+        word.senses.forEach((sense, index) => {
           let id = uuid();
           let id2 = uuid();
           senses[id] = { ...sense, srcWord: word.id, order: index };

@@ -11,10 +11,6 @@ import { Typography } from "@material-ui/core";
  * yet.
  */
 class EmptyGoalComponent extends React.Component<LocalizeContextProps> {
-  constructor(props: LocalizeContextProps) {
-    super(props);
-  }
-
   render() {
     return (
       <div className={"emptyGoal"}>
