@@ -60,7 +60,12 @@
   },
   "goal": {
     "selector": {
-      "selectOption": ["Select this goal", "Selecciona este objectivo"]
+      "selectOption": ["Select this goal", "Selecciona este objectivo"],
+      "past": ["You've completed:", "Completó:"],
+      "present": ["Our recommendation:", "Nuestra recomendación:"],
+      "other": ["Other options:", "Otras opciónas:"],
+      "noHistory": ["Nothing yet", "Nada ahora"],
+      "done": ["All done", "Esta listo"]
     },
     "mergeDups": {
       "done": ["Save & Continue", "Ahorrar y Continuar"]
