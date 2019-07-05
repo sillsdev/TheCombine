@@ -17,10 +17,8 @@ import {
   TranslateFunction
 } from "react-localize-redux";
 import { Word, State } from "../../types/word";
-import { Edit, Delete } from "@material-ui/icons";
+import { Edit, Delete, RemoveFromQueueTwoTone } from "@material-ui/icons";
 import * as Backend from "../../backend";
-
-let testdata = [["yun", "cloud"], ["tian", "sky"], ["taiyang", "sun"]];
 
 interface AddWordsProps {
   domain: string;
@@ -28,12 +26,19 @@ interface AddWordsProps {
 }
 
 interface AddWordsState {
-  fields: string[][];
+  rows: Row[];
   editing?: number;
   newVern: string;
   newGloss: string;
   hoverRow?: number;
   editWord?: number;
+}
+
+/** The data from the `Word` type that the view uses */
+interface Row {
+  vernacular: string;
+  glosses: string;
+  id: string;
 }
 
 export default class AddWords extends React.Component<
@@ -45,7 +50,7 @@ export default class AddWords extends React.Component<
     this.state = {
       newVern: "",
       newGloss: "",
-      fields: testdata
+      rows: []
     };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
@@ -58,23 +63,37 @@ export default class AddWords extends React.Component<
     e.preventDefault();
 
     const vernacular = this.state.newVern;
-    const gloss = this.state.newGloss;
+    const glosses = this.state.newGloss;
 
     if (vernacular === "") return;
 
-    let words = [...this.state.fields];
-    words.push([vernacular, gloss]);
-    this.setState({ fields: words, newVern: "", newGloss: "" });
+    let rows = [...this.state.rows];
 
-    this.focusVernInput();
+    Backend.createWord(this.rowToWord({ vernacular, glosses, id: "" }))
+      .catch(err => console.log(err))
+      .then(res => {
+        rows.push(this.wordToRow(res as Word));
+        this.setState({ rows: rows, newVern: "", newGloss: "" });
+        this.focusVernInput();
+      });
   }
 
-  updateWord(values: string[], index: number) {
-    let words = [...this.state.fields];
-    words.splice(index, 1, values);
-    this.setState({ fields: words });
+  /** updates the view only */
+  updateRow(row: Row, index: number) {
+    let words = [...this.state.rows];
+    words.splice(index, 1, row);
+    this.setState({ rows: words });
   }
 
+  /** updates the word in the backend */
+  updateWord(index: number) {
+    let row = this.state.rows[index];
+    Backend.updateWord(this.rowToWord(row))
+      .catch(err => console.log(err))
+      .then(res => this.updateRow(this.wordToRow(res as Word), index));
+  }
+
+  // Used by new word input
   /** Updates the state to match the value in a textbox */
   updateField<K extends keyof AddWordsState>(
     e: React.ChangeEvent<
@@ -100,9 +119,18 @@ export default class AddWords extends React.Component<
   }
 
   removeWord(index: number) {
-    let words = [...this.state.fields];
-    words.splice(index, 1);
-    this.setState({ fields: words });
+    console.log(this.rowToWord(this.state.rows[index]));
+    Backend.deleteWord(this.rowToWord(this.state.rows[index]))
+      .catch(err => console.log(err))
+      .then(res => {
+        this.removeRow(index);
+      });
+  }
+
+  removeRow(index: number) {
+    let rows = [...this.state.rows];
+    rows.splice(index, 1);
+    this.setState({ rows });
   }
 
   async uploadWords() {
@@ -131,11 +159,11 @@ export default class AddWords extends React.Component<
       plural: ""
     };
 
-    for (let tuple of this.state.fields) {
-      word.vernacular = tuple[0];
+    for (let row of this.state.rows) {
+      word.vernacular = row.vernacular;
 
       word.senses[0].glosses = [];
-      let defs = tuple[1].split(",");
+      let defs = row.glosses.split(",");
       for (let def of defs) {
         let gloss = {
           language: "",
@@ -146,6 +174,56 @@ export default class AddWords extends React.Component<
 
       await Backend.createWord(word); // TODO: catch errors
     }
+  }
+
+  rowToWord(row: Row): Word {
+    let word: Word = {
+      id: row.id,
+      vernacular: "",
+      senses: [
+        {
+          glosses: [
+            {
+              language: "",
+              def: ""
+            }
+          ],
+          semanticDomains: []
+        }
+      ],
+      audio: "",
+      created: "",
+      modified: "",
+      history: [],
+      partOfSpeech: "",
+      editedBy: [],
+      accessability: State.active,
+      otherField: "",
+      plural: ""
+    };
+    word.vernacular = row.vernacular;
+
+    word.senses[0].glosses = [];
+    let defs = row.glosses.split(",");
+    for (let def of defs) {
+      let gloss = {
+        language: "",
+        def
+      };
+      word.senses[0].glosses.push(gloss);
+    }
+
+    return word;
+  }
+
+  wordToRow(word: Word): Row {
+    let row: Row = { vernacular: word.vernacular, id: word.id, glosses: "" };
+    let glosses: string[] = [];
+    word.senses[0].glosses.forEach(gloss => {
+      glosses.push(gloss.def);
+    });
+    row.glosses = glosses.join(",");
+    return row;
   }
 
   render() {
@@ -192,7 +270,7 @@ export default class AddWords extends React.Component<
               </Grid>
 
               {/* Rows of words */}
-              {this.state.fields.map((word, index) => {
+              {this.state.rows.map((row, index) => {
                 return this.state.editWord === index ? (
                   "ok"
                 ) : (
@@ -214,9 +292,20 @@ export default class AddWords extends React.Component<
                       >
                         <TextField
                           fullWidth
-                          value={word[0]}
+                          value={row.vernacular}
                           onChange={e => {
-                            this.updateWord([e.target.value, word[1]], index);
+                            this.updateRow(
+                              { ...row, vernacular: e.target.value },
+                              index
+                            );
+                          }}
+                          onBlur={() => {
+                            this.updateWord(index);
+                          }}
+                          onKeyDown={e => {
+                            if (e.key === "Enter") {
+                              this.focusVernInput();
+                            }
                           }}
                         />
                       </Grid>
@@ -230,9 +319,20 @@ export default class AddWords extends React.Component<
                       >
                         <TextField
                           fullWidth
-                          value={word[1]}
+                          value={row.glosses}
                           onChange={e => {
-                            this.updateWord([word[0], e.target.value], index);
+                            this.updateRow(
+                              { ...row, glosses: e.target.value },
+                              index
+                            );
+                          }}
+                          onBlur={() => {
+                            this.updateWord(index);
+                          }}
+                          onKeyDown={e => {
+                            if (e.key === "Enter") {
+                              this.focusVernInput();
+                            }
                           }}
                         />
                       </Grid>
