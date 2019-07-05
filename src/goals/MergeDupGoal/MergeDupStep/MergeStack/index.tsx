@@ -1,16 +1,20 @@
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import MergeStackComponent from "./component";
+import MergeStackComponent from "./MergeStackComponent";
 import { StoreState } from "../../../../types";
-import { MergeTreeAction, moveSense } from "../actions";
-import {MergeTreeReference} from '../MergeDupsTree';
-import {WordDragAction, dropWord, dragWord} from '../../../../components/DraggableWord/actions';
+import { MergeTreeAction, moveSense } from "../MergeDupStepActions";
+import { MergeTreeReference } from "../MergeDupsTree";
+import {
+  WordDragAction,
+  dropWord,
+  dragWord
+} from "../../../../components/DraggableWord/actions";
 
 export function mapStateToProps(state: StoreState) {
   return {
     draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord,
     treeSenses: state.mergeDuplicateGoal.mergeTreeState.tree.senses,
-    senses: state.mergeDuplicateGoal.mergeTreeState.data.senses,
+    senses: state.mergeDuplicateGoal.mergeTreeState.data.senses
   };
 }
 
