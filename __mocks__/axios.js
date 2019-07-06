@@ -21,6 +21,10 @@ export default {
     });
   }),
 
+  put: jest.fn(route => {
+    return Promise.resolve({});
+  }),
+
   // create: when axios.create is called within parent directory, instead return this object.
   // mockReturnThis() is just shorthand for jest.fn(function() { return this; });
   create: jest.fn().mockReturnThis()

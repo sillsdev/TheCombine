@@ -11,10 +11,6 @@ export interface GoalSuggestionsProps {
 export class GoalSuggestions extends React.Component<
   GoalSuggestionsProps & LocalizeContextProps
 > {
-  constructor(props: GoalSuggestionsProps & LocalizeContextProps) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="GoalSuggestions">

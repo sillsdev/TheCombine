@@ -3,7 +3,12 @@ import {
   UserAction,
   LOGIN_ATTEMPT,
   LOGIN_FAILURE,
-  REGISTER_ATTEMPT
+  REGISTER_ATTEMPT,
+  LOGIN_SUCCESS,
+  REGISTER_SUCCESS,
+  REGISTER_FAILURE,
+  LOGIN_RESET,
+  REGISTER_RESET
 } from "../LoginActions";
 
 const user = { user: "testUser", password: "testPass" };
@@ -13,16 +18,6 @@ describe("LoginReducer Tests", () => {
     ...reducer.defaultState,
     user: user.user,
     success: false
-  };
-  //reducer.defaultState;
-  let resultState: reducer.LoginState = {
-    loginAttempt: false,
-    loginFailure: false,
-    registerAttempt: true,
-    registerFailure: false,
-    registerSuccess: false,
-    success: false,
-    user: "testUser"
   };
 
   //The state while attempting to log in
@@ -36,49 +31,108 @@ describe("LoginReducer Tests", () => {
     user: "testUser"
   };
 
-  let loginFailureState: reducer.LoginState = {
-    ...reducer.defaultState,
-    loginAttempt: false,
-    loginFailure: true,
-    user: user.user,
-    success: false
-  };
-
-  let loginAttempt: UserAction = {
+  let action: UserAction = {
     type: LOGIN_ATTEMPT,
-    payload: user
-  };
-
-  let loginFailure: UserAction = {
-    type: LOGIN_FAILURE,
-    payload: user
-  };
-
-  let registerAttempt: UserAction = {
-    type: REGISTER_ATTEMPT,
     payload: user
   };
 
   // Test with no state
   test("no state, expecting login attempt", () => {
-    expect(reducer.loginReducer(undefined, loginAttempt)).toEqual(
-      loginAttemptState
-    );
+    action.type = LOGIN_ATTEMPT;
+    expect(reducer.loginReducer(undefined, action)).toEqual(loginAttemptState);
   });
 
   test("default state, expecting login attempt", () => {
-    expect(reducer.loginReducer(dummySt, loginAttempt)).toEqual(
-      loginAttemptState
-    );
+    action.type = LOGIN_ATTEMPT;
+    expect(reducer.loginReducer(dummySt, action)).toEqual(loginAttemptState);
   });
 
   test("failed login, expecting no success", () => {
-    expect(reducer.loginReducer(dummySt, loginFailure)).toEqual(
-      loginFailureState
-    );
+    let loginFailureState: reducer.LoginState = {
+      ...reducer.defaultState,
+      loginAttempt: false,
+      loginFailure: true,
+      user: user.user,
+      success: false
+    };
+
+    action.type = LOGIN_FAILURE;
+    expect(reducer.loginReducer(dummySt, action)).toEqual(loginFailureState);
   });
 
   test("default state, expecting register", () => {
-    expect(reducer.loginReducer(dummySt, registerAttempt)).toEqual(resultState);
+    let resultState: reducer.LoginState = {
+      loginAttempt: false,
+      loginFailure: false,
+      registerAttempt: true,
+      registerFailure: false,
+      registerSuccess: false,
+      success: false,
+      user: "testUser"
+    };
+    action.type = REGISTER_ATTEMPT;
+
+    expect(reducer.loginReducer(dummySt, action)).toEqual(resultState);
+  });
+
+  test("default state, expecting login success", () => {
+    let loginSuccessState: reducer.LoginState = {
+      ...dummySt,
+      user: user.user,
+      success: true
+    };
+    action.type = LOGIN_SUCCESS;
+
+    expect(reducer.loginReducer(dummySt, action)).toEqual(loginSuccessState);
+  });
+
+  test("default state, expecting register success", () => {
+    let registerSuccessState: reducer.LoginState = {
+      ...dummySt,
+      user: user.user,
+      registerAttempt: false,
+      registerSuccess: true
+    };
+    action.type = REGISTER_SUCCESS;
+    expect(reducer.loginReducer(dummySt, action)).toEqual(registerSuccessState);
+  });
+
+  test("default state, expecting register failure", () => {
+    let registerFailureState: reducer.LoginState = {
+      ...dummySt,
+      registerAttempt: false,
+      registerSuccess: false,
+      registerFailure: true
+    };
+    action.type = REGISTER_FAILURE;
+    expect(reducer.loginReducer(dummySt, action)).toEqual(registerFailureState);
+  });
+
+  test("non-default state, expecting login reset", () => {
+    let badState: reducer.LoginState = {
+      ...dummySt,
+      user: "bad",
+      registerSuccess: true,
+      registerAttempt: true,
+      registerFailure: true
+    };
+    action.type = LOGIN_RESET;
+    expect(reducer.loginReducer(badState, action)).toEqual(
+      reducer.defaultState
+    );
+  });
+
+  test("non-default state, expecting register reset", () => {
+    let badState: reducer.LoginState = {
+      ...dummySt,
+      user: "bad",
+      registerSuccess: true,
+      registerAttempt: true,
+      registerFailure: true
+    };
+    action.type = REGISTER_RESET;
+    expect(reducer.loginReducer(badState, action)).toEqual(
+      reducer.defaultState
+    );
   });
 });

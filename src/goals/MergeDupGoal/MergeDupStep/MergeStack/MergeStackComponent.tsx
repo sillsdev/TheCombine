@@ -1,11 +1,7 @@
-//external modules
-import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { Word } from "../../../../types/word";
 import {
   MergeTreeReference,
   Hash,
-  MergeTreeSense,
   TreeDataSense
 } from "../MergeDupsTree";
 import Card from "@material-ui/core/Card/Card";
@@ -18,6 +14,7 @@ import {
 } from "@material-ui/core";
 import { uuid } from "../../../../utilities";
 import { Sort } from "@material-ui/icons";
+import React from 'react';
 
 //interface for component props
 export interface MergeStackProps {
@@ -26,9 +23,8 @@ export interface MergeStackProps {
   moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
   draggedWord?: MergeTreeReference;
   wordID: string;
-  senseRef: string;
   senseID: string;
-  treeSenses: Hash<MergeTreeSense>;
+  sense: Hash<string>;
   senses: Hash<TreeDataSense>;
 }
 
@@ -55,7 +51,7 @@ class MergeStack extends React.Component<
     if (this.props.draggedWord && this.props.moveSense) {
       let ref = {
         word: this.props.wordID,
-        sense: this.props.senseRef,
+        sense: this.props.senseID,
         duplicate: uuid()
       };
       this.props.moveSense(this.props.draggedWord, ref);
@@ -63,15 +59,19 @@ class MergeStack extends React.Component<
   }
 
   render() {
-    let treeSense = this.props.treeSenses[this.props.senseID];
-    let displaySenseKey = Object.keys(treeSense.dups)[0];
-    let displaySenseID = Object.values(treeSense.dups)[0];
+    let displaySenseKey = Object.keys(this.props.sense)[0];
+    let displaySenseID = Object.values(this.props.sense)[0];
     let displaySense = this.props.senses[displaySenseID];
     //TODO: Make language dynamic
+    if (!displaySense){
+      debugger;
+    }
     let lang = "en";
 
     // Find gloss
-    let gloss = displaySense.glosses.filter(gloss => gloss.language == lang)[0];
+    let gloss = displaySense.glosses.filter(
+      gloss => gloss.language === lang
+    )[0];
 
     return (
       <Card
@@ -80,14 +80,14 @@ class MergeStack extends React.Component<
           this.props.dragWord &&
           this.props.dragWord({
             word: this.props.wordID,
-            sense: this.props.senseRef,
+            sense: this.props.senseID,
             duplicate: displaySenseKey
           })
         }
         onDragOver={e => e.preventDefault()}
         onDrop={e => this.dragDrop(e)}
       >
-        {Object.keys(treeSense.dups).length > 1 && (
+        {Object.keys(this.props.sense).length > 1 && (
           <IconButton style={{ float: "right" }}>
             <Sort />
           </IconButton>
@@ -98,7 +98,7 @@ class MergeStack extends React.Component<
           </Typography>
           {/* List semantic domains */}
           <List dense={true}>
-            {displaySense.semanticDomains.length == 0 &&
+            {displaySense.semanticDomains.length === 0 &&
               "{ no semantic domain }"}
             {displaySense.semanticDomains.map(dom => (
               <ListItem> {dom.name + "\t" + dom.number} </ListItem>

@@ -2,7 +2,7 @@ import { StoreState } from "../../../types";
 import { ThunkDispatch } from "redux-thunk";
 import { MergeTreeReference, Hash, TreeDataSense } from "./MergeDupsTree";
 import DupFinder from "../DuplicateFinder/DuplicateFinder";
-import { Sense, Word, MergeWord, State } from "../../../types/word";
+import { Word, State } from "../../../types/word";
 import * as backend from "../../../backend";
 
 export enum MergeTreeActions {
@@ -120,15 +120,13 @@ export function mergeWord(wordID: string) {
       wordID
     ];
     if (word) {
-      const treeSenses = getState().mergeDuplicateGoal.mergeTreeState.tree
-        .senses;
       const data = getState().mergeDuplicateGoal.mergeTreeState.data;
 
       // create a list of all senses and add merge type tags slit by src word
       let senses: Hash<SenseWithState[]> = {};
 
       Object.values(word.senses).forEach(sense => {
-        let senseIDs = Object.values(treeSenses[sense].dups);
+        let senseIDs = Object.values(sense);
         let senseData = data.senses[senseIDs[0]];
         if (senses[senseData.srcWord]) {
           senses[senseData.srcWord].push({ ...senseData, state: State.sense });
@@ -162,7 +160,7 @@ export function mergeWord(wordID: string) {
       // construct sense children
       let children = Object.values(senses).map(word => {
         word.forEach(sense => {
-          if (sense.state == State.sense || sense.state == State.active) {
+          if (sense.state === State.sense || sense.state === State.active) {
             parent.senses.push({
               glosses: sense.glosses,
               semanticDomains: sense.semanticDomains

@@ -11,12 +11,10 @@ import {
   CardContent,
   Typography,
   Button,
-  Link,
   TextField,
   CircularProgress
 } from "@material-ui/core";
 import history from "../../../history";
-import { green } from "@material-ui/core/colors";
 import { Check } from "@material-ui/icons";
 import { buttonSuccess } from "../../../types/theme";
 

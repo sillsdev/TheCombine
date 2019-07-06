@@ -28,11 +28,14 @@ export interface CharacterInventoryProps {
   translate: TranslateFunction;
 }
 
+export const SAVE: string = "pushGoals";
+export const CANCEL: string = "cancelInventoryCreation";
+
 interface CharacterInventoryState {
   cancelDialogOpen: boolean;
 }
 
-class CharacterInventory extends React.Component<
+export class CharacterInventory extends React.Component<
   CharacterInventoryProps & LocalizeContextProps,
   CharacterInventoryState
 > {
@@ -58,13 +61,13 @@ class CharacterInventory extends React.Component<
         >
           <Grid item sm={6} xs={12}>
             <CharacterSet
-              setInventory={inventory => this.props.setInventory(inventory)}
+              setInventory={this.props.setInventory}
               inventory={this.props.inventory}
             />
           </Grid>
           <Grid item sm={6} xs={12}>
             <SampleWords
-              setInventory={inventory => this.props.setInventory(inventory)}
+              setInventory={this.props.setInventory}
               inventory={this.props.inventory}
             />
           </Grid>
@@ -72,6 +75,7 @@ class CharacterInventory extends React.Component<
             {/* submission buttons */}
             <Grid container justify="center">
               <Button
+                id={SAVE}
                 variant="contained"
                 color="primary"
                 onClick={() => {
@@ -83,6 +87,7 @@ class CharacterInventory extends React.Component<
                 <Save /> <Translate id="charInventory.save" />
               </Button>
               <Button
+                id={CANCEL}
                 variant="contained"
                 onClick={() => {
                   this.setState({ cancelDialogOpen: true });

@@ -4,6 +4,7 @@ import BaseGoalScreen from "../../goals/DefaultGoal/BaseGoalScreen";
 import GoalTimeline from "../GoalTimeline/";
 import PageNotFound from "../PageNotFound/component";
 import { PrivateRoute } from "../PrivateRoute";
+import GoalTimelineHorizontal from "../GoalTimeline/GoalTimelineHorizontal";
 
 /**
  * A wrapper on all goal components. The component that will be displayed will
@@ -14,7 +15,11 @@ export class GoalRoute extends React.Component {
     return (
       <div>
         <Switch>
-          <PrivateRoute exact path="/goals" component={GoalTimeline} />
+          <PrivateRoute
+            exact
+            path="/goals"
+            component={GoalTimelineHorizontal}
+          />
           <PrivateRoute path={"/goals/:id"} component={BaseGoalScreen} />
           <Route component={PageNotFound} />
         </Switch>
