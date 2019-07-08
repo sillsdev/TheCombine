@@ -1,5 +1,4 @@
-﻿using Backend.Tests;
-using BackendFramework.Controllers;
+﻿using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
@@ -12,16 +11,16 @@ namespace Backend.Tests
 {
     public class AvatarControllerTests
     {
-        IUserService _userService;
-        UserController userController;
-        AvatarController avatarController;
+        private IUserService _userService;
+        private UserController _userController;
+        private AvatarController _avatarController;
 
         [SetUp]
         public void Setup()
         {
             _userService = new UserServiceMock();
-            userController = new UserController(_userService);
-            avatarController = new AvatarController(_userService);
+            _userController = new UserController(_userService);
+            _avatarController = new AvatarController(_userService);
         }
 
         string RandomString(int length = 0)
@@ -55,9 +54,9 @@ namespace Backend.Tests
 
             User user = _userService.Create(RandomUser()).Result;
 
-            _ = avatarController.UploadAvatar(user.Id, fileUpload).Result;
+            _ = _avatarController.UploadAvatar(user.Id, fileUpload).Result;
 
-            var action = userController.Get(user.Id).Result;
+            var action = _userController.Get(user.Id).Result;
 
             var foundUser = (action as ObjectResult).Value as User;
             Assert.IsNotNull(foundUser.Avatar);

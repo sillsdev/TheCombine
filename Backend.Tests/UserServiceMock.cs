@@ -9,51 +9,51 @@ namespace Backend.Tests
 {
     public class UserServiceMock : IUserService
     {
-        readonly List<User> users;
+        private readonly List<User> _users;
 
         public UserServiceMock()
         {
-            users = new List<User>();
+            _users = new List<User>();
         }
 
         public Task<List<User>> GetAllUsers()
         {
-            return Task.FromResult(users.Select(user => user.Clone()).ToList());
+            return Task.FromResult(_users.Select(user => user.Clone()).ToList());
         }
 
         public Task<User> GetUser(string id)
         {
-            var foundUser = users.Where(user => user.Id == id).Single();
+            var foundUser = _users.Where(user => user.Id == id).Single();
             return Task.FromResult(foundUser.Clone());
         }
 
         public Task<User> Create(User user)
         {
             user.Id = Guid.NewGuid().ToString();
-            users.Add(user.Clone());
+            _users.Add(user.Clone());
             return Task.FromResult(user.Clone());
         }
 
         public Task<bool> DeleteAllUsers()
         {
-            users.Clear();
+            _users.Clear();
             return Task.FromResult(true);
         }
 
         public Task<bool> Delete(string Id)
         {
-            var foundUser = users.Single(user => user.Id == Id);
-            var success = users.Remove(foundUser);
+            var foundUser = _users.Single(user => user.Id == Id);
+            var success = _users.Remove(foundUser);
             return Task.FromResult(success);
         }
 
         public Task<bool> Update(string Id, User user)
         {
-            var foundUser = users.Single(u => u.Id == Id);
-            var success = users.Remove(foundUser);
+            var foundUser = _users.Single(u => u.Id == Id);
+            var success = _users.Remove(foundUser);
             if (success)
             {
-                users.Add(user.Clone());
+                _users.Add(user.Clone());
             }
             return Task.FromResult(success);
         }
@@ -62,7 +62,7 @@ namespace Backend.Tests
         {
             try
             {
-                var foundUser = users.Single(u => u.Username == username && u.Password == password);
+                var foundUser = _users.Single(u => u.Username == username && u.Password == password);
 
                 if (foundUser == null)
                 {

@@ -1,5 +1,4 @@
-﻿using Backend.Tests;
-using BackendFramework.Controllers;
+﻿using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
@@ -12,20 +11,22 @@ namespace Backend.Tests
 {
     public class UserEditControllerTests
     {
-        IUserEditRepository _userEditRepo;
-        IUserEditService _userEditService;
-        IUserService _userService;
-        UserEditController userEditController;
-        UserController userController;
+        private IUserEditRepository _userEditRepo;
+        private IUserEditService _userEditService;
+        private UserEditController _userEditController;
+
+        private IProjectService _projectService;
+        private string _projId; 
 
         [SetUp]
         public void Setup()
         {
             _userEditRepo = new UserEditRepositoryMock();
-            _userService = new UserServiceMock();
             _userEditService = new UserEditService(_userEditRepo);
-            userEditController = new UserEditController(_userEditService, _userEditRepo);
-            userController = new UserController(_userService);
+            _userEditController = new UserEditController(_userEditRepo, _userEditService);
+
+            _projectService = new ProjectServiceMock();
+            _projId = _projectService.Create(new Project()).Result.Id;
         }
 
         UserEdit RandomUserEdit()
@@ -50,22 +51,22 @@ namespace Backend.Tests
             _userEditRepo.Create(RandomUserEdit());
             _userEditRepo.Create(RandomUserEdit());
 
-            var getResult = userEditController.Get().Result;
+            var getResult = _userEditController.Get(_projId).Result;
 
             Assert.IsInstanceOf<ObjectResult>(getResult);
 
             var edits = (getResult as ObjectResult).Value as List<UserEdit>;
             Assert.That(edits, Has.Count.EqualTo(3));
-            _userEditRepo.GetAllUserEdits().Result.ForEach(edit => Assert.Contains(edit, edits));
+            _userEditRepo.GetAllUserEdits(_projId).Result.ForEach(edit => Assert.Contains(edit, edits));
         }
 
         [Test]
         public void TestGetUserEdit()
         {
             //Get UserEdit for nonexistant user
-            var noUser = userEditController.Get(Guid.NewGuid().ToString()).Result;
+            var noUser = _userEditController.Get(_projId, Guid.NewGuid().ToString()).Result;
 
-            var getResult = userEditController.Get().Result;
+            var getResult = _userEditController.Get(_projId).Result;
 
             Assert.IsInstanceOf<ObjectResult>(getResult);
 
@@ -78,7 +79,7 @@ namespace Backend.Tests
             _userEditRepo.Create(RandomUserEdit());
             _userEditRepo.Create(RandomUserEdit());
 
-            var action = userEditController.Get(userEdit.Id).Result;
+            var action = _userEditController.Get(_projId, userEdit.Id).Result;
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
@@ -96,9 +97,9 @@ namespace Backend.Tests
             UserEdit updateEdit = userEdit.Clone();
             updateEdit.Edits.Add(newEditStep);
 
-            _ = userEditController.Post(userEdit.Id, newEditStep).Result;
+            _ = _userEditController.Post(_projId, userEdit.Id, newEditStep).Result;
 
-            var allUserEdits = _userEditRepo.GetAllUserEdits().Result;
+            var allUserEdits = _userEditRepo.GetAllUserEdits(_projId).Result;
 
             Assert.Contains(updateEdit, allUserEdits);
         }
@@ -125,10 +126,10 @@ namespace Backend.Tests
             int modGoalIndex = 0;
             UserEditObjectWrapper wrapperobj = new UserEditObjectWrapper(modGoalIndex, stringUserEdit);
 
-            var action = userEditController.Put(origUserEdit.Id, wrapperobj);
+            var action = _userEditController.Put(_projId, origUserEdit.Id, wrapperobj);
 
-            Assert.That(_userEditRepo.GetAllUserEdits().Result, Has.Count.EqualTo(count + 1));
-            Assert.Contains(stringUserEdit, _userEditRepo.GetUserEdit(origUserEdit.Id).Result.Edits[modGoalIndex].StepData);
+            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(count + 1));
+            Assert.Contains(stringUserEdit, _userEditRepo.GetUserEdit(_projId, origUserEdit.Id).Result.Edits[modGoalIndex].StepData);
         }
 
         [Test]
@@ -136,11 +137,11 @@ namespace Backend.Tests
         {
             UserEdit origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
 
-            Assert.That(_userEditRepo.GetAllUserEdits().Result, Has.Count.EqualTo(1));
+            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(1));
 
-            _ = userEditController.Delete(origUserEdit.Id).Result;
+            _ = _userEditController.Delete(origUserEdit.Id).Result;
 
-            Assert.That(_userEditRepo.GetAllUserEdits().Result, Has.Count.EqualTo(0));
+            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(0));
         }
 
         [Test]
@@ -150,11 +151,11 @@ namespace Backend.Tests
             _userEditRepo.Create(RandomUserEdit());
             _userEditRepo.Create(RandomUserEdit());
 
-            Assert.That(_userEditRepo.GetAllUserEdits().Result, Has.Count.EqualTo(3));
+            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(3));
 
-            _ = userEditController.Delete().Result;
+            _ = _userEditController.Delete(_projId).Result;
 
-            Assert.That(_userEditRepo.GetAllUserEdits().Result, Has.Count.EqualTo(0));
+            Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(0));
         }
     }
 }

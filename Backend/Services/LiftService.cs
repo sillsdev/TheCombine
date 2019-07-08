@@ -65,8 +65,8 @@ namespace BackendFramework.Services
         /********************************
         * Lift Export Implementation
         ********************************/
-        
-        public void LiftExport(string Id)
+
+        public void LiftExport(string projectId)
         {
             //the helper tag must be included because there are also SIL.Utilitites
             Helper.Utilities util = new Helper.Utilities();
@@ -101,14 +101,14 @@ namespace BackendFramework.Services
 
             writer.WriteHeader(header);
 
-            var allWords = _repo.GetAllWords().Result;
+            var allWords = _repo.GetAllWords(projectId).Result;
 
             foreach (Word wordEntry in allWords)
             {
                 LexEntry entry = new LexEntry();
 
                 //add vernacular (lexical form)
-                addVern(Id, wordEntry, entry);
+                addVern(projectId, wordEntry, entry);
 
                 string audioSrc = Path.Combine(filename, "zips");
                 addAudio(entry, wordEntry, audiodir);
@@ -123,10 +123,10 @@ namespace BackendFramework.Services
             ZipFile.CreateFromDirectory(zipdir, Path.Combine(zipdir, Path.Combine("..", "LiftExportCompressed-" + Path.GetRandomFileName() + ".zip")));
         }
 
-        public void addVern(string Id, Word wordEntry, LexEntry entry)
+        public void addVern(string projectId, Word wordEntry, LexEntry entry)
         {
             LiftMultiText lexMultiText = new LiftMultiText();
-            string lang = _projService.GetProject(Id).Result.VernacularWritingSystem;
+            string lang = _projService.GetProject(projectId).Result.VernacularWritingSystem;
             lexMultiText.Add(lang, wordEntry.Vernacular);
             entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
         }

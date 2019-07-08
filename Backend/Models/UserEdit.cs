@@ -15,9 +15,13 @@ namespace BackendFramework.ValueModels
         [BsonElement("edits")]
         public List<Edit> Edits { get; set; }
 
+        [BsonElement("projectId")]
+        public string ProjectId { get; set; }
+
         public UserEdit()
         {
             Id = "";
+            ProjectId = "";
             Edits = new List<Edit>();
         }
 
@@ -26,6 +30,7 @@ namespace BackendFramework.ValueModels
             UserEdit clone = new UserEdit
             {
                 Id = Id.Clone() as string,
+                ProjectId = ProjectId.Clone() as string,
                 Edits = new List<Edit>()
             };
 
@@ -40,6 +45,7 @@ namespace BackendFramework.ValueModels
         public bool ContentEquals(UserEdit other)
         {
             return
+                other.ProjectId.Equals(ProjectId) &&
                 other.Edits.Count == Edits.Count &&
                 other.Edits.All(Edits.Contains);
         }
@@ -59,7 +65,7 @@ namespace BackendFramework.ValueModels
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Edits);
+            return HashCode.Combine(Id, ProjectId, Edits);
         }
     }
 

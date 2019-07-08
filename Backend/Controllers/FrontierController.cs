@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/Projects/Words/Frontier")]
+    [Route("v1/projects/{projectId}/words/frontier")]
     public class FrontierController : Controller
     {
         private readonly IWordRepository _repo;
@@ -16,18 +16,19 @@ namespace BackendFramework.Controllers
             _repo = repo;
         }
 
-        // GET: v1/project/words/frontier
-        [HttpGet()]
-        public async Task<IActionResult> GetFrontier()
+        // GET: v1/project/{projectId}/words/frontier
+        [HttpGet]
+        public async Task<IActionResult> GetFrontier(string projectId)
         {
-            return new ObjectResult(await _repo.GetFrontier());
+            return new ObjectResult(await _repo.GetFrontier(projectId));
         }
 
-        // POST: v1/project/words/frontier
-        [HttpPost()]
-        public async Task<IActionResult> PostFrontier([FromBody]Word word)
+        // POST: v1/project/{projectId}/words/frontier
+        [HttpPost]
+        public async Task<IActionResult> PostFrontier(string projectId, [FromBody]Word word)
         {
 #if DEBUG
+            word.ProjectId = projectId;
             await _repo.AddFrontier(word);
             return new OkObjectResult(word.Id);
 #else
@@ -35,12 +36,12 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        // DELETE: v1/project/words/frontier/{Id}
-        [HttpDelete("{Id}")]
-        public async Task<IActionResult> DeleteFrontier(string Id)
+        // DELETE: v1/project/{projectId}/words/frontier/{wordId}
+        [HttpDelete("{wordId}")]
+        public async Task<IActionResult> DeleteFrontier(string projectId, string wordId)
         {
 #if DEBUG
-            if (await _repo.DeleteFrontier(Id))
+            if (await _repo.DeleteFrontier(projectId, wordId))
             {
                 return new OkResult();
             }

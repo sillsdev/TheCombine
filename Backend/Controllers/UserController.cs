@@ -4,12 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
     public class UserController : Controller
@@ -23,7 +22,7 @@ namespace BackendFramework.Controllers
 
         [EnableCors("AllowAll")]
 
-        // GET: v1/Users
+        // GET: v1/users
         // Implements GetAllUsers()
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -43,6 +42,8 @@ namespace BackendFramework.Controllers
 #endif
         }
 
+        // GET: v1/Users/authenticate
+        // Implements Authenticate()
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]Credentials cred)
@@ -64,12 +65,12 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(user);
         }
 
-        // GET: v1/Users/name
+        // GET: v1/Users/{userId}
         // Implements GetUser(), Arguments: string id of target user
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> Get(string Id)
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> Get(string userId)
         {
-            var user = await _userService.GetUser(Id);
+            var user = await _userService.GetUser(userId);
 
             if (user == null)
             {
@@ -95,29 +96,29 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(user.Id);
         }
 
-        // PUT: v1/Users/{Id}
+        // PUT: v1/Users/{userId}
         // Implements Update(), 
         // Arguments: string id of target user, user object with updates from body
-        [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, [FromBody] User user)
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> Put(string userId, [FromBody] User user)
         {
-            var document = await _userService.GetUser(Id);
+            var document = await _userService.GetUser(userId);
             if (document == null)
             {
                 return new NotFoundResult();
             }
             user.Id = document.Id;
-            await _userService.Update(Id, user);
+            await _userService.Update(userId, user);
             return new OkObjectResult(user.Id);
         }
 
-        // DELETE: v1/ApiWithActions/{Id}
+        // DELETE: v1/ApiWithActions/{userId}
         // Implements Delete(), Arguments: string id of target user
-        [HttpDelete("{Id}")]
-        public async Task<IActionResult> Delete(string Id)
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> Delete(string userId)
         {
 #if DEBUG
-            if (await _userService.Delete(Id))
+            if (await _userService.Delete(userId))
             {
                 return new OkResult();
             }

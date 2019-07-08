@@ -20,7 +20,9 @@ namespace BackendFramework.Controllers
             _userService = service;
         }
 
-        [HttpPost("users/{Id}/upload/avatar")]
+        // POST: v1/users/{userId}/upload/avatar
+        // Implements UploadAvatar()
+        [HttpPost("users/{userId}/upload/avatar")]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload model)
         {
             var file = model.File;

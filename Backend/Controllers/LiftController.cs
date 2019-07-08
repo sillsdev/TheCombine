@@ -17,23 +17,21 @@ namespace BackendFramework.Controllers
 {
     //[Authorize]
     [Produces("application/json")]
-    [Route("v1/projects")]
+    [Route("v1/projects/{projectId}")]
     public class LiftController : Controller
     {
-        public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
-        public readonly IWordService _wordService;
-        public readonly IWordRepository _wordRepo;
-        public readonly LiftService _liftService;
+        private readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
+        private readonly IWordRepository _wordRepo;
+        private readonly LiftService _liftService;
 
         public LiftController(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService wordService, IProjectService projServ)
         {
             _merger = merger;
             _wordRepo = repo;
-            _wordService = wordService;
             _liftService = new LiftService(_wordRepo, projServ);
         }
 
-        // POST: v1/Project/Words/upload
+        // POST: v1/project/{projectId}/words/upload
         // Implements: Upload(), Arguments: FileUpload model
         [HttpPost("words/upload")]
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
@@ -119,15 +117,15 @@ namespace BackendFramework.Controllers
         }
 
         [HttpGet("words/download")]
-        public async Task<IActionResult> ExportLiftFile(string Id)
+        public async Task<IActionResult> ExportLiftFile(string projectId)
         {
-            var words = await _wordRepo.GetAllWords();
+            var words = await _wordRepo.GetAllWords(projectId);
             if(words.Count == 0)
             {
                 return new BadRequestResult();
             }
 
-            _liftService.LiftExport(Id);
+            _liftService.LiftExport(projectId);
 
             return new OkObjectResult(words);
         }

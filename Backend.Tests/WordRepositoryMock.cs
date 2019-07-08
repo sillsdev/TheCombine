@@ -9,64 +9,64 @@ namespace Backend.Tests
 {
     public class WordRepositoryMock : IWordRepository
     {
-        readonly List<Word> words;
-        readonly List<Word> frontier;
+        private readonly List<Word> _words;
+        private readonly List<Word> _frontier;
 
         public WordRepositoryMock()
         {
-            words = new List<Word>();
-            frontier = new List<Word>();
+            _words = new List<Word>();
+            _frontier = new List<Word>();
         }
 
-        public Task<List<Word>> GetAllWords()
+        public Task<List<Word>> GetAllWords(string projectId)
         {
-            return Task.FromResult(words.Select(word => word.Clone()).ToList());
+            return Task.FromResult(_words.Select(word => word.Clone()).ToList());
         }
 
-        public Task<Word> GetWord(string id)
+        public Task<Word> GetWord(string projectId, string wordId)
         {
-            var foundWord = words.Where(word => word.Id == id).Single();
+            var foundWord = _words.Where(word => word.Id == wordId).Single();
             return Task.FromResult(foundWord.Clone());
         }
 
         public Task<Word> Create(Word word)
         {
             word.Id = Guid.NewGuid().ToString();
-            words.Add(word.Clone());
+            _words.Add(word.Clone());
             AddFrontier(word.Clone());
             return Task.FromResult(word.Clone());
         }
 
-        public Task<bool> DeleteAllWords()
+        public Task<bool> DeleteAllWords(string projectId)
         {
-            words.Clear();
-            frontier.Clear();
+            _words.Clear();
+            _frontier.Clear();
             return Task.FromResult(true);
         }
 
-        public Task<List<Word>> GetFrontier()
+        public Task<List<Word>> GetFrontier(string projectId)
         {
-            return Task.FromResult(frontier.Select(word => word.Clone()).ToList());
+            return Task.FromResult(_frontier.Select(word => word.Clone()).ToList());
         }
 
         public Task<Word> AddFrontier(Word word)
         {
-            frontier.Add(word.Clone());
+            _frontier.Add(word.Clone());
             return Task.FromResult(word.Clone());
         }
 
-        public Task<bool> DeleteFrontier(string id)
+        public Task<bool> DeleteFrontier(string projectId, string wordId)
         {
-            var origLength = frontier.Count;
-            frontier.RemoveAll(word => word.Id == id);
-            return Task.FromResult(origLength != frontier.Count);
+            var origLength = _frontier.Count;
+            _frontier.RemoveAll(word => word.Id == wordId);
+            return Task.FromResult(origLength != _frontier.Count);
 
         }
 
         public Task<Word> Add(Word word)
         {
             word.Id = Guid.NewGuid().ToString();
-            words.Add(word.Clone());
+            _words.Add(word.Clone());
             return Task.FromResult(word.Clone());
         }
     }
