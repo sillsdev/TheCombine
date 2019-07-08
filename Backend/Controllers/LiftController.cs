@@ -1,11 +1,17 @@
-﻿using BackendFramework.Interfaces;
+﻿using BackendFramework.Helper;
+using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers
 {
@@ -32,23 +38,74 @@ namespace BackendFramework.Controllers
         [HttpPost("words/upload")]
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
-            var file = model.File;
+            var fileInfo = model.File;
 
-            if (file.Length > 0)
+            if (fileInfo.Length > 0)
             {
-                string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-                System.IO.Directory.CreateDirectory(wanted_path + "/Words");
+                //get path to home
+                Utilities util = new Utilities();
+                //generate the file to put the filestream into
+                model.FilePath = util.GenerateFilePath(filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine("AmbigProjectName", "Import"));
 
-                model.FilePath = Path.Combine(wanted_path + "/Words/UploadFile-" + model.Name + ".xml");
+                //copy stream into file
                 using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
                 {
-                    await file.CopyToAsync(fs);
+                    await fileInfo.CopyToAsync(fs);
                 }
+
+                //extract the zip into another dir
+                string zipDest = Path.GetDirectoryName(model.FilePath);
+                Directory.CreateDirectory(zipDest);
+
+                //log the dirs in the dest pre extraction
+                var preExportDirList = Directory.GetDirectories(zipDest);
+
+                try
+                {
+                    ZipFile.ExtractToDirectory(model.FilePath, zipDest);
+                }
+                catch (IOException)
+                {
+                    //is thrown if duplicate files are unzipped
+                    return new BadRequestObjectResult("That file has already been uploaded");
+                }
+
+                //log the dirs in the dest post extraction
+                var postExportDirList = Directory.GetDirectories(zipDest);
+
+                //get path to extracted dir
+                var pathToExtracted = postExportDirList.Except(preExportDirList).ToList();
+                string extractedDirPath;
+
+                if (pathToExtracted.Count == 1)
+                {
+                    extractedDirPath = pathToExtracted.FirstOrDefault();
+                }
+                else
+                {
+                    throw new InvalidDataException("Your zip file structure is incorrect");
+                }
+
+                var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
+                string extractedLiftName = "";
+
+                //search for the lift file within the list
+                var extractedLiftPath = Array.FindAll(extractedLiftNameArr, file => file.EndsWith(".lift"));
+                if (extractedLiftPath.Length > 1)
+                {
+                    throw new InvalidDataException("More than one .lift file detected");
+                }
+                else if (extractedLiftPath.Length == 0)
+                {
+                    throw new InvalidDataException("No lift files detected");
+                }
+
+                
 
                 try
                 {
                     var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                    return new ObjectResult(parser.ReadLiftFile(model.FilePath));
+                    return new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
                 }
                 catch (Exception)
                 {
