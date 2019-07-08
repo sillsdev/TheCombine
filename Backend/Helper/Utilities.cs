@@ -39,7 +39,7 @@ namespace BackendFramework.Helper
             //if its the first time here it needs to be created
             Directory.CreateDirectory(returnFilepath);
 
-            //if the path being generated is to a dir and not a file then dont add an extension
+            //if the path being generated is to a dir and not a file then don't add an extension
             returnFilepath = Path.Combine(returnFilepath, customFileName + (isDirectory ? "" : FileTypeExtension(type)));
 
             return returnFilepath;

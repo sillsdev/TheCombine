@@ -70,7 +70,7 @@ namespace BackendFramework.Controllers
                     return new BadRequestObjectResult("That file has already been uploaded");
                 }
 
-                //log the dirs in the dest pre extraction
+                //log the dirs in the dest post extraction
                 var postExportDirList = Directory.GetDirectories(zipDest);
 
                 //get path to extracted dir
