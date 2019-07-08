@@ -73,7 +73,7 @@ const treeB: { tree: MergeTree } = {
       WA: {
         senses: { ID1: { ID1: "S1" }, ID2: { ID1: "S4" } },
         vern: "AAA",
-        plural: "AAS"
+        plural: "AAAS"
       },
       WB: {
         senses: { ID1: { ID1: "S3" }, ID2: { ID1: "S2" } },
