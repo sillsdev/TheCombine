@@ -3,13 +3,7 @@ import { StoreState } from "../../../types";
 
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import {
-  asyncLogin,
-  UserAction,
-  logout,
-  asyncRegister,
-  registerReset
-} from "../LoginActions";
+import { UserAction, asyncRegister, registerReset } from "../LoginActions";
 
 function mapStateToProps(state: StoreState): RegisterStateProps {
   return {

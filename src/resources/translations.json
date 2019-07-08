@@ -56,10 +56,10 @@
     "title": ["Create Project", "Crear Proyecto"],
     "name": ["Project Name", "Nombre del Proyecto"],
     "languageData": [
-      ".lift language data file",
-      "archivo de datos de idioma .lift"
+      ".zip language data file",
+      "archivo de datos de idioma .zip"
     ],
-    "upload?": ["Upload .lift file?", "Uploado .lift filada?"],
+    "upload?": ["Upload .zip project file?", "Subir archivo de proyecto .zip?"],
     "browse": ["Browse", "Navegar"],
     "create": ["Create Project", "Crear Proyecto"],
     "fileSelected": ["File selected", "Archivo seleccionado"],
@@ -67,7 +67,12 @@
   },
   "goal": {
     "selector": {
-      "selectOption": ["Select this goal", "Selecciona este objectivo"]
+      "selectOption": ["Select this goal", "Selecciona este objectivo"],
+      "past": ["You've completed:", "Completó:"],
+      "present": ["Our recommendation:", "Nuestra recomendación:"],
+      "other": ["Other options:", "Otras opciónas:"],
+      "noHistory": ["Nothing yet", "Nada ahora"],
+      "done": ["All done", "Esta listo"]
     },
     "mergeDups": {
       "done": ["Save & Continue", "Ahorrar y Continuar"]

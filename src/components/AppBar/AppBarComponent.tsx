@@ -8,10 +8,6 @@ import { GoToHomeButton } from "../GoToHomeButton/GoToHomeButtonComponent";
 
 /** An app bar shown at the top of almost every page of The Combine */
 export class AppBarComponent extends React.Component<LocalizeContextProps> {
-  constructor(props: LocalizeContextProps) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="NavigationBar">
