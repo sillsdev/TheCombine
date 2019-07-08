@@ -10,6 +10,7 @@ using SIL.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -64,10 +65,25 @@ namespace BackendFramework.Services
         /********************************
         * Lift Export Implementation
         ********************************/
+        
         public void LiftExport(string Id)
         {
-            string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            string filepath = wanted_path + "/EXAMPLE.lift";
+            //the helper tag must be included because there are also SIL.Utilitites
+            Helper.Utilities util = new Helper.Utilities();
+
+            //generate the zip dir
+            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, true, "", Path.Combine("AmbigProjectName", "Export"));
+            string zipdir = Path.Combine(filename, "LiftExport");
+            Directory.CreateDirectory(zipdir);
+
+            //generates file to be exported to
+            string exportFilePath = Path.Combine(zipdir, "EXPORTED-" + Path.GetRandomFileName());
+
+           //add audio dir inside zip dir
+            string audiodir = Path.Combine(zipdir, "Audio");
+            Directory.CreateDirectory(audiodir);
+            string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
+
             CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
 
             string header =
@@ -87,15 +103,15 @@ namespace BackendFramework.Services
 
             var allWords = _repo.GetAllWords().Result;
 
-            foreach (Word wordEntry in allWords )
+            foreach (Word wordEntry in allWords)
             {
                 LexEntry entry = new LexEntry();
 
                 //add vernacular (lexical form)
                 addVern(Id, wordEntry, entry);
 
-                //add audio (pronunciation media)
-                addAudio(entry, wordEntry);
+                string audioSrc = Path.Combine(filename, "zips");
+                addAudio(entry, wordEntry, audiodir);
 
                 //add sense
                 addSense(entry, wordEntry);
@@ -103,9 +119,10 @@ namespace BackendFramework.Services
                 writer.Add(entry);
             }
             writer.End();
+
+            ZipFile.CreateFromDirectory(zipdir, Path.Combine(zipdir, Path.Combine("..", "LiftExportCompressed-" + Path.GetRandomFileName() + ".zip")));
         }
 
-        //add vernacular
         public void addVern(string Id, Word wordEntry, LexEntry entry)
         {
             LiftMultiText lexMultiText = new LiftMultiText();
@@ -114,12 +131,24 @@ namespace BackendFramework.Services
             entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
         }
 
-        public void addAudio(LexEntry entry, Word wordEntry)
+        public void addAudio(LexEntry entry, Word wordEntry, string path)
         {
             LexPhonetic lexPhonetic = new LexPhonetic();
-            LiftMultiText proMultiText = new LiftMultiText { { "href", wordEntry.Audio } };
+
+            string dest = Path.Combine(path, wordEntry.Audio);
+            LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
             lexPhonetic.MergeIn(MultiText.Create(proMultiText));
             entry.Pronunciations.Add(lexPhonetic);
+            try
+            {
+                Helper.Utilities util = new Helper.Utilities();
+                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
+                File.Copy(src, dest, true);
+            }
+            catch (FileNotFoundException)
+            {
+                //do nothing, the audio file isnt there so it wont be added
+            }
         }
 
         public void addSense(LexEntry entry, Word wordEntry)
