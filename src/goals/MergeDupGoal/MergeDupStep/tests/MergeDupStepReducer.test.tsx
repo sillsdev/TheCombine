@@ -1,7 +1,7 @@
-import { setWordData, moveSense } from "../MergeDupStepActions";
+import { setWordData, moveSense, clearTree } from "../MergeDupStepActions";
 import { testWordList } from "../../../../types/word";
 import mergeDupStepReducer from "../MergeDupStepReducer";
-import { Hash, MergeTreeWord, MergeTreeReference } from "../MergeDupsTree";
+import { Hash, MergeTreeWord, MergeTreeReference, defaultData, defaultTree } from "../MergeDupsTree";
 import { randElement, uuid } from "../../../../utilities";
 
 // Actions to test
@@ -59,6 +59,37 @@ describe("MergeDupStep reducer tests", () => {
     }
     return undefined;
   };
+
+
+  test("clear data", () => {
+    let newState = mergeDupStepReducer(fullState, clearTree());
+    expect(JSON.stringify(newState)).toEqual(JSON.stringify({tree: defaultTree, data: defaultData}));
+  });
+
+  test("set data", () => {
+    let wordList = testWordList();
+    let data = mergeDupStepReducer(undefined, setWordData(wordList));
+    // check if data has all words present
+    for (let word of wordList) {
+      expect(Object.keys(data.data.words)).toContain(word.id);
+      // check each sense of word
+      for (let [index, sense] of word.senses.entries()) {
+        let treeSense = { ...sense, srcWord: word.id, order: index };
+        expect(
+          Object.values(data.data.senses).map(a => JSON.stringify(a))
+        ).toContain(JSON.stringify(treeSense));
+        let ids = Object.keys(data.data.senses);
+        let id_res = ids.find(
+          id =>
+            JSON.stringify(data.data.senses[id]) === JSON.stringify(treeSense)
+        );
+        expect(id_res).toBeTruthy();
+        let id = id_res ? id_res : "";
+        // check that this sense is somewhere in the tree
+        expect(getRefByID(id, data.tree.words)).toBeTruthy();
+      }
+    }
+  });
 
   test("move sense", () => {
     // move a random card to a new location and check that it is there
