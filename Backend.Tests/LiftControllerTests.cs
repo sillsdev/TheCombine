@@ -28,7 +28,7 @@ namespace Backend.Tests
             _wordrepo = new WordRepositoryMock();
             _wordService = new WordService(_wordrepo);
             _merger = new LiftService(_wordrepo, _projServ);
-            _liftController = new LiftController(_merger, _wordrepo, _wordService, _projServ);
+            _liftController = new LiftController(_merger, _wordrepo, _projServ);
         }
 
         Project RandomProject()
@@ -147,7 +147,7 @@ namespace Backend.Tests
             var fileUpload = InitFile(fstream, actualFilename);
 
             //make api call
-            var result = _liftController.UploadLiftFile(fileUpload).Result;
+            var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
             if(result is BadRequestObjectResult)
             {
                 //this will be removed in the next pull request

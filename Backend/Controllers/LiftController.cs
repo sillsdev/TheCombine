@@ -24,7 +24,7 @@ namespace BackendFramework.Controllers
         private readonly IWordRepository _wordRepo;
         private readonly LiftService _liftService;
 
-        public LiftController(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService wordService, IProjectService projServ)
+        public LiftController(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IProjectService projServ)
         {
             _merger = merger;
             _wordRepo = repo;
@@ -34,7 +34,7 @@ namespace BackendFramework.Controllers
         // POST: v1/project/{projectId}/words/upload
         // Implements: Upload(), Arguments: FileUpload model
         [HttpPost("words/upload")]
-        public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
+        public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload model)
         {
             var fileInfo = model.File;
 
@@ -102,7 +102,8 @@ namespace BackendFramework.Controllers
 
                 try
                 {
-                    var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+                    _liftService.SetProject(projectId);
+                    var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_liftService);
                     return new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
                 }
                 catch (Exception)
