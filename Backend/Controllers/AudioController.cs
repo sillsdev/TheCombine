@@ -1,11 +1,15 @@
-﻿using BackendFramework.Interfaces;
+﻿using BackendFramework.Helper;
+using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers
 {
+
     //[Authorize]
     [Produces("application/json")]
     [Route("v1")]
@@ -27,17 +31,20 @@ namespace BackendFramework.Controllers
 
             if (file.Length > 0)
             {
-                string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-                System.IO.Directory.CreateDirectory(wanted_path + "/Audio");
+                //get path to home
+                Utilities util = new Utilities();
+                model.FilePath = util.GenerateFilePath(filetype.audio, false, wordId, Path.Combine("AmbigProjectName", "Import", "Audio"));
 
-                model.FilePath = Path.Combine(wanted_path + "/Audio/" + wordId + ".mp3");
+                //copy the file data to the created file
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
                 }
-                //add the relative path to the audio field of 
-                Word gotWord = await _wordRepo.GetWord(wordId);
+
+                //add the relative path to the audio field
+                Word gotWord = await _wordRepo.GetWord(wordId); //TODO: this isnt relative
                 gotWord.Audio = model.FilePath;
+
                 //update the entry
                 _ = await _wordService.Update(wordId, gotWord);
 
