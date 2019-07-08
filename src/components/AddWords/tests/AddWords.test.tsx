@@ -49,6 +49,8 @@ beforeEach(() => {
     );
     handle = master.root.findByType(AddWords_unconnected);
   });
+
+  mockedAxios.put.mockClear();
 });
 
 describe("Tests AddWords", () => {
@@ -94,10 +96,9 @@ describe("Tests AddWords", () => {
         }
       ]
     });
-    mockedAxios.put = jest.fn(() => Promise.resolve(1));
-    let spy = jest.spyOn(mockedAxios, "put");
+    mockedAxios.put.mockResolvedValue(1);
     handle.instance.updateWord(1);
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(mockedAxios.put).toHaveBeenCalledTimes(1);
     done();
   });
 
@@ -121,7 +122,7 @@ describe("Tests AddWords", () => {
         }
       ]
     });
-    mockedAxios.delete = jest.fn(() => Promise.resolve(1));
+    mockedAxios.delete.mockResolvedValue(1);
     handle.instance.removeWord(1, () => {
       expect(handle.instance.state.rows).toEqual([
         {
