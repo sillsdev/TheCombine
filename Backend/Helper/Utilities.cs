@@ -14,7 +14,7 @@ namespace BackendFramework.Helper
             dir
         }
 
-        public string GenerateFilePath(filetype type, bool isDirectory, string customFileName = "", string customDirPath = "AmbigProjectName")
+        public string GenerateFilePath(filetype type, bool isDirectory, string customFileName = "", string customDirPath = "")
         {
             //generate path to home on linux
             var pathToHome = Environment.GetEnvironmentVariable("HOME");
