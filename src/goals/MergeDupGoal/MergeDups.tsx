@@ -1,14 +1,6 @@
-import {
-  Goal,
-  GoalData,
-  Tools,
-  GoalOption,
-  GoalType,
-  GoalStep
-} from "../../types/goals";
+import { Goal, Tools, GoalOption, GoalType, GoalStep } from "../../types/goals";
 import { User } from "../../types/user";
 import { Word } from "../../types/word";
-import DupFinder from "./DuplicateFinder/DuplicateFinder";
 
 //interface for component state
 export interface MergeDupProps {

@@ -15,8 +15,6 @@ import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
 import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { Word } from "../../types/word";
-import { Action } from "redux";
 
 export const LOAD_USER_EDITS = "LOAD_USER_EDITS";
 export type LOAD_USER_EDITS = typeof LOAD_USER_EDITS;

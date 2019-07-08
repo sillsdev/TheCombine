@@ -1,4 +1,3 @@
-import React from "react";
 import { Goal, GoalsState } from "../../types/goals";
 import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
@@ -8,8 +7,6 @@ import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
-import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { Word } from "../../types/word";
 
 let goal1: Goal = new CreateCharInv([]);
 let goal2: Goal = new CreateStrWordInv([]);
@@ -29,9 +26,6 @@ let allTheGoals: Goal[] = [
   goal7,
   goal8
 ];
-
-let suggestion1: Goal = new CreateCharInv([]);
-let suggestion2: Goal = new MergeDups();
 
 let suggestionsArray: Goal[] = [...allTheGoals];
 
