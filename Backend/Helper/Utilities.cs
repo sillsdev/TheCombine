@@ -14,7 +14,7 @@ namespace BackendFramework.Helper
             dir
         }
 
-        public string GenerateFilePath(filetype type, bool directory, string customFileName = "", string customDirPath = "AmbigProjectName")
+        public string GenerateFilePath(filetype type, bool isDirectory, string customFileName = "", string customDirPath = "AmbigProjectName")
         {
             //generate path to home on linux
             var pathToHome = Environment.GetEnvironmentVariable("HOME");
@@ -30,19 +30,18 @@ namespace BackendFramework.Helper
             {
                 throw new DesktopNotFoundException();
             }
-            
+
             //path to the base data folder
             string returnFilepath = Path.Combine(pathToHome, ".CombineFiles", customDirPath);
 
             //establish path to the typed file in the base folder
-            //string returnFilepath = Path.Combine(wanted_path, FileTypeFolder(type));
 
             //if its the first time here it needs to be created
             Directory.CreateDirectory(returnFilepath);
-            
-            //if the path being generated is to a dir not a file then dont add an extension
-            returnFilepath = Path.Combine(returnFilepath, customFileName + (directory ? "" : FileTypeExtension(type)));
-            
+
+            //if the path being generated is to a dir and not a file then dont add an extension
+            returnFilepath = Path.Combine(returnFilepath, customFileName + (isDirectory ? "" : FileTypeExtension(type)));
+
             return returnFilepath;
         }
         private string FileTypeFolder(filetype type)

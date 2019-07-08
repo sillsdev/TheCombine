@@ -43,7 +43,7 @@ namespace Backend.Tests
         public void TestAudioImport()
         {
             //yell at mark if this makes it into the pull request
-            string filePath = "../../../Assets/sound.mp3";
+            string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "sound.mp3");
 
             FileStream fstream = File.OpenRead(filePath);
 

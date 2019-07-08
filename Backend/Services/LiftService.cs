@@ -72,12 +72,12 @@ namespace BackendFramework.Services
             Helper.Utilities util = new Helper.Utilities();
 
             //generate the zip dir
-            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, false, "", Path.Combine("AmbigProjectName", "Export"));
+            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, true, "", Path.Combine("AmbigProjectName", "Export"));
             string zipdir = Path.Combine(filename, "LiftExport");
             Directory.CreateDirectory(zipdir);
 
             //generates file to be exported to
-            string exportFilePath = Path.Combine(zipdir, "TEST-EXPORTED-" + Path.GetRandomFileName());
+            string exportFilePath = Path.Combine(zipdir, "EXPORTED-" + Path.GetRandomFileName());
 
            //add audio dir inside zip dir
             string audiodir = Path.Combine(zipdir, "Audio");
@@ -110,7 +110,6 @@ namespace BackendFramework.Services
                 //add vernacular (lexical form)
                 addVern(Id, wordEntry, entry);
 
-                //add audio (pronunciation media) filename = //projectname
                 string audioSrc = Path.Combine(filename, "zips");
                 addAudio(entry, wordEntry, audiodir);
 
@@ -149,7 +148,7 @@ namespace BackendFramework.Services
             }
             catch (FileNotFoundException)
             {
-                //do nothing
+                //do nothing, the audio file isnt there so it wont be added
             }
         }
 

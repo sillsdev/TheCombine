@@ -38,11 +38,11 @@ namespace BackendFramework.Controllers
         [HttpPost("words/upload")]
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
-            var file = model.File;
+            var fileInfo = model.File;
 
-            if (file.Length > 0)
+            if (fileInfo.Length > 0)
             {
-                //get path to desktop
+                //get path to home
                 Utilities util = new Utilities();
                 //generate the file to put the filestream into
                 model.FilePath = util.GenerateFilePath(filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine("AmbigProjectName", "Import"));
@@ -50,12 +50,16 @@ namespace BackendFramework.Controllers
                 //copy stream into file
                 using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
                 {
-                    await file.CopyToAsync(fs);
+                    await fileInfo.CopyToAsync(fs);
                 }
 
-                //extract the zip into another file
+                //extract the zip into another dir
                 string zipDest = Path.GetDirectoryName(model.FilePath);
                 Directory.CreateDirectory(zipDest);
+
+                //log the dirs in the dest pre extraction
+                var preExportDirList = Directory.GetDirectories(zipDest);
+
                 try
                 {
                     ZipFile.ExtractToDirectory(model.FilePath, zipDest);
@@ -66,59 +70,42 @@ namespace BackendFramework.Controllers
                     return new BadRequestObjectResult("That file has already been uploaded");
                 }
 
-                //generate path to extracted .lift file for import
-                //first you need the filename of the extracted dir
-                var filesArr = Directory.GetDirectories(Directory.GetParent(model.FilePath).ToString());
-                
-                if (filesArr.Length != 3)
+                //log the dirs in the dest pre extraction
+                var postExportDirList = Directory.GetDirectories(zipDest);
+
+                //get path to extracted dir
+                var pathToExtracted = postExportDirList.Except(preExportDirList).ToList();
+                string extractedDirPath;
+
+                if (pathToExtracted.Count == 1)
                 {
-                    //there should only be one files within the zips dir, the extracted dir
-                    throw new InvalidDataException("Your .zip file structure is incorrect");
+                    extractedDirPath = pathToExtracted.FirstOrDefault();
+                }
+                else
+                {
+                    throw new InvalidDataException("Your zip file structure is incorrect");
                 }
 
-                //get a list of files within the extracted dir
-                string extractedDirPath = "";
-                foreach(string path in filesArr)
-                {
-                    string[] split = path.Split( Path.DirectorySeparatorChar );
-                    if (split.Last() == Path.GetFileNameWithoutExtension(model.File.FileName))
-                    {
-                        extractedDirPath = path;
-                    }
-                }
-                
                 var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
                 string extractedLiftName = "";
-                int successCount = 0;
 
                 //search for the lift file within the list
-                Regex reg = new Regex(".lift$");
-                foreach (var liftFile in extractedLiftNameArr)
+                var extractedLiftPath = Array.FindAll(extractedLiftNameArr, file => file.EndsWith(".lift"));
+                if (extractedLiftPath.Length > 1)
                 {
-                    Match match = reg.Match(liftFile);
-                    if (match.Success)
-                    {
-                        extractedLiftName = liftFile;
-                        ++successCount;
-
-                        if(successCount >= 2)
-                        {
-                            //if there is more than one lift file
-                            throw new InvalidDataException("More than one .lift file detected");
-                        }
-                    }
+                    throw new InvalidDataException("More than one .lift file detected");
                 }
-                if (successCount == 0)
+                else if (extractedLiftPath.Length == 0)
                 {
                     throw new InvalidDataException("No lift files detected");
                 }
 
-                string extractedLiftPath = Path.Combine(extractedDirPath, extractedLiftName);
+                
 
                 try
                 {
                     var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                    return new ObjectResult(parser.ReadLiftFile(extractedLiftPath));
+                    return new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
                 }
                 catch (Exception)
                 {

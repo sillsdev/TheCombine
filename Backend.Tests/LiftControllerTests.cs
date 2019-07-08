@@ -122,7 +122,7 @@ namespace Backend.Tests
         [Test]
         public void TestRoundtrip()
         {
-           
+
             /*
              * This test assumes you have the starting .zip included in your project files. It will be included in the pull request
              */
@@ -143,7 +143,7 @@ namespace Backend.Tests
 
             //generate api perameter with filestream
             FileStream fstream = File.OpenRead(pathToStartZip);
-            
+
             var fileUpload = InitFile(fstream, actualFilename);
 
             //make api call
@@ -153,13 +153,11 @@ namespace Backend.Tests
                 //this will be removed in the next pull request
                 return;
             }
-            
+
             fstream.Close();
 
             var allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
-
-            
 
             //export
             _ = liftController.ExportLiftFile(proj.Id).Result;
@@ -182,7 +180,7 @@ namespace Backend.Tests
             File.Delete(fileUpload.FilePath);
             fstream.Close();
             */
-            
+
         }
     }
 }

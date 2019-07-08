@@ -44,7 +44,7 @@ namespace Backend.Tests
         [Test]
         public void TestAvatarImport()
         {//yell at mark if this makes it to the pull request
-            string filePath = "../../../Assets/combine.png";
+            string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "combine.png");
 
             FileStream fstream = File.OpenRead(filePath);
 
