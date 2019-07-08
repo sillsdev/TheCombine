@@ -9,10 +9,7 @@ using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers
 {
-    public class DesktopNotFoundExceoption : Exception
-    {
-        public DesktopNotFoundExceoption() { }
-    }
+    
     //[Authorize]
     [Produces("application/json")]
     [Route("v1")]
