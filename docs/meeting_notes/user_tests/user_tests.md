@@ -145,3 +145,61 @@ The tester also requested an undo button. We determined this was unnecessary.
   - Make stacking mechanic and purpose clearer
   - Make dragging mechanic more quickly evident
   - Disable right-click for now
+
+# Wednesday, July 3
+
+### Merge Duplicate Goal
+
+- Minimize Mouse Movement
+
+  - Add keybindings
+    - Arrow keys to move selected card
+    - Spacebar/enter? to select card
+    - Number keys to drop card onto corresponding word
+  - Possibly move 'save & continue' button
+
+- Handle Right Click (Still)
+
+  - Select card?
+  - Show stack?
+
+- Allow Editing of Card Fields
+
+  - Editable Dropdown/Autocomplete for:
+    - Vernacular
+    - Gloss
+  - Dropdown for:
+    - Semantic Domain
+
+- Add Stacking Visuals to New UI
+
+  - Display number of cards in stack
+  - Display cards in stack on click
+  - Clarify only one gloss per language per sense
+
+- Clarify Card Mechanics
+
+  - Add animation to show card has moved, not been deleted (dragndrop library?)
+  - Make it clearer that cards can be stacked
+
+- Add Way to Delete Cards?
+  - "To be Deleted" stack
+
+### Navigation Component View
+
+- Don't Append Empty Goals to History
+  - Check if user did anything within the goal before adding it to the history
+
+### Create Character Inventory Goal
+
+- Eliminate Initial Click on 'Add Chars' Button
+
+  - Disable button until field is filled?
+  - Make buttons invisible until can be used?
+  - Rename goal more clearly?
+
+- Move Sliding Buttons to Left Side of Words in Create Char. Inv.
+
+### Bugfixes
+
+- Goal History Remains After Logging Out
