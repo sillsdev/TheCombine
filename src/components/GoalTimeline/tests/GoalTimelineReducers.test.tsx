@@ -12,7 +12,7 @@ import { CreateStrWordInv } from "../../../goals/CreateStrWordInv/CreateStrWordI
 import { ValidateChars } from "../../../goals/ValidateChars/ValidateChars";
 import { State } from "../../../types/word";
 
-const goalDataMock: MergeDupData = {
+export const goalDataMock: MergeDupData = {
   plannedWords: [
     [
       {

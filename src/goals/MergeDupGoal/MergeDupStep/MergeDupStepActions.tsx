@@ -90,6 +90,7 @@ export function removeSense(ref: MergeTreeReference): MergeTreeAction {
 }
 
 export function setWordData(words: Word[]): MergeDataAction {
+  console.log(words);
   return {
     type: MergeTreeActions.SET_DATA,
     payload: words
@@ -113,8 +114,7 @@ export function refreshWords() {
     dispatch(nextStep());
     let history: Goal[] = getState().goalsState.historyState.history;
     let goal: Goal = history[history.length - 1];
-    // console.log(history);
-    let words: Word[] = goal.steps[goal.curNdx].words;
+    let words: Word[] = goal.steps[goal.curNdx - 1].words;
 
     dispatch(setWordData(words));
   };

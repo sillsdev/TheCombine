@@ -46,7 +46,7 @@ export const goalsReducer = (
       let history: Goal[] = state.historyState.history;
       let currentGoal: Goal = history[history.length - 1];
 
-      currentGoal = updateStepData(currentGoal);
+      currentGoal = updateStepDataAndCurNdx(currentGoal);
       history.splice(-1, 1, currentGoal);
 
       return {
@@ -63,7 +63,7 @@ export const goalsReducer = (
   }
 };
 
-export function updateStepData(goal: Goal): Goal {
+export function updateStepDataAndCurNdx(goal: Goal): Goal {
   switch (goal.goalType) {
     case GoalType.MergeDups:
       let currentGoalData: MergeDupData = goal.data as MergeDupData;

@@ -1,4 +1,4 @@
-import { Goal } from "../../types/goals";
+import { Goal, GoalData } from "../../types/goals";
 import { ActionWithPayload } from "../../types/mockAction";
 import { Dispatch } from "redux";
 import * as backend from "../../backend";
@@ -8,7 +8,7 @@ import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDups, MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
@@ -76,12 +76,12 @@ export function asyncAddGoalToHistory(goal: Goal) {
   };
 }
 
-async function loadGoalData(goal: Goal): Promise<Goal> {
+export async function loadGoalData(goal: Goal): Promise<Goal> {
   switch (goal.goalType) {
     case GoalType.MergeDups:
       let finder = new DupFinder();
       await finder.getNextDups().then(words => {
-        (goal.data as MergeDupData) = { plannedWords: words };
+        goal.data = { plannedWords: words };
       });
   }
   return goal;
