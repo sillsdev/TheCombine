@@ -111,7 +111,7 @@ export async function updateUser(user: User): Promise<User> {
 
 export async function createProject(project: Project): Promise<Project> {
   return await backendServer
-    .post("projects/" + projectId + "", project, { headers: authHeader() })
+    .post("projects/", project, { headers: authHeader() })
     .then(resp => {
       return { ...project, id: resp.data };
     });
