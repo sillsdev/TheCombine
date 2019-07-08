@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
             {
                 //get path to home
                 Utilities util = new Utilities();
-                model.FilePath = util.GenerateFilePath(filetype.audio, false, wordId, Path.Combine("AmbigProjectName", "Import", "Audio"));
+                model.FilePath = util.GenerateFilePath(filetype.audio, false, wordId, Path.Combine(projectId, "Import", "Audio"));
 
                 //copy the file data to the created file
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))

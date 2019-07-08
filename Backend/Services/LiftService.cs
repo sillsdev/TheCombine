@@ -77,7 +77,7 @@ namespace BackendFramework.Services
             Helper.Utilities util = new Helper.Utilities();
 
             //generate the zip dir
-            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, true, "", Path.Combine("AmbigProjectName", "Export"));
+            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, true, "", Path.Combine(projectId, "Export"));
             string zipdir = Path.Combine(filename, "LiftExport");
             Directory.CreateDirectory(zipdir);
 

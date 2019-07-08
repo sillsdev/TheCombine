@@ -37,7 +37,7 @@ namespace BackendFramework.Controllers
                 {
                     //get path to home
                     Utilities util = new Utilities();
-                    model.FilePath = util.GenerateFilePath(Utilities.filetype.avatar, false, userId, Path.Combine("AmbigProjectName", "Import", "Avatars"));
+                    model.FilePath = util.GenerateFilePath(Utilities.filetype.avatar, false, userId, "Avatars");
 
                     //copy stream to filepath
                     using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))

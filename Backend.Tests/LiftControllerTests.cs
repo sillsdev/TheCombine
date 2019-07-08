@@ -1,7 +1,5 @@
 ﻿using BackendFramework.Controllers;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
-using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +14,6 @@ namespace Backend.Tests
     public class LiftControllerTests
     {
         private IWordRepository _wordrepo;
-        private IWordService _wordService;
         private IProjectService _projServ;
         private ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
         private LiftController _liftController;
@@ -26,9 +23,7 @@ namespace Backend.Tests
         {
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordrepo);
-            _merger = new LiftService(_wordrepo, _projServ);
-            _liftController = new LiftController(_merger, _wordrepo, _projServ);
+            _liftController = new LiftController(_wordrepo, _projServ);
         }
 
         Project RandomProject()

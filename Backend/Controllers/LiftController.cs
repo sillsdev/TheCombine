@@ -5,11 +5,9 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static BackendFramework.Helper.Utilities;
 
@@ -20,13 +18,11 @@ namespace BackendFramework.Controllers
     [Route("v1/projects/{projectId}")]
     public class LiftController : Controller
     {
-        private readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
         private readonly IWordRepository _wordRepo;
         private readonly LiftService _liftService;
 
-        public LiftController(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IProjectService projServ)
+        public LiftController(IWordRepository repo, IProjectService projServ)
         {
-            _merger = merger;
             _wordRepo = repo;
             _liftService = new LiftService(_wordRepo, projServ);
         }
@@ -43,7 +39,7 @@ namespace BackendFramework.Controllers
                 //get path to home
                 Utilities util = new Utilities();
                 //generate the file to put the filestream into
-                model.FilePath = util.GenerateFilePath(filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine("AmbigProjectName", "Import"));
+                model.FilePath = util.GenerateFilePath(filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine(projectId, "Import"));
 
                 //copy stream into file
                 using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
