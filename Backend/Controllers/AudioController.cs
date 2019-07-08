@@ -9,7 +9,7 @@ using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers
 {
-    
+
     //[Authorize]
     [Produces("application/json")]
     [Route("v1")]
@@ -42,7 +42,7 @@ namespace BackendFramework.Controllers
                 }
 
                 //add the relative path to the audio field
-                Word gotWord = await _wordRepo.GetWord(wordId); //kumquat: this isnt relative
+                Word gotWord = await _wordRepo.GetWord(wordId); //TODO: this isnt relative
                 gotWord.Audio = model.FilePath;
 
                 //update the entry
