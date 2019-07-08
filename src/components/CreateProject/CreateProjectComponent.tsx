@@ -102,23 +102,28 @@ class CreateProject extends React.Component<
     return (
       <div className="CreateProject">
         <AppBarComponent />
-        <Grid container justify="center">
+        <Grid container justify="center" spacing={2}>
           <Grid item>
-            <CardContent>
-              {/* Title */}
-              <Typography variant="h5" align="center" gutterBottom>
-                <Translate id="selectProject.title" />
-              </Typography>
+            <Card style={{ width: 450 }}>
+              <CardContent>
+                {/* Title */}
+                <Typography variant="h5" align="center" gutterBottom>
+                  <Translate id="selectProject.title" />
+                </Typography>
 
-              {/* List of projects */}
-              <List>
-                {this.state.projectList.map(project => (
-                  <ListItem button onClick={() => this.selectProject(project)}>
-                    <Typography variant="h6">{project.name}</Typography>
-                  </ListItem>
-                ))}
-              </List>
-            </CardContent>
+                {/* List of projects */}
+                <List>
+                  {this.state.projectList.map(project => (
+                    <ListItem
+                      button
+                      onClick={() => this.selectProject(project)}
+                    >
+                      <Typography variant="h6">{project.name}</Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
           </Grid>
           <Grid item>
             <Card style={{ width: 450 }}>
