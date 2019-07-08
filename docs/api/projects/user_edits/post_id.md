@@ -1,6 +1,6 @@
-# Add UserEdit
+# Add Goal to UserEdit
 
-**URL** : `/v1/projects/userroles/`
+**URL** : `/v1/projects/{projectId}/useredits/{userEditId}`
 
 **Method** : `POST`
 

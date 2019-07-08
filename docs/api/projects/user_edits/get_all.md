@@ -1,6 +1,6 @@
 # Get all UserEdits
 
-**URL** : `/v1/projects/useredits/`
+**URL** : `/v1/projects/{projectId}/useredits/`
 
 **Method** : `GET`
 

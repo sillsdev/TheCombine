@@ -1,6 +1,6 @@
 # Get user
 
-**URL** : `/v1/users/{Id}`
+**URL** : `/v1/users/{userId}`
 
 **Method** : `GET`
 

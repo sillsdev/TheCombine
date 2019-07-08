@@ -1,6 +1,6 @@
 # Get a single project
 
-**URL** : `/v1/projects/{Id}`
+**URL** : `/v1/projects/{projectId}`
 
 **Method** : `GET`
 
