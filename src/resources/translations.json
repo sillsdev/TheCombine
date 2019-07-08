@@ -58,6 +58,9 @@
     "fileSelected": ["File selected", "Archivo seleccionado"],
     "success": ["Project Created!", "Proyecto creado!"]
   },
+  "selectProject": {
+    "title": ["Select Project", "Select Project in spanish"]
+  },
   "goal": {
     "selector": {
       "selectOption": ["Select this goal", "Selecciona este objectivo"],

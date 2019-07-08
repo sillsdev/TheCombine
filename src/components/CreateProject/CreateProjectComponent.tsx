@@ -12,14 +12,20 @@ import {
   Typography,
   CardContent,
   Card,
-  CircularProgress
+  CircularProgress,
+  List,
+  ListItem
 } from "@material-ui/core";
 import { Check } from "@material-ui/icons";
 import { buttonSuccess } from "../../types/theme";
 import AppBarComponent from "../AppBar/AppBarComponent";
+import { Project } from "../../types/project";
+import { getAllProjects } from "../../backend";
+import history from "../../history";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
+  setCurrentProject?: (project: Project) => void;
   reset: () => void;
   inProgress: boolean;
   success: boolean;
@@ -31,6 +37,7 @@ interface CreateProjectState {
   languageData?: File;
   fileName?: string;
   error: { name: boolean };
+  projectList: Project[];
 }
 
 class CreateProject extends React.Component<
@@ -39,7 +46,10 @@ class CreateProject extends React.Component<
 > {
   constructor(props: CreateProjectProps & LocalizeContextProps) {
     super(props);
-    this.state = { name: "", error: { name: false } };
+    this.state = { projectList: [], name: "", error: { name: false } };
+    getAllProjects().then(projects =>
+      this.setState({ ...this.state, projectList: projects })
+    );
   }
 
   componentDidMount() {
@@ -82,114 +92,142 @@ class CreateProject extends React.Component<
     }
   }
 
+  selectProject(project: Project) {
+    if (this.props.setCurrentProject) this.props.setCurrentProject(project);
+    history.push("/goals");
+  }
+
   render() {
     //visual definition
     return (
       <div className="CreateProject">
         <AppBarComponent />
         <Grid container justify="center">
-          <Card style={{ width: 450 }}>
-            <form onSubmit={e => this.createProject(e)}>
-              <CardContent>
-                {/* Title */}
-                <Typography variant="h5" align="center" gutterBottom>
-                  <Translate id="createProject.title" />
-                </Typography>
+          <Grid item>
+            <CardContent>
+              {/* Title */}
+              <Typography variant="h5" align="center" gutterBottom>
+                <Translate id="selectProject.title" />
+              </Typography>
 
-                {/* Project name field */}
-                <TextField
-                  label={<Translate id="createProject.name" />}
-                  value={this.state.name}
-                  onChange={e => this.updateName(e)}
-                  variant="outlined"
-                  style={{ width: "100%", marginBottom: 30 }}
-                  margin="normal"
-                  error={this.state.error["name"]}
-                  helperText={
-                    this.state.error["name"] && (
-                      <Translate id="login.required" />
-                    )
-                  }
-                />
-
-                {/* File upload */}
-                <Typography
-                  variant="body1"
-                  style={{ marginRight: 20 }}
-                  display="inline"
-                >
-                  <Translate id="createProject.upload?" />
-                </Typography>
-                {/* The actual file input element is hidden... */}
-                <input
-                  id="file-input"
-                  type="file"
-                  name="name"
-                  accept=".lift"
-                  onChange={e =>
-                    this.updateLanguageData(e.target.files as FileList)
-                  }
-                  style={{ display: "none" }}
-                />
-                {/* ... and this button is tied to it with the htmlFor property */}
-                <Button variant="contained">
-                  <label
-                    htmlFor="file-input"
-                    style={{
-                      cursor: "pointer"
-                    }}
-                  >
-                    <Translate id="createProject.browse" />
-                  </label>
-                </Button>
-                {/* Displays the name of the selected file */}
-                {this.state.fileName && (
-                  <Typography variant="body1" noWrap style={{ marginTop: 30 }}>
-                    <Translate id="createProject.fileSelected" />:{" "}
-                    {this.state.fileName}
+              {/* List of projects */}
+              <List>
+                {this.state.projectList.map(project => (
+                  <ListItem button onClick={() => this.selectProject(project)}>
+                    <Typography variant="h6">{project.name}</Typography>
+                  </ListItem>
+                ))}
+              </List>
+            </CardContent>
+          </Grid>
+          <Grid item>
+            <Card style={{ width: 450 }}>
+              <form onSubmit={e => this.createProject(e)}>
+                <CardContent>
+                  {/* Title */}
+                  <Typography variant="h5" align="center" gutterBottom>
+                    <Translate id="createProject.title" />
                   </Typography>
-                )}
 
-                {/* Form submission button */}
-                <Grid container justify="flex-end">
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={this.props.inProgress}
-                    style={{
-                      marginTop: 30,
-                      backgroundColor: this.props.success
-                        ? buttonSuccess
-                        : undefined
-                    }}
+                  {/* Project name field */}
+                  <TextField
+                    label={<Translate id="createProject.name" />}
+                    value={this.state.name}
+                    onChange={e => this.updateName(e)}
+                    variant="outlined"
+                    style={{ width: "100%", marginBottom: 30 }}
+                    margin="normal"
+                    error={this.state.error["name"]}
+                    helperText={
+                      this.state.error["name"] && (
+                        <Translate id="login.required" />
+                      )
+                    }
+                  />
+
+                  {/* File upload */}
+                  <Typography
+                    variant="body1"
+                    style={{ marginRight: 20 }}
+                    display="inline"
                   >
-                    {this.props.success ? (
-                      <React.Fragment>
-                        <Check />
-                        <Translate id="createProject.success" />
-                      </React.Fragment>
-                    ) : (
-                      <Translate id="createProject.create" />
-                    )}
-                    {this.props.inProgress && (
-                      <CircularProgress
-                        size={24}
-                        style={{
-                          color: buttonSuccess,
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          marginTop: -12,
-                          marginLeft: -12
-                        }}
-                      />
-                    )}
+                    <Translate id="createProject.upload?" />
+                  </Typography>
+                  {/* The actual file input element is hidden... */}
+                  <input
+                    id="file-input"
+                    type="file"
+                    name="name"
+                    accept=".lift"
+                    onChange={e =>
+                      this.updateLanguageData(e.target.files as FileList)
+                    }
+                    style={{ display: "none" }}
+                  />
+                  {/* ... and this button is tied to it with the htmlFor property */}
+                  <Button variant="contained">
+                    <label
+                      htmlFor="file-input"
+                      style={{
+                        cursor: "pointer"
+                      }}
+                    >
+                      <Translate id="createProject.browse" />
+                    </label>
                   </Button>
-                </Grid>
-              </CardContent>
-            </form>
-          </Card>
+                  {/* Displays the name of the selected file */}
+                  {this.state.fileName && (
+                    <Typography
+                      variant="body1"
+                      noWrap
+                      style={{ marginTop: 30 }}
+                    >
+                      <Translate id="createProject.fileSelected" />:{" "}
+                      {this.state.fileName}
+                    </Typography>
+                  )}
+
+                  {/* Form submission button */}
+                  <Grid container justify="flex-end">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      disabled={this.props.inProgress}
+                      style={{
+                        marginTop: 30,
+                        backgroundColor: this.props.success
+                          ? buttonSuccess
+                          : undefined
+                      }}
+                    >
+                      {this.props.success ? (
+                        <React.Fragment>
+                          <Check />
+                          <Translate id="createProject.success" />
+                        </React.Fragment>
+                      ) : (
+                        <Translate id="createProject.create" />
+                      )}
+                      {this.props.inProgress && (
+                        <CircularProgress
+                          size={24}
+                          style={{
+                            color: buttonSuccess,
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            marginTop: -12,
+                            marginLeft: -12
+                          }}
+                        />
+                      )}
+                    </Button>
+                  </Grid>
+                </CardContent>
+              </form>
+            </Card>
+          </Grid>
         </Grid>
       </div>
     );
