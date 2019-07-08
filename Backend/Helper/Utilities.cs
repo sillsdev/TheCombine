@@ -44,6 +44,8 @@ namespace BackendFramework.Helper
 
             return returnFilepath;
         }
+
+        //TODO:
         private string FileTypeFolder(filetype type)
         {
             switch (type)
