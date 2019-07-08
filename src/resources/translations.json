@@ -52,7 +52,7 @@
       ".lift language data file",
       "archivo de datos de idioma .lift"
     ],
-    "upload?": ["Upload .lift file?", "Uploado .lift filada?"],
+    "upload?": ["Upload lift project?", "Uploado .lift filada?"],
     "browse": ["Browse", "Navegar"],
     "create": ["Create Project", "Crear Proyecto"],
     "fileSelected": ["File selected", "Archivo seleccionado"],

@@ -158,7 +158,7 @@ class CreateProject extends React.Component<
                     id="file-input"
                     type="file"
                     name="name"
-                    accept=".lift"
+                    accept=".zip"
                     onChange={e =>
                       this.updateLanguageData(e.target.files as FileList)
                     }
