@@ -16,3 +16,7 @@ export function uuid(): string {
   return bytes(4) + '-' + bytes(2) + '-' + bytes(2) + '-' + bytes(2) + '-' + bytes(6);
 
 }
+
+export function randElement<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
