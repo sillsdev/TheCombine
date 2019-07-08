@@ -25,7 +25,7 @@ import history from "../../history";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
-  setCurrentProject?: (project: Project) => void;
+  setCurrentProject: (project: Project) => void;
   reset: () => void;
   inProgress: boolean;
   success: boolean;
@@ -93,7 +93,7 @@ class CreateProject extends React.Component<
   }
 
   selectProject(project: Project) {
-    if (this.props.setCurrentProject) this.props.setCurrentProject(project);
+    this.props.setCurrentProject(project);
     history.push("/goals");
   }
 
