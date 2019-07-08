@@ -1,5 +1,5 @@
 import { User } from "./user";
-import { MergeStepData } from "../goals/MergeDupGoal/MergeDups";
+import { MergeStepData, MergeDupData } from "../goals/MergeDupGoal/MergeDups";
 import { MergeDupProps } from "../goals/MergeDupGoal/MergeDups";
 import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/component";
 
@@ -18,7 +18,7 @@ export enum Tools {
 
 export type GoalProps = MergeDupProps;
 
-export type GoalData = MergeStepData | {}; // | OtherTypes
+export type GoalData = MergeDupData | {}; // | OtherTypes
 
 export type MockGoalStepType = {};
 

@@ -19,7 +19,7 @@ export class ValidateChars implements Goal {
   completed: boolean;
   result: GoalOption;
 
-  constructor(steps: GoalStep[]) {
+  constructor(steps: GoalStep[] = []) {
     this.goalType = GoalType.ValidateChars;
     this.name = "validateChars";
     this.user = new User("", "", "");

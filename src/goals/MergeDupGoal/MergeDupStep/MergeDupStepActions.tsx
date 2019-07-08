@@ -113,7 +113,9 @@ export function refreshWords() {
     dispatch(nextStep());
     let history: Goal[] = getState().goalsState.historyState.history;
     let goal: Goal = history[history.length - 1];
+    // console.log(history);
     let words: Word[] = goal.steps[goal.curNdx].words;
+
     dispatch(setWordData(words));
   };
 }

@@ -53,6 +53,7 @@ export default class DupFinder {
   async getNextDups(n: number = 1): Promise<Word[][]> {
     let wordsFromDB: Promise<Word[][]> = this.getWordsFromDB().then(words => {
       //return no words if DB empty
+      console.log(words);
       if (words.length <= 0) {
         return this.empty2dArray;
       }

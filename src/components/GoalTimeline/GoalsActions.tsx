@@ -16,6 +16,7 @@ import { Edit } from "../../types/userEdit";
 import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { Word } from "../../types/word";
+import { Action } from "redux";
 
 export const LOAD_USER_EDITS = "LOAD_USER_EDITS";
 export type LOAD_USER_EDITS = typeof LOAD_USER_EDITS;
@@ -36,7 +37,7 @@ export interface AddGoalToHistory extends ActionWithPayload<Goal[]> {
 export const NEXT_STEP = "NEXT_STEP";
 export type NEXT_STEP = typeof NEXT_STEP;
 
-export interface NextStep {
+export interface NextStep extends ActionWithPayload<Goal[]> {
   type: NEXT_STEP;
 }
 
@@ -64,7 +65,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
     let userEditId: string = getUserEditId();
 
     loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
-
+    console.log();
     await backend
       .addGoalToUserEdit(userEditId, goal)
       .then(resp => {
@@ -81,9 +82,9 @@ async function loadGoalData(goal: Goal): Promise<Goal> {
   switch (goal.goalType) {
     case GoalType.MergeDups:
       let finder = new DupFinder();
-      finder
-        .getNextDups()
-        .then(words => ((goal.data as MergeDupData) = { plannedWords: words }));
+      await finder.getNextDups().then(words => {
+        (goal.data as MergeDupData) = { plannedWords: words };
+      });
   }
   return goal;
 }
@@ -163,5 +164,5 @@ export function loadUserEdits(history: Goal[]): LoadUserEdits {
 }
 
 export function nextStep(): NextStep {
-  return { type: NEXT_STEP };
+  return { type: NEXT_STEP, payload: [] };
 }
