@@ -17,7 +17,7 @@ import {
   TranslateFunction
 } from "react-localize-redux";
 import { Word, State } from "../../types/word";
-import { Edit, Delete, RemoveFromQueueTwoTone } from "@material-ui/icons";
+import { Delete } from "@material-ui/icons";
 import * as Backend from "../../backend";
 
 interface AddWordsProps {
@@ -27,11 +27,9 @@ interface AddWordsProps {
 
 interface AddWordsState {
   rows: Row[];
-  editing?: number;
   newVern: string;
   newGloss: string;
   hoverRow?: number;
-  editWord?: number;
 }
 
 /** The data from the `Word` type that the view uses */
@@ -42,10 +40,10 @@ interface Row {
 }
 
 export default class AddWords extends React.Component<
-  AddWordsProps & LocalizeContextProps,
+  AddWordsProps,
   AddWordsState
 > {
-  constructor(props: AddWordsProps & LocalizeContextProps) {
+  constructor(props: AddWordsProps) {
     super(props);
     this.state = {
       newVern: "",
@@ -59,8 +57,8 @@ export default class AddWords extends React.Component<
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
 
-  submit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  submit(e?: React.FormEvent<HTMLFormElement>, callback?: Function) {
+    if (e) e.preventDefault();
 
     const vernacular = this.state.newVern;
     const glosses = this.state.newGloss;
@@ -73,8 +71,9 @@ export default class AddWords extends React.Component<
       .catch(err => console.log(err))
       .then(res => {
         rows.push(this.wordToRow(res as Word));
-        this.setState({ rows: rows, newVern: "", newGloss: "" });
+        this.setState({ rows, newVern: "", newGloss: "" });
         this.focusVernInput();
+        if (callback) callback(res);
       });
   }
 
@@ -86,11 +85,14 @@ export default class AddWords extends React.Component<
   }
 
   /** updates the word in the backend */
-  updateWord(index: number) {
+  updateWord(index: number, callback?: Function) {
     let row = this.state.rows[index];
     Backend.updateWord(this.rowToWord(row))
       .catch(err => console.log(err))
-      .then(res => this.updateRow(this.wordToRow(res as Word), index));
+      .then(res => {
+        this.updateRow(this.wordToRow(res as Word), index);
+        if (callback) callback();
+      });
   }
 
   // Used by new word input
@@ -118,11 +120,12 @@ export default class AddWords extends React.Component<
     if (this.glossInput.current) this.glossInput.current.focus();
   }
 
-  removeWord(index: number) {
+  removeWord(index: number, callback?: Function) {
     Backend.deleteWord(this.rowToWord(this.state.rows[index]))
       .catch(err => console.log(err))
       .then(res => {
         this.removeRow(index);
+        if (callback) callback(res);
       });
   }
 
