@@ -38,7 +38,7 @@ export interface LoginData {
   password?: string;
 }
 
-type LoginType =
+export type LoginType =
   | LOGIN_ATTEMPT
   | LOGIN_FAILURE
   | LOGIN_SUCCESS

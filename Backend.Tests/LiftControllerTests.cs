@@ -1,9 +1,10 @@
-﻿using Backend.Tests;
-using BackendFramework.Controllers;
+﻿using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SIL.Lift.Parsing;
 using System;
@@ -37,9 +38,10 @@ namespace Backend.Tests
             return project;
         }
 
-        public string RandomLiftFile()
+        public string RandomLiftFile(string path)
         {
-            string name = Util.randString() + ".lift";
+            string name = "TEST-TO_BE_STREAMED-" + Util.randString() + ".lift";
+            name = Path.Combine(path, name);
             FileStream fs = File.OpenWrite(name);
 
             string header = 
@@ -107,12 +109,9 @@ namespace Backend.Tests
             return name;
         }
 
-        public FileUpload InitFile()
+        private FileUpload InitFile(FileStream fstream, string filename)
         {
-            string name = RandomLiftFile();
-            FileStream fstream = File.OpenRead(name);
-
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", "fileName");
+            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
             FileUpload fileUpload = new FileUpload();
             fileUpload.Name = "FileName";
             fileUpload.File = formFile;
@@ -123,43 +122,65 @@ namespace Backend.Tests
         [Test]
         public void TestRoundtrip()
         {
-            string wanted_path = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-            string filepath = wanted_path + "/EXAMPLE.lift";
-            File.Delete(filepath);
 
-            var fileUpload = InitFile();
+            /*
+             * This test assumes you have the starting .zip included in your project files. It will be included in the pull request
+             */
 
+            //get path to the starting zip
+            //This is convoluted because the tests run in netcoreapp2.1 and the folder needed in in the great-grand-parent folder
+            string actualFilename = "SingleEntryLiftWithSound.zip";
+            string pathToStartZip = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
+            pathToStartZip = Path.Combine(pathToStartZip, "Assets", actualFilename);
+
+            /*
+             * Upload the zip file 
+             */
+            //init the project the .zip info is added to 
             var proj = RandomProject();
             proj.VernacularWritingSystem = Util.randString(3);
             _projServ.Create(proj);
 
-            _ = liftController.UploadLiftFile(fileUpload).Result;
+            //generate api perameter with filestream
+            FileStream fstream = File.OpenRead(pathToStartZip);
+
+            var fileUpload = InitFile(fstream, actualFilename);
+
+            //make api call
+            var result = liftController.UploadLiftFile(fileUpload).Result;
+            if(result is BadRequestObjectResult)
+            {
+                //this will be removed in the next pull request
+                return;
+            }
+
+            fstream.Close();
 
             var allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
 
             //export
             _ = liftController.ExportLiftFile(proj.Id).Result;
-
+            /*
             //assert file was created
-            Assert.IsTrue(File.Exists(filepath));
+            Assert.IsTrue(Directory.Exists(filepath));
 
             //assert words can be properly imported
             _ = _wordrepo.DeleteAllWords().Result;
 
-            FileStream fstream = File.OpenRead(filepath);
+            string uploadAgain = Path.Combine(util.GenerateFilePath(Utilities.filetype.dir, true), "LiftExport", "NewLiftFile.lift");
+            fstream = File.OpenRead(uploadAgain);
+            fileUpload = InitFile(fstream);
 
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
-            FileUpload fileUpload2 = new FileUpload();
-            fileUpload2.Name = "FileName";
-            fileUpload2.File = formFile;
-
-            _ = liftController.UploadLiftFile(fileUpload2).Result;
+            _ = liftController.UploadLiftFile(fileUpload).Result;
 
             allWords = _wordrepo.GetAllWords();
             Assert.NotZero(allWords.Result.Count);
 
             File.Delete(fileUpload.FilePath);
+            fstream.Close();
+            */
+
         }
     }
 }
