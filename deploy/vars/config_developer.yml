@@ -2,6 +2,8 @@
 
 # config_developer
 
+# path for The Combine application
+application_path: "/var/www/html/TheWordCombine"
 # mongo_path: /hddlinux/mongodb
 mongo_path: /var/lib/mongodb
 
@@ -51,7 +53,7 @@ apache_vhosts:
     server_admin: jimgrady.jg@gmail.com
     server_file_name: default_local
     template: vhost_proxypath_ssl.conf.j2
-    document_root: /var/www/default_local
+    document_root: "{{ application_path }}"
     directory_options:
       - "+Indexes"
       - "+FollowSymLinks"
@@ -59,6 +61,7 @@ apache_vhosts:
       - RewriteEngine On
     virtual_hosts:
       - has_ssl: false
+        listen: 10.10.0.1
         port: 80
         server_alias:
           - localhost
@@ -70,11 +73,12 @@ apache_vhosts:
     server_admin: jimgrady.jg@gmail.com
     server_file_name: thewordcombine_org
     template: vhost_proxypath_ssl.conf.j2
-    document_root: /var/www/thewordcombine.org/htdocs
+    document_root: "{{ application_path }}"
     directory_extra:
       - RewriteEngine On
     virtual_hosts:
       - has_ssl: false
+        listen: 10.10.0.1
         port: 80
         server_alias:
           - thewordcombine.local

@@ -1,5 +1,5 @@
 {% for host in item.virtual_hosts %}
-<VirtualHost *:{{ host.port | default('80') }}>
+<VirtualHost {{ host.listen | default('*') }}:{{ host.port | default('80') }}>
     ServerName {{ item.server_name }}
 {% if host.server_alias is defined %}    ServerAlias {{ host.server_alias | join(' ') }}
 {% endif %}
@@ -45,7 +45,7 @@
 {% endfor %}{% endif %}
     </Directory>
 {% endif %}
-    
+
     # Possible values include: debug, info, notice, warn, error, crit,
     # alert, emerg.
     LogLevel warn
