@@ -41,6 +41,9 @@ export default class DupFinder {
     this.insertionCost = params.insCost;
     this.deletionCost = params.delCost;
     this.subsitutionCost = params.subCost;
+
+    this.vernmap = [];
+    this.glossmap = [];
   }
 
   //prevent infinite loops in getNextDups()
@@ -60,6 +63,9 @@ export default class DupFinder {
   deletionCost: number;
   subsitutionCost: number;
 
+  vernmap: string[];
+  glossmap: string[];
+
   empty2dArray = [[]];
 
   // get n lists of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
@@ -69,6 +75,9 @@ export default class DupFinder {
       if (words.length <= 0) {
         return this.empty2dArray;
       }
+
+      this.setBitmap(words);
+
       //[wordlist, list score]
       let currentWords: [Word[], number][] = [];
 
@@ -113,6 +122,20 @@ export default class DupFinder {
     return wordsFromDB;
   }
 
+  setBitmap(wordCollection: Word[]) {
+    //define bitmaps
+    wordCollection.forEach(word => {
+      this.vernmap = [
+        ...this.vernmap,
+        ...word.vernacular.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
+      ];
+      this.glossmap = [
+        ...this.glossmap,
+        ...word.senses[0].glosses[0].def.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
+      ];
+    });
+  }
+
   //returns a set of words from the database
   async getWordsFromDB(): Promise<Word[]> {
     var wordCollection = backend.getFrontierWords();
@@ -133,9 +156,20 @@ export default class DupFinder {
     return scoredList;
   }
 
+  //TODO
+  mapWords(words: Word[]): number[] {
+    return [];
+  }
+
   //remove words that are more than one longer or shorter than parent
   filter(parent: Word, words: Word[]): Word[] {
     let filteredWords: Word[] = [];
+
+    // let mappedWords = this.mapWords(words);
+    // let mappedParent = this.mapWords([parent])[0];
+
+    // for (let i = 0; i < mappedWords.length; i++) {}
+
     words.forEach(word => {
       if (Math.abs(parent.vernacular.length - word.vernacular.length) < 2)
         filteredWords.push(word);
