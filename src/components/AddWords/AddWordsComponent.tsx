@@ -11,11 +11,7 @@ import {
   Tooltip
 } from "@material-ui/core";
 import theme from "../../types/theme";
-import {
-  LocalizeContextProps,
-  Translate,
-  TranslateFunction
-} from "react-localize-redux";
+import { Translate, TranslateFunction } from "react-localize-redux";
 import { Word, State } from "../../types/word";
 import { Delete } from "@material-ui/icons";
 import * as Backend from "../../backend";
@@ -30,6 +26,7 @@ interface AddWordsState {
   newVern: string;
   newGloss: string;
   hoverRow?: number;
+  newVernInFrontier: Boolean; // does the new word already exist in the frontier?
 }
 
 /** The data from the `Word` type that the view uses */
@@ -37,6 +34,8 @@ interface Row {
   vernacular: string;
   glosses: string;
   id: string;
+  duplicate?: Boolean;
+  dupId?: string; // the id of the duplicate word in frontier
 }
 
 export default class AddWords extends React.Component<
@@ -48,10 +47,31 @@ export default class AddWords extends React.Component<
     this.state = {
       newVern: "",
       newGloss: "",
-      rows: []
+      rows: [],
+      newVernInFrontier: false
     };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
+  }
+
+  allWords: Word[] = [];
+
+  async componentDidMount() {
+    this.allWords = await Backend.getFrontierWords();
+  }
+
+  /** Returns whether the vernacular is already a word in the frontier and the other word's id */
+  vernInFrontier(vernacular: string): [Boolean, string] {
+    console.log("vernInFrontier() " + Date.now());
+    for (let word of this.allWords) {
+      if (word.vernacular === vernacular) {
+        //TODO: check accessability
+        console.log("vernInFrontier() true");
+        return [true, word.id];
+      }
+    }
+    console.log("vernInFrontier() false");
+    return [false, ""];
   }
 
   vernInput: React.RefObject<HTMLDivElement>;
@@ -71,16 +91,21 @@ export default class AddWords extends React.Component<
       .catch(err => console.log(err))
       .then(res => {
         rows.push(this.wordToRow(res as Word));
-        this.setState({ rows, newVern: "", newGloss: "" });
+        this.setState({
+          rows,
+          newVern: "",
+          newGloss: "",
+          newVernInFrontier: false
+        });
         this.focusVernInput();
         if (callback) callback(res);
       });
   }
 
-  /** updates the view only */
+  /** updates a row in the view only */
   updateRow(row: Row, index: number) {
     let words = [...this.state.rows];
-    words.splice(index, 1, row);
+    words.splice(index, 1, { ...words[index], ...row });
     this.setState({ rows: words });
   }
 
@@ -101,13 +126,17 @@ export default class AddWords extends React.Component<
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >,
-    field: K
+    field: K,
+    callback?: () => void
   ) {
     const value = e.target.value;
 
-    this.setState({
-      [field]: value
-    } as Pick<AddWordsState, K>);
+    this.setState(
+      {
+        [field]: value
+      } as Pick<AddWordsState, K>,
+      callback
+    );
   }
 
   /** Moves the focus to the vernacular textbox */
@@ -120,6 +149,7 @@ export default class AddWords extends React.Component<
     if (this.glossInput.current) this.glossInput.current.focus();
   }
 
+  /** Removes a word from the backend */
   removeWord(index: number, callback?: Function) {
     Backend.deleteWord(this.rowToWord(this.state.rows[index]))
       .catch(err => console.log(err))
@@ -129,6 +159,7 @@ export default class AddWords extends React.Component<
       });
   }
 
+  /** deletes a row from the view only */
   removeRow(index: number) {
     let rows = [...this.state.rows];
     rows.splice(index, 1);
@@ -225,6 +256,7 @@ export default class AddWords extends React.Component<
 
               {/* Rows of words */}
               {this.state.rows.map((row, index) => {
+                console.log(row);
                 return (
                   <Grid
                     item
@@ -239,15 +271,24 @@ export default class AddWords extends React.Component<
                         xs={5}
                         style={{
                           paddingLeft: theme.spacing(2),
-                          paddingRight: theme.spacing(2)
+                          paddingRight: theme.spacing(2),
+                          position: "relative"
                         }}
                       >
                         <TextField
                           fullWidth
                           value={row.vernacular}
                           onChange={e => {
+                            let [duplicate, dupId] = this.vernInFrontier(
+                              e.target.value
+                            );
                             this.updateRow(
-                              { ...row, vernacular: e.target.value },
+                              {
+                                ...row,
+                                vernacular: e.target.value,
+                                duplicate,
+                                dupId
+                              },
                               index
                             );
                           }}
@@ -260,6 +301,29 @@ export default class AddWords extends React.Component<
                             }
                           }}
                         />
+                        {row.duplicate && (
+                          <Tooltip
+                            title={
+                              this.props.translate(
+                                "addWords.wordInDatabase"
+                              ) as string
+                            }
+                            placement="top"
+                          >
+                            <div
+                              style={{
+                                height: "5px",
+                                width: "5px",
+                                border: "2px solid red",
+                                borderRadius: "50%",
+                                position: "absolute",
+                                top: 8,
+                                right: 48,
+                                cursor: "pointer"
+                              }}
+                            />
+                          </Tooltip>
+                        )}
                       </Grid>
                       <Grid
                         item
@@ -323,7 +387,8 @@ export default class AddWords extends React.Component<
                       xs={5}
                       style={{
                         paddingLeft: theme.spacing(2),
-                        paddingRight: theme.spacing(2)
+                        paddingRight: theme.spacing(2),
+                        position: "relative"
                       }}
                     >
                       <TextField
@@ -333,7 +398,13 @@ export default class AddWords extends React.Component<
                         variant="outlined"
                         value={this.state.newVern}
                         onChange={e => {
-                          this.updateField(e, "newVern");
+                          this.updateField(e, "newVern", () =>
+                            this.setState({
+                              newVernInFrontier: this.vernInFrontier(
+                                this.state.newVern
+                              )[0]
+                            })
+                          );
                         }}
                         inputRef={this.vernInput}
                         // Move the focus to the next box when the right arrow key is pressed
@@ -346,6 +417,29 @@ export default class AddWords extends React.Component<
                             this.focusGlossInput();
                         }}
                       />
+                      {this.state.newVernInFrontier && (
+                        <Tooltip
+                          title={
+                            this.props.translate(
+                              "addWords.wordInDatabase"
+                            ) as string
+                          }
+                          placement="top"
+                        >
+                          <div
+                            style={{
+                              height: "5px",
+                              width: "5px",
+                              border: "2px solid red",
+                              borderRadius: "50%",
+                              position: "absolute",
+                              top: 24,
+                              right: 48,
+                              cursor: "pointer"
+                            }}
+                          />
+                        </Tooltip>
+                      )}
                     </Grid>
                     <Grid
                       item

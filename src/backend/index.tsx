@@ -15,11 +15,11 @@ export function setProjectID(id: string) {
 }
 
 export async function createWord(word: Word): Promise<Word> {
-  return await backendServer
-    .post(`projects/"${projectId}/words`, word)
-    .then(resp => {
-      return { ...word, id: resp.data };
-    });
+  let route = `projects/${projectId}/words`;
+  console.log(route);
+  return await backendServer.post(route, word).then(resp => {
+    return { ...word, id: resp.data };
+  });
 }
 
 export async function getWord(id: string): Promise<Word> {
