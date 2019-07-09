@@ -10,8 +10,12 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
     <PackageReference Include="SIL.Core" Version="7.0.0-alpha0816" />
-    <PackageReference Include="SIL.Core.Desktop" Version="7.0.0-alpha0816" />
-    <PackageReference Include="SIL.DictionaryServices" Version="7.0.0-alpha0816" />
+    <PackageReference Include="SIL.Core.Desktop" Version="7.0.0-alpha0816">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+    <PackageReference Include="SIL.DictionaryServices" Version="7.0.0-alpha0816">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
     <PackageReference Include="SIL.Lift" Version="7.0.0-alpha0816">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>

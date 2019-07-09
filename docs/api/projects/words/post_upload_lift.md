@@ -3,7 +3,7 @@
 Used to add many words to a language project from a .lift file  
 [.lift](https://github.com/sillsdev/lift-standard) is an xml variant focused on lexical data transfer
 
-**URL** : `/v1/projects/{project}/words/upload`
+**URL** : `/v1/projects/{projectId}/words/upload`
 
 **Method** : `POST`
 

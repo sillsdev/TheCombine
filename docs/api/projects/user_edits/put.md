@@ -1,6 +1,6 @@
 # Add step to goal
 
-**URL** : `/v1/projects/userroles/{id}`
+**URL** : `/v1/projects/{projectId}/useredits/{userEditId}`
 
 **Method** : `PUT`
 

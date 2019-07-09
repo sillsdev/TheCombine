@@ -6,11 +6,11 @@ namespace BackendFramework.Interfaces
 {
     public interface IUserEditRepository
     {
-        Task<List<UserEdit>> GetAllUserEdits();
-        Task<UserEdit> GetUserEdit(string Id);
+        Task<List<UserEdit>> GetAllUserEdits(string projectId);
+        Task<UserEdit> GetUserEdit(string projectId, string userEditId);
         Task<UserEdit> Create(UserEdit userEdit);
-        Task<bool> Delete(string Id);
-        Task<bool> DeleteAllUserEdits();
-        Task<bool> Replace(string Id, UserEdit userEdit);
+        Task<bool> Delete(string projectId, string uesrEditId);
+        Task<bool> DeleteAllUserEdits(string projectId);
+        Task<bool> Replace(string projectId, string userEditId, UserEdit userEdit);
     }
 }

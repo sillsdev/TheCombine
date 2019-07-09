@@ -1,6 +1,6 @@
 # Upload an audio file
 
-**URL** : `/v1/projects/words/{Id}/upload/audio`
+**URL** : `/v1/projects/{projectId}/words/{wordId}/upload/audio`
 
 **Method** : `POST`
 

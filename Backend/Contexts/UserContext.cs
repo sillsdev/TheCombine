@@ -14,10 +14,10 @@ namespace BackendFramework.Context
         public UserContext(IOptions<Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.UsersDatabase);
+            _db = client.GetDatabase(options.Value.CombineDatabase);
         }
 
-        public IMongoCollection<User> Users => _db.GetCollection<User>("UsersDatabase");
+        public IMongoCollection<User> Users => _db.GetCollection<User>("UsersCollection");
     }
     
 }
