@@ -4,13 +4,10 @@ using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
-using SIL.WritingSystems;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static BackendFramework.Helper.Utilities;
 
@@ -40,7 +37,6 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
             var fileInfo = model.File;
-            ObjectResult result;
 
             if (fileInfo.Length > 0)
             {
@@ -102,36 +98,29 @@ namespace BackendFramework.Controllers
                     throw new InvalidDataException("No lift files detected");
                 }
 
-                
+
 
                 try
                 {
                     var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                    result = new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
+                    return new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
                 }
                 catch (Exception)
                 {
                     return new UnsupportedMediaTypeResult();
                 }
-
-
-                WritingSystemDefinition dave = new WritingSystemDefinition();
-                //dave.LanguageTag = 
-
-
             }
             else
             {
                 return new BadRequestObjectResult("Empty File");
             }
-            return new OkObjectResult(result);
         }
 
         [HttpGet("words/download")]
         public async Task<IActionResult> ExportLiftFile(string Id)
         {
             var words = await _wordRepo.GetAllWords();
-            if(words.Count == 0)
+            if (words.Count == 0)
             {
                 return new BadRequestResult();
             }
