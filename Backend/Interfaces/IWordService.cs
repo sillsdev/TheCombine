@@ -8,5 +8,6 @@ namespace BackendFramework.Interfaces
         Task<bool> Update(string projectId, string wordId, Word word);
         Task<bool> Delete(string projectId, string wordId);
         Task<Word> Merge(string projectId, MergeWords mergeWords);
+        Task<bool> searchInDuplicates(Word word);
     }
 }

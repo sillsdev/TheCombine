@@ -1,6 +1,7 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,10 +11,13 @@ namespace BackendFramework.Services
     public class WordService : IWordService
     {
         private readonly IWordRepository _repo;
+        private readonly IWordContext _wordDatabase;
+        private object filterDef;
 
-        public WordService(IWordRepository repo)
+        public WordService(IWordRepository repo, IWordContext collectionSettings)
         {
             _repo = repo;
+            _wordDatabase = collectionSettings;
         }
 
         public async Task<bool> Delete(string projectId, string wordId)
@@ -26,7 +30,7 @@ namespace BackendFramework.Services
                 wordToDelete.Id = null;
                 wordToDelete.History.Add(wordId);
 
-                foreach(var senseAcc in wordToDelete.Senses)
+                foreach (var senseAcc in wordToDelete.Senses)
                 {
                     senseAcc.Accessibility = (int)state.deleted;
                 }
@@ -63,7 +67,7 @@ namespace BackendFramework.Services
         {
 
             //generate new child words form child word field
-            foreach(var newChildWordState in mergeWords.ChildrenWords)
+            foreach (var newChildWordState in mergeWords.ChildrenWords)
             {
                 //get child word
                 var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordID);
@@ -71,7 +75,7 @@ namespace BackendFramework.Services
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
                 //iterate through senses of that word and change to corresponding state in mergewords
-                for(int i = 0; i < currentChildWord.Senses.Count; i++)
+                for (int i = 0; i < currentChildWord.Senses.Count; i++)
                 {
                     currentChildWord.Senses[i].Accessibility = (int)newChildWordState.SenseStates[i];
                 }
@@ -93,6 +97,52 @@ namespace BackendFramework.Services
             await _repo.AddFrontier(newParent);
 
             return newParent;
+        }
+
+        public async Task<bool> searchInDuplicates(Word word)
+        {
+            //get all words from database
+            var allWords = await _repo.GetAllWords(word.ProjectId);
+
+            //search through all words for the correct vernacular
+            var allVernaculars = allWords.FindAll(x => x.Vernacular == word.Vernacular);
+
+            //for each matching vern check its glosses 
+
+            //this is terrible
+            //  -cant use .contains because no guarantee of strict subset
+            //  -cant use .equals because some fields should not be included in evaluation of equality
+
+
+            foreach (var matchingVern in allVernaculars)
+            {
+                foreach (var oldSense in matchingVern.Senses)
+                {
+                    foreach (var newSense in word.Senses)
+                    {
+                        /*
+                            if old sense contains all elements in new sense
+                            - will not return true if the newSense list is not a 
+                                strict subset of oldSense, At that point the word 
+                                will have to be merged
+                        */
+                        if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
+                        {
+                            //update sem-dom and edited by tag
+                            oldSense.SemanticDomains.AddRange(oldSense.SemanticDomains);
+                            matchingVern.EditedBy.AddRange(word.EditedBy);
+                            //remove dups
+                            oldSense.SemanticDomains.Distinct().ToList();
+                            matchingVern.EditedBy.Distinct().ToList();
+
+                            //its probably not going to be a duplicate of any other sense
+                            //(and if it is we have a bigger problem) so we can quit now
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }
