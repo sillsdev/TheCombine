@@ -94,50 +94,6 @@ namespace BackendFramework.Controllers
                     throw new InvalidDataException("No lift files detected");
                 }
 
-
-
-                try
-                {
-                    ZipFile.ExtractToDirectory(model.FilePath, zipDest);
-                }
-                catch (IOException)
-                {
-                    //is thrown if duplicate files are unzipped
-                    return new BadRequestObjectResult("That file has already been uploaded");
-                }
-
-                //log the dirs in the dest post extraction
-                var postExportDirList = Directory.GetDirectories(zipDest);
-
-                //get path to extracted dir
-                var pathToExtracted = postExportDirList.Except(preExportDirList).ToList();
-                string extractedDirPath;
-
-                if (pathToExtracted.Count == 1)
-                {
-                    extractedDirPath = pathToExtracted.FirstOrDefault();
-                }
-                else
-                {
-                    throw new InvalidDataException("Your zip file structure is incorrect");
-                }
-
-                var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
-                string extractedLiftName = "";
-
-                //search for the lift file within the list
-                var extractedLiftPath = Array.FindAll(extractedLiftNameArr, file => file.EndsWith(".lift"));
-                if (extractedLiftPath.Length > 1)
-                {
-                    throw new InvalidDataException("More than one .lift file detected");
-                }
-                else if (extractedLiftPath.Length == 0)
-                {
-                    throw new InvalidDataException("No lift files detected");
-                }
-
-                
-
                 try
                 {
                     _liftService.SetProject(projectId);

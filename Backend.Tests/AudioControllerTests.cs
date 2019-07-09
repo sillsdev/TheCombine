@@ -1,4 +1,5 @@
 ﻿using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
@@ -32,6 +33,29 @@ namespace Backend.Tests
 
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
+
+            Utilities util = new Utilities();
+
+            DeleteDirectory(util.GenerateFilePath(Utilities.filetype.dir, true,  "" , ""));
+        }
+
+        public static void DeleteDirectory(string target_dir)
+        {
+            string[] files = Directory.GetFiles(target_dir);
+            string[] dirs = Directory.GetDirectories(target_dir);
+
+            foreach (string file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(target_dir, false);
         }
 
         string RandomString(int length = 16)
@@ -49,7 +73,7 @@ namespace Backend.Tests
         [Test]
         public void TestAudioImport()
         {
-            //yell at mark if this makes it into the pull request
+
             string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "sound.mp3");
 
             FileStream fstream = File.OpenRead(filePath);

@@ -52,7 +52,7 @@ namespace BackendFramework.Services
     public class LiftService : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
 
-        
+
         private readonly IWordRepository _repo;
         private readonly IProjectService _projService;
         private string projectId;
@@ -70,7 +70,7 @@ namespace BackendFramework.Services
         /********************************
         * Lift Export Implementation
         ********************************/
-        
+
         public void LiftExport(string projectId)
         {
             //the helper tag must be included because there are also SIL.Utilitites
@@ -84,7 +84,7 @@ namespace BackendFramework.Services
             //generates file to be exported to
             string exportFilePath = Path.Combine(zipdir, "EXPORTED-" + Path.GetRandomFileName());
 
-           //add audio dir inside zip dir
+            //add audio dir inside zip dir
             string audiodir = Path.Combine(zipdir, "Audio");
             Directory.CreateDirectory(audiodir);
             string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
@@ -197,7 +197,8 @@ namespace BackendFramework.Services
             if (!entry.CitationForm.IsEmpty) //prefer citation form for vernacular
             {
                 newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
-            } else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
+            }
+            else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
             {
                 newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
             }
@@ -223,7 +224,7 @@ namespace BackendFramework.Services
                 Helper.Utilities util = new Helper.Utilities();
 
                 //path to Import file ~/AmbigProjName/Import
-                var extractedPathToImport = util.GenerateFilePath(Helper.Utilities.filetype.dir, false, "", Path.Combine("AmbigProjectName", "Import"));
+                var extractedPathToImport = util.GenerateFilePath(Helper.Utilities.filetype.dir, false, "", Path.Combine(projectId, "Import"));
 
                 //get path to ~/AmbigProjName/Import/ExtractedLiftDir
                 var importListArr = Directory.GetDirectories(extractedPathToImport);
@@ -244,7 +245,7 @@ namespace BackendFramework.Services
                 {
                     File.Copy(extractedAudioMp3, Path.Combine(audioFolder, newWord.Audio));
                 }
-                catch(IOException)
+                catch (IOException)
                 {
                     // the audio file already existed in the destination, Im not sure how to react
                 }
@@ -356,7 +357,7 @@ namespace BackendFramework.Services
         {
             var audioFile = Regex.Split(rawXml, "\"")[1];
             LiftPhonetic phonetic = new LiftPhonetic();
-            LiftUrlRef url = new LiftUrlRef{ Url = audioFile };
+            LiftUrlRef url = new LiftUrlRef { Url = audioFile };
             phonetic.Media.Add(url);
             entry.Pronunciations.Add(phonetic);
             return entry;

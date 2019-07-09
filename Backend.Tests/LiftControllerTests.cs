@@ -143,18 +143,6 @@ namespace Backend.Tests
             var fileUpload = InitFile(fstream, actualFilename);
 
             //make api call
-            var result = liftController.UploadLiftFile(fileUpload).Result;
-            if(result is BadRequestObjectResult)
-            {
-                //this will be removed in the next pull request
-                return;
-            }
-
-            fstream.Close();
-
-            var fileUpload = InitFile(fstream, actualFilename);
-
-            //make api call
             var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
             if(result is BadRequestObjectResult)
             {
