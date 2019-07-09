@@ -215,6 +215,34 @@ namespace BackendFramework.Services
             foreach (var pro in entry.Pronunciations)
             {
                 newWord.Audio = pro.Media.FirstOrDefault().Url;
+                Helper.Utilities util = new Helper.Utilities();
+
+                //path to Import file ~/AmbigProjName/Import
+                var extractedPathToImport = util.GenerateFilePath(Helper.Utilities.filetype.dir, false, "", Path.Combine("AmbigProjectName", "Import"));
+
+                //get path to ~/AmbigProjName/Import/ExtractedLiftDir
+                var importListArr = Directory.GetDirectories(extractedPathToImport);
+                var extractedPath = Array.FindAll(importListArr, file => !(file.EndsWith("Audio") || file.EndsWith("Avatars")));
+
+                //get path to ~/AmbigProjName/Import/ExtractedLiftDir
+                var extractedContentsList = Directory.GetDirectories(extractedPath.FirstOrDefault());
+
+                //get path to ~/AmbigProjName/Import/ExtractedLiftDir/Audio
+                var extractedAudioDir = Path.Combine(extractedPath.FirstOrDefault(), "audio");
+
+                //get path to ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word mp3
+                var extractedAudioMp3 = Path.Combine(extractedAudioDir, newWord.Audio);
+
+                //move mp3 to audio folder at ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word.mp3
+                var audioFolder = Path.Combine(extractedPathToImport, "Audio");
+                try
+                {
+                    File.Copy(extractedAudioMp3, Path.Combine(audioFolder, newWord.Audio));
+                }
+                catch(IOException)
+                {
+                    // the audio file already existed in the destination, Im not sure how to react
+                }
             }
 
             //add senses

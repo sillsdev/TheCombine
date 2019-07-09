@@ -4,6 +4,7 @@ using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,6 +40,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
         {
             var fileInfo = model.File;
+            ObjectResult result;
 
             if (fileInfo.Length > 0)
             {
@@ -87,7 +89,7 @@ namespace BackendFramework.Controllers
                 }
 
                 var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
-                string extractedLiftName = "";
+                string extractedLiftName = ""; //TODO:
 
                 //search for the lift file within the list
                 var extractedLiftPath = Array.FindAll(extractedLiftNameArr, file => file.EndsWith(".lift"));
@@ -105,17 +107,24 @@ namespace BackendFramework.Controllers
                 try
                 {
                     var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
-                    return new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
+                    result = new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
                 }
                 catch (Exception)
                 {
                     return new UnsupportedMediaTypeResult();
                 }
+
+
+                WritingSystemDefinition dave = new WritingSystemDefinition();
+                //dave.LanguageTag = 
+
+
             }
             else
             {
                 return new BadRequestObjectResult("Empty File");
             }
+            return new OkObjectResult(result);
         }
 
         [HttpGet("words/download")]
