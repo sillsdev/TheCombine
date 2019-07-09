@@ -43,12 +43,12 @@ namespace Backend.Tests
 
         [Test]
         public void TestAvatarImport()
-        {
-            string filePath = "../../../Assets/combine.png";
+        {//yell at mark if this makes it to the pull request
+            string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "combine.png");
 
             FileStream fstream = File.OpenRead(filePath);
 
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "sena");
+            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "combine.png");
             FileUpload fileUpload = new FileUpload();
             fileUpload.Name = "FileName";
             fileUpload.File = formFile;
