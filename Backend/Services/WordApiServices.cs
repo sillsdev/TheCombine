@@ -113,7 +113,6 @@ namespace BackendFramework.Services
                             }
                             break;
                         default:
-                            //TODO: throw an error
                             throw new NotSupportedException();
                     }
 
