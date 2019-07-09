@@ -4,10 +4,7 @@ import GoalSwitcher from "./GoalSwitcherComponent";
 import { connect } from "react-redux";
 import { StoreState } from "../../../types";
 import { ThunkDispatch } from "redux-thunk";
-import {
-  asyncAddGoalToHistory,
-  AddGoalToHistory
-} from "../GoalTimelineActions";
+import { asyncAddGoalToHistory, AddGoalToHistory } from "../GoalsActions";
 
 export function mapStateToProps(state: StoreState): GoalSwitcherState {
   return {

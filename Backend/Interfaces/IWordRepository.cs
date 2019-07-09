@@ -6,14 +6,14 @@ namespace BackendFramework.Interfaces
 {
     public interface IWordRepository
     {
-        Task<List<Word>> GetAllWords();
-        Task<Word> GetWord(string Id);
+        Task<List<Word>> GetAllWords(string projectId);
+        Task<Word> GetWord(string projectId, string wordId);
         Task<Word> Create(Word word);
         Task<Word> Add(Word word);
-        Task<bool> DeleteAllWords();
+        Task<bool> DeleteAllWords(string projectId);
 
-        Task<List<Word>> GetFrontier();
+        Task<List<Word>> GetFrontier(string projectId);
         Task<Word> AddFrontier(Word word);
-        Task<bool> DeleteFrontier(string id);
+        Task<bool> DeleteFrontier(string projectId, string wordId);
     }
 }

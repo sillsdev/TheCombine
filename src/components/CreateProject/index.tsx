@@ -8,6 +8,8 @@ import {
   asyncCreateProject,
   reset
 } from "./CreateProjectActions";
+import { Project } from "../../types/project";
+import { setCurrentProject, ProjectAction } from "../Project/ProjectActions";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -19,11 +21,14 @@ function mapStateToProps(state: StoreState) {
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<StoreState, any, CreateProjectAction>
+  dispatch: ThunkDispatch<StoreState, any, CreateProjectAction | ProjectAction>
 ) {
   return {
     asyncCreateProject: (name: string, languageData: File) => {
       dispatch(asyncCreateProject(name, languageData));
+    },
+    setCurrentProject: (project: Project) => {
+      dispatch(setCurrentProject(project));
     },
     reset: () => {
       dispatch(reset());

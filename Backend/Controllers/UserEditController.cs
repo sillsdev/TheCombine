@@ -8,36 +8,36 @@ using System.Threading.Tasks;
 namespace BackendFramework.Controllers
 {
     [Produces("application/json")]
-    [Route("v1/projects/useredits")]
+    [Route("v1/projects/{projectId}/useredits")]
     public class UserEditController : Controller
     {
-        private readonly IUserEditService _userEditService;
         private readonly IUserEditRepository _repo;
+        private readonly IUserEditService _userEditService;
 
-        public UserEditController(IUserEditService userEditService, IUserEditRepository repo)
+        public UserEditController(IUserEditRepository repo, IUserEditService userEditService)
         {
-            _userEditService = userEditService;
             _repo = repo;
+            _userEditService = userEditService;
         }
 
         [EnableCors("AllowAll")]
 
         // GET: v1/Projects/UserEdits
-        // Implements GetAllUserEdits(),
+        // Implements GetAllUserEdits()
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(string projectId)
         {
-            return new ObjectResult(await _repo.GetAllUserEdits());
+            return new ObjectResult(await _repo.GetAllUserEdits(projectId));
         }
 
         // DELETE v1/Projects/UserEdits
         // Implements DeleteAllUserEdits()
         // DEBUG ONLY
         [HttpDelete]
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> Delete(string projectId)
         {
 #if DEBUG
-            return new ObjectResult(await _repo.DeleteAllUserEdits());
+            return new ObjectResult(await _repo.DeleteAllUserEdits(projectId));
 #else
             return new UnauthorizedResult();
 #endif
@@ -45,14 +45,14 @@ namespace BackendFramework.Controllers
 
         // GET: v1/Projects/UserEdits/{Id}
         // Implements GetUserEdit(), Arguments: string id of target userEdit
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> Get(string Id)
+        [HttpGet("{userEditId}")]
+        public async Task<IActionResult> Get(string projectId, string userEditId)
         {
-            var userEdit = await _repo.GetUserEdit(Id);
+            var userEdit = await _repo.GetUserEdit(projectId, userEditId);
             if (userEdit == null)
             {
                 var newUserEdit = new UserEdit();
-
+                newUserEdit.ProjectId = projectId;
                 var result = await _repo.Create(newUserEdit);
 
                 return new OkObjectResult(result);
@@ -63,17 +63,17 @@ namespace BackendFramework.Controllers
         // POST: v1/Projects/UserEdits/{Id}
         // Implements AddGoalToUserEdit(), Arguments: new userEdit from body
         // Creates a goal
-        [HttpPost("{Id}")]
-        public async Task<IActionResult> Post(string Id, [FromBody]Edit newEdit)
+        [HttpPost("{userEditId}")]
+        public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody]Edit newEdit)
         {
-            UserEdit toBeMod = await _repo.GetUserEdit(Id);
+            UserEdit toBeMod = await _repo.GetUserEdit(projectId, userEditId);
 
             if (toBeMod == null)
             {
-                return new NotFoundObjectResult(Id);
+                return new NotFoundObjectResult(userEditId);
             }
 
-            Tuple<bool, int> result = await _userEditService.AddGoalToUserEdit(Id, newEdit);
+            Tuple<bool, int> result = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
 
             if (result.Item1)
             {
@@ -89,26 +89,26 @@ namespace BackendFramework.Controllers
         // Implements AddStepToGoal(), Arguments: string id of target userEdit, 
         // wrapper object to hold the goal index and the step to add to the goal history
         // Adds steps to a goal
-        [HttpPut("{Id}")]
-        public async Task<IActionResult> Put(string Id, [FromBody] UserEditObjectWrapper userEdit)
+        [HttpPut("{userEditId}")]
+        public async Task<IActionResult> Put(string projectId, string userEditId, [FromBody] UserEditObjectWrapper userEdit)
         {
-            var document = await _repo.GetUserEdit(Id);
+            var document = await _repo.GetUserEdit(projectId, userEditId);
             if (document == null)
             {
                 return new NotFoundResult();
             }
 
-            await _userEditService.AddStepToGoal(Id, userEdit.GoalIndex, userEdit.NewEdit);
+            await _userEditService.AddStepToGoal(projectId, userEditId, userEdit.GoalIndex, userEdit.NewEdit);
 
             return new OkObjectResult(document.Edits[userEdit.GoalIndex].StepData.Count);
         }
 
         // DELETE: v1/Projects/UserEdits/{Id}
         // Implements Delete(), Arguments: string id of target userEdit
-        [HttpDelete("{Id}")]
-        public async Task<IActionResult> Delete(string Id)
+        [HttpDelete("{userEditId}")]
+        public async Task<IActionResult> Delete(string projectId, string userEditId)
         {
-            if (await _repo.Delete(Id))
+            if (await _repo.Delete(projectId, userEditId))
             {
                 return new OkResult();
             }

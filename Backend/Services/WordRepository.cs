@@ -15,25 +15,28 @@ namespace BackendFramework.Services
             _wordDatabase = collectionSettings;
         }
 
-        public async Task<List<Word>> GetAllWords()
+        public async Task<List<Word>> GetAllWords(string projectId)
         {
-            return await _wordDatabase.Words.Find(_ => true).ToListAsync();
+            return await _wordDatabase.Words.Find(w => w.ProjectId == projectId).ToListAsync();
         }
 
-        public async Task<Word> GetWord(string Id)
+        public async Task<Word> GetWord(string projectId, string wordId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.Eq(x => x.Id, Id);
+            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
 
             var wordList =  await _wordDatabase.Words.FindAsync(filter);
 
             return wordList.FirstOrDefault();
         }
 
-        public async Task<bool> DeleteAllWords()
+        public async Task<bool> DeleteAllWords(string projectId)
         {
-            var deleted = await _wordDatabase.Words.DeleteManyAsync(_ => true);
-            await _wordDatabase.Frontier.DeleteManyAsync(_ => true);
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.Eq(x => x.ProjectId, projectId);
+
+            var deleted = await _wordDatabase.Words.DeleteManyAsync(filter);
+            await _wordDatabase.Frontier.DeleteManyAsync(filter);
             if (deleted.DeletedCount != 0)
             {
                 return true;
@@ -54,9 +57,9 @@ namespace BackendFramework.Services
             return word;
         }
 
-        public async Task<List<Word>> GetFrontier()
+        public async Task<List<Word>> GetFrontier(string projectId)
         {
-            return await _wordDatabase.Frontier.Find(_ => true).ToListAsync();
+            return await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).ToListAsync();
         }
 
         public async Task<Word> AddFrontier(Word word)
@@ -65,9 +68,12 @@ namespace BackendFramework.Services
             return word;
         }
 
-        public async Task<bool> DeleteFrontier(string Id)
+        public async Task<bool> DeleteFrontier(string projectId, string wordId)
         {
-            var deleted = await _wordDatabase.Frontier.DeleteManyAsync(x => x.Id == Id);
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
+
+            var deleted = await _wordDatabase.Frontier.DeleteManyAsync(filter);
             return deleted.DeletedCount > 0;
         }
     }

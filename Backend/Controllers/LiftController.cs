@@ -5,11 +5,9 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static BackendFramework.Helper.Utilities;
 
@@ -17,26 +15,22 @@ namespace BackendFramework.Controllers
 {
     //[Authorize]
     [Produces("application/json")]
-    [Route("v1/projects")]
+    [Route("v1/projects/{projectId}")]
     public class LiftController : Controller
     {
-        public readonly ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
-        public readonly IWordService _wordService;
-        public readonly IWordRepository _wordRepo;
-        public readonly LiftService _liftService;
+        private readonly IWordRepository _wordRepo;
+        private readonly LiftService _liftService;
 
-        public LiftController(ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> merger, IWordRepository repo, IWordService wordService, IProjectService projServ)
+        public LiftController(IWordRepository repo, IProjectService projServ)
         {
-            _merger = merger;
             _wordRepo = repo;
-            _wordService = wordService;
             _liftService = new LiftService(_wordRepo, projServ);
         }
 
-        // POST: v1/Project/Words/upload
+        // POST: v1/project/{projectId}/words/upload
         // Implements: Upload(), Arguments: FileUpload model
         [HttpPost("words/upload")]
-        public async Task<IActionResult> UploadLiftFile([FromForm] FileUpload model)
+        public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload model)
         {
             var fileInfo = model.File;
 
@@ -45,7 +39,7 @@ namespace BackendFramework.Controllers
                 //get path to home
                 Utilities util = new Utilities();
                 //generate the file to put the filestream into
-                model.FilePath = util.GenerateFilePath(filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine("AmbigProjectName", "Import"));
+                model.FilePath = util.GenerateFilePath(filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine(projectId, "Import"));
 
                 //copy stream into file
                 using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))
@@ -104,7 +98,8 @@ namespace BackendFramework.Controllers
 
                 try
                 {
-                    var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_merger);
+                    _liftService.SetProject(projectId);
+                    var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_liftService);
                     return new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
                 }
                 catch (Exception)
@@ -119,15 +114,15 @@ namespace BackendFramework.Controllers
         }
 
         [HttpGet("words/download")]
-        public async Task<IActionResult> ExportLiftFile(string Id)
+        public async Task<IActionResult> ExportLiftFile(string projectId)
         {
-            var words = await _wordRepo.GetAllWords();
+            var words = await _wordRepo.GetAllWords(projectId);
             if(words.Count == 0)
             {
                 return new BadRequestResult();
             }
 
-            _liftService.LiftExport(Id);
+            _liftService.LiftExport(projectId);
 
             return new OkObjectResult(words);
         }

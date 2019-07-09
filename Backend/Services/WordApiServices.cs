@@ -16,15 +16,15 @@ namespace BackendFramework.Services
             _repo = repo;
         }
 
-        public async Task<bool> Delete(string Id)
+        public async Task<bool> Delete(string projectId, string wordId)
         {
-            var wordIsInFrontier = _repo.DeleteFrontier(Id).Result;
+            var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
 
             if (wordIsInFrontier)
             {
-                Word wordToDelete = _repo.GetWord(Id).Result;
+                Word wordToDelete = _repo.GetWord(projectId, wordId).Result;
                 wordToDelete.Id = null;
-                wordToDelete.History.Add(Id);
+                wordToDelete.History.Add(wordId);
 
                 foreach(var senseAcc in wordToDelete.Senses)
                 {
@@ -36,21 +36,22 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        public async Task<bool> Update(string Id, Word word)
+        public async Task<bool> Update(string projectId, string wordId, Word word)
         {
-            var wordIsInFrontier = _repo.DeleteFrontier(Id).Result;
+            var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
             if (wordIsInFrontier)
             {
                 word.Id = null;
+                word.ProjectId = projectId;
 
                 //If the word already has a history you dont want to overwrite it
                 if (word.History == null)
                 {
-                    word.History = new List<string> { Id };
+                    word.History = new List<string> { wordId };
                 }
                 else
                 {
-                    word.History.Add(Id);
+                    word.History.Add(wordId);
                 }
 
                 await _repo.Create(word);
@@ -58,16 +59,16 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        public async Task<Word> Merge(MergeWords mergeWords)
+        public async Task<Word> Merge(string projectId, MergeWords mergeWords)
         {
 
             //generate new child words form child word field
             foreach(var newChildWordState in mergeWords.ChildrenWords)
             {
                 //get child word
-                var currentChildWord = await _repo.GetWord(newChildWordState.SrcWordID);
+                var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordID);
                 //remove child from frontier
-                _repo.DeleteFrontier(currentChildWord.Id);
+                await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
                 //iterate through senses of that word and change to corresponding state in mergewords
                 for(int i = 0; i < currentChildWord.Senses.Count; i++)
@@ -87,8 +88,9 @@ namespace BackendFramework.Services
             }
 
             //add parent with child history to the datbase
+            mergeWords.Parent.ProjectId = projectId;
             var newParent = await _repo.Add(mergeWords.Parent);
-            _repo.AddFrontier(newParent);
+            await _repo.AddFrontier(newParent);
 
             return newParent;
         }

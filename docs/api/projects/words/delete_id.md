@@ -1,6 +1,6 @@
 # Delete word
 
-**URL** : `/v1/projects/{project}/words/{id}`
+**URL** : `/v1/projects/{projectId}/words/{wordId}`
 
 **Method** : `DELETE`
 

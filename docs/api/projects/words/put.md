@@ -2,7 +2,7 @@
 
 Merge words into a parent
 
-**URL** : `/v1/projects/{project}/words`
+**URL** : `/v1/projects/{projectId}/words`
 
 **Method** : `PUT`
 

@@ -1,6 +1,6 @@
 # Update user info
 
-**URL** : `/v1/users/{id}`
+**URL** : `/v1/users/{userId}`
 
 **Method** : `PUT`
 

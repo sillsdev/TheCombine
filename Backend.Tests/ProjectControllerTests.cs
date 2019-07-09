@@ -11,14 +11,14 @@ namespace Backend.Tests
 {
     public class ProjectControllerTests
     {
-        IProjectService _projectService;
-        ProjectController controller;
+        private IProjectService _projectService;
+        private ProjectController _controller;
 
         [SetUp]
         public void Setup()
         {
             _projectService = new ProjectServiceMock();
-            controller = new ProjectController(_projectService);
+            _controller = new ProjectController(_projectService);
         }
 
         Project RandomProject()
@@ -35,7 +35,7 @@ namespace Backend.Tests
             _projectService.Create(RandomProject());
             _projectService.Create(RandomProject());
 
-            var projects = (controller.Get().Result as ObjectResult).Value as List<Project>;
+            var projects = (_controller.Get().Result as ObjectResult).Value as List<Project>;
             Assert.That(projects, Has.Count.EqualTo(3));
             _projectService.GetAllProjects().Result.ForEach(project => Assert.Contains(project, projects));
         }
@@ -48,7 +48,7 @@ namespace Backend.Tests
             _projectService.Create(RandomProject());
             _projectService.Create(RandomProject());
 
-            var action = controller.Get(project.Id).Result;
+            var action = _controller.Get(project.Id).Result;
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
@@ -60,7 +60,7 @@ namespace Backend.Tests
         public void TestCreateProject()
         {
             Project project = RandomProject();
-            string id = (controller.Post(project).Result as ObjectResult).Value as string;
+            string id = (_controller.Post(project).Result as ObjectResult).Value as string;
             project.Id = id;
             Assert.Contains(project, _projectService.GetAllProjects().Result);
         }
@@ -73,7 +73,7 @@ namespace Backend.Tests
             Project modProject = origProject.Clone();
             modProject.Name = "Mark";
 
-            _ = controller.Put(modProject.Id, modProject);
+            _ = _controller.Put(modProject.Id, modProject);
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(1));
             Assert.Contains(modProject, _projectService.GetAllProjects().Result);
@@ -86,7 +86,7 @@ namespace Backend.Tests
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(1));
 
-            _ = controller.Delete(origProject.Id).Result;
+            _ = _controller.Delete(origProject.Id).Result;
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
@@ -100,7 +100,7 @@ namespace Backend.Tests
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(3));
 
-            _ = controller.Delete().Result;
+            _ = _controller.Delete().Result;
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
