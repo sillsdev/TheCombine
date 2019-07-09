@@ -7,6 +7,7 @@ import thunk from "redux-thunk";
 import { defaultState } from "../DefaultState";
 import { goalDataMock, wordsArrayMock } from "./GoalTimelineReducers.test";
 import axios from "axios";
+import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 
 const mockAxios = axios as jest.Mocked<typeof axios>;
 
@@ -100,9 +101,9 @@ it("should update goal data", () => {
 });
 
 it("should not change the goal data", () => {
-  const goal: Goal = new CreateCharInv();
+  const goal: Goal = new HandleFlags();
 
-  const expectedGoal: Goal = new CreateCharInv();
+  const expectedGoal: Goal = new HandleFlags();
 
   actions
     .loadGoalData(goal)

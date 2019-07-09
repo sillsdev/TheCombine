@@ -108,6 +108,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
   };
 }
 
+// DO STUFF HERE
 export async function loadGoalData(goal: Goal): Promise<Goal> {
   switch (goal.goalType) {
     case GoalType.MergeDups:
@@ -115,6 +116,12 @@ export async function loadGoalData(goal: Goal): Promise<Goal> {
       await finder.getNextDups(goal.numSteps).then(words => {
         goal.data = { plannedWords: words };
       });
+      break;
+    case GoalType.CreateCharInv:
+      goal.data = { inventory: [[]] };
+      break;
+    default:
+      break;
   }
   return goal;
 }

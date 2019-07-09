@@ -1,4 +1,4 @@
-import { GoalsState, GoalType } from "../../types/goals";
+import { GoalsState, GoalType, GoalData } from "../../types/goals";
 import { Goal } from "../../types/goals";
 import {
   ADD_GOAL_TO_HISTORY,
@@ -8,6 +8,7 @@ import {
 import { ActionWithPayload } from "../../types/mockAction";
 import { defaultState } from "./DefaultState";
 import { MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
+import { CreateCharInvData } from "../../goals/CreateCharInv/CreateCharInv";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
@@ -56,14 +57,25 @@ export const goalsReducer = (
   }
 };
 
+// DO STUFF HERE
 export function updateStepData(goal: Goal): Goal {
   switch (goal.goalType) {
-    case GoalType.MergeDups:
+    case GoalType.MergeDups: {
       let currentGoalData: MergeDupData = goal.data as MergeDupData;
       goal.steps[goal.currentStep] = {
         words: currentGoalData.plannedWords[goal.currentStep]
       };
       goal.currentStep++;
+      break;
+    }
+    case GoalType.CreateCharInv: {
+      let currentGoalData = goal.data as CreateCharInvData;
+      goal.steps[goal.currentStep] = {
+        inventory: currentGoalData.inventory[goal.currentStep]
+      };
+      goal.currentStep++;
+      break;
+    }
   }
   return goal;
 }

@@ -1,6 +1,10 @@
 import { User } from "./user";
 import { MergeStepData, MergeDupData } from "../goals/MergeDupGoal/MergeDups";
 import { MergeDupProps } from "../goals/MergeDupGoal/MergeDups";
+import {
+  CreateCharInvData,
+  CreateCharInvStepData
+} from "../goals/CreateCharInv/CreateCharInv";
 
 export enum GoalOption {
   Complete,
@@ -17,11 +21,11 @@ export enum Tools {
 
 export type GoalProps = MergeDupProps;
 
-export type GoalData = MergeDupData | {}; // | OtherTypes
+export type GoalData = MergeDupData | CreateCharInvData | {}; // | OtherTypes
 
 export type MockGoalStepType = {};
 
-export type GoalStep = MergeStepData; // | OtherTypes
+export type GoalStep = MergeStepData | CreateCharInvStepData; // | OtherTypes
 
 export interface GoalViewState {
   state: GoalsState;
