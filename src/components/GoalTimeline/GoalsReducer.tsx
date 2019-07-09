@@ -1,9 +1,10 @@
-import { GoalsState, GoalType, GoalData } from "../../types/goals";
+import { GoalsState, GoalType } from "../../types/goals";
 import { Goal } from "../../types/goals";
 import {
   ADD_GOAL_TO_HISTORY,
   LOAD_USER_EDITS,
-  NEXT_STEP
+  NEXT_STEP,
+  UPDATE_GOAL
 } from "./GoalsActions";
 import { ActionWithPayload } from "../../types/mockAction";
 import { defaultState } from "./DefaultState";
@@ -52,6 +53,22 @@ export const goalsReducer = (
           history: history
         }
       };
+    case UPDATE_GOAL: {
+      let history: Goal[] = [...state.historyState.history];
+      history[history.length - 1] = action.payload[0];
+
+      let updatedState: GoalsState = {
+        ...state,
+        historyState: {
+          history: history
+        }
+      };
+
+      console.log(updatedState);
+
+      return updatedState;
+    }
+
     default:
       return state;
   }

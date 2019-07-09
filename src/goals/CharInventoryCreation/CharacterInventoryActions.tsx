@@ -5,6 +5,12 @@ import {
   ProjectAction
 } from "../../components/Project/ProjectActions";
 import { updateProject } from "../../backend";
+import {
+  updateGoal,
+  UpdateGoalAction
+} from "../../components/GoalTimeline/GoalsActions";
+import { Goal } from "../../types/goals";
+import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
 
 export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
 export type SET_CHARACTER_INVENTORY = typeof SET_CHARACTER_INVENTORY;
@@ -25,12 +31,25 @@ export interface CharacterInventoryAction {
  */
 export function uploadInventory() {
   return async (
-    dispatch: Dispatch<CharacterInventoryAction | ProjectAction>,
+    dispatch: Dispatch<
+      CharacterInventoryAction | ProjectAction | UpdateGoalAction
+    >,
     getState: () => StoreState
   ) => {
     let project = getState().currentProject;
     let inv = getState().characterInventoryState.inventory;
     project.characterSet = inv;
+
+    // Update goal
+    let history = getState().goalsState.historyState.history;
+    let currentGoal: CreateCharInv = history[
+      history.length - 1
+    ] as CreateCharInv;
+    currentGoal.data = {
+      inventory: [getState().characterInventoryState.inventory]
+    };
+
+    dispatch(updateGoal(currentGoal));
 
     updateProject(project);
 

@@ -41,8 +41,17 @@ export interface NextStep extends ActionWithPayload<Goal[]> {
   type: NEXT_STEP;
 }
 
+export const UPDATE_GOAL = "UPDATE_GOAL";
+export type UPDATE_GOAL = typeof UPDATE_GOAL;
+
+export interface UpdateGoal extends ActionWithPayload<Goal[]> {
+  type: UPDATE_GOAL;
+  payload: Goal[];
+}
+
 export type AddGoalToHistoryAction = AddGoalToHistory;
 export type LoadUserEditsAction = LoadUserEdits;
+export type UpdateGoalAction = UpdateGoal;
 
 export function asyncLoadUserEdits(projectId: string, userEditId: string) {
   return async (dispatch: Dispatch<LoadUserEditsAction>) => {
@@ -208,4 +217,8 @@ export function loadUserEdits(history: Goal[]): LoadUserEdits {
 
 export function nextStep(): NextStep {
   return { type: NEXT_STEP, payload: [] };
+}
+
+export function updateGoal(goal: Goal): UpdateGoal {
+  return { type: UPDATE_GOAL, payload: [goal] };
 }

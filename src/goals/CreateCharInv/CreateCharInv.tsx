@@ -1,4 +1,4 @@
-import { Goal, Tools, GoalOption, GoalType, GoalStep } from "../../types/goals";
+import { Goal, Tools, GoalOption, GoalType } from "../../types/goals";
 import { User } from "../../types/user";
 
 export interface CreateCharInvData {
