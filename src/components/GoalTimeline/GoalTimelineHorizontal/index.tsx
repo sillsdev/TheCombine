@@ -8,7 +8,7 @@ import {
   asyncAddGoalToHistory,
   LoadUserEditsAction,
   AddGoalToHistory
-} from "../GoalTimelineActions";
+} from "../GoalsActions";
 import { ThunkDispatch } from "redux-thunk";
 
 export function mapStateToProps(state: StoreState) {

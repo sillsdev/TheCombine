@@ -1,9 +1,14 @@
 import { StoreState } from "../../../types";
 import { ThunkDispatch } from "redux-thunk";
 import { MergeTreeReference, Hash, TreeDataSense } from "./MergeDupsTree";
-import DupFinder from "../DuplicateFinder/DuplicateFinder";
 import { Word, State } from "../../../types/word";
 import * as backend from "../../../backend";
+import {
+  nextStep,
+  NextStep
+} from "../../../components/GoalTimeline/GoalsActions";
+import { Goal } from "../../../types/goals";
+import { Dispatch } from "redux";
 
 export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
@@ -100,11 +105,23 @@ export function mergeSense() {
   };
 }
 
+const goToNextStep = (dispatch: Dispatch<NextStep>) =>
+  new Promise((resolve, reject) => {
+    dispatch(nextStep());
+    resolve();
+  });
+
 export function refreshWords() {
-  return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
-    let finder = new DupFinder();
-    let words = await finder.getNextDups();
-    dispatch(setWordData(words[0]));
+  return async (
+    dispatch: ThunkDispatch<any, any, MergeTreeAction | NextStep>,
+    getState: () => StoreState
+  ) => {
+    goToNextStep(dispatch).then(() => {
+      let history: Goal[] = getState().goalsState.historyState.history;
+      let goal: Goal = history[history.length - 1];
+      let words: Word[] = goal.steps[goal.currentStep - 1].words;
+      dispatch(setWordData(words));
+    });
   };
 }
 
@@ -192,9 +209,6 @@ export function mergeAll() {
       )
     );
     //await dispatch(clearTree());
-    //TODO: I don't know exactly why this doesn't correctly update with only one call to
-    //refresh words but I don't want to look into it yet
-    await dispatch(refreshWords());
     await dispatch(refreshWords());
   };
 }
