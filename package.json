@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "predatabase": "tsc setupMongo.ts && node setupMongo.js",
-    "database": "mongod --dbpath=../mongo_database",
+    "database": "mongod --dbpath=./mongo_database",
     "frontend": "react-scripts start",
     "start": "npm install && npm-run-all --parallel frontend database api",
     "api": "dotnet run --project Backend/BackendFramework.csproj",

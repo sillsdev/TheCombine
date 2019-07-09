@@ -1,7 +1,7 @@
 import React from "react";
 
 import GoalSelectorScroll from "../";
-import { Goal, GoalSelectorState } from "../../../../../types/goals";
+import { Goal, GoalSelectorState, GoalType } from "../../../../../types/goals";
 import { BaseGoal } from "../../../../../types/baseGoal";
 import { User } from "../../../../../types/user";
 import {
@@ -215,7 +215,7 @@ function createTempState(): GoalSelectorState {
   let goals: Goal[] = [];
 
   for (let i: number = 0; i < labels.length; i++)
-    goals[i] = createBGoal(i.toString(), labels[i], tempUser);
+    goals[i] = createBGoal(labels[i], tempUser);
 
   return {
     selectedIndex: 0,
@@ -226,9 +226,9 @@ function createTempState(): GoalSelectorState {
 }
 
 // Creates a BaseGoal with the specified attributes
-function createBGoal(id: string, name: string, user: User): Goal {
+function createBGoal(name: string, user: User): Goal {
   let goal: Goal = new BaseGoal();
-  goal.id = id;
+  goal.goalType = GoalType.CreateCharInv;
   goal.name = name;
   goal.user = user;
   return goal;
