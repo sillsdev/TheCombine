@@ -1,29 +1,40 @@
-import { Goal, GoalData, Tools, GoalOption } from "../../types/goals";
+import { Goal, Tools, GoalOption, GoalType, GoalStep } from "../../types/goals";
 import { User } from "../../types/user";
+import { Word } from "../../types/word";
 
 //interface for component state
 export interface MergeDupProps {
   goal?: Goal;
 }
 
+export interface MergeDupData {
+  plannedWords: Word[][];
+}
+
+export interface MergeStepData {
+  words: Word[];
+}
+
 export class MergeDups implements Goal {
-  id: string;
+  goalType: GoalType;
   name: string;
   user: User;
-  steps: JSX.Element[];
-  curNdx: number;
-  data: GoalData;
+  steps: GoalStep[];
+  numSteps: number;
+  currentStep: number;
+  data: MergeDupData;
   tool: Tools;
   completed: boolean;
   result: GoalOption;
 
-  constructor(steps: JSX.Element[]) {
-    this.id = "-1";
+  constructor(steps: GoalStep[] = [], numSteps: number = 8) {
+    this.goalType = GoalType.MergeDups;
     this.name = "mergeDups";
     this.user = new User("", "", "");
     this.steps = steps;
-    this.curNdx = 0;
-    this.data = {};
+    this.numSteps = numSteps;
+    this.currentStep = 0;
+    this.data = { plannedWords: [[]] };
     this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;

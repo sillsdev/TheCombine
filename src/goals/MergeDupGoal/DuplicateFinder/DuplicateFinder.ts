@@ -90,9 +90,8 @@ export default class DupFinder {
       }
 
       //return empty 2d array if no possible duplicates found
-      if(currentWords.length <= 0)
-        return this.empty2dArray;
-        
+      if (currentWords.length <= 0) return this.empty2dArray;
+
       //return the wordlist from the scored list
       return currentWords.map(function(scoredList) {
         return scoredList[0];
@@ -232,6 +231,7 @@ export default class DupFinder {
     let a: string[] = aInput.split("");
     let b: string[] = bInput.split("");
 
+    if (a.length <= 0 || b.length <= 0) return 0;
     for (let i = 0; i < a.length; i++) {
       matrix[i] = [];
       for (let j = 0; j < b.length; j++) {
