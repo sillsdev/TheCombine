@@ -4,13 +4,20 @@
   hosts: all
   become: yes
 
+  vars:
+    config: developer
+  vars_files:
+    - "vars/config_{{config}}.yml"
+#    - vars/config.yml
+
   roles:
     - role: ansible-depends
     - role: headless
     - role: nodejs
     - role: mongodb
     - role: dotnet_core
-    - role: apache
+    - role: ssl_config
+    - role: apache_config
     - role: wifi_ap
-      when: ansible_system_vendor != "innotek GmbH"
+      when: ansible_system_vendor not in vm_vendors
     - role: the_combine_app
