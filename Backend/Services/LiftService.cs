@@ -55,24 +55,29 @@ namespace BackendFramework.Services
         
         private readonly IWordRepository _repo;
         private readonly IProjectService _projService;
+        private string projectId;
 
         public LiftService(IWordRepository repo, IProjectService projserv)
         {
             _repo = repo;
             _projService = projserv;
         }
+        public void SetProject(string id)
+        {
+            projectId = id;
+        }
 
         /********************************
         * Lift Export Implementation
         ********************************/
         
-        public void LiftExport(string Id)
+        public void LiftExport(string projectId)
         {
             //the helper tag must be included because there are also SIL.Utilitites
             Helper.Utilities util = new Helper.Utilities();
 
             //generate the zip dir
-            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, true, "", Path.Combine("AmbigProjectName", "Export"));
+            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, true, "", Path.Combine(projectId, "Export"));
             string zipdir = Path.Combine(filename, "LiftExport");
             Directory.CreateDirectory(zipdir);
 
@@ -101,20 +106,20 @@ namespace BackendFramework.Services
 
             writer.WriteHeader(header);
 
-            var allWords = _repo.GetAllWords().Result;
+            var allWords = _repo.GetAllWords(projectId).Result;
 
             foreach (Word wordEntry in allWords)
             {
                 LexEntry entry = new LexEntry();
 
                 //add vernacular (lexical form)
-                addVern(Id, wordEntry, entry);
+                AddVern(projectId, wordEntry, entry);
 
                 string audioSrc = Path.Combine(filename, "zips");
-                addAudio(entry, wordEntry, audiodir);
+                AddAudio(entry, wordEntry, audiodir);
 
                 //add sense
-                addSense(entry, wordEntry);
+                AddSense(entry, wordEntry);
 
                 writer.Add(entry);
             }
@@ -123,15 +128,15 @@ namespace BackendFramework.Services
             ZipFile.CreateFromDirectory(zipdir, Path.Combine(zipdir, Path.Combine("..", "LiftExportCompressed-" + Path.GetRandomFileName() + ".zip")));
         }
 
-        public void addVern(string Id, Word wordEntry, LexEntry entry)
+        public void AddVern(string projectId, Word wordEntry, LexEntry entry)
         {
             LiftMultiText lexMultiText = new LiftMultiText();
-            string lang = _projService.GetProject(Id).Result.VernacularWritingSystem;
+            string lang = _projService.GetProject(projectId).Result.VernacularWritingSystem;
             lexMultiText.Add(lang, wordEntry.Vernacular);
             entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
         }
 
-        public void addAudio(LexEntry entry, Word wordEntry, string path)
+        public void AddAudio(LexEntry entry, Word wordEntry, string path)
         {
             LexPhonetic lexPhonetic = new LexPhonetic();
 
@@ -151,7 +156,7 @@ namespace BackendFramework.Services
             }
         }
 
-        public void addSense(LexEntry entry, Word wordEntry)
+        public void AddSense(LexEntry entry, Word wordEntry)
         {
             for (int i = 0; i < wordEntry.Senses.Count; i++)
             {
@@ -292,6 +297,7 @@ namespace BackendFramework.Services
                 newWord.Senses.Add(newSense);
             }
 
+            newWord.ProjectId = projectId;
             await _repo.Create(newWord);
         }
 

@@ -1,5 +1,4 @@
-﻿using Backend.Tests;
-using BackendFramework.Controllers;
+﻿using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
@@ -13,18 +12,26 @@ namespace Backend.Tests
 {
     public class AudioControllerTests
     {
-        IWordRepository _wordrepo;
-        WordService _wordService;
-        WordController wordController;
-        AudioController audioController;
+        private IWordRepository _wordrepo;
+        private WordService _wordService;
+        private WordController _wordController;
+
+        private AudioController _audioController;
+
+        private IProjectService _projectService;
+        private string _projId;
 
         [SetUp]
         public void Setup()
         {
             _wordrepo = new WordRepositoryMock();
             _wordService = new WordService(_wordrepo);
-            audioController = new AudioController(_wordrepo, _wordService);
-            wordController = new WordController(_wordService, _wordrepo);
+            _wordController = new WordController(_wordrepo, _wordService);
+
+            _audioController = new AudioController(_wordrepo, _wordService);
+
+            _projectService = new ProjectServiceMock();
+            _projId = _projectService.Create(new Project()).Result.Id;
         }
 
         string RandomString(int length = 16)
@@ -54,9 +61,9 @@ namespace Backend.Tests
 
             Word word = _wordrepo.Create(RandomWord()).Result;
 
-            _ = audioController.UploadAudioFile(word.Id, fileUpload).Result;
+            _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
 
-            var action = wordController.Get(word.Id).Result;
+            var action = _wordController.Get(_projId, word.Id).Result;
 
             var foundWord = (action as ObjectResult).Value as Word;
             Assert.IsNotNull(foundWord.Audio);

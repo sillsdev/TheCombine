@@ -12,11 +12,11 @@ namespace BackendFramework.Controllers
 
     //[Authorize]
     [Produces("application/json")]
-    [Route("v1")]
+    [Route("v1/projects/{projectId}/words")]
     public class AudioController : Controller
     {
-        public readonly IWordService _wordService;
-        public readonly IWordRepository _wordRepo;
+        private readonly IWordRepository _wordRepo;
+        private readonly IWordService _wordService;
 
         public AudioController(IWordRepository repo, IWordService wordService)
         {
@@ -24,8 +24,10 @@ namespace BackendFramework.Controllers
             _wordService = wordService;
         }
 
-        [HttpPost("projects/words/{Id}/upload/audio")]
-        public async Task<IActionResult> UploadAudioFile(string wordId, [FromForm] FileUpload model)
+        // POST: v1/projects/{projectId}/words/{wordId}/upload/audio
+        // Implements UploadAudio()
+        [HttpPost("{wordId}/upload/audio")]
+        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, [FromForm] FileUpload model)
         {
             var file = model.File;
 
@@ -33,7 +35,7 @@ namespace BackendFramework.Controllers
             {
                 //get path to home
                 Utilities util = new Utilities();
-                model.FilePath = util.GenerateFilePath(filetype.audio, false, wordId, Path.Combine("AmbigProjectName", "Import", "Audio"));
+                model.FilePath = util.GenerateFilePath(filetype.audio, false, wordId, Path.Combine(projectId, "Import", "Audio"));
 
                 //copy the file data to the created file
                 using (var fs = new FileStream(model.FilePath, FileMode.Create))
@@ -42,14 +44,15 @@ namespace BackendFramework.Controllers
                 }
 
                 //add the relative path to the audio field
-                Word gotWord = await _wordRepo.GetWord(wordId); //TODO: this isnt relative
+                Word gotWord = await _wordRepo.GetWord(projectId, wordId); //TODO: this isnt relative
                 gotWord.Audio = model.FilePath;
 
                 //update the entry
-                _ = await _wordService.Update(wordId, gotWord);
+                _ = await _wordService.Update(projectId, wordId, gotWord);
 
                 return new ObjectResult(model.FilePath);
             }
+
             return new BadRequestObjectResult("Empty File");
         }
     }

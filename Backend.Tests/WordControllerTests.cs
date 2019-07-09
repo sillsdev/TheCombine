@@ -1,4 +1,3 @@
-using Backend.Tests;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
@@ -13,16 +12,21 @@ namespace Backend.Tests
 {
     public class WordControllerTests
     {
-        IWordRepository repo;
-        WordController controller;
-        IWordService service;
+        private IWordRepository _repo;
+        private IWordService _wordService;
+        private WordController _wordController;
+
+        private IProjectService _projectService;
+        private string _projId;
 
         [SetUp]
         public void Setup()
         {
-            repo = new WordRepositoryMock();
-            service = new WordService(repo);
-            controller = new WordController(service, repo);
+            _repo = new WordRepositoryMock();
+            _wordService = new WordService(_repo);
+            _wordController = new WordController(_repo, _wordService);
+            _projectService = new ProjectServiceMock();
+            _projId = _projectService.Create(new Project()).Result.Id;
         }
 
         Word RandomWord()
@@ -65,24 +69,24 @@ namespace Backend.Tests
         [Test]
         public void TestGetAllWords()
         {
-            repo.Create(RandomWord());
-            repo.Create(RandomWord());
-            repo.Create(RandomWord());
+            _repo.Create(RandomWord());
+            _repo.Create(RandomWord());
+            _repo.Create(RandomWord());
 
-            var words = (controller.Get().Result as ObjectResult).Value as List<Word>;
+            var words = (_wordController.Get(_projId).Result as ObjectResult).Value as List<Word>;
             Assert.That(words, Has.Count.EqualTo(3));
-            repo.GetAllWords().Result.ForEach(word => Assert.Contains(word, words));
+            _repo.GetAllWords(_projId).Result.ForEach(word => Assert.Contains(word, words));
         }
 
         [Test]
         public void TestGetWord()
         {
-            Word word = repo.Create(RandomWord()).Result;
+            Word word = _repo.Create(RandomWord()).Result;
 
-            repo.Create(RandomWord());
-            repo.Create(RandomWord());
+            _repo.Create(RandomWord());
+            _repo.Create(RandomWord());
 
-            var action = controller.Get(word.Id).Result;
+            var action = _wordController.Get(_projId, word.Id).Result;
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
@@ -95,48 +99,48 @@ namespace Backend.Tests
         {
             Word word = RandomWord();
 
-            string id = (controller.Post(word).Result as ObjectResult).Value as string;
+            string id = (_wordController.Post(_projId, word).Result as ObjectResult).Value as string;
             word.Id = id;
 
-            Assert.AreEqual(word, repo.GetAllWords().Result[0]);
-            Assert.AreEqual(word, repo.GetFrontier().Result[0]);
+            Assert.AreEqual(word, _repo.GetAllWords(_projId).Result[0]);
+            Assert.AreEqual(word, _repo.GetFrontier(_projId).Result[0]);
         }
 
         [Test]
         public void UpdateWord()
         {
-            Word origWord = repo.Create(RandomWord()).Result;
+            Word origWord = _repo.Create(RandomWord()).Result;
 
             Word modWord = origWord.Clone();
             modWord.Vernacular = "Yoink";
 
-            string id = (controller.Put(modWord.Id, modWord).Result as ObjectResult).Value as string;
+            string id = (_wordController.Put(_projId, modWord.Id, modWord).Result as ObjectResult).Value as string;
 
             Word finalWord = modWord.Clone();
             finalWord.Id = id;
             finalWord.History = new List<string> { origWord.Id };
 
-            Assert.Contains(origWord, repo.GetAllWords().Result);
-            Assert.Contains(finalWord, repo.GetAllWords().Result);
+            Assert.Contains(origWord, _repo.GetAllWords(_projId).Result);
+            Assert.Contains(finalWord, _repo.GetAllWords(_projId).Result);
 
-            Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
-            Assert.Contains(finalWord, repo.GetFrontier().Result);
+            Assert.That(_repo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
+            Assert.Contains(finalWord, _repo.GetFrontier(_projId).Result);
         }
 
         [Test]
         public void DeleteWord()
         {
             //fill test database
-            Word origWord = repo.Create(RandomWord()).Result;
+            Word origWord = _repo.Create(RandomWord()).Result;
 
             //test delete function
-            var action = controller.Delete(origWord.Id).Result;
+            var action = _wordController.Delete(_projId, origWord.Id).Result;
 
             //original word persists
-            Assert.Contains(origWord, repo.GetAllWords().Result);
+            Assert.Contains(origWord, _repo.GetAllWords(_projId).Result);
 
             //get the new deleted word from the database
-            var wordRepo = repo.GetFrontier().Result;
+            var wordRepo = _repo.GetFrontier(_projId).Result;
             
 
             //ensure the word is valid
@@ -145,7 +149,7 @@ namespace Backend.Tests
             Assert.IsTrue(wordRepo[0].History.Count == 1);
 
             //test the fronteir
-            Assert.That(repo.GetFrontier().Result, Has.Count.EqualTo(1));
+            Assert.That(_repo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
 
             //ensure the deleted word is in the fronteir
             Assert.IsTrue(wordRepo.Count == 1);
@@ -181,20 +185,20 @@ namespace Backend.Tests
 
                 //generate mergeSourceWord with new child ID and desired child state list 
                 MergeSourceWord newGenChild = new MergeSourceWord();
-                newGenChild.SrcWordID = repo.Add(child).Result.Id;
+                newGenChild.SrcWordID = _repo.Add(child).Result.Id;
                 newGenChild.SenseStates = childStatesLst;
                 parentChildMergeObject.ChildrenWords.Add(newGenChild);
             }
 
-            var newParentId = service.Merge(parentChildMergeObject).Result;
+            var newParentId = _wordService.Merge(_projId, parentChildMergeObject).Result;
 
             //2 * child number + 1, there are duplicate child nodes and one extra for the parent
-            Assert.AreEqual(repo.GetAllWords().Result.Count, 2 * childCount + 1);
+            Assert.AreEqual(_repo.GetAllWords(_projId).Result.Count, 2 * childCount + 1);
             //make sure the parent is in the db
-            Assert.AreEqual(parentChildMergeObject.Parent, repo.GetWord(parentChildMergeObject.Parent.Id).Result);
+            Assert.AreEqual(parentChildMergeObject.Parent, _repo.GetWord(_projId, parentChildMergeObject.Parent.Id).Result);
 
             //assert the children are in the database
-            var dbWords = repo.GetAllWords().Result;
+            var dbWords = _repo.GetAllWords(_projId).Result;
             dbWords.RemoveAll(StartingChildren);
 
             // 4 = the number of elements in the database - the childCOunt
@@ -203,7 +207,7 @@ namespace Backend.Tests
             for(int childIndex = 0; childIndex < childCount; ++childIndex)
             {
                 //check for children in db
-                Assert.Contains(repo.GetWord(parentChildMergeObject.ChildrenWords[childIndex].SrcWordID).Result, repo.GetAllWords().Result);
+                Assert.Contains(_repo.GetWord(_projId, parentChildMergeObject.ChildrenWords[childIndex].SrcWordID).Result, _repo.GetAllWords(_projId).Result);
             }
         }
 

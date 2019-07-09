@@ -14,10 +14,10 @@ namespace BackendFramework.Services
             _repo = repo;
         }
 
-        public async Task<Tuple<bool, int>> AddGoalToUserEdit(string Id, Edit edit)
+        public async Task<Tuple<bool, int>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
             //get userEdit to change
-            var userEntry = await _repo.GetUserEdit(Id);
+            var userEntry = await _repo.GetUserEdit(projectId, userEditId);
 
             UserEdit newUserEdit = userEntry.Clone();
 
@@ -25,28 +25,28 @@ namespace BackendFramework.Services
             newUserEdit.Edits.Add(edit);
 
             //replace the old UserEdit object with the new one that contains  the new list entryz
-            bool validation = _repo.Replace(Id, newUserEdit).Result;
+            bool validation = _repo.Replace(projectId, userEditId, newUserEdit).Result;
 
             int indexOfNewestEdit = -1;
 
             if (validation)
             {
-                var newestEdit = _repo.GetUserEdit(Id).Result;
+                var newestEdit = _repo.GetUserEdit(projectId, userEditId).Result;
                 indexOfNewestEdit = newestEdit.Edits.Count -1;
             }
 
             return new Tuple<bool, int>(validation, indexOfNewestEdit);
         }
 
-        public async Task<bool> AddStepToGoal(string Id, int goalIndex, string userEdit)
+        public async Task<bool> AddStepToGoal(string projectId, string userEditId, int goalIndex, string userEdit)
         {
-            UserEdit addUserEdit = await _repo.GetUserEdit(Id);
+            UserEdit addUserEdit = await _repo.GetUserEdit(projectId, userEditId);
 
             UserEdit newUserEdit = addUserEdit.Clone();
 
             newUserEdit.Edits[goalIndex].StepData.Add(userEdit);
 
-            bool updateResult = _repo.Replace(Id, newUserEdit).Result;
+            bool updateResult = _repo.Replace(projectId, userEditId, newUserEdit).Result;
 
             return updateResult;
            

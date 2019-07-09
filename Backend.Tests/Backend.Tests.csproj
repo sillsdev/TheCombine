@@ -18,9 +18,11 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="SIL.Core" Version="7.0.0-alpha0819" />
-    <PackageReference Include="SIL.Core.Desktop" Version="7.0.0-alpha0816" />
-    <PackageReference Include="SIL.DictionaryServices" Version="7.0.0-alpha0816" />
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
     <PackageReference Include="SIL.WritingSystems" Version="7.0.0-alpha0819" />
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

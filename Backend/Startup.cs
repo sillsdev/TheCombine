@@ -26,10 +26,7 @@ namespace BackendFramework
         public class Settings
         {
             public string ConnectionString { get; set; }
-            public string WordsDatabase { get; set; }
-            public string UsersDatabase { get; set; }
-            public string UserEditsDatabase { get; set; }
-            public string ProjectsDatabase { get; set; }
+            public string CombineDatabase { get; set; }
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -75,10 +72,7 @@ namespace BackendFramework
             options =>
             {
                 options.ConnectionString = Configuration.GetSection("MongoDB:ConnectionString").Value;
-                options.WordsDatabase = Configuration.GetSection("MongoDB:WordsDatabase").Value;
-                options.UsersDatabase = Configuration.GetSection("MongoDB:UsersDatabase").Value;
-                options.ProjectsDatabase = Configuration.GetSection("MongoDB:ProjectsDatabase").Value;
-                options.UserEditsDatabase = Configuration.GetSection("MongoDB:UserEditsDatabase").Value;
+                options.CombineDatabase = Configuration.GetSection("MongoDB:CombineDatabase").Value;
             });
 
             // Register concrete types for dependency injection

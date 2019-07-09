@@ -14,10 +14,10 @@ namespace BackendFramework.Context
         public UserEditContext(IOptions<Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.UserEditsDatabase);
+            _db = client.GetDatabase(options.Value.CombineDatabase);
         }
 
-        public IMongoCollection<UserEdit> UserEdits => _db.GetCollection<UserEdit>("UserEditsDatabase");
+        public IMongoCollection<UserEdit> UserEdits => _db.GetCollection<UserEdit>("UserEditsCollection");
     }
     
 }

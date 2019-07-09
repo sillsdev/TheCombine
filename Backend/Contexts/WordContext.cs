@@ -14,7 +14,7 @@ namespace BackendFramework.Context
         public WordContext(IOptions<Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.WordsDatabase);
+            _db = client.GetDatabase(options.Value.CombineDatabase);
         }
 
         public IMongoCollection<Word> Words => _db.GetCollection<Word>("WordsCollection");

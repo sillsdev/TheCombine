@@ -2,7 +2,7 @@
 
 Gets all words in the project
 
-**URL** : `/v1/projects/{project}/words`
+**URL** : `/v1/projects/{projectId}/words`
 
 **Method** : `GET`
 
