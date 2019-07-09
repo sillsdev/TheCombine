@@ -14,7 +14,7 @@ namespace BackendFramework.Context
         public ProjectContext(IOptions<Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.ProjectsDatabase);
+            _db = client.GetDatabase(options.Value.CombineDatabase);
         }
 
         public IMongoCollection<Project> Projects => _db.GetCollection<Project>("ProjectsCollection");

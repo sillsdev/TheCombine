@@ -9,51 +9,51 @@ namespace Backend.Tests
 {
     public class ProjectServiceMock : IProjectService
     {
-        readonly List<Project> projects;
+        private readonly List<Project> _projects;
 
         public ProjectServiceMock()
         {
-            projects = new List<Project>();
+            _projects = new List<Project>();
         }
 
         public Task<List<Project>> GetAllProjects()
         {
-            return Task.FromResult(projects.Select(project => project.Clone()).ToList());
+            return Task.FromResult(_projects.Select(project => project.Clone()).ToList());
         }
 
         public Task<Project> GetProject(string id)
         {
-            var foundProjects = projects.Where(project => project.Id == id).Single();
+            var foundProjects = _projects.Where(project => project.Id == id).Single();
             return Task.FromResult(foundProjects.Clone());
         }
 
         public Task<Project> Create(Project project)
         {
             project.Id = Guid.NewGuid().ToString();
-            projects.Add(project.Clone());
+            _projects.Add(project.Clone());
             return Task.FromResult(project.Clone());
         }
 
         public Task<bool> DeleteAllProjects()
         {
-            projects.Clear();
+            _projects.Clear();
             return Task.FromResult(true);
         }
 
         public Task<bool> Delete(string Id)
         {
-            var foundProject = projects.Single(project => project.Id == Id);
-            var success = projects.Remove(foundProject);
+            var foundProject = _projects.Single(project => project.Id == Id);
+            var success = _projects.Remove(foundProject);
             return Task.FromResult(success);
         }
 
         public Task<bool> Update(string Id, Project project)
         {
-            var foundProject = projects.Single(u => u.Id == Id);
-            var success = projects.Remove(foundProject);
+            var foundProject = _projects.Single(u => u.Id == Id);
+            var success = _projects.Remove(foundProject);
             if (success)
             {
-                projects.Add(project.Clone());
+                _projects.Add(project.Clone());
             }
             return Task.FromResult(success);
         }

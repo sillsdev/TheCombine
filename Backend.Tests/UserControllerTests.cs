@@ -10,14 +10,14 @@ namespace Backend.Tests
 {
     public class UserControllerTests
     {
-        IUserService _userService;
-        UserController controller;
+        private IUserService _userService;
+        private UserController _controller;
 
         [SetUp]
         public void Setup()
         {
             _userService = new UserServiceMock();
-            controller = new UserController(_userService);
+            _controller = new UserController(_userService);
         }
 
         User RandomUser()
@@ -35,7 +35,7 @@ namespace Backend.Tests
             _userService.Create(RandomUser());
             _userService.Create(RandomUser());
 
-            var users = (controller.Get().Result as ObjectResult).Value as List<User>;
+            var users = (_controller.Get().Result as ObjectResult).Value as List<User>;
             Assert.That(users, Has.Count.EqualTo(3));
             _userService.GetAllUsers().Result.ForEach(user => Assert.Contains(user, users));
         }
@@ -48,7 +48,7 @@ namespace Backend.Tests
             _userService.Create(RandomUser());
             _userService.Create(RandomUser());
 
-            var action = controller.Get(user.Id).Result;
+            var action = _controller.Get(user.Id).Result;
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
@@ -60,7 +60,7 @@ namespace Backend.Tests
         public void TestCreateUser()
         {
             User user = RandomUser();
-            string id = (controller.Post(user).Result as ObjectResult).Value as string;
+            string id = (_controller.Post(user).Result as ObjectResult).Value as string;
             user.Id = id;
             Assert.Contains(user, _userService.GetAllUsers().Result);
         }
@@ -73,7 +73,7 @@ namespace Backend.Tests
             User modUser = origUser.Clone();
             modUser.Username = "Mark";
 
-            _ = controller.Put(modUser.Id, modUser);
+            _ = _controller.Put(modUser.Id, modUser);
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(1));
             Assert.Contains(modUser, _userService.GetAllUsers().Result);
@@ -86,7 +86,7 @@ namespace Backend.Tests
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(1));
 
-            _ = controller.Delete(origUser.Id).Result;
+            _ = _controller.Delete(origUser.Id).Result;
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
@@ -100,7 +100,7 @@ namespace Backend.Tests
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(3));
 
-            _ = controller.Delete().Result;
+            _ = _controller.Delete().Result;
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
         }

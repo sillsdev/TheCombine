@@ -9,21 +9,21 @@ namespace Backend.Tests
 {
     public class UserEditRepositoryMock : IUserEditRepository
     {
-        private readonly List<UserEdit> userEdits;
+        private readonly List<UserEdit> _userEdits;
 
         public UserEditRepositoryMock()
         {
-            userEdits = new List<UserEdit>();
+            _userEdits = new List<UserEdit>();
         }
 
-        public Task<List<UserEdit>> GetAllUserEdits()
+        public Task<List<UserEdit>> GetAllUserEdits(string projectId)
         {
-            return Task.FromResult(userEdits.Select(userEdit => userEdit.Clone()).ToList());
+            return Task.FromResult(_userEdits.Select(userEdit => userEdit.Clone()).ToList());
         }
 
-        public Task<UserEdit> GetUserEdit(string id)
+        public Task<UserEdit> GetUserEdit(string projectId, string userEditId)
         {
-            var foundUserEdit = userEdits.Where(userEdit => userEdit.Id == id).FirstOrDefault();
+            var foundUserEdit = _userEdits.Where(userEdit => userEdit.Id == userEditId).FirstOrDefault();
             if (foundUserEdit == null)
             {
                 return Task.FromResult(foundUserEdit);
@@ -34,28 +34,28 @@ namespace Backend.Tests
         public Task<UserEdit> Create(UserEdit userEdit)
         {
             userEdit.Id = Guid.NewGuid().ToString();
-            userEdits.Add(userEdit.Clone());
+            _userEdits.Add(userEdit.Clone());
             return Task.FromResult(userEdit.Clone());
         }
 
-        public Task<bool> DeleteAllUserEdits()
+        public Task<bool> DeleteAllUserEdits(string projectId)
         {
-            userEdits.Clear();
+            _userEdits.Clear();
             return Task.FromResult(true);
         }
 
-        public Task<bool> Delete(string Id)
+        public Task<bool> Delete(string projectId, string userEditId)
         {
-            var foundUserEdit = userEdits.Single(userEdit => userEdit.Id == Id);
-            var success = userEdits.Remove(foundUserEdit);
+            var foundUserEdit = _userEdits.Single(userEdit => userEdit.Id == userEditId);
+            var success = _userEdits.Remove(foundUserEdit);
             return Task.FromResult(success);
         }
 
-        public Task<bool> Replace(string Id, UserEdit userEdit)
+        public Task<bool> Replace(string projectId, string userEditId, UserEdit userEdit)
         {
-            var foundUserEdit = userEdits.Single(ue => ue.Id == Id);
-            var success = userEdits.Remove(foundUserEdit);
-            userEdits.Add(userEdit);
+            var foundUserEdit = _userEdits.Single(ue => ue.Id == userEditId);
+            var success = _userEdits.Remove(foundUserEdit);
+            _userEdits.Add(userEdit);
             return Task.FromResult(success);
         }
     }

@@ -20,7 +20,9 @@ namespace BackendFramework.Controllers
             _userService = service;
         }
 
-        [HttpPost("users/{Id}/upload/avatar")]
+        // POST: v1/users/{userId}/upload/avatar
+        // Implements UploadAvatar()
+        [HttpPost("users/{userId}/upload/avatar")]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload model)
         {
             var file = model.File;
@@ -35,7 +37,7 @@ namespace BackendFramework.Controllers
                 {
                     //get path to home
                     Utilities util = new Utilities();
-                    model.FilePath = util.GenerateFilePath(Utilities.filetype.avatar, false, userId, Path.Combine("AmbigProjectName", "Import", "Avatars"));
+                    model.FilePath = util.GenerateFilePath(Utilities.filetype.avatar, false, userId, "Avatars");
 
                     //copy stream to filepath
                     using (var fs = new FileStream(model.FilePath, FileMode.OpenOrCreate))

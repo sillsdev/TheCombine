@@ -43,6 +43,9 @@ namespace BackendFramework.ValueModels
         [BsonElement("otherField")]
         public string OtherField { get; set; }
 
+        [BsonElement("projectId")]
+        public string ProjectId { get; set; }
+
         public Word()
         {
             Id = "";
@@ -53,6 +56,7 @@ namespace BackendFramework.ValueModels
             Modified = "";
             PartOfSpeech = "";
             OtherField = "";
+            ProjectId = "";
             EditedBy = new List<string>();
             History = new List<string>();
             Senses = new List<Sense>();
@@ -70,6 +74,7 @@ namespace BackendFramework.ValueModels
                 Modified = Modified.Clone() as string,
                 PartOfSpeech = PartOfSpeech.Clone() as string,
                 OtherField = OtherField.Clone() as string,
+                ProjectId = ProjectId.Clone() as string,
                 EditedBy = new List<string>(),
                 History = new List<string>(),
                 Senses = new List<Sense>()
@@ -101,6 +106,7 @@ namespace BackendFramework.ValueModels
                 other.Modified.Equals(Modified) &&
                 other.PartOfSpeech.Equals(PartOfSpeech) &&
                 other.OtherField.Equals(OtherField) &&
+                other.ProjectId.Equals(ProjectId) &&
 
                 other.EditedBy.Count == EditedBy.Count &&
                 other.EditedBy.All(EditedBy.Contains) &&
@@ -139,6 +145,7 @@ namespace BackendFramework.ValueModels
             hash.Add(PartOfSpeech);
             hash.Add(EditedBy);
             hash.Add(OtherField);
+            hash.Add(ProjectId);
             return hash.ToHashCode();
         }
     }
@@ -152,7 +159,7 @@ namespace BackendFramework.ValueModels
     {
         public Word Parent { get; set; }
         public List<MergeSourceWord> ChildrenWords { get; set; }
-        public User MergedBy { get; set; }
+        public string MergedBy { get; set; }
         public string Time { get; set; }
     }
 

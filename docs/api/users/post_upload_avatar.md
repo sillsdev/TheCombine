@@ -2,7 +2,7 @@
 
 Used to add an avatar to a user profile
 
-**URL** : `/v1/users/{id}/upload/avatar`
+**URL** : `/v1/users/{userId}/upload/avatar`
 
 **Method** : `POST`
 

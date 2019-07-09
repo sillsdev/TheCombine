@@ -1,6 +1,8 @@
 # Get a single UserEdit
 
-**URL** : `/v1/projects/useredit/{Id}`
+Get user edit with target id, otherwise makes a new user edit
+
+**URL** : `/v1/projects/{projectId}/useredits/{userEditId}`
 
 **Method** : `GET`
 

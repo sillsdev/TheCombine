@@ -1,7 +1,5 @@
 ﻿using BackendFramework.Controllers;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
-using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -16,19 +14,16 @@ namespace Backend.Tests
     public class LiftControllerTests
     {
         private IWordRepository _wordrepo;
-        private IWordService _wordService;
         private IProjectService _projServ;
         private ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
-        private LiftController liftController;
+        private LiftController _liftController;
 
         [SetUp]
         public void Setup()
         {
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordrepo);
-            _merger = new LiftService(_wordrepo, _projServ);
-            liftController = new LiftController(_merger, _wordrepo, _wordService, _projServ);
+            _liftController = new LiftController(_wordrepo, _projServ);
         }
 
         Project RandomProject()
@@ -147,7 +142,7 @@ namespace Backend.Tests
             var fileUpload = InitFile(fstream, actualFilename);
 
             //make api call
-            var result = liftController.UploadLiftFile(fileUpload).Result;
+            var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
             if(result is BadRequestObjectResult)
             {
                 //this will be removed in the next pull request
@@ -156,25 +151,25 @@ namespace Backend.Tests
 
             fstream.Close();
 
-            var allWords = _wordrepo.GetAllWords();
+            var allWords = _wordrepo.GetAllWords(proj.Id);
             Assert.NotZero(allWords.Result.Count);
 
             //export
-            _ = liftController.ExportLiftFile(proj.Id).Result;
+            _ = _liftController.ExportLiftFile(proj.Id).Result;
             /*
             //assert file was created
             Assert.IsTrue(Directory.Exists(filepath));
 
             //assert words can be properly imported
-            _ = _wordrepo.DeleteAllWords().Result;
+            _ = _wordrepo.DeleteAllWords(proj.Id).Result;
 
             string uploadAgain = Path.Combine(util.GenerateFilePath(Utilities.filetype.dir, true), "LiftExport", "NewLiftFile.lift");
             fstream = File.OpenRead(uploadAgain);
             fileUpload = InitFile(fstream);
 
-            _ = liftController.UploadLiftFile(fileUpload).Result;
+            _ = _liftController.UploadLiftFile(fileUpload).Result;
 
-            allWords = _wordrepo.GetAllWords();
+            allWords = _wordrepo.GetAllWords(proj.Id);
             Assert.NotZero(allWords.Result.Count);
 
             File.Delete(fileUpload.FilePath);
