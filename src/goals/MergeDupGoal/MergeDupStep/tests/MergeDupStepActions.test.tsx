@@ -1,9 +1,11 @@
-import { simpleWord, multiGlossWord, State } from "../../../../types/word";
+import { multiGlossWord, State } from "../../../../types/word";
 import thunk from "redux-thunk";
 import { mergeAll } from "../MergeDupStepActions";
 import * as backend from "../../../../backend";
 import configureMockStore from "redux-mock-store";
 import { MergeData, MergeTree } from "../MergeDupsTree";
+import { MergeDups } from "../../MergeDups";
+import { goalDataMock } from "../../../../components/GoalTimeline/tests/GoalTimelineReducers.test";
 
 jest.mock("../../../../backend", () => {
   return {
@@ -84,21 +86,51 @@ const treeB: { tree: MergeTree } = {
   }
 };
 
-test("test simple merge", () => {
+test("test simple merge", async () => {
   let parent = { ...data.data.words.WA };
   let children = [
     { wordID: "WA", senses: [State.sense, State.sense] },
     { wordID: "WB", senses: [State.duplicate] }
   ];
-  const mockStore = createMockStore({
+
+  const mockGoal: MergeDups = new MergeDups();
+  mockGoal.data = goalDataMock;
+  mockGoal.steps = [
+    {
+      words: []
+    },
+    {
+      words: []
+    }
+  ];
+
+  const mockGoal2: MergeDups = new MergeDups();
+  mockGoal2.data = goalDataMock;
+  mockGoal2.steps = [
+    {
+      words: []
+    }
+  ];
+  const mockStoreState = {
+    goalsState: {
+      historyState: {
+        history: [mockGoal]
+      },
+      allPossibleGoals: [],
+      suggestionsState: {
+        suggestions: []
+      }
+    },
     mergeDuplicateGoal: { mergeTreeState: { ...data, ...treeA } }
-  });
+  };
+  const mockStore = createMockStore(mockStoreState);
+
   mockStore
     .dispatch<any>(mergeAll())
     .then(() => {
       expect(backend.mergeWords).toHaveBeenCalledWith(parent, children);
     })
-    .catch(e => console.log(e));
+    .catch((e: string) => fail(e));
 });
 
 /* This test test behaviour that has not yet been written

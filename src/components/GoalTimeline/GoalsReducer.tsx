@@ -7,7 +7,7 @@ import {
 } from "./GoalsActions";
 import { ActionWithPayload } from "../../types/mockAction";
 import { defaultState } from "./DefaultState";
-import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
@@ -45,9 +45,8 @@ export const goalsReducer = (
     case NEXT_STEP: // Update the step data in the current step, then go to the next step
       let history: Goal[] = state.historyState.history;
       let currentGoal: Goal = history[history.length - 1];
-
       currentGoal = updateStepDataAndCurNdx(currentGoal);
-      history.splice(-1, 1, currentGoal);
+      history[history.length - 1] = currentGoal;
 
       return {
         historyState: {
@@ -67,12 +66,10 @@ export function updateStepDataAndCurNdx(goal: Goal): Goal {
   switch (goal.goalType) {
     case GoalType.MergeDups:
       let currentGoalData: MergeDupData = goal.data as MergeDupData;
-
       goal.steps[goal.curNdx] = {
         words: currentGoalData.plannedWords[goal.curNdx]
       };
       goal.curNdx++;
   }
-
   return goal;
 }

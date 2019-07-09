@@ -10,7 +10,7 @@ import { goalDataMock } from "./GoalTimelineReducers.test";
 const createMockStore = configureMockStore([thunk]);
 
 it("should create an action to add a goal to history", () => {
-  const goal: Goal = new CreateCharInv([]);
+  const goal: Goal = new CreateCharInv();
   const expectedAction: actions.AddGoalToHistory = {
     type: actions.ADD_GOAL_TO_HISTORY,
     payload: [goal]
@@ -19,7 +19,7 @@ it("should create an action to add a goal to history", () => {
 });
 
 it("should create an action to load user edits", () => {
-  const goalHistory: Goal[] = [new CreateCharInv([]), new MergeDups([])];
+  const goalHistory: Goal[] = [new CreateCharInv(), new MergeDups()];
   const expectedAction: actions.LoadUserEdits = {
     type: actions.LOAD_USER_EDITS,
     payload: goalHistory
@@ -48,7 +48,7 @@ it("should create an async action to load user edits", () => {
 
 it("should create an async action to add a goal to history", () => {
   const mockStore = createMockStore(defaultState);
-  const goal: Goal = new CreateCharInv([]);
+  const goal: Goal = new CreateCharInv();
   const mockDispatch = mockStore.dispatch<any>(
     actions.asyncAddGoalToHistory(goal)
   );

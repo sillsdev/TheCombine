@@ -14,6 +14,7 @@ export class BaseGoal implements Goal {
   user: User;
 
   steps: GoalStep[];
+  numSteps: number;
   curNdx: number;
   data: GoalData; // The data required to load/reload this exact goal
 
@@ -21,11 +22,12 @@ export class BaseGoal implements Goal {
   completed: boolean;
   result: GoalOption;
 
-  constructor() {
+  constructor(numSteps: number = 8) {
     this.goalType = GoalType.CreateCharInv;
     this.name = "";
     this.user = new User("", "", "");
     this.steps = [];
+    this.numSteps = numSteps;
     this.curNdx = 0;
     this.data = {};
     this.tool = Tools.TempTool;

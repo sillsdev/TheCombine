@@ -59,6 +59,7 @@ export interface Goal {
   user: User;
 
   steps: GoalStep[];
+  numSteps: number;
   curNdx: number;
   data: GoalData; // The data required to load/reload this exact goal
 

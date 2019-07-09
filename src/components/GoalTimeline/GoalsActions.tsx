@@ -1,4 +1,4 @@
-import { Goal, GoalData } from "../../types/goals";
+import { Goal } from "../../types/goals";
 import { ActionWithPayload } from "../../types/mockAction";
 import { Dispatch } from "redux";
 import * as backend from "../../backend";
@@ -62,8 +62,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: Dispatch<AddGoalToHistoryAction>, getState: any) => {
     let userEditId: string = getUserEditId();
 
-    loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
-    console.log();
+    await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
     await backend
       .addGoalToUserEdit(userEditId, goal)
       .then(resp => {
@@ -80,7 +79,7 @@ export async function loadGoalData(goal: Goal): Promise<Goal> {
   switch (goal.goalType) {
     case GoalType.MergeDups:
       let finder = new DupFinder();
-      await finder.getNextDups().then(words => {
+      await finder.getNextDups(goal.numSteps).then(words => {
         goal.data = { plannedWords: words };
       });
   }
@@ -133,21 +132,21 @@ function convertEditsToArrayOfGoals(edits: Edit[]): Goal[] {
 function goalTypeToGoal(type: number): Goal | undefined {
   switch (type) {
     case GoalType.CreateCharInv:
-      return new CreateCharInv([]);
+      return new CreateCharInv();
     case GoalType.ValidateChars:
-      return new ValidateChars([]);
+      return new ValidateChars();
     case GoalType.CreateStrWordInv:
-      return new CreateStrWordInv([]);
+      return new CreateStrWordInv();
     case GoalType.ValidateStrWords:
-      return new ValidateStrWords([]);
+      return new ValidateStrWords();
     case GoalType.MergeDups:
-      return new MergeDups([]);
+      return new MergeDups();
     case GoalType.SpellcheckGloss:
-      return new SpellCheckGloss([]);
+      return new SpellCheckGloss();
     case GoalType.ViewFind:
-      return new ViewFinal([]);
+      return new ViewFinal();
     case GoalType.HandleFlags:
-      return new HandleFlags([]);
+      return new HandleFlags();
     default:
       return undefined;
   }

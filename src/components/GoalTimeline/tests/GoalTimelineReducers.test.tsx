@@ -1,5 +1,5 @@
 import * as actions from "../GoalsActions";
-import { goalsReducer, updateStepData } from "../GoalsReducer";
+import { goalsReducer, updateStepDataAndCurNdx } from "../GoalsReducer";
 import { Goal, GoalsState } from "../../../types/goals";
 import { MockActionGoalArrayInstance } from "../../../types/mockAction";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
@@ -56,7 +56,7 @@ it("Should return the default state", () => {
 });
 
 it("Should add a goal to history and remove it from suggestions", () => {
-  const goal: Goal = new CreateCharInv([]);
+  const goal: Goal = new CreateCharInv();
   const suggestionsArray: Goal[] = [goal];
 
   const state: GoalsState = {
@@ -86,7 +86,7 @@ it("Should add a goal to history and remove it from suggestions", () => {
 });
 
 it("Should add a goal to history but not remove any goals from non-existent suggestions", () => {
-  const goal: Goal = new CreateCharInv([]);
+  const goal: Goal = new CreateCharInv();
 
   const state: GoalsState = {
     historyState: {
@@ -115,7 +115,7 @@ it("Should add a goal to history but not remove any goals from non-existent sugg
 });
 
 it("Should add a goal to history but not remove it from suggestions", () => {
-  const goal: Goal = new CreateCharInv([]);
+  const goal: Goal = new CreateCharInv();
   const suggestionsArray: Goal[] = [goal];
 
   const state: GoalsState = {
@@ -128,7 +128,7 @@ it("Should add a goal to history but not remove it from suggestions", () => {
     }
   };
 
-  const chosenGoal: Goal = new HandleFlags([]);
+  const chosenGoal: Goal = new HandleFlags();
 
   const addGoalAction: actions.AddGoalToHistoryAction = {
     type: actions.ADD_GOAL_TO_HISTORY,
@@ -147,11 +147,11 @@ it("Should add a goal to history but not remove it from suggestions", () => {
 });
 
 it("Should set the goal history to the payload and leave everything else unchanged", () => {
-  const goal: Goal = new CreateCharInv([]);
+  const goal: Goal = new CreateCharInv();
   const goal2: Goal = new MergeDups();
-  const goal3: Goal = new ViewFinal([]);
-  const goal4: Goal = new SpellCheckGloss([]);
-  const goal5: Goal = new CreateStrWordInv([]);
+  const goal3: Goal = new ViewFinal();
+  const goal4: Goal = new SpellCheckGloss();
+  const goal5: Goal = new CreateStrWordInv();
   const historyArray: Goal[] = [goal, goal2];
   const allPossibleGoalsArray: Goal[] = [goal3];
   const suggestionsArray: Goal[] = [goal4, goal5];
@@ -166,8 +166,8 @@ it("Should set the goal history to the payload and leave everything else unchang
     }
   };
 
-  const goal6: Goal = new HandleFlags([]);
-  const goal7: Goal = new ValidateChars([]);
+  const goal6: Goal = new HandleFlags();
+  const goal7: Goal = new ValidateChars();
 
   const loadUserEditsAction: actions.LoadUserEditsAction = {
     type: actions.LOAD_USER_EDITS,
@@ -188,12 +188,12 @@ it("Should set the goal history to the payload and leave everything else unchang
 });
 
 it("Should update a goal when navigating to the next step", () => {
-  const goal: Goal = new CreateCharInv([]);
+  const goal: Goal = new CreateCharInv();
   const goalToEdit: Goal = new MergeDups();
   goalToEdit.data = goalDataMock;
-  const goal3: Goal = new ViewFinal([]);
-  const goal4: Goal = new SpellCheckGloss([]);
-  const goal5: Goal = new CreateStrWordInv([]);
+  const goal3: Goal = new ViewFinal();
+  const goal4: Goal = new SpellCheckGloss();
+  const goal5: Goal = new CreateStrWordInv();
   const historyArray: Goal[] = [goal, goalToEdit];
   const allPossibleGoalsArray: Goal[] = [goal3];
   const suggestionsArray: Goal[] = [goal4, goal5];
@@ -246,7 +246,7 @@ it("Should update the step data of a goal", () => {
   expect(goal.steps).toEqual([]);
   expect(goal.curNdx).toEqual(0);
 
-  const updatedGoal: Goal = updateStepData(goal);
+  const updatedGoal: Goal = updateStepDataAndCurNdx(goal);
 
   expect(updatedGoal.data).toEqual(goal.data);
   expect(updatedGoal.steps[0].words).toEqual(goal.data.plannedWords[0]);

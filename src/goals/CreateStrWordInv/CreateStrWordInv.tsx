@@ -13,17 +13,19 @@ export class CreateStrWordInv implements Goal {
   name: string;
   user: User;
   steps: GoalStep[];
+  numSteps: number;
   curNdx: number;
   data: GoalData;
   tool: Tools;
   completed: boolean;
   result: GoalOption;
 
-  constructor(steps: GoalStep[]) {
+  constructor(steps: GoalStep[] = [], numSteps: number = 8) {
     this.goalType = GoalType.CreateStrWordInv;
     this.name = "createStrWordInv";
     this.user = new User("", "", "");
     this.steps = steps;
+    this.numSteps = numSteps;
     this.curNdx = 0;
     this.data = {};
     this.tool = Tools.TempTool;

@@ -8,14 +8,14 @@ import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 
-let goal1: Goal = new CreateCharInv([]);
-let goal2: Goal = new CreateStrWordInv([]);
-let goal3: Goal = new HandleFlags([]);
+let goal1: Goal = new CreateCharInv();
+let goal2: Goal = new CreateStrWordInv();
+let goal3: Goal = new HandleFlags();
 let goal4: Goal = new MergeDups();
-let goal5: Goal = new SpellCheckGloss([]);
-let goal6: Goal = new ValidateChars([]);
-let goal7: Goal = new ValidateStrWords([]);
-let goal8: Goal = new ViewFinal([]);
+let goal5: Goal = new SpellCheckGloss();
+let goal6: Goal = new ValidateChars();
+let goal7: Goal = new ValidateStrWords();
+let goal8: Goal = new ViewFinal();
 let allTheGoals: Goal[] = [
   goal1,
   goal2,
