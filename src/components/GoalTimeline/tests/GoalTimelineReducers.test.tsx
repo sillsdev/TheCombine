@@ -1,5 +1,5 @@
 import * as actions from "../GoalsActions";
-import { goalsReducer, updateStepDataAndCurNdx } from "../GoalsReducer";
+import { goalsReducer, updateStepData } from "../GoalsReducer";
 import { Goal, GoalsState } from "../../../types/goals";
 import { MockActionGoalArrayInstance } from "../../../types/mockAction";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
@@ -10,26 +10,44 @@ import { ViewFinal } from "../../../goals/ViewFinal/ViewFinal";
 import { SpellCheckGloss } from "../../../goals/SpellCheckGloss/SpellCheckGloss";
 import { CreateStrWordInv } from "../../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateChars } from "../../../goals/ValidateChars/ValidateChars";
-import { State } from "../../../types/word";
+import { State, Word } from "../../../types/word";
+
+export const wordMock: Word = {
+  id: "",
+  vernacular: "",
+  senses: [],
+  audio: "",
+  created: "",
+  modified: "",
+  history: [""],
+  partOfSpeech: "",
+  editedBy: [""],
+  accessability: State.active,
+  otherField: "",
+  plural: ""
+};
+
+export const wordsArrayMock: Word[] = [
+  wordMock,
+  wordMock,
+  wordMock,
+  wordMock,
+  wordMock,
+  wordMock,
+  wordMock,
+  wordMock
+];
 
 export const goalDataMock: MergeDupData = {
   plannedWords: [
-    [
-      {
-        id: "",
-        vernacular: "",
-        senses: [],
-        audio: "",
-        created: "",
-        modified: "",
-        history: [""],
-        partOfSpeech: "",
-        editedBy: [""],
-        accessability: State.active,
-        otherField: "",
-        plural: ""
-      }
-    ]
+    wordsArrayMock,
+    wordsArrayMock,
+    wordsArrayMock,
+    wordsArrayMock,
+    wordsArrayMock,
+    wordsArrayMock,
+    wordsArrayMock,
+    wordsArrayMock
   ]
 };
 
@@ -215,12 +233,12 @@ it("Should update a goal when navigating to the next step", () => {
 
   const updatedGoalToEdit: Goal = new MergeDups();
   updatedGoalToEdit.data = goalDataMock;
-  updatedGoalToEdit.steps[updatedGoalToEdit.curNdx] = {
+  updatedGoalToEdit.steps[updatedGoalToEdit.currentStep] = {
     words: (updatedGoalToEdit.data as MergeDupData).plannedWords[
-      updatedGoalToEdit.curNdx
+      updatedGoalToEdit.currentStep
     ]
   };
-  updatedGoalToEdit.curNdx = updatedGoalToEdit.curNdx + 1;
+  updatedGoalToEdit.currentStep = updatedGoalToEdit.currentStep + 1;
   const updatedHistoryArray: Goal[] = [goal, updatedGoalToEdit];
 
   const newState: GoalsState = {
@@ -244,11 +262,11 @@ it("Should update the step data of a goal", () => {
   goal.data = goalDataMock;
   expect(goal.data).toEqual(goalDataMock);
   expect(goal.steps).toEqual([]);
-  expect(goal.curNdx).toEqual(0);
+  expect(goal.currentStep).toEqual(0);
 
-  const updatedGoal: Goal = updateStepDataAndCurNdx(goal);
+  const updatedGoal: Goal = updateStepData(goal);
 
   expect(updatedGoal.data).toEqual(goal.data);
   expect(updatedGoal.steps[0].words).toEqual(goal.data.plannedWords[0]);
-  expect(updatedGoal.curNdx).toEqual(1);
+  expect(updatedGoal.currentStep).toEqual(1);
 });

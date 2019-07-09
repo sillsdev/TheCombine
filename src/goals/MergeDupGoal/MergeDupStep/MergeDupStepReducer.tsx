@@ -10,7 +10,6 @@ import {
 } from "./MergeDupsTree";
 import { Word } from "../../../types/word";
 import { uuid } from "../../../utilities";
-import { GoalsState } from "../../../types/goals";
 
 export const defaultState: MergeTreeState = {
   data: defaultData,

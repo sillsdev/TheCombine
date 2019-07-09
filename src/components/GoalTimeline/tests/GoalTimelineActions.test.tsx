@@ -5,7 +5,10 @@ import { MergeDups } from "../../../goals/MergeDupGoal/MergeDups";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import { defaultState } from "../DefaultState";
-import { goalDataMock } from "./GoalTimelineReducers.test";
+import { goalDataMock, wordsArrayMock } from "./GoalTimelineReducers.test";
+import axios from "axios";
+
+const mockAxios = axios as jest.Mocked<typeof axios>;
 
 const createMockStore = configureMockStore([thunk]);
 
@@ -40,9 +43,8 @@ it("should create an async action to load user edits", () => {
     .then(() => {
       expect(mockStore.getActions()).toEqual([loadUserEdits]);
     })
-    .catch((err: any) => {
-      console.log(err);
-      fail();
+    .catch((err: string) => {
+      fail(err);
     });
 });
 
@@ -62,18 +64,42 @@ it("should create an async action to add a goal to history", () => {
     .then(() => {
       expect(mockStore.getActions()).toEqual([addGoalToHistory]);
     })
-    .catch((err: any) => {
-      console.log(err);
-      fail();
+    .catch((err: string) => {
+      fail(err);
     });
 });
 
-it("should update goal data after calling the database", () => {
+it("should update goal data", () => {
+  mockAxios.get.mockImplementationOnce(() =>
+    Promise.resolve({
+      data: wordsArrayMock
+    })
+  );
+  const expectedGoal: Goal = new MergeDups();
+  expectedGoal.data = goalDataMock;
+
   const goal: Goal = new MergeDups();
-  goal.data = goalDataMock;
-  let updatedGoal: Goal;
-  actions.loadGoalData(goal).then(goal => {
-    updatedGoal = goal;
-    expect(updatedGoal.data).toEqual(goal.data);
-  });
+  actions
+    .loadGoalData(goal)
+    .then(returnedGoal => {
+      expect(returnedGoal.data).toEqual(expectedGoal.data);
+    })
+    .catch((err: string) => {
+      fail(err);
+    });
+});
+
+it("should not change the goal data", () => {
+  const goal: Goal = new CreateCharInv();
+
+  const expectedGoal: Goal = new CreateCharInv();
+
+  actions
+    .loadGoalData(goal)
+    .then(returnedGoal => {
+      expect(returnedGoal.data).toEqual(expectedGoal.data);
+    })
+    .catch((err: string) => {
+      fail(err);
+    });
 });

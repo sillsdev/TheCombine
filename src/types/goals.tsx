@@ -60,7 +60,7 @@ export interface Goal {
 
   steps: GoalStep[];
   numSteps: number;
-  curNdx: number;
+  currentStep: number;
   data: GoalData; // The data required to load/reload this exact goal
 
   tool: Tools;

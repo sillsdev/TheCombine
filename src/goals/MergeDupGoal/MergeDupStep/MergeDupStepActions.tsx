@@ -119,7 +119,7 @@ export function refreshWords() {
     goToNextStep(dispatch).then(() => {
       let history: Goal[] = getState().goalsState.historyState.history;
       let goal: Goal = history[history.length - 1];
-      let words: Word[] = goal.steps[goal.curNdx - 1].words;
+      let words: Word[] = goal.steps[goal.currentStep - 1].words;
       dispatch(setWordData(words));
     });
   };

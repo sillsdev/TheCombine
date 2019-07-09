@@ -33,7 +33,7 @@ class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
         <AppBarComponent />
         <DisplayProg goal={this.props.goal} />
         {completeGoals.includes(goal.goalType) ? (
-          stepComponentDictionary[goal.goalType].steps[goal.curNdx]
+          stepComponentDictionary[goal.goalType].steps[goal.currentStep]
         ) : (
           <EmptyGoalComponent />
         )}

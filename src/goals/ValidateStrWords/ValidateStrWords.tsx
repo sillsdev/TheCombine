@@ -14,7 +14,7 @@ export class ValidateStrWords implements Goal {
   user: User;
   steps: GoalStep[];
   numSteps: number;
-  curNdx: number;
+  currentStep: number;
   data: GoalData;
   tool: Tools;
   completed: boolean;
@@ -26,7 +26,7 @@ export class ValidateStrWords implements Goal {
     this.user = new User("", "", "");
     this.steps = steps;
     this.numSteps = numSteps;
-    this.curNdx = 0;
+    this.currentStep = 0;
     this.data = {};
     this.tool = Tools.TempTool;
     this.completed = false;

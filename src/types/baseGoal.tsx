@@ -15,7 +15,7 @@ export class BaseGoal implements Goal {
 
   steps: GoalStep[];
   numSteps: number;
-  curNdx: number;
+  currentStep: number;
   data: GoalData; // The data required to load/reload this exact goal
 
   tool: Tools;
@@ -28,7 +28,7 @@ export class BaseGoal implements Goal {
     this.user = new User("", "", "");
     this.steps = [];
     this.numSteps = numSteps;
-    this.curNdx = 0;
+    this.currentStep = 0;
     this.data = {};
     this.tool = Tools.TempTool;
     this.completed = false;
