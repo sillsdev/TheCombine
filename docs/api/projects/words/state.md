@@ -8,7 +8,9 @@ Acccessibility state is an enum representing one of four states
 
 **Sense** : Node has been merged with another node as an alternate definition
 
-**Duplicate** : Node had been merged with another node as a duplicate node
+**Duplicate** : Node has been merged with another node as a duplicate node
+
+**Separate** : Node has been made into a new node
 
 ## Raw type
 
@@ -17,6 +19,7 @@ enum {
     active,
     deleted,
     sense,
-    duplicate
+    duplicate,
+    separate
 }
 ```

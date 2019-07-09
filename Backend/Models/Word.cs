@@ -296,6 +296,7 @@ namespace BackendFramework.ValueModels
         active,
         deleted,
         sense,
-        duplicate
+        duplicate,
+        separate
     }
 }

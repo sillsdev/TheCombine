@@ -2,6 +2,8 @@
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
@@ -101,8 +103,15 @@ namespace BackendFramework.Controllers
         {
             if (mergeWords != null && mergeWords.Parent != null)
             {
-                var newParent = await _wordService.Merge(projectId, mergeWords);
-                return new ObjectResult(newParent.Id);
+                try
+                {
+                    var newWordList = await _wordService.Merge(projectId, mergeWords);
+                    return new ObjectResult(newWordList.Select(i => i.Id).ToList());
+                }
+                catch (NotSupportedException)
+                {
+                    return new BadRequestResult();
+                }
             }
             else
             {
