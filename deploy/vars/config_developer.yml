@@ -4,39 +4,32 @@
 
 # mongo_path: /hddlinux/mongodb
 mongo_path: /var/lib/mongodb
-php_log_folder: /var/log/php
-lf_path: /var/www/default_local/web-languageforge
-sf_path: /var/www/default_local/web-languageforge
-site_src_paths:
-  - "{{lf_path}}/src"
-  - "{{sf_path}}/src"
 
 ### Version/distro
 base_distribution: "{{ansible_distribution | lower}}"
 base_distribution_release: "{{ansible_distribution_release}}"
 
-node_version: 8.11.4
-mongodb_version: 4.0
-php_version: 7.3
+#node_version: 10.16.0
+#mongodb_version: 4.0
 
 ### SSL config
 ssl_letsencrypt_install: false
 
 ssl_items:
-  - name: scriptureforge
+  - name: thewordcombine
     state: selfsign
     request:
-        country_code: "TH"
-        state: "Chiang Mai"
-        locality: "Chiang Mai"
+        country_code: "US"
+        state: "TX"
+        locality: "Dallas"
         organization: "SIL"
         organization_unit: ""
-        common_name: "scriptureforge.local"
+        common_name: "thewordcombine.local"
         alt_names:
           - key: DNS.1
-            value: "www.scriptureforge.local"
+            value: "www.thewordcombine.local"
           - key: DNS.2
-            value: "scriptureforge.local"
+            value: "thewordcombine.local"
     sign:
 
 
@@ -51,12 +44,11 @@ apache_module_enable:
 
 apache_site_enable:
   - default_local.conf
-  - languageforge_org.conf
-  - scriptureforge_org.conf
+  - thewordcombine_org.conf
 
 apache_vhosts:
   - server_name: default.local
-    server_admin: webmaster@palaso.org
+    server_admin: jimgrady.jg@gmail.com
     server_file_name: default_local
     template: vhost_proxypath_ssl.conf.j2
     document_root: /var/www/default_local
@@ -74,41 +66,19 @@ apache_vhosts:
           - '/api2/ http://localhost:5000/'
           - '/machine/ http://localhost:5001/'
           - '/sharedb/ "ws://localhost:5002/"'
-  - server_name: languageforge.org
-    server_admin: webmaster@palaso.org
-    server_file_name: languageforge_org
+  - server_name: thewordcombine.org
+    server_admin: jimgrady.jg@gmail.com
+    server_file_name: thewordcombine_org
     template: vhost_proxypath_ssl.conf.j2
-    document_root: /var/www/languageforge.org/htdocs
-    link_to: "{{lf_path}}/src"
+    document_root: /var/www/thewordcombine.org/htdocs
     directory_extra:
       - RewriteEngine On
     virtual_hosts:
       - has_ssl: false
         port: 80
         server_alias:
-          - languageforge.local
-          - languageforge.localhost
-          - localhost
-        extra:
-          - '<ifModule mod_headers.c>'
-          - '    <Files "service-worker.js">'
-          - '        Header Set Service-Worker-allowed "/"'
-          - '    </Files>'
-          - '</IfModule>'
-  - server_name: scriptureforge.org
-    server_admin: webmaster@palaso.org
-    server_file_name: scriptureforge_org
-    template: vhost_proxypath_ssl.conf.j2
-    document_root: /var/www/scriptureforge.org/htdocs
-    link_to: "{{sf_path}}/src"
-    directory_extra:
-      - RewriteEngine On
-    virtual_hosts:
-      - has_ssl: false
-        port: 80
-        server_alias:
-          - scriptureforge.local
-          - scriptureforge.localhost
+          - thewordcombine.local
+          - thewordcombine.localhost
           - localhost
         extra:
         - '<ifModule mod_headers.c>'
@@ -122,8 +92,8 @@ apache_vhosts:
           - '/sharedb/ "ws://localhost:5002/"'
       - has_ssl: true
         port: 443
-        certificate_file: "scriptureforge.pem"
-        key_file: "scriptureforge.key"
+        certificate_file: "thewordcombine.pem"
+        key_file: "thewordcombine.key"
         extra:
         - '<ifModule mod_headers.c>'
         - '    <Files "service-worker.js">'

@@ -52,3 +52,9 @@ Backend.Tests/bin/Avatars/*
 
 # Python
 *.pyc
+
+# auto-generated SSL keys and certificate requests
+deploy/site_info/**/*.csr
+deploy/site_info/**/*.csr.txt
+deploy/site_files/certificates/*.pem
+

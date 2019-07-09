@@ -4,6 +4,6 @@ www_uploads_dir: /var/thecombine/uploads
 www_uploads_owner: www-data
 www_uploads_group: www-data
 
-www_app_dir: /var/www/html/TheCombine
+www_app_dir: /var/www/thewordcombine.org/htdocs
 www_app_owner: www-data
 www_app_group: www-data
