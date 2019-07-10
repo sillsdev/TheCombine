@@ -29,6 +29,12 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             return new ObjectResult(await _repo.GetAllUserEdits(projectId));
         }
 
@@ -39,6 +45,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete(string projectId)
         {
 #if DEBUG
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             return new ObjectResult(await _repo.DeleteAllUserEdits(projectId));
 #else
             return new UnauthorizedResult();

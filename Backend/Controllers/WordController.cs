@@ -30,7 +30,12 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             return new ObjectResult(await _wordRepo.GetAllWords(projectId));
         }
 
@@ -41,6 +46,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete(string projectId)
         {
 #if DEBUG
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             return new ObjectResult(await _wordRepo.DeleteAllWords(projectId));
 #else
             return new UnauthorizedResult();
@@ -65,7 +76,6 @@ namespace BackendFramework.Controllers
             }
             return new ObjectResult(word);
         }
-        
 
         // POST: v1/Project/Words
         // Implements Create(), Arguments: new word from body
