@@ -113,8 +113,7 @@ export function asyncRegister(name: string, user: string, password: string) {
   ) => {
     dispatch(registerAttempt(user));
     // Create new user
-    let newUser = new User("", user, password);
-    newUser.name = name;
+    let newUser = new User(name, user, password);
     await backend
       .addUser(newUser)
       .then(res => {

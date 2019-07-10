@@ -7,7 +7,8 @@ import {
   asyncLoadUserEdits,
   asyncAddGoalToHistory,
   LoadUserEditsAction,
-  AddGoalToHistory
+  AddGoalToHistory,
+  asyncCreateNewUserEditsObject
 } from "../GoalsActions";
 import { ThunkDispatch } from "redux-thunk";
 
@@ -29,6 +30,9 @@ export function mapDispatchToProps(
   return {
     loadUserEdits: (id: string) => {
       dispatch(asyncLoadUserEdits(id));
+    },
+    createUserEditsObject: () => {
+      dispatch(asyncCreateNewUserEditsObject());
     },
     chooseGoal: (goal: Goal) => {
       dispatch(asyncAddGoalToHistory(goal));

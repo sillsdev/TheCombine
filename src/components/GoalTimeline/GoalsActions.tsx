@@ -47,9 +47,25 @@ export function asyncLoadUserEdits(id: string) {
     await backend
       .getUserEditById(id)
       .then(resp => {
-        updateUserIfExists(resp.id);
+        let projectId = backend.getProjectId();
+        updateUserIfExists(projectId, resp.id);
         let history: Goal[] = convertEditsToArrayOfGoals(resp.edits);
         dispatch(loadUserEdits(history));
+        return resp;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+}
+
+export function asyncCreateNewUserEditsObject() {
+  return async (dispatch: Dispatch<LoadUserEditsAction>) => {
+    await backend
+      .createUserEdit()
+      .then(resp => {
+        let projectId = backend.getProjectId();
+        updateUserIfExists(projectId, resp);
         return resp;
       })
       .catch(err => {
@@ -92,16 +108,18 @@ function getUserEditId(): string {
   let userEditId: string = "";
   if (userString) {
     userObject = JSON.parse(userString);
-    userEditId = userObject.userEditId;
+    let projectId = backend.getProjectId();
+    userEditId = userObject.workedProjects[projectId];
   }
   return userEditId;
 }
 
-function updateUserIfExists(userEditId: string) {
+function updateUserIfExists(projectId: string, userEditId: string) {
   let currentUserString = localStorage.getItem("user");
   if (currentUserString) {
     let updatedUserString = updateUserWithUserEditId(
       currentUserString,
+      projectId,
       userEditId
     );
     localStorage.setItem("user", updatedUserString);
@@ -110,10 +128,11 @@ function updateUserIfExists(userEditId: string) {
 
 function updateUserWithUserEditId(
   userObjectString: string,
+  projectId: string,
   userEditId: string
 ): string {
   let currentUserObject: User = JSON.parse(userObjectString);
-  currentUserObject.userEditId = userEditId;
+  currentUserObject.workedProjects[projectId] = userEditId;
   let updatedUserString = JSON.stringify(currentUserObject);
   return updatedUserString;
 }

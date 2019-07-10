@@ -10,6 +10,7 @@ import {
   withLocalize
 } from "react-localize-redux";
 import { User } from "../../../types/user";
+import { getProjectId } from "../../../backend";
 
 const timelineStyle = {
   centerDisplays: {
@@ -34,6 +35,7 @@ const timelineStyle = {
 
 export interface GoalTimelineHorizontalProps {
   loadUserEdits: (id: string) => void;
+  createUserEditsObject: () => void;
   chooseGoal: (goal: Goal) => void;
 
   allPossibleGoals: Goal[];
@@ -59,10 +61,13 @@ export class GoalTimelineHorizontal extends React.Component<
     let currentUserString = localStorage.getItem("user");
     if (currentUserString) {
       let currentUserObject: User = JSON.parse(currentUserString);
-      if (currentUserObject.userEditId) {
-        this.props.loadUserEdits(currentUserObject.userEditId);
+      let projectId: string = getProjectId();
+      let userEditId: string | undefined =
+        currentUserObject.workedProjects[projectId];
+      if (userEditId != undefined) {
+        this.props.loadUserEdits(userEditId);
       } else {
-        this.props.loadUserEdits("878611321567894156984651"); // Pass a nonexistent id
+        this.props.createUserEditsObject();
       }
     }
   }

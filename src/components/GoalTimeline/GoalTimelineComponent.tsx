@@ -28,11 +28,11 @@ export class GoalTimeline extends React.Component<GoalTimelineProps> {
     let currentUserString = localStorage.getItem("user");
     if (currentUserString) {
       let currentUserObject: User = JSON.parse(currentUserString);
-      if (currentUserObject.userEditId) {
-        this.props.loadUserEdits(currentUserObject.userEditId);
-      } else {
-        this.props.loadUserEdits("878611321567894156984651"); // Pass a nonexistent id
-      }
+      // if (currentUserObject.userEditId) {
+      //   this.props.loadUserEdits(currentUserObject.userEditId);
+      // } else {
+      //   this.props.loadUserEdits("878611321567894156984651"); // Pass a nonexistent id
+      // }
     }
   }
 
