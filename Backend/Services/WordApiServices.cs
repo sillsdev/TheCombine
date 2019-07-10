@@ -144,9 +144,19 @@ namespace BackendFramework.Services
 
             //for each matching vern check its glosses 
 
-            //this is terrible
-            //  -cant use .contains because no guarantee of strict subset
-            //  -cant use .equals because some fields should not be included in evaluation of equality
+            /*this is terrible
+                -this code block checks if a word is a "duplicate" of an already existing word
+
+                -A duplicate is defined by:
+                    -having the same vern as another word as well as...
+                    -having a strict subset of the senses of the already existing word
+                        -having more than a subset will immidately indicate the word is not mergeable
+                    -all senses must have an strict subset of the matchign senses glosses
+                        -having more than a subset will immidately indicate the word is not mergeable
+
+                -If a word is mergeable then its semantic domains and editor 
+                    will be copied into the duplicate word.
+            */
             Word differences = new Word();
             bool duplicate = true;
 
