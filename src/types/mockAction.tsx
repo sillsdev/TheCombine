@@ -20,8 +20,8 @@ interface MockActionGoalArray extends ActionWithPayload<Goal[]> {
   payload: Goal[];
 }
 
-const goal: Goal = new CreateCharInv([]);
-const goalArray: Goal[] = [new CreateCharInv([]), new MergeDups([])];
+const goal: Goal = new CreateCharInv();
+const goalArray: Goal[] = [new CreateCharInv(), new MergeDups()];
 
 // Used for passing a non-existent action to a reducer
 export const MockActionInstance: MockAction = {

@@ -1,4 +1,5 @@
 ﻿using BackendFramework.ValueModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Interfaces
@@ -7,6 +8,6 @@ namespace BackendFramework.Interfaces
     {
         Task<bool> Update(string projectId, string wordId, Word word);
         Task<bool> Delete(string projectId, string wordId);
-        Task<Word> Merge(string projectId, MergeWords mergeWords);
+        Task<List<Word>> Merge(string projectId, MergeWords mergeWords);
     }
 }

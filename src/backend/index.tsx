@@ -16,7 +16,7 @@ export function setProjectID(id: string) {
 
 export async function createWord(word: Word): Promise<Word> {
   return await backendServer
-    .post(`projects/"${projectId}/words`, word)
+    .post(`projects/${projectId}/words`, word)
     .then(resp => {
       return { ...word, id: resp.data };
     });
@@ -122,11 +122,11 @@ export async function getAllProjects(): Promise<Project[]> {
 }
 
 export async function getProject(id: string): Promise<Project> {
-  return await backendServer.get(`projects/"${id}`).then(resp => resp.data);
+  return await backendServer.get(`projects/${id}`).then(resp => resp.data);
 }
 
 export async function updateProject(project: Project) {
-  await backendServer.put(`projects/"${project.id}`, project);
+  await backendServer.put(`projects/${project.id}`, project);
 }
 
 export async function uploadLift(project: Project, lift: File) {
