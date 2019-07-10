@@ -23,10 +23,9 @@ namespace Backend.Tests
         {
             _userEditRepo = new UserEditRepositoryMock();
             _userEditService = new UserEditService(_userEditRepo);
-            _userEditController = new UserEditController(_userEditRepo, _userEditService);
-
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
+            _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService);
         }
 
         UserEdit RandomUserEdit()

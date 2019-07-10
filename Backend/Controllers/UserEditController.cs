@@ -13,11 +13,13 @@ namespace BackendFramework.Controllers
     {
         private readonly IUserEditRepository _repo;
         private readonly IUserEditService _userEditService;
+        private readonly IProjectService _projectService;
 
-        public UserEditController(IUserEditRepository repo, IUserEditService userEditService)
+        public UserEditController(IUserEditRepository repo, IUserEditService userEditService, IProjectService projectService)
         {
             _repo = repo;
             _userEditService = userEditService;
+            _projectService = projectService;
         }
 
         [EnableCors("AllowAll")]
@@ -48,6 +50,12 @@ namespace BackendFramework.Controllers
         [HttpGet("{userEditId}")]
         public async Task<IActionResult> Get(string projectId, string userEditId)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var userEdit = await _repo.GetUserEdit(projectId, userEditId);
             if (userEdit == null)
             {
@@ -66,6 +74,12 @@ namespace BackendFramework.Controllers
         [HttpPost("{userEditId}")]
         public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody]Edit newEdit)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             UserEdit toBeMod = await _repo.GetUserEdit(projectId, userEditId);
 
             if (toBeMod == null)
@@ -92,6 +106,12 @@ namespace BackendFramework.Controllers
         [HttpPut("{userEditId}")]
         public async Task<IActionResult> Put(string projectId, string userEditId, [FromBody] UserEditObjectWrapper userEdit)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var document = await _repo.GetUserEdit(projectId, userEditId);
             if (document == null)
             {
@@ -108,6 +128,12 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userEditId}")]
         public async Task<IActionResult> Delete(string projectId, string userEditId)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             if (await _repo.Delete(projectId, userEditId))
             {
                 return new OkResult();

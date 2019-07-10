@@ -14,11 +14,13 @@ namespace BackendFramework.Controllers
     {
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
+        private readonly IProjectService _projectService;
 
-        public WordController(IWordRepository repo, IWordService wordService)
+        public WordController(IWordRepository repo, IWordService wordService, IProjectService projectService)
         {
             _wordRepo = repo;
             _wordService = wordService;
+            _projectService = projectService;
         }
 
         [EnableCors("AllowAll")]
@@ -28,6 +30,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
+            
             return new ObjectResult(await _wordRepo.GetAllWords(projectId));
         }
 
@@ -49,19 +52,32 @@ namespace BackendFramework.Controllers
         [HttpGet("{wordId}")]
         public async Task<IActionResult> Get(string projectId, string wordId)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var word = await _wordRepo.GetWord(projectId, wordId);
             if (word == null)
             {
-                return new NotFoundResult();
+                return new NotFoundObjectResult(wordId);
             }
             return new ObjectResult(word);
         }
+        
 
         // POST: v1/Project/Words
         // Implements Create(), Arguments: new word from body
         [HttpPost]
         public async Task<IActionResult> Post(string projectId, [FromBody]Word word)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             word.ProjectId = projectId;
             await _wordRepo.Create(word);
             return new OkObjectResult(word.Id);
@@ -72,6 +88,12 @@ namespace BackendFramework.Controllers
         [HttpPut("{wordId}")]
         public async Task<IActionResult> Put(string projectId, string wordId, [FromBody] Word word)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var document = await _wordRepo.GetWord(projectId, wordId);
             if (document == null)
             {
@@ -89,6 +111,12 @@ namespace BackendFramework.Controllers
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> Delete(string projectId,  string wordId)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             if (await _wordService.Delete(projectId, wordId))
             {
                 return new OkResult();
@@ -101,6 +129,12 @@ namespace BackendFramework.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(string projectId, [FromBody] MergeWords mergeWords)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             if (mergeWords != null && mergeWords.Parent != null)
             {
                 try
