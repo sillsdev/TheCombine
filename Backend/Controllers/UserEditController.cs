@@ -51,13 +51,20 @@ namespace BackendFramework.Controllers
             var userEdit = await _repo.GetUserEdit(projectId, userEditId);
             if (userEdit == null)
             {
-                var newUserEdit = new UserEdit();
-                newUserEdit.ProjectId = projectId;
-                var result = await _repo.Create(newUserEdit);
-
-                return new OkObjectResult(result);
+                return new NotFoundObjectResult(userEditId);
             }
             return new ObjectResult(userEdit);
+        }
+
+        // POST v1/Projects/UserEdits
+        // Implements Create()
+        [HttpPost]
+        public async Task<IActionResult> Post(string projectId)
+        {
+            UserEdit userEdit = new UserEdit();
+            userEdit.ProjectId = projectId;
+            await _repo.Create(userEdit);
+            return new OkObjectResult(userEdit.Id);
         }
 
         // POST: v1/Projects/UserEdits/{Id}
