@@ -108,7 +108,16 @@ namespace Backend.Tests
             Word newDuplicate = oldDuplicate.Clone();
 
             _ = _wordController.Post(_projId, oldDuplicate).Result;
-            Assert.AreEqual(_wordService.searchInDuplicates(newDuplicate).Result, true);
+            var result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            Assert.AreEqual(result, "Duplicate");
+
+            newDuplicate.Senses.RemoveAt(2);
+            result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            Assert.AreEqual(result, "Duplicate");
+
+            newDuplicate.Senses = new List<Sense>();
+            result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            Assert.AreNotEqual(result, "Duplicate");
         }
 
         [Test]

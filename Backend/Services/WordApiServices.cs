@@ -112,7 +112,7 @@ namespace BackendFramework.Services
             //  -cant use .contains because no guarantee of strict subset
             //  -cant use .equals because some fields should not be included in evaluation of equality
             Word differences = new Word();
-            bool duplicate = false;
+            bool duplicate = true;
 
             foreach (var matchingVern in allVernaculars)
             {
@@ -121,7 +121,6 @@ namespace BackendFramework.Services
                     int senseIndex = 0;
                     foreach (var newSense in word.Senses)
                     {
-                        ++senseIndex;
                         //if the new sense isnt a strict subset then dont bother adding anything 
                         if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
                         {
@@ -133,10 +132,13 @@ namespace BackendFramework.Services
                                 //remove dups
                                 matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
                                 matchingVern.Senses[senseIndex].SemanticDomains = matchingVern.Senses[senseIndex].SemanticDomains.Distinct().ToList();
-
-                                duplicate = true;
                             }
                         }
+                        else
+                        {
+                            duplicate = false;
+                        }
+                        ++senseIndex;
                     }
                     //update the database
                     await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
