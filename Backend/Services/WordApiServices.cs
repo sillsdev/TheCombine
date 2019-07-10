@@ -1,7 +1,6 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,12 +10,10 @@ namespace BackendFramework.Services
     public class WordService : IWordService
     {
         private readonly IWordRepository _repo;
-        private readonly IWordContext _wordDatabase;
 
-        public WordService(IWordRepository repo, IWordContext collectionSettings)
+        public WordService(IWordRepository repo)
         {
             _repo = repo;
-            _wordDatabase = collectionSettings;
         }
 
         public async Task<bool> Delete(string projectId, string wordId)

@@ -16,7 +16,6 @@ namespace Backend.Tests
         private IWordRepository _wordrepo;
         private WordService _wordService;
         private WordController _wordController;
-        private IWordContext _wordContext;
         private AudioController _audioController;
 
         private IProjectService _projectService;
@@ -26,7 +25,7 @@ namespace Backend.Tests
         public void Setup()
         {
             _wordrepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordrepo, _wordContext);
+            _wordService = new WordService(_wordrepo);
             _wordController = new WordController(_wordrepo, _wordService);
 
             _audioController = new AudioController(_wordrepo, _wordService);

@@ -15,7 +15,6 @@ namespace Backend.Tests
         private IWordRepository _repo;
         private IWordService _wordService;
         private WordController _wordController;
-        private IWordContext _wordContext;
         private IProjectService _projectService;
         private string _projId;
 
@@ -23,7 +22,7 @@ namespace Backend.Tests
         public void Setup()
         {
             _repo = new WordRepositoryMock();
-            _wordService = new WordService(_repo, _wordContext);
+            _wordService = new WordService(_repo);
             _wordController = new WordController(_repo, _wordService);
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
