@@ -9,8 +9,8 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, LoadUserEdits>
 ) {
   return {
-    loadUserEdits: (id: string) => {
-      dispatch(asyncLoadUserEdits(id));
+    loadUserEdits: (projectId: string, userEditId: string) => {
+      dispatch(asyncLoadUserEdits(projectId, userEditId));
     }
   };
 }

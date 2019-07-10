@@ -28,11 +28,11 @@ export function mapDispatchToProps(
   >
 ) {
   return {
-    loadUserEdits: (id: string) => {
-      dispatch(asyncLoadUserEdits(id));
+    loadUserEdits: (projectId: string, userEditId: string) => {
+      dispatch(asyncLoadUserEdits(projectId, userEditId));
     },
-    createUserEditsObject: () => {
-      dispatch(asyncCreateNewUserEditsObject());
+    createUserEditsObject: (projectId: string) => {
+      dispatch(asyncCreateNewUserEditsObject(projectId));
     },
     chooseGoal: (goal: Goal) => {
       dispatch(asyncAddGoalToHistory(goal));

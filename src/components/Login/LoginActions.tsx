@@ -62,7 +62,7 @@ export function asyncLogin(user: string, password: string) {
     //attempt to login with server
     await backend
       .authenticateUser(user, password)
-      .then((res: any) => {
+      .then((res: string) => {
         localStorage.setItem("user", res); //Store tokens
         dispatch(loginSuccess(user));
         history.push("/");

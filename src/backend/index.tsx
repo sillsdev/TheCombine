@@ -204,7 +204,6 @@ export async function createUserEdit(): Promise<string> {
   return await backendServer
     .post(`projects/${projectId}/useredits`)
     .then(resp => {
-      console.log(resp.data);
       return resp.data;
     });
 }

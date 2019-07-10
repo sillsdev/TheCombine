@@ -42,16 +42,16 @@ export interface NextStep extends ActionWithPayload<Goal[]> {
 export type AddGoalToHistoryAction = AddGoalToHistory;
 export type LoadUserEditsAction = LoadUserEdits;
 
-export function asyncLoadUserEdits(id: string) {
+export function asyncLoadUserEdits(projectId: string, userEditId: string) {
+  console.log("User edit already exists for the current project and user");
   return async (dispatch: Dispatch<LoadUserEditsAction>) => {
     await backend
-      .getUserEditById(id)
-      .then(resp => {
-        let projectId = backend.getProjectId();
-        updateUserIfExists(projectId, resp.id);
-        let history: Goal[] = convertEditsToArrayOfGoals(resp.edits);
+      .getUserEditById(userEditId)
+      .then(userEdit => {
+        // updateUserIfExists(projectId, userEdit.id);
+        let history: Goal[] = convertEditsToArrayOfGoals(userEdit.edits);
         dispatch(loadUserEdits(history));
-        return resp;
+        // return userEdit;
       })
       .catch(err => {
         console.log(err);
@@ -59,14 +59,15 @@ export function asyncLoadUserEdits(id: string) {
   };
 }
 
-export function asyncCreateNewUserEditsObject() {
-  return async (dispatch: Dispatch<LoadUserEditsAction>) => {
+export function asyncCreateNewUserEditsObject(projectId: string) {
+  console.log("User edit will be created");
+  return async () => {
     await backend
       .createUserEdit()
-      .then(resp => {
-        let projectId = backend.getProjectId();
-        updateUserIfExists(projectId, resp);
-        return resp;
+      .then(async (userEditId: string) => {
+        let updatedUser: User = updateUserIfExists(projectId, userEditId);
+        await backend.updateUser(updatedUser);
+        // return userEditId;
       })
       .catch(err => {
         console.log(err);
@@ -114,8 +115,9 @@ function getUserEditId(): string {
   return userEditId;
 }
 
-function updateUserIfExists(projectId: string, userEditId: string) {
+function updateUserIfExists(projectId: string, userEditId: string): User {
   let currentUserString = localStorage.getItem("user");
+  let updatedUser: User = new User("", "", "");
   if (currentUserString) {
     let updatedUserString = updateUserWithUserEditId(
       currentUserString,
@@ -123,7 +125,9 @@ function updateUserIfExists(projectId: string, userEditId: string) {
       userEditId
     );
     localStorage.setItem("user", updatedUserString);
+    updatedUser = JSON.parse(updatedUserString);
   }
+  return updatedUser;
 }
 
 function updateUserWithUserEditId(

@@ -15,7 +15,7 @@ const timelineStyle = {
 };
 
 export interface GoalTimelineProps {
-  loadUserEdits: (id: string) => void;
+  loadUserEdits: (projectId: string, userEditId: string) => void;
 }
 
 /**

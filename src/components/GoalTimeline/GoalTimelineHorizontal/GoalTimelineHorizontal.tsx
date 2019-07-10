@@ -34,8 +34,8 @@ const timelineStyle = {
 };
 
 export interface GoalTimelineHorizontalProps {
-  loadUserEdits: (id: string) => void;
-  createUserEditsObject: () => void;
+  loadUserEdits: (projectId: string, userEditId: string) => void;
+  createUserEditsObject: (projectId: string) => void;
   chooseGoal: (goal: Goal) => void;
 
   allPossibleGoals: Goal[];
@@ -65,9 +65,9 @@ export class GoalTimelineHorizontal extends React.Component<
       let userEditId: string | undefined =
         currentUserObject.workedProjects[projectId];
       if (userEditId != undefined) {
-        this.props.loadUserEdits(userEditId);
+        this.props.loadUserEdits(projectId, userEditId);
       } else {
-        this.props.createUserEditsObject();
+        this.props.createUserEditsObject(projectId);
       }
     }
   }
