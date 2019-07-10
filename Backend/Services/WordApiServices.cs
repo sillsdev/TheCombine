@@ -151,7 +151,7 @@ namespace BackendFramework.Services
                     -having the same vern as another word as well as...
                     -having a strict subset of the senses of the already existing word
                         -having more than a subset will immidately indicate the word is not mergeable
-                    -all senses must have an strict subset of the matchign senses glosses
+                    -all senses must have an strict subset of the matching sense's glosses
                         -having more than a subset will immidately indicate the word is not mergeable
 
                 -If a word is mergeable then its semantic domains and editor 
