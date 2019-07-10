@@ -12,7 +12,6 @@ namespace BackendFramework.Services
     {
         private readonly IWordRepository _repo;
         private readonly IWordContext _wordDatabase;
-        private object filterDef;
 
         public WordService(IWordRepository repo, IWordContext collectionSettings)
         {
@@ -112,37 +111,40 @@ namespace BackendFramework.Services
             //this is terrible
             //  -cant use .contains because no guarantee of strict subset
             //  -cant use .equals because some fields should not be included in evaluation of equality
-
+            Word differences = new Word();
+            bool duplicate = false;
 
             foreach (var matchingVern in allVernaculars)
             {
                 foreach (var oldSense in matchingVern.Senses)
                 {
+                    int senseIndex = 0;
                     foreach (var newSense in word.Senses)
                     {
-                        /*
-                            if old sense contains all elements in new sense
-                            - will not return true if the newSense list is not a 
-                                strict subset of oldSense, At that point the word 
-                                will have to be merged
-                        */
+                        ++senseIndex;
+                        //if the new sense isnt a strict subset then dont bother adding anything 
                         if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
                         {
-                            //update sem-dom and edited by tag
-                            oldSense.SemanticDomains.AddRange(oldSense.SemanticDomains);
-                            matchingVern.EditedBy.AddRange(word.EditedBy);
-                            //remove dups
-                            oldSense.SemanticDomains.Distinct().ToList();
-                            matchingVern.EditedBy.Distinct().ToList();
+                            foreach (var newGloss in newSense.Glosses)
+                            {
+                                //add semdom and edited by
+                                matchingVern.EditedBy.AddRange(word.EditedBy);
+                                matchingVern.Senses[senseIndex].SemanticDomains.AddRange(word.Senses[senseIndex].SemanticDomains);
+                                //remove dups
+                                matchingVern.EditedBy = differences.EditedBy.Distinct().ToList();
+                                matchingVern.Senses[senseIndex].SemanticDomains = differences.Senses[senseIndex].SemanticDomains.Distinct().ToList();
 
-                            //its probably not going to be a duplicate of any other sense
-                            //(and if it is we have a bigger problem) so we can quit now
-                            return true;
+                                duplicate = true;
+                                
+                            }
+
                         }
                     }
+                    //update the database
+                    await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
                 }
             }
-            return false;
+            return duplicate;
         }
     }
 }
