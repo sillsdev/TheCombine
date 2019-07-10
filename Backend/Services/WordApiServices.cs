@@ -131,13 +131,11 @@ namespace BackendFramework.Services
                                 matchingVern.EditedBy.AddRange(word.EditedBy);
                                 matchingVern.Senses[senseIndex].SemanticDomains.AddRange(word.Senses[senseIndex].SemanticDomains);
                                 //remove dups
-                                matchingVern.EditedBy = differences.EditedBy.Distinct().ToList();
-                                matchingVern.Senses[senseIndex].SemanticDomains = differences.Senses[senseIndex].SemanticDomains.Distinct().ToList();
+                                matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
+                                matchingVern.Senses[senseIndex].SemanticDomains = matchingVern.Senses[senseIndex].SemanticDomains.Distinct().ToList();
 
                                 duplicate = true;
-                                
                             }
-
                         }
                     }
                     //update the database

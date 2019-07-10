@@ -32,7 +32,6 @@ namespace Backend.Tests
         Word RandomWord()
         {
             Word word = new Word();
-            Random num = new Random();
             word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense()};
 
             foreach (Sense sense in word.Senses)
@@ -61,7 +60,7 @@ namespace Backend.Tests
             word.PartOfSpeech = Util.randString();
             word.Plural = Util.randString();
             word.History = new List<string>();
-            word.Id = null;
+            word.Id = "";
 
             return word;
         }
@@ -105,17 +104,11 @@ namespace Backend.Tests
             Assert.AreEqual(word, _repo.GetAllWords(_projId).Result[0]);
             Assert.AreEqual(word, _repo.GetFrontier(_projId).Result[0]);
 
-            Word oldDuplicate = new Word();
-            Word newDuplicate = new Word();
+            Word oldDuplicate = RandomWord();
+            Word newDuplicate = oldDuplicate.Clone();
 
-            oldDuplicate.Vernacular = "DaveGreen";
-            newDuplicate.Vernacular = oldDuplicate.Vernacular;
-
-            oldDuplicate.Senses = new List<Sense>();
-            Sense dupSense1 = new Sense();
-            dupSense1.SemanticDomains = new List<SemanticDomain>();
-            dupSense1
-            oldDuplicate.Senses.First() = 
+            _ = _wordController.Post(_projId, oldDuplicate).Result;
+            Assert.AreEqual(_wordService.searchInDuplicates(newDuplicate).Result, true);
         }
 
         [Test]
