@@ -63,7 +63,17 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Post(string projectId, [FromBody]Word word)
         {
             word.ProjectId = projectId;
-            await _wordRepo.Create(word);
+
+            //check if word is already in database
+            if (await  _wordService.searchInDuplicates(word))
+            {
+                await _wordRepo.Create(word);
+            }
+            else
+            {
+                return new OkObjectResult("Duplicate");
+            }
+
             return new OkObjectResult(word.Id);
         }
 
