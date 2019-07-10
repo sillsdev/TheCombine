@@ -62,17 +62,6 @@ export function uploadInventory() {
   };
 }
 
-function getUserEditId(): string {
-  let userString = localStorage.getItem("user");
-  let userObject: User;
-  let userEditId: string = "";
-  if (userString) {
-    userObject = JSON.parse(userString);
-    userEditId = userObject.userEditId;
-  }
-  return userEditId;
-}
-
 export function setInventory(payload: string[]): CharacterInventoryAction {
   return {
     type: SET_CHARACTER_INVENTORY,

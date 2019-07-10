@@ -5,7 +5,8 @@ import { Word, State } from "../../../types/word";
 import * as backend from "../../../backend";
 import {
   nextStep,
-  NextStep
+  NextStep,
+  getUserEditId
 } from "../../../components/GoalTimeline/GoalsActions";
 import { Goal } from "../../../types/goals";
 import { Dispatch } from "redux";
@@ -106,21 +107,27 @@ export function mergeSense() {
   };
 }
 
-const goToNextStep = (dispatch: Dispatch<NextStep>) =>
+const goToNextStep = (dispatch: Dispatch<NextStep>, goal: Goal) =>
   new Promise((resolve, reject) => {
     dispatch(nextStep());
+    addStepToGoal(goal);
     resolve();
   });
+
+async function addStepToGoal(goal: Goal) {
+  let userEditId: string = getUserEditId();
+  await backend.addStepToGoal(userEditId, goal);
+}
 
 export function refreshWords() {
   return async (
     dispatch: ThunkDispatch<any, any, MergeTreeAction | NextStep>,
     getState: () => StoreState
   ) => {
-    goToNextStep(dispatch).then(() => {
-      let history: Goal[] = getState().goalsState.historyState.history;
-      let goal: Goal = history[history.length - 1];
-      let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1].words;
+    let history: Goal[] = getState().goalsState.historyState.history;
+    let goal: Goal = history[history.length - 1];
+    let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1].words;
+    goToNextStep(dispatch, goal).then(() => {
       dispatch(setWordData(words));
     });
   };

@@ -133,7 +133,7 @@ export async function loadGoalData(goal: Goal): Promise<Goal> {
   return goal;
 }
 
-function getUserEditId(): string {
+export function getUserEditId(): string {
   let userString = localStorage.getItem("user");
   let userObject: User;
   let userEditId: string = "";
