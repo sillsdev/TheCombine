@@ -138,7 +138,7 @@ namespace Backend.Tests
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(1));
 
-            _ = _userEditController.Delete(origUserEdit.Id).Result;
+            _ = _userEditController.Delete(_projId, origUserEdit.Id).Result;
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(0));
         }
