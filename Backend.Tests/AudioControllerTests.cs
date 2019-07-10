@@ -36,27 +36,9 @@ namespace Backend.Tests
 
             Utilities util = new Utilities();
 
-            DeleteDirectory(util.GenerateFilePath(Utilities.filetype.dir, true,  "" , ""));
+            Directory.Delete(util.GenerateFilePath(Utilities.filetype.dir, true, "", ""), true);
         }
 
-        public static void DeleteDirectory(string target_dir)
-        {
-            string[] files = Directory.GetFiles(target_dir);
-            string[] dirs = Directory.GetDirectories(target_dir);
-
-            foreach (string file in files)
-            {
-                File.SetAttributes(file, FileAttributes.Normal);
-                File.Delete(file);
-            }
-
-            foreach (string dir in dirs)
-            {
-                DeleteDirectory(dir);
-            }
-
-            Directory.Delete(target_dir, false);
-        }
 
         string RandomString(int length = 16)
         {
