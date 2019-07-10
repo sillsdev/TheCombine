@@ -23,8 +23,9 @@ namespace Backend.Tests
         {
             _repo = new WordRepositoryMock();
             _wordService = new WordService(_repo);
-            _wordController = new WordController(_repo, _wordService);
             _projectService = new ProjectServiceMock();
+            _projectService = new ProjectServiceMock();
+            _wordController = new WordController(_repo, _wordService, _projectService);
             _projId = _projectService.Create(new Project()).Result.Id;
         }
 
