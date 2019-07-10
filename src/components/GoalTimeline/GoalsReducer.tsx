@@ -1,8 +1,13 @@
-import { GoalsState } from "../../types/goals";
+import { GoalsState, GoalType } from "../../types/goals";
 import { Goal } from "../../types/goals";
-import { ADD_GOAL_TO_HISTORY, LOAD_USER_EDITS } from "./GoalTimelineActions";
+import {
+  ADD_GOAL_TO_HISTORY,
+  LOAD_USER_EDITS,
+  NEXT_STEP
+} from "./GoalsActions";
 import { ActionWithPayload } from "../../types/mockAction";
 import { defaultState } from "./DefaultState";
+import { MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
@@ -14,22 +19,19 @@ export const goalsReducer = (
   switch (action.type) {
     case LOAD_USER_EDITS:
       return {
+        ...state,
         historyState: {
           history: [...action.payload]
-        },
-        allPossibleGoals: state.allPossibleGoals,
-        suggestionsState: {
-          suggestions: state.suggestionsState.suggestions
         }
       };
     case ADD_GOAL_TO_HISTORY: // Remove top suggestion if same as goal to add
       let suggestions = state.suggestionsState.suggestions;
       let goalToAdd = action.payload[0];
       return {
+        ...state,
         historyState: {
           history: [...state.historyState.history, goalToAdd]
         },
-        allPossibleGoals: state.allPossibleGoals,
         suggestionsState: {
           suggestions: suggestions.filter(
             (goal, index) =>
@@ -37,8 +39,31 @@ export const goalsReducer = (
           )
         }
       };
+    case NEXT_STEP: // Update the step data in the current step, then go to the next step
+      let history: Goal[] = [...state.historyState.history];
+      let currentGoal: Goal = history[history.length - 1];
+      currentGoal = updateStepData(currentGoal);
+      history[history.length - 1] = currentGoal;
 
+      return {
+        ...state,
+        historyState: {
+          history: history
+        }
+      };
     default:
       return state;
   }
 };
+
+export function updateStepData(goal: Goal): Goal {
+  switch (goal.goalType) {
+    case GoalType.MergeDups:
+      let currentGoalData: MergeDupData = goal.data as MergeDupData;
+      goal.steps[goal.currentStep] = {
+        words: currentGoalData.plannedWords[goal.currentStep]
+      };
+      goal.currentStep++;
+  }
+  return goal;
+}

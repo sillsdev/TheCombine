@@ -81,7 +81,7 @@ namespace BackendFramework.Controllers
                 }
 
                 var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
-                string extractedLiftName = "";
+                string extractedLiftName = ""; //TODO:
 
                 //search for the lift file within the list
                 var extractedLiftPath = Array.FindAll(extractedLiftNameArr, file => file.EndsWith(".lift"));
@@ -93,8 +93,6 @@ namespace BackendFramework.Controllers
                 {
                     throw new InvalidDataException("No lift files detected");
                 }
-
-                
 
                 try
                 {
@@ -117,7 +115,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             var words = await _wordRepo.GetAllWords(projectId);
-            if(words.Count == 0)
+            if (words.Count == 0)
             {
                 return new BadRequestResult();
             }

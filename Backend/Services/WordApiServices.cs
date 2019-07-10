@@ -1,6 +1,6 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
-using MongoDB.Driver;
+using System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,9 +62,13 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
-        public async Task<Word> Merge(string projectId, MergeWords mergeWords)
+        public async Task<List<Word>> Merge(string projectId, MergeWords mergeWords)
         {
+            var newWordsList = new List<Word>();
+            mergeWords.Parent.Senses = new List<Sense>();
 
+            var baseParent = mergeWords.Parent.Clone();
+            var addParent = baseParent.Clone();
             //generate new child words form child word field
             foreach (var newChildWordState in mergeWords.ChildrenWords)
             {
@@ -86,16 +90,51 @@ namespace BackendFramework.Services
                 currentChildWord.Id = null;
                 var newChildWord = await _repo.Add(currentChildWord);
 
-                //add new child word to the parents history
-                mergeWords.Parent.History.Add(newChildWord.Id);
+                //handle different states
+                for (int i = 0; i < currentChildWord.Senses.Count; i++)
+                {
+                    var separateWord = baseParent.Clone();
+
+                    switch (newChildWordState.SenseStates[i]){
+                        //add the sense to the parent word
+                        case state.sense:
+                            addParent.Senses.Add(currentChildWord.Senses[i]);
+                            goto case state.duplicate; //fall through
+                        //add the word to the parent's history
+                        case state.duplicate:
+                            if (!addParent.History.Contains(currentChildWord.Id))
+                            {
+                                addParent.History.Add(currentChildWord.Id);
+                            }
+                            break;
+                        //add the sense to a separate word and the word to its history
+                        case state.separate:
+                            separateWord.Senses.Add(currentChildWord.Senses[i]);
+                            if (!separateWord.History.Contains(currentChildWord.Id))
+                            {
+                                separateWord.History.Add(currentChildWord.Id);
+                            }
+                            break;
+                        default:
+                            throw new NotSupportedException();
+                    }
+
+                    //add a new word to the database with all of the senses with separate tags from this word
+                    if (separateWord.Senses.Count != 0)
+                    {
+                        separateWord.ProjectId = projectId;
+                        var newSeparate = await _repo.Create(separateWord);
+                        newWordsList.Add(newSeparate);
+                    }
+                }
             }
 
             //add parent with child history to the datbase
-            mergeWords.Parent.ProjectId = projectId;
-            var newParent = await _repo.Add(mergeWords.Parent);
-            await _repo.AddFrontier(newParent);
+            addParent.ProjectId = projectId;
+            var newParent = await _repo.Create(addParent);
+            newWordsList.Insert(0, newParent);
 
-            return newParent;
+            return newWordsList;
         }
 
         public async Task<bool> searchInDuplicates(Word word)
