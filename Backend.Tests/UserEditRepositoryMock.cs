@@ -23,11 +23,7 @@ namespace Backend.Tests
 
         public Task<UserEdit> GetUserEdit(string projectId, string userEditId)
         {
-            var foundUserEdit = _userEdits.Where(userEdit => userEdit.Id == userEditId).FirstOrDefault();
-            if (foundUserEdit == null)
-            {
-                return Task.FromResult(foundUserEdit);
-            }
+            var foundUserEdit = _userEdits.Where(ue => ue.Id == userEditId).Single();
             return Task.FromResult(foundUserEdit.Clone());
         }
 
