@@ -26,7 +26,7 @@ namespace BackendFramework.Services
                 wordToDelete.Id = null;
                 wordToDelete.History.Add(wordId);
 
-                foreach(var senseAcc in wordToDelete.Senses)
+                foreach (var senseAcc in wordToDelete.Senses)
                 {
                     senseAcc.Accessibility = (int)state.deleted;
                 }
@@ -75,7 +75,7 @@ namespace BackendFramework.Services
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
                 //iterate through senses of that word and change to corresponding state in mergewords
-                for(int i = 0; i < currentChildWord.Senses.Count; i++)
+                for (int i = 0; i < currentChildWord.Senses.Count; i++)
                 {
                     currentChildWord.Senses[i].Accessibility = (int)newChildWordState.SenseStates[i];
                 }
@@ -132,6 +132,65 @@ namespace BackendFramework.Services
             newWordsList.Insert(0, newParent);
 
             return newWordsList;
+        }
+
+        public async Task<bool> searchInDuplicates(Word word)
+        {
+            //get all words from database
+            var allWords = await _repo.GetAllWords(word.ProjectId);
+
+            //search through all words for the correct vernacular
+            var allVernaculars = allWords.FindAll(x => x.Vernacular == word.Vernacular);
+
+            //for each matching vern check its glosses 
+
+            /*this is terrible
+                -this code block checks if a word is a "duplicate" of an already existing word
+
+                -A duplicate is defined by:
+                    -having the same vern as another word as well as...
+                    -having a strict subset of the senses of the already existing word
+                        -having more than a subset will immidately indicate the word is not mergeable
+                    -all senses must have an strict subset of the matching sense's glosses
+                        -having more than a subset will immidately indicate the word is not mergeable
+
+                -If a word is mergeable then its semantic domains and editor 
+                    will be copied into the duplicate word.
+            */
+            Word differences = new Word();
+            bool duplicate = true;
+
+            foreach (var matchingVern in allVernaculars)
+            {
+                foreach (var oldSense in matchingVern.Senses)
+                {
+                    int senseIndex = 0;
+                    foreach (var newSense in word.Senses)
+                    {
+                        //if the new sense isnt a strict subset then dont bother adding anything 
+                        if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
+                        {
+                            foreach (var newGloss in newSense.Glosses)
+                            {
+                                //add semdom and edited by
+                                matchingVern.EditedBy.AddRange(word.EditedBy);
+                                matchingVern.Senses[senseIndex].SemanticDomains.AddRange(word.Senses[senseIndex].SemanticDomains);
+                                //remove dups
+                                matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
+                                matchingVern.Senses[senseIndex].SemanticDomains = matchingVern.Senses[senseIndex].SemanticDomains.Distinct().ToList();
+                            }
+                        }
+                        else
+                        {
+                            duplicate = false;
+                        }
+                        ++senseIndex;
+                    }
+                    //update the database
+                    await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
+                }
+            }
+            return duplicate;
         }
     }
 }
