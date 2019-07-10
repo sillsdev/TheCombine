@@ -15,6 +15,8 @@ import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
 import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import { ThunkDispatch } from "redux-thunk";
+import { StoreState } from "../../types";
 
 export const LOAD_USER_EDITS = "LOAD_USER_EDITS";
 export type LOAD_USER_EDITS = typeof LOAD_USER_EDITS;
@@ -43,15 +45,12 @@ export type AddGoalToHistoryAction = AddGoalToHistory;
 export type LoadUserEditsAction = LoadUserEdits;
 
 export function asyncLoadUserEdits(projectId: string, userEditId: string) {
-  console.log("User edit already exists for the current project and user");
   return async (dispatch: Dispatch<LoadUserEditsAction>) => {
     await backend
-      .getUserEditById(userEditId)
+      .getUserEditById(projectId, userEditId)
       .then(userEdit => {
-        // updateUserIfExists(projectId, userEdit.id);
         let history: Goal[] = convertEditsToArrayOfGoals(userEdit.edits);
         dispatch(loadUserEdits(history));
-        // return userEdit;
       })
       .catch(err => {
         console.log(err);
@@ -59,19 +58,36 @@ export function asyncLoadUserEdits(projectId: string, userEditId: string) {
   };
 }
 
-export function asyncCreateNewUserEditsObject(projectId: string) {
-  console.log("User edit will be created");
+function asyncCreateNewUserEditsObject(projectId: string) {
   return async () => {
     await backend
       .createUserEdit()
       .then(async (userEditId: string) => {
         let updatedUser: User = updateUserIfExists(projectId, userEditId);
         await backend.updateUser(updatedUser);
-        // return userEditId;
       })
       .catch(err => {
         console.log(err);
       });
+  };
+}
+
+export function asyncGetUserEdits() {
+  return async (
+    dispatch: ThunkDispatch<StoreState, any, LoadUserEditsAction>
+  ) => {
+    let currentUserString = localStorage.getItem("user");
+    if (currentUserString) {
+      let currentUserObject: User = JSON.parse(currentUserString);
+      let projectId: string = backend.getProjectId();
+      let userEditId: string | undefined =
+        currentUserObject.workedProjects[projectId];
+      if (userEditId != undefined) {
+        dispatch(asyncLoadUserEdits(projectId, userEditId));
+      } else {
+        dispatch(asyncCreateNewUserEditsObject(projectId));
+      }
+    }
   };
 }
 

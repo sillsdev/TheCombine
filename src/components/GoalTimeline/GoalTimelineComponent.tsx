@@ -4,7 +4,6 @@ import GoalHistory from "./GoalHistory/index";
 import GoalSwitcher from "./GoalSwitcher";
 import GoalSuggestions from "./GoalSuggestions";
 import AppBarComponent from "../AppBar/AppBarComponent";
-import { User } from "../../types/user";
 
 const timelineStyle = {
   centerDisplays: {
@@ -15,7 +14,7 @@ const timelineStyle = {
 };
 
 export interface GoalTimelineProps {
-  loadUserEdits: (projectId: string, userEditId: string) => void;
+  loadHistory: () => void;
 }
 
 /**
@@ -25,15 +24,7 @@ export interface GoalTimelineProps {
  */
 export class GoalTimeline extends React.Component<GoalTimelineProps> {
   componentDidMount() {
-    let currentUserString = localStorage.getItem("user");
-    if (currentUserString) {
-      let currentUserObject: User = JSON.parse(currentUserString);
-      // if (currentUserObject.userEditId) {
-      //   this.props.loadUserEdits(currentUserObject.userEditId);
-      // } else {
-      //   this.props.loadUserEdits("878611321567894156984651"); // Pass a nonexistent id
-      // }
-    }
+    this.props.loadHistory();
   }
 
   render() {

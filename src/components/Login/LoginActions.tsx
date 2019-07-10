@@ -1,5 +1,4 @@
 import { Dispatch } from "react";
-//import axios from "./tests/__mocks__/axios";
 import history from "../../history";
 import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";

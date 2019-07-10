@@ -208,9 +208,12 @@ export async function createUserEdit(): Promise<string> {
     });
 }
 
-export async function getUserEditById(index: string): Promise<UserEdit> {
+export async function getUserEditById(
+  projId: string,
+  index: string
+): Promise<UserEdit> {
   return await backendServer
-    .get(`projects/${projectId}/useredits/${index}`)
+    .get(`projects/${projId}/useredits/${index}`)
     .then(resp => {
       return resp.data;
     });
