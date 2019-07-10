@@ -1,4 +1,4 @@
-import { GoalsState, GoalType } from "../../types/goals";
+import { GoalsState, GoalType, GoalData } from "../../types/goals";
 import { Goal } from "../../types/goals";
 import {
   ADD_GOAL_TO_HISTORY,
@@ -57,16 +57,12 @@ export const goalsReducer = (
       let history: Goal[] = [...state.historyState.history];
       history[history.length - 1] = action.payload[0];
 
-      let updatedState: GoalsState = {
+      return {
         ...state,
         historyState: {
           history: history
         }
       };
-
-      console.log(updatedState);
-
-      return updatedState;
     }
 
     default:
@@ -74,7 +70,6 @@ export const goalsReducer = (
   }
 };
 
-// DO STUFF HERE
 export function updateStepData(goal: Goal): Goal {
   switch (goal.goalType) {
     case GoalType.MergeDups: {

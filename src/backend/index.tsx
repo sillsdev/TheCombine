@@ -193,7 +193,7 @@ export async function addGoalToUserEdit(
   goal: Goal
 ): Promise<Goal> {
   let goalType: string = goalNameToGoalTypeId(goal.name);
-  let stepData: string = goal.steps.toString();
+  let stepData: string = JSON.stringify(goal.steps);
   let userEditTuple = { goalType: goalType, stepData: [stepData] };
   let resp = await backendServer.post(
     `projects/${getProjectId()}/useredits/${userEditId}`,
@@ -203,6 +203,21 @@ export async function addGoalToUserEdit(
     }
   );
   return resp.data;
+}
+
+export async function addStepToGoal(
+  userEditId: string,
+  goal: Goal
+): Promise<Goal> {
+  let stepData: string = JSON.stringify(goal.steps);
+  let userEditTuple = { goalIndex: 0, newEdit: stepData };
+  return await backendServer
+    .put(`projects/${getProjectId()}/useredits/${userEditId}`, userEditTuple, {
+      headers: { ...authHeader() }
+    })
+    .then(resp => {
+      return resp.data;
+    });
 }
 
 function goalNameToGoalTypeId(goalName: string): string {

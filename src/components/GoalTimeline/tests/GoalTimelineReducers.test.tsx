@@ -257,6 +257,49 @@ it("Should update a goal when navigating to the next step", () => {
   expect(goalToEdit).toEqual(updatedGoalToEdit);
 });
 
+it("Should replace the most recent goal with an updated version", () => {
+  const goal: Goal = new CreateCharInv();
+  const goal2: Goal = new ViewFinal();
+  const goal3: Goal = new ViewFinal();
+  const goal4: Goal = new SpellCheckGloss();
+  const goal5: Goal = new CreateStrWordInv();
+  const historyArray: Goal[] = [goal, goal2];
+  const allPossibleGoalsArray: Goal[] = [goal3];
+  const suggestionsArray: Goal[] = [goal4, goal5];
+
+  const state: GoalsState = {
+    historyState: {
+      history: historyArray
+    },
+    allPossibleGoals: allPossibleGoalsArray,
+    suggestionsState: {
+      suggestions: suggestionsArray
+    }
+  };
+
+  const updatedGoal: Goal = goal2;
+  updatedGoal.currentStep++;
+
+  const updatedHistory: Goal[] = [goal, updatedGoal];
+
+  const updateGoalAction: actions.UpdateGoal = {
+    type: actions.UPDATE_GOAL,
+    payload: [goal2]
+  };
+
+  const newState: GoalsState = {
+    historyState: {
+      history: updatedHistory
+    },
+    allPossibleGoals: allPossibleGoalsArray,
+    suggestionsState: {
+      suggestions: suggestionsArray
+    }
+  };
+
+  expect(goalsReducer(state, updateGoalAction)).toEqual(newState);
+});
+
 it("Should update the step data of a goal", () => {
   const goal: MergeDups = new MergeDups();
   goal.data = goalDataMock;
@@ -264,7 +307,7 @@ it("Should update the step data of a goal", () => {
   expect(goal.steps).toEqual([]);
   expect(goal.currentStep).toEqual(0);
 
-  const updatedGoal: Goal = updateStepData(goal);
+  const updatedGoal: MergeDups = updateStepData(goal) as MergeDups;
 
   expect(updatedGoal.data).toEqual(goal.data);
   expect(updatedGoal.steps[0].words).toEqual(goal.data.plannedWords[0]);

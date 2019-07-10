@@ -9,8 +9,9 @@ import {
   updateGoal,
   UpdateGoalAction
 } from "../../components/GoalTimeline/GoalsActions";
-import { Goal } from "../../types/goals";
 import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
+import * as backend from "../../backend";
+import { User } from "../../types/user";
 
 export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
 export type SET_CHARACTER_INVENTORY = typeof SET_CHARACTER_INVENTORY;
@@ -46,16 +47,31 @@ export function uploadInventory() {
       history.length - 1
     ] as CreateCharInv;
     currentGoal.data = {
-      inventory: [getState().characterInventoryState.inventory]
+      inventory: [[...inv]]
     };
 
     dispatch(updateGoal(currentGoal));
+    let userEditId: string = getUserEditId();
+    await backend
+      .addStepToGoal(userEditId, currentGoal)
+      .catch((err: string) => console.log(err));
 
     updateProject(project);
 
     dispatch(setCurrentProject(project));
     //alert("Uploading inventory");
   };
+}
+
+function getUserEditId(): string {
+  let userString = localStorage.getItem("user");
+  let userObject: User;
+  let userEditId: string = "";
+  if (userString) {
+    userObject = JSON.parse(userString);
+    userEditId = userObject.userEditId;
+  }
+  return userEditId;
 }
 
 export function setInventory(payload: string[]): CharacterInventoryAction {

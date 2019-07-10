@@ -111,13 +111,12 @@ export function asyncAddGoalToHistory(goal: Goal) {
         dispatch(addGoalToHistory(goal));
         history.push(`/goals/${resp}`);
       })
-      .catch(err => {
-        console.log("Failed to add goal to history");
+      .catch((err: string) => {
+        console.log(err);
       });
   };
 }
 
-// DO STUFF HERE
 export async function loadGoalData(goal: Goal): Promise<Goal> {
   switch (goal.goalType) {
     case GoalType.MergeDups:
