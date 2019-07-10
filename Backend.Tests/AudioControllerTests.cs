@@ -26,12 +26,13 @@ namespace Backend.Tests
         {
             _wordrepo = new WordRepositoryMock();
             _wordService = new WordService(_wordrepo);
-            _wordController = new WordController(_wordrepo, _wordService);
+            _projectService = new ProjectServiceMock();
+            _projId = _projectService.Create(new Project()).Result.Id;
+            _wordController = new WordController(_wordrepo, _wordService, _projectService);
 
             _audioController = new AudioController(_wordrepo, _wordService);
 
-            _projectService = new ProjectServiceMock();
-            _projId = _projectService.Create(new Project()).Result.Id;
+            
 
             Utilities util = new Utilities();
 
