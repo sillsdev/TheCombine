@@ -126,7 +126,6 @@ export async function loadGoalData(goal: Goal): Promise<Goal> {
       });
       break;
     case GoalType.CreateCharInv:
-      goal.data = { inventory: [[]] };
       break;
     default:
       break;

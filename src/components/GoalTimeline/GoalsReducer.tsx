@@ -81,11 +81,6 @@ export function updateStepData(goal: Goal): Goal {
       break;
     }
     case GoalType.CreateCharInv: {
-      let currentGoalData = goal.data as CreateCharInvData;
-      goal.steps[goal.currentStep] = {
-        inventory: currentGoalData.inventory[goal.currentStep]
-      };
-      goal.currentStep++;
       break;
     }
   }
