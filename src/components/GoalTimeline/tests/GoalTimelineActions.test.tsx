@@ -11,6 +11,7 @@ import {
   wordsArrayMock,
   goalDataMock
 } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import { ViewFinal } from "../../../goals/ViewFinal/ViewFinal";
 
 const mockAxios = axios as jest.Mocked<typeof axios>;
 
@@ -128,5 +129,17 @@ describe("Test GoalsActions", () => {
     let returnedIndex = actions.getIndexInHistory(history, currentGoal);
 
     expect(returnedIndex).toEqual(1);
+  });
+
+  it("should return -1 when a goal doesn't exist", () => {
+    const goal: Goal = new HandleFlags();
+    const goal2: Goal = new CreateCharInv();
+    const goal3: Goal = new MergeDups();
+    const history: Goal[] = [goal, goal2, goal3];
+
+    const currentGoal: Goal = new ViewFinal();
+    let returnedIndex = actions.getIndexInHistory(history, currentGoal);
+
+    expect(returnedIndex).toEqual(-1);
   });
 });
