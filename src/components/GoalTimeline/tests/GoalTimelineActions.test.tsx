@@ -30,9 +30,19 @@ it("should create an action to load user edits", () => {
   expect(actions.loadUserEdits(goalHistory)).toEqual(expectedAction);
 });
 
+it("should create an action to navigate to the next step", () => {
+  const expectedAction: actions.NextStep = {
+    type: actions.NEXT_STEP,
+    payload: []
+  };
+  expect(actions.nextStep()).toEqual(expectedAction);
+});
+
 it("should create an async action to load user edits", () => {
   const mockStore = createMockStore(defaultState);
-  const mockDispatch = mockStore.dispatch<any>(actions.asyncLoadUserEdits("1"));
+  const mockDispatch = mockStore.dispatch<any>(
+    actions.asyncLoadUserEdits("1", "1")
+  );
 
   let loadUserEdits: actions.LoadUserEdits = {
     type: actions.LOAD_USER_EDITS,
