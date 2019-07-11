@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SIL.Lift.Parsing;
+using System;
 using System.Text;
 
 namespace BackendFramework
@@ -42,13 +43,8 @@ namespace BackendFramework
                     .AllowAnyOrigin());
             });
 
-            // configure strongly typed settings objects
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
             // configure jwt authentication
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY"));
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

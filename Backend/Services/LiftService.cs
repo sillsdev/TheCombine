@@ -53,7 +53,7 @@ namespace BackendFramework.Services
     public class LiftService : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
 
-        
+
         private readonly IWordRepository _repo;
         private readonly IProjectService _projService;
         private string projectId;
@@ -107,7 +107,7 @@ namespace BackendFramework.Services
             //generates file to be exported to
             string exportFilePath = Path.Combine(zipdir, "EXPORTED-" + Path.GetRandomFileName());
 
-           //add audio dir inside zip dir
+            //add audio dir inside zip dir
             string audiodir = Path.Combine(zipdir, "Audio");
             Directory.CreateDirectory(audiodir);
             string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
@@ -253,10 +253,57 @@ namespace BackendFramework.Services
                 }
             }
 
+            //setup file path for audio files
+            Helper.Utilities util = new Helper.Utilities();
+
+            //path to Import file ~/AmbigProjName/Import
+            var extractedPathToImport = util.GenerateFilePath(Helper.Utilities.filetype.dir, false, "", Path.Combine(projectId, "Import"));
+
+            //get path to ~/AmbigProjName/Import/ExtractedLiftDir/audio
+            var importListArr = Directory.GetDirectories(extractedPathToImport);
+            var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
+
             //add audio
             foreach (var pro in entry.Pronunciations)
             {
                 newWord.Audio = pro.Media.FirstOrDefault().Url;
+
+                //get path to ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word mp3
+                var extractedAudioMp3 = Path.Combine(extractedAudioDir, newWord.Audio);
+
+                //move mp3 to audio folder at ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word.mp3
+                var audioFolder = Path.Combine(extractedPathToImport, "Audio");
+                Directory.CreateDirectory(audioFolder);
+                var audioDest = Path.Combine(audioFolder, newWord.Audio);
+                File.Create(audioDest);
+
+                //if there are duplicate filenames then add a (number) like windows does to the end of it
+                int filecount = 1;
+                while (true)
+                {
+                    
+                    try
+                    {
+                        File.Copy(extractedAudioMp3, audioDest);
+                        break; // Exit the loop. Could return from the method, depending
+                               // on what it does...
+                    }
+                    catch(IOException)
+                    {
+                        //does the filename already have a counter
+                        var filename = Path.GetFileNameWithoutExtension(audioDest);
+                        var fileList = Regex.Match(filename, @".+(\([0-9]+\))");
+                        
+                        //if yes then take it off
+                        if(fileList.Success)
+                        {
+                            filename = audioDest.Substring(audioDest.Length - 3);
+                            
+                        }
+                        //add a new counter
+                        audioDest = Path.Combine(audioFolder , Path.GetFileNameWithoutExtension(filename) + "(" + filecount++ + ")" + ".mp3");
+                    }
+                }
             }
 
             //add senses
@@ -365,7 +412,7 @@ namespace BackendFramework.Services
         {
             var audioFile = Regex.Split(rawXml, "\"")[1];
             LiftPhonetic phonetic = new LiftPhonetic();
-            LiftUrlRef url = new LiftUrlRef{ Url = audioFile };
+            LiftUrlRef url = new LiftUrlRef { Url = audioFile };
             phonetic.Media.Add(url);
             entry.Pronunciations.Add(phonetic);
             return entry;

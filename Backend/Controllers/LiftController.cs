@@ -2,6 +2,7 @@
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
 using System;
@@ -13,7 +14,7 @@ using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}")]
     public class LiftController : Controller
@@ -21,12 +22,14 @@ namespace BackendFramework.Controllers
         private readonly IWordRepository _wordRepo;
         private readonly IProjectService _projectService;
         private readonly LiftService _liftService;
+        private readonly IProjectService _projectService;
 
         public LiftController(IWordRepository repo, IProjectService projServ)
         {
             _wordRepo = repo;
             _projectService = projServ;
             _liftService = new LiftService(_wordRepo, projServ);
+            _projectService = projServ;
         }
 
         // POST: v1/project/{projectId}/words/upload
@@ -34,6 +37,12 @@ namespace BackendFramework.Controllers
         [HttpPost("words/upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload model)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var fileInfo = model.File;
 
             if (fileInfo.Length > 0)
@@ -119,8 +128,14 @@ namespace BackendFramework.Controllers
         [HttpGet("words/download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
+            var isValid = _projectService.GetProject(projectId);
+            if (isValid == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var words = await _wordRepo.GetAllWords(projectId);
-            if(words.Count == 0)
+            if (words.Count == 0)
             {
                 return new BadRequestResult();
             }
