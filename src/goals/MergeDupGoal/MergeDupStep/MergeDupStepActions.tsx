@@ -12,7 +12,7 @@ import {
 import { Goal } from "../../../types/goals";
 import { Dispatch } from "redux";
 import { MergeDups } from "../MergeDups";
-import { UserProject } from "../../../components/Project/UserProject";
+import { UserProjectMap } from "../../../components/Project/UserProject";
 
 export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
@@ -124,11 +124,11 @@ const goToNextStep = (
 async function addStepToGoal(goal: Goal, indexInHistory: number) {
   let projectId: string = backend.getProjectId();
   let userEditId: string = getUserEditId();
-  let userProject: UserProject = {
+  let userProjectMap: UserProjectMap = {
     projectId: projectId,
     userEditId: userEditId
   };
-  await backend.addStepToGoal(userProject, indexInHistory, goal);
+  await backend.addStepToGoal(userProjectMap, indexInHistory, goal);
 }
 
 export function refreshWords() {
