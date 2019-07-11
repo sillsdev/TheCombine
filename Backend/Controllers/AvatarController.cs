@@ -1,6 +1,7 @@
 ﻿using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("v1")]
     public class AvatarController : Controller
