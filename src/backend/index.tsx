@@ -241,9 +241,13 @@ function goalNameToGoalTypeId(goalName: string): string {
 }
 
 export async function createUserEdit(): Promise<string> {
-  let resp = await backendServer.post(`projects/${getProjectId()}/useredits`, {
-    headers: authHeader()
-  });
+  let resp = await backendServer.post(
+    `projects/${getProjectId()}/useredits`,
+    "",
+    {
+      headers: authHeader()
+    }
+  );
   return resp.data;
 }
 
