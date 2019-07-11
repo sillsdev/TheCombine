@@ -58,13 +58,13 @@ export default class AddWords extends React.Component<
       newVern: "",
       newGloss: "",
       rows: [
-        {
-          vernacular: "sam",
-          glosses: "boy",
-          id: "5d2501f2188d610ef03a42f2",
-          dupId: "5d250046188d610ef03a42ed",
-          senseIndex: 0
-        }
+        // {
+        //   vernacular: "sam",
+        //   glosses: "boy",
+        //   id: "5d2501f2188d610ef03a42f2",
+        //   dupId: "5d250046188d610ef03a42ed",
+        //   senseIndex: 0
+        // }
       ],
       newVernInFrontier: false
     };
