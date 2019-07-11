@@ -171,6 +171,18 @@ function updateUserWithUserEditId(
   return updatedUserString;
 }
 
+// Write a unit test for this
+export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
+  let index: number = -1;
+  for (let goal of history) {
+    index++;
+    if (goal.hash === currentGoal.hash) {
+      return index;
+    }
+  }
+  return index;
+}
+
 function convertEditsToArrayOfGoals(edits: Edit[]): Goal[] {
   let history: Goal[] = [];
   for (var edit of edits) {

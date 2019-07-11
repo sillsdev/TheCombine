@@ -6,11 +6,13 @@ import * as backend from "../../../backend";
 import {
   nextStep,
   NextStep,
-  getUserEditId
+  getUserEditId,
+  getIndexInHistory
 } from "../../../components/GoalTimeline/GoalsActions";
 import { Goal } from "../../../types/goals";
 import { Dispatch } from "redux";
 import { MergeDups } from "../MergeDups";
+import { UserProject } from "../../../components/Project/UserProject";
 
 export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
@@ -107,17 +109,26 @@ export function mergeSense() {
   };
 }
 
-const goToNextStep = (dispatch: Dispatch<NextStep>, goal: Goal) =>
+const goToNextStep = (
+  dispatch: Dispatch<NextStep>,
+  history: Goal[],
+  goal: Goal
+) =>
   new Promise((resolve, reject) => {
     dispatch(nextStep());
-    addStepToGoal(goal, 0);
+    let indexInHistory: number = getIndexInHistory(history, goal);
+    addStepToGoal(goal, indexInHistory);
     resolve();
   });
 
 async function addStepToGoal(goal: Goal, indexInHistory: number) {
-  let userEditId: string = getUserEditId();
   let projectId: string = backend.getProjectId();
-  await backend.addStepToGoal(indexInHistory, projectId, userEditId, goal);
+  let userEditId: string = getUserEditId();
+  let userProject: UserProject = {
+    projectId: projectId,
+    userEditId: userEditId
+  };
+  await backend.addStepToGoal(userProject, indexInHistory, goal);
 }
 
 export function refreshWords() {
@@ -127,7 +138,7 @@ export function refreshWords() {
   ) => {
     let history: Goal[] = getState().goalsState.historyState.history;
     let goal: Goal = history[history.length - 1];
-    goToNextStep(dispatch, goal).then(() => {
+    goToNextStep(dispatch, history, goal).then(() => {
       let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1].words;
       dispatch(setWordData(words));
     });
