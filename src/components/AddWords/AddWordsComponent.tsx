@@ -93,7 +93,7 @@ export default class AddWords extends React.Component<
         word.vernacular
       );
       if (levenD < foundDuplicate[1]) {
-        foundDuplicate = [word.vernacular, levenD];
+        foundDuplicate = [word.id, levenD];
       }
     }
 
@@ -183,31 +183,25 @@ export default class AddWords extends React.Component<
   /** updates the word in the backend */
   updateWord(index: number, callback?: Function) {
     let row = this.state.rows[index];
-    Backend.getWord(row.id)
+    this.rowToExistingWord(row)
       .catch(err => console.log(err))
       .then(res =>
-        this.rowToExistingWord(row)
+        Backend.updateWord(res as Word)
           .catch(err => console.log(err))
-          .then(res =>
-            Backend.updateWord(res as Word)
-              .catch(err => console.log(err))
-              .then(res => {
-                this.updateRow(
-                  this.wordToRow(res as Word, row.senseIndex),
-                  index
-                );
-                if (callback) callback();
-              })
-          )
+          .then(res => {
+            this.updateRow(this.wordToRow(res as Word, row.senseIndex), index);
+            if (callback) callback();
+          })
       );
   }
 
   /** Creates a new word from a row */
   async rowToExistingWord(row: Row): Promise<Word> {
     let word = await Backend.getWord(row.id);
+
     let glosses: Gloss[] = [];
-    let defs = row.glosses.split(",");
     let gloss: Gloss;
+    let defs = row.glosses.split(",");
     for (let def of defs) {
       gloss = {
         language: "en",
@@ -219,6 +213,8 @@ export default class AddWords extends React.Component<
       glosses,
       semanticDomains: [this.semanticDomain]
     };
+
+    word.vernacular = row.vernacular;
     return word;
   }
 
@@ -290,6 +286,7 @@ export default class AddWords extends React.Component<
   }
 
   showDuplicateForRow(rowIndex: number) {
+    console.log(this.state.rows);
     let row = this.state.rows[rowIndex];
     let dupWord = this.getWord(row.dupId);
     row.dupVernacular = dupWord.vernacular;
@@ -402,6 +399,7 @@ export default class AddWords extends React.Component<
                             value={row.vernacular}
                             onChange={e => {
                               let dupId = this.vernInFrontier(e.target.value);
+                              if (dupId === row.id) dupId = ""; // the "duplicate" is the word we're already editing
                               this.updateRow(
                                 {
                                   ...row,
@@ -554,6 +552,19 @@ export default class AddWords extends React.Component<
                                   }}
                                 />
                               ))}
+                            <Chip
+                              variant="outlined"
+                              label={"Add New Sense +"}
+                              onClick={() =>
+                                this.editASenseOfAnExistingWordInsteadOfUsingThisWord(
+                                  rowIndex,
+                                  row.dupGlosses ? row.dupGlosses.length : 0
+                                )
+                              }
+                              style={{
+                                margin: theme.spacing(1)
+                              }}
+                            />
                           </Grid>
                         </Grid>
                       </Grid>
