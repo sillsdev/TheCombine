@@ -16,6 +16,7 @@ import { styleAddendum } from "../../../types/theme";
 import { uuid } from "../../../utilities";
 import { MergeTreeReference, MergeTreeWord } from "./MergeDupsTree";
 import MergeRow from "./MergeRow";
+import { DragDropContext } from "react-beautiful-dnd";
 
 // Constants
 const MIN_VIEW: string = "60vh";
@@ -90,31 +91,33 @@ class MergeDupStep extends React.Component<
             direction={this.state.portrait ? "row" : "column"}
             style={{ flex: 1 }}
           >
-            {Object.keys(this.props.words).map(key => (
-              <Grid item>
-                <MergeRow portait={this.state.portrait} wordID={key} />
-              </Grid>
-            ))}
-            {
-              <Box
-                style={{ height: "100%" }}
-                onDragOver={e => e.preventDefault()}
-                onDrop={_ => this.dragDrop()}
-                title={
-                  this.props.translate("mergeDups.helpText.root") as string
-                }
-              >
-                <hr />
-                <Grid container>
-                  <Grid item />
-                  {
-                    <Card style={{ ...styleAddendum.inactive, width: 200 }}>
-                      <CardContent>Drag new root word Here</CardContent>
-                    </Card>
-                  }
+            <DragDropContext onDragEnd={() => {}}>
+              {Object.keys(this.props.words).map(key => (
+                <Grid item>
+                  <MergeRow portait={this.state.portrait} wordID={key} />
                 </Grid>
-              </Box>
-            }
+              ))}
+              {
+                <Box
+                  style={{ height: "100%" }}
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={_ => this.dragDrop()}
+                  title={
+                    this.props.translate("mergeDups.helpText.root") as string
+                  }
+                >
+                  <hr />
+                  <Grid container>
+                    <Grid item />
+                    {
+                      <Card style={{ ...styleAddendum.inactive, width: 200 }}>
+                        <CardContent>Drag new root word Here</CardContent>
+                      </Card>
+                    }
+                  </Grid>
+                </Box>
+              }
+            </DragDropContext>
           </Grid>
         </div>
         {/* Merge button */}
