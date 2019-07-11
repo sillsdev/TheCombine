@@ -28,7 +28,7 @@ namespace BackendFramework.ValueModels
         public string OtherConnectionField { get; set; }
 
         [BsonElement("workedProjects")]
-        public List<string> WorkedProjects { get; set; }
+        public Dictionary<string, string> WorkedProjects { get; set; }
 
         [BsonElement("agreement")]
         public bool Agreement { get; set; }
@@ -45,9 +45,6 @@ namespace BackendFramework.ValueModels
         [BsonElement("token")]
         public string Token { get; set; }
 
-        [BsonElement("userEdits")]
-        public string UserEdits { get; set; }
-
         public User()
         {
             Id = "";
@@ -61,7 +58,7 @@ namespace BackendFramework.ValueModels
             Username = "";
             UILang = "";
             Token = "";
-            WorkedProjects = new List<string>();
+            WorkedProjects = new Dictionary<string, string>();
         }
 
         public User Clone()
@@ -79,12 +76,12 @@ namespace BackendFramework.ValueModels
                 Username = Username.Clone() as string,
                 UILang = UILang.Clone() as string,
                 Token = Token.Clone() as string,
-                WorkedProjects = new List<string>()
-            };
+                WorkedProjects = new Dictionary<string, string>()
+        };
 
-            foreach (string proj in WorkedProjects)
+            foreach (string projId in WorkedProjects.Keys)
             {
-                clone.WorkedProjects.Add(proj.Clone() as string);
+                clone.WorkedProjects.Add(projId.Clone() as string, WorkedProjects[projId].Clone() as string);
             }
 
             return clone;

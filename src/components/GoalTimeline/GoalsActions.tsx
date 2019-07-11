@@ -15,6 +15,8 @@ import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
 import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import { ThunkDispatch } from "redux-thunk";
+import { StoreState } from "../../types";
 
 export const LOAD_USER_EDITS = "LOAD_USER_EDITS";
 export type LOAD_USER_EDITS = typeof LOAD_USER_EDITS;
@@ -42,19 +44,50 @@ export interface NextStep extends ActionWithPayload<Goal[]> {
 export type AddGoalToHistoryAction = AddGoalToHistory;
 export type LoadUserEditsAction = LoadUserEdits;
 
-export function asyncLoadUserEdits(id: string) {
+export function asyncLoadUserEdits(projectId: string, userEditId: string) {
   return async (dispatch: Dispatch<LoadUserEditsAction>) => {
     await backend
-      .getUserEditById(id)
-      .then(resp => {
-        updateUserIfExists(resp.id);
-        let history: Goal[] = convertEditsToArrayOfGoals(resp.edits);
+      .getUserEditById(projectId, userEditId)
+      .then(userEdit => {
+        let history: Goal[] = convertEditsToArrayOfGoals(userEdit.edits);
         dispatch(loadUserEdits(history));
-        return resp;
       })
       .catch(err => {
         console.log(err);
       });
+  };
+}
+
+function asyncCreateNewUserEditsObject(projectId: string) {
+  return async () => {
+    await backend
+      .createUserEdit()
+      .then(async (userEditId: string) => {
+        let updatedUser: User = updateUserIfExists(projectId, userEditId);
+        await backend.updateUser(updatedUser);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+}
+
+export function asyncGetUserEdits() {
+  return async (
+    dispatch: ThunkDispatch<StoreState, any, LoadUserEditsAction>
+  ) => {
+    let currentUserString = localStorage.getItem("user");
+    if (currentUserString) {
+      let currentUserObject: User = JSON.parse(currentUserString);
+      let projectId: string = backend.getProjectId();
+      let userEditId: string | undefined =
+        currentUserObject.workedProjects[projectId];
+      if (userEditId != undefined) {
+        dispatch(asyncLoadUserEdits(projectId, userEditId));
+      } else {
+        dispatch(asyncCreateNewUserEditsObject(projectId));
+      }
+    }
   };
 }
 
@@ -92,28 +125,34 @@ function getUserEditId(): string {
   let userEditId: string = "";
   if (userString) {
     userObject = JSON.parse(userString);
-    userEditId = userObject.userEditId;
+    let projectId = backend.getProjectId();
+    userEditId = userObject.workedProjects[projectId];
   }
   return userEditId;
 }
 
-function updateUserIfExists(userEditId: string) {
+function updateUserIfExists(projectId: string, userEditId: string): User {
   let currentUserString = localStorage.getItem("user");
+  let updatedUser: User = new User("", "", "");
   if (currentUserString) {
     let updatedUserString = updateUserWithUserEditId(
       currentUserString,
+      projectId,
       userEditId
     );
     localStorage.setItem("user", updatedUserString);
+    updatedUser = JSON.parse(updatedUserString);
   }
+  return updatedUser;
 }
 
 function updateUserWithUserEditId(
   userObjectString: string,
+  projectId: string,
   userEditId: string
 ): string {
   let currentUserObject: User = JSON.parse(userObjectString);
-  currentUserObject.userEditId = userEditId;
+  currentUserObject.workedProjects[projectId] = userEditId;
   let updatedUserString = JSON.stringify(currentUserObject);
   return updatedUserString;
 }
