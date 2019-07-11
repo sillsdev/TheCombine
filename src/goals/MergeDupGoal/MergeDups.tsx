@@ -26,6 +26,7 @@ export class MergeDups implements Goal {
   tool: Tools;
   completed: boolean;
   result: GoalOption;
+  hash: string;
 
   constructor(steps: MergeStepData[] = [], numSteps: number = 8) {
     this.goalType = GoalType.MergeDups;
@@ -38,5 +39,6 @@ export class MergeDups implements Goal {
     this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;
+    this.hash = Math.floor(Math.random() * 9999999).toString();
   }
 }

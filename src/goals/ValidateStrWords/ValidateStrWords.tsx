@@ -19,6 +19,7 @@ export class ValidateStrWords implements Goal {
   tool: Tools;
   completed: boolean;
   result: GoalOption;
+  hash: string;
 
   constructor(steps: GoalStep[] = [], numSteps: number = 8) {
     this.goalType = GoalType.ValidateStrWords;
@@ -31,5 +32,6 @@ export class ValidateStrWords implements Goal {
     this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;
+    this.hash = Math.floor(Math.random() * 9999999).toString();
   }
 }

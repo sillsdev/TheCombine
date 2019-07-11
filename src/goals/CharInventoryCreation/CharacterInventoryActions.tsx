@@ -7,11 +7,13 @@ import {
 import { updateProject } from "../../backend";
 import {
   updateGoal,
-  UpdateGoalAction
+  UpdateGoalAction,
+  getUserEditId
 } from "../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
 import * as backend from "../../backend";
 import { User } from "../../types/user";
+import { Goal } from "../../types/goals";
 
 export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
 export type SET_CHARACTER_INVENTORY = typeof SET_CHARACTER_INVENTORY;
@@ -42,24 +44,37 @@ export function uploadInventory() {
     project.characterSet = inv;
 
     // Update goal
-    let history = getState().goalsState.historyState.history;
+    let history: Goal[] = getState().goalsState.historyState.history;
     let currentGoal: CreateCharInv = history[
       history.length - 1
     ] as CreateCharInv;
     currentGoal.data = {
       inventory: [[...inv]]
     };
+    let indexInHistory: number = getIndexInHistory(history, currentGoal);
 
     dispatch(updateGoal(currentGoal));
     let userEditId: string = getUserEditId();
+    let projectId: string = backend.getProjectId();
     await backend
-      .addStepToGoal(userEditId, currentGoal)
+      .addStepToGoal(indexInHistory, projectId, userEditId, currentGoal)
       .catch((err: string) => console.log(err));
 
     updateProject(project);
 
     dispatch(setCurrentProject(project));
   };
+}
+
+function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
+  let index: number = -1;
+  for (let goal of history) {
+    index++;
+    if (goal.hash === currentGoal.hash) {
+      return index;
+    }
+  }
+  return index;
 }
 
 export function setInventory(payload: string[]): CharacterInventoryAction {

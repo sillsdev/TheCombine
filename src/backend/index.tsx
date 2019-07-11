@@ -206,11 +206,13 @@ export async function addGoalToUserEdit(
 }
 
 export async function addStepToGoal(
+  indexInHistory: number,
+  projId: string,
   userEditId: string,
   goal: Goal
 ): Promise<Goal> {
   let stepData: string = JSON.stringify(goal.steps);
-  let userEditTuple = { goalIndex: 0, newEdit: stepData };
+  let userEditTuple = { goalIndex: indexInHistory, newEdit: stepData };
   return await backendServer
     .put(`projects/${getProjectId()}/useredits/${userEditId}`, userEditTuple, {
       headers: { ...authHeader() }

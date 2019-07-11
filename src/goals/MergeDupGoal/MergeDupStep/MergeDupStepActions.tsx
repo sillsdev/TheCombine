@@ -110,13 +110,14 @@ export function mergeSense() {
 const goToNextStep = (dispatch: Dispatch<NextStep>, goal: Goal) =>
   new Promise((resolve, reject) => {
     dispatch(nextStep());
-    addStepToGoal(goal);
+    addStepToGoal(goal, 0);
     resolve();
   });
 
-async function addStepToGoal(goal: Goal) {
+async function addStepToGoal(goal: Goal, indexInHistory: number) {
   let userEditId: string = getUserEditId();
-  await backend.addStepToGoal(userEditId, goal);
+  let projectId: string = backend.getProjectId();
+  await backend.addStepToGoal(indexInHistory, projectId, userEditId, goal);
 }
 
 export function refreshWords() {
@@ -126,8 +127,8 @@ export function refreshWords() {
   ) => {
     let history: Goal[] = getState().goalsState.historyState.history;
     let goal: Goal = history[history.length - 1];
-    let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1].words;
     goToNextStep(dispatch, goal).then(() => {
+      let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1].words;
       dispatch(setWordData(words));
     });
   };

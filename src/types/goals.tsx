@@ -70,6 +70,7 @@ export interface Goal {
   tool: Tools;
   completed: boolean;
   result: GoalOption;
+  hash: string;
 }
 
 export enum GoalType {
