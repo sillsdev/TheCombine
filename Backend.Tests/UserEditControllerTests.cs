@@ -62,17 +62,6 @@ namespace Backend.Tests
         [Test]
         public void TestGetUserEdit()
         {
-            //Get UserEdit for nonexistant user
-            var noUser = _userEditController.Get(_projId, Guid.NewGuid().ToString()).Result;
-
-            var getResult = _userEditController.Get(_projId).Result;
-
-            Assert.IsInstanceOf<ObjectResult>(getResult);
-
-            var edits = (getResult as ObjectResult).Value as List<UserEdit>;
-            Assert.That(edits, Has.Count.EqualTo(1));
-
-            //Get a valid UserEdit
             UserEdit userEdit = _userEditRepo.Create(RandomUserEdit()).Result;
 
             _userEditRepo.Create(RandomUserEdit());
@@ -84,6 +73,16 @@ namespace Backend.Tests
 
             var foundUserEdit = (action as ObjectResult).Value as UserEdit;
             Assert.AreEqual(userEdit, foundUserEdit);
+        }
+
+        [Test]
+        public void TestCreateUserEdit()
+        {
+            UserEdit userEdit = new UserEdit();
+            userEdit.ProjectId = _projId;
+            string id = (_userEditController.Post(_projId).Result as ObjectResult).Value as string;
+            userEdit.Id = id;
+            Assert.Contains(userEdit, _userEditRepo.GetAllUserEdits(_projId).Result);
         }
 
         [Test]

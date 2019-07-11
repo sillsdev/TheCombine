@@ -14,6 +14,10 @@ export function setProjectID(id: string) {
   projectId = id;
 }
 
+export function getProjectId(): string {
+  return projectId;
+}
+
 export async function createWord(word: Word): Promise<Word> {
   return await backendServer
     .post(`projects/${projectId}/words`, word)
@@ -196,9 +200,20 @@ function goalNameToGoalTypeId(goalName: string): string {
   return goalType.toString();
 }
 
-export async function getUserEditById(index: string): Promise<UserEdit> {
+export async function createUserEdit(): Promise<string> {
   return await backendServer
-    .get(`projects/${projectId}/useredits/${index}`)
+    .post(`projects/${projectId}/useredits`)
+    .then(resp => {
+      return resp.data;
+    });
+}
+
+export async function getUserEditById(
+  projId: string,
+  index: string
+): Promise<UserEdit> {
+  return await backendServer
+    .get(`projects/${projId}/useredits/${index}`)
     .then(resp => {
       return resp.data;
     });
