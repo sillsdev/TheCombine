@@ -1,33 +1,46 @@
 import { Word, hasSenses } from "../../../types/word";
 import * as backend from "../../../backend";
 
+export interface FinderParams {
+  searchLim: number;
+  maxScore: number;
+  maxCount: number;
+  subCost: number;
+  insCost: number;
+  delCost: number;
+  qualVal: number;
+}
+
+//use spread operator on default params to assign to parameters
+export const DefaultParams: FinderParams = {
+  searchLim: 500,
+  maxScore: 3,
+  maxCount: 8,
+  subCost: 1,
+  insCost: 2,
+  delCost: 2,
+  qualVal: 0
+};
+
 export interface ScoredWord {
   word: Word;
   score: number;
 }
 
 export default class DupFinder {
-  constructor(
-    searchLim: number = 500,
-    maxScore: number = 3,
-    maxCount: number = 8,
-    subCost: number = 1,
-    insCost: number = 2,
-    delCost: number = 2,
-    qualVal: number = 0
-  ) {
-    this.searchLimit = searchLim;
+  constructor(params: FinderParams = DefaultParams) {
+    this.searchLimit = params.searchLim;
 
     this.searchCount = 0;
 
-    this.qualifiedValue = qualVal;
+    this.qualifiedValue = params.qualVal;
 
-    this.maxScore = maxScore;
-    this.maxCount = maxCount;
+    this.maxScore = params.maxScore;
+    this.maxCount = params.maxCount;
 
-    this.insertionCost = insCost;
-    this.deletionCost = delCost;
-    this.subsitutionCost = subCost;
+    this.insertionCost = params.insCost;
+    this.deletionCost = params.delCost;
+    this.subsitutionCost = params.subCost;
   }
 
   //prevent infinite loops in getNextDups()
@@ -90,9 +103,8 @@ export default class DupFinder {
       }
 
       //return empty 2d array if no possible duplicates found
-      if(currentWords.length <= 0)
-        return this.empty2dArray;
-        
+      if (currentWords.length <= 0) return this.empty2dArray;
+
       //return the wordlist from the scored list
       return currentWords.map(function(scoredList) {
         return scoredList[0];
@@ -199,14 +211,6 @@ export default class DupFinder {
     return [...this.quicksort(less), pivot, ...this.quicksort(greater)];
   }
 
-  //adjust for levenshtein's bias toward short words
-  sizeAdjust(a: Word, b: Word): number {
-    return Math.max(
-      this.maxScore - (a.vernacular.length + b.vernacular.length) / 3,
-      0
-    );
-  }
-
   //extra level of abstraction for readability
   wordLevenshteinDistance(a: Word, b: Word): number {
     //get current word score
@@ -257,7 +261,7 @@ export default class DupFinder {
         );
       }
     }
-
+    console.log(a, b, matrix[a.length - 1][b.length - 1]);
     return matrix[a.length - 1][b.length - 1];
   }
 }
