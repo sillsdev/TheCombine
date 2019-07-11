@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import theme from "../../types/theme";
 import { Translate, TranslateFunction } from "react-localize-redux";
-import { Word, State } from "../../types/word";
+import { Word, State, Gloss } from "../../types/word";
 import { Delete } from "@material-ui/icons";
 import * as Backend from "../../backend";
 
@@ -27,15 +27,22 @@ interface AddWordsState {
   newGloss: string;
   hoverRow?: number;
   newVernInFrontier: Boolean; // does the new word already exist in the frontier?
+  showDuplicate?: number;
 }
 
-/** The data from the `Word` type that the view uses */
+/** A row in the view */
 interface Row {
+  id: string;
+  /** The ID of the duplicate word in the frontier */
+  dupId: string;
   vernacular: string;
   glosses: string;
-  id: string;
+  /** The vernacular of the duplicate word in the frontier */
+  dupVernacular?: string;
+  /** The `def` field of the glosses of the duplicate word in the frontier */
+  dupGlosses?: string[];
+
   duplicate?: Boolean;
-  dupId?: string; // the id of the duplicate word in frontier
 }
 
 export default class AddWords extends React.Component<
@@ -47,7 +54,15 @@ export default class AddWords extends React.Component<
     this.state = {
       newVern: "",
       newGloss: "",
-      rows: [],
+      rows: [
+        {
+          vernacular: "sam",
+          glosses: "boy",
+          id: "5d2501f2188d610ef03a42f2",
+          duplicate: true,
+          dupId: "5d250046188d610ef03a42ed"
+        }
+      ],
       newVernInFrontier: false
     };
     this.vernInput = React.createRef<HTMLDivElement>();
@@ -60,18 +75,15 @@ export default class AddWords extends React.Component<
     this.allWords = await Backend.getFrontierWords();
   }
 
-  /** Returns whether the vernacular is already a word in the frontier and the other word's id */
-  vernInFrontier(vernacular: string): [Boolean, string] {
-    console.log("vernInFrontier() " + Date.now());
+  /** If the venacular is in the frontier, returns that words id */
+  vernInFrontier(vernacular: string): string {
     for (let word of this.allWords) {
       if (word.vernacular === vernacular) {
         //TODO: check accessability
-        console.log("vernInFrontier() true");
-        return [true, word.id];
+        return word.id;
       }
     }
-    console.log("vernInFrontier() false");
-    return [false, ""];
+    return "";
   }
 
   vernInput: React.RefObject<HTMLDivElement>;
@@ -87,10 +99,14 @@ export default class AddWords extends React.Component<
 
     let rows = [...this.state.rows];
 
-    Backend.createWord(this.rowToWord({ vernacular, glosses, id: "" }))
+    Backend.createWord(
+      this.rowToWord({ vernacular, glosses, id: "", dupId: "" })
+    )
       .catch(err => console.log(err))
       .then(res => {
-        rows.push(this.wordToRow(res as Word));
+        let word = res as Word;
+        let dupId = this.vernInFrontier(word.vernacular);
+        rows.push({ ...this.wordToRow(word), dupId });
         this.setState({
           rows,
           newVern: "",
@@ -104,9 +120,9 @@ export default class AddWords extends React.Component<
 
   /** updates a row in the view only */
   updateRow(row: Row, index: number) {
-    let words = [...this.state.rows];
-    words.splice(index, 1, { ...words[index], ...row });
-    this.setState({ rows: words });
+    let rows = [...this.state.rows];
+    rows.splice(index, 1, { ...rows[index], ...row });
+    this.setState({ rows });
   }
 
   /** updates the word in the backend */
@@ -202,13 +218,45 @@ export default class AddWords extends React.Component<
   }
 
   wordToRow(word: Word): Row {
-    let row: Row = { vernacular: word.vernacular, id: word.id, glosses: "" };
+    let row: Row = {
+      vernacular: word.vernacular,
+      id: word.id,
+      glosses: "",
+      dupId: ""
+    };
     let glosses: string[] = [];
     word.senses[0].glosses.forEach(gloss => {
       glosses.push(gloss.def);
     });
     row.glosses = glosses.join(",");
     return row;
+  }
+
+  getWord(id: string): Word {
+    let word = this.allWords.find(word => word.id === id);
+    if (!word) throw "No word exists with this id";
+    return word;
+  }
+
+  mergeRow(index: number) {
+    if (index >= this.state.rows.length) {
+      console.log("That row does not exist");
+      return;
+    }
+    let row: Row = { ...this.state.rows[index] };
+    if (!row.dupId) {
+      console.log("No duplicate for this row");
+      return;
+    }
+    let originalWord = this.getWord(row.dupId);
+    let newRow: Row = {
+      ...row,
+      ...this.wordToRow(originalWord),
+      duplicate: false,
+      dupId: ""
+    };
+    this.removeWord(index);
+    this.updateRow(newRow, index);
   }
 
   render() {
@@ -256,125 +304,176 @@ export default class AddWords extends React.Component<
 
               {/* Rows of words */}
               {this.state.rows.map((row, index) => {
-                console.log(row);
                 return (
-                  <Grid
-                    item
-                    xs={12}
-                    key={index}
-                    onMouseEnter={() => this.setState({ hoverRow: index })}
-                    onMouseLeave={() => this.setState({ hoverRow: undefined })}
-                  >
-                    <Grid container>
-                      <Grid
-                        item
-                        xs={5}
-                        style={{
-                          paddingLeft: theme.spacing(2),
-                          paddingRight: theme.spacing(2),
-                          position: "relative"
-                        }}
-                      >
-                        <TextField
-                          fullWidth
-                          value={row.vernacular}
-                          onChange={e => {
-                            let [duplicate, dupId] = this.vernInFrontier(
-                              e.target.value
-                            );
-                            this.updateRow(
-                              {
-                                ...row,
-                                vernacular: e.target.value,
-                                duplicate,
-                                dupId
-                              },
-                              index
-                            );
+                  <React.Fragment>
+                    <Grid
+                      item
+                      xs={12}
+                      key={index}
+                      onMouseEnter={() => this.setState({ hoverRow: index })}
+                      onMouseLeave={() =>
+                        this.setState({ hoverRow: undefined })
+                      }
+                    >
+                      <Grid container>
+                        <Grid
+                          item
+                          xs={5}
+                          style={{
+                            paddingLeft: theme.spacing(2),
+                            paddingRight: theme.spacing(2),
+                            position: "relative"
                           }}
-                          onBlur={() => {
-                            this.updateWord(index);
-                          }}
-                          onKeyDown={e => {
-                            if (e.key === "Enter") {
-                              this.focusVernInput();
-                            }
-                          }}
-                        />
-                        {row.duplicate && (
-                          <Tooltip
-                            title={
-                              this.props.translate(
-                                "addWords.wordInDatabase"
-                              ) as string
-                            }
-                            placement="top"
-                          >
-                            <div
-                              style={{
-                                height: "5px",
-                                width: "5px",
-                                border: "2px solid red",
-                                borderRadius: "50%",
-                                position: "absolute",
-                                top: 8,
-                                right: 48,
-                                cursor: "pointer"
-                              }}
-                            />
-                          </Tooltip>
-                        )}
-                      </Grid>
-                      <Grid
-                        item
-                        xs={5}
-                        style={{
-                          paddingLeft: theme.spacing(2),
-                          paddingRight: theme.spacing(2)
-                        }}
-                      >
-                        <TextField
-                          fullWidth
-                          value={row.glosses}
-                          onChange={e => {
-                            this.updateRow(
-                              { ...row, glosses: e.target.value },
-                              index
-                            );
-                          }}
-                          onBlur={() => {
-                            this.updateWord(index);
-                          }}
-                          onKeyDown={e => {
-                            if (e.key === "Enter") {
-                              this.focusVernInput();
-                            }
-                          }}
-                        />
-                      </Grid>
-                      <Grid item xs={2}>
-                        {this.state.hoverRow === index && (
-                          <React.Fragment>
+                        >
+                          <TextField
+                            fullWidth
+                            value={row.vernacular}
+                            onChange={e => {
+                              let dupId = this.vernInFrontier(e.target.value);
+                              this.updateRow(
+                                {
+                                  ...row,
+                                  vernacular: e.target.value,
+                                  dupId
+                                },
+                                index
+                              );
+                            }}
+                            onBlur={() => {
+                              this.updateWord(index);
+                            }}
+                            onKeyDown={e => {
+                              if (e.key === "Enter") {
+                                this.focusVernInput();
+                              }
+                            }}
+                          />
+                          {row.dupId !== "" && (
                             <Tooltip
                               title={
                                 this.props.translate(
-                                  "addWords.deleteRow"
+                                  "addWords.wordInDatabase"
                                 ) as string
                               }
                               placement="top"
                             >
-                              <IconButton
-                                size="small"
-                                onClick={() => this.removeWord(index)}
-                              >
-                                <Delete />
-                              </IconButton>
+                              <div
+                                style={{
+                                  height: "5px",
+                                  width: "5px",
+                                  border: "2px solid red",
+                                  borderRadius: "50%",
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 48,
+                                  cursor: "pointer"
+                                }}
+                                onClick={() =>
+                                  this.setState({ showDuplicate: index })
+                                }
+                              />
                             </Tooltip>
-                          </React.Fragment>
-                        )}
+                          )}
+                        </Grid>
+                        <Grid
+                          item
+                          xs={5}
+                          style={{
+                            paddingLeft: theme.spacing(2),
+                            paddingRight: theme.spacing(2)
+                          }}
+                        >
+                          <TextField
+                            fullWidth
+                            value={row.glosses}
+                            onChange={e => {
+                              this.updateRow(
+                                { ...row, glosses: e.target.value },
+                                index
+                              );
+                            }}
+                            onBlur={() => {
+                              this.updateWord(index);
+                            }}
+                            onKeyDown={e => {
+                              if (e.key === "Enter") {
+                                this.focusVernInput();
+                              }
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={2}>
+                          {this.state.hoverRow === index && (
+                            <React.Fragment>
+                              <Tooltip
+                                title={
+                                  this.props.translate(
+                                    "addWords.deleteRow"
+                                  ) as string
+                                }
+                                placement="top"
+                              >
+                                <IconButton
+                                  size="small"
+                                  onClick={() => this.removeWord(index)}
+                                >
+                                  <Delete />
+                                </IconButton>
+                              </Tooltip>
+                            </React.Fragment>
+                          )}
+                        </Grid>
                       </Grid>
                     </Grid>
-                  </Grid>
+                    {this.state.showDuplicate === index && row.dupId && (
+                      <Grid
+                        item
+                        xs={12}
+                        key={index}
+                        onMouseEnter={() => this.setState({ hoverRow: index })}
+                        onMouseLeave={() =>
+                          this.setState({ hoverRow: undefined })
+                        }
+                      >
+                        <Grid container>
+                          <Grid
+                            item
+                            xs={5}
+                            style={{
+                              paddingLeft: theme.spacing(2),
+                              paddingRight: theme.spacing(2)
+                            }}
+                          >
+                            <Paper style={{ padding: "6px 3px 7px" }}>
+                              <Typography variant="body1">
+                                {"Duplicate: " +
+                                  this.getWord(row.dupId).vernacular}
+                              </Typography>
+                            </Paper>
+                          </Grid>
+                          <Grid
+                            item
+                            xs={5}
+                            style={{
+                              paddingLeft: theme.spacing(2),
+                              paddingRight: theme.spacing(2)
+                            }}
+                          >
+                            <Paper
+                              style={{ padding: "6px 3px 7px" }}
+                              onClick={() => this.mergeRow(index)}
+                            >
+                              <Typography variant="body1">
+                                {this.getWord(row.dupId).senses.map(
+                                  sense => sense.glosses[0].def
+                                )}
+                              </Typography>
+                            </Paper>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    )}
+                  </React.Fragment>
                 );
               })}
 
@@ -400,9 +499,8 @@ export default class AddWords extends React.Component<
                         onChange={e => {
                           this.updateField(e, "newVern", () =>
                             this.setState({
-                              newVernInFrontier: this.vernInFrontier(
-                                this.state.newVern
-                              )[0]
+                              newVernInFrontier:
+                                this.vernInFrontier(this.state.newVern) !== ""
                             })
                           );
                         }}

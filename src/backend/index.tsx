@@ -39,9 +39,10 @@ export async function mergeWords(
   children: MergeWord[]
 ): Promise<string> {
   parent.id = "";
-  let childrenWords = children.map(child => {
-    return { SrcWordID: child.wordID, SenseStates: child.senses };
-  });
+  let childrenWords = children.map(child => ({
+    SrcWordID: child.wordID,
+    SenseStates: child.senses
+  }));
   let merge = {
     Parent: parent,
     ChildrenWords: childrenWords,
