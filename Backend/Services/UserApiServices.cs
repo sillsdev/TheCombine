@@ -50,7 +50,7 @@ namespace BackendFramework.Services
                     }),
 
                     //This line here will cause serious debugging problems if not kept in mind
-                    Expires = DateTime.UtcNow.AddYears(30),
+                    Expires = DateTime.UtcNow.AddMinutes(30),
 
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
