@@ -15,7 +15,6 @@ namespace Backend.Tests
         private IWordRepository _repo;
         private IWordService _wordService;
         private WordController _wordController;
-
         private IProjectService _projectService;
         private string _projId;
 
@@ -24,15 +23,15 @@ namespace Backend.Tests
         {
             _repo = new WordRepositoryMock();
             _wordService = new WordService(_repo);
-            _wordController = new WordController(_repo, _wordService);
             _projectService = new ProjectServiceMock();
+            _projectService = new ProjectServiceMock();
+            _wordController = new WordController(_repo, _wordService, _projectService);
             _projId = _projectService.Create(new Project()).Result.Id;
         }
 
         Word RandomWord()
         {
             Word word = new Word();
-            Random num = new Random();
             word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense()};
 
             foreach (Sense sense in word.Senses)
@@ -104,6 +103,21 @@ namespace Backend.Tests
 
             Assert.AreEqual(word, _repo.GetAllWords(_projId).Result[0]);
             Assert.AreEqual(word, _repo.GetFrontier(_projId).Result[0]);
+
+            Word oldDuplicate = RandomWord();
+            Word newDuplicate = oldDuplicate.Clone();
+
+            _ = _wordController.Post(_projId, oldDuplicate).Result;
+            var result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            Assert.AreEqual(result, "Duplicate");
+
+            newDuplicate.Senses.RemoveAt(2);
+            result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            Assert.AreEqual(result, "Duplicate");
+
+            newDuplicate.Senses = new List<Sense>();
+            result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            Assert.AreNotEqual(result, "Duplicate");
         }
 
         [Test]

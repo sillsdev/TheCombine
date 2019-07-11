@@ -23,10 +23,9 @@ namespace Backend.Tests
         {
             _userEditRepo = new UserEditRepositoryMock();
             _userEditService = new UserEditService(_userEditRepo);
-            _userEditController = new UserEditController(_userEditRepo, _userEditService);
-
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
+            _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService);
         }
 
         UserEdit RandomUserEdit()
@@ -138,7 +137,7 @@ namespace Backend.Tests
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(1));
 
-            _ = _userEditController.Delete(origUserEdit.Id).Result;
+            _ = _userEditController.Delete(_projId, origUserEdit.Id).Result;
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(0));
         }
