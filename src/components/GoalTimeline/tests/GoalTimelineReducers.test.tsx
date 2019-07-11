@@ -10,306 +10,270 @@ import { ViewFinal } from "../../../goals/ViewFinal/ViewFinal";
 import { SpellCheckGloss } from "../../../goals/SpellCheckGloss/SpellCheckGloss";
 import { CreateStrWordInv } from "../../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateChars } from "../../../goals/ValidateChars/ValidateChars";
-import { State, Word } from "../../../types/word";
+import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 
-export const wordMock: Word = {
-  id: "",
-  vernacular: "",
-  senses: [],
-  audio: "",
-  created: "",
-  modified: "",
-  history: [""],
-  partOfSpeech: "",
-  editedBy: [""],
-  accessability: State.active,
-  otherField: "",
-  plural: ""
-};
+describe("Test GoalsReducers", () => {
+  it("Should return the default state", () => {
+    expect(goalsReducer(undefined, MockActionGoalArrayInstance)).toEqual(
+      defaultState
+    );
+  });
 
-export const wordsArrayMock: Word[] = [
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock
-];
+  it("Should return the default state", () => {
+    const state: GoalsState = {
+      historyState: {
+        history: [...defaultState.historyState.history]
+      },
+      allPossibleGoals: [...defaultState.allPossibleGoals],
+      suggestionsState: {
+        suggestions: [...defaultState.suggestionsState.suggestions]
+      }
+    };
 
-export const goalDataMock: MergeDupData = {
-  plannedWords: [
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock
-  ]
-};
+    expect(goalsReducer(state, MockActionGoalArrayInstance)).toEqual(
+      defaultState
+    );
+  });
 
-it("Should return the default state", () => {
-  expect(goalsReducer(undefined, MockActionGoalArrayInstance)).toEqual(
-    defaultState
-  );
-});
+  it("Should add a goal to history and remove it from suggestions", () => {
+    const goal: Goal = new CreateCharInv();
+    const suggestionsArray: Goal[] = [goal];
 
-it("Should return the default state", () => {
-  const state: GoalsState = {
-    historyState: {
-      history: [...defaultState.historyState.history]
-    },
-    allPossibleGoals: [...defaultState.allPossibleGoals],
-    suggestionsState: {
-      suggestions: [...defaultState.suggestionsState.suggestions]
-    }
-  };
+    const state: GoalsState = {
+      historyState: {
+        history: []
+      },
+      allPossibleGoals: [],
+      suggestionsState: {
+        suggestions: suggestionsArray
+      }
+    };
 
-  expect(goalsReducer(state, MockActionGoalArrayInstance)).toEqual(
-    defaultState
-  );
-});
+    const addGoalAction: actions.AddGoalToHistoryAction = {
+      type: actions.ADD_GOAL_TO_HISTORY,
+      payload: [goal]
+    };
+    const newState: GoalsState = {
+      historyState: {
+        history: suggestionsArray
+      },
+      allPossibleGoals: [],
+      suggestionsState: {
+        suggestions: []
+      }
+    };
+    expect(goalsReducer(state, addGoalAction)).toEqual(newState);
+  });
 
-it("Should add a goal to history and remove it from suggestions", () => {
-  const goal: Goal = new CreateCharInv();
-  const suggestionsArray: Goal[] = [goal];
+  it("Should add a goal to history but not remove any goals from non-existent suggestions", () => {
+    const goal: Goal = new CreateCharInv();
 
-  const state: GoalsState = {
-    historyState: {
-      history: []
-    },
-    allPossibleGoals: [],
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
+    const state: GoalsState = {
+      historyState: {
+        history: []
+      },
+      allPossibleGoals: [],
+      suggestionsState: {
+        suggestions: []
+      }
+    };
 
-  const addGoalAction: actions.AddGoalToHistoryAction = {
-    type: actions.ADD_GOAL_TO_HISTORY,
-    payload: [goal]
-  };
-  const newState: GoalsState = {
-    historyState: {
-      history: suggestionsArray
-    },
-    allPossibleGoals: [],
-    suggestionsState: {
-      suggestions: []
-    }
-  };
-  expect(goalsReducer(state, addGoalAction)).toEqual(newState);
-});
+    const addGoalAction: actions.AddGoalToHistoryAction = {
+      type: actions.ADD_GOAL_TO_HISTORY,
+      payload: [goal]
+    };
+    const newState: GoalsState = {
+      historyState: {
+        history: [goal]
+      },
+      allPossibleGoals: [],
+      suggestionsState: {
+        suggestions: []
+      }
+    };
+    expect(goalsReducer(state, addGoalAction)).toEqual(newState);
+  });
 
-it("Should add a goal to history but not remove any goals from non-existent suggestions", () => {
-  const goal: Goal = new CreateCharInv();
+  it("Should add a goal to history but not remove it from suggestions", () => {
+    const goal: Goal = new CreateCharInv();
+    const suggestionsArray: Goal[] = [goal];
 
-  const state: GoalsState = {
-    historyState: {
-      history: []
-    },
-    allPossibleGoals: [],
-    suggestionsState: {
-      suggestions: []
-    }
-  };
+    const state: GoalsState = {
+      historyState: {
+        history: []
+      },
+      allPossibleGoals: [],
+      suggestionsState: {
+        suggestions: suggestionsArray
+      }
+    };
 
-  const addGoalAction: actions.AddGoalToHistoryAction = {
-    type: actions.ADD_GOAL_TO_HISTORY,
-    payload: [goal]
-  };
-  const newState: GoalsState = {
-    historyState: {
-      history: [goal]
-    },
-    allPossibleGoals: [],
-    suggestionsState: {
-      suggestions: []
-    }
-  };
-  expect(goalsReducer(state, addGoalAction)).toEqual(newState);
-});
+    const chosenGoal: Goal = new HandleFlags();
 
-it("Should add a goal to history but not remove it from suggestions", () => {
-  const goal: Goal = new CreateCharInv();
-  const suggestionsArray: Goal[] = [goal];
+    const addGoalAction: actions.AddGoalToHistoryAction = {
+      type: actions.ADD_GOAL_TO_HISTORY,
+      payload: [chosenGoal]
+    };
+    const newState: GoalsState = {
+      historyState: {
+        history: [chosenGoal]
+      },
+      allPossibleGoals: [],
+      suggestionsState: {
+        suggestions: suggestionsArray
+      }
+    };
+    expect(goalsReducer(state, addGoalAction)).toEqual(newState);
+  });
 
-  const state: GoalsState = {
-    historyState: {
-      history: []
-    },
-    allPossibleGoals: [],
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
+  it("Should set the goal history to the payload and leave everything else unchanged", () => {
+    const goal: Goal = new CreateCharInv();
+    const goal2: Goal = new MergeDups();
+    const goal3: Goal = new ViewFinal();
+    const goal4: Goal = new SpellCheckGloss();
+    const goal5: Goal = new CreateStrWordInv();
+    const historyArray: Goal[] = [goal, goal2];
+    const allPossibleGoalsArray: Goal[] = [goal3];
+    const suggestionsArray: Goal[] = [goal4, goal5];
 
-  const chosenGoal: Goal = new HandleFlags();
+    const state: GoalsState = {
+      historyState: {
+        history: historyArray
+      },
+      allPossibleGoals: allPossibleGoalsArray,
+      suggestionsState: {
+        suggestions: suggestionsArray
+      }
+    };
 
-  const addGoalAction: actions.AddGoalToHistoryAction = {
-    type: actions.ADD_GOAL_TO_HISTORY,
-    payload: [chosenGoal]
-  };
-  const newState: GoalsState = {
-    historyState: {
-      history: [chosenGoal]
-    },
-    allPossibleGoals: [],
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
-  expect(goalsReducer(state, addGoalAction)).toEqual(newState);
-});
+    const goal6: Goal = new HandleFlags();
+    const goal7: Goal = new ValidateChars();
 
-it("Should set the goal history to the payload and leave everything else unchanged", () => {
-  const goal: Goal = new CreateCharInv();
-  const goal2: Goal = new MergeDups();
-  const goal3: Goal = new ViewFinal();
-  const goal4: Goal = new SpellCheckGloss();
-  const goal5: Goal = new CreateStrWordInv();
-  const historyArray: Goal[] = [goal, goal2];
-  const allPossibleGoalsArray: Goal[] = [goal3];
-  const suggestionsArray: Goal[] = [goal4, goal5];
+    const loadUserEditsAction: actions.LoadUserEditsAction = {
+      type: actions.LOAD_USER_EDITS,
+      payload: [goal6, goal7]
+    };
 
-  const state: GoalsState = {
-    historyState: {
-      history: historyArray
-    },
-    allPossibleGoals: allPossibleGoalsArray,
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
+    const newState: GoalsState = {
+      historyState: {
+        history: [goal6, goal7]
+      },
+      allPossibleGoals: allPossibleGoalsArray,
+      suggestionsState: {
+        suggestions: suggestionsArray
+      }
+    };
 
-  const goal6: Goal = new HandleFlags();
-  const goal7: Goal = new ValidateChars();
+    expect(goalsReducer(state, loadUserEditsAction)).toEqual(newState);
+  });
 
-  const loadUserEditsAction: actions.LoadUserEditsAction = {
-    type: actions.LOAD_USER_EDITS,
-    payload: [goal6, goal7]
-  };
+  it("Should update a goal when navigating to the next step", () => {
+    const goal: Goal = new CreateCharInv();
+    const goalToEdit: Goal = new MergeDups();
+    goalToEdit.data = goalDataMock;
+    const goal3: Goal = new ViewFinal();
+    const goal4: Goal = new SpellCheckGloss();
+    const goal5: Goal = new CreateStrWordInv();
+    const historyArray: Goal[] = [goal, goalToEdit];
+    const allPossibleGoalsArray: Goal[] = [goal3];
+    const suggestionsArray: Goal[] = [goal4, goal5];
 
-  const newState: GoalsState = {
-    historyState: {
-      history: [goal6, goal7]
-    },
-    allPossibleGoals: allPossibleGoalsArray,
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
+    const state: GoalsState = {
+      historyState: {
+        history: historyArray
+      },
+      allPossibleGoals: allPossibleGoalsArray,
+      suggestionsState: {
+        suggestions: suggestionsArray
+      }
+    };
 
-  expect(goalsReducer(state, loadUserEditsAction)).toEqual(newState);
-});
+    const nextStepAction: actions.NextStep = {
+      type: actions.NEXT_STEP,
+      payload: []
+    };
 
-it("Should update a goal when navigating to the next step", () => {
-  const goal: Goal = new CreateCharInv();
-  const goalToEdit: Goal = new MergeDups();
-  goalToEdit.data = goalDataMock;
-  const goal3: Goal = new ViewFinal();
-  const goal4: Goal = new SpellCheckGloss();
-  const goal5: Goal = new CreateStrWordInv();
-  const historyArray: Goal[] = [goal, goalToEdit];
-  const allPossibleGoalsArray: Goal[] = [goal3];
-  const suggestionsArray: Goal[] = [goal4, goal5];
+    const updatedGoalToEdit: Goal = new MergeDups();
+    updatedGoalToEdit.hash = goalToEdit.hash;
+    updatedGoalToEdit.data = goalDataMock;
+    updatedGoalToEdit.steps[updatedGoalToEdit.currentStep] = {
+      words: (updatedGoalToEdit.data as MergeDupData).plannedWords[
+        updatedGoalToEdit.currentStep
+      ]
+    };
+    updatedGoalToEdit.currentStep = updatedGoalToEdit.currentStep + 1;
+    const updatedHistoryArray: Goal[] = [goal, updatedGoalToEdit];
 
-  const state: GoalsState = {
-    historyState: {
-      history: historyArray
-    },
-    allPossibleGoals: allPossibleGoalsArray,
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
+    const newState: GoalsState = {
+      historyState: {
+        history: updatedHistoryArray
+      },
+      allPossibleGoals: allPossibleGoalsArray,
+      suggestionsState: {
+        suggestions: suggestionsArray
+      }
+    };
 
-  const nextStepAction: actions.NextStep = {
-    type: actions.NEXT_STEP,
-    payload: []
-  };
+    const actualNewState: GoalsState = goalsReducer(state, nextStepAction);
 
-  const updatedGoalToEdit: Goal = new MergeDups();
-  updatedGoalToEdit.data = goalDataMock;
-  updatedGoalToEdit.steps[updatedGoalToEdit.currentStep] = {
-    words: (updatedGoalToEdit.data as MergeDupData).plannedWords[
-      updatedGoalToEdit.currentStep
-    ]
-  };
-  updatedGoalToEdit.currentStep = updatedGoalToEdit.currentStep + 1;
-  const updatedHistoryArray: Goal[] = [goal, updatedGoalToEdit];
+    expect(actualNewState).toEqual(newState);
+    expect(goalToEdit).toEqual(updatedGoalToEdit);
+  });
 
-  const newState: GoalsState = {
-    historyState: {
-      history: updatedHistoryArray
-    },
-    allPossibleGoals: allPossibleGoalsArray,
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
+  it("Should replace the most recent goal with an updated version", () => {
+    const goal: Goal = new CreateCharInv();
+    const goal2: Goal = new ViewFinal();
+    const goal3: Goal = new ViewFinal();
+    const goal4: Goal = new SpellCheckGloss();
+    const goal5: Goal = new CreateStrWordInv();
+    const historyArray: Goal[] = [goal, goal2];
+    const allPossibleGoalsArray: Goal[] = [goal3];
+    const suggestionsArray: Goal[] = [goal4, goal5];
 
-  const actualNewState: GoalsState = goalsReducer(state, nextStepAction);
+    const state: GoalsState = {
+      historyState: {
+        history: historyArray
+      },
+      allPossibleGoals: allPossibleGoalsArray,
+      suggestionsState: {
+        suggestions: suggestionsArray
+      }
+    };
 
-  expect(actualNewState).toEqual(newState);
-  expect(goalToEdit).toEqual(updatedGoalToEdit);
-});
+    const updatedGoal: Goal = goal2;
+    updatedGoal.currentStep++;
 
-it("Should replace the most recent goal with an updated version", () => {
-  const goal: Goal = new CreateCharInv();
-  const goal2: Goal = new ViewFinal();
-  const goal3: Goal = new ViewFinal();
-  const goal4: Goal = new SpellCheckGloss();
-  const goal5: Goal = new CreateStrWordInv();
-  const historyArray: Goal[] = [goal, goal2];
-  const allPossibleGoalsArray: Goal[] = [goal3];
-  const suggestionsArray: Goal[] = [goal4, goal5];
+    const updatedHistory: Goal[] = [goal, updatedGoal];
 
-  const state: GoalsState = {
-    historyState: {
-      history: historyArray
-    },
-    allPossibleGoals: allPossibleGoalsArray,
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
+    const updateGoalAction: actions.UpdateGoal = {
+      type: actions.UPDATE_GOAL,
+      payload: [goal2]
+    };
 
-  const updatedGoal: Goal = goal2;
-  updatedGoal.currentStep++;
+    const newState: GoalsState = {
+      historyState: {
+        history: updatedHistory
+      },
+      allPossibleGoals: allPossibleGoalsArray,
+      suggestionsState: {
+        suggestions: suggestionsArray
+      }
+    };
 
-  const updatedHistory: Goal[] = [goal, updatedGoal];
+    expect(goalsReducer(state, updateGoalAction)).toEqual(newState);
+  });
 
-  const updateGoalAction: actions.UpdateGoal = {
-    type: actions.UPDATE_GOAL,
-    payload: [goal2]
-  };
+  it("Should update the step data of a goal", () => {
+    const goal: MergeDups = new MergeDups();
+    goal.data = goalDataMock;
+    expect(goal.data).toEqual(goalDataMock);
+    expect(goal.steps).toEqual([]);
+    expect(goal.currentStep).toEqual(0);
 
-  const newState: GoalsState = {
-    historyState: {
-      history: updatedHistory
-    },
-    allPossibleGoals: allPossibleGoalsArray,
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  };
+    const updatedGoal: MergeDups = updateStepData(goal) as MergeDups;
 
-  expect(goalsReducer(state, updateGoalAction)).toEqual(newState);
-});
-
-it("Should update the step data of a goal", () => {
-  const goal: MergeDups = new MergeDups();
-  goal.data = goalDataMock;
-  expect(goal.data).toEqual(goalDataMock);
-  expect(goal.steps).toEqual([]);
-  expect(goal.currentStep).toEqual(0);
-
-  const updatedGoal: MergeDups = updateStepData(goal) as MergeDups;
-
-  expect(updatedGoal.data).toEqual(goal.data);
-  expect(updatedGoal.steps[0].words).toEqual(goal.data.plannedWords[0]);
-  expect(updatedGoal.currentStep).toEqual(1);
+    expect(updatedGoal.data).toEqual(goal.data);
+    expect(updatedGoal.steps[0].words).toEqual(goal.data.plannedWords[0]);
+    expect(updatedGoal.currentStep).toEqual(1);
+  });
 });
