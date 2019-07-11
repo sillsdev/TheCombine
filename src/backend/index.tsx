@@ -69,6 +69,14 @@ export async function deleteWord(word: Word): Promise<Word> {
     });
 }
 
+export async function deleteWordById(id: string): Promise<string> {
+  return await backendServer
+    .delete(`projects/${projectId}/words/${id}`)
+    .then(resp => {
+      return resp.data;
+    });
+}
+
 export async function getFrontierWords(): Promise<Word[]> {
   return await backendServer
     .get(`projects/${projectId}/words/frontier`)

@@ -166,11 +166,10 @@ export default class AddWords extends React.Component<
   }
 
   /** Removes a word from the backend */
-  removeWord(index: number, callback?: Function) {
-    Backend.deleteWord(this.rowToWord(this.state.rows[index]))
+  removeWord(id: string, callback?: Function) {
+    Backend.deleteWordById(id)
       .catch(err => console.log(err))
       .then(res => {
-        this.removeRow(index);
         if (callback) callback(res);
       });
   }
@@ -255,8 +254,12 @@ export default class AddWords extends React.Component<
       duplicate: false,
       dupId: ""
     };
-    this.removeWord(index);
+    //this.removeWord(index);
     this.updateRow(newRow, index);
+  }
+
+  showDuplicateForRow(rowIndex: number) {
+    this.setState({ showDuplicate: rowIndex });
   }
 
   render() {
@@ -368,9 +371,7 @@ export default class AddWords extends React.Component<
                                   right: 48,
                                   cursor: "pointer"
                                 }}
-                                onClick={() =>
-                                  this.setState({ showDuplicate: index })
-                                }
+                                onClick={() => this.showDuplicateForRow(index)}
                               />
                             </Tooltip>
                           )}
@@ -415,7 +416,11 @@ export default class AddWords extends React.Component<
                               >
                                 <IconButton
                                   size="small"
-                                  onClick={() => this.removeWord(index)}
+                                  onClick={() =>
+                                    this.removeWord(row.id, () =>
+                                      this.removeRow(index)
+                                    )
+                                  }
                                 >
                                   <Delete />
                                 </IconButton>
@@ -425,6 +430,7 @@ export default class AddWords extends React.Component<
                         </Grid>
                       </Grid>
                     </Grid>
+                    {/* This is where it shows the duplicate if the red dot is clicked */}
                     {this.state.showDuplicate === index && row.dupId && (
                       <Grid
                         item
