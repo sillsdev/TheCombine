@@ -43,15 +43,7 @@ namespace BackendFramework
                     .AllowAnyOrigin());
             });
 
-            // configure strongly typed settings objects
-            ConfigurationBuilder newBuilder = new ConfigurationBuilder();
-            newBuilder.AddEnvironmentVariables();
-
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
             // configure jwt authentication
-            var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY"));
             services.AddAuthentication(x =>
             {
