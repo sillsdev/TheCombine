@@ -20,8 +20,9 @@
     "BackendFramework": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "v1",
+      "launchUrl": "v1/",
       "environmentVariables": {
+        "Key": "Value",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_JWT_SECRET_KEY": "Thisisasecretkey123"
       },
