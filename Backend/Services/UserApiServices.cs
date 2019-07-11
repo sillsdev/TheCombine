@@ -122,7 +122,6 @@ namespace BackendFramework.Services
                 await _userDatabase.Users.InsertOneAsync(user);
 
                 return user;
-                
             }
             catch (Exception)
             {
