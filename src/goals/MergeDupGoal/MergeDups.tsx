@@ -1,4 +1,10 @@
-import { Goal, Tools, GoalOption, GoalType } from "../../types/goals";
+import {
+  Goal,
+  Tools,
+  GoalOption,
+  GoalType,
+  generateGuid
+} from "../../types/goals";
 import { User } from "../../types/user";
 import { Word } from "../../types/word";
 
@@ -39,6 +45,6 @@ export class MergeDups implements Goal {
     this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;
-    this.hash = Math.floor(Math.random() * 9999999).toString();
+    this.hash = generateGuid();
   }
 }

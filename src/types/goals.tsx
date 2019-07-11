@@ -83,3 +83,7 @@ export enum GoalType {
   ViewFind,
   HandleFlags
 }
+
+export function generateGuid(): string {
+  return Math.floor(Math.random() * 9999999).toString();
+}

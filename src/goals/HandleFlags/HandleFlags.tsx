@@ -4,7 +4,8 @@ import {
   Tools,
   GoalOption,
   GoalType,
-  GoalStep
+  GoalStep,
+  generateGuid
 } from "../../types/goals";
 import { User } from "../../types/user";
 
@@ -32,6 +33,6 @@ export class HandleFlags implements Goal {
     this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;
-    this.hash = Math.floor(Math.random() * 9999999).toString();
+    this.hash = generateGuid();
   }
 }
