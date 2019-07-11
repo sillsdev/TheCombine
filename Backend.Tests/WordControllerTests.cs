@@ -15,7 +15,6 @@ namespace Backend.Tests
         private IWordRepository _repo;
         private IWordService _wordService;
         private WordController _wordController;
-
         private IProjectService _projectService;
         private string _projId;
 
@@ -24,15 +23,15 @@ namespace Backend.Tests
         {
             _repo = new WordRepositoryMock();
             _wordService = new WordService(_repo);
-            _wordController = new WordController(_repo, _wordService);
             _projectService = new ProjectServiceMock();
+            _projectService = new ProjectServiceMock();
+            _wordController = new WordController(_repo, _wordService, _projectService);
             _projId = _projectService.Create(new Project()).Result.Id;
         }
 
         Word RandomWord()
         {
             Word word = new Word();
-            Random num = new Random();
             word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense()};
 
             foreach (Sense sense in word.Senses)
@@ -61,7 +60,7 @@ namespace Backend.Tests
             word.PartOfSpeech = Util.randString();
             word.Plural = Util.randString();
             word.History = new List<string>();
-            word.Id = null;
+            word.ProjectId = _projId;
 
             return word;
         }
@@ -104,6 +103,21 @@ namespace Backend.Tests
 
             Assert.AreEqual(word, _repo.GetAllWords(_projId).Result[0]);
             Assert.AreEqual(word, _repo.GetFrontier(_projId).Result[0]);
+
+            Word oldDuplicate = RandomWord();
+            Word newDuplicate = oldDuplicate.Clone();
+
+            _ = _wordController.Post(_projId, oldDuplicate).Result;
+            var result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            Assert.AreEqual(result, "Duplicate");
+
+            newDuplicate.Senses.RemoveAt(2);
+            result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            Assert.AreEqual(result, "Duplicate");
+
+            newDuplicate.Senses = new List<Sense>();
+            result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            Assert.AreNotEqual(result, "Duplicate");
         }
 
         [Test]
@@ -157,64 +171,41 @@ namespace Backend.Tests
             Assert.IsTrue(wordRepo[0].History.Count == 1);
         }
 
-        private state RandState()
-        {
-            Random num = new Random();
-            int numberOfStates = 4;
-            return (state)(num.Next() % numberOfStates);
-        }
-
         [Test]
         public void MergeWords()
         {
-            MergeWords parentChildMergeObject = new MergeWords();
-            parentChildMergeObject.ChildrenWords = new List<MergeSourceWord>();
-            
-
             //the parent word is inherently correct as it is calculated by the frontend as the desired result of the merge
+            MergeWords parentChildMergeObject = new MergeWords();
             parentChildMergeObject.Parent = RandomWord();
-            List<Word> childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
             parentChildMergeObject.Time = Util.randString();
+            parentChildMergeObject.ChildrenWords = new List<MergeSourceWord>();
 
-            //set the child info 
-            int childCount = childWords.Count();
+            //set the child info
+            List<Word> childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
             foreach (Word child in childWords)
             {
-                //generate state list of children
-                List<state> childStatesLst = new List<state> { RandState(), RandState(), RandState() };
-
                 //generate mergeSourceWord with new child ID and desired child state list 
                 MergeSourceWord newGenChild = new MergeSourceWord();
                 newGenChild.SrcWordID = _repo.Add(child).Result.Id;
-                newGenChild.SenseStates = childStatesLst;
+                newGenChild.SenseStates = new List<state> { state.duplicate, state.sense, state.separate };
                 parentChildMergeObject.ChildrenWords.Add(newGenChild);
             }
 
-            var newParentId = _wordService.Merge(_projId, parentChildMergeObject).Result;
+            var newWordList = _wordService.Merge(_projId, parentChildMergeObject).Result;
 
-            //2 * child number + 1, there are duplicate child nodes and one extra for the parent
-            Assert.AreEqual(_repo.GetAllWords(_projId).Result.Count, 2 * childCount + 1);
-            //make sure the parent is in the db
-            Assert.AreEqual(parentChildMergeObject.Parent, _repo.GetWord(_projId, parentChildMergeObject.Parent.Id).Result);
+            //check for parent is in the db
+            var dbParent = newWordList.FirstOrDefault();
+            Assert.IsNotNull(dbParent);
+            Assert.AreEqual(dbParent.Senses.Count, 3);
+            Assert.AreEqual(dbParent.History.Count, 3);
 
-            //assert the children are in the database
-            var dbWords = _repo.GetAllWords(_projId).Result;
-            dbWords.RemoveAll(StartingChildren);
+            //check the separarte words were made
+            Assert.AreEqual(newWordList.Count, 4);
 
-            // 4 = the number of elements in the database - the childCOunt
-            Assert.AreEqual(4, dbWords.Count);
-            
-            for(int childIndex = 0; childIndex < childCount; ++childIndex)
+            foreach (var word in newWordList)
             {
-                //check for children in db
-                Assert.Contains(_repo.GetWord(_projId, parentChildMergeObject.ChildrenWords[childIndex].SrcWordID).Result, _repo.GetAllWords(_projId).Result);
+                Assert.Contains(_repo.GetWord(_projId, word.Id).Result, _repo.GetAllWords(_projId).Result);
             }
-        }
-
-        private static bool StartingChildren(Word word)
-        {
-            //in this test the histories of the original child words are going to have no history
-            return word.History.Count <= 0;
         }
     }
 }

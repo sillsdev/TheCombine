@@ -64,6 +64,7 @@ describe("Tests AddWords", () => {
     mockedAxios.post.mockImplementationOnce((url, word: Word) => {
       return Promise.resolve({ data: "123" });
     });
+    handle.instance.allWords = [];
     handle.instance.submit(undefined, () => {
       expect(handle.instance.state.rows).toEqual([
         {
@@ -123,7 +124,8 @@ describe("Tests AddWords", () => {
       ]
     });
     mockedAxios.delete.mockResolvedValue(1);
-    handle.instance.removeWord(1, () => {
+    handle.instance.removeWord(456, () => {
+      handle.instance.removeRow(1);
       expect(handle.instance.state.rows).toEqual([
         {
           vernacular: "testVern1",

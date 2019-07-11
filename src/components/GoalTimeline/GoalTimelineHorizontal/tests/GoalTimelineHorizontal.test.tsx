@@ -29,6 +29,7 @@ HTMLDivElement.prototype.scrollIntoView = jest.fn();
 // Constants
 const LOAD_EDITS = jest.fn();
 const CHOOSE_GOAL = jest.fn();
+const LOAD_HISTORY = jest.fn();
 const goals: Goal[] = [...defaultState.allPossibleGoals];
 
 // Handles
@@ -110,8 +111,8 @@ function createTimeMaster(history?: Goal[], suggestions?: Goal[]): void {
 function createTimeline(history?: Goal[], suggestions?: Goal[]): ReactElement {
   return (
     <GoalTimelineHorizontal
-      loadUserEdits={LOAD_EDITS}
       chooseGoal={CHOOSE_GOAL}
+      loadHistory={LOAD_HISTORY}
       allPossibleGoals={goals}
       history={history ? history : goals.slice(0, 3)}
       suggestions={suggestions ? suggestions : goals.slice(3)}

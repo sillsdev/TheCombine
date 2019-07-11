@@ -1,7 +1,6 @@
 import { User } from "./user";
-import { MergeDupData } from "../goals/MergeDupGoal";
+import { MergeStepData, MergeDupData } from "../goals/MergeDupGoal/MergeDups";
 import { MergeDupProps } from "../goals/MergeDupGoal/MergeDups";
-import { MergeDupStepProps } from "../goals/MergeDupGoal/MergeDupStep/MergeDupStepComponent";
 
 export enum GoalOption {
   Complete,
@@ -18,8 +17,11 @@ export enum Tools {
 
 export type GoalProps = MergeDupProps;
 
-export type GoalData = MergeDupData; // | OtherTypes
-export type GoalStep = MergeDupStepProps; // | OtherTypes
+export type GoalData = MergeDupData | {}; // | OtherTypes
+
+export type MockGoalStepType = {};
+
+export type GoalStep = MergeStepData; // | OtherTypes
 
 export interface GoalViewState {
   state: GoalsState;
@@ -52,12 +54,13 @@ export interface GoalSelectorState {
 }
 
 export interface Goal {
-  id: string;
+  goalType: GoalType;
   name: string;
   user: User;
 
-  steps: JSX.Element[];
-  curNdx: number;
+  steps: GoalStep[];
+  numSteps: number;
+  currentStep: number;
   data: GoalData; // The data required to load/reload this exact goal
 
   tool: Tools;

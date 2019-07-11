@@ -8,11 +8,12 @@ import {
   Divider,
   Button,
   IconButton,
-  Tooltip
+  Tooltip,
+  Chip
 } from "@material-ui/core";
 import theme from "../../types/theme";
 import { Translate, TranslateFunction } from "react-localize-redux";
-import { Word, State, Gloss } from "../../types/word";
+import { Word, State } from "../../types/word";
 import { Delete } from "@material-ui/icons";
 import * as Backend from "../../backend";
 import DuplicateFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
@@ -219,7 +220,7 @@ export default class AddWords extends React.Component<
     for (let def of defs) {
       let gloss = {
         language: "en",
-        def
+        def: def.trim()
       };
       word.senses[0].glosses.push(gloss);
     }
@@ -270,6 +271,18 @@ export default class AddWords extends React.Component<
   }
 
   showDuplicateForRow(rowIndex: number) {
+    let row = this.state.rows[rowIndex];
+    let dupWord = this.getWord(row.dupId);
+    row.dupVernacular = dupWord.vernacular;
+    row.dupGlosses = [];
+    for (let sense of dupWord.senses) {
+      let glosses = [];
+      for (let gloss of sense.glosses) {
+        glosses.push(gloss.def);
+      }
+      row.dupGlosses.push(glosses.join(", "));
+    }
+    this.updateRow(row, rowIndex);
     this.setState({ showDuplicate: rowIndex });
   }
 
@@ -451,6 +464,7 @@ export default class AddWords extends React.Component<
                         onMouseLeave={() =>
                           this.setState({ hoverRow: undefined })
                         }
+                        style={{ background: "whitesmoke" }}
                       >
                         <Grid container>
                           <Grid
@@ -461,12 +475,9 @@ export default class AddWords extends React.Component<
                               paddingRight: theme.spacing(2)
                             }}
                           >
-                            <Paper style={{ padding: "6px 3px 7px" }}>
-                              <Typography variant="body1">
-                                {"Duplicate: " +
-                                  this.getWord(row.dupId).vernacular}
-                              </Typography>
-                            </Paper>
+                            <Typography variant="body1">
+                              {"Duplicate in database: " + row.dupVernacular}
+                            </Typography>
                           </Grid>
                           <Grid
                             item
@@ -476,16 +487,19 @@ export default class AddWords extends React.Component<
                               paddingRight: theme.spacing(2)
                             }}
                           >
-                            <Paper
-                              style={{ padding: "6px 3px 7px" }}
-                              onClick={() => this.mergeRow(index)}
-                            >
-                              <Typography variant="body1">
-                                {this.getWord(row.dupId).senses.map(
-                                  sense => sense.glosses[0].def
-                                )}
-                              </Typography>
-                            </Paper>
+                            <Typography variant="body1">
+                              {"Glosses: "}
+                            </Typography>
+                            {row.dupGlosses &&
+                              row.dupGlosses.map((gloss, index) => (
+                                <Chip
+                                  label={gloss}
+                                  onClick={() => console.log("Edit gloss")}
+                                  style={{
+                                    margin: theme.spacing(1)
+                                  }}
+                                />
+                              ))}
                           </Grid>
                         </Grid>
                       </Grid>

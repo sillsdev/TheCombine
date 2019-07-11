@@ -1,5 +1,4 @@
 import { Dispatch } from "react";
-//import axios from "./tests/__mocks__/axios";
 import history from "../../history";
 import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
@@ -62,7 +61,7 @@ export function asyncLogin(user: string, password: string) {
     //attempt to login with server
     await backend
       .authenticateUser(user, password)
-      .then((res: any) => {
+      .then((res: string) => {
         localStorage.setItem("user", res); //Store tokens
         dispatch(loginSuccess(user));
         history.push("/");
@@ -113,8 +112,7 @@ export function asyncRegister(name: string, user: string, password: string) {
   ) => {
     dispatch(registerAttempt(user));
     // Create new user
-    let newUser = new User("", user, password);
-    newUser.name = name;
+    let newUser = new User(name, user, password);
     await backend
       .addUser(newUser)
       .then(res => {

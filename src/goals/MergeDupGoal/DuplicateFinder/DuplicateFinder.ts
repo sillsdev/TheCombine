@@ -236,6 +236,7 @@ export default class DupFinder {
     let a: string[] = aInput.split("");
     let b: string[] = bInput.split("");
 
+    if (a.length <= 0 || b.length <= 0) return 0;
     for (let i = 0; i < a.length; i++) {
       matrix[i] = [];
       for (let j = 0; j < b.length; j++) {
