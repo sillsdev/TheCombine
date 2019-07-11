@@ -40,7 +40,8 @@ namespace BackendFramework.Services
 
                 // authentication successful so generate jwt token
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_jwtsettings.Secret);
+                var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
+                var key = Encoding.ASCII.GetBytes(secretKey);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
@@ -106,16 +107,20 @@ namespace BackendFramework.Services
             {
                 //check if collection is not empty
                 var users = await GetAllUsers();
-                
-                //ckeck to see if username is taken
-                if (_userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
+
+                if (users.Count != 0)
                 {
-                    throw new InvalidCastException();
+
+                    //check to see if username is taken
+                    if (_userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
+                    {
+                        throw new InvalidCastException();
+                    }
                 }
 
                 //insert user
                 await _userDatabase.Users.InsertOneAsync(user);
-  
+
                 return user;
             }
             catch (Exception)
