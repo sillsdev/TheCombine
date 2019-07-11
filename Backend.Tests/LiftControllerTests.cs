@@ -4,7 +4,6 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using SIL.Lift.Parsing;
 using System;
 using System.IO;
 using System.Text;
@@ -15,7 +14,6 @@ namespace Backend.Tests
     {
         private IWordRepository _wordrepo;
         private IProjectService _projServ;
-        private ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> _merger;
         private LiftController _liftController;
 
         [SetUp]
@@ -124,7 +122,7 @@ namespace Backend.Tests
 
             //get path to the starting zip
             //This is convoluted because the tests run in netcoreapp2.1 and the folder needed in in the great-grand-parent folder
-            string actualFilename = "SingleEntryLiftWithSound.zip";
+            string actualFilename = "RWC.zip";
             string pathToStartZip = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
             pathToStartZip = Path.Combine(pathToStartZip, "Assets", actualFilename);
 
@@ -133,7 +131,7 @@ namespace Backend.Tests
              */
             //init the project the .zip info is added to 
             var proj = RandomProject();
-            proj.VernacularWritingSystem = Util.randString(3);
+            //proj.VernacularWritingSystem = Util.randString(3);
             _projServ.Create(proj);
 
             //generate api perameter with filestream
@@ -148,6 +146,10 @@ namespace Backend.Tests
                 //this will be removed in the next pull request
                 return;
             }
+
+            var newProj = _projServ.GetProject(proj.Id).Result;
+
+            Assert.IsNotEmpty(newProj.VernacularWritingSystem);
 
             fstream.Close();
 

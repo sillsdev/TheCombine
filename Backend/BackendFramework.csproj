@@ -7,18 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="icu.net" Version="2.6.0-beta0033" />
+    <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.1.4-beta" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="MongoDB.Driver" Version="2.8.1" />
-    <PackageReference Include="SIL.Core" Version="7.0.0-alpha0816" />
-    <PackageReference Include="SIL.Core.Desktop" Version="7.0.0-alpha0816">
+    <PackageReference Include="MongoDB.Driver" Version="2.9.0-beta2" />
+    <PackageReference Include="SIL.Core" Version="7.0.0-alpha0822" />
+    <PackageReference Include="SIL.Core.Desktop" Version="7.0.0-alpha0822">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.DictionaryServices" Version="7.0.0-alpha0816">
+    <PackageReference Include="SIL.DictionaryServices" Version="7.0.0-alpha0822">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.Lift" Version="7.0.0-alpha0816">
+    <PackageReference Include="SIL.Lift" Version="7.0.0-alpha0822">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
+    <PackageReference Include="SIL.WritingSystems" Version="7.0.0-alpha0822" />
   </ItemGroup>
 
 </Project>

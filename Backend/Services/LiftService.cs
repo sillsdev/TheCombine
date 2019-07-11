@@ -7,6 +7,7 @@ using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Lift.Parsing;
 using SIL.Text;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -65,6 +66,28 @@ namespace BackendFramework.Services
         public void SetProject(string id)
         {
             projectId = id;
+        }
+
+        /********************************
+        * Ldml Import Implementation
+        ********************************/
+
+        public void LdmlImport(string filePath, string langTag)
+        {
+            Sldr.Initialize(true);
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
+            var wsrf = new LdmlInFolderWritingSystemFactory(wsr);
+            var wsDef = new WritingSystemDefinition(langTag);
+            wsrf.Create(langTag, out wsDef);
+
+            if (wsDef.CharacterSets.FirstOrDefault() != null)
+            {
+                var newProj = _projService.GetProject(projectId).Result;
+                newProj.CharacterSet = wsDef.CharacterSets.FirstOrDefault().Characters.ToList();
+                _projService.Update(projectId, newProj);
+            }
+
+            Sldr.Cleanup();
         }
 
         /********************************
@@ -146,9 +169,12 @@ namespace BackendFramework.Services
             entry.Pronunciations.Add(lexPhonetic);
             try
             {
-                Helper.Utilities util = new Helper.Utilities();
-                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
-                File.Copy(src, dest, true);
+                if (wordEntry.Audio != "")
+                {
+                    Helper.Utilities util = new Helper.Utilities();
+                    string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
+                    File.Copy(src, dest, true);
+                }
             }
             catch (FileNotFoundException)
             {
@@ -192,14 +218,25 @@ namespace BackendFramework.Services
         public async void FinishEntry(LiftEntry entry)
         {
             Word newWord = new Word();
+            var proj = _projService.GetProject(projectId).Result;
 
             //add vernacular
             if (!entry.CitationForm.IsEmpty) //prefer citation form for vernacular
             {
                 newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
+                if (proj.VernacularWritingSystem == "")
+                {
+                    proj.VernacularWritingSystem = entry.CitationForm.FirstValue.Key;
+                    await _projService.Update(projectId, proj);
+                }
             } else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
             {
                 newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
+                if (proj.VernacularWritingSystem == "")
+                {
+                    proj.VernacularWritingSystem = entry.LexicalForm.FirstValue.Key;
+                    await _projService.Update(projectId, proj);
+                }
             }
             else //this is not a word
             {

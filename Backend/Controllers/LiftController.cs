@@ -19,11 +19,13 @@ namespace BackendFramework.Controllers
     public class LiftController : Controller
     {
         private readonly IWordRepository _wordRepo;
+        private readonly IProjectService _projectService;
         private readonly LiftService _liftService;
 
         public LiftController(IWordRepository repo, IProjectService projServ)
         {
             _wordRepo = repo;
+            _projectService = projServ;
             _liftService = new LiftService(_wordRepo, projServ);
         }
 
@@ -81,7 +83,6 @@ namespace BackendFramework.Controllers
                 }
 
                 var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
-                string extractedLiftName = "";
 
                 //search for the lift file within the list
                 var extractedLiftPath = Array.FindAll(extractedLiftNameArr, file => file.EndsWith(".lift"));
@@ -94,13 +95,15 @@ namespace BackendFramework.Controllers
                     throw new InvalidDataException("No lift files detected");
                 }
 
-                
-
                 try
                 {
                     _liftService.SetProject(projectId);
                     var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_liftService);
-                    return new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
+                    var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
+                    var proj = _projectService.GetProject(projectId).Result;
+                    _liftService.LdmlImport(Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem);
+
+                    return new ObjectResult(resp);
                 }
                 catch (Exception)
                 {
