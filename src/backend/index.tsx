@@ -7,7 +7,9 @@ import { Goal, GoalType } from "../types/goals";
 import { UserEdit } from "../types/userEdit";
 import history from "../history";
 
-const backendServer = axios.create({ baseURL: "https://localhost:5001/v1" });
+const backendServer = axios.create({
+  baseURL: "https://localhost:5001/v1"
+});
 
 backendServer.interceptors.response.use(
   resp => resp,
@@ -20,25 +22,33 @@ backendServer.interceptors.response.use(
 );
 
 export function setProjectID(id: string) {
-  localStorage.projectId = id;
+  localStorage.setItem("projectId", id);
 }
 
 export function getProjectId(): string {
-  return localStorage.projectId;
+  return localStorage.getItem("projectId") || "";
 }
 
 export async function createWord(word: Word): Promise<Word> {
-  let resp = await backendServer.post(`projects/${getProjectId()}/words`, word);
+  let resp = await backendServer.post(
+    `projects/${getProjectId()}/words`,
+    word,
+    { headers: authHeader() }
+  );
   return { ...word, id: resp.data };
 }
 
 export async function getWord(id: string): Promise<Word> {
-  let resp = await backendServer.get(`projects/${getProjectId()}/words/${id}`);
+  let resp = await backendServer.get(`projects/${getProjectId()}/words/${id}`, {
+    headers: authHeader()
+  });
   return resp.data;
 }
 
 export async function getAllWords(): Promise<Word[]> {
-  let resp = await backendServer.get(`projects/${getProjectId()}/words`);
+  let resp = await backendServer.get(`projects/${getProjectId()}/words`, {
+    headers: authHeader()
+  });
   return resp.data;
 }
 
@@ -56,28 +66,35 @@ export async function mergeWords(
     ChildrenWords: childrenWords,
     Time: Date.now().toString()
   };
-  let resp = await backendServer.put(`projects/${getProjectId()}/words`, merge);
+  let resp = await backendServer.put(
+    `projects/${getProjectId()}/words`,
+    merge,
+    { headers: authHeader() }
+  );
   return resp.data;
 }
 
 export async function updateWord(word: Word): Promise<Word> {
   let resp = await backendServer.put(
     `projects/${getProjectId()}/words/${word.id}`,
-    word
+    word,
+    { headers: authHeader() }
   );
   return { ...word, id: resp.data };
 }
 
 export async function deleteWord(word: Word): Promise<Word> {
   let resp = await backendServer.delete(
-    `projects/${getProjectId()}/words/${word.id}`
+    `projects/${getProjectId()}/words/${word.id}`,
+    { headers: authHeader() }
   );
   return { ...word, id: resp.data };
 }
 
 export async function getFrontierWords(): Promise<Word[]> {
   let resp = await backendServer.get(
-    `projects/${getProjectId()}/words/frontier`
+    `projects/${getProjectId()}/words/frontier`,
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -100,17 +117,19 @@ export async function authenticateUser(
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  let resp = await backendServer.get(`users`);
+  let resp = await backendServer.get(`users`, { headers: authHeader() });
   return resp.data;
 }
 
 export async function getUser(id: string): Promise<User> {
-  let resp = await backendServer.get(`users/${id}`);
+  let resp = await backendServer.get(`users/${id}`, { headers: authHeader() });
   return resp.data;
 }
 
 export async function updateUser(user: User): Promise<User> {
-  let resp = await backendServer.put(`users/${user.id}`, user);
+  let resp = await backendServer.put(`users/${user.id}`, user, {
+    headers: authHeader()
+  });
   return { ...user, id: resp.data };
 }
 
@@ -122,17 +141,21 @@ export async function createProject(project: Project): Promise<Project> {
 }
 
 export async function getAllProjects(): Promise<Project[]> {
-  let resp = await backendServer.get(`projects`);
+  let resp = await backendServer.get(`projects`, { headers: authHeader() });
   return resp.data;
 }
 
 export async function getProject(id: string): Promise<Project> {
-  let resp = await backendServer.get(`projects/${id}`);
+  let resp = await backendServer.get(`projects/${id}`, {
+    headers: authHeader()
+  });
   return resp.data;
 }
 
 export async function updateProject(project: Project) {
-  let resp = await backendServer.put(`projects/${project.id}`, project);
+  let resp = await backendServer.put(`projects/${project.id}`, project, {
+    headers: authHeader()
+  });
   return resp.data;
 }
 
@@ -218,7 +241,9 @@ function goalNameToGoalTypeId(goalName: string): string {
 }
 
 export async function createUserEdit(): Promise<string> {
-  let resp = await backendServer.post(`projects/${getProjectId()}/useredits`);
+  let resp = await backendServer.post(`projects/${getProjectId()}/useredits`, {
+    headers: authHeader()
+  });
   return resp.data;
 }
 
@@ -226,11 +251,15 @@ export async function getUserEditById(
   projId: string,
   index: string
 ): Promise<UserEdit> {
-  let resp = await backendServer.get(`projects/${projId}/useredits/${index}`);
+  let resp = await backendServer.get(`projects/${projId}/useredits/${index}`, {
+    headers: authHeader()
+  });
   return resp.data;
 }
 
 export async function getAllUserEdits(): Promise<Goal[]> {
-  let resp = await backendServer.get(`projects/${getProjectId()}/useredits`);
+  let resp = await backendServer.get(`projects/${getProjectId()}/useredits`, {
+    headers: authHeader()
+  });
   return resp.data;
 }
