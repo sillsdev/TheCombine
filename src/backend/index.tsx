@@ -8,19 +8,17 @@ import { UserEdit } from "../types/userEdit";
 
 const backendServer = axios.create({ baseURL: "https://localhost:5001/v1" });
 
-let projectId: string = "";
-
 export function setProjectID(id: string) {
-  projectId = id;
+  localStorage.projectId = id;
 }
 
 export function getProjectId(): string {
-  return projectId;
+  return localStorage.projectId;
 }
 
 export async function createWord(word: Word): Promise<Word> {
   return await backendServer
-    .post(`projects/${projectId}/words`, word)
+    .post(`projects/${getProjectId()}/words`, word)
     .then(resp => {
       return { ...word, id: resp.data };
     });
@@ -28,13 +26,13 @@ export async function createWord(word: Word): Promise<Word> {
 
 export async function getWord(id: string): Promise<Word> {
   return await backendServer
-    .get(`projects/${projectId}/words/${id}`)
+    .get(`projects/${getProjectId()}/words/${id}`)
     .then(resp => resp.data);
 }
 
 export async function getAllWords(): Promise<Word[]> {
   return await backendServer
-    .get(`projects/${projectId}/words`)
+    .get(`projects/${getProjectId()}/words`)
     .then(resp => resp.data);
 }
 
@@ -52,13 +50,13 @@ export async function mergeWords(
     Time: Date.now().toString()
   };
   return await backendServer
-    .put(`projects/${projectId}/words`, merge)
+    .put(`projects/${getProjectId()}/words`, merge)
     .then(resp => resp.data);
 }
 
 export async function updateWord(word: Word): Promise<Word> {
   return await backendServer
-    .put(`projects/${projectId}/words/${word.id}`, word)
+    .put(`projects/${getProjectId()}/words/${word.id}`, word)
     .then(resp => {
       return { ...word, id: resp.data };
     });
@@ -66,7 +64,7 @@ export async function updateWord(word: Word): Promise<Word> {
 
 export async function deleteWord(word: Word): Promise<Word> {
   return await backendServer
-    .delete(`projects/${projectId}/words/${word.id}`)
+    .delete(`projects/${getProjectId()}/words/${word.id}`)
     .then(resp => {
       return { ...word, id: resp.data };
     });
@@ -74,7 +72,7 @@ export async function deleteWord(word: Word): Promise<Word> {
 
 export async function getFrontierWords(): Promise<Word[]> {
   return await backendServer
-    .get(`projects/${projectId}/words/frontier`)
+    .get(`projects/${getProjectId()}/words/frontier`)
     .then(resp => resp.data);
 }
 
@@ -136,7 +134,7 @@ export async function updateProject(project: Project) {
 export async function uploadLift(project: Project, lift: File) {
   let data = new FormData();
   data.append("file", lift);
-  await backendServer.post(`projects/${projectId}/words/upload`, data, {
+  await backendServer.post(`projects/${getProjectId()}/words/upload`, data, {
     headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
   });
 }
@@ -144,7 +142,7 @@ export async function uploadLift(project: Project, lift: File) {
 export async function uploadMp3(project: Project, mp3: File) {
   let data = new FormData();
   data.append("file", mp3);
-  await backendServer.post(`projects/${projectId}/words/upload/audio`, data, {
+  await backendServer.post(`projects/${getProjectId()}/words/upload/audio`, data, {
     headers: { ...authHeader(), "content-type": "application/json" }
   });
 }
@@ -157,7 +155,7 @@ export async function addGoalToUserEdit(
   let stepData: string = goal.steps.toString();
   let userEditTuple = { goalType: goalType, stepData: [stepData] };
   return await backendServer
-    .post(`projects/${projectId}/useredits/${userEditId}`, userEditTuple, {
+    .post(`projects/${getProjectId()}/useredits/${userEditId}`, userEditTuple, {
       headers: { ...authHeader() }
     })
     .then(resp => {
@@ -202,7 +200,7 @@ function goalNameToGoalTypeId(goalName: string): string {
 
 export async function createUserEdit(): Promise<string> {
   return await backendServer
-    .post(`projects/${projectId}/useredits`)
+    .post(`projects/${getProjectId()}/useredits`)
     .then(resp => {
       return resp.data;
     });
@@ -221,7 +219,7 @@ export async function getUserEditById(
 
 export async function getAllUserEdits(): Promise<Goal[]> {
   return await backendServer
-    .get(`projects/${projectId}/useredits`)
+    .get(`projects/${getProjectId()}/useredits`)
     .then(resp => {
       return resp.data;
     });
