@@ -17,23 +17,18 @@ export function getProjectId(): string {
 }
 
 export async function createWord(word: Word): Promise<Word> {
-  return await backendServer
-    .post(`projects/${getProjectId()}/words`, word)
-    .then(resp => {
-      return { ...word, id: resp.data };
-    });
+  let resp = await backendServer.post(`projects/${getProjectId()}/words`, word);
+  return { ...word, id: resp.data };
 }
 
 export async function getWord(id: string): Promise<Word> {
-  return await backendServer
-    .get(`projects/${getProjectId()}/words/${id}`)
-    .then(resp => resp.data);
+  let resp = await backendServer.get(`projects/${getProjectId()}/words/${id}`);
+  return resp.data;
 }
 
 export async function getAllWords(): Promise<Word[]> {
-  return await backendServer
-    .get(`projects/${getProjectId()}/words`)
-    .then(resp => resp.data);
+  let resp = await backendServer.get(`projects/${getProjectId()}/words`);
+  return resp.data;
 }
 
 export async function mergeWords(
@@ -41,110 +36,122 @@ export async function mergeWords(
   children: MergeWord[]
 ): Promise<string> {
   parent.id = "";
-  let childrenWords = children.map(child => {
-    return { SrcWordID: child.wordID, SenseStates: child.senses };
-  });
+  let childrenWords = children.map(child => ({
+    SrcWordID: child.wordID,
+    SenseStates: child.senses
+  }));
   let merge = {
     Parent: parent,
     ChildrenWords: childrenWords,
     Time: Date.now().toString()
   };
-  return await backendServer
-    .put(`projects/${getProjectId()}/words`, merge)
-    .then(resp => resp.data);
+  let resp = await backendServer.put(`projects/${getProjectId()}/words`, merge);
+  return resp.data;
 }
 
 export async function updateWord(word: Word): Promise<Word> {
-  return await backendServer
-    .put(`projects/${getProjectId()}/words/${word.id}`, word)
-    .then(resp => {
-      return { ...word, id: resp.data };
-    });
+  let resp = await backendServer.put(
+    `projects/${getProjectId()}/words/${word.id}`,
+    word
+  );
+  return { ...word, id: resp.data };
 }
 
 export async function deleteWord(word: Word): Promise<Word> {
-  return await backendServer
-    .delete(`projects/${getProjectId()}/words/${word.id}`)
-    .then(resp => {
-      return { ...word, id: resp.data };
-    });
+  let resp = await backendServer.delete(
+    `projects/${getProjectId()}/words/${word.id}`
+  );
+  return { ...word, id: resp.data };
 }
 
 export async function getFrontierWords(): Promise<Word[]> {
-  return await backendServer
-    .get(`projects/${getProjectId()}/words/frontier`)
-    .then(resp => resp.data);
+  let resp = await backendServer.get(
+    `projects/${getProjectId()}/words/frontier`
+  );
+  return resp.data;
 }
 
 export async function addUser(user: User): Promise<User> {
-  return await backendServer
-    .post(`users`, user, { headers: authHeader() })
-    .then(resp => {
-      return { ...user, id: resp.data };
-    });
+  let resp = await backendServer.post(`users`, user, { headers: authHeader() });
+  return { ...user, id: resp.data };
 }
 
 export async function authenticateUser(
   username: string,
   password: string
 ): Promise<string> {
-  return await backendServer
-    .post(
-      `users/authenticate`,
-      { Username: username, Password: password },
-      { headers: authHeader() }
-    )
-    .then(resp => JSON.stringify(resp.data));
+  let resp = await backendServer.post(
+    `users/authenticate`,
+    { Username: username, Password: password },
+    { headers: authHeader() }
+  );
+  return JSON.stringify(resp.data);
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  return await backendServer.get(`users`).then(resp => resp.data);
+  let resp = await backendServer.get(`users`);
+  return resp.data;
 }
 
 export async function getUser(id: string): Promise<User> {
-  return await backendServer.get(`users/${id}`).then(resp => resp.data);
+  let resp = await backendServer.get(`users/${id}`);
+  return resp.data;
 }
 
 export async function updateUser(user: User): Promise<User> {
-  return await backendServer.put(`users/${user.id}`, user).then(resp => {
-    return { ...user, id: resp.data };
-  });
+  let resp = await backendServer.put(`users/${user.id}`, user);
+  return { ...user, id: resp.data };
 }
 
 export async function createProject(project: Project): Promise<Project> {
-  return await backendServer
-    .post(`projects/`, project, { headers: authHeader() })
-    .then(resp => {
-      return { ...project, id: resp.data };
-    });
+  let resp = await backendServer.post(`projects/`, project, {
+    headers: authHeader()
+  });
+  return { ...project, id: resp.data };
 }
 
 export async function getAllProjects(): Promise<Project[]> {
-  return await backendServer.get(`projects`).then(resp => resp.data);
+  let resp = await backendServer.get(`projects`);
+  return resp.data;
 }
 
 export async function getProject(id: string): Promise<Project> {
-  return await backendServer.get(`projects/${id}`).then(resp => resp.data);
+  let resp = await backendServer.get(`projects/${id}`);
+  return resp.data;
 }
 
 export async function updateProject(project: Project) {
-  await backendServer.put(`projects/${project.id}`, project);
+  let resp = await backendServer.put(`projects/${project.id}`, project);
+  return resp.data;
 }
 
-export async function uploadLift(project: Project, lift: File) {
+export async function uploadLift(
+  project: Project,
+  lift: File
+): Promise<number> {
   let data = new FormData();
   data.append("file", lift);
-  await backendServer.post(`projects/${getProjectId()}/words/upload`, data, {
-    headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
-  });
+  let resp = await backendServer.post(
+    `projects/${project.id}/words/upload`,
+    data,
+    {
+      headers: { ...authHeader(), "Content-Type": "multipart/form-data" }
+    }
+  );
+  return parseInt(resp.toString());
 }
 
-export async function uploadMp3(project: Project, mp3: File) {
+export async function uploadMp3(project: Project, mp3: File): Promise<string> {
   let data = new FormData();
   data.append("file", mp3);
-  await backendServer.post(`projects/${getProjectId()}/words/upload/audio`, data, {
-    headers: { ...authHeader(), "content-type": "application/json" }
-  });
+  let resp = await backendServer.post(
+    `projects/${project.id}/words/upload/audio`,
+    data,
+    {
+      headers: { ...authHeader(), "content-type": "application/json" }
+    }
+  );
+  return resp.data;
 }
 
 export async function addGoalToUserEdit(
@@ -154,13 +161,14 @@ export async function addGoalToUserEdit(
   let goalType: string = goalNameToGoalTypeId(goal.name);
   let stepData: string = goal.steps.toString();
   let userEditTuple = { goalType: goalType, stepData: [stepData] };
-  return await backendServer
-    .post(`projects/${getProjectId()}/useredits/${userEditId}`, userEditTuple, {
+  let resp = await backendServer.post(
+    `projects/${getProjectId()}/useredits/${userEditId}`,
+    userEditTuple,
+    {
       headers: { ...authHeader() }
-    })
-    .then(resp => {
-      return resp.data;
-    });
+    }
+  );
+  return resp.data;
 }
 
 function goalNameToGoalTypeId(goalName: string): string {
@@ -199,28 +207,19 @@ function goalNameToGoalTypeId(goalName: string): string {
 }
 
 export async function createUserEdit(): Promise<string> {
-  return await backendServer
-    .post(`projects/${getProjectId()}/useredits`)
-    .then(resp => {
-      return resp.data;
-    });
+  let resp = await backendServer.post(`projects/${getProjectId()}/useredits`);
+  return resp.data;
 }
 
 export async function getUserEditById(
   projId: string,
   index: string
 ): Promise<UserEdit> {
-  return await backendServer
-    .get(`projects/${projId}/useredits/${index}`)
-    .then(resp => {
-      return resp.data;
-    });
+  let resp = await backendServer.get(`projects/${projId}/useredits/${index}`);
+  return resp.data;
 }
 
 export async function getAllUserEdits(): Promise<Goal[]> {
-  return await backendServer
-    .get(`projects/${getProjectId()}/useredits`)
-    .then(resp => {
-      return resp.data;
-    });
+  let resp = await backendServer.get(`projects/${getProjectId()}/useredits`);
+  return resp.data;
 }
