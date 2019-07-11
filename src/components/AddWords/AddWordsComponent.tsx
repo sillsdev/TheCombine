@@ -17,6 +17,7 @@ import { Word, State, Gloss } from "../../types/word";
 import { Delete } from "@material-ui/icons";
 import * as Backend from "../../backend";
 import { SemanticDomain } from "../../types/project";
+import DuplicateFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 
 interface AddWordsProps {
   domain: string;
@@ -80,13 +81,23 @@ export default class AddWords extends React.Component<
 
   /** If the venacular is in the frontier, returns that words id */
   vernInFrontier(vernacular: string): string {
+    let Finder = new DuplicateFinder();
+
+    //[vernacular form, levenshtein distance]
+    let foundDuplicate: [string, number] = ["", 2];
+
     for (let word of this.allWords) {
-      if (word.vernacular === vernacular) {
-        //TODO: check accessability
-        return word.id;
+      //TODO: check accessability
+      let levenD: number = Finder.getLevenshteinDistance(
+        vernacular,
+        word.vernacular
+      );
+      if (levenD < foundDuplicate[1]) {
+        foundDuplicate = [word.vernacular, levenD];
       }
     }
-    return "";
+
+    return foundDuplicate[0];
   }
 
   vernInput: React.RefObject<HTMLDivElement>;
