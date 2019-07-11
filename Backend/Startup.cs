@@ -43,6 +43,9 @@ namespace BackendFramework
             });
 
             // configure strongly typed settings objects
+            //ConfigurationBuilder newBuilder = new ConfigurationBuilder();
+            //newBuilder.AddEnvironmentVariables();
+
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
