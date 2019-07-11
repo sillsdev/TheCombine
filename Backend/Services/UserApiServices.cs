@@ -111,7 +111,7 @@ namespace BackendFramework.Services
                 if (users.Count != 0)
                 {
 
-                    //ckeck to see if username is taken
+                    //check to see if username is taken
                     if (_userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
                     {
                         throw new InvalidCastException();
