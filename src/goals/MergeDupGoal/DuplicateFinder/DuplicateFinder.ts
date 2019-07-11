@@ -27,6 +27,18 @@ export interface ScoredWord {
   score: number;
 }
 
+interface MappedWord {
+  word: Word;
+  map: Bitmap;
+}
+
+interface Bitmap {
+  vern: number;
+  senses: number[][];
+}
+
+// THIS DOES NOT YET WORK WITH MULTIPLE GLOSSES
+
 export default class DupFinder {
   constructor(params: FinderParams = DefaultParams) {
     this.searchLimit = params.searchLim;
@@ -44,6 +56,7 @@ export default class DupFinder {
 
     this.vernmap = [];
     this.glossmap = [];
+    this.mappedWords = [];
   }
 
   //prevent infinite loops in getNextDups()
@@ -65,6 +78,7 @@ export default class DupFinder {
 
   vernmap: string[];
   glossmap: string[];
+  mappedWords: MappedWord[];
 
   empty2dArray = [[]];
 
@@ -76,7 +90,7 @@ export default class DupFinder {
         return this.empty2dArray;
       }
 
-      this.setBitmap(words);
+      this.setBitmaps(words);
 
       //[wordlist, list score]
       let currentWords: [Word[], number][] = [];
@@ -84,10 +98,7 @@ export default class DupFinder {
       //use each word as a parent and compare the resulting lists against each other
       for (let i = 0; i < words.length; i++) {
         //word list to compare against current words
-        let newWordList: [Word[], number] = this.getDupsFromWordList(
-          words[i],
-          words
-        );
+        let newWordList: [Word[], number] = this.getDupsFromWordList(words[i]);
 
         //ignore wordlists with less than 2 words
         if (newWordList[0].length <= 1) {
@@ -122,7 +133,12 @@ export default class DupFinder {
     return wordsFromDB;
   }
 
-  setBitmap(wordCollection: Word[]) {
+  //defines vernacular and gloss bitmaps
+  setBitmaps(wordCollection: Word[]) {
+    //empty bitmaps
+    this.vernmap = [];
+    this.glossmap = [];
+
     //define bitmaps
     wordCollection.forEach(word => {
       this.vernmap = [
@@ -134,6 +150,14 @@ export default class DupFinder {
         ...word.senses[0].glosses[0].def.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
       ];
     });
+
+    //clear current words
+    this.mappedWords = [];
+
+    //map and store current words
+    wordCollection.forEach(word => {
+      this.mappedWords.concat(this.mapWord(word));
+    });
   }
 
   //returns a set of words from the database
@@ -143,9 +167,9 @@ export default class DupFinder {
   }
 
   //scores a collection and returns
-  getDupsFromWordList(parent: Word, words: Word[]): [Word[], number] {
+  getDupsFromWordList(parent: Word): [Word[], number] {
     //narrow down very different words
-    words = this.filter(parent, words);
+    let words = this.filter(parent, this.mappedWords);
 
     //thorough scoring
     let scoredWords: ScoredWord[] = this.scoreWords(parent, words);
@@ -156,21 +180,56 @@ export default class DupFinder {
     return scoredList;
   }
 
+  //map a word and return as type MappedWord
+  private mapWord(word: Word): MappedWord {
+    let vern = this.mapString(word.vernacular, this.vernmap);
+    let senses: number[][] = [];
+    word.senses.forEach((sense, i) => {
+      senses[i] = [];
+      sense.glosses.forEach(gloss =>
+        senses[i].concat(this.mapString(gloss.def, this.glossmap))
+      );
+    });
+
+    return {
+      word,
+      map: {
+        vern,
+        senses
+      } as Bitmap
+    } as MappedWord;
+  }
+
+  //return the input string masked to the filter as a number
+  private mapString(input: string, filter: string[]): number {
+    var output = 0b0;
+    var splitInput = input.split("");
+    filter.forEach((character: string, i) => {
+      if (splitInput.includes(character)) output = output | (1 << i);
+    });
+    return output;
+  }
+
   //TODO
-  mapWords(words: Word[]): number[] {
-    return [];
+  private unmapWord(mask: MappedWord): number {
+    return 0;
   }
 
   //remove words that are more than one longer or shorter than parent
-  filter(parent: Word, words: Word[]): Word[] {
+  filter(parent: Word, words: MappedWord[]): Word[] {
+    let mappedParent: MappedWord = this.mapWord(parent);
+
     let filteredWords: Word[] = [];
 
-    // let mappedWords = this.mapWords(words);
-    // let mappedParent = this.mapWords([parent])[0];
+    //filter words with bitmap
+    words.forEach(mappedWord => {
+      let resultMask = {} as MappedWord; //TODO
 
-    // for (let i = 0; i < mappedWords.length; i++) {}
+      if (this.unmapWord(resultMask) < 3) filteredWords.push(mappedWord.word);
+    });
 
-    words.forEach(word => {
+    //filter based on word length - may not be worth the computation time
+    filteredWords.forEach(word => {
       if (Math.abs(parent.vernacular.length - word.vernacular.length) < 2)
         filteredWords.push(word);
     });
