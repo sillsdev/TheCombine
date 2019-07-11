@@ -16,7 +16,7 @@ import { styleAddendum } from "../../../types/theme";
 import { uuid } from "../../../utilities";
 import { MergeTreeReference, MergeTreeWord } from "./MergeDupsTree";
 import MergeRow from "./MergeRow";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 // Constants
 const MIN_VIEW: string = "60vh";
@@ -75,6 +75,10 @@ class MergeDupStep extends React.Component<
     if (this.props.mergeAll) this.props.mergeAll();
   }
 
+  foo(res: DropResult){
+    console.log(res);
+  }
+
   render() {
     //visual definition
     return (
@@ -91,7 +95,7 @@ class MergeDupStep extends React.Component<
             direction={this.state.portrait ? "row" : "column"}
             style={{ flex: 1 }}
           >
-            <DragDropContext onDragEnd={() => {}}>
+          <DragDropContext onDragEnd={res => this.foo(res)}>
               {Object.keys(this.props.words).map(key => (
                 <Grid item>
                   <MergeRow portait={this.state.portrait} wordID={key} />

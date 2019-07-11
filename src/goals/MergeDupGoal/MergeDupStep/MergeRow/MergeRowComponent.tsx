@@ -51,44 +51,30 @@ export class MergeRow extends React.Component<
 
   render() {
     return (
-        <Droppable droppableId="drop1">
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              style={{
-                backgroundColor: "lightgrey",
-                padding: 8,
-                width: 250
-              }}
-              {...provided.droppableProps}
-            >
-              {this.state.items.map((item, index) => (
-                <Draggable
-                  key={item}
-                  draggableId={item.toString()}
+      <Droppable droppableId={this.props.wordID}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            style={{
+              backgroundColor: "lightgrey",
+              padding: 8,
+              width: 250
+            }}
+            {...provided.droppableProps}
+          >
+            {Object.keys(this.props.words[this.props.wordID].senses).map(
+              (item, index) => (
+                <MergeStack
                   index={index}
-                >
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={{
-                        ...provided.draggableProps.style,
-                        margin: "0 0 8px 0",
-                        padding: 16,
-                        userSelect: "none",
-                        background: snapshot.isDragging ? "lightgreen" : "grey"
-                      }}
-                    >
-                      Item #{item}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-            </div>
-          )}
-        </Droppable>
+                  wordID={this.props.wordID}
+                  senseID={item}
+                  sense={this.props.words[this.props.wordID].senses[item]}
+                />
+              )
+            )}
+          </div>
+        )}
+      </Droppable>
     );
     //visual definition
     //return (
