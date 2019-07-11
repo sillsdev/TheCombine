@@ -13,9 +13,10 @@ import {
 } from "@material-ui/core";
 import theme from "../../types/theme";
 import { Translate, TranslateFunction } from "react-localize-redux";
-import { Word, State } from "../../types/word";
+import { Word, State, Gloss } from "../../types/word";
 import { Delete } from "@material-ui/icons";
 import * as Backend from "../../backend";
+import { SemanticDomain } from "../../types/project";
 
 interface AddWordsProps {
   domain: string;
@@ -38,12 +39,12 @@ interface Row {
   dupId: string;
   vernacular: string;
   glosses: string;
+  /** The index of the sense of the word that we're showing in the view */
+  senseIndex: number;
   /** The vernacular of the duplicate word in the frontier */
   dupVernacular?: string;
   /** The `def` field of the glosses of the duplicate word in the frontier */
   dupGlosses?: string[];
-
-  duplicate?: Boolean;
 }
 
 export default class AddWords extends React.Component<
@@ -60,8 +61,8 @@ export default class AddWords extends React.Component<
           vernacular: "sam",
           glosses: "boy",
           id: "5d2501f2188d610ef03a42f2",
-          duplicate: true,
-          dupId: "5d250046188d610ef03a42ed"
+          dupId: "5d250046188d610ef03a42ed",
+          senseIndex: 0
         }
       ],
       newVernInFrontier: false
@@ -71,6 +72,7 @@ export default class AddWords extends React.Component<
   }
 
   allWords: Word[] = [];
+  semanticDomain: SemanticDomain = { name: "Sky", number: "1.2" };
 
   async componentDidMount() {
     this.allWords = await Backend.getFrontierWords();
@@ -99,15 +101,20 @@ export default class AddWords extends React.Component<
     if (vernacular === "") return;
 
     let rows = [...this.state.rows];
-
     Backend.createWord(
-      this.rowToWord({ vernacular, glosses, id: "", dupId: "" })
+      this.rowToNewWord({
+        vernacular,
+        glosses,
+        id: "",
+        dupId: "",
+        senseIndex: 0
+      })
     )
       .catch(err => console.log(err))
       .then(res => {
         let word = res as Word;
         let dupId = this.vernInFrontier(word.vernacular);
-        rows.push({ ...this.wordToRow(word), dupId });
+        rows.push({ ...this.wordToRow(word, 0), dupId });
         this.setState({
           rows,
           newVern: "",
@@ -117,6 +124,42 @@ export default class AddWords extends React.Component<
         this.focusVernInput();
         if (callback) callback(res);
       });
+  }
+
+  /** Creates a new word from a row */
+  rowToNewWord(row: Row): Word {
+    let word: Word = {
+      id: row.id,
+      vernacular: "",
+      senses: [
+        {
+          glosses: [],
+          semanticDomains: []
+        }
+      ],
+      audio: "",
+      created: "",
+      modified: "",
+      history: [],
+      partOfSpeech: "",
+      editedBy: [],
+      accessability: State.active,
+      otherField: "",
+      plural: ""
+    };
+    word.vernacular = row.vernacular;
+
+    word.senses[0].glosses = [];
+    let defs = row.glosses.split(",");
+    for (let def of defs) {
+      let gloss = {
+        language: "en",
+        def: def.trim()
+      };
+      word.senses[0].glosses.push(gloss);
+    }
+
+    return word;
   }
 
   /** updates a row in the view only */
@@ -129,12 +172,43 @@ export default class AddWords extends React.Component<
   /** updates the word in the backend */
   updateWord(index: number, callback?: Function) {
     let row = this.state.rows[index];
-    Backend.updateWord(this.rowToWord(row))
+    Backend.getWord(row.id)
       .catch(err => console.log(err))
-      .then(res => {
-        this.updateRow(this.wordToRow(res as Word), index);
-        if (callback) callback();
-      });
+      .then(res =>
+        this.rowToExistingWord(row)
+          .catch(err => console.log(err))
+          .then(res =>
+            Backend.updateWord(res as Word)
+              .catch(err => console.log(err))
+              .then(res => {
+                this.updateRow(
+                  this.wordToRow(res as Word, row.senseIndex),
+                  index
+                );
+                if (callback) callback();
+              })
+          )
+      );
+  }
+
+  /** Creates a new word from a row */
+  async rowToExistingWord(row: Row): Promise<Word> {
+    let word = await Backend.getWord(row.id);
+    let glosses: Gloss[] = [];
+    let defs = row.glosses.split(",");
+    let gloss: Gloss;
+    for (let def of defs) {
+      gloss = {
+        language: "en",
+        def: def.trim()
+      };
+      glosses.push(gloss);
+    }
+    word.senses[row.senseIndex] = {
+      glosses,
+      semanticDomains: [this.semanticDomain]
+    };
+    return word;
   }
 
   // Used by new word input
@@ -182,53 +256,19 @@ export default class AddWords extends React.Component<
     this.setState({ rows });
   }
 
-  rowToWord(row: Row): Word {
-    let word: Word = {
-      id: row.id,
-      vernacular: "",
-      senses: [
-        {
-          glosses: [],
-          semanticDomains: []
-        }
-      ],
-      audio: "",
-      created: "",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      accessability: State.active,
-      otherField: "",
-      plural: ""
-    };
-    word.vernacular = row.vernacular;
-
-    word.senses[0].glosses = [];
-    let defs = row.glosses.split(",");
-    for (let def of defs) {
-      let gloss = {
-        language: "en",
-        def: def.trim()
-      };
-      word.senses[0].glosses.push(gloss);
-    }
-
-    return word;
-  }
-
-  wordToRow(word: Word): Row {
+  wordToRow(word: Word, senseIndex: number): Row {
     let row: Row = {
       vernacular: word.vernacular,
       id: word.id,
       glosses: "",
-      dupId: ""
+      dupId: "",
+      senseIndex
     };
     let glosses: string[] = [];
-    word.senses[0].glosses.forEach(gloss => {
+    word.senses[senseIndex].glosses.forEach(gloss => {
       glosses.push(gloss.def);
     });
-    row.glosses = glosses.join(",");
+    row.glosses = glosses.join(", ");
     return row;
   }
 
@@ -236,27 +276,6 @@ export default class AddWords extends React.Component<
     let word = this.allWords.find(word => word.id === id);
     if (!word) throw "No word exists with this id";
     return word;
-  }
-
-  mergeRow(index: number) {
-    if (index >= this.state.rows.length) {
-      console.log("That row does not exist");
-      return;
-    }
-    let row: Row = { ...this.state.rows[index] };
-    if (!row.dupId) {
-      console.log("No duplicate for this row");
-      return;
-    }
-    let originalWord = this.getWord(row.dupId);
-    let newRow: Row = {
-      ...row,
-      ...this.wordToRow(originalWord),
-      duplicate: false,
-      dupId: ""
-    };
-    //this.removeWord(index);
-    this.updateRow(newRow, index);
   }
 
   showDuplicateForRow(rowIndex: number) {
@@ -273,6 +292,32 @@ export default class AddWords extends React.Component<
     }
     this.updateRow(row, rowIndex);
     this.setState({ showDuplicate: rowIndex });
+  }
+
+  /** TODO: change the name of this method */
+  editASenseOfAnExistingWordInsteadOfUsingThisWord(
+    rowIndex: number,
+    senseIndex: number
+  ) {
+    let row = this.state.rows[rowIndex];
+    if (row.dupId === "") {
+      throw "This row does not have a duplicate";
+    } else {
+      Backend.deleteWordById(row.id)
+        .catch(err => console.log(err))
+        .then(() => {
+          if (row.dupVernacular && row.dupGlosses) {
+            let newRow: Row = {
+              vernacular: row.dupVernacular,
+              glosses: row.dupGlosses[senseIndex],
+              id: row.dupId,
+              dupId: "",
+              senseIndex
+            };
+            this.updateRow(newRow, rowIndex);
+          }
+        });
+    }
   }
 
   render() {
@@ -319,14 +364,14 @@ export default class AddWords extends React.Component<
               </Grid>
 
               {/* Rows of words */}
-              {this.state.rows.map((row, index) => {
+              {this.state.rows.map((row, rowIndex) => {
                 return (
                   <React.Fragment>
                     <Grid
                       item
                       xs={12}
-                      key={index}
-                      onMouseEnter={() => this.setState({ hoverRow: index })}
+                      key={rowIndex}
+                      onMouseEnter={() => this.setState({ hoverRow: rowIndex })}
                       onMouseLeave={() =>
                         this.setState({ hoverRow: undefined })
                       }
@@ -352,11 +397,11 @@ export default class AddWords extends React.Component<
                                   vernacular: e.target.value,
                                   dupId
                                 },
-                                index
+                                rowIndex
                               );
                             }}
                             onBlur={() => {
-                              this.updateWord(index);
+                              this.updateWord(rowIndex);
                             }}
                             onKeyDown={e => {
                               if (e.key === "Enter") {
@@ -384,7 +429,9 @@ export default class AddWords extends React.Component<
                                   right: 48,
                                   cursor: "pointer"
                                 }}
-                                onClick={() => this.showDuplicateForRow(index)}
+                                onClick={() =>
+                                  this.showDuplicateForRow(rowIndex)
+                                }
                               />
                             </Tooltip>
                           )}
@@ -403,11 +450,11 @@ export default class AddWords extends React.Component<
                             onChange={e => {
                               this.updateRow(
                                 { ...row, glosses: e.target.value },
-                                index
+                                rowIndex
                               );
                             }}
                             onBlur={() => {
-                              this.updateWord(index);
+                              this.updateWord(rowIndex);
                             }}
                             onKeyDown={e => {
                               if (e.key === "Enter") {
@@ -417,7 +464,7 @@ export default class AddWords extends React.Component<
                           />
                         </Grid>
                         <Grid item xs={2}>
-                          {this.state.hoverRow === index && (
+                          {this.state.hoverRow === rowIndex && (
                             <React.Fragment>
                               <Tooltip
                                 title={
@@ -431,7 +478,7 @@ export default class AddWords extends React.Component<
                                   size="small"
                                   onClick={() =>
                                     this.removeWord(row.id, () =>
-                                      this.removeRow(index)
+                                      this.removeRow(rowIndex)
                                     )
                                   }
                                 >
@@ -444,12 +491,14 @@ export default class AddWords extends React.Component<
                       </Grid>
                     </Grid>
                     {/* This is where it shows the duplicate if the red dot is clicked */}
-                    {this.state.showDuplicate === index && row.dupId && (
+                    {this.state.showDuplicate === rowIndex && row.dupId && (
                       <Grid
                         item
                         xs={12}
-                        key={index}
-                        onMouseEnter={() => this.setState({ hoverRow: index })}
+                        key={rowIndex}
+                        onMouseEnter={() =>
+                          this.setState({ hoverRow: rowIndex })
+                        }
                         onMouseLeave={() =>
                           this.setState({ hoverRow: undefined })
                         }
@@ -480,10 +529,15 @@ export default class AddWords extends React.Component<
                               {"Glosses: "}
                             </Typography>
                             {row.dupGlosses &&
-                              row.dupGlosses.map((gloss, index) => (
+                              row.dupGlosses.map((gloss, senseIndex) => (
                                 <Chip
                                   label={gloss}
-                                  onClick={() => console.log("Edit gloss")}
+                                  onClick={() =>
+                                    this.editASenseOfAnExistingWordInsteadOfUsingThisWord(
+                                      rowIndex,
+                                      senseIndex
+                                    )
+                                  }
                                   style={{
                                     margin: theme.spacing(1)
                                   }}
