@@ -20,7 +20,7 @@ describe("Test GoalsActions", () => {
   it("should create an action to add a goal to history", () => {
     const goal: Goal = new CreateCharInv();
     const expectedAction: actions.AddGoalToHistory = {
-      type: actions.ADD_GOAL_TO_HISTORY,
+      type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
       payload: [goal]
     };
     expect(actions.addGoalToHistory(goal)).toEqual(expectedAction);
@@ -29,7 +29,7 @@ describe("Test GoalsActions", () => {
   it("should create an action to load user edits", () => {
     const goalHistory: Goal[] = [new CreateCharInv(), new MergeDups()];
     const expectedAction: actions.LoadUserEdits = {
-      type: actions.LOAD_USER_EDITS,
+      type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: goalHistory
     };
     expect(actions.loadUserEdits(goalHistory)).toEqual(expectedAction);
@@ -37,7 +37,7 @@ describe("Test GoalsActions", () => {
 
   it("should create an action to navigate to the next step", () => {
     const expectedAction: actions.NextStep = {
-      type: actions.NEXT_STEP,
+      type: actions.GoalsActions.NEXT_STEP,
       payload: []
     };
     expect(actions.nextStep()).toEqual(expectedAction);
@@ -50,7 +50,7 @@ describe("Test GoalsActions", () => {
     );
 
     let loadUserEdits: actions.LoadUserEdits = {
-      type: actions.LOAD_USER_EDITS,
+      type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: []
     };
 
@@ -71,7 +71,7 @@ describe("Test GoalsActions", () => {
     );
 
     let addGoalToHistory: actions.AddGoalToHistory = {
-      type: actions.ADD_GOAL_TO_HISTORY,
+      type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
       payload: [goal]
     };
 

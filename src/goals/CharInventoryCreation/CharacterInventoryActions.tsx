@@ -6,9 +6,9 @@ import {
 } from "../../components/Project/ProjectActions";
 import {
   updateGoal,
-  UpdateGoalAction,
   getUserEditId,
-  getIndexInHistory
+  getIndexInHistory,
+  GoalAction
 } from "../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
 import * as backend from "../../backend";
@@ -35,9 +35,7 @@ export interface CharacterInventoryAction {
  */
 export function uploadInventory() {
   return async (
-    dispatch: Dispatch<
-      CharacterInventoryAction | ProjectAction | UpdateGoalAction
-    >,
+    dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>,
     getState: () => StoreState
   ) => {
     let state: StoreState = getState();
@@ -53,9 +51,7 @@ async function saveChanges(
   goal: Goal,
   history: Goal[],
   project: Project,
-  dispatch: Dispatch<
-    CharacterInventoryAction | ProjectAction | UpdateGoalAction
-  >
+  dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
   await saveChangesToGoal(goal, history, dispatch);
   await saveChangesToProject(project, dispatch);
@@ -64,9 +60,7 @@ async function saveChanges(
 async function saveChangesToGoal(
   updatedGoal: Goal,
   history: Goal[],
-  dispatch: Dispatch<
-    CharacterInventoryAction | ProjectAction | UpdateGoalAction
-  >
+  dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
   let projectId: string = backend.getProjectId();
   let userEditId: string = getUserEditId();
@@ -84,9 +78,7 @@ async function saveChangesToGoal(
 
 async function saveChangesToProject(
   project: Project,
-  dispatch: Dispatch<
-    CharacterInventoryAction | ProjectAction | UpdateGoalAction
-  >
+  dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
   dispatch(setCurrentProject(project));
   await backend.updateProject(project);

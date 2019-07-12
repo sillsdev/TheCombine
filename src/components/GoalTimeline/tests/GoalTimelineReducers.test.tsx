@@ -49,8 +49,8 @@ describe("Test GoalsReducers", () => {
       }
     };
 
-    const addGoalAction: actions.AddGoalToHistoryAction = {
-      type: actions.ADD_GOAL_TO_HISTORY,
+    const addGoalAction: actions.GoalAction = {
+      type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
       payload: [goal]
     };
     const newState: GoalsState = {
@@ -78,8 +78,8 @@ describe("Test GoalsReducers", () => {
       }
     };
 
-    const addGoalAction: actions.AddGoalToHistoryAction = {
-      type: actions.ADD_GOAL_TO_HISTORY,
+    const addGoalAction: actions.GoalAction = {
+      type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
       payload: [goal]
     };
     const newState: GoalsState = {
@@ -110,8 +110,8 @@ describe("Test GoalsReducers", () => {
 
     const chosenGoal: Goal = new HandleFlags();
 
-    const addGoalAction: actions.AddGoalToHistoryAction = {
-      type: actions.ADD_GOAL_TO_HISTORY,
+    const addGoalAction: actions.GoalAction = {
+      type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
       payload: [chosenGoal]
     };
     const newState: GoalsState = {
@@ -149,8 +149,8 @@ describe("Test GoalsReducers", () => {
     const goal6: Goal = new HandleFlags();
     const goal7: Goal = new ValidateChars();
 
-    const loadUserEditsAction: actions.LoadUserEditsAction = {
-      type: actions.LOAD_USER_EDITS,
+    const loadUserEditsAction: actions.GoalAction = {
+      type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: [goal6, goal7]
     };
 
@@ -188,8 +188,8 @@ describe("Test GoalsReducers", () => {
       }
     };
 
-    const nextStepAction: actions.NextStep = {
-      type: actions.NEXT_STEP,
+    const nextStepAction: actions.GoalAction = {
+      type: actions.GoalsActions.NEXT_STEP,
       payload: []
     };
 
@@ -240,13 +240,13 @@ describe("Test GoalsReducers", () => {
       }
     };
 
-    const updatedGoal: Goal = goal2;
+    const updatedGoal: Goal = Object.assign(goal2);
     updatedGoal.currentStep++;
 
     const updatedHistory: Goal[] = [goal, updatedGoal];
 
-    const updateGoalAction: actions.UpdateGoal = {
-      type: actions.UPDATE_GOAL,
+    const updateGoalAction: actions.GoalAction = {
+      type: actions.GoalsActions.UPDATE_GOAL,
       payload: [goal2]
     };
 

@@ -1,15 +1,9 @@
-import { GoalsState, GoalType, GoalData } from "../../types/goals";
+import { GoalsState, GoalType } from "../../types/goals";
 import { Goal } from "../../types/goals";
-import {
-  ADD_GOAL_TO_HISTORY,
-  LOAD_USER_EDITS,
-  NEXT_STEP,
-  UPDATE_GOAL
-} from "./GoalsActions";
+import { GoalsActions } from "./GoalsActions";
 import { ActionWithPayload } from "../../types/mockAction";
 import { defaultState } from "./DefaultState";
 import { MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
-import { CreateCharInvData } from "../../goals/CreateCharInv/CreateCharInv";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
@@ -19,14 +13,14 @@ export const goalsReducer = (
     return defaultState;
   }
   switch (action.type) {
-    case LOAD_USER_EDITS:
+    case GoalsActions.LOAD_USER_EDITS:
       return {
         ...state,
         historyState: {
           history: [...action.payload]
         }
       };
-    case ADD_GOAL_TO_HISTORY: // Remove top suggestion if same as goal to add
+    case GoalsActions.ADD_GOAL_TO_HISTORY: // Remove top suggestion if same as goal to add
       let suggestions = state.suggestionsState.suggestions;
       let goalToAdd = action.payload[0];
       return {
@@ -41,7 +35,7 @@ export const goalsReducer = (
           )
         }
       };
-    case NEXT_STEP: // Update the step data in the current step, then go to the next step
+    case GoalsActions.NEXT_STEP: // Update the step data in the current step, then go to the next step
       let history: Goal[] = [...state.historyState.history];
       let currentGoal: Goal = history[history.length - 1];
       currentGoal = updateStepData(currentGoal);
@@ -53,7 +47,7 @@ export const goalsReducer = (
           history: history
         }
       };
-    case UPDATE_GOAL: {
+    case GoalsActions.UPDATE_GOAL: {
       let history: Goal[] = [...state.historyState.history];
       history[history.length - 1] = action.payload[0];
 
