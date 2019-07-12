@@ -100,66 +100,6 @@ export class MergeRow extends React.Component<
         )}
       </Droppable>
     );
-    //visual definition
-    //return (
-    //  <Box style={{ flex: 1 }}>
-    //    <ListSubheader
-    //      onDragOver={e => e.preventDefault()}
-    //      onDrop={_ => this.drop()}
-    //    >
-    //      <hr />
-    //      <div style={{ textAlign: "center" }}>
-    //        {this.props.words[this.props.wordID].vern}
-    //        <i> {"pl. " + this.props.words[this.props.wordID].plural} </i>
-    //      </div>
-    //    </ListSubheader>
-    //    <div>
-    //      <Grid container direction={this.props.portait ? "column" : "row"}>
-    //        {/*this.props.parent.senses.map(item => (
-    //          //<Grid item key={item.id}>
-    //          <MergeStack updateRow={() => this.update()} sense={item} />
-    //          //</Grid>
-    //        ))*/}
-    //        {Object.keys(this.props.words[this.props.wordID].senses).map(
-    //          senseID => (
-    //            <Grid item key={senseID}>
-    //              <MergeStack
-    //                senseID={senseID}
-    //                wordID={this.props.wordID}
-    //                sense={
-    //                  this.props.words[this.props.wordID].senses[senseID]
-    //                }
-    //              />
-    //            </Grid>
-    //          )
-    //        )}
-    //        <Grid
-    //          item
-    //          onDragOver={e => e.preventDefault()}
-    //          onDrop={_ => this.drop()}
-    //          style={{
-    //            position: "relative",
-    //            flex: "1 0 10vw"
-    //          }}
-    //        >
-    //          {
-    //            <Card style={{ ...styleAddendum.inactive, width: "10vw" }}>
-    //              <CardContent>Drag new sense</CardContent>
-    //              <CardContent>Here</CardContent>
-    //            </Card>
-    //          }
-    //        </Grid>
-    //        <Grid
-    //          item
-    //          style={{ flex: 1 }}
-    //          onDragOver={e => e.preventDefault()}
-    //          onDrop={_ => this.drop()}
-    //          title={this.props.translate("mergeDups.helpText.sense") as string}
-    //        />
-    //      </Grid>
-    //    </div>
-    //  </Box>
-    //);
   }
 }
 
