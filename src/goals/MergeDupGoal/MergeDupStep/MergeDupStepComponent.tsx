@@ -98,15 +98,27 @@ class MergeDupStep extends React.Component<
           });
         }
         this.props.moveSenses(srcRefs, destRefs);
-        this.props.orderSense(res.destination.droppableId, res.draggableId, res.destination.index);
-      }else{
-      // set ordering
-        this.props.orderSense(res.source.droppableId, res.draggableId, res.destination.index);
+        this.props.orderSense(
+          res.destination.droppableId,
+          res.draggableId,
+          res.destination.index
+        );
+      } else {
+        // set ordering
+        this.props.orderSense(
+          res.source.droppableId,
+          res.draggableId,
+          res.destination.index
+        );
       }
     }
   }
 
   render() {
+    let key = Object.keys(this.props.words).reduce(
+      (key, acc) => `${key}:${acc}`,
+      "Step:"
+    );
     //visual definition
     return (
       <Box style={{ maxHeight: "100%" }}>
@@ -132,7 +144,7 @@ class MergeDupStep extends React.Component<
           >
             <DragDropContext onDragEnd={res => this.foo(res)}>
               {Object.keys(this.props.words).map(key => (
-                <Grid item>
+                <Grid item key={key}>
                   <MergeRow portait={this.state.portrait} wordID={key} />
                 </Grid>
               ))}

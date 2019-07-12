@@ -239,13 +239,9 @@ export function mergeAll() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
-    await Promise.all(
-      Object.keys(getState().mergeDuplicateGoal.mergeTreeState.data.words).map(
-        wordID => {
-          dispatch(mergeWord(wordID));
-        }
-      )
-    );
+    for (let  wordID of Object.keys(getState().mergeDuplicateGoal.mergeTreeState.data.words)){
+      await dispatch(mergeWord(wordID));
+    }
     //await dispatch(clearTree());
     await dispatch(refreshWords());
   };

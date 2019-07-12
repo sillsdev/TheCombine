@@ -105,7 +105,7 @@ class MergeStack extends React.Component<
               {/* List semantic domains */}
               <Grid container spacing={2}>
                 {displaySense.semanticDomains.map(dom => (
-                  <Grid item xs>
+                  <Grid item xs key={dom.name + " " + dom.number}>
                     <Chip
                       label={dom.name + " " + dom.number}
                       onDelete={() => {}}
