@@ -159,6 +159,7 @@ namespace BackendFramework.Services
             */
             Word differences = new Word();
             bool duplicate = true;
+            bool same = false;
 
             foreach (var matchingVern in allVernaculars)
             {
@@ -170,6 +171,10 @@ namespace BackendFramework.Services
                         //if the new sense isnt a strict subset then dont bother adding anything 
                         if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
                         {
+                            if (newSense.Glosses.All(oldSense.Glosses.Contains))
+                            {
+                                same = true;
+                            }
                             foreach (var newGloss in newSense.Glosses)
                             {
                                 //add semdom and edited by
@@ -189,7 +194,11 @@ namespace BackendFramework.Services
                         ++senseIndex;
                     }
                     //update the database
-                    await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
+                    if (duplicate == false && same != true)
+                    {
+                        await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
+                    }
+                    same = false;
                 }
             }
             return duplicate;
