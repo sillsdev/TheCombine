@@ -8,10 +8,18 @@ import thunk from "redux-thunk";
 import { StoreState } from "../../../types";
 import axios from "axios";
 import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
+import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
+import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 
 const createMockStore = configureMockStore([thunk]);
 const DATA: string[] = ["foo", "bar"];
+const goal: CreateCharInv = new CreateCharInv();
 const MOCK_STATE = {
+  goalsState: {
+    historyState: {
+      history: [goal]
+    }
+  },
   currentProject: {
     characterSet: null
   },
@@ -35,8 +43,17 @@ describe("Testing CharacterInventoryActions", () => {
       mockStore.dispatch,
       mockStore.getState as () => StoreState
     );
-    expect(axios.put).toHaveBeenCalledTimes(1);
+
+    const updatedGoal: CreateCharInv = goal;
+    updatedGoal.data = {
+      inventory: [[...MOCK_STATE.characterInventoryState.inventory]]
+    };
+    expect(axios.put).toHaveBeenCalledTimes(2);
     expect(mockStore.getActions()).toEqual([
+      {
+        type: GoalsActions.UPDATE_GOAL,
+        payload: [updatedGoal]
+      },
       {
         type: SET_CURRENT_PROJECT,
         payload: {

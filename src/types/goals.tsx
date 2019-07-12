@@ -1,6 +1,10 @@
 import { User } from "./user";
 import { MergeStepData, MergeDupData } from "../goals/MergeDupGoal/MergeDups";
 import { MergeDupProps } from "../goals/MergeDupGoal/MergeDups";
+import {
+  CreateCharInvData,
+  CreateCharInvStepData
+} from "../goals/CreateCharInv/CreateCharInv";
 
 export enum GoalOption {
   Complete,
@@ -17,11 +21,11 @@ export enum Tools {
 
 export type GoalProps = MergeDupProps;
 
-export type GoalData = MergeDupData | {}; // | OtherTypes
+export type GoalData = MergeDupData | CreateCharInvData | {}; // | OtherTypes
 
 export type MockGoalStepType = {};
 
-export type GoalStep = MergeStepData; // | OtherTypes
+export type GoalStep = MergeStepData | CreateCharInvStepData; // | OtherTypes
 
 export interface GoalViewState {
   state: GoalsState;
@@ -66,6 +70,7 @@ export interface Goal {
   tool: Tools;
   completed: boolean;
   result: GoalOption;
+  hash: string;
 }
 
 export enum GoalType {
@@ -77,4 +82,8 @@ export enum GoalType {
   SpellcheckGloss,
   ViewFind,
   HandleFlags
+}
+
+export function generateGuid(): string {
+  return Math.floor(Math.random() * 9999999).toString();
 }
