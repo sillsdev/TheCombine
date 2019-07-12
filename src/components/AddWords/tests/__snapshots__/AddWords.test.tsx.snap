@@ -73,106 +73,6 @@ exports[`Tests AddWords Constructs correctly 1`] = `
         </div>
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-        >
-          <div
-            className="MuiGrid-root MuiGrid-container"
-          >
-            <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
-              style={
-                Object {
-                  "paddingLeft": 32,
-                  "paddingRight": 32,
-                  "position": "relative",
-                }
-              }
-            >
-              <div
-                className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-                onKeyDown={[Function]}
-              >
-                <div
-                  className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
-                  onClick={[Function]}
-                >
-                  <input
-                    aria-invalid={false}
-                    className="MuiInputBase-input MuiInput-input"
-                    disabled={false}
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    required={false}
-                    type="text"
-                    value="sam"
-                  />
-                </div>
-              </div>
-              <div
-                aria-describedby={null}
-                className=""
-                onBlur={[Function]}
-                onClick={[Function]}
-                onFocus={[Function]}
-                onMouseLeave={[Function]}
-                onMouseOver={[Function]}
-                onTouchEnd={[Function]}
-                onTouchStart={[Function]}
-                style={
-                  Object {
-                    "border": "2px solid red",
-                    "borderRadius": "50%",
-                    "cursor": "pointer",
-                    "height": "5px",
-                    "position": "absolute",
-                    "right": 48,
-                    "top": 8,
-                    "width": "5px",
-                  }
-                }
-                title="ok"
-              />
-            </div>
-            <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
-              style={
-                Object {
-                  "paddingLeft": 32,
-                  "paddingRight": 32,
-                }
-              }
-            >
-              <div
-                className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-                onKeyDown={[Function]}
-              >
-                <div
-                  className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
-                  onClick={[Function]}
-                >
-                  <input
-                    aria-invalid={false}
-                    className="MuiInputBase-input MuiInput-input"
-                    disabled={false}
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    required={false}
-                    type="text"
-                    value="boy"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2"
-            />
-          </div>
-        </div>
-        <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
         >
           <div
             className="MuiGrid-root MuiGrid-container"
@@ -203,7 +103,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                 >
                   <fieldset
                     aria-hidden={true}
-                    className="PrivateNotchedOutline-root-246 MuiOutlinedInput-notchedOutline"
+                    className="PrivateNotchedOutline-root-226 MuiOutlinedInput-notchedOutline"
                     style={
                       Object {
                         "paddingLeft": 8,
@@ -211,7 +111,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                     }
                   >
                     <legend
-                      className="PrivateNotchedOutline-legend-247"
+                      className="PrivateNotchedOutline-legend-227"
                       style={
                         Object {
                           "width": 0.01,
@@ -267,7 +167,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                 >
                   <fieldset
                     aria-hidden={true}
-                    className="PrivateNotchedOutline-root-246 MuiOutlinedInput-notchedOutline"
+                    className="PrivateNotchedOutline-root-226 MuiOutlinedInput-notchedOutline"
                     style={
                       Object {
                         "paddingLeft": 8,
@@ -275,7 +175,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                     }
                   >
                     <legend
-                      className="PrivateNotchedOutline-legend-247"
+                      className="PrivateNotchedOutline-legend-227"
                       style={
                         Object {
                           "width": 0.01,
@@ -341,9 +241,6 @@ exports[`Tests AddWords Constructs correctly 1`] = `
           >
             Missing translationId: addWords.next for language: \${ languageCode }
           </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
         </button>
       </div>
     </div>

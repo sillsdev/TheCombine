@@ -44,10 +44,15 @@ beforeEach(() => {
   // Here, use the act block to be able to render our AddWords into the DOM
   // Re-created each time to prevent actions from previous runs from affecting future runs
   act(() => {
+    // Getfrontierwords
+    mockedAxios.get.mockImplementationOnce(url => {
+      return Promise.resolve([]);
+    });
     master = renderer.create(
       <AddWords_unconnected domain={"en"} translate={jest.fn(() => "ok")} />
     );
     handle = master.root.findByType(AddWords_unconnected);
+    console.log("in act" + handle.instance.allWords);
   });
 
   mockedAxios.put.mockClear();
@@ -60,17 +65,21 @@ describe("Tests AddWords", () => {
   });
 
   it("Adds a word", done => {
+    debugger;
     handle.instance.setState({ newVern: "testVern", newGloss: "testGloss" });
     mockedAxios.post.mockImplementationOnce((url, word: Word) => {
       return Promise.resolve({ data: "123" });
     });
     handle.instance.allWords = []; // This is what I want to do but it doesn't work
+    console.log("In adds a word" + handle.instance.allWords);
     handle.instance.submit(undefined, () => {
       expect(handle.instance.state.rows).toEqual([
         {
           vernacular: "testVern",
           glosses: "testGloss",
-          id: "123"
+          id: "123",
+          senseIndex: 0,
+          dupId: ""
         }
       ]);
       done();
@@ -83,17 +92,23 @@ describe("Tests AddWords", () => {
         {
           vernacular: "testVern1",
           glosses: "testGloss1",
-          id: "123"
+          id: "123",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern2",
           glosses: "testGloss2",
-          id: "456"
+          id: "456",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern3",
           glosses: "testGloss3",
-          id: "789"
+          id: "789",
+          senseIndex: 0,
+          dupId: ""
         }
       ]
     });
@@ -109,17 +124,23 @@ describe("Tests AddWords", () => {
         {
           vernacular: "testVern1",
           glosses: "testGloss1",
-          id: "123"
+          id: "123",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern2",
           glosses: "testGloss2",
-          id: "456"
+          id: "456",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern3",
           glosses: "testGloss3",
-          id: "789"
+          id: "789",
+          senseIndex: 0,
+          dupId: ""
         }
       ]
     });
@@ -130,12 +151,16 @@ describe("Tests AddWords", () => {
         {
           vernacular: "testVern1",
           glosses: "testGloss1",
-          id: "123"
+          id: "123",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern3",
           glosses: "testGloss3",
-          id: "789"
+          id: "789",
+          senseIndex: 0,
+          dupId: ""
         }
       ]);
       done();

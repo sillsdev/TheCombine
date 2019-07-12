@@ -123,6 +123,7 @@ export default class AddWords extends React.Component<
     )
       .catch(err => console.log(err))
       .then(res => {
+        debugger;
         let word = res as Word;
         let dupId = this.vernInFrontier(word.vernacular);
         rows.push({ ...this.wordToRow(word, 0), dupId });
@@ -175,6 +176,7 @@ export default class AddWords extends React.Component<
 
   /** updates a row in the view only */
   updateRow(row: Row, index: number) {
+    console.log(row);
     let rows = [...this.state.rows];
     rows.splice(index, 1, { ...rows[index], ...row });
     this.setState({ rows });
@@ -195,7 +197,7 @@ export default class AddWords extends React.Component<
       );
   }
 
-  /** Creates a new word from a row */
+  /** Adds the fields in a row to the word it corresponds to in the database */
   async rowToExistingWord(row: Row): Promise<Word> {
     let word = await Backend.getWord(row.id);
 
@@ -281,12 +283,11 @@ export default class AddWords extends React.Component<
 
   getWord(id: string): Word {
     let word = this.allWords.find(word => word.id === id);
-    if (!word) throw "No word exists with this id";
+    if (!word) throw new Error("No word exists with this id");
     return word;
   }
 
   showDuplicateForRow(rowIndex: number) {
-    console.log(this.state.rows);
     let row = this.state.rows[rowIndex];
     let dupWord = this.getWord(row.dupId);
     row.dupVernacular = dupWord.vernacular;
@@ -309,7 +310,7 @@ export default class AddWords extends React.Component<
   ) {
     let row = this.state.rows[rowIndex];
     if (row.dupId === "") {
-      throw "This row does not have a duplicate";
+      throw new Error("This row does not have a duplicate");
     } else {
       Backend.deleteWordById(row.id)
         .catch(err => console.log(err))
@@ -562,7 +563,7 @@ export default class AddWords extends React.Component<
                                 )
                               }
                               style={{
-                                margin: theme.spacing(1)
+                                margin: 4
                               }}
                             />
                           </Grid>
