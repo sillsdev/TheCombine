@@ -4,7 +4,17 @@ import {
   setCurrentProject,
   ProjectAction
 } from "../../components/Project/ProjectActions";
-import { updateProject } from "../../backend";
+import {
+  updateGoal,
+  getUserEditId,
+  getIndexInHistory,
+  GoalAction
+} from "../../components/GoalTimeline/GoalsActions";
+import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
+import * as backend from "../../backend";
+import { Goal } from "../../types/goals";
+import { UserProjectMap } from "../../components/Project/UserProject";
+import { Project } from "../../types/project";
 
 export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
 export type SET_CHARACTER_INVENTORY = typeof SET_CHARACTER_INVENTORY;
@@ -25,18 +35,68 @@ export interface CharacterInventoryAction {
  */
 export function uploadInventory() {
   return async (
-    dispatch: Dispatch<CharacterInventoryAction | ProjectAction>,
+    dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>,
     getState: () => StoreState
   ) => {
-    let project = getState().currentProject;
-    let inv = getState().characterInventoryState.inventory;
-    project.characterSet = inv;
+    let state: StoreState = getState();
+    let project: Project = updateCurrentProject(state);
+    let updatedGoal: Goal = updateCurrentGoal(state);
+    let history: Goal[] = state.goalsState.historyState.history;
 
-    updateProject(project);
-
-    dispatch(setCurrentProject(project));
-    //alert("Uploading inventory");
+    await saveChanges(updatedGoal, history, project, dispatch);
   };
+}
+
+async function saveChanges(
+  goal: Goal,
+  history: Goal[],
+  project: Project,
+  dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
+) {
+  await saveChangesToGoal(goal, history, dispatch);
+  await saveChangesToProject(project, dispatch);
+}
+
+async function saveChangesToGoal(
+  updatedGoal: Goal,
+  history: Goal[],
+  dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
+) {
+  let projectId: string = backend.getProjectId();
+  let userEditId: string = getUserEditId();
+  let userProjectMap: UserProjectMap = {
+    projectId: projectId,
+    userEditId: userEditId
+  };
+  let indexInHistory: number = getIndexInHistory(history, updatedGoal);
+
+  dispatch(updateGoal(updatedGoal));
+  await backend
+    .addStepToGoal(userProjectMap, indexInHistory, updatedGoal)
+    .catch((err: string) => console.log(err));
+}
+
+async function saveChangesToProject(
+  project: Project,
+  dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
+) {
+  dispatch(setCurrentProject(project));
+  await backend.updateProject(project);
+}
+
+function updateCurrentProject(state: StoreState): Project {
+  let project = state.currentProject;
+  let inv = state.characterInventoryState.inventory;
+  project.characterSet = inv;
+  return project;
+}
+
+function updateCurrentGoal(state: StoreState): Goal {
+  let history: Goal[] = state.goalsState.historyState.history;
+  let currentGoal: CreateCharInv = history[history.length - 1] as CreateCharInv;
+  // Nothing stored as goal data for now
+
+  return currentGoal;
 }
 
 export function setInventory(payload: string[]): CharacterInventoryAction {
