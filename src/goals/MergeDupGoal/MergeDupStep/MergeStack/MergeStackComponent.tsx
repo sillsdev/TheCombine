@@ -4,8 +4,6 @@ import Card from "@material-ui/core/Card/Card";
 import {
   CardContent,
   Typography,
-  List,
-  ListItem,
   IconButton,
   Grid,
   Chip
@@ -13,7 +11,7 @@ import {
 import { uuid } from "../../../../utilities";
 import { Sort } from "@material-ui/icons";
 import React from "react";
-import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
+import { Draggable } from "react-beautiful-dnd";
 
 //interface for component props
 export interface MergeStackProps {
@@ -35,7 +33,6 @@ interface MergeStackState {
 
 // Constants
 const WIDTH: string = "16vw"; // Width of each card
-const HEIGHT: string = "10vw"; // Height of each card
 
 class MergeStack extends React.Component<
   MergeStackProps & LocalizeContextProps,
@@ -59,7 +56,6 @@ class MergeStack extends React.Component<
   }
 
   render() {
-    let displaySenseKey = Object.keys(this.props.sense)[0];
     let displaySenseID = Object.values(this.props.sense)[0];
     let displaySense = this.props.senses[displaySenseID];
     //TODO: Make language dynamic

@@ -88,6 +88,14 @@ export function moveSenses(
   };
 }
 
+// sugar for moving a single sense
+export function moveSense(
+  src: MergeTreeReference,
+  dest: MergeTreeReference
+): MergeTreeAction {
+  return moveSenses([src], [dest]);
+}
+
 export function setSense(
   ref: MergeTreeReference,
   data: number | undefined
@@ -109,13 +117,17 @@ export function setWordData(words: Word[]): MergeDataAction {
   };
 }
 
-export function orderSense(wordID: string, senseID: string, order: number): MergeOrderAction {
+export function orderSense(
+  wordID: string,
+  senseID: string,
+  order: number
+): MergeOrderAction {
   return {
     type: MergeTreeActions.ORDER_SENSE,
     wordID: wordID,
     senseID: senseID,
-    order: order,
-  }
+    order: order
+  };
 }
 
 export function mergeSense() {
@@ -239,7 +251,9 @@ export function mergeAll() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
-    for (let  wordID of Object.keys(getState().mergeDuplicateGoal.mergeTreeState.data.words)){
+    for (let wordID of Object.keys(
+      getState().mergeDuplicateGoal.mergeTreeState.data.words
+    )) {
       await dispatch(mergeWord(wordID));
     }
     //await dispatch(clearTree());

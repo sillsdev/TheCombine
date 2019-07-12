@@ -56,14 +56,11 @@ class MergeDupStep extends React.Component<
     }
   }
 
-  dragDrop() {}
-
   next() {
     if (this.props.mergeAll) this.props.mergeAll();
   }
 
-  foo(res: DropResult) {
-    console.log(res);
+  handleDrop(res: DropResult) {
     let srcRefs = [];
     for (let key in this.props.words[res.source.droppableId].senses[
       res.draggableId
@@ -142,32 +139,12 @@ class MergeDupStep extends React.Component<
             style={{ flex: 1 }}
             spacing={2}
           >
-            <DragDropContext onDragEnd={res => this.foo(res)}>
+            <DragDropContext onDragEnd={res => this.handleDrop(res)}>
               {Object.keys(this.props.words).map(key => (
                 <Grid item key={key}>
                   <MergeRow portait={this.state.portrait} wordID={key} />
                 </Grid>
               ))}
-              {
-                <Box
-                  style={{ height: "100%" }}
-                  onDragOver={e => e.preventDefault()}
-                  onDrop={_ => this.dragDrop()}
-                  title={
-                    this.props.translate("mergeDups.helpText.root") as string
-                  }
-                >
-                  <hr />
-                  <Grid container>
-                    <Grid item />
-                    {
-                      <Card style={{ ...styleAddendum.inactive, width: 200 }}>
-                        <CardContent>Drag new root word Here</CardContent>
-                      </Card>
-                    }
-                  </Grid>
-                </Box>
-              }
             </DragDropContext>
           </Grid>
         </div>
