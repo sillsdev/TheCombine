@@ -178,11 +178,13 @@ namespace BackendFramework.Services
                                 //remove dups
                                 matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
                                 matchingVern.Senses[senseIndex].SemanticDomains = matchingVern.Senses[senseIndex].SemanticDomains.Distinct().ToList();
+
+                                duplicate = false;
                             }
                         }
                         else
                         {
-                            duplicate = false;
+                            //duplicate = false;
                         }
                         ++senseIndex;
                     }
