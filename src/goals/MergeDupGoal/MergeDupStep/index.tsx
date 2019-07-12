@@ -8,8 +8,9 @@ import { StoreState } from "../../../types";
 import {
   MergeTreeAction,
   refreshWords,
-  moveSense,
-  mergeAll
+  moveSenses,
+  mergeAll,
+  orderSense
 } from "./MergeDupStepActions";
 import MergeDupStepComponent from "./MergeDupStepComponent";
 import { MergeTreeReference } from "./MergeDupsTree";
@@ -31,8 +32,11 @@ export function mapDispatchToProps(
     refreshWords: () => {
       dispatch(refreshWords());
     },
-    moveSense: (src: MergeTreeReference, dest: MergeTreeReference) => {
-      dispatch(moveSense(src, dest));
+    moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => {
+      dispatch(moveSenses(src, dest));
+    },
+    orderSense: (wordID: string, senseID: string, order: number) => {
+      dispatch(orderSense(wordID, senseID, order));
     },
     mergeAll: () => {
       dispatch(mergeAll());

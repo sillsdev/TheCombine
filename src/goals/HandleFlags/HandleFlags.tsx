@@ -4,7 +4,8 @@ import {
   Tools,
   GoalOption,
   GoalType,
-  GoalStep
+  GoalStep,
+  generateGuid
 } from "../../types/goals";
 import { User } from "../../types/user";
 
@@ -19,6 +20,7 @@ export class HandleFlags implements Goal {
   tool: Tools;
   completed: boolean;
   result: GoalOption;
+  hash: string;
 
   constructor(steps: GoalStep[] = [], numSteps: number = 8) {
     this.goalType = GoalType.HandleFlags;
@@ -31,5 +33,6 @@ export class HandleFlags implements Goal {
     this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;
+    this.hash = generateGuid();
   }
 }

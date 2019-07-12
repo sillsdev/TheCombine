@@ -1,4 +1,10 @@
-import { Goal, Tools, GoalOption, GoalType, GoalStep } from "../../types/goals";
+import {
+  Goal,
+  Tools,
+  GoalOption,
+  GoalType,
+  generateGuid
+} from "../../types/goals";
 import { User } from "../../types/user";
 import { Word } from "../../types/word";
 
@@ -19,15 +25,16 @@ export class MergeDups implements Goal {
   goalType: GoalType;
   name: string;
   user: User;
-  steps: GoalStep[];
+  steps: MergeStepData[];
   numSteps: number;
   currentStep: number;
   data: MergeDupData;
   tool: Tools;
   completed: boolean;
   result: GoalOption;
+  hash: string;
 
-  constructor(steps: GoalStep[] = [], numSteps: number = 8) {
+  constructor(steps: MergeStepData[] = [], numSteps: number = 8) {
     this.goalType = GoalType.MergeDups;
     this.name = "mergeDups";
     this.user = new User("", "", "");
@@ -38,5 +45,6 @@ export class MergeDups implements Goal {
     this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;
+    this.hash = generateGuid();
   }
 }

@@ -3,9 +3,12 @@ import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { uuid } from "../../../../utilities";
 import { MergeTreeReference, Hash, MergeTreeWord } from "../MergeDupsTree";
-import { Box, ListSubheader, Grid, Card, CardContent } from "@material-ui/core";
+import {
+  Paper,
+  Typography
+} from "@material-ui/core";
 import MergeStack from "../MergeStack";
-import { styleAddendum } from "../../../../types/theme";
+import { Droppable } from "react-beautiful-dnd";
 
 //interface for component props
 export interface MergeRowProps {
@@ -18,12 +21,18 @@ export interface MergeRowProps {
 }
 
 //interface for component state
-interface MergeRowState {}
+interface MergeRowState {
+  items: number[];
+}
 
 export class MergeRow extends React.Component<
   MergeRowProps & LocalizeContextProps,
   MergeRowState
 > {
+  constructor(props: MergeRowProps & LocalizeContextProps) {
+    super(props);
+    this.state = { items: [0, 1, 2, 3, 4] };
+  }
   // this function is used to force this component to redraw itself when
   // the contents of parent change from the removeWord action in MergeStack
   update() {
@@ -43,65 +52,47 @@ export class MergeRow extends React.Component<
   }
 
   render() {
-    //visual definition
     return (
-      <Box style={{ flex: 1 }}>
-        <ListSubheader
-          onDragOver={e => e.preventDefault()}
-          onDrop={_ => this.drop()}
-        >
-          <hr />
-          <div style={{ textAlign: "center" }}>
-            {this.props.words[this.props.wordID].vern}
-            <i> {"pl. " + this.props.words[this.props.wordID].plural} </i>
-          </div>
-        </ListSubheader>
-        <div>
-          <Grid container direction={this.props.portait ? "column" : "row"}>
-            {/*this.props.parent.senses.map(item => (
-              //<Grid item key={item.id}>
-              <MergeStack updateRow={() => this.update()} sense={item} />
-              //</Grid>
-            ))*/}
+      <Droppable
+        key={this.props.wordID}
+        droppableId={this.props.wordID}
+        isCombineEnabled={true}
+      >
+        {(provided) => (
+          <Paper
+            ref={provided.innerRef}
+            style={{
+              backgroundColor: "lightgrey",
+              paddingBottom: 8
+            }}
+            {...provided.droppableProps}
+          >
+            <Paper square style={{ padding: 8 }}>
+              <Typography variant="h5">
+                {this.props.words[this.props.wordID].vern}
+              </Typography>
+            </Paper>
             {Object.keys(this.props.words[this.props.wordID].senses).map(
-              senseID => (
-                <Grid item key={senseID}>
-                  <MergeStack
-                    senseID={senseID}
-                    wordID={this.props.wordID}
-                    sense={
-                      this.props.words[this.props.wordID].senses[senseID]
-                    }
-                  />
-                </Grid>
+              (item, index) => (
+                <MergeStack
+                  key={item}
+                  index={index}
+                  wordID={this.props.wordID}
+                  senseID={item}
+                  sense={this.props.words[this.props.wordID].senses[item]}
+                />
               )
             )}
-            <Grid
-              item
-              onDragOver={e => e.preventDefault()}
-              onDrop={_ => this.drop()}
-              style={{
-                position: "relative",
-                flex: "1 0 10vw"
-              }}
-            >
-              {
-                <Card style={{ ...styleAddendum.inactive, width: "10vw" }}>
-                  <CardContent>Drag new sense</CardContent>
-                  <CardContent>Here</CardContent>
-                </Card>
-              }
-            </Grid>
-            <Grid
-              item
-              style={{ flex: 1 }}
-              onDragOver={e => e.preventDefault()}
-              onDrop={_ => this.drop()}
-              title={this.props.translate("mergeDups.helpText.sense") as string}
-            />
-          </Grid>
-        </div>
-      </Box>
+
+            {provided.placeholder}
+            <div style={{ padding: 16, textAlign: "center" }}>
+              <Typography variant="subtitle1">
+                Drag a card here to merge
+              </Typography>
+            </div>
+          </Paper>
+        )}
+      </Droppable>
     );
   }
 }

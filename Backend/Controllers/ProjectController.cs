@@ -1,11 +1,13 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/projects")]
     public class ProjectController : Controller

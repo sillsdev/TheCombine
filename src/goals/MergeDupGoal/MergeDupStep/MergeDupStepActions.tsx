@@ -5,15 +5,20 @@ import { Word, State } from "../../../types/word";
 import * as backend from "../../../backend";
 import {
   nextStep,
-  NextStep
+  NextStep,
+  getUserEditId,
+  getIndexInHistory
 } from "../../../components/GoalTimeline/GoalsActions";
 import { Goal } from "../../../types/goals";
 import { Dispatch } from "redux";
+import { MergeDups } from "../MergeDups";
+import { UserProjectMap } from "../../../components/Project/UserProject";
 
 export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
   SET_PLURAL = "SET_PLURAL",
   MOVE_SENSE = "MOVE_SENSE",
+  ORDER_SENSE = "ORDER_SENSE",
   SET_SENSE = "SET_SENSE",
   SET_DATA = "SET_DATA",
   CLEAR_TREE = "CLEAR_TREE"
@@ -26,12 +31,19 @@ interface MergeDataAction {
 
 interface MergeTreeMoveAction {
   type: MergeTreeActions.MOVE_SENSE;
-  payload: { src: MergeTreeReference; dest: MergeTreeReference };
+  payload: { src: MergeTreeReference[]; dest: MergeTreeReference[] };
 }
 
 interface MergeTreeSetAction {
   type: MergeTreeActions.SET_SENSE;
   payload: { ref: MergeTreeReference; data: number | undefined };
+}
+
+interface MergeOrderAction {
+  type: MergeTreeActions.ORDER_SENSE;
+  wordID: string;
+  senseID: string;
+  order: number;
 }
 
 interface MergeTreeWordAction {
@@ -44,6 +56,7 @@ export type MergeTreeAction =
   | MergeTreeMoveAction
   | MergeTreeSetAction
   | MergeDataAction
+  | MergeOrderAction
   | { type: MergeTreeActions.CLEAR_TREE };
 
 // action creators
@@ -65,14 +78,22 @@ export function clearTree(): MergeTreeAction {
   return { type: MergeTreeActions.CLEAR_TREE };
 }
 
-export function moveSense(
-  src: MergeTreeReference,
-  dest: MergeTreeReference
+export function moveSenses(
+  src: MergeTreeReference[],
+  dest: MergeTreeReference[]
 ): MergeTreeAction {
   return {
     type: MergeTreeActions.MOVE_SENSE,
     payload: { src, dest }
   };
+}
+
+// sugar for moving a single sense
+export function moveSense(
+  src: MergeTreeReference,
+  dest: MergeTreeReference
+): MergeTreeAction {
+  return moveSenses([src], [dest]);
 }
 
 export function setSense(
@@ -96,6 +117,19 @@ export function setWordData(words: Word[]): MergeDataAction {
   };
 }
 
+export function orderSense(
+  wordID: string,
+  senseID: string,
+  order: number
+): MergeOrderAction {
+  return {
+    type: MergeTreeActions.ORDER_SENSE,
+    wordID: wordID,
+    senseID: senseID,
+    order: order
+  };
+}
+
 export function mergeSense() {
   return async (
     _dispatch: ThunkDispatch<any, any, MergeTreeAction>,
@@ -105,21 +139,37 @@ export function mergeSense() {
   };
 }
 
-const goToNextStep = (dispatch: Dispatch<NextStep>) =>
+const goToNextStep = (
+  dispatch: Dispatch<NextStep>,
+  history: Goal[],
+  goal: Goal
+) =>
   new Promise((resolve, reject) => {
     dispatch(nextStep());
+    let indexInHistory: number = getIndexInHistory(history, goal);
+    addStepToGoal(goal, indexInHistory);
     resolve();
   });
+
+async function addStepToGoal(goal: Goal, indexInHistory: number) {
+  let projectId: string = backend.getProjectId();
+  let userEditId: string = getUserEditId();
+  let userProjectMap: UserProjectMap = {
+    projectId: projectId,
+    userEditId: userEditId
+  };
+  await backend.addStepToGoal(userProjectMap, indexInHistory, goal);
+}
 
 export function refreshWords() {
   return async (
     dispatch: ThunkDispatch<any, any, MergeTreeAction | NextStep>,
     getState: () => StoreState
   ) => {
-    goToNextStep(dispatch).then(() => {
-      let history: Goal[] = getState().goalsState.historyState.history;
-      let goal: Goal = history[history.length - 1];
-      let words: Word[] = goal.steps[goal.currentStep - 1].words;
+    let history: Goal[] = getState().goalsState.historyState.history;
+    let goal: Goal = history[history.length - 1];
+    goToNextStep(dispatch, history, goal).then(() => {
+      let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1].words;
       dispatch(setWordData(words));
     });
   };
@@ -201,13 +251,11 @@ export function mergeAll() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
-    await Promise.all(
-      Object.keys(getState().mergeDuplicateGoal.mergeTreeState.data.words).map(
-        wordID => {
-          dispatch(mergeWord(wordID));
-        }
-      )
-    );
+    for (let wordID of Object.keys(
+      getState().mergeDuplicateGoal.mergeTreeState.data.words
+    )) {
+      await dispatch(mergeWord(wordID));
+    }
     //await dispatch(clearTree());
     await dispatch(refreshWords());
   };

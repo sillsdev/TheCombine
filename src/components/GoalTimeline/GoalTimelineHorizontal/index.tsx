@@ -5,9 +5,8 @@ import { connect } from "react-redux";
 import { StoreState } from "../../../types";
 import {
   asyncAddGoalToHistory,
-  LoadUserEditsAction,
-  AddGoalToHistory,
-  asyncGetUserEdits
+  asyncGetUserEdits,
+  GoalAction
 } from "../GoalsActions";
 import { ThunkDispatch } from "redux-thunk";
 
@@ -20,11 +19,7 @@ export function mapStateToProps(state: StoreState) {
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<
-    StoreState,
-    any,
-    LoadUserEditsAction | AddGoalToHistory
-  >
+  dispatch: ThunkDispatch<StoreState, any, GoalAction>
 ) {
   return {
     chooseGoal: (goal: Goal) => {
