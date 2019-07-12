@@ -5,7 +5,7 @@ import * as backend from "../../../../backend";
 import configureMockStore from "redux-mock-store";
 import { MergeData, MergeTree } from "../MergeDupsTree";
 import { MergeDups } from "../../MergeDups";
-import { goalDataMock } from "../../../../components/GoalTimeline/tests/GoalTimelineReducers.test";
+import { goalDataMock } from "./MockMergeDupData";
 
 jest.mock("../../../../backend", () => {
   return {
@@ -44,7 +44,7 @@ const data: { data: MergeData } = {
         srcWord: "WB",
         order: 0
       },
-      s4: {
+      S4: {
         glosses: [{ language: "", def: "Sense 4" }],
         semanticDomains: [],
         srcWord: "WB",
@@ -104,13 +104,6 @@ test("test simple merge", async () => {
     }
   ];
 
-  const mockGoal2: MergeDups = new MergeDups();
-  mockGoal2.data = goalDataMock;
-  mockGoal2.steps = [
-    {
-      words: []
-    }
-  ];
   const mockStoreState = {
     goalsState: {
       historyState: {

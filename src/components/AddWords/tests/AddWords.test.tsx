@@ -1,20 +1,9 @@
 import React from "react";
 
-import GoalSelectorScroll from "..";
-
-import { Provider } from "react-redux";
-import { act, Simulate } from "react-dom/test-utils";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer
-} from "react-test-renderer";
-import AddWords from "../";
-import configureStore from "redux-mock-store";
+import { act } from "react-dom/test-utils";
+import renderer from "react-test-renderer";
 import AddWords_unconnected from "../AddWordsComponent";
-import { LocalizeProvider } from "react-localize-redux";
 import configureMockStore from "redux-mock-store";
-import createMockStore from "redux-mock-store";
-import { GoalSelectorState } from "../../../types/goals";
 import axios from "axios";
 import { Word } from "../../../types/word";
 
@@ -37,25 +26,44 @@ jest.mock("react-localize-redux", () => {
 jest.mock("axios");
 let mockedAxios = axios as jest.Mocked<typeof axios>;
 
+// Circumvent unneeded store connections
+jest.mock("../../TreeView", () => {
+  const material = jest.requireActual("@material-ui/core");
+  return material.Container;
+});
+
 // Mock store
-const mockStore = configureStore();
+const mockStore = configureMockStore()({
+  treeViewState: { currentDomain: { name: "en", number: "1", subDomains: [] } }
+});
 
 beforeEach(() => {
   // Here, use the act block to be able to render our AddWords into the DOM
   // Re-created each time to prevent actions from previous runs from affecting future runs
   act(() => {
     master = renderer.create(
-      <AddWords_unconnected domain={"en"} translate={jest.fn(() => "ok")} />
+      <AddWords_unconnected
+        domain={{ name: "en", number: "1", subDomains: [] }}
+        translate={jest.fn(() => "ok")}
+      />
     );
-    handle = master.root.findByType(AddWords_unconnected);
   });
+  handle = master.root.findByType(AddWords_unconnected);
 
   mockedAxios.put.mockClear();
 });
 
+afterAll(() => {
+  jest.unmock("../../TreeView");
+});
+
 describe("Tests AddWords", () => {
   it("Constructs correctly", () => {
-    // Default snapshot test
+    // Switch from the selectDomain view to normal view
+    handle.instance.setState({
+      ...handle.instance.state,
+      gettingSemanticDomain: false
+    });
     snapTest("default view");
   });
 

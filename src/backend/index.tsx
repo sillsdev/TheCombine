@@ -6,6 +6,7 @@ import { authHeader } from "../components/Login/AuthHeaders";
 import { Goal, GoalType } from "../types/goals";
 import { UserEdit } from "../types/userEdit";
 import history from "../history";
+import { UserProjectMap } from "../components/Project/UserProject";
 
 const backendServer = axios.create({
   baseURL: "https://localhost:5001/v1"
@@ -14,7 +15,7 @@ const backendServer = axios.create({
 backendServer.interceptors.response.use(
   resp => resp,
   err => {
-    if (err.response.status === 401) {
+    if (err.response && err.response.status === 401) {
       history.push("/login");
     }
     return Promise.reject(err);
@@ -56,6 +57,7 @@ export async function mergeWords(
   parent: Word,
   children: MergeWord[]
 ): Promise<string> {
+  parent = JSON.parse(JSON.stringify(parent));
   parent.id = "";
   let childrenWords = children.map(child => ({
     SrcWordID: child.wordID,
@@ -193,7 +195,7 @@ export async function addGoalToUserEdit(
   goal: Goal
 ): Promise<Goal> {
   let goalType: string = goalNameToGoalTypeId(goal.name);
-  let stepData: string = goal.steps.toString();
+  let stepData: string = JSON.stringify(goal.steps);
   let userEditTuple = { goalType: goalType, stepData: [stepData] };
   let resp = await backendServer.post(
     `projects/${getProjectId()}/useredits/${userEditId}`,
@@ -203,6 +205,24 @@ export async function addGoalToUserEdit(
     }
   );
   return resp.data;
+}
+
+export async function addStepToGoal(
+  userProjectMap: UserProjectMap,
+  indexInHistory: number,
+  goal: Goal
+): Promise<Goal> {
+  let stepData: string = JSON.stringify(goal.steps);
+  let userEditId: string = userProjectMap.userEditId;
+  let projId: string = userProjectMap.projectId;
+  let userEditTuple = { goalIndex: indexInHistory, newEdit: stepData };
+  return await backendServer
+    .put(`projects/${getProjectId()}/useredits/${userEditId}`, userEditTuple, {
+      headers: { ...authHeader() }
+    })
+    .then(resp => {
+      return resp.data;
+    });
 }
 
 function goalNameToGoalTypeId(goalName: string): string {

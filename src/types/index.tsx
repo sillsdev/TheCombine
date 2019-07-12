@@ -6,6 +6,7 @@ import { GoalsState, GoalSelectorState } from "./goals";
 import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";
 import { Project } from "./project";
 import { MergeDuplicateState } from "../goals/MergeDupGoal/mergeDuplicateReducer";
+import { TreeViewState } from "../components/TreeView/TreeViewReducer";
 
 //root store structure
 export interface StoreState {
@@ -15,6 +16,7 @@ export interface StoreState {
   //intro windows
   loginState: LoginState;
   createProjectState: CreateProjectState;
+  treeViewState: TreeViewState;
 
   //general cleanup tools
   goalSelectorState: GoalSelectorState;

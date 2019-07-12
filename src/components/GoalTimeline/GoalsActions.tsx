@@ -18,34 +18,40 @@ import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder"
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
 
-export const LOAD_USER_EDITS = "LOAD_USER_EDITS";
-export type LOAD_USER_EDITS = typeof LOAD_USER_EDITS;
+export enum GoalsActions {
+  LOAD_USER_EDITS = "LOAD_USER_EDITS",
+  ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY",
+  NEXT_STEP = "NEXT_STEP",
+  UPDATE_GOAL = "UPDATE_GOAL"
+}
+
+export type GoalAction =
+  | LoadUserEdits
+  | AddGoalToHistory
+  | NextStep
+  | UpdateGoal;
 
 export interface LoadUserEdits extends ActionWithPayload<Goal[]> {
-  type: LOAD_USER_EDITS;
+  type: GoalsActions.LOAD_USER_EDITS;
   payload: Goal[];
 }
-
-export const ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY";
-export type ADD_GOAL_TO_HISTORY = typeof ADD_GOAL_TO_HISTORY;
 
 export interface AddGoalToHistory extends ActionWithPayload<Goal[]> {
-  type: ADD_GOAL_TO_HISTORY;
+  type: GoalsActions.ADD_GOAL_TO_HISTORY;
   payload: Goal[];
 }
 
-export const NEXT_STEP = "NEXT_STEP";
-export type NEXT_STEP = typeof NEXT_STEP;
-
 export interface NextStep extends ActionWithPayload<Goal[]> {
-  type: NEXT_STEP;
+  type: GoalsActions.NEXT_STEP;
 }
 
-export type AddGoalToHistoryAction = AddGoalToHistory;
-export type LoadUserEditsAction = LoadUserEdits;
+export interface UpdateGoal extends ActionWithPayload<Goal[]> {
+  type: GoalsActions.UPDATE_GOAL;
+  payload: Goal[];
+}
 
 export function asyncLoadUserEdits(projectId: string, userEditId: string) {
-  return async (dispatch: Dispatch<LoadUserEditsAction>) => {
+  return async (dispatch: Dispatch<GoalAction>) => {
     await backend
       .getUserEditById(projectId, userEditId)
       .then(userEdit => {
@@ -73,9 +79,7 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 }
 
 export function asyncGetUserEdits() {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, LoadUserEditsAction>
-  ) => {
+  return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     let currentUserString = localStorage.getItem("user");
     if (currentUserString) {
       let currentUserObject: User = JSON.parse(currentUserString);
@@ -92,7 +96,7 @@ export function asyncGetUserEdits() {
 }
 
 export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: Dispatch<AddGoalToHistoryAction>, getState: any) => {
+  return async (dispatch: Dispatch<GoalAction>, getState: any) => {
     let userEditId: string = getUserEditId();
 
     await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
@@ -102,8 +106,8 @@ export function asyncAddGoalToHistory(goal: Goal) {
         dispatch(addGoalToHistory(goal));
         history.push(`/goals/${resp}`);
       })
-      .catch(err => {
-        console.log("Failed to add goal to history");
+      .catch((err: string) => {
+        console.log(err);
       });
   };
 }
@@ -115,11 +119,16 @@ export async function loadGoalData(goal: Goal): Promise<Goal> {
       await finder.getNextDups(goal.numSteps).then(words => {
         goal.data = { plannedWords: words };
       });
+      break;
+    case GoalType.CreateCharInv:
+      break;
+    default:
+      break;
   }
   return goal;
 }
 
-function getUserEditId(): string {
+export function getUserEditId(): string {
   let userString = localStorage.getItem("user");
   let userObject: User;
   let userEditId: string = "";
@@ -157,6 +166,15 @@ function updateUserWithUserEditId(
   return updatedUserString;
 }
 
+export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
+  for (let i = 0; i < history.length; i++) {
+    if (history[i].hash === currentGoal.hash) {
+      return i;
+    }
+  }
+  return -1;
+}
+
 function convertEditsToArrayOfGoals(edits: Edit[]): Goal[] {
   let history: Goal[] = [];
   for (var edit of edits) {
@@ -192,13 +210,17 @@ function goalTypeToGoal(type: number): Goal | undefined {
 }
 
 export function addGoalToHistory(goal: Goal): AddGoalToHistory {
-  return { type: ADD_GOAL_TO_HISTORY, payload: [goal] };
+  return { type: GoalsActions.ADD_GOAL_TO_HISTORY, payload: [goal] };
 }
 
 export function loadUserEdits(history: Goal[]): LoadUserEdits {
-  return { type: LOAD_USER_EDITS, payload: history };
+  return { type: GoalsActions.LOAD_USER_EDITS, payload: history };
 }
 
 export function nextStep(): NextStep {
-  return { type: NEXT_STEP, payload: [] };
+  return { type: GoalsActions.NEXT_STEP, payload: [] };
+}
+
+export function updateGoal(goal: Goal): UpdateGoal {
+  return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
 }

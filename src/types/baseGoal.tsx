@@ -4,7 +4,8 @@ import {
   Tools,
   GoalOption,
   GoalType,
-  GoalStep
+  GoalStep,
+  generateGuid
 } from "../types/goals";
 import { User } from "./user";
 
@@ -21,6 +22,7 @@ export class BaseGoal implements Goal {
   tool: Tools;
   completed: boolean;
   result: GoalOption;
+  hash: string;
 
   constructor(numSteps: number = 8) {
     this.goalType = GoalType.CreateCharInv;
@@ -33,5 +35,6 @@ export class BaseGoal implements Goal {
     this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;
+    this.hash = generateGuid();
   }
 }
