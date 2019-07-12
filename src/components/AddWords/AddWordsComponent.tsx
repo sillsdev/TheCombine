@@ -18,6 +18,7 @@ import { Delete } from "@material-ui/icons";
 import * as Backend from "../../backend";
 import { SemanticDomain } from "../../types/project";
 import DuplicateFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import { setSense } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 
 interface AddWordsProps {
   domain: string;
@@ -87,13 +88,21 @@ export default class AddWords extends React.Component<
     let foundDuplicate: [string, number] = ["", 2];
 
     for (let word of this.allWords) {
-      //TODO: check accessability
-      let levenD: number = Finder.getLevenshteinDistance(
-        vernacular,
-        word.vernacular
-      );
-      if (levenD < foundDuplicate[1]) {
-        foundDuplicate = [word.id, levenD];
+      let accessible = false;
+      for (let sense of word.senses) {
+        if (sense.accessibility === 0) {
+          accessible = true;
+          break;
+        }
+      }
+      if (accessible) {
+        let levenD: number = Finder.getLevenshteinDistance(
+          vernacular,
+          word.vernacular
+        );
+        if (levenD < foundDuplicate[1]) {
+          foundDuplicate = [word.id, levenD];
+        }
       }
     }
 
@@ -123,7 +132,6 @@ export default class AddWords extends React.Component<
     )
       .catch(err => console.log(err))
       .then(res => {
-        debugger;
         let word = res as Word;
         let dupId = this.vernInFrontier(word.vernacular);
         rows.push({ ...this.wordToRow(word, 0), dupId });
@@ -175,11 +183,12 @@ export default class AddWords extends React.Component<
   }
 
   /** updates a row in the view only */
-  updateRow(row: Row, index: number) {
+  updateRow(row: Row, index: number, callback?: Function) {
     console.log(row);
     let rows = [...this.state.rows];
     rows.splice(index, 1, { ...rows[index], ...row });
-    this.setState({ rows });
+    if (callback) this.setState({ rows }, () => callback());
+    else this.setState({ rows });
   }
 
   /** updates the word in the backend */
@@ -318,12 +327,14 @@ export default class AddWords extends React.Component<
           if (row.dupVernacular && row.dupGlosses) {
             let newRow: Row = {
               vernacular: row.dupVernacular,
-              glosses: row.dupGlosses[senseIndex],
+              glosses: row.dupGlosses[senseIndex]
+                ? row.dupGlosses[senseIndex]
+                : row.glosses,
               id: row.dupId,
               dupId: "",
               senseIndex
             };
-            this.updateRow(newRow, rowIndex);
+            this.updateRow(newRow, rowIndex, () => this.updateWord(rowIndex));
           }
         });
     }
@@ -505,7 +516,7 @@ export default class AddWords extends React.Component<
                       <Grid
                         item
                         xs={12}
-                        key={rowIndex}
+                        key={"d" + rowIndex}
                         onMouseEnter={() =>
                           this.setState({ hoverRow: rowIndex })
                         }
@@ -549,7 +560,7 @@ export default class AddWords extends React.Component<
                                     )
                                   }
                                   style={{
-                                    margin: theme.spacing(1)
+                                    margin: 4
                                   }}
                                 />
                               ))}

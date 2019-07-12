@@ -21,6 +21,26 @@ import { Word } from "../../../types/word";
 let master: renderer.ReactTestRenderer;
 let handle: renderer.ReactTestInstance;
 
+const testWord: Word = {
+  id: "",
+  vernacular: "",
+  senses: [
+    {
+      glosses: [],
+      semanticDomains: []
+    }
+  ],
+  audio: "",
+  created: "",
+  modified: "",
+  history: [],
+  partOfSpeech: "",
+  editedBy: [],
+  accessability: 0,
+  otherField: "",
+  plural: ""
+};
+
 // Mock getTranslate
 const MOCK_TRANSLATE = jest.fn(_ => {
   return "dummy";
@@ -46,13 +66,12 @@ beforeEach(() => {
   act(() => {
     // Getfrontierwords
     mockedAxios.get.mockImplementationOnce(url => {
-      return Promise.resolve([]);
+      return Promise.resolve({ data: [] });
     });
     master = renderer.create(
       <AddWords_unconnected domain={"en"} translate={jest.fn(() => "ok")} />
     );
     handle = master.root.findByType(AddWords_unconnected);
-    console.log("in act" + handle.instance.allWords);
   });
 
   mockedAxios.put.mockClear();
@@ -65,13 +84,11 @@ describe("Tests AddWords", () => {
   });
 
   it("Adds a word", done => {
-    debugger;
     handle.instance.setState({ newVern: "testVern", newGloss: "testGloss" });
     mockedAxios.post.mockImplementationOnce((url, word: Word) => {
       return Promise.resolve({ data: "123" });
     });
     handle.instance.allWords = []; // This is what I want to do but it doesn't work
-    console.log("In adds a word" + handle.instance.allWords);
     handle.instance.submit(undefined, () => {
       expect(handle.instance.state.rows).toEqual([
         {
@@ -112,10 +129,12 @@ describe("Tests AddWords", () => {
         }
       ]
     });
-    mockedAxios.put.mockResolvedValue(1);
-    handle.instance.updateWord(1);
-    expect(mockedAxios.put).toHaveBeenCalledTimes(1);
-    done();
+    mockedAxios.get.mockResolvedValueOnce({ data: testWord });
+    mockedAxios.put.mockResolvedValueOnce({ data: 1 });
+    handle.instance.updateWord(1, () => {
+      expect(mockedAxios.put).toHaveBeenCalledTimes(1);
+      done();
+    });
   });
 
   it("Removes a word", done => {
