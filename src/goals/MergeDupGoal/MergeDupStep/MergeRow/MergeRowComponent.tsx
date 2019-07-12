@@ -3,7 +3,15 @@ import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { uuid } from "../../../../utilities";
 import { MergeTreeReference, Hash, MergeTreeWord } from "../MergeDupsTree";
-import { Box, ListSubheader, Grid, Card, CardContent } from "@material-ui/core";
+import {
+  Box,
+  ListSubheader,
+  Grid,
+  Card,
+  CardContent,
+  Paper,
+  Typography
+} from "@material-ui/core";
 import MergeStack from "../MergeStack";
 import { styleAddendum } from "../../../../types/theme";
 import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
@@ -51,30 +59,43 @@ export class MergeRow extends React.Component<
 
   render() {
     return (
-      <Droppable droppableId={this.props.wordID}>
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            style={{
-              backgroundColor: "lightgrey",
-              padding: 8,
-              width: 250
-            }}
-            {...provided.droppableProps}
-          >
-            {Object.keys(this.props.words[this.props.wordID].senses).map(
-              (item, index) => (
-                <MergeStack
-                  index={index}
-                  wordID={this.props.wordID}
-                  senseID={item}
-                  sense={this.props.words[this.props.wordID].senses[item]}
-                />
-              )
-            )}
-          </div>
-        )}
-      </Droppable>
+      <div>
+        <Droppable droppableId={this.props.wordID} isCombineEnabled={true}>
+          {(provided, snapshot) => (
+            <Paper
+              ref={provided.innerRef}
+              style={{
+                backgroundColor: "lightgrey",
+                paddingBottom: 8
+              }}
+              {...provided.droppableProps}
+            >
+              <Paper square style={{ padding: 8 }}>
+                <Typography variant="h5">
+                  {this.props.words[this.props.wordID].vern}
+                </Typography>
+              </Paper>
+              {Object.keys(this.props.words[this.props.wordID].senses).map(
+                (item, index) => (
+                  <MergeStack
+                    index={index}
+                    wordID={this.props.wordID}
+                    senseID={item}
+                    sense={this.props.words[this.props.wordID].senses[item]}
+                  />
+                )
+              )}
+
+              {provided.placeholder}
+              <div style={{ padding: 16, textAlign: "center" }}>
+                <Typography variant="subtitle1">
+                  Drag a card here to merge
+                </Typography>
+              </div>
+            </Paper>
+          )}
+        </Droppable>
+      </div>
     );
     //visual definition
     //return (

@@ -5,7 +5,7 @@ import {
   WordDragAction
 } from "../../../../components/DraggableWord/actions";
 import { StoreState } from "../../../../types";
-import { MergeTreeAction, moveSense } from "../MergeDupStepActions";
+import { MergeTreeAction } from "../MergeDupStepActions";
 import MergeRowComponent from "./MergeRowComponent";
 import { MergeTreeReference } from "../MergeDupsTree";
 
@@ -22,9 +22,6 @@ export function mapDispatchToProps(
   return {
     dropWord: () => {
       dispatch(dropWord());
-    },
-    moveSense: (src: MergeTreeReference, dest: MergeTreeReference) => {
-      dispatch(moveSense(src, dest));
     }
   };
 }

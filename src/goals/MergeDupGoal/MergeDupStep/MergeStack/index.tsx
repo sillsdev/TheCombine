@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import MergeStackComponent from "./MergeStackComponent";
 import { StoreState } from "../../../../types";
-import { MergeTreeAction, moveSense } from "../MergeDupStepActions";
+import { MergeTreeAction } from "../MergeDupStepActions";
 import { MergeTreeReference } from "../MergeDupsTree";
 import {
   WordDragAction,
@@ -27,9 +27,6 @@ export function mapDispatchToProps(
     dragWord: (ref: MergeTreeReference) => {
       dispatch(dragWord(ref));
     },
-    moveSense: (src: MergeTreeReference, dest: MergeTreeReference) => {
-      dispatch(moveSense(src, dest));
-    }
   };
 }
 

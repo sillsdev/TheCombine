@@ -31,7 +31,8 @@ export interface MergeDupStepProps {
   words: { [wordID: string]: MergeTreeWord };
   dropWord?: () => void;
   draggedSense?: MergeTreeReference;
-  moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
+  moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
+  orderSense: (wordID: string, senseID: string, order: number) => void;
   mergeAll?: () => void;
   refreshWords?: () => void;
 }
@@ -55,28 +56,54 @@ class MergeDupStep extends React.Component<
     }
   }
 
-  dragDrop() {
-    if (
-      this.props.moveSense &&
-      this.props.draggedSense &&
-      this.props.dropWord
-    ) {
-      let ref = {
-        word: uuid(),
-        sense: uuid(),
-        duplicate: uuid()
-      };
-      this.props.moveSense(this.props.draggedSense, ref);
-      this.props.dropWord();
-    }
-  }
+  dragDrop() {}
 
   next() {
     if (this.props.mergeAll) this.props.mergeAll();
   }
 
-  foo(res: DropResult){
+  foo(res: DropResult) {
     console.log(res);
+    let srcRefs = [];
+    for (let key in this.props.words[res.source.droppableId].senses[
+      res.draggableId
+    ]) {
+      srcRefs.push({
+        word: res.source.droppableId,
+        sense: res.draggableId,
+        duplicate: key
+      });
+    }
+
+    if (res.combine) {
+      // this is a combine operation
+      let destRefs = [];
+      for (let _ in srcRefs) {
+        destRefs.push({
+          word: res.combine.droppableId,
+          sense: res.combine.draggableId,
+          duplicate: uuid()
+        });
+      }
+      this.props.moveSenses(srcRefs, destRefs);
+    } else if (res.destination) {
+      if (res.source.droppableId !== res.destination.droppableId) {
+        // move to different word
+        let destRefs = [];
+        for (let _ in srcRefs) {
+          destRefs.push({
+            word: res.destination.droppableId,
+            sense: res.draggableId,
+            duplicate: uuid()
+          });
+        }
+        this.props.moveSenses(srcRefs, destRefs);
+        this.props.orderSense(res.destination.droppableId, res.draggableId, res.destination.index);
+      }else{
+      // set ordering
+        this.props.orderSense(res.source.droppableId, res.draggableId, res.destination.index);
+      }
+    }
   }
 
   render() {
@@ -89,13 +116,21 @@ class MergeDupStep extends React.Component<
           onChange={e => this.setState({ portrait: e.target.checked })}
         />
         {/* Merging pane */}
-        <div style={{ ...HEIGHT_STYLE, overflowY: "scroll" }}>
+        <div
+          style={{
+            ...HEIGHT_STYLE,
+            overflowY: "scroll",
+            background: "white",
+            padding: 8
+          }}
+        >
           <Grid
             container
             direction={this.state.portrait ? "row" : "column"}
             style={{ flex: 1 }}
+            spacing={2}
           >
-          <DragDropContext onDragEnd={res => this.foo(res)}>
+            <DragDropContext onDragEnd={res => this.foo(res)}>
               {Object.keys(this.props.words).map(key => (
                 <Grid item>
                   <MergeRow portait={this.state.portrait} wordID={key} />

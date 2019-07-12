@@ -6,7 +6,9 @@ import {
   Typography,
   List,
   ListItem,
-  IconButton
+  IconButton,
+  Grid,
+  Chip
 } from "@material-ui/core";
 import { uuid } from "../../../../utilities";
 import { Sort } from "@material-ui/icons";
@@ -76,6 +78,7 @@ class MergeStack extends React.Component<
         key={this.props.senseID}
         draggableId={this.props.senseID}
         index={this.props.index}
+        type="SENSE"
       >
         {(provided, snapshot) => (
           <Card
@@ -84,8 +87,9 @@ class MergeStack extends React.Component<
             {...provided.dragHandleProps}
             style={{
               ...provided.draggableProps.style,
-              margin: "0 0 8px 0",
+              margin: 8,
               userSelect: "none",
+              width: WIDTH,
               background: snapshot.isDragging ? "lightgreen" : "white"
             }}
           >
@@ -99,13 +103,16 @@ class MergeStack extends React.Component<
                 {gloss ? gloss.def : "{ no gloss }"}
               </Typography>
               {/* List semantic domains */}
-              <List dense={true}>
-                {displaySense.semanticDomains.length === 0 &&
-                  "{ no semantic domain }"}
+              <Grid container spacing={2}>
                 {displaySense.semanticDomains.map(dom => (
-                  <ListItem> {dom.name + "\t" + dom.number} </ListItem>
+                  <Grid item xs>
+                    <Chip
+                      label={dom.name + " " + dom.number}
+                      onDelete={() => {}}
+                    />
+                  </Grid>
                 ))}
-              </List>
+              </Grid>
             </CardContent>
           </Card>
         )}

@@ -14,6 +14,7 @@ export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
   SET_PLURAL = "SET_PLURAL",
   MOVE_SENSE = "MOVE_SENSE",
+  ORDER_SENSE = "ORDER_SENSE",
   SET_SENSE = "SET_SENSE",
   SET_DATA = "SET_DATA",
   CLEAR_TREE = "CLEAR_TREE"
@@ -26,12 +27,19 @@ interface MergeDataAction {
 
 interface MergeTreeMoveAction {
   type: MergeTreeActions.MOVE_SENSE;
-  payload: { src: MergeTreeReference; dest: MergeTreeReference };
+  payload: { src: MergeTreeReference[]; dest: MergeTreeReference[] };
 }
 
 interface MergeTreeSetAction {
   type: MergeTreeActions.SET_SENSE;
   payload: { ref: MergeTreeReference; data: number | undefined };
+}
+
+interface MergeOrderAction {
+  type: MergeTreeActions.ORDER_SENSE;
+  wordID: string;
+  senseID: string;
+  order: number;
 }
 
 interface MergeTreeWordAction {
@@ -44,6 +52,7 @@ export type MergeTreeAction =
   | MergeTreeMoveAction
   | MergeTreeSetAction
   | MergeDataAction
+  | MergeOrderAction
   | { type: MergeTreeActions.CLEAR_TREE };
 
 // action creators
@@ -65,9 +74,9 @@ export function clearTree(): MergeTreeAction {
   return { type: MergeTreeActions.CLEAR_TREE };
 }
 
-export function moveSense(
-  src: MergeTreeReference,
-  dest: MergeTreeReference
+export function moveSenses(
+  src: MergeTreeReference[],
+  dest: MergeTreeReference[]
 ): MergeTreeAction {
   return {
     type: MergeTreeActions.MOVE_SENSE,
@@ -94,6 +103,15 @@ export function setWordData(words: Word[]): MergeDataAction {
     type: MergeTreeActions.SET_DATA,
     payload: words
   };
+}
+
+export function orderSense(wordID: string, senseID: string, order: number): MergeOrderAction {
+  return {
+    type: MergeTreeActions.ORDER_SENSE,
+    wordID: wordID,
+    senseID: senseID,
+    order: order,
+  }
 }
 
 export function mergeSense() {
