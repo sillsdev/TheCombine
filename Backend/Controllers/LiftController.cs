@@ -22,14 +22,12 @@ namespace BackendFramework.Controllers
         private readonly IWordRepository _wordRepo;
         private readonly IProjectService _projectService;
         private readonly LiftService _liftService;
-        private readonly IProjectService _projectService;
 
         public LiftController(IWordRepository repo, IProjectService projServ)
         {
             _wordRepo = repo;
             _projectService = projServ;
             _liftService = new LiftService(_wordRepo, projServ);
-            _projectService = projServ;
         }
 
         // POST: v1/project/{projectId}/words/upload
