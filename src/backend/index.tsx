@@ -15,7 +15,7 @@ const backendServer = axios.create({
 backendServer.interceptors.response.use(
   resp => resp,
   err => {
-    if (err.response.status === 401) {
+    if (err.response && err.response.status === 401) {
       history.push("/login");
     }
     return Promise.reject(err);
@@ -57,6 +57,7 @@ export async function mergeWords(
   parent: Word,
   children: MergeWord[]
 ): Promise<string> {
+  parent = JSON.parse(JSON.stringify(parent));
   parent.id = "";
   let childrenWords = children.map(child => ({
     SrcWordID: child.wordID,
