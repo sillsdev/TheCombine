@@ -2,7 +2,6 @@ import React from "react";
 import {
   Paper,
   Typography,
-  Container,
   TextField,
   Grid,
   Divider,
@@ -11,17 +10,16 @@ import {
   Tooltip
 } from "@material-ui/core";
 import theme from "../../types/theme";
-import {
-  LocalizeContextProps,
-  Translate,
-  TranslateFunction
-} from "react-localize-redux";
+import { Translate, TranslateFunction } from "react-localize-redux";
 import { Word, State } from "../../types/word";
 import { Delete } from "@material-ui/icons";
 import * as Backend from "../../backend";
 
+import DomainTree from "../TreeView/SemanticDomain";
+import TreeViewComponent from "../TreeView";
+
 interface AddWordsProps {
-  domain: string;
+  domain: DomainTree;
   translate: TranslateFunction;
 }
 
@@ -30,6 +28,7 @@ interface AddWordsState {
   newVern: string;
   newGloss: string;
   hoverRow?: number;
+  gettingSemanticDomain?: boolean;
 }
 
 /** The data from the `Word` type that the view uses */
@@ -48,7 +47,8 @@ export default class AddWords extends React.Component<
     this.state = {
       newVern: "",
       newGloss: "",
-      rows: []
+      rows: [],
+      gettingSemanticDomain: true
     };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
@@ -142,7 +142,9 @@ export default class AddWords extends React.Component<
       senses: [
         {
           glosses: [],
-          semanticDomains: []
+          semanticDomains: [
+            { name: this.props.domain.name, number: this.props.domain.number }
+          ]
         }
       ],
       audio: "",
@@ -181,142 +183,76 @@ export default class AddWords extends React.Component<
   }
 
   render() {
-    return (
-      <Container>
-        <Paper
-          style={{
-            padding: theme.spacing(2),
-            maxWidth: 800,
-            marginLeft: "auto",
-            marginRight: "auto"
-          }}
+    return this.state.gettingSemanticDomain ? (
+      <TreeViewComponent
+        returnControlToCaller={() =>
+          this.setState({
+            gettingSemanticDomain: false
+          })
+        }
+      />
+    ) : (
+      <Paper
+        style={{
+          padding: theme.spacing(2),
+          maxWidth: 800,
+          marginLeft: "auto",
+          marginRight: "auto"
+        }}
+      >
+        <Typography
+          variant="h4"
+          align="center"
+          style={{ marginBottom: theme.spacing(2) }}
         >
-          <Typography
-            variant="h4"
-            align="center"
-            style={{ marginBottom: theme.spacing(2) }}
+          <Translate id="addWords.domain" />
+          {": "}
+          <Button
+            variant={"contained"}
+            onClick={() => {
+              this.setState({ gettingSemanticDomain: true });
+            }}
           >
-            <Translate id="addWords.domain" />: Sky
-          </Typography>
-          <Divider />
-          <form onSubmit={e => this.submit(e)}>
-            <input type="submit" style={{ display: "none" }} />
+            <Typography variant={"h4"}>
+              {this.props.domain.name + " (" + this.props.domain.number + ")"}
+            </Typography>
+          </Button>
+        </Typography>
+        <Divider />
+        <form onSubmit={e => this.submit(e)}>
+          <input type="submit" style={{ display: "none" }} />
 
-            {/* Table title */}
-            <Grid container spacing={3}>
-              <Grid item xs={5}>
-                <Typography
-                  variant="h5"
-                  align="center"
-                  style={{ marginTop: theme.spacing(2) }}
+          {/* Table title */}
+          <Grid container spacing={3}>
+            <Grid item xs={5}>
+              <Typography
+                variant="h5"
+                align="center"
+                style={{ marginTop: theme.spacing(2) }}
+              >
+                <Translate id="addWords.vernacular" />
+              </Typography>
+            </Grid>
+            <Grid item xs={5}>
+              <Typography
+                variant="h5"
+                align="center"
+                style={{ marginTop: theme.spacing(2) }}
+              >
+                <Translate id="addWords.glosses" />
+              </Typography>
+            </Grid>
+
+            {/* Rows of words */}
+            {this.state.rows.map((row, index) => {
+              return (
+                <Grid
+                  item
+                  xs={12}
+                  key={index}
+                  onMouseEnter={() => this.setState({ hoverRow: index })}
+                  onMouseLeave={() => this.setState({ hoverRow: undefined })}
                 >
-                  <Translate id="addWords.vernacular" />
-                </Typography>
-              </Grid>
-              <Grid item xs={5}>
-                <Typography
-                  variant="h5"
-                  align="center"
-                  style={{ marginTop: theme.spacing(2) }}
-                >
-                  <Translate id="addWords.glosses" />
-                </Typography>
-              </Grid>
-
-              {/* Rows of words */}
-              {this.state.rows.map((row, index) => {
-                return (
-                  <Grid
-                    item
-                    xs={12}
-                    key={index}
-                    onMouseEnter={() => this.setState({ hoverRow: index })}
-                    onMouseLeave={() => this.setState({ hoverRow: undefined })}
-                  >
-                    <Grid container>
-                      <Grid
-                        item
-                        xs={5}
-                        style={{
-                          paddingLeft: theme.spacing(2),
-                          paddingRight: theme.spacing(2)
-                        }}
-                      >
-                        <TextField
-                          fullWidth
-                          value={row.vernacular}
-                          onChange={e => {
-                            this.updateRow(
-                              { ...row, vernacular: e.target.value },
-                              index
-                            );
-                          }}
-                          onBlur={() => {
-                            this.updateWord(index);
-                          }}
-                          onKeyDown={e => {
-                            if (e.key === "Enter") {
-                              this.focusVernInput();
-                            }
-                          }}
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={5}
-                        style={{
-                          paddingLeft: theme.spacing(2),
-                          paddingRight: theme.spacing(2)
-                        }}
-                      >
-                        <TextField
-                          fullWidth
-                          value={row.glosses}
-                          onChange={e => {
-                            this.updateRow(
-                              { ...row, glosses: e.target.value },
-                              index
-                            );
-                          }}
-                          onBlur={() => {
-                            this.updateWord(index);
-                          }}
-                          onKeyDown={e => {
-                            if (e.key === "Enter") {
-                              this.focusVernInput();
-                            }
-                          }}
-                        />
-                      </Grid>
-                      <Grid item xs={2}>
-                        {this.state.hoverRow === index && (
-                          <React.Fragment>
-                            <Tooltip
-                              title={
-                                this.props.translate(
-                                  "addWords.deleteRow"
-                                ) as string
-                              }
-                              placement="top"
-                            >
-                              <IconButton
-                                size="small"
-                                onClick={() => this.removeWord(index)}
-                              >
-                                <Delete />
-                              </IconButton>
-                            </Tooltip>
-                          </React.Fragment>
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                );
-              })}
-
-              {/* New word entry */}
-              <React.Fragment>
-                <Grid item xs={12}>
                   <Grid container>
                     <Grid
                       item
@@ -327,23 +263,21 @@ export default class AddWords extends React.Component<
                       }}
                     >
                       <TextField
-                        autoFocus
-                        label={<Translate id="addWords.vernacular" />}
                         fullWidth
-                        variant="outlined"
-                        value={this.state.newVern}
+                        value={row.vernacular}
                         onChange={e => {
-                          this.updateField(e, "newVern");
+                          this.updateRow(
+                            { ...row, vernacular: e.target.value },
+                            index
+                          );
                         }}
-                        inputRef={this.vernInput}
-                        // Move the focus to the next box when the right arrow key is pressed
+                        onBlur={() => {
+                          this.updateWord(index);
+                        }}
                         onKeyDown={e => {
-                          if (
-                            e.key === "ArrowRight" &&
-                            (e.target as HTMLInputElement).selectionStart ===
-                              this.state.newVern.length
-                          )
-                            this.focusGlossInput();
+                          if (e.key === "Enter") {
+                            this.focusVernInput();
+                          }
                         }}
                       />
                     </Grid>
@@ -356,43 +290,128 @@ export default class AddWords extends React.Component<
                       }}
                     >
                       <TextField
-                        label={<Translate id="addWords.glosses" />}
                         fullWidth
-                        variant="outlined"
-                        value={this.state.newGloss}
+                        value={row.glosses}
                         onChange={e => {
-                          this.updateField(e, "newGloss");
+                          this.updateRow(
+                            { ...row, glosses: e.target.value },
+                            index
+                          );
                         }}
-                        inputRef={this.glossInput}
-                        // Move the focus to the previous box when the left arrow key is pressed
+                        onBlur={() => {
+                          this.updateWord(index);
+                        }}
                         onKeyDown={e => {
-                          if (
-                            e.key === "ArrowLeft" &&
-                            (e.target as HTMLInputElement).selectionStart === 0
-                          )
+                          if (e.key === "Enter") {
                             this.focusVernInput();
+                          }
                         }}
                       />
                     </Grid>
+                    <Grid item xs={2}>
+                      {this.state.hoverRow === index && (
+                        <React.Fragment>
+                          <Tooltip
+                            title={
+                              this.props.translate(
+                                "addWords.deleteRow"
+                              ) as string
+                            }
+                            placement="top"
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={() => this.removeWord(index)}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </Tooltip>
+                        </React.Fragment>
+                      )}
+                    </Grid>
                   </Grid>
                 </Grid>
-              </React.Fragment>
-            </Grid>
-          </form>
-          <Grid container justify="flex-end" spacing={2}>
-            <Grid item>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                style={{ marginTop: theme.spacing(2) }}
-              >
-                <Translate id="addWords.next" />
-              </Button>
-            </Grid>
+              );
+            })}
+
+            {/* New word entry */}
+            <React.Fragment>
+              <Grid item xs={12}>
+                <Grid container>
+                  <Grid
+                    item
+                    xs={5}
+                    style={{
+                      paddingLeft: theme.spacing(2),
+                      paddingRight: theme.spacing(2)
+                    }}
+                  >
+                    <TextField
+                      autoFocus
+                      label={<Translate id="addWords.vernacular" />}
+                      fullWidth
+                      variant="outlined"
+                      value={this.state.newVern}
+                      onChange={e => {
+                        this.updateField(e, "newVern");
+                      }}
+                      inputRef={this.vernInput}
+                      // Move the focus to the next box when the right arrow key is pressed
+                      onKeyDown={e => {
+                        if (
+                          e.key === "ArrowRight" &&
+                          (e.target as HTMLInputElement).selectionStart ===
+                            this.state.newVern.length
+                        )
+                          this.focusGlossInput();
+                      }}
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={5}
+                    style={{
+                      paddingLeft: theme.spacing(2),
+                      paddingRight: theme.spacing(2)
+                    }}
+                  >
+                    <TextField
+                      label={<Translate id="addWords.glosses" />}
+                      fullWidth
+                      variant="outlined"
+                      value={this.state.newGloss}
+                      onChange={e => {
+                        this.updateField(e, "newGloss");
+                      }}
+                      inputRef={this.glossInput}
+                      // Move the focus to the previous box when the left arrow key is pressed
+                      onKeyDown={e => {
+                        if (
+                          e.key === "ArrowLeft" &&
+                          (e.target as HTMLInputElement).selectionStart === 0
+                        )
+                          this.focusVernInput();
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </React.Fragment>
           </Grid>
-        </Paper>
-      </Container>
+        </form>
+        <Grid container justify="flex-end" spacing={2}>
+          <Grid item>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ marginTop: theme.spacing(2) }}
+            >
+              <Translate id="addWords.next" />
+            </Button>
+          </Grid>
+        </Grid>
+      </Paper>
     );
   }
 }

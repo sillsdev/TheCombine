@@ -5,7 +5,8 @@ import { getTranslate } from "react-localize-redux";
 
 function mapStateToProps(state: StoreState) {
   return {
-    translate: getTranslate(state.localize)
+    translate: getTranslate(state.localize),
+    domain: state.treeViewState.currentDomain
   };
 }
 
