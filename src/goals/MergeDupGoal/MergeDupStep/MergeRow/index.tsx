@@ -5,14 +5,15 @@ import {
   WordDragAction
 } from "../../../../components/DraggableWord/actions";
 import { StoreState } from "../../../../types";
-import { MergeTreeAction } from "../MergeDupStepActions";
+import { MergeTreeAction, setVern } from "../MergeDupStepActions";
 import MergeRowComponent from "./MergeRowComponent";
 import { MergeTreeReference } from "../MergeDupsTree";
 
 export function mapStateToProps(state: StoreState) {
   return {
     draggedWord: state.mergeDuplicateGoal.wordDragState.draggedWord,
-    words: state.mergeDuplicateGoal.mergeTreeState.tree.words
+    words: state.mergeDuplicateGoal.mergeTreeState.tree.words,
+    data: state.mergeDuplicateGoal.mergeTreeState.data
   };
 }
 
@@ -22,6 +23,9 @@ export function mapDispatchToProps(
   return {
     dropWord: () => {
       dispatch(dropWord());
+    },
+    setVern: (wordID: string, vern: string) => {
+      dispatch(setVern(wordID, vern));
     }
   };
 }

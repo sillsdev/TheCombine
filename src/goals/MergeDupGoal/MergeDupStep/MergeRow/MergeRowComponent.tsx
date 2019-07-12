@@ -2,21 +2,25 @@
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { uuid } from "../../../../utilities";
-import { MergeTreeReference, Hash, MergeTreeWord } from "../MergeDupsTree";
 import {
-  Paper,
-  Typography
-} from "@material-ui/core";
+  MergeTreeReference,
+  Hash,
+  MergeTreeWord,
+  MergeData
+} from "../MergeDupsTree";
+import { Paper, Typography, Select, MenuItem } from "@material-ui/core";
 import MergeStack from "../MergeStack";
 import { Droppable } from "react-beautiful-dnd";
 
 //interface for component props
 export interface MergeRowProps {
   draggedWord?: MergeTreeReference;
+  setVern: (wordID: string, vern: string) => void;
   wordID: string;
   dropWord?: () => void;
   moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
   words: Hash<MergeTreeWord>;
+  data: MergeData;
   portait: boolean;
 }
 
@@ -33,32 +37,28 @@ export class MergeRow extends React.Component<
     super(props);
     this.state = { items: [0, 1, 2, 3, 4] };
   }
-  // this function is used to force this component to redraw itself when
-  // the contents of parent change from the removeWord action in MergeStack
-  update() {
-    this.setState({});
-  }
-
-  drop() {
-    if (this.props.moveSense && this.props.draggedWord && this.props.dropWord) {
-      let dest = {
-        word: this.props.wordID,
-        sense: uuid(),
-        duplicate: uuid()
-      };
-      this.props.moveSense(this.props.draggedWord, dest);
-      this.props.dropWord();
-    }
-  }
 
   render() {
+    let verns = [
+      ...new Set(
+        Object.values(this.props.words[this.props.wordID].senses)
+          .map(dups =>
+            Object.values(dups).map(
+              senseID =>
+                this.props.data.words[this.props.data.senses[senseID].srcWord]
+                  .vernacular
+            )
+          )
+          .flat()
+      )
+    ];
     return (
       <Droppable
         key={this.props.wordID}
         droppableId={this.props.wordID}
         isCombineEnabled={true}
       >
-        {(provided) => (
+        {provided => (
           <Paper
             ref={provided.innerRef}
             style={{
@@ -68,9 +68,16 @@ export class MergeRow extends React.Component<
             {...provided.droppableProps}
           >
             <Paper square style={{ padding: 8 }}>
-              <Typography variant="h5">
-                {this.props.words[this.props.wordID].vern}
-              </Typography>
+              <Select
+                value={this.props.words[this.props.wordID].vern}
+                onChange={e => this.props.setVern(this.props.wordID, e.target.value as string)}
+              >
+                {verns.map(vern => (
+                  <MenuItem value={vern}>
+                    <Typography variant="h5">{vern}</Typography>
+                  </MenuItem>
+                ))}
+              </Select>
             </Paper>
             {Object.keys(this.props.words[this.props.wordID].senses).map(
               (item, index) => (

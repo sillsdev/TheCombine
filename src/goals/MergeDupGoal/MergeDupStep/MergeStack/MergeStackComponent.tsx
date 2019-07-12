@@ -6,12 +6,15 @@ import {
   Typography,
   IconButton,
   Grid,
-  Chip
+  Chip,
+  Select,
+  MenuItem
 } from "@material-ui/core";
 import { uuid } from "../../../../utilities";
 import { Sort } from "@material-ui/icons";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { Gloss } from "../../../../types/word";
 
 //interface for component props
 export interface MergeStackProps {
@@ -56,19 +59,41 @@ class MergeStack extends React.Component<
   }
 
   render() {
-    let displaySenseID = Object.values(this.props.sense)[0];
-    let displaySense = this.props.senses[displaySenseID];
-    //TODO: Make language dynamic
-    if (!displaySense) {
-      debugger;
-    }
     let lang = "en";
 
-    // Find gloss
-    let gloss = displaySense.glosses.filter(
-      gloss => gloss.language === lang
-    )[0];
+    let senses = Object.values(this.props.sense).map(
+      senseID => this.props.senses[senseID]
+    );
 
+    let senseEntries = Object.entries(this.props.sense).map(sense => ({
+      id: sense[0],
+      data: this.props.senses[sense[1]]
+    }));
+
+    let glosses: { def: string; language: string; sense: string }[] = [];
+    for (let entry of senseEntries) {
+      for (let gloss of entry.data.glosses) {
+        glosses.push({
+          def: gloss.def,
+          language: gloss.language,
+          sense: entry.id
+        });
+      }
+    }
+    glosses = glosses.filter(
+      (v, i, a) => a.findIndex(o => o.def === v.def) === i
+    );
+
+    let semDoms = [
+      ...new Set(
+        senses
+          .map(sense =>
+            sense.semanticDomains.map(dom => `${dom.name} ${dom.number}`)
+          )
+          .flat()
+      )
+    ];
+    console.log(glosses);
     return (
       <Draggable
         key={this.props.senseID}
@@ -95,17 +120,18 @@ class MergeStack extends React.Component<
               </IconButton>
             )}
             <CardContent>
-              <Typography variant={"h5"}>
-                {gloss ? gloss.def : "{ no gloss }"}
-              </Typography>
+              <Select value={glosses[0].def}>
+                {glosses.map((gloss, i) => (
+                  <MenuItem value={gloss.def}>
+                    <Typography variant={"h5"}>{gloss.def}</Typography>
+                  </MenuItem>
+                ))}
+              </Select>
               {/* List semantic domains */}
               <Grid container spacing={2}>
-                {displaySense.semanticDomains.map(dom => (
-                  <Grid item xs key={dom.name + " " + dom.number}>
-                    <Chip
-                      label={dom.name + " " + dom.number}
-                      onDelete={() => {}}
-                    />
+                {semDoms.map(dom => (
+                  <Grid item xs key={dom}>
+                    <Chip label={dom} onDelete={() => {}} />
                   </Grid>
                 ))}
               </Grid>

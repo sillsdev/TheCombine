@@ -27,7 +27,10 @@ const mergeDupStepReducer = (
 ): MergeTreeState => {
   switch (action.type) {
     case MergeTreeActions.SET_VERNACULAR:
-      return state;
+      state.tree.words[action.payload.wordID].vern = action.payload.data;
+      state.tree.words = { ...state.tree.words };
+      state.tree = { ...state.tree };
+      return { ...state };
     case MergeTreeActions.SET_PLURAL:
       return state;
     case MergeTreeActions.ORDER_SENSE: {
@@ -40,10 +43,9 @@ const mergeDupStepReducer = (
       senses.splice(action.order, 0, [action.senseID, sense]);
 
       word.senses = {};
-      for (let sense of senses){
+      for (let sense of senses) {
         word.senses[sense[0]] = sense[1];
       }
-
 
       state.tree.words[action.wordID] = word;
       state.tree = { ...state.tree };
