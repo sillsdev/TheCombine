@@ -36,7 +36,9 @@ export const goalsReducer = (
         }
       };
     case GoalsActions.NEXT_STEP: // Update the step data in the current step, then go to the next step
-      let history: Goal[] = [...state.historyState.history];
+      let history: Goal[] = JSON.parse(
+        JSON.stringify(state.historyState.history)
+      );
       let currentGoal: Goal = history[history.length - 1];
       currentGoal = updateStepData(currentGoal);
       history[history.length - 1] = currentGoal;

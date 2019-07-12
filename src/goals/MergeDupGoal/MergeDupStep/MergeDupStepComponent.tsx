@@ -34,7 +34,7 @@ export interface MergeDupStepProps {
   moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
   orderSense: (wordID: string, senseID: string, order: number) => void;
   mergeAll?: () => void;
-  refreshWords?: () => void;
+  refreshWords?: () => Promise<void>;
 }
 
 //interface for component state
@@ -52,7 +52,9 @@ class MergeDupStep extends React.Component<
   }
   componentDidMount() {
     if (this.props.refreshWords) {
-      this.props.refreshWords();
+      this.props.refreshWords().then(() => {
+        console.log(JSON.stringify(this.props.words));
+      });
     }
   }
 

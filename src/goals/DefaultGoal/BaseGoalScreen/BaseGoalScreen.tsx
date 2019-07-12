@@ -31,7 +31,7 @@ class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
     return (
       <div className="GoalDisplay content">
         <AppBarComponent />
-        <DisplayProg goal={this.props.goal} />
+        <DisplayProg goal={goal} />
         {completeGoals.includes(goal.goalType) ? (
           stepComponentDictionary[goal.goalType].steps[goal.currentStep]
         ) : (

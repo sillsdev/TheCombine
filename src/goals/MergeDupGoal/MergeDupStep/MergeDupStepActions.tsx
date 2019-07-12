@@ -9,7 +9,7 @@ import {
   getUserEditId,
   getIndexInHistory
 } from "../../../components/GoalTimeline/GoalsActions";
-import { Goal } from "../../../types/goals";
+import { Goal, GoalHistoryState } from "../../../types/goals";
 import { Dispatch } from "redux";
 import { MergeDups } from "../MergeDups";
 import { UserProjectMap } from "../../../components/Project/UserProject";
@@ -141,13 +141,13 @@ export function mergeSense() {
 
 const goToNextStep = (
   dispatch: Dispatch<NextStep>,
-  history: Goal[],
-  goal: Goal
+  goal: Goal,
+  state: GoalHistoryState
 ) =>
   new Promise((resolve, reject) => {
     dispatch(nextStep());
-    let indexInHistory: number = getIndexInHistory(history, goal);
-    addStepToGoal(goal, indexInHistory);
+    let indexInHistory: number = getIndexInHistory(state.history, goal);
+    addStepToGoal(state.history[indexInHistory], indexInHistory);
     resolve();
   });
 
@@ -166,9 +166,12 @@ export function refreshWords() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction | NextStep>,
     getState: () => StoreState
   ) => {
-    let history: Goal[] = getState().goalsState.historyState.history;
-    let goal: Goal = history[history.length - 1];
-    goToNextStep(dispatch, history, goal).then(() => {
+    let historyState: GoalHistoryState = getState().goalsState.historyState;
+    let goal: Goal = historyState.history[historyState.history.length - 1];
+
+    goToNextStep(dispatch, goal, historyState).then(() => {
+      historyState = getState().goalsState.historyState;
+      goal = historyState.history[historyState.history.length - 1];
       let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1].words;
       dispatch(setWordData(words));
     });
