@@ -1,20 +1,17 @@
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import {
-  MergeTreeReference,
-  Hash,
-  TreeDataSense
-} from "../MergeDupsTree";
+import { MergeTreeReference, Hash, TreeDataSense } from "../MergeDupsTree";
 import Card from "@material-ui/core/Card/Card";
 import {
   CardContent,
   Typography,
-  List,
-  ListItem,
-  IconButton
+  IconButton,
+  Grid,
+  Chip
 } from "@material-ui/core";
 import { uuid } from "../../../../utilities";
 import { Sort } from "@material-ui/icons";
-import React from 'react';
+import React from "react";
+import { Draggable } from "react-beautiful-dnd";
 
 //interface for component props
 export interface MergeStackProps {
@@ -26,6 +23,7 @@ export interface MergeStackProps {
   senseID: string;
   sense: Hash<string>;
   senses: Hash<TreeDataSense>;
+  index: number;
 }
 
 //interface for component state
@@ -35,7 +33,6 @@ interface MergeStackState {
 
 // Constants
 const WIDTH: string = "16vw"; // Width of each card
-const HEIGHT: string = "10vw"; // Height of each card
 
 class MergeStack extends React.Component<
   MergeStackProps & LocalizeContextProps,
@@ -59,11 +56,10 @@ class MergeStack extends React.Component<
   }
 
   render() {
-    let displaySenseKey = Object.keys(this.props.sense)[0];
     let displaySenseID = Object.values(this.props.sense)[0];
     let displaySense = this.props.senses[displaySenseID];
     //TODO: Make language dynamic
-    if (!displaySense){
+    if (!displaySense) {
       debugger;
     }
     let lang = "en";
@@ -74,38 +70,49 @@ class MergeStack extends React.Component<
     )[0];
 
     return (
-      <Card
-        draggable={true}
-        onDragStart={() =>
-          this.props.dragWord &&
-          this.props.dragWord({
-            word: this.props.wordID,
-            sense: this.props.senseID,
-            duplicate: displaySenseKey
-          })
-        }
-        onDragOver={e => e.preventDefault()}
-        onDrop={e => this.dragDrop(e)}
+      <Draggable
+        key={this.props.senseID}
+        draggableId={this.props.senseID}
+        index={this.props.index}
+        type="SENSE"
       >
-        {Object.keys(this.props.sense).length > 1 && (
-          <IconButton style={{ float: "right" }}>
-            <Sort />
-          </IconButton>
+        {(provided, snapshot) => (
+          <Card
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            style={{
+              ...provided.draggableProps.style,
+              margin: 8,
+              userSelect: "none",
+              width: WIDTH,
+              background: snapshot.isDragging ? "lightgreen" : "white"
+            }}
+          >
+            {Object.keys(this.props.sense).length > 1 && (
+              <IconButton style={{ float: "right" }}>
+                <Sort />
+              </IconButton>
+            )}
+            <CardContent>
+              <Typography variant={"h5"}>
+                {gloss ? gloss.def : "{ no gloss }"}
+              </Typography>
+              {/* List semantic domains */}
+              <Grid container spacing={2}>
+                {displaySense.semanticDomains.map(dom => (
+                  <Grid item xs key={dom.name + " " + dom.number}>
+                    <Chip
+                      label={dom.name + " " + dom.number}
+                      onDelete={() => {}}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </CardContent>
+          </Card>
         )}
-        <CardContent>
-          <Typography variant={"h5"}>
-            {gloss ? gloss.def : "{ no gloss }"}
-          </Typography>
-          {/* List semantic domains */}
-          <List dense={true}>
-            {displaySense.semanticDomains.length === 0 &&
-              "{ no semantic domain }"}
-            {displaySense.semanticDomains.map(dom => (
-              <ListItem> {dom.name + "\t" + dom.number} </ListItem>
-            ))}
-          </List>
-        </CardContent>
-      </Card>
+      </Draggable>
     );
   }
 }

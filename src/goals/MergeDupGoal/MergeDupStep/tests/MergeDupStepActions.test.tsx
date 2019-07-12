@@ -44,7 +44,7 @@ const data: { data: MergeData } = {
         srcWord: "WB",
         order: 0
       },
-      s4: {
+      S4: {
         glosses: [{ language: "", def: "Sense 4" }],
         semanticDomains: [],
         srcWord: "WB",
