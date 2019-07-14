@@ -29,12 +29,12 @@ export interface ScoredWord {
 
 interface MappedWord {
   word: Word;
-  map: Bitmap;
+  map: Bitmask;
 }
 
-interface Bitmap {
+interface Bitmask {
   vern: number;
-  senses: number[][];
+  glosses: number[];
 }
 
 // THIS DOES NOT YET WORK WITH MULTIPLE GLOSSES
@@ -183,11 +183,10 @@ export default class DupFinder {
   //map a word and return as type MappedWord
   private mapWord(word: Word): MappedWord {
     let vern = this.mapString(word.vernacular, this.vernmap);
-    let senses: number[][] = [];
+    let glosses: number[] = [];
     word.senses.forEach((sense, i) => {
-      senses[i] = [];
       sense.glosses.forEach(gloss =>
-        senses[i].concat(this.mapString(gloss.def, this.glossmap))
+        glosses.concat(this.mapString(gloss.def, this.glossmap))
       );
     });
 
@@ -195,8 +194,8 @@ export default class DupFinder {
       word,
       map: {
         vern,
-        senses
-      } as Bitmap
+        glosses
+      } as Bitmask
     } as MappedWord;
   }
 
@@ -210,9 +209,34 @@ export default class DupFinder {
     return output;
   }
 
-  //TODO
-  private unmapWord(mask: MappedWord): number {
-    return 0;
+  private compareMasks(a: Bitmask, b: Bitmask): number {
+    //compare masks
+    let vern = a.vern & ~b.vern;
+    let glosses: number[] = [];
+    a.glosses.forEach(agloss => {
+      b.glosses.forEach(bgloss => {
+        glosses.push(agloss & ~bgloss);
+      });
+    });
+
+    //score results
+    let vernScore = this.calculateScore(vern);
+    let glossScore = 0;
+    glosses.forEach(glossMask => {
+      glossScore += this.calculateScore(glossMask);
+    });
+
+    //weight
+    return vernScore + glossScore / glosses.length;
+  }
+
+  private calculateScore(mask: number): number {
+    let score = 0;
+    while (mask > 0) {
+      if (mask % 2 === 1) score++;
+      mask = mask >> 1;
+    }
+    return score;
   }
 
   //remove words that are more than one longer or shorter than parent
@@ -223,9 +247,8 @@ export default class DupFinder {
 
     //filter words with bitmap
     words.forEach(mappedWord => {
-      let resultMask = {} as MappedWord; //TODO
-
-      if (this.unmapWord(resultMask) < 3) filteredWords.push(mappedWord.word);
+      if (this.compareMasks(mappedParent.map, mappedWord.map) < 3)
+        filteredWords.push(mappedWord.word);
     });
 
     //filter based on word length - may not be worth the computation time
