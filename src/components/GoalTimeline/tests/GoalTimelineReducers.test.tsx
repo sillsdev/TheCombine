@@ -1,7 +1,6 @@
 import * as actions from "../GoalsActions";
 import { goalsReducer, updateStepData } from "../GoalsReducer";
 import { Goal, GoalsState } from "../../../types/goals";
-import { MockActionGoalArrayInstance } from "../../../types/mockAction";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import { defaultState } from "../DefaultState";
@@ -11,28 +10,33 @@ import { SpellCheckGloss } from "../../../goals/SpellCheckGloss/SpellCheckGloss"
 import { CreateStrWordInv } from "../../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateChars } from "../../../goals/ValidateChars/ValidateChars";
 import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import { StoreAction, StoreActions } from "../../../rootActions";
+
+const loadUserEditsAction: actions.GoalAction = {
+  type: actions.GoalsActions.LOAD_USER_EDITS,
+  payload: []
+};
 
 describe("Test GoalsReducers", () => {
   it("Should return the default state", () => {
-    expect(goalsReducer(undefined, MockActionGoalArrayInstance)).toEqual(
-      defaultState
-    );
+    expect(goalsReducer(undefined, loadUserEditsAction)).toEqual(defaultState);
   });
 
   it("Should return the default state", () => {
     const state: GoalsState = {
       historyState: {
-        history: [...defaultState.historyState.history]
+        history: []
       },
-      allPossibleGoals: [...defaultState.allPossibleGoals],
+      allPossibleGoals: [],
       suggestionsState: {
-        suggestions: [...defaultState.suggestionsState.suggestions]
+        suggestions: []
       }
     };
 
-    expect(goalsReducer(state, MockActionGoalArrayInstance)).toEqual(
-      defaultState
-    );
+    const action: StoreAction = {
+      type: StoreActions.RESET
+    };
+    expect(goalsReducer(state, action)).toEqual(defaultState);
   });
 
   it("Should add a goal to history and remove it from suggestions", () => {
