@@ -181,7 +181,6 @@ export default class AddWords extends React.Component<
 
   /** Update a row in the view only */
   updateRow(row: Row, index: number, callback?: Function) {
-    console.log(row);
     let rows = [...this.state.rows];
     rows.splice(index, 1, { ...rows[index], ...row });
     if (callback) this.setState({ rows }, () => callback());
