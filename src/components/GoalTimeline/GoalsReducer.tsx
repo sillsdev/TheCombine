@@ -30,31 +30,33 @@ export const goalsReducer = (
         },
         suggestionsState: {
           suggestions: suggestions.filter(
-            (goal, index) =>
-              index !== 0 || (index === 0 && goalToAdd.name !== goal.name)
+            (goal, index) => index !== 0 || goalToAdd.name !== goal.name
           )
         }
       };
     case GoalsActions.NEXT_STEP: // Update the step data in the current step, then go to the next step
-      let history: Goal[] = [...state.historyState.history];
-      let currentGoal: Goal = history[history.length - 1];
-      currentGoal = updateStepData(currentGoal);
-      history[history.length - 1] = currentGoal;
-
+      let currentIndex: number = state.historyState.history.length - 1;
+      let currentGoal: Goal = updateStepData(
+        state.historyState.history[currentIndex]
+      );
       return {
         ...state,
         historyState: {
-          history: history
+          history: [
+            ...state.historyState.history.slice(0, currentIndex),
+            currentGoal
+          ]
         }
       };
-    case GoalsActions.UPDATE_GOAL: {
-      let history: Goal[] = [...state.historyState.history];
-      history[history.length - 1] = action.payload[0];
 
+    case GoalsActions.UPDATE_GOAL: {
       return {
         ...state,
         historyState: {
-          history: history
+          history: [
+            ...state.historyState.history.slice(0, -1),
+            action.payload[0]
+          ]
         }
       };
     }
@@ -68,7 +70,9 @@ export const goalsReducer = (
 export function updateStepData(goal: Goal): Goal {
   switch (goal.goalType) {
     case GoalType.MergeDups: {
-      let currentGoalData: MergeDupData = goal.data as MergeDupData;
+      let currentGoalData: MergeDupData = JSON.parse(
+        JSON.stringify(goal.data as MergeDupData)
+      );
       goal.steps[goal.currentStep] = {
         words: currentGoalData.plannedWords[goal.currentStep]
       };

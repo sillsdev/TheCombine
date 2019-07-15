@@ -29,9 +29,7 @@ export function mapDispatchToProps(
     dropWord: () => {
       dispatch(dropWord());
     },
-    refreshWords: () => {
-      dispatch(refreshWords());
-    },
+    refreshWords: () => dispatch(refreshWords()),
     moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => {
       dispatch(moveSenses(src, dest));
     },
