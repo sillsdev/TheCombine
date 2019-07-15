@@ -1,5 +1,6 @@
 import * as action from "../LoginActions";
 import * as reducer from "../LoginReducer";
+import * as rootAction from "../../../rootActions";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -18,6 +19,15 @@ describe("LoginAction Tests", () => {
   let loginSuccess: action.UserAction = {
     type: action.LOGIN_SUCCESS,
     payload: { user: user.user }
+  };
+
+  let logout: action.UserAction = {
+    type: action.LOGOUT,
+    payload: { user: user.user }
+  };
+
+  let reset: rootAction.StoreAction = {
+    type: rootAction.StoreActions.RESET
   };
 
   let registerAttempt: action.UserAction = {
@@ -112,10 +122,10 @@ describe("LoginAction Tests", () => {
   });
 
   test("logout creates a proper action", () => {
-    const logout = action.logout();
-    localStorage.setItem("user", "junk");
-    logout();
-
+    localStorage.setItem("user", user.user);
+    const mockStore = createMockStore(mockState);
+    mockStore.dispatch<any>(action.logoutAndResetStore());
+    expect(mockStore.getActions()).toEqual([logout, reset]);
     expect(localStorage.getItem("user")).toBe(null);
   });
 });
