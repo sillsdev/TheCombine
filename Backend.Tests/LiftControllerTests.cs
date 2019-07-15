@@ -124,7 +124,7 @@ namespace Backend.Tests
 
             //get path to the starting zip
             //This is convoluted because the tests run in netcoreapp2.1 and the folder needed in in the great-grand-parent folder
-            string actualFilename = "Sena.recompressed.zip";
+            string actualFilename = "SingleEntryLiftWithSound.zip";
             string pathToStartZip = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
             pathToStartZip = Path.Combine(pathToStartZip, "Assets", actualFilename);
 

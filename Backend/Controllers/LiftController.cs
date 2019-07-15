@@ -89,14 +89,14 @@ namespace BackendFramework.Controllers
                     int count = 0;
                     foreach (var dir in pathToExtracted)
                     {
-                        if (!dir.EndsWith("__MACOSX"))
+                        if (dir.EndsWith("__MACOSX"))
                         {
-                            extractedDirPath = dir;
-                            count++;
+                            Directory.Delete(dir, true);
                         }
                         else
                         {
-                            Directory.Delete(dir, true);
+                            extractedDirPath = dir;
+                            count++;
                         }
                     }
                     if (count == 2)
