@@ -59,6 +59,18 @@ export const goalsReducer = (
       };
     }
 
+    case GoalsActions.RESET: {
+      return {
+        historyState: {
+          history: []
+        },
+        allPossibleGoals: [],
+        suggestionsState: {
+          suggestions: []
+        }
+      };
+    }
+
     default:
       return state;
   }

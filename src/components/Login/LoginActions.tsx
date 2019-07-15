@@ -4,6 +4,7 @@ import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 import * as backend from "../../backend";
 import { User } from "../../types/user";
+import * as goalActions from "../GoalTimeline/GoalsActions";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
@@ -101,7 +102,9 @@ export function loginReset(): UserAction {
 }
 
 export function logout() {
-  return () => {
+  return (dispatch: Dispatch<goalActions.Reset>) => {
+    dispatch(goalActions.reset());
+    // dispatch(projects.reset());
     localStorage.removeItem("user");
   };
 }

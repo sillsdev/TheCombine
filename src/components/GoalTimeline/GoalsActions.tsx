@@ -22,7 +22,8 @@ export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
   ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY",
   NEXT_STEP = "NEXT_STEP",
-  UPDATE_GOAL = "UPDATE_GOAL"
+  UPDATE_GOAL = "UPDATE_GOAL",
+  RESET = "RESET"
 }
 
 export type GoalAction =
@@ -48,6 +49,10 @@ export interface NextStep extends ActionWithPayload<Goal[]> {
 export interface UpdateGoal extends ActionWithPayload<Goal[]> {
   type: GoalsActions.UPDATE_GOAL;
   payload: Goal[];
+}
+
+export interface Reset {
+  type: GoalsActions.RESET;
 }
 
 export function asyncLoadUserEdits(projectId: string, userEditId: string) {
@@ -223,4 +228,8 @@ export function nextStep(): NextStep {
 
 export function updateGoal(goal: Goal): UpdateGoal {
   return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
+}
+
+export function reset(): Reset {
+  return { type: GoalsActions.RESET };
 }
