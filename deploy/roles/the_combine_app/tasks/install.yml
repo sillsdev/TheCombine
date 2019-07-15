@@ -10,7 +10,7 @@
 
 - name: install the build
   copy:
-    src: ../build
+    src: ../build/
     dest: "{{ www_app_dir }}"
     owner: "{{ www_app_owner }}"
     group: "{{ www_app_group }}"

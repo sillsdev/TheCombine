@@ -3,7 +3,8 @@
 # config_developer
 
 # path for The Combine application
-application_path: "/var/www/html/TheWordCombine"
+www_app_dir: "/var/www/thewordcombine.org/htdocs"
+
 # mongo_path: /hddlinux/mongodb
 mongo_path: /var/lib/mongodb
 
@@ -14,8 +15,15 @@ base_distribution_release: "{{ansible_distribution_release}}"
 #node_version: 10.16.0
 #mongodb_version: 4.0
 
+#wifi access point variables
+ap_ssid: "thewordcombine_ap"
+ap_passphrase: "BigRed@1979"
+ap_gateway: "10.10.10.1"
+ap_domain: thewordcombine.org
+ap_hostname: nuc.thewordcombine.org
+
 ### SSL config
-ssl_letsencrypt_install: false
+ssl_letsencrypt_install: true
 
 ssl_items:
   - name: thewordcombine
@@ -26,12 +34,12 @@ ssl_items:
         locality: "Dallas"
         organization: "SIL"
         organization_unit: ""
-        common_name: "thewordcombine.local"
+        common_name: "thewordcombine.org"
         alt_names:
           - key: DNS.1
-            value: "www.thewordcombine.local"
+            value: "www.thewordcombine.org"
           - key: DNS.2
-            value: "thewordcombine.local"
+            value: "thewordcombine.org"
     sign:
 
 
@@ -53,7 +61,7 @@ apache_vhosts:
     server_admin: jimgrady.jg@gmail.com
     server_file_name: default_local
     template: vhost_proxypath_ssl.conf.j2
-    document_root: "{{ application_path }}"
+    document_root: "{{ www_app_dir }}"
     directory_options:
       - "+Indexes"
       - "+FollowSymLinks"
@@ -61,27 +69,25 @@ apache_vhosts:
       - RewriteEngine On
     virtual_hosts:
       - has_ssl: false
-        listen: 10.10.0.1
+        listen: "{{ ap_gateway }}"
         port: 80
         server_alias:
           - localhost
         proxy:
-          - '/api2/ http://localhost:5000/'
-          - '/machine/ http://localhost:5001/'
-          - '/sharedb/ "ws://localhost:5002/"'
+          - '/v1/ http://localhost:5001/'
   - server_name: thewordcombine.org
     server_admin: jimgrady.jg@gmail.com
     server_file_name: thewordcombine_org
     template: vhost_proxypath_ssl.conf.j2
-    document_root: "{{ application_path }}"
+    document_root: "{{ www_app_dir }}"
     directory_extra:
       - RewriteEngine On
     virtual_hosts:
       - has_ssl: false
-        listen: 10.10.0.1
+        listen: "{{ ap_gateway }}"
         port: 80
         server_alias:
-          - thewordcombine.local
+          - thewordcombine.org
           - thewordcombine.localhost
           - localhost
         extra:
@@ -91,9 +97,7 @@ apache_vhosts:
         - '    </Files>'
         - '</IfModule>'
         proxy:
-          - '/api2/ http://localhost:5000/'
-          - '/machine/ http://localhost:5001/'
-          - '/sharedb/ "ws://localhost:5002/"'
+          - '/v1/ http://localhost:5001/'
       - has_ssl: true
         port: 443
         certificate_file: "thewordcombine.pem"
@@ -105,6 +109,4 @@ apache_vhosts:
         - '    </Files>'
         - '</IfModule>'
         proxy:
-          - '/api2/ http://localhost:5000/'
-          - '/machine/ http://localhost:5001/'
-          - '/sharedb/ "ws://localhost:5002/"'
+          - '/v1/ http://localhost:5001/'
