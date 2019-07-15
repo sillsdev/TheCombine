@@ -110,7 +110,8 @@ class MergeStack extends React.Component<
               ...provided.draggableProps.style,
               margin: 8,
               userSelect: "none",
-              width: WIDTH,
+              minWidth: 150,
+              maxWidth: 300,
               background: snapshot.isDragging ? "lightgreen" : "white"
             }}
           >

@@ -21,7 +21,7 @@ export interface MergeRowProps {
   moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
   words: Hash<MergeTreeWord>;
   data: MergeData;
-  portait: boolean;
+  portrait: boolean;
 }
 
 //interface for component state
@@ -39,19 +39,23 @@ export class MergeRow extends React.Component<
   }
 
   render() {
-    let verns = [
-      ...new Set(
-        Object.values(this.props.words[this.props.wordID].senses)
-          .map(dups =>
-            Object.values(dups).map(
-              senseID =>
-                this.props.data.words[this.props.data.senses[senseID].srcWord]
-                  .vernacular
+    let filled = !!this.props.words[this.props.wordID];
+    let verns: string[] = [];
+    if (filled) {
+      verns = [
+        ...new Set(
+          Object.values(this.props.words[this.props.wordID].senses)
+            .map(dups =>
+              Object.values(dups).map(
+                senseID =>
+                  this.props.data.words[this.props.data.senses[senseID].srcWord]
+                    .vernacular
+              )
             )
-          )
-          .flat()
-      )
-    ];
+            .flat()
+        )
+      ];
+    }
     return (
       <Droppable
         key={this.props.wordID}
@@ -67,30 +71,35 @@ export class MergeRow extends React.Component<
             }}
             {...provided.droppableProps}
           >
-            <Paper square style={{ padding: 8 }}>
-              <Select
-                value={this.props.words[this.props.wordID].vern}
-                onChange={e => this.props.setVern(this.props.wordID, e.target.value as string)}
-              >
-                {verns.map(vern => (
-                  <MenuItem value={vern}>
-                    <Typography variant="h5">{vern}</Typography>
-                  </MenuItem>
-                ))}
-              </Select>
+            <Paper square style={{ padding: 8, height: 44, minWidth: 150 }}>
+              {filled && (
+                <Select
+                  value={this.props.words[this.props.wordID].vern}
+                  onChange={e =>
+                    this.props.setVern(this.props.wordID, e.target
+                      .value as string)
+                  }
+                >
+                  {verns.map(vern => (
+                    <MenuItem value={vern}>
+                      <Typography variant="h5">{vern}</Typography>
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
             </Paper>
-            {Object.keys(this.props.words[this.props.wordID].senses).map(
-              (item, index) => (
-                <MergeStack
-                  key={item}
-                  index={index}
-                  wordID={this.props.wordID}
-                  senseID={item}
-                  sense={this.props.words[this.props.wordID].senses[item]}
-                />
-              )
-            )}
-
+            {filled &&
+              Object.keys(this.props.words[this.props.wordID].senses).map(
+                (item, index) => (
+                  <MergeStack
+                    key={item}
+                    index={index}
+                    wordID={this.props.wordID}
+                    senseID={item}
+                    sense={this.props.words[this.props.wordID].senses[item]}
+                  />
+                )
+              )}
             {provided.placeholder}
             <div style={{ padding: 16, textAlign: "center" }}>
               <Typography variant="subtitle1">

@@ -4,7 +4,9 @@ import {
   Card,
   CardContent,
   Grid,
-  Switch
+  Switch,
+  List,
+  ListItem
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -116,6 +118,8 @@ class MergeDupStep extends React.Component<
       (key, acc) => `${key}:${acc}`,
       "Step:"
     );
+
+    let newId = uuid();
     //visual definition
     return (
       <Box style={{ maxHeight: "100%" }}>
@@ -142,9 +146,12 @@ class MergeDupStep extends React.Component<
             <DragDropContext onDragEnd={res => this.handleDrop(res)}>
               {Object.keys(this.props.words).map(key => (
                 <Grid item key={key}>
-                  <MergeRow portait={this.state.portrait} wordID={key} />
+                  <MergeRow portrait={this.state.portrait} wordID={key} />
                 </Grid>
               ))}
+              <Grid item key={newId}>
+                <MergeRow portrait={this.state.portrait} wordID={newId} />
+              </Grid>
             </DragDropContext>
           </Grid>
         </div>
