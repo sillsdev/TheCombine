@@ -93,6 +93,14 @@ export async function deleteWord(word: Word): Promise<Word> {
   return { ...word, id: resp.data };
 }
 
+export async function deleteWordById(id: string): Promise<string> {
+  let resp = await backendServer.delete(
+    `projects/${getProjectId()}/words/${id}`,
+    { headers: authHeader() }
+  );
+  return resp.data;
+}
+
 export async function getFrontierWords(): Promise<Word[]> {
   let resp = await backendServer.get(
     `projects/${getProjectId()}/words/frontier`,
