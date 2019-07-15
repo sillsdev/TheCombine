@@ -12,14 +12,14 @@ import { ValidateChars } from "../../../goals/ValidateChars/ValidateChars";
 import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import { StoreAction, StoreActions } from "../../../rootActions";
 
-const loadUserEdidtsAction: actions.GoalAction = {
+const loadUserEditsAction: actions.GoalAction = {
   type: actions.GoalsActions.LOAD_USER_EDITS,
   payload: []
 };
 
 describe("Test GoalsReducers", () => {
   it("Should return the default state", () => {
-    expect(goalsReducer(undefined, loadUserEdidtsAction)).toEqual(defaultState);
+    expect(goalsReducer(undefined, loadUserEditsAction)).toEqual(defaultState);
   });
 
   it("Should return the default state", () => {
