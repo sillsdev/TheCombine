@@ -96,7 +96,8 @@ namespace BackendFramework.Services
                 {
                     var separateWord = baseParent.Clone();
 
-                    switch (newChildWordState.SenseStates[i]){
+                    switch (newChildWordState.SenseStates[i])
+                    {
                         //add the sense to the parent word
                         case state.sense:
                             addParent.Senses.Add(currentChildWord.Senses[i]);
@@ -163,6 +164,7 @@ namespace BackendFramework.Services
             */
             Word differences = new Word();
             bool duplicate = true;
+            bool same = false;
 
             foreach (var matchingVern in allVernaculars)
             {
@@ -174,6 +176,7 @@ namespace BackendFramework.Services
                         //if the new sense isnt a strict subset then dont bother adding anything 
                         if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
                         {
+                            same = true;
                             foreach (var newGloss in newSense.Glosses)
                             {
                                 //add semdom and edited by
@@ -182,16 +185,22 @@ namespace BackendFramework.Services
                                 //remove dups
                                 matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
                                 matchingVern.Senses[senseIndex].SemanticDomains = matchingVern.Senses[senseIndex].SemanticDomains.Distinct().ToList();
+
+                                duplicate = false;
                             }
                         }
                         else
                         {
-                            duplicate = false;
+                            //duplicate = false;
                         }
                         ++senseIndex;
                     }
                     //update the database
-                    await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
+                    if (!duplicate && !same)
+                    {
+                        await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
+                    }
+                    same = false;
                 }
             }
             return duplicate;

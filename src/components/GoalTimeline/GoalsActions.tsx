@@ -86,7 +86,7 @@ export function asyncGetUserEdits() {
       let projectId: string = backend.getProjectId();
       let userEditId: string | undefined =
         currentUserObject.workedProjects[projectId];
-      if (userEditId != undefined) {
+      if (userEditId !== undefined) {
         dispatch(asyncLoadUserEdits(projectId, userEditId));
       } else {
         dispatch(asyncCreateNewUserEditsObject(projectId));
