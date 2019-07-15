@@ -7,7 +7,8 @@ import {
   REGISTER_FAILURE,
   REGISTER_ATTEMPT,
   REGISTER_SUCCESS,
-  REGISTER_RESET
+  REGISTER_RESET,
+  LOGOUT
 } from "./LoginActions";
 
 export interface LoginState {
@@ -81,6 +82,7 @@ export const loginReducer = (
         registerFailure: true
       };
     case LOGIN_RESET:
+    case LOGOUT:
     case REGISTER_RESET:
       return defaultState;
     default:

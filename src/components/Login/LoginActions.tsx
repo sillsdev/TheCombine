@@ -4,6 +4,11 @@ import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 import * as backend from "../../backend";
 import { User } from "../../types/user";
+import {
+  CreateProjectAction,
+  RESET
+} from "../CreateProject/CreateProjectActions";
+import { StoreAction, StoreActions, reset } from "../../rootActions";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
@@ -42,6 +47,7 @@ export type LoginType =
   | LOGIN_FAILURE
   | LOGIN_SUCCESS
   | LOGIN_RESET
+  | LOGOUT
   | REGISTER_ATTEMPT
   | REGISTER_SUCCESS
   | REGISTER_FAILURE
@@ -100,8 +106,13 @@ export function loginReset(): UserAction {
   };
 }
 
-export function logout() {
-  return () => {
+export function logoutAndResetStore() {
+  return (dispatch: Dispatch<UserAction | StoreAction>) => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      dispatch(logout(user));
+    }
+    dispatch(reset());
     localStorage.removeItem("user");
   };
 }
@@ -152,5 +163,12 @@ export function registerReset(): UserAction {
   return {
     type: REGISTER_RESET,
     payload: { user: "" }
+  };
+}
+
+function logout(user: string): UserAction {
+  return {
+    type: LOGOUT,
+    payload: { user: user }
   };
 }

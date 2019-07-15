@@ -89,7 +89,7 @@ namespace BackendFramework.Controllers
             var returnUser = await _userService.Create(user);
 
             //check if creations were valid
-            if (returnUser == null )
+            if (returnUser == null)
             {
                 return BadRequest();
             }
