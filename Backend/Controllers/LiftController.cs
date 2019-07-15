@@ -81,7 +81,6 @@ namespace BackendFramework.Controllers
                 var pathToExtracted = postExportDirList.Except(preExportDirList).ToList();
                 string extractedDirPath = null;
 
-                var reg = new Regex("__MACOSX$");
                 if (pathToExtracted.Count == 1)
                 {
                     extractedDirPath = pathToExtracted.FirstOrDefault();
@@ -91,7 +90,7 @@ namespace BackendFramework.Controllers
                     int count = 0;
                     foreach (var dir in pathToExtracted)
                     {
-                        if (!reg.IsMatch(dir))
+                        if (!dir.EndsWith("__MACOSX"))
                         {
                             extractedDirPath = dir;
                             count++;
