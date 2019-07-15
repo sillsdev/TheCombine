@@ -75,6 +75,10 @@ namespace BackendFramework.Services
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
                 //iterate through senses of that word and change to corresponding state in mergewords
+                if (currentChildWord.Senses.Count != newChildWordState.SenseStates.Count)
+                {
+                    throw new FormatException("Sense counts don't match");
+                }
                 for (int i = 0; i < currentChildWord.Senses.Count; i++)
                 {
                     currentChildWord.Senses[i].Accessibility = (int)newChildWordState.SenseStates[i];

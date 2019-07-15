@@ -168,6 +168,10 @@ namespace BackendFramework.Controllers
                 {
                     return new BadRequestResult();
                 }
+                catch (FormatException)
+                {
+                    return new BadRequestResult();
+                }
             }
             else
             {
