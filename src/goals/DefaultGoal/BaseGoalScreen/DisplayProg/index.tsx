@@ -7,7 +7,8 @@ import { Goal } from "../../../../types/goals";
 function mapStateToProps(state: StoreState) {
   let history: Goal[] = state.goalsState.historyState.history;
   return {
-    goal: history[history.length - 1]
+    currentStep: history[history.length - 1].currentStep,
+    numSteps: history[history.length - 1].numSteps
   };
 }
 

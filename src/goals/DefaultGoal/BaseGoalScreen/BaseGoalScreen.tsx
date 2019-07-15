@@ -1,7 +1,7 @@
 import { GoalProps, Goal, GoalType } from "../../../types/goals";
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import DisplayProg from "./DisplayProg/displayProg";
+import DisplayProg from "./DisplayProg";
 import AppBarComponent from "../../../components/AppBar/AppBarComponent";
 import PageNotFound from "../../../components/PageNotFound/component";
 import EmptyGoalComponent from "../../../components/EmptyGoal/EmptyGoalComponent";
@@ -31,7 +31,7 @@ class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
     return (
       <div className="GoalDisplay content">
         <AppBarComponent />
-        <DisplayProg goal={goal} />
+        <DisplayProg />
         {completeGoals.includes(goal.goalType) ? (
           stepComponentDictionary[goal.goalType].steps[goal.currentStep]
         ) : (

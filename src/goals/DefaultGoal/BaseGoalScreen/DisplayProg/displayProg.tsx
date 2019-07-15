@@ -1,17 +1,30 @@
-import { GoalProps } from "../../../../types/goals";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  withLocalize,
+  Translate
+} from "react-localize-redux";
 import { LinearProgress, Paper, Grid, Typography } from "@material-ui/core";
 
+interface ProgressProps {
+  currentStep: number;
+  numSteps: number;
+}
+
 export class DisplayProg extends React.Component<
-  GoalProps & LocalizeContextProps
+  ProgressProps & LocalizeContextProps
 > {
   render() {
-    return (
-      <Paper key={this.props.goal ? this.props.goal.currentStep : -1}>
+    return this.props.numSteps > 1 ? (
+      <Paper key={this.props.currentStep}>
         <Grid container direction="column">
           <Grid item xs>
-            <Typography variant={"h4"}>{this.getHeaderString()}</Typography>
+            <Typography variant={"h4"}>
+              <Translate id="goal.progress.step" />
+              {` ${this.props.currentStep} `}
+              <Translate id="goal.progress.of" />
+              {` ${this.props.numSteps}`}
+            </Typography>
           </Grid>
           <Grid item xs>
             <LinearProgress
@@ -21,19 +34,15 @@ export class DisplayProg extends React.Component<
           </Grid>
         </Grid>
       </Paper>
-    );
+    ) : null;
   }
 
   getAmountComplete(): number {
-    if (this.props.goal)
-      return (this.props.goal.currentStep / this.props.goal.numSteps) * 100;
-    else return 0;
+    return (this.props.currentStep / this.props.numSteps) * 100;
   }
 
   getHeaderString(): string {
-    if (this.props.goal)
-      return `${this.props.goal.currentStep} / ${this.props.goal.numSteps}`;
-    else return "";
+    return `${this.props.currentStep} / ${this.props.numSteps}`;
   }
 }
 

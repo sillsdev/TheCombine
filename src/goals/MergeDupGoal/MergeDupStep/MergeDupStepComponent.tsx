@@ -17,6 +17,7 @@ import { uuid } from "../../../utilities";
 import { MergeTreeReference, MergeTreeWord } from "./MergeDupsTree";
 import MergeRow from "./MergeRow";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { GoalHistoryState } from "../../../types/goals";
 
 // Constants
 const MIN_VIEW: string = "60vh";
@@ -52,8 +53,10 @@ class MergeDupStep extends React.Component<
   }
   componentDidMount() {
     if (this.props.refreshWords) {
+      let cursor = document.body.style.cursor;
+      document.body.style.cursor = "wait";
       this.props.refreshWords().then(() => {
-        console.log(JSON.stringify(this.props.words));
+        document.body.style.cursor = cursor;
       });
     }
   }

@@ -78,10 +78,7 @@ const mergeDupStepReducer = (
           }
 
           let destSense = treeState.words[dest.word].senses[dest.sense];
-
-          destSense = { ...destSense };
           destSense[dest.duplicate] = srcSenseID;
-
           treeState.words[dest.word].senses[dest.sense] = destSense;
 
           // cleanup src
@@ -110,7 +107,7 @@ const mergeDupStepReducer = (
       let senses: Hash<TreeDataSense> = {};
       let wordsTree: Hash<MergeTreeWord> = {};
       action.payload.forEach(word => {
-        words[word.id] = word;
+        words[word.id] = JSON.parse(JSON.stringify(word));
         let treeSenses: Hash<Hash<string>> = {};
         word.senses.forEach((sense, index) => {
           let id = uuid();
@@ -125,7 +122,6 @@ const mergeDupStepReducer = (
           plural: word.plural
         };
       });
-      console.log(JSON.stringify(wordsTree));
       return {
         ...state,
         tree: { words: wordsTree },

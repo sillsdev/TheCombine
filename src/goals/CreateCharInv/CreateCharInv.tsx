@@ -28,12 +28,12 @@ export class CreateCharInv implements Goal {
   result: GoalOption;
   hash: string;
 
-  constructor(steps: CreateCharInvStepData[] = [], numSteps: number = 8) {
+  constructor(steps: CreateCharInvStepData[] = []) {
     this.goalType = GoalType.CreateCharInv;
     this.name = "charInventory";
     this.user = new User("", "", "");
     this.steps = steps;
-    this.numSteps = numSteps;
+    this.numSteps = 1;
     this.currentStep = 0;
     this.data = { inventory: [[]] };
     this.tool = Tools.TempTool;
