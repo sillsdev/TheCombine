@@ -92,7 +92,8 @@ namespace BackendFramework.Services
                 {
                     var separateWord = baseParent.Clone();
 
-                    switch (newChildWordState.SenseStates[i]){
+                    switch (newChildWordState.SenseStates[i])
+                    {
                         //add the sense to the parent word
                         case state.sense:
                             addParent.Senses.Add(currentChildWord.Senses[i]);
@@ -171,10 +172,7 @@ namespace BackendFramework.Services
                         //if the new sense isnt a strict subset then dont bother adding anything 
                         if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
                         {
-                            if (newSense.Glosses.All(oldSense.Glosses.Contains))
-                            {
-                                same = true;
-                            }
+                            same = true;
                             foreach (var newGloss in newSense.Glosses)
                             {
                                 //add semdom and edited by
@@ -194,7 +192,7 @@ namespace BackendFramework.Services
                         ++senseIndex;
                     }
                     //update the database
-                    if (duplicate == false && same != true)
+                    if (!duplicate && !same)
                     {
                         await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
                     }

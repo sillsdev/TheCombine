@@ -95,7 +95,8 @@ export async function deleteWord(word: Word): Promise<Word> {
 
 export async function deleteWordById(id: string): Promise<string> {
   let resp = await backendServer.delete(
-    `projects/${getProjectId()}/words/${id}`
+    `projects/${getProjectId()}/words/${id}`,
+    { headers: authHeader() }
   );
   return resp.data;
 }

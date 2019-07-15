@@ -93,7 +93,7 @@ namespace BackendFramework.Controllers
             word.ProjectId = projectId;
 
             //check if word is already in database
-            if (await  _wordService.searchInDuplicates(word))
+            if (await _wordService.searchInDuplicates(word))
             {
                 await _wordRepo.Create(word);
             }
@@ -130,9 +130,8 @@ namespace BackendFramework.Controllers
 
         // DELETE: v1/projects/{projectId}/words/{wordId}
         // Implements Delete(), Arguments: string id of target word
-        [AllowAnonymous] // TODO: Authorization doesn't work on this function
         [HttpDelete("{wordId}")]
-        public async Task<IActionResult> Delete(string projectId,  string wordId)
+        public async Task<IActionResult> Delete(string projectId, string wordId)
         {
             var isValid = _projectService.GetProject(projectId);
             if (isValid == null)
