@@ -5,7 +5,10 @@
     "glosses": ["Glosses", "Traducciones"],
     "next": ["Next", "Siguiente"],
     "deleteRow": ["Delete this row", "borrar esta fila"],
-    "wordInDatabase": ["This word is already in the database", "TODO"]
+    "wordInDatabase": [
+      "This word is already in the database",
+      "Esta palabra ya está en la base de datos"
+    ]
   },
   "temp": {
     "buttonText": ["This is a button.", "Este es un botón."],

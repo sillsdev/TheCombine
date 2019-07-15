@@ -107,7 +107,6 @@ describe("Tests AddWords", () => {
     mockedAxios.post.mockImplementationOnce((url, word: Word) => {
       return Promise.resolve({ data: "123" });
     });
-    handle.instance.allWords = []; // This is what I want to do but it doesn't work
     handle.instance.submit(undefined, () => {
       expect(handle.instance.state.rows).toEqual([
         {

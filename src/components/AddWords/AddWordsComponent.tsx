@@ -80,6 +80,7 @@ export default class AddWords extends React.Component<
     let Finder = new DuplicateFinder();
 
     //[vernacular form, levenshtein distance]
+    // the number defined here sets the upper bound on acceptable scores
     let foundDuplicate: [string, number] = ["", 2];
 
     for (let word of this.allWords) {
