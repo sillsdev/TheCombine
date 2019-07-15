@@ -17,6 +17,7 @@ import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
+import { RESET } from "../CreateProject/CreateProjectActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -223,4 +224,8 @@ export function nextStep(): NextStep {
 
 export function updateGoal(goal: Goal): UpdateGoal {
   return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
+}
+
+export function reset() {
+  return { type: RESET, payload: [] };
 }

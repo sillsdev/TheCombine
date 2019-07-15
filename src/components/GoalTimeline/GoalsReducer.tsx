@@ -1,13 +1,13 @@
 import { GoalsState, GoalType } from "../../types/goals";
 import { Goal } from "../../types/goals";
-import { GoalsActions } from "./GoalsActions";
-import { ActionWithPayload } from "../../types/mockAction";
+import { GoalsActions, GoalAction } from "./GoalsActions";
 import { defaultState } from "./DefaultState";
 import { MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
+import { StoreAction, StoreActions } from "../../rootActions";
 
 export const goalsReducer = (
   state: GoalsState | undefined,
-  action: ActionWithPayload<Goal[]>
+  action: StoreAction | GoalAction
 ): GoalsState => {
   if (!state) {
     return defaultState;
@@ -60,7 +60,8 @@ export const goalsReducer = (
         }
       };
     }
-
+    case StoreActions.RESET:
+      return defaultState;
     default:
       return state;
   }
