@@ -10,6 +10,7 @@ import {
   LOGIN_RESET,
   REGISTER_RESET
 } from "../LoginActions";
+import { StoreActions, StoreAction } from "../../../rootActions";
 
 const user = { user: "testUser", password: "testPass" };
 
@@ -132,6 +133,24 @@ describe("LoginReducer Tests", () => {
     };
     action.type = REGISTER_RESET;
     expect(reducer.loginReducer(badState, action)).toEqual(
+      reducer.defaultState
+    );
+  });
+
+  test("non-default state, expecting reset", () => {
+    const state: reducer.LoginState = {
+      ...dummySt,
+      user: "bad",
+      registerSuccess: true,
+      registerAttempt: true,
+      registerFailure: true
+    };
+
+    const resetAction: StoreAction = {
+      type: StoreActions.RESET
+    };
+
+    expect(reducer.loginReducer(state, resetAction)).toEqual(
       reducer.defaultState
     );
   });
