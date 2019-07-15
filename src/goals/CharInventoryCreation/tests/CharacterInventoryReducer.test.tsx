@@ -8,6 +8,7 @@ import {
   CharacterInventoryAction,
   SET_CHARACTER_INVENTORY
 } from "../CharacterInventoryActions";
+import { StoreActions, StoreAction } from "../../../rootActions";
 
 const DATA: string[] = ["foo", "bar"];
 const BAD_RESP: string[] = ["If", "this", "appears", "there's", "an", "issue"];
@@ -39,5 +40,17 @@ describe("Test Character Inventory Reducer", () => {
         payload: BAD_RESP
       } as CharacterInventoryAction)
     ).toEqual(inv);
+  });
+
+  it("Returns default state when passed reset action", () => {
+    let state: CharacterInventoryState = {
+      inventory: ["What", "up"]
+    };
+
+    let action: StoreAction = {
+      type: StoreActions.RESET
+    };
+
+    expect(characterInventoryReducer(state, action)).toEqual(defaultState);
   });
 });
