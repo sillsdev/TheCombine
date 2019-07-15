@@ -7,7 +7,7 @@ import {
   asyncLogin,
   UserAction,
   loginReset,
-  logoutUser
+  logoutAndResetStore
 } from "../LoginActions";
 
 function mapStateToProps(state: StoreState): LoginStateProps {
@@ -25,7 +25,7 @@ export function mapDispatchToProps(
       dispatch(asyncLogin(user, password));
     },
     logout: () => {
-      dispatch(logoutUser());
+      dispatch(logoutAndResetStore());
     },
     reset: () => {
       dispatch(loginReset());

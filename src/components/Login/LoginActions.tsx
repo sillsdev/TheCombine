@@ -106,7 +106,7 @@ export function loginReset(): UserAction {
   };
 }
 
-export function logoutUser() {
+export function logoutAndResetStore() {
   return (dispatch: Dispatch<UserAction | StoreAction>) => {
     const user = localStorage.getItem("user");
     if (user) {
