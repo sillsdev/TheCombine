@@ -40,10 +40,9 @@ const mergeDupStepReducer = (
       senses.splice(action.order, 0, [action.senseID, sense]);
 
       word.senses = {};
-      for (let sense of senses){
+      for (let sense of senses) {
         word.senses[sense[0]] = sense[1];
       }
-
 
       state.tree.words[action.wordID] = word;
       state.tree = { ...state.tree };
@@ -90,7 +89,7 @@ const mergeDupStepReducer = (
           // check if we removed last dup in a sense if so remove the sense from the word
 
           if (
-            Object.keys(state.tree.words[src.word].senses[src.sense]).length ==
+            Object.keys(state.tree.words[src.word].senses[src.sense]).length ===
             0
           ) {
             delete state.tree.words[src.word].senses[src.sense];
