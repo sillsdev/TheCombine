@@ -14,14 +14,15 @@ import {
 import theme from "../../types/theme";
 import { Translate, TranslateFunction } from "react-localize-redux";
 import { Word, State, Gloss } from "../../types/word";
-import { Delete } from "@material-ui/icons";
+import { Delete, Edit } from "@material-ui/icons";
 import * as Backend from "../../backend";
 import { SemanticDomain } from "../../types/project";
 import DuplicateFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { setSense } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import DomainTree from "../TreeView/SemanticDomain";
+import TreeViewComponent from "../TreeView";
 
 interface AddWordsProps {
-  domain: string;
+  domain: DomainTree;
   translate: TranslateFunction;
 }
 
@@ -32,6 +33,7 @@ interface AddWordsState {
   hoverRow?: number;
   newVernInFrontier: Boolean; // does the new word already exist in the frontier?
   showDuplicate?: number;
+  gettingSemanticDomain?: boolean;
 }
 
 /** A row in the view */
@@ -58,16 +60,9 @@ export default class AddWords extends React.Component<
     this.state = {
       newVern: "",
       newGloss: "",
-      rows: [
-        // {
-        //   vernacular: "sam",
-        //   glosses: "boy",
-        //   id: "5d2501f2188d610ef03a42f2",
-        //   dupId: "5d250046188d610ef03a42ed",
-        //   senseIndex: 0
-        // }
-      ],
-      newVernInFrontier: false
+      rows: [],
+      newVernInFrontier: false,
+      gettingSemanticDomain: true
     };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
@@ -146,7 +141,7 @@ export default class AddWords extends React.Component<
       });
   }
 
-  /** Creates a new word from a row */
+  /** Return a new word based on a row */
   rowToNewWord(row: Row): Word {
     let word: Word = {
       id: row.id,
@@ -154,7 +149,9 @@ export default class AddWords extends React.Component<
       senses: [
         {
           glosses: [],
-          semanticDomains: []
+          semanticDomains: [
+            { name: this.props.domain.name, number: this.props.domain.number }
+          ]
         }
       ],
       audio: "",
@@ -182,7 +179,7 @@ export default class AddWords extends React.Component<
     return word;
   }
 
-  /** updates a row in the view only */
+  /** Update a row in the view only */
   updateRow(row: Row, index: number, callback?: Function) {
     console.log(row);
     let rows = [...this.state.rows];
@@ -191,7 +188,7 @@ export default class AddWords extends React.Component<
     else this.setState({ rows });
   }
 
-  /** updates the word in the backend */
+  /** Update the word in the backend */
   updateWord(index: number, callback?: Function) {
     let row = this.state.rows[index];
     this.rowToExistingWord(row)
@@ -206,7 +203,7 @@ export default class AddWords extends React.Component<
       );
   }
 
-  /** Adds the fields in a row to the word it corresponds to in the database */
+  /** Add the fields in a row to the word it corresponds to in the database */
   async rowToExistingWord(row: Row): Promise<Word> {
     let word = await Backend.getWord(row.id);
 
@@ -230,7 +227,7 @@ export default class AddWords extends React.Component<
   }
 
   // Used by new word input
-  /** Updates the state to match the value in a textbox */
+  /** Update the state to match the value in a textbox */
   updateField<K extends keyof AddWordsState>(
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
@@ -248,17 +245,17 @@ export default class AddWords extends React.Component<
     );
   }
 
-  /** Moves the focus to the vernacular textbox */
+  /** Move the focus to the vernacular textbox */
   focusVernInput() {
     if (this.vernInput.current) this.vernInput.current.focus();
   }
 
-  /** Moves the focus to the gloss textbox */
+  /** Move the focus to the gloss textbox */
   focusGlossInput() {
     if (this.glossInput.current) this.glossInput.current.focus();
   }
 
-  /** Removes a word from the backend */
+  /** Remove a word from the backend */
   removeWord(id: string, callback?: Function) {
     Backend.deleteWordById(id)
       .catch(err => console.log(err))
@@ -267,7 +264,7 @@ export default class AddWords extends React.Component<
       });
   }
 
-  /** deletes a row from the view only */
+  /** Delete a row from the view only */
   removeRow(index: number) {
     let rows = [...this.state.rows];
     rows.splice(index, 1);
@@ -312,11 +309,8 @@ export default class AddWords extends React.Component<
     this.setState({ showDuplicate: rowIndex });
   }
 
-  /** TODO: change the name of this method */
-  editASenseOfAnExistingWordInsteadOfUsingThisWord(
-    rowIndex: number,
-    senseIndex: number
-  ) {
+  /** Switch a row to edit a sense of a word in the database */
+  switchToExistingWord(rowIndex: number, senseIndex: number) {
     let row = this.state.rows[rowIndex];
     if (row.dupId === "") {
       throw new Error("This row does not have a duplicate");
@@ -341,7 +335,15 @@ export default class AddWords extends React.Component<
   }
 
   render() {
-    return (
+    return this.state.gettingSemanticDomain ? (
+      <TreeViewComponent
+        returnControlToCaller={() =>
+          this.setState({
+            gettingSemanticDomain: false
+          })
+        }
+      />
+    ) : (
       <Container>
         <Paper
           style={{
@@ -356,7 +358,16 @@ export default class AddWords extends React.Component<
             align="center"
             style={{ marginBottom: theme.spacing(2) }}
           >
-            <Translate id="addWords.domain" />: Sky
+            <Translate id="addWords.domain" />
+            {": "}
+            {this.props.domain.name + " (" + this.props.domain.number + ")"}
+            <IconButton
+              onClick={() => {
+                this.setState({ gettingSemanticDomain: true });
+              }}
+            >
+              <Edit />
+            </IconButton>
           </Typography>
           <Divider />
           <form onSubmit={e => this.submit(e)}>
@@ -554,7 +565,7 @@ export default class AddWords extends React.Component<
                                 <Chip
                                   label={gloss}
                                   onClick={() =>
-                                    this.editASenseOfAnExistingWordInsteadOfUsingThisWord(
+                                    this.switchToExistingWord(
                                       rowIndex,
                                       senseIndex
                                     )
@@ -568,7 +579,7 @@ export default class AddWords extends React.Component<
                               variant="outlined"
                               label={"Add New Sense +"}
                               onClick={() =>
-                                this.editASenseOfAnExistingWordInsteadOfUsingThisWord(
+                                this.switchToExistingWord(
                                   rowIndex,
                                   row.dupGlosses ? row.dupGlosses.length : 0
                                 )

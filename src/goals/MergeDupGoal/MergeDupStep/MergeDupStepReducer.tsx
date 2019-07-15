@@ -89,7 +89,7 @@ const mergeDupStepReducer = (
           // check if we removed last dup in a sense if so remove the sense from the word
 
           if (
-            Object.keys(state.tree.words[src.word].senses[src.sense]).length ==
+            Object.keys(state.tree.words[src.word].senses[src.sense]).length ===
             0
           ) {
             delete state.tree.words[src.word].senses[src.sense];

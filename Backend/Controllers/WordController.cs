@@ -130,6 +130,7 @@ namespace BackendFramework.Controllers
 
         // DELETE: v1/projects/{projectId}/words/{wordId}
         // Implements Delete(), Arguments: string id of target word
+        [AllowAnonymous] // TODO: Authorization doesn't work on this function
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> Delete(string projectId,  string wordId)
         {

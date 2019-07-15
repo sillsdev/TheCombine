@@ -57,8 +57,16 @@ jest.mock("react-localize-redux", () => {
 jest.mock("axios");
 let mockedAxios = axios as jest.Mocked<typeof axios>;
 
+// Circumvent unneeded store connections
+jest.mock("../../TreeView", () => {
+  const material = jest.requireActual("@material-ui/core");
+  return material.Container;
+});
+
 // Mock store
-const mockStore = configureStore();
+const mockStore = configureMockStore()({
+  treeViewState: { currentDomain: { name: "en", number: "1", subDomains: [] } }
+});
 
 beforeEach(() => {
   // Here, use the act block to be able to render our AddWords into the DOM
@@ -69,17 +77,28 @@ beforeEach(() => {
       return Promise.resolve({ data: [] });
     });
     master = renderer.create(
-      <AddWords_unconnected domain={"en"} translate={jest.fn(() => "ok")} />
+      <AddWords_unconnected
+        domain={{ name: "en", number: "1", subDomains: [] }}
+        translate={jest.fn(() => "ok")}
+      />
     );
-    handle = master.root.findByType(AddWords_unconnected);
   });
+  handle = master.root.findByType(AddWords_unconnected);
 
   mockedAxios.put.mockClear();
 });
 
+afterAll(() => {
+  jest.unmock("../../TreeView");
+});
+
 describe("Tests AddWords", () => {
   it("Constructs correctly", () => {
-    // Default snapshot test
+    // Switch from the selectDomain view to normal view
+    handle.instance.setState({
+      ...handle.instance.state,
+      gettingSemanticDomain: false
+    });
     snapTest("default view");
   });
 

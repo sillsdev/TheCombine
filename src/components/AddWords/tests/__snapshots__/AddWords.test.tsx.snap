@@ -24,7 +24,45 @@ exports[`Tests AddWords Constructs correctly 1`] = `
       }
     >
       Missing translationId: addWords.domain for language: \${ languageCode }
-      : Sky
+      : 
+      en (1)
+      <button
+        className="MuiButtonBase-root MuiIconButton-root"
+        disabled={false}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <span
+          className="MuiIconButton-label"
+        >
+          <svg
+            aria-hidden="true"
+            className="MuiSvgIcon-root"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+            />
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+          </svg>
+        </span>
+      </button>
     </h4>
     <hr
       className="MuiDivider-root"
@@ -103,7 +141,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                 >
                   <fieldset
                     aria-hidden={true}
-                    className="PrivateNotchedOutline-root-226 MuiOutlinedInput-notchedOutline"
+                    className="PrivateNotchedOutline-root-247 MuiOutlinedInput-notchedOutline"
                     style={
                       Object {
                         "paddingLeft": 8,
@@ -111,7 +149,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                     }
                   >
                     <legend
-                      className="PrivateNotchedOutline-legend-227"
+                      className="PrivateNotchedOutline-legend-248"
                       style={
                         Object {
                           "width": 0.01,
@@ -167,7 +205,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                 >
                   <fieldset
                     aria-hidden={true}
-                    className="PrivateNotchedOutline-root-226 MuiOutlinedInput-notchedOutline"
+                    className="PrivateNotchedOutline-root-247 MuiOutlinedInput-notchedOutline"
                     style={
                       Object {
                         "paddingLeft": 8,
@@ -175,7 +213,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                     }
                   >
                     <legend
-                      className="PrivateNotchedOutline-legend-227"
+                      className="PrivateNotchedOutline-legend-248"
                       style={
                         Object {
                           "width": 0.01,

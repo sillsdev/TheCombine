@@ -75,7 +75,7 @@ class MergeDupStep extends React.Component<
     if (res.combine) {
       // this is a combine operation
       let destRefs = [];
-      for (let _ in srcRefs) {
+      for (let _ of srcRefs) {
         destRefs.push({
           word: res.combine.droppableId,
           sense: res.combine.draggableId,
@@ -87,7 +87,7 @@ class MergeDupStep extends React.Component<
       if (res.source.droppableId !== res.destination.droppableId) {
         // move to different word
         let destRefs = [];
-        for (let _ in srcRefs) {
+        for (let _ of srcRefs) {
           destRefs.push({
             word: res.destination.droppableId,
             sense: res.draggableId,
