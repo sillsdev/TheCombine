@@ -10,6 +10,7 @@ import { characterInventoryReducer } from "./goals/CharInventoryCreation/Charact
 import { goalSelectReducer } from "./components/GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
 import { projectReducer } from "./components/Project/ProjectReducer";
 import mergeDuplicateReducer from "./goals/MergeDupGoal/mergeDuplicateReducer";
+import { treeViewReducer } from "./components/TreeView/TreeViewReducer";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //handles localization through react-localize-redux utilities
@@ -18,6 +19,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //intro windows
   loginState: loginReducer,
   createProjectState: createProjectReducer,
+  treeViewState: treeViewReducer,
 
   //general cleanup tools
   goalSelectorState: goalSelectReducer,
