@@ -26,6 +26,11 @@ const mockStoreState = {
     wordDragState: {
       draggedWord: undefined
     }
+  },
+  goalsState: {
+    historyState: {
+      history: [{ currentStep: 1, numSteps: 5 }]
+    }
   }
 };
 
