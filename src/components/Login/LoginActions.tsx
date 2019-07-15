@@ -8,7 +8,7 @@ import {
   CreateProjectAction,
   RESET
 } from "../CreateProject/CreateProjectActions";
-import { StoreAction, StoreActions } from "../../rootActions";
+import { StoreAction, StoreActions, reset } from "../../rootActions";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
@@ -163,12 +163,6 @@ export function registerReset(): UserAction {
   return {
     type: REGISTER_RESET,
     payload: { user: "" }
-  };
-}
-
-export function reset(): StoreAction {
-  return {
-    type: StoreActions.RESET
   };
 }
 

@@ -7,3 +7,9 @@ interface Reset {
 }
 
 export type StoreAction = Reset;
+
+export function reset(): StoreAction {
+  return {
+    type: StoreActions.RESET
+  };
+}
