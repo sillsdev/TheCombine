@@ -81,6 +81,10 @@
       "noHistory": ["Nothing yet", "Nada ahora"],
       "done": ["All done", "Esta listo"]
     },
+    "progress": {
+      "step": ["Step", "Paso"],
+      "of": ["of", "de"]
+    },
     "mergeDups": {
       "done": ["Save & Continue", "Ahorrar y Continuar"]
     }
