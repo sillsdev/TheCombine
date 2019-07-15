@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/projects")]
     public class ProjectController : Controller
