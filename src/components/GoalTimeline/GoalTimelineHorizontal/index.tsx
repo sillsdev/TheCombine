@@ -4,10 +4,9 @@ import { GoalTimelineHorizontal } from "./GoalTimelineHorizontal";
 import { connect } from "react-redux";
 import { StoreState } from "../../../types";
 import {
-  asyncLoadUserEdits,
   asyncAddGoalToHistory,
-  LoadUserEditsAction,
-  AddGoalToHistory
+  asyncGetUserEdits,
+  GoalAction
 } from "../GoalsActions";
 import { ThunkDispatch } from "redux-thunk";
 
@@ -20,18 +19,14 @@ export function mapStateToProps(state: StoreState) {
 }
 
 export function mapDispatchToProps(
-  dispatch: ThunkDispatch<
-    StoreState,
-    any,
-    LoadUserEditsAction | AddGoalToHistory
-  >
+  dispatch: ThunkDispatch<StoreState, any, GoalAction>
 ) {
   return {
-    loadUserEdits: (id: string) => {
-      dispatch(asyncLoadUserEdits(id));
-    },
     chooseGoal: (goal: Goal) => {
       dispatch(asyncAddGoalToHistory(goal));
+    },
+    loadHistory: () => {
+      dispatch(asyncGetUserEdits());
     }
   };
 }

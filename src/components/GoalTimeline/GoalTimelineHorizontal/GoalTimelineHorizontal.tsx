@@ -9,7 +9,6 @@ import {
   LocalizeContextProps,
   withLocalize
 } from "react-localize-redux";
-import { User } from "../../../types/user";
 
 const timelineStyle = {
   centerDisplays: {
@@ -33,8 +32,8 @@ const timelineStyle = {
 };
 
 export interface GoalTimelineHorizontalProps {
-  loadUserEdits: (id: string) => void;
   chooseGoal: (goal: Goal) => void;
+  loadHistory: () => void;
 
   allPossibleGoals: Goal[];
   history: Goal[];
@@ -56,15 +55,7 @@ export class GoalTimelineHorizontal extends React.Component<
 
   // Load history from database
   componentDidMount() {
-    let currentUserString = localStorage.getItem("user");
-    if (currentUserString) {
-      let currentUserObject: User = JSON.parse(currentUserString);
-      if (currentUserObject.userEditId) {
-        this.props.loadUserEdits(currentUserObject.userEditId);
-      } else {
-        this.props.loadUserEdits("878611321567894156984651"); // Pass a nonexistent id
-      }
-    }
+    this.props.loadHistory();
   }
 
   // Given a change event, find which goal the user selected, and choose it

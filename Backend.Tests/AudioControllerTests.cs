@@ -1,4 +1,5 @@
 ﻿using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
@@ -15,7 +16,6 @@ namespace Backend.Tests
         private IWordRepository _wordrepo;
         private WordService _wordService;
         private WordController _wordController;
-
         private AudioController _audioController;
 
         private IProjectService _projectService;
@@ -26,13 +26,19 @@ namespace Backend.Tests
         {
             _wordrepo = new WordRepositoryMock();
             _wordService = new WordService(_wordrepo);
-            _wordController = new WordController(_wordrepo, _wordService);
+            _projectService = new ProjectServiceMock();
+            _projId = _projectService.Create(new Project()).Result.Id;
+            _wordController = new WordController(_wordrepo, _wordService, _projectService);
 
             _audioController = new AudioController(_wordrepo, _wordService);
 
-            _projectService = new ProjectServiceMock();
-            _projId = _projectService.Create(new Project()).Result.Id;
+            
+
+            Utilities util = new Utilities();
+
+            Directory.Delete(util.GenerateFilePath(Utilities.filetype.dir, true, "", ""), true);
         }
+
 
         string RandomString(int length = 16)
         {
@@ -49,7 +55,7 @@ namespace Backend.Tests
         [Test]
         public void TestAudioImport()
         {
-            //yell at mark if this makes it into the pull request
+
             string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "sound.mp3");
 
             FileStream fstream = File.OpenRead(filePath);
