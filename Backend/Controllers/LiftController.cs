@@ -4,7 +4,6 @@ using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
 using SIL.Lift.Parsing;
 using System;
 using System.IO;
