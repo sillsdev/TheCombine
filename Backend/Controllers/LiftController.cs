@@ -4,6 +4,7 @@ using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 using SIL.Lift.Parsing;
 using System;
 using System.IO;
@@ -78,11 +79,32 @@ namespace BackendFramework.Controllers
 
                 //get path to extracted dir
                 var pathToExtracted = postExportDirList.Except(preExportDirList).ToList();
-                string extractedDirPath;
+                string extractedDirPath = null;
 
+                var reg = new Regex("__MACOSX$");
                 if (pathToExtracted.Count == 1)
                 {
                     extractedDirPath = pathToExtracted.FirstOrDefault();
+                }
+                else if (pathToExtracted.Count == 2)
+                {
+                    int count = 0;
+                    foreach (var dir in pathToExtracted)
+                    {
+                        if (!reg.IsMatch(dir))
+                        {
+                            extractedDirPath = dir;
+                            count++;
+                        }
+                        else
+                        {
+                            Directory.Delete(dir, true);
+                        }
+                    }
+                    if (count == 2)
+                    {
+                        throw new InvalidDataException("Your zip file should have one directory");
+                    }
                 }
                 else
                 {
