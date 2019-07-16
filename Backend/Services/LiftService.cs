@@ -31,8 +31,8 @@ namespace BackendFramework.Services
 
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
-            if (entry.Pronunciations.First().Forms.Count() > 0)
-            {
+            if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
+            { 
                 Writer.WriteStartElement("pronunciation");
                 Writer.WriteStartElement("media");
 
@@ -67,26 +67,60 @@ namespace BackendFramework.Services
         {
             projectId = id;
         }
-
-        /********************************
-        * Ldml Import Implementation
-        ********************************/
-
+        
         public void LdmlImport(string filePath, string langTag)
         {
             Sldr.Initialize(true);
-            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
-            var wsrf = new LdmlInFolderWritingSystemFactory(wsr);
-            var wsDef = new WritingSystemDefinition(langTag);
-            wsrf.Create(langTag, out wsDef);
-
-            if (wsDef.CharacterSets.FirstOrDefault() != null)
+            try
             {
-                var newProj = _projService.GetProject(projectId).Result;
-                newProj.CharacterSet = wsDef.CharacterSets.FirstOrDefault().Characters.ToList();
-                _projService.Update(projectId, newProj);
-            }
+                var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
+                var wsf = new LdmlInFolderWritingSystemFactory(wsr);
+                wsf.Create(langTag, out WritingSystemDefinition wsDef);
 
+                try
+                {
+                    if (wsDef.CharacterSets["main"] != null)
+                    {
+                        var newProj = _projService.GetProject(projectId).Result;
+                        newProj.CharacterSet = wsDef.CharacterSets["main"].Characters.ToList();
+                        _projService.Update(projectId, newProj);
+                    }
+                }
+                catch
+                {
+                    //do nothing, there is no main character set
+                }
+            }
+            finally
+            {
+                Sldr.Cleanup();
+            }
+        }
+
+        private void LdmlExport(string filePath, string langTag)
+        {
+            Sldr.Initialize(true);
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
+            var wsf = new LdmlInFolderWritingSystemFactory(wsr);
+
+            //There are no existing writing systems in this folder
+            wsf.Create(langTag, out WritingSystemDefinition wsDef);
+
+            var proj = _projService.GetProject(projectId).Result;
+            if (!wsDef.CharacterSets.TryGet("main", out CharacterSetDefinition chars))
+            {
+                chars = new CharacterSetDefinition("main");
+                wsDef.CharacterSets.Add(chars);
+            }
+            //= wsDef.CharacterSets["main"];
+
+            chars.Characters.Clear();
+            foreach (var character in proj.CharacterSet)
+            {
+                chars.Characters.Add(character);
+            }
+            wsr.Set(wsDef);
+            wsr.Save();
             Sldr.Cleanup();
         }
 
@@ -148,6 +182,12 @@ namespace BackendFramework.Services
             }
             writer.End();
 
+            //export ldml
+            string ldmlDir = Path.Combine(zipdir, "WritingSystems");
+            Directory.CreateDirectory(ldmlDir);
+            var proj = _projService.GetProject(projectId).Result;
+            LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+
             ZipFile.CreateFromDirectory(zipdir, Path.Combine(zipdir, Path.Combine("..", "LiftExportCompressed-" + Path.GetRandomFileName() + ".zip")));
         }
 
@@ -161,19 +201,20 @@ namespace BackendFramework.Services
 
         public void AddAudio(LexEntry entry, Word wordEntry, string path)
         {
-            LexPhonetic lexPhonetic = new LexPhonetic();
-
-            string dest = Path.Combine(path, wordEntry.Audio);
-            LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
-            lexPhonetic.MergeIn(MultiText.Create(proMultiText));
-            entry.Pronunciations.Add(lexPhonetic);
             try
             {
                 if (wordEntry.Audio != "")
                 {
+                    LexPhonetic lexPhonetic = new LexPhonetic();
+                    string dest = Path.Combine(path, wordEntry.Audio);
+
                     Helper.Utilities util = new Helper.Utilities();
                     string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
                     File.Copy(src, dest, true);
+
+                    LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
+                    lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+                    entry.Pronunciations.Add(lexPhonetic);
                 }
             }
             catch (FileNotFoundException)

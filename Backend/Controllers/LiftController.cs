@@ -22,11 +22,13 @@ namespace BackendFramework.Controllers
     {
         private readonly IWordRepository _wordRepo;
         private readonly LiftService _liftService;
+        private readonly IProjectService _projectService;
 
         public LiftController(IWordRepository repo, IProjectService projServ)
         {
             _wordRepo = repo;
-            _liftService = new LiftService(_wordRepo, projServ);
+            _projectService = projServ;
+            _liftService = new LiftService(_wordRepo, _projectService);
         }
 
         // POST: v1/project/{projectId}/words/upload
@@ -34,8 +36,8 @@ namespace BackendFramework.Controllers
         [HttpPost("words/upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload model)
         {
-            var isValid = _projectService.GetProject(projectId);
-            if (isValid == null)
+            var project = _projectService.GetProject(projectId);
+            if (project == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
