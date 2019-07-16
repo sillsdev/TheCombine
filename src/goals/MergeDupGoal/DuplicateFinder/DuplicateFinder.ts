@@ -262,7 +262,6 @@ export default class DupFinder {
         );
       }
     }
-    console.log(a, b, matrix[a.length - 1][b.length - 1]);
     return matrix[a.length - 1][b.length - 1];
   }
 }
