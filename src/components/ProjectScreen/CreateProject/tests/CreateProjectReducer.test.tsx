@@ -4,7 +4,7 @@ import {
   IN_PROGRESS,
   RESET
 } from "../CreateProjectActions";
-import { StoreActions, StoreAction } from "../../../rootActions";
+import { StoreActions, StoreAction } from "../../../../rootActions";
 
 const project = {
   name: "testProjectName",
