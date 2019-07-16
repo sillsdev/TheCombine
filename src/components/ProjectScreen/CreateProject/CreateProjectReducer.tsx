@@ -5,8 +5,8 @@ import {
   RESET,
   CreateProjectAction
 } from "./CreateProjectActions";
-import { Project } from "../../types/project";
-import { StoreAction, StoreActions } from "../../rootActions";
+import { Project } from "../../../types/project";
+import { StoreAction, StoreActions } from "../../../rootActions";
 
 export interface CreateProjectState {
   name: string;
