@@ -78,11 +78,31 @@ namespace BackendFramework.Controllers
 
                 //get path to extracted dir
                 var pathToExtracted = postExportDirList.Except(preExportDirList).ToList();
-                string extractedDirPath;
+                string extractedDirPath = null;
 
                 if (pathToExtracted.Count == 1)
                 {
                     extractedDirPath = pathToExtracted.FirstOrDefault();
+                }
+                else if (pathToExtracted.Count == 2)
+                {
+                    int count = 0;
+                    foreach (var dir in pathToExtracted)
+                    {
+                        if (dir.EndsWith("__MACOSX"))
+                        {
+                            Directory.Delete(dir, true);
+                        }
+                        else
+                        {
+                            extractedDirPath = dir;
+                            count++;
+                        }
+                    }
+                    if (count == 2)
+                    {
+                        throw new InvalidDataException("Your zip file should have one directory");
+                    }
                 }
                 else
                 {
