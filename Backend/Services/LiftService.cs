@@ -216,6 +216,7 @@ namespace BackendFramework.Services
                     lexPhonetic.MergeIn(MultiText.Create(proMultiText));
                     entry.Pronunciations.Add(lexPhonetic);
                 }
+                }
             }
             catch (FileNotFoundException)
             {
