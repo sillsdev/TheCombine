@@ -1,6 +1,6 @@
 import { simpleWord, Word } from "../../types/word";
 import { defaultState as goalTimelineState } from "../GoalTimeline/DefaultState";
-import { defaultState as createProjectState } from "../CreateProject/CreateProjectReducer";
+import { defaultState as createProjectState } from "../ProjectScreen/CreateProject/CreateProjectReducer";
 import { defaultState as goalSelectorState } from "../GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
 
 export const defaultState = {
