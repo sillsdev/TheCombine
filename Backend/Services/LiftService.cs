@@ -216,7 +216,6 @@ namespace BackendFramework.Services
                     lexPhonetic.MergeIn(MultiText.Create(proMultiText));
                     entry.Pronunciations.Add(lexPhonetic);
                 }
-                }
             }
             catch (FileNotFoundException)
             {
@@ -271,7 +270,8 @@ namespace BackendFramework.Services
                     proj.VernacularWritingSystem = entry.CitationForm.FirstValue.Key;
                     await _projService.Update(projectId, proj);
                 }
-            } else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
+            } 
+            else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
             {
                 newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
                 if (proj.VernacularWritingSystem == "")

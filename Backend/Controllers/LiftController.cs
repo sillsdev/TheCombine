@@ -81,7 +81,6 @@ namespace BackendFramework.Controllers
                 var pathToExtracted = postExportDirList.Except(preExportDirList).ToList();
                 string extractedDirPath = null;
 
-                var reg = new Regex("__MACOSX$");
                 if (pathToExtracted.Count == 1)
                 {
                     extractedDirPath = pathToExtracted.FirstOrDefault();
@@ -112,6 +111,7 @@ namespace BackendFramework.Controllers
                 }
 
                 var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
+                //TODO: string extractedLiftName = ""; 
 
                 //search for the lift file within the list
                 var extractedLiftPath = Array.FindAll(extractedLiftNameArr, file => file.EndsWith(".lift"));
