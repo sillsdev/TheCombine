@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,13 +30,32 @@ namespace BackendFramework.Services
         {
             try
             {
-                var user = await _userDatabase.Users.FindAsync(x => (x.Username == username &&  x.Password == password));
+                // Fetch the stored user
+                var user = await _userDatabase.Users.FindAsync(x => x.Username == username);
                 User foundUser = user.Single();
 
                 // return null if user not found
                 if (foundUser == null)
                 {
                     return null;
+                }
+
+                // Extract the bytes from password
+                byte[] hashBytes = Convert.FromBase64String(foundUser.Password);
+                // Get the salt
+                byte[] salt = new byte[16];
+                Array.Copy(hashBytes, 0, salt, 0, 16);
+                // Compute the hash on the password the user entered
+                var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
+                byte[] hash = pbkdf2.GetBytes(20);
+
+                // Compare the results
+                for (int i = 0; i < 20; i++)
+                {
+                    if (hashBytes[i + 16] != hash[i])
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
                 }
 
                 // authentication successful so generate jwt token
@@ -110,7 +130,6 @@ namespace BackendFramework.Services
 
                 if (users.Count != 0)
                 {
-
                     //check to see if username is taken
                     if (_userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
                     {
@@ -118,7 +137,21 @@ namespace BackendFramework.Services
                     }
                 }
 
-                //insert user
+                //create salt 
+                byte[] salt;
+                new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+
+                //hash the password
+                var pbkdf2 = new Rfc2898DeriveBytes(user.Password, salt, 10000);
+                byte[] hash = pbkdf2.GetBytes(20);
+
+                //combine salt and hashed password
+                byte[] hashBytes = new byte[36];
+                Array.Copy(salt, 0, hashBytes, 0, 16);
+                Array.Copy(hash, 0, hashBytes, 16, 20);
+
+                //insert user with hashed salt+hash
+                user.Password = Convert.ToBase64String(hashBytes);
                 await _userDatabase.Users.InsertOneAsync(user);
 
                 return user;
@@ -158,10 +191,6 @@ namespace BackendFramework.Services
 
             return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
 
-        }
-
-        
+        }   
     }
-
-
 }
