@@ -11,7 +11,7 @@ import WordTile from "./WordTileComponent";
 
 export interface SampleWordsProps {
   setInventory: (inventory: string[]) => void;
-  inventory: string[];
+  allCharacters: string[];
 }
 
 interface SampleWordsState {
@@ -49,7 +49,7 @@ export class SampleWords extends React.Component<
   }
 
   componentDidUpdate(prevProps: SampleWordsProps & LocalizeContextProps) {
-    if (prevProps.inventory !== this.props.inventory) this.getWords();
+    if (prevProps.allCharacters !== this.props.allCharacters) this.getWords();
   }
 
   componentWillUnmount() {
@@ -63,7 +63,7 @@ export class SampleWords extends React.Component<
   getWords() {
     const NUM_WORDS = 5; // The max number of words we want to display on the page
 
-    let inv = [...this.props.inventory];
+    let inv = [...this.props.allCharacters];
     let sampleWords: string[] = [];
 
     let word;
@@ -88,7 +88,7 @@ export class SampleWords extends React.Component<
   /** Adds all characters from the word into the character inventory */
   addWordToCharSet(word: string) {
     this.props.setInventory([
-      ...this.props.inventory,
+      ...this.props.allCharacters,
       ...word.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
     ]);
 
@@ -111,6 +111,7 @@ export class SampleWords extends React.Component<
         direction="row"
         justify="flex-start"
         alignItems="center"
+        style={{ borderLeft: "1px solid #ccc", height: "100%" }}
       >
         <Grid item xs={12}>
           <Typography component="h1" variant="h4">
@@ -124,7 +125,7 @@ export class SampleWords extends React.Component<
           <WordTile
             key={word + index + "tile"}
             word={word}
-            inventory={this.props.inventory}
+            allCharacters={this.props.allCharacters}
             addWordToCharSet={word => this.addWordToCharSet(word)}
             addWordToIgnoreList={word => this.addWordToIgnoreList(word)}
           />

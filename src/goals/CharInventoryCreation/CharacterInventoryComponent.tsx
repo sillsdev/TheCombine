@@ -21,9 +21,11 @@ import { Save } from "@material-ui/icons";
 import history from "../../history";
 
 export interface CharacterInventoryProps {
-  setInventory: (inventory: string[]) => void;
+  setAcceptedCharacters: (inventory: string[]) => void;
+  setRejectedCharacters: (inventory: string[]) => void;
   uploadInventory: () => void;
   validCharacters: string[];
+  rejectedCharacters: string[];
   currentProject: Project;
   translate: TranslateFunction;
 }
@@ -42,7 +44,7 @@ export class CharacterInventory extends React.Component<
   constructor(props: CharacterInventoryProps & LocalizeContextProps) {
     super(props);
     // Load inventory from server
-    this.props.setInventory(this.props.currentProject.validCharacters);
+    this.props.setAcceptedCharacters(this.props.currentProject.validCharacters);
     this.state = { cancelDialogOpen: false };
   }
 
@@ -61,14 +63,18 @@ export class CharacterInventory extends React.Component<
         >
           <Grid item sm={9} xs={12}>
             <CharacterSet
-              setInventory={this.props.setInventory}
-              inventory={this.props.validCharacters}
+              setValidCharacters={this.props.setAcceptedCharacters}
+              validCharacters={this.props.validCharacters}
+              setRejectedCharacters={this.props.setRejectedCharacters}
+              rejectedCharacters={this.props.rejectedCharacters}
             />
           </Grid>
           <Grid item sm={3} xs={12}>
             <SampleWords
-              setInventory={this.props.setInventory}
-              inventory={this.props.validCharacters}
+              setInventory={this.props.setAcceptedCharacters}
+              allCharacters={this.props.validCharacters.concat(
+                this.props.rejectedCharacters
+              )}
             />
           </Grid>
           <Grid item xs={12}>

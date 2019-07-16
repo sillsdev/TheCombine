@@ -1,6 +1,6 @@
 import {
-  setInventory,
-  SET_CHARACTER_INVENTORY,
+  setAcceptedCharacters,
+  SET_ACCEPTED_CHARACTERS,
   uploadInventory
 } from "../CharacterInventoryActions";
 import configureMockStore from "redux-mock-store";
@@ -30,8 +30,8 @@ const MOCK_STATE = {
 
 describe("Testing CharacterInventoryActions", () => {
   test("setInventory yields correct action", () => {
-    expect(setInventory(DATA)).toEqual({
-      type: SET_CHARACTER_INVENTORY,
+    expect(setAcceptedCharacters(DATA)).toEqual({
+      type: SET_ACCEPTED_CHARACTERS,
       payload: DATA
     });
   });

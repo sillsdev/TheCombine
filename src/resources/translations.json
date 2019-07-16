@@ -131,7 +131,8 @@
         "Remove the selected characters from the character set",
         ""
       ],
-      "input": ["Accepted Characters", "Caracteres Aceptados..."],
+      "acceptedCharacters": ["Accepted Characters", "Caracteres Aceptados..."],
+      "rejectedCharacters": ["Rejected Characters", "Caracteres Rechazados..."],
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
         "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar."

@@ -16,12 +16,15 @@ import { Goal } from "../../types/goals";
 import { UserProjectMap } from "../../components/Project/UserProject";
 import { Project } from "../../types/project";
 
-export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
-export type SET_CHARACTER_INVENTORY = typeof SET_CHARACTER_INVENTORY;
+export const SET_ACCEPTED_CHARACTERS = "SET_ACCEPTED_CHARACTERS";
+export type SET_ACCEPTED_CHARACTERS = typeof SET_ACCEPTED_CHARACTERS;
+
+export const SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS";
+export type SET_REJECTED_CHARACTERS = typeof SET_REJECTED_CHARACTERS;
 
 export interface CharacterInventoryData {}
 
-type CharacterInventoryType = SET_CHARACTER_INVENTORY;
+type CharacterInventoryType = SET_ACCEPTED_CHARACTERS | SET_REJECTED_CHARACTERS;
 
 //action types
 
@@ -44,6 +47,24 @@ export function uploadInventory() {
     let history: Goal[] = state.goalsState.historyState.history;
 
     await saveChanges(updatedGoal, history, project, dispatch);
+  };
+}
+
+export function setAcceptedCharacters(
+  payload: string[]
+): CharacterInventoryAction {
+  return {
+    type: SET_ACCEPTED_CHARACTERS,
+    payload
+  };
+}
+
+export function setRejectedCharacters(
+  payload: string[]
+): CharacterInventoryAction {
+  return {
+    type: SET_REJECTED_CHARACTERS,
+    payload
   };
 }
 
@@ -86,8 +107,8 @@ async function saveChangesToProject(
 
 function updateCurrentProject(state: StoreState): Project {
   let project = state.currentProject;
-  let inv = state.characterInventoryState.inventory;
-  project.validCharacters = inv;
+  project.validCharacters = state.characterInventoryState.acceptedCharacters;
+  project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
   return project;
 }
 
@@ -97,11 +118,4 @@ function updateCurrentGoal(state: StoreState): Goal {
   // Nothing stored as goal data for now
 
   return currentGoal;
-}
-
-export function setInventory(payload: string[]): CharacterInventoryAction {
-  return {
-    type: SET_CHARACTER_INVENTORY,
-    payload
-  };
 }

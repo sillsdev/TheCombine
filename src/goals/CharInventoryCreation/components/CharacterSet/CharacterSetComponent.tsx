@@ -4,19 +4,14 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import {
-  Grid,
-  Typography,
-  TextField,
-  Button,
-  Paper,
-  Tooltip
-} from "@material-ui/core";
-import { Delete as DeleteIcon, Add, Help } from "@material-ui/icons";
+import { Grid, Typography, TextField, Paper, Tooltip } from "@material-ui/core";
+import { Help } from "@material-ui/icons";
 
 export interface CharacterSetProps {
-  setInventory: (inventory: string[]) => void;
-  inventory: string[];
+  setValidCharacters: (inventory: string[]) => void;
+  validCharacters: string[];
+  setRejectedCharacters: (inventory: string[]) => void;
+  rejectedCharacters: string[];
 }
 
 interface CharacterSetState {
@@ -47,7 +42,7 @@ export class CharacterSet extends React.Component<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) {
-    this.props.setInventory(e.target.value.replace(/\s/g, "").split(""));
+    this.props.setValidCharacters(e.target.value.replace(/\s/g, "").split(""));
     // this.setState({
     //   chars: e.target.value.replace(/\s/g, ""),
     //   textboxError: false
@@ -92,16 +87,16 @@ export class CharacterSet extends React.Component<
   // }
 
   // deletes selected chraracters
-  deleteSelected() {
-    this.props.setInventory([
-      ...this.props.inventory.filter(
-        char => !this.state.selected.includes(char)
-      )
-    ]);
-    this.setState({
-      selected: []
-    });
-  }
+  // deleteSelected() {
+  //   this.props.setValidCharacters([
+  //     ...this.props.validCharacters.filter(
+  //       char => !this.state.selected.includes(char)
+  //     )
+  //   ]);
+  //   this.setState({
+  //     selected: []
+  //   });
+  // }
 
   // reorders the character inventory by moving one char
   moveChar() {
@@ -113,7 +108,7 @@ export class CharacterSet extends React.Component<
       return;
     }
 
-    let inv = [...this.props.inventory];
+    let inv = [...this.props.validCharacters];
     let dragIndex = inv.indexOf(this.state.dragChar);
     let dropIndex = inv.indexOf(this.state.dropChar);
 
@@ -129,7 +124,7 @@ export class CharacterSet extends React.Component<
       dragChar: "",
       dropChar: ""
     });
-    this.props.setInventory(inv);
+    this.props.setValidCharacters(inv);
   }
 
   render() {
@@ -157,7 +152,7 @@ export class CharacterSet extends React.Component<
           </Typography>
         </Grid>
 
-        {this.props.inventory.length <= 0 ? (
+        {this.props.validCharacters.length <= 0 ? (
           <Grid item xs={12}>
             <Typography variant="subtitle1" style={{ color: "#999" }}>
               <Translate id="charInventory.characterSet.noCharacters" />
@@ -165,7 +160,7 @@ export class CharacterSet extends React.Component<
           </Grid>
         ) : (
           /* The grid of character tiles */
-          this.props.inventory.map(char => [
+          this.props.validCharacters.map(char => [
             this.state.dropChar === char && this.state.dragChar !== char ? (
               <Grid
                 item
@@ -178,7 +173,8 @@ export class CharacterSet extends React.Component<
             ) : null, // Creates a blank space where the tile will be dropped
             <Grid
               item
-              xs={1}
+              sm={1}
+              xs={2}
               key={"char_" + char}
               onDragOver={e => {
                 e.preventDefault();
@@ -219,44 +215,46 @@ export class CharacterSet extends React.Component<
 
         <Grid item xs={12} />
 
-        {/* The text area for character input */}
-        <Grid item xs={6}>
+        {/* Input for accepted characters */}
+        <Grid item xs={12}>
           <TextField
-            value={this.props.inventory.join("")}
+            value={this.props.validCharacters.join("")}
             fullWidth
             variant="outlined"
             name="chracters"
-            label={<Translate id="charInventory.characterSet.input" />}
-            onChange={e => this.handleChange(e)}
-            // onKeyDown={e => this.handleKeyDown(e)}
-            autoComplete="off"
-            error={this.state.textboxError}
-            helperText={
-              this.state.textboxError && (
-                <Translate id="charInventory.characterSet.required" />
+            label={
+              <Translate id="charInventory.characterSet.acceptedCharacters" />
+            }
+            onChange={e =>
+              this.props.setValidCharacters(
+                e.target.value.replace(/\s/g, "").split("")
               )
             }
-            inputProps={{ style: { letterSpacing: 5 } }}
+            // onKeyDown={e => this.handleKeyDown(e)}
+            autoComplete="off"
+            inputProps={{ style: { letterSpacing: 5 }, spellcheck: "false" }}
           />
         </Grid>
 
-        {/* The add characters and delete character buttons */}
-        <Grid item xs={6}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => this.deleteSelected()}
-            disabled={this.state.selected.length === 0}
-            title={
-              this.props.translate(
-                "charInventory.characterSet.deleteButtonTitle"
-              ) as string
+        {/* Input for rejected characters */}
+        <Grid item xs={12}>
+          <TextField
+            value={this.props.rejectedCharacters.join("")}
+            fullWidth
+            variant="outlined"
+            name="chracters"
+            label={
+              <Translate id="charInventory.characterSet.rejectedCharacters" />
             }
-            style={{ margin: 10 }}
-          >
-            <DeleteIcon />{" "}
-            <Translate id="charInventory.characterSet.deleteButton" />
-          </Button>
+            onChange={e =>
+              this.props.setRejectedCharacters(
+                e.target.value.replace(/\s/g, "").split("")
+              )
+            }
+            // onKeyDown={e => this.handleKeyDown(e)}
+            autoComplete="off"
+            inputProps={{ style: { letterSpacing: 5 }, spellcheck: "false" }}
+          />
         </Grid>
       </Grid>
     );

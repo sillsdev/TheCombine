@@ -8,7 +8,7 @@ describe("Testing Word Tile Component", () => {
     ReactDOM.render(
       <WordTileComponent
         word={""}
-        inventory={[]}
+        allCharacters={[]}
         addWordToCharSet={jest.fn()}
         addWordToIgnoreList={jest.fn()}
       />,

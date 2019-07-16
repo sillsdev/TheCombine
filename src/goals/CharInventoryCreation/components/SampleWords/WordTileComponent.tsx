@@ -15,7 +15,7 @@ const TRANSITION =
 
 export interface WordTileProps {
   word: string;
-  inventory: string[];
+  allCharacters: string[]; // valid and rejected
   addWordToCharSet: (arg0: string) => void;
   addWordToIgnoreList: (arg0: string) => void;
 }
@@ -51,7 +51,7 @@ export class WordTile extends React.Component<
             <Typography variant="body1">
               {word.split("").map((letter: string, index: number) =>
                 // Highlight character if not in the inventory (don't highlight " ")
-                [...this.props.inventory, " "].includes(letter) ? (
+                [...this.props.allCharacters, " "].includes(letter) ? (
                   letter
                 ) : (
                   <span

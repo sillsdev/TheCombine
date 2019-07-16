@@ -32,7 +32,7 @@ beforeAll(() => {
       <CharacterInventoryComponent
         validCharacters={["a"]}
         currentProject={{ validCharacters: ["a"] } as Project}
-        setInventory={SET_INV}
+        setAcceptedCharacters={SET_INV}
         uploadInventory={UPLOAD_INV}
       />
     );
@@ -52,7 +52,7 @@ describe("Testing Character Inventory Component", () => {
       <CharacterInventoryComponent
         validCharacters={["a"]}
         currentProject={{ validCharacters: ["a"] } as Project}
-        setInventory={SET_INV}
+        setAcceptedCharacters={SET_INV}
         uploadInventory={UPLOAD_INV}
       />,
       div

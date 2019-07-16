@@ -50,7 +50,7 @@ describe("Tests characterInventoryComponent", () => {
   it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
-      <CharacterSet inventory={[]} setInventory={SET_INV} />,
+      <CharacterSet validCharacters={[]} setInventory={SET_INV} />,
       div
     );
     ReactDOM.unmountComponentAtNode(div);
@@ -187,7 +187,7 @@ describe("Tests characterInventoryComponent", () => {
 function createTree(inventory: string[]) {
   act(() => {
     charMaster = renderer.create(
-      <CharacterSet inventory={inventory} setInventory={SET_INV} />
+      <CharacterSet validCharacters={inventory} setInventory={SET_INV} />
     );
   });
   charHandle = charMaster.root.findByType(CharSetClass).instance;
