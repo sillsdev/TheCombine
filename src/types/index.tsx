@@ -33,3 +33,5 @@ export interface StoreState {
   //temporary
   tempState: TempState;
 }
+
+export type Hash<V> = { [key: string]: V };

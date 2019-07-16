@@ -1,5 +1,5 @@
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { MergeTreeReference, Hash, TreeDataSense } from "../MergeDupsTree";
+import { MergeTreeReference, TreeDataSense } from "../MergeDupsTree";
 import Card from "@material-ui/core/Card/Card";
 import {
   CardContent,
@@ -12,6 +12,7 @@ import { uuid } from "../../../../utilities";
 import { Sort } from "@material-ui/icons";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { Hash } from "../../../../types";
 
 //interface for component props
 export interface MergeStackProps {
