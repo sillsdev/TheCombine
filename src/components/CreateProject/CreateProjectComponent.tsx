@@ -12,20 +12,16 @@ import {
   Typography,
   CardContent,
   Card,
-  CircularProgress,
-  List,
-  ListItem
+  CircularProgress
 } from "@material-ui/core";
 import { Check } from "@material-ui/icons";
 import { buttonSuccess } from "../../types/theme";
 import AppBarComponent from "../AppBar/AppBarComponent";
-import { Project } from "../../types/project";
-import { getAllProjects } from "../../backend";
-import history from "../../history";
+import ChooseProjectComponent from "./ChooseProject";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
-  setCurrentProject: (project: Project) => void;
+  // setCurrentProject: (project: Project) => void;
   reset: () => void;
   inProgress: boolean;
   success: boolean;
@@ -37,7 +33,6 @@ interface CreateProjectState {
   languageData?: File;
   fileName?: string;
   error: { name: boolean };
-  projectList: Project[];
 }
 
 class CreateProject extends React.Component<
@@ -46,10 +41,10 @@ class CreateProject extends React.Component<
 > {
   constructor(props: CreateProjectProps & LocalizeContextProps) {
     super(props);
-    this.state = { projectList: [], name: "", error: { name: false } };
-    getAllProjects().then(projects =>
-      this.setState({ ...this.state, projectList: projects })
-    );
+    this.state = { name: "", error: { name: false } };
+    // getAllProjects().then(projects =>
+    //   this.setState({ ...this.state, projectList: projects })
+    // );
   }
 
   componentDidMount() {
@@ -92,10 +87,10 @@ class CreateProject extends React.Component<
     }
   }
 
-  selectProject(project: Project) {
-    this.props.setCurrentProject(project);
-    history.push("/goals");
-  }
+  // selectProject(project: Project) {
+  //   this.props.setCurrentProject(project);
+  //   history.push("/goals");
+  // }
 
   render() {
     //visual definition
@@ -104,26 +99,7 @@ class CreateProject extends React.Component<
         <AppBarComponent />
         <Grid container justify="center" spacing={2}>
           <Grid item>
-            <Card style={{ width: 450 }}>
-              <CardContent>
-                {/* Title */}
-                <Typography variant="h5" align="center" gutterBottom>
-                  <Translate id="selectProject.title" />
-                </Typography>
-
-                {/* List of projects */}
-                <List>
-                  {this.state.projectList.map(project => (
-                    <ListItem
-                      button
-                      onClick={() => this.selectProject(project)}
-                    >
-                      <Typography variant="h6">{project.name}</Typography>
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
+            <ChooseProjectComponent />
           </Grid>
           <Grid item>
             <Card style={{ width: 450 }}>
