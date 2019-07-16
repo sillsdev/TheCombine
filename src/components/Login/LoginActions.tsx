@@ -4,11 +4,7 @@ import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 import * as backend from "../../backend";
 import { User } from "../../types/user";
-import {
-  CreateProjectAction,
-  RESET
-} from "../CreateProject/CreateProjectActions";
-import { StoreAction, StoreActions, reset } from "../../rootActions";
+import { StoreAction, reset } from "../../rootActions";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
