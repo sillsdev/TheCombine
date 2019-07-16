@@ -1,13 +1,25 @@
-import React from "react";
-import { treeViewReducer, defaultState } from "../TreeViewReducer";
+import {
+  treeViewReducer,
+  defaultState,
+  TreeViewState
+} from "../TreeViewReducer";
 import { TreeViewAction, TreeActionType } from "../TreeViewActions";
 import SemanticDomain from "../SemanticDomain";
+import { StoreAction, StoreActions } from "../../../rootActions";
 
 describe("Test the TreeViewReducer", () => {
   it("Returns defaultState when passed undefined", () => {
     expect(treeViewReducer(undefined, {} as TreeViewAction)).toEqual(
       defaultState
     );
+  });
+
+  it("Returns default state when reset action is passed", () => {
+    const action: StoreAction = {
+      type: StoreActions.RESET
+    };
+
+    expect(treeViewReducer({} as TreeViewState, action)).toEqual(defaultState);
   });
 
   it("Returns state passed in when passed an invalid action", () => {
