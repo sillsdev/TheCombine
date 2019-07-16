@@ -17,7 +17,7 @@ import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
-import { RESET } from "../CreateProject/CreateProjectActions";
+import { RESET } from "../ProjectScreen/CreateProject/CreateProjectActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
