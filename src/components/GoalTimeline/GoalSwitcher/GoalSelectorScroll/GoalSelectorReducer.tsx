@@ -4,6 +4,7 @@ import {
   MOUSE_ACTION
 } from "./GoalSelectorAction";
 import { GoalSelectorState } from "../../../../types/goals";
+import { StoreAction, StoreActions } from "../../../../rootActions";
 
 export const defaultState: GoalSelectorState = {
   selectedIndex: 0,
@@ -14,7 +15,7 @@ export const defaultState: GoalSelectorState = {
 
 export const goalSelectReducer = (
   state: GoalSelectorState | undefined,
-  action: GoalScrollAction
+  action: StoreAction | GoalScrollAction
 ): GoalSelectorState => {
   if (!state) return defaultState;
   switch (action.type) {
@@ -23,13 +24,13 @@ export const goalSelectReducer = (
         ...state,
         selectedIndex: action.payload
       };
-
     case MOUSE_ACTION:
       return {
         ...state,
         mouseX: action.payload
       };
-
+    case StoreActions.RESET:
+      return defaultState;
     default:
       return state;
   }

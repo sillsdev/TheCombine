@@ -1,6 +1,7 @@
 import { TreeViewAction, TreeActionType } from "./TreeViewActions";
 import SemanticDomain from "./SemanticDomain";
 import SemanticDomainTest from "../../resources/semantic.json";
+import { StoreAction, StoreActions } from "../../rootActions";
 const tempData: string = JSON.stringify(SemanticDomainTest); // temporary, will eventually get semantic domains from backend
 
 export interface TreeViewState {
@@ -35,11 +36,13 @@ export const defaultState: TreeViewState = createDomains();
 
 export const treeViewReducer = (
   state: TreeViewState = defaultState,
-  action: TreeViewAction
+  action: StoreAction | TreeViewAction
 ): TreeViewState => {
   switch (action.type) {
     case TreeActionType.TRAVERSE_TREE:
       return { ...state, currentDomain: action.payload };
+    case StoreActions.RESET:
+      return defaultState;
     default:
       return state;
   }
