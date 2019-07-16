@@ -18,6 +18,7 @@ import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder"
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
 import { RESET } from "../ProjectScreen/CreateProject/CreateProjectActions";
+import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -85,8 +86,10 @@ export function asyncGetUserEdits() {
     if (currentUserString) {
       let currentUserObject: User = JSON.parse(currentUserString);
       let projectId: string = backend.getProjectId();
-      let userEditId: string | undefined =
-        currentUserObject.workedProjects[projectId];
+      let userEditId: string | undefined = getUserEditIdFromProjectId(
+        currentUserObject.workedProjects,
+        projectId
+      );
       if (userEditId !== undefined) {
         dispatch(asyncLoadUserEdits(projectId, userEditId));
       } else {
@@ -96,20 +99,36 @@ export function asyncGetUserEdits() {
   };
 }
 
+function getUserEditIdFromProjectId(
+  workedProjects: Hash<string>[],
+  projectId: string
+): string | undefined {
+  let matches: string[] = Object.keys(workedProjects).filter(
+    project => projectId === project
+  );
+  if (matches.length !== 0 && matches.length < 2) {
+    return matches[0];
+  } else {
+    console.log("No projects exist");
+  }
+}
+
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: Dispatch<GoalAction>, getState: any) => {
-    let userEditId: string = getUserEditId();
+    let userEditId: string | undefined = getUserEditId();
 
-    await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
-    await backend
-      .addGoalToUserEdit(userEditId, goal)
-      .then(resp => {
-        dispatch(addGoalToHistory(goal));
-        history.push(`/goals/${resp}`);
-      })
-      .catch((err: string) => {
-        console.log(err);
-      });
+    if (userEditId !== undefined) {
+      await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
+      await backend
+        .addGoalToUserEdit(userEditId, goal)
+        .then(resp => {
+          dispatch(addGoalToHistory(goal));
+          history.push(`/goals/${resp}`);
+        })
+        .catch((err: string) => {
+          console.log(err);
+        });
+    }
   };
 }
 
@@ -129,14 +148,18 @@ export async function loadGoalData(goal: Goal): Promise<Goal> {
   return goal;
 }
 
-export function getUserEditId(): string {
+export function getUserEditId(): string | undefined {
   let userString = localStorage.getItem("user");
   let userObject: User;
-  let userEditId: string = "";
+  let userEditId: string | undefined = "";
   if (userString) {
     userObject = JSON.parse(userString);
     let projectId = backend.getProjectId();
-    userEditId = userObject.workedProjects[projectId];
+    userEditId = getUserEditIdFromProjectId(
+      userObject.workedProjects,
+      projectId
+    );
+    // userEditId = userObject.workedProjects[projectId];
   }
   return userEditId;
 }
@@ -162,9 +185,26 @@ function updateUserWithUserEditId(
   userEditId: string
 ): string {
   let currentUserObject: User = JSON.parse(userObjectString);
-  currentUserObject.workedProjects[projectId] = userEditId;
+  currentUserObject = updateWorkedProjectsWithUserEditId(
+    currentUserObject,
+    projectId,
+    userEditId
+  );
   let updatedUserString = JSON.stringify(currentUserObject);
   return updatedUserString;
+}
+
+function updateWorkedProjectsWithUserEditId(
+  user: User,
+  projectId: string,
+  userEditId: string
+): User {
+  let results: string[] = Object.keys(user.workedProjects)
+    .filter(project => projectId === project)
+    .map(userEdit => (userEdit = userEditId));
+  // currentUserObject.workedProjects[projectId] = userEditId;
+  console.log(results);
+  return user;
 }
 
 export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {

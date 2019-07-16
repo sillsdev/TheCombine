@@ -63,17 +63,19 @@ async function saveChangesToGoal(
   dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
   let projectId: string = backend.getProjectId();
-  let userEditId: string = getUserEditId();
-  let userProjectMap: UserProjectMap = {
-    projectId: projectId,
-    userEditId: userEditId
-  };
-  let indexInHistory: number = getIndexInHistory(history, updatedGoal);
+  let userEditId: string | undefined = getUserEditId();
+  if (userEditId !== undefined) {
+    let userProjectMap: UserProjectMap = {
+      projectId: projectId,
+      userEditId: userEditId
+    };
+    let indexInHistory: number = getIndexInHistory(history, updatedGoal);
 
-  dispatch(updateGoal(updatedGoal));
-  await backend
-    .addStepToGoal(userProjectMap, indexInHistory, updatedGoal)
-    .catch((err: string) => console.log(err));
+    dispatch(updateGoal(updatedGoal));
+    await backend
+      .addStepToGoal(userProjectMap, indexInHistory, updatedGoal)
+      .catch((err: string) => console.log(err));
+  }
 }
 
 async function saveChangesToProject(

@@ -155,6 +155,17 @@ export async function getAllProjects(): Promise<Project[]> {
   return resp.data;
 }
 
+export async function getAllProjectsByUser(user: User): Promise<Project[]> {
+  let projectIds: string[] = Object.keys(user.workedProjects);
+  let projects: Project[] = [];
+  for (let projectId of projectIds) {
+    await getProject(projectId).then(project => {
+      projects.push(project);
+    });
+  }
+  return projects;
+}
+
 export async function getProject(id: string): Promise<Project> {
   let resp = await backendServer.get(`projects/${id}`, {
     headers: authHeader()

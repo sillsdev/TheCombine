@@ -13,8 +13,9 @@ import {
   ListItem
 } from "@material-ui/core";
 import { Project } from "../../../types/project";
-import { getAllProjects } from "../../../backend";
+import { getAllProjectsByUser } from "../../../backend";
 import history from "../../../history";
+import { User } from "../../../types/user";
 
 export interface ChooseProjectProps {
   setCurrentProject: (project: Project) => void;
@@ -31,9 +32,14 @@ class ChooseProject extends React.Component<
   constructor(props: ChooseProjectProps & LocalizeContextProps) {
     super(props);
     this.state = { projectList: [] };
-    getAllProjects().then(projects =>
-      this.setState({ ...this.state, projectList: projects })
-    );
+    let user: string | null = localStorage.getItem("user");
+    if (user) {
+      let userObject: User = JSON.parse(user);
+      getAllProjectsByUser(userObject).then(projects => {
+        console.log(projects);
+        this.setState({ ...this.state, projectList: projects });
+      });
+    }
   }
 
   selectProject(project: Project) {

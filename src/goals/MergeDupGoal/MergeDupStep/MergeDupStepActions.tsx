@@ -142,12 +142,14 @@ export function mergeSense() {
 
 async function addStepToGoal(goal: Goal, indexInHistory: number) {
   let projectId: string = backend.getProjectId();
-  let userEditId: string = getUserEditId();
-  let userProjectMap: UserProjectMap = {
-    projectId: projectId,
-    userEditId: userEditId
-  };
-  await backend.addStepToGoal(userProjectMap, indexInHistory, goal);
+  let userEditId: string | undefined = getUserEditId();
+  if (userEditId !== undefined) {
+    let userProjectMap: UserProjectMap = {
+      projectId: projectId,
+      userEditId: userEditId
+    };
+    await backend.addStepToGoal(userProjectMap, indexInHistory, goal);
+  }
 }
 
 export function refreshWords() {
