@@ -281,21 +281,11 @@ namespace BackendFramework.Services
 
                     //if there are duplicate filenames then add a (number) like windows does to the end of it
                     int filecount = 1;
+                    var filename = Path.GetFileNameWithoutExtension(audioDest);
 
                     while (File.Exists(audioDest))
                     {
-                        //does the filename already have a counter
-                        var filename = Path.GetFileNameWithoutExtension(audioDest);
-                        var fileList = Regex.Match(filename, @".+(\([0-9]+\))");
-
-                        //if yes then take it off
-                        if (fileList.Success)
-                        {
-                            filename = audioDest.Substring(audioDest.Length - 3);
-
-                        }
-                        //add a new counter
-                        audioDest = Path.Combine(audioFolder, Path.GetFileNameWithoutExtension(filename) + "(" + filecount++ + ")" + ".mp3");
+                        audioDest = Path.Combine(audioFolder, filename + "(" + filecount++ + ")" + ".mp3");
                     }
                     File.Copy(extractedAudioMp3, audioDest);
                 }
