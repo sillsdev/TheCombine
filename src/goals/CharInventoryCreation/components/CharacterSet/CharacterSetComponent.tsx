@@ -16,10 +16,10 @@ export interface CharacterSetProps {
 
 interface CharacterSetState {
   chars: string; // characters in the textbox
-  selected: string[];
-  dragChar: string;
-  dropChar: string;
-  textboxError: boolean;
+  // selected: string[];
+  // dragChar: string;
+  // dropChar: string;
+  // textboxError: boolean;
 }
 
 export class CharacterSet extends React.Component<
@@ -29,25 +29,30 @@ export class CharacterSet extends React.Component<
   constructor(props: CharacterSetProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      chars: "",
-      selected: [],
-      dragChar: "",
-      dropChar: "",
-      textboxError: false
+      chars: ""
+      // selected: [],
+      // dragChar: "",
+      // dropChar: "",
+      // textboxError: false
     };
   }
 
-  handleChange(
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) {
-    this.props.setValidCharacters(e.target.value.replace(/\s/g, "").split(""));
-    // this.setState({
-    //   chars: e.target.value.replace(/\s/g, ""),
-    //   textboxError: false
-    // }); // removes whitespace
+  // TEMP: Yell at Simeon if this is in the pull request
+  componentDidMount() {
+    this.props.setValidCharacters("bfwqiue".split(""));
   }
+
+  // handleChange(
+  //   e: React.ChangeEvent<
+  //     HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  //   >
+  // ) {
+  //   this.props.setValidCharacters(e.target.value.replace(/\s/g, "").split(""));
+  //   // this.setState({
+  //   //   chars: e.target.value.replace(/\s/g, ""),
+  //   //   textboxError: false
+  //   // }); // removes whitespace
+  // }
 
   // handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
   //   if (e.key === "Enter") {
@@ -56,20 +61,20 @@ export class CharacterSet extends React.Component<
   // }
 
   // toggles selection (for deletion) of a character
-  toggleSelected(char: string) {
-    let selected = this.state.selected;
-    let index = selected.indexOf(char);
+  // toggleSelected(char: string) {
+  //   let selected = this.state.selected;
+  //   let index = selected.indexOf(char);
 
-    if (index === -1) {
-      selected.push(char);
-    } else {
-      selected.splice(index, 1);
-    }
+  //   if (index === -1) {
+  //     selected.push(char);
+  //   } else {
+  //     selected.splice(index, 1);
+  //   }
 
-    this.setState({
-      selected
-    });
-  }
+  //   this.setState({
+  //     selected
+  //   });
+  // }
 
   // adds characters in the textbox to the inventory
   // addChars() {
@@ -99,33 +104,33 @@ export class CharacterSet extends React.Component<
   // }
 
   // reorders the character inventory by moving one char
-  moveChar() {
-    if (this.state.dragChar === this.state.dropChar) {
-      this.setState({
-        dragChar: "",
-        dropChar: ""
-      });
-      return;
-    }
+  // moveChar() {
+  //   if (this.state.dragChar === this.state.dropChar) {
+  //     this.setState({
+  //       dragChar: "",
+  //       dropChar: ""
+  //     });
+  //     return;
+  //   }
 
-    let inv = [...this.props.validCharacters];
-    let dragIndex = inv.indexOf(this.state.dragChar);
-    let dropIndex = inv.indexOf(this.state.dropChar);
+  //   let inv = [...this.props.validCharacters];
+  //   let dragIndex = inv.indexOf(this.state.dragChar);
+  //   let dropIndex = inv.indexOf(this.state.dropChar);
 
-    inv.splice(dragIndex, 1);
+  //   inv.splice(dragIndex, 1);
 
-    if (dragIndex >= dropIndex) {
-      inv.splice(dropIndex, 0, this.state.dragChar);
-    } else {
-      inv.splice(dropIndex - 1, 0, this.state.dragChar);
-    }
+  //   if (dragIndex >= dropIndex) {
+  //     inv.splice(dropIndex, 0, this.state.dragChar);
+  //   } else {
+  //     inv.splice(dropIndex - 1, 0, this.state.dragChar);
+  //   }
 
-    this.setState({
-      dragChar: "",
-      dropChar: ""
-    });
-    this.props.setValidCharacters(inv);
-  }
+  //   this.setState({
+  //     dragChar: "",
+  //     dropChar: ""
+  //   });
+  //   this.props.setValidCharacters(inv);
+  // }
 
   render() {
     return (
@@ -160,63 +165,59 @@ export class CharacterSet extends React.Component<
           </Grid>
         ) : (
           /* The grid of character tiles */
-          this.props.validCharacters.map(char => [
-            this.state.dropChar === char && this.state.dragChar !== char ? (
-              <Grid
-                item
-                xs={1}
-                onDragOver={e => {
-                  e.preventDefault();
-                  e.dataTransfer.dropEffect = "move";
-                }}
-              />
-            ) : null, // Creates a blank space where the tile will be dropped
+          this.props.validCharacters.map(char => (
             <Grid
               item
               sm={1}
               xs={2}
               key={"char_" + char}
-              onDragOver={e => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = "move";
-                if (this.state.dropChar !== char)
-                  this.setState({ dropChar: char });
-              }}
+              // onDragOver={e => {
+              //   e.preventDefault();
+              //   e.dataTransfer.dropEffect = "move";
+              //   if (this.state.dropChar !== char)
+              //     this.setState({ dropChar: char });
+              // }}
             >
               <Grid container justify="center">
-                <Paper
+                <div
                   id={"charTile_" + char}
                   style={{
-                    minWidth: 20,
-                    textAlign: "center",
-                    padding: "5px 10px",
-                    cursor: "pointer",
-                    background: this.state.selected.includes(char)
-                      ? "#fcc"
-                      : "#fff"
+                    position: "relative",
+                    border: "4px solid #E3E5E6",
+                    borderRadius: "50%",
+                    width: 40,
+                    height: 40,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
                   }}
-                  draggable={true}
-                  onDragStart={e => {
-                    this.setState({ dragChar: char });
-                    e.dataTransfer.effectAllowed = "move";
-                  }}
-                  onDragEnd={e => {
-                    e.preventDefault();
-                    this.moveChar();
-                  }}
-                  onClick={() => this.toggleSelected(char)}
+
+                  // draggable={true}
+                  // onDragStart={e => {
+                  //   this.setState({ dragChar: char });
+                  //   e.dataTransfer.effectAllowed = "move";
+                  // }}
+                  // onDragEnd={e => {
+                  //   e.preventDefault();
+                  //   this.moveChar();
+                  // }}
+                  // onClick={() => this.toggleSelected(char)}
                 >
-                  {char}
-                </Paper>
+                  <Typography variant="h6">{char}</Typography>
+                </div>
               </Grid>
             </Grid>
-          ])
+          ))
         )}
 
         <Grid item xs={12} />
 
         {/* Input for accepted characters */}
-        <Grid item xs={12}>
+        <Grid
+          item
+          xs={12}
+          style={{ background: "whitesmoke", borderTop: "1px solid #ccc" }}
+        >
           <TextField
             value={this.props.validCharacters.join("")}
             fullWidth
@@ -233,11 +234,12 @@ export class CharacterSet extends React.Component<
             // onKeyDown={e => this.handleKeyDown(e)}
             autoComplete="off"
             inputProps={{ style: { letterSpacing: 5 }, spellcheck: "false" }}
+            style={{ maxWidth: 512 }}
           />
         </Grid>
 
         {/* Input for rejected characters */}
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{ background: "whitesmoke" }}>
           <TextField
             value={this.props.rejectedCharacters.join("")}
             fullWidth
@@ -254,6 +256,7 @@ export class CharacterSet extends React.Component<
             // onKeyDown={e => this.handleKeyDown(e)}
             autoComplete="off"
             inputProps={{ style: { letterSpacing: 5 }, spellcheck: "false" }}
+            style={{ maxWidth: 512 }}
           />
         </Grid>
       </Grid>

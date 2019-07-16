@@ -111,7 +111,6 @@ export class SampleWords extends React.Component<
         direction="row"
         justify="flex-start"
         alignItems="center"
-        style={{ borderLeft: "1px solid #ccc", height: "100%" }}
       >
         <Grid item xs={12}>
           <Typography component="h1" variant="h4">
