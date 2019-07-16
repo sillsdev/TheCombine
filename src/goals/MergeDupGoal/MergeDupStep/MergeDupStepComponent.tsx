@@ -6,7 +6,9 @@ import {
   Grid,
   Switch,
   List,
-  ListItem
+  ListItem,
+  GridList,
+  GridListTile
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -137,23 +139,23 @@ class MergeDupStep extends React.Component<
             padding: 8
           }}
         >
-          <Grid
-            container
-            direction={this.state.portrait ? "row" : "column"}
-            style={{ flex: 1 }}
-            spacing={2}
+          <GridList
+            style={{
+              flexWrap: "nowrap",
+              background: "#eee"
+            }}
           >
             <DragDropContext onDragEnd={res => this.handleDrop(res)}>
               {Object.keys(this.props.words).map(key => (
-                <Grid item key={key}>
+                <GridListTile key={key} style={{ margin: 8 }}>
                   <MergeRow portrait={this.state.portrait} wordID={key} />
-                </Grid>
+                </GridListTile>
               ))}
-              <Grid item key={newId}>
+              <GridListTile key={newId} style={{ margin: 8 }}>
                 <MergeRow portrait={this.state.portrait} wordID={newId} />
-              </Grid>
+              </GridListTile>
             </DragDropContext>
-          </Grid>
+          </GridList>
         </div>
         {/* Merge button */}
         <div style={{ borderTop: "1px solid gray" }}>
