@@ -10,6 +10,7 @@ import {
 } from "./MergeDupsTree";
 import { Word } from "../../../types/word";
 import { uuid } from "../../../utilities";
+import { StoreAction, StoreActions } from "../../../rootActions";
 
 export const defaultState: MergeTreeState = {
   data: defaultData,
@@ -23,7 +24,7 @@ export interface MergeTreeState {
 
 const mergeDupStepReducer = (
   state: MergeTreeState = defaultState, //createStore() calls each reducer with undefined state
-  action: MergeTreeAction
+  action: StoreAction | MergeTreeAction
 ): MergeTreeState => {
   switch (action.type) {
     case MergeTreeActions.SET_VERNACULAR:
@@ -129,6 +130,8 @@ const mergeDupStepReducer = (
       };
     case MergeTreeActions.CLEAR_TREE:
       return { tree: { ...defaultTree }, data: { ...defaultData } };
+    case StoreActions.RESET:
+      return defaultState;
     default:
       return state;
   }
