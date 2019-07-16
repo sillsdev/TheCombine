@@ -146,9 +146,12 @@ namespace BackendFramework.Services
             entry.Pronunciations.Add(lexPhonetic);
             try
             {
-                Helper.Utilities util = new Helper.Utilities();
-                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
-                File.Copy(src, dest, true);
+                if (wordEntry.Audio != "")
+                {
+                    Helper.Utilities util = new Helper.Utilities();
+                    string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
+                    File.Copy(src, dest, true);
+                }
             }
             catch (FileNotFoundException)
             {
@@ -227,46 +230,31 @@ namespace BackendFramework.Services
             var importListArr = Directory.GetDirectories(extractedPathToImport);
             var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
 
-            //add audio
-            foreach (var pro in entry.Pronunciations)
+            if (Directory.Exists(extractedAudioDir))
             {
-                newWord.Audio = pro.Media.FirstOrDefault().Url;
-
-                //get path to ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word mp3
-                var extractedAudioMp3 = Path.Combine(extractedAudioDir, newWord.Audio);
-
-                //move mp3 to audio folder at ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word.mp3
-                var audioFolder = Path.Combine(extractedPathToImport, "Audio");
-                Directory.CreateDirectory(audioFolder);
-                var audioDest = Path.Combine(audioFolder, newWord.Audio);
-                File.Create(audioDest);
-
-                //if there are duplicate filenames then add a (number) like windows does to the end of it
-                int filecount = 1;
-                while (true)
+                //try to read audio b/c it's prob there
+                //add audio
+                foreach (var pro in entry.Pronunciations)
                 {
-                    
-                    try
+                    newWord.Audio = pro.Media.FirstOrDefault().Url;
+
+                    //get path to ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word mp3
+                    var extractedAudioMp3 = Path.Combine(extractedAudioDir, newWord.Audio);
+
+                    //move mp3 to audio folder at ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word.mp3
+                    var audioFolder = Path.Combine(extractedPathToImport, "Audio");
+                    Directory.CreateDirectory(audioFolder);
+                    var audioDest = Path.Combine(audioFolder, newWord.Audio);
+
+                    //if there are duplicate filenames then add a (number) like windows does to the end of it
+                    int filecount = 1;
+                    var filename = Path.GetFileNameWithoutExtension(audioDest);
+
+                    while (File.Exists(audioDest))
                     {
-                        File.Copy(extractedAudioMp3, audioDest);
-                        break; // Exit the loop. Could return from the method, depending
-                               // on what it does...
+                        audioDest = Path.Combine(audioFolder, filename + "(" + filecount++ + ")" + ".mp3");
                     }
-                    catch(IOException)
-                    {
-                        //does the filename already have a counter
-                        var filename = Path.GetFileNameWithoutExtension(audioDest);
-                        var fileList = Regex.Match(filename, @".+(\([0-9]+\))");
-                        
-                        //if yes then take it off
-                        if(fileList.Success)
-                        {
-                            filename = audioDest.Substring(audioDest.Length - 3);
-                            
-                        }
-                        //add a new counter
-                        audioDest = Path.Combine(audioFolder , Path.GetFileNameWithoutExtension(filename) + "(" + filecount++ + ")" + ".mp3");
-                    }
+                    File.Copy(extractedAudioMp3, audioDest);
                 }
             }
 
