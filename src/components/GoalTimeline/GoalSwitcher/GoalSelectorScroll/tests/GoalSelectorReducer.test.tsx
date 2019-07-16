@@ -5,6 +5,7 @@ import {
   MOUSE_ACTION
 } from "../GoalSelectorAction";
 import { GoalSelectorState } from "../../../../../types/goals";
+import { StoreActions, StoreAction } from "../../../../../rootActions";
 
 const VAL = 5;
 const scrollAct: GoalScrollAction = {
@@ -46,5 +47,12 @@ describe("Testing goal select reducer", () => {
         payload: 0
       } as unknown) as GoalScrollAction)
     ).toEqual(scrollResultStore);
+  });
+
+  it("Should return the default state", () => {
+    const action: StoreAction = {
+      type: StoreActions.RESET
+    };
+    expect(goalSelectReducer(scrollResultStore, action)).toEqual(defaultState);
   });
 });

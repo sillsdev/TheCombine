@@ -1,5 +1,6 @@
 import { TempAction } from "./TempActions";
 import { PRESS_BUTTON } from "./TempActions";
+import { StoreAction, StoreActions } from "../../rootActions";
 
 export interface TempState {
   tempText: string;
@@ -11,13 +12,14 @@ export const defaultState: TempState = {
 
 export const tempReducer = (
   state: TempState | undefined, //createStore() calls each reducer with undefined state
-  action: TempAction
+  action: StoreAction | TempAction
 ): TempState => {
-  //console.log('reducer reached');
   if (!state) return defaultState;
   switch (action.type) {
     case PRESS_BUTTON:
       return { ...state, tempText: "BUTTON PRESSED! REDUX WORKING!" };
+    case StoreActions.RESET:
+      return defaultState;
     default:
       return state;
   }
