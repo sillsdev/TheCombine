@@ -12,7 +12,6 @@ const project = {
 };
 
 describe("createActionReducer Tests", () => {
-  let dummySt: reducer.CreateProjectState = reducer.defaultState;
   let resultState: reducer.CreateProjectState = {
     name: project.name,
     success: false,
@@ -36,25 +35,21 @@ describe("createActionReducer Tests", () => {
   });
 
   test("default state, expecting create project", () => {
-    expect(reducer.createProjectReducer(dummySt, inProgress)).toEqual(
-      resultState
-    );
+    expect(
+      reducer.createProjectReducer({} as reducer.CreateProjectState, inProgress)
+    ).toEqual(resultState);
   });
 
   test("non-default state, expecting default state", () => {
-    const state: reducer.CreateProjectState = {
-      name: "",
-      inProgress: false,
-      success: false,
-      errorMsg: ""
-    };
-
     const resetAction: StoreAction = {
       type: StoreActions.RESET
     };
 
-    expect(reducer.createProjectReducer(state, resetAction)).toEqual(
-      reducer.defaultState
-    );
+    expect(
+      reducer.createProjectReducer(
+        {} as reducer.CreateProjectState,
+        resetAction
+      )
+    ).toEqual(reducer.defaultState);
   });
 });

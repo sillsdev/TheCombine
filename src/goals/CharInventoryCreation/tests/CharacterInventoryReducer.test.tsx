@@ -43,14 +43,12 @@ describe("Test Character Inventory Reducer", () => {
   });
 
   it("Returns default state when passed reset action", () => {
-    let state: CharacterInventoryState = {
-      inventory: ["What", "up"]
-    };
-
     let action: StoreAction = {
       type: StoreActions.RESET
     };
 
-    expect(characterInventoryReducer(state, action)).toEqual(defaultState);
+    expect(
+      characterInventoryReducer({} as CharacterInventoryState, action)
+    ).toEqual(defaultState);
   });
 });

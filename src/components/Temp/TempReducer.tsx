@@ -14,7 +14,6 @@ export const tempReducer = (
   state: TempState | undefined, //createStore() calls each reducer with undefined state
   action: StoreAction | TempAction
 ): TempState => {
-  //console.log('reducer reached');
   if (!state) return defaultState;
   switch (action.type) {
     case PRESS_BUTTON:

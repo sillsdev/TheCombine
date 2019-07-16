@@ -136,20 +136,12 @@ describe("MergeDupStep reducer tests", () => {
   });
 
   test("Reset returns default state", () => {
-    let state: MergeTreeState = {
-      data: {
-        words: {},
-        senses: {}
-      },
-      tree: {
-        words: {}
-      }
-    };
-
     let action: StoreAction = {
       type: StoreActions.RESET
     };
 
-    expect(mergeDupStepReducer(state, action)).toEqual(defaultState);
+    expect(mergeDupStepReducer({} as MergeTreeState, action)).toEqual(
+      defaultState
+    );
   });
 });

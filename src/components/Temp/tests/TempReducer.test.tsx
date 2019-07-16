@@ -25,14 +25,12 @@ describe("tempReducer Tests", () => {
   });
 
   test("passing reset action returns default state", () => {
-    const state: reducer.TempState = {
-      tempText: "test"
-    };
-
     const action: StoreAction = {
       type: StoreActions.RESET
     };
 
-    expect(reducer.tempReducer(state, action)).toEqual(reducer.defaultState);
+    expect(reducer.tempReducer({} as reducer.TempState, action)).toEqual(
+      reducer.defaultState
+    );
   });
 });

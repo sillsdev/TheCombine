@@ -15,19 +15,11 @@ describe("Test the TreeViewReducer", () => {
   });
 
   it("Returns default state when reset action is passed", () => {
-    const state: TreeViewState = {
-      currentDomain: {
-        name: "",
-        number: "",
-        subDomains: []
-      }
-    };
-
     const action: StoreAction = {
       type: StoreActions.RESET
     };
 
-    expect(treeViewReducer(state, action)).toEqual(defaultState);
+    expect(treeViewReducer({} as TreeViewState, action)).toEqual(defaultState);
   });
 
   it("Returns state passed in when passed an invalid action", () => {
