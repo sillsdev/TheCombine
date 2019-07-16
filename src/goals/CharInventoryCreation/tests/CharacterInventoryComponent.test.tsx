@@ -30,8 +30,8 @@ beforeAll(() => {
   renderer.act(() => {
     charMaster = renderer.create(
       <CharacterInventoryComponent
-        inventory={["a"]}
-        currentProject={{ characterSet: ["a"] } as Project}
+        validCharacters={["a"]}
+        currentProject={{ validCharacters: ["a"] } as Project}
         setInventory={SET_INV}
         uploadInventory={UPLOAD_INV}
       />
@@ -50,8 +50,8 @@ describe("Testing Character Inventory Component", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <CharacterInventoryComponent
-        inventory={["a"]}
-        currentProject={{ characterSet: ["a"] } as Project}
+        validCharacters={["a"]}
+        currentProject={{ validCharacters: ["a"] } as Project}
         setInventory={SET_INV}
         uploadInventory={UPLOAD_INV}
       />,

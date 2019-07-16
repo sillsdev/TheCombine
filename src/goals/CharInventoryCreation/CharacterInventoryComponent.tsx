@@ -23,7 +23,7 @@ import history from "../../history";
 export interface CharacterInventoryProps {
   setInventory: (inventory: string[]) => void;
   uploadInventory: () => void;
-  inventory: string[];
+  validCharacters: string[];
   currentProject: Project;
   translate: TranslateFunction;
 }
@@ -42,7 +42,7 @@ export class CharacterInventory extends React.Component<
   constructor(props: CharacterInventoryProps & LocalizeContextProps) {
     super(props);
     // Load inventory from server
-    this.props.setInventory(this.props.currentProject.characterSet);
+    this.props.setInventory(this.props.currentProject.validCharacters);
     this.state = { cancelDialogOpen: false };
   }
 
@@ -59,16 +59,16 @@ export class CharacterInventory extends React.Component<
           spacing={2}
           style={{ background: "#fff" }}
         >
-          <Grid item sm={6} xs={12}>
+          <Grid item sm={9} xs={12}>
             <CharacterSet
               setInventory={this.props.setInventory}
-              inventory={this.props.inventory}
+              inventory={this.props.validCharacters}
             />
           </Grid>
-          <Grid item sm={6} xs={12}>
+          <Grid item sm={3} xs={12}>
             <SampleWords
               setInventory={this.props.setInventory}
-              inventory={this.props.inventory}
+              inventory={this.props.validCharacters}
             />
           </Grid>
           <Grid item xs={12}>

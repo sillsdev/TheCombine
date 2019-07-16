@@ -54,7 +54,14 @@ export class WordTile extends React.Component<
                 [...this.props.inventory, " "].includes(letter) ? (
                   letter
                 ) : (
-                  <span key={index} style={{ background: greenHighlight }}>
+                  <span
+                    key={index}
+                    style={{
+                      background: greenHighlight,
+                      padding: "3px 0",
+                      borderBottom: "2px solid red"
+                    }}
+                  >
                     {letter}
                   </span>
                 )

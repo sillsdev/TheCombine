@@ -11,7 +11,7 @@ import { getTranslate } from "react-localize-redux";
 
 function mapStateToProps(state: StoreState) {
   return {
-    inventory:
+    validCharacters:
       state.characterInventoryState && state.characterInventoryState.inventory,
     currentProject: state.currentProject,
     translate: getTranslate(state.localize)

@@ -47,17 +47,18 @@ export class CharacterSet extends React.Component<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) {
-    this.setState({
-      chars: e.target.value.replace(/\s/g, ""),
-      textboxError: false
-    }); // removes whitespace
+    this.props.setInventory(e.target.value.replace(/\s/g, "").split(""));
+    // this.setState({
+    //   chars: e.target.value.replace(/\s/g, ""),
+    //   textboxError: false
+    // }); // removes whitespace
   }
 
-  handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === "Enter") {
-      this.addChars();
-    }
-  }
+  // handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+  //   if (e.key === "Enter") {
+  //     this.addChars();
+  //   }
+  // }
 
   // toggles selection (for deletion) of a character
   toggleSelected(char: string) {
@@ -76,19 +77,19 @@ export class CharacterSet extends React.Component<
   }
 
   // adds characters in the textbox to the inventory
-  addChars() {
-    if (this.state.chars === "") {
-      this.setState({ textboxError: true });
-    } else {
-      this.props.setInventory([
-        ...this.props.inventory,
-        ...this.state.chars.split("")
-      ]);
-      this.setState({
-        chars: ""
-      });
-    }
-  }
+  // addChars() {
+  //   if (this.state.chars === "") {
+  //     this.setState({ textboxError: true });
+  //   } else {
+  //     this.props.setInventory([
+  //       ...this.props.inventory,
+  //       ...this.state.chars.split("")
+  //     ]);
+  //     this.setState({
+  //       chars: ""
+  //     });
+  //   }
+  // }
 
   // deletes selected chraracters
   deleteSelected() {
@@ -221,13 +222,13 @@ export class CharacterSet extends React.Component<
         {/* The text area for character input */}
         <Grid item xs={6}>
           <TextField
-            value={this.state.chars}
+            value={this.props.inventory.join("")}
             fullWidth
             variant="outlined"
             name="chracters"
             label={<Translate id="charInventory.characterSet.input" />}
             onChange={e => this.handleChange(e)}
-            onKeyDown={e => this.handleKeyDown(e)}
+            // onKeyDown={e => this.handleKeyDown(e)}
             autoComplete="off"
             error={this.state.textboxError}
             helperText={
@@ -235,24 +236,12 @@ export class CharacterSet extends React.Component<
                 <Translate id="charInventory.characterSet.required" />
               )
             }
+            inputProps={{ style: { letterSpacing: 5 } }}
           />
         </Grid>
 
         {/* The add characters and delete character buttons */}
         <Grid item xs={6}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => this.addChars()}
-            title={
-              this.props.translate(
-                "charInventory.characterSet.addButtonTitle"
-              ) as string
-            }
-            style={{ margin: 10 }} // remove when we can add theme
-          >
-            <Add /> <Translate id="charInventory.characterSet.addButton" />
-          </Button>
           <Button
             variant="contained"
             color="secondary"

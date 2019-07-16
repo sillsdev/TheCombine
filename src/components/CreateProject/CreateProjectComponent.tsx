@@ -170,7 +170,12 @@ class CreateProject extends React.Component<
                     style={{ display: "none" }}
                   />
                   {/* ... and this button is tied to it with the htmlFor property */}
-                  <Button variant="contained">
+                  <Button
+                    variant="contained"
+                    style={{
+                      cursor: "default"
+                    }}
+                  >
                     <label
                       htmlFor="file-input"
                       style={{

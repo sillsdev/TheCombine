@@ -87,7 +87,7 @@ async function saveChangesToProject(
 function updateCurrentProject(state: StoreState): Project {
   let project = state.currentProject;
   let inv = state.characterInventoryState.inventory;
-  project.characterSet = inv;
+  project.validCharacters = inv;
   return project;
 }
 
