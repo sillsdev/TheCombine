@@ -71,11 +71,19 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
-            if (await _projectService.Update(projectId, project))
+            try
             {
-                return new OkObjectResult(project.Id);
+                if (await _projectService.Update(projectId, project))
+                {
+                    return new OkObjectResult(project.Id);
+                }
+                Response.StatusCode = 304;
+                return Content("");
             }
-            return new NotFoundResult();
+            catch
+            {
+                return new NotFoundResult();
+            }
         }
 
         // DELETE: v1/Project/Projects/{projectId}
