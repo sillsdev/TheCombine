@@ -7,7 +7,7 @@ export class User {
   email: string;
   phone: string;
   otherConnectionField: string;
-  workedProjects: Hash<string>; //{ [key: string]: string };
+  workedProjects: Hash<string>;
   agreement: boolean;
   password: string;
   username: string;

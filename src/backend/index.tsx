@@ -6,7 +6,6 @@ import { authHeader } from "../components/Login/AuthHeaders";
 import { Goal, GoalType } from "../types/goals";
 import { UserEdit } from "../types/userEdit";
 import history from "../history";
-import { UserProjectMap } from "../components/Project/UserProject";
 
 const backendServer = axios.create({
   baseURL: "https://localhost:5001/v1"
@@ -228,13 +227,11 @@ export async function addGoalToUserEdit(
 }
 
 export async function addStepToGoal(
-  userProjectMap: UserProjectMap,
+  userEditId: string,
   indexInHistory: number,
   goal: Goal
 ): Promise<Goal> {
   let stepData: string = JSON.stringify(goal.steps);
-  let userEditId: string = userProjectMap.userEditId;
-  let projId: string = userProjectMap.projectId;
   let userEditTuple = { goalIndex: indexInHistory, newEdit: stepData };
   return await backendServer
     .put(`projects/${getProjectId()}/useredits/${userEditId}`, userEditTuple, {

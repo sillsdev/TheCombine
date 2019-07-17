@@ -12,6 +12,22 @@ import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 
 const createMockStore = configureMockStore([thunk]);
+jest.mock("../../../components/GoalTimeline/GoalsActions", () => {
+  const User = jest.requireActual("../../../types/user");
+  const goalsActions = jest.requireActual(
+    "../../../components/GoalTimeline/GoalsActions"
+  );
+  return {
+    ...goalsActions,
+    getUser: jest.fn(() => {
+      return new User.User("", "", "");
+    }),
+    getUserEditId: jest.fn(() => {
+      return "";
+    })
+  };
+});
+
 const DATA: string[] = ["foo", "bar"];
 const goal: CreateCharInv = new CreateCharInv();
 const MOCK_STATE = {

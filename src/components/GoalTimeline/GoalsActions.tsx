@@ -52,7 +52,10 @@ export interface UpdateGoal extends ActionWithPayload<Goal[]> {
   payload: Goal[];
 }
 
-export function asyncLoadUserEdits(projectId: string, userEditId: string) {
+export function asyncLoadExistingUserEdits(
+  projectId: string,
+  userEditId: string
+) {
   return async (dispatch: Dispatch<GoalAction>) => {
     await backend
       .getUserEditById(projectId, userEditId)
@@ -92,7 +95,7 @@ export function asyncGetUserEdits() {
       );
 
       if (userEditId !== undefined) {
-        dispatch(asyncLoadUserEdits(projectId, userEditId));
+        dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
         dispatch(asyncCreateNewUserEditsObject(projectId));
       }
@@ -101,22 +104,34 @@ export function asyncGetUserEdits() {
 }
 
 export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: Dispatch<GoalAction>, getState: any) => {
-    let userEditId: string | undefined = getUserEditId();
-
-    if (userEditId !== undefined) {
-      await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
-      await backend
-        .addGoalToUserEdit(userEditId, goal)
-        .then(resp => {
-          dispatch(addGoalToHistory(goal));
-          history.push(`/goals/${resp}`);
-        })
-        .catch((err: string) => {
-          console.log(err);
-        });
+  return async (dispatch: Dispatch<GoalAction>) => {
+    let user: User | undefined = getUser();
+    console.log(user);
+    if (user !== undefined) {
+      let userEditId: string | undefined = getUserEditId(user);
+      if (userEditId !== undefined) {
+        await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
+        await backend
+          .addGoalToUserEdit(userEditId, goal)
+          .then(resp => {
+            dispatch(addGoalToHistory(goal));
+            history.push(`/goals/${resp}`);
+          })
+          .catch((err: string) => {
+            console.log(err);
+          });
+      }
     }
   };
+}
+
+export function getUser(): User | undefined {
+  let userString: string | null = localStorage.getItem("user");
+  let user: User | undefined;
+  if (userString) {
+    user = JSON.parse(userString);
+  }
+  return user;
 }
 
 export async function loadGoalData(goal: Goal): Promise<Goal> {
@@ -135,18 +150,12 @@ export async function loadGoalData(goal: Goal): Promise<Goal> {
   return goal;
 }
 
-export function getUserEditId(): string | undefined {
-  let userString = localStorage.getItem("user");
-  let userObject: User;
-  let userEditId: string | undefined = "";
-  if (userString) {
-    userObject = JSON.parse(userString);
-    let projectId = backend.getProjectId();
-    userEditId = getUserEditIdFromProjectId(
-      userObject.workedProjects,
-      projectId
-    );
-  }
+export function getUserEditId(user: User): string | undefined {
+  let projectId = backend.getProjectId();
+  let userEditId: string | undefined = getUserEditIdFromProjectId(
+    user.workedProjects,
+    projectId
+  );
   return userEditId;
 }
 
