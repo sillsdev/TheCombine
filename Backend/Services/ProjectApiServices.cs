@@ -1,6 +1,7 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -74,7 +75,12 @@ namespace BackendFramework.Services
 
             var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 
-            return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
+            if (!updateResult.IsAcknowledged)
+            {
+                throw new Exception("Project not found");
+            }
+
+            return updateResult.ModifiedCount > 0;
         }
     }
 }

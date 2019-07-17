@@ -102,14 +102,18 @@ namespace BackendFramework.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> Put(string userId, [FromBody] User user)
         {
-            var document = await _userService.GetUser(userId);
-            if (document == null)
+            try
+            {
+                if (await _userService.Update(userId, user))
+                {
+                    return new OkObjectResult(user.Id);
+                }
+                return new StatusCodeResult(304);
+            }
+            catch
             {
                 return new NotFoundResult();
             }
-            user.Id = document.Id;
-            await _userService.Update(userId, user);
-            return new OkObjectResult(user.Id);
         }
 
         // DELETE: v1/ApiWithActions/{userId}

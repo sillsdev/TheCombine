@@ -195,8 +195,12 @@ namespace BackendFramework.Services
 
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
 
-            return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
+            if (!updateResult.IsAcknowledged)
+            {
+                throw new Exception("User not found");
+            }
 
+            return updateResult.ModifiedCount > 0;
         }   
     }
 }
