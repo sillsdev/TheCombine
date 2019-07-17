@@ -55,7 +55,7 @@ export function asyncCreateProject(name: string, languageData?: File) {
                 setTimeout(() => {
                   history.push("/goals");
                 }, 1000);
-              
+
               }).catch(err => {
                 dispatch(failure(name, err.response.statusText));
             })
