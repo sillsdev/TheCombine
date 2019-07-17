@@ -1,3 +1,8 @@
+| Project               | Start Words | Time (ms) | Post-Filter Words | Post-Finder Words |
+| --------------------- | ----------- | --------- | ----------------- | ----------------- |
+| Gusillaay (Master)    | 8043        | 92845.78  | 2093.3            | 3.24              |
+| Gusillaay (Bitmapped) | 8043        | 18560.94  | 312.9             | 3.04              |
+
 | Project           | Start Words | Time (ms) | Post-Filter Words | Post-Finder Words |
 | ----------------- | ----------- | --------- | ----------------- | ----------------- |
 | Lotud (Master)    | 5396        | 33211.799 | 1234.0            | 2.67              |

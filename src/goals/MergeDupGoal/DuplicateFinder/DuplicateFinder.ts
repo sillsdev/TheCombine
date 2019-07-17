@@ -82,6 +82,9 @@ export default class DupFinder {
 
   empty2dArray = [[]];
 
+  //filter output, total output - Used for testing duplicate finder. (See docs/bitmap_testing.md)
+  //filterTest: [number, number] = [0, 0];
+
   // get n lists of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
   async getNextDups(n: number = 1): Promise<Word[][]> {
     let wordsFromDB: Promise<Word[][]> = this.getWordsFromDB().then(
@@ -127,6 +130,15 @@ export default class DupFinder {
           }
         }
 
+        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+        /*
+        console.log(
+          "Start: " + wordCollections.length,
+          "Filtered: " + this.filterTest[0] / wordCollections.length,
+          "Result: " + this.filterTest[1] / wordCollections.length
+        );
+        */
+
         //return empty 2d array if no possible duplicates found
         if (currentWords.length <= 0) return this.empty2dArray;
 
@@ -138,11 +150,9 @@ export default class DupFinder {
     );
     return wordsFromDB;
   }
-  //TODO debug
   /** defines vernacular and gloss bitmaps */
   setMapsAndMaskWords(wordCollection: Word[]) {
     //empty bitmaps
-    debugger;
     this.vernmap.clear();
     this.glossmap.clear();
 
@@ -178,11 +188,17 @@ export default class DupFinder {
     //narrow down very different words
     let words = this.filter(parent, this.maskedWords);
 
+    //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+    //this.filterTest[0] += words.length;
+
     //thorough scoring
     let scoredWords: ScoredWord[] = this.scoreWords(parent, words);
 
     //apply thresholds
     let scoredList: [Word[], number] = this.getAcceptedWords(scoredWords);
+
+    //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+    //this.filterTest[1] += scoredList[0].length;
 
     return scoredList;
   }
