@@ -151,7 +151,7 @@ export function getUserEditId(): string | undefined {
 }
 
 function getUserEditIdFromProjectId(
-  workedProjects: { [key: string]: string },
+  workedProjects: Hash<string>,
   projectId: string
 ): string | undefined {
   let projectIds = Object.keys(workedProjects);
