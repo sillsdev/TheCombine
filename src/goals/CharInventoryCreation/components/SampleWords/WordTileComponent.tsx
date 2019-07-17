@@ -16,8 +16,8 @@ const TRANSITION =
 export interface WordTileProps {
   word: string;
   allCharacters: string[]; // valid and rejected
-  addWordToCharSet: (arg0: string) => void;
-  addWordToIgnoreList: (arg0: string) => void;
+  addToCharSet: (chars: string) => void;
+  addWordToIgnoreList: (word: string) => void;
 }
 
 export interface WordTileState {
@@ -31,10 +31,14 @@ export class WordTile extends React.Component<
   constructor(props: WordTileProps & LocalizeContextProps) {
     super(props);
     this.state = { hover: false };
+    this.newCharacters = "";
   }
+
+  newCharacters: string;
 
   render() {
     let word = this.props.word;
+    this.newCharacters = "";
     return (
       <Grid item xs={12} key={word}>
         <Grid container justify="flex-start">
@@ -49,23 +53,26 @@ export class WordTile extends React.Component<
             onMouseLeave={() => this.setState({ hover: false })}
           >
             <Typography variant="body1">
-              {word.split("").map((letter: string, index: number) =>
+              {word.split("").map((letter: string, index: number) => {
                 // Highlight character if not in the inventory (don't highlight " ")
-                [...this.props.allCharacters, " "].includes(letter) ? (
-                  letter
-                ) : (
-                  <span
-                    key={index}
-                    style={{
-                      background: greenHighlight,
-                      padding: "3px 0",
-                      borderBottom: "2px solid red"
-                    }}
-                  >
-                    {letter}
-                  </span>
-                )
-              )}{" "}
+                if ([...this.props.allCharacters, " "].includes(letter)) {
+                  return letter;
+                } else {
+                  this.newCharacters += letter;
+                  return (
+                    <span
+                      key={index}
+                      style={{
+                        background: greenHighlight,
+                        padding: "3px 0",
+                        borderBottom: "2px solid red"
+                      }}
+                    >
+                      {letter}
+                    </span>
+                  );
+                }
+              })}{" "}
               {/* 'add to inventory' button */}
               <Tooltip
                 title={
@@ -93,7 +100,7 @@ export class WordTile extends React.Component<
                   }
                   size="small"
                   onClick={() => {
-                    this.props.addWordToCharSet(word);
+                    this.props.addToCharSet(this.newCharacters);
                   }}
                 >
                   <Add />

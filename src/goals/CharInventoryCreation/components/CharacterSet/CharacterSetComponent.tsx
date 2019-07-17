@@ -4,8 +4,10 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography, TextField, Paper, Tooltip } from "@material-ui/core";
+import { Grid, Typography, TextField, Tooltip } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
+import theme from "../../../../types/theme";
+import { red, green } from "@material-ui/core/colors";
 
 export interface CharacterSetProps {
   setValidCharacters: (inventory: string[]) => void;
@@ -16,6 +18,7 @@ export interface CharacterSetProps {
 
 interface CharacterSetState {
   chars: string; // characters in the textbox
+  hoverChar: string;
   // selected: string[];
   // dragChar: string;
   // dropChar: string;
@@ -29,7 +32,8 @@ export class CharacterSet extends React.Component<
   constructor(props: CharacterSetProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      chars: ""
+      chars: "",
+      hoverChar: ""
       // selected: [],
       // dragChar: "",
       // dropChar: "",
@@ -157,107 +161,178 @@ export class CharacterSet extends React.Component<
           </Typography>
         </Grid>
 
-        {this.props.validCharacters.length <= 0 ? (
+        {this.props.validCharacters.length <= 0 &&
+        this.props.rejectedCharacters.length <= 0 ? (
           <Grid item xs={12}>
             <Typography variant="subtitle1" style={{ color: "#999" }}>
               <Translate id="charInventory.characterSet.noCharacters" />
             </Typography>
           </Grid>
         ) : (
-          /* The grid of character tiles */
-          this.props.validCharacters.map(char => (
-            <Grid
-              item
-              sm={1}
-              xs={2}
-              key={"char_" + char}
-              // onDragOver={e => {
-              //   e.preventDefault();
-              //   e.dataTransfer.dropEffect = "move";
-              //   if (this.state.dropChar !== char)
-              //     this.setState({ dropChar: char });
-              // }}
-            >
-              <Grid container justify="center">
-                <div
-                  id={"charTile_" + char}
-                  style={{
-                    position: "relative",
-                    border: "4px solid #E3E5E6",
-                    borderRadius: "50%",
-                    width: 40,
-                    height: 40,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center"
-                  }}
+          <React.Fragment>
+            {/* The grid of character tiles */
+            this.props.validCharacters.map(char => (
+              <Grid
+                item
+                sm={1}
+                xs={2}
+                key={"char_" + char}
+                style={{ paddingBottom: 0 }}
+                // onDragOver={e => {
+                //   e.preventDefault();
+                //   e.dataTransfer.dropEffect = "move";
+                //   if (this.state.dropChar !== char)
+                //     this.setState({ dropChar: char });
+                // }}
+              >
+                <Grid container justify="center">
+                  <div
+                    id={"charTile_" + char}
+                    style={{
+                      position: "relative",
+                      border: "4px solid " + green[100],
+                      borderRadius: "50%",
+                      width: 40,
+                      height: 40,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      cursor: "pointer"
+                    }}
+                    onMouseEnter={() => this.setState({ hoverChar: char })}
+                    onMouseLeave={() => this.setState({ hoverChar: "" })}
+                    onClick={() =>
+                      this.props.setRejectedCharacters(
+                        this.props.rejectedCharacters.concat(char)
+                      )
+                    }
 
-                  // draggable={true}
-                  // onDragStart={e => {
-                  //   this.setState({ dragChar: char });
-                  //   e.dataTransfer.effectAllowed = "move";
-                  // }}
-                  // onDragEnd={e => {
-                  //   e.preventDefault();
-                  //   this.moveChar();
-                  // }}
-                  // onClick={() => this.toggleSelected(char)}
-                >
-                  <Typography variant="h6">{char}</Typography>
-                </div>
+                    // draggable={true}
+                    // onDragStart={e => {
+                    //   this.setState({ dragChar: char });
+                    //   e.dataTransfer.effectAllowed = "move";
+                    // }}
+                    // onDragEnd={e => {
+                    //   e.preventDefault();
+                    //   this.moveChar();
+                    // }}
+                    // onClick={() => this.toggleSelected(char)}
+                  >
+                    <Typography variant="h6">{char}</Typography>
+                  </div>
+                  <Typography
+                    variant="subtitle2"
+                    style={{ opacity: this.state.hoverChar === char ? 1 : 0 }}
+                  >
+                    Accepted
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
-          ))
+            ))}
+            {this.props.rejectedCharacters.map(char => (
+              <Grid
+                item
+                sm={1}
+                xs={2}
+                key={"char_" + char}
+                style={{ paddingBottom: 0 }}
+              >
+                <Grid container justify="center">
+                  <div
+                    id={"charTile_" + char}
+                    style={{
+                      position: "relative",
+                      border: "4px solid " + red[100],
+                      borderRadius: "50%",
+                      width: 40,
+                      height: 40,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      cursor: "pointer"
+                    }}
+                    onMouseEnter={() => this.setState({ hoverChar: char })}
+                    onMouseLeave={() => this.setState({ hoverChar: "" })}
+                    onClick={() =>
+                      this.props.setValidCharacters(
+                        this.props.validCharacters.concat(char)
+                      )
+                    }
+                  >
+                    <Typography variant="h6">{char}</Typography>
+                  </div>
+                  <Typography
+                    variant="subtitle2"
+                    style={{ opacity: this.state.hoverChar === char ? 1 : 0 }}
+                  >
+                    Rejected
+                  </Typography>
+                </Grid>
+              </Grid>
+            ))}
+          </React.Fragment>
         )}
 
-        <Grid item xs={12} />
+        <Grid item xs={12}>
+          <Grid
+            container
+            style={{
+              padding: theme.spacing(1),
+              background: "whitesmoke",
+              borderTop: "1px solid #ccc"
+            }}
+            spacing={2}
+          >
+            {/* Input for accepted characters */}
+            <Grid item xs={12}>
+              <TextField
+                value={this.props.validCharacters.join("")}
+                fullWidth
+                variant="outlined"
+                name="chracters"
+                label={
+                  <Translate id="charInventory.characterSet.acceptedCharacters" />
+                }
+                onChange={e =>
+                  this.props.setValidCharacters(
+                    e.target.value.replace(/\s/g, "").split("")
+                  )
+                }
+                // onKeyDown={e => this.handleKeyDown(e)}
+                autoComplete="off"
+                inputProps={{
+                  style: { letterSpacing: 5 },
+                  spellcheck: "false"
+                }}
+                style={{ maxWidth: 512 }}
+              />
+            </Grid>
 
-        {/* Input for accepted characters */}
-        <Grid
-          item
-          xs={12}
-          style={{ background: "whitesmoke", borderTop: "1px solid #ccc" }}
-        >
-          <TextField
-            value={this.props.validCharacters.join("")}
-            fullWidth
-            variant="outlined"
-            name="chracters"
-            label={
-              <Translate id="charInventory.characterSet.acceptedCharacters" />
-            }
-            onChange={e =>
-              this.props.setValidCharacters(
-                e.target.value.replace(/\s/g, "").split("")
-              )
-            }
-            // onKeyDown={e => this.handleKeyDown(e)}
-            autoComplete="off"
-            inputProps={{ style: { letterSpacing: 5 }, spellcheck: "false" }}
-            style={{ maxWidth: 512 }}
-          />
-        </Grid>
-
-        {/* Input for rejected characters */}
-        <Grid item xs={12} style={{ background: "whitesmoke" }}>
-          <TextField
-            value={this.props.rejectedCharacters.join("")}
-            fullWidth
-            variant="outlined"
-            name="chracters"
-            label={
-              <Translate id="charInventory.characterSet.rejectedCharacters" />
-            }
-            onChange={e =>
-              this.props.setRejectedCharacters(
-                e.target.value.replace(/\s/g, "").split("")
-              )
-            }
-            // onKeyDown={e => this.handleKeyDown(e)}
-            autoComplete="off"
-            inputProps={{ style: { letterSpacing: 5 }, spellcheck: "false" }}
-            style={{ maxWidth: 512 }}
-          />
+            {/* Input for rejected characters */}
+            <Grid item xs={12} style={{ background: "whitesmoke" }}>
+              <TextField
+                value={this.props.rejectedCharacters.join("")}
+                fullWidth
+                variant="outlined"
+                name="chracters"
+                label={
+                  <Translate id="charInventory.characterSet.rejectedCharacters" />
+                }
+                onChange={e =>
+                  this.props.setRejectedCharacters(
+                    e.target.value.replace(/\s/g, "").split("")
+                  )
+                }
+                // onKeyDown={e => this.handleKeyDown(e)}
+                autoComplete="off"
+                inputProps={{
+                  style: { letterSpacing: 5 },
+                  spellcheck: "false"
+                }}
+                style={{ maxWidth: 512 }}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     );

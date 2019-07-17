@@ -9,7 +9,7 @@ describe("Testing Word Tile Component", () => {
       <WordTileComponent
         word={""}
         allCharacters={[]}
-        addWordToCharSet={jest.fn()}
+        addToCharSet={jest.fn()}
         addWordToIgnoreList={jest.fn()}
       />,
       div

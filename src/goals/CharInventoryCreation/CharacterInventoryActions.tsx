@@ -22,9 +22,15 @@ export type SET_ACCEPTED_CHARACTERS = typeof SET_ACCEPTED_CHARACTERS;
 export const SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS";
 export type SET_REJECTED_CHARACTERS = typeof SET_REJECTED_CHARACTERS;
 
+export const ADD_TO_ACCEPTED_CHARACTERS = "ADD_TO_ACCEPTED_CHARACTERS";
+export type ADD_TO_ACCEPTED_CHARACTERS = typeof ADD_TO_ACCEPTED_CHARACTERS;
+
 export interface CharacterInventoryData {}
 
-type CharacterInventoryType = SET_ACCEPTED_CHARACTERS | SET_REJECTED_CHARACTERS;
+type CharacterInventoryType =
+  | SET_ACCEPTED_CHARACTERS
+  | SET_REJECTED_CHARACTERS
+  | ADD_TO_ACCEPTED_CHARACTERS;
 
 //action types
 
@@ -47,6 +53,15 @@ export function uploadInventory() {
     let history: Goal[] = state.goalsState.historyState.history;
 
     await saveChanges(updatedGoal, history, project, dispatch);
+  };
+}
+
+export function addToAcceptedCharacters(
+  chars: string[]
+): CharacterInventoryAction {
+  return {
+    type: ADD_TO_ACCEPTED_CHARACTERS,
+    payload: chars
   };
 }
 

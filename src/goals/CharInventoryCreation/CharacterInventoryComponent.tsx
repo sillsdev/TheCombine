@@ -21,6 +21,7 @@ import { Save } from "@material-ui/icons";
 import history from "../../history";
 
 export interface CharacterInventoryProps {
+  addToAcceptedCharacters: (chars: string[]) => void;
   setAcceptedCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
   uploadInventory: () => void;
@@ -45,6 +46,9 @@ export class CharacterInventory extends React.Component<
     super(props);
     // Load inventory from server
     this.props.setAcceptedCharacters(this.props.currentProject.validCharacters);
+    this.props.setRejectedCharacters(
+      this.props.currentProject.rejectedCharacters
+    );
     this.state = { cancelDialogOpen: false };
   }
 
@@ -61,7 +65,7 @@ export class CharacterInventory extends React.Component<
           spacing={2}
           style={{ background: "#fff" }}
         >
-          <Grid item sm={9} xs={12}>
+          <Grid item sm={9} xs={12} style={{ borderRight: "1px solid #ccc" }}>
             <CharacterSet
               setValidCharacters={this.props.setAcceptedCharacters}
               validCharacters={this.props.validCharacters}
@@ -71,13 +75,13 @@ export class CharacterInventory extends React.Component<
           </Grid>
           <Grid item sm={3} xs={12}>
             <SampleWords
-              setInventory={this.props.setAcceptedCharacters}
+              addToAcceptedCharacters={this.props.addToAcceptedCharacters}
               allCharacters={this.props.validCharacters.concat(
                 this.props.rejectedCharacters
               )}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} style={{ borderTop: "1px solid #ccc" }}>
             {/* submission buttons */}
             <Grid container justify="center">
               <Button

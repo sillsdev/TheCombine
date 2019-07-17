@@ -6,7 +6,8 @@ import {
   CharacterInventoryAction,
   setAcceptedCharacters,
   uploadInventory,
-  setRejectedCharacters
+  setRejectedCharacters,
+  addToAcceptedCharacters
 } from "./CharacterInventoryActions";
 import { getTranslate } from "react-localize-redux";
 
@@ -27,6 +28,9 @@ function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>
 ) {
   return {
+    addToAcceptedCharacters: (chars: string[]) => {
+      dispatch(addToAcceptedCharacters(chars));
+    },
     setAcceptedCharacters: (inventory: string[]) => {
       dispatch(setAcceptedCharacters(inventory));
     },

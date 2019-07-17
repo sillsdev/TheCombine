@@ -10,7 +10,7 @@ import * as backend from "../../../../backend";
 import WordTile from "./WordTileComponent";
 
 export interface SampleWordsProps {
-  setInventory: (inventory: string[]) => void;
+  addToAcceptedCharacters: (chars: string[]) => void;
   allCharacters: string[];
 }
 
@@ -85,11 +85,10 @@ export class SampleWords extends React.Component<
     });
   }
 
-  /** Adds all characters from the word into the character inventory */
-  addWordToCharSet(word: string) {
-    this.props.setInventory([
-      ...this.props.allCharacters,
-      ...word.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
+  /** Adds characters to the valid characters */
+  addToCharSet(chars: string) {
+    this.props.addToAcceptedCharacters([
+      ...chars.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
     ]);
 
     this.getWords(); // refresh the list
@@ -125,7 +124,7 @@ export class SampleWords extends React.Component<
             key={word + index + "tile"}
             word={word}
             allCharacters={this.props.allCharacters}
-            addWordToCharSet={word => this.addWordToCharSet(word)}
+            addToCharSet={word => this.addToCharSet(word)}
             addWordToIgnoreList={word => this.addWordToIgnoreList(word)}
           />
         ))}
