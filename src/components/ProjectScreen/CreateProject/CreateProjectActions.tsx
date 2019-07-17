@@ -48,15 +48,21 @@ export function asyncCreateProject(name: string, languageData?: File) {
           backend
             .uploadLift(createdProject, languageData)
             .then(res => {
-              dispatch(success(name));
-              // we manually pause so they have a chance to see the success message
-              setTimeout(() => {
-                history.push("/goals");
-              }, 1000);
+              backend.getProject(createdProject.id).then(res=>{
+                dispatch(setCurrentProject(res));
+                dispatch(success(name));
+                // we manually pause so they have a chance to see the success message
+                setTimeout(() => {
+                  history.push("/goals");
+                }, 1000);
+
+              }).catch(err => {
+                dispatch(failure(name, err.response.statusText));
             })
             .catch(err => {
               dispatch(failure(name, err.response.statusText));
             });
+          })
         } else {
           dispatch(success(name));
           setTimeout(() => {

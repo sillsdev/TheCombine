@@ -26,8 +26,8 @@ namespace BackendFramework.Controllers
         public LiftController(IWordRepository repo, IProjectService projServ)
         {
             _wordRepo = repo;
-            _liftService = new LiftService(_wordRepo, projServ);
             _projectService = projServ;
+            _liftService = new LiftService(_wordRepo, _projectService);
         }
 
         // POST: v1/project/{projectId}/words/upload
@@ -35,8 +35,8 @@ namespace BackendFramework.Controllers
         [HttpPost("words/upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload model)
         {
-            var isValid = _projectService.GetProject(projectId);
-            if (isValid == null)
+            var project = _projectService.GetProject(projectId);
+            if (project == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -110,7 +110,7 @@ namespace BackendFramework.Controllers
                 }
 
                 var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
-                string extractedLiftName = ""; //TODO:
+                //TODO: string extractedLiftName = ""; 
 
                 //search for the lift file within the list
                 var extractedLiftPath = Array.FindAll(extractedLiftNameArr, file => file.EndsWith(".lift"));
@@ -127,7 +127,11 @@ namespace BackendFramework.Controllers
                 {
                     _liftService.SetProject(projectId);
                     var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_liftService);
-                    return new ObjectResult(parser.ReadLiftFile(extractedLiftPath.FirstOrDefault()));
+                    var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
+                    var proj = _projectService.GetProject(projectId).Result;
+                    _liftService.LdmlImport(Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem);
+
+                    return new ObjectResult(resp);
                 }
                 catch (Exception)
                 {
