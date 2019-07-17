@@ -53,6 +53,33 @@ const mergeDupStepReducer = (
 
       return state;
     }
+    case MergeTreeActions.ORDER_DUPLICATE: {
+      console.log("HI");
+      let ref = action.ref;
+      let dups = Object.entries(state.tree.words[ref.word].senses[ref.sense]);
+      let dup = state.tree.words[ref.word].senses[ref.sense][ref.duplicate];
+
+      dups.splice(dups.findIndex(s => s[0] === ref.duplicate), 1);
+      dups.splice(action.order, 0, [ref.duplicate, dup]);
+
+      let newDups: Hash<string> = {};
+
+      for (let dup of dups) {
+        newDups[dup[0]] = dup[1];
+      }
+
+      let newSenses = { ...state.tree.words[ref.word].senses };
+      newSenses[ref.sense] = newDups;
+
+      state.tree.words[ref.word] = {
+        ...state.tree.words[ref.word],
+        senses: newSenses
+      };
+      state.tree.words = {...state.tree.words};
+      state.tree = { ...state.tree };
+      state = { ...state };
+      return state;
+    }
     case MergeTreeActions.MOVE_SENSE:
       for (let op in action.payload.src) {
         let src = action.payload.src[op];

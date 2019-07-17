@@ -21,7 +21,8 @@ export enum MergeTreeActions {
   ORDER_SENSE = "ORDER_SENSE",
   SET_SENSE = "SET_SENSE",
   SET_DATA = "SET_DATA",
-  CLEAR_TREE = "CLEAR_TREE"
+  CLEAR_TREE = "CLEAR_TREE",
+  ORDER_DUPLICATE = "ORDER_DUPLICATE"
 }
 
 interface MergeDataAction {
@@ -57,6 +58,11 @@ export type MergeTreeAction =
   | MergeTreeSetAction
   | MergeDataAction
   | MergeOrderAction
+  | {
+      type: MergeTreeActions.ORDER_DUPLICATE;
+      ref: MergeTreeReference;
+      order: number;
+    }
   | { type: MergeTreeActions.CLEAR_TREE };
 
 // action creators
@@ -127,6 +133,17 @@ export function orderSense(
     wordID: wordID,
     senseID: senseID,
     order: order
+  };
+}
+
+export function orderDuplicate(
+  ref: MergeTreeReference,
+  order: number
+): MergeTreeAction {
+  return {
+    type: MergeTreeActions.ORDER_DUPLICATE,
+    ref,
+    order
   };
 }
 

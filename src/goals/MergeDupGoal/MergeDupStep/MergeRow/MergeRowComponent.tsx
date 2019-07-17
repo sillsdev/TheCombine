@@ -22,11 +22,12 @@ export interface MergeRowProps {
   words: Hash<MergeTreeWord>;
   data: MergeData;
   portrait: boolean;
+  setSidebar: (el: () => JSX.Element | undefined) => void;
 }
 
 //interface for component state
 interface MergeRowState {
-  items: number[];
+  dropDisabled: boolean;
 }
 
 export class MergeRow extends React.Component<
@@ -35,7 +36,7 @@ export class MergeRow extends React.Component<
 > {
   constructor(props: MergeRowProps & LocalizeContextProps) {
     super(props);
-    this.state = { items: [0, 1, 2, 3, 4] };
+    this.state = { dropDisabled: false };
   }
 
   render() {
@@ -92,6 +93,7 @@ export class MergeRow extends React.Component<
               Object.keys(this.props.words[this.props.wordID].senses).map(
                 (item, index) => (
                   <MergeStack
+                    setSidebar={this.props.setSidebar}
                     key={item}
                     index={index}
                     wordID={this.props.wordID}

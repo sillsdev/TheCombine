@@ -8,7 +8,9 @@ import {
   List,
   ListItem,
   GridList,
-  GridListTile
+  GridListTile,
+  Paper,
+  IconButton
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -21,6 +23,7 @@ import { uuid } from "../../../utilities";
 import { MergeTreeReference, MergeTreeWord } from "./MergeDupsTree";
 import MergeRow from "./MergeRow";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 
 // Constants
 const MIN_VIEW: string = "60vh";
@@ -37,6 +40,7 @@ export interface MergeDupStepProps {
   draggedSense?: MergeTreeReference;
   moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
   orderSense: (wordID: string, senseID: string, order: number) => void;
+  orderDuplicate: (ref: MergeTreeReference, order: number) => void;
   mergeAll?: () => void;
   refreshWords?: () => void;
 }
@@ -44,6 +48,8 @@ export interface MergeDupStepProps {
 //interface for component state
 export interface MergeDupStepState {
   portrait: boolean;
+  sideBar: () => JSX.Element | undefined;
+  colCount: number;
 }
 
 class MergeDupStep extends React.Component<
@@ -52,12 +58,31 @@ class MergeDupStep extends React.Component<
 > {
   constructor(props: MergeDupStepProps & LocalizeContextProps) {
     super(props);
-    this.state = { portrait: true };
+    this.state = {
+      colCount: 2,
+      portrait: true,
+      sideBar: () => undefined
+    };
   }
   componentDidMount() {
+    this.updateWindowDimensions();
     if (this.props.refreshWords) {
       this.props.refreshWords();
     }
+    window.addEventListener("resize", () => this.updateWindowDimensions());
+  }
+
+  componentDidUnmount() {
+    window.removeEventListener("resize", () => this.updateWindowDimensions());
+  }
+
+  componentWillMount() {
+    document.body.style.overflow = "hidden";
+  }
+
+  updateWindowDimensions() {
+    console.log(window);
+    this.setState({ ...this.state, colCount: window.innerWidth / 250 });
   }
 
   next() {
@@ -66,23 +91,28 @@ class MergeDupStep extends React.Component<
 
   handleDrop(res: DropResult) {
     let srcRefs = [];
-    for (let key in this.props.words[res.source.droppableId].senses[
-      res.draggableId
-    ]) {
-      srcRefs.push({
-        word: res.source.droppableId,
-        sense: res.draggableId,
-        duplicate: key
-      });
+
+    let srcRef: MergeTreeReference = JSON.parse(res.draggableId);
+    if (!srcRef.duplicate) {
+      for (let key in this.props.words[srcRef.word].senses[srcRef.sense]) {
+        srcRefs.push({
+          word: srcRef.word,
+          sense: srcRef.sense,
+          duplicate: key
+        });
+      }
+    } else {
+      srcRefs.push(srcRef);
     }
 
     if (res.combine) {
+      let combineRef: MergeTreeReference = JSON.parse(res.combine.draggableId);
       // this is a combine operation
       let destRefs = [];
       for (let _ in srcRefs) {
         destRefs.push({
-          word: res.combine.droppableId,
-          sense: res.combine.draggableId,
+          word: combineRef.word,
+          sense: combineRef.sense,
           duplicate: uuid()
         });
       }
@@ -91,26 +121,31 @@ class MergeDupStep extends React.Component<
       if (res.source.droppableId !== res.destination.droppableId) {
         // move to different word
         let destRefs = [];
+        let destSense = uuid();
         for (let _ in srcRefs) {
           destRefs.push({
             word: res.destination.droppableId,
-            sense: res.draggableId,
+            sense: destSense,
             duplicate: uuid()
           });
         }
         this.props.moveSenses(srcRefs, destRefs);
         this.props.orderSense(
           res.destination.droppableId,
-          res.draggableId,
+          destSense,
           res.destination.index
         );
       } else {
         // set ordering
-        this.props.orderSense(
-          res.source.droppableId,
-          res.draggableId,
-          res.destination.index
-        );
+        if (srcRef.duplicate) {
+          this.props.orderDuplicate(srcRef, res.destination.index);
+        } else {
+          this.props.orderSense(
+            srcRef.word,
+            srcRef.sense,
+            res.destination.index
+          );
+        }
       }
     }
   }
@@ -125,42 +160,73 @@ class MergeDupStep extends React.Component<
     //visual definition
     return (
       <Box style={{ maxHeight: "100%" }}>
-        Portrait
-        <Switch
-          checked={this.state.portrait}
-          onChange={e => this.setState({ portrait: e.target.checked })}
-        />
-        {/* Merging pane */}
-        <div
-          style={{
-            ...HEIGHT_STYLE,
-            overflowY: "scroll",
-            background: "white",
-            padding: 8
-          }}
-        >
-          <GridList
+        <DragDropContext onDragEnd={res => this.handleDrop(res)}>
+          {this.state.sideBar() && (
+            <Paper
+              square
+              style={{
+                float: "right",
+                position: "relative",
+                padding: 40
+              }}
+            >
+              <IconButton
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: 0,
+                  transform: "translateY(-50%)"
+                }}
+                onClick={() =>
+                  this.setState({ ...this.state, sideBar: () => undefined })
+                }
+              >
+                <ArrowForwardIos />
+              </IconButton>
+              {this.state.sideBar()}
+            </Paper>
+          )}
+          {/* Merging pane */}
+          <div
             style={{
-              flexWrap: "nowrap",
-              background: "#eee"
+              ...HEIGHT_STYLE,
+              overflow: "hidden",
+              background: "#eee",
+              padding: 8
             }}
           >
-            <DragDropContext onDragEnd={res => this.handleDrop(res)}>
+            <GridList
+              cellHeight="auto"
+              cols={this.state.colCount}
+              style={{
+                flexWrap: "nowrap"
+              }}
+            >
               {Object.keys(this.props.words).map(key => (
                 <GridListTile key={key} style={{ margin: 8 }}>
-                  <MergeRow portrait={this.state.portrait} wordID={key} />
+                  <MergeRow
+                    setSidebar={el =>
+                      this.setState({ ...this.state, sideBar: el })
+                    }
+                    portrait={this.state.portrait}
+                    wordID={key}
+                  />
                 </GridListTile>
               ))}
               <GridListTile key={newId} style={{ margin: 8 }}>
-                <MergeRow portrait={this.state.portrait} wordID={newId} />
+                <MergeRow
+                  setSidebar={_ => {}}
+                  portrait={this.state.portrait}
+                  wordID={newId}
+                />
               </GridListTile>
-            </DragDropContext>
-          </GridList>
-        </div>
+            </GridList>
+          </div>
+        </DragDropContext>
         {/* Merge button */}
         <div style={{ borderTop: "1px solid gray" }}>
           <Button
-            style={{ float: "right", margin: 10 }}
+            style={{ float: "right" }}
             onClick={_ => this.next()}
             title={this.props.translate("mergeDups.helpText.next") as string}
           >
