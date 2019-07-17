@@ -70,6 +70,8 @@ namespace BackendFramework.Services
         
         public void LdmlImport(string filePath, string langTag)
         {
+            // SLDR is the SIL Locale Data repository, it is necessary for reading/writing ldml and 
+            // It is being initialized in offline mode here to only pull local data
             Sldr.Initialize(true);
             try
             {
