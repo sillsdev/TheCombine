@@ -42,17 +42,47 @@ export class WordTile extends React.Component<
     return (
       <Grid item xs={12} key={word}>
         <Grid container justify="flex-start">
-          <Paper
-            className="classes.paper"
+          <div
             style={{
               textAlign: "center",
               padding: "5px 10px",
-              cursor: "pointer"
+              cursor: "pointer",
+              border: "1px solid grey",
+              borderRadius: 21
             }}
             onMouseEnter={() => this.setState({ hover: true })}
             onMouseLeave={() => this.setState({ hover: false })}
           >
             <Typography variant="body1">
+              {/* 'add to inventory' button */}
+              <Tooltip
+                title={
+                  this.props.translate(
+                    "charInventory.sampleWords.add"
+                  ) as string
+                }
+                placement="top"
+              >
+                <IconButton
+                  style={
+                    this.state.hover
+                      ? {
+                          transition: TRANSITION,
+                          opacity: 1
+                        }
+                      : {
+                          transition: TRANSITION,
+                          opacity: 0.01
+                        }
+                  }
+                  size="small"
+                  onClick={() => {
+                    this.props.addToCharSet(this.newCharacters);
+                  }}
+                >
+                  <Add />
+                </IconButton>
+              </Tooltip>
               {word.split("").map((letter: string, index: number) => {
                 // Highlight character if not in the inventory (don't highlight " ")
                 if ([...this.props.allCharacters, " "].includes(letter)) {
@@ -73,39 +103,6 @@ export class WordTile extends React.Component<
                   );
                 }
               })}{" "}
-              {/* 'add to inventory' button */}
-              <Tooltip
-                title={
-                  this.props.translate(
-                    "charInventory.sampleWords.add"
-                  ) as string
-                }
-                placement="top"
-              >
-                <IconButton
-                  style={
-                    this.state.hover
-                      ? {
-                          transition: TRANSITION,
-                          width: "1.7em",
-                          opacity: 1,
-                          padding: "3px"
-                        }
-                      : {
-                          transition: TRANSITION,
-                          width: "0",
-                          opacity: 0.01,
-                          padding: "auto 0"
-                        }
-                  }
-                  size="small"
-                  onClick={() => {
-                    this.props.addToCharSet(this.newCharacters);
-                  }}
-                >
-                  <Add />
-                </IconButton>
-              </Tooltip>
               {/* 'ignore for now' button */}
               <Tooltip
                 title={
@@ -120,15 +117,11 @@ export class WordTile extends React.Component<
                     this.state.hover
                       ? {
                           transition: TRANSITION,
-                          width: "1.7em",
-                          opacity: 1,
-                          padding: "3px"
+                          opacity: 1
                         }
                       : {
                           transition: TRANSITION,
-                          width: "0em",
-                          opacity: 0,
-                          padding: 0
+                          opacity: 0
                         }
                   }
                   size="small"
@@ -140,7 +133,7 @@ export class WordTile extends React.Component<
                 </IconButton>
               </Tooltip>
             </Typography>
-          </Paper>
+          </div>
         </Grid>
       </Grid>
     );
