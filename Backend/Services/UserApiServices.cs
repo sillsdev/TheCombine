@@ -40,19 +40,22 @@ namespace BackendFramework.Services
                     return null;
                 }
 
+                int saltLength = 16;
+                int hashLength = 20;
+
                 // Extract the bytes from password
                 byte[] hashBytes = Convert.FromBase64String(foundUser.Password);
                 // Get the salt
-                byte[] salt = new byte[16];
-                Array.Copy(hashBytes, 0, salt, 0, 16);
+                byte[] salt = new byte[saltLength];
+                Array.Copy(hashBytes, 0, salt, 0, saltLength);
                 // Compute the hash on the password the user entered
-                var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
-                byte[] hash = pbkdf2.GetBytes(20);
+                var rfc = new Rfc2898DeriveBytes(password, salt, 10000);
+                byte[] hash = rfc.GetBytes(hashLength);
 
-                // Compare the results
-                for (int i = 0; i < 20; i++)
+                // Check if the password given to us matches the hash we have stored (after the salt)
+                for (int i = 0; i < hashLength; i++)
                 {
-                    if (hashBytes[i + 16] != hash[i])
+                    if (hashBytes[i + saltLength] != hash[i])
                     {
                         throw new UnauthorizedAccessException();
                     }
@@ -137,20 +140,23 @@ namespace BackendFramework.Services
                     }
                 }
 
-                //create salt 
-                byte[] salt;
-                new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+                int saltLength = 16;
+                int hashLength = 20;
 
-                //hash the password
+                //create randomized salt 
+                byte[] salt;
+                new RNGCryptoServiceProvider().GetBytes(salt = new byte[saltLength]);
+
+                //hash the password along with the salt
                 var pbkdf2 = new Rfc2898DeriveBytes(user.Password, salt, 10000);
                 byte[] hash = pbkdf2.GetBytes(20);
 
-                //combine salt and hashed password
-                byte[] hashBytes = new byte[36];
-                Array.Copy(salt, 0, hashBytes, 0, 16);
-                Array.Copy(hash, 0, hashBytes, 16, 20);
+                //combine salt and hashed password for storage
+                byte[] hashBytes = new byte[saltLength + hashLength];
+                Array.Copy(salt, 0, hashBytes, 0, saltLength);
+                Array.Copy(hash, 0, hashBytes, saltLength, hashLength);
 
-                //insert user with hashed salt+hash
+                //replace pasword with hashed password
                 user.Password = Convert.ToBase64String(hashBytes);
                 await _userDatabase.Users.InsertOneAsync(user);
 
