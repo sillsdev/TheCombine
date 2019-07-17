@@ -57,11 +57,13 @@ namespace BackendFramework.Services
         private readonly IWordRepository _repo;
         private readonly IProjectService _projService;
         private string projectId;
+        private List<SemanticDomain> sdList;
 
         public LiftService(IWordRepository repo, IProjectService projserv)
         {
             _repo = repo;
             _projService = projserv;
+            sdList = new List<SemanticDomain>();
         }
         public void SetProject(string id)
         {
@@ -500,7 +502,13 @@ namespace BackendFramework.Services
 
         public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
 
-        public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml) { }
+        public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
+        {
+            if (range == "semantic-domain-ddp4")
+            {
+                sdList.Add(new SemanticDomain() { Name = label.First().Value.Text, Number = abbrev.First().Value.Text });
+            }
+        }
     }
 
     public class EmptyLiftObject : LiftObject
