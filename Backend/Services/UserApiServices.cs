@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,13 +30,35 @@ namespace BackendFramework.Services
         {
             try
             {
-                var user = await _userDatabase.Users.FindAsync(x => (x.Username == username &&  x.Password == password));
+                // Fetch the stored user
+                var user = await _userDatabase.Users.FindAsync(x => x.Username == username);
                 User foundUser = user.Single();
 
                 // return null if user not found
                 if (foundUser == null)
                 {
                     return null;
+                }
+
+                int saltLength = 16;
+                int hashLength = 20;
+
+                // Extract the bytes from password
+                byte[] hashBytes = Convert.FromBase64String(foundUser.Password);
+                // Get the salt
+                byte[] salt = new byte[saltLength];
+                Array.Copy(hashBytes, 0, salt, 0, saltLength);
+                // Compute the hash on the password the user entered
+                var rfc = new Rfc2898DeriveBytes(password, salt, 10000);
+                byte[] hash = rfc.GetBytes(hashLength);
+
+                // Check if the password given to us matches the hash we have stored (after the salt)
+                for (int i = 0; i < hashLength; i++)
+                {
+                    if (hashBytes[i + saltLength] != hash[i])
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
                 }
 
                 // authentication successful so generate jwt token
@@ -110,7 +133,6 @@ namespace BackendFramework.Services
 
                 if (users.Count != 0)
                 {
-
                     //check to see if username is taken
                     if (_userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
                     {
@@ -118,7 +140,24 @@ namespace BackendFramework.Services
                     }
                 }
 
-                //insert user
+                int saltLength = 16;
+                int hashLength = 20;
+
+                //create randomized salt 
+                byte[] salt;
+                new RNGCryptoServiceProvider().GetBytes(salt = new byte[saltLength]);
+
+                //hash the password along with the salt
+                var pbkdf2 = new Rfc2898DeriveBytes(user.Password, salt, 10000);
+                byte[] hash = pbkdf2.GetBytes(20);
+
+                //combine salt and hashed password for storage
+                byte[] hashBytes = new byte[saltLength + hashLength];
+                Array.Copy(salt, 0, hashBytes, 0, saltLength);
+                Array.Copy(hash, 0, hashBytes, saltLength, hashLength);
+
+                //replace pasword with hashed password
+                user.Password = Convert.ToBase64String(hashBytes);
                 await _userDatabase.Users.InsertOneAsync(user);
 
                 return user;
@@ -158,10 +197,6 @@ namespace BackendFramework.Services
 
             return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
 
-        }
-
-        
+        }   
     }
-
-
 }
