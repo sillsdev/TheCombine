@@ -1,5 +1,6 @@
 import * as Data from "../../../types/word";
-import { Hash } from "../../../types";
+
+export type Hash<V> = { [key: string]: V };
 
 export type TreeDataSense = Data.Sense & { srcWord: string; order: number };
 

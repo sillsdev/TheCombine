@@ -1,6 +1,6 @@
-import { StoreState, Hash } from "../../../types";
+import { StoreState } from "../../../types";
 import { ThunkDispatch } from "redux-thunk";
-import { MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
+import { MergeTreeReference, Hash, TreeDataSense } from "./MergeDupsTree";
 import { Word, State } from "../../../types/word";
 import * as backend from "../../../backend";
 import {

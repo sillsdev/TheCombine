@@ -183,7 +183,7 @@ describe("dupFinder Tests", () => {
 
   //test that getDupsFromWordList properly strings together scoring and accepting
   test("test getDupsFromWordList", () => {
-    let testOutput = Finder.getDupsFromWordList(testWordList[3], testWordList);
+    let testOutput = Finder.getDuplicatesOfWord(testWordList[3], testWordList);
     for (let i = 0; i < testOutput[0].length; i++) {
       expect(testOutput[0][i].vernacular).toEqual(acceptedYank[i].vernacular);
       expect(testOutput[0][i].senses[0]).toEqual(acceptedYank[i].senses[0]);

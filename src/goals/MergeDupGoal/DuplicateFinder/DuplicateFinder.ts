@@ -27,14 +27,14 @@ export interface ScoredWord {
   score: number;
 }
 
-interface MappedWord {
+interface MaskedWord {
   word: Word;
   map: Bitmask;
 }
 
 interface Bitmask {
-  vern: number;
-  glosses: number[];
+  vernMask: number;
+  glossMasks: number[];
 }
 
 // THIS DOES NOT YET WORK WITH MULTIPLE GLOSSES
@@ -54,9 +54,9 @@ export default class DupFinder {
     this.deletionCost = params.delCost;
     this.subsitutionCost = params.subCost;
 
-    this.vernmap = [];
-    this.glossmap = [];
-    this.mappedWords = [];
+    this.vernmap = new Set();
+    this.glossmap = new Set();
+    this.maskedWords = [];
   }
 
   //prevent infinite loops in getNextDups()
@@ -76,90 +76,97 @@ export default class DupFinder {
   deletionCost: number;
   subsitutionCost: number;
 
-  vernmap: string[];
-  glossmap: string[];
-  mappedWords: MappedWord[];
+  vernmap: Set<string>;
+  glossmap: Set<string>;
+  maskedWords: MaskedWord[];
 
   empty2dArray = [[]];
 
   // get n lists of suspected duplicates from DB O(n^(4+ε)). Returns [] if no duplicates have been found.
   async getNextDups(n: number = 1): Promise<Word[][]> {
-    let wordsFromDB: Promise<Word[][]> = this.getWordsFromDB().then(words => {
-      //return no words if DB empty
-      if (words.length <= 0) {
-        return this.empty2dArray;
+    let wordsFromDB: Promise<Word[][]> = this.getWordsFromDB().then(
+      wordCollections => {
+        //return no words if DB empty
+        if (wordCollections.length <= 0) {
+          return this.empty2dArray;
+        }
+
+        this.setMapsAndMaskWords(wordCollections);
+
+        //[wordlist, list score]
+        let currentWords: [Word[], number][] = [];
+
+        //use each word as a parent and compare the resulting lists against each other
+        for (let i = 0; i < wordCollections.length; i++) {
+          //word list to compare against current words
+          let newWordList: [Word[], number] = this.getDuplicatesOfWord(
+            wordCollections[i]
+          );
+
+          //ignore wordlists with less than 2 words
+          if (newWordList[0].length <= 1) {
+            continue;
+          }
+
+          //add wordlist if currentWords is not full yet
+          if (currentWords.length < n) {
+            currentWords.push(newWordList);
+            continue;
+          }
+
+          //add wordlist if it scores lower than the last element in currentWords
+          // and resort currentWords
+          if (
+            currentWords[currentWords.length - 1].length < newWordList.length
+          ) {
+            currentWords.push(newWordList);
+            currentWords.sort(function(a, b): number {
+              return a[1] - b[1];
+            });
+            currentWords.pop();
+          }
+        }
+
+        //return empty 2d array if no possible duplicates found
+        if (currentWords.length <= 0) return this.empty2dArray;
+
+        //return the wordlist from the scored list
+        return currentWords.map(function(scoredList) {
+          return scoredList[0];
+        });
       }
-
-      this.setBitmaps(words);
-
-      //[wordlist, list score]
-      let currentWords: [Word[], number][] = [];
-
-      //use each word as a parent and compare the resulting lists against each other
-      for (let i = 0; i < words.length; i++) {
-        //word list to compare against current words
-        let newWordList: [Word[], number] = this.getDupsFromWordList(words[i]);
-
-        //ignore wordlists with less than 2 words
-        if (newWordList[0].length <= 1) {
-          continue;
-        }
-
-        //add wordlist if currentWords is not full yet
-        if (currentWords.length < n) {
-          currentWords.push(newWordList);
-          continue;
-        }
-
-        //add wordlist if it scores lower than the last element in currentWords
-        // and resort currentWords
-        if (currentWords[currentWords.length - 1].length < newWordList.length) {
-          currentWords.push(newWordList);
-          currentWords.sort(function(a, b): number {
-            return a[1] - b[1];
-          });
-          currentWords.pop();
-        }
-      }
-
-      //return empty 2d array if no possible duplicates found
-      if (currentWords.length <= 0) return this.empty2dArray;
-
-      //return the wordlist from the scored list
-      return currentWords.map(function(scoredList) {
-        return scoredList[0];
-      });
-    });
+    );
     return wordsFromDB;
   }
-
-  //defines vernacular and gloss bitmaps
-  setBitmaps(wordCollection: Word[]) {
+  //TODO debug
+  /** defines vernacular and gloss bitmaps */
+  setMapsAndMaskWords(wordCollection: Word[]) {
     //empty bitmaps
-    this.vernmap = [];
-    this.glossmap = [];
+    debugger;
+    this.vernmap.clear();
+    this.glossmap.clear();
 
     //define bitmaps
     wordCollection.forEach(word => {
-      this.vernmap = [
-        ...this.vernmap,
-        ...word.vernacular.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
-      ];
-      this.glossmap = [
-        ...this.glossmap,
-        ...word.senses[0].glosses[0].def.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
-      ];
+      word.vernacular.split("").forEach(char => {
+        this.vernmap.add(char);
+      });
+
+      if (hasSenses(word)) {
+        word.senses[0].glosses[0].def.split("").forEach(char => {
+          this.glossmap.add(char);
+        });
+      }
     });
 
     //clear current words
-    this.mappedWords = [];
+    this.maskedWords = [];
 
     //map and store current words
     wordCollection.forEach(word => {
-      this.mappedWords.concat(this.mapWord(word));
+      this.maskedWords.push(this.maskWord(word));
     });
   }
-
   //returns a set of words from the database
   async getWordsFromDB(): Promise<Word[]> {
     var wordCollection = backend.getFrontierWords();
@@ -167,9 +174,9 @@ export default class DupFinder {
   }
 
   //scores a collection and returns
-  getDupsFromWordList(parent: Word): [Word[], number] {
+  getDuplicatesOfWord(parent: Word): [Word[], number] {
     //narrow down very different words
-    let words = this.filter(parent, this.mappedWords);
+    let words = this.filter(parent, this.maskedWords);
 
     //thorough scoring
     let scoredWords: ScoredWord[] = this.scoreWords(parent, words);
@@ -181,56 +188,63 @@ export default class DupFinder {
   }
 
   //map a word and return as type MappedWord
-  private mapWord(word: Word): MappedWord {
-    let vern = this.mapString(word.vernacular, this.vernmap);
-    let glosses: number[] = [];
+  private maskWord(word: Word): MaskedWord {
+    //mask vernacular
+    let vernMask: number = this.mapString(word.vernacular, this.vernmap);
+
+    //mask glosses
+    let glossMasks: number[] = [];
     word.senses.forEach((sense, i) => {
       sense.glosses.forEach(gloss =>
-        glosses.concat(this.mapString(gloss.def, this.glossmap))
+        glossMasks.concat(this.mapString(gloss.def, this.glossmap))
       );
     });
 
     return {
       word,
       map: {
-        vern,
-        glosses
+        vernMask,
+        glossMasks
       } as Bitmask
-    } as MappedWord;
+    } as MaskedWord;
   }
 
-  //return the input string masked to the filter as a number
-  private mapString(input: string, filter: string[]): number {
+  /** return the input string masked to the map as a number */
+  private mapString(input: string, map: Set<string>): number {
     var output = 0b0;
     var splitInput = input.split("");
-    filter.forEach((character: string, i) => {
+
+    let i: number = 0;
+    map.forEach(character => {
       if (splitInput.includes(character)) output = output | (1 << i);
+      i++;
     });
     return output;
   }
 
-  private compareMasks(a: Bitmask, b: Bitmask): number {
-    //compare masks
-    let vern = a.vern & ~b.vern;
-    let glosses: number[] = [];
-    a.glosses.forEach(agloss => {
-      b.glosses.forEach(bgloss => {
-        glosses.push(agloss & ~bgloss);
+  private compareMasks(a: Bitmask, b: Bitmask, threshold: number): boolean {
+    //compare masks against threshold
+    if (
+      this.calculateMaskScore(a.vernMask & ~b.vernMask) +
+        this.calculateMaskScore(b.vernMask & ~a.vernMask) <
+      threshold * 2
+    )
+      return true;
+
+    a.glossMasks.forEach(agloss => {
+      b.glossMasks.forEach(bgloss => {
+        if (
+          this.calculateMaskScore(agloss & ~bgloss) +
+            this.calculateMaskScore(bgloss & ~agloss) <
+          threshold * 2
+        )
+          return true;
       });
     });
-
-    //score results
-    let vernScore = this.calculateScore(vern);
-    let glossScore = 0;
-    glosses.forEach(glossMask => {
-      glossScore += this.calculateScore(glossMask);
-    });
-
-    //weight
-    return vernScore + glossScore / glosses.length;
+    return false;
   }
 
-  private calculateScore(mask: number): number {
+  private calculateMaskScore(mask: number): number {
     let score = 0;
     while (mask > 0) {
       if (mask % 2 === 1) score++;
@@ -239,27 +253,30 @@ export default class DupFinder {
     return score;
   }
 
-  //remove words that are more than one longer or shorter than parent
-  filter(parent: Word, words: MappedWord[]): Word[] {
-    let mappedParent: MappedWord = this.mapWord(parent);
+  /** remove words that are more than one longer or shorter than parent */
+  filter(parent: Word, words: MaskedWord[]): Word[] {
+    let mappedParent: MaskedWord = this.maskWord(parent);
 
-    let filteredWords: Word[] = [];
+    let bitFilteredWords: Word[] = [];
 
     //filter words with bitmap
     words.forEach(mappedWord => {
-      if (this.compareMasks(mappedParent.map, mappedWord.map) < 3)
-        filteredWords.push(mappedWord.word);
+      if (this.compareMasks(mappedParent.map, mappedWord.map, 3))
+        bitFilteredWords.push(mappedWord.word);
     });
 
+    let filteredWords: Word[] = [];
+
     //filter based on word length - may not be worth the computation time
-    filteredWords.forEach(word => {
+    bitFilteredWords.forEach(word => {
       if (Math.abs(parent.vernacular.length - word.vernacular.length) < 2)
         filteredWords.push(word);
     });
+
     return filteredWords;
   }
 
-  //removes words which do not fit the quality thresholds and returns a reordered collection of the accepted words
+  /** removes words which do not fit the quality thresholds and returns a reordered collection of the accepted words */
   getAcceptedWords(words: ScoredWord[]): [Word[], number] {
     let outputCollection: [Word[], number] = [[], 0];
 
