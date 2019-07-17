@@ -112,7 +112,7 @@ export class SampleWords extends React.Component<
         alignItems="center"
       >
         <Grid item xs={12}>
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h5">
             <Translate id="charInventory.sampleWords.title" />
           </Typography>
           <Typography variant="subtitle1">

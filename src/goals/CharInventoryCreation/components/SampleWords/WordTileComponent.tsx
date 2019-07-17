@@ -5,8 +5,10 @@ import {
   Paper,
   IconButton,
   Tooltip,
-  Typography
+  Typography,
+  Chip
 } from "@material-ui/core";
+import BlockIcon from "@material-ui/icons/Block";
 import { Add, Block } from "@material-ui/icons";
 import { greenHighlight } from "../../../../types/theme";
 
@@ -40,49 +42,79 @@ export class WordTile extends React.Component<
     let word = this.props.word;
     this.newCharacters = "";
     return (
-      <Grid item xs={12} key={word}>
-        <Grid container justify="flex-start">
-          <div
-            style={{
-              textAlign: "center",
-              padding: "5px 10px",
-              cursor: "pointer",
-              border: "1px solid grey",
-              borderRadius: 21
-            }}
-            onMouseEnter={() => this.setState({ hover: true })}
-            onMouseLeave={() => this.setState({ hover: false })}
-          >
-            <Typography variant="body1">
-              {/* 'add to inventory' button */}
-              <Tooltip
-                title={
-                  this.props.translate(
-                    "charInventory.sampleWords.add"
-                  ) as string
+      <Grid item key={word}>
+        <Chip
+          style={
+            this.state.hover
+              ? {
+                  transition: TRANSITION,
+                  borderColor: "#ccc"
                 }
-                placement="top"
+              : {
+                  transition: TRANSITION,
+                  borderColor: "white"
+                }
+          }
+          // 'add to inventory' button
+          avatar={
+            <Tooltip
+              title={
+                this.props.translate("charInventory.sampleWords.add") as string
+              }
+              placement="top"
+            >
+              <IconButton
+                style={
+                  this.state.hover
+                    ? {
+                        transition: TRANSITION,
+                        opacity: 1
+                      }
+                    : {
+                        transition: TRANSITION,
+                        opacity: 0.01
+                      }
+                }
+                size="small"
+                onClick={() => {
+                  this.props.addToCharSet(this.newCharacters);
+                }}
               >
-                <IconButton
-                  style={
-                    this.state.hover
-                      ? {
-                          transition: TRANSITION,
-                          opacity: 1
-                        }
-                      : {
-                          transition: TRANSITION,
-                          opacity: 0.01
-                        }
-                  }
-                  size="small"
-                  onClick={() => {
-                    this.props.addToCharSet(this.newCharacters);
-                  }}
-                >
-                  <Add />
-                </IconButton>
-              </Tooltip>
+                <Add />
+              </IconButton>
+            </Tooltip>
+          }
+          onMouseEnter={() => this.setState({ hover: true })}
+          onMouseLeave={() => this.setState({ hover: false })}
+          variant="outlined"
+          deleteIcon={
+            <Tooltip
+              title={
+                this.props.translate(
+                  "charInventory.sampleWords.ignore"
+                ) as string
+              }
+              placement="top"
+              style={
+                this.state.hover
+                  ? {
+                      transition: TRANSITION,
+                      opacity: 1
+                    }
+                  : {
+                      transition: TRANSITION,
+                      opacity: 0.01
+                    }
+              }
+            >
+              <BlockIcon />
+            </Tooltip>
+          }
+          onDelete={() => {
+            this.props.addWordToIgnoreList(word);
+          }}
+          label={
+            <Typography variant="body1">
               {word.split("").map((letter: string, index: number) => {
                 // Highlight character if not in the inventory (don't highlight " ")
                 if ([...this.props.allCharacters, " "].includes(letter)) {
@@ -94,47 +126,18 @@ export class WordTile extends React.Component<
                       key={index}
                       style={{
                         background: greenHighlight,
-                        padding: "3px 0",
-                        borderBottom: "2px solid red"
+                        padding: "3px 0"
+                        //borderBottom: "2px solid red"
                       }}
                     >
                       {letter}
                     </span>
                   );
                 }
-              })}{" "}
-              {/* 'ignore for now' button */}
-              <Tooltip
-                title={
-                  this.props.translate(
-                    "charInventory.sampleWords.ignore"
-                  ) as string
-                }
-                placement="top"
-              >
-                <IconButton
-                  style={
-                    this.state.hover
-                      ? {
-                          transition: TRANSITION,
-                          opacity: 1
-                        }
-                      : {
-                          transition: TRANSITION,
-                          opacity: 0
-                        }
-                  }
-                  size="small"
-                  onClick={() => {
-                    this.props.addWordToIgnoreList(word);
-                  }}
-                >
-                  <Block />
-                </IconButton>
-              </Tooltip>
+              })}
             </Typography>
-          </div>
-        </Grid>
+          }
+        />
       </Grid>
     );
   }
