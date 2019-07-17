@@ -1,5 +1,3 @@
-import { Hash } from "../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-
 export class User {
   id: string;
   avatar: string;
@@ -7,7 +5,7 @@ export class User {
   email: string;
   phone: string;
   otherConnectionField: string;
-  workedProjects: Hash<string>[];
+  workedProjects: { [key: string]: string };
   agreement: boolean;
   password: string;
   username: string;
@@ -21,7 +19,7 @@ export class User {
     this.email = "";
     this.phone = "";
     this.otherConnectionField = "";
-    this.workedProjects = [];
+    this.workedProjects = {};
     this.agreement = false;
     this.password = password;
     this.username = username;

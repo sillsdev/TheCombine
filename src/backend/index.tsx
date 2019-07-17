@@ -216,8 +216,9 @@ export async function addGoalToUserEdit(
   let goalType: string = goalNameToGoalTypeId(goal.name);
   let stepData: string = JSON.stringify(goal.steps);
   let userEditTuple = { goalType: goalType, stepData: [stepData] };
+  let projectId: string = getProjectId();
   let resp = await backendServer.post(
-    `projects/${getProjectId()}/useredits/${userEditId}`,
+    `projects/${projectId}/useredits/${userEditId}`,
     userEditTuple,
     {
       headers: { ...authHeader() }

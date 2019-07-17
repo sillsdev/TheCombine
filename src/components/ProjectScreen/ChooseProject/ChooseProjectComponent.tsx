@@ -36,7 +36,6 @@ class ChooseProject extends React.Component<
     if (user) {
       let userObject: User = JSON.parse(user);
       getAllProjectsByUser(userObject).then(projects => {
-        console.log(projects);
         this.setState({ ...this.state, projectList: projects });
       });
     }

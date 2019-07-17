@@ -90,6 +90,7 @@ export function asyncGetUserEdits() {
         currentUserObject.workedProjects,
         projectId
       );
+
       if (userEditId !== undefined) {
         dispatch(asyncLoadUserEdits(projectId, userEditId));
       } else {
@@ -97,20 +98,6 @@ export function asyncGetUserEdits() {
       }
     }
   };
-}
-
-function getUserEditIdFromProjectId(
-  workedProjects: Hash<string>[],
-  projectId: string
-): string | undefined {
-  let matches: string[] = Object.keys(workedProjects).filter(
-    project => projectId === project
-  );
-  if (matches.length !== 0 && matches.length < 2) {
-    return matches[0];
-  } else {
-    console.log("No projects exist");
-  }
 }
 
 export function asyncAddGoalToHistory(goal: Goal) {
@@ -159,9 +146,19 @@ export function getUserEditId(): string | undefined {
       userObject.workedProjects,
       projectId
     );
-    // userEditId = userObject.workedProjects[projectId];
   }
   return userEditId;
+}
+
+function getUserEditIdFromProjectId(
+  workedProjects: { [key: string]: string },
+  projectId: string
+): string | undefined {
+  let projectIds = Object.keys(workedProjects);
+  let matches: string[] = projectIds.filter(project => projectId === project);
+  if (matches.length !== 0 && matches.length < 2) {
+    return workedProjects[matches[0]];
+  }
 }
 
 function updateUserIfExists(projectId: string, userEditId: string): User {
@@ -185,7 +182,7 @@ function updateUserWithUserEditId(
   userEditId: string
 ): string {
   let currentUserObject: User = JSON.parse(userObjectString);
-  currentUserObject = updateWorkedProjectsWithUserEditId(
+  currentUserObject = addProjectToWorkedProjects(
     currentUserObject,
     projectId,
     userEditId
@@ -194,16 +191,12 @@ function updateUserWithUserEditId(
   return updatedUserString;
 }
 
-function updateWorkedProjectsWithUserEditId(
+function addProjectToWorkedProjects(
   user: User,
   projectId: string,
   userEditId: string
 ): User {
-  let results: string[] = Object.keys(user.workedProjects)
-    .filter(project => projectId === project)
-    .map(userEdit => (userEdit = userEditId));
-  // currentUserObject.workedProjects[projectId] = userEditId;
-  console.log(results);
+  user.workedProjects[projectId] = userEditId;
   return user;
 }
 
