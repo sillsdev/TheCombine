@@ -81,6 +81,7 @@ namespace BackendFramework.Controllers
                 var pathToExtracted = postExportDirList.Except(preExportDirList).ToList();
                 string extractedDirPath = null;
 
+                var reg = new Regex("__MACOSX$");
                 if (pathToExtracted.Count == 1)
                 {
                     extractedDirPath = pathToExtracted.FirstOrDefault();
