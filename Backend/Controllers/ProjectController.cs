@@ -77,8 +77,7 @@ namespace BackendFramework.Controllers
                 {
                     return new OkObjectResult(project.Id);
                 }
-                Response.StatusCode = 304;
-                return Content("");
+                return new StatusCodeResult(304);
             }
             catch
             {
