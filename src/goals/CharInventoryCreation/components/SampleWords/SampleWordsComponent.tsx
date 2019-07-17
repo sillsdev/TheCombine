@@ -16,9 +16,8 @@ export interface SampleWordsProps {
 
 interface SampleWordsState {
   words: string[];
-  dragChar: string;
-  dropChar: string;
   ignoreList: string[]; // A list of words we don't want to see right now
+  hoverWord: number | null;
 }
 
 export class SampleWords extends React.Component<
@@ -29,9 +28,8 @@ export class SampleWords extends React.Component<
     super(props);
     this.state = {
       words: [],
-      dragChar: "",
-      dropChar: "",
-      ignoreList: []
+      ignoreList: [],
+      hoverWord: null
     };
     this.canGetWords = true;
   }
@@ -57,9 +55,7 @@ export class SampleWords extends React.Component<
     this.canGetWords = false;
   }
 
-  /**
-   * Gets the words that don't fit the character inventory
-   */
+  /** Gets the words that don't fit the character inventory */
   getWords() {
     const NUM_WORDS = 5; // The max number of words we want to display on the page
 
@@ -126,6 +122,9 @@ export class SampleWords extends React.Component<
             allCharacters={this.props.allCharacters}
             addToCharSet={word => this.addToCharSet(word)}
             addWordToIgnoreList={word => this.addWordToIgnoreList(word)}
+            hover={this.state.hoverWord === index}
+            setHover={() => this.setState({ hoverWord: index })}
+            unsetHover={() => this.setState({ hoverWord: null })}
           />
         ))}
         <Grid item xs={12} />

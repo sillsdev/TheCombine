@@ -1,15 +1,8 @@
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import {
-  Grid,
-  Paper,
-  IconButton,
-  Tooltip,
-  Typography,
-  Chip
-} from "@material-ui/core";
+import { Grid, IconButton, Tooltip, Typography, Chip } from "@material-ui/core";
 import BlockIcon from "@material-ui/icons/Block";
-import { Add, Block } from "@material-ui/icons";
+import { Add } from "@material-ui/icons";
 import { greenHighlight } from "../../../../types/theme";
 
 const TRANSITION =
@@ -20,11 +13,12 @@ export interface WordTileProps {
   allCharacters: string[]; // valid and rejected
   addToCharSet: (chars: string) => void;
   addWordToIgnoreList: (word: string) => void;
+  hover: Boolean;
+  setHover: () => void;
+  unsetHover: () => void;
 }
 
-export interface WordTileState {
-  hover: Boolean;
-}
+export interface WordTileState {}
 
 export class WordTile extends React.Component<
   WordTileProps & LocalizeContextProps,
@@ -32,7 +26,6 @@ export class WordTile extends React.Component<
 > {
   constructor(props: WordTileProps & LocalizeContextProps) {
     super(props);
-    this.state = { hover: false };
     this.newCharacters = "";
   }
 
@@ -45,7 +38,7 @@ export class WordTile extends React.Component<
       <Grid item key={word}>
         <Chip
           style={
-            this.state.hover
+            this.props.hover
               ? {
                   transition: TRANSITION,
                   borderColor: "#ccc"
@@ -65,7 +58,7 @@ export class WordTile extends React.Component<
             >
               <IconButton
                 style={
-                  this.state.hover
+                  this.props.hover
                     ? {
                         transition: TRANSITION,
                         opacity: 1
@@ -84,8 +77,8 @@ export class WordTile extends React.Component<
               </IconButton>
             </Tooltip>
           }
-          onMouseEnter={() => this.setState({ hover: true })}
-          onMouseLeave={() => this.setState({ hover: false })}
+          onMouseEnter={() => this.props.setHover()}
+          onMouseLeave={() => this.props.unsetHover()}
           variant="outlined"
           deleteIcon={
             <Tooltip
@@ -96,7 +89,7 @@ export class WordTile extends React.Component<
               }
               placement="top"
               style={
-                this.state.hover
+                this.props.hover
                   ? {
                       transition: TRANSITION,
                       opacity: 1
