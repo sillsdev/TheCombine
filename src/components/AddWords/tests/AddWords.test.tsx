@@ -18,6 +18,14 @@ import { GoalSelectorState } from "../../../types/goals";
 import axios from "axios";
 import { Word } from "../../../types/word";
 
+jest.mock("@material-ui/core", () => {
+  const material = jest.requireActual("@material-ui/core");
+  return {
+    ...material,
+    Dialog: material.Box
+  };
+});
+
 let master: renderer.ReactTestRenderer;
 let handle: renderer.ReactTestInstance;
 

@@ -13,16 +13,19 @@ import endcapL from "../../resources/tree/leftEndcap.svg";
 import endcapR from "../../resources/tree/rightEndcap.svg";
 import span from "../../resources/tree/span.svg";
 import pillar from "../../resources/tree/pillar.svg";
-import teeUp from "../../resources/tree/teeUp.svg";
+import parent from "../../resources/tree/parent.svg";
+import teeUpLeft from "../../resources/tree/teeUpLeft.svg";
+import teeUpRight from "../../resources/tree/teeUpRight.svg";
 import teeDown from "../../resources/tree/teeDown.svg";
 import intersect from "../../resources/tree/intersect.svg";
+import TreeViewHeader from "./TreeViewHeader";
 
-const MAX_TILE_WIDTH = 150;
-const MIN_TILE_WIDTH = 50;
+export const MAX_TILE_WIDTH = 150;
+export const MIN_TILE_WIDTH = 75;
 
 interface TreeDepictionProps {
   currentDomain: SemanticDomain;
-  animate: (domain: SemanticDomain) => void;
+  animate: (domain: SemanticDomain) => Promise<void>;
 }
 
 interface TreeDepictionState {
@@ -74,20 +77,6 @@ export default class TreeDepiction extends React.Component<
       this.setState({ tileWidth: tileWidth });
   }
 
-  // Renders the parent domain + a dash down to the domain below
-  parentDomain(): ReactNode {
-    if (this.props.currentDomain.parentDomain)
-      return (
-        <GridList cols={1}>
-          {this.treeTile(pillar)}
-          <GridListTile>
-            {this.nameTile(this.props.currentDomain.parentDomain)}
-          </GridListTile>
-        </GridList>
-      );
-    else return <div />;
-  }
-
   // Renders the subdomains + their connectors to the current domain
   subDomains(): ReactNode {
     let subDomains: SemanticDomain[] = this.props.currentDomain.subDomains;
@@ -95,7 +84,7 @@ export default class TreeDepiction extends React.Component<
       return (
         <GridList
           cols={this.props.currentDomain.subDomains.length * 2 - 1} // # of cells across the joist is
-          cellHeight={this.state.tileWidth}
+          cellHeight={"auto"}
           spacing={0}
           style={{
             width:
@@ -120,12 +109,10 @@ export default class TreeDepiction extends React.Component<
       return (
         <GridList
           cols={1}
-          cellHeight={this.state.tileWidth}
           spacing={0}
+          cellHeight={"auto"}
           style={{
-            width:
-              (this.props.currentDomain.subDomains.length * 2 - 1) *
-              this.state.tileWidth
+            width: this.state.tileWidth
           }}
         >
           <GridListTile>{this.nameTile(subDomains[0])}</GridListTile>
@@ -146,18 +133,25 @@ export default class TreeDepiction extends React.Component<
     else middleElement = intersect;
 
     // Add elements on left, then the center, then the right
-    this.halfJoist(half, row, true);
+    this.halfJoist(half, row, true, true);
     row[half] = this.treeTile(middleElement);
-    this.halfJoist(half, row, middleElement === intersect);
+    this.halfJoist(half, row, middleElement === intersect, false);
 
     return row;
   }
 
   // Helper function for joistRow: creates an alternating pattern of tees and spans, based on an initial starting type
-  halfJoist(half: number, row: ReactNode[], startWithSpan: boolean) {
+  halfJoist(
+    half: number,
+    row: ReactNode[],
+    startWithSpan: boolean,
+    right: boolean
+  ) {
     let valForSpan: number = startWithSpan ? 0 : 1;
     for (let count: number = 0; count < half; count++) {
-      row.push(this.treeTile(count % 2 === valForSpan ? span : teeUp));
+      if (count % 2 !== valForSpan)
+        row.push(this.treeTile(right ? teeUpRight : teeUpLeft));
+      else row.push(this.treeTile(span));
     }
   }
 
@@ -184,16 +178,19 @@ export default class TreeDepiction extends React.Component<
   }
 
   // Creates a semantic domain tile, which (if navigable) can be clicked on to navigate to that semantic domain
-  nameTile(domain: SemanticDomain, currentDomain: boolean = true): ReactNode {
+  nameTile(domain: SemanticDomain): ReactNode {
     return (
       <Button
         id={domain.number}
         color={"primary"}
-        variant={currentDomain ? "contained" : "outlined"}
-        disabled={!currentDomain && !this.props.currentDomain.parentDomain}
+        variant={"outlined"}
+        disabled={
+          !this.props.currentDomain.parentDomain &&
+          this.props.currentDomain === domain
+        }
         style={{
           left: 0,
-          top: 0,
+          bottom: 0,
           width: "90%",
           height: "90%",
           margin: "5%"
@@ -202,9 +199,9 @@ export default class TreeDepiction extends React.Component<
           this.props.animate(domain);
         }}
       >
-        <div>
-          <Typography variant={"h5"}>{domain.name}</Typography>
-          <Typography variant={"h6"}>{domain.number}</Typography>
+        <div style={{ textTransform: "capitalize" }}>
+          <Typography variant={"overline"}>{domain.number}</Typography>
+          <Typography variant={"body1"}>{domain.name}</Typography>
         </div>
       </Button>
     );
@@ -228,25 +225,32 @@ export default class TreeDepiction extends React.Component<
     return (
       <React.Fragment>
         {/* Label next options, if applicable */}
-        <Grid item xs>
+        <Grid item>
           {this.props.currentDomain.subDomains.length > 0 && this.subDomains()}
         </Grid>
-        <div
-          style={{
-            marginLeft:
-              Math.max(this.props.currentDomain.subDomains.length - 1, 0) *
-              this.state.tileWidth
-          }}
-        >
-          {/* Label current domain */}
-          <Grid item xs style={{ width: this.state.tileWidth }}>
-            {this.nameTile(this.props.currentDomain, false)}
-          </Grid>
-          {/* Optionally create the header for the parent domain */}
-          <Grid item xs style={{ width: this.state.tileWidth }}>
-            {this.props.currentDomain.parentDomain && this.parentDomain()}
-          </Grid>
-        </div>
+        {/* Label current domain */}
+        <Grid item>
+          <TreeViewHeader
+            currentDomain={this.props.currentDomain}
+            animate={this.props.animate}
+          />
+        </Grid>
+        {/* Optionally create the header for the parent domain */}
+        <Grid item>
+          {this.props.currentDomain.parentDomain && (
+            <GridList
+              cols={1}
+              spacing={0}
+              style={{ width: this.state.tileWidth }}
+              cellHeight="auto"
+            >
+              {this.treeTile(parent)}
+              <GridListTile>
+                {this.nameTile(this.props.currentDomain.parentDomain)}
+              </GridListTile>
+            </GridList>
+          )}
+        </Grid>
       </React.Fragment>
     );
   }

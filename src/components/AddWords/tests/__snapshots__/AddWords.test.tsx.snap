@@ -62,6 +62,9 @@ exports[`Tests AddWords Constructs correctly 1`] = `
             />
           </svg>
         </span>
+        <span
+          className="MuiTouchRipple-root"
+        />
       </button>
     </h4>
     <hr
@@ -279,9 +282,22 @@ exports[`Tests AddWords Constructs correctly 1`] = `
           >
             Missing translationId: addWords.next for language: \${ languageCode }
           </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
         </button>
       </div>
     </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-267"
+    fullScreen={true}
+    open={false}
+  >
+    <div
+      className="MuiContainer-root MuiContainer-maxWidthLg"
+      returnControlToCaller={[Function]}
+    />
   </div>
 </div>
 `;
