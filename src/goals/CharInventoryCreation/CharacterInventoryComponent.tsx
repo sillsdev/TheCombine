@@ -21,9 +21,12 @@ import { Save } from "@material-ui/icons";
 import history from "../../history";
 
 export interface CharacterInventoryProps {
-  setInventory: (inventory: string[]) => void;
+  addToValidCharacters: (chars: string[]) => void;
+  setValidCharacters: (inventory: string[]) => void;
+  setRejectedCharacters: (inventory: string[]) => void;
   uploadInventory: () => void;
-  inventory: string[];
+  validCharacters: string[];
+  rejectedCharacters: string[];
   currentProject: Project;
   translate: TranslateFunction;
 }
@@ -42,7 +45,10 @@ export class CharacterInventory extends React.Component<
   constructor(props: CharacterInventoryProps & LocalizeContextProps) {
     super(props);
     // Load inventory from server
-    this.props.setInventory(this.props.currentProject.characterSet);
+    this.props.setValidCharacters(this.props.currentProject.validCharacters);
+    this.props.setRejectedCharacters(
+      this.props.currentProject.rejectedCharacters
+    );
     this.state = { cancelDialogOpen: false };
   }
 
@@ -59,19 +65,23 @@ export class CharacterInventory extends React.Component<
           spacing={2}
           style={{ background: "#fff" }}
         >
-          <Grid item sm={6} xs={12}>
+          <Grid item sm={9} xs={12} style={{ borderRight: "1px solid #ccc" }}>
             <CharacterSet
-              setInventory={this.props.setInventory}
-              inventory={this.props.inventory}
+              setValidCharacters={this.props.setValidCharacters}
+              validCharacters={this.props.validCharacters}
+              setRejectedCharacters={this.props.setRejectedCharacters}
+              rejectedCharacters={this.props.rejectedCharacters}
             />
           </Grid>
-          <Grid item sm={6} xs={12}>
+          <Grid item sm={3} xs={12}>
             <SampleWords
-              setInventory={this.props.setInventory}
-              inventory={this.props.inventory}
+              addToValidCharacters={this.props.addToValidCharacters}
+              allCharacters={this.props.validCharacters.concat(
+                this.props.rejectedCharacters
+              )}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} style={{ borderTop: "1px solid #ccc" }}>
             {/* submission buttons */}
             <Grid container justify="center">
               <Button
