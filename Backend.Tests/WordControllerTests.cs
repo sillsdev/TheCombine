@@ -50,7 +50,7 @@ namespace Backend.Tests
                 foreach(SemanticDomain semdom in sense.SemanticDomains)
                 {
                     semdom.Name = Util.randString();
-                    semdom.Number = Util.randString();
+                    semdom.Id = Util.randString();
                 }
             }
 
