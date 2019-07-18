@@ -82,7 +82,6 @@ function asyncCreateNewUserEditsObject(projectId: string) {
   };
 }
 
-// WRITE UNIT TESTS FOR THIS
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     let currentUserString = localStorage.getItem("user");
@@ -106,10 +105,8 @@ export function asyncGetUserEdits() {
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: Dispatch<GoalAction>) => {
     let user: User | undefined = getUser();
-    console.log(user);
     if (user !== undefined) {
       let userEditId: string | undefined = getUserEditId(user);
-      console.log(userEditId);
       if (userEditId !== undefined) {
         await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
         await backend
