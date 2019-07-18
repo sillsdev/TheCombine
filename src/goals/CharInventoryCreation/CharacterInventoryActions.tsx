@@ -8,13 +8,14 @@ import {
   updateGoal,
   getUserEditId,
   getIndexInHistory,
-  GoalAction
+  GoalAction,
+  getUser
 } from "../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
 import * as backend from "../../backend";
 import { Goal } from "../../types/goals";
-import { UserProjectMap } from "../../components/Project/UserProject";
 import { Project } from "../../types/project";
+import { User } from "../../types/user";
 
 export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
 export type SET_CHARACTER_INVENTORY = typeof SET_CHARACTER_INVENTORY;
@@ -62,18 +63,18 @@ async function saveChangesToGoal(
   history: Goal[],
   dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
-  let projectId: string = backend.getProjectId();
-  let userEditId: string = getUserEditId();
-  let userProjectMap: UserProjectMap = {
-    projectId: projectId,
-    userEditId: userEditId
-  };
-  let indexInHistory: number = getIndexInHistory(history, updatedGoal);
+  let user: User | undefined = getUser();
+  if (user !== undefined) {
+    let userEditId: string | undefined = getUserEditId(user);
+    if (userEditId !== undefined) {
+      let indexInHistory: number = getIndexInHistory(history, updatedGoal);
 
-  dispatch(updateGoal(updatedGoal));
-  await backend
-    .addStepToGoal(userProjectMap, indexInHistory, updatedGoal)
-    .catch((err: string) => console.log(err));
+      dispatch(updateGoal(updatedGoal));
+      await backend
+        .addStepToGoal(userEditId, indexInHistory, updatedGoal)
+        .catch((err: string) => console.log(err));
+    }
+  }
 }
 
 async function saveChangesToProject(

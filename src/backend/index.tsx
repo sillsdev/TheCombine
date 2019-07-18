@@ -6,7 +6,6 @@ import { authHeader } from "../components/Login/AuthHeaders";
 import { Goal, GoalType } from "../types/goals";
 import { UserEdit } from "../types/userEdit";
 import history from "../history";
-import { UserProjectMap } from "../components/Project/UserProject";
 import SemanticDomain from "../components/TreeView/SemanticDomain";
 
 const backendServer = axios.create({
@@ -156,6 +155,17 @@ export async function getAllProjects(): Promise<Project[]> {
   return resp.data;
 }
 
+export async function getAllProjectsByUser(user: User): Promise<Project[]> {
+  let projectIds: string[] = Object.keys(user.workedProjects);
+  let projects: Project[] = [];
+  for (let projectId of projectIds) {
+    await getProject(projectId).then(project => {
+      projects.push(project);
+    });
+  }
+  return projects;
+}
+
 export async function getProject(id: string): Promise<Project> {
   let resp = await backendServer.get(`projects/${id}`, {
     headers: authHeader()
@@ -206,8 +216,9 @@ export async function addGoalToUserEdit(
   let goalType: string = goalNameToGoalTypeId(goal.name);
   let stepData: string = JSON.stringify(goal.steps);
   let userEditTuple = { goalType: goalType, stepData: [stepData] };
+  let projectId: string = getProjectId();
   let resp = await backendServer.post(
-    `projects/${getProjectId()}/useredits/${userEditId}`,
+    `projects/${projectId}/useredits/${userEditId}`,
     userEditTuple,
     {
       headers: { ...authHeader() }
@@ -217,13 +228,11 @@ export async function addGoalToUserEdit(
 }
 
 export async function addStepToGoal(
-  userProjectMap: UserProjectMap,
+  userEditId: string,
   indexInHistory: number,
   goal: Goal
 ): Promise<Goal> {
   let stepData: string = JSON.stringify(goal.steps);
-  let userEditId: string = userProjectMap.userEditId;
-  let projId: string = userProjectMap.projectId;
   let userEditTuple = { goalIndex: indexInHistory, newEdit: stepData };
   return await backendServer
     .put(`projects/${getProjectId()}/useredits/${userEditId}`, userEditTuple, {
