@@ -14,7 +14,7 @@ using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}")]
     public class LiftController : Controller
