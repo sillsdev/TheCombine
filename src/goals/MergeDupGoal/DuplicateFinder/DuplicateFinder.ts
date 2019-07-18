@@ -10,7 +10,8 @@ export interface FinderParams {
   insCost: number;
   delCost: number;
   qualVal: number;
-  filterAt: number;
+  bitfilterAt: number;
+  lengthFilter: number;
 }
 
 //use spread operator on default params to assign to parameters
@@ -22,7 +23,8 @@ export const DefaultParams: FinderParams = {
   insCost: 2,
   delCost: 2,
   qualVal: 0,
-  filterAt: 3
+  bitfilterAt: 3,
+  lengthFilter: 2
 };
 
 export interface ScoredWord {
@@ -60,7 +62,9 @@ export default class DupFinder {
     this.deletionCost = params.delCost;
     this.subsitutionCost = params.subCost;
 
-    this.filterAt = params.filterAt;
+    this.lengthFilter = params.lengthFilter;
+
+    this.bitfilterAt = params.bitfilterAt;
     this.vernmap = new Set();
     this.glossmap = new Set();
     this.maskedWords = [];
@@ -77,6 +81,7 @@ export default class DupFinder {
   //output content thresholds
   maxScore: number;
   maxCount: number;
+  lengthFilter: number;
 
   //Levenshtein settings
   insertionCost: number;
@@ -84,7 +89,7 @@ export default class DupFinder {
   subsitutionCost: number;
 
   //bitmap filtering
-  filterAt: number;
+  bitfilterAt: number;
   vernmap: Set<string>;
   glossmap: Set<string>;
   maskedWords: MaskedWord[];
@@ -301,7 +306,7 @@ export default class DupFinder {
     if (
       this.calculateMaskScore(a.vernMask & ~b.vernMask) +
         this.calculateMaskScore(b.vernMask & ~a.vernMask) <
-      this.filterAt * 2
+      this.bitfilterAt * 2
     )
       return true;
 
@@ -310,7 +315,7 @@ export default class DupFinder {
         if (
           this.calculateMaskScore(agloss & ~bgloss) +
             this.calculateMaskScore(bgloss & ~agloss) <
-          this.filterAt * 2
+          this.bitfilterAt * 2
         )
           return true;
       });
@@ -342,7 +347,10 @@ export default class DupFinder {
 
     //filter based on word length - may not be worth the computation time
     bitFilteredWords.forEach(word => {
-      if (Math.abs(parent.word.vernacular.length - word.vernacular.length) < 2)
+      if (
+        Math.abs(parent.word.vernacular.length - word.vernacular.length) <
+        this.lengthFilter
+      )
         filteredWords.push(word);
     });
 
