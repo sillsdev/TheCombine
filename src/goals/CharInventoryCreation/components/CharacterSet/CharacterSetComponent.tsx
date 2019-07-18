@@ -217,6 +217,7 @@ export class CharacterSet extends React.Component<
             {/* Input for accepted characters */}
             <Grid item xs={12}>
               <TextField
+                id="valid-characters-input"
                 value={this.props.validCharacters.join("")}
                 fullWidth
                 variant="outlined"
@@ -241,6 +242,7 @@ export class CharacterSet extends React.Component<
             {/* Input for rejected characters */}
             <Grid item xs={12} style={{ background: "whitesmoke" }}>
               <TextField
+                id="rejected-characters-input"
                 value={this.props.rejectedCharacters.join("")}
                 fullWidth
                 variant="outlined"

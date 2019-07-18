@@ -1,10 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import { StoreState } from "../../../../../types";
 import { act } from "react-dom/test-utils";
 
-import { Project } from "../../../../../types/project";
 import { CharacterSet as CharSetClass } from "../CharacterSetComponent";
 import CharacterSet from "../";
 
@@ -23,8 +21,8 @@ jest.mock("react-localize-redux", () => {
 });
 
 // Constants
-const SET_INV = jest.fn();
-const DATA = "dat";
+const SET_VALID_CHARS = jest.fn();
+const SET_REJECT_CHARS = jest.fn();
 
 // Handles
 var charMaster: ReactTestRenderer;
@@ -40,7 +38,8 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  SET_INV.mockClear();
+  SET_VALID_CHARS.mockClear();
+  SET_VALID_CHARS.mockClear();
 
   // Reset tree
   charHandle.setState(originalState);
@@ -50,136 +49,71 @@ describe("Tests characterInventoryComponent", () => {
   it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
-      <CharacterSet validCharacters={[]} setValidCharacters={SET_INV} />,
+      <CharacterSet
+        validCharacters={[]}
+        setValidCharacters={SET_VALID_CHARS}
+        setRejectedCharacters={SET_REJECT_CHARS}
+        rejectedCharacters={[]}
+      />,
       div
     );
     ReactDOM.unmountComponentAtNode(div);
   });
 
   // Add chars tests
-  it("Adds single character", () => {
-    testAddCharsWith("w");
+  it("adds single character to valid characters", () => {
+    testValidCharsInputWith("w");
   });
 
-  it("Adds multiple characters", () => {
-    testAddCharsWith("asdf");
+  it("adds multiple characters to valid characters", () => {
+    testValidCharsInputWith("asdf");
   });
 
-  it("Adds multiple non-latin characters", () => {
-    testAddCharsWith("ʔʃжψض");
+  it("adds multiple non-latin characters to valid characters", () => {
+    testValidCharsInputWith("ʔʃжψض");
   });
 
-  // it("Appends data to the end of the list", () => {
-  //   createTree(["y", "a"]);
-  //   charHandle.setState({ chars: "ck" });
-  //   charHandle.addChars();
-  //   expect(SET_INV).toHaveBeenCalledWith(["y", "a", "c", "k"]);
-  // });
-
-  // it("Errors out when attempting to call addChars without any data", () => {
-  //   charHandle.setState({ chars: "" });
-  //   charHandle.addChars();
-
-  //   expect(SET_INV).toHaveBeenCalledTimes(0);
-  //   expect(charHandle.state.textboxError).toBeTruthy();
-  //   expect(charHandle.state.chars).toEqual("");
-  // });
-
-  // Handle change tests
-  it("Clears error + adds chars when calling handleChange", () => {
-    charHandle.setState({ chars: "", textboxError: true });
-    charHandle.handleChange({ target: { value: DATA } } as any);
-
-    expect(charHandle.state.chars).toBe(DATA);
-    expect(charHandle.state.textboxError).toBeFalsy();
+  it("adds single character to rejected characters", () => {
+    testRejectedCharsInputWith("w");
   });
 
-  it("Removes whitespace on addChars", () => {
-    charHandle.handleChange({ target: { value: DATA + " \n\t" } } as any);
-    expect(charHandle.state.chars).toBe(DATA);
+  it("adds multiple characters to rejected characters", () => {
+    testRejectedCharsInputWith("asdf");
   });
 
-  // // Handle key down tests
-  // it("Calls addChars properly on handleKeyDown", () => {
-  //   // Temporarily mock out addChars
-  //   const REAL = CharSetClass.prototype.addChars;
-  //   const MOCK = jest.fn();
-  //   CharSetClass.prototype.addChars = MOCK;
+  it("adds multiple non-latin characters to rejected characters", () => {
+    testRejectedCharsInputWith("ʔʃжψض");
+  });
 
-  //   // Test
-  //   charHandle.handleKeyDown({ key: "Not enter" } as any);
-  //   expect(MOCK).toHaveBeenCalledTimes(0);
-  //   MOCK.mockClear();
-
-  //   charHandle.handleKeyDown({ key: "Enter" } as any);
-  //   expect(MOCK).toHaveBeenCalledTimes(1);
-
-  //   // Fix CharSetClass
-  //   CharSetClass.prototype.addChars = REAL;
-  // });
+  // Character input tests
 
   // moveChar
-
-  // toggleSelected test
-  it("Toggles an unselected char", () => {
-    charHandle.toggleSelected("a");
-    expect(charHandle.state.selected).toEqual(["a"]);
-  });
-
-  it("Un-toggles a selected char", () => {
-    charHandle.setState({ selected: ["a"] });
-    charHandle.toggleSelected("a");
-    expect(charHandle.state.selected).toEqual([]);
-  });
-
-  it("Un-toggles a selected char without removing other chars", () => {
-    charHandle.setState({ selected: ["a", "v"] });
-    charHandle.toggleSelected("a");
-    expect(charHandle.state.selected).toEqual(["v"]);
-  });
-
-  // // deleteSelected test
-  // it("Deletes a selected char", () => {
-  //   // Setup
-  //   createTree(["q", "w", "e", "r", "t", "y"]);
-  //   charHandle.setState({
-  //     selected: ["q", "e", "r", "y"]
-  //   });
-
-  //   charHandle.deleteSelected();
-  //   expect(SET_INV).toHaveBeenCalledWith(["w", "t"]);
-
-  //   // Cleanup
-  //   createTree([]);
-  // });
-
-  // moveChar
-  it("Does nothing with a drag and drop equal to the same char", () => {
+  it("does nothing with a drag and drop equal to the same char", () => {
     var char: string = "a";
     createTree([char, "+", char]);
     charHandle.setState({ dragChar: char, dropChar: char });
     charHandle.moveChar();
-    expect(SET_INV).toHaveBeenCalledTimes(0);
+    expect(SET_VALID_CHARS).toHaveBeenCalledTimes(0);
     createTree([]);
   });
 
-  it("Re-arranges the list upon drag: dragIndex < dropIndex", () => {
+  it("re-arranges the list upon drag: dragIndex < dropIndex", () => {
     var drag: string = "a";
     var drop: string = "b";
     createTree([drag, "+", drop]);
     charHandle.setState({ dragChar: drag, dropChar: drop });
     charHandle.moveChar();
-    expect(SET_INV).toHaveBeenCalledWith(["+", drag, drop]);
+    expect(SET_VALID_CHARS).toHaveBeenCalledWith(["+", drag, drop]);
     createTree([]);
   });
 
-  it("Re-arranges the list upon drag: dragIndex > dropIndex", () => {
+  it("re-arranges the list upon drag: dragIndex > dropIndex", () => {
     var drag: string = "a";
     var drop: string = "b";
     createTree([drop, "+", drag]);
     charHandle.setState({ dragChar: drag, dropChar: drop });
     charHandle.moveChar();
-    expect(SET_INV).toHaveBeenCalledWith([drag, drop, "+"]);
+    expect(SET_VALID_CHARS).toHaveBeenCalledWith([drag, drop, "+"]);
     createTree([]);
   });
 });
@@ -187,28 +121,25 @@ describe("Tests characterInventoryComponent", () => {
 function createTree(inventory: string[]) {
   act(() => {
     charMaster = renderer.create(
-      <CharacterSet validCharacters={inventory} setValidCharacters={SET_INV} />
+      <CharacterSet
+        validCharacters={inventory}
+        setValidCharacters={SET_VALID_CHARS}
+        setRejectedCharacters={SET_REJECT_CHARS}
+        rejectedCharacters={[]}
+      />
     );
   });
   charHandle = charMaster.root.findByType(CharSetClass).instance;
 }
 
-function testAddCharsWith(data: string) {
-  charHandle.setState({ chars: data });
-  charHandle.addChars();
-
-  expect(SET_INV).toHaveBeenCalledWith(data.split(""));
-  expect(charHandle.state.chars).toEqual("");
+function testValidCharsInputWith(data: string) {
+  let input = charMaster.root.findByProps({ id: "valid-characters-input" });
+  input.props.onChange({ target: { value: data } });
+  expect(SET_VALID_CHARS).toHaveBeenCalledWith(data.split(""));
 }
 
-function dragAndDropChar(
-  drag: string,
-  drop: string,
-  resultantInventory: any[]
-) {
-  createTree([drag, "+", drop]);
-  charHandle.setState({ dragChar: drag, dropChar: drop });
-  charHandle.moveChar();
-  expect(SET_INV).toHaveBeenCalledWith(resultantInventory);
-  createTree([]);
+function testRejectedCharsInputWith(data: string) {
+  let input = charMaster.root.findByProps({ id: "rejected-characters-input" });
+  input.props.onChange({ target: { value: data } });
+  expect(SET_REJECT_CHARS).toHaveBeenCalledWith(data.split(""));
 }
