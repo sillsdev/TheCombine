@@ -49,9 +49,12 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  mockStore.clearActions();
+});
+
+afterAll(() => {
   if (oldUser) localStorage.setItem("user", oldUser);
   if (oldProjectId) localStorage.setItem("projectId", oldProjectId);
-  mockStore.clearActions();
 });
 
 describe("Testing CharacterInventoryActions", () => {
