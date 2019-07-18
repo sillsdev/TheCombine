@@ -5,7 +5,8 @@ import {
   RESET,
   CreateProjectAction
 } from "./CreateProjectActions";
-import { Project } from "../../types/project";
+import { Project } from "../../../types/project";
+import { StoreAction, StoreActions } from "../../../rootActions";
 
 export interface CreateProjectState {
   name: string;
@@ -24,7 +25,7 @@ export const defaultState: CreateProjectState = {
 
 export const createProjectReducer = (
   state: CreateProjectState = defaultState,
-  action: CreateProjectAction
+  action: StoreAction | CreateProjectAction
 ): CreateProjectState => {
   switch (action.type) {
     case IN_PROGRESS:
@@ -49,6 +50,8 @@ export const createProjectReducer = (
         errorMsg: action.payload.errorMsg || ""
       };
     case RESET:
+      return defaultState;
+    case StoreActions.RESET:
       return defaultState;
     default:
       return state;

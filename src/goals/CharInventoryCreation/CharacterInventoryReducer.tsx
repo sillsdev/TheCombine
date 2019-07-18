@@ -4,6 +4,7 @@ import {
   SET_REJECTED_CHARACTERS,
   ADD_TO_VALID_CHARACTERS
 } from "./CharacterInventoryActions";
+import { StoreActions, StoreAction } from "../../rootActions";
 
 export interface CharacterInventoryState {
   validCharacters: string[];
@@ -17,7 +18,7 @@ export const defaultState: CharacterInventoryState = {
 
 export const characterInventoryReducer = (
   state: CharacterInventoryState = defaultState,
-  action: CharacterInventoryAction
+  action: StoreAction | CharacterInventoryAction
 ): CharacterInventoryState => {
   let validCharacters: string[], rejectedCharacters: string[];
   switch (action.type) {
@@ -44,7 +45,8 @@ export const characterInventoryReducer = (
         char => !validCharacters.includes(char)
       );
       return { ...state, validCharacters: validCharacters, rejectedCharacters };
-
+    case StoreActions.RESET:
+      return defaultState;
     default:
       return state;
   }

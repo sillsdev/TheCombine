@@ -8,6 +8,7 @@ import {
   CharacterInventoryAction,
   SET_VALID_CHARACTERS
 } from "../CharacterInventoryActions";
+import { StoreActions, StoreAction } from "../../../rootActions";
 
 const DATA: string[] = ["a", "b"];
 const DATA2: string[] = ["c", "d"];
@@ -40,5 +41,15 @@ describe("Test Character Inventory Reducer", () => {
         payload: BAD_RESP
       } as CharacterInventoryAction)
     ).toEqual(inv);
+  });
+
+  it("Returns default state when passed reset action", () => {
+    let action: StoreAction = {
+      type: StoreActions.RESET
+    };
+
+    expect(
+      characterInventoryReducer({} as CharacterInventoryState, action)
+    ).toEqual(defaultState);
   });
 });

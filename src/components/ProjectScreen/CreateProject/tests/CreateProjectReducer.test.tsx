@@ -4,6 +4,7 @@ import {
   IN_PROGRESS,
   RESET
 } from "../CreateProjectActions";
+import { StoreActions, StoreAction } from "../../../../rootActions";
 
 const project = {
   name: "testProjectName",
@@ -11,7 +12,6 @@ const project = {
 };
 
 describe("createActionReducer Tests", () => {
-  let dummySt: reducer.CreateProjectState = reducer.defaultState;
   let resultState: reducer.CreateProjectState = {
     name: project.name,
     success: false,
@@ -35,8 +35,21 @@ describe("createActionReducer Tests", () => {
   });
 
   test("default state, expecting create project", () => {
-    expect(reducer.createProjectReducer(dummySt, inProgress)).toEqual(
-      resultState
-    );
+    expect(
+      reducer.createProjectReducer({} as reducer.CreateProjectState, inProgress)
+    ).toEqual(resultState);
+  });
+
+  test("non-default state, expecting default state", () => {
+    const resetAction: StoreAction = {
+      type: StoreActions.RESET
+    };
+
+    expect(
+      reducer.createProjectReducer(
+        {} as reducer.CreateProjectState,
+        resetAction
+      )
+    ).toEqual(reducer.defaultState);
   });
 });
