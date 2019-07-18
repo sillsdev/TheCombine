@@ -11,7 +11,8 @@ import {
   GridListTile,
   Paper,
   IconButton,
-  Typography
+  Typography,
+  Chip
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -166,6 +167,106 @@ class MergeDupStep extends React.Component<
     }
   }
 
+  renderSideBar() {
+    if (this.state.sideBar.senses.length > 1) {
+    } else {
+      return <div />;
+    }
+    return (
+      <Paper
+        square
+        style={{
+          float: "right",
+          position: "relative",
+          padding: 40,
+          height: "100%",
+          top: -8,
+          right: -8
+        }}
+      >
+        <IconButton
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: 0,
+            transform: "translateY(-50%)"
+          }}
+          onClick={() =>
+            this.setState({
+              ...this.state,
+              sideBar: { senseID: "", wordID: "", senses: [] }
+            })
+          }
+        >
+          <ArrowForwardIos />
+        </IconButton>
+        <Droppable
+          droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
+        >
+          {(providedDroppable, _snapshot) => (
+            <div
+              ref={providedDroppable.innerRef}
+              {...providedDroppable.droppableProps}
+              style={{
+                width: 250
+              }}
+            >
+              <Typography variant="h5">
+                {this.props.words[this.state.sideBar.wordID].vern}
+              </Typography>
+              {this.state.sideBar.senses.map((entry, index) => (
+                <Draggable
+                  draggableId={JSON.stringify({
+                    word: this.state.sideBar.wordID,
+                    sense: this.state.sideBar.senseID,
+                    duplicate: entry.id
+                  })}
+                  index={index}
+                >
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <Card
+                        style={{
+                          marginBottom: 8,
+                          marginTop: 8,
+                          background: snapshot.isDragging
+                            ? "lightgreen"
+                            : "white"
+                        }}
+                      >
+                        <CardContent>
+                          <Typography variant={"h5"}>
+                            {entry.data.glosses
+                              .map(gloss => gloss.def)
+                              .reduce((gloss, acc) => `${acc}, ${gloss}`)}
+                          </Typography>
+                          <Grid container spacing={2}>
+                            {entry.data.semanticDomains.map(semdom => (
+                              <Grid item xs>
+                                <Chip
+                                  label={`${semdom.name} ${semdom.number}`}
+                                />
+                              </Grid>
+                            ))}
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {providedDroppable.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </Paper>
+    );
+  }
+
   render() {
     let key = Object.keys(this.props.words).reduce(
       (key, acc) => `${key}:${acc}`,
@@ -177,82 +278,6 @@ class MergeDupStep extends React.Component<
     return (
       <Box style={{ maxHeight: "100%" }}>
         <DragDropContext onDragEnd={res => this.handleDrop(res)}>
-          {this.state.sideBar.senses.length > 1 && (
-            <Paper
-              square
-              style={{
-                float: "right",
-                position: "relative",
-                padding: 40
-              }}
-            >
-              <IconButton
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: 0,
-                  transform: "translateY(-50%)"
-                }}
-                onClick={() =>
-                  this.setState({
-                    ...this.state,
-                    sideBar: { senseID: "", wordID: "", senses: [] }
-                  })
-                }
-              >
-                <ArrowForwardIos />
-              </IconButton>
-              <Droppable
-                droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
-              >
-                {(providedDroppable, _snapshot) => (
-                  <div
-                    ref={providedDroppable.innerRef}
-                    {...providedDroppable.droppableProps}
-                  >
-                    {this.state.sideBar.senses.map((entry, index) => (
-                      <Draggable
-                        draggableId={JSON.stringify({
-                          word: this.state.sideBar.wordID,
-                          sense: this.state.sideBar.senseID,
-                          duplicate: entry.id
-                        })}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <Card
-                              style={{
-                                marginBottom: 8,
-                                marginTop: 8,
-                                background: snapshot.isDragging
-                                  ? "lightgreen"
-                                  : "white"
-                              }}
-                            >
-                              <CardContent>
-                                <Typography variant={"h5"}>
-                                  {entry.data.glosses
-                                    .map(gloss => gloss.def)
-                                    .reduce((gloss, acc) => `${acc}, ${gloss}`)}
-                                </Typography>
-                                semdom info
-                              </CardContent>
-                            </Card>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {providedDroppable.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </Paper>
-          )}
           {/* Merging pane */}
           <div
             style={{
@@ -262,6 +287,7 @@ class MergeDupStep extends React.Component<
               padding: 8
             }}
           >
+            {this.renderSideBar()}
             <GridList
               cellHeight="auto"
               cols={this.state.colCount}
