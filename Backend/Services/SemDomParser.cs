@@ -36,11 +36,11 @@ namespace BackendFramework.Services
             var sdOfShortLengthList = new List<SemanticDomainWithSubdomains>();
             var sdOfLongLengthList = new List<SemanticDomainWithSubdomains>();
             var returnList = new List<SemanticDomainWithSubdomains>();
-            int length = sdList[0].Number.Length;
+            int length = sdList[0].Id.Length;
 
             foreach (var sd in sdList)
             {
-                if (sd.Number.Length != length)
+                if (sd.Id.Length != length)
                 {
                     length += 2;
                     returnList.AddRange(sdOfShortLengthList);
@@ -56,7 +56,7 @@ namespace BackendFramework.Services
                     //find short length sd with same preceding number and add to children
                     foreach (var shortSd in sdOfShortLengthList)
                     {
-                        if (sd.Number.StartsWith(shortSd.Number))
+                        if (sd.Id.StartsWith(shortSd.Id))
                         {
                             shortSd.Subdomains.Add(sdToAdd);
                         }
@@ -71,10 +71,10 @@ namespace BackendFramework.Services
             public int Compare(SemanticDomain x, SemanticDomain y)
             {
                 //sorts semantic domains by length of number, then numerically
-                int lengthComparison = x.Number.Length.CompareTo(y.Number.Length);
+                int lengthComparison = x.Id.Length.CompareTo(y.Id.Length);
                 if (lengthComparison == 0)
                 {
-                    return x.Number.CompareTo(y.Number);
+                    return x.Id.CompareTo(y.Id);
                 }
                 else
                 {

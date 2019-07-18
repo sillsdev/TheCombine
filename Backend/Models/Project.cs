@@ -176,17 +176,14 @@ namespace BackendFramework.ValueModels
 
     public class SemanticDomainWithSubdomains
     {
-        [BsonElement("name")]
         public string Name;
-        [BsonElement("id")]
-        public string Number;
-        [BsonElement("subdomains")]
+        public string Id;
         public List<SemanticDomainWithSubdomains> Subdomains;
 
         public SemanticDomainWithSubdomains(SemanticDomain sd)
         {
             Name = sd.Name;
-            Number = sd.Number;
+            Id = sd.Id;
             Subdomains = new List<SemanticDomainWithSubdomains>();
         }
     }

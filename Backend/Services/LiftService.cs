@@ -247,7 +247,7 @@ namespace BackendFramework.Services
                 {
                     //add semantic domain
                     var orc = new OptionRefCollection();
-                    orc.Add(semdom.Number + " " + semdom.Name);
+                    orc.Add(semdom.Id + " " + semdom.Name);
 
                     entry.Senses[i].Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
 
@@ -366,7 +366,7 @@ namespace BackendFramework.Services
                     string[] words = SemanticDomainString.Split(" ");
 
                     SemanticDomain newSemanticDomain = new SemanticDomain();
-                    newSemanticDomain.Number = words[0];
+                    newSemanticDomain.Id = words[0];
 
                     for (int i = 1; i < words.Length - 1; i++)
                     {
@@ -512,7 +512,7 @@ namespace BackendFramework.Services
         {
             if (range == "semantic-domain-ddp4")
             {
-                sdList.Add(new SemanticDomain() { Name = label.First().Value.Text, Number = abbrev.First().Value.Text });
+                sdList.Add(new SemanticDomain() { Name = label.First().Value.Text, Id = abbrev.First().Value.Text });
             }
         }
     }
