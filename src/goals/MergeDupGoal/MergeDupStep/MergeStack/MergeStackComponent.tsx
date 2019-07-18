@@ -123,7 +123,6 @@ class MergeStack extends React.Component<
           .flat()
       )
     ];
-    console.log(glosses);
 
     let showMoreButton = Object.keys(this.props.sense).length > 1;
 

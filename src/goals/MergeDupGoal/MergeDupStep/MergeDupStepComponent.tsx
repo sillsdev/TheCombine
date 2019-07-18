@@ -98,7 +98,6 @@ class MergeDupStep extends React.Component<
   }
 
   updateWindowDimensions() {
-    console.log(window);
     this.setState({ ...this.state, colCount: window.innerWidth / 250 });
   }
 
@@ -168,10 +167,7 @@ class MergeDupStep extends React.Component<
   }
 
   renderSideBar() {
-    if (this.state.sideBar.senses.length > 1) {
-    } else {
-      return <div />;
-    }
+    if (this.state.sideBar.senses.length <= 1) return <div />;
     return (
       <Paper
         square
