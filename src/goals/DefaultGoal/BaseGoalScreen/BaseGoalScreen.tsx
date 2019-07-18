@@ -11,20 +11,51 @@ import CharInventoryCreation from "../../CharInventoryCreation";
 interface componentSteps {
   goal: GoalType;
   steps: JSX.Element[];
+  loadComponent: () => JSX.Element;
 }
 
 const stepComponentDictionary: componentSteps[] = [
-  { goal: GoalType.CreateCharInv, steps: [<CharInventoryCreation />] },
-  { goal: GoalType.ValidateChars, steps: [] },
-  { goal: GoalType.CreateStrWordInv, steps: [] },
-  { goal: GoalType.ValidateStrWords, steps: [] },
-  { goal: GoalType.MergeDups, steps: [<MergeDupStep />] },
-  { goal: GoalType.SpellcheckGloss, steps: [] },
-  { goal: GoalType.ViewFind, steps: [] },
-  { goal: GoalType.HandleFlags, steps: [] }
+  {
+    goal: GoalType.CreateCharInv,
+    steps: [<CharInventoryCreation />],
+    loadComponent: () => <CharInventoryCreation />
+  },
+  {
+    goal: GoalType.ValidateChars,
+    steps: [],
+    loadComponent: () => <EmptyGoalComponent />
+  },
+  {
+    goal: GoalType.CreateStrWordInv,
+    steps: [],
+    loadComponent: () => <EmptyGoalComponent />
+  },
+  {
+    goal: GoalType.ValidateStrWords,
+    steps: [],
+    loadComponent: () => <EmptyGoalComponent />
+  },
+  {
+    goal: GoalType.MergeDups,
+    steps: [<MergeDupStep />],
+    loadComponent: () => <MergeDupStep />
+  },
+  {
+    goal: GoalType.SpellcheckGloss,
+    steps: [],
+    loadComponent: () => <EmptyGoalComponent />
+  },
+  {
+    goal: GoalType.ViewFind,
+    steps: [],
+    loadComponent: () => <EmptyGoalComponent />
+  },
+  {
+    goal: GoalType.HandleFlags,
+    steps: [],
+    loadComponent: () => <EmptyGoalComponent />
+  }
 ];
-
-const completeGoals: GoalType[] = [GoalType.MergeDups, GoalType.CreateCharInv];
 
 class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
   renderGoal(goal: Goal): JSX.Element {
@@ -32,11 +63,7 @@ class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
       <div className="GoalDisplay content">
         <AppBarComponent />
         <DisplayProg />
-        {completeGoals.includes(goal.goalType) ? (
-          stepComponentDictionary[goal.goalType].steps[goal.currentStep]
-        ) : (
-          <EmptyGoalComponent />
-        )}
+        {stepComponentDictionary[goal.goalType].loadComponent()}
       </div>
     );
   }
