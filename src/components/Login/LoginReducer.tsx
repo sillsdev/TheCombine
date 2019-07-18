@@ -7,8 +7,10 @@ import {
   REGISTER_FAILURE,
   REGISTER_ATTEMPT,
   REGISTER_SUCCESS,
-  REGISTER_RESET
+  REGISTER_RESET,
+  LOGOUT
 } from "./LoginActions";
+import { StoreAction, StoreActions } from "../../rootActions";
 
 export interface LoginState {
   user: string;
@@ -32,7 +34,7 @@ export const defaultState: LoginState = {
 
 export const loginReducer = (
   state: LoginState = defaultState, //createStore() calls each reducer with undefined state
-  action: UserAction
+  action: StoreAction | UserAction
 ): LoginState => {
   switch (action.type) {
     case LOGIN_ATTEMPT:
@@ -81,6 +83,8 @@ export const loginReducer = (
         registerFailure: true
       };
     case LOGIN_RESET:
+    case LOGOUT:
+    case StoreActions.RESET:
     case REGISTER_RESET:
       return defaultState;
     default:

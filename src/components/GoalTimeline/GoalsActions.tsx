@@ -17,6 +17,7 @@ import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
+import { RESET } from "../ProjectScreen/CreateProject/CreateProjectActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -86,7 +87,7 @@ export function asyncGetUserEdits() {
       let projectId: string = backend.getProjectId();
       let userEditId: string | undefined =
         currentUserObject.workedProjects[projectId];
-      if (userEditId != undefined) {
+      if (userEditId !== undefined) {
         dispatch(asyncLoadUserEdits(projectId, userEditId));
       } else {
         dispatch(asyncCreateNewUserEditsObject(projectId));
@@ -223,4 +224,8 @@ export function nextStep(): NextStep {
 
 export function updateGoal(goal: Goal): UpdateGoal {
   return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
+}
+
+export function reset() {
+  return { type: RESET, payload: [] };
 }

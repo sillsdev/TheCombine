@@ -9,10 +9,11 @@ import {
   getUserEditId,
   getIndexInHistory
 } from "../../../components/GoalTimeline/GoalsActions";
-import { Goal } from "../../../types/goals";
+import { Goal, GoalHistoryState } from "../../../types/goals";
 import { Dispatch } from "redux";
 import { MergeDups } from "../MergeDups";
 import { UserProjectMap } from "../../../components/Project/UserProject";
+import navigationHistory from "../../../history";
 
 export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
@@ -156,18 +157,6 @@ export function mergeSense() {
   };
 }
 
-const goToNextStep = (
-  dispatch: Dispatch<NextStep>,
-  history: Goal[],
-  goal: Goal
-) =>
-  new Promise((resolve, reject) => {
-    dispatch(nextStep());
-    let indexInHistory: number = getIndexInHistory(history, goal);
-    addStepToGoal(goal, indexInHistory);
-    resolve();
-  });
-
 async function addStepToGoal(goal: Goal, indexInHistory: number) {
   let projectId: string = backend.getProjectId();
   let userEditId: string = getUserEditId();
@@ -183,84 +172,95 @@ export function refreshWords() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction | NextStep>,
     getState: () => StoreState
   ) => {
-    let history: Goal[] = getState().goalsState.historyState.history;
-    let goal: Goal = history[history.length - 1];
-    goToNextStep(dispatch, history, goal).then(() => {
-      let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1].words;
-      dispatch(setWordData(words));
+    let historyState: GoalHistoryState = getState().goalsState.historyState;
+    let goal: Goal = historyState.history[historyState.history.length - 1];
+
+    goToNextStep(dispatch, goal, historyState).then(() => {
+      historyState = getState().goalsState.historyState;
+      goal = historyState.history[historyState.history.length - 1];
+      if (goal.currentStep <= goal.numSteps) {
+        let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1]
+          .words;
+        dispatch(setWordData(words));
+      } else {
+        navigationHistory.push("/goals");
+      }
     });
   };
 }
 
+function goToNextStep(
+  dispatch: Dispatch<NextStep>,
+  goal: Goal,
+  state: GoalHistoryState
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    dispatch(nextStep());
+    let indexInHistory: number = getIndexInHistory(state.history, goal);
+    addStepToGoal(state.history[indexInHistory], indexInHistory);
+    resolve();
+  });
+}
+
 type SenseWithState = TreeDataSense & { state: State };
 
-export function mergeWord(wordID: string) {
-  return async (
-    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
-    getState: () => StoreState
-  ) => {
-    // find and build MergeWord[]
-    const word = getState().mergeDuplicateGoal.mergeTreeState.tree.words[
-      wordID
-    ];
-    if (word) {
-      const data = getState().mergeDuplicateGoal.mergeTreeState.data;
+export async function mergeWord(wordID: string, getState: () => StoreState) {
+  // find and build MergeWord[]
+  const word = getState().mergeDuplicateGoal.mergeTreeState.tree.words[wordID];
+  if (word) {
+    const data = getState().mergeDuplicateGoal.mergeTreeState.data;
 
-      // create a list of all senses and add merge type tags slit by src word
-      let senses: Hash<SenseWithState[]> = {};
+    // create a list of all senses and add merge type tags slit by src word
+    let senses: Hash<SenseWithState[]> = {};
 
-      Object.values(word.senses).forEach(sense => {
-        let senseIDs = Object.values(sense);
-        let senseData = data.senses[senseIDs[0]];
-        if (senses[senseData.srcWord]) {
-          senses[senseData.srcWord].push({ ...senseData, state: State.sense });
+    Object.values(word.senses).forEach(sense => {
+      let senseIDs = Object.values(sense);
+      let senseData = data.senses[senseIDs[0]];
+      if (senses[senseData.srcWord]) {
+        senses[senseData.srcWord].push({ ...senseData, state: State.sense });
+      } else {
+        senses[senseData.srcWord] = [{ ...senseData, state: State.sense }];
+      }
+      let dups = senseIDs.slice(1).map(id => {
+        return { ...data.senses[id], state: State.duplicate };
+      });
+      dups.forEach(dup => {
+        if (senses[dup.srcWord]) {
+          senses[dup.srcWord].push({ ...dup });
         } else {
-          senses[senseData.srcWord] = [{ ...senseData, state: State.sense }];
+          senses[dup.srcWord] = [{ ...dup }];
         }
-        delete senseIDs[0];
-        let dups = senseIDs.map(id => {
-          return { ...data.senses[id], state: State.duplicate };
-        });
-        dups.forEach(dup => {
-          if (senses[dup.srcWord]) {
-            senses[dup.srcWord].push(dup);
-          } else {
-            senses[dup.srcWord] = [dup];
-          }
-        });
       });
+    });
 
-      // clean order of senses in each src word to reflect
-      // the order in the backend
-      Object.values(senses).forEach(wordSenses => {
-        wordSenses = wordSenses.sort((a, b) => a.order - b.order);
-        senses[wordSenses[0].srcWord] = wordSenses;
+    // clean order of senses in each src word to reflect
+    // the order in the backend
+    Object.values(senses).forEach(wordSenses => {
+      wordSenses = wordSenses.sort((a, b) => a.order - b.order);
+      senses[wordSenses[0].srcWord] = wordSenses;
+    });
+
+    // construct parent word
+    let parent: Word = { ...data.words[wordID], senses: [] };
+    // construct sense children
+    let children = Object.values(senses).map(word => {
+      word.forEach(sense => {
+        if (sense.state === State.sense || sense.state === State.active) {
+          parent.senses.push({
+            glosses: sense.glosses,
+            semanticDomains: sense.semanticDomains
+          });
+        }
       });
+      return {
+        wordID: word[0].srcWord,
+        senses: word.map(sense => sense.state)
+      };
+    });
 
-      // construct parent word
-      let parent = data.words[wordID];
-      parent.senses = [];
-
-      // construct sense children
-      let children = Object.values(senses).map(word => {
-        word.forEach(sense => {
-          if (sense.state === State.sense || sense.state === State.active) {
-            parent.senses.push({
-              glosses: sense.glosses,
-              semanticDomains: sense.semanticDomains
-            });
-          }
-        });
-        return {
-          wordID: word[0].srcWord,
-          senses: word.map(sense => sense.state)
-        };
-      });
-
-      // send database call
-      await backend.mergeWords(parent, children);
-    }
-  };
+    // send database call
+    await backend.mergeWords(parent, children);
+  }
 }
 
 export function mergeAll() {
@@ -271,7 +271,7 @@ export function mergeAll() {
     for (let wordID of Object.keys(
       getState().mergeDuplicateGoal.mergeTreeState.data.words
     )) {
-      await dispatch(mergeWord(wordID));
+      await mergeWord(wordID, getState);
     }
     //await dispatch(clearTree());
     await dispatch(refreshWords());

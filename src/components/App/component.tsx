@@ -2,7 +2,7 @@
 import React from "react";
 
 //TC modules
-import CreateProject from "../CreateProject";
+import ProjectScreen from "../ProjectScreen/ProjectScreenComponent";
 import { Route, Switch } from "react-router-dom";
 import { PrivateRoute } from "../PrivateRoute";
 import Login from "../Login/LoginPage";
@@ -15,7 +15,7 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Switch>
-          <PrivateRoute exact path="/" component={CreateProject} />
+          <PrivateRoute exact path="/" component={ProjectScreen} />
           <PrivateRoute path="/goals" component={GoalRoute} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />

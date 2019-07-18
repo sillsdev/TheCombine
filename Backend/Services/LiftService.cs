@@ -7,6 +7,7 @@ using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Lift.Parsing;
 using SIL.Text;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,8 +31,8 @@ namespace BackendFramework.Services
 
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
-            if (entry.Pronunciations.First().Forms.Count() > 0)
-            {
+            if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
+            { 
                 Writer.WriteStartElement("pronunciation");
                 Writer.WriteStartElement("media");
 
@@ -65,6 +66,64 @@ namespace BackendFramework.Services
         public void SetProject(string id)
         {
             projectId = id;
+        }
+
+        public void LdmlImport(string filePath, string langTag)
+        {
+            // SLDR is the SIL Locale Data repository, it is necessary for reading/writing ldml and 
+            // It is being initialized in offline mode here to only pull local data
+            Sldr.Initialize(true);
+            try
+            {
+                var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
+                var wsf = new LdmlInFolderWritingSystemFactory(wsr);
+                wsf.Create(langTag, out WritingSystemDefinition wsDef);
+
+                try
+                {
+                    if (wsDef.CharacterSets["main"] != null)
+                    {
+                        var newProj = _projService.GetProject(projectId).Result;
+                        newProj.CharacterSet = wsDef.CharacterSets["main"].Characters.ToList();
+                        _projService.Update(projectId, newProj);
+                    }
+                }
+                catch
+                {
+                    //do nothing, there is no main character set
+                }
+            }
+            finally
+            {
+                Sldr.Cleanup();
+            }
+        }
+
+        private void LdmlExport(string filePath, string langTag)
+        {
+            Sldr.Initialize(true);
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
+            var wsf = new LdmlInFolderWritingSystemFactory(wsr);
+
+            //There are no existing writing systems in this folder
+            wsf.Create(langTag, out WritingSystemDefinition wsDef);
+
+            var proj = _projService.GetProject(projectId).Result;
+            if (!wsDef.CharacterSets.TryGet("main", out CharacterSetDefinition chars))
+            {
+                chars = new CharacterSetDefinition("main");
+                wsDef.CharacterSets.Add(chars);
+            }
+            //= wsDef.CharacterSets["main"];
+
+            chars.Characters.Clear();
+            foreach (var character in proj.CharacterSet)
+            {
+                chars.Characters.Add(character);
+            }
+            wsr.Set(wsDef);
+            wsr.Save();
+            Sldr.Cleanup();
         }
 
         /********************************
@@ -125,6 +184,12 @@ namespace BackendFramework.Services
             }
             writer.End();
 
+            //export ldml
+            string ldmlDir = Path.Combine(zipdir, "WritingSystems");
+            Directory.CreateDirectory(ldmlDir);
+            var proj = _projService.GetProject(projectId).Result;
+            LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+
             ZipFile.CreateFromDirectory(zipdir, Path.Combine(zipdir, Path.Combine("..", "LiftExportCompressed-" + Path.GetRandomFileName() + ".zip")));
         }
 
@@ -138,17 +203,21 @@ namespace BackendFramework.Services
 
         public void AddAudio(LexEntry entry, Word wordEntry, string path)
         {
-            LexPhonetic lexPhonetic = new LexPhonetic();
-
-            string dest = Path.Combine(path, wordEntry.Audio);
-            LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
-            lexPhonetic.MergeIn(MultiText.Create(proMultiText));
-            entry.Pronunciations.Add(lexPhonetic);
             try
             {
-                Helper.Utilities util = new Helper.Utilities();
-                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
-                File.Copy(src, dest, true);
+                if (wordEntry.Audio != "")
+                {
+                    LexPhonetic lexPhonetic = new LexPhonetic();
+                    string dest = Path.Combine(path, wordEntry.Audio);
+
+                    Helper.Utilities util = new Helper.Utilities();
+                    string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
+                    File.Copy(src, dest, true);
+
+                    LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
+                    lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+                    entry.Pronunciations.Add(lexPhonetic);
+                }
             }
             catch (FileNotFoundException)
             {
@@ -192,15 +261,26 @@ namespace BackendFramework.Services
         public async void FinishEntry(LiftEntry entry)
         {
             Word newWord = new Word();
+            var proj = _projService.GetProject(projectId).Result;
 
             //add vernacular
             if (!entry.CitationForm.IsEmpty) //prefer citation form for vernacular
             {
                 newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
-            }
+                if (proj.VernacularWritingSystem == "")
+                {
+                    proj.VernacularWritingSystem = entry.CitationForm.FirstValue.Key;
+                    await _projService.Update(projectId, proj);
+                }
+            } 
             else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
             {
                 newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
+                if (proj.VernacularWritingSystem == "")
+                {
+                    proj.VernacularWritingSystem = entry.LexicalForm.FirstValue.Key;
+                    await _projService.Update(projectId, proj);
+                }
             }
             else //this is not a word
             {
@@ -227,46 +307,31 @@ namespace BackendFramework.Services
             var importListArr = Directory.GetDirectories(extractedPathToImport);
             var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
 
-            //add audio
-            foreach (var pro in entry.Pronunciations)
+            if (Directory.Exists(extractedAudioDir))
             {
-                newWord.Audio = pro.Media.FirstOrDefault().Url;
-
-                //get path to ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word mp3
-                var extractedAudioMp3 = Path.Combine(extractedAudioDir, newWord.Audio);
-
-                //move mp3 to audio folder at ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word.mp3
-                var audioFolder = Path.Combine(extractedPathToImport, "Audio");
-                Directory.CreateDirectory(audioFolder);
-                var audioDest = Path.Combine(audioFolder, newWord.Audio);
-                File.Create(audioDest);
-
-                //if there are duplicate filenames then add a (number) like windows does to the end of it
-                int filecount = 1;
-                while (true)
+                //try to read audio b/c it's prob there
+                //add audio
+                foreach (var pro in entry.Pronunciations)
                 {
-                    
-                    try
+                    newWord.Audio = pro.Media.FirstOrDefault().Url;
+
+                    //get path to ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word mp3
+                    var extractedAudioMp3 = Path.Combine(extractedAudioDir, newWord.Audio);
+
+                    //move mp3 to audio folder at ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word.mp3
+                    var audioFolder = Path.Combine(extractedPathToImport, "Audio");
+                    Directory.CreateDirectory(audioFolder);
+                    var audioDest = Path.Combine(audioFolder, newWord.Audio);
+
+                    //if there are duplicate filenames then add a (number) like windows does to the end of it
+                    int filecount = 1;
+                    var filename = Path.GetFileNameWithoutExtension(audioDest);
+
+                    while (File.Exists(audioDest))
                     {
-                        File.Copy(extractedAudioMp3, audioDest);
-                        break; // Exit the loop. Could return from the method, depending
-                               // on what it does...
+                        audioDest = Path.Combine(audioFolder, filename + "(" + filecount++ + ")" + ".mp3");
                     }
-                    catch(IOException)
-                    {
-                        //does the filename already have a counter
-                        var filename = Path.GetFileNameWithoutExtension(audioDest);
-                        var fileList = Regex.Match(filename, @".+(\([0-9]+\))");
-                        
-                        //if yes then take it off
-                        if(fileList.Success)
-                        {
-                            filename = audioDest.Substring(audioDest.Length - 3);
-                            
-                        }
-                        //add a new counter
-                        audioDest = Path.Combine(audioFolder , Path.GetFileNameWithoutExtension(filename) + "(" + filecount++ + ")" + ".mp3");
-                    }
+                    File.Copy(extractedAudioMp3, audioDest);
                 }
             }
 

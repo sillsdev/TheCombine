@@ -10,6 +10,7 @@ import {
 } from "./MergeDupsTree";
 import { Word } from "../../../types/word";
 import { uuid } from "../../../utilities";
+import { StoreAction, StoreActions } from "../../../rootActions";
 
 export const defaultState: MergeTreeState = {
   data: defaultData,
@@ -23,7 +24,7 @@ export interface MergeTreeState {
 
 const mergeDupStepReducer = (
   state: MergeTreeState = defaultState, //createStore() calls each reducer with undefined state
-  action: MergeTreeAction
+  action: StoreAction | MergeTreeAction
 ): MergeTreeState => {
   switch (action.type) {
     case MergeTreeActions.SET_VERNACULAR:
@@ -35,7 +36,7 @@ const mergeDupStepReducer = (
       return state;
     case MergeTreeActions.ORDER_SENSE: {
       // reorder sense
-      let word = { ...state.tree.words[action.wordID] };
+      let word = JSON.parse(JSON.stringify(state.tree.words[action.wordID]));
       let senses = Object.entries(word.senses);
       let sense = { ...word.senses[action.senseID] };
 
@@ -47,14 +48,15 @@ const mergeDupStepReducer = (
         word.senses[sense[0]] = sense[1];
       }
 
-      state.tree.words[action.wordID] = word;
-      state.tree = { ...state.tree };
-      state = { ...state };
+      let treeWords: Hash<MergeTreeWord> = JSON.parse(
+        JSON.stringify(state.tree.words)
+      );
+      treeWords[action.wordID] = word;
+      state = { ...state, tree: { ...state.tree, words: treeWords } };
 
       return state;
     }
     case MergeTreeActions.ORDER_DUPLICATE: {
-      console.log("HI");
       let ref = action.ref;
       let dups = Object.entries(state.tree.words[ref.word].senses[ref.sense]);
       let dup = state.tree.words[ref.word].senses[ref.sense][ref.duplicate];
@@ -81,6 +83,7 @@ const mergeDupStepReducer = (
       return state;
     }
     case MergeTreeActions.MOVE_SENSE:
+      let treeState: MergeTree = JSON.parse(JSON.stringify(state.tree));
       for (let op in action.payload.src) {
         let src = action.payload.src[op];
         let dest = action.payload.dest[op];
@@ -88,71 +91,54 @@ const mergeDupStepReducer = (
         if (JSON.stringify(src) !== JSON.stringify(dest)) {
           // perform move
           let srcSenseID =
-            state.tree.words[src.word].senses[src.sense][src.duplicate];
+            treeState.words[src.word].senses[src.sense][src.duplicate];
           let srcWordID = state.data.senses[srcSenseID].srcWord;
 
           // tree elements need to be added to words if they don't exist
-          if (!state.tree.words[dest.word]) {
-            state.tree.words = { ...state.tree.words };
-            state.tree.words[dest.word] = {
+          if (!treeState.words[dest.word]) {
+            treeState.words[dest.word] = {
               senses: {},
               vern: state.data.words[srcWordID].vernacular,
               plural: state.data.words[srcWordID].plural
             };
           }
 
-          if (!state.tree.words[dest.word].senses[dest.sense]) {
-            state.tree.words = { ...state.tree.words };
-            state.tree.words[dest.word].senses[dest.sense] = {};
+          if (!treeState.words[dest.word].senses[dest.sense]) {
+            treeState.words[dest.word].senses[dest.sense] = {};
           }
 
-          let destSense = state.tree.words[dest.word].senses[dest.sense];
-
-          destSense = { ...destSense };
+          let destSense = treeState.words[dest.word].senses[dest.sense];
           destSense[dest.duplicate] = srcSenseID;
-
-          state.tree.words[dest.word].senses[dest.sense] = destSense;
+          treeState.words[dest.word].senses[dest.sense] = destSense;
 
           // cleanup src
-          delete state.tree.words[src.word].senses[src.sense][src.duplicate];
+          delete treeState.words[src.word].senses[src.sense][src.duplicate];
 
           // check if we removed last dup in a sense if so remove the sense from the word
 
           if (
-            Object.keys(state.tree.words[src.word].senses[src.sense]).length ==
+            Object.keys(treeState.words[src.word].senses[src.sense]).length ===
             0
           ) {
-            delete state.tree.words[src.word].senses[src.sense];
-            state.tree.words[src.word] = { ...state.tree.words[src.word] };
+            delete treeState.words[src.word].senses[src.sense];
           }
 
           // check if we removed last sense in a word if so remove the word from the tree
 
-          if (Object.keys(state.tree.words[src.word].senses).length === 0) {
-            delete state.tree.words[src.word];
-            state.tree.words = { ...state.tree.words };
+          if (Object.keys(treeState.words[src.word].senses).length === 0) {
+            delete treeState.words[src.word];
           }
-
-          state.tree.words[dest.word].senses[dest.sense] = {
-            ...state.tree.words[dest.word].senses[dest.sense]
-          };
-          state.tree.words[dest.word].senses = {
-            ...state.tree.words[dest.word].senses
-          };
-          state.tree.words[dest.word] = { ...state.tree.words[dest.word] };
-          state.tree.words = { ...state.tree.words };
-
-          state.tree = { ...state.tree };
+          }
         }
       }
 
-      return { ...state };
+      return { ...state, tree: treeState };
     case MergeTreeActions.SET_DATA:
-      let words: { [id: string]: Word } = {};
+      let words: Hash<Word> = {};
       let senses: Hash<TreeDataSense> = {};
-      let wordsTree: { [id: string]: MergeTreeWord } = {};
+      let wordsTree: Hash<MergeTreeWord> = {};
       action.payload.forEach(word => {
-        words[word.id] = word;
+        words[word.id] = JSON.parse(JSON.stringify(word));
         let treeSenses: Hash<Hash<string>> = {};
         word.senses.forEach((sense, index) => {
           let id = uuid();
@@ -168,11 +154,14 @@ const mergeDupStepReducer = (
         };
       });
       return {
+        ...state,
         tree: { words: wordsTree },
         data: { senses, words }
       };
     case MergeTreeActions.CLEAR_TREE:
       return { tree: { ...defaultTree }, data: { ...defaultData } };
+    case StoreActions.RESET:
+      return defaultState;
     default:
       return state;
   }

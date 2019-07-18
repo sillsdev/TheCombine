@@ -1,8 +1,18 @@
 import { setWordData, moveSense, clearTree } from "../MergeDupStepActions";
 import { testWordList } from "../../../../types/word";
-import mergeDupStepReducer from "../MergeDupStepReducer";
-import { Hash, MergeTreeWord, MergeTreeReference, defaultData, defaultTree } from "../MergeDupsTree";
+import mergeDupStepReducer, {
+  MergeTreeState,
+  defaultState
+} from "../MergeDupStepReducer";
+import {
+  Hash,
+  MergeTreeWord,
+  MergeTreeReference,
+  defaultData,
+  defaultTree
+} from "../MergeDupsTree";
 import { randElement, uuid } from "../../../../utilities";
+import { StoreAction, StoreActions } from "../../../../rootActions";
 
 // Actions to test
 //
@@ -60,10 +70,11 @@ describe("MergeDupStep reducer tests", () => {
     return undefined;
   };
 
-
   test("clear data", () => {
     let newState = mergeDupStepReducer(fullState, clearTree());
-    expect(JSON.stringify(newState)).toEqual(JSON.stringify({tree: defaultTree, data: defaultData}));
+    expect(JSON.stringify(newState)).toEqual(
+      JSON.stringify({ tree: defaultTree, data: defaultData })
+    );
   });
 
   test("set data", () => {
@@ -122,5 +133,15 @@ describe("MergeDupStep reducer tests", () => {
     let newState = mergeDupStepReducer(fullState, moveSense(srcRef, destRef));
 
     expect(getRef(srcRef, newState.tree.words)).toBe(undefined);
+  });
+
+  test("Reset returns default state", () => {
+    let action: StoreAction = {
+      type: StoreActions.RESET
+    };
+
+    expect(mergeDupStepReducer({} as MergeTreeState, action)).toEqual(
+      defaultState
+    );
   });
 });
