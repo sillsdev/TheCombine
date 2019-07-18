@@ -12,7 +12,7 @@ export interface WordTileProps {
   allCharacters: string[]; // valid and rejected
   addToCharSet: (chars: string) => void;
   addWordToIgnoreList: (word: string) => void;
-  hover: Boolean;
+  hover: boolean;
   setHover: () => void;
   unsetHover: () => void;
 }

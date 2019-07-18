@@ -12,8 +12,8 @@ import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 
 const createMockStore = configureMockStore([thunk]);
-const DATA: string[] = ["foo", "bar"];
-const DATA2: string[] = ["a", "b"];
+const VALID_DATA: string[] = ["foo", "bar"];
+const REJECT_DATA: string[] = ["a", "b"];
 const goal: CreateCharInv = new CreateCharInv();
 const MOCK_STATE = {
   goalsState: {
@@ -25,16 +25,16 @@ const MOCK_STATE = {
     characterSet: null
   },
   characterInventoryState: {
-    validCharacters: DATA,
-    rejectedCharacters: DATA2
+    validCharacters: VALID_DATA,
+    rejectedCharacters: REJECT_DATA
   }
 };
 
 describe("Testing CharacterInventoryActions", () => {
   test("setInventory yields correct action", () => {
-    expect(setValidCharacters(DATA)).toEqual({
+    expect(setValidCharacters(VALID_DATA)).toEqual({
       type: SET_VALID_CHARACTERS,
-      payload: DATA
+      payload: VALID_DATA
     });
   });
 
@@ -60,8 +60,8 @@ describe("Testing CharacterInventoryActions", () => {
         type: SET_CURRENT_PROJECT,
         payload: {
           characterSet: null,
-          validCharacters: ["foo", "bar"],
-          rejectedCharacters: ["a", "b"]
+          validCharacters: VALID_DATA,
+          rejectedCharacters: REJECT_DATA
         }
       }
     ]);

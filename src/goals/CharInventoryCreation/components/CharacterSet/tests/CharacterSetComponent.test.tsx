@@ -60,7 +60,7 @@ describe("Tests characterInventoryComponent", () => {
     ReactDOM.unmountComponentAtNode(div);
   });
 
-  // Add chars tests
+  // Character input tests
   it("adds single character to valid characters", () => {
     testValidCharsInputWith("w");
   });
@@ -84,8 +84,6 @@ describe("Tests characterInventoryComponent", () => {
   it("adds multiple non-latin characters to rejected characters", () => {
     testRejectedCharsInputWith("ʔʃжψض");
   });
-
-  // Character input tests
 
   // moveChar
   it("does nothing with a drag and drop equal to the same char", () => {

@@ -17,7 +17,7 @@ export interface SampleWordsProps {
 interface SampleWordsState {
   words: string[];
   ignoreList: string[]; // A list of words we don't want to see right now
-  hoverWord: number | null;
+  hoverWordIndex: number | null;
 }
 
 export class SampleWords extends React.Component<
@@ -29,7 +29,7 @@ export class SampleWords extends React.Component<
     this.state = {
       words: [],
       ignoreList: [],
-      hoverWord: null
+      hoverWordIndex: null
     };
     this.canGetWords = true;
   }
@@ -122,9 +122,9 @@ export class SampleWords extends React.Component<
             allCharacters={this.props.allCharacters}
             addToCharSet={word => this.addToCharSet(word)}
             addWordToIgnoreList={word => this.addWordToIgnoreList(word)}
-            hover={this.state.hoverWord === index}
-            setHover={() => this.setState({ hoverWord: index })}
-            unsetHover={() => this.setState({ hoverWord: null })}
+            hover={this.state.hoverWordIndex === index}
+            setHover={() => this.setState({ hoverWordIndex: index })}
+            unsetHover={() => this.setState({ hoverWordIndex: null })}
           />
         ))}
         <Grid item xs={12} />

@@ -133,6 +133,8 @@
       ],
       "acceptedCharacters": ["Accepted Characters", "Caracteres Aceptados..."],
       "rejectedCharacters": ["Rejected Characters", "Caracteres Rechazados..."],
+      "accepted": ["Accepted", "Aceptado"],
+      "rejected": ["Rejected", "Rechazado"],
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
         "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar."

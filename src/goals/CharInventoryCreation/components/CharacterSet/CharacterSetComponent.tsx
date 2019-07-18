@@ -155,7 +155,7 @@ export class CharacterSet extends React.Component<
                     variant="subtitle2"
                     style={{ opacity: this.state.hoverChar === char ? 1 : 0 }}
                   >
-                    Accepted
+                    <Translate id="charInventory.characterSet.accepted" />
                   </Typography>
                 </Grid>
               </Grid>
@@ -196,7 +196,7 @@ export class CharacterSet extends React.Component<
                     variant="subtitle2"
                     style={{ opacity: this.state.hoverChar === char ? 1 : 0 }}
                   >
-                    Rejected
+                    <Translate id="charInventory.characterSet.rejected" />
                   </Typography>
                 </Grid>
               </Grid>
