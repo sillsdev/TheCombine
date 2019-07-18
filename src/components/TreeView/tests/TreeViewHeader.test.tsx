@@ -49,15 +49,45 @@ describe("Tests TreeViewHeader", () => {
 
   // onKeyDown
   it("Search & select domain switches semantic domain if given number found", () => {
-    event.target.value = MockTree.number;
+    treeHandle.setState({ input: MockTree.number });
+    event.target.value = "not empty";
     treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
     expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree);
+    expect(treeHandle.state.input).toEqual("");
+    expect(event.target.value).toEqual("");
   });
 
   it("Search & select domain does not switch semantic domain if given number not found", () => {
-    event.target.value = "NO_NUMBER";
+    const TEST: string = "10";
+    treeHandle.setState({ input: TEST });
+    event.target.value = TEST;
     treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
     expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+    expect(treeHandle.state.input).toEqual(TEST);
+    expect(event.target.value).toEqual(TEST);
+  });
+
+  it("Search & select domain switches semantic domain if given name found", () => {
+    treeHandle.setState({ input: MockTree.subDomains[2].name });
+    event.target.value = "not empty";
+    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subDomains[2]);
+    expect(treeHandle.state.input).toEqual("");
+    expect(event.target.value).toEqual("");
+  });
+
+  it("Search & select domain does not switch semantic domain if given name not found", () => {
+    const TEST: string = "itsatrap";
+    treeHandle.setState({ input: TEST });
+    event.target.value = TEST;
+    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+    expect(treeHandle.state.input).toEqual(TEST);
+    expect(event.target.value).toEqual(TEST);
   });
 
   // getBrotherDomain

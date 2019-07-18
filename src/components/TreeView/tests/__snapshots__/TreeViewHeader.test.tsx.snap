@@ -1,124 +1,243 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Tests TreeViewHeader Renders correctly 1`] = `
-<div
-  className="MuiGrid-root MuiGrid-container"
->
-  <div
-    className="MuiGrid-root MuiGrid-item"
-    style={
-      Object {
-        "minWidth": "5vw",
-      }
+<ul
+  className="MuiGridList-root"
+  style={
+    Object {
+      "margin": -1,
     }
-  >
-    <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="button"
-    >
-      <span
-        className="MuiButton-label"
-      >
-        <h6
-          className="MuiTypography-root MuiTypography-h6"
-        >
-          &lt;     1.0
-        </h6>
-      </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
-    </button>
-  </div>
-  <div
-    className="MuiGrid-root MuiGrid-item"
+  }
+>
+  <li
+    className="MuiGridListTile-root"
     style={
       Object {
-        "minWidth": "10vw",
+        "height": "auto",
+        "padding": 1,
+        "width": "20%",
       }
     }
   >
     <div
-      className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-      onKeyUp={[Function]}
+      className="MuiGridListTile-tile"
     >
-      <label
-        className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
-        data-shrink={true}
-        htmlFor="name"
-      >
-        Semantic Domain
-      </label>
       <div
-        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
-        onClick={[Function]}
+        className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
       >
-        <input
-          aria-invalid={false}
-          className="MuiInputBase-input MuiInput-input"
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
           disabled={false}
-          id="name"
           onBlur={[Function]}
-          onChange={[Function]}
+          onClick={[Function]}
           onFocus={[Function]}
-          required={false}
-          type="text"
-          value="1.1"
-        />
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          style={
+            Object {
+              "float": "right",
+              "marginTop": "50%",
+            }
+          }
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+              />
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+            </svg>
+            <p
+              className="MuiTypography-root MuiTypography-body2"
+            >
+                   1.0
+            </p>
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </button>
       </div>
     </div>
-  </div>
-  <div
-    className="MuiGrid-root MuiGrid-item"
+  </li>
+  <li
+    className="MuiGridListTile-root"
     style={
       Object {
-        "minWidth": "5vw",
+        "height": "auto",
+        "padding": 1,
+        "width": "60%",
       }
     }
   >
-    <button
-      className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
-      disabled={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onKeyUp={[Function]}
-      onMouseDown={[Function]}
-      onMouseLeave={[Function]}
-      onMouseUp={[Function]}
-      onTouchEnd={[Function]}
-      onTouchMove={[Function]}
-      onTouchStart={[Function]}
-      tabIndex={0}
-      type="button"
+    <div
+      className="MuiGridListTile-tile"
     >
-      <span
-        className="MuiButton-label"
+      <div
+        className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
       >
-        <h6
-          className="MuiTypography-root MuiTypography-h6"
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
         >
-          1.2     &gt;
-        </h6>
-      </span>
-      <span
-        className="MuiTouchRipple-root"
-      />
-    </button>
-  </div>
-</div>
+          <span
+            className="MuiButton-label"
+          >
+            <div
+              style={
+                Object {
+                  "textTransform": "capitalize",
+                }
+              }
+            >
+              <span
+                className="MuiTypography-root MuiTypography-overline"
+              >
+                1.1
+              </span>
+              <h6
+                className="MuiTypography-root MuiTypography-h6"
+              >
+                kid1
+              </h6>
+            </div>
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </button>
+        <div
+          className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
+          onKeyUp={[Function]}
+        >
+          <label
+            className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+            data-shrink={false}
+            htmlFor="name"
+          >
+            Find a domain
+          </label>
+          <div
+            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl"
+            onClick={[Function]}
+          >
+            <input
+              aria-invalid={false}
+              autoComplete="off"
+              className="MuiInputBase-input MuiInput-input"
+              disabled={false}
+              id="name"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              type="text"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </li>
+  <li
+    className="MuiGridListTile-root"
+    style={
+      Object {
+        "height": "auto",
+        "padding": 1,
+        "width": "20%",
+      }
+    }
+  >
+    <div
+      className="MuiGridListTile-tile"
+    >
+      <div
+        className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
+      >
+        <button
+          className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          style={
+            Object {
+              "marginTop": "50%",
+            }
+          }
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiButton-label"
+          >
+            <p
+              className="MuiTypography-root MuiTypography-body2"
+            >
+              1.2     
+            </p>
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+              />
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+            </svg>
+          </span>
+          <span
+            className="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+  </li>
+</ul>
 `;
