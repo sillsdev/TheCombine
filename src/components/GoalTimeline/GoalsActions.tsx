@@ -17,7 +17,6 @@ import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
-import { RESET } from "../ProjectScreen/CreateProject/CreateProjectActions";
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
 export enum GoalsActions {
@@ -83,6 +82,7 @@ function asyncCreateNewUserEditsObject(projectId: string) {
   };
 }
 
+// WRITE UNIT TESTS FOR THIS
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     let currentUserString = localStorage.getItem("user");
@@ -109,6 +109,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
     console.log(user);
     if (user !== undefined) {
       let userEditId: string | undefined = getUserEditId(user);
+      console.log(userEditId);
       if (userEditId !== undefined) {
         await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
         await backend
@@ -266,8 +267,4 @@ export function nextStep(): NextStep {
 
 export function updateGoal(goal: Goal): UpdateGoal {
   return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
-}
-
-export function reset() {
-  return { type: RESET, payload: [] };
 }

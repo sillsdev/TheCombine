@@ -14,20 +14,29 @@ import {
 import { ViewFinal } from "../../../goals/ViewFinal/ViewFinal";
 import { User } from "../../../types/user";
 
+const mockUserEditId: string = "Hey";
 const mockAxios = axios as jest.Mocked<typeof axios>;
 jest.mock("../GoalsActions", () => {
-  const User = jest.requireActual("../../../types/user");
   const goalsActions = jest.requireActual("../GoalsActions");
   return {
     ...goalsActions,
-    getUser: jest.fn(() => {
-      return new User.User("", "", "");
-    })
+    getUserEditId: jest.fn().mockReturnValue("Hey")
   };
+});
+
+let oldUser: string | null;
+
+beforeAll(() => {
+  oldUser = localStorage.getItem("user");
+});
+
+afterAll(() => {
+  if (oldUser) localStorage.setItem("user", oldUser);
 });
 
 describe("Test GoalsActions", () => {
   const createMockStore = configureMockStore([thunk]);
+
   it("should create an action to add a goal to history", () => {
     const goal: Goal = new CreateCharInv();
     const expectedAction: actions.AddGoalToHistory = {
@@ -54,6 +63,15 @@ describe("Test GoalsActions", () => {
     expect(actions.nextStep()).toEqual(expectedAction);
   });
 
+  it("should create an action to update a goal", () => {
+    const goal: Goal = new CreateCharInv();
+    const expectedAction: actions.UpdateGoal = {
+      type: actions.GoalsActions.UPDATE_GOAL,
+      payload: [goal]
+    };
+    expect(actions.updateGoal(goal)).toEqual(expectedAction);
+  });
+
   it("should create an async action to load user edits", () => {
     const mockStore = createMockStore(defaultState);
     const mockDispatch = mockStore.dispatch<any>(
@@ -74,29 +92,26 @@ describe("Test GoalsActions", () => {
       });
   });
 
-  // it("should create an async action to add a goal to history", () => {
-  //   const mockStore = createMockStore(defaultState);
-  //   const goal: Goal = new CreateCharInv();
-  //   const mockDispatch = mockStore.dispatch<any>(
-  //     actions.asyncAddGoalToHistory(goal)
-  //   );
+  it("should create an async action to add a goal to history", () => {
+    const mockStore = createMockStore(defaultState);
+    const goal: Goal = new CreateCharInv();
+    localStorage.setItem("user", JSON.stringify(new User("", "", "")));
+    const mockDispatch = mockStore.dispatch<any>(
+      actions.asyncAddGoalToHistory(goal)
+    );
 
-  //   let addGoalToHistory: actions.AddGoalToHistory = {
-  //     type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-  //     payload: [goal]
-  //   };
+    let addGoalToHistory: actions.AddGoalToHistory = {
+      type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
+      payload: [goal]
+    };
 
-  //   mockDispatch
-  //     .then(() => {
-  //       expect(mockStore.getActions()).toEqual([addGoalToHistory]);
-  //     })
-  //     .catch((err: string) => {
-  //       fail(err);
-  //     });
-  // });
-
-  it("should return undefined when user is undefined", () => {
-    expect(actions.getUserEditId(new User("", "", ""))).toEqual(undefined);
+    mockDispatch
+      .then(() => {
+        expect(mockStore.getActions()).toEqual([addGoalToHistory]);
+      })
+      .catch((err: string) => {
+        fail(err);
+      });
   });
 
   it("should return a user", () => {
@@ -137,6 +152,11 @@ describe("Test GoalsActions", () => {
       .catch((err: string) => {
         fail(err);
       });
+  });
+
+  it("should return a userEditId", () => {
+    let user: User = new User("", "", "");
+    expect(actions.getUserEditId(user)).toEqual(mockUserEditId);
   });
 
   it("should return the correct goal", () => {
