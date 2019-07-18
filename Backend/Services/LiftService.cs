@@ -32,7 +32,7 @@ namespace BackendFramework.Services
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
             if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
-            { 
+            {
                 Writer.WriteStartElement("pronunciation");
                 Writer.WriteStartElement("media");
 
@@ -84,7 +84,7 @@ namespace BackendFramework.Services
                     if (wsDef.CharacterSets["main"] != null)
                     {
                         var newProj = _projService.GetProject(projectId).Result;
-                        newProj.CharacterSet = wsDef.CharacterSets["main"].Characters.ToList();
+                        newProj.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
                         _projService.Update(projectId, newProj);
                     }
                 }
@@ -117,7 +117,7 @@ namespace BackendFramework.Services
             //= wsDef.CharacterSets["main"];
 
             chars.Characters.Clear();
-            foreach (var character in proj.CharacterSet)
+            foreach (var character in proj.ValidCharacters)
             {
                 chars.Characters.Add(character);
             }
@@ -272,7 +272,7 @@ namespace BackendFramework.Services
                     proj.VernacularWritingSystem = entry.CitationForm.FirstValue.Key;
                     await _projService.Update(projectId, proj);
                 }
-            } 
+            }
             else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
             {
                 newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
