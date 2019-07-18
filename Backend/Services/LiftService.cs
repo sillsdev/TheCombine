@@ -57,11 +57,13 @@ namespace BackendFramework.Services
         private readonly IWordRepository _repo;
         private readonly IProjectService _projService;
         private string projectId;
+        private List<SemanticDomain> sdList;
 
         public LiftService(IWordRepository repo, IProjectService projserv)
         {
             _repo = repo;
             _projService = projserv;
+            sdList = new List<SemanticDomain>();
         }
         public void SetProject(string id)
         {
@@ -245,7 +247,7 @@ namespace BackendFramework.Services
                 {
                     //add semantic domain
                     var orc = new OptionRefCollection();
-                    orc.Add(semdom.Number + " " + semdom.Name);
+                    orc.Add(semdom.Id + " " + semdom.Name);
 
                     entry.Senses[i].Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
 
@@ -285,6 +287,12 @@ namespace BackendFramework.Services
             else //this is not a word
             {
                 return;
+            }
+
+            if (proj.SemanticDomains.Count == 0)
+            {
+                proj.SemanticDomains = sdList;
+                await _projService.Update(projectId, proj);
             }
 
             //add plural
@@ -358,7 +366,7 @@ namespace BackendFramework.Services
                     string[] words = SemanticDomainString.Split(" ");
 
                     SemanticDomain newSemanticDomain = new SemanticDomain();
-                    newSemanticDomain.Number = words[0];
+                    newSemanticDomain.Id = words[0];
 
                     for (int i = 1; i < words.Length - 1; i++)
                     {
@@ -500,7 +508,13 @@ namespace BackendFramework.Services
 
         public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
 
-        public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml) { }
+        public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
+        {
+            if (range == "semantic-domain-ddp4")
+            {
+                sdList.Add(new SemanticDomain() { Name = label.First().Value.Text, Id = abbrev.First().Value.Text });
+            }
+        }
     }
 
     public class EmptyLiftObject : LiftObject

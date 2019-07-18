@@ -221,14 +221,14 @@ namespace BackendFramework.ValueModels
     public class SemanticDomain
     {
         public string Name { get; set; }
-        public string Number { get; set; }
+        public string Id { get; set; }
 
         public SemanticDomain Clone()
         {
             return new SemanticDomain
             {
                 Name = Name.Clone() as string,
-                Number = Number.Clone() as string
+                Id = Id.Clone() as string
             };
         }
 
@@ -241,13 +241,13 @@ namespace BackendFramework.ValueModels
             else
             {
                 SemanticDomain other = obj as SemanticDomain;
-                return Name.Equals(other.Name) && Number.Equals(other.Number);
+                return Name.Equals(other.Name) && Id.Equals(other.Id);
             }
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Number);
+            return HashCode.Combine(Name, Id);
         }
     }
 

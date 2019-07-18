@@ -64,10 +64,10 @@ export default class TreeDepiction extends React.Component<
   updateTileWidth(event?: UIEvent) {
     let tileWidth: number;
 
-    if (this.props.currentDomain.subDomains.length > 0)
+    if (this.props.currentDomain.subdomains.length > 0)
       tileWidth = Math.floor(
         document.documentElement.clientWidth /
-          (this.props.currentDomain.subDomains.length * 2 - 1)
+          (this.props.currentDomain.subdomains.length * 2 - 1)
       );
     else tileWidth = MAX_TILE_WIDTH;
     if (tileWidth < MIN_TILE_WIDTH) tileWidth = MIN_TILE_WIDTH;
@@ -79,16 +79,16 @@ export default class TreeDepiction extends React.Component<
 
   // Renders the subdomains + their connectors to the current domain
   subDomains(): ReactNode {
-    let subDomains: SemanticDomain[] = this.props.currentDomain.subDomains;
-    if (this.props.currentDomain.subDomains.length > 1)
+    let subDomains: SemanticDomain[] = this.props.currentDomain.subdomains;
+    if (this.props.currentDomain.subdomains.length > 1)
       return (
         <GridList
-          cols={this.props.currentDomain.subDomains.length * 2 - 1} // # of cells across the joist is
+          cols={this.props.currentDomain.subdomains.length * 2 - 1} // # of cells across the joist is
           cellHeight={"auto"}
           spacing={0}
           style={{
             width:
-              (this.props.currentDomain.subDomains.length * 2 - 1) *
+              (this.props.currentDomain.subdomains.length * 2 - 1) *
               this.state.tileWidth
           }}
         >
@@ -125,10 +125,10 @@ export default class TreeDepiction extends React.Component<
   joistRow(): ReactNode[] {
     let row: ReactNode[] = [];
     let middleElement: string;
-    let half: number = this.props.currentDomain.subDomains.length - 2;
+    let half: number = this.props.currentDomain.subdomains.length - 2;
 
     // Determine the kind of middle element needed
-    if (this.props.currentDomain.subDomains.length % 2 === 0)
+    if (this.props.currentDomain.subdomains.length % 2 === 0)
       middleElement = teeDown;
     else middleElement = intersect;
 
@@ -162,13 +162,13 @@ export default class TreeDepiction extends React.Component<
 
     for (
       let i: number = 0;
-      i < this.props.currentDomain.subDomains.length * 2 - 1;
+      i < this.props.currentDomain.subdomains.length * 2 - 1;
       i++
     ) {
       if (i % 2 === 0) {
         subDomains.push(
           <GridListTile key={domainIndex + "NameTile"}>
-            {this.nameTile(this.props.currentDomain.subDomains[domainIndex])}
+            {this.nameTile(this.props.currentDomain.subdomains[domainIndex])}
           </GridListTile>
         );
         domainIndex++;
@@ -181,7 +181,7 @@ export default class TreeDepiction extends React.Component<
   nameTile(domain: SemanticDomain): ReactNode {
     return (
       <Button
-        id={domain.number}
+        id={domain.id}
         color={"primary"}
         variant={"outlined"}
         disabled={
@@ -200,7 +200,7 @@ export default class TreeDepiction extends React.Component<
         }}
       >
         <div style={{ textTransform: "capitalize" }}>
-          <Typography variant={"overline"}>{domain.number}</Typography>
+          <Typography variant={"overline"}>{domain.id}</Typography>
           <Typography variant={"body1"}>{domain.name}</Typography>
         </div>
       </Button>
@@ -226,7 +226,7 @@ export default class TreeDepiction extends React.Component<
       <React.Fragment>
         {/* Label next options, if applicable */}
         <Grid item>
-          {this.props.currentDomain.subDomains.length > 0 && this.subDomains()}
+          {this.props.currentDomain.subdomains.length > 0 && this.subDomains()}
         </Grid>
         {/* Label current domain */}
         <Grid item>
