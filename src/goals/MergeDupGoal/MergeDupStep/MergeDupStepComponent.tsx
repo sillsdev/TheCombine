@@ -199,7 +199,7 @@ class MergeDupStep extends React.Component<
         <Droppable
           droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
         >
-          {(providedDroppable, _snapshot) => (
+          {(providedDroppable) => (
             <div
               ref={providedDroppable.innerRef}
               {...providedDroppable.droppableProps}
@@ -244,7 +244,7 @@ class MergeDupStep extends React.Component<
                             {entry.data.semanticDomains.map(semdom => (
                               <Grid item xs>
                                 <Chip
-                                  label={`${semdom.name} ${semdom.number}`}
+                                  label={`${semdom.name} ${semdom.id}`}
                                 />
                               </Grid>
                             ))}
