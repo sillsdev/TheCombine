@@ -11,6 +11,9 @@ describe("Testing Word Tile Component", () => {
         allCharacters={[]}
         addToCharSet={jest.fn()}
         addWordToIgnoreList={jest.fn()}
+        hover={false}
+        setHover={jest.fn()}
+        unsetHover={jest.fn()}
       />,
       div
     );

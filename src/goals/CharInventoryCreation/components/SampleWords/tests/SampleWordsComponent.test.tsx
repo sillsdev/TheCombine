@@ -25,7 +25,7 @@ describe("Testing Sample Words Component", () => {
   it("Renders without crashing", async () => {
     const div = document.createElement("div");
     await ReactDOM.render(
-      <SampleWords allCharacters={[]} addToAcceptedCharacters={SET_INV} />,
+      <SampleWords allCharacters={[]} addToValidCharacters={SET_INV} />,
       div
     );
     ReactDOM.unmountComponentAtNode(div);
@@ -81,10 +81,7 @@ describe("Testing Sample Words Component", () => {
 function createTree(inventory: string[]) {
   renderer.act(() => {
     wordsMaster = renderer.create(
-      <SampleWords
-        allCharacters={inventory}
-        addToAcceptedCharacters={SET_INV}
-      />
+      <SampleWords allCharacters={inventory} addToValidCharacters={SET_INV} />
     );
   });
   wordsHandle = wordsMaster.root.findByType(SampleComponent).instance;

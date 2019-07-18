@@ -133,6 +133,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                 <label
                   className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-filled"
                   data-shrink={true}
+                  htmlFor="valid-characters-input"
                 >
                   Missing translationId: charInventory.characterSet.acceptedCharacters for language: \${ languageCode }
                 </label>
@@ -171,6 +172,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                     autoComplete="off"
                     className="MuiInputBase-input MuiOutlinedInput-input"
                     disabled={false}
+                    id="valid-characters-input"
                     name="chracters"
                     onBlur={[Function]}
                     onChange={[Function]}
@@ -207,6 +209,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                 <label
                   className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined"
                   data-shrink={false}
+                  htmlFor="rejected-characters-input"
                 >
                   Missing translationId: charInventory.characterSet.rejectedCharacters for language: \${ languageCode }
                 </label>
@@ -245,6 +248,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                     autoComplete="off"
                     className="MuiInputBase-input MuiOutlinedInput-input"
                     disabled={false}
+                    id="rejected-characters-input"
                     name="chracters"
                     onBlur={[Function]}
                     onChange={[Function]}

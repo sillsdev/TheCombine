@@ -1,6 +1,6 @@
 import {
-  setAcceptedCharacters,
-  SET_ACCEPTED_CHARACTERS,
+  setValidCharacters,
+  SET_VALID_CHARACTERS,
   uploadInventory
 } from "../CharacterInventoryActions";
 import configureMockStore from "redux-mock-store";
@@ -25,15 +25,15 @@ const MOCK_STATE = {
     characterSet: null
   },
   characterInventoryState: {
-    acceptedCharacters: DATA,
+    validCharacters: DATA,
     rejectedCharacters: DATA2
   }
 };
 
 describe("Testing CharacterInventoryActions", () => {
   test("setInventory yields correct action", () => {
-    expect(setAcceptedCharacters(DATA)).toEqual({
-      type: SET_ACCEPTED_CHARACTERS,
+    expect(setValidCharacters(DATA)).toEqual({
+      type: SET_VALID_CHARACTERS,
       payload: DATA
     });
   });
@@ -48,7 +48,7 @@ describe("Testing CharacterInventoryActions", () => {
 
     const updatedGoal: CreateCharInv = goal;
     updatedGoal.data = {
-      inventory: [[...MOCK_STATE.characterInventoryState.acceptedCharacters]]
+      inventory: [[...MOCK_STATE.characterInventoryState.validCharacters]]
     };
     expect(axios.put).toHaveBeenCalledTimes(2);
     expect(mockStore.getActions()).toEqual([
