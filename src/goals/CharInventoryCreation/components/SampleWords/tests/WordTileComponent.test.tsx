@@ -8,9 +8,12 @@ describe("Testing Word Tile Component", () => {
     ReactDOM.render(
       <WordTileComponent
         word={""}
-        inventory={[]}
-        addWordToCharSet={jest.fn()}
+        allCharacters={[]}
+        addToCharSet={jest.fn()}
         addWordToIgnoreList={jest.fn()}
+        hover={false}
+        setHover={jest.fn()}
+        unsetHover={jest.fn()}
       />,
       div
     );

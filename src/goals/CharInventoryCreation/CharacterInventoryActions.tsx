@@ -17,12 +17,21 @@ import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
 import { User } from "../../types/user";
 
-export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
-export type SET_CHARACTER_INVENTORY = typeof SET_CHARACTER_INVENTORY;
+export const SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS";
+export type SET_VALID_CHARACTERS = typeof SET_VALID_CHARACTERS;
+
+export const SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS";
+export type SET_REJECTED_CHARACTERS = typeof SET_REJECTED_CHARACTERS;
+
+export const ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS";
+export type ADD_TO_VALID_CHARACTERS = typeof ADD_TO_VALID_CHARACTERS;
 
 export interface CharacterInventoryData {}
 
-type CharacterInventoryType = SET_CHARACTER_INVENTORY;
+type CharacterInventoryType =
+  | SET_VALID_CHARACTERS
+  | SET_REJECTED_CHARACTERS
+  | ADD_TO_VALID_CHARACTERS;
 
 //action types
 
@@ -45,6 +54,33 @@ export function uploadInventory() {
     let history: Goal[] = state.goalsState.historyState.history;
 
     await saveChanges(updatedGoal, history, project, dispatch);
+  };
+}
+
+export function addToValidCharacters(
+  chars: string[]
+): CharacterInventoryAction {
+  return {
+    type: ADD_TO_VALID_CHARACTERS,
+    payload: chars
+  };
+}
+
+export function setValidCharacters(
+  payload: string[]
+): CharacterInventoryAction {
+  return {
+    type: SET_VALID_CHARACTERS,
+    payload
+  };
+}
+
+export function setRejectedCharacters(
+  payload: string[]
+): CharacterInventoryAction {
+  return {
+    type: SET_REJECTED_CHARACTERS,
+    payload
   };
 }
 
@@ -87,8 +123,8 @@ async function saveChangesToProject(
 
 function updateCurrentProject(state: StoreState): Project {
   let project = state.currentProject;
-  let inv = state.characterInventoryState.inventory;
-  project.characterSet = inv;
+  project.validCharacters = state.characterInventoryState.validCharacters;
+  project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
   return project;
 }
 
@@ -98,11 +134,4 @@ function updateCurrentGoal(state: StoreState): Goal {
   // Nothing stored as goal data for now
 
   return currentGoal;
-}
-
-export function setInventory(payload: string[]): CharacterInventoryAction {
-  return {
-    type: SET_CHARACTER_INVENTORY,
-    payload
-  };
 }

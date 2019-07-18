@@ -68,7 +68,8 @@ namespace BackendFramework.Services
                 .Set(x => x.Words, project.Words)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
                 .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)
-                .Set(x => x.CharacterSet, project.CharacterSet)
+                .Set(x => x.ValidCharacters, project.ValidCharacters)
+                .Set(x => x.RejectedCharacters, project.RejectedCharacters)
                 .Set(x => x.CustomFields, project.CustomFields)
                 .Set(x => x.WordFields, project.WordFields)
                 .Set(x => x.PartsOfSpeech, project.PartsOfSpeech);
