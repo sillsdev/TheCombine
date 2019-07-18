@@ -20,7 +20,7 @@ export default class TreeViewHeader extends React.Component<
   constructor(props: TreeHeaderProps) {
     super(props);
     this.state = {
-      input: props.currentDomain.number
+      input: props.currentDomain.id
     };
 
     this.animating = false;
@@ -62,7 +62,7 @@ export default class TreeViewHeader extends React.Component<
       // Search for domain
       for (let i: number = 0; i < 4 && parent; i++) {
         parent = this.searchDomain(parent, target.slice(0, i * 2 + 1));
-        if (parent && parent.number === target) this.props.animate(parent);
+        if (parent && parent.id === target) this.props.animate(parent);
         else if (!parent) break;
       }
     }
@@ -72,11 +72,11 @@ export default class TreeViewHeader extends React.Component<
   navigateDomainArrowKeys(event: KeyboardEvent) {
     if (event.key === "ArrowLeft") {
       let domain: SemanticDomain | undefined = this.getBrotherDomain(-1);
-      if (domain && domain.number !== this.props.currentDomain.number)
+      if (domain && domain.id !== this.props.currentDomain.id)
         this.props.animate(domain);
     } else if (event.key === "ArrowRight") {
       let domain: SemanticDomain | undefined = this.getBrotherDomain(1);
-      if (domain && domain.number !== this.props.currentDomain.number)
+      if (domain && domain.id !== this.props.currentDomain.id)
         this.props.animate(domain);
     } else if (event.key === "ArrowDown") {
       if (this.props.currentDomain.parentDomain)
@@ -90,9 +90,9 @@ export default class TreeViewHeader extends React.Component<
     number: string
   ): SemanticDomain | undefined {
     for (let domain of parent.subDomains)
-      if (domain.number === number) return domain;
+      if (domain.id === number) return domain;
 
-    if (parent.number === number) return parent;
+    if (parent.id === number) return parent;
     else return undefined;
   }
 
@@ -112,7 +112,7 @@ export default class TreeViewHeader extends React.Component<
       let brotherDomains: SemanticDomain[] = this.props.currentDomain
         .parentDomain.subDomains;
       let index: number = brotherDomains.findIndex(
-        domain => this.props.currentDomain.number === domain.number
+        domain => this.props.currentDomain.id === domain.id
       );
 
       index += navigationAmount;
@@ -126,7 +126,7 @@ export default class TreeViewHeader extends React.Component<
 
   // Switches current semantic domain + updates search bar
   updateDomain() {
-    this.setState({ input: this.props.currentDomain.number });
+    this.setState({ input: this.props.currentDomain.id });
   }
 
   // Creates the two-button + input field input
@@ -143,7 +143,7 @@ export default class TreeViewHeader extends React.Component<
               onClick={() => this.navigateDomain(-1)}
             >
               <Typography variant="h6">
-                {"<" + domainL.number.padStart(8, " ")}
+                {"<" + domainL.id.padStart(8, " ")}
               </Typography>
             </Button>
           ) : (
@@ -165,7 +165,7 @@ export default class TreeViewHeader extends React.Component<
           {domainR ? (
             <Button variant={"outlined"} onClick={() => this.navigateDomain(1)}>
               <Typography variant="h6">
-                {domainR.number.padEnd(8, " ") + ">"}
+                {domainR.id.padEnd(8, " ") + ">"}
               </Typography>
             </Button>
           ) : (

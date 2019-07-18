@@ -33,10 +33,10 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<Project> GetProject(string Id)
+        public async Task<Project> GetProject(string projectId)
         {
             var filterDef = new FilterDefinitionBuilder<Project>();
-            var filter = filterDef.Eq(x => x.Id, Id);
+            var filter = filterDef.Eq(x => x.Id, projectId);
 
             var projectList = await _projectDatabase.Projects.FindAsync(filter);
 
@@ -49,15 +49,15 @@ namespace BackendFramework.Services
             return project;
         }
 
-        public async Task<bool> Delete(string Id)
+        public async Task<bool> Delete(string projectId)
         {
-            var deleted = await _projectDatabase.Projects.DeleteManyAsync(x => x.Id == Id);
+            var deleted = await _projectDatabase.Projects.DeleteManyAsync(x => x.Id == projectId);
             return deleted.DeletedCount > 0;
         }
 
-        public async Task<bool> Update(string Id, Project project)
+        public async Task<bool> Update(string projectId, Project project)
         {
-            FilterDefinition<Project> filter = Builders<Project>.Filter.Eq(x => x.Id, Id);
+            FilterDefinition<Project> filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);
 
             Project updatedProject = new Project();
 

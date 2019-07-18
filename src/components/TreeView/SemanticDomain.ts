@@ -1,7 +1,7 @@
 export default interface SemanticDomain {
   // Data of current domain
   name: string;
-  number: string;
+  id: string;
 
   // Data about tangential domains
   parentDomain?: SemanticDomain;

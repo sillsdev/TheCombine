@@ -34,7 +34,7 @@ export default class TreeView extends React.Component<
       return new Promise(resolve =>
         setTimeout(() => {
           if (domain)
-            if (domain.number !== this.props.currentDomain.number) {
+            if (domain.id !== this.props.currentDomain.id) {
               this.props.navigate(domain);
               this.setState({ ...this.state, visible: true });
               if (this.updateDomain) this.updateDomain();

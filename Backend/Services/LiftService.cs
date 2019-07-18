@@ -289,6 +289,12 @@ namespace BackendFramework.Services
                 return;
             }
 
+            if (proj.SemanticDomains.Count == 0)
+            {
+                proj.SemanticDomains = sdList;
+                await _projService.Update(projectId, proj);
+            }
+
             //add plural
             foreach (var field in entry.Fields)
             {

@@ -78,7 +78,7 @@ beforeEach(() => {
     });
     master = renderer.create(
       <AddWords_unconnected
-        domain={{ name: "en", number: "1", subDomains: [] }}
+        domain={{ name: "en", id: "1", subDomains: [] }}
         translate={jest.fn(() => "ok")}
       />
     );

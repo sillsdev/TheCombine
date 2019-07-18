@@ -173,4 +173,21 @@ namespace BackendFramework.ValueModels
             };
         }
     }
+
+    public class SemanticDomainWithSubdomains
+    {
+        [BsonElement("name")]
+        public string Name;
+        [BsonElement("id")]
+        public string Number;
+        [BsonElement("subdomains")]
+        public List<SemanticDomainWithSubdomains> Subdomains;
+
+        public SemanticDomainWithSubdomains(SemanticDomain sd)
+        {
+            Name = sd.Name;
+            Number = sd.Number;
+            Subdomains = new List<SemanticDomainWithSubdomains>();
+        }
+    }
 }

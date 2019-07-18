@@ -47,7 +47,7 @@ describe("Tests AddWords", () => {
   it("Sets a new domain upon navigation", () => {
     let newDom: SemanticDomain = {
       name: "test",
-      number: "test",
+      id: "test",
       subDomains: []
     };
 

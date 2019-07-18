@@ -49,7 +49,7 @@ describe("Tests TreeViewHeader", () => {
 
   // onKeyDown
   it("Search & select domain switches semantic domain if given number found", () => {
-    event.target.value = MockTree.number;
+    event.target.value = MockTree.id;
     treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
     expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree);
   });

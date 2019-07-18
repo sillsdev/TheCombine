@@ -3,7 +3,7 @@ import SemanticDomain from "../SemanticDomain";
 // Parent
 const PAR: SemanticDomain = {
   name: "parent",
-  number: "1",
+  id: "1",
   subDomains: []
 };
 
@@ -11,7 +11,7 @@ const PAR: SemanticDomain = {
 for (let i: number = 0; i < 3; i++)
   PAR.subDomains[i] = {
     name: "kid",
-    number: "1." + i,
+    id: "1." + i,
     parentDomain: PAR,
     subDomains: []
   };
@@ -20,7 +20,7 @@ for (let i: number = 0; i < 3; i++)
 for (let i: number = 0; i < 4; i++)
   PAR.subDomains[0].subDomains.push({
     name: "evenData",
-    number: PAR.subDomains[0].number + "." + i,
+    id: PAR.subDomains[0].id + "." + i,
     parentDomain: PAR.subDomains[0],
     subDomains: []
   });
@@ -29,7 +29,7 @@ for (let i: number = 0; i < 4; i++)
 for (let i: number = 0; i < 3; i++)
   PAR.subDomains[1].subDomains.push({
     name: "oddData",
-    number: PAR.subDomains[1].number + "." + i,
+    id: PAR.subDomains[1].id + "." + i,
     parentDomain: PAR.subDomains[1],
     subDomains: []
   });
@@ -37,7 +37,7 @@ for (let i: number = 0; i < 3; i++)
 // Give the the last subdomain one subdomain
 PAR.subDomains[2].subDomains.push({
   name: "oddData",
-  number: PAR.subDomains[2].number + ".1",
+  id: PAR.subDomains[2].id + ".1",
   parentDomain: PAR.subDomains[2],
   subDomains: []
 });

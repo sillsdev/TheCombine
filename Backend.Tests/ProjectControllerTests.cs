@@ -1,10 +1,9 @@
-﻿using Backend.Tests;
-using BackendFramework.Controllers;
+﻿using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
+using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace Backend.Tests
@@ -12,19 +11,36 @@ namespace Backend.Tests
     public class ProjectControllerTests
     {
         private IProjectService _projectService;
+        private ISemDomParser _semDomParser;
         private ProjectController _controller;
 
         [SetUp]
         public void Setup()
         {
             _projectService = new ProjectServiceMock();
-            _controller = new ProjectController(_projectService);
+            _semDomParser = new SemDomParser(_projectService);
+            _controller = new ProjectController(_projectService, _semDomParser);
         }
 
         Project RandomProject()
         {
             Project project = new Project();
             project.Name = Util.randString();
+
+            project.SemanticDomains = new List<SemanticDomain>();
+            for (int i = 1; i < 4; i++)
+            {
+                project.SemanticDomains.Add(new SemanticDomain() { Number = $"{i}", Name = Util.randString() });
+                for (int j = 1; j < 4; j++)
+                {
+                    project.SemanticDomains.Add(new SemanticDomain() { Number = $"{i}.{j}", Name = Util.randString() });
+                    for (int k = 1; k < 4; k++)
+                    {
+                        project.SemanticDomains.Add(new SemanticDomain() { Number = $"{i}.{j}.{k}", Name = Util.randString() });
+                    }
+                }
+            }
+
             return project;
         }
 
@@ -103,6 +119,16 @@ namespace Backend.Tests
             _ = _controller.Delete().Result;
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
+        }
+
+        [Test]
+        public void TestParseSemanticDomains()
+        {
+            var project = _projectService.Create(RandomProject()).Result;
+            var sdList = (_controller.GetSemDoms(project.Id).Result as ObjectResult).Value as List<SemanticDomainWithSubdomains>;
+            Assert.That(sdList, Has.Count.EqualTo(3));
+            Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
+            Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
         }
     }
 }

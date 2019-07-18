@@ -13,7 +13,7 @@ function createDomains(data: string = tempData): TreeViewState {
   let state: TreeViewState = {
     currentDomain: {
       name: "Semantic Domains",
-      number: "",
+      id: "",
       subDomains: JSON.parse(data).domains
     }
   };

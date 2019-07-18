@@ -187,7 +187,7 @@ export default class TreeDepiction extends React.Component<
   nameTile(domain: SemanticDomain, currentDomain: boolean = true): ReactNode {
     return (
       <Button
-        id={domain.number}
+        id={domain.id}
         color={"primary"}
         variant={currentDomain ? "contained" : "outlined"}
         disabled={!currentDomain && !this.props.currentDomain.parentDomain}
@@ -204,7 +204,7 @@ export default class TreeDepiction extends React.Component<
       >
         <div>
           <Typography variant={"h5"}>{domain.name}</Typography>
-          <Typography variant={"h6"}>{domain.number}</Typography>
+          <Typography variant={"h6"}>{domain.id}</Typography>
         </div>
       </Button>
     );

@@ -13,10 +13,9 @@ import {
 } from "@material-ui/core";
 import theme from "../../types/theme";
 import { Translate, TranslateFunction } from "react-localize-redux";
-import { Word, State, Gloss } from "../../types/word";
+import { Word, SemanticDomain, State, Gloss } from "../../types/word";
 import { Delete, Edit } from "@material-ui/icons";
 import * as Backend from "../../backend";
-import { SemanticDomain } from "../../types/project";
 import DuplicateFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
@@ -69,7 +68,7 @@ export default class AddWords extends React.Component<
   }
 
   allWords: Word[] = [];
-  semanticDomain: SemanticDomain = { name: "Sky", number: "1.2" };
+  semanticDomain: SemanticDomain = { name: "Sky", id: "1.2" };
 
   async componentDidMount() {
     this.allWords = await Backend.getFrontierWords();
@@ -151,7 +150,7 @@ export default class AddWords extends React.Component<
         {
           glosses: [],
           semanticDomains: [
-            { name: this.props.domain.name, number: this.props.domain.number }
+            { name: this.props.domain.name, id: this.props.domain.id }
           ]
         }
       ],
@@ -360,7 +359,7 @@ export default class AddWords extends React.Component<
           >
             <Translate id="addWords.domain" />
             {": "}
-            {this.props.domain.name + " (" + this.props.domain.number + ")"}
+            {this.props.domain.name + " (" + this.props.domain.id + ")"}
             <IconButton
               onClick={() => {
                 this.setState({ gettingSemanticDomain: true });
