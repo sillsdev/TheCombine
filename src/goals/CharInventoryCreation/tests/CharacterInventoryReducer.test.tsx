@@ -9,7 +9,8 @@ import {
   SET_ACCEPTED_CHARACTERS
 } from "../CharacterInventoryActions";
 
-const DATA: string[] = ["foo", "bar"];
+const DATA: string[] = ["a", "b"];
+const DATA2: string[] = ["c", "d"];
 const BAD_RESP: string[] = ["If", "this", "appears", "there's", "an", "issue"];
 
 describe("Test Character Inventory Reducer", () => {
@@ -28,11 +29,11 @@ describe("Test Character Inventory Reducer", () => {
         type: SET_ACCEPTED_CHARACTERS,
         payload: DATA
       } as CharacterInventoryAction)
-    ).toEqual({ inventory: DATA });
+    ).toEqual({ acceptedCharacters: DATA, rejectedCharacters: [] });
   });
 
   it("Returns state passed in when passed an undefined action", () => {
-    let inv = { inventory: DATA };
+    let inv = { acceptedCharacters: DATA, rejectedCharacters: [] };
     expect(
       characterInventoryReducer(inv, {
         type: "" as SET_ACCEPTED_CHARACTERS,

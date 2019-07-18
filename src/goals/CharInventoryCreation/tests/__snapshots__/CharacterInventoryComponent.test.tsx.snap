@@ -11,7 +11,12 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
     }
   >
     <div
-      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6"
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-9"
+      style={
+        Object {
+          "borderRight": "1px solid #ccc",
+        }
+      }
     >
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-align-items-xs-center"
@@ -50,196 +55,219 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
           </h1>
         </div>
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1"
+          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2 MuiGrid-grid-sm-1"
           onDragOver={[Function]}
+          style={
+            Object {
+              "paddingBottom": 0,
+            }
+          }
         >
           <div
             className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
           >
             <div
-              className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
               draggable={true}
               id="charTile_a"
               onClick={[Function]}
               onDragEnd={[Function]}
               onDragStart={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
               style={
                 Object {
-                  "background": "#fff",
+                  "alignItems": "center",
+                  "border": "4px solid #c8e6c9",
+                  "borderRadius": "50%",
                   "cursor": "pointer",
-                  "minWidth": 20,
-                  "padding": "5px 10px",
-                  "textAlign": "center",
+                  "display": "flex",
+                  "height": 40,
+                  "justifyContent": "center",
+                  "position": "relative",
+                  "width": 40,
                 }
               }
             >
-              a
+              <h6
+                className="MuiTypography-root MuiTypography-h6"
+              >
+                a
+              </h6>
             </div>
+            <h6
+              className="MuiTypography-root MuiTypography-subtitle2"
+              style={
+                Object {
+                  "opacity": 0,
+                }
+              }
+            >
+              Accepted
+            </h6>
           </div>
         </div>
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
-        />
-        <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6"
         >
           <div
-            className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
-            onKeyDown={[Function]}
+            className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+            style={
+              Object {
+                "background": "whitesmoke",
+                "borderTop": "1px solid #ccc",
+                "padding": 16,
+              }
+            }
           >
-            <label
-              className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined"
-              data-shrink={false}
-            >
-              Missing translationId: charInventory.characterSet.input for language: \${ languageCode }
-            </label>
             <div
-              className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
-              onClick={[Function]}
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
             >
-              <fieldset
-                aria-hidden={true}
-                className="PrivateNotchedOutline-root-231 MuiOutlinedInput-notchedOutline"
+              <div
+                className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
                 style={
                   Object {
-                    "paddingLeft": 8,
+                    "maxWidth": 512,
                   }
                 }
               >
-                <legend
-                  className="PrivateNotchedOutline-legend-232"
-                  style={
-                    Object {
-                      "width": 0.01,
-                    }
-                  }
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-filled"
+                  data-shrink={true}
                 >
-                  <span
-                    dangerouslySetInnerHTML={
+                  Missing translationId: charInventory.characterSet.acceptedCharacters for language: \${ languageCode }
+                </label>
+                <div
+                  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
+                  onClick={[Function]}
+                >
+                  <fieldset
+                    aria-hidden={true}
+                    className="PrivateNotchedOutline-root-204 MuiOutlinedInput-notchedOutline"
+                    style={
                       Object {
-                        "__html": "&#8203;",
+                        "paddingLeft": 8,
                       }
                     }
+                  >
+                    <legend
+                      className="PrivateNotchedOutline-legend-205"
+                      style={
+                        Object {
+                          "width": 0,
+                        }
+                      }
+                    >
+                      <span
+                        dangerouslySetInnerHTML={
+                          Object {
+                            "__html": "&#8203;",
+                          }
+                        }
+                      />
+                    </legend>
+                  </fieldset>
+                  <input
+                    aria-invalid={false}
+                    autoComplete="off"
+                    className="MuiInputBase-input MuiOutlinedInput-input"
+                    disabled={false}
+                    name="chracters"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    spellcheck="false"
+                    style={
+                      Object {
+                        "letterSpacing": 5,
+                      }
+                    }
+                    type="text"
+                    value="a"
                   />
-                </legend>
-              </fieldset>
-              <input
-                aria-invalid={false}
-                autoComplete="off"
-                className="MuiInputBase-input MuiOutlinedInput-input"
-                disabled={false}
-                name="chracters"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                required={false}
-                type="text"
-                value=""
-              />
+                </div>
+              </div>
+            </div>
+            <div
+              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+              style={
+                Object {
+                  "background": "whitesmoke",
+                }
+              }
+            >
+              <div
+                className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+                style={
+                  Object {
+                    "maxWidth": 512,
+                  }
+                }
+              >
+                <label
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined"
+                  data-shrink={false}
+                >
+                  Missing translationId: charInventory.characterSet.rejectedCharacters for language: \${ languageCode }
+                </label>
+                <div
+                  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
+                  onClick={[Function]}
+                >
+                  <fieldset
+                    aria-hidden={true}
+                    className="PrivateNotchedOutline-root-204 MuiOutlinedInput-notchedOutline"
+                    style={
+                      Object {
+                        "paddingLeft": 8,
+                      }
+                    }
+                  >
+                    <legend
+                      className="PrivateNotchedOutline-legend-205"
+                      style={
+                        Object {
+                          "width": 0.01,
+                        }
+                      }
+                    >
+                      <span
+                        dangerouslySetInnerHTML={
+                          Object {
+                            "__html": "&#8203;",
+                          }
+                        }
+                      />
+                    </legend>
+                  </fieldset>
+                  <input
+                    aria-invalid={false}
+                    autoComplete="off"
+                    className="MuiInputBase-input MuiOutlinedInput-input"
+                    disabled={false}
+                    name="chracters"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    spellcheck="false"
+                    style={
+                      Object {
+                        "letterSpacing": 5,
+                      }
+                    }
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6"
-        >
-          <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-            disabled={false}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            style={
-              Object {
-                "margin": 10,
-              }
-            }
-            tabIndex={0}
-            title="Missing translationId: charInventory.characterSet.addButtonTitle for language: \${ languageCode }"
-            type="button"
-          >
-            <span
-              className="MuiButton-label"
-            >
-              <svg
-                aria-hidden="true"
-                className="MuiSvgIcon-root"
-                focusable="false"
-                role="presentation"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-                />
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-              </svg>
-               
-              Missing translationId: charInventory.characterSet.addButton for language: \${ languageCode }
-            </span>
-            <span
-              className="MuiTouchRipple-root"
-            />
-          </button>
-          <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary Mui-disabled Mui-disabled"
-            disabled={true}
-            onBlur={[Function]}
-            onClick={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            style={
-              Object {
-                "margin": 10,
-              }
-            }
-            tabIndex={-1}
-            title="Missing translationId: charInventory.characterSet.deleteButtonTitle for language: \${ languageCode }"
-            type="button"
-          >
-            <span
-              className="MuiButton-label"
-            >
-              <svg
-                aria-hidden="true"
-                className="MuiSvgIcon-root"
-                focusable="false"
-                role="presentation"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
-                />
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-              </svg>
-               
-              Missing translationId: charInventory.characterSet.deleteButton for language: \${ languageCode }
-            </span>
-          </button>
         </div>
       </div>
     </div>
     <div
-      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-6"
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-3"
     >
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-align-items-xs-center"
@@ -248,7 +276,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
         >
           <h1
-            className="MuiTypography-root MuiTypography-h4"
+            className="MuiTypography-root MuiTypography-h5"
           >
             Missing translationId: charInventory.sampleWords.title for language: \${ languageCode }
           </h1>
@@ -265,6 +293,11 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
     </div>
     <div
       className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+      style={
+        Object {
+          "borderTop": "1px solid #ccc",
+        }
+      }
     >
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"

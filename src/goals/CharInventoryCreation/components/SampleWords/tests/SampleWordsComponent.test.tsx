@@ -25,7 +25,7 @@ describe("Testing Sample Words Component", () => {
   it("Renders without crashing", async () => {
     const div = document.createElement("div");
     await ReactDOM.render(
-      <SampleWords allCharacters={[]} setAcceptedCharacters={SET_INV} />,
+      <SampleWords allCharacters={[]} addToAcceptedCharacters={SET_INV} />,
       div
     );
     ReactDOM.unmountComponentAtNode(div);
@@ -65,7 +65,7 @@ describe("Testing Sample Words Component", () => {
   it("Adds words to character set, removing whitespace", () => {
     createTree(["a", "b"]);
     wordsHandle.addToCharSet("y o d e l \n");
-    expect(SET_INV).toHaveBeenCalledWith(["a", "b", "y", "o", "d", "e", "l"]);
+    expect(SET_INV).toHaveBeenCalledWith(["y", "o", "d", "e", "l"]);
     createTree([]);
   });
 
@@ -81,7 +81,10 @@ describe("Testing Sample Words Component", () => {
 function createTree(inventory: string[]) {
   renderer.act(() => {
     wordsMaster = renderer.create(
-      <SampleWords allCharacters={inventory} setAcceptedCharacters={SET_INV} />
+      <SampleWords
+        allCharacters={inventory}
+        addToAcceptedCharacters={SET_INV}
+      />
     );
   });
   wordsHandle = wordsMaster.root.findByType(SampleComponent).instance;

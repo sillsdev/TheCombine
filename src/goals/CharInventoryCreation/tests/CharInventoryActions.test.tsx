@@ -13,6 +13,7 @@ import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 
 const createMockStore = configureMockStore([thunk]);
 const DATA: string[] = ["foo", "bar"];
+const DATA2: string[] = ["a", "b"];
 const goal: CreateCharInv = new CreateCharInv();
 const MOCK_STATE = {
   goalsState: {
@@ -24,7 +25,8 @@ const MOCK_STATE = {
     characterSet: null
   },
   characterInventoryState: {
-    inventory: DATA
+    acceptedCharacters: DATA,
+    rejectedCharacters: DATA2
   }
 };
 
@@ -46,7 +48,7 @@ describe("Testing CharacterInventoryActions", () => {
 
     const updatedGoal: CreateCharInv = goal;
     updatedGoal.data = {
-      inventory: [[...MOCK_STATE.characterInventoryState.inventory]]
+      inventory: [[...MOCK_STATE.characterInventoryState.acceptedCharacters]]
     };
     expect(axios.put).toHaveBeenCalledTimes(2);
     expect(mockStore.getActions()).toEqual([
@@ -57,7 +59,9 @@ describe("Testing CharacterInventoryActions", () => {
       {
         type: SET_CURRENT_PROJECT,
         payload: {
-          characterSet: DATA
+          characterSet: null,
+          validCharacters: ["foo", "bar"],
+          rejectedCharacters: ["a", "b"]
         }
       }
     ]);

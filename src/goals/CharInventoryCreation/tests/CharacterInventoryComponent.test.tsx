@@ -34,6 +34,9 @@ beforeAll(() => {
         currentProject={{ validCharacters: ["a"] } as Project}
         setAcceptedCharacters={SET_INV}
         uploadInventory={UPLOAD_INV}
+        addToAcceptedCharacters={jest.fn()}
+        setRejectedCharacters={jest.fn()}
+        rejectedCharacters={[]}
       />
     );
   });
@@ -54,6 +57,9 @@ describe("Testing Character Inventory Component", () => {
         currentProject={{ validCharacters: ["a"] } as Project}
         setAcceptedCharacters={SET_INV}
         uploadInventory={UPLOAD_INV}
+        addToAcceptedCharacters={jest.fn()}
+        setRejectedCharacters={jest.fn()}
+        rejectedCharacters={[]}
       />,
       div
     );
