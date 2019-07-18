@@ -17,7 +17,7 @@ import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
-import { RESET } from "../ProjectScreen/CreateProject/CreateProjectActions";
+import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -51,7 +51,10 @@ export interface UpdateGoal extends ActionWithPayload<Goal[]> {
   payload: Goal[];
 }
 
-export function asyncLoadUserEdits(projectId: string, userEditId: string) {
+export function asyncLoadExistingUserEdits(
+  projectId: string,
+  userEditId: string
+) {
   return async (dispatch: Dispatch<GoalAction>) => {
     await backend
       .getUserEditById(projectId, userEditId)
@@ -85,10 +88,13 @@ export function asyncGetUserEdits() {
     if (currentUserString) {
       let currentUserObject: User = JSON.parse(currentUserString);
       let projectId: string = backend.getProjectId();
-      let userEditId: string | undefined =
-        currentUserObject.workedProjects[projectId];
+      let userEditId: string | undefined = getUserEditIdFromProjectId(
+        currentUserObject.workedProjects,
+        projectId
+      );
+
       if (userEditId !== undefined) {
-        dispatch(asyncLoadUserEdits(projectId, userEditId));
+        dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
         dispatch(asyncCreateNewUserEditsObject(projectId));
       }
@@ -97,20 +103,33 @@ export function asyncGetUserEdits() {
 }
 
 export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: Dispatch<GoalAction>, getState: any) => {
-    let userEditId: string = getUserEditId();
-
-    await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
-    await backend
-      .addGoalToUserEdit(userEditId, goal)
-      .then(resp => {
-        dispatch(addGoalToHistory(goal));
-        history.push(`/goals/${resp}`);
-      })
-      .catch((err: string) => {
-        console.log(err);
-      });
+  return async (dispatch: Dispatch<GoalAction>) => {
+    let user: User | undefined = getUser();
+    if (user !== undefined) {
+      let userEditId: string | undefined = getUserEditId(user);
+      if (userEditId !== undefined) {
+        await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
+        await backend
+          .addGoalToUserEdit(userEditId, goal)
+          .then(resp => {
+            dispatch(addGoalToHistory(goal));
+            history.push(`/goals/${resp}`);
+          })
+          .catch((err: string) => {
+            console.log(err);
+          });
+      }
+    }
   };
+}
+
+export function getUser(): User | undefined {
+  let userString: string | null = localStorage.getItem("user");
+  let user: User | undefined;
+  if (userString) {
+    user = JSON.parse(userString);
+  }
+  return user;
 }
 
 export async function loadGoalData(goal: Goal): Promise<Goal> {
@@ -129,16 +148,24 @@ export async function loadGoalData(goal: Goal): Promise<Goal> {
   return goal;
 }
 
-export function getUserEditId(): string {
-  let userString = localStorage.getItem("user");
-  let userObject: User;
-  let userEditId: string = "";
-  if (userString) {
-    userObject = JSON.parse(userString);
-    let projectId = backend.getProjectId();
-    userEditId = userObject.workedProjects[projectId];
-  }
+export function getUserEditId(user: User): string | undefined {
+  let projectId = backend.getProjectId();
+  let userEditId: string | undefined = getUserEditIdFromProjectId(
+    user.workedProjects,
+    projectId
+  );
   return userEditId;
+}
+
+function getUserEditIdFromProjectId(
+  workedProjects: Hash<string>,
+  projectId: string
+): string | undefined {
+  let projectIds = Object.keys(workedProjects);
+  let matches: string[] = projectIds.filter(project => projectId === project);
+  if (matches.length !== 0 && matches.length < 2) {
+    return workedProjects[matches[0]];
+  }
 }
 
 function updateUserIfExists(projectId: string, userEditId: string): User {
@@ -162,9 +189,22 @@ function updateUserWithUserEditId(
   userEditId: string
 ): string {
   let currentUserObject: User = JSON.parse(userObjectString);
-  currentUserObject.workedProjects[projectId] = userEditId;
+  currentUserObject = addProjectToWorkedProjects(
+    currentUserObject,
+    projectId,
+    userEditId
+  );
   let updatedUserString = JSON.stringify(currentUserObject);
   return updatedUserString;
+}
+
+function addProjectToWorkedProjects(
+  user: User,
+  projectId: string,
+  userEditId: string
+): User {
+  user.workedProjects[projectId] = userEditId;
+  return user;
 }
 
 export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
@@ -224,8 +264,4 @@ export function nextStep(): NextStep {
 
 export function updateGoal(goal: Goal): UpdateGoal {
   return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
-}
-
-export function reset() {
-  return { type: RESET, payload: [] };
 }
