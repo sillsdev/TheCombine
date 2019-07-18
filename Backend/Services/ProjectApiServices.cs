@@ -77,7 +77,7 @@ namespace BackendFramework.Services
 
             if (!updateResult.IsAcknowledged)
             {
-                throw new Exception();
+                throw new Exception("Project not found");
             }
 
             return updateResult.ModifiedCount > 0;
