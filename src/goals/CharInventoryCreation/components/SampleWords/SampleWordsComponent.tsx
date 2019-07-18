@@ -10,15 +10,14 @@ import * as backend from "../../../../backend";
 import WordTile from "./WordTileComponent";
 
 export interface SampleWordsProps {
-  setInventory: (inventory: string[]) => void;
-  inventory: string[];
+  addToValidCharacters: (chars: string[]) => void;
+  allCharacters: string[];
 }
 
 interface SampleWordsState {
   words: string[];
-  dragChar: string;
-  dropChar: string;
   ignoreList: string[]; // A list of words we don't want to see right now
+  hoverWordIndex: number | null;
 }
 
 export class SampleWords extends React.Component<
@@ -29,9 +28,8 @@ export class SampleWords extends React.Component<
     super(props);
     this.state = {
       words: [],
-      dragChar: "",
-      dropChar: "",
-      ignoreList: []
+      ignoreList: [],
+      hoverWordIndex: null
     };
     this.canGetWords = true;
   }
@@ -49,7 +47,7 @@ export class SampleWords extends React.Component<
   }
 
   componentDidUpdate(prevProps: SampleWordsProps & LocalizeContextProps) {
-    if (prevProps.inventory !== this.props.inventory) this.getWords();
+    if (prevProps.allCharacters !== this.props.allCharacters) this.getWords();
   }
 
   componentWillUnmount() {
@@ -57,13 +55,11 @@ export class SampleWords extends React.Component<
     this.canGetWords = false;
   }
 
-  /**
-   * Gets the words that don't fit the character inventory
-   */
+  /** Gets the words that don't fit the character inventory */
   getWords() {
     const NUM_WORDS = 5; // The max number of words we want to display on the page
 
-    let inv = [...this.props.inventory];
+    let inv = [...this.props.allCharacters];
     let sampleWords: string[] = [];
 
     let word;
@@ -85,11 +81,10 @@ export class SampleWords extends React.Component<
     });
   }
 
-  /** Adds all characters from the word into the character inventory */
-  addWordToCharSet(word: string) {
-    this.props.setInventory([
-      ...this.props.inventory,
-      ...word.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
+  /** Adds characters to the valid characters */
+  addToCharSet(chars: string) {
+    this.props.addToValidCharacters([
+      ...chars.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
     ]);
 
     this.getWords(); // refresh the list
@@ -113,7 +108,7 @@ export class SampleWords extends React.Component<
         alignItems="center"
       >
         <Grid item xs={12}>
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h5">
             <Translate id="charInventory.sampleWords.title" />
           </Typography>
           <Typography variant="subtitle1">
@@ -124,9 +119,12 @@ export class SampleWords extends React.Component<
           <WordTile
             key={word + index + "tile"}
             word={word}
-            inventory={this.props.inventory}
-            addWordToCharSet={word => this.addWordToCharSet(word)}
+            allCharacters={this.props.allCharacters}
+            addToCharSet={word => this.addToCharSet(word)}
             addWordToIgnoreList={word => this.addWordToIgnoreList(word)}
+            hover={this.state.hoverWordIndex === index}
+            setHover={() => this.setState({ hoverWordIndex: index })}
+            unsetHover={() => this.setState({ hoverWordIndex: null })}
           />
         ))}
         <Grid item xs={12} />
