@@ -319,7 +319,7 @@ class MergeDupStep extends React.Component<
           </div>
         </DragDropContext>
         {/* Merge button */}
-        <div style={{ borderTop: "1px solid gray" }}>
+        <div style={{ borderTop: "1px solid gray", margin: 10 }}>
           <Button
             style={{ float: "right" }}
             onClick={_ => this.next()}

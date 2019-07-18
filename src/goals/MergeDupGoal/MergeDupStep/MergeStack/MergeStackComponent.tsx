@@ -127,7 +127,6 @@ class MergeStack extends React.Component<
 
     let showMoreButton = Object.keys(this.props.sense).length > 1;
 
-    debugger;
     if (
       this.props.sideBar.wordID === this.props.wordID &&
       this.props.sideBar.senseID === this.props.senseID &&

@@ -77,7 +77,7 @@ const mergeDupStepReducer = (
         ...state.tree.words[ref.word],
         senses: newSenses
       };
-      state.tree.words = {...state.tree.words};
+      state.tree.words = { ...state.tree.words };
       state.tree = { ...state.tree };
       state = { ...state };
       return state;
@@ -127,7 +127,6 @@ const mergeDupStepReducer = (
 
           if (Object.keys(treeState.words[src.word].senses).length === 0) {
             delete treeState.words[src.word];
-          }
           }
         }
       }
