@@ -1,9 +1,10 @@
 import * as utilities from "../utilities";
 
 describe("test all utilities", () => {
-  let compareItem = (input: any) => {
-    return input as number;
+  let compareItem = (input: number) => {
+    return input;
   };
+
   let numbers: number[] = [];
   for (let i = 0; i < 25; i++) numbers.push(Math.random());
 

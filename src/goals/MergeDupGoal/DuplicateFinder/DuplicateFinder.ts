@@ -10,6 +10,7 @@ export interface FinderParams {
   insCost: number;
   delCost: number;
   qualVal: number;
+  filterAt: number;
 }
 
 //use spread operator on default params to assign to parameters
@@ -20,7 +21,8 @@ export const DefaultParams: FinderParams = {
   subCost: 1,
   insCost: 2,
   delCost: 2,
-  qualVal: 0
+  qualVal: 0,
+  filterAt: 3
 };
 
 export interface ScoredWord {
@@ -37,6 +39,9 @@ interface Bitmask {
   vernMask: number;
   glossMasks: number[];
 }
+
+//[wordlist, list score]
+type ScoredWordlist = [Word[], number];
 
 // THIS DOES NOT YET WORK WITH MULTIPLE GLOSSES
 
@@ -55,6 +60,7 @@ export default class DupFinder {
     this.deletionCost = params.delCost;
     this.subsitutionCost = params.subCost;
 
+    this.filterAt = params.filterAt;
     this.vernmap = new Set();
     this.glossmap = new Set();
     this.maskedWords = [];
@@ -77,10 +83,13 @@ export default class DupFinder {
   deletionCost: number;
   subsitutionCost: number;
 
+  //bitmap filtering
+  filterAt: number;
   vernmap: Set<string>;
   glossmap: Set<string>;
   maskedWords: MaskedWord[];
 
+  //error handling
   empty2dArray = [[]];
 
   //filter output, total output - Used for testing duplicate finder. (See docs/bitmap_testing.md)
@@ -91,17 +100,17 @@ export default class DupFinder {
    */
   async getNextDups(n: number = 1): Promise<Word[][]> {
     let wordCollections: Promise<Word[][]> = this.fetchWordsFromDB().then(
-      gotWords => {
+      gotWordsFromDB => {
         //return no words if DB empty
-        if (!gotWords) return this.empty2dArray;
+        if (!gotWordsFromDB) return this.empty2dArray;
 
         //[wordlist, list score]
-        let currentWords: [Word[], number][] = [];
+        let currentWordlists: ScoredWordlist[] = [];
 
         //use each word as a parent and compare the resulting lists against each other
         for (let i = 0; i < this.maskedWords.length; i++) {
           //word list to compare against current words
-          let newWordList: [Word[], number] = this.getDuplicatesOfWord(
+          let newWordList: ScoredWordlist = this.getDuplicatesOfWord(
             this.maskedWords[i]
           );
 
@@ -111,21 +120,21 @@ export default class DupFinder {
           }
 
           //add wordlist if currentWords is not full yet
-          if (currentWords.length < n) {
-            currentWords.push(newWordList);
+          if (currentWordlists.length < n) {
+            currentWordlists.push(newWordList);
             continue;
           }
 
           //add wordlist if it scores lower than the last element in currentWords
           // and resort currentWords
           if (
-            currentWords[currentWords.length - 1].length < newWordList.length
+            currentWordlists[currentWordlists.length - 1][1] < newWordList[1]
           ) {
-            currentWords.push(newWordList);
-            currentWords.sort(function(a, b): number {
+            currentWordlists.push(newWordList);
+            currentWordlists.sort(function(a, b): number {
               return a[1] - b[1];
             });
-            currentWords.pop();
+            currentWordlists.pop();
           }
         }
 
@@ -137,10 +146,10 @@ export default class DupFinder {
         // );
 
         //return empty 2d array if no possible duplicates found
-        if (currentWords.length <= 0) return this.empty2dArray;
+        if (currentWordlists.length <= 0) return this.empty2dArray;
 
         //return the wordlist from the scored list
-        return currentWords.map(function(scoredList) {
+        return currentWordlists.map(function(scoredList) {
           return scoredList[0];
         });
       }
@@ -149,7 +158,7 @@ export default class DupFinder {
   }
 
   /** returns a scored collection of duplicates of the parent */
-  getDuplicatesOfWord(parent: Word | MaskedWord): [Word[], number] {
+  getDuplicatesOfWord(parent: Word | MaskedWord): ScoredWordlist {
     if (!("mask" in parent)) parent = this.maskWord(parent);
 
     if (this.maskedWords.length <= 0) {
@@ -166,7 +175,7 @@ export default class DupFinder {
     let scoredWords: ScoredWord[] = this.scoreWords(parent.word, words);
 
     //apply thresholds
-    let scoredList: [Word[], number] = this.getAcceptedWords(scoredWords);
+    let scoredList: ScoredWordlist = this.getAcceptedWords(scoredWords);
 
     //Used for testing duplicate finder. (See docs/bitmap_testing.md)
     //this.filterTest[1] += scoredList[0].length;
@@ -251,7 +260,7 @@ export default class DupFinder {
 
   //---------------------------------- PRIVATE METHODS ----------------------------------\\
 
-  /** map a word and return as type MappedWord */
+  /** map a word and return as type MaskedWord */
   private maskWord(word: Word): MaskedWord {
     //mask vernacular
     let vernMask: number = this.mapString(word.vernacular, this.vernmap);
@@ -286,12 +295,13 @@ export default class DupFinder {
     return output;
   }
 
-  private compareMasks(a: Bitmask, b: Bitmask, threshold: number): boolean {
+  /** compare two masks and return whether their result falls below a threshold */
+  private masksAreSimilar(a: Bitmask, b: Bitmask): boolean {
     //compare masks against threshold
     if (
       this.calculateMaskScore(a.vernMask & ~b.vernMask) +
         this.calculateMaskScore(b.vernMask & ~a.vernMask) <
-      threshold * 2
+      this.filterAt * 2
     )
       return true;
 
@@ -300,7 +310,7 @@ export default class DupFinder {
         if (
           this.calculateMaskScore(agloss & ~bgloss) +
             this.calculateMaskScore(bgloss & ~agloss) <
-          threshold * 2
+          this.filterAt * 2
         )
           return true;
       });
@@ -308,6 +318,7 @@ export default class DupFinder {
     return false;
   }
 
+  /** read bitmask and return number of characters represented in data */
   private calculateMaskScore(mask: number): number {
     let score = 0;
     while (mask > 0) {
@@ -323,7 +334,7 @@ export default class DupFinder {
 
     //filter words with bitmap
     words.forEach(mappedWord => {
-      if (this.compareMasks(parent.mask, mappedWord.mask, 3))
+      if (this.masksAreSimilar(parent.mask, mappedWord.mask))
         bitFilteredWords.push(mappedWord.word);
     });
 
@@ -339,8 +350,8 @@ export default class DupFinder {
   }
 
   /** removes words which do not fit the quality thresholds and returns a reordered collection of the accepted words */
-  private getAcceptedWords(words: ScoredWord[]): [Word[], number] {
-    let outputCollection: [Word[], number] = [[], 0];
+  private getAcceptedWords(words: ScoredWord[]): ScoredWordlist {
+    let outputCollection: ScoredWordlist = [[], 0];
 
     let getScore = (word: ScoredWord) => {
       return word.score;

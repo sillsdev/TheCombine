@@ -1,7 +1,7 @@
 //Sam Delaney, 6/12/19
 
-import DupFinder, { ScoredWord, DefaultParams } from "../DuplicateFinder";
-import { Word, simpleWord, makeSense } from "../../../../types/word";
+import DupFinder, { DefaultParams } from "../DuplicateFinder";
+import { Word, simpleWord } from "../../../../types/word";
 import axios from "axios";
 
 const mockAxios = axios as jest.Mocked<typeof axios>;
