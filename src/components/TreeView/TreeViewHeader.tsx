@@ -110,7 +110,7 @@ export default class TreeViewHeader extends React.Component<
     parent: SemanticDomain,
     number: string
   ): SemanticDomain | undefined {
-    for (let domain of parent.subDomains)
+    for (let domain of parent.subdomains)
       if (domain.id === number) return domain;
 
     if (parent.id === number) return parent;
@@ -127,9 +127,9 @@ export default class TreeViewHeader extends React.Component<
     if (check(domain)) return domain;
 
     // If there are subdomains
-    if (domain.subDomains.length > 0) {
+    if (domain.subdomains.length > 0) {
       let tempDomain: SemanticDomain | undefined;
-      for (let sub of domain.subDomains) {
+      for (let sub of domain.subdomains) {
         tempDomain = this.searchDomainByName(sub, target);
         if (check(tempDomain)) return tempDomain;
       }
@@ -150,7 +150,7 @@ export default class TreeViewHeader extends React.Component<
   getBrotherDomain(navigationAmount: number): SemanticDomain | undefined {
     if (this.props.currentDomain.parentDomain) {
       let brotherDomains: SemanticDomain[] = this.props.currentDomain
-        .parentDomain.subDomains;
+        .parentDomain.subdomains;
       let index: number = brotherDomains.findIndex(
         domain => this.props.currentDomain.id === domain.id
       );

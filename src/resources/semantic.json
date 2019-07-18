@@ -1,56 +1,54 @@
-{
-  "domains": [
+[
     {
       "name": "universe",
-      "number": "1",
-      "subDomains": [
+      "id": "1",
+      "subdomains": [
         {
           "name": "sky",
-          "number": "1.1",
-          "subDomains": [
+          "id": "1.1",
+          "subdomains": [
             {
               "name": "sun",
-              "number": "1.1.1",
-              "subDomains": [
-                { "name": "moon", "number": "1.1.1.1", "subDomains": [] }
+              "id": "1.1.1",
+              "subdomains": [
+                { "name": "moon", "id": "1.1.1.1", "subdomains": [] }
               ]
             },
             {
               "name": "air",
-              "number": "1.1.2",
-              "subDomains": []
+              "id": "1.1.2",
+              "subdomains": []
             },
             {
               "name": "weather",
-              "number": "1.1.3",
-              "subDomains": [
-                { "name": "wind", "number": "1.1.3.1", "subDomains": [] },
-                { "name": "cloud", "number": "1.1.3.2", "subDomains": [] },
-                { "name": "rain", "number": "1.1.3.3", "subDomains": [] },
-                { "name": "snow, ice", "number": "1.1.3.4", "subDomains": [] },
-                { "name": "storm", "number": "1.1.3.5", "subDomains": [] },
-                { "name": "storm", "number": "1.1.3.5", "subDomains": [] },
-                { "name": "storm", "number": "1.1.3.5", "subDomains": [] },
-                { "name": "storm", "number": "1.1.3.5", "subDomains": [] },
-                { "name": "storm", "number": "1.1.3.5", "subDomains": [] }
+              "id": "1.1.3",
+              "subdomains": [
+                { "name": "wind", "id": "1.1.3.1", "subdomains": [] },
+                { "name": "cloud", "id": "1.1.3.2", "subdomains": [] },
+                { "name": "rain", "id": "1.1.3.3", "subdomains": [] },
+                { "name": "snow, ice", "id": "1.1.3.4", "subdomains": [] },
+                { "name": "storm", "id": "1.1.3.5", "subdomains": [] },
+                { "name": "storm", "id": "1.1.3.5", "subdomains": [] },
+                { "name": "storm", "id": "1.1.3.5", "subdomains": [] },
+                { "name": "storm", "id": "1.1.3.5", "subdomains": [] },
+                { "name": "storm", "id": "1.1.3.5", "subdomains": [] }
               ]
             }
           ]
         },
         {
           "name": "World",
-          "number": "1.2",
-          "subDomains": []
+          "id": "1.2",
+          "subdomains": []
         }
       ]
     },
     {
       "name": "Foo",
-      "number": "x",
-      "subDomains": [
-        { "name": "Bar", "number": "x.1", "subDomains": [] },
-        { "name": "Baz", "number": "x.2", "subDomains": [] }
+      "id": "x",
+      "subdomains": [
+        { "name": "Bar", "id": "x.1", "subdomains": [] },
+        { "name": "Baz", "id": "x.2", "subdomains": [] }
       ]
     }
   ]
-}

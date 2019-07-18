@@ -7,7 +7,7 @@ import SemanticDomain from "./SemanticDomain";
 
 function mapStateToProps(state: StoreState) {
   return {
-    currentDomain: state.treeViewState.currentDomain
+    currentDomain: state.treeViewState.currentdomain
   };
 }
 

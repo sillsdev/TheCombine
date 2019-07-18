@@ -4,6 +4,8 @@ import { Grid, Zoom } from "@material-ui/core";
 import TreeProps from "./TreeProps";
 import TreeDepiction from "./TreeDepiction";
 import SemanticDomain from "./SemanticDomain";
+import { getSemanticDomains } from "../../backend";
+import { createDomains } from "./TreeViewReducer";
 
 interface TreeViewProps extends TreeProps {
   returnControlToCaller: () => void;
@@ -24,6 +26,13 @@ export default class TreeView extends React.Component<
     this.state = { visible: true };
 
     this.animate = this.animate.bind(this);
+
+    getSemanticDomains().then((data: SemanticDomain[]) => {
+      let newDomain = createDomains(data);
+      this.props.navigate(newDomain.currentdomain);
+    }).catch((err) =>
+     console.error(err)
+    )
   }
 
   animate(domain: SemanticDomain | undefined): Promise<void> {
@@ -31,13 +40,14 @@ export default class TreeView extends React.Component<
       this.setState({ visible: false });
       return new Promise(resolve =>
         setTimeout(() => {
-          if (domain && this.state.visible === false)
+          if (domain && this.state.visible === false) {
             if (domain.id !== this.props.currentDomain.id) {
               this.props.navigate(domain);
               this.setState({ visible: true });
             } else {
               this.props.returnControlToCaller();
             }
+          }
           resolve();
         }, 300)
       );

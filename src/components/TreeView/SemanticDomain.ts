@@ -5,5 +5,5 @@ export default interface SemanticDomain {
 
   // Data about tangential domains
   parentDomain?: SemanticDomain;
-  subDomains: SemanticDomain[];
+  subdomains: SemanticDomain[];
 }

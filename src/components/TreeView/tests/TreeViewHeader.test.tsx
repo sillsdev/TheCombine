@@ -29,7 +29,7 @@ window = {
 };
 
 beforeEach(() => {
-  setTree(MockTree.subDomains[1]);
+  setTree(MockTree.subdomains[1]);
   MOCK_ANIMATE.mockClear();
 });
 
@@ -70,11 +70,11 @@ describe("Tests TreeViewHeader", () => {
   });
 
   it("Search & select domain switches semantic domain if given name found", () => {
-    treeHandle.setState({ input: MockTree.subDomains[2].name });
+    treeHandle.setState({ input: MockTree.subdomains[2].name });
     event.target.value = "not empty";
     treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
 
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subDomains[2]);
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subdomains[2]);
     expect(treeHandle.state.input).toEqual("");
     expect(event.target.value).toEqual("");
   });
@@ -93,8 +93,8 @@ describe("Tests TreeViewHeader", () => {
   // getBrotherDomain
   it("provides the proper brother domains", () => {
     // Standard navigation
-    expect(treeHandle.getBrotherDomain(-1)).toEqual(MockTree.subDomains[0]);
-    expect(treeHandle.getBrotherDomain(1)).toEqual(MockTree.subDomains[2]);
+    expect(treeHandle.getBrotherDomain(-1)).toEqual(MockTree.subdomains[0]);
+    expect(treeHandle.getBrotherDomain(1)).toEqual(MockTree.subdomains[2]);
 
     // Check with indices out-of-bounds
     expect(treeHandle.getBrotherDomain(-2)).toEqual(undefined);
@@ -115,13 +115,13 @@ describe("Tests TreeViewHeader", () => {
   it("navigateKeys w/ Arrow Left switches to left brother domain", () => {
     event.key = "ArrowLeft";
     treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subDomains[0]);
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subdomains[0]);
   });
 
   it("navigateKeys w/ Arrow Right switches to right brother domain", () => {
     event.key = "ArrowRight";
     treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subDomains[2]);
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subdomains[2]);
   });
 });
 

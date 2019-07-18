@@ -42,8 +42,12 @@ namespace BackendFramework.Services
             {
                 if (sd.Id.Length != length)
                 {
+                    //add base level of sds once we have hit the first entry of subdomains
+                    if (length == 3)
+                    {
+                        returnList.AddRange(sdOfShortLengthList);
+                    }
                     length += 2;
-                    returnList.AddRange(sdOfShortLengthList);
                     sdOfShortLengthList.Clear();
                     sdOfShortLengthList.AddRange(sdOfLongLengthList);
                     sdOfLongLengthList.Clear();
