@@ -3,10 +3,7 @@ import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { uuid } from "../../../../utilities";
 import { MergeTreeReference, Hash, MergeTreeWord } from "../MergeDupsTree";
-import {
-  Paper,
-  Typography
-} from "@material-ui/core";
+import { Paper, Typography } from "@material-ui/core";
 import MergeStack from "../MergeStack";
 import { Droppable } from "react-beautiful-dnd";
 
@@ -58,7 +55,7 @@ export class MergeRow extends React.Component<
         droppableId={this.props.wordID}
         isCombineEnabled={true}
       >
-        {(provided) => (
+        {provided => (
           <Paper
             ref={provided.innerRef}
             style={{
