@@ -11,6 +11,7 @@ import {
 import { Paper, Typography, Select, MenuItem } from "@material-ui/core";
 import MergeStack from "../MergeStack";
 import { Droppable } from "react-beautiful-dnd";
+import {SideBar} from '../MergeDupStepComponent';
 
 //interface for component props
 export interface MergeRowProps {
@@ -22,7 +23,8 @@ export interface MergeRowProps {
   words: Hash<MergeTreeWord>;
   data: MergeData;
   portrait: boolean;
-  setSidebar: (el: () => JSX.Element | undefined) => void;
+  setSidebar: (el: SideBar) => void;
+  sideBar: SideBar;
 }
 
 //interface for component state
@@ -92,7 +94,8 @@ export class MergeRow extends React.Component<
             {filled &&
               Object.keys(this.props.words[this.props.wordID].senses).map(
                 (item, index) => (
-                  <MergeStack
+                <MergeStack
+                    sideBar={this.props.sideBar}
                     setSidebar={this.props.setSidebar}
                     key={item}
                     index={index}

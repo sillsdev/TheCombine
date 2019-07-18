@@ -20,6 +20,7 @@ import {
 import React from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { Gloss } from "../../../../types/word";
+import { SideBar } from "../MergeDupStepComponent";
 
 //interface for component props
 export interface MergeStackProps {
@@ -32,7 +33,8 @@ export interface MergeStackProps {
   sense: Hash<string>;
   senses: Hash<TreeDataSense>;
   index: number;
-  setSidebar: (el: () => JSX.Element | undefined) => void;
+  setSidebar: (el: SideBar) => void;
+  sideBar: SideBar;
 }
 
 //interface for component state
@@ -43,6 +45,14 @@ interface MergeStackState {
 
 // Constants
 const WIDTH: string = "16vw"; // Width of each card
+
+function arraysEqual<T>(arr1: T[], arr2: T[]) {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+  return true;
+}
 
 class MergeStack extends React.Component<
   MergeStackProps & LocalizeContextProps,
@@ -65,63 +75,17 @@ class MergeStack extends React.Component<
     }
   }
 
-  toggleExpand() {
-    this.props.setSidebar(() => this.renderExpanded());
-  }
-
-  renderExpanded() {
+  expand() {
     let senseEntries = Object.entries(this.props.sense).map(sense => ({
       id: sense[0],
       data: this.props.senses[sense[1]]
     }));
 
-    return (
-      <Droppable droppableId={`${this.props.wordID} ${this.props.senseID}`}>
-        {(providedDroppable, _snapshot) => (
-          <div
-            ref={providedDroppable.innerRef}
-            {...providedDroppable.droppableProps}
-          >
-            {senseEntries.map((entry, index) => (
-              <Draggable
-                draggableId={JSON.stringify({
-                  word: this.props.wordID,
-                  sense: this.props.senseID,
-                  duplicate: entry.id
-                })}
-                index={index}
-              >
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <Card
-                      style={{
-                        marginBottom: 8,
-                        marginTop: 8,
-                        background: snapshot.isDragging ? "lightgreen" : "white"
-                      }}
-                    >
-                      <CardContent>
-                        <Typography variant={"h5"}>
-                          {entry.data.glosses
-                            .map(gloss => gloss.def)
-                            .reduce((gloss, acc) => `${acc}, ${gloss}`)}
-                        </Typography>
-                        semdom info
-                      </CardContent>
-                    </Card>
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {providedDroppable.placeholder}
-          </div>
-        )}
-      </Droppable>
-    );
+    this.props.setSidebar({
+      senses: senseEntries,
+      wordID: this.props.wordID,
+      senseID: this.props.senseID
+    });
   }
 
   render() {
@@ -163,6 +127,21 @@ class MergeStack extends React.Component<
 
     let showMoreButton = Object.keys(this.props.sense).length > 1;
 
+    debugger;
+    if (
+      this.props.sideBar.wordID === this.props.wordID &&
+      this.props.sideBar.senseID === this.props.senseID &&
+      !arraysEqual(
+        this.props.sideBar.senses.map(a => a.id),
+        senseEntries.map(a => a.id)
+      )
+    ) {
+      this.props.setSidebar({
+        senses: senseEntries,
+        wordID: this.props.wordID,
+        senseID: this.props.senseID
+      });
+    }
     return (
       <Draggable
         key={this.props.senseID}
@@ -197,7 +176,7 @@ class MergeStack extends React.Component<
                 }}
               >
                 {showMoreButton && (
-                  <IconButton onClick={() => this.toggleExpand()}>
+                  <IconButton onClick={() => this.expand()}>
                     <ArrowForwardIos />
                   </IconButton>
                 )}

@@ -10,7 +10,8 @@ import {
   GridList,
   GridListTile,
   Paper,
-  IconButton
+  IconButton,
+  Typography
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -20,9 +21,18 @@ import {
 } from "react-localize-redux";
 import { styleAddendum } from "../../../types/theme";
 import { uuid } from "../../../utilities";
-import { MergeTreeReference, MergeTreeWord } from "./MergeDupsTree";
+import {
+  TreeDataSense,
+  MergeTreeReference,
+  MergeTreeWord
+} from "./MergeDupsTree";
 import MergeRow from "./MergeRow";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import {
+  Droppable,
+  Draggable,
+  DragDropContext,
+  DropResult
+} from "react-beautiful-dnd";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 
 // Constants
@@ -32,6 +42,12 @@ const HEIGHT_STYLE: React.CSSProperties = {
   //minHeight: MIN_VIEW,
   height: MAX_VIEW
 };
+
+export interface SideBar {
+  senses: { id: string; data: TreeDataSense }[];
+  wordID: string;
+  senseID: string;
+}
 
 //interface for component props
 export interface MergeDupStepProps {
@@ -48,7 +64,7 @@ export interface MergeDupStepProps {
 //interface for component state
 export interface MergeDupStepState {
   portrait: boolean;
-  sideBar: () => JSX.Element | undefined;
+  sideBar: SideBar;
   colCount: number;
 }
 
@@ -61,7 +77,7 @@ class MergeDupStep extends React.Component<
     this.state = {
       colCount: 2,
       portrait: true,
-      sideBar: () => undefined
+      sideBar: { senses: [], wordID: "WORD", senseID: "SENSE" }
     };
   }
   componentDidMount() {
@@ -161,7 +177,7 @@ class MergeDupStep extends React.Component<
     return (
       <Box style={{ maxHeight: "100%" }}>
         <DragDropContext onDragEnd={res => this.handleDrop(res)}>
-          {this.state.sideBar() && (
+          {this.state.sideBar.senses.length > 1 && (
             <Paper
               square
               style={{
@@ -178,12 +194,63 @@ class MergeDupStep extends React.Component<
                   transform: "translateY(-50%)"
                 }}
                 onClick={() =>
-                  this.setState({ ...this.state, sideBar: () => undefined })
+                  this.setState({
+                    ...this.state,
+                    sideBar: { senseID: "", wordID: "", senses: [] }
+                  })
                 }
               >
                 <ArrowForwardIos />
               </IconButton>
-              {this.state.sideBar()}
+              <Droppable
+                droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
+              >
+                {(providedDroppable, _snapshot) => (
+                  <div
+                    ref={providedDroppable.innerRef}
+                    {...providedDroppable.droppableProps}
+                  >
+                    {this.state.sideBar.senses.map((entry, index) => (
+                      <Draggable
+                        draggableId={JSON.stringify({
+                          word: this.state.sideBar.wordID,
+                          sense: this.state.sideBar.senseID,
+                          duplicate: entry.id
+                        })}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <Card
+                              style={{
+                                marginBottom: 8,
+                                marginTop: 8,
+                                background: snapshot.isDragging
+                                  ? "lightgreen"
+                                  : "white"
+                              }}
+                            >
+                              <CardContent>
+                                <Typography variant={"h5"}>
+                                  {entry.data.glosses
+                                    .map(gloss => gloss.def)
+                                    .reduce((gloss, acc) => `${acc}, ${gloss}`)}
+                                </Typography>
+                                semdom info
+                              </CardContent>
+                            </Card>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {providedDroppable.placeholder}
+                  </div>
+                )}
+              </Droppable>
             </Paper>
           )}
           {/* Merging pane */}
@@ -205,6 +272,7 @@ class MergeDupStep extends React.Component<
               {Object.keys(this.props.words).map(key => (
                 <GridListTile key={key} style={{ margin: 8 }}>
                   <MergeRow
+                    sideBar={this.state.sideBar}
                     setSidebar={el =>
                       this.setState({ ...this.state, sideBar: el })
                     }
@@ -215,6 +283,7 @@ class MergeDupStep extends React.Component<
               ))}
               <GridListTile key={newId} style={{ margin: 8 }}>
                 <MergeRow
+                  sideBar={this.state.sideBar}
                   setSidebar={_ => {}}
                   portrait={this.state.portrait}
                   wordID={newId}
