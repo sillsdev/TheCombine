@@ -10,7 +10,7 @@ import * as backend from "../../../../backend";
 import WordTile from "./WordTileComponent";
 
 export interface SampleWordsProps {
-  addToAcceptedCharacters: (chars: string[]) => void;
+  addToValidCharacters: (chars: string[]) => void;
   allCharacters: string[];
 }
 
@@ -83,7 +83,7 @@ export class SampleWords extends React.Component<
 
   /** Adds characters to the valid characters */
   addToCharSet(chars: string) {
-    this.props.addToAcceptedCharacters([
+    this.props.addToValidCharacters([
       ...chars.replace(/\s/g, "").split("") //remove whitespace and break up word into chars
     ]);
 

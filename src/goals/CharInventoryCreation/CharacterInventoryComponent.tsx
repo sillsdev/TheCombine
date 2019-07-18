@@ -21,8 +21,8 @@ import { Save } from "@material-ui/icons";
 import history from "../../history";
 
 export interface CharacterInventoryProps {
-  addToAcceptedCharacters: (chars: string[]) => void;
-  setAcceptedCharacters: (inventory: string[]) => void;
+  addToValidCharacters: (chars: string[]) => void;
+  setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
   uploadInventory: () => void;
   validCharacters: string[];
@@ -45,7 +45,7 @@ export class CharacterInventory extends React.Component<
   constructor(props: CharacterInventoryProps & LocalizeContextProps) {
     super(props);
     // Load inventory from server
-    this.props.setAcceptedCharacters(this.props.currentProject.validCharacters);
+    this.props.setValidCharacters(this.props.currentProject.validCharacters);
     this.props.setRejectedCharacters(
       this.props.currentProject.rejectedCharacters
     );
@@ -67,7 +67,7 @@ export class CharacterInventory extends React.Component<
         >
           <Grid item sm={9} xs={12} style={{ borderRight: "1px solid #ccc" }}>
             <CharacterSet
-              setValidCharacters={this.props.setAcceptedCharacters}
+              setValidCharacters={this.props.setValidCharacters}
               validCharacters={this.props.validCharacters}
               setRejectedCharacters={this.props.setRejectedCharacters}
               rejectedCharacters={this.props.rejectedCharacters}
@@ -75,7 +75,7 @@ export class CharacterInventory extends React.Component<
           </Grid>
           <Grid item sm={3} xs={12}>
             <SampleWords
-              addToAcceptedCharacters={this.props.addToAcceptedCharacters}
+              addToValidCharacters={this.props.addToValidCharacters}
               allCharacters={this.props.validCharacters.concat(
                 this.props.rejectedCharacters
               )}

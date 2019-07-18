@@ -16,21 +16,21 @@ import { Goal } from "../../types/goals";
 import { UserProjectMap } from "../../components/Project/UserProject";
 import { Project } from "../../types/project";
 
-export const SET_ACCEPTED_CHARACTERS = "SET_ACCEPTED_CHARACTERS";
-export type SET_ACCEPTED_CHARACTERS = typeof SET_ACCEPTED_CHARACTERS;
+export const SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS";
+export type SET_VALID_CHARACTERS = typeof SET_VALID_CHARACTERS;
 
 export const SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS";
 export type SET_REJECTED_CHARACTERS = typeof SET_REJECTED_CHARACTERS;
 
-export const ADD_TO_ACCEPTED_CHARACTERS = "ADD_TO_ACCEPTED_CHARACTERS";
-export type ADD_TO_ACCEPTED_CHARACTERS = typeof ADD_TO_ACCEPTED_CHARACTERS;
+export const ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS";
+export type ADD_TO_VALID_CHARACTERS = typeof ADD_TO_VALID_CHARACTERS;
 
 export interface CharacterInventoryData {}
 
 type CharacterInventoryType =
-  | SET_ACCEPTED_CHARACTERS
+  | SET_VALID_CHARACTERS
   | SET_REJECTED_CHARACTERS
-  | ADD_TO_ACCEPTED_CHARACTERS;
+  | ADD_TO_VALID_CHARACTERS;
 
 //action types
 
@@ -56,20 +56,20 @@ export function uploadInventory() {
   };
 }
 
-export function addToAcceptedCharacters(
+export function addToValidCharacters(
   chars: string[]
 ): CharacterInventoryAction {
   return {
-    type: ADD_TO_ACCEPTED_CHARACTERS,
+    type: ADD_TO_VALID_CHARACTERS,
     payload: chars
   };
 }
 
-export function setAcceptedCharacters(
+export function setValidCharacters(
   payload: string[]
 ): CharacterInventoryAction {
   return {
-    type: SET_ACCEPTED_CHARACTERS,
+    type: SET_VALID_CHARACTERS,
     payload
   };
 }
@@ -122,7 +122,7 @@ async function saveChangesToProject(
 
 function updateCurrentProject(state: StoreState): Project {
   let project = state.currentProject;
-  project.validCharacters = state.characterInventoryState.acceptedCharacters;
+  project.validCharacters = state.characterInventoryState.validCharacters;
   project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
   return project;
 }

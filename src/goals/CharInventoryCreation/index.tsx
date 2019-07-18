@@ -4,10 +4,10 @@ import { StoreState } from "../../types";
 import { ThunkDispatch } from "redux-thunk";
 import {
   CharacterInventoryAction,
-  setAcceptedCharacters,
+  setValidCharacters,
   uploadInventory,
   setRejectedCharacters,
-  addToAcceptedCharacters
+  addToValidCharacters
 } from "./CharacterInventoryActions";
 import { getTranslate } from "react-localize-redux";
 
@@ -15,7 +15,7 @@ function mapStateToProps(state: StoreState) {
   return {
     validCharacters:
       state.characterInventoryState &&
-      state.characterInventoryState.acceptedCharacters,
+      state.characterInventoryState.validCharacters,
     rejectedCharacters:
       state.characterInventoryState &&
       state.characterInventoryState.rejectedCharacters,
@@ -28,11 +28,11 @@ function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>
 ) {
   return {
-    addToAcceptedCharacters: (chars: string[]) => {
-      dispatch(addToAcceptedCharacters(chars));
+    addToValidCharacters: (chars: string[]) => {
+      dispatch(addToValidCharacters(chars));
     },
-    setAcceptedCharacters: (inventory: string[]) => {
-      dispatch(setAcceptedCharacters(inventory));
+    setValidCharacters: (inventory: string[]) => {
+      dispatch(setValidCharacters(inventory));
     },
     setRejectedCharacters: (inventory: string[]) => {
       dispatch(setRejectedCharacters(inventory));
