@@ -186,4 +186,18 @@ namespace BackendFramework.ValueModels
             };
         }
     }
+
+    public class SemanticDomainWithSubdomains
+    {
+        public string Name;
+        public string Id;
+        public List<SemanticDomainWithSubdomains> Subdomains;
+
+        public SemanticDomainWithSubdomains(SemanticDomain sd)
+        {
+            Name = sd.Name;
+            Id = sd.Id;
+            Subdomains = new List<SemanticDomainWithSubdomains>();
+        }
+    }
 }

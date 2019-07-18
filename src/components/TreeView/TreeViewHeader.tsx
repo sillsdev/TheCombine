@@ -31,7 +31,7 @@ export default class TreeViewHeader extends React.Component<
   constructor(props: TreeHeaderProps) {
     super(props);
     this.state = {
-      input: props.currentDomain.number
+      input: props.currentDomain.id
     };
 
     this.animating = false;
@@ -72,7 +72,7 @@ export default class TreeViewHeader extends React.Component<
             parent,
             this.state.input.slice(0, i * 2 + 1)
           );
-          if (parent && parent.number === this.state.input) {
+          if (parent && parent.id === this.state.input) {
             this.props.animate(parent);
             this.setState({ input: "" });
             (event.target as any).value = "";
@@ -93,11 +93,11 @@ export default class TreeViewHeader extends React.Component<
   navigateDomainArrowKeys(event: KeyboardEvent) {
     if (event.key === "ArrowLeft") {
       let domain: SemanticDomain | undefined = this.getBrotherDomain(-1);
-      if (domain && domain.number !== this.props.currentDomain.number)
+      if (domain && domain.id !== this.props.currentDomain.id)
         this.props.animate(domain);
     } else if (event.key === "ArrowRight") {
       let domain: SemanticDomain | undefined = this.getBrotherDomain(1);
-      if (domain && domain.number !== this.props.currentDomain.number)
+      if (domain && domain.id !== this.props.currentDomain.id)
         this.props.animate(domain);
     } else if (event.key === "ArrowDown") {
       if (this.props.currentDomain.parentDomain)
@@ -110,10 +110,10 @@ export default class TreeViewHeader extends React.Component<
     parent: SemanticDomain,
     number: string
   ): SemanticDomain | undefined {
-    for (let domain of parent.subDomains)
-      if (domain.number === number) return domain;
+    for (let domain of parent.subdomains)
+      if (domain.id === number) return domain;
 
-    if (parent.number === number) return parent;
+    if (parent.id === number) return parent;
     else return undefined;
   }
 
@@ -127,9 +127,9 @@ export default class TreeViewHeader extends React.Component<
     if (check(domain)) return domain;
 
     // If there are subdomains
-    if (domain.subDomains.length > 0) {
+    if (domain.subdomains.length > 0) {
       let tempDomain: SemanticDomain | undefined;
-      for (let sub of domain.subDomains) {
+      for (let sub of domain.subdomains) {
         tempDomain = this.searchDomainByName(sub, target);
         if (check(tempDomain)) return tempDomain;
       }
@@ -150,9 +150,9 @@ export default class TreeViewHeader extends React.Component<
   getBrotherDomain(navigationAmount: number): SemanticDomain | undefined {
     if (this.props.currentDomain.parentDomain) {
       let brotherDomains: SemanticDomain[] = this.props.currentDomain
-        .parentDomain.subDomains;
+        .parentDomain.subdomains;
       let index: number = brotherDomains.findIndex(
-        domain => this.props.currentDomain.number === domain.number
+        domain => this.props.currentDomain.id === domain.id
       );
 
       index += navigationAmount;
@@ -166,7 +166,7 @@ export default class TreeViewHeader extends React.Component<
 
   // Switches current semantic domain + updates search bar
   updateDomain() {
-    this.setState({ input: this.props.currentDomain.number });
+    this.setState({ input: this.props.currentDomain.id });
   }
 
   // Creates the L/R button + select button + search bar
@@ -186,7 +186,7 @@ export default class TreeViewHeader extends React.Component<
               >
                 <ChevronLeft />
                 <Typography variant="body2">
-                  {domainL.number.padStart(8, " ")}
+                  {domainL.id.padStart(8, " ")}
                 </Typography>
               </Button>
             </Grid>
@@ -204,7 +204,7 @@ export default class TreeViewHeader extends React.Component<
             >
               <div style={{ textTransform: "capitalize" }}>
                 <Typography variant="overline">
-                  {this.props.currentDomain.number}
+                  {this.props.currentDomain.id}
                 </Typography>
                 <Typography variant="h6">
                   {this.props.currentDomain.name}
@@ -231,7 +231,7 @@ export default class TreeViewHeader extends React.Component<
                 style={{ marginTop: "50%" }}
               >
                 <Typography variant="body2">
-                  {domainR.number.padEnd(8, " ")}
+                  {domainR.id.padEnd(8, " ")}
                 </Typography>
                 <ChevronRight />
               </Button>

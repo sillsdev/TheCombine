@@ -1,38 +1,38 @@
 import { TreeViewAction, TreeActionType } from "./TreeViewActions";
 import SemanticDomain from "./SemanticDomain";
-import SemanticDomainTest from "../../resources/semantic.json";
 import { StoreAction, StoreActions } from "../../rootActions";
-const tempData: string = JSON.stringify(SemanticDomainTest); // temporary, will eventually get semantic domains from backend
 
 export interface TreeViewState {
-  currentDomain: SemanticDomain;
+  currentdomain: SemanticDomain;
 }
 
 // Parses a list of semantic domains (to be received from backend)
-function createDomains(data: string = tempData): TreeViewState {
+export function createDomains(data: SemanticDomain[]): TreeViewState {
   let state: TreeViewState = {
-    currentDomain: {
+    currentdomain: {
       name: "Semantic Domains",
-      number: "",
-      subDomains: JSON.parse(data).domains
+      id: "",
+      subdomains: data
     }
   };
-  addParentDomains(state.currentDomain);
-  while (state.currentDomain.subDomains.length > 0)
-    state.currentDomain = state.currentDomain.subDomains[0];
+  addParentDomains(state.currentdomain);
+  // while (state.currentDomain.subDomains.length > 0)
+  //   state.currentDomain = state.currentDomain.subDomains[0];
   return state;
 }
 
 // Adds the parent domains to the information sent by the backend
 function addParentDomains(parent: SemanticDomain) {
-  if (parent.subDomains)
-    for (let domain of parent.subDomains) {
+  if (parent.subdomains)
+    for (let domain of parent.subdomains) {
       domain.parentDomain = parent;
       addParentDomains(domain);
     }
-  else parent.subDomains = [];
+  //else parent.subDomains = [];
 }
-export const defaultState: TreeViewState = createDomains();
+
+// Creates a dummy default state
+export const defaultState: TreeViewState = { currentdomain: { name: "", id: "", subdomains: [] } };
 
 export const treeViewReducer = (
   state: TreeViewState = defaultState,
@@ -40,7 +40,7 @@ export const treeViewReducer = (
 ): TreeViewState => {
   switch (action.type) {
     case TreeActionType.TRAVERSE_TREE:
-      return { ...state, currentDomain: action.payload };
+      return { ...state, currentdomain: action.payload };
     case StoreActions.RESET:
       return defaultState;
     default:

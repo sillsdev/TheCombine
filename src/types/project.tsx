@@ -1,9 +1,4 @@
-import { Word } from "./word";
-
-export interface SemanticDomain {
-  name: string;
-  number: string;
-}
+import { Word, SemanticDomain } from "./word";
 
 export interface CustomField {
   name: string;

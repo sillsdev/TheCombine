@@ -9,19 +9,19 @@ describe("Tests AddWords", () => {
   testFromNode("Renders correctly: from Parent", MockTree);
   testFromNode(
     "Renders correctly: node w/ even # of subdomains",
-    MockTree.subDomains[0]
+    MockTree.subdomains[0]
   );
   testFromNode(
     "Renders correctly: node w/ odd # of subdomains",
-    MockTree.subDomains[1]
+    MockTree.subdomains[1]
   );
   testFromNode(
     "Renders correctly: node w/ 1 subdomains",
-    MockTree.subDomains[2]
+    MockTree.subdomains[2]
   );
   testFromNode(
     "Renders correctly: node w/ no subdomains",
-    MockTree.subDomains[2].subDomains[0]
+    MockTree.subdomains[2].subdomains[0]
   );
 });
 
