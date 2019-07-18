@@ -102,7 +102,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                 }
               }
             >
-              Accepted
+              Missing translationId: charInventory.characterSet.accepted for language: \${ languageCode }
             </h6>
           </div>
         </div>
