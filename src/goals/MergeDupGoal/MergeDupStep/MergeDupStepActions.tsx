@@ -7,13 +7,14 @@ import {
   nextStep,
   NextStep,
   getUserEditId,
-  getIndexInHistory
+  getIndexInHistory,
+  getUser
 } from "../../../components/GoalTimeline/GoalsActions";
 import { Goal, GoalHistoryState } from "../../../types/goals";
 import { Dispatch } from "redux";
 import { MergeDups } from "../MergeDups";
-import { UserProjectMap } from "../../../components/Project/UserProject";
 import navigationHistory from "../../../history";
+import { User } from "../../../types/user";
 
 export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
@@ -141,13 +142,13 @@ export function mergeSense() {
 }
 
 async function addStepToGoal(goal: Goal, indexInHistory: number) {
-  let projectId: string = backend.getProjectId();
-  let userEditId: string = getUserEditId();
-  let userProjectMap: UserProjectMap = {
-    projectId: projectId,
-    userEditId: userEditId
-  };
-  await backend.addStepToGoal(userProjectMap, indexInHistory, goal);
+  let user: User | undefined = getUser();
+  if (user !== undefined) {
+    let userEditId: string | undefined = getUserEditId(user);
+    if (userEditId !== undefined) {
+      await backend.addStepToGoal(userEditId, indexInHistory, goal);
+    }
+  }
 }
 
 export function refreshWords() {

@@ -9,9 +9,11 @@ import {
   Button,
   IconButton,
   Tooltip,
-  Chip
+  Chip,
+  Dialog
 } from "@material-ui/core";
 import theme from "../../types/theme";
+
 import { Translate, TranslateFunction } from "react-localize-redux";
 import { Word, State, Gloss } from "../../types/word";
 import { Delete, Edit } from "@material-ui/icons";
@@ -33,7 +35,7 @@ interface AddWordsState {
   hoverRow?: number;
   newVernInFrontier: Boolean; // does the new word already exist in the frontier?
   showDuplicate?: number;
-  gettingSemanticDomain?: boolean;
+  gettingSemanticDomain: boolean;
 }
 
 /** A row in the view */
@@ -335,15 +337,7 @@ export default class AddWords extends React.Component<
   }
 
   render() {
-    return this.state.gettingSemanticDomain ? (
-      <TreeViewComponent
-        returnControlToCaller={() =>
-          this.setState({
-            gettingSemanticDomain: false
-          })
-        }
-      />
-    ) : (
+    return (
       <Container>
         <Paper
           style={{
@@ -703,6 +697,17 @@ export default class AddWords extends React.Component<
             </Grid>
           </Grid>
         </Paper>
+
+        {/** Tree modal */}
+        <Dialog fullScreen open={this.state.gettingSemanticDomain}>
+          <TreeViewComponent
+            returnControlToCaller={() =>
+              this.setState({
+                gettingSemanticDomain: false
+              })
+            }
+          />
+        </Dialog>
       </Container>
     );
   }
