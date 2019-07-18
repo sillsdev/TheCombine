@@ -12,7 +12,7 @@ export interface Gloss {
 
 export interface SemanticDomain {
   name: string;
-  number: string;
+  id: string;
 }
 export interface Sense {
   glosses: Gloss[];

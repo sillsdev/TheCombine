@@ -118,7 +118,7 @@ class MergeStack extends React.Component<
       ...new Set(
         senses
           .map(sense =>
-            sense.semanticDomains.map(dom => `${dom.name} ${dom.number}`)
+            sense.semanticDomains.map(dom => `${dom.name} ${dom.id}`)
           )
           .flat()
       )
