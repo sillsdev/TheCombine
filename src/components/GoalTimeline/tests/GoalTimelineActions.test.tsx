@@ -24,7 +24,7 @@ let mockUser: User = new User("", "", "");
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 const createMockStore = configureMockStore([thunk]);
-let mockStore: MockStoreEnhanced<unknown, {}>;
+const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(defaultState);
 
 beforeAll(() => {
   oldUser = localStorage.getItem("user");
@@ -34,7 +34,6 @@ beforeAll(() => {
 beforeEach(() => {
   localStorage.removeItem("user");
   localStorage.removeItem("projectId");
-  mockStore = createMockStore(defaultState);
 });
 
 afterEach(() => {

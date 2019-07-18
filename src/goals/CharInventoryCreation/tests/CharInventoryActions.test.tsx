@@ -3,30 +3,14 @@ import {
   SET_CHARACTER_INVENTORY,
   uploadInventory
 } from "../CharacterInventoryActions";
-import configureMockStore from "redux-mock-store";
+import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 import { StoreState } from "../../../types";
 import axios from "axios";
 import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
 import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
-
-const createMockStore = configureMockStore([thunk]);
-jest.mock("../../../components/GoalTimeline/GoalsActions", () => {
-  const User = jest.requireActual("../../../types/user");
-  const goalsActions = jest.requireActual(
-    "../../../components/GoalTimeline/GoalsActions"
-  );
-  return {
-    ...goalsActions,
-    getUser: jest.fn(() => {
-      return new User.User("", "", "");
-    }),
-    getUserEditId: jest.fn(() => {
-      return "";
-    })
-  };
-});
+import { User } from "../../../types/user";
 
 const DATA: string[] = ["foo", "bar"];
 const goal: CreateCharInv = new CreateCharInv();
@@ -44,6 +28,33 @@ const MOCK_STATE = {
   }
 };
 
+let oldUser: string | null;
+let oldProjectId: string | null;
+const mockProjectId: string = "12345";
+const mockUserEditId: string = "23456";
+let mockUser: User = new User("", "", "");
+mockUser.workedProjects[mockProjectId] = mockUserEditId;
+
+const createMockStore = configureMockStore([thunk]);
+let mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(MOCK_STATE);
+
+beforeAll(() => {
+  oldUser = localStorage.getItem("user");
+  oldProjectId = localStorage.getItem("projectId");
+});
+
+beforeEach(() => {
+  localStorage.removeItem("user");
+  localStorage.removeItem("projectId");
+  mockStore = createMockStore(MOCK_STATE);
+});
+
+afterEach(() => {
+  if (oldUser) localStorage.setItem("user", oldUser);
+  if (oldProjectId) localStorage.setItem("projectId", oldProjectId);
+  mockStore.clearActions();
+});
+
 describe("Testing CharacterInventoryActions", () => {
   test("setInventory yields correct action", () => {
     expect(setInventory(DATA)).toEqual({
@@ -53,6 +64,8 @@ describe("Testing CharacterInventoryActions", () => {
   });
 
   test("uploadInventory dispatches correct actions", async () => {
+    localStorage.setItem("user", JSON.stringify(mockUser));
+    localStorage.setItem("projectId", mockProjectId);
     let mockStore = createMockStore(MOCK_STATE);
     const mockUpload = uploadInventory();
     await mockUpload(
