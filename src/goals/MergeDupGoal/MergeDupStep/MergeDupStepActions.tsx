@@ -23,7 +23,8 @@ export enum MergeTreeActions {
   ORDER_SENSE = "ORDER_SENSE",
   SET_SENSE = "SET_SENSE",
   SET_DATA = "SET_DATA",
-  CLEAR_TREE = "CLEAR_TREE"
+  CLEAR_TREE = "CLEAR_TREE",
+  ORDER_DUPLICATE = "ORDER_DUPLICATE"
 }
 
 interface MergeDataAction {
@@ -50,7 +51,7 @@ interface MergeOrderAction {
 
 interface MergeTreeWordAction {
   type: MergeTreeActions.SET_VERNACULAR | MergeTreeActions.SET_PLURAL;
-  payload: { wordID: number; data: string };
+  payload: { wordID: string; data: string };
 }
 
 export type MergeTreeAction =
@@ -59,17 +60,22 @@ export type MergeTreeAction =
   | MergeTreeSetAction
   | MergeDataAction
   | MergeOrderAction
+  | {
+      type: MergeTreeActions.ORDER_DUPLICATE;
+      ref: MergeTreeReference;
+      order: number;
+    }
   | { type: MergeTreeActions.CLEAR_TREE };
 
 // action creators
-export function setVern(wordID: number, vern: string): MergeTreeAction {
+export function setVern(wordID: string, vern: string): MergeTreeAction {
   return {
     type: MergeTreeActions.SET_VERNACULAR,
     payload: { wordID, data: vern }
   };
 }
 
-export function setPlural(wordID: number, plural: string): MergeTreeAction {
+export function setPlural(wordID: string, plural: string): MergeTreeAction {
   return {
     type: MergeTreeActions.SET_PLURAL,
     payload: { wordID, data: plural }
@@ -129,6 +135,17 @@ export function orderSense(
     wordID: wordID,
     senseID: senseID,
     order: order
+  };
+}
+
+export function orderDuplicate(
+  ref: MergeTreeReference,
+  order: number
+): MergeTreeAction {
+  return {
+    type: MergeTreeActions.ORDER_DUPLICATE,
+    ref,
+    order
   };
 }
 

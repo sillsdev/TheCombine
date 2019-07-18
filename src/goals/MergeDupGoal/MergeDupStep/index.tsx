@@ -10,7 +10,8 @@ import {
   refreshWords,
   moveSenses,
   mergeAll,
-  orderSense
+  orderSense,
+  orderDuplicate
 } from "./MergeDupStepActions";
 import MergeDupStepComponent from "./MergeDupStepComponent";
 import { MergeTreeReference } from "./MergeDupsTree";
@@ -29,12 +30,17 @@ export function mapDispatchToProps(
     dropWord: () => {
       dispatch(dropWord());
     },
-    refreshWords: () => dispatch(refreshWords()),
+    refreshWords: () => {
+      dispatch(refreshWords());
+    },
     moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => {
       dispatch(moveSenses(src, dest));
     },
     orderSense: (wordID: string, senseID: string, order: number) => {
       dispatch(orderSense(wordID, senseID, order));
+    },
+    orderDuplicate: (ref: MergeTreeReference, order: number) => {
+      dispatch(orderDuplicate(ref, order));
     },
     mergeAll: () => {
       dispatch(mergeAll());

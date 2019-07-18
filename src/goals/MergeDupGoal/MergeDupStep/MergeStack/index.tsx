@@ -26,7 +26,7 @@ export function mapDispatchToProps(
     },
     dragWord: (ref: MergeTreeReference) => {
       dispatch(dragWord(ref));
-    },
+    }
   };
 }
 
