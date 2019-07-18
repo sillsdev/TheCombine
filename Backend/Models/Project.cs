@@ -30,7 +30,7 @@ namespace BackendFramework.ValueModels
         [BsonElement("validCharacters")]
         public List<string> ValidCharacters { get; set; }
 
-        [BsonElement("Characters")]
+        [BsonElement("rejectedCharacters")]
         public List<string> RejectedCharacters { get; set; }
 
         [BsonElement("customFields")]
