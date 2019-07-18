@@ -9,17 +9,17 @@ const PAR: SemanticDomain = {
 
 // Following subdomains
 for (let i: number = 0; i < 3; i++)
-  PAR.subDomains[i] = {
-    name: "kid",
+  PAR.subDomains.push({
+    name: "kid" + i,
     id: "1." + i,
     parentDomain: PAR,
     subDomains: []
-  };
+  });
 
 // Give subdomain 0 an even # of subdomains
 for (let i: number = 0; i < 4; i++)
   PAR.subDomains[0].subDomains.push({
-    name: "evenData",
+    name: "evenData" + i,
     id: PAR.subDomains[0].id + "." + i,
     parentDomain: PAR.subDomains[0],
     subDomains: []
@@ -28,7 +28,7 @@ for (let i: number = 0; i < 4; i++)
 // Give the the next subdomain an odd # of subdomains
 for (let i: number = 0; i < 3; i++)
   PAR.subDomains[1].subDomains.push({
-    name: "oddData",
+    name: "oddData" + i,
     id: PAR.subDomains[1].id + "." + i,
     parentDomain: PAR.subDomains[1],
     subDomains: []
@@ -36,7 +36,7 @@ for (let i: number = 0; i < 3; i++)
 
 // Give the the last subdomain one subdomain
 PAR.subDomains[2].subDomains.push({
-  name: "oddData",
+  name: "soloData",
   id: PAR.subDomains[2].id + ".1",
   parentDomain: PAR.subDomains[2],
   subDomains: []

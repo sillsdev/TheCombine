@@ -1,7 +1,6 @@
 import React from "react";
-import { Grid, Paper, Zoom } from "@material-ui/core";
+import { Grid, Zoom } from "@material-ui/core";
 
-import TreeViewHeader from "./TreeViewHeader";
 import TreeProps from "./TreeProps";
 import TreeDepiction from "./TreeDepiction";
 import SemanticDomain from "./SemanticDomain";
@@ -19,7 +18,6 @@ export default class TreeView extends React.Component<
   TreeViewState
 > {
   id: any;
-  updateDomain?: () => void;
 
   constructor(props: TreeViewProps) {
     super(props);
@@ -33,11 +31,10 @@ export default class TreeView extends React.Component<
       this.setState({ visible: false });
       return new Promise(resolve =>
         setTimeout(() => {
-          if (domain)
+          if (domain && this.state.visible === false)
             if (domain.id !== this.props.currentDomain.id) {
               this.props.navigate(domain);
-              this.setState({ ...this.state, visible: true });
-              if (this.updateDomain) this.updateDomain();
+              this.setState({ visible: true });
             } else {
               this.props.returnControlToCaller();
             }
@@ -49,32 +46,21 @@ export default class TreeView extends React.Component<
 
   render() {
     return (
-      <Paper
-        style={{
-          flexWrap: "nowrap",
-          flexGrow: 1
-        }}
-      >
-        <Grid container direction="column" justify="center" alignItems="center">
-          <Grid item xs>
-            <TreeViewHeader
+      <React.Fragment>
+        <Zoom in={this.state.visible}>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            <TreeDepiction
               currentDomain={this.props.currentDomain}
               animate={this.animate}
-              ref={ref => {
-                if (ref) this.updateDomain = ref.updateDomain;
-              }}
             />
           </Grid>
-          <Zoom in={this.state.visible}>
-            <Grid item xs>
-              <TreeDepiction
-                currentDomain={this.props.currentDomain}
-                animate={this.animate}
-              />
-            </Grid>
-          </Zoom>
-        </Grid>
-      </Paper>
+        </Zoom>
+      </React.Fragment>
     );
   }
 }
