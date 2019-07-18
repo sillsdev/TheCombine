@@ -12,7 +12,6 @@ import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 import { User } from "../../../types/user";
 
-const createMockStore = configureMockStore([thunk]);
 const VALID_DATA: string[] = ["foo", "bar"];
 const REJECT_DATA: string[] = ["a", "b"];
 const goal: CreateCharInv = new CreateCharInv();
