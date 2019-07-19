@@ -31,7 +31,7 @@ namespace Backend.Tests
             UserRole userRole = new UserRole
             {
                 ProjectId = _projId,
-                Permissions = new List<Permission>() { Permission.CreateProject, Permission.ImportLift, Permission.ExportLift }
+                Permissions = new List<int>() { (int)Permission.CreateProject, (int)Permission.ImportLift, (int)Permission.ExportLift }
             };
             return userRole;
         }
@@ -83,7 +83,7 @@ namespace Backend.Tests
             UserRole userRole = RandomUserRole();
             _userRoleService.Create(userRole);
             UserRole updateRole = userRole.Clone();
-            updateRole.Permissions.Add(Permission.Goals);
+            updateRole.Permissions.Add((int)Permission.Goals);
 
             _ = _userRoleController.Put(userRole.Id, updateRole).Result;
 

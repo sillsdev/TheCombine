@@ -79,7 +79,7 @@ namespace BackendFramework.Controllers
         // POST v1/Projects/{projectId}/UserRoles
         // Implements Create()
         [HttpPost]
-        public async Task<IActionResult> Post(string projectId, UserRole userRole)
+        public async Task<IActionResult> Post(string projectId, [FromBody]UserRole userRole)
         {
             var returnUserRole = await _userRoleService.Create(userRole);
 

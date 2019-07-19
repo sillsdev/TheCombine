@@ -13,7 +13,7 @@ namespace BackendFramework.ValueModels
         public string Id { get; set; }
 
         [BsonElement("permissions")]
-        public List<Permission> Permissions { get; set; }
+        public List<int> Permissions { get; set; }
 
         [BsonElement("projectId")]
         public string ProjectId { get; set; }
@@ -22,7 +22,7 @@ namespace BackendFramework.ValueModels
         {
             Id = "";
             ProjectId = "";
-            Permissions = new List<Permission>();
+            Permissions = new List<int>();
         }
 
         public UserRole Clone()
@@ -31,10 +31,10 @@ namespace BackendFramework.ValueModels
             {
                 Id = Id.Clone() as string,
                 ProjectId = ProjectId.Clone() as string,
-                Permissions = new List<Permission>()
+                Permissions = new List<int>()
             };
 
-            foreach(Permission permission in Permissions)
+            foreach(int permission in Permissions)
             {
                 clone.Permissions.Add(permission);
             }
