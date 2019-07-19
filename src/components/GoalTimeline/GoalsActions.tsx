@@ -136,9 +136,17 @@ export async function loadGoalData(goal: Goal): Promise<Goal> {
   switch (goal.goalType) {
     case GoalType.MergeDups:
       let finder = new DupFinder();
+
+      //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+      //let t0 = performance.now();
+
       await finder.getNextDups(goal.numSteps).then(words => {
         goal.data = { plannedWords: words };
       });
+
+      //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+      //console.log(performance.now() - t0);
+
       break;
     case GoalType.CreateCharInv:
       break;

@@ -41,6 +41,7 @@ export interface MergeStackProps {
 interface MergeStackState {
   anchorEl?: HTMLElement;
   expanded: boolean;
+  duplicateCount: number;
 }
 
 // Constants
@@ -60,7 +61,7 @@ class MergeStack extends React.Component<
 > {
   constructor(props: MergeStackProps & LocalizeContextProps) {
     super(props);
-    this.state = { expanded: false };
+    this.state = { duplicateCount: 1, expanded: false };
   }
 
   dragDrop(event: React.DragEvent<HTMLElement>) {
@@ -99,6 +100,13 @@ class MergeStack extends React.Component<
       id: sense[0],
       data: this.props.senses[sense[1]]
     }));
+
+    if (senseEntries.length > this.state.duplicateCount){
+      this.expand();
+      this.setState({...this.state, duplicateCount: senseEntries.length});
+    }else if (senseEntries.length != this.state.duplicateCount){
+      this.setState({...this.state, duplicateCount: senseEntries.length});
+    }
 
     let glosses: { def: string; language: string; sense: string }[] = [];
     for (let entry of senseEntries) {
