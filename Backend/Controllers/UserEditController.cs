@@ -26,13 +26,13 @@ namespace BackendFramework.Controllers
 
         [EnableCors("AllowAll")]
 
-        // GET: v1/Projects/UserEdits
+        // GET: v1/Projects/{projectId}/UserEdits
         // Implements GetAllUserEdits()
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            var isValid = _projectService.GetProject(projectId);
-            if (isValid == null)
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -40,15 +40,15 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _repo.GetAllUserEdits(projectId));
         }
 
-        // DELETE v1/Projects/UserEdits
+        // DELETE v1/Projects/{projectId}/UserEdits
         // Implements DeleteAllUserEdits()
         // DEBUG ONLY
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
 #if DEBUG
-            var isValid = _projectService.GetProject(projectId);
-            if (isValid == null)
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -59,13 +59,13 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        // GET: v1/Projects/UserEdits/{Id}
+        // GET: v1/Projects/{projectId}/UserEdits/{userEditId}
         // Implements GetUserEdit(), Arguments: string id of target userEdit
         [HttpGet("{userEditId}")]
         public async Task<IActionResult> Get(string projectId, string userEditId)
         {
-            var isValid = _projectService.GetProject(projectId);
-            if (isValid == null)
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -78,7 +78,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(userEdit);
         }
 
-        // POST v1/Projects/UserEdits
+        // POST v1/Projects/{projectId}/UserEdits
         // Implements Create()
         [HttpPost]
         public async Task<IActionResult> Post(string projectId)
@@ -89,7 +89,7 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(userEdit.Id);
         }
 
-        // POST: v1/Projects/UserEdits/{Id}
+        // POST: v1/Projects/{projectId}/UserEdits/{userEditId}
         // Implements AddGoalToUserEdit(), Arguments: new userEdit from body
         // Creates a goal
         [HttpPost("{userEditId}")]
@@ -120,7 +120,7 @@ namespace BackendFramework.Controllers
             }
         }
 
-        // PUT: v1/Projects/UserEdits/{Id}
+        // PUT: v1/Projects/{projectId}/UserEdits/{userEditId}
         // Implements AddStepToGoal(), Arguments: string id of target userEdit, 
         // wrapper object to hold the goal index and the step to add to the goal history
         // Adds steps to a goal
@@ -144,13 +144,13 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(document.Edits[userEdit.GoalIndex].StepData.Count);
         }
 
-        // DELETE: v1/Projects/UserEdits/{Id}
+        // DELETE: v1/Projects/{projectId}/UserEdits/{userEditId}
         // Implements Delete(), Arguments: string id of target userEdit
         [HttpDelete("{userEditId}")]
         public async Task<IActionResult> Delete(string projectId, string userEditId)
         {
-            var isValid = _projectService.GetProject(projectId);
-            if (isValid == null)
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -159,7 +159,7 @@ namespace BackendFramework.Controllers
             {
                 return new OkResult();
             }
-            return new NotFoundResult();
+            return new NotFoundObjectResult(userEditId);
         }
     }
 }

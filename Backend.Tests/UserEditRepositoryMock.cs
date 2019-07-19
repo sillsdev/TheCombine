@@ -18,7 +18,8 @@ namespace Backend.Tests
 
         public Task<List<UserEdit>> GetAllUserEdits(string projectId)
         {
-            return Task.FromResult(_userEdits.Select(userEdit => userEdit.Clone()).ToList());
+            var cloneList = _userEdits.Select(userEdit => userEdit.Clone()).ToList();
+            return Task.FromResult(cloneList.Where(userEdit => userEdit.ProjectId == projectId).ToList());
         }
 
         public Task<UserEdit> GetUserEdit(string projectId, string userEditId)
@@ -43,8 +44,7 @@ namespace Backend.Tests
         public Task<bool> Delete(string projectId, string userEditId)
         {
             var foundUserEdit = _userEdits.Single(userEdit => userEdit.Id == userEditId);
-            var success = _userEdits.Remove(foundUserEdit);
-            return Task.FromResult(success);
+            return Task.FromResult(_userEdits.Remove(foundUserEdit));
         }
 
         public Task<bool> Replace(string projectId, string userEditId, UserEdit userEdit)
