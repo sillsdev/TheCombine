@@ -59,7 +59,7 @@ namespace BackendFramework.Services
         public async Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
             FilterDefinition<UserRole> filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
-            
+
             var updateDef = Builders<UserRole>.Update.Set(x => x.Permissions, userRole.Permissions);
 
             var updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);
