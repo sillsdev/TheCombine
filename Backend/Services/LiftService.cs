@@ -454,6 +454,13 @@ namespace BackendFramework.Services
             entry.Pronunciations.Add(phonetic);
             return entry;
         }
+        public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
+        {
+            if (range == "semantic-domain-ddp4")
+            {
+                sdList.Add(new SemanticDomain() { Name = label.First().Value.Text, Id = abbrev.First().Value.Text });
+            }
+        }
 
         // The following are unused and are not implemented, but must stay to satisfy the needs of the ILexiconMerger 
         public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
@@ -508,13 +515,6 @@ namespace BackendFramework.Services
 
         public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
 
-        public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
-        {
-            if (range == "semantic-domain-ddp4")
-            {
-                sdList.Add(new SemanticDomain() { Name = label.First().Value.Text, Id = abbrev.First().Value.Text });
-            }
-        }
     }
 
     public class EmptyLiftObject : LiftObject
