@@ -275,6 +275,5 @@ export function mergeAll() {
       await mergeWord(wordID, getState);
     }
     //await dispatch(clearTree());
-    await dispatch(refreshWords());
   };
 }

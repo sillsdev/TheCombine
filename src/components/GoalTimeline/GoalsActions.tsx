@@ -18,6 +18,10 @@ import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder"
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import {
+  refreshWords,
+  MergeTreeAction
+} from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -103,12 +107,15 @@ export function asyncGetUserEdits() {
 }
 
 export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: Dispatch<GoalAction>) => {
+  return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     let user: User | undefined = getUser();
     if (user !== undefined) {
       let userEditId: string | undefined = getUserEditId(user);
       if (userEditId !== undefined) {
-        await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
+        dispatch(loadGoalData(goal)).then(
+          returnedGoal => (goal = returnedGoal)
+        );
+        //await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
         await backend
           .addGoalToUserEdit(userEditId, goal)
           .then(resp => {
@@ -132,28 +139,32 @@ export function getUser(): User | undefined {
   return user;
 }
 
-export async function loadGoalData(goal: Goal): Promise<Goal> {
-  switch (goal.goalType) {
-    case GoalType.MergeDups:
-      let finder = new DupFinder();
+export function loadGoalData(goal: Goal) {
+  return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
+    switch (goal.goalType) {
+      case GoalType.MergeDups:
+        let finder = new DupFinder();
 
-      //Used for testing duplicate finder. (See docs/bitmap_testing.md)
-      //let t0 = performance.now();
+        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+        //let t0 = performance.now();
 
-      await finder.getNextDups(goal.numSteps).then(words => {
-        goal.data = { plannedWords: words };
-      });
+        await finder.getNextDups(goal.numSteps).then(words => {
+          goal.data = { plannedWords: words };
+        });
 
-      //Used for testing duplicate finder. (See docs/bitmap_testing.md)
-      //console.log(performance.now() - t0);
+        await dispatch(refreshWords());
 
-      break;
-    case GoalType.CreateCharInv:
-      break;
-    default:
-      break;
-  }
-  return goal;
+        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+        //console.log(performance.now() - t0);
+
+        break;
+      case GoalType.CreateCharInv:
+        break;
+      default:
+        break;
+    }
+    return goal;
+  };
 }
 
 export function getUserEditId(user: User): string | undefined {

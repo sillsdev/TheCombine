@@ -18,44 +18,52 @@ const stepComponentDictionary: componentSteps[] = [
   {
     goal: GoalType.CreateCharInv,
     steps: [<CharInventoryCreation />],
-    loadComponent: () => <CharInventoryCreation />
+    loadComponent: () => getGoal(GoalType.CreateCharInv)
   },
   {
     goal: GoalType.ValidateChars,
     steps: [],
-    loadComponent: () => <EmptyGoalComponent />
+    loadComponent: () => getGoal(GoalType.ValidateChars)
   },
   {
     goal: GoalType.CreateStrWordInv,
     steps: [],
-    loadComponent: () => <EmptyGoalComponent />
+    loadComponent: () => getGoal(GoalType.CreateStrWordInv)
   },
   {
     goal: GoalType.ValidateStrWords,
     steps: [],
-    loadComponent: () => <EmptyGoalComponent />
+    loadComponent: () => getGoal(GoalType.ValidateStrWords)
   },
   {
     goal: GoalType.MergeDups,
     steps: [<MergeDupStep />],
-    loadComponent: () => <MergeDupStep />
+    loadComponent: () => getGoal(GoalType.MergeDups)
   },
   {
     goal: GoalType.SpellcheckGloss,
     steps: [],
-    loadComponent: () => <EmptyGoalComponent />
+    loadComponent: () => getGoal(GoalType.SpellcheckGloss)
   },
   {
     goal: GoalType.ViewFind,
     steps: [],
-    loadComponent: () => <EmptyGoalComponent />
+    loadComponent: () => getGoal(GoalType.ViewFind)
   },
   {
     goal: GoalType.HandleFlags,
     steps: [],
-    loadComponent: () => <EmptyGoalComponent />
+    loadComponent: () => getGoal(GoalType.HandleFlags)
   }
 ];
+
+function getGoal(goalType: GoalType): JSX.Element {
+  let steps: JSX.Element[] = stepComponentDictionary[goalType].steps;
+  if (steps.length > 0) {
+    return stepComponentDictionary[goalType].steps[0];
+  }
+  return <EmptyGoalComponent />;
+}
 
 class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
   renderGoal(goal: Goal): JSX.Element {

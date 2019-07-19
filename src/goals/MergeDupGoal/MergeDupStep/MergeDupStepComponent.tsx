@@ -84,9 +84,6 @@ class MergeDupStep extends React.Component<
   }
   componentDidMount() {
     this.updateWindowDimensions();
-    if (this.props.refreshWords) {
-      this.props.refreshWords();
-    }
     window.addEventListener("resize", () => this.updateWindowDimensions());
   }
 
@@ -104,6 +101,7 @@ class MergeDupStep extends React.Component<
 
   next() {
     if (this.props.mergeAll) this.props.mergeAll();
+    if (this.props.refreshWords) this.props.refreshWords();
   }
 
   handleDrop(res: DropResult) {
@@ -176,7 +174,9 @@ class MergeDupStep extends React.Component<
         open={this.state.sideBar.senses.length > 1}
       >
         <Droppable
-          droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
+          droppableId={`${this.state.sideBar.wordID} ${
+            this.state.sideBar.senseID
+          }`}
         >
           {providedDroppable => (
             <div
