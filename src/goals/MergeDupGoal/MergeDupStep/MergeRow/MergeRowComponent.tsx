@@ -1,8 +1,7 @@
 //external modules
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { uuid } from "../../../../utilities";
-import { Paper, Typography } from "@material-ui/core";
+import {
   MergeTreeReference,
   Hash,
   MergeTreeWord,
@@ -11,7 +10,7 @@ import { Paper, Typography } from "@material-ui/core";
 import { Paper, Typography, Select, MenuItem } from "@material-ui/core";
 import MergeStack from "../MergeStack";
 import { Droppable } from "react-beautiful-dnd";
-import {SideBar} from '../MergeDupStepComponent';
+import { SideBar } from "../MergeDupStepComponent";
 
 //interface for component props
 export interface MergeRowProps {
@@ -94,7 +93,7 @@ export class MergeRow extends React.Component<
             {filled &&
               Object.keys(this.props.words[this.props.wordID].senses).map(
                 (item, index) => (
-                <MergeStack
+                  <MergeStack
                     sideBar={this.props.sideBar}
                     setSidebar={this.props.setSidebar}
                     key={item}
