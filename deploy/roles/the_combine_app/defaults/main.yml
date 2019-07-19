@@ -7,3 +7,6 @@ www_uploads_group: www-data
 www_app_dir: /var/www/thewordcombine.org/htdocs
 www_app_owner: www-data
 www_app_group: www-data
+
+combine_env_vars:
+  - ASPNETCORE_JWT_SECRET_KEY: EiQQ7lBDy2Hyio0xjXS8odeO1zVvaa0SFifLvmFz5fHU4mJNpZvNKZ8rhkURWtr
