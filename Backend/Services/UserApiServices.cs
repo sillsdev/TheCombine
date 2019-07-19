@@ -81,7 +81,7 @@ namespace BackendFramework.Services
                 foundUser.Token = tokenHandler.WriteToken(token);
 
                 // remove password before returning
-                if(!await Update(foundUser.Id, foundUser))
+                if(await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
                 {
                     throw (new KeyNotFoundException());
                 }
@@ -174,11 +174,9 @@ namespace BackendFramework.Services
             return deleted.DeletedCount > 0;
         }
 
-        public async Task<bool> Update(string Id, User user)
+        public async Task<ResultOfUpdate> Update(string Id, User user)
         {
             FilterDefinition<User> filter = Builders<User>.Filter.Eq(x => x.Id, Id);
-
-            User updatedUser = new User();
 
             //Note: Nulls out values not in update body
             var updateDef = Builders<User>.Update
@@ -198,10 +196,16 @@ namespace BackendFramework.Services
 
             if (!updateResult.IsAcknowledged)
             {
-                throw new Exception("User not found");
+                return ResultOfUpdate.NotFound;
             }
-
-            return updateResult.ModifiedCount > 0;
+            else if (updateResult.ModifiedCount > 0)
+            {
+                return ResultOfUpdate.Updated;
+            }
+            else
+            {
+                return ResultOfUpdate.NoChange;
+            }
         }   
     }
 }

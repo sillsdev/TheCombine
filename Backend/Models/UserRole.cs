@@ -77,4 +77,11 @@ namespace BackendFramework.ValueModels
         Goals,
         DataEntry
     }
+
+    public enum ResultOfUpdate
+    {
+        Updated,
+        NoChange,
+        NotFound
+    }
 }

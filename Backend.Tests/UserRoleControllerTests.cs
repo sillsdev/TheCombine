@@ -85,7 +85,7 @@ namespace Backend.Tests
             UserRole updateRole = userRole.Clone();
             updateRole.Permissions.Add((int)Permission.Goals);
 
-            _ = _userRoleController.Put(userRole.Id, updateRole).Result;
+            _ = _userRoleController.Put(_projId ,userRole.Id, updateRole).Result;
 
             var allUserRoles = _userRoleService.GetAllUserRoles(_projId).Result;
 

@@ -47,15 +47,16 @@ namespace Backend.Tests
             return Task.FromResult(_userRoles.Remove(foundUserRole));
         }
 
-        public Task<bool> Update(string userRoleId, UserRole userRole)
+        public Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
             var foundUserRole = _userRoles.Single(ur => ur.Id == userRoleId);
             var success = _userRoles.Remove(foundUserRole);
             if (success)
             {
                 _userRoles.Add(userRole.Clone());
+                return Task.FromResult(ResultOfUpdate.Updated);
             }
-            return Task.FromResult(success);
+            return Task.FromResult(ResultOfUpdate.NotFound);
         }
     }
 }

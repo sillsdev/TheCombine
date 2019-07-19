@@ -55,11 +55,9 @@ namespace BackendFramework.Services
             return deleted.DeletedCount > 0;
         }
 
-        public async Task<bool> Update(string projectId, Project project)
+        public async Task<ResultOfUpdate> Update(string projectId, Project project)
         {
             FilterDefinition<Project> filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);
-
-            Project updatedProject = new Project();
 
             //Note: Nulls out values not in update body
             var updateDef = Builders<Project>.Update
@@ -78,10 +76,16 @@ namespace BackendFramework.Services
 
             if (!updateResult.IsAcknowledged)
             {
-                throw new Exception("Project not found");
+                return ResultOfUpdate.NotFound;
             }
-
-            return updateResult.ModifiedCount > 0;
+            else if (updateResult.ModifiedCount > 0)
+            {
+                return ResultOfUpdate.Updated;
+            }
+            else
+            {
+                return ResultOfUpdate.NoChange;
+            }
         }
     }
 }

@@ -11,6 +11,6 @@ namespace BackendFramework.Interfaces
         Task<UserRole> Create(UserRole userRole);
         Task<bool> Delete(string projectId, string uesrRoleId);
         Task<bool> DeleteAllUserRoles(string projectId);
-        Task<bool> Update(string userRoleId, UserRole userRole);
+        Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole);
     }
 }

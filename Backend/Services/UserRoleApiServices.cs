@@ -56,22 +56,26 @@ namespace BackendFramework.Services
             return deleted.DeletedCount > 0;
         }
 
-        public async Task<bool> Update(string userRoleId, UserRole userRole)
+        public async Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
             FilterDefinition<UserRole> filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
-
-            UserRole updatedUserRole = new UserRole();
-
+            
             var updateDef = Builders<UserRole>.Update.Set(x => x.Permissions, userRole.Permissions);
 
             var updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)
             {
-                throw new Exception("User not found");
+                return ResultOfUpdate.NotFound;
             }
-
-            return updateResult.ModifiedCount > 0;
+            else if (updateResult.ModifiedCount > 0)
+            {
+                return ResultOfUpdate.Updated;
+            }
+            else
+            {
+                return ResultOfUpdate.NoChange;
+            }
         }
     }
 }

@@ -81,12 +81,18 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId, [FromBody]UserRole userRole)
         {
-            var returnUserRole = await _userRoleService.Create(userRole);
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
 
+            var returnUserRole = await _userRoleService.Create(userRole);
             if (returnUserRole == null)
             {
                 return BadRequest();
             }
+
             return new OkObjectResult(userRole.Id);
         }
 
@@ -111,19 +117,26 @@ namespace BackendFramework.Controllers
         // PUT: v1/Projects/{projectId}/UserRoles/{userRoleId}
         // Implements Update()
         [HttpPut("{userRoleId}")]
-        public async Task<IActionResult> Put(string userRoleId, [FromBody] UserRole userRole)
+        public async Task<IActionResult> Put(string projectId, string userRoleId, [FromBody] UserRole userRole)
         {
-            try
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
             {
-                if (await _userRoleService.Update(userRoleId, userRole))
-                {
-                    return new OkObjectResult(userRole.Id);
-                }
-                return new StatusCodeResult(304);
+                return new NotFoundObjectResult(projectId);
             }
-            catch
+
+            var result = await _userRoleService.Update(userRoleId, userRole);
+            if (result == ResultOfUpdate.NotFound)
             {
-                return new NotFoundResult();
+                return new NotFoundObjectResult(userRoleId);
+            }
+            else if(result == ResultOfUpdate.Updated)
+            {
+                return new OkObjectResult(userRoleId);
+            }
+            else
+            {
+                return new StatusCodeResult(304);
             }
         }
     }
