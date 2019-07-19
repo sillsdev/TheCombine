@@ -170,7 +170,7 @@ namespace BackendFramework.Services
 
         public async Task<bool> Delete(string Id)
         {
-            var deleted = await _userDatabase.Users.DeleteManyAsync(x => x.Id == Id);
+            var deleted = await _userDatabase.Users.DeleteOneAsync(x => x.Id == Id);
             return deleted.DeletedCount > 0;
         }
 

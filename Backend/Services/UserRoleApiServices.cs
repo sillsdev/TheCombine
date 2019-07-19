@@ -52,7 +52,7 @@ namespace BackendFramework.Services
             var filterDef = new FilterDefinitionBuilder<UserRole>();
             var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
 
-            var deleted = await _userRoleDatabase.UserRoles.DeleteManyAsync(filter);
+            var deleted = await _userRoleDatabase.UserRoles.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
 

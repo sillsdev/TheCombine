@@ -51,7 +51,7 @@ namespace BackendFramework.Services
 
         public async Task<bool> Delete(string projectId)
         {
-            var deleted = await _projectDatabase.Projects.DeleteManyAsync(x => x.Id == projectId);
+            var deleted = await _projectDatabase.Projects.DeleteOneAsync(x => x.Id == projectId);
             return deleted.DeletedCount > 0;
         }
 
