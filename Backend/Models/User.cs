@@ -30,6 +30,9 @@ namespace BackendFramework.ValueModels
         [BsonElement("workedProjects")]
         public Dictionary<string, string> WorkedProjects { get; set; }
 
+        [BsonElement("projectRoles")]
+        public Dictionary<string, string> ProjectRoles { get; set; }
+
         [BsonElement("agreement")]
         public bool Agreement { get; set; }
 
@@ -59,6 +62,7 @@ namespace BackendFramework.ValueModels
             UILang = "";
             Token = "";
             WorkedProjects = new Dictionary<string, string>();
+            ProjectRoles = new Dictionary<string, string>();
         }
 
         public User Clone()
@@ -76,12 +80,18 @@ namespace BackendFramework.ValueModels
                 Username = Username.Clone() as string,
                 UILang = UILang.Clone() as string,
                 Token = Token.Clone() as string,
-                WorkedProjects = new Dictionary<string, string>()
-        };
+                WorkedProjects = new Dictionary<string, string>(),
+                ProjectRoles = new Dictionary<string, string>()
+            };
 
             foreach (string projId in WorkedProjects.Keys)
             {
                 clone.WorkedProjects.Add(projId.Clone() as string, WorkedProjects[projId].Clone() as string);
+            }
+
+            foreach (string projId in ProjectRoles.Keys)
+            {
+                clone.ProjectRoles.Add(projId.Clone() as string, ProjectRoles[projId].Clone() as string);
             }
 
             return clone;
@@ -103,7 +113,10 @@ namespace BackendFramework.ValueModels
                 other.Token.Equals(Token) &&
 
                 other.WorkedProjects.Count == WorkedProjects.Count &&
-                other.WorkedProjects.All(WorkedProjects.Contains);
+                other.WorkedProjects.All(WorkedProjects.Contains) &&
+
+                other.ProjectRoles.Count == ProjectRoles.Count &&
+                other.ProjectRoles.All(ProjectRoles.Contains);
         }
 
         public override bool Equals(object obj)
@@ -129,6 +142,7 @@ namespace BackendFramework.ValueModels
             hash.Add(Phone);
             hash.Add(OtherConnectionField);
             hash.Add(WorkedProjects);
+            hash.Add(ProjectRoles);
             hash.Add(Agreement);
             hash.Add(Password);
             hash.Add(Username);

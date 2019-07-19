@@ -23,7 +23,7 @@ namespace Backend.Tests
 
         public Task<User> GetUser(string id)
         {
-            var foundUser = _users.Where(user => user.Id == id).Single();
+            var foundUser = _users.Single(user => user.Id == id);
             return Task.FromResult(foundUser.Clone());
         }
 

@@ -188,6 +188,7 @@ namespace BackendFramework.Services
                 .Set(x => x.Phone, user.Phone)
                 .Set(x => x.OtherConnectionField, user.OtherConnectionField)
                 .Set(x => x.WorkedProjects, user.WorkedProjects)
+                .Set(x => x.ProjectRoles, user.ProjectRoles)
                 .Set(x => x.Agreement, user.Agreement)
                 .Set(x => x.Username, user.Username)
                 .Set(x => x.UILang, user.UILang)
