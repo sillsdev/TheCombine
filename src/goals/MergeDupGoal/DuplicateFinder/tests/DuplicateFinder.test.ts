@@ -1,11 +1,12 @@
 //Sam Delaney, 6/12/19
 
-import DupFinder, { ScoredWord } from "../DuplicateFinder";
-import { Word, simpleWord, makeSense } from "../../../../types/word";
+import DupFinder, { DefaultParams } from "../DuplicateFinder";
+import { Word, simpleWord } from "../../../../types/word";
+import axios from "axios";
+
+const mockAxios = axios as jest.Mocked<typeof axios>;
 
 describe("dupFinder Tests", () => {
-  let Finder = new DupFinder();
-
   //TEST UTILITIES
 
   //put here instead of importing because testWordList will eventually be removed from types/word.
@@ -25,233 +26,83 @@ describe("dupFinder Tests", () => {
     simpleWord("Yes", "Mayonnaise")
   ];
 
-  let scoredYank: ScoredWord[] = [
-    {
-      word: {
-        id: "6212061",
-        vernacular: "Yank",
-        senses: [makeSense("No")],
-        audio: "",
-        created: "now",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: 0,
-        otherField: "",
-        plural: ""
-      },
-      score: 0
-    },
-    {
-      word: {
-        id: "7518701",
-        vernacular: "Yang",
-        senses: [makeSense("Die")],
-        audio: "",
-        created: "now",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: 0,
-        otherField: "",
-        plural: ""
-      },
-      score: 1.25
-    },
-    {
-      word: {
-        id: "921780",
-        vernacular: "Yank",
-        senses: [makeSense("Please god help me")],
-        audio: "",
-        created: "now",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: 0,
-        otherField: "",
-        plural: ""
-      },
-      score: 0
-    }
-  ];
-  let orderedYank: ScoredWord[] = [
-    {
-      word: {
-        id: "6212061",
-        vernacular: "Yank",
-        senses: [makeSense("No")],
-        audio: "",
-        created: "now",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: 0,
-        otherField: "",
-        plural: ""
-      },
-      score: 0
-    },
-    {
-      word: {
-        id: "921780",
-        vernacular: "Yank",
-        senses: [makeSense("Please god help me")],
-        audio: "",
-        created: "now",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: 0,
-        otherField: "",
-        plural: ""
-      },
-      score: 0
-    },
-    {
-      word: {
-        id: "7518701",
-        vernacular: "Yang",
-        senses: [makeSense("Die")],
-        audio: "",
-        created: "now",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: 0,
-        otherField: "",
-        plural: ""
-      },
-      score: 1.25
-    }
-  ];
-  let acceptedYank: Word[] = [
-    {
-      id: "921780",
-      vernacular: "Yank",
-      senses: [makeSense("Please god help me")],
-      audio: "",
-      created: "now",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      accessability: 0,
-      otherField: "",
-      plural: ""
-    },
-    {
-      id: "6212061",
-      vernacular: "Yank",
-      senses: [makeSense("No")],
-      audio: "",
-      created: "now",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      accessability: 0,
-      otherField: "",
-      plural: ""
-    },
-    {
-      id: "7518701",
-      vernacular: "Yang",
-      senses: [makeSense("Die")],
-      audio: "",
-      created: "now",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      accessability: 0,
-      otherField: "",
-      plural: ""
-    }
-  ];
+  test("getNextDups returns correct number of word collections", async () => {
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({ data: testWordList })
+    );
 
-  //placeholder for now (dependent on getWordsFromDB)
-  test("test getNextDups", () => {});
-  //placeholder for now
-  test("test getWordsFromDB", () => {});
+    let finder = new DupFinder();
 
-  //test that getDupsFromWordList properly strings together scoring and accepting
-  test("test getDupsFromWordList", () => {
-    let testOutput = Finder.getDupsFromWordList(testWordList[3], testWordList);
-    for (let i = 0; i < testOutput[0].length; i++) {
-      expect(testOutput[0][i].vernacular).toEqual(acceptedYank[i].vernacular);
-      expect(testOutput[0][i].senses[0]).toEqual(acceptedYank[i].senses[0]);
-    }
-  });
-
-  test("test filter", () => {
-    let testWords = testWordList;
-    let filteredwords = Finder.filter(testWords[0], testWords);
-
-    filteredwords.forEach(word => {
-      expect(
-        Math.abs(word.vernacular.length - testWords[0].vernacular.length)
-      ).toBeLessThan(2);
+    await finder.getNextDups(7).then(wordCollections => {
+      expect(wordCollections.length).toBe(7);
     });
   });
 
-  //test that getAcceptedWords properly strings together sorting and converting to Word
-  test("test getAcceptedWords", () => {
-    let testOutput = Finder.getAcceptedWords(scoredYank);
-    for (let i = 0; i < testOutput.length; i++) {
-      expect(testOutput[0][i].vernacular).toEqual(acceptedYank[i].vernacular);
-      expect(testOutput[0][i].senses[0]).toEqual(acceptedYank[i].senses[0]);
-    }
+  test("finder can get words from frontier", async () => {
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({ data: testWordList })
+    );
+
+    let finder = new DupFinder();
+
+    expect(finder.maskedWords.length).toBe(0);
+
+    await finder.fetchWordsFromDB().then(gotWords => {
+      expect(gotWords).toBe(true);
+      expect(finder.maskedWords.length).toBe(testWordList.length);
+    });
   });
 
-  test("test scoreWords algorithm", () => {
-    let testOutput = Finder.scoreWords(testWordList[3], testWordList);
-    for (let i = 0; i < testOutput.length; i++)
-      expect(testOutput[i].score).toEqual(scoredYank[i].score);
-  });
+  test("the finder can search for duplicates with one parent", async () => {
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({ data: testWordList })
+    );
 
-  test("test QuickSort algorithm against ordered collection", () => {
-    let testOutput = Finder.quicksort(scoredYank);
-    for (let i = 0; i < testOutput.length; i++)
-      expect(testOutput[i].score).toEqual(orderedYank[i].score);
-  });
+    let finder = new DupFinder();
 
-  test("test QuickSort algorithm for ordering", () => {
-    let testOutput = Finder.quicksort(scoredYank);
-    for (let i = 1; i < testOutput.length; i++)
-      expect(testOutput[i].score <= testOutput[i - 1].score);
+    let parent = simpleWord("Yank", "Mayonnaise");
+
+    let duplicates: [Word[], number] = [[], Number.MIN_SAFE_INTEGER];
+    await finder.fetchWordsFromDB().then(gotWords => {
+      duplicates = finder.getDuplicatesOfWord(parent);
+
+      duplicates[0].forEach(duplicate => {
+        let vernScore = finder.getLevenshteinDistance(
+          duplicate.vernacular,
+          parent.vernacular
+        );
+        let glossScore =
+          finder.getLevenshteinDistance(
+            duplicate.senses[0].glosses[0].def,
+            parent.senses[0].glosses[0].def
+          ) * 3;
+
+        expect(
+          glossScore + vernScore <= DefaultParams.maxScore ||
+            glossScore === 0 ||
+            vernScore <= 1
+        ).toBe(true);
+      });
+    });
   });
 
   test("Levenshtein Distance with same Word", () => {
-    expect(
-      Finder.getLevenshteinDistance(
-        testWordList[0].vernacular,
-        testWordList[0].vernacular
-      )
-    ).toEqual(0);
+    let finder = new DupFinder();
+    expect(finder.getLevenshteinDistance("testing", "testing")).toEqual(0);
   });
 
   test("Levenshtein Distance with similar Word", () => {
-    expect(
-      Finder.getLevenshteinDistance(
-        testWordList[4].vernacular,
-        testWordList[8].vernacular
-      )
-    ).toEqual(3);
+    let finder = new DupFinder();
+    expect(finder.getLevenshteinDistance("testing", "toasting")).toEqual(2);
   });
 
   test("Levenshtein Distance with distinct Word", () => {
+    let finder = new DupFinder();
     expect(
-      Finder.getLevenshteinDistance(
-        testWordList[8].senses[0].glosses[0].def,
-        testWordList[12].senses[0].glosses[0].def
+      finder.getLevenshteinDistance(
+        "badger",
+        "testWordList[12].senses[0].glosses[0].def"
       )
-    ).toEqual(16);
+    ).toEqual(39);
   });
 });
