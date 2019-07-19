@@ -17,6 +17,7 @@ export interface SemanticDomain {
 export interface Sense {
   glosses: Gloss[];
   semanticDomains: SemanticDomain[];
+  accessibility?: State;
 }
 
 export function makeSense(val: string) {
@@ -41,7 +42,7 @@ export interface Word {
   plural: string;
 }
 
-export interface MergeWord{
+export interface MergeWord {
   wordID: string;
   senses: State[];
 }

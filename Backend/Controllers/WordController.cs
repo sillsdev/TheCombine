@@ -93,7 +93,7 @@ namespace BackendFramework.Controllers
             word.ProjectId = projectId;
 
             //check if word is already in database
-            if (await  _wordService.searchInDuplicates(word))
+            if (await _wordService.searchInDuplicates(word))
             {
                 await _wordRepo.Create(word);
             }
@@ -131,7 +131,7 @@ namespace BackendFramework.Controllers
         // DELETE: v1/projects/{projectId}/words/{wordId}
         // Implements Delete(), Arguments: string id of target word
         [HttpDelete("{wordId}")]
-        public async Task<IActionResult> Delete(string projectId,  string wordId)
+        public async Task<IActionResult> Delete(string projectId, string wordId)
         {
             var isValid = _projectService.GetProject(projectId);
             if (isValid == null)
@@ -165,6 +165,10 @@ namespace BackendFramework.Controllers
                     return new ObjectResult(newWordList.Select(i => i.Id).ToList());
                 }
                 catch (NotSupportedException)
+                {
+                    return new BadRequestResult();
+                }
+                catch (FormatException)
                 {
                     return new BadRequestResult();
                 }

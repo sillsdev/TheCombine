@@ -1,14 +1,45 @@
 import React from "react";
 
-import { act } from "react-dom/test-utils";
-import renderer from "react-test-renderer";
+import GoalSelectorScroll from "..";
+
+import { Provider } from "react-redux";
+import { act, Simulate } from "react-dom/test-utils";
+import renderer, {
+  ReactTestInstance,
+  ReactTestRenderer
+} from "react-test-renderer";
+import AddWords from "../";
+import configureStore from "redux-mock-store";
 import AddWords_unconnected from "../AddWordsComponent";
+import { LocalizeProvider } from "react-localize-redux";
 import configureMockStore from "redux-mock-store";
+import createMockStore from "redux-mock-store";
+import { GoalSelectorState } from "../../../types/goals";
 import axios from "axios";
 import { Word } from "../../../types/word";
 
 let master: renderer.ReactTestRenderer;
 let handle: renderer.ReactTestInstance;
+
+const testWord: Word = {
+  id: "",
+  vernacular: "",
+  senses: [
+    {
+      glosses: [],
+      semanticDomains: []
+    }
+  ],
+  audio: "",
+  created: "",
+  modified: "",
+  history: [],
+  partOfSpeech: "",
+  editedBy: [],
+  accessability: 0,
+  otherField: "",
+  plural: ""
+};
 
 // Mock getTranslate
 const MOCK_TRANSLATE = jest.fn(_ => {
@@ -41,6 +72,10 @@ beforeEach(() => {
   // Here, use the act block to be able to render our AddWords into the DOM
   // Re-created each time to prevent actions from previous runs from affecting future runs
   act(() => {
+    // Getfrontierwords
+    mockedAxios.get.mockImplementationOnce(url => {
+      return Promise.resolve({ data: [] });
+    });
     master = renderer.create(
       <AddWords_unconnected
         domain={{ name: "en", number: "1", subDomains: [] }}
@@ -77,7 +112,9 @@ describe("Tests AddWords", () => {
         {
           vernacular: "testVern",
           glosses: "testGloss",
-          id: "123"
+          id: "123",
+          senseIndex: 0,
+          dupId: ""
         }
       ]);
       done();
@@ -90,24 +127,32 @@ describe("Tests AddWords", () => {
         {
           vernacular: "testVern1",
           glosses: "testGloss1",
-          id: "123"
+          id: "123",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern2",
           glosses: "testGloss2",
-          id: "456"
+          id: "456",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern3",
           glosses: "testGloss3",
-          id: "789"
+          id: "789",
+          senseIndex: 0,
+          dupId: ""
         }
       ]
     });
-    mockedAxios.put.mockResolvedValue(1);
-    handle.instance.updateWord(1);
-    expect(mockedAxios.put).toHaveBeenCalledTimes(1);
-    done();
+    mockedAxios.get.mockResolvedValueOnce({ data: testWord });
+    mockedAxios.put.mockResolvedValueOnce({ data: 1 });
+    handle.instance.updateWord(1, () => {
+      expect(mockedAxios.put).toHaveBeenCalledTimes(1);
+      done();
+    });
   });
 
   it("Removes a word", done => {
@@ -116,32 +161,43 @@ describe("Tests AddWords", () => {
         {
           vernacular: "testVern1",
           glosses: "testGloss1",
-          id: "123"
+          id: "123",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern2",
           glosses: "testGloss2",
-          id: "456"
+          id: "456",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern3",
           glosses: "testGloss3",
-          id: "789"
+          id: "789",
+          senseIndex: 0,
+          dupId: ""
         }
       ]
     });
     mockedAxios.delete.mockResolvedValue(1);
-    handle.instance.removeWord(1, () => {
+    handle.instance.removeWord(456, () => {
+      handle.instance.removeRow(1);
       expect(handle.instance.state.rows).toEqual([
         {
           vernacular: "testVern1",
           glosses: "testGloss1",
-          id: "123"
+          id: "123",
+          senseIndex: 0,
+          dupId: ""
         },
         {
           vernacular: "testVern3",
           glosses: "testGloss3",
-          id: "789"
+          id: "789",
+          senseIndex: 0,
+          dupId: ""
         }
       ]);
       done();
