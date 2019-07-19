@@ -47,15 +47,16 @@ namespace Backend.Tests
             return Task.FromResult(success);
         }
 
-        public Task<bool> Update(string Id, Project project)
+        public Task<ResultOfUpdate> Update(string Id, Project project)
         {
             var foundProject = _projects.Single(u => u.Id == Id);
             var success = _projects.Remove(foundProject);
             if (success)
             {
                 _projects.Add(project.Clone());
+                return Task.FromResult(ResultOfUpdate.Updated);
             }
-            return Task.FromResult(success);
+            return Task.FromResult(ResultOfUpdate.NotFound);
         }
     }
 }
