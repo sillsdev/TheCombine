@@ -101,11 +101,11 @@ class MergeStack extends React.Component<
       data: this.props.senses[sense[1]]
     }));
 
-    if (senseEntries.length > this.state.duplicateCount){
+    if (senseEntries.length > this.state.duplicateCount) {
       this.expand();
-      this.setState({...this.state, duplicateCount: senseEntries.length});
-    }else if (senseEntries.length != this.state.duplicateCount){
-      this.setState({...this.state, duplicateCount: senseEntries.length});
+      this.setState({ ...this.state, duplicateCount: senseEntries.length });
+    } else if (senseEntries.length != this.state.duplicateCount) {
+      this.setState({ ...this.state, duplicateCount: senseEntries.length });
     }
 
     let glosses: { def: string; language: string; sense: string }[] = [];
@@ -172,13 +172,13 @@ class MergeStack extends React.Component<
               background: snapshot.isDragging ? "lightgreen" : "white"
             }}
           >
-            <CardContent style={{ position: "relative" }}>
+            <CardContent style={{ position: "relative", paddingRight: 40}}>
               <div
                 style={{
                   position: "absolute",
                   top: "50%",
                   right: 0,
-                  transform: "translateY(-50%)"
+                  transform: "translateY(-50%)",
                 }}
               >
                 {showMoreButton && (
@@ -187,7 +187,7 @@ class MergeStack extends React.Component<
                   </IconButton>
                 )}
               </div>
-              <div style={{ overflow: "hidden" }}>
+              <div style={{}}>
                 <Typography variant={"h5"}>{glosses[0].def}</Typography>
                 {/* List semantic domains */}
                 <Grid container spacing={2}>
