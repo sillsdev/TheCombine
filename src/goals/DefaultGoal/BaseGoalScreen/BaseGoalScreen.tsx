@@ -11,59 +11,42 @@ import CharInventoryCreation from "../../CharInventoryCreation";
 interface componentSteps {
   goal: GoalType;
   steps: JSX.Element[];
-  loadComponent: () => JSX.Element;
 }
 
 const stepComponentDictionary: componentSteps[] = [
   {
     goal: GoalType.CreateCharInv,
-    steps: [<CharInventoryCreation />],
-    loadComponent: () => getGoal(GoalType.CreateCharInv)
+    steps: [<CharInventoryCreation />]
   },
   {
     goal: GoalType.ValidateChars,
-    steps: [],
-    loadComponent: () => getGoal(GoalType.ValidateChars)
+    steps: []
   },
   {
     goal: GoalType.CreateStrWordInv,
-    steps: [],
-    loadComponent: () => getGoal(GoalType.CreateStrWordInv)
+    steps: []
   },
   {
     goal: GoalType.ValidateStrWords,
-    steps: [],
-    loadComponent: () => getGoal(GoalType.ValidateStrWords)
+    steps: []
   },
   {
     goal: GoalType.MergeDups,
-    steps: [<MergeDupStep />],
-    loadComponent: () => getGoal(GoalType.MergeDups)
+    steps: [<MergeDupStep />]
   },
   {
     goal: GoalType.SpellcheckGloss,
-    steps: [],
-    loadComponent: () => getGoal(GoalType.SpellcheckGloss)
+    steps: []
   },
   {
     goal: GoalType.ViewFind,
-    steps: [],
-    loadComponent: () => getGoal(GoalType.ViewFind)
+    steps: []
   },
   {
     goal: GoalType.HandleFlags,
-    steps: [],
-    loadComponent: () => getGoal(GoalType.HandleFlags)
+    steps: []
   }
 ];
-
-function getGoal(goalType: GoalType): JSX.Element {
-  let steps: JSX.Element[] = stepComponentDictionary[goalType].steps;
-  if (steps.length > 0) {
-    return stepComponentDictionary[goalType].steps[0];
-  }
-  return <EmptyGoalComponent />;
-}
 
 class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
   renderGoal(goal: Goal): JSX.Element {
@@ -71,9 +54,17 @@ class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
       <div className="GoalDisplay content">
         <AppBarComponent />
         <DisplayProg />
-        {stepComponentDictionary[goal.goalType].loadComponent()}
+        {this.displayComponent(goal)}
       </div>
     );
+  }
+
+  displayComponent(goal: Goal): JSX.Element {
+    let steps: JSX.Element[] = stepComponentDictionary[goal.goalType].steps;
+    if (steps.length > 0) {
+      return stepComponentDictionary[goal.goalType].steps[0];
+    }
+    return <EmptyGoalComponent />;
   }
 
   render() {

@@ -8,7 +8,7 @@ import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDups, MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
@@ -26,15 +26,10 @@ import {
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
   ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY",
-  NEXT_STEP = "NEXT_STEP",
   UPDATE_GOAL = "UPDATE_GOAL"
 }
 
-export type GoalAction =
-  | LoadUserEdits
-  | AddGoalToHistory
-  | NextStep
-  | UpdateGoal;
+export type GoalAction = LoadUserEdits | AddGoalToHistory | UpdateGoal;
 
 export interface LoadUserEdits extends ActionWithPayload<Goal[]> {
   type: GoalsActions.LOAD_USER_EDITS;
@@ -44,10 +39,6 @@ export interface LoadUserEdits extends ActionWithPayload<Goal[]> {
 export interface AddGoalToHistory extends ActionWithPayload<Goal[]> {
   type: GoalsActions.ADD_GOAL_TO_HISTORY;
   payload: Goal[];
-}
-
-export interface NextStep extends ActionWithPayload<Goal[]> {
-  type: GoalsActions.NEXT_STEP;
 }
 
 export interface UpdateGoal extends ActionWithPayload<Goal[]> {
@@ -115,7 +106,6 @@ export function asyncAddGoalToHistory(goal: Goal) {
         dispatch(loadGoalData(goal)).then(
           returnedGoal => (goal = returnedGoal)
         );
-        //await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
         await backend
           .addGoalToUserEdit(userEditId, goal)
           .then(resp => {
@@ -165,6 +155,25 @@ export function loadGoalData(goal: Goal) {
     }
     return goal;
   };
+}
+
+export function updateStepData(goal: Goal): Goal {
+  switch (goal.goalType) {
+    case GoalType.MergeDups: {
+      let currentGoalData: MergeDupData = JSON.parse(
+        JSON.stringify(goal.data as MergeDupData)
+      );
+      goal.steps[goal.currentStep] = {
+        words: currentGoalData.plannedWords[goal.currentStep]
+      };
+      goal.currentStep++;
+      break;
+    }
+    case GoalType.CreateCharInv: {
+      break;
+    }
+  }
+  return goal;
 }
 
 export function getUserEditId(user: User): string | undefined {
@@ -275,10 +284,6 @@ export function addGoalToHistory(goal: Goal): AddGoalToHistory {
 
 export function loadUserEdits(history: Goal[]): LoadUserEdits {
   return { type: GoalsActions.LOAD_USER_EDITS, payload: history };
-}
-
-export function nextStep(): NextStep {
-  return { type: GoalsActions.NEXT_STEP, payload: [] };
 }
 
 export function updateGoal(goal: Goal): UpdateGoal {
