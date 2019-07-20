@@ -73,17 +73,18 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
-            try
+            var result = await _projectService.Update(projectId, project);
+            if (result == ResultOfUpdate.NotFound)
             {
-                if (await _projectService.Update(projectId, project))
-                {
-                    return new OkObjectResult(project.Id);
-                }
-                return new StatusCodeResult(304);
+                return new NotFoundObjectResult(projectId);
             }
-            catch
+            else if (result == ResultOfUpdate.Updated)
             {
-                return new NotFoundResult();
+                return new OkObjectResult(projectId);
+            }
+            else
+            {
+                return new StatusCodeResult(304);
             }
         }
 

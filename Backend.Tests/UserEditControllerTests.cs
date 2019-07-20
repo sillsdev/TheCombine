@@ -39,6 +39,7 @@ namespace Backend.Tests
                 GoalType = (GoalType)count,
                 StepData = new List<string>() { Util.randString() }
             };
+            userEdit.ProjectId = _projId;
             userEdit.Edits.Add(edit);
             return userEdit;
         }
