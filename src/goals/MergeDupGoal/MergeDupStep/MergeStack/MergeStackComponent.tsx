@@ -187,7 +187,7 @@ class MergeStack extends React.Component<
                   </IconButton>
                 )}
               </div>
-              <div style={{}}>
+              <div>
                 <Typography variant={"h5"}>{glosses[0].def}</Typography>
                 {/* List semantic domains */}
                 <Grid container spacing={2}>

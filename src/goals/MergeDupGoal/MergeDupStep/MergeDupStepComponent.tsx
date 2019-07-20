@@ -182,6 +182,10 @@ class MergeDupStep extends React.Component<
             <div
               ref={providedDroppable.innerRef}
               {...providedDroppable.droppableProps}
+              /* 
+                  Set padding to 30 and add the height of the appbar (64) to the
+                  top padding
+              */
               style={{ padding: 30, paddingTop: 64 + 30 }}
             >
               <IconButton
