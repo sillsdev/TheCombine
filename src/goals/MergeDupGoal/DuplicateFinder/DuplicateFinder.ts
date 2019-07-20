@@ -199,10 +199,11 @@ export default class DupFinder {
   /** controls the scoring of a particular child by calculating the Levenshtein distance in O(n^(1 + ε) */
   getLevenshteinDistance(a: string, b: string): number {
     const matrix: number[][] = [];
-    let alength = a.length;
-    let blength = b.length;
+    let alength = a.length + 1;
+    let blength = b.length + 1;
 
     if (a.length <= 0 || b.length <= 0) return 0;
+
     for (let i = 0; i < alength; i++) {
       matrix[i] = [];
       for (let j = 0; j < blength; j++) {
@@ -219,7 +220,7 @@ export default class DupFinder {
         }
 
         let thisSubCost = 0;
-        if (a[i] !== b[i]) {
+        if (a[i - 1] !== b[j - 1]) {
           thisSubCost = this.subsitutionCost;
         }
 
