@@ -13,10 +13,12 @@ namespace BackendFramework.Controllers
     public class ProjectController : Controller
     {
         private readonly IProjectService _projectService;
+        private readonly ISemDomParser _semDomParser;
 
-        public ProjectController(IProjectService projectService)
+        public ProjectController(IProjectService projectService, ISemDomParser semDomParser)
         {
             _projectService = projectService;
+            _semDomParser = semDomParser;
         }
 
         [EnableCors("AllowAll")]
@@ -71,11 +73,19 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
-            if (await _projectService.Update(projectId, project))
+            var result = await _projectService.Update(projectId, project);
+            if (result == ResultOfUpdate.NotFound)
             {
-                return new OkObjectResult(project.Id);
+                return new NotFoundObjectResult(projectId);
             }
-            return new NotFoundResult();
+            else if (result == ResultOfUpdate.Updated)
+            {
+                return new OkObjectResult(projectId);
+            }
+            else
+            {
+                return new StatusCodeResult(304);
+            }
         }
 
         // DELETE: v1/Project/Projects/{projectId}
@@ -88,6 +98,20 @@ namespace BackendFramework.Controllers
                 return new OkResult();
             }
             return new NotFoundResult();
+        }
+
+        [HttpGet("{projectId}/semanticdomains")]
+        public async Task<IActionResult> GetSemDoms(string projectId)
+        {
+            try
+            {
+                var result = await _semDomParser.ParseSemanticDomains(projectId);
+                return new OkObjectResult(result);
+            }
+            catch
+            {
+                return new NotFoundResult();
+            }
         }
     }
 }

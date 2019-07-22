@@ -89,7 +89,7 @@ namespace BackendFramework.Controllers
             var returnUser = await _userService.Create(user);
 
             //check if creations were valid
-            if (returnUser == null )
+            if (returnUser == null)
             {
                 return BadRequest();
             }
@@ -102,14 +102,19 @@ namespace BackendFramework.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> Put(string userId, [FromBody] User user)
         {
-            var document = await _userService.GetUser(userId);
-            if (document == null)
+            var result = await _userService.Update(userId, user);
+            if (result == ResultOfUpdate.NotFound)
             {
-                return new NotFoundResult();
+                return new NotFoundObjectResult(userId);
             }
-            user.Id = document.Id;
-            await _userService.Update(userId, user);
-            return new OkObjectResult(user.Id);
+            else if (result == ResultOfUpdate.Updated)
+            {
+                return new OkObjectResult(userId);
+            }
+            else
+            {
+                return new StatusCodeResult(304);
+            }
         }
 
         // DELETE: v1/ApiWithActions/{userId}

@@ -10,7 +10,8 @@ import {
   refreshWords,
   moveSenses,
   mergeAll,
-  orderSense
+  orderSense,
+  orderDuplicate
 } from "./MergeDupStepActions";
 import MergeDupStepComponent from "./MergeDupStepComponent";
 import { MergeTreeReference } from "./MergeDupsTree";
@@ -37,6 +38,9 @@ export function mapDispatchToProps(
     },
     orderSense: (wordID: string, senseID: string, order: number) => {
       dispatch(orderSense(wordID, senseID, order));
+    },
+    orderDuplicate: (ref: MergeTreeReference, order: number) => {
+      dispatch(orderDuplicate(ref, order));
     },
     mergeAll: () => {
       dispatch(mergeAll());

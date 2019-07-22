@@ -1,6 +1,17 @@
 import React from "react";
+import {
+  Button,
+  Typography,
+  TextField,
+  Grid,
+  GridList,
+  GridListTile,
+  Card
+} from "@material-ui/core";
+import ChevronLeft from "@material-ui/icons/ChevronLeft";
+import ChevronRight from "@material-ui/icons/ChevronRight";
+
 import SemanticDomain from "./SemanticDomain";
-import { Button, Typography, TextField, Grid } from "@material-ui/core";
 
 interface TreeHeaderProps {
   currentDomain: SemanticDomain;
@@ -20,7 +31,7 @@ export default class TreeViewHeader extends React.Component<
   constructor(props: TreeHeaderProps) {
     super(props);
     this.state = {
-      input: props.currentDomain.number
+      input: props.currentDomain.id
     };
 
     this.animating = false;
@@ -48,22 +59,32 @@ export default class TreeViewHeader extends React.Component<
   searchAndSelectDomain(event: React.KeyboardEvent) {
     event.bubbles = false;
     event.preventDefault();
-    if (
-      event.key === "Enter" &&
-      event.target &&
-      (event.target as any).value !== ""
-    ) {
-      let target: string = (event.target as any).value;
 
+    if (event.key === "Enter") {
       // Find parent domain
       let parent: SemanticDomain | undefined = this.props.currentDomain;
       while (parent.parentDomain !== undefined) parent = parent.parentDomain;
 
       // Search for domain
-      for (let i: number = 0; i < 4 && parent; i++) {
-        parent = this.searchDomain(parent, target.slice(0, i * 2 + 1));
-        if (parent && parent.number === target) this.props.animate(parent);
-        else if (!parent) break;
+      if (!isNaN(parseInt(this.state.input)))
+        for (let i: number = 0; i < 4 && parent; i++) {
+          parent = this.searchDomainByNumber(
+            parent,
+            this.state.input.slice(0, i * 2 + 1)
+          );
+          if (parent && parent.id === this.state.input) {
+            this.props.animate(parent);
+            this.setState({ input: "" });
+            (event.target as any).value = "";
+          } else if (!parent) break;
+        }
+      else {
+        parent = this.searchDomainByName(parent, this.state.input);
+        if (parent) {
+          this.props.animate(parent);
+          this.setState({ input: "" });
+          (event.target as any).value = "";
+        }
       }
     }
   }
@@ -72,11 +93,11 @@ export default class TreeViewHeader extends React.Component<
   navigateDomainArrowKeys(event: KeyboardEvent) {
     if (event.key === "ArrowLeft") {
       let domain: SemanticDomain | undefined = this.getBrotherDomain(-1);
-      if (domain && domain.number !== this.props.currentDomain.number)
+      if (domain && domain.id !== this.props.currentDomain.id)
         this.props.animate(domain);
     } else if (event.key === "ArrowRight") {
       let domain: SemanticDomain | undefined = this.getBrotherDomain(1);
-      if (domain && domain.number !== this.props.currentDomain.number)
+      if (domain && domain.id !== this.props.currentDomain.id)
         this.props.animate(domain);
     } else if (event.key === "ArrowDown") {
       if (this.props.currentDomain.parentDomain)
@@ -85,15 +106,34 @@ export default class TreeViewHeader extends React.Component<
   }
 
   // Search for a semantic domain by number
-  searchDomain(
+  searchDomainByNumber(
     parent: SemanticDomain,
     number: string
   ): SemanticDomain | undefined {
-    for (let domain of parent.subDomains)
-      if (domain.number === number) return domain;
+    for (let domain of parent.subdomains)
+      if (domain.id === number) return domain;
 
-    if (parent.number === number) return parent;
+    if (parent.id === number) return parent;
     else return undefined;
+  }
+
+  // Searches for a semantic domain by name
+  searchDomainByName(
+    domain: SemanticDomain,
+    target: string
+  ): SemanticDomain | undefined {
+    let check = (checkAgainst: SemanticDomain | undefined) =>
+      checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
+    if (check(domain)) return domain;
+
+    // If there are subdomains
+    if (domain.subdomains.length > 0) {
+      let tempDomain: SemanticDomain | undefined;
+      for (let sub of domain.subdomains) {
+        tempDomain = this.searchDomainByName(sub, target);
+        if (check(tempDomain)) return tempDomain;
+      }
+    }
   }
 
   // Switches currentDomain to the domain navigationAmount off from this domain, assuming that domain exists
@@ -110,9 +150,9 @@ export default class TreeViewHeader extends React.Component<
   getBrotherDomain(navigationAmount: number): SemanticDomain | undefined {
     if (this.props.currentDomain.parentDomain) {
       let brotherDomains: SemanticDomain[] = this.props.currentDomain
-        .parentDomain.subDomains;
+        .parentDomain.subdomains;
       let index: number = brotherDomains.findIndex(
-        domain => this.props.currentDomain.number === domain.number
+        domain => this.props.currentDomain.id === domain.id
       );
 
       index += navigationAmount;
@@ -126,53 +166,79 @@ export default class TreeViewHeader extends React.Component<
 
   // Switches current semantic domain + updates search bar
   updateDomain() {
-    this.setState({ input: this.props.currentDomain.number });
+    this.setState({ input: this.props.currentDomain.id });
   }
 
-  // Creates the two-button + input field input
+  // Creates the L/R button + select button + search bar
   render() {
     let domainL: SemanticDomain | undefined = this.getBrotherDomain(-1);
     let domainR: SemanticDomain | undefined = this.getBrotherDomain(1);
 
     return (
-      <Grid container>
-        <Grid item style={{ minWidth: "5vw" }}>
+      <GridList cols={5} spacing={2} cellHeight={"auto"}>
+        <GridListTile cols={1}>
           {domainL ? (
+            <Grid container justify="center">
+              <Button
+                variant={"outlined"}
+                onClick={() => this.navigateDomain(-1)}
+                style={{ float: "right", marginTop: "50%" }}
+              >
+                <ChevronLeft />
+                <Typography variant="body2">
+                  {domainL.id.padStart(8, " ")}
+                </Typography>
+              </Button>
+            </Grid>
+          ) : null}
+        </GridListTile>
+        <GridListTile cols={3}>
+          <Card>
             <Button
-              variant={"outlined"}
-              onClick={() => this.navigateDomain(-1)}
+              fullWidth
+              size="large"
+              color="primary"
+              variant="contained"
+              disabled={!this.props.currentDomain.parentDomain}
+              onClick={() => this.props.animate(this.props.currentDomain)}
             >
-              <Typography variant="h6">
-                {"<" + domainL.number.padStart(8, " ")}
-              </Typography>
+              <div style={{ textTransform: "capitalize" }}>
+                <Typography variant="overline">
+                  {this.props.currentDomain.id}
+                </Typography>
+                <Typography variant="h6">
+                  {this.props.currentDomain.name}
+                </Typography>
+              </div>
             </Button>
-          ) : (
-            <div />
-          )}
-        </Grid>
-        <Grid item style={{ minWidth: "10vw" }}>
-          <TextField
-            fullWidth
-            id="name"
-            label="Semantic Domain"
-            value={this.state.input}
-            onKeyUp={this.searchAndSelectDomain}
-            onChange={this.handleChange}
-            margin="normal"
-          />
-        </Grid>
-        <Grid item style={{ minWidth: "5vw" }}>
+            <TextField
+              fullWidth
+              id="name"
+              label="Find a domain"
+              onKeyUp={this.searchAndSelectDomain}
+              onChange={this.handleChange}
+              margin="normal"
+              autoComplete="off"
+            />
+          </Card>
+        </GridListTile>
+        <GridListTile cols={1}>
           {domainR ? (
-            <Button variant={"outlined"} onClick={() => this.navigateDomain(1)}>
-              <Typography variant="h6">
-                {domainR.number.padEnd(8, " ") + ">"}
-              </Typography>
-            </Button>
-          ) : (
-            <div />
-          )}
-        </Grid>
-      </Grid>
+            <Grid container justify="center">
+              <Button
+                variant={"outlined"}
+                onClick={() => this.navigateDomain(1)}
+                style={{ marginTop: "50%" }}
+              >
+                <Typography variant="body2">
+                  {domainR.id.padEnd(8, " ")}
+                </Typography>
+                <ChevronRight />
+              </Button>
+            </Grid>
+          ) : null}
+        </GridListTile>
+      </GridList>
     );
   }
 }

@@ -1,6 +1,7 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -32,10 +33,10 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<Project> GetProject(string Id)
+        public async Task<Project> GetProject(string projectId)
         {
             var filterDef = new FilterDefinitionBuilder<Project>();
-            var filter = filterDef.Eq(x => x.Id, Id);
+            var filter = filterDef.Eq(x => x.Id, projectId);
 
             var projectList = await _projectDatabase.Projects.FindAsync(filter);
 
@@ -48,17 +49,15 @@ namespace BackendFramework.Services
             return project;
         }
 
-        public async Task<bool> Delete(string Id)
+        public async Task<bool> Delete(string projectId)
         {
-            var deleted = await _projectDatabase.Projects.DeleteManyAsync(x => x.Id == Id);
+            var deleted = await _projectDatabase.Projects.DeleteOneAsync(x => x.Id == projectId);
             return deleted.DeletedCount > 0;
         }
 
-        public async Task<bool> Update(string Id, Project project)
+        public async Task<ResultOfUpdate> Update(string projectId, Project project)
         {
-            FilterDefinition<Project> filter = Builders<Project>.Filter.Eq(x => x.Id, Id);
-
-            Project updatedProject = new Project();
+            FilterDefinition<Project> filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);
 
             //Note: Nulls out values not in update body
             var updateDef = Builders<Project>.Update
@@ -67,14 +66,26 @@ namespace BackendFramework.Services
                 .Set(x => x.Words, project.Words)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
                 .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)
-                .Set(x => x.CharacterSet, project.CharacterSet)
+                .Set(x => x.ValidCharacters, project.ValidCharacters)
+                .Set(x => x.RejectedCharacters, project.RejectedCharacters)
                 .Set(x => x.CustomFields, project.CustomFields)
                 .Set(x => x.WordFields, project.WordFields)
                 .Set(x => x.PartsOfSpeech, project.PartsOfSpeech);
 
             var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 
-            return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
+            if (!updateResult.IsAcknowledged)
+            {
+                return ResultOfUpdate.NotFound;
+            }
+            else if (updateResult.ModifiedCount > 0)
+            {
+                return ResultOfUpdate.Updated;
+            }
+            else
+            {
+                return ResultOfUpdate.NoChange;
+            }
         }
     }
 }

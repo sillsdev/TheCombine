@@ -1,9 +1,4 @@
-import { Word } from "./word";
-
-export interface SemanticDomain {
-  name: string;
-  number: string;
-}
+import { Word, SemanticDomain } from "./word";
 
 export interface CustomField {
   name: string;
@@ -17,7 +12,8 @@ export interface Project {
   userRoles: string;
   vernacularWritingSystem: string;
   analysisWritingSystems: string[];
-  characterSet: string[];
+  validCharacters: string[];
+  rejectedCharacters: string[];
   wordFields: string[];
   partsOfSpeech: string[];
   words: Word[];
@@ -31,7 +27,8 @@ export const defaultProject = {
   userRoles: "",
   vernacularWritingSystem: "",
   analysisWritingSystems: [],
-  characterSet: [],
+  validCharacters: [],
+  rejectedCharacters: [],
   customFields: [],
   wordFields: [],
   partsOfSpeech: [],

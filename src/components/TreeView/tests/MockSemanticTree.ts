@@ -3,43 +3,43 @@ import SemanticDomain from "../SemanticDomain";
 // Parent
 const PAR: SemanticDomain = {
   name: "parent",
-  number: "1",
-  subDomains: []
+  id: "1",
+  subdomains: []
 };
 
 // Following subdomains
 for (let i: number = 0; i < 3; i++)
-  PAR.subDomains[i] = {
-    name: "kid",
-    number: "1." + i,
+  PAR.subdomains.push({
+    name: "kid" + i,
+    id: "1." + i,
     parentDomain: PAR,
-    subDomains: []
-  };
+    subdomains: []
+  });
 
 // Give subdomain 0 an even # of subdomains
 for (let i: number = 0; i < 4; i++)
-  PAR.subDomains[0].subDomains.push({
-    name: "evenData",
-    number: PAR.subDomains[0].number + "." + i,
-    parentDomain: PAR.subDomains[0],
-    subDomains: []
+  PAR.subdomains[0].subdomains.push({
+    name: "evenData" + i,
+    id: PAR.subdomains[0].id + "." + i,
+    parentDomain: PAR.subdomains[0],
+    subdomains: []
   });
 
 // Give the the next subdomain an odd # of subdomains
 for (let i: number = 0; i < 3; i++)
-  PAR.subDomains[1].subDomains.push({
-    name: "oddData",
-    number: PAR.subDomains[1].number + "." + i,
-    parentDomain: PAR.subDomains[1],
-    subDomains: []
+  PAR.subdomains[1].subdomains.push({
+    name: "oddData" + i,
+    id: PAR.subdomains[1].id + "." + i,
+    parentDomain: PAR.subdomains[1],
+    subdomains: []
   });
 
 // Give the the last subdomain one subdomain
-PAR.subDomains[2].subDomains.push({
-  name: "oddData",
-  number: PAR.subDomains[2].number + ".1",
-  parentDomain: PAR.subDomains[2],
-  subDomains: []
+PAR.subdomains[2].subdomains.push({
+  name: "soloData",
+  id: PAR.subdomains[2].id + ".1",
+  parentDomain: PAR.subdomains[2],
+  subdomains: []
 });
 
 export default PAR;

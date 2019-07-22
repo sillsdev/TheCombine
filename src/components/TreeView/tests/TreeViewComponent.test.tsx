@@ -3,6 +3,8 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 import TreeViewComponent from "../TreeViewComponent";
 import { defaultState } from "../TreeViewReducer";
 import SemanticDomain from "../SemanticDomain";
+import axios from "axios";
+import mockTree from "./MockSemanticTree";
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: TreeViewComponent;
@@ -22,11 +24,15 @@ jest.mock("@material-ui/core", () => {
   };
 });
 
+// Mock axios instance to mock return data
+const mockAxios = axios as jest.Mocked<typeof axios>;
+
 beforeEach(() => {
+  mockAxios.get.mockImplementationOnce(() => Promise.resolve({ data: [defaultState.currentdomain] }));
   renderer.act(() => {
     treeMaster = renderer.create(
       <TreeViewComponent
-        currentDomain={defaultState.currentDomain}
+        currentDomain={mockTree}
         returnControlToCaller={RETURN_MOCK}
         navigate={NAVIGATE_MOCK}
       />
@@ -39,16 +45,19 @@ beforeEach(() => {
 });
 
 describe("Tests AddWords", () => {
-  it("Renders correctly", () => {
+  it("Constructs correctly", () => {
     // Default snapshot test
     snapTest("default view");
+    expect(NAVIGATE_MOCK).toHaveBeenCalledWith({
+      name: "Semantic Domains",
+      id: "", subdomains: [defaultState.currentdomain]});
   });
 
   it("Sets a new domain upon navigation", () => {
     let newDom: SemanticDomain = {
       name: "test",
-      number: "test",
-      subDomains: []
+      id: "test",
+      subdomains: []
     };
 
     treeHandle.animate(newDom);
@@ -58,10 +67,9 @@ describe("Tests AddWords", () => {
   });
 
   it("Returns control to caller when the same semantic domain is passed in", () => {
-    treeHandle.animate(defaultState.currentDomain);
+    treeHandle.animate(mockTree);
     jest.runAllTimers();
 
-    expect(NAVIGATE_MOCK).toHaveBeenCalledTimes(0);
     expect(RETURN_MOCK).toHaveBeenCalledTimes(1);
   });
 });

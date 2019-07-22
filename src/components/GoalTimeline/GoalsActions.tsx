@@ -8,7 +8,7 @@ import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDups, MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
@@ -17,40 +17,42 @@ import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
+import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import {
+  refreshWords,
+  MergeTreeAction
+} from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
   ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY",
-  NEXT_STEP = "NEXT_STEP",
   UPDATE_GOAL = "UPDATE_GOAL"
 }
 
 export type GoalAction =
-  | LoadUserEdits
-  | AddGoalToHistory
-  | NextStep
-  | UpdateGoal;
+  | LoadUserEditsAction
+  | AddGoalToHistoryAction
+  | UpdateGoalAction;
 
-export interface LoadUserEdits extends ActionWithPayload<Goal[]> {
+export interface LoadUserEditsAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.LOAD_USER_EDITS;
   payload: Goal[];
 }
 
-export interface AddGoalToHistory extends ActionWithPayload<Goal[]> {
+export interface AddGoalToHistoryAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.ADD_GOAL_TO_HISTORY;
   payload: Goal[];
 }
 
-export interface NextStep extends ActionWithPayload<Goal[]> {
-  type: GoalsActions.NEXT_STEP;
-}
-
-export interface UpdateGoal extends ActionWithPayload<Goal[]> {
+export interface UpdateGoalAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.UPDATE_GOAL;
   payload: Goal[];
 }
 
-export function asyncLoadUserEdits(projectId: string, userEditId: string) {
+export function asyncLoadExistingUserEdits(
+  projectId: string,
+  userEditId: string
+) {
   return async (dispatch: Dispatch<GoalAction>) => {
     await backend
       .getUserEditById(projectId, userEditId)
@@ -84,10 +86,13 @@ export function asyncGetUserEdits() {
     if (currentUserString) {
       let currentUserObject: User = JSON.parse(currentUserString);
       let projectId: string = backend.getProjectId();
-      let userEditId: string | undefined =
-        currentUserObject.workedProjects[projectId];
+      let userEditId: string | undefined = getUserEditIdFromProjectId(
+        currentUserObject.workedProjects,
+        projectId
+      );
+
       if (userEditId !== undefined) {
-        dispatch(asyncLoadUserEdits(projectId, userEditId));
+        dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
         dispatch(asyncCreateNewUserEditsObject(projectId));
       }
@@ -96,48 +101,101 @@ export function asyncGetUserEdits() {
 }
 
 export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: Dispatch<GoalAction>, getState: any) => {
-    let userEditId: string = getUserEditId();
-
-    await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
-    await backend
-      .addGoalToUserEdit(userEditId, goal)
-      .then(resp => {
-        dispatch(addGoalToHistory(goal));
-        history.push(`/goals/${resp}`);
-      })
-      .catch((err: string) => {
-        console.log(err);
-      });
+  return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
+    let user: User | undefined = getUser();
+    if (user !== undefined) {
+      let userEditId: string | undefined = getUserEditId(user);
+      if (userEditId !== undefined) {
+        dispatch(loadGoalData(goal)).then(
+          returnedGoal => (goal = returnedGoal)
+        );
+        await backend
+          .addGoalToUserEdit(userEditId, goal)
+          .then(resp => {
+            dispatch(addGoalToHistory(goal));
+            history.push(`/goals/${resp}`);
+          })
+          .catch((err: string) => {
+            console.log(err);
+          });
+      }
+    }
   };
 }
 
-export async function loadGoalData(goal: Goal): Promise<Goal> {
+export function getUser(): User | undefined {
+  let userString: string | null = localStorage.getItem("user");
+  let user: User | undefined;
+  if (userString) {
+    user = JSON.parse(userString);
+  }
+  return user;
+}
+
+export function loadGoalData(goal: Goal) {
+  return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
+    switch (goal.goalType) {
+      case GoalType.MergeDups:
+        let finder = new DupFinder();
+
+        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+        //let t0 = performance.now();
+
+        await finder.getNextDups(goal.numSteps).then(words => {
+          goal.data = { plannedWords: words };
+        });
+
+        await dispatch(refreshWords());
+
+        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+        //console.log(performance.now() - t0);
+
+        break;
+      case GoalType.CreateCharInv:
+        break;
+      default:
+        break;
+    }
+    return goal;
+  };
+}
+
+export function updateStepData(goal: Goal): Goal {
   switch (goal.goalType) {
-    case GoalType.MergeDups:
-      let finder = new DupFinder();
-      await finder.getNextDups(goal.numSteps).then(words => {
-        goal.data = { plannedWords: words };
-      });
+    case GoalType.MergeDups: {
+      let currentGoalData: MergeDupData = JSON.parse(
+        JSON.stringify(goal.data as MergeDupData)
+      );
+      goal.steps[goal.currentStep] = {
+        words: currentGoalData.plannedWords[goal.currentStep]
+      };
+      goal.currentStep++;
       break;
-    case GoalType.CreateCharInv:
-      break;
+    }
     default:
       break;
   }
   return goal;
 }
 
-export function getUserEditId(): string {
-  let userString = localStorage.getItem("user");
-  let userObject: User;
-  let userEditId: string = "";
-  if (userString) {
-    userObject = JSON.parse(userString);
-    let projectId = backend.getProjectId();
-    userEditId = userObject.workedProjects[projectId];
-  }
+export function getUserEditId(user: User): string | undefined {
+  let projectId = backend.getProjectId();
+  let userEditId: string | undefined = getUserEditIdFromProjectId(
+    user.workedProjects,
+    projectId
+  );
   return userEditId;
+}
+
+function getUserEditIdFromProjectId(
+  workedProjects: Hash<string>,
+  projectId: string
+): string | undefined {
+  let projectIds = Object.keys(workedProjects);
+  let matches: string[] = projectIds.filter(project => projectId === project);
+  if (matches.length !== 0 && matches.length < 2) {
+    return workedProjects[matches[0]];
+  }
 }
 
 function updateUserIfExists(projectId: string, userEditId: string): User {
@@ -161,9 +219,22 @@ function updateUserWithUserEditId(
   userEditId: string
 ): string {
   let currentUserObject: User = JSON.parse(userObjectString);
-  currentUserObject.workedProjects[projectId] = userEditId;
+  currentUserObject = addProjectToWorkedProjects(
+    currentUserObject,
+    projectId,
+    userEditId
+  );
   let updatedUserString = JSON.stringify(currentUserObject);
   return updatedUserString;
+}
+
+function addProjectToWorkedProjects(
+  user: User,
+  projectId: string,
+  userEditId: string
+): User {
+  user.workedProjects[projectId] = userEditId;
+  return user;
 }
 
 export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
@@ -209,18 +280,14 @@ function goalTypeToGoal(type: number): Goal | undefined {
   }
 }
 
-export function addGoalToHistory(goal: Goal): AddGoalToHistory {
+export function addGoalToHistory(goal: Goal): AddGoalToHistoryAction {
   return { type: GoalsActions.ADD_GOAL_TO_HISTORY, payload: [goal] };
 }
 
-export function loadUserEdits(history: Goal[]): LoadUserEdits {
+export function loadUserEdits(history: Goal[]): LoadUserEditsAction {
   return { type: GoalsActions.LOAD_USER_EDITS, payload: history };
 }
 
-export function nextStep(): NextStep {
-  return { type: GoalsActions.NEXT_STEP, payload: [] };
-}
-
-export function updateGoal(goal: Goal): UpdateGoal {
+export function updateGoal(goal: Goal): UpdateGoalAction {
   return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
 }

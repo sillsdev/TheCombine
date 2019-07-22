@@ -1,38 +1,41 @@
 import * as actions from "../GoalsActions";
-import { goalsReducer, updateStepData } from "../GoalsReducer";
+import { goalsReducer } from "../GoalsReducer";
 import { Goal, GoalsState } from "../../../types/goals";
-import { MockActionGoalArrayInstance } from "../../../types/mockAction";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import { defaultState } from "../DefaultState";
-import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
+import { MergeDups } from "../../../goals/MergeDupGoal/MergeDups";
 import { ViewFinal } from "../../../goals/ViewFinal/ViewFinal";
 import { SpellCheckGloss } from "../../../goals/SpellCheckGloss/SpellCheckGloss";
 import { CreateStrWordInv } from "../../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateChars } from "../../../goals/ValidateChars/ValidateChars";
-import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import { StoreAction, StoreActions } from "../../../rootActions";
+
+const loadUserEditsAction: actions.GoalAction = {
+  type: actions.GoalsActions.LOAD_USER_EDITS,
+  payload: []
+};
 
 describe("Test GoalsReducers", () => {
   it("Should return the default state", () => {
-    expect(goalsReducer(undefined, MockActionGoalArrayInstance)).toEqual(
-      defaultState
-    );
+    expect(goalsReducer(undefined, loadUserEditsAction)).toEqual(defaultState);
   });
 
   it("Should return the default state", () => {
     const state: GoalsState = {
       historyState: {
-        history: [...defaultState.historyState.history]
+        history: []
       },
-      allPossibleGoals: [...defaultState.allPossibleGoals],
+      allPossibleGoals: [],
       suggestionsState: {
-        suggestions: [...defaultState.suggestionsState.suggestions]
+        suggestions: []
       }
     };
 
-    expect(goalsReducer(state, MockActionGoalArrayInstance)).toEqual(
-      defaultState
-    );
+    const action: StoreAction = {
+      type: StoreActions.RESET
+    };
+    expect(goalsReducer(state, action)).toEqual(defaultState);
   });
 
   it("Should add a goal to history and remove it from suggestions", () => {
@@ -167,59 +170,6 @@ describe("Test GoalsReducers", () => {
     expect(goalsReducer(state, loadUserEditsAction)).toEqual(newState);
   });
 
-  it("Should update a goal when navigating to the next step", () => {
-    const goal: Goal = new CreateCharInv();
-    const goalToEdit: Goal = new MergeDups();
-    goalToEdit.data = goalDataMock;
-    const goal3: Goal = new ViewFinal();
-    const goal4: Goal = new SpellCheckGloss();
-    const goal5: Goal = new CreateStrWordInv();
-    const historyArray: Goal[] = [goal, goalToEdit];
-    const allPossibleGoalsArray: Goal[] = [goal3];
-    const suggestionsArray: Goal[] = [goal4, goal5];
-
-    const state: GoalsState = {
-      historyState: {
-        history: historyArray
-      },
-      allPossibleGoals: allPossibleGoalsArray,
-      suggestionsState: {
-        suggestions: suggestionsArray
-      }
-    };
-
-    const nextStepAction: actions.GoalAction = {
-      type: actions.GoalsActions.NEXT_STEP,
-      payload: []
-    };
-
-    const updatedGoalToEdit: Goal = new MergeDups();
-    updatedGoalToEdit.hash = goalToEdit.hash;
-    updatedGoalToEdit.data = goalDataMock;
-    updatedGoalToEdit.steps[updatedGoalToEdit.currentStep] = {
-      words: (updatedGoalToEdit.data as MergeDupData).plannedWords[
-        updatedGoalToEdit.currentStep
-      ]
-    };
-    updatedGoalToEdit.currentStep = updatedGoalToEdit.currentStep + 1;
-    const updatedHistoryArray: Goal[] = [goal, updatedGoalToEdit];
-
-    const newState: GoalsState = {
-      historyState: {
-        history: updatedHistoryArray
-      },
-      allPossibleGoals: allPossibleGoalsArray,
-      suggestionsState: {
-        suggestions: suggestionsArray
-      }
-    };
-
-    const actualNewState: GoalsState = goalsReducer(state, nextStepAction);
-
-    expect(actualNewState).toEqual(newState);
-    expect(goalToEdit).toEqual(updatedGoalToEdit);
-  });
-
   it("Should replace the most recent goal with an updated version", () => {
     const goal: Goal = new CreateCharInv();
     const goal2: Goal = new ViewFinal();
@@ -261,19 +211,5 @@ describe("Test GoalsReducers", () => {
     };
 
     expect(goalsReducer(state, updateGoalAction)).toEqual(newState);
-  });
-
-  it("Should update the step data of a goal", () => {
-    const goal: MergeDups = new MergeDups();
-    goal.data = goalDataMock;
-    expect(goal.data).toEqual(goalDataMock);
-    expect(goal.steps).toEqual([]);
-    expect(goal.currentStep).toEqual(0);
-
-    const updatedGoal: MergeDups = updateStepData(goal) as MergeDups;
-
-    expect(updatedGoal.data).toEqual(goal.data);
-    expect(updatedGoal.steps[0].words).toEqual(goal.data.plannedWords[0]);
-    expect(updatedGoal.currentStep).toEqual(1);
   });
 });

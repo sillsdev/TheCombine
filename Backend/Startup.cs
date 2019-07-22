@@ -85,14 +85,19 @@ namespace BackendFramework
             // Lift types
             services.AddTransient<ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>, LiftService>();
 
-            // User role types
+            // User edit types
             services.AddTransient<IUserEditContext, UserEditContext>();
             services.AddTransient<IUserEditService, UserEditService>();
             services.AddTransient<IUserEditRepository, UserEditRepository>();
 
+            // User role types
+            services.AddTransient<IUserRoleContext, UserRoleContext>();
+            services.AddTransient<IUserRoleService, UserRoleService>();
+
             // Project types
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<ISemDomParser, SemDomParser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

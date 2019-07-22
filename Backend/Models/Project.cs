@@ -27,8 +27,11 @@ namespace BackendFramework.ValueModels
         [BsonElement("analysisWritingSystems")]
         public List<string> AnalysisWritingSystems { get; set; }
 
-        [BsonElement("characterSet")]
-        public List<string> CharacterSet { get; set; }
+        [BsonElement("validCharacters")]
+        public List<string> ValidCharacters { get; set; }
+
+        [BsonElement("rejectedCharacters")]
+        public List<string> RejectedCharacters { get; set; }
 
         [BsonElement("customFields")]
         public List<CustomField> CustomFields { get; set; }
@@ -47,7 +50,8 @@ namespace BackendFramework.ValueModels
             Words = new List<Word>();
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<string>();
-            CharacterSet = new List<string>();
+            ValidCharacters = new List<string>();
+            RejectedCharacters = new List<string>();
             CustomFields = new List<CustomField>();
             WordFields = new List<string>();
             PartsOfSpeech = new List<string>();
@@ -63,7 +67,8 @@ namespace BackendFramework.ValueModels
                 Words = new List<Word>(),
                 SemanticDomains = new List<SemanticDomain>(),
                 AnalysisWritingSystems = new List<string>(),
-                CharacterSet = new List<string>(),
+                ValidCharacters = new List<string>(),
+                RejectedCharacters = new List<string>(),
                 CustomFields = new List<CustomField>(),
                 WordFields = new List<string>(),
                 PartsOfSpeech = new List<string>()
@@ -81,9 +86,13 @@ namespace BackendFramework.ValueModels
             {
                 clone.AnalysisWritingSystems.Add(aws.Clone() as string);
             }
-            foreach (string cs in CharacterSet)
+            foreach (string cs in ValidCharacters)
             {
-                clone.CharacterSet.Add(cs.Clone() as string);
+                clone.ValidCharacters.Add(cs.Clone() as string);
+            }
+            foreach (string cs in RejectedCharacters)
+            {
+                clone.RejectedCharacters.Add(cs.Clone() as string);
             }
             foreach (CustomField cf in CustomFields)
             {
@@ -116,8 +125,11 @@ namespace BackendFramework.ValueModels
                 other.AnalysisWritingSystems.Count == AnalysisWritingSystems.Count &&
                 other.AnalysisWritingSystems.All(AnalysisWritingSystems.Contains) &&
 
-                other.CharacterSet.Count == CharacterSet.Count &&
-                other.CharacterSet.All(CharacterSet.Contains) &&
+                other.ValidCharacters.Count == ValidCharacters.Count &&
+                other.ValidCharacters.All(ValidCharacters.Contains) &&
+
+                other.RejectedCharacters.Count == RejectedCharacters.Count &&
+                other.RejectedCharacters.All(RejectedCharacters.Contains) &&
 
                 other.CustomFields.Count == CustomFields.Count &&
                 other.CustomFields.All(CustomFields.Contains) &&
@@ -151,7 +163,8 @@ namespace BackendFramework.ValueModels
             hash.Add(Words);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
-            hash.Add(CharacterSet);
+            hash.Add(ValidCharacters);
+            hash.Add(RejectedCharacters);
             hash.Add(CustomFields);
             hash.Add(WordFields);
             hash.Add(PartsOfSpeech);
@@ -171,6 +184,20 @@ namespace BackendFramework.ValueModels
                 Name = Name.Clone() as string,
                 Type = Type.Clone() as string
             };
+        }
+    }
+
+    public class SemanticDomainWithSubdomains
+    {
+        public string Name;
+        public string Id;
+        public List<SemanticDomainWithSubdomains> Subdomains;
+
+        public SemanticDomainWithSubdomains(SemanticDomain sd)
+        {
+            Name = sd.Name;
+            Id = sd.Id;
+            Subdomains = new List<SemanticDomainWithSubdomains>();
         }
     }
 }

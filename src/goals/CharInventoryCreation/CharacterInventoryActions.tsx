@@ -8,20 +8,30 @@ import {
   updateGoal,
   getUserEditId,
   getIndexInHistory,
-  GoalAction
+  GoalAction,
+  getUser
 } from "../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
 import * as backend from "../../backend";
 import { Goal } from "../../types/goals";
-import { UserProjectMap } from "../../components/Project/UserProject";
 import { Project } from "../../types/project";
+import { User } from "../../types/user";
 
-export const SET_CHARACTER_INVENTORY = "SET_CHARACTER_INVENTORY";
-export type SET_CHARACTER_INVENTORY = typeof SET_CHARACTER_INVENTORY;
+export const SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS";
+export type SET_VALID_CHARACTERS = typeof SET_VALID_CHARACTERS;
+
+export const SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS";
+export type SET_REJECTED_CHARACTERS = typeof SET_REJECTED_CHARACTERS;
+
+export const ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS";
+export type ADD_TO_VALID_CHARACTERS = typeof ADD_TO_VALID_CHARACTERS;
 
 export interface CharacterInventoryData {}
 
-type CharacterInventoryType = SET_CHARACTER_INVENTORY;
+type CharacterInventoryType =
+  | SET_VALID_CHARACTERS
+  | SET_REJECTED_CHARACTERS
+  | ADD_TO_VALID_CHARACTERS;
 
 //action types
 
@@ -47,6 +57,33 @@ export function uploadInventory() {
   };
 }
 
+export function addToValidCharacters(
+  chars: string[]
+): CharacterInventoryAction {
+  return {
+    type: ADD_TO_VALID_CHARACTERS,
+    payload: chars
+  };
+}
+
+export function setValidCharacters(
+  payload: string[]
+): CharacterInventoryAction {
+  return {
+    type: SET_VALID_CHARACTERS,
+    payload
+  };
+}
+
+export function setRejectedCharacters(
+  payload: string[]
+): CharacterInventoryAction {
+  return {
+    type: SET_REJECTED_CHARACTERS,
+    payload
+  };
+}
+
 async function saveChanges(
   goal: Goal,
   history: Goal[],
@@ -62,18 +99,18 @@ async function saveChangesToGoal(
   history: Goal[],
   dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
-  let projectId: string = backend.getProjectId();
-  let userEditId: string = getUserEditId();
-  let userProjectMap: UserProjectMap = {
-    projectId: projectId,
-    userEditId: userEditId
-  };
-  let indexInHistory: number = getIndexInHistory(history, updatedGoal);
+  let user: User | undefined = getUser();
+  if (user !== undefined) {
+    let userEditId: string | undefined = getUserEditId(user);
+    if (userEditId !== undefined) {
+      let indexInHistory: number = getIndexInHistory(history, updatedGoal);
 
-  dispatch(updateGoal(updatedGoal));
-  await backend
-    .addStepToGoal(userProjectMap, indexInHistory, updatedGoal)
-    .catch((err: string) => console.log(err));
+      dispatch(updateGoal(updatedGoal));
+      await backend
+        .addStepToGoal(userEditId, indexInHistory, updatedGoal)
+        .catch((err: string) => console.log(err));
+    }
+  }
 }
 
 async function saveChangesToProject(
@@ -86,8 +123,8 @@ async function saveChangesToProject(
 
 function updateCurrentProject(state: StoreState): Project {
   let project = state.currentProject;
-  let inv = state.characterInventoryState.inventory;
-  project.characterSet = inv;
+  project.validCharacters = state.characterInventoryState.validCharacters;
+  project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
   return project;
 }
 
@@ -97,11 +134,4 @@ function updateCurrentGoal(state: StoreState): Goal {
   // Nothing stored as goal data for now
 
   return currentGoal;
-}
-
-export function setInventory(payload: string[]): CharacterInventoryAction {
-  return {
-    type: SET_CHARACTER_INVENTORY,
-    payload
-  };
 }

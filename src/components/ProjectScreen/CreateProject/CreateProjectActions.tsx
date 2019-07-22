@@ -1,8 +1,8 @@
 import { Dispatch } from "react";
-import * as backend from "../../backend";
-import { Project, defaultProject } from "../../types/project";
-import { setCurrentProject, ProjectAction } from "../Project/ProjectActions";
-import history from "../../history";
+import * as backend from "../../../backend";
+import { Project, defaultProject } from "../../../types/project";
+import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
+import history from "../../../history";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;
@@ -48,15 +48,21 @@ export function asyncCreateProject(name: string, languageData?: File) {
           backend
             .uploadLift(createdProject, languageData)
             .then(res => {
-              dispatch(success(name));
-              // we manually pause so they have a chance to see the success message
-              setTimeout(() => {
-                history.push("/goals");
-              }, 1000);
+              backend.getProject(createdProject.id).then(res=>{
+                dispatch(setCurrentProject(res));
+                dispatch(success(name));
+                // we manually pause so they have a chance to see the success message
+                setTimeout(() => {
+                  history.push("/goals");
+                }, 1000);
+
+              }).catch(err => {
+                dispatch(failure(name, err.response.statusText));
             })
             .catch(err => {
               dispatch(failure(name, err.response.statusText));
             });
+          })
         } else {
           dispatch(success(name));
           setTimeout(() => {
