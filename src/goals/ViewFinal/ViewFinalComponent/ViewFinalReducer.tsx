@@ -8,7 +8,6 @@ import { ViewFinalAction, ViewFinalActionTypes } from "./ViewFinalActions";
 
 export interface ViewFinalState {
   words: ViewFinalWord[];
-  frontier: Word[];
   edits: string[];
   language: string;
 }
@@ -47,7 +46,6 @@ export interface ViewFinalState {
 
 const defaultState: ViewFinalState = {
   words: [],
-  frontier: [],
   edits: [],
   language: "en"
 };
@@ -158,19 +156,26 @@ export const viewFinalReducer = (
       });
       break;
 
-    // Update the local words and, if provided, frontier words
-    case ViewFinalActionTypes.UpdateAllWords:
-      if (action.payload.frontier)
-        return {
-          ...state,
-          words: action.payload.words,
-          frontier: action.payload.frontier
-        };
-      else
-        return {
-          ...state,
-          words: action.payload.words
-        };
+    // Update the local words
+    case ViewFinalActionTypes.UpdateWords:
+      return {
+        ...state,
+        words: action.payload.words
+      };
+
+    // Update the id of a specified word
+    case ViewFinalActionTypes.UpdateWordId:
+      return {
+        ...state,
+        words: state.words.map(word => {
+          if (word.id === action.payload.oldId)
+            return {
+              ...word,
+              id: action.payload.newId
+            };
+          else return word;
+        })
+      };
 
     default:
       return state;

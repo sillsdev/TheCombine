@@ -20,7 +20,6 @@ interface ViewFinalProps {
   // Props mapped to store
   language: string;
   words: ViewFinalWord[];
-  frontier: Word[];
   edits: string[];
 
   // Dispatch changes
@@ -52,7 +51,6 @@ export interface ViewFinalWord {
   senses: ViewFinalSense[];
 }
 export interface ViewFinalSense {
-  deleted: boolean;
   glosses: string;
   domains: SemanticDomain[];
 }
@@ -76,7 +74,17 @@ export class ViewFinalComponent extends React.Component<
     {
       title: "Glosses",
       field: "glosses",
-      render: (rowData: ViewFinalWord) => this.senseField(rowData)
+      render: (rowData: ViewFinalWord) => this.senseField(rowData),
+      customFilterAndSearch: (
+        term: string,
+        rowData: ViewFinalWord
+      ): boolean => {
+        let regex: RegExp = new RegExp(term);
+        debugger;
+        for (let sense of rowData.senses)
+          if (regex.exec(sense.glosses) !== null) return true;
+        return false;
+      }
     },
     {
       title: "Domains",
@@ -87,7 +95,21 @@ export class ViewFinalComponent extends React.Component<
           addDomain={this.props.addDomain}
           deleteDomain={this.props.deleteDomain}
         />
-      )
+      ),
+      customFilterAndSearch: (
+        term: string,
+        rowData: ViewFinalWord
+      ): boolean => {
+        let regex: RegExp = new RegExp(term);
+        for (let sense of rowData.senses)
+          for (let domain of sense.domains)
+            if (
+              regex.exec(domain.name) !== null ||
+              regex.exec(domain.number) !== null
+            )
+              return true;
+        return false;
+      }
     },
     {
       title: "",
@@ -135,7 +157,6 @@ export class ViewFinalComponent extends React.Component<
 
       for (let sense of word.senses) {
         currentSense = {
-          deleted: false,
           glosses: "",
           domains: [...sense.semanticDomains]
         };
@@ -172,9 +193,7 @@ export class ViewFinalComponent extends React.Component<
     let senseHandle: ViewFinalSense | Sense;
 
     for (let edit of edits) {
-      editWord = JSON.parse(
-        JSON.stringify(this.props.frontier.find(value => value.id === edit))
-      );
+      editWord = await backend.getWord(edit);
       editSource = this.props.words.find(
         value => value.id === edit
       ) as ViewFinalWord;
@@ -283,7 +302,7 @@ export class ViewFinalComponent extends React.Component<
         bottomCell={
           <Chip
             label={<Add />}
-            onClick={event => this.props.addSense(rowData.id)}
+            onClick={() => this.props.addSense(rowData.id)}
           />
         }
       />

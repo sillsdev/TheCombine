@@ -9,7 +9,7 @@ import {
   deleteDomain,
   addSense,
   deleteSense,
-  updateAllWords,
+  updateWords,
   updateVernacular
 } from "./ViewFinalActions";
 import { SemanticDomain, Word } from "../../../types/word";
@@ -19,7 +19,6 @@ function mapStateToProps(state: StoreState) {
   return {
     language: state.viewFinalState.language,
     words: state.viewFinalState.words,
-    frontier: state.viewFinalState.frontier,
     edits: state.viewFinalState.edits
   };
 }
@@ -48,8 +47,8 @@ function mapDispatchToProps(dispatch: Dispatch<ViewFinalAction>) {
     deleteSense: (id: string, deleteIndex: number) => {
       dispatch(deleteSense(id, deleteIndex));
     },
-    updateWords: (words: ViewFinalWord[], frontier?: Word[]) => {
-      dispatch(updateAllWords(words, frontier));
+    updateWords: (words: ViewFinalWord[]) => {
+      dispatch(updateWords(words));
     }
   };
 }

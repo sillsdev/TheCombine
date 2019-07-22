@@ -9,7 +9,8 @@ export enum ViewFinalActionTypes {
   DeleteDomainAction,
   AddSenseAction,
   DeleteSenseAction,
-  UpdateAllWords
+  UpdateWords,
+  UpdateWordId
 }
 
 interface FinalUpdateVernacular {
@@ -42,9 +43,14 @@ interface FinalDeleteSense {
   payload: { id: string; deleteIndex: number };
 }
 
-interface FinalUpdateAllWords {
-  type: ViewFinalActionTypes.UpdateAllWords;
-  payload: { words: ViewFinalWord[]; frontier: Word[] | undefined };
+interface FinalUpdateWords {
+  type: ViewFinalActionTypes.UpdateWords;
+  payload: { words: ViewFinalWord[] };
+}
+
+interface FinalUpdateWordId {
+  type: ViewFinalActionTypes.UpdateWordId;
+  payload: { oldId: string; newId: string };
 }
 
 export type ViewFinalAction =
@@ -54,7 +60,8 @@ export type ViewFinalAction =
   | FinalDeleteDomain
   | FinalAddSense
   | FinalDeleteSense
-  | FinalUpdateAllWords;
+  | FinalUpdateWords
+  | FinalUpdateWordId;
 
 export function updateVernacular(
   id: string,
@@ -113,12 +120,16 @@ export function deleteSense(id: string, deleteIndex: number): FinalDeleteSense {
   };
 }
 
-export function updateAllWords(
-  words: ViewFinalWord[],
-  frontier?: Word[]
-): FinalUpdateAllWords {
+export function updateWords(words: ViewFinalWord[]): FinalUpdateWords {
   return {
-    type: ViewFinalActionTypes.UpdateAllWords,
-    payload: { words, frontier }
+    type: ViewFinalActionTypes.UpdateWords,
+    payload: { words }
+  };
+}
+
+export function updateWordId(oldId: string, newId: string): FinalUpdateWordId {
+  return {
+    type: ViewFinalActionTypes.UpdateWordId,
+    payload: { oldId, newId }
   };
 }
