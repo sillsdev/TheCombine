@@ -10,12 +10,27 @@ import {
 } from "@material-ui/core";
 import theme from "../../../types/theme";
 
+import dictionary from "dictionary-en-us";
+import nspell from "nspell";
 import { Translate, TranslateFunction } from "react-localize-redux";
 import { Word, SemanticDomain, State, Gloss } from "../../../types/word";
 import { Delete } from "@material-ui/icons";
 import * as Backend from "../../../backend";
 import DuplicateFinder from "../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import DomainTree from "../../TreeView/SemanticDomain";
+
+dictionary(ondictionary);
+
+function ondictionary(err: string, dict) {
+  if (err) {
+    throw err;
+  }
+
+  var spell = nspell(dict);
+
+  console.log(spell.correct("colour"));
+  console.log(spell.correct("color"));
+}
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -36,6 +51,8 @@ interface Row {
   id: string;
   /** The ID of the duplicate word in the frontier */
   dupId: string;
+  /** The ID of the mispelled vernacular */
+  mispelledVernId: string;
   vernacular: string;
   glosses: string;
   /** The index of the sense of the word that we're showing in the view */
@@ -86,6 +103,7 @@ export class DataEntryTable extends React.Component<
         glosses,
         id: "",
         dupId: "",
+        mispelledVernId: "",
         senseIndex: 0
       })
     )
@@ -179,6 +197,7 @@ export class DataEntryTable extends React.Component<
       id: word.id,
       glosses: "",
       dupId: "",
+      mispelledVernId: "",
       senseIndex
     };
     let glosses: string[] = [];
@@ -278,6 +297,10 @@ export class DataEntryTable extends React.Component<
     this.setState({ showDuplicate: rowIndex });
   }
 
+  showMispelledForRow(rowIndex: number) {
+    // yeet
+  }
+
   /** Switch a row to edit a sense of a word in the database */
   switchToExistingWord(rowIndex: number, senseIndex: number) {
     let row = this.state.rows[rowIndex];
@@ -295,6 +318,7 @@ export class DataEntryTable extends React.Component<
                 : row.glosses,
               id: row.dupId,
               dupId: "",
+              mispelledVernId: "",
               senseIndex
             };
             this.updateRow(newRow, rowIndex, () => this.updateWord(rowIndex));
@@ -435,8 +459,14 @@ export class DataEntryTable extends React.Component<
                         fullWidth
                         value={row.glosses}
                         onChange={e => {
+                          let mispelledVernId: string = "123";
+                          //   if (mispelledVernId === row.id) mispelledVernId = "";
                           this.updateRow(
-                            { ...row, glosses: e.target.value },
+                            {
+                              ...row,
+                              glosses: e.target.value,
+                              mispelledVernId: mispelledVernId
+                            },
                             rowIndex
                           );
                         }}
@@ -449,6 +479,30 @@ export class DataEntryTable extends React.Component<
                           }
                         }}
                       />
+                      {row.mispelledVernId !== "" && (
+                        <Tooltip
+                          title={
+                            this.props.translate(
+                              "addWords.mispelledWord"
+                            ) as string
+                          }
+                          placement="top"
+                        >
+                          <div
+                            style={{
+                              height: "5px",
+                              width: "5px",
+                              border: "2px solid green",
+                              borderRadius: "50%",
+                              position: "absolute",
+                              top: 50,
+                              right: 60,
+                              cursor: "pointer"
+                            }}
+                            onClick={() => this.showMispelledForRow(rowIndex)}
+                          />
+                        </Tooltip>
+                      )}
                     </Grid>
                     <Grid item xs={2}>
                       {this.state.hoverRow === rowIndex && (

@@ -8,7 +8,8 @@
     "wordInDatabase": [
       "This word is already in the database",
       "Esta palabra ya está en la base de datos"
-    ]
+    ],
+    "mispelledWord": ["This word is mispelled", "Esta palabra está mal escrita"]
   },
   "temp": {
     "buttonText": ["This is a button.", "Este es un botón."],
