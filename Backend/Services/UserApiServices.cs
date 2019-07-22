@@ -81,7 +81,7 @@ namespace BackendFramework.Services
                 foundUser.Token = tokenHandler.WriteToken(token);
 
                 // remove password before returning
-                if(!await Update(foundUser.Id, foundUser))
+                if(await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
                 {
                     throw (new KeyNotFoundException());
                 }
@@ -170,15 +170,13 @@ namespace BackendFramework.Services
 
         public async Task<bool> Delete(string Id)
         {
-            var deleted = await _userDatabase.Users.DeleteManyAsync(x => x.Id == Id);
+            var deleted = await _userDatabase.Users.DeleteOneAsync(x => x.Id == Id);
             return deleted.DeletedCount > 0;
         }
 
-        public async Task<bool> Update(string Id, User user)
+        public async Task<ResultOfUpdate> Update(string Id, User user)
         {
             FilterDefinition<User> filter = Builders<User>.Filter.Eq(x => x.Id, Id);
-
-            User updatedUser = new User();
 
             //Note: Nulls out values not in update body
             var updateDef = Builders<User>.Update
@@ -188,6 +186,7 @@ namespace BackendFramework.Services
                 .Set(x => x.Phone, user.Phone)
                 .Set(x => x.OtherConnectionField, user.OtherConnectionField)
                 .Set(x => x.WorkedProjects, user.WorkedProjects)
+                .Set(x => x.ProjectRoles, user.ProjectRoles)
                 .Set(x => x.Agreement, user.Agreement)
                 .Set(x => x.Username, user.Username)
                 .Set(x => x.UILang, user.UILang)
@@ -197,10 +196,16 @@ namespace BackendFramework.Services
 
             if (!updateResult.IsAcknowledged)
             {
-                throw new Exception("User not found");
+                return ResultOfUpdate.NotFound;
             }
-
-            return updateResult.ModifiedCount > 0;
+            else if (updateResult.ModifiedCount > 0)
+            {
+                return ResultOfUpdate.Updated;
+            }
+            else
+            {
+                return ResultOfUpdate.NoChange;
+            }
         }   
     }
 }

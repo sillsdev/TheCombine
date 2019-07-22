@@ -9,7 +9,7 @@ namespace BackendFramework.Interfaces
         Task<List<User>> GetAllUsers();
         Task<User> GetUser(string userId);
         Task<User> Create(User user);
-        Task<bool> Update(string userId, User user);
+        Task<ResultOfUpdate> Update(string userId, User user);
         Task<bool> Delete(string userId);
         Task<bool> DeleteAllUsers();
         Task<User> Authenticate(string username, string password);
