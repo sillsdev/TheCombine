@@ -456,10 +456,14 @@ namespace BackendFramework.Services
         }
         public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
         {
-            if (range == "semantic-domain-ddp4")
+            try
             {
-                sdList.Add(new SemanticDomain() { Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
+                if (range == "semantic-domain-ddp4")
+                {
+                    sdList.Add(new SemanticDomain() { Id = abbrev.First().Value.Text, Name = label.ElementAt(2).Value.Text, Description = description.ElementAt(2).Value.Text });
+                }
             }
+            catch { /*some languages don't have all the same semantic domains, just skip those*/ }
         }
 
         // The following are unused and are not implemented, but must stay to satisfy the needs of the ILexiconMerger 
