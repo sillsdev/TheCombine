@@ -47,9 +47,15 @@ namespace BackendFramework.Controllers
                     }
 
                     gotUser.Avatar = model.FilePath;
-                    bool success = await _userService.Update(userId, gotUser);
-
-                    return new OkObjectResult(success);
+                    var result = await _userService.Update(userId, gotUser);
+                    if (result == ResultOfUpdate.Updated)
+                    {
+                        return new OkObjectResult(userId);
+                    }
+                    else
+                    {
+                        return new StatusCodeResult(304);
+                    }
                 }
                 else
                 {

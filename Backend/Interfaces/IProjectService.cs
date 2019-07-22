@@ -9,7 +9,7 @@ namespace BackendFramework.Interfaces
         Task<List<Project>> GetAllProjects();
         Task<Project> GetProject(string projectId);
         Task<Project> Create(Project project);
-        Task<bool> Update(string projectId, Project project);
+        Task<ResultOfUpdate> Update(string projectId, Project project);
         Task<bool> Delete(string projectId);
         Task<bool> DeleteAllProjects();
     }

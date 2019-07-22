@@ -51,7 +51,7 @@ namespace BackendFramework.Services
             var filterDef = new FilterDefinitionBuilder<UserEdit>();
             var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
-            var deleted = await _userEditDatabase.UserEdits.DeleteManyAsync(filter);
+            var deleted = await _userEditDatabase.UserEdits.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
 

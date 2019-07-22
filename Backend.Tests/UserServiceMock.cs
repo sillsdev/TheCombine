@@ -23,7 +23,7 @@ namespace Backend.Tests
 
         public Task<User> GetUser(string id)
         {
-            var foundUser = _users.Where(user => user.Id == id).Single();
+            var foundUser = _users.Single(user => user.Id == id);
             return Task.FromResult(foundUser.Clone());
         }
 
@@ -47,15 +47,16 @@ namespace Backend.Tests
             return Task.FromResult(success);
         }
 
-        public Task<bool> Update(string Id, User user)
+        public Task<ResultOfUpdate> Update(string Id, User user)
         {
             var foundUser = _users.Single(u => u.Id == Id);
             var success = _users.Remove(foundUser);
             if (success)
             {
                 _users.Add(user.Clone());
+                return Task.FromResult(ResultOfUpdate.Updated);
             }
-            return Task.FromResult(success);
+            return Task.FromResult(ResultOfUpdate.NotFound);
         }
 
         public Task<User> Authenticate(string username, string password)
