@@ -1,7 +1,7 @@
 import { Word, State } from "../../../../types/word";
 import { MergeDupData } from "../../MergeDups";
 
-const wordMock: Word = {
+export const wordMock: Word = {
   id: "",
   vernacular: "",
   senses: [],

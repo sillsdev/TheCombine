@@ -1,14 +1,15 @@
 import * as actions from "../GoalsActions";
 import { Goal } from "../../../types/goals";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
-import { MergeDups } from "../../../goals/MergeDupGoal/MergeDups";
+import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 import axios from "axios";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import {
   wordsArrayMock,
-  goalDataMock
+  goalDataMock,
+  wordMock
 } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import { ViewFinal } from "../../../goals/ViewFinal/ViewFinal";
 import { User } from "../../../types/user";
@@ -253,7 +254,7 @@ describe("Test GoalsActions", () => {
     expect(mockStore.getActions()).toEqual([]);
   });
 
-  it("should update goal data", async () => {
+  it("should load goal data for MergeDups", async () => {
     mockAxios.get.mockImplementationOnce(() =>
       Promise.resolve({
         data: wordsArrayMock
@@ -261,16 +262,33 @@ describe("Test GoalsActions", () => {
     );
 
     let goal: Goal = new MergeDups();
+    let theMockGoalData: MergeDupData = {
+      plannedWords: [
+        [
+          wordMock,
+          wordMock,
+          wordMock,
+          wordMock,
+          wordMock,
+          wordMock,
+          wordMock,
+          wordMock
+        ],
+        [wordMock, wordMock, wordMock, wordMock, wordMock, wordMock, wordMock],
+        [wordMock, wordMock, wordMock, wordMock, wordMock, wordMock],
+        [wordMock, wordMock, wordMock, wordMock, wordMock]
+      ]
+    };
 
     await mockStore
       .dispatch<any>(actions.loadGoalData(goal))
       .then((returnedGoal: Goal) => {
-        expect(returnedGoal.data).toEqual(goalDataMock);
+        expect(returnedGoal.data).toEqual(theMockGoalData);
       })
       .catch((err: string) => fail(err));
   });
 
-  it("should not change the goal data", async () => {
+  it("should not load any goal data", async () => {
     const goal: Goal = new HandleFlags();
 
     await mockStore
