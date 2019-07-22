@@ -207,32 +207,64 @@ function goToNextStep(
 
 type SenseWithState = TreeDataSense & { state: State };
 
-export async function mergeWord(wordID: string, getState: () => StoreState) {
+export async function mergeWord(
+  wordID: string,
+  getState: () => StoreState,
+  mapping: Hash<{ srcWord: string; order: number }>
+): Promise<Hash<{ srcWord: string; order: number }>> {
   // find and build MergeWord[]
   const word = getState().mergeDuplicateGoal.mergeTreeState.tree.words[wordID];
+  console.log(word);
   if (word) {
     const data = getState().mergeDuplicateGoal.mergeTreeState.data;
 
     // create a list of all senses and add merge type tags slit by src word
     let senses: Hash<SenseWithState[]> = {};
 
+    let allSenses = Object.values(word.senses).map(sense =>
+      Object.values(sense)
+    );
+
+    // build senses array
+    for (let senseList of allSenses) {
+      for (let sense of senseList) {
+        let senseData = data.senses[sense];
+        let wordID = senseData.srcWord;
+
+        if (!senses[senseData.srcWord]) {
+          // get full word
+          let fullWord = getState().mergeDuplicateGoal.mergeTreeState.data
+            .words[wordID];
+          // add each sense into senses as separate
+          senses[wordID] = [];
+          for (let sense of fullWord.senses) {
+            senses[wordID].push({
+              ...sense,
+              srcWord: wordID,
+              order: senses[wordID].length,
+              state: State.separate
+            });
+          }
+        }
+      }
+    }
+
+    // Set sense and duplicate senses
     Object.values(word.senses).forEach(sense => {
       let senseIDs = Object.values(sense);
       let senseData = data.senses[senseIDs[0]];
-      if (senses[senseData.srcWord]) {
-        senses[senseData.srcWord].push({ ...senseData, state: State.sense });
-      } else {
-        senses[senseData.srcWord] = [{ ...senseData, state: State.sense }];
-      }
-      let dups = senseIDs.slice(1).map(id => {
-        return { ...data.senses[id], state: State.duplicate };
-      });
+
+      // set this sense to be merged as sense
+      senses[senseData.srcWord][senseData.order].state = State.sense;
+
+      // we want a list of all senses skipping the first
+      let dups = senseIDs
+        .slice(1)
+        .map(id => ({ ...data.senses[id], state: State.duplicate }));
+
+      // set each dup to be merged as duplicates
       dups.forEach(dup => {
-        if (senses[dup.srcWord]) {
-          senses[dup.srcWord].push({ ...dup });
-        } else {
-          senses[dup.srcWord] = [{ ...dup }];
-        }
+        senses[dup.srcWord][dup.order].state = State.duplicate;
       });
     });
 
@@ -261,9 +293,30 @@ export async function mergeWord(wordID: string, getState: () => StoreState) {
       };
     });
 
+    // check if anything is actually done whith this merge
+    /*if (children.length === 1) {
+      // check if we changed any of the senses
+      if (parent.senses.length === children[0].senses.length) {
+        let foundDiff = false;
+        for (let state of children[0].senses) {
+          if (state !== State.sense) {
+            foundDiff = true;
+          }
+        }
+        if (!foundDiff) {
+          return mapping;
+        }
+      }
+    }
+    /**/
+
     // send database call
-    await backend.mergeWords(parent, children);
+    console.log("-----------------------------------------");
+    for (let wordID of await backend.mergeWords(parent, children)) {
+      console.log("Created: ", await backend.getWord(wordID));
+    }
   }
+  return mapping;
 }
 
 export function mergeAll() {
@@ -271,10 +324,12 @@ export function mergeAll() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
+    let mapping: Hash<{ srcWord: string; order: number }> = {};
     for (let wordID of Object.keys(
-      getState().mergeDuplicateGoal.mergeTreeState.data.words
+      getState().mergeDuplicateGoal.mergeTreeState.tree.words
     )) {
-      await mergeWord(wordID, getState);
+      console.log("Merge it");
+      mapping = await mergeWord(wordID, getState, mapping);
     }
     //await dispatch(clearTree());
   };
