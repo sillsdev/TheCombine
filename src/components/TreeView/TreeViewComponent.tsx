@@ -13,16 +13,14 @@ interface TreeViewProps extends TreeProps {
   returnControlToCaller: () => void;
 }
 
-interface TreeViewState {
+interface TreeViewComponentState {
   visible: boolean;
 }
 
-export default class TreeView extends React.Component<
+export default class TreeViewComponent extends React.Component<
   TreeViewProps,
-  TreeViewState
+  TreeViewComponentState
 > {
-  id: any;
-
   constructor(props: TreeViewProps) {
     super(props);
     this.state = { visible: true };
