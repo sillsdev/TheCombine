@@ -1,5 +1,5 @@
 import { GoalProps, Goal, GoalType } from "../../../types/goals";
-import React from "react";
+import React, { ReactNode } from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import DisplayProg from "./DisplayProg";
 import AppBarComponent from "../../../components/AppBar/AppBarComponent";
@@ -10,7 +10,7 @@ import CharInventoryCreation from "../../CharInventoryCreation";
 
 interface componentSteps {
   goal: GoalType;
-  steps: JSX.Element[];
+  steps: ReactNode[];
 }
 
 const stepComponentDictionary: componentSteps[] = [
@@ -49,7 +49,7 @@ const stepComponentDictionary: componentSteps[] = [
 ];
 
 class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
-  renderGoal(goal: Goal): JSX.Element {
+  renderGoal(goal: Goal): ReactNode {
     return (
       <div className="GoalDisplay content">
         <AppBarComponent />
@@ -59,8 +59,8 @@ class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
     );
   }
 
-  displayComponent(goal: Goal): JSX.Element {
-    let steps: JSX.Element[] = stepComponentDictionary[goal.goalType].steps;
+  displayComponent(goal: Goal): ReactNode {
+    let steps: ReactNode[] = stepComponentDictionary[goal.goalType].steps;
     if (steps.length > 0) {
       return stepComponentDictionary[goal.goalType].steps[0];
     }
