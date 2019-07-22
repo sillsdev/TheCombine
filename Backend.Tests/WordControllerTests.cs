@@ -32,25 +32,27 @@ namespace Backend.Tests
         Word RandomWord()
         {
             Word word = new Word();
-            word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense()};
+            word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() };
 
             foreach (Sense sense in word.Senses)
             {
 
                 sense.Accessibility = (int)state.active;
-                sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss() , new Gloss() };
+                sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
-                foreach (Gloss gloss in sense.Glosses) {
+                foreach (Gloss gloss in sense.Glosses)
+                {
                     gloss.Def = Util.randString();
                     gloss.Language = Util.randString(3);
                 }
 
                 sense.SemanticDomains = new List<SemanticDomain>() { new SemanticDomain(), new SemanticDomain(), new SemanticDomain() };
 
-                foreach(SemanticDomain semdom in sense.SemanticDomains)
+                foreach (SemanticDomain semdom in sense.SemanticDomains)
                 {
                     semdom.Name = Util.randString();
                     semdom.Id = Util.randString();
+                    semdom.Description = Util.randString();
                 }
             }
 
@@ -155,7 +157,7 @@ namespace Backend.Tests
 
             //get the new deleted word from the database
             var wordRepo = _repo.GetFrontier(_projId).Result;
-            
+
 
             //ensure the word is valid
             Assert.IsTrue(wordRepo.Count == 1);
