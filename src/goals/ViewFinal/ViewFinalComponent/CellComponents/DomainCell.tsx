@@ -1,18 +1,5 @@
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize
-} from "react-localize-redux";
-import {
-  Container,
-  Grid,
-  Chip,
-  Dialog,
-  IconButton,
-  GridList,
-  GridListTile
-} from "@material-ui/core";
+import { Grid, Chip, Dialog, IconButton } from "@material-ui/core";
 import Add from "@material-ui/icons/Add";
 
 import { ViewFinalWord } from "../ViewFinalComponent";
@@ -24,8 +11,16 @@ interface DomainCellProps {
   rowData: ViewFinalWord;
 
   selectedDomain: SemanticDomain;
-  addDomain: (domain: SemanticDomain, id: string, sense: number) => void;
-  deleteDomain: (domain: SemanticDomain, id: string, sense: number) => void;
+  addDomain: (
+    id: string,
+    senseIndex: number,
+    newDomain: SemanticDomain
+  ) => void;
+  deleteDomain: (
+    id: string,
+    senseIndex: number,
+    delDomain: SemanticDomain
+  ) => void;
 }
 
 interface DomainCellState {
@@ -33,11 +28,11 @@ interface DomainCellState {
   senseToChange: number;
 }
 
-class DomainCell extends React.Component<
-  DomainCellProps & LocalizeContextProps,
+export default class DomainCell extends React.Component<
+  DomainCellProps,
   DomainCellState
 > {
-  constructor(props: DomainCellProps & LocalizeContextProps) {
+  constructor(props: DomainCellProps) {
     super(props);
     // This data is set before any actions which depend on it, meaning that this line is a compiler-appeaser
     this.state = { addingDomains: false, senseToChange: 0 };
@@ -48,9 +43,9 @@ class DomainCell extends React.Component<
 
   addDomain() {
     this.props.addDomain(
-      this.props.selectedDomain,
       this.props.rowData.id,
-      this.state.senseToChange
+      this.state.senseToChange,
+      this.props.selectedDomain
     );
     this.setState({
       addingDomains: false
@@ -59,9 +54,9 @@ class DomainCell extends React.Component<
 
   deleteDomain(toDelete: SemanticDomain) {
     this.props.deleteDomain(
-      toDelete,
       this.props.rowData.id,
-      this.state.senseToChange
+      this.state.senseToChange,
+      toDelete
     );
   }
 
@@ -104,6 +99,3 @@ class DomainCell extends React.Component<
     );
   }
 }
-
-// Create
-export default withLocalize(DomainCell);

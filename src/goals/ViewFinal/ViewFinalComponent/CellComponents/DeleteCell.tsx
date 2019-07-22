@@ -19,7 +19,7 @@ import { ViewFinalWord } from "../ViewFinalComponent";
 
 interface DeleteCellProps {
   rowData: ViewFinalWord;
-  delete: (word: ViewFinalWord, deleteIndex: number) => void;
+  delete: (id: string, deleteIndex: number) => void;
 }
 
 interface DeleteCellState {
@@ -66,7 +66,7 @@ class DeleteCell extends React.Component<
                 <Button
                   onClick={() => {
                     this.props.delete(
-                      this.props.rowData,
+                      this.props.rowData.id,
                       this.state.deleteSenseIndex
                     );
                     this.close();
