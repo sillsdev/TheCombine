@@ -62,7 +62,6 @@ namespace BackendFramework.Services
         public async Task<List<Word>> Merge(string projectId, MergeWords mergeWords)
         {
             var newWordsList = new List<Word>();
-            mergeWords.Parent.Senses = new List<Sense>();
 
             var baseParent = mergeWords.Parent.Clone();
             var addParent = baseParent.Clone();
@@ -98,11 +97,8 @@ namespace BackendFramework.Services
 
                     switch (newChildWordState.SenseStates[i])
                     {
-                        //add the sense to the parent word
-                        case state.sense:
-                            addParent.Senses.Add(currentChildWord.Senses[i]);
-                            goto case state.duplicate; //fall through
                         //add the word to the parent's history
+                        case state.sense:
                         case state.duplicate:
                             if (!addParent.History.Contains(currentChildWord.Id))
                             {
