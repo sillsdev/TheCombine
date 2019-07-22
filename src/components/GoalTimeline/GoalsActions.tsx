@@ -8,7 +8,7 @@ import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDups } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDups, MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
@@ -18,35 +18,33 @@ import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder"
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import {
+  refreshWords,
+  MergeTreeAction
+} from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
   ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY",
-  NEXT_STEP = "NEXT_STEP",
   UPDATE_GOAL = "UPDATE_GOAL"
 }
 
 export type GoalAction =
-  | LoadUserEdits
-  | AddGoalToHistory
-  | NextStep
-  | UpdateGoal;
+  | LoadUserEditsAction
+  | AddGoalToHistoryAction
+  | UpdateGoalAction;
 
-export interface LoadUserEdits extends ActionWithPayload<Goal[]> {
+export interface LoadUserEditsAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.LOAD_USER_EDITS;
   payload: Goal[];
 }
 
-export interface AddGoalToHistory extends ActionWithPayload<Goal[]> {
+export interface AddGoalToHistoryAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.ADD_GOAL_TO_HISTORY;
   payload: Goal[];
 }
 
-export interface NextStep extends ActionWithPayload<Goal[]> {
-  type: GoalsActions.NEXT_STEP;
-}
-
-export interface UpdateGoal extends ActionWithPayload<Goal[]> {
+export interface UpdateGoalAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.UPDATE_GOAL;
   payload: Goal[];
 }
@@ -103,12 +101,14 @@ export function asyncGetUserEdits() {
 }
 
 export function asyncAddGoalToHistory(goal: Goal) {
-  return async (dispatch: Dispatch<GoalAction>) => {
+  return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     let user: User | undefined = getUser();
     if (user !== undefined) {
       let userEditId: string | undefined = getUserEditId(user);
       if (userEditId !== undefined) {
-        await loadGoalData(goal).then(returnedGoal => (goal = returnedGoal));
+        dispatch(loadGoalData(goal)).then(
+          returnedGoal => (goal = returnedGoal)
+        );
         await backend
           .addGoalToUserEdit(userEditId, goal)
           .then(resp => {
@@ -132,24 +132,46 @@ export function getUser(): User | undefined {
   return user;
 }
 
-export async function loadGoalData(goal: Goal): Promise<Goal> {
+export function loadGoalData(goal: Goal) {
+  return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
+    switch (goal.goalType) {
+      case GoalType.MergeDups:
+        let finder = new DupFinder();
+
+        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+        //let t0 = performance.now();
+
+        await finder.getNextDups(goal.numSteps).then(words => {
+          goal.data = { plannedWords: words };
+        });
+
+        await dispatch(refreshWords());
+
+        //Used for testing duplicate finder. (See docs/bitmap_testing.md)
+        //console.log(performance.now() - t0);
+
+        break;
+      case GoalType.CreateCharInv:
+        break;
+      default:
+        break;
+    }
+    return goal;
+  };
+}
+
+export function updateStepData(goal: Goal): Goal {
   switch (goal.goalType) {
-    case GoalType.MergeDups:
-      let finder = new DupFinder();
-
-      //Used for testing duplicate finder. (See docs/bitmap_testing.md)
-      //let t0 = performance.now();
-
-      await finder.getNextDups(goal.numSteps).then(words => {
-        goal.data = { plannedWords: words };
-      });
-
-      //Used for testing duplicate finder. (See docs/bitmap_testing.md)
-      //console.log(performance.now() - t0);
-
+    case GoalType.MergeDups: {
+      let currentGoalData: MergeDupData = JSON.parse(
+        JSON.stringify(goal.data as MergeDupData)
+      );
+      goal.steps[goal.currentStep] = {
+        words: currentGoalData.plannedWords[goal.currentStep]
+      };
+      goal.currentStep++;
       break;
-    case GoalType.CreateCharInv:
-      break;
+    }
     default:
       break;
   }
@@ -258,18 +280,14 @@ function goalTypeToGoal(type: number): Goal | undefined {
   }
 }
 
-export function addGoalToHistory(goal: Goal): AddGoalToHistory {
+export function addGoalToHistory(goal: Goal): AddGoalToHistoryAction {
   return { type: GoalsActions.ADD_GOAL_TO_HISTORY, payload: [goal] };
 }
 
-export function loadUserEdits(history: Goal[]): LoadUserEdits {
+export function loadUserEdits(history: Goal[]): LoadUserEditsAction {
   return { type: GoalsActions.LOAD_USER_EDITS, payload: history };
 }
 
-export function nextStep(): NextStep {
-  return { type: GoalsActions.NEXT_STEP, payload: [] };
-}
-
-export function updateGoal(goal: Goal): UpdateGoal {
+export function updateGoal(goal: Goal): UpdateGoalAction {
   return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
 }

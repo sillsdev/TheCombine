@@ -7,13 +7,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 //TC modules
 import App from "./components/App/component";
 import * as serviceWorker from "./serviceWorker";
-import { store } from "./store";
+import { store, persistor } from "./store";
 import { LocalizeProvider } from "react-localize-redux";
 
 //additional files
 import globalTranslations from "./resources/translations.json";
 import { Router } from "react-router-dom";
 import history from "./history";
+import { PersistGate } from "redux-persist/integration/react";
 
 const localizeInit = {
   languages: [{ name: "English", code: "en" }, { name: "Spanish", code: "es" }],
@@ -28,7 +29,9 @@ ReactDOM.render(
   <Provider store={store}>
     <LocalizeProvider store={store} initialize={localizeInit}>
       <Router history={history}>
-        <App />
+        <PersistGate loading={null} persistor={persistor}>
+          <App />
+        </PersistGate>
       </Router>
     </LocalizeProvider>
   </Provider>,
