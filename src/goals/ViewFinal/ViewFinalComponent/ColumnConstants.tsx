@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
-import { Typography, Grid } from "@material-ui/core";
+import { Typography, Grid, Button } from "@material-ui/core";
 import { ViewFinalWord } from "./ViewFinalComponent";
+import { Translate } from "react-localize-redux";
 
 // export interface TableCol {
 //   title: string;
@@ -34,14 +35,24 @@ export default [
     title: "Glosses",
     field: "glosses",
     render: (rowData: ViewFinalWord) =>
-      multilineStringToReactElement(rowData.glosses)
+      multilineStringToReactElement("rowData.glosses")
   },
   {
     title: "Domains",
     field: "domains",
     render: (rowData: ViewFinalWord) =>
-      multilineStringToReactElement(rowData.domains)
+      multilineStringToReactElement("rowData.domains")
   }
+  // {
+  //   title: "Add sense",
+  //   field: "addSense",
+  //   render: (rowData: ViewFinalWord) => (
+  //     <Button onClick={() => rowData.addSense(rowData)}>
+  //       <Translate id="viewFinal.addSense" />
+  //       {rowData.vernacular}
+  //     </Button>
+  //   )
+  // }
 ];
 
 // export const SEMANTIC: TableCol = {

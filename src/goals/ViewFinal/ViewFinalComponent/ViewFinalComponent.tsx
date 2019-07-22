@@ -1,17 +1,19 @@
-import React, { ReactElement } from "react";
-import MaterialTable, { MTableEditField, MTableCell } from "material-table";
+import React from "react";
+import MaterialTable, { MTableEditField } from "material-table";
 import {
   Translate,
   LocalizeContextProps,
   withLocalize
 } from "react-localize-redux";
-import columns from "./ColumnConstants";
+import { Button, Paper, TextField, Chip } from "@material-ui/core";
 
-import { Hash } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { Word, Gloss, Sense, SemanticDomain } from "../../../types/word";
+import { Word, Gloss, SemanticDomain, Sense } from "../../../types/word";
 import tableIcons from "./icons";
 import * as backend from "../../../backend";
-import { Button, Paper } from "@material-ui/core";
+import DomainCell from "./CellComponents";
+import { Add } from "@material-ui/icons";
+import AlignedList from "./CellComponents/AlignedList";
+import DeleteCell from "./CellComponents/DeleteCell";
 
 // Component state/props
 interface ViewFinalProps {
@@ -23,217 +25,367 @@ interface ViewFinalState {
   words: ViewFinalWord[];
   frontier: Word[];
   edits: string[];
+
+  addingSenseToWord: boolean;
+  wordToEdit: ViewFinalWord;
 }
 
 export interface ViewFinalWord {
   id: string;
   vernacular: string;
+  senses: ViewFinalSense[];
+}
+export interface ViewFinalSense {
+  deleted: boolean;
   glosses: string;
-  domains: string;
+  domains: SemanticDomain[];
 }
 
 // Constants
 const SEP_CHAR: string = ",";
-const DOMAIN_SEP_CHAR: string = ":";
 const SEPARATOR: string = SEP_CHAR + " ";
+
+const NO_GLOSS: string = "{No gloss}";
 
 export class ViewFinalComponent extends React.Component<
   ViewFinalProps & LocalizeContextProps,
   ViewFinalState
 > {
+  readonly COLUMNS = [
+    {
+      title: "Vernacular",
+      field: "vernacular",
+      render: (rowData: ViewFinalWord) => this.vernacularField(rowData)
+    },
+    {
+      title: "Glosses",
+      field: "glosses",
+      render: (rowData: ViewFinalWord) => this.senseField(rowData)
+    },
+    {
+      title: "Domains",
+      field: "domains",
+      render: (rowData: ViewFinalWord) => (
+        <DomainCell
+          rowData={rowData}
+          addDomain={this.addDomain}
+          deleteDomain={this.deleteDomain}
+        />
+      )
+    },
+    {
+      title: "",
+      field: "id",
+      render: (rowData: ViewFinalWord) => (
+        <DeleteCell rowData={rowData} delete={this.deleteSense} />
+      )
+    }
+  ];
+
   constructor(props: ViewFinalProps & LocalizeContextProps) {
     super(props);
 
-    // this.rowListener = this.rowListener.bind(this);
-
     // TODO: Make this default to the current user's language
+    this.senseField = this.senseField.bind(this);
+    this.vernacularField = this.vernacularField.bind(this);
+
+    // Bind updates
+    this.updateVernacular = this.updateVernacular.bind(this);
+    this.addDomain = this.addDomain.bind(this);
+    this.deleteDomain = this.deleteDomain.bind(this);
+    this.deleteSense = this.deleteSense.bind(this);
+
     this.updateFrontierWords = this.updateFrontierWords.bind(this);
-    this.state = { language: "en", words: [], frontier: [], edits: [] };
+
+    this.state = {
+      language: "en",
+      words: [],
+      frontier: [],
+      edits: [],
+      addingSenseToWord: false,
+      wordToEdit: {} as ViewFinalWord // WordToEdit always set right before being needed, so its value here is unimportant
+    };
   }
 
   async componentDidMount() {
     backend
       .getFrontierWords()
       .then((frontier: Word[]) => this.updateLocalWords(frontier));
-    // window.addEventListener("keypress", this.rowListener);
   }
 
-  // rowListener(event: KeyboardEvent) {
-  //   if (event.key === "Enter" && event.target && event.target instanceof React.Component) {
-  //     let element: React.Component = event.target as React.Component;
-  //     if (element.props.id === "semanticdomain")
-  //   }
-  // }
-
-  updateLocalWords(frontier: Word[]) {
+  // Creates the local set of words from the frontier
+  private updateLocalWords(frontier: Word[]) {
+    let hasGloss: boolean;
     let newWords: ViewFinalWord[] = [];
     let currentWord: ViewFinalWord;
-    let hasGloss: boolean;
+    let currentSense: ViewFinalSense;
 
     for (let word of frontier) {
       // Create a new currentword
       currentWord = {
         id: word.id,
         vernacular: word.vernacular,
-        glosses: "",
-        domains: ""
+        senses: []
       };
 
       for (let sense of word.senses) {
-        // Add all glosses on to currentWord.glosses, if they match the current language
+        currentSense = {
+          deleted: false,
+          glosses: "",
+          domains: [...sense.semanticDomains]
+        };
+
+        // Find all glosses in the current language
         hasGloss = false;
-        for (let gloss of sense.glosses) {
+        for (let gloss of sense.glosses)
           if (gloss.language === this.state.language) {
-            currentWord.glosses += gloss.def + SEPARATOR;
             hasGloss = true;
+            currentSense.glosses += gloss.def + SEPARATOR;
           }
-        }
 
-        // Record semantic domains
-        for (let domain of sense.semanticDomains) {
-          currentWord.domains +=
-            domain.number + DOMAIN_SEP_CHAR + domain.name + SEPARATOR;
-        }
-
-        // Remove the last SEPARATOR from glosses and domains, if applicable, and add newlines
+        // Format the glosses + push them
         if (hasGloss)
-          currentWord.glosses = currentWord.glosses.slice(0, -SEPARATOR.length);
-        if (sense.semanticDomains.length > 0)
-          currentWord.domains = currentWord.domains.slice(0, -SEPARATOR.length);
-        currentWord.glosses += "\n";
-        currentWord.domains += "\n";
+          currentSense.glosses = currentSense.glosses.slice(
+            0,
+            -SEPARATOR.length
+          );
+        else currentSense.glosses = NO_GLOSS;
+        currentWord.senses.push(currentSense);
       }
+
       // Remove the trailing newlines + push to newWords
-      currentWord.glosses = currentWord.glosses.slice(0, -1);
-      currentWord.domains = currentWord.domains.slice(0, -1);
       newWords.push(currentWord);
     }
     this.setState({ words: newWords, frontier });
   }
 
-  async updateFrontierWords() {
+  // Updates the frontier from the local word set
+  private async updateFrontierWords() {
     let editWord: Word;
     let editSource: ViewFinalWord;
+    let edits: string[] = Array.from(new Set(this.state.edits));
+    let senseHandle: ViewFinalSense | Sense;
 
-    // Stores gloss info
-    let glossBuffer: string[][];
+    for (let edit of edits) {
+      editWord = JSON.parse(
+        JSON.stringify(this.state.frontier.find(value => value.id === edit))
+      );
+      editSource = this.state.words.find(
+        value => value.id === edit
+      ) as ViewFinalWord;
 
-    // Stores semantic domain info
-    let domainBuffer: string[][][];
+      editWord.vernacular = editSource.vernacular;
+      // Update old senses
+      for (let sense = 0; sense < editWord.senses.length; sense++) {
+        senseHandle = editWord.senses[sense];
 
-    for (let edit of this.state.edits) {
-      editWord = this.state.frontier.find(word => word.id === edit) as Word;
-      if (editWord) {
-        // Deep copy to edit
-        editWord = JSON.parse(JSON.stringify(editWord));
-        editSource = this.state.words.find(
-          word => word.id === edit
-        ) as ViewFinalWord;
-        editWord.vernacular = editSource.vernacular;
+        // Update the glosses of the current sense. The second argument converts a comma-separated string into an array, trimming whitespace
+        senseHandle.glosses = this.updateAddGlosses(
+          senseHandle.glosses,
+          editSource.senses[sense].glosses
+            .split(SEP_CHAR)
+            .map(value => value.trim())
+        );
 
-        // Create a 2D array: row based on \n, column based on SEP_CHAR; clean data afterwards
-        glossBuffer = editSource.glosses
-          .split("\n")
-          .map(value => value.split(SEP_CHAR));
-        this.cleanElements(glossBuffer);
+        senseHandle.semanticDomains = editSource.senses[sense].domains.map(
+          value => {
+            return {
+              name: value.name,
+              number: value.number
+            };
+          }
+        );
+      }
 
-        // Create a 3D array: row based on \n, column based on SEP_CHAR, and index based on DOMAIN_SEP_CHAR
-        domainBuffer = editSource.domains
-          .split("\n")
-          .map(value =>
-            value.split(SEP_CHAR).map(value2 => value2.split(DOMAIN_SEP_CHAR))
-          );
-        domainBuffer.forEach(element => this.cleanElements(element));
-
-        // Update all old senses
-        for (let sense = 0; sense < editWord.senses.length; sense++) {
-          // Edit all glosses
-          this.updateAndAddGlosses(
-            editWord.senses[sense].glosses,
-            glossBuffer[sense]
-          );
-
-          // Edit all domains
-          this.updateAndAddDomains(
-            editWord.senses[sense].semanticDomains,
-            domainBuffer[sense]
-          );
-        }
-
-        // Add new senses
-        for (let i = editWord.senses.length; i < glossBuffer.length; i++) {
+      // Add new senses
+      if (editWord.senses.length > editSource.senses.length)
+        for (
+          let sense = editWord.senses.length;
+          sense < editSource.senses.length;
+          sense++
+        ) {
+          senseHandle = editSource.senses[sense];
           editWord.senses.push({
-            glosses: glossBuffer[i].map(value => {
-              return { language: this.state.language, def: value };
+            glosses: senseHandle.glosses.split(SEP_CHAR).map(value => {
+              return { language: this.state.language, def: value.trim() };
             }),
-            semanticDomains: domainBuffer[i].map(value => {
-              return { name: value[0], number: value[1] };
+            semanticDomains: editSource.senses[sense].domains.map(value => {
+              return {
+                name: value.name,
+                number: value.number
+              };
             })
           });
         }
 
-        debugger;
-        await backend.updateWord(editWord);
-      } else {
-        // Edited a non-existant word (addition of words not currently allowed).
-        // Wat.
-      }
+      debugger;
+      await backend.updateWord(editWord);
     }
-    this.setState({ edits: [] });
   }
 
   // Adds in glosses from glossBuffer; this both updates existing glosses and adds new ones
-  private updateAndAddGlosses(glosses: Gloss[], glossBuffer: string[]) {
+  private updateAddGlosses(glosses: Gloss[], glossBuffer: string[]): Gloss[] {
     let glossIndex: number = 0;
+    let superIndex: number = 0;
 
-    // Update old glosses
-    for (let gloss of glosses) {
-      if (gloss.language === this.state.language) {
-        // Found a gloss to update
-        gloss.def = glossBuffer[glossIndex];
-        glossIndex++;
-      }
-    }
-
-    // Add new glosses
+    // Overwrite/add glosses
+    // debugger;
     while (glossIndex < glossBuffer.length) {
-      glosses.push({
+      // Locate an entry
+      while (
+        glosses[superIndex] &&
+        glosses[superIndex].language !== this.state.language
+      )
+        superIndex++;
+
+      // Add the new entry
+      glosses[superIndex] = {
         language: this.state.language,
         def: glossBuffer[glossIndex]
-      });
+      };
+      superIndex++;
       glossIndex++;
     }
+
+    // Remove dead glosses; superIndex is the index of the last valid gloss, so one beyond it
+    return glosses.slice(0, superIndex);
   }
 
-  // Adds in domains from domainBuffer; this both updates existing domains and adds new ones
-  private updateAndAddDomains(
-    semanticDomains: SemanticDomain[],
-    domainBuffer: string[][]
+  // Create the vernacular text field
+  vernacularField(rowData: ViewFinalWord) {
+    return (
+      <TextField
+        value={rowData.vernacular}
+        onChange={event => this.updateVernacular(rowData, event.target.value)}
+      />
+    );
+  }
+  updateVernacular(rowData: ViewFinalWord, newData: string) {
+    this.setState({
+      words: this.state.words.map(value => {
+        if (value.id === rowData.id) return { ...value, vernacular: newData };
+        else return value;
+      }),
+      edits: [...this.state.edits, rowData.id]
+    });
+  }
+
+  // Create the sense edit fields
+  senseField(rowData: ViewFinalWord) {
+    return (
+      <AlignedList
+        contents={rowData.senses.map((value, index) => (
+          <TextField
+            value={value.glosses}
+            onChange={event =>
+              this.updateSense(
+                rowData,
+                index,
+                event.target.value,
+                value.domains
+              )
+            }
+          />
+        ))}
+        bottomCell={
+          <Chip
+            label={<Add />}
+            onClick={event =>
+              this.updateSense(rowData, rowData.senses.length, "", [])
+            }
+          />
+        }
+      />
+    );
+  }
+
+  updateSense(
+    wordToEdit: ViewFinalWord,
+    editIndex: number,
+    newGlosses: string,
+    newDomains: SemanticDomain[]
   ) {
-    let domainIndex: number = 0;
-
-    // Edit semantic domains
-    for (let domain of semanticDomains) {
-      domain.name = domainBuffer[domainIndex][0];
-      domain.number = domainBuffer[domainIndex][1];
-      domainIndex++;
-    }
-
-    // Add in straggler domains
-    while (domainIndex < domainBuffer.length) {
-      semanticDomains.push({
-        name: domainBuffer[domainIndex][0],
-        number: domainBuffer[domainIndex][1]
-      });
-      domainIndex++;
-    }
+    this.setState({
+      words: this.state.words.map(value => {
+        if (value.id === wordToEdit.id)
+          return {
+            ...value,
+            senses: [
+              ...value.senses.slice(0, editIndex),
+              {
+                ...value.senses[editIndex],
+                glosses: newGlosses,
+                domains: newDomains
+              },
+              ...value.senses.slice(editIndex + 1, value.senses.length)
+            ]
+            //  value.senses.map((sense, index) => {
+            //   if (editIndex === index)
+            //     return { ...sense, glosses: newGlosses, domains: newDomains };
+            //   else return sense;
+            // })
+          };
+        else return value;
+      }),
+      edits: [...this.state.edits, wordToEdit.id]
+    });
   }
 
-  // Removes all whitespace from strings in a 2d array
-  private cleanElements(elements: string[][]) {
-    for (let i = 0; i < elements.length; i++)
-      for (let j = 0; j < elements[i].length; j++)
-        elements[i][j] = elements[i][j].trim();
+  deleteSense(wordToEdit: ViewFinalWord, deleteIndex: number) {
+    this.setState({
+      words: this.state.words.map(value => {
+        if (value.id === wordToEdit.id)
+          return {
+            ...value,
+            senses: value.senses.filter((sense, index) => index !== deleteIndex)
+          };
+        else return value;
+      })
+    });
+  }
+
+  // Adds a domain to a word with a specific ID
+  addDomain(newDomain: SemanticDomain, id: string, senseIndex: number) {
+    this.setState({
+      words: this.state.words.map(word => {
+        if (word.id === id)
+          return {
+            ...word,
+            senses: word.senses.map((sense, index) => {
+              if (index === senseIndex) {
+                return {
+                  ...sense,
+                  domains: [...sense.domains, newDomain]
+                };
+              } else return sense;
+            })
+          };
+        else return word;
+      }),
+      edits: [...this.state.edits, id]
+    });
+  }
+
+  // Removes the specified domain from the word with the specified ID
+  deleteDomain(delDomain: SemanticDomain, id: string, senseIndex: number) {
+    this.setState({
+      words: this.state.words.map(word => {
+        if (word.id === id)
+          return {
+            ...word,
+            senses: word.senses.map((sense, index) => {
+              if (index === senseIndex)
+                return {
+                  ...sense,
+                  domains: sense.domains.filter(domain => domain !== delDomain)
+                };
+              else return sense;
+            })
+          };
+        else return word;
+      }),
+      edits: [...this.state.edits, id]
+    });
   }
 
   render() {
@@ -242,28 +394,12 @@ export class ViewFinalComponent extends React.Component<
         <MaterialTable
           icons={tableIcons}
           title={<Translate id={"viewFinal.title"} />}
-          columns={columns}
+          columns={this.COLUMNS}
           data={this.state.words}
-          components={{
-            //Cell: props => <MTableCell multiline {...props} />,
-            EditField: props => <MTableEditField multiline {...props} />
-          }}
-          editable={{
-            onRowUpdate: (newData: ViewFinalWord) => {
-              return new Promise(resolve => {
-                this.setState({
-                  words: this.state.words.map((word: ViewFinalWord) => {
-                    if (word.id === newData.id) return newData;
-                    else return word;
-                  }),
-                  edits: [...this.state.edits, newData.id]
-                });
-                resolve();
-              });
-            }
-          }}
         />
-        <Button onClick={this.updateFrontierWords}>SUBMIT</Button>
+        <Button onClick={this.updateFrontierWords}>
+          <Translate id="viewFinal.submit" />
+        </Button>
       </Paper>
     );
   }
