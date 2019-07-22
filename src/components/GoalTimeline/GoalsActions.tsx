@@ -29,19 +29,22 @@ export enum GoalsActions {
   UPDATE_GOAL = "UPDATE_GOAL"
 }
 
-export type GoalAction = LoadUserEdits | AddGoalToHistory | UpdateGoal;
+export type GoalAction =
+  | LoadUserEditsAction
+  | AddGoalToHistoryAction
+  | UpdateGoalAction;
 
-export interface LoadUserEdits extends ActionWithPayload<Goal[]> {
+export interface LoadUserEditsAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.LOAD_USER_EDITS;
   payload: Goal[];
 }
 
-export interface AddGoalToHistory extends ActionWithPayload<Goal[]> {
+export interface AddGoalToHistoryAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.ADD_GOAL_TO_HISTORY;
   payload: Goal[];
 }
 
-export interface UpdateGoal extends ActionWithPayload<Goal[]> {
+export interface UpdateGoalAction extends ActionWithPayload<Goal[]> {
   type: GoalsActions.UPDATE_GOAL;
   payload: Goal[];
 }
@@ -277,14 +280,14 @@ function goalTypeToGoal(type: number): Goal | undefined {
   }
 }
 
-export function addGoalToHistory(goal: Goal): AddGoalToHistory {
+export function addGoalToHistory(goal: Goal): AddGoalToHistoryAction {
   return { type: GoalsActions.ADD_GOAL_TO_HISTORY, payload: [goal] };
 }
 
-export function loadUserEdits(history: Goal[]): LoadUserEdits {
+export function loadUserEdits(history: Goal[]): LoadUserEditsAction {
   return { type: GoalsActions.LOAD_USER_EDITS, payload: history };
 }
 
-export function updateGoal(goal: Goal): UpdateGoal {
+export function updateGoal(goal: Goal): UpdateGoalAction {
   return { type: GoalsActions.UPDATE_GOAL, payload: [goal] };
 }

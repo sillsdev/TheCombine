@@ -95,7 +95,7 @@ afterEach(() => {
 describe("Test GoalsActions", () => {
   it("should create an action to add a goal to history", () => {
     const goal: Goal = new CreateCharInv();
-    const expectedAction: actions.AddGoalToHistory = {
+    const expectedAction: actions.AddGoalToHistoryAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
       payload: [goal]
     };
@@ -104,7 +104,7 @@ describe("Test GoalsActions", () => {
 
   it("should create an action to load user edits", () => {
     const goalHistory: Goal[] = [new CreateCharInv(), new MergeDups()];
-    const expectedAction: actions.LoadUserEdits = {
+    const expectedAction: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: goalHistory
     };
@@ -113,7 +113,7 @@ describe("Test GoalsActions", () => {
 
   it("should create an action to update a goal", () => {
     const goal: Goal = new CreateCharInv();
-    const expectedAction: actions.UpdateGoal = {
+    const expectedAction: actions.UpdateGoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
       payload: [goal]
     };
@@ -125,7 +125,7 @@ describe("Test GoalsActions", () => {
       actions.asyncLoadExistingUserEdits("1", "1")
     );
 
-    let loadUserEdits: actions.LoadUserEdits = {
+    let loadUserEdits: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: []
     };
@@ -150,7 +150,7 @@ describe("Test GoalsActions", () => {
         fail(err);
       });
 
-    let loadUserEditsAction: actions.LoadUserEdits = {
+    let loadUserEditsAction: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: []
     };
@@ -179,7 +179,7 @@ describe("Test GoalsActions", () => {
       actions.asyncAddGoalToHistory(goal)
     );
 
-    let addGoalToHistory: actions.AddGoalToHistory = {
+    let addGoalToHistory: actions.AddGoalToHistoryAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
       payload: [goal]
     };
@@ -222,7 +222,7 @@ describe("Test GoalsActions", () => {
       }
     ];
 
-    let updateGoal: actions.UpdateGoal = {
+    let updateGoal: actions.UpdateGoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
       payload: [theGoal]
     };

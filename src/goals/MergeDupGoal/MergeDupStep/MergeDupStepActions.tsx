@@ -8,7 +8,7 @@ import {
   getIndexInHistory,
   getUser,
   updateGoal,
-  UpdateGoal,
+  UpdateGoalAction,
   updateStepData
 } from "../../../components/GoalTimeline/GoalsActions";
 import { Goal, GoalHistoryState } from "../../../types/goals";
@@ -192,7 +192,7 @@ export function refreshWords() {
 }
 
 function goToNextStep(
-  dispatch: Dispatch<UpdateGoal>,
+  dispatch: Dispatch<UpdateGoalAction>,
   goal: Goal,
   state: GoalHistoryState
 ): Promise<void> {
