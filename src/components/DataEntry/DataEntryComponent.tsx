@@ -14,7 +14,12 @@ import {
 } from "@material-ui/core";
 import theme from "../../types/theme";
 
-import { Translate, TranslateFunction } from "react-localize-redux";
+import {
+  Translate,
+  TranslateFunction,
+  withLocalize,
+  LocalizeContextProps
+} from "react-localize-redux";
 import { Word, SemanticDomain, State, Gloss } from "../../types/word";
 import { Delete, Edit } from "@material-ui/icons";
 import * as Backend from "../../backend";
@@ -22,12 +27,12 @@ import DuplicateFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateF
 import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
 
-interface AddWordsProps {
+interface DataEntryProps {
   domain: DomainTree;
   translate: TranslateFunction;
 }
 
-interface AddWordsState {
+interface DataEntryState {
   rows: Row[];
   newVern: string;
   newGloss: string;
@@ -52,11 +57,11 @@ interface Row {
   dupGlosses?: string[];
 }
 
-export default class AddWords extends React.Component<
-  AddWordsProps,
-  AddWordsState
+export class DataEntry extends React.Component<
+  DataEntryProps & LocalizeContextProps,
+  DataEntryState
 > {
-  constructor(props: AddWordsProps) {
+  constructor(props: DataEntryProps & LocalizeContextProps) {
     super(props);
     this.state = {
       newVern: "",
@@ -229,7 +234,7 @@ export default class AddWords extends React.Component<
 
   // Used by new word input
   /** Update the state to match the value in a textbox */
-  updateField<K extends keyof AddWordsState>(
+  updateField<K extends keyof DataEntryState>(
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >,
@@ -241,7 +246,7 @@ export default class AddWords extends React.Component<
     this.setState(
       {
         [field]: value
-      } as Pick<AddWordsState, K>,
+      } as Pick<DataEntryState, K>,
       callback
     );
   }
@@ -711,3 +716,5 @@ export default class AddWords extends React.Component<
     );
   }
 }
+
+export default withLocalize(DataEntry);

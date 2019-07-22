@@ -8,9 +8,9 @@ import renderer, {
   ReactTestInstance,
   ReactTestRenderer
 } from "react-test-renderer";
-import AddWords from "../";
+import AddWords from "..";
 import configureStore from "redux-mock-store";
-import AddWords_unconnected from "../AddWordsComponent";
+import ConnectedDataEntry, { DataEntry } from "../DataEntryComponent";
 import { LocalizeProvider } from "react-localize-redux";
 import configureMockStore from "redux-mock-store";
 import createMockStore from "redux-mock-store";
@@ -85,13 +85,10 @@ beforeEach(() => {
       return Promise.resolve({ data: [] });
     });
     master = renderer.create(
-      <AddWords_unconnected
-        domain={{ name: "en", id: "1", subdomains: [] }}
-        translate={jest.fn(() => "ok")}
-      />
+      <ConnectedDataEntry domain={{ name: "en", id: "1", subdomains: [] }} />
     );
   });
-  handle = master.root.findByType(AddWords_unconnected);
+  handle = master.root.findByType(DataEntry);
 
   mockedAxios.put.mockClear();
 });
