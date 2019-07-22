@@ -261,30 +261,22 @@ describe("Test GoalsActions", () => {
     );
 
     let goal: Goal = new MergeDups();
-    goal.data = goalDataMock;
-
-    let expectedGoal: Goal = new MergeDups();
-    expectedGoal.data = goalDataMock;
 
     await mockStore
       .dispatch<any>(actions.loadGoalData(goal))
       .then((returnedGoal: Goal) => {
-        expect(returnedGoal.data).toEqual(expectedGoal.data);
+        expect(returnedGoal.data).toEqual(goalDataMock);
       })
       .catch((err: string) => fail(err));
   });
 
   it("should not change the goal data", async () => {
     const goal: Goal = new HandleFlags();
-    goal.data = goalDataMock;
-
-    const expectedGoal: Goal = new HandleFlags();
-    expectedGoal.data = goalDataMock;
 
     await mockStore
       .dispatch<any>(actions.loadGoalData(goal))
       .then((returnedGoal: Goal) => {
-        expect(returnedGoal.data).toEqual(expectedGoal.data);
+        expect(returnedGoal.data).toEqual({});
       })
       .catch((err: string) => fail(err));
   });
@@ -292,13 +284,11 @@ describe("Test GoalsActions", () => {
   it("Should update the step data of a goal", () => {
     const goal: MergeDups = new MergeDups();
     goal.data = goalDataMock;
-    expect(goal.data).toEqual(goalDataMock);
     expect(goal.steps).toEqual([]);
     expect(goal.currentStep).toEqual(0);
 
     const updatedGoal: MergeDups = actions.updateStepData(goal) as MergeDups;
 
-    expect(updatedGoal.data).toEqual(goal.data);
     expect(updatedGoal.steps[0].words).toEqual(goal.data.plannedWords[0]);
     expect(updatedGoal.currentStep).toEqual(1);
   });

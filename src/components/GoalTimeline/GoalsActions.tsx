@@ -169,9 +169,8 @@ export function updateStepData(goal: Goal): Goal {
       goal.currentStep++;
       break;
     }
-    case GoalType.CreateCharInv: {
+    default:
       break;
-    }
   }
   return goal;
 }
