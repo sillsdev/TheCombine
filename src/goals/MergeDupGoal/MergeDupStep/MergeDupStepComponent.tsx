@@ -12,7 +12,8 @@ import {
   Paper,
   IconButton,
   Typography,
-  Chip
+  Chip,
+  Drawer
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -169,44 +170,34 @@ class MergeDupStep extends React.Component<
   renderSideBar() {
     if (this.state.sideBar.senses.length <= 1) return <div />;
     return (
-      <Paper
-        square
-        style={{
-          float: "right",
-          position: "relative",
-          padding: 40,
-          height: "100%",
-          top: -8,
-          right: -8
-        }}
+      <Drawer
+        anchor="right"
+        variant="persistent"
+        open={this.state.sideBar.senses.length > 1}
       >
-        <IconButton
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: 0,
-            transform: "translateY(-50%)"
-          }}
-          onClick={() =>
-            this.setState({
-              ...this.state,
-              sideBar: { senseID: "", wordID: "", senses: [] }
-            })
-          }
-        >
-          <ArrowForwardIos />
-        </IconButton>
         <Droppable
           droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
         >
-          {(providedDroppable) => (
+          {providedDroppable => (
             <div
               ref={providedDroppable.innerRef}
               {...providedDroppable.droppableProps}
-              style={{
-                width: 250
-              }}
+              /* 
+                  Set padding to 30 and add the height of the appbar (64) to the
+                  top padding
+              */
+              style={{ padding: 30, paddingTop: 64 + 30 }}
             >
+              <IconButton
+                onClick={() =>
+                  this.setState({
+                    ...this.state,
+                    sideBar: { senses: [], senseID: "", wordID: "" }
+                  })
+                }
+              >
+                <ArrowForwardIos />
+              </IconButton>
               <Typography variant="h5">
                 {this.props.words[this.state.sideBar.wordID].vern}
               </Typography>
@@ -243,9 +234,7 @@ class MergeDupStep extends React.Component<
                           <Grid container spacing={2}>
                             {entry.data.semanticDomains.map(semdom => (
                               <Grid item xs>
-                                <Chip
-                                  label={`${semdom.name} ${semdom.id}`}
-                                />
+                                <Chip label={`${semdom.name} ${semdom.id}`} />
                               </Grid>
                             ))}
                           </Grid>
@@ -259,7 +248,7 @@ class MergeDupStep extends React.Component<
             </div>
           )}
         </Droppable>
-      </Paper>
+      </Drawer>
     );
   }
 
@@ -273,24 +262,22 @@ class MergeDupStep extends React.Component<
     //visual definition
     return (
       <Box style={{ maxHeight: "100%" }}>
-        <DragDropContext onDragEnd={res => this.handleDrop(res)}>
-          {/* Merging pane */}
-          <div
+        {/* Merging pane */}
+        <div
+          style={{
+            ...HEIGHT_STYLE,
+            overflow: "hidden",
+            background: "#eee",
+            padding: 8
+          }}
+        >
+          <GridList
+            cellHeight="auto"
             style={{
-              ...HEIGHT_STYLE,
-              overflow: "hidden",
-              background: "#eee",
-              padding: 8
+              flexWrap: "nowrap"
             }}
           >
-            {this.renderSideBar()}
-            <GridList
-              cellHeight="auto"
-              cols={this.state.colCount}
-              style={{
-                flexWrap: "nowrap"
-              }}
-            >
+            <DragDropContext onDragEnd={res => this.handleDrop(res)}>
               {Object.keys(this.props.words).map(key => (
                 <GridListTile key={key} style={{ margin: 8 }}>
                   <MergeRow
@@ -311,9 +298,10 @@ class MergeDupStep extends React.Component<
                   wordID={newId}
                 />
               </GridListTile>
-            </GridList>
-          </div>
-        </DragDropContext>
+              {this.renderSideBar()}
+            </DragDropContext>
+          </GridList>
+        </div>
         {/* Merge button */}
         <div style={{ borderTop: "1px solid gray", margin: 10 }}>
           <Button
