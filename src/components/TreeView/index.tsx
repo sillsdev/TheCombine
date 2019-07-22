@@ -1,4 +1,4 @@
-import TreeView from "./TreeViewComponent";
+import TreeViewComponent from "./TreeViewComponent";
 import { StoreState } from "../../types";
 import { connect } from "react-redux";
 import { Dispatch } from "react";
@@ -22,4 +22,4 @@ function mapDispatchToProps(dispatch: Dispatch<TreeViewAction>) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TreeView);
+)(TreeViewComponent);
