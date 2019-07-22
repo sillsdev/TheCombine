@@ -4,35 +4,32 @@ import { Grid, Zoom } from "@material-ui/core";
 import TreeProps from "./TreeProps";
 import TreeDepiction from "./TreeDepiction";
 import SemanticDomain from "./SemanticDomain";
-import { getSemanticDomains } from "../../backend";
 import { createDomains } from "./TreeViewReducer";
+
+// Domain data
+import en from "../../resources/semantic-domains/en.json";
 
 interface TreeViewProps extends TreeProps {
   returnControlToCaller: () => void;
 }
 
-interface TreeViewState {
+interface TreeViewComponentState {
   visible: boolean;
 }
 
-export default class TreeView extends React.Component<
+export default class TreeViewComponent extends React.Component<
   TreeViewProps,
-  TreeViewState
+  TreeViewComponentState
 > {
-  id: any;
-
   constructor(props: TreeViewProps) {
     super(props);
     this.state = { visible: true };
 
     this.animate = this.animate.bind(this);
 
-    getSemanticDomains().then((data: SemanticDomain[]) => {
-      let newDomain = createDomains(data);
-      this.props.navigate(newDomain.currentdomain);
-    }).catch((err) =>
-     console.error(err)
-    )
+    // TODO: add checking the user's language to select the semantic domains
+    let newDomain = createDomains(en);
+    this.props.navigate(newDomain.currentdomain);
   }
 
   animate(domain: SemanticDomain | undefined): Promise<void> {
