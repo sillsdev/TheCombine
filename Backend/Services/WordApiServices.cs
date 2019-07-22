@@ -91,10 +91,10 @@ namespace BackendFramework.Services
                 var newChildWord = await _repo.Add(currentChildWord);
 
                 //handle different states
+
+                var separateWord = baseParent.Clone();
                 for (int i = 0; i < currentChildWord.Senses.Count; i++)
                 {
-                    var separateWord = baseParent.Clone();
-
                     switch (newChildWordState.SenseStates[i])
                     {
                         //add the word to the parent's history
@@ -116,14 +116,14 @@ namespace BackendFramework.Services
                         default:
                             throw new NotSupportedException();
                     }
+                }
 
-                    //add a new word to the database with all of the senses with separate tags from this word
-                    if (separateWord.Senses.Count != 0)
-                    {
-                        separateWord.ProjectId = projectId;
-                        var newSeparate = await _repo.Create(separateWord);
-                        newWordsList.Add(newSeparate);
-                    }
+                //add a new word to the database with all of the senses with separate tags from this word
+                if (separateWord.Senses.Count != 0)
+                {
+                    separateWord.ProjectId = projectId;
+                    var newSeparate = await _repo.Create(separateWord);
+                    newWordsList.Add(newSeparate);
                 }
             }
 
