@@ -4,11 +4,12 @@ import { MergeTreeReference, Hash, TreeDataSense } from "./MergeDupsTree";
 import { Word, State } from "../../../types/word";
 import * as backend from "../../../backend";
 import {
-  nextStep,
-  NextStep,
   getUserEditId,
   getIndexInHistory,
-  getUser
+  getUser,
+  updateGoal,
+  UpdateGoalAction,
+  updateStepData
 } from "../../../components/GoalTimeline/GoalsActions";
 import { Goal, GoalHistoryState } from "../../../types/goals";
 import { Dispatch } from "redux";
@@ -170,13 +171,13 @@ async function addStepToGoal(goal: Goal, indexInHistory: number) {
 
 export function refreshWords() {
   return async (
-    dispatch: ThunkDispatch<any, any, MergeTreeAction | NextStep>,
+    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
     let historyState: GoalHistoryState = getState().goalsState.historyState;
     let goal: Goal = historyState.history[historyState.history.length - 1];
 
-    goToNextStep(dispatch, goal, historyState).then(() => {
+    await goToNextStep(dispatch, goal, historyState).then(() => {
       historyState = getState().goalsState.historyState;
       goal = historyState.history[historyState.history.length - 1];
       if (goal.currentStep <= goal.numSteps) {
@@ -191,12 +192,13 @@ export function refreshWords() {
 }
 
 function goToNextStep(
-  dispatch: Dispatch<NextStep>,
+  dispatch: Dispatch<UpdateGoalAction>,
   goal: Goal,
   state: GoalHistoryState
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    dispatch(nextStep());
+    let updatedGoal = updateStepData(goal);
+    dispatch(updateGoal(updatedGoal));
     let indexInHistory: number = getIndexInHistory(state.history, goal);
     addStepToGoal(state.history[indexInHistory], indexInHistory);
     resolve();
@@ -275,6 +277,5 @@ export function mergeAll() {
       await mergeWord(wordID, getState);
     }
     //await dispatch(clearTree());
-    await dispatch(refreshWords());
   };
 }

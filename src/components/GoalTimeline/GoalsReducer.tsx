@@ -1,8 +1,6 @@
-import { GoalsState, GoalType } from "../../types/goals";
-import { Goal } from "../../types/goals";
+import { GoalsState } from "../../types/goals";
 import { GoalsActions, GoalAction } from "./GoalsActions";
 import { defaultState } from "./DefaultState";
-import { MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
 import { StoreAction, StoreActions } from "../../rootActions";
 
 export const goalsReducer = (
@@ -34,21 +32,6 @@ export const goalsReducer = (
           )
         }
       };
-    case GoalsActions.NEXT_STEP: // Update the step data in the current step, then go to the next step
-      let currentIndex: number = state.historyState.history.length - 1;
-      let currentGoal: Goal = updateStepData(
-        state.historyState.history[currentIndex]
-      );
-      return {
-        ...state,
-        historyState: {
-          history: [
-            ...state.historyState.history.slice(0, currentIndex),
-            currentGoal
-          ]
-        }
-      };
-
     case GoalsActions.UPDATE_GOAL: {
       return {
         ...state,
@@ -66,22 +49,3 @@ export const goalsReducer = (
       return state;
   }
 };
-
-export function updateStepData(goal: Goal): Goal {
-  switch (goal.goalType) {
-    case GoalType.MergeDups: {
-      let currentGoalData: MergeDupData = JSON.parse(
-        JSON.stringify(goal.data as MergeDupData)
-      );
-      goal.steps[goal.currentStep] = {
-        words: currentGoalData.plannedWords[goal.currentStep]
-      };
-      goal.currentStep++;
-      break;
-    }
-    case GoalType.CreateCharInv: {
-      break;
-    }
-  }
-  return goal;
-}
