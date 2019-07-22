@@ -458,7 +458,7 @@ namespace BackendFramework.Services
         {
             if (range == "semantic-domain-ddp4")
             {
-                sdList.Add(new SemanticDomain() { Name = label.First().Value.Text, Id = abbrev.First().Value.Text });
+                sdList.Add(new SemanticDomain() { Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
             }
         }
 
