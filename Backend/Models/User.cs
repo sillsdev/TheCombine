@@ -1,12 +1,16 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BackendFramework.ValueModels
 {
-    public class User
+    public class User : IUserStore<User>
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -150,6 +154,75 @@ namespace BackendFramework.ValueModels
             hash.Add(Token);
             return hash.ToHashCode();
         }
+
+        public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Id);
+        }
+
+        public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Name);
+        }
+
+        public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
+        {
+            user.Name = userName;
+            return Task.FromResult(Type.Missing);
+        }
+
+        public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Name.ToLower());
+        }
+
+        public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
+        {
+            user.Name = normalizedName;
+            return Task.FromResult(Type.Missing);
+        }
+
+        /*
+         * Within the UserStore class, you use the data access classes that you created to perform operations.
+         * These are passed in using dependency injection. For example, in the SQL Server with Dapper implementation, 
+         * the UserStore class has the CreateAsync method which uses an instance of DapperUsersTable to insert a new record:
+         * https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity-custom-storage-providers?view=aspnetcore-2.2#userrole-storage
+         */
+
+        public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
+        {
+            //not sure what this should do
+            return Task.FromResult(new IdentityResult());
+        }
+
+        public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
+        {
+            //not sure what this should do
+            return Task.FromResult(new IdentityResult());
+        }
+
+        public Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
+        {
+            //not sure what this should do
+            return Task.FromResult(new IdentityResult());
+        }
+
+        public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        {
+            //not sure what this should do
+            return Task.FromResult(new User());
+        }
+
+        public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        {
+            //not sure what this should do
+            return Task.FromResult(new User());
+        }
+
+        public void Dispose()
+        {
+            //what should this do
+        }
     }
 
     public class Credentials
@@ -158,3 +231,4 @@ namespace BackendFramework.ValueModels
         public string Password { get; set; }
     }
 }
+ 

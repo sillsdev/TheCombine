@@ -19,11 +19,13 @@ namespace BackendFramework.Services
     {
         private readonly IUserContext _userDatabase;
         private readonly AppSettings _jwtsettings;
+        private readonly IUserRoleService _userRole;
 
-        public UserService(IUserContext collectionSettings, IOptions<AppSettings> appSettings)
+        public UserService(IUserContext collectionSettings, IOptions<AppSettings> appSettings, IUserRoleService userRole)
         {
             _userDatabase = collectionSettings;
             _jwtsettings = appSettings.Value;
+            _userRole = userRole;
         }
         
         public async Task<User> Authenticate(string username, string password)
@@ -65,11 +67,26 @@ namespace BackendFramework.Services
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
                 var key = Encoding.ASCII.GetBytes(secretKey);
+
+                //fetch the projects Id and the roles for each Id
+                List<twoThings<string, List<int>>> projectPermissionMap = new List<twoThings<string, List<int>>>();
+
+                foreach(var projectRolePair in foundUser.WorkedProjects)
+                {
+                    //convert each userRole ID to its respective role && add to the mapping
+                    var permissions = _userRole.GetUserRole(projectRolePair.Key, projectRolePair.Value).Result.Permissions;
+                    var validEntry = new twoThings<string, List<int>>(projectRolePair.Key, permissions);
+                    projectPermissionMap.Add(validEntry);
+                }
+
+                var claimString = projectPermissionMap.ToString();
+
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim(ClaimTypes.Name, foundUser.Id)
+                    new Claim(ClaimTypes.Name, foundUser.Id), 
+                    new Claim(ClaimTypes.Anonymous, claimString)
                     }),
 
                     //This line here will cause serious debugging problems if not kept in mind
@@ -206,6 +223,16 @@ namespace BackendFramework.Services
             {
                 return ResultOfUpdate.NoChange;
             }
-        }   
+        }
+        public class twoThings<T, W>
+        {
+            public twoThings(T first, W second)
+            {
+                ItemOne = first;
+                ItemTwo = second;
+            }
+            public T ItemOne { get; set; }
+            public W ItemTwo { get; set; }
+        }
     }
 }
