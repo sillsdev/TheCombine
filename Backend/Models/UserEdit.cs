@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace BackendFramework.ValueModels
 {
+    /// <summary> The changes a user has made on a particular project </summary>
     public class UserEdit
     {
         [BsonId]
@@ -77,10 +78,10 @@ namespace BackendFramework.ValueModels
         [BsonElement("newEdit")]
         public string NewEdit { get; set; }
 
-        public UserEditObjectWrapper(int goalI, string newE)
+        public UserEditObjectWrapper(int goalIndex, string newEdit)
         {
-            GoalIndex = goalI;
-            NewEdit = newE;
+            GoalIndex = goalIndex;
+            NewEdit = newEdit;
         }
 
         public override bool Equals(object obj)
@@ -104,6 +105,7 @@ namespace BackendFramework.ValueModels
 
     public class Edit
     {
+        /// <summary> Integer representation of enum <see cref="ValueModels.GoalType"/> </summary>
         [BsonElement("goalType")]
         public int GoalType { get; set; }
 

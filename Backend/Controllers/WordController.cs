@@ -12,6 +12,7 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words")]
+    [EnableCors("AllowAll")]
     public class WordController : Controller
     {
         private readonly IWordRepository _wordRepo;
@@ -24,8 +25,6 @@ namespace BackendFramework.Controllers
             _wordService = wordService;
             _projectService = projectService;
         }
-
-        [EnableCors("AllowAll")]
 
         // GET: v1/projects/{projectId}/words
         // Implements GetAllWords(),
