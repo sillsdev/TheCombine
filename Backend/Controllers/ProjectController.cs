@@ -3,22 +3,28 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
     [Authorize]
+    []
     [Produces("application/json")]
     [Route("v1/projects")]
     public class ProjectController : Controller
     {
         private readonly IProjectService _projectService;
         private readonly ISemDomParser _semDomParser;
+        private readonly IUserRoleService _userRoleService;
+        private readonly IUserService _userService;
 
-        public ProjectController(IProjectService projectService, ISemDomParser semDomParser)
+        public ProjectController(IProjectService projectService, ISemDomParser semDomParser, IUserRoleService userRoleService, IUserService userService)
         {
             _projectService = projectService;
             _semDomParser = semDomParser;
+            _userRoleService = userRoleService;
+            _userService = userService;
         }
 
         [EnableCors("AllowAll")]
@@ -65,6 +71,27 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Post([FromBody] Project project)
         {
             await _projectService.Create(project);
+
+            //get user 
+            var currentUserId = HttpContext.User.Identity.Name;
+            var currentUser = await _userService.GetUser(currentUserId);
+
+            //give admin privilages
+            UserRole usersRole = new UserRole();
+            usersRole.Permissions = new List<int>() { (int)Permission.CreateProject/*<- this makes no sense*/, (int)Permission.DataEntry, (int)Permission.ExportLift, (int)Permission.Goals, (int)Permission.ImportLift };
+            usersRole.ProjectId = project.Id;
+
+            usersRole = await _userRoleService.Create(usersRole);
+
+            //update user with userRole
+            if(currentUser.ProjectRoles.Equals(null))
+            {
+                currentUser.ProjectRoles = new Dictionary<string, string>();
+            }
+
+            currentUser.ProjectRoles.Add(project.Id, usersRole.Id);
+            var result = await _userService.Update(currentUserId, currentUser);
+            
             return new OkObjectResult(project.Id);
         }
 

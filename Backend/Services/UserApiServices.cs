@@ -71,7 +71,7 @@ namespace BackendFramework.Services
                 //fetch the projects Id and the roles for each Id
                 List<twoThings<string, List<int>>> projectPermissionMap = new List<twoThings<string, List<int>>>();
 
-                foreach(var projectRolePair in foundUser.WorkedProjects)
+                foreach(var projectRolePair in foundUser.ProjectRoles)
                 {
                     //convert each userRole ID to its respective role && add to the mapping
                     var permissions = _userRole.GetUserRole(projectRolePair.Key, projectRolePair.Value).Result.Permissions;
