@@ -38,8 +38,7 @@ interface Row {
   id: string;
   /** The ID of the duplicate word in the frontier */
   dupId: string;
-  /** The ID of the mispelled gloss */
-  mispelledGlossId: string;
+  glossSpelledCorrectly: boolean;
   vernacular: string;
   glosses: string;
   /** The index of the sense of the word that we're showing in the view */
@@ -90,7 +89,7 @@ export class DataEntryTable extends React.Component<
         glosses,
         id: "",
         dupId: "",
-        mispelledGlossId: "",
+        glossSpelledCorrectly: true,
         senseIndex: 0
       })
     )
@@ -178,14 +177,8 @@ export class DataEntryTable extends React.Component<
     return foundDuplicate[0];
   }
 
-  getMispelledGlossId(gloss: string): string {
-    if (this.props.spellChecker.correct(gloss)) {
-      console.log("correct");
-      return "";
-    } else {
-      console.log("incorrect");
-      return gloss;
-    }
+  isMispelled(gloss: string): boolean {
+    return this.props.spellChecker.correct(gloss);
   }
 
   wordToRow(word: Word, senseIndex: number): Row {
@@ -194,7 +187,7 @@ export class DataEntryTable extends React.Component<
       id: word.id,
       glosses: "",
       dupId: "",
-      mispelledGlossId: "",
+      glossSpelledCorrectly: true,
       senseIndex
     };
     let glosses: string[] = [];
@@ -294,10 +287,6 @@ export class DataEntryTable extends React.Component<
     this.setState({ showDuplicate: rowIndex });
   }
 
-  showMispelledForRow(rowIndex: number) {
-    // yeet
-  }
-
   /** Switch a row to edit a sense of a word in the database */
   switchToExistingWord(rowIndex: number, senseIndex: number) {
     let row = this.state.rows[rowIndex];
@@ -315,7 +304,7 @@ export class DataEntryTable extends React.Component<
                 : row.glosses,
               id: row.dupId,
               dupId: "",
-              mispelledGlossId: "",
+              glossSpelledCorrectly: true,
               senseIndex
             };
             this.updateRow(newRow, rowIndex, () => this.updateWord(rowIndex));
@@ -449,27 +438,23 @@ export class DataEntryTable extends React.Component<
                       xs={5}
                       style={{
                         paddingLeft: theme.spacing(2),
-                        paddingRight: theme.spacing(2)
+                        paddingRight: theme.spacing(2),
+                        position: "relative"
                       }}
                     >
                       <TextField
                         fullWidth
                         value={row.glosses}
                         onChange={e => {
-                          let mispelledGlossId: string = this.getMispelledGlossId(
-                            e.target.value
-                          );
-                          if (mispelledGlossId === row.id)
-                            mispelledGlossId = "";
+                          const isMispelled = this.isMispelled(e.target.value);
                           this.updateRow(
                             {
                               ...row,
                               glosses: e.target.value,
-                              mispelledGlossId: mispelledGlossId
+                              glossSpelledCorrectly: isMispelled
                             },
                             rowIndex
                           );
-                          console.log(row);
                         }}
                         onBlur={() => {
                           this.updateWord(rowIndex);
@@ -480,7 +465,7 @@ export class DataEntryTable extends React.Component<
                           }
                         }}
                       />
-                      {row.mispelledGlossId !== "" && (
+                      {!row.glossSpelledCorrectly && (
                         <Tooltip
                           title={
                             this.props.translate(
@@ -496,11 +481,10 @@ export class DataEntryTable extends React.Component<
                               border: "2px solid green",
                               borderRadius: "50%",
                               position: "absolute",
-                              top: 50,
-                              right: 60,
+                              top: 8,
+                              right: 48,
                               cursor: "pointer"
                             }}
-                            onClick={() => this.showMispelledForRow(rowIndex)}
                           />
                         </Tooltip>
                       )}
@@ -673,6 +657,16 @@ export class DataEntryTable extends React.Component<
                     variant="outlined"
                     value={this.state.newGloss}
                     onChange={e => {
+                      // const isMispelled = this.isMispelled(e.target.value);
+                      // this.updateRow(
+                      //   {
+                      //     ...row,
+                      //     glosses: e.target.value,
+                      //     glossSpelledCorrectly: isMispelled
+                      //   },
+                      //   rowIndex
+                      // );
+
                       this.updateField(e, "newGloss");
                     }}
                     inputRef={this.glossInput}
