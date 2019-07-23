@@ -4,25 +4,15 @@ import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
-import axios from "axios";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
-import {
-  wordsArrayMock,
-  goalDataMock
-} from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import { ViewFinal } from "../../../goals/ViewFinal/ViewFinal";
 import { User } from "../../../types/user";
 import {
   MergeTreeActions,
   MergeTreeAction
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { CreateStrWordInv } from "../../../goals/CreateStrWordInv/CreateStrWordInv";
-import { SpellCheckGloss } from "../../../goals/SpellCheckGloss/SpellCheckGloss";
-import { ValidateChars } from "../../../goals/ValidateChars/ValidateChars";
-import { ValidateStrWords } from "../../../goals/ValidateStrWords/ValidateStrWords";
-import { Word } from "../../../types/word";
-
-const mockAxios = axios as jest.Mocked<typeof axios>;
+import { defaultState as goalsDefaultState } from "../DefaultState";
 
 jest.mock(
   ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
@@ -39,6 +29,9 @@ jest.mock(
   }
 );
 
+// At compile time, jest.mock calls will be hoisted to the top of the file,
+// so calls to imported variables fail. Fixed by initializing these variables
+// inside of beforeAll()
 let mockGoalData: MergeDupData;
 
 let oldUser: string | null;
@@ -48,56 +41,27 @@ const mockUserEditId: string = "23456";
 let mockUser: User = new User("", "", "");
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
-let goal1: Goal = new CreateCharInv();
-let goal2: Goal = new CreateStrWordInv();
-let goal3: Goal = new HandleFlags();
-let goal4: Goal = new MergeDups();
-let goal5: Goal = new SpellCheckGloss();
-let goal6: Goal = new ValidateChars();
-let goal7: Goal = new ValidateStrWords();
-let goal8: Goal = new ViewFinal();
-let allTheGoals: Goal[] = [
-  goal1,
-  goal2,
-  goal3,
-  goal4,
-  goal5,
-  goal6,
-  goal7,
-  goal8
-];
-
-let suggestionsArray: Goal[] = [...allTheGoals];
-
-let mockHistoryGoal: Goal = new MergeDups();
-mockHistoryGoal.numSteps = 1;
-mockHistoryGoal.steps = [
-  {
-    words: [...wordsArrayMock]
-  }
-];
-
-const mockStoreState = {
-  goalsState: {
-    historyState: {
-      history: [mockHistoryGoal]
-    },
-    allPossibleGoals: allTheGoals,
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  }
-};
-
 const createMockStore = configureMockStore([thunk]);
-const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(
-  mockStoreState
-);
+let mockStore: MockStoreEnhanced<unknown, {}>;
 
 beforeAll(() => {
   oldUser = localStorage.getItem("user");
   oldProjectId = localStorage.getItem("projectId");
   mockGoalData = goalDataMock;
+
+  const mockStoreState = {
+    goalsState: {
+      historyState: {
+        history: [...goalsDefaultState.historyState.history]
+      },
+      allPossibleGoals: [...goalsDefaultState.allPossibleGoals],
+      suggestionsState: {
+        suggestions: [...goalsDefaultState.suggestionsState.suggestions]
+      }
+    }
+  };
+
+  mockStore = createMockStore(mockStoreState);
 });
 
 beforeEach(() => {
@@ -106,9 +70,12 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  mockStore.clearActions();
+});
+
+afterAll(() => {
   if (oldUser) localStorage.setItem("user", oldUser);
   if (oldProjectId) localStorage.setItem("projectId", oldProjectId);
-  mockStore.clearActions();
 });
 
 describe("Test GoalsActions", () => {
@@ -221,42 +188,58 @@ describe("Test GoalsActions", () => {
     expect(actions.getUser()).toEqual(undefined);
   });
 
-  // it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
-  //   mockAxios.get.mockImplementationOnce(() =>
-  //     Promise.resolve({
-  //       data: wordsArrayMock
-  //     })
-  //   );
+  it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
+    let goalToUpdate: Goal = new MergeDups();
+    goalToUpdate.numSteps = 1;
+    goalToUpdate.steps = [
+      {
+        words: [...goalDataMock.plannedWords[0]]
+      }
+    ];
 
-  //   let theGoal: Goal = new MergeDups();
-  //   theGoal.currentStep = 1;
-  //   theGoal.hash = mockHistoryGoal.hash;
-  //   theGoal.numSteps = mockHistoryGoal.numSteps;
-  //   theGoal.data = {
-  //     plannedWords: [[...wordsArrayMock]]
-  //   };
-  //   theGoal.steps = [
-  //     {
-  //       words: [...wordsArrayMock]
-  //     }
-  //   ];
+    let expectedUpdatedGoal: Goal = new MergeDups();
+    expectedUpdatedGoal.currentStep = 1;
+    expectedUpdatedGoal.hash = goalToUpdate.hash;
+    expectedUpdatedGoal.numSteps = goalToUpdate.numSteps;
+    expectedUpdatedGoal.data = {
+      plannedWords: [...goalDataMock.plannedWords]
+    };
+    expectedUpdatedGoal.steps = [
+      {
+        words: [...goalDataMock.plannedWords[0]]
+      }
+    ];
 
-  //   let updateGoal: actions.UpdateGoalAction = {
-  //     type: actions.GoalsActions.UPDATE_GOAL,
-  //     payload: [theGoal]
-  //   };
+    let updateGoal: actions.UpdateGoalAction = {
+      type: actions.GoalsActions.UPDATE_GOAL,
+      payload: [expectedUpdatedGoal]
+    };
 
-  //   let setWordData: MergeTreeAction = {
-  //     type: MergeTreeActions.SET_DATA,
-  //     payload: [...wordsArrayMock]
-  //   };
+    let setWordData: MergeTreeAction = {
+      type: MergeTreeActions.SET_DATA,
+      payload: [...goalDataMock.plannedWords[0]]
+    };
 
-  //   await mockStore
-  //     .dispatch<any>(actions.loadGoalData(mockHistoryGoal))
-  //     .then(() => {})
-  //     .catch((err: string) => fail(err));
-  //   expect(mockStore.getActions()).toEqual([updateGoal, setWordData]);
-  // });
+    const mockStoreState = {
+      goalsState: {
+        historyState: {
+          history: [goalToUpdate]
+        },
+        allPossibleGoals: [...goalsDefaultState.allPossibleGoals],
+        suggestionsState: {
+          suggestions: [...goalsDefaultState.suggestionsState.suggestions]
+        }
+      }
+    };
+
+    mockStore = createMockStore(mockStoreState);
+
+    await mockStore
+      .dispatch<any>(actions.loadGoalData(goalToUpdate))
+      .then(() => {})
+      .catch((err: string) => fail(err));
+    expect(mockStore.getActions()).toEqual([updateGoal, setWordData]);
+  });
 
   it("should not dispatch any actions", async () => {
     const goal: Goal = new HandleFlags();
@@ -273,35 +256,11 @@ describe("Test GoalsActions", () => {
   });
 
   it("should load goal data for MergeDups", async () => {
-    // mockAxios.get.mockImplementationOnce(() =>
-    //   Promise.resolve({
-    //     data: wordsArrayMock
-    //   })
-    // );
-
     let goal: Goal = new MergeDups();
-    // let theMockGoalData: MergeDupData = {
-    //   plannedWords: [
-    //     [
-    //       wordMock,
-    //       wordMock,
-    //       wordMock,
-    //       wordMock,
-    //       wordMock,
-    //       wordMock,
-    //       wordMock,
-    //       wordMock
-    //     ],
-    //     [wordMock, wordMock, wordMock, wordMock, wordMock, wordMock, wordMock],
-    //     [wordMock, wordMock, wordMock, wordMock, wordMock, wordMock],
-    //     [wordMock, wordMock, wordMock, wordMock, wordMock]
-    //   ]
-    // };
-
     await mockStore
       .dispatch<any>(actions.loadGoalData(goal))
       .then((returnedGoal: Goal) => {
-        expect(returnedGoal.data).toEqual(mockGoalData);
+        expect(returnedGoal.data).toEqual(goalDataMock);
       })
       .catch((err: string) => fail(err));
   });
