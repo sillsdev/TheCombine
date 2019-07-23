@@ -30,6 +30,7 @@ interface DataEntryState {
   newGloss: string;
   hoverRow?: number;
   newVernInFrontier: Boolean; // does the new word already exist in the frontier?
+  glossSpelledCorrectly: boolean;
   showDuplicate?: number;
 }
 
@@ -59,7 +60,8 @@ export class DataEntryTable extends React.Component<
       newVern: "",
       newGloss: "",
       rows: [],
-      newVernInFrontier: false
+      newVernInFrontier: false,
+      glossSpelledCorrectly: true
     };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
@@ -177,7 +179,7 @@ export class DataEntryTable extends React.Component<
     return foundDuplicate[0];
   }
 
-  isMispelled(gloss: string): boolean {
+  isSpelledCorrectly(gloss: string): boolean {
     return this.props.spellChecker.correct(gloss);
   }
 
@@ -446,12 +448,14 @@ export class DataEntryTable extends React.Component<
                         fullWidth
                         value={row.glosses}
                         onChange={e => {
-                          const isMispelled = this.isMispelled(e.target.value);
+                          const isSpelledCorrectly = this.isSpelledCorrectly(
+                            e.target.value
+                          );
                           this.updateRow(
                             {
                               ...row,
                               glosses: e.target.value,
-                              glossSpelledCorrectly: isMispelled
+                              glossSpelledCorrectly: isSpelledCorrectly
                             },
                             rowIndex
                           );
@@ -648,7 +652,8 @@ export class DataEntryTable extends React.Component<
                   xs={5}
                   style={{
                     paddingLeft: theme.spacing(2),
-                    paddingRight: theme.spacing(2)
+                    paddingRight: theme.spacing(2),
+                    position: "relative"
                   }}
                 >
                   <TextField
@@ -657,17 +662,13 @@ export class DataEntryTable extends React.Component<
                     variant="outlined"
                     value={this.state.newGloss}
                     onChange={e => {
-                      // const isMispelled = this.isMispelled(e.target.value);
-                      // this.updateRow(
-                      //   {
-                      //     ...row,
-                      //     glosses: e.target.value,
-                      //     glossSpelledCorrectly: isMispelled
-                      //   },
-                      //   rowIndex
-                      // );
-
-                      this.updateField(e, "newGloss");
+                      this.updateField(e, "newGloss", () =>
+                        this.setState({
+                          glossSpelledCorrectly: this.isSpelledCorrectly(
+                            this.state.newGloss
+                          )
+                        })
+                      );
                     }}
                     inputRef={this.glossInput}
                     // Move the focus to the previous box when the left arrow key is pressed
@@ -679,6 +680,27 @@ export class DataEntryTable extends React.Component<
                         this.focusVernInput();
                     }}
                   />
+                  {!this.state.glossSpelledCorrectly && (
+                    <Tooltip
+                      title={
+                        this.props.translate("addWords.mispelledWord") as string
+                      }
+                      placement="top"
+                    >
+                      <div
+                        style={{
+                          height: "5px",
+                          width: "5px",
+                          border: "2px solid green",
+                          borderRadius: "50%",
+                          position: "absolute",
+                          top: 24,
+                          right: 48,
+                          cursor: "pointer"
+                        }}
+                      />
+                    </Tooltip>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
