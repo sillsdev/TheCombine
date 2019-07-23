@@ -288,10 +288,29 @@ describe("Test GoalsActions", () => {
     expect(updatedGoal.currentStep).toEqual(1);
   });
 
+  it("Should not update the step data of an unimplemented goal", () => {
+    const goal: HandleFlags = new HandleFlags();
+    expect(goal.steps).toEqual([]);
+    expect(goal.currentStep).toEqual(0);
+
+    const updatedGoal: HandleFlags = actions.updateStepData(
+      goal
+    ) as HandleFlags;
+
+    expect(updatedGoal.steps).toEqual([]);
+    expect(updatedGoal.currentStep).toEqual(0);
+  });
+
   it("should return a userEditId", () => {
     localStorage.setItem("user", JSON.stringify(mockUser));
     localStorage.setItem("projectId", mockProjectId);
     expect(actions.getUserEditId(mockUser)).toEqual(mockUserEditId);
+  });
+
+  it("should return undefined when a user edit doesn't exist", () => {
+    let user: User = new User("", "", "");
+    localStorage.setItem("user", JSON.stringify(user));
+    expect(actions.getUserEditId(mockUser)).toEqual(undefined);
   });
 
   it("should return the correct goal", () => {
