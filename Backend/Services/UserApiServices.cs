@@ -79,7 +79,7 @@ namespace BackendFramework.Services
                     projectPermissionMap.Add(validEntry);
                 }
 
-                var claimString = projectPermissionMap.ToString();
+                var claimString = ListToString(projectPermissionMap);
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
@@ -233,6 +233,24 @@ namespace BackendFramework.Services
             }
             public T ItemOne { get; set; }
             public W ItemTwo { get; set; }
+
+            public string ToString()
+            {
+                return ItemOne.ToString() + "," + ItemTwo.ToString();
+            }
+
         }
+
+        public string ListToString(List<twoThings<string, List<int>>> objectValues)
+        {
+            string result = "";
+
+            foreach (var entry in objectValues)
+            {
+                result = result + "[" + entry.ToString() + "],";
+            }
+            return result;
+        }
+
     }
 }
