@@ -50,6 +50,10 @@ interface Row {
   dupGlosses?: string[];
 }
 
+const inputProps = {
+  color: "green"
+};
+
 export class DataEntryTable extends React.Component<
   DataEntryTableProps,
   DataEntryState
@@ -136,17 +140,24 @@ export class DataEntryTable extends React.Component<
     };
     word.vernacular = row.vernacular;
 
-    word.senses[0].glosses = [];
-    let defs = row.glosses.split(",");
+    word.senses[0].glosses = this.splitGloses(row.glosses);
+
+    return word;
+  }
+
+  /** Convert a string containing glosses into an array of glosses */
+  splitGloses(glossesString: string): Gloss[] {
+    let glossesArray: Gloss[] = [];
+    let defs: string[] = glossesString.split(",");
     for (let def of defs) {
-      let gloss = {
+      let gloss: Gloss = {
         language: "en",
         def: def.trim()
       };
-      word.senses[0].glosses.push(gloss);
+      glossesArray.push(gloss);
     }
 
-    return word;
+    return glossesArray;
   }
 
   /** If the venacular is in the frontier, returns that words id */
@@ -468,6 +479,9 @@ export class DataEntryTable extends React.Component<
                             this.focusVernInput();
                           }
                         }}
+                        inputProps={{
+                          className: inputProps.color
+                        }}
                       />
                       {!row.glossSpelledCorrectly && (
                         <Tooltip
@@ -480,16 +494,38 @@ export class DataEntryTable extends React.Component<
                         >
                           <div
                             style={{
-                              height: "5px",
-                              width: "5px",
-                              border: "2px solid green",
-                              borderRadius: "50%",
-                              position: "absolute",
-                              top: 8,
-                              right: 48,
+                              // height: "5px",
+                              // width: "5px",
+                              // border: "2px solid green",
+                              // borderRadius: "50%",
+                              // position: "absolute",
+                              // top: 8,
+                              // right: 48,
                               cursor: "pointer"
                             }}
-                          />
+                          >
+                            <Typography variant="body1">
+                              {row.glosses
+                                .split("")
+                                .map((letter: string, index: number) => {
+                                  if (row.glossSpelledCorrectly) {
+                                    return letter;
+                                  } else {
+                                    return (
+                                      <span
+                                        key={index}
+                                        style={{
+                                          background: "red",
+                                          padding: "3px 0"
+                                        }}
+                                      >
+                                        {letter}
+                                      </span>
+                                    );
+                                  }
+                                })}
+                            </Typography>
+                          </div>
                         </Tooltip>
                       )}
                     </Grid>
