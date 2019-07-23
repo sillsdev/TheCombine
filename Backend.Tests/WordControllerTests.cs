@@ -172,6 +172,38 @@ namespace Backend.Tests
         }
 
         [Test]
+        public void mergeWordsIdentity()
+        {
+            Word thisWord = RandomWord();
+            thisWord = _repo.Create(thisWord).Result;
+
+            MergeWords mergeObject = new MergeWords();
+            mergeObject.Parent = thisWord;
+            mergeObject.ChildrenWords = new List<MergeSourceWord>
+            {
+                new MergeSourceWord {
+                    SrcWordID = thisWord.Id,
+                    SenseStates = new List<state> {state.sense, state.sense, state.sense }
+                }
+            };
+
+            var newWords = _wordService.Merge(_projId, mergeObject).Result;
+
+            // There should only be 1 word added and it should be identical to what we passed in
+            Assert.That(newWords, Has.Count.EqualTo(1));
+            Assert.IsTrue(newWords[0].ContentEquals(thisWord));
+
+            // Check that the only word in the frontier is the new word
+            var frontier = _repo.GetFrontier(_projId).Result;
+            Assert.That(frontier, Has.Count.EqualTo(1));
+            Assert.Equals(frontier[0], newWords[0]);
+
+            // check that new word has the right history
+            Assert.That(newWords[0].History, Has.Count.EqualTo(1));
+            Assert.Equals(newWords[0].History[0], thisWord.Id);
+        }
+
+        [Test]
         public void MergeWords()
         {
             //the parent word is inherently correct as it is calculated by the frontend as the desired result of the merge
