@@ -147,7 +147,7 @@ namespace BackendFramework.Controllers
 
             await _userEditService.AddStepToGoal(projectId, userEditId, userEdit.GoalIndex, userEdit.NewEdit);
 
-            return new OkObjectResult(document.Edits[userEdit.GoalIndex].StepData.Count); //TODO: should this be count-1?
+            return new OkObjectResult(document.Edits[userEdit.GoalIndex].StepData.Count - 1); //TODO: should this be count-1?
         }
 
         /// <summary> Deletes <see cref="UserEdit"/> with specified id </summary>
