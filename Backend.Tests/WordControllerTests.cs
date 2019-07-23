@@ -196,11 +196,13 @@ namespace Backend.Tests
             // Check that the only word in the frontier is the new word
             var frontier = _repo.GetFrontier(_projId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.Equals(frontier[0], newWords[0]);
+            Assert.AreEqual(frontier[0], newWords[0]);
 
             // check that new word has the right history
             Assert.That(newWords[0].History, Has.Count.EqualTo(1));
-            Assert.Equals(newWords[0].History[0], thisWord.Id);
+            var intermediateWord = _repo.GetWord(_projId, newWords[0].History[0]).Result;
+            Assert.That(intermediateWord.History, Has.Count.EqualTo(1));
+            Assert.AreEqual(intermediateWord.History[0], thisWord.Id);
         }
 
         [Test]

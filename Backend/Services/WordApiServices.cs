@@ -119,7 +119,7 @@ namespace BackendFramework.Services
                 }
 
                 //add a new word to the database with all of the senses with separate tags from this word
-                if (separateWord.Senses.Count != 0)
+                if (separateWord.Senses.Count != baseParent.Senses.Count)
                 {
                     separateWord.ProjectId = projectId;
                     var newSeparate = await _repo.Create(separateWord);
