@@ -1,4 +1,4 @@
-SET UTF-8
+export default `SET UTF-8
 TRY esianrtolcdugmphbyfvkwzESIANRTOLCDUGMPHBYFVKWZ'
 ICONV 1
 ICONV ’ '
@@ -202,4 +202,4 @@ REP ss z
 REP shun tion
 REP shun sion
 REP shun cion
-REP size cise
+REP size cise`;

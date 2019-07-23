@@ -19,6 +19,7 @@ import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import { DataEntryTable } from "./Table/DataEntryTable";
+import SpellChecker from "./Table/spellChecker";
 
 interface DataEntryProps {
   domain: DomainTree;
@@ -61,6 +62,7 @@ export class DataEntry extends React.Component<
           <DataEntryTable
             domain={this.props.domain}
             translate={this.props.translate}
+            spellChecker={new SpellChecker()}
           />
         </Paper>
 

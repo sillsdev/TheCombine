@@ -1,4 +1,4 @@
-49270
+export default `49270
 0/nm
 0th/pt
 1/n1
@@ -49268,4 +49268,4 @@ zwieback/M
 zydeco/M
 zygote/SM
 zygotic
-zymurgy/M
+zymurgy/M`;
