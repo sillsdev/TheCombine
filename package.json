@@ -10,6 +10,7 @@
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
     "test": "dotnet test Backend.Tests/Backend.Tests.csproj && react-scripts test",
+    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
     "coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true && react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject"
@@ -36,11 +37,7 @@
     "extends": "react-app"
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

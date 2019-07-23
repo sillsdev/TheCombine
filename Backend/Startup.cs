@@ -67,8 +67,8 @@ namespace BackendFramework
             services.Configure<Settings>(
             options =>
             {
-                options.ConnectionString = Configuration.GetSection("MongoDB:ConnectionString").Value;
-                options.CombineDatabase = Configuration.GetSection("MongoDB:CombineDatabase").Value;
+                options.ConnectionString = Configuration["MongoDB:ConnectionString"];
+                options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
             });
 
             // Register concrete types for dependency injection
