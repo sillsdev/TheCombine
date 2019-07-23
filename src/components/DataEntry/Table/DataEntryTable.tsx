@@ -10,27 +10,13 @@ import {
 } from "@material-ui/core";
 import theme from "../../../types/theme";
 
-import dictionary from "dictionary-en-us";
-import nspell from "nspell";
 import { Translate, TranslateFunction } from "react-localize-redux";
 import { Word, SemanticDomain, State, Gloss } from "../../../types/word";
 import { Delete } from "@material-ui/icons";
 import * as Backend from "../../../backend";
 import DuplicateFinder from "../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import DomainTree from "../../TreeView/SemanticDomain";
-
-dictionary(ondictionary);
-
-function ondictionary(err: string, dict) {
-  if (err) {
-    throw err;
-  }
-
-  var spell = nspell(dict);
-
-  console.log(spell.correct("colour"));
-  console.log(spell.correct("color"));
-}
+import SpellChecker from "./spellChecker";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -77,6 +63,7 @@ export class DataEntryTable extends React.Component<
     };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
+    let spellChecker = new SpellChecker();
   }
 
   allWords: Word[] = [];
