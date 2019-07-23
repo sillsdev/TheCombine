@@ -93,7 +93,7 @@ namespace BackendFramework.Controllers
             word.ProjectId = projectId;
 
             //check if word is already in database
-            if (await _wordService.searchInDuplicates(word))
+            if (await _wordService.SearchInDuplicates(word))
             {
                 await _wordRepo.Create(word);
             }

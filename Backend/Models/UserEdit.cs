@@ -105,7 +105,7 @@ namespace BackendFramework.ValueModels
     public class Edit
     {
         [BsonElement("goalType")]
-        public GoalType GoalType { get; set; }
+        public int GoalType { get; set; }
 
         [BsonElement("stepData")]
         public List<string> StepData { get; set; }

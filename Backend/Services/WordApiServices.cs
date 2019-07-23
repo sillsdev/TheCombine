@@ -139,10 +139,10 @@ namespace BackendFramework.Services
             return newWordsList;
         }
 
-        public async Task<bool> searchInDuplicates(Word word)
+        public async Task<bool> SearchInDuplicates(Word word)
         {
             //get all words from database
-            var allWords = await _repo.GetAllWords(word.ProjectId);
+            var allWords = await _repo.GetFrontier(word.ProjectId);
 
             //search through all words for the correct vernacular
             var allVernaculars = allWords.FindAll(x => x.Vernacular == word.Vernacular);
