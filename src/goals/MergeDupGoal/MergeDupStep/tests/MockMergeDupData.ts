@@ -16,7 +16,7 @@ const wordMock: Word = {
   plural: ""
 };
 
-export const wordsArrayMock: Word[] = [
+const wordsArrayMock: Word[] = [
   wordMock,
   wordMock,
   wordMock,
