@@ -80,7 +80,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(userEdit);
         }
 
-        /// <summary> Create a <see cref="UserEdit"/> </summary>
+        /// <summary> Creates a <see cref="UserEdit"/> </summary>
         /// <remarks> POST: v1/projects/{projectId}/useredits </remarks>
         /// <returns> Id of create UserEdit </returns>
         [HttpPost]

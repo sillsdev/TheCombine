@@ -1,5 +1,4 @@
 ﻿using BackendFramework.Context;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -30,7 +29,7 @@ namespace BackendFramework
             public string CombineDatabase { get; set; }
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary> This method gets called by the runtime. Use this method to add services to the container. </summary>
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -100,7 +99,7 @@ namespace BackendFramework
             services.AddTransient<ISemDomParser, SemDomParser>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline. </summary>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
