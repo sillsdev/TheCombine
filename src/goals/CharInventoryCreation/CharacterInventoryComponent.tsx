@@ -5,7 +5,7 @@ import {
   Translate,
   TranslateFunction
 } from "react-localize-redux";
-import CharacterSet from "./components/CharacterSet";
+import CharacterList from "./components/CharacterList";
 import {
   Grid,
   Button,
@@ -13,12 +13,15 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,
+  Typography,
+  Tooltip
 } from "@material-ui/core";
 import { Project } from "../../types/project";
 import SampleWords from "./components/SampleWords";
-import { Save } from "@material-ui/icons";
+import { Save, Help } from "@material-ui/icons";
 import history from "../../history";
+import CharacterEntry from "./components/CharacterEntry";
 
 export interface CharacterInventoryProps {
   addToValidCharacters: (chars: string[]) => void;
@@ -66,12 +69,31 @@ export class CharacterInventory extends React.Component<
           style={{ background: "#fff" }}
         >
           <Grid item sm={9} xs={12} style={{ borderRight: "1px solid #ccc" }}>
-            <CharacterSet
-              setValidCharacters={this.props.setValidCharacters}
-              validCharacters={this.props.validCharacters}
-              setRejectedCharacters={this.props.setRejectedCharacters}
-              rejectedCharacters={this.props.rejectedCharacters}
-            />
+            <Grid
+              container
+              spacing={2}
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+            >
+              <Grid item xs={12}>
+                <Typography component="h1" variant="h4">
+                  <Translate id="charInventory.characterSet.title" />{" "}
+                  <Tooltip
+                    title={
+                      this.props.translate(
+                        "charInventory.characterSet.help"
+                      ) as string
+                    }
+                    placement="right"
+                  >
+                    <Help />
+                  </Tooltip>
+                </Typography>
+              </Grid>
+              <CharacterEntry />
+              <CharacterList />
+            </Grid>
           </Grid>
           <Grid item sm={3} xs={12}>
             <SampleWords

@@ -1,0 +1,32 @@
+import * as React from "react";
+import { TextField } from "@material-ui/core";
+import theme from "../../../../types/theme";
+
+export interface CharactersInputProps {
+  setCharacters: (characters: string[]) => void;
+  characters: string[];
+  label: JSX.Element;
+  id?: string;
+}
+
+export default function CharactersInput(props: CharactersInputProps) {
+  return (
+    <TextField
+      value={props.characters.join("")}
+      onChange={e =>
+        props.setCharacters(e.target.value.replace(/\s/g, "").split(""))
+      }
+      label={props.label}
+      fullWidth
+      variant="outlined"
+      style={{ maxWidth: 512, marginTop: theme.spacing(1) }}
+      inputProps={{
+        style: { letterSpacing: 5 },
+        spellcheck: "false"
+      }}
+      autoComplete="off"
+      id={props.id}
+      name="characters"
+    />
+  );
+}

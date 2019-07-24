@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import { act } from "react-dom/test-utils";
 
-import { CharacterSet as CharSetClass } from "../CharacterSetComponent";
-import CharacterSet from "../";
+import { CharacterList as CharSetClass } from "../CharacterListComponent";
+import CharacterList from "..";
 
 // Mock getTranslate
 const MOCK_TRANSLATE = jest.fn(_ => {
@@ -48,15 +48,7 @@ beforeEach(() => {
 describe("Tests characterInventoryComponent", () => {
   it("renders without crashing", () => {
     const div = document.createElement("div");
-    ReactDOM.render(
-      <CharacterSet
-        validCharacters={[]}
-        setValidCharacters={SET_VALID_CHARS}
-        setRejectedCharacters={SET_REJECT_CHARS}
-        rejectedCharacters={[]}
-      />,
-      div
-    );
+    ReactDOM.render(<CharacterList />, div);
     ReactDOM.unmountComponentAtNode(div);
   });
 
@@ -118,14 +110,7 @@ describe("Tests characterInventoryComponent", () => {
 
 function createTree(inventory: string[]) {
   act(() => {
-    charMaster = renderer.create(
-      <CharacterSet
-        validCharacters={inventory}
-        setValidCharacters={SET_VALID_CHARS}
-        setRejectedCharacters={SET_REJECT_CHARS}
-        rejectedCharacters={[]}
-      />
-    );
+    charMaster = renderer.create(<CharacterList />);
   });
   charHandle = charMaster.root.findByType(CharSetClass).instance;
 }
