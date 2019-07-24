@@ -12,6 +12,10 @@ class SpellChecker {
   correct(word) {
     return this.spell.correct(word);
   }
+
+  getSpellingSuggestions(word) {
+    return this.spell.suggest(word);
+  }
 }
 
 export default SpellChecker;

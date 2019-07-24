@@ -36,7 +36,8 @@ interface DataEntryState {
   hoverRow?: number;
   newVernInFrontier: Boolean; // does the new word already exist in the frontier?
   glossSpelledCorrectly: boolean;
-  showDuplicate?: number;
+  showDuplicate?: number; // row index with duplicate vernacular
+  showMispelled?: number; // row index with mispelled gloss
 }
 
 /** A row in the view */
@@ -196,6 +197,10 @@ export class DataEntryTable extends React.Component<
     return this.props.spellChecker.correct(gloss);
   }
 
+  getSpellingSuggestions(gloss: string): string[] {
+    return this.props.spellChecker.getSpellingSuggestions(gloss);
+  }
+
   wordToRow(word: Word, senseIndex: number): Row {
     let row: Row = {
       vernacular: word.vernacular,
@@ -303,6 +308,124 @@ export class DataEntryTable extends React.Component<
     }
     this.updateRow(row, rowIndex);
     this.setState({ showDuplicate: rowIndex });
+  }
+
+  displayDuplicates(row: Row, rowIndex: number) {
+    return (
+      <Grid
+        item
+        xs={12}
+        key={"d" + rowIndex}
+        onMouseEnter={() => this.setState({ hoverRow: rowIndex })}
+        onMouseLeave={() => this.setState({ hoverRow: undefined })}
+        style={{ background: "whitesmoke" }}
+      >
+        <Grid container>
+          <Grid
+            item
+            xs={5}
+            style={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2)
+            }}
+          >
+            <Typography variant="body1">
+              {"Duplicate in database: " + row.dupVernacular}
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            xs={5}
+            style={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2)
+            }}
+          >
+            <Typography variant="body1">{"Glosses: "}</Typography>
+            {row.dupGlosses &&
+              row.dupGlosses.map((gloss, senseIndex) => (
+                <Chip
+                  label={gloss}
+                  onClick={() =>
+                    this.switchToExistingWord(rowIndex, senseIndex)
+                  }
+                  style={{
+                    margin: 4
+                  }}
+                />
+              ))}
+            <Chip
+              variant="outlined"
+              label={"Add New Sense +"}
+              onClick={() =>
+                this.switchToExistingWord(
+                  rowIndex,
+                  row.dupGlosses ? row.dupGlosses.length : 0
+                )
+              }
+              style={{
+                margin: 4
+              }}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  toggleSpellingSuggestionsView(rowIndex: number) {
+    let row = this.state.rows[rowIndex];
+    this.updateRow(row, rowIndex);
+    this.setState({ showMispelled: rowIndex });
+  }
+
+  displaySpellingSuggestions(row: Row, rowIndex: number) {
+    return (
+      <Grid
+        item
+        xs={12}
+        key={"mispelled" + rowIndex}
+        onMouseEnter={() => this.setState({ hoverRow: rowIndex })}
+        onMouseLeave={() => this.setState({ hoverRow: undefined })}
+        style={{ background: "whitesmoke" }}
+      >
+        <Grid container>
+          <Grid
+            item
+            xs={5}
+            style={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2)
+            }}
+          >
+            <Typography variant="body1">
+              {"Mispelled gloss: " + row.glosses}
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            xs={5}
+            style={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2)
+            }}
+          >
+            <Typography variant="body1">{"Suggestions: "}</Typography>
+            {this.getSpellingSuggestions(this.state.rows[rowIndex].glosses).map(
+              (suggestion, suggestionIndex) => (
+                <Chip
+                  label={suggestion}
+                  onClick={() => null}
+                  style={{
+                    margin: 4
+                  }}
+                />
+              )
+            )}
+          </Grid>
+        </Grid>
+      </Grid>
+    );
   }
 
   /** Switch a row to edit a sense of a word in the database */
@@ -461,7 +584,8 @@ export class DataEntryTable extends React.Component<
                       xs={5}
                       style={{
                         paddingLeft: theme.spacing(2),
-                        paddingRight: theme.spacing(2)
+                        paddingRight: theme.spacing(2),
+                        position: "relative"
                       }}
                     >
                       <TextField
@@ -502,6 +626,32 @@ export class DataEntryTable extends React.Component<
                               }
                         }
                       />
+                      {!row.glossSpelledCorrectly && (
+                        <Tooltip
+                          title={
+                            this.props.translate(
+                              "addWords.mispelledWord"
+                            ) as string
+                          }
+                          placement="top"
+                        >
+                          <div
+                            style={{
+                              height: "5px",
+                              width: "5px",
+                              border: "2px solid red",
+                              borderRadius: "50%",
+                              position: "absolute",
+                              top: 8,
+                              right: 48,
+                              cursor: "pointer"
+                            }}
+                            onClick={() =>
+                              this.toggleSpellingSuggestionsView(rowIndex)
+                            }
+                          />
+                        </Tooltip>
+                      )}
                     </Grid>
                     <Grid item xs={2}>
                       {this.state.hoverRow === rowIndex && (
@@ -531,66 +681,13 @@ export class DataEntryTable extends React.Component<
                   </Grid>
                 </Grid>
                 {/* This is where it shows the duplicate if the red dot is clicked */}
-                {this.state.showDuplicate === rowIndex && row.dupId && (
-                  <Grid
-                    item
-                    xs={12}
-                    key={"d" + rowIndex}
-                    onMouseEnter={() => this.setState({ hoverRow: rowIndex })}
-                    onMouseLeave={() => this.setState({ hoverRow: undefined })}
-                    style={{ background: "whitesmoke" }}
-                  >
-                    <Grid container>
-                      <Grid
-                        item
-                        xs={5}
-                        style={{
-                          paddingLeft: theme.spacing(2),
-                          paddingRight: theme.spacing(2)
-                        }}
-                      >
-                        <Typography variant="body1">
-                          {"Duplicate in database: " + row.dupVernacular}
-                        </Typography>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={5}
-                        style={{
-                          paddingLeft: theme.spacing(2),
-                          paddingRight: theme.spacing(2)
-                        }}
-                      >
-                        <Typography variant="body1">{"Glosses: "}</Typography>
-                        {row.dupGlosses &&
-                          row.dupGlosses.map((gloss, senseIndex) => (
-                            <Chip
-                              label={gloss}
-                              onClick={() =>
-                                this.switchToExistingWord(rowIndex, senseIndex)
-                              }
-                              style={{
-                                margin: 4
-                              }}
-                            />
-                          ))}
-                        <Chip
-                          variant="outlined"
-                          label={"Add New Sense +"}
-                          onClick={() =>
-                            this.switchToExistingWord(
-                              rowIndex,
-                              row.dupGlosses ? row.dupGlosses.length : 0
-                            )
-                          }
-                          style={{
-                            margin: 4
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                )}
+                {this.state.showDuplicate === rowIndex &&
+                  row.dupId &&
+                  this.displayDuplicates(row, rowIndex)}
+                {/* This is where it shows spelling suggestions if the red dot is clicked */}
+                {this.state.showMispelled === rowIndex &&
+                  !row.glossSpelledCorrectly &&
+                  this.displaySpellingSuggestions(row, rowIndex)}
               </React.Fragment>
             );
           })}
