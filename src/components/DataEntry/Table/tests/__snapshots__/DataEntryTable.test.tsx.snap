@@ -120,6 +120,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
             Object {
               "paddingLeft": 32,
               "paddingRight": 32,
+              "position": "relative",
             }
           }
         >

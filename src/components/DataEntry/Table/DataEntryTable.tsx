@@ -33,8 +33,7 @@ interface DataEntryState {
   rows: Row[];
   newVern: string;
   newGloss: string;
-  hoverRow?: number;
-  newVernInFrontier: Boolean; // does the new word already exist in the frontier?
+  newVernInFrontier: boolean; // does the new word already exist in the frontier?
   glossSpelledCorrectly: boolean;
   showDuplicate?: boolean; // row index with duplicate vernacular
   showMispelled?: boolean; // row index with mispelled gloss
@@ -56,6 +55,7 @@ interface Row {
   dupGlosses?: string[];
   showMispelled?: boolean;
   showDuplicate?: boolean;
+  hover?: boolean; // Is this row being hovered over
 }
 
 export class DataEntryTable extends React.Component<
@@ -315,7 +315,6 @@ export class DataEntryTable extends React.Component<
     };
 
     this.updateRow(newRow, rowIndex);
-    // this.setState({ showDuplicate: rowIndex });
   }
 
   displayDuplicates(row: Row, rowIndex: number) {
@@ -324,8 +323,20 @@ export class DataEntryTable extends React.Component<
         item
         xs={12}
         key={"d" + rowIndex}
-        onMouseEnter={() => this.setState({ hoverRow: rowIndex })}
-        onMouseLeave={() => this.setState({ hoverRow: undefined })}
+        onMouseEnter={() => {
+          let newRow: Row = {
+            ...this.state.rows[rowIndex],
+            hover: true
+          };
+          this.updateRow(newRow, rowIndex);
+        }}
+        onMouseLeave={() => {
+          let newRow: Row = {
+            ...this.state.rows[rowIndex],
+            hover: false
+          };
+          this.updateRow(newRow, rowIndex);
+        }}
         style={{ background: "whitesmoke" }}
       >
         <Grid container>
@@ -399,8 +410,20 @@ export class DataEntryTable extends React.Component<
         item
         xs={12}
         key={"mispelled" + rowIndex}
-        onMouseEnter={() => this.setState({ hoverRow: rowIndex })}
-        onMouseLeave={() => this.setState({ hoverRow: undefined })}
+        onMouseEnter={() => {
+          let newRow: Row = {
+            ...this.state.rows[rowIndex],
+            hover: true
+          };
+          this.updateRow(newRow, rowIndex);
+        }}
+        onMouseLeave={() => {
+          let newRow: Row = {
+            ...this.state.rows[rowIndex],
+            hover: false
+          };
+          this.updateRow(newRow, rowIndex);
+        }}
         style={{ background: "whitesmoke" }}
       >
         <Grid container>
@@ -542,8 +565,20 @@ export class DataEntryTable extends React.Component<
                   item
                   xs={12}
                   key={rowIndex}
-                  onMouseEnter={() => this.setState({ hoverRow: rowIndex })}
-                  onMouseLeave={() => this.setState({ hoverRow: undefined })}
+                  onMouseEnter={() => {
+                    let newRow: Row = {
+                      ...this.state.rows[rowIndex],
+                      hover: true
+                    };
+                    this.updateRow(newRow, rowIndex);
+                  }}
+                  onMouseLeave={() => {
+                    let newRow: Row = {
+                      ...this.state.rows[rowIndex],
+                      hover: false
+                    };
+                    this.updateRow(newRow, rowIndex);
+                  }}
                 >
                   <Grid container>
                     {/* Vernacular entry */}
@@ -684,7 +719,7 @@ export class DataEntryTable extends React.Component<
                       )}
                     </Grid>
                     <Grid item xs={2}>
-                      {this.state.hoverRow === rowIndex && (
+                      {this.state.rows[rowIndex].hover && (
                         <React.Fragment>
                           <Tooltip
                             title={
@@ -852,9 +887,6 @@ export class DataEntryTable extends React.Component<
                           right: 48,
                           cursor: "pointer"
                         }}
-                        // onClick={() =>
-                        //   this.toggleSpellingSuggestionsView(rowIndex)
-                        // }
                       />
                     </Tooltip>
                   )}
