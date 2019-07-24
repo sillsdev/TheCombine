@@ -18,9 +18,6 @@ namespace BackendFramework.ValueModels
         [BsonElement("semanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
-        [BsonElement("words")]
-        public List<Word> Words { get; set; }
-
         [BsonElement("vernacularWritingSystem")]
         public string VernacularWritingSystem { get; set; }
 
@@ -33,9 +30,11 @@ namespace BackendFramework.ValueModels
         [BsonElement("rejectedCharacters")]
         public List<string> RejectedCharacters { get; set; }
 
+        /// <summary> Not implemented: optional fields for projects </summary>
         [BsonElement("customFields")]
         public List<CustomField> CustomFields { get; set; }
 
+        /// <summary> Not implemented: optional fields for words in a project </summary>
         [BsonElement("wordFields")]
         public List<string> WordFields { get; set; }
 
@@ -47,7 +46,6 @@ namespace BackendFramework.ValueModels
             Id = "";
             Name = "";
             VernacularWritingSystem = "";
-            Words = new List<Word>();
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<string>();
             ValidCharacters = new List<string>();
@@ -64,7 +62,6 @@ namespace BackendFramework.ValueModels
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
                 VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
-                Words = new List<Word>(),
                 SemanticDomains = new List<SemanticDomain>(),
                 AnalysisWritingSystems = new List<string>(),
                 ValidCharacters = new List<string>(),
@@ -74,10 +71,6 @@ namespace BackendFramework.ValueModels
                 PartsOfSpeech = new List<string>()
             };
 
-            foreach (Word word in Words)
-            {
-                clone.Words.Add(word.Clone());
-            }
             foreach (SemanticDomain sd in SemanticDomains)
             {
                 clone.SemanticDomains.Add(sd.Clone());
@@ -115,9 +108,6 @@ namespace BackendFramework.ValueModels
             return
                 other.Name.Equals(Name) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
-
-                other.Words.Count == Words.Count &&
-                other.Words.All(Words.Contains) &&
 
                 other.SemanticDomains.Count == SemanticDomains.Count &&
                 other.SemanticDomains.All(SemanticDomains.Contains) &&
@@ -160,7 +150,6 @@ namespace BackendFramework.ValueModels
             hash.Add(Id);
             hash.Add(Name);
             hash.Add(SemanticDomains);
-            hash.Add(Words);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
             hash.Add(ValidCharacters);

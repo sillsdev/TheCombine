@@ -6,12 +6,14 @@ using System.Linq;
 
 namespace BackendFramework.ValueModels
 {
+    /// <summary> The permissions a user has on a particular project </summary>
     public class UserRole
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        /// <summary> Integer representation of <see cref="Permission"/> </summary>
         [BsonElement("permissions")]
         public List<int> Permissions { get; set; }
 
@@ -78,6 +80,7 @@ namespace BackendFramework.ValueModels
         DataEntry
     }
 
+    /// <summary> Return type of Update functions </summary>
     public enum ResultOfUpdate
     {
         Updated,

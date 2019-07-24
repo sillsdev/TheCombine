@@ -36,7 +36,7 @@ namespace Backend.Tests
             UserEdit userEdit = new UserEdit();
             Edit edit = new Edit
             {
-                GoalType = (GoalType)count,
+                GoalType = count,
                 StepData = new List<string>() { Util.randString() }
             };
             userEdit.ProjectId = _projId;
