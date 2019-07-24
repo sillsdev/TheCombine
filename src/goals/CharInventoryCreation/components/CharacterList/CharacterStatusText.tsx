@@ -1,10 +1,6 @@
 import React from "react";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import theme, { accepted, rejected } from "../../../../types/theme";
+import { accepted, rejected } from "../../../../types/theme";
 import { Translate } from "react-localize-redux";
 
 export interface CharacterStatusTextProps {

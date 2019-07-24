@@ -29,13 +29,17 @@ export type ADD_TO_VALID_CHARACTERS = typeof ADD_TO_VALID_CHARACTERS;
 export const SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS";
 export type SET_ALL_WORDS = typeof SET_ALL_WORDS;
 
+export const SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER";
+export type SET_SELECTED_CHARACTER = typeof SET_SELECTED_CHARACTER;
+
 export interface CharacterInventoryData {}
 
 type CharacterInventoryType =
   | SET_VALID_CHARACTERS
   | SET_REJECTED_CHARACTERS
   | ADD_TO_VALID_CHARACTERS
-  | SET_ALL_WORDS;
+  | SET_ALL_WORDS
+  | SET_SELECTED_CHARACTER;
 
 //action types
 
@@ -97,6 +101,15 @@ export function fetchWords() {
   return async (dispatch: Dispatch<CharacterInventoryAction>) => {
     let words = await backend.getAllWords();
     dispatch(setAllWords(words.map(word => word.vernacular)));
+  };
+}
+
+export function setSelectedCharacter(
+  character: string
+): CharacterInventoryAction {
+  return {
+    type: SET_SELECTED_CHARACTER,
+    payload: [character]
   };
 }
 

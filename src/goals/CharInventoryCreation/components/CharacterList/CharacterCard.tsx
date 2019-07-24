@@ -11,6 +11,7 @@ export interface CharacterCardProps {
   char: string;
   count: number;
   status: "accepted" | "rejected";
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 const useStyles = makeStyles(
@@ -32,7 +33,7 @@ export default function CharacterCard(props: CharacterCardProps) {
   const classes = useStyles();
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} onClick={props.onClick}>
       <CardActionArea>
         <Typography variant="h1" className={classes.header}>
           {props.char}

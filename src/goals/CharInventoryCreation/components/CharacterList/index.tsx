@@ -4,20 +4,16 @@ import { ThunkDispatch } from "redux-thunk";
 import {
   CharacterInventoryAction,
   setValidCharacters,
-  setRejectedCharacters
+  setRejectedCharacters,
+  setSelectedCharacter
 } from "../../CharacterInventoryActions";
 import { StoreState } from "../../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
-    validCharacters:
-      state.characterInventoryState &&
-      state.characterInventoryState.validCharacters,
-    rejectedCharacters:
-      state.characterInventoryState &&
-      state.characterInventoryState.rejectedCharacters,
-    allWords:
-      state.characterInventoryState && state.characterInventoryState.allWords
+    validCharacters: state.characterInventoryState.validCharacters,
+    rejectedCharacters: state.characterInventoryState.rejectedCharacters,
+    allWords: state.characterInventoryState.allWords
   };
 }
 
@@ -30,6 +26,9 @@ function mapDispatchToProps(
     },
     setRejectedCharacters: (inventory: string[]) => {
       dispatch(setRejectedCharacters(inventory));
+    },
+    setSelectedCharacter: (character: string) => {
+      dispatch(setSelectedCharacter(character));
     }
   };
 }

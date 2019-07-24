@@ -13,27 +13,28 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions,
-  Typography,
-  Tooltip
+  DialogActions
 } from "@material-ui/core";
 import { Project } from "../../types/project";
 import SampleWords from "./components/SampleWords";
-import { Save, Help } from "@material-ui/icons";
+import { Save } from "@material-ui/icons";
 import history from "../../history";
 import CharacterEntry from "./components/CharacterEntry";
 import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
+import CharacterDetail from "./components/CharacterDetail";
 
 export interface CharacterInventoryProps {
   addToValidCharacters: (chars: string[]) => void;
   setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
+  setSelectedCharacter: (character: string) => void;
   uploadInventory: () => void;
   fetchWords: () => void;
   validCharacters: string[];
   rejectedCharacters: string[];
   currentProject: Project;
   translate: TranslateFunction;
+  selectedCharacter: string;
 }
 
 export const SAVE: string = "pushGoals";
@@ -59,6 +60,7 @@ export class CharacterInventory extends React.Component<
 
   componentDidMount() {
     this.props.fetchWords();
+    this.props.setSelectedCharacter("");
   }
 
   handleClose() {
@@ -89,12 +91,16 @@ export class CharacterInventory extends React.Component<
           </Grid>
 
           <Grid item sm={3} xs={12}>
-            <SampleWords
-              addToValidCharacters={this.props.addToValidCharacters}
-              allCharacters={this.props.validCharacters.concat(
-                this.props.rejectedCharacters
-              )}
-            />
+            {this.props.selectedCharacter === "" ? (
+              <SampleWords
+                addToValidCharacters={this.props.addToValidCharacters}
+                allCharacters={this.props.validCharacters.concat(
+                  this.props.rejectedCharacters
+                )}
+              />
+            ) : (
+              <CharacterDetail character={this.props.selectedCharacter} />
+            )}
           </Grid>
 
           <Grid item xs={12} style={{ borderTop: "1px solid #ccc" }}>

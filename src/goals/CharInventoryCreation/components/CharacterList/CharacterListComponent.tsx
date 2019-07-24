@@ -1,13 +1,10 @@
 import * as React from "react";
-import * as Backend from "../../../../backend";
 import {
   LocalizeContextProps,
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography, Tooltip } from "@material-ui/core";
-import { Help } from "@material-ui/icons";
-import { red, green } from "@material-ui/core/colors";
+import { Grid, Typography } from "@material-ui/core";
 import CharacterCard from "./CharacterCard";
 
 export interface CharacterListProps {
@@ -15,6 +12,7 @@ export interface CharacterListProps {
   validCharacters: string[];
   setRejectedCharacters: (inventory: string[]) => void;
   rejectedCharacters: string[];
+  setSelectedCharacter: (character: string) => void;
   allWords: string[];
 }
 
@@ -87,6 +85,7 @@ export class CharacterList extends React.Component<
                 key={char}
                 count={countCharacterOccurences(char, this.props.allWords)}
                 status={"accepted"}
+                onClick={() => this.props.setSelectedCharacter(char)}
               />
               // <Grid
               //   item

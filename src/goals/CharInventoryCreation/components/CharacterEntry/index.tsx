@@ -10,12 +10,8 @@ import CharacterEntry from "./CharacterEntryComponent";
 
 function mapStateToProps(state: StoreState) {
   return {
-    validCharacters:
-      state.characterInventoryState &&
-      state.characterInventoryState.validCharacters,
-    rejectedCharacters:
-      state.characterInventoryState &&
-      state.characterInventoryState.rejectedCharacters
+    validCharacters: state.characterInventoryState.validCharacters,
+    rejectedCharacters: state.characterInventoryState.rejectedCharacters
   };
 }
 
