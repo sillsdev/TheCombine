@@ -18,12 +18,10 @@ namespace BackendFramework.Services
     public class UserService : IUserService
     {
         private readonly IUserContext _userDatabase;
-        private readonly AppSettings _jwtsettings;
 
-        public UserService(IUserContext collectionSettings, IOptions<AppSettings> appSettings)
+        public UserService(IUserContext collectionSettings)
         {
             _userDatabase = collectionSettings;
-            _jwtsettings = appSettings.Value;
         }
 
         public async Task<User> Authenticate(string username, string password)
