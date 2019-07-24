@@ -65,11 +65,12 @@ namespace BackendFramework.Controllers
 
             //make destination for extracted files
             string zipDest = Path.GetDirectoryName(fileUpload.FilePath);
-            if (Directory.Exists(zipDest))
-            {
-                return new BadRequestObjectResult("That file has already been uploaded");
-            }
             Directory.CreateDirectory(zipDest);
+            if (Directory.Exists(Path.Combine(zipDest, "ExtractedLocation")))
+            {
+                return new BadRequestObjectResult("A file has already been uploaded");
+            }
+            
 
             //extract the zip to new directory
             var extractDir = Path.Combine(zipDest, "ExtractedLocation");
