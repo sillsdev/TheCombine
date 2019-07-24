@@ -1,16 +1,8 @@
 import React from "react";
-import {
-  Paper,
-  Container,
-  Grid,
-  Divider,
-  Button,
-  Dialog
-} from "@material-ui/core";
+import { Paper, Container, Divider, Dialog } from "@material-ui/core";
 import theme from "../../types/theme";
 
 import {
-  Translate,
   TranslateFunction,
   withLocalize,
   LocalizeContextProps
@@ -18,7 +10,7 @@ import {
 import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
-import { DataEntryTable } from "./Table/DataEntryTable";
+import DataEntryTable from "./Table/DataEntryTable";
 import SpellChecker from "./Table/spellChecker";
 
 interface DataEntryProps {
@@ -61,7 +53,6 @@ export class DataEntry extends React.Component<
           <Divider />
           <DataEntryTable
             domain={this.props.domain}
-            translate={this.props.translate}
             spellChecker={new SpellChecker()}
           />
         </Paper>

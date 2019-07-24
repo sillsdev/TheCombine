@@ -1,0 +1,31 @@
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import LocalizedDataEntryHeader from "../DataEntryHeader";
+import configureMockStore from "redux-mock-store";
+import SemanticDomain from "../../../TreeView/SemanticDomain";
+
+const createMockStore = configureMockStore([]);
+const mockStore = createMockStore({});
+
+const mockDomain: SemanticDomain = {
+  name: "",
+  id: "",
+  subdomains: []
+};
+
+describe("Tests DataEntryHeader", () => {
+  it("renders without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <Provider store={mockStore}>
+        <LocalizedDataEntryHeader
+          domain={mockDomain}
+          notifyOfGettingSemanticDomain={(isGetting: boolean) => null}
+        />
+      </Provider>,
+      div
+    );
+    ReactDOM.unmountComponentAtNode(div);
+  });
+});

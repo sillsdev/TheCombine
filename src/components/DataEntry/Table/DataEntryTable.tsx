@@ -10,7 +10,12 @@ import {
 } from "@material-ui/core";
 import theme from "../../../types/theme";
 
-import { Translate, TranslateFunction } from "react-localize-redux";
+import {
+  Translate,
+  TranslateFunction,
+  LocalizeContextProps,
+  withLocalize
+} from "react-localize-redux";
 import { Word, SemanticDomain, State, Gloss } from "../../../types/word";
 import { Delete } from "@material-ui/icons";
 import * as Backend from "../../../backend";
@@ -51,10 +56,10 @@ interface Row {
 }
 
 export class DataEntryTable extends React.Component<
-  DataEntryTableProps,
+  DataEntryTableProps & LocalizeContextProps,
   DataEntryState
 > {
-  constructor(props: DataEntryTableProps) {
+  constructor(props: DataEntryTableProps & LocalizeContextProps) {
     super(props);
     this.state = {
       newVern: "",
@@ -723,3 +728,5 @@ export class DataEntryTable extends React.Component<
     );
   }
 }
+
+export default withLocalize(DataEntryTable);
