@@ -50,10 +50,6 @@ interface Row {
   dupGlosses?: string[];
 }
 
-const inputProps = {
-  color: "green"
-};
-
 export class DataEntryTable extends React.Component<
   DataEntryTableProps,
   DataEntryState
@@ -85,6 +81,7 @@ export class DataEntryTable extends React.Component<
 
     const vernacular = this.state.newVern;
     const glosses = this.state.newGloss;
+    const glossSpelledCorrectly = this.state.glossSpelledCorrectly;
 
     if (vernacular === "") return;
 
@@ -95,7 +92,7 @@ export class DataEntryTable extends React.Component<
         glosses,
         id: "",
         dupId: "",
-        glossSpelledCorrectly: true,
+        glossSpelledCorrectly,
         senseIndex: 0
       })
     )
@@ -205,6 +202,10 @@ export class DataEntryTable extends React.Component<
     };
     let glosses: string[] = [];
     word.senses[senseIndex].glosses.forEach(gloss => {
+      if (!this.isSpelledCorrectly(gloss.def)) {
+        // Temporary. In future, keep track of whether each gloss is spelled correctly
+        row.glossSpelledCorrectly = false;
+      }
       glosses.push(gloss.def);
     });
     row.glosses = glosses.join(", ");
@@ -388,6 +389,7 @@ export class DataEntryTable extends React.Component<
                   onMouseLeave={() => this.setState({ hoverRow: undefined })}
                 >
                   <Grid container>
+                    {/* Vernacular entry */}
                     <Grid
                       item
                       xs={5}
@@ -446,13 +448,14 @@ export class DataEntryTable extends React.Component<
                         </Tooltip>
                       )}
                     </Grid>
+
+                    {/* Gloss entry */}
                     <Grid
                       item
                       xs={5}
                       style={{
                         paddingLeft: theme.spacing(2),
-                        paddingRight: theme.spacing(2),
-                        position: "relative"
+                        paddingRight: theme.spacing(2)
                       }}
                     >
                       <TextField
@@ -479,55 +482,20 @@ export class DataEntryTable extends React.Component<
                             this.focusVernInput();
                           }
                         }}
-                        inputProps={{
-                          className: inputProps.color
-                        }}
+                        InputProps={
+                          !row.glossSpelledCorrectly
+                            ? {
+                                style: {
+                                  color: "red"
+                                }
+                              }
+                            : {
+                                style: {
+                                  color: "black"
+                                }
+                              }
+                        }
                       />
-                      {!row.glossSpelledCorrectly && (
-                        <Tooltip
-                          title={
-                            this.props.translate(
-                              "addWords.mispelledWord"
-                            ) as string
-                          }
-                          placement="top"
-                        >
-                          <div
-                            style={{
-                              // height: "5px",
-                              // width: "5px",
-                              // border: "2px solid green",
-                              // borderRadius: "50%",
-                              // position: "absolute",
-                              // top: 8,
-                              // right: 48,
-                              cursor: "pointer"
-                            }}
-                          >
-                            <Typography variant="body1">
-                              {row.glosses
-                                .split("")
-                                .map((letter: string, index: number) => {
-                                  if (row.glossSpelledCorrectly) {
-                                    return letter;
-                                  } else {
-                                    return (
-                                      <span
-                                        key={index}
-                                        style={{
-                                          background: "red",
-                                          padding: "3px 0"
-                                        }}
-                                      >
-                                        {letter}
-                                      </span>
-                                    );
-                                  }
-                                })}
-                            </Typography>
-                          </div>
-                        </Tooltip>
-                      )}
                     </Grid>
                     <Grid item xs={2}>
                       {this.state.hoverRow === rowIndex && (
@@ -625,6 +593,7 @@ export class DataEntryTable extends React.Component<
           <React.Fragment>
             <Grid item xs={12}>
               <Grid container>
+                {/* Vernacular new word entry */}
                 <Grid
                   item
                   xs={5}
@@ -683,13 +652,14 @@ export class DataEntryTable extends React.Component<
                     </Tooltip>
                   )}
                 </Grid>
+
+                {/* Gloss new word entry */}
                 <Grid
                   item
                   xs={5}
                   style={{
                     paddingLeft: theme.spacing(2),
-                    paddingRight: theme.spacing(2),
-                    position: "relative"
+                    paddingRight: theme.spacing(2)
                   }}
                 >
                   <TextField
@@ -698,11 +668,13 @@ export class DataEntryTable extends React.Component<
                     variant="outlined"
                     value={this.state.newGloss}
                     onChange={e => {
+                      const isSpelledCorrectly = this.isSpelledCorrectly(
+                        e.target.value
+                        // this.state.newGloss
+                      );
                       this.updateField(e, "newGloss", () =>
                         this.setState({
-                          glossSpelledCorrectly: this.isSpelledCorrectly(
-                            this.state.newGloss
-                          )
+                          glossSpelledCorrectly: isSpelledCorrectly
                         })
                       );
                     }}
@@ -715,28 +687,20 @@ export class DataEntryTable extends React.Component<
                       )
                         this.focusVernInput();
                     }}
+                    InputProps={
+                      !this.state.glossSpelledCorrectly
+                        ? {
+                            style: {
+                              color: "red"
+                            }
+                          }
+                        : {
+                            style: {
+                              color: "black"
+                            }
+                          }
+                    }
                   />
-                  {!this.state.glossSpelledCorrectly && (
-                    <Tooltip
-                      title={
-                        this.props.translate("addWords.mispelledWord") as string
-                      }
-                      placement="top"
-                    >
-                      <div
-                        style={{
-                          height: "5px",
-                          width: "5px",
-                          border: "2px solid green",
-                          borderRadius: "50%",
-                          position: "absolute",
-                          top: 24,
-                          right: 48,
-                          cursor: "pointer"
-                        }}
-                      />
-                    </Tooltip>
-                  )}
                 </Grid>
               </Grid>
             </Grid>
