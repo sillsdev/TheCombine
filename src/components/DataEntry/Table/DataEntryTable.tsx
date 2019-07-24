@@ -234,7 +234,6 @@ export class DataEntryTable extends React.Component<
         Backend.updateWord(res as Word)
           .catch(err => console.log(err))
           .then(res => {
-            this.updateRow(this.wordToRow(res as Word, row.senseIndex), index);
             if (callback) callback();
           })
       );
@@ -404,12 +403,14 @@ export class DataEntryTable extends React.Component<
                         value={row.vernacular}
                         onChange={e => {
                           let dupId = this.vernInFrontier(e.target.value);
-                          if (dupId === row.id) dupId = ""; // the "duplicate" is the word we're already editing
+                          if (dupId === row.id) {
+                            dupId = ""; // the "duplicate" is the word we're already editing
+                          }
                           this.updateRow(
                             {
                               ...row,
                               vernacular: e.target.value,
-                              dupId
+                              dupId: dupId
                             },
                             rowIndex
                           );
