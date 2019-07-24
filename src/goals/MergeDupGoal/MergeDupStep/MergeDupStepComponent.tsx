@@ -303,15 +303,23 @@ class MergeDupStep extends React.Component<
           </GridList>
         </div>
         {/* Merge button */}
-        <div style={{ borderTop: "1px solid gray", margin: 10 }}>
+        <Paper
+          square
+          style={{
+            position: "fixed",
+            width: "100vw",
+            height: "25vh",
+            zIndex: theme.zIndex.drawer
+          }}
+        >
           <Button
-            style={{ float: "right" }}
+            style={{ float: "right", marginRight: 30 }}
             onClick={_ => this.next()}
             title={this.props.translate("mergeDups.helpText.next") as string}
           >
             <Translate id="goal.mergeDups.done" />
           </Button>
-        </div>
+        </Paper>
       </Box>
     );
   }
