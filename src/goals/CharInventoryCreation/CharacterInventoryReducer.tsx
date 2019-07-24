@@ -2,18 +2,21 @@ import {
   SET_VALID_CHARACTERS,
   CharacterInventoryAction,
   SET_REJECTED_CHARACTERS,
-  ADD_TO_VALID_CHARACTERS
+  ADD_TO_VALID_CHARACTERS,
+  SET_ALL_WORDS
 } from "./CharacterInventoryActions";
 import { StoreActions, StoreAction } from "../../rootActions";
 
 export interface CharacterInventoryState {
   validCharacters: string[];
   rejectedCharacters: string[];
+  allWords: string[];
 }
 
 export const defaultState: CharacterInventoryState = {
   validCharacters: [],
-  rejectedCharacters: []
+  rejectedCharacters: [],
+  allWords: []
 };
 
 export const characterInventoryReducer = (
@@ -45,6 +48,8 @@ export const characterInventoryReducer = (
         char => !validCharacters.includes(char)
       );
       return { ...state, validCharacters: validCharacters, rejectedCharacters };
+    case SET_ALL_WORDS:
+      return { ...state, allWords: action.payload };
     case StoreActions.RESET:
       return defaultState;
     default:

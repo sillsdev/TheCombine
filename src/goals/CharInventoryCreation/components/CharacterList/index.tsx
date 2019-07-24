@@ -15,7 +15,9 @@ function mapStateToProps(state: StoreState) {
       state.characterInventoryState.validCharacters,
     rejectedCharacters:
       state.characterInventoryState &&
-      state.characterInventoryState.rejectedCharacters
+      state.characterInventoryState.rejectedCharacters,
+    allWords:
+      state.characterInventoryState && state.characterInventoryState.allWords
   };
 }
 

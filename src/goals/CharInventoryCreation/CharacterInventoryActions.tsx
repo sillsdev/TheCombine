@@ -26,12 +26,16 @@ export type SET_REJECTED_CHARACTERS = typeof SET_REJECTED_CHARACTERS;
 export const ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS";
 export type ADD_TO_VALID_CHARACTERS = typeof ADD_TO_VALID_CHARACTERS;
 
+export const SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS";
+export type SET_ALL_WORDS = typeof SET_ALL_WORDS;
+
 export interface CharacterInventoryData {}
 
 type CharacterInventoryType =
   | SET_VALID_CHARACTERS
   | SET_REJECTED_CHARACTERS
-  | ADD_TO_VALID_CHARACTERS;
+  | ADD_TO_VALID_CHARACTERS
+  | SET_ALL_WORDS;
 
 //action types
 
@@ -66,21 +70,33 @@ export function addToValidCharacters(
   };
 }
 
-export function setValidCharacters(
-  payload: string[]
-): CharacterInventoryAction {
+export function setValidCharacters(chars: string[]): CharacterInventoryAction {
   return {
     type: SET_VALID_CHARACTERS,
-    payload
+    payload: chars
   };
 }
 
 export function setRejectedCharacters(
-  payload: string[]
+  chars: string[]
 ): CharacterInventoryAction {
   return {
     type: SET_REJECTED_CHARACTERS,
-    payload
+    payload: chars
+  };
+}
+
+export function setAllWords(words: string[]): CharacterInventoryAction {
+  return {
+    type: SET_ALL_WORDS,
+    payload: words
+  };
+}
+
+export function fetchWords() {
+  return async (dispatch: Dispatch<CharacterInventoryAction>) => {
+    let words = await backend.getAllWords();
+    dispatch(setAllWords(words.map(word => word.vernacular)));
   };
 }
 

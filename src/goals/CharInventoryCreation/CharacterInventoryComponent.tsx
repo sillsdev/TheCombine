@@ -22,12 +22,14 @@ import SampleWords from "./components/SampleWords";
 import { Save, Help } from "@material-ui/icons";
 import history from "../../history";
 import CharacterEntry from "./components/CharacterEntry";
+import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
 
 export interface CharacterInventoryProps {
   addToValidCharacters: (chars: string[]) => void;
   setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
   uploadInventory: () => void;
+  fetchWords: () => void;
   validCharacters: string[];
   rejectedCharacters: string[];
   currentProject: Project;
@@ -55,6 +57,10 @@ export class CharacterInventory extends React.Component<
     this.state = { cancelDialogOpen: false };
   }
 
+  componentDidMount() {
+    this.props.fetchWords();
+  }
+
   handleClose() {
     this.setState({ cancelDialogOpen: false });
   }
@@ -76,25 +82,12 @@ export class CharacterInventory extends React.Component<
               justify="flex-start"
               alignItems="center"
             >
-              <Grid item xs={12}>
-                <Typography component="h1" variant="h4">
-                  <Translate id="charInventory.characterSet.title" />{" "}
-                  <Tooltip
-                    title={
-                      this.props.translate(
-                        "charInventory.characterSet.help"
-                      ) as string
-                    }
-                    placement="right"
-                  >
-                    <Help />
-                  </Tooltip>
-                </Typography>
-              </Grid>
+              <CharacterSetHeader translate={this.props.translate} />
               <CharacterEntry />
               <CharacterList />
             </Grid>
           </Grid>
+
           <Grid item sm={3} xs={12}>
             <SampleWords
               addToValidCharacters={this.props.addToValidCharacters}
@@ -103,6 +96,7 @@ export class CharacterInventory extends React.Component<
               )}
             />
           </Grid>
+
           <Grid item xs={12} style={{ borderTop: "1px solid #ccc" }}>
             {/* submission buttons */}
             <Grid container justify="center">

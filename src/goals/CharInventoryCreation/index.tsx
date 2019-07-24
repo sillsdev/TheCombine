@@ -7,7 +7,8 @@ import {
   setValidCharacters,
   uploadInventory,
   setRejectedCharacters,
-  addToValidCharacters
+  addToValidCharacters,
+  fetchWords
 } from "./CharacterInventoryActions";
 import { getTranslate } from "react-localize-redux";
 
@@ -39,6 +40,9 @@ function mapDispatchToProps(
     },
     uploadInventory: () => {
       dispatch(uploadInventory());
+    },
+    fetchWords: () => {
+      dispatch(fetchWords());
     }
   };
 }

@@ -8,6 +8,7 @@ import { Grid, Typography } from "@material-ui/core";
 import { Word } from "../../../../types/word";
 import * as backend from "../../../../backend";
 import WordTile from "./WordTileComponent";
+import theme from "../../../../types/theme";
 
 export interface SampleWordsProps {
   addToValidCharacters: (chars: string[]) => void;
@@ -108,7 +109,11 @@ export class SampleWords extends React.Component<
         alignItems="center"
       >
         <Grid item xs={12}>
-          <Typography component="h1" variant="h5">
+          <Typography
+            component="h1"
+            variant="h5"
+            style={{ marginTop: theme.spacing(1) }}
+          >
             <Translate id="charInventory.sampleWords.title" />
           </Typography>
           <Typography variant="subtitle1">

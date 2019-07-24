@@ -5,9 +5,12 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import theme from "../../../../types/theme";
+import CharacterStatusText from "./CharacterStatusText";
 
 export interface CharacterCardProps {
   char: string;
+  count: number;
+  status: "accepted" | "rejected";
 }
 
 const useStyles = makeStyles(
@@ -35,12 +38,13 @@ export default function CharacterCard(props: CharacterCardProps) {
           {props.char}
         </Typography>
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant="h6" component="h2">
             {charToHexValue(props.char)}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            190 occurrences
+            {props.count} occurrences
           </Typography>
+          <CharacterStatusText status={props.status} />
         </CardContent>
       </CardActionArea>
     </Card>

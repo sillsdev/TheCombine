@@ -3,7 +3,7 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { Grid, IconButton, Tooltip, Typography, Chip } from "@material-ui/core";
 import BlockIcon from "@material-ui/icons/Block";
 import { Add } from "@material-ui/icons";
-import { greenHighlight } from "../../../../types/theme";
+import { highlight } from "../../../../types/theme";
 
 const TRANSITION = "all 0.25s";
 
@@ -117,7 +117,7 @@ export class WordTile extends React.Component<
                     <span
                       key={index}
                       style={{
-                        background: greenHighlight,
+                        background: highlight,
                         padding: "3px 0"
                         //borderBottom: "2px solid red"
                       }}

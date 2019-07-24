@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Backend from "../../../../backend";
 import {
   LocalizeContextProps,
   withLocalize,
@@ -14,13 +15,13 @@ export interface CharacterListProps {
   validCharacters: string[];
   setRejectedCharacters: (inventory: string[]) => void;
   rejectedCharacters: string[];
+  allWords: string[];
 }
 
 interface CharacterListState {
   hoverChar: string;
   dragChar: string;
   dropChar: string;
-  checked: boolean;
 }
 
 export class CharacterList extends React.Component<
@@ -32,10 +33,11 @@ export class CharacterList extends React.Component<
     this.state = {
       hoverChar: "",
       dragChar: "",
-      dropChar: "",
-      checked: false
+      dropChar: ""
     };
   }
+
+  componentDidMount() {}
 
   // reorders the character inventory by moving one char
   moveChar() {
@@ -80,7 +82,12 @@ export class CharacterList extends React.Component<
           <React.Fragment>
             {/* The grid of character tiles */
             this.props.validCharacters.map((char, index) => (
-              <CharacterCard char={char} />
+              <CharacterCard
+                char={char}
+                key={char}
+                count={countCharacterOccurences(char, this.props.allWords)}
+                status={"accepted"}
+              />
               // <Grid
               //   item
               //   sm={1}
@@ -142,51 +149,69 @@ export class CharacterList extends React.Component<
               // </Grid>
             ))}
             {this.props.rejectedCharacters.map(char => (
-              <Grid
-                item
-                sm={1}
-                xs={2}
-                key={"char_" + char}
-                style={{ paddingBottom: 0 }}
-              >
-                <Grid container justify="center">
-                  <div
-                    id={"charTile_" + char}
-                    style={{
-                      position: "relative",
-                      border: "4px solid " + red[100],
-                      borderRadius: "50%",
-                      width: 40,
-                      height: 40,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      cursor: "pointer"
-                    }}
-                    onMouseEnter={() => this.setState({ hoverChar: char })}
-                    onMouseLeave={() => this.setState({ hoverChar: "" })}
-                    onClick={() =>
-                      this.props.setValidCharacters(
-                        this.props.validCharacters.concat(char)
-                      )
-                    }
-                  >
-                    <Typography variant="h6">{char}</Typography>
-                  </div>
-                  <Typography
-                    variant="subtitle2"
-                    style={{ opacity: this.state.hoverChar === char ? 1 : 0 }}
-                  >
-                    <Translate id="charInventory.characterSet.rejected" />
-                  </Typography>
-                </Grid>
-              </Grid>
+              <CharacterCard
+                char={char}
+                key={char}
+                count={countCharacterOccurences(char, this.props.allWords)}
+                status={"rejected"}
+              />
+              // <Grid
+              //   item
+              //   sm={1}
+              //   xs={2}
+              //   key={"char_" + char}
+              //   style={{ paddingBottom: 0 }}
+              // >
+              //   <Grid container justify="center">
+              //     <div
+              //       id={"charTile_" + char}
+              //       style={{
+              //         position: "relative",
+              //         border: "4px solid " + red[100],
+              //         borderRadius: "50%",
+              //         width: 40,
+              //         height: 40,
+              //         display: "flex",
+              //         justifyContent: "center",
+              //         alignItems: "center",
+              //         cursor: "pointer"
+              //       }}
+              //       onMouseEnter={() => this.setState({ hoverChar: char })}
+              //       onMouseLeave={() => this.setState({ hoverChar: "" })}
+              //       onClick={() =>
+              //         this.props.setValidCharacters(
+              //           this.props.validCharacters.concat(char)
+              //         )
+              //       }
+              //     >
+              //       <Typography variant="h6">{char}</Typography>
+              //     </div>
+              //     <Typography
+              //       variant="subtitle2"
+              //       style={{ opacity: this.state.hoverChar === char ? 1 : 0 }}
+              //     >
+              //       <Translate id="charInventory.characterSet.rejected" />
+              //     </Typography>
+              //   </Grid>
+              // </Grid>
             ))}
           </React.Fragment>
         )}
       </React.Fragment>
     );
   }
+}
+
+function countCharacterOccurences(char: string, words: string[]) {
+  let count = 0;
+  for (let word of words) {
+    for (let letter of word) {
+      if (letter === char) {
+        count++;
+      }
+    }
+  }
+  return count;
 }
 
 export default withLocalize(CharacterList);
