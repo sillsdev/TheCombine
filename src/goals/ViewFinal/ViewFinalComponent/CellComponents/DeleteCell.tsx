@@ -1,25 +1,14 @@
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize
-} from "react-localize-redux";
-import {
-  Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button
-} from "@material-ui/core";
+import { Chip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
-import AlignedList from "./AlignedList";
+import AlignedList, { SPACER } from "./AlignedList";
 import { ViewFinalWord } from "../ViewFinalComponent";
 
 interface DeleteCellProps {
   rowData: ViewFinalWord;
-  delete: (id: string, deleteIndex: string) => void;
+  delete: (deleteIndex: string) => void;
 }
 
 interface DeleteCellState {
@@ -45,42 +34,15 @@ class DeleteCell extends React.Component<
         contents={this.props.rowData.senses.map(value => (
           <React.Fragment>
             <Chip
+              color={value.deleted ? "secondary" : "default"}
               label={<Delete />}
               onClick={() => {
-                this.setState({ deleteSenseIndex: value.senseId });
+                this.props.delete(value.senseId);
               }}
             />
-
-            {/* Confirm delete dialog */}
-            <Dialog open={this.state.deleteSenseIndex !== ""}>
-              <DialogTitle>
-                <Translate id="viewFinal.deleteSense.title" />
-              </DialogTitle>
-              <DialogContent>
-                <Translate id="viewFinal.deleteSense.message" />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => this.close()} color="primary">
-                  <Translate id="viewFinal.deleteSense.cancel" />
-                </Button>
-                <Button
-                  onClick={() => {
-                    this.props.delete(
-                      this.props.rowData.id,
-                      this.state.deleteSenseIndex
-                    );
-                    this.close();
-                  }}
-                  color="primary"
-                  autoFocus
-                >
-                  <Translate id="viewFinal.deleteSense.delete" />
-                </Button>
-              </DialogActions>
-            </Dialog>
           </React.Fragment>
         ))}
-        bottomCell={undefined}
+        bottomCell={SPACER}
       />
     );
   }

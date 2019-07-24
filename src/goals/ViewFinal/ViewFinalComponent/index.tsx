@@ -1,20 +1,12 @@
-import { Dispatch } from "react";
 import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
 
 import ViewFinalComponent, { ViewFinalWord } from "./ViewFinalComponent";
 import {
   ViewFinalAction,
-  updateGlosses,
-  addDomain,
-  deleteDomain,
-  addSense,
-  deleteSense,
-  updateWords,
-  updateVernacular,
-  resetEdits,
-  updateWord
+  updateAllWords,
+  updateFrontierWord
 } from "./ViewFinalActions";
-import { SemanticDomain, Word } from "../../../types/word";
 import { StoreState } from "../../../types";
 
 function mapStateToProps(state: StoreState) {
@@ -25,35 +17,13 @@ function mapStateToProps(state: StoreState) {
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<ViewFinalAction>) {
+function mapDispatchToProps(
+  dispatch: ThunkDispatch<StoreState, any, ViewFinalAction>
+) {
   return {
-    updateVernacular: (id: string, newVernacular: string) => {
-      dispatch(updateVernacular(id, newVernacular));
-    },
-    updateGlosses: (id: string, editId: string, newGlosses: string) => {
-      dispatch(updateGlosses(id, editId, newGlosses));
-    },
-    addDomain: (id: string, senseId: string, newDomain: SemanticDomain) => {
-      dispatch(addDomain(id, senseId, newDomain));
-    },
-    deleteDomain: (id: string, senseId: string, delDomain: SemanticDomain) => {
-      dispatch(deleteDomain(id, senseId, delDomain));
-    },
-    addSense: (id: string) => {
-      dispatch(addSense(id));
-    },
-    deleteSense: (id: string, senseId: string) => {
-      dispatch(deleteSense(id, senseId));
-    },
-    updateWords: (words: ViewFinalWord[]) => {
-      dispatch(updateWords(words));
-    },
-    updateWord: (id: string, newId: string, newWord?: ViewFinalWord) => {
-      dispatch(updateWord(id, newId, newWord));
-    },
-    resetEdits: () => {
-      dispatch(resetEdits());
-    }
+    updateAllWords: (words: ViewFinalWord[]) => dispatch(updateAllWords(words)),
+    updateFrontierWord: (editSource: ViewFinalWord, language: string) =>
+      dispatch(updateFrontierWord(editSource, language))
   };
 }
 

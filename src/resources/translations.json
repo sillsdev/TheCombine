@@ -112,19 +112,9 @@
   },
   "viewFinal": {
     "title": ["View Final", "Ver final"],
-    "submit": ["Submit", "Enviar"],
-    "addSense": ["Add a sense for ", "Añadir un acepción adicional"],
-    "newSense": {
-      "gloss": ["Gloss", "Tradución"],
-      "domain": ["Domain", "Dominio"],
-      "submit": ["Add Sense", "Añadir la acepción"]
-    },
-    "deleteSense": {
-      "title": ["Warning!", "Advertencia!"],
-      "message": ["This action cannot be undone. Do you wish to continue?"],
-      "delete": ["Delete", "Borrar"],
-      "cancel": ["Cancel", "Cancelar"]
-    }
+    "nodomain": ["No domain selected", "No tenemos un domain"],
+    "nogloss": ["No glosses input", "No tenemos un traduccion"],
+    "sense": ["Sense", "Sentido"]
   },
   "charInventory": {
     "title": ["Create Character Inventory", "Crear inventario de personajes"],

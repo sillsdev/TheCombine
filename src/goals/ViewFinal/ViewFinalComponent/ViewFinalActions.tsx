@@ -1,57 +1,23 @@
-import { SemanticDomain, Word } from "../../../types/word";
-import { ViewFinalWord } from "./ViewFinalComponent";
+import { Word, Sense, State } from "../../../types/word";
+import { ViewFinalWord, SEP_CHAR } from "./ViewFinalComponent";
+import * as backend from "../../../backend";
+import { ThunkDispatch } from "redux-thunk";
+import { StoreState } from "../../../types";
 
 export enum ViewFinalActionTypes {
-  SetWordAction,
-  UpdateVernacularAction,
-  UpdateGlossAction,
-  AddDomainAction,
-  DeleteDomainAction,
-  AddSenseAction,
-  DeleteSenseAction,
-  UpdateWords,
+  UpdateAllWords,
   UpdateWord,
   ResetEdits
 }
 
-interface FinalUpdateVernacular {
-  type: ViewFinalActionTypes.UpdateVernacularAction;
-  payload: { id: string; newVernacular: string };
-}
-
-interface FinalUpdateGlosses {
-  type: ViewFinalActionTypes.UpdateGlossAction;
-  payload: { id: string; editId: string; newGlosses: string };
-}
-
-interface FinalAddDomain {
-  type: ViewFinalActionTypes.AddDomainAction;
-  payload: { id: string; senseId: string; newDomain: SemanticDomain };
-}
-
-interface FinalDeleteDomain {
-  type: ViewFinalActionTypes.DeleteDomainAction;
-  payload: { id: string; senseId: string; delDomain: SemanticDomain };
-}
-
-interface FinalAddSense {
-  type: ViewFinalActionTypes.AddSenseAction;
-  payload: { id: string };
-}
-
-interface FinalDeleteSense {
-  type: ViewFinalActionTypes.DeleteSenseAction;
-  payload: { id: string; deleteId: string };
-}
-
 interface FinalUpdateWords {
-  type: ViewFinalActionTypes.UpdateWords;
+  type: ViewFinalActionTypes.UpdateAllWords;
   payload: { words: ViewFinalWord[] };
 }
 
 interface FinalUpdateWord {
   type: ViewFinalActionTypes.UpdateWord;
-  payload: { id: string; newId: string; newWord: ViewFinalWord | undefined };
+  payload: { id: string; newId: string; newWord: ViewFinalWord };
 }
 
 interface FinalResetEdits {
@@ -59,84 +25,21 @@ interface FinalResetEdits {
 }
 
 export type ViewFinalAction =
-  | FinalUpdateVernacular
-  | FinalUpdateGlosses
-  | FinalAddDomain
-  | FinalDeleteDomain
-  | FinalAddSense
-  | FinalDeleteSense
   | FinalUpdateWords
   | FinalUpdateWord
   | FinalResetEdits;
 
-export function updateVernacular(
-  id: string,
-  newVernacular: string
-): FinalUpdateVernacular {
+export function updateAllWords(words: ViewFinalWord[]): FinalUpdateWords {
   return {
-    type: ViewFinalActionTypes.UpdateVernacularAction,
-    payload: { id, newVernacular }
-  };
-}
-
-export function updateGlosses(
-  id: string,
-  editId: string,
-  newGlosses: string
-): FinalUpdateGlosses {
-  return {
-    type: ViewFinalActionTypes.UpdateGlossAction,
-    payload: { id, editId, newGlosses }
-  };
-}
-
-export function addDomain(
-  id: string,
-  senseId: string,
-  newDomain: SemanticDomain
-): FinalAddDomain {
-  return {
-    type: ViewFinalActionTypes.AddDomainAction,
-    payload: { id, senseId, newDomain }
-  };
-}
-
-export function deleteDomain(
-  id: string,
-  senseId: string,
-  delDomain: SemanticDomain
-): FinalDeleteDomain {
-  return {
-    type: ViewFinalActionTypes.DeleteDomainAction,
-    payload: { id, senseId, delDomain }
-  };
-}
-
-export function addSense(id: string): FinalAddSense {
-  return {
-    type: ViewFinalActionTypes.AddSenseAction,
-    payload: { id }
-  };
-}
-
-export function deleteSense(id: string, deleteId: string): FinalDeleteSense {
-  return {
-    type: ViewFinalActionTypes.DeleteSenseAction,
-    payload: { id, deleteId }
-  };
-}
-
-export function updateWords(words: ViewFinalWord[]): FinalUpdateWords {
-  return {
-    type: ViewFinalActionTypes.UpdateWords,
+    type: ViewFinalActionTypes.UpdateAllWords,
     payload: { words }
   };
 }
 
-export function updateWord(
+function updateWord(
   id: string,
   newId: string,
-  newWord?: ViewFinalWord
+  newWord: ViewFinalWord
 ): FinalUpdateWord {
   return {
     type: ViewFinalActionTypes.UpdateWord,
@@ -144,8 +47,60 @@ export function updateWord(
   };
 }
 
-export function resetEdits(): FinalResetEdits {
-  return {
-    type: ViewFinalActionTypes.ResetEdits
+export function updateFrontierWord(
+  editSource: ViewFinalWord,
+  language: string
+) {
+  return async (dispatch: ThunkDispatch<StoreState, any, ViewFinalAction>) => {
+    let editWord: Word;
+    let editSense: Sense | undefined;
+    let originalIndex: number;
+    editWord = await backend.getWord(editSource.id);
+
+    originalIndex = 0;
+    editWord.vernacular = editSource.vernacular;
+    editWord.senses = editSource.senses.map(newSense => {
+      if (originalIndex < editWord.senses.length) {
+        editSense = editWord.senses[originalIndex];
+        originalIndex++;
+      } else editSense = undefined;
+
+      if (!newSense.deleted) {
+        // Create a new sense if a sense doesn't exist
+        if (!editSense)
+          editSense = ({
+            glosses: [],
+            accessibility: State.active
+          } as any) as Sense;
+
+        // Take all glosses from what the user edited, then add all glosses from the original word which are not in the current language
+        return {
+          ...editSense,
+          glosses: [
+            ...newSense.glosses.split(SEP_CHAR).map(gloss => {
+              return {
+                language: language,
+                def: gloss.trim()
+              };
+            }),
+            ...editSense.glosses.filter(gloss => gloss.language !== language)
+          ],
+          semanticDomains: newSense.domains
+        };
+      } else
+        return ({
+          ...editSense,
+          accessibility: State.deleted
+        } as any) as Sense;
+    });
+
+    debugger;
+    dispatch(
+      updateWord(
+        editWord.id,
+        (await backend.updateWord(editWord)).id,
+        editSource
+      )
+    );
   };
 }
