@@ -24,15 +24,19 @@ namespace BackendFramework.ValueModels
         [BsonElement("phone")]
         public string Phone { get; set; }
 
+        /// <summary> Other form of contact if phone/email are unavailable </summary>
         [BsonElement("otherConnectionField")]
         public string OtherConnectionField { get; set; }
 
+        /// <summary> Maps a projectId to a userEditId </summary>
         [BsonElement("workedProjects")]
         public Dictionary<string, string> WorkedProjects { get; set; }
 
+        /// <summary> Maps a projectId to a userRoleId </summary>
         [BsonElement("projectRoles")]
         public Dictionary<string, string> ProjectRoles { get; set; }
 
+        /// <summary> If the user has consented for audio/video containing them to be used </summary>
         [BsonElement("agreement")]
         public bool Agreement { get; set; }
 
@@ -152,6 +156,7 @@ namespace BackendFramework.ValueModels
         }
     }
 
+    /// <summary> Contains username and password for authenitcation </summary>
     public class Credentials
     {
         public string Username { get; set; }
