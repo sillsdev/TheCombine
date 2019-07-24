@@ -11,8 +11,13 @@ export default class AlignedList extends React.Component<AlignedListProps> {
   render() {
     return (
       <Grid container direction="column" spacing={2}>
-        {this.props.contents.map(value => (
-          <Grid item xs style={{ borderBottom: "1px solid lightgrey" }}>
+        {this.props.contents.map((value, index) => (
+          <Grid
+            item
+            xs
+            style={{ borderBottom: "1px solid lightgrey" }}
+            key={`aligned${index}`}
+          >
             {value}
           </Grid>
         ))}

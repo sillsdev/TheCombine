@@ -1,48 +1,12 @@
-import React from "react";
-
-import { Word, Gloss, SemanticDomain, Sense } from "../../../types/word";
-import tableIcons from "./icons";
-import * as backend from "../../../backend";
-import { ViewFinalWord } from "./ViewFinalComponent";
+import { ViewFinalWord, OLD_SENSE } from "./ViewFinalComponent";
 import { ViewFinalAction, ViewFinalActionTypes } from "./ViewFinalActions";
+import { uuid } from "../../../utilities";
 
 export interface ViewFinalState {
   words: ViewFinalWord[];
   edits: string[];
   language: string;
 }
-
-//   // Adds in glosses from glossBuffer; this both updates existing glosses and adds new ones
-//   updateAddGlosses(glosses: Gloss[], glossBuffer: string[]): Gloss[] {
-//   let glosses = action.payload.glosses;
-//   let glossIndex: number = 0;
-//   let superIndex: number = 0;
-
-//   // Overwrite/add glosses
-//   // debugger;
-//   while (glossIndex < action.payload.glossBuffer.length) {
-//     // Locate an entry
-//     while (
-//       glosses[superIndex] &&
-//       glosses[superIndex].language !== state.language
-//     )
-//       superIndex++;
-
-//     // Add the new entry
-//     glosses[superIndex] = {
-//       language: state.language,
-//       def: action.payload.glossBuffer[glossIndex]
-//     };
-//     superIndex++;
-//     glossIndex++;
-//   }
-//   // Remove dead glosses; superIndex is the index of the last valid gloss, so one beyond it
-//   return glosses.slice(0, superIndex);
-//   }
-
-// Removes the specified domain from the word with the specified ID
-// function deleteDomain(delDomain: SemanticDomain, id: string, senseIndex: number) {
-//   }
 
 const defaultState: ViewFinalState = {
   words: [],
@@ -71,17 +35,14 @@ export const viewFinalReducer = (
         if (value.id === action.payload.id)
           return {
             ...value,
-            senses: [
-              ...value.senses.slice(0, action.payload.editIndex),
-              {
-                ...value.senses[action.payload.editIndex],
-                glosses: action.payload.newGlosses
-              },
-              ...value.senses.slice(
-                action.payload.editIndex + 1,
-                value.senses.length
-              )
-            ]
+            senses: value.senses.map(sense => {
+              if (sense.senseId === action.payload.editId)
+                return {
+                  ...sense,
+                  glosses: action.payload.newGlosses
+                };
+              else return sense;
+            })
           };
         else return value;
       });
@@ -93,8 +54,13 @@ export const viewFinalReducer = (
         if (word.id === action.payload.id)
           return {
             ...word,
-            senses: word.senses.map((sense, index) => {
-              if (index === action.payload.senseIndex) {
+            senses: word.senses.map(sense => {
+              if (
+                sense.senseId === action.payload.senseId &&
+                !sense.domains.find(
+                  value => value.id === action.payload.newDomain.id
+                )
+              ) {
                 return {
                   ...sense,
                   domains: [...sense.domains, action.payload.newDomain]
@@ -112,12 +78,12 @@ export const viewFinalReducer = (
         if (word.id === action.payload.id)
           return {
             ...word,
-            senses: word.senses.map((sense, index) => {
-              if (index === action.payload.senseIndex)
+            senses: word.senses.map(sense => {
+              if (sense.senseId === action.payload.senseId)
                 return {
                   ...sense,
                   domains: sense.domains.filter(
-                    domain => domain !== action.payload.delDomain
+                    domain => domain.id !== action.payload.delDomain.id
                   )
                 };
               else return sense;
@@ -135,7 +101,12 @@ export const viewFinalReducer = (
             ...value,
             senses: [
               ...value.senses,
-              { deleted: false, glosses: "", domains: [] }
+              {
+                deleted: false,
+                glosses: "",
+                domains: [],
+                senseId: uuid()
+              }
             ]
           };
         else return value;
@@ -144,34 +115,84 @@ export const viewFinalReducer = (
 
     // Removes the sense from the specified word
     case ViewFinalActionTypes.DeleteSenseAction:
-      words = state.words.map(value => {
-        if (value.id === action.payload.id)
-          return {
-            ...value,
-            senses: value.senses.filter(
-              (sense, index) => index !== action.payload.deleteIndex
-            )
-          };
-        else return value;
-      });
+      // If the sense existed when the frontier was pulled, update it. Otherwise, delete it
+      if (action.payload.deleteId.endsWith(OLD_SENSE))
+        words = state.words.map(value => {
+          if (value.id === action.payload.id)
+            return {
+              ...value,
+              senses: value.senses.map(sense => {
+                if (sense.senseId === action.payload.deleteId)
+                  return { ...sense, deleted: true };
+                else return sense;
+              })
+            };
+          else return value;
+        });
+      else
+        words = state.words.map(value => {
+          if (value.id === action.payload.id)
+            return {
+              ...value,
+              senses: value.senses.filter(
+                sense => sense.senseId !== action.payload.deleteId
+              )
+            };
+          else return value;
+        });
       break;
 
     // Update the local words
     case ViewFinalActionTypes.UpdateWords:
       return {
         ...state,
-        words: action.payload.words
+        words: action.payload.words,
+        edits: []
+      };
+
+    // Resets all word edits
+    case ViewFinalActionTypes.ResetEdits:
+      return {
+        ...state,
+        edits: []
       };
 
     // Update the id of a specified word
-    case ViewFinalActionTypes.UpdateWordId:
+    case ViewFinalActionTypes.UpdateWord:
       return {
         ...state,
         words: state.words.map(word => {
-          if (word.id === action.payload.oldId)
+          if (word.id === action.payload.id) {
+            words = [action.payload.newWord ? action.payload.newWord : word];
+            return {
+              ...words[0],
+              id: action.payload.id,
+              senses: words[0].senses.map(sense => {
+                return {
+                  ...sense,
+                  senseId: sense.senseId + OLD_SENSE
+                };
+              })
+            };
+          } else return word;
+        })
+      };
+
+    // Update the id of a specified word
+    case ViewFinalActionTypes.UpdateWord:
+      return {
+        ...state,
+        words: state.words.map(word => {
+          if (word.id === action.payload.id)
             return {
               ...word,
-              id: action.payload.newId
+              id: action.payload.id,
+              senses: word.senses.map(sense => {
+                return {
+                  ...sense,
+                  senseId: sense.senseId + OLD_SENSE
+                };
+              })
             };
           else return word;
         })

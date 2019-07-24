@@ -19,11 +19,11 @@ import { ViewFinalWord } from "../ViewFinalComponent";
 
 interface DeleteCellProps {
   rowData: ViewFinalWord;
-  delete: (id: string, deleteIndex: number) => void;
+  delete: (id: string, deleteIndex: string) => void;
 }
 
 interface DeleteCellState {
-  deleteSenseIndex: number;
+  deleteSenseIndex: string;
 }
 
 class DeleteCell extends React.Component<
@@ -32,27 +32,27 @@ class DeleteCell extends React.Component<
 > {
   constructor(props: DeleteCellProps & LocalizeContextProps) {
     super(props);
-    this.state = { deleteSenseIndex: -1 };
+    this.state = { deleteSenseIndex: "" };
   }
 
   close() {
-    this.setState({ deleteSenseIndex: -1 });
+    this.setState({ deleteSenseIndex: "" });
   }
 
   render() {
     return (
       <AlignedList
-        contents={this.props.rowData.senses.map((value, index) => (
+        contents={this.props.rowData.senses.map(value => (
           <React.Fragment>
             <Chip
               label={<Delete />}
-              onClick={event => {
-                this.setState({ deleteSenseIndex: index });
+              onClick={() => {
+                this.setState({ deleteSenseIndex: value.senseId });
               }}
             />
 
             {/* Confirm delete dialog */}
-            <Dialog open={this.state.deleteSenseIndex !== -1}>
+            <Dialog open={this.state.deleteSenseIndex !== ""}>
               <DialogTitle>
                 <Translate id="viewFinal.deleteSense.title" />
               </DialogTitle>

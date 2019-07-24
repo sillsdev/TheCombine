@@ -7,13 +7,14 @@ import {
 } from "react-localize-redux";
 import { Button, Paper, TextField, Chip } from "@material-ui/core";
 
-import { Word, Gloss, SemanticDomain, Sense } from "../../../types/word";
+import { Word, SemanticDomain, Sense, State } from "../../../types/word";
 import tableIcons from "./icons";
 import * as backend from "../../../backend";
 import DomainCell from "./CellComponents";
 import { Add } from "@material-ui/icons";
 import AlignedList from "./CellComponents/AlignedList";
 import DeleteCell from "./CellComponents/DeleteCell";
+import { uuid } from "../../../utilities";
 
 // Component state/props
 interface ViewFinalProps {
@@ -24,25 +25,22 @@ interface ViewFinalProps {
 
   // Dispatch changes
   updateVernacular: (id: string, newVernacular: string) => void;
-  updateGlosses: (id: string, editIndex: number, newGlosses: string) => void;
-  addDomain: (
-    id: string,
-    senseIndex: number,
-    newDomain: SemanticDomain
-  ) => void;
+  updateGlosses: (id: string, editId: string, newGlosses: string) => void;
+  addDomain: (id: string, senseId: string, newDomain: SemanticDomain) => void;
   deleteDomain: (
     id: string,
-    senseIndex: number,
+    senseId: string,
     delDomain: SemanticDomain
   ) => void;
   addSense: (id: string) => void;
-  deleteSense: (id: string, deleteIndex: number) => void;
-  updateWords: (words: ViewFinalWord[], frontier?: Word[]) => void;
+  deleteSense: (id: string, deleteId: string) => void;
+  updateWords: (words: ViewFinalWord[]) => void;
+  updateWord: (id: string, newId: string, newWord?: ViewFinalWord) => void;
+  resetEdits: () => void;
 }
 
 interface ViewFinalState {
-  addingSenseToWord: boolean;
-  wordToEdit: ViewFinalWord;
+  editingField: boolean;
 }
 
 export interface ViewFinalWord {
@@ -51,14 +49,23 @@ export interface ViewFinalWord {
   senses: ViewFinalSense[];
 }
 export interface ViewFinalSense {
+  senseId: string;
   glosses: string;
   domains: SemanticDomain[];
+  deleted: boolean;
+}
+
+interface FieldParameterStandard {
+  rowData: ViewFinalWord;
+  value: any;
+  onRowDataChange?: (...args: any) => any;
 }
 
 // Constants
+export const OLD_SENSE: string = "-old";
+
 const SEP_CHAR: string = ",";
 const SEPARATOR: string = SEP_CHAR + " ";
-
 const NO_GLOSS: string = "{No gloss}";
 
 export class ViewFinalComponent extends React.Component<
@@ -69,21 +76,47 @@ export class ViewFinalComponent extends React.Component<
     {
       title: "Vernacular",
       field: "vernacular",
-      render: (rowData: ViewFinalWord) => this.vernacularField(rowData)
+      render: (rowData: ViewFinalWord) =>
+        this.vernacularField({ rowData, value: rowData.vernacular }, false),
+      editComponent: (props: any) => this.vernacularField(props, true)
     },
     {
       title: "Glosses",
-      field: "glosses",
-      render: (rowData: ViewFinalWord) => this.senseField(rowData),
+      field: "senses",
+      disableClick: true,
+      render: (rowData: ViewFinalWord) =>
+        this.senseField({ rowData, value: rowData.senses }, false),
+      editComponent: (props: any) => this.senseField(props, true),
       customFilterAndSearch: (
         term: string,
         rowData: ViewFinalWord
       ): boolean => {
         let regex: RegExp = new RegExp(term);
-        debugger;
         for (let sense of rowData.senses)
           if (regex.exec(sense.glosses) !== null) return true;
         return false;
+      },
+      customSort: (a: any, b: any, type: "row" | "group"): number => {
+        let count = 0;
+        let compare: number = 0;
+        while (
+          count < a.senses.length &&
+          count < b.senses.length &&
+          compare === 0
+        ) {
+          for (
+            let i = 0;
+            i < a.senses[count].glosses.length &&
+            i < b.senses[count].glosses.length &&
+            compare === 0;
+            i++
+          )
+            compare =
+              a.senses[count].glosses.codePointAt(i) -
+              b.senses[count].glosses.codePointAt(i);
+          count++;
+        }
+        return compare;
       }
     },
     {
@@ -92,6 +125,15 @@ export class ViewFinalComponent extends React.Component<
       render: (rowData: ViewFinalWord) => (
         <DomainCell
           rowData={rowData}
+          editable={false}
+          addDomain={this.props.addDomain}
+          deleteDomain={this.props.deleteDomain}
+        />
+      ),
+      editComponent: (props: any) => (
+        <DomainCell
+          rowData={props.rowData}
+          editable={true}
           addDomain={this.props.addDomain}
           deleteDomain={this.props.deleteDomain}
         />
@@ -105,17 +147,42 @@ export class ViewFinalComponent extends React.Component<
           for (let domain of sense.domains)
             if (
               regex.exec(domain.name) !== null ||
-              regex.exec(domain.number) !== null
+              regex.exec(domain.id) !== null
             )
               return true;
         return false;
+      },
+      customSort: (a: any, b: any, type: "row" | "group"): number => {
+        let count = 0;
+        let compare: number = 0;
+        debugger;
+        while (
+          count < a.senses.length &&
+          count < b.senses.length &&
+          compare === 0
+        ) {
+          for (
+            let i = 0;
+            i < a.senses[count].domains.length &&
+            i < b.senses[count].domains.length &&
+            compare === 0;
+            i++
+          ) {
+            compare =
+              a.senses[count].domains[i].id.codePointAt(i) -
+              b.senses[count].domains[i].id.codePointAt(i);
+          }
+          count++;
+        }
+        return compare;
       }
     },
     {
       title: "",
       field: "id",
-      render: (rowData: ViewFinalWord) => (
-        <DeleteCell rowData={rowData} delete={this.props.deleteSense} />
+      render: (rowData: ViewFinalWord) => null,
+      editComponent: (props: any) => (
+        <DeleteCell rowData={props.rowData} delete={this.props.deleteSense} />
       )
     }
   ];
@@ -129,8 +196,7 @@ export class ViewFinalComponent extends React.Component<
     this.updateFrontierWords = this.updateFrontierWords.bind(this);
 
     this.state = {
-      addingSenseToWord: false,
-      wordToEdit: {} as ViewFinalWord // WordToEdit always set right before being needed, so its value here is unimportant
+      editingField: false
     };
   }
 
@@ -148,6 +214,9 @@ export class ViewFinalComponent extends React.Component<
     let currentSense: ViewFinalSense;
 
     for (let word of frontier) {
+      // Bypass deleted words
+      if (word.accessability === State.deleted) continue;
+
       // Create a new currentword
       currentWord = {
         id: word.id,
@@ -156,9 +225,14 @@ export class ViewFinalComponent extends React.Component<
       };
 
       for (let sense of word.senses) {
+        // Bypass deleted senses
+        if (sense.accessibility === State.deleted) continue;
+
         currentSense = {
           glosses: "",
-          domains: [...sense.semanticDomains]
+          domains: [...sense.semanticDomains],
+          deleted: false,
+          senseId: uuid() + OLD_SENSE
         };
 
         // Find all glosses in the current language
@@ -182,7 +256,7 @@ export class ViewFinalComponent extends React.Component<
       // Remove the trailing newlines + push to newWords
       newWords.push(currentWord);
     }
-    this.props.updateWords(newWords, frontier);
+    this.props.updateWords(newWords);
   }
 
   // Updates the frontier from the local word set
@@ -190,7 +264,9 @@ export class ViewFinalComponent extends React.Component<
     let editWord: Word;
     let editSource: ViewFinalWord;
     let edits: string[] = Array.from(new Set(this.props.edits));
-    let senseHandle: ViewFinalSense | Sense;
+
+    let editSense: Sense | undefined;
+    let originalIndex: number;
 
     for (let edit of edits) {
       editWord = await backend.getWord(edit);
@@ -198,112 +274,114 @@ export class ViewFinalComponent extends React.Component<
         value => value.id === edit
       ) as ViewFinalWord;
 
+      originalIndex = 0;
       editWord.vernacular = editSource.vernacular;
-      // Update old senses
-      for (let sense = 0; sense < editWord.senses.length; sense++) {
-        senseHandle = editWord.senses[sense];
+      editWord.senses = editSource.senses.map(newSense => {
+        if (originalIndex < editWord.senses.length) {
+          editSense = editWord.senses[originalIndex];
+          originalIndex++;
+        } else editSense = undefined;
 
-        // Update the glosses of the current sense. The second argument converts a comma-separated string into an array, trimming whitespace
-        senseHandle.glosses = this.updateAddGlosses(
-          senseHandle.glosses,
-          editSource.senses[sense].glosses
-            .split(SEP_CHAR)
-            .map(value => value.trim())
-        );
+        if (!newSense.deleted) {
+          // Create a new sense if a sense doesn't exist
+          if (!editSense)
+            editSense = ({
+              glosses: [],
+              accessibility: State.active
+            } as any) as Sense;
 
-        senseHandle.semanticDomains = editSource.senses[sense].domains.map(
-          value => {
-            return {
-              name: value.name,
-              number: value.number
-            };
-          }
-        );
-      }
-
-      // Add new senses
-      if (editWord.senses.length > editSource.senses.length)
-        for (
-          let sense = editWord.senses.length;
-          sense < editSource.senses.length;
-          sense++
-        ) {
-          senseHandle = editSource.senses[sense];
-          editWord.senses.push({
-            glosses: senseHandle.glosses.split(SEP_CHAR).map(value => {
-              return { language: this.props.language, def: value.trim() };
-            }),
-            semanticDomains: editSource.senses[sense].domains.map(value => {
-              return {
-                name: value.name,
-                number: value.number
-              };
-            })
-          });
-        }
+          // Take all glosses from what the user edited, then add all glosses from the original word which are not in the current language
+          return {
+            ...editSense,
+            glosses: [
+              ...newSense.glosses.split(SEP_CHAR).map(gloss => {
+                return {
+                  language: this.props.language,
+                  def: gloss.trim()
+                };
+              }),
+              ...editSense.glosses.filter(
+                gloss => gloss.language !== this.props.language
+              )
+            ],
+            semanticDomains: newSense.domains
+          };
+        } else
+          return ({
+            ...editSense,
+            accessibility: State.deleted
+          } as any) as Sense;
+      });
 
       debugger;
-      await backend.updateWord(editWord);
+      this.props.updateWord(edit, (await backend.updateWord(editWord)).id);
     }
-  }
-
-  // Adds in glosses from glossBuffer; this both updates existing glosses and adds new ones
-  private updateAddGlosses(glosses: Gloss[], glossBuffer: string[]): Gloss[] {
-    let glossIndex: number = 0;
-    let superIndex: number = 0;
-
-    // Overwrite/add glosses
-    // debugger;
-    while (glossIndex < glossBuffer.length) {
-      // Locate an entry
-      while (
-        glosses[superIndex] &&
-        glosses[superIndex].language !== this.props.language
-      )
-        superIndex++;
-
-      // Add the new entry
-      glosses[superIndex] = {
-        language: this.props.language,
-        def: glossBuffer[glossIndex]
-      };
-      superIndex++;
-      glossIndex++;
-    }
-
-    // Remove dead glosses; superIndex is the index of the last valid gloss, so one beyond it
-    return glosses.slice(0, superIndex);
+    this.props.resetEdits();
   }
 
   // Create the vernacular text field
-  private vernacularField(rowData: ViewFinalWord) {
+  // private vernacularDisplay(rowData: ViewFinalWord) {
+  //   return (
+  //     <TextField
+  //       key={`vernacular${rowData.id}`}
+  //       value={rowData.vernacular}
+  //       disabled={true}
+  //     />
+  //   );
+  // }
+  private vernacularField(props: FieldParameterStandard, editable: boolean) {
     return (
       <TextField
-        value={rowData.vernacular}
+        {...props}
+        key={`vernacular${props.rowData.id}`}
+        value={props.value}
+        disabled={!editable}
+        // onRowDataChange={() => props.setState({ data: props.rowData })}
         onChange={event =>
-          this.props.updateVernacular(rowData.id, event.target.value)
+          props.onRowDataChange &&
+          props.onRowDataChange({
+            ...props.rowData,
+            vernacular: event.target.value
+          })
         }
       />
     );
   }
 
   // Create the sense edit fields
-  private senseField(rowData: ViewFinalWord) {
+  private senseField(props: FieldParameterStandard, editable: boolean) {
     return (
       <AlignedList
-        contents={rowData.senses.map((value, index) => (
-          <TextField
-            value={value.glosses}
-            onChange={event =>
-              this.props.updateGlosses(rowData.id, index, event.target.value)
-            }
-          />
-        ))}
+        contents={props.rowData.senses.map(
+          (sense: ViewFinalSense, index: number) => (
+            <TextField
+              key={props.rowData.id}
+              value={props.value[index].glosses}
+              disabled={!editable}
+              onChange={event =>
+                props.onRowDataChange &&
+                props.onRowDataChange({
+                  ...props.rowData,
+                  senses: [
+                    ...props.rowData.senses.slice(0, index),
+                    { ...sense, glosses: event.target.value },
+                    ...props.rowData.senses.slice(
+                      index + 1,
+                      props.rowData.senses.length
+                    )
+                  ]
+                })
+              }
+            />
+          )
+        )}
         bottomCell={
-          <Chip
-            label={<Add />}
-            onClick={() => this.props.addSense(rowData.id)}
-          />
+          editable ? (
+            <Chip
+              label={<Add />}
+              onClick={() => this.props.addSense(props.rowData.id)}
+            />
+          ) : null
         }
       />
     );
@@ -316,7 +394,22 @@ export class ViewFinalComponent extends React.Component<
           icons={tableIcons}
           title={<Translate id={"viewFinal.title"} />}
           columns={this.COLUMNS}
-          data={this.props.words}
+          data={this.props.words.map(word => {
+            return {
+              ...word,
+              senses: word.senses.filter(sense => !sense.deleted)
+            };
+          })}
+          editable={{
+            onRowUpdate: (newData, oldData) =>
+              new Promise(resolve =>
+                setTimeout(() => {
+                  this.props.updateWord(oldData.id, newData.id, newData);
+                  this.forceUpdate();
+                  resolve();
+                }, 500)
+              )
+          }}
         />
         <Button onClick={this.updateFrontierWords}>
           <Translate id="viewFinal.submit" />

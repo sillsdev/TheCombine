@@ -9,23 +9,20 @@ import AlignedList from "./AlignedList";
 
 interface DomainCellProps {
   rowData: ViewFinalWord;
+  editable: boolean;
 
   selectedDomain: SemanticDomain;
-  addDomain: (
-    id: string,
-    senseIndex: number,
-    newDomain: SemanticDomain
-  ) => void;
+  addDomain: (id: string, senseId: string, newDomain: SemanticDomain) => void;
   deleteDomain: (
     id: string,
-    senseIndex: number,
+    senseId: string,
     delDomain: SemanticDomain
   ) => void;
 }
 
 interface DomainCellState {
   addingDomains: boolean;
-  senseToChange: number;
+  senseToChange: string;
 }
 
 export default class DomainCell extends React.Component<
@@ -35,67 +32,69 @@ export default class DomainCell extends React.Component<
   constructor(props: DomainCellProps) {
     super(props);
     // This data is set before any actions which depend on it, meaning that this line is a compiler-appeaser
-    this.state = { addingDomains: false, senseToChange: 0 };
+    this.state = { addingDomains: false, senseToChange: "" };
 
+    this.prepAddDomain = this.prepAddDomain.bind(this);
     this.addDomain = this.addDomain.bind(this);
     this.deleteDomain = this.deleteDomain.bind(this);
   }
 
-  addDomain() {
-    this.props.addDomain(
-      this.props.rowData.id,
-      this.state.senseToChange,
-      this.props.selectedDomain
-    );
+  private prepAddDomain(senseId: string) {
     this.setState({
-      addingDomains: false
+      addingDomains: true,
+      senseToChange: senseId
     });
   }
 
-  deleteDomain(toDelete: SemanticDomain) {
-    this.props.deleteDomain(
-      this.props.rowData.id,
-      this.state.senseToChange,
-      toDelete
-    );
+  private addDomain() {
+    this.setState({
+      addingDomains: false
+    });
+    this.props.addDomain(this.props.rowData.id, this.state.senseToChange, {
+      name: this.props.selectedDomain.name,
+      id: this.props.selectedDomain.id
+    });
+  }
+
+  private deleteDomain(toDelete: SemanticDomain, senseId: string) {
+    this.props.deleteDomain(this.props.rowData.id, senseId, toDelete);
   }
 
   render() {
     return (
-      <AlignedList
-        contents={this.props.rowData.senses.map((value, senseIndex) => (
-          <Grid container direction="row" spacing={2}>
-            {value.domains.length > 0 &&
-              value.domains.map(domain => (
-                <Grid item xs>
-                  <Chip
-                    label={`${domain.number}: ${domain.name}`}
-                    onDelete={() => this.deleteDomain(domain)}
-                  />
-                </Grid>
-              ))}
-            <IconButton
-              onClick={() =>
-                this.setState({
-                  addingDomains: true,
-                  senseToChange: senseIndex
-                })
-              }
-            >
-              <Add />
-              <Dialog fullScreen open={this.state.addingDomains}>
-                <TreeView returnControlToCaller={this.addDomain} />
-              </Dialog>
-            </IconButton>
-          </Grid>
-        ))}
-        bottomCell={null}
-      />
-      // <Grid item xs>
-      //   <Chip label={<Add />} style={{ opacity: 0.01 }} />
-      // </Grid>
-      //</Grid>
-      //</React.Fragment>
+      <React.Fragment>
+        <AlignedList
+          contents={this.props.rowData.senses.map((value, index) => (
+            <Grid container direction="row" spacing={2}>
+              {value.domains.length > 0 &&
+                value.domains.map(domain => (
+                  <Grid item xs key={`domain${index}`}>
+                    <Chip
+                      label={`${domain.id}: ${domain.name}`}
+                      onDelete={
+                        this.props.editable
+                          ? () => this.deleteDomain(domain, value.senseId)
+                          : undefined
+                      }
+                    />
+                  </Grid>
+                ))}
+              {this.props.editable && (
+                <IconButton
+                  key={`buttonFor${value.senseId}`}
+                  onClick={() => this.prepAddDomain(value.senseId)}
+                >
+                  <Add />
+                </IconButton>
+              )}
+            </Grid>
+          ))}
+          bottomCell={null}
+        />
+        <Dialog fullScreen open={this.state.addingDomains}>
+          <TreeView returnControlToCaller={() => this.addDomain()} />
+        </Dialog>
+      </React.Fragment>
     );
   }
 }

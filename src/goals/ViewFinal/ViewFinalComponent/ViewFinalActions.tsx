@@ -10,7 +10,8 @@ export enum ViewFinalActionTypes {
   AddSenseAction,
   DeleteSenseAction,
   UpdateWords,
-  UpdateWordId
+  UpdateWord,
+  ResetEdits
 }
 
 interface FinalUpdateVernacular {
@@ -20,17 +21,17 @@ interface FinalUpdateVernacular {
 
 interface FinalUpdateGlosses {
   type: ViewFinalActionTypes.UpdateGlossAction;
-  payload: { id: string; editIndex: number; newGlosses: string };
+  payload: { id: string; editId: string; newGlosses: string };
 }
 
 interface FinalAddDomain {
   type: ViewFinalActionTypes.AddDomainAction;
-  payload: { id: string; senseIndex: number; newDomain: SemanticDomain };
+  payload: { id: string; senseId: string; newDomain: SemanticDomain };
 }
 
 interface FinalDeleteDomain {
   type: ViewFinalActionTypes.DeleteDomainAction;
-  payload: { id: string; senseIndex: number; delDomain: SemanticDomain };
+  payload: { id: string; senseId: string; delDomain: SemanticDomain };
 }
 
 interface FinalAddSense {
@@ -40,7 +41,7 @@ interface FinalAddSense {
 
 interface FinalDeleteSense {
   type: ViewFinalActionTypes.DeleteSenseAction;
-  payload: { id: string; deleteIndex: number };
+  payload: { id: string; deleteId: string };
 }
 
 interface FinalUpdateWords {
@@ -48,9 +49,13 @@ interface FinalUpdateWords {
   payload: { words: ViewFinalWord[] };
 }
 
-interface FinalUpdateWordId {
-  type: ViewFinalActionTypes.UpdateWordId;
-  payload: { oldId: string; newId: string };
+interface FinalUpdateWord {
+  type: ViewFinalActionTypes.UpdateWord;
+  payload: { id: string; newId: string; newWord: ViewFinalWord | undefined };
+}
+
+interface FinalResetEdits {
+  type: ViewFinalActionTypes.ResetEdits;
 }
 
 export type ViewFinalAction =
@@ -61,7 +66,8 @@ export type ViewFinalAction =
   | FinalAddSense
   | FinalDeleteSense
   | FinalUpdateWords
-  | FinalUpdateWordId;
+  | FinalUpdateWord
+  | FinalResetEdits;
 
 export function updateVernacular(
   id: string,
@@ -75,34 +81,34 @@ export function updateVernacular(
 
 export function updateGlosses(
   id: string,
-  editIndex: number,
+  editId: string,
   newGlosses: string
 ): FinalUpdateGlosses {
   return {
     type: ViewFinalActionTypes.UpdateGlossAction,
-    payload: { id, editIndex, newGlosses }
+    payload: { id, editId, newGlosses }
   };
 }
 
 export function addDomain(
   id: string,
-  senseIndex: number,
+  senseId: string,
   newDomain: SemanticDomain
 ): FinalAddDomain {
   return {
     type: ViewFinalActionTypes.AddDomainAction,
-    payload: { id, senseIndex, newDomain }
+    payload: { id, senseId, newDomain }
   };
 }
 
 export function deleteDomain(
   id: string,
-  senseIndex: number,
+  senseId: string,
   delDomain: SemanticDomain
 ): FinalDeleteDomain {
   return {
     type: ViewFinalActionTypes.DeleteDomainAction,
-    payload: { id, senseIndex, delDomain }
+    payload: { id, senseId, delDomain }
   };
 }
 
@@ -113,10 +119,10 @@ export function addSense(id: string): FinalAddSense {
   };
 }
 
-export function deleteSense(id: string, deleteIndex: number): FinalDeleteSense {
+export function deleteSense(id: string, deleteId: string): FinalDeleteSense {
   return {
     type: ViewFinalActionTypes.DeleteSenseAction,
-    payload: { id, deleteIndex }
+    payload: { id, deleteId }
   };
 }
 
@@ -127,9 +133,19 @@ export function updateWords(words: ViewFinalWord[]): FinalUpdateWords {
   };
 }
 
-export function updateWordId(oldId: string, newId: string): FinalUpdateWordId {
+export function updateWord(
+  id: string,
+  newId: string,
+  newWord?: ViewFinalWord
+): FinalUpdateWord {
   return {
-    type: ViewFinalActionTypes.UpdateWordId,
-    payload: { oldId, newId }
+    type: ViewFinalActionTypes.UpdateWord,
+    payload: { id, newId, newWord }
+  };
+}
+
+export function resetEdits(): FinalResetEdits {
+  return {
+    type: ViewFinalActionTypes.ResetEdits
   };
 }

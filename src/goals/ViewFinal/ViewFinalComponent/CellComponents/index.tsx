@@ -5,7 +5,7 @@ import { StoreState } from "../../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
-    selectedDomain: state.treeViewState.currentDomain
+    selectedDomain: state.treeViewState.currentdomain
   };
 }
 

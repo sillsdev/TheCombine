@@ -10,7 +10,9 @@ import {
   addSense,
   deleteSense,
   updateWords,
-  updateVernacular
+  updateVernacular,
+  resetEdits,
+  updateWord
 } from "./ViewFinalActions";
 import { SemanticDomain, Word } from "../../../types/word";
 import { StoreState } from "../../../types";
@@ -28,27 +30,29 @@ function mapDispatchToProps(dispatch: Dispatch<ViewFinalAction>) {
     updateVernacular: (id: string, newVernacular: string) => {
       dispatch(updateVernacular(id, newVernacular));
     },
-    updateGlosses: (id: string, editIndex: number, newGlosses: string) => {
-      dispatch(updateGlosses(id, editIndex, newGlosses));
+    updateGlosses: (id: string, editId: string, newGlosses: string) => {
+      dispatch(updateGlosses(id, editId, newGlosses));
     },
-    addDomain: (id: string, senseIndex: number, newDomain: SemanticDomain) => {
-      dispatch(addDomain(id, senseIndex, newDomain));
+    addDomain: (id: string, senseId: string, newDomain: SemanticDomain) => {
+      dispatch(addDomain(id, senseId, newDomain));
     },
-    deleteDomain: (
-      id: string,
-      senseIndex: number,
-      delDomain: SemanticDomain
-    ) => {
-      dispatch(deleteDomain(id, senseIndex, delDomain));
+    deleteDomain: (id: string, senseId: string, delDomain: SemanticDomain) => {
+      dispatch(deleteDomain(id, senseId, delDomain));
     },
     addSense: (id: string) => {
       dispatch(addSense(id));
     },
-    deleteSense: (id: string, deleteIndex: number) => {
-      dispatch(deleteSense(id, deleteIndex));
+    deleteSense: (id: string, senseId: string) => {
+      dispatch(deleteSense(id, senseId));
     },
     updateWords: (words: ViewFinalWord[]) => {
       dispatch(updateWords(words));
+    },
+    updateWord: (id: string, newId: string, newWord?: ViewFinalWord) => {
+      dispatch(updateWord(id, newId, newWord));
+    },
+    resetEdits: () => {
+      dispatch(resetEdits());
     }
   };
 }
