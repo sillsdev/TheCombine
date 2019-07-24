@@ -138,7 +138,7 @@ namespace BackendFramework.Services
             Helper.Utilities util = new Helper.Utilities();
 
             //generate the zip dir
-            string filename = util.GenerateFilePath(Helper.Utilities.filetype.dir, true, "", Path.Combine(projectId, "Export"));
+            string filename = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Export"));
             string zipdir = Path.Combine(filename, "LiftExport");
             Directory.CreateDirectory(zipdir);
 
@@ -213,7 +213,7 @@ namespace BackendFramework.Services
                     string dest = Path.Combine(path, wordEntry.Audio);
 
                     Helper.Utilities util = new Helper.Utilities();
-                    string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.filetype.audio, true), wordEntry.Audio);
+                    string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), wordEntry.Audio);
                     File.Copy(src, dest, true);
 
                     LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
@@ -223,7 +223,7 @@ namespace BackendFramework.Services
             }
             catch (FileNotFoundException)
             {
-                //do nothing, the audio file isnt there so it wont be added
+                //do nothing, the audio file isnt there so it won't be added
             }
         }
 
@@ -309,7 +309,7 @@ namespace BackendFramework.Services
             Helper.Utilities util = new Helper.Utilities();
 
             //path to Import file ~/AmbigProjName/Import
-            var extractedPathToImport = util.GenerateFilePath(Helper.Utilities.filetype.dir, false, "", Path.Combine(projectId, "Import"));
+            var extractedPathToImport = util.GenerateFilePath(Helper.Utilities.Filetype.dir, false, "", Path.Combine(projectId, "Import"));
 
             //get path to ~/AmbigProjName/Import/ExtractedLiftDir/audio
             var importListArr = Directory.GetDirectories(extractedPathToImport);
