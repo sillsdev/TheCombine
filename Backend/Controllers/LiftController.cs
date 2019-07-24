@@ -53,7 +53,7 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("Empty File");
             }
 
-            //get path to home and generate the file to put the filestream into
+            //get path to where we will copy the zip file
             Utilities util = new Utilities();
             fileUpload.FilePath = util.GenerateFilePath(Filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine(projectId, "Import"));
 
@@ -71,29 +71,25 @@ namespace BackendFramework.Controllers
             }
             Directory.CreateDirectory(zipDest);
 
-            //log the directories before extraction
-            var preExportDirList = Directory.GetDirectories(zipDest);
+            //extract the zip to new directory
+            var extractDir = Path.Combine(zipDest, "ExtractedLocation");
+            Directory.CreateDirectory(extractDir);
+            ZipFile.ExtractToDirectory(fileUpload.FilePath, extractDir);
 
-            //extract the zip
-            ZipFile.ExtractToDirectory(fileUpload.FilePath, zipDest);
-
-            //log the directories after extraction
-            var postExportDirList = Directory.GetDirectories(zipDest);
-
-            //get path to extracted dir by looking at the diff
-            var pathToExtracted = postExportDirList.Except(preExportDirList).ToList();
-            string extractedDirPath = null;
+            //check number of directories extracted
+            var directoriesExtracted = Directory.GetDirectories(extractDir);
+            string extractedDirPath = "";
 
             //if there was one directory, we're good
-            if (pathToExtracted.Count == 1)
+            if (directoriesExtracted.Length == 1)
             {
-                extractedDirPath = pathToExtracted.FirstOrDefault();
+                extractedDirPath = directoriesExtracted.FirstOrDefault();
             }
             //if there were two, and there was a __MACOSX directory, ignore it
-            else if (pathToExtracted.Count == 2)
+            else if (directoriesExtracted.Length == 2)
             {
                 int numDirs = 0;
-                foreach (var dir in pathToExtracted)
+                foreach (var dir in directoriesExtracted)
                 {
                     if (dir.EndsWith("__MACOSX"))
                     {
@@ -111,7 +107,7 @@ namespace BackendFramework.Controllers
                     return new BadRequestObjectResult("Your zip file should have one directory");
                 }
             }
-            else
+            else //there were 0 or more than 2 directories
             {
                 return new BadRequestObjectResult("Your zip file structure has the wrong number of directories");
             }

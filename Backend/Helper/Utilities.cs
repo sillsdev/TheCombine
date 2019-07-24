@@ -38,7 +38,7 @@ namespace BackendFramework.Helper
 
             //establish path to the typed file in the base folder
 
-            //creates the dierectory if it doesn't exist
+            //creates the directory if it doesn't exist
             Directory.CreateDirectory(returnFilepath);
 
             //if the path being generated is to a dir and not a file then don't add an extension

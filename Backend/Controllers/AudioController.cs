@@ -27,7 +27,7 @@ namespace BackendFramework.Controllers
             _wordService = wordService;
         }
 
-        /// <summary> Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> </summary>
+        /// <summary> Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to ~/.CombineFiles/{ProjectId}/Import/Audio </summary>
         /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/upload/audio </remarks>
         /// <returns> Path to local audio file </returns>
         [HttpPost("{wordId}/upload/audio")]

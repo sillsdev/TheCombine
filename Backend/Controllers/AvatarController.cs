@@ -22,7 +22,7 @@ namespace BackendFramework.Controllers
             _userService = service;
         }
 
-        /// <summary> Adds an avatar image to a <see cref="User"/> </summary>
+        /// <summary> Adds an avatar image to a <see cref="User"/> and saves locally to ~/.CombineFiles/{ProjectId}/Avatars </summary>
         /// <remarks> POST: v1/users/{userId}/upload/avatar </remarks>
         /// <returns> Path to local avatar file </returns>
         [HttpPost("{userId}/upload/avatar")]

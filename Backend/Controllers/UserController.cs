@@ -31,7 +31,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes all <see cref="User"/>s </summary>
         /// <remarks> DELETE: v1/users </remarks>
-        /// <returns> true: if success, false: if there were no projects </returns>
+        /// <returns> true: if success, false: if there were no users </returns>
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
@@ -62,7 +62,6 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundResult();
             }
-
         }
 
         /// <summary> Returns <see cref="User"/> with specified id </summary>
