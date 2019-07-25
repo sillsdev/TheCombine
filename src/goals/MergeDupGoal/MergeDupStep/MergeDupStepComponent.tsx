@@ -77,22 +77,6 @@ class MergeDupStep extends React.Component<
       sideBar: { senses: [], wordID: "WORD", senseID: "SENSE" }
     };
   }
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener("resize", () => this.updateWindowDimensions());
-  }
-
-  componentDidUnmount() {
-    window.removeEventListener("resize", () => this.updateWindowDimensions());
-  }
-
-  componentWillMount() {
-    document.body.style.overflow = "hidden";
-  }
-
-  updateWindowDimensions() {
-    this.setState({ ...this.state, colCount: window.innerWidth / 250 });
-  }
 
   next() {
     this.setState({
