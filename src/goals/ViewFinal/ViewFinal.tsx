@@ -27,7 +27,7 @@ export class ViewFinal implements Goal {
     this.name = "viewFinal";
     this.user = new User("", "", "");
     this.steps = steps;
-    this.numSteps = -1;
+    this.numSteps = 1;
     this.currentStep = 0;
     this.data = {};
     this.tool = Tools.TempTool;

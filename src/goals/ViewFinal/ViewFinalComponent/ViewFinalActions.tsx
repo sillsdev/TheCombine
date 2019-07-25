@@ -10,9 +10,8 @@ import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../types";
 
 export enum ViewFinalActionTypes {
-  UpdateAllWords,
-  UpdateWord,
-  ResetEdits
+  UpdateAllWords = "UPDATE_ALL_WORDS",
+  UpdateWord = "UPDATE_WORD"
 }
 
 interface FinalUpdateWords {
@@ -25,14 +24,7 @@ interface FinalUpdateWord {
   payload: { id: string; newId: string; newWord: ViewFinalWord };
 }
 
-interface FinalResetEdits {
-  type: ViewFinalActionTypes.ResetEdits;
-}
-
-export type ViewFinalAction =
-  | FinalUpdateWords
-  | FinalUpdateWord
-  | FinalResetEdits;
+export type ViewFinalAction = FinalUpdateWords | FinalUpdateWord;
 
 export function updateAllWords(words: ViewFinalWord[]): FinalUpdateWords {
   return {
@@ -57,7 +49,7 @@ function updateWord(
 // * If a sense has no domains, its old domains are retrieved and added (if possible)
 // * If a sense is utterly blank and was just created (has no history), it is removed
 // * If a new sense has a gloss but no domain, or a domain but no gloss, it is retained
-// * If a new sense is also deleted, it is removed
+// * If a new sense is also deleted, it is removed entirely
 function cleanSenses(
   senses: ViewFinalSense[],
   oldSenses: ViewFinalSense[]
@@ -82,9 +74,8 @@ function cleanSenses(
           senseBuffer = { ...senseBuffer, glosses: newSense.glosses };
         if (newSense.domains.length !== 0)
           senseBuffer = { ...senseBuffer, domains: newSense.domains };
-      }
-      // If at least one field is defined, save the sense
-      else if (newSense.glosses.length !== 0 || newSense.domains.length !== 0)
+      } else if (newSense.glosses.length !== 0 || newSense.domains.length !== 0)
+        // If at least one field is defined, save the sense
         senseBuffer = newSense;
     } else senseBuffer = newSense;
 
@@ -118,11 +109,12 @@ export function updateFrontierWord(
   oldData: ViewFinalWord,
   language: string
 ) {
+  debugger;
   let editSource: ViewFinalWord | undefined = cleanWord(newData, oldData);
 
-  // Converts the ViewFinalWord data into a Word to send to the backend. Expecting data to have been run through cleanSenses beforehand
+  // Converts the ViewFinalWord data into a Word to send to the backend
   return async (dispatch: ThunkDispatch<StoreState, any, ViewFinalAction>) => {
-    // Reject the change if there's no vernacular
+    // Reject the change if there's no vernacular ANYWHERE
     if (!editSource) return Promise.reject("No vernacular detected");
 
     let editWord: Word;
@@ -148,19 +140,26 @@ export function updateFrontierWord(
           } as any) as Sense;
 
         // Take all glosses from what the user edited, then add all glosses from the original word which are not in the current language
-        return {
-          ...editSense,
-          glosses: [
-            ...newSense.glosses.split(SEP_CHAR).map(gloss => {
-              return {
-                language: language,
-                def: gloss.trim()
-              };
-            }),
-            ...editSense.glosses.filter(gloss => gloss.language !== language)
-          ],
-          semanticDomains: newSense.domains
-        };
+        // * If there are no glosses, then keep whatever glosses were present before
+        if (newSense.glosses.length > 0)
+          return {
+            ...editSense,
+            glosses: [
+              ...newSense.glosses.split(SEP_CHAR).map(gloss => {
+                return {
+                  language: language,
+                  def: gloss.trim()
+                };
+              }),
+              ...editSense.glosses.filter(gloss => gloss.language !== language)
+            ],
+            semanticDomains: newSense.domains
+          };
+        else
+          return {
+            ...editSense,
+            semanticDomains: newSense.domains
+          };
       } else
         return ({
           ...editSense,
@@ -168,7 +167,6 @@ export function updateFrontierWord(
         } as any) as Sense;
     });
 
-    debugger;
     dispatch(
       updateWord(
         editWord.id,

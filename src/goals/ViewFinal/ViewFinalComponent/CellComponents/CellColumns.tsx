@@ -188,7 +188,6 @@ export default [
     customSort: (a: any, b: any, type: "row" | "group"): number => {
       let count = 0;
       let compare: number = 0;
-      debugger;
       while (
         count < a.senses.length &&
         count < b.senses.length &&
@@ -214,6 +213,7 @@ export default [
     title: "",
     field: "id",
     filtering: false,
+    sorting: false,
     render: (rowData: ViewFinalWord) => null,
     editComponent: (props: FieldParameterStandard) => {
       const deleteSense = (senseId: string) => {

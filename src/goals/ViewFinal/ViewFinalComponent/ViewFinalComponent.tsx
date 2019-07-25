@@ -7,7 +7,7 @@ import {
 } from "react-localize-redux";
 import { Paper } from "@material-ui/core";
 
-import { Word, SemanticDomain, State } from "../../../types/word";
+import { Word, SemanticDomain, State, Sense } from "../../../types/word";
 import tableIcons from "./icons";
 import * as backend from "../../../backend";
 import columns from "./CellComponents/CellColumns";
@@ -47,9 +47,8 @@ export interface ViewFinalSense {
 // Constants
 export const OLD_SENSE: string = "-old";
 export const SEP_CHAR: string = ",";
-
 const SEPARATOR: string = SEP_CHAR + " ";
-const NO_GLOSS: string = "{No gloss}";
+const ROWS_PER_PAGE: number[] = [10, 100, 1000];
 
 export class ViewFinalComponent extends React.Component<
   ViewFinalProps & LocalizeContextProps,
@@ -63,7 +62,7 @@ export class ViewFinalComponent extends React.Component<
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     backend
       .getFrontierWords()
       .then((frontier: Word[]) => this.updateLocalWords(frontier));
@@ -71,10 +70,8 @@ export class ViewFinalComponent extends React.Component<
 
   // Creates the local set of words from the frontier
   private updateLocalWords(frontier: Word[]) {
-    let hasGloss: boolean;
     let newWords: ViewFinalWord[] = [];
     let currentWord: ViewFinalWord;
-    let currentSense: ViewFinalSense;
 
     for (let word of frontier) {
       // Bypass deleted words
@@ -88,41 +85,7 @@ export class ViewFinalComponent extends React.Component<
       };
 
       for (let sense of word.senses) {
-        debugger;
-        // Create dummy sense
-        currentSense = {
-          glosses: "",
-          domains: [],
-          deleted:
-            sense.accessibility !== undefined &&
-            sense.accessibility === State.deleted,
-          senseId: uuid() + OLD_SENSE
-        };
-
-        // Add domains
-        if (sense.semanticDomains)
-          currentSense = {
-            ...currentSense,
-            domains: [...sense.semanticDomains]
-          };
-
-        // Find all glosses in the current language
-        hasGloss = false;
-        if (sense.glosses)
-          for (let gloss of sense.glosses)
-            if (gloss.language === this.props.language) {
-              hasGloss = true;
-              currentSense.glosses += gloss.def + SEPARATOR;
-            }
-
-        // Format the glosses + push them
-        if (hasGloss)
-          currentSense.glosses = currentSense.glosses.slice(
-            0,
-            -SEPARATOR.length
-          );
-        else currentSense.glosses = NO_GLOSS;
-        currentWord.senses.push(currentSense);
+        currentWord.senses.push(this.parseSense(sense));
       }
 
       // Remove the trailing newlines + push to newWords
@@ -131,19 +94,58 @@ export class ViewFinalComponent extends React.Component<
     this.props.updateAllWords(newWords);
   }
 
+  // Convert a Sense into a ViewFinalSense
+  private parseSense(sense: Sense) {
+    let hasGloss: boolean;
+    let currentSense: ViewFinalSense = {
+      glosses: "",
+      domains: [],
+      deleted:
+        sense.accessibility !== undefined &&
+        sense.accessibility === State.deleted,
+      senseId: uuid() + OLD_SENSE
+    };
+
+    // Add domains
+    if (sense.semanticDomains)
+      currentSense = {
+        ...currentSense,
+        domains: [...sense.semanticDomains]
+      };
+
+    // Find all glosses in the current language
+    hasGloss = false;
+    if (sense.glosses)
+      for (let gloss of sense.glosses)
+        if (gloss.language === this.props.language) {
+          hasGloss = true;
+          currentSense.glosses += gloss.def + SEPARATOR;
+        }
+
+    // Format the glosses + push them
+    if (hasGloss)
+      currentSense.glosses = currentSense.glosses.slice(0, -SEPARATOR.length);
+    else currentSense.glosses = "";
+
+    return currentSense;
+  }
+
+  // Remove the duplicates from an array; sugar syntax, as the place it's used is already hideous enough without adding more
+  private removeDuplicates(array: any[]) {
+    return [...new Set(array)];
+  }
+
   render() {
     return (
-      <Paper>
+      <div>
         <MaterialTable
           icons={tableIcons}
           title={<Translate id={"viewFinal.title"} />}
           columns={columns}
-          data={this.props.words.map(word => {
-            return {
-              ...word,
-              senses: word.senses.filter(sense => !sense.deleted)
-            };
-          })}
+          data={this.props.words.map(word => ({
+            ...word,
+            senses: word.senses.filter(sense => !sense.deleted)
+          }))}
           editable={{
             onRowUpdate: (newData: ViewFinalWord, oldData: ViewFinalWord) =>
               new Promise(async resolve => {
@@ -159,10 +161,16 @@ export class ViewFinalComponent extends React.Component<
               })
           }}
           options={{
-            filtering: true
+            filtering: true,
+            pageSize: Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
+            pageSizeOptions: this.removeDuplicates([
+              Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
+              Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
+              Math.min(this.props.words.length, ROWS_PER_PAGE[2])
+            ])
           }}
         />
-      </Paper>
+      </div>
     );
   }
 }
