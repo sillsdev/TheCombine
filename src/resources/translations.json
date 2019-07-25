@@ -136,6 +136,8 @@
       "accepted": ["Accepted", "Aceptado"],
       "rejected": ["Rejected", "Rechazado"],
       "undecided": ["Undecided", "Indeciso"],
+      "accept": ["Accept", "Aceptar"],
+      "reject": ["Reject", "Rechazar"],
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
         "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar."

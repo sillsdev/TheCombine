@@ -34,7 +34,7 @@ export class CharacterDetail extends React.Component<
           <Typography variant="h1">{this.props.character}</Typography>
         </Grid>
         <Grid item xs={9}>
-          <CharacterStatusControl character={this.props.character} />>
+          <CharacterStatusControl character={this.props.character} />
         </Grid>
         <Grid item xs={12}>
           <CharacterInfo character={this.props.character} />
