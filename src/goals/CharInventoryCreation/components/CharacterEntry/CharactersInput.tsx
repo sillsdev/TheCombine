@@ -22,7 +22,7 @@ export default function CharactersInput(props: CharactersInputProps) {
       style={{ maxWidth: 512, marginTop: theme.spacing(1) }}
       inputProps={{
         style: { letterSpacing: 5 },
-        spellcheck: "false"
+        spellCheck: false
       }}
       autoComplete="off"
       id={props.id}

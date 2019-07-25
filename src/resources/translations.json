@@ -144,7 +144,8 @@
         "Add characters by entering them in this box",
         "Agrega caracteres ingresándolos en este cuadro"
       ],
-      "advanced": ["Advanced", "Avanzado"]
+      "advanced": ["Advanced", "Avanzado"],
+      "occurrences": ["occurrences", "ocurrencias"]
     },
     "sampleWords": {
       "title": ["Sample Words", "Palabras de muestra"],

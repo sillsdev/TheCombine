@@ -153,6 +153,7 @@ export class CharacterList extends React.Component<
                 key={char}
                 count={countCharacterOccurences(char, this.props.allWords)}
                 status={"rejected"}
+                onClick={() => this.props.setSelectedCharacter(char)}
               />
               // <Grid
               //   item

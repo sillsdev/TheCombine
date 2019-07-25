@@ -6,6 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import theme from "../../../../types/theme";
 import CharacterStatusText from "./CharacterStatusText";
+import { Translate } from "react-localize-redux";
 
 export interface CharacterCardProps {
   char: string;
@@ -43,7 +44,8 @@ export default function CharacterCard(props: CharacterCardProps) {
             {charToHexValue(props.char)}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {props.count} occurrences
+            {props.count}{" "}
+            <Translate id="charInventory.characterSet.occurrences" />
           </Typography>
           <CharacterStatusText status={props.status} />
         </CardContent>
