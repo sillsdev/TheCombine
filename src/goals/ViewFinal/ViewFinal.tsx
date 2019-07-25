@@ -22,12 +22,12 @@ export class ViewFinal implements Goal {
   result: GoalOption;
   hash: string;
 
-  constructor(steps: GoalStep[] = [], numSteps: number = 8) {
+  constructor(steps: GoalStep[] = []) {
     this.goalType = GoalType.ViewFind;
     this.name = "viewFinal";
     this.user = new User("", "", "");
     this.steps = steps;
-    this.numSteps = numSteps;
+    this.numSteps = -1;
     this.currentStep = 0;
     this.data = {};
     this.tool = Tools.TempTool;
