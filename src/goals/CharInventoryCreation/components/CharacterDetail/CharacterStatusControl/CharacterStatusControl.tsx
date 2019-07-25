@@ -13,36 +13,24 @@ export interface CharacterStatusControlProps {
   reject: (character: string) => void;
 }
 
-interface CharacterStatusControlState {}
-
-export class CharacterStatusControl extends React.Component<
-  CharacterStatusControlProps & LocalizeContextProps,
-  CharacterStatusControlState
-> {
-  constructor(props: CharacterStatusControlProps & LocalizeContextProps) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <ButtonGroup
-          variant="contained"
-          size="small"
-          aria-label="small outlined secondary button group"
-        >
-          <Button onClick={() => this.props.accept(this.props.character)}>
-            <Translate id="charInventory.characterSet.accept" />
-          </Button>
-          {/* <Button>Undecided</Button> */}
-          <Button onClick={() => this.props.reject(this.props.character)}>
-            <Translate id="charInventory.characterSet.reject" />
-          </Button>
-        </ButtonGroup>
-      </React.Fragment>
-    );
-  }
+export default function CharacterStatusControl(
+  props: CharacterStatusControlProps
+) {
+  return (
+    <React.Fragment>
+      <ButtonGroup
+        variant="contained"
+        size="small"
+        aria-label="small outlined secondary button group"
+      >
+        <Button onClick={() => props.accept(props.character)}>
+          <Translate id="charInventory.characterSet.accept" />
+        </Button>
+        {/* <Button>Undecided</Button> */}
+        <Button onClick={() => props.reject(props.character)}>
+          <Translate id="charInventory.characterSet.reject" />
+        </Button>
+      </ButtonGroup>
+    </React.Fragment>
+  );
 }
-
-export default withLocalize(CharacterStatusControl);
