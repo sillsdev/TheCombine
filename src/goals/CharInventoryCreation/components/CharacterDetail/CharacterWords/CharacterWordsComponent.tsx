@@ -14,7 +14,7 @@ export default function CharacterWords(props: CharacterWordsProps) {
         variant="body1"
         style={{ display: "inline-flex", verticalAlign: "middle" }}
       >
-        Examples
+        Example words with character
         <ArrowRightAlt />
       </Typography>
       {getWordsContainingChar(props.character, props.allWords, 5).map(word => (
