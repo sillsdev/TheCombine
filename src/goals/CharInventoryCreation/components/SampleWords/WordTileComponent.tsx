@@ -5,7 +5,7 @@ import BlockIcon from "@material-ui/icons/Block";
 import { Add } from "@material-ui/icons";
 import { highlight } from "../../../../types/theme";
 
-const TRANSITION = "all 0.25s";
+const TRANSITION = "all 200ms";
 
 export interface WordTileProps {
   word: string;

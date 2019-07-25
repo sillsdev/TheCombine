@@ -1,9 +1,5 @@
 import * as React from "react";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 import { Typography } from "@material-ui/core";
 
 export interface CharacterInfoProps {
@@ -11,31 +7,19 @@ export interface CharacterInfoProps {
   allWords: string[];
 }
 
-interface CharacterInfoState {}
-
-export class CharacterInfo extends React.Component<
-  CharacterInfoProps & LocalizeContextProps,
-  CharacterInfoState
-> {
-  constructor(props: CharacterInfoProps & LocalizeContextProps) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <Typography variant="body1">
-          {charToHexValue(this.props.character)}
-        </Typography>
-        <Typography variant="body1">Details</Typography>
-        <Typography variant="body1">
-          {countCharacterOccurences(this.props.character, this.props.allWords)}{" "}
-          <Translate id="charInventory.characterSet.occurrences" />
-        </Typography>
-      </React.Fragment>
-    );
-  }
+export default function CharacterInfo(props: CharacterInfoProps) {
+  return (
+    <React.Fragment>
+      <Typography variant="body1">{charToHexValue(props.character)}</Typography>
+      <Typography variant="body1">
+        [Character details has not been implemented]
+      </Typography>
+      <Typography variant="body1">
+        {countCharacterOccurences(props.character, props.allWords)}{" "}
+        <Translate id="charInventory.characterSet.occurrences" />
+      </Typography>
+    </React.Fragment>
+  );
 }
 
 function charToHexValue(char: string) {
@@ -60,5 +44,3 @@ function countCharacterOccurences(char: string, words: string[]) {
   }
   return count;
 }
-
-export default withLocalize(CharacterInfo);

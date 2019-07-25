@@ -35,8 +35,6 @@ export class CharacterList extends React.Component<
     };
   }
 
-  componentDidMount() {}
-
   // reorders the character inventory by moving one char
   moveChar() {
     if (this.state.dragChar === this.state.dropChar) {

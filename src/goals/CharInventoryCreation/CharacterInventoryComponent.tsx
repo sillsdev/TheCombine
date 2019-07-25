@@ -60,7 +60,7 @@ export class CharacterInventory extends React.Component<
 
   componentDidMount() {
     this.props.fetchWords();
-    this.props.setSelectedCharacter("");
+    this.props.setSelectedCharacter("-"); // DON'T LET SIMEON COMMIT THIS
   }
 
   handleClose() {
