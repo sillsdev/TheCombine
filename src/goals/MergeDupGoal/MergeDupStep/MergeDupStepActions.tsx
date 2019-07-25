@@ -305,23 +305,6 @@ export async function mergeWord(
       };
     });
 
-    // check if anything is actually done whith this merge
-    /*if (children.length === 1) {
-      // check if we changed any of the senses
-      if (parent.senses.length === children[0].senses.length) {
-        let foundDiff = false;
-        for (let state of children[0].senses) {
-          if (state !== State.sense) {
-            foundDiff = true;
-          }
-        }
-        if (!foundDiff) {
-          return mapping;
-        }
-      }
-    }
-    /**/
-
     // send database call
     let newWords = await backend.mergeWords(parent, children);
     let separateIndex = 0;
@@ -344,7 +327,6 @@ export async function mergeWord(
         let src = `${origWord.wordID}:${senseIndex}`;
         switch (origWord.senses[senseIndex]) {
           case State.sense:
-            if (!newWords) debugger;
             mapping[src] = { srcWord: newWords[0], order: keepCounts[0] };
             keepCounts[0]++;
             break;

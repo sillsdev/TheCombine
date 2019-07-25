@@ -57,7 +57,6 @@ export async function mergeWords(
   parent: Word,
   children: MergeWord[]
 ): Promise<string[]> {
-  console.log("Merging: ", { parent, children });
   parent = JSON.parse(JSON.stringify(parent));
   parent.id = "";
   let childrenWords = children.map(child => ({

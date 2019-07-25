@@ -100,9 +100,6 @@ const mockStoreState = {
   mergeDuplicateGoal: { mergeTreeState: { data: {}, tree: {} } }
 };
 
-// when testing this I would like to make sure the right merge requests are sent
-// I think I'm going to intercept the backend wrapper call and check that
-
 const data: { data: MergeData } = {
   data: {
     words: {
