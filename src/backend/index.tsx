@@ -106,6 +106,7 @@ export async function getFrontierWords(): Promise<Word[]> {
     `projects/${getProjectId()}/words/frontier`,
     { headers: authHeader() }
   );
+  console.log(resp);
   return resp.data;
 }
 
@@ -307,8 +308,9 @@ export async function getAllUserEdits(): Promise<Goal[]> {
 }
 
 export async function getSemanticDomains(): Promise<SemanticDomain[]> {
-  let resp = await backendServer.get(`projects/${getProjectId()}/semanticdomains`, {
-    headers: authHeader()
-  });
+  let resp = await backendServer.get(
+    `projects/${getProjectId()}/semanticdomains`,
+    { headers: authHeader() }
+  );
   return resp.data;
 }

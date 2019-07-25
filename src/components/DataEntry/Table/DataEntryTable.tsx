@@ -31,19 +31,18 @@ interface DataEntryTableProps {
 
 interface DataEntryState {
   rows: Row[];
+  hoverIndex?: number /** Index of row being hovered over */;
 }
 
 interface Row {
   vernacular: string;
   glosses: string;
   dupId: string /** The ID of the duplicate word in the frontier */;
-  duplicateVernacular: boolean;
   dupVernacular?: string /** The vernacular of the duplicate word in the frontier */;
   dupGlosses?: string[] /** The `def` field of the glosses of the duplicate word in the frontier */;
   glossSpelledCorrectly: boolean;
   showMispelled?: boolean;
   showDuplicate?: boolean;
-  hover?: boolean /** Is this row being hovered over */;
 }
 
 interface ExistingRow extends Row {
@@ -61,7 +60,6 @@ export class DataEntryTable extends React.Component<
       vernacular: "",
       glosses: "",
       dupId: "",
-      duplicateVernacular: false,
       glossSpelledCorrectly: true
     };
     this.state = {
@@ -95,7 +93,6 @@ export class DataEntryTable extends React.Component<
       this.rowToNewWord({
         vernacular: vernacular,
         glosses: glosses,
-        duplicateVernacular: lastRow.duplicateVernacular,
         glossSpelledCorrectly: glossSpelledCorrectly,
         id: "",
         dupId: "",
@@ -118,7 +115,6 @@ export class DataEntryTable extends React.Component<
           vernacular: "",
           glosses: "",
           dupId: lastRow.dupId,
-          duplicateVernacular: false, // May need to fix
           glossSpelledCorrectly: true, // May need to fix
           id: "", // May need to fix
           senseIndex: 0 // May need to fix
@@ -219,7 +215,6 @@ export class DataEntryTable extends React.Component<
     let row: ExistingRow = {
       vernacular: word.vernacular,
       glosses: "",
-      duplicateVernacular: false,
       glossSpelledCorrectly: true,
       id: word.id,
       dupId: "",
@@ -311,7 +306,7 @@ export class DataEntryTable extends React.Component<
   }
 
   // Fix
-  showDuplicateForRow(rowIndex: number) {
+  toggleDuplicateVernacularView(rowIndex: number) {
     let row = this.state.rows[rowIndex];
     let dupWord = this.getWord(row.dupId);
     row.dupVernacular = dupWord.vernacular;
@@ -339,20 +334,18 @@ export class DataEntryTable extends React.Component<
         item
         xs={12}
         key={"d" + rowIndex}
-        onMouseEnter={() => {
-          let newRow: Row = {
-            ...this.state.rows[rowIndex],
-            hover: true
-          };
-          this.updateRow(newRow, rowIndex);
-        }}
-        onMouseLeave={() => {
-          let newRow: Row = {
-            ...this.state.rows[rowIndex],
-            hover: false
-          };
-          this.updateRow(newRow, rowIndex);
-        }}
+        // onMouseEnter={() => {
+        //   let newRow: Row = {
+        //     ...this.state.rows[rowIndex]
+        //   };
+        //   this.updateRow(newRow, rowIndex);
+        // }}
+        // onMouseLeave={() => {
+        //   let newRow: Row = {
+        //     ...this.state.rows[rowIndex]
+        //   };
+        //   this.updateRow(newRow, rowIndex);
+        // }}
         style={{ background: "whitesmoke" }}
       >
         <Grid container>
@@ -426,21 +419,21 @@ export class DataEntryTable extends React.Component<
         item
         xs={12}
         key={"mispelled" + rowIndex}
-        onMouseEnter={() => {
-          // Will this lose data since we may be updating an existing row?
-          let newRow: Row = {
-            ...this.state.rows[rowIndex],
-            hover: true
-          };
-          this.updateRow(newRow, rowIndex);
-        }}
-        onMouseLeave={() => {
-          let newRow: Row = {
-            ...this.state.rows[rowIndex],
-            hover: false
-          };
-          this.updateRow(newRow, rowIndex);
-        }}
+        // onMouseEnter={() => {
+        //   // Will this lose data since we may be updating an existing row?
+        //   // let newRow: Row = {
+        //   //   ...this.state.rows[rowIndex]
+        //   //   // hover: true
+        //   // };
+        //   // this.updateRow(newRow, rowIndex);
+        // }}
+        // onMouseLeave={() => {
+        //   // let newRow: Row = {
+        //   //   ...this.state.rows[rowIndex]
+        //   //   // hover: false
+        //   // };
+        //   // this.updateRow(newRow, rowIndex);
+        // }}
         style={{ background: "whitesmoke" }}
       >
         <Grid container>
@@ -516,7 +509,6 @@ export class DataEntryTable extends React.Component<
                 ? row.dupGlosses[senseIndex]
                 : row.glosses,
               dupId: "",
-              duplicateVernacular: false,
               glossSpelledCorrectly: true,
               id: row.dupId,
               senseIndex: senseIndex
@@ -589,15 +581,28 @@ export class DataEntryTable extends React.Component<
                           variant="outlined"
                           value={row.vernacular}
                           onChange={e => {
-                            let duplicateVernacular: boolean =
-                              this.vernInFrontier(row.vernacular) !== "";
-                            let updatedRow: Row = {
-                              ...row,
-                              vernacular: e.target.value,
-                              duplicateVernacular: duplicateVernacular
-                            };
+                            // let duplicateVernacular: boolean =
+                            //   this.vernInFrontier(row.vernacular) !== "";
+                            // let updatedRow: Row = {
+                            //   ...row,
+                            //   vernacular: e.target.value,
+                            //   duplicateVernacular: duplicateVernacular
+                            // };
 
-                            this.updateState(updatedRow, rowIndex);
+                            // this.updateState(updatedRow, rowIndex);
+
+                            let dupId = this.vernInFrontier(e.target.value);
+                            // if (dupId === (row as ExistingRow).id) {
+                            //   dupId = ""; // the "duplicate" is the word we're already editing
+                            // }
+                            this.updateRow(
+                              {
+                                ...row,
+                                vernacular: e.target.value,
+                                dupId: dupId
+                              },
+                              rowIndex
+                            );
                           }}
                           inputRef={this.vernInput}
                           // Move the focus to the next box when the right arrow key is pressed
@@ -610,7 +615,7 @@ export class DataEntryTable extends React.Component<
                               this.focusGlossInput();
                           }}
                         />
-                        {this.state.rows[rowIndex].duplicateVernacular && (
+                        {this.state.rows[rowIndex].dupId && (
                           <Tooltip
                             title={
                               this.props.translate(
@@ -630,6 +635,9 @@ export class DataEntryTable extends React.Component<
                                 right: 48,
                                 cursor: "pointer"
                               }}
+                              onClick={() =>
+                                this.toggleDuplicateVernacularView(rowIndex)
+                              }
                             />
                           </Tooltip>
                         )}
@@ -723,18 +731,10 @@ export class DataEntryTable extends React.Component<
                     xs={12}
                     key={rowIndex}
                     onMouseEnter={() => {
-                      let newRow: Row = {
-                        ...this.state.rows[rowIndex],
-                        hover: true
-                      };
-                      this.updateRow(newRow, rowIndex);
+                      this.setState({ hoverIndex: rowIndex });
                     }}
                     onMouseLeave={() => {
-                      let newRow: Row = {
-                        ...this.state.rows[rowIndex],
-                        hover: false
-                      };
-                      this.updateRow(newRow, rowIndex);
+                      this.setState({ hoverIndex: undefined });
                     }}
                   >
                     <Grid container>
@@ -794,7 +794,9 @@ export class DataEntryTable extends React.Component<
                                 right: 48,
                                 cursor: "pointer"
                               }}
-                              onClick={() => this.showDuplicateForRow(rowIndex)}
+                              onClick={() =>
+                                this.toggleDuplicateVernacularView(rowIndex)
+                              }
                             />
                           </Tooltip>
                         )}
@@ -876,7 +878,7 @@ export class DataEntryTable extends React.Component<
                         )}
                       </Grid>
                       <Grid item xs={2}>
-                        {this.state.rows[rowIndex].hover && (
+                        {this.state.hoverIndex === rowIndex && (
                           <React.Fragment>
                             <Tooltip
                               title={
