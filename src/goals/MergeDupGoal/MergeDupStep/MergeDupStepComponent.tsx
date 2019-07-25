@@ -4,16 +4,13 @@ import {
   Card,
   CardContent,
   Grid,
-  Switch,
-  List,
-  ListItem,
   GridList,
   GridListTile,
-  Paper,
   IconButton,
   Typography,
   Chip,
-  Drawer
+  Drawer,
+  Paper
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -21,7 +18,7 @@ import {
   Translate,
   withLocalize
 } from "react-localize-redux";
-import { styleAddendum } from "../../../types/theme";
+import theme from "../../../types/theme";
 import { uuid } from "../../../utilities";
 import {
   TreeDataSense,
@@ -35,10 +32,8 @@ import {
   DragDropContext,
   DropResult
 } from "react-beautiful-dnd";
-import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
+import { ArrowForwardIos } from "@material-ui/icons";
 
-// Constants
-const MIN_VIEW: string = "60vh";
 const MAX_VIEW: string = "75vh";
 const HEIGHT_STYLE: React.CSSProperties = {
   //minHeight: MIN_VIEW,
@@ -59,7 +54,7 @@ export interface MergeDupStepProps {
   moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
   orderSense: (wordID: string, senseID: string, order: number) => void;
   orderDuplicate: (ref: MergeTreeReference, order: number) => void;
-  mergeAll?: () => void;
+  mergeAll?: () => Promise<void>;
   refreshWords?: () => void;
 }
 
@@ -100,8 +95,15 @@ class MergeDupStep extends React.Component<
   }
 
   next() {
-    if (this.props.mergeAll) this.props.mergeAll();
-    if (this.props.refreshWords) this.props.refreshWords();
+    this.setState({
+      ...this.state,
+      sideBar: { senses: [], wordID: "", senseID: "" }
+    });
+    if (this.props.mergeAll) {
+      this.props.mergeAll().then(() => {
+        if (this.props.refreshWords) this.props.refreshWords();
+      });
+    }
   }
 
   handleDrop(res: DropResult) {
@@ -174,9 +176,7 @@ class MergeDupStep extends React.Component<
         open={this.state.sideBar.senses.length > 1}
       >
         <Droppable
-          droppableId={`${this.state.sideBar.wordID} ${
-            this.state.sideBar.senseID
-          }`}
+          droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
         >
           {providedDroppable => (
             <div
@@ -253,11 +253,6 @@ class MergeDupStep extends React.Component<
   }
 
   render() {
-    let key = Object.keys(this.props.words).reduce(
-      (key, acc) => `${key}:${acc}`,
-      "Step:"
-    );
-
     let newId = uuid();
     //visual definition
     return (

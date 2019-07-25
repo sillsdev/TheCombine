@@ -92,7 +92,9 @@ namespace BackendFramework.Services
 
                 //handle different states
 
-                var separateWord = baseParent.Clone();
+                var separateWord = currentChildWord.Clone();
+                separateWord.Senses = new List<Sense>();
+                separateWord.Id = "";
                 for (int i = 0; i < currentChildWord.Senses.Count; i++)
                 {
                     switch (newChildWordState.SenseStates[i])
@@ -119,7 +121,7 @@ namespace BackendFramework.Services
                 }
 
                 //add a new word to the database with all of the senses with separate tags from this word
-                if (separateWord.Senses.Count != baseParent.Senses.Count)
+                if (separateWord.Senses.Count != 0)
                 {
                     separateWord.ProjectId = projectId;
                     var newSeparate = await _repo.Create(separateWord);

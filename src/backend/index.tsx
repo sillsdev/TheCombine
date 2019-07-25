@@ -56,7 +56,7 @@ export async function getAllWords(): Promise<Word[]> {
 export async function mergeWords(
   parent: Word,
   children: MergeWord[]
-): Promise<string> {
+): Promise<string[]> {
   console.log("Merging: ", { parent, children });
   parent = JSON.parse(JSON.stringify(parent));
   parent.id = "";

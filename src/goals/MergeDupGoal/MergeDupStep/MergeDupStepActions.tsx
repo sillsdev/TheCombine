@@ -230,14 +230,20 @@ export async function mergeWord(
       for (let sense of senseList) {
         let senseData = data.senses[sense];
         let wordID = senseData.srcWord;
+        let senseIndex = senseData.order;
 
-        if (!senses[senseData.srcWord]) {
-          // get full word
-          let fullWord = getState().mergeDuplicateGoal.mergeTreeState.data
-            .words[wordID];
+        let map = mapping[`${wordID}:${senseData.order}`];
+        if (map) {
+          wordID = map.srcWord;
+          senseIndex = map.order;
+        }
+
+        if (!senses[wordID]) {
+          let dbWord = await backend.getWord(wordID);
+
           // add each sense into senses as separate
           senses[wordID] = [];
-          for (let sense of fullWord.senses) {
+          for (let sense of dbWord.senses) {
             senses[wordID].push({
               ...sense,
               srcWord: wordID,
@@ -253,9 +259,16 @@ export async function mergeWord(
     Object.values(word.senses).forEach(sense => {
       let senseIDs = Object.values(sense);
       let senseData = data.senses[senseIDs[0]];
+      let wordID = senseData.srcWord;
+      let senseIndex = senseData.order;
 
+      let map = mapping[`${wordID}:${senseData.order}`];
+      if (map) {
+        wordID = map.srcWord;
+        senseIndex = map.order;
+      }
       // set this sense to be merged as sense
-      senses[senseData.srcWord][senseData.order].state = State.sense;
+      senses[wordID][senseIndex].state = State.sense;
 
       // we want a list of all senses skipping the first
       let dups = senseIDs
@@ -311,11 +324,51 @@ export async function mergeWord(
     /**/
 
     // send database call
-    console.log("-----------------------------------------");
-    for (let wordID of await backend.mergeWords(parent, children)) {
-      console.log("Created: ", await backend.getWord(wordID));
+    let newWords = await backend.mergeWords(parent, children);
+    console.log(newWords);
+    let separateIndex = 0;
+    let keepCounts: number[] = [];
+    for (let i in newWords) {
+      keepCounts[i] = 0;
+    }
+
+    for (let wordIndex in children) {
+      let word = await backend.getWord(children[wordIndex].wordID);
+      // get original wordID
+      console.log(wordIndex);
+      let origWord = children[wordIndex];
+
+      // if merge contains separate increment index
+      if (origWord.senses.includes(State.separate)) {
+        separateIndex++;
+      }
+
+      for (let senseIndex in origWord.senses) {
+        let src = `${origWord.wordID}:${senseIndex}`;
+        switch (origWord.senses[senseIndex]) {
+          case State.sense:
+            console.log("sense");
+            mapping[src] = { srcWord: newWords[0], order: keepCounts[0] };
+            keepCounts[0]++;
+            break;
+          case State.separate:
+            console.log("separate", separateIndex);
+            mapping[src] = {
+              srcWord: newWords[separateIndex],
+              order: keepCounts[separateIndex]
+            };
+            keepCounts[separateIndex]++;
+            break;
+          case State.duplicate:
+            console.log("dup");
+            mapping[src] = { srcWord: newWords[0], order: -1 };
+            break;
+          default:
+        }
+      }
     }
   }
+  console.log(JSON.stringify(mapping, null, 2));
   return mapping;
 }
 
@@ -328,9 +381,8 @@ export function mergeAll() {
     for (let wordID of Object.keys(
       getState().mergeDuplicateGoal.mergeTreeState.tree.words
     )) {
-      console.log("Merge it");
+      console.log("Merge id: ", wordID);
       mapping = await mergeWord(wordID, getState, mapping);
     }
-    //await dispatch(clearTree());
   };
 }
