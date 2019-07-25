@@ -190,7 +190,7 @@ describe("Test GoalsActions", () => {
 
   it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
     let goalToUpdate: Goal = new MergeDups();
-    goalToUpdate.numSteps = 1;
+    goalToUpdate.numSteps = 8;
     goalToUpdate.steps = [
       {
         words: [...goalDataMock.plannedWords[0]]
@@ -234,10 +234,12 @@ describe("Test GoalsActions", () => {
 
     mockStore = createMockStore(mockStoreState);
 
-    await mockStore
-      .dispatch<any>(actions.loadGoalData(goalToUpdate))
-      .then(() => {})
-      .catch((err: string) => fail(err));
+    try {
+      await mockStore.dispatch<any>(actions.loadGoalData(goalToUpdate));
+    } catch (err) {
+      fail(err);
+    }
+    debugger;
     expect(mockStore.getActions()).toEqual([updateGoal, setWordData]);
   });
 
@@ -257,12 +259,14 @@ describe("Test GoalsActions", () => {
 
   it("should load goal data for MergeDups", async () => {
     let goal: Goal = new MergeDups();
-    await mockStore
-      .dispatch<any>(actions.loadGoalData(goal))
-      .then((returnedGoal: Goal) => {
-        expect(returnedGoal.data).toEqual(goalDataMock);
-      })
-      .catch((err: string) => fail(err));
+    debugger;
+    try {
+      goal = await mockStore.dispatch<any>(actions.loadGoalData(goal));
+      let data = goal.data as MergeDupData;
+      expect(data.plannedWords.length).toBeGreaterThan(0);
+    } catch (err) {
+      fail(err);
+    }
   });
 
   it("should not load any goal data", async () => {
