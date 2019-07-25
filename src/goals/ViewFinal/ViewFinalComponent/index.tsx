@@ -12,8 +12,7 @@ import { StoreState } from "../../../types";
 function mapStateToProps(state: StoreState) {
   return {
     language: state.viewFinalState.language,
-    words: state.viewFinalState.words,
-    edits: state.viewFinalState.edits
+    words: state.viewFinalState.words
   };
 }
 

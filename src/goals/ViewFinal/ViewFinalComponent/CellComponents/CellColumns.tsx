@@ -38,7 +38,6 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
               vernacular: event.target.value
             })
           }
-          style={{ float: "inline-start" }}
         />
       )}
     </Translate>
@@ -53,7 +52,7 @@ function senseField(props: FieldParameterStandard, editable: boolean) {
         <Translate>
           {({ translate }) => (
             <TextField
-              key={props.rowData.id}
+              key={`glosses${props.rowData.id}`}
               value={props.value[index].glosses}
               error={sense.glosses.length === 0}
               placeholder={translate("viewFinal.nogloss").toString()}

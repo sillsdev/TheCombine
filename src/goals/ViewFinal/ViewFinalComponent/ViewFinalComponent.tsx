@@ -5,7 +5,6 @@ import {
   LocalizeContextProps,
   withLocalize
 } from "react-localize-redux";
-import { Paper } from "@material-ui/core";
 
 import { Word, SemanticDomain, State, Sense } from "../../../types/word";
 import tableIcons from "./icons";

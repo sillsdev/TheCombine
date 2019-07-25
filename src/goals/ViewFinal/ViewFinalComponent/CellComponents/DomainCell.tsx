@@ -70,7 +70,7 @@ export default class DomainCell extends React.Component<
             <Grid container direction="row" spacing={2}>
               {sense.domains.length > 0 ? (
                 sense.domains.map(domain => (
-                  <Grid item xs key={`domain${index}`}>
+                  <Grid item xs key={`domainFor${sense.senseId}-${index}`}>
                     <Chip
                       color={sense.deleted ? "default" : "primary"}
                       label={`${domain.id}: ${domain.name}`}
@@ -83,7 +83,7 @@ export default class DomainCell extends React.Component<
                   </Grid>
                 ))
               ) : (
-                <Grid item xs key={`domain${index}`}>
+                <Grid item xs key={`noDomain${sense.senseId}`}>
                   <Chip
                     label={<Translate id="viewFinal.nodomain" />}
                     color="secondary"

@@ -16,12 +16,14 @@ export enum ViewFinalActionTypes {
 
 interface FinalUpdateWords {
   type: ViewFinalActionTypes.UpdateAllWords;
-  payload: { words: ViewFinalWord[] };
+  words: ViewFinalWord[];
 }
 
 interface FinalUpdateWord {
   type: ViewFinalActionTypes.UpdateWord;
-  payload: { id: string; newId: string; newWord: ViewFinalWord };
+  id: string;
+  newId: string;
+  newWord: ViewFinalWord;
 }
 
 export type ViewFinalAction = FinalUpdateWords | FinalUpdateWord;
@@ -29,7 +31,7 @@ export type ViewFinalAction = FinalUpdateWords | FinalUpdateWord;
 export function updateAllWords(words: ViewFinalWord[]): FinalUpdateWords {
   return {
     type: ViewFinalActionTypes.UpdateAllWords,
-    payload: { words }
+    words
   };
 }
 
@@ -40,7 +42,9 @@ function updateWord(
 ): FinalUpdateWord {
   return {
     type: ViewFinalActionTypes.UpdateWord,
-    payload: { id, newId, newWord }
+    id,
+    newId,
+    newWord
   };
 }
 

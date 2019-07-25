@@ -3,13 +3,11 @@ import { ViewFinalAction, ViewFinalActionTypes } from "./ViewFinalActions";
 
 export interface ViewFinalState {
   words: ViewFinalWord[];
-  edits: string[];
   language: string;
 }
 
 const defaultState: ViewFinalState = {
   words: [],
-  edits: [],
   language: "en"
 };
 
@@ -17,31 +15,27 @@ export const viewFinalReducer = (
   state: ViewFinalState = defaultState, //createStore() calls each reducer with undefined state
   action: ViewFinalAction
 ): ViewFinalState => {
-  let words: ViewFinalWord[];
   switch (action.type) {
-    // Update the local words
     case ViewFinalActionTypes.UpdateAllWords:
+      // Update the local words
       return {
         ...state,
-        words: action.payload.words
+        words: action.words
       };
 
-    // Update the id of a specified word
     case ViewFinalActionTypes.UpdateWord:
+      // Update the specified word's IDs and data
       return {
         ...state,
         words: state.words.map(word => {
-          if (word.id === action.payload.id) {
-            words = [action.payload.newWord ? action.payload.newWord : word];
+          if (word.id === action.id) {
             return {
-              ...words[0],
-              id: action.payload.id,
-              senses: words[0].senses.map(sense => {
-                return {
-                  ...sense,
-                  senseId: sense.senseId + OLD_SENSE
-                };
-              })
+              ...action.newWord,
+              id: action.id,
+              senses: action.newWord.senses.map(sense => ({
+                ...sense,
+                senseId: sense.senseId + OLD_SENSE
+              }))
             };
           } else return word;
         })
