@@ -123,11 +123,11 @@ namespace BackendFramework.ValueModels
                 return 
                     other.Id.Equals(Id) &&
                     this.ContentEquals(other) &&
-                    other.History.Count == History.Count && 
                     other.Created.Equals(Created) &&
                     other.Modified.Equals(Modified) && 
                     other.EditedBy.Count == EditedBy.Count &&
                     other.EditedBy.All(EditedBy.Contains) &&
+                    other.History.Count == History.Count && 
                     other.History.All(History.Contains);
             }
         }

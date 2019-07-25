@@ -172,7 +172,7 @@ namespace Backend.Tests
         }
 
         [Test]
-        public void mergeWordsIdentity()
+        public void MergeWordsIdentity()
         {
             Word thisWord = RandomWord();
             thisWord = _repo.Create(thisWord).Result;
@@ -191,18 +191,18 @@ namespace Backend.Tests
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
-            Assert.IsTrue(newWords[0].ContentEquals(thisWord));
+            Assert.IsTrue(newWords.First().ContentEquals(thisWord));
 
             // Check that the only word in the frontier is the new word
             var frontier = _repo.GetFrontier(_projId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.AreEqual(frontier[0], newWords[0]);
+            Assert.AreEqual(frontier.First(), newWords.First());
 
             // check that new word has the right history
-            Assert.That(newWords[0].History, Has.Count.EqualTo(1));
-            var intermediateWord = _repo.GetWord(_projId, newWords[0].History[0]).Result;
+            Assert.That(newWords.First().History, Has.Count.EqualTo(1));
+            var intermediateWord = _repo.GetWord(_projId, newWords.First().History.First()).Result;
             Assert.That(intermediateWord.History, Has.Count.EqualTo(1));
-            Assert.AreEqual(intermediateWord.History[0], thisWord.Id);
+            Assert.AreEqual(intermediateWord.History.First(), thisWord.Id);
         }
 
         [Test]
