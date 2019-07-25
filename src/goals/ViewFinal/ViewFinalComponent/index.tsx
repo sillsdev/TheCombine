@@ -22,8 +22,11 @@ function mapDispatchToProps(
 ) {
   return {
     updateAllWords: (words: ViewFinalWord[]) => dispatch(updateAllWords(words)),
-    updateFrontierWord: (editSource: ViewFinalWord, language: string) =>
-      dispatch(updateFrontierWord(editSource, language))
+    updateFrontierWord: (
+      newData: ViewFinalWord,
+      oldData: ViewFinalWord,
+      language: string
+    ) => dispatch(updateFrontierWord(newData, oldData, language))
   };
 }
 

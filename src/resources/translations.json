@@ -112,9 +112,10 @@
   },
   "viewFinal": {
     "title": ["View Final", "Ver final"],
-    "nodomain": ["No domain selected", "No tenemos un domain"],
+    "sense": ["Sense", "Sentido"],
+    "novernacular": ["No vernacular input!", "No tenemos un vernáculo!"],
     "nogloss": ["No glosses input", "No tenemos un traduccion"],
-    "sense": ["Sense", "Sentido"]
+    "nodomain": ["No domain selected", "No tenemos un domain"]
   },
   "charInventory": {
     "title": ["Create Character Inventory", "Crear inventario de personajes"],

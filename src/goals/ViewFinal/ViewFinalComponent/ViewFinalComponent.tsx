@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialTable, { MTableEditRow, MTableCell } from "material-table";
+import MaterialTable from "material-table";
 import {
   Translate,
   LocalizeContextProps,
@@ -22,7 +22,8 @@ interface ViewFinalProps {
   // Dispatch changes
   updateAllWords: (words: ViewFinalWord[]) => void;
   updateFrontierWord: (
-    editSource: ViewFinalWord,
+    newData: ViewFinalWord,
+    oldData: ViewFinalWord,
     language: string
   ) => Promise<void>;
 }
@@ -87,23 +88,32 @@ export class ViewFinalComponent extends React.Component<
       };
 
       for (let sense of word.senses) {
-        // Bypass deleted senses
-        if (sense.accessibility === State.deleted) continue;
-
+        debugger;
+        // Create dummy sense
         currentSense = {
           glosses: "",
-          domains: [...sense.semanticDomains],
-          deleted: false,
+          domains: [],
+          deleted:
+            sense.accessibility !== undefined &&
+            sense.accessibility === State.deleted,
           senseId: uuid() + OLD_SENSE
         };
 
+        // Add domains
+        if (sense.semanticDomains)
+          currentSense = {
+            ...currentSense,
+            domains: [...sense.semanticDomains]
+          };
+
         // Find all glosses in the current language
         hasGloss = false;
-        for (let gloss of sense.glosses)
-          if (gloss.language === this.props.language) {
-            hasGloss = true;
-            currentSense.glosses += gloss.def + SEPARATOR;
-          }
+        if (sense.glosses)
+          for (let gloss of sense.glosses)
+            if (gloss.language === this.props.language) {
+              hasGloss = true;
+              currentSense.glosses += gloss.def + SEPARATOR;
+            }
 
         // Format the glosses + push them
         if (hasGloss)
@@ -119,35 +129,6 @@ export class ViewFinalComponent extends React.Component<
       newWords.push(currentWord);
     }
     this.props.updateAllWords(newWords);
-  }
-
-  // Returns a cleaned array of senses: if the sense has no gloss or semantic domain, it's replaced with its counterpart from oldSenses; if there is no counterpart, the blank sense is removed.
-  cleanSenses(
-    senses: ViewFinalSense[],
-    oldSenses: ViewFinalSense[]
-  ): ViewFinalSense[] {
-    let compactSenses: ViewFinalSense[] = [];
-    let senseBuffer: ViewFinalSense | undefined;
-
-    for (let newSense of senses) {
-      if (newSense.glosses === "" || newSense.domains.length === 0) {
-        senseBuffer = oldSenses.find(
-          oldSense => oldSense.senseId === newSense.senseId
-        );
-
-        // If the old sense existed, then add in any not-empty data from the new sense
-        if (senseBuffer) {
-          senseBuffer = { ...senseBuffer, deleted: newSense.deleted };
-          if (newSense.glosses !== "")
-            senseBuffer = { ...senseBuffer, glosses: newSense.glosses };
-          else senseBuffer = { ...senseBuffer, domains: newSense.domains };
-        }
-      } else senseBuffer = newSense;
-
-      if (senseBuffer) compactSenses.push(senseBuffer);
-    }
-
-    return compactSenses;
   }
 
   render() {
@@ -168,10 +149,8 @@ export class ViewFinalComponent extends React.Component<
               new Promise(async resolve => {
                 // Update database + update word ID. Awaited so that the user can't edit + submit a word with a bad ID before the ID is updated
                 await this.props.updateFrontierWord(
-                  {
-                    ...newData,
-                    senses: this.cleanSenses(newData.senses, oldData.senses)
-                  },
+                  newData,
+                  oldData,
                   this.props.language
                 );
                 setTimeout(() => {

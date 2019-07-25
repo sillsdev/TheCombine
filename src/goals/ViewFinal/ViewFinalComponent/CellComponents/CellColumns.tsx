@@ -19,24 +19,29 @@ interface FieldParameterStandard {
 // Creates the editable vernacular text field
 function vernacularField(props: FieldParameterStandard, editable: boolean) {
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <TextField
-        key={`vernacular${props.rowData.id}`}
-        value={props.value}
-        inputProps={{
-          readOnly: !editable
-        }}
-        // Handles editing word's local vernacular
-        onChange={event =>
-          props.onRowDataChange &&
-          props.onRowDataChange({
-            ...props.rowData,
-            vernacular: event.target.value
-          })
-        }
-        style={{ float: "inline-start" }}
-      />
-    </div>
+    <Translate>
+      {({ translate }) => (
+        <TextField
+          key={`vernacular${props.rowData.id}`}
+          value={props.value}
+          error={props.value.length === 0}
+          placeholder={translate("viewFinal.novernacular").toString()}
+          InputProps={{
+            readOnly: !editable,
+            disableUnderline: !editable
+          }}
+          // Handles editing word's local vernacular
+          onChange={event =>
+            props.onRowDataChange &&
+            props.onRowDataChange({
+              ...props.rowData,
+              vernacular: event.target.value
+            })
+          }
+          style={{ float: "inline-start" }}
+        />
+      )}
+    </Translate>
   );
 }
 
@@ -51,10 +56,11 @@ function senseField(props: FieldParameterStandard, editable: boolean) {
               key={props.rowData.id}
               value={props.value[index].glosses}
               error={sense.glosses.length === 0}
-              disabled={sense.deleted}
               placeholder={translate("viewFinal.nogloss").toString()}
-              inputProps={{
-                readOnly: !editable
+              disabled={sense.deleted}
+              InputProps={{
+                readOnly: !editable,
+                disableUnderline: !editable
               }}
               // Handles editing sense's local glosses
               onChange={event =>
