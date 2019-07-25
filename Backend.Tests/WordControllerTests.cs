@@ -37,7 +37,7 @@ namespace Backend.Tests
             foreach (Sense sense in word.Senses)
             {
 
-                sense.Accessibility = (int)state.active;
+                sense.Accessibility = (int)State.active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss() , new Gloss() };
 
                 foreach (Gloss gloss in sense.Glosses) {
@@ -221,7 +221,7 @@ namespace Backend.Tests
                 //generate mergeSourceWord with new child ID and desired child state list 
                 MergeSourceWord newGenChild = new MergeSourceWord();
                 newGenChild.SrcWordID = _repo.Add(child).Result.Id;
-                newGenChild.SenseStates = new List<state> { state.duplicate, state.sense, state.separate };
+                newGenChild.SenseStates = new List<State> { State.duplicate, State.sense, State.separate };
                 parentChildMergeObject.ChildrenWords.Add(newGenChild);
             }
 

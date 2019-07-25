@@ -5,7 +5,7 @@ namespace BackendFramework.Helper
 {
     public class Utilities
     {
-        public enum filetype
+        public enum Filetype
         {
             audio,
             avatar,
@@ -14,7 +14,9 @@ namespace BackendFramework.Helper
             dir
         }
 
-        public string GenerateFilePath(filetype type, bool isDirectory, string customFileName = "", string customDirPath = "")
+
+        //TODO: split this function in two that generate directories or files
+        public string GenerateFilePath(Filetype type, bool isDirectory, string customFileName = "", string customDirPath = "")
         {
             //generate path to home on linux
             var pathToHome = Environment.GetEnvironmentVariable("HOME");
@@ -36,7 +38,7 @@ namespace BackendFramework.Helper
 
             //establish path to the typed file in the base folder
 
-            //if its the first time here it needs to be created
+            //creates the directory if it doesn't exist
             Directory.CreateDirectory(returnFilepath);
 
             //if the path being generated is to a dir and not a file then don't add an extension
@@ -45,21 +47,20 @@ namespace BackendFramework.Helper
             return returnFilepath;
         }
 
-        //TODO:
-        private string FileTypeFolder(filetype type)
+        private string FileTypeFolder(Filetype type)
         {
             switch (type)
             {
-                case filetype.audio:
+                case Filetype.audio:
                     return "Audios";
 
-                case filetype.avatar:
+                case Filetype.avatar:
                     return "Avatars";
 
-                case filetype.lift:
+                case Filetype.lift:
                     return "lifts";
 
-                case filetype.zip:
+                case Filetype.zip:
                     return "zips";
 
                 default:
@@ -67,20 +68,20 @@ namespace BackendFramework.Helper
             }
         }
 
-        private string FileTypeExtension(filetype type)
+        private string FileTypeExtension(Filetype type)
         {
             switch (type)
             {
-                case filetype.audio:
+                case Filetype.audio:
                     return ".mp3";
 
-                case filetype.avatar:
+                case Filetype.avatar:
                     return ".jpg";
 
-                case filetype.lift:
+                case Filetype.lift:
                     return ".lift";
 
-                case filetype.zip:
+                case Filetype.zip:
                     return ".zip";
 
                 default:

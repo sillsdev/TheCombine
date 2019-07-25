@@ -28,7 +28,7 @@ namespace BackendFramework.Services
 
                 foreach (var senseAcc in wordToDelete.Senses)
                 {
-                    senseAcc.Accessibility = (int)state.deleted;
+                    senseAcc.Accessibility = (int)State.deleted;
                 }
 
                 await _repo.Create(wordToDelete);
@@ -99,16 +99,17 @@ namespace BackendFramework.Services
                 {
                     switch (newChildWordState.SenseStates[i])
                     {
+                        case State.sense:
+                            goto case State.duplicate; //fall through
                         //add the word to the parent's history
-                        case state.sense:
-                        case state.duplicate:
+                        case State.duplicate:
                             if (!addParent.History.Contains(currentChildWord.Id))
                             {
                                 addParent.History.Add(currentChildWord.Id);
                             }
                             break;
                         //add the sense to a separate word and the word to its history
-                        case state.separate:
+                        case State.separate:
                             separateWord.Senses.Add(currentChildWord.Senses[i]);
                             if (!separateWord.History.Contains(currentChildWord.Id))
                             {
@@ -137,10 +138,10 @@ namespace BackendFramework.Services
             return newWordsList;
         }
 
-        public async Task<bool> searchInDuplicates(Word word)
+        public async Task<bool> SearchInDuplicates(Word word)
         {
             //get all words from database
-            var allWords = await _repo.GetAllWords(word.ProjectId);
+            var allWords = await _repo.GetFrontier(word.ProjectId);
 
             //search through all words for the correct vernacular
             var allVernaculars = allWords.FindAll(x => x.Vernacular == word.Vernacular);

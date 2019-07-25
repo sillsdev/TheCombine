@@ -1,27 +1,38 @@
 import * as actions from "../GoalsActions";
 import { Goal } from "../../../types/goals";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
-import { MergeDups } from "../../../goals/MergeDupGoal/MergeDups";
+import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
-import axios from "axios";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
-import {
-  wordsArrayMock,
-  goalDataMock
-} from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import { ViewFinal } from "../../../goals/ViewFinal/ViewFinal";
 import { User } from "../../../types/user";
 import {
   MergeTreeActions,
   MergeTreeAction
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { CreateStrWordInv } from "../../../goals/CreateStrWordInv/CreateStrWordInv";
-import { SpellCheckGloss } from "../../../goals/SpellCheckGloss/SpellCheckGloss";
-import { ValidateChars } from "../../../goals/ValidateChars/ValidateChars";
-import { ValidateStrWords } from "../../../goals/ValidateStrWords/ValidateStrWords";
+import { defaultState as goalsDefaultState } from "../DefaultState";
 
-const mockAxios = axios as jest.Mocked<typeof axios>;
+jest.mock(
+  ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
+  () => {
+    const dupFinder = jest.requireActual(
+      ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder"
+    );
+    return jest.fn().mockImplementation(() => ({
+      ...dupFinder,
+      getNextDups: jest.fn(() => {
+        return Promise.resolve(mockGoalData.plannedWords);
+      })
+    }));
+  }
+);
+
+// At compile time, jest.mock calls will be hoisted to the top of the file,
+// so calls to imported variables fail. Fixed by initializing these variables
+// inside of beforeAll()
+let mockGoalData: MergeDupData;
 
 let oldUser: string | null;
 let oldProjectId: string | null;
@@ -30,55 +41,27 @@ const mockUserEditId: string = "23456";
 let mockUser: User = new User("", "", "");
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
-let goal1: Goal = new CreateCharInv();
-let goal2: Goal = new CreateStrWordInv();
-let goal3: Goal = new HandleFlags();
-let goal4: Goal = new MergeDups();
-let goal5: Goal = new SpellCheckGloss();
-let goal6: Goal = new ValidateChars();
-let goal7: Goal = new ValidateStrWords();
-let goal8: Goal = new ViewFinal();
-let allTheGoals: Goal[] = [
-  goal1,
-  goal2,
-  goal3,
-  goal4,
-  goal5,
-  goal6,
-  goal7,
-  goal8
-];
-
-let suggestionsArray: Goal[] = [...allTheGoals];
-
-let mockHistoryGoal: Goal = new MergeDups();
-mockHistoryGoal.numSteps = 1;
-mockHistoryGoal.steps = [
-  {
-    words: [...wordsArrayMock]
-  }
-];
-
-const mockStoreState = {
-  goalsState: {
-    historyState: {
-      history: [mockHistoryGoal]
-    },
-    allPossibleGoals: allTheGoals,
-    suggestionsState: {
-      suggestions: suggestionsArray
-    }
-  }
-};
-
 const createMockStore = configureMockStore([thunk]);
-const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(
-  mockStoreState
-);
+let mockStore: MockStoreEnhanced<unknown, {}>;
 
 beforeAll(() => {
   oldUser = localStorage.getItem("user");
   oldProjectId = localStorage.getItem("projectId");
+  mockGoalData = goalDataMock;
+
+  const mockStoreState = {
+    goalsState: {
+      historyState: {
+        history: [...goalsDefaultState.historyState.history]
+      },
+      allPossibleGoals: [...goalsDefaultState.allPossibleGoals],
+      suggestionsState: {
+        suggestions: [...goalsDefaultState.suggestionsState.suggestions]
+      }
+    }
+  };
+
+  mockStore = createMockStore(mockStoreState);
 });
 
 beforeEach(() => {
@@ -87,9 +70,12 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  mockStore.clearActions();
+});
+
+afterAll(() => {
   if (oldUser) localStorage.setItem("user", oldUser);
   if (oldProjectId) localStorage.setItem("projectId", oldProjectId);
-  mockStore.clearActions();
 });
 
 describe("Test GoalsActions", () => {
@@ -203,37 +189,53 @@ describe("Test GoalsActions", () => {
   });
 
   it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
-    mockAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: wordsArrayMock
-      })
-    );
-
-    let theGoal: Goal = new MergeDups();
-    theGoal.currentStep = 1;
-    theGoal.hash = mockHistoryGoal.hash;
-    theGoal.numSteps = mockHistoryGoal.numSteps;
-    theGoal.data = {
-      plannedWords: [[...wordsArrayMock]]
-    };
-    theGoal.steps = [
+    let goalToUpdate: Goal = new MergeDups();
+    goalToUpdate.numSteps = 1;
+    goalToUpdate.steps = [
       {
-        words: [...wordsArrayMock]
+        words: [...goalDataMock.plannedWords[0]]
+      }
+    ];
+
+    let expectedUpdatedGoal: Goal = new MergeDups();
+    expectedUpdatedGoal.currentStep = 1;
+    expectedUpdatedGoal.hash = goalToUpdate.hash;
+    expectedUpdatedGoal.numSteps = goalToUpdate.numSteps;
+    expectedUpdatedGoal.data = {
+      plannedWords: [...goalDataMock.plannedWords]
+    };
+    expectedUpdatedGoal.steps = [
+      {
+        words: [...goalDataMock.plannedWords[0]]
       }
     ];
 
     let updateGoal: actions.UpdateGoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
-      payload: [theGoal]
+      payload: [expectedUpdatedGoal]
     };
 
     let setWordData: MergeTreeAction = {
       type: MergeTreeActions.SET_DATA,
-      payload: [...wordsArrayMock]
+      payload: [...goalDataMock.plannedWords[0]]
     };
 
+    const mockStoreState = {
+      goalsState: {
+        historyState: {
+          history: [goalToUpdate]
+        },
+        allPossibleGoals: [...goalsDefaultState.allPossibleGoals],
+        suggestionsState: {
+          suggestions: [...goalsDefaultState.suggestionsState.suggestions]
+        }
+      }
+    };
+
+    mockStore = createMockStore(mockStoreState);
+
     await mockStore
-      .dispatch<any>(actions.loadGoalData(mockHistoryGoal))
+      .dispatch<any>(actions.loadGoalData(goalToUpdate))
       .then(() => {})
       .catch((err: string) => fail(err));
     expect(mockStore.getActions()).toEqual([updateGoal, setWordData]);
@@ -253,15 +255,8 @@ describe("Test GoalsActions", () => {
     expect(mockStore.getActions()).toEqual([]);
   });
 
-  it("should update goal data", async () => {
-    mockAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: wordsArrayMock
-      })
-    );
-
+  it("should load goal data for MergeDups", async () => {
     let goal: Goal = new MergeDups();
-
     await mockStore
       .dispatch<any>(actions.loadGoalData(goal))
       .then((returnedGoal: Goal) => {
@@ -270,7 +265,7 @@ describe("Test GoalsActions", () => {
       .catch((err: string) => fail(err));
   });
 
-  it("should not change the goal data", async () => {
+  it("should not load any goal data", async () => {
     const goal: Goal = new HandleFlags();
 
     await mockStore
@@ -293,10 +288,29 @@ describe("Test GoalsActions", () => {
     expect(updatedGoal.currentStep).toEqual(1);
   });
 
+  it("Should not update the step data of an unimplemented goal", () => {
+    const goal: HandleFlags = new HandleFlags();
+    expect(goal.steps).toEqual([]);
+    expect(goal.currentStep).toEqual(0);
+
+    const updatedGoal: HandleFlags = actions.updateStepData(
+      goal
+    ) as HandleFlags;
+
+    expect(updatedGoal.steps).toEqual([]);
+    expect(updatedGoal.currentStep).toEqual(0);
+  });
+
   it("should return a userEditId", () => {
     localStorage.setItem("user", JSON.stringify(mockUser));
     localStorage.setItem("projectId", mockProjectId);
     expect(actions.getUserEditId(mockUser)).toEqual(mockUserEditId);
+  });
+
+  it("should return undefined when a user edit doesn't exist", () => {
+    let user: User = new User("", "", "");
+    localStorage.setItem("user", JSON.stringify(user));
+    expect(actions.getUserEditId(mockUser)).toEqual(undefined);
   });
 
   it("should return the correct goal", () => {
