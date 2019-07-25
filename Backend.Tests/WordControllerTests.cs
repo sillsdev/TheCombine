@@ -183,7 +183,7 @@ namespace Backend.Tests
             {
                 new MergeSourceWord {
                     SrcWordID = thisWord.Id,
-                    SenseStates = new List<state> {state.sense, state.sense, state.sense }
+                    SenseStates = new List<State> {State.sense, State.sense, State.sense }
                 }
             };
 

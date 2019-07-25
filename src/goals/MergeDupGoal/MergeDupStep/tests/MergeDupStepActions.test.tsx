@@ -1,16 +1,77 @@
-import { multiGlossWord, State } from "../../../../types/word";
+import { multiGlossWord, State, Word, MergeWord } from "../../../../types/word";
 import thunk from "redux-thunk";
 import { mergeAll } from "../MergeDupStepActions";
 import * as backend from "../../../../backend";
 import configureMockStore from "redux-mock-store";
-import { MergeData, MergeTree } from "../MergeDupsTree";
+import { MergeData, MergeTree, Hash } from "../MergeDupsTree";
 import { MergeDups } from "../../MergeDups";
 import { goalDataMock } from "./MockMergeDupData";
 
 jest.mock("../../../../backend", () => {
   return {
     ...jest.requireActual("../../../../backend"),
-    mergeWords: jest.fn()
+    mergeWords: jest.fn((parent: Word, children: MergeWord[]) => {
+      const { multiGlossWord, State } = jest.requireActual(
+        "../../../../types/word"
+      );
+      // Setup data needed to mock
+      const wordList = {
+        WA: { ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
+        WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
+        WA2: {
+          ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]),
+          id: "WA2",
+          history: ["WA", "WB"]
+        },
+        WB2: {
+          ...multiGlossWord("BBB", ["Sense 4"]),
+          id: "WB2",
+          history: ["WB"]
+        }
+      };
+      const M0: { parent: Word; children: MergeWord[] } = {
+        parent: { ...wordList["WA2"], id: "WA", history: [] },
+        children: [
+          { wordID: "WA", senses: [State.sense, State.sense] },
+          { wordID: "WB", senses: [State.duplicate, State.separate] }
+        ]
+      };
+
+      const M1: { parent: Word; children: MergeWord[] } = {
+        parent: { ...wordList["WB2"], history: [], id: "WB" },
+        children: [{ wordID: "WB2", senses: [State.sense] }]
+      };
+
+      expect([M0, M1]).toContainEqual({ parent, children });
+
+      let mergeList: Hash<string[]> = {};
+      mergeList[JSON.stringify(M0)] = ["WA2", "WB2"];
+      mergeList[JSON.stringify(M1)] = ["WB2"];
+      let args = JSON.stringify({ parent, children });
+
+      return Promise.resolve(mergeList[args]);
+    }),
+    getWord: jest.fn((id: string) => {
+      const { multiGlossWord, State } = jest.requireActual(
+        "../../../../types/word"
+      );
+      const wordList = {
+        WA: { ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
+        WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
+        WA2: {
+          ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]),
+          id: "WA2",
+          history: ["WA", "WB"]
+        },
+        WB2: {
+          ...multiGlossWord("BBB", ["Sense 4"]),
+          id: "WB2",
+          history: ["WB"]
+        }
+      };
+
+      return Promise.resolve(wordList[id]);
+    })
   };
 });
 
@@ -91,25 +152,7 @@ const treeA: { tree: MergeTree } = {
   }
 };
 
-// Swap sense 2 and 4
-const treeB: { tree: MergeTree } = {
-  tree: {
-    words: {
-      WA: {
-        senses: { ID1: { ID1: "S1" }, ID2: { ID1: "S4" } },
-        vern: "AAA",
-        plural: "AAAS"
-      },
-      WB: {
-        senses: { ID1: { ID1: "S3" }, ID2: { ID1: "S2" } },
-        vern: "BBB",
-        plural: "BBBS"
-      }
-    }
-  }
-};
-
-test("test simple merge", async () => {
+test("test merge", async () => {
   let parent = { ...data.data.words.WA };
   let children = [
     { wordID: "WA", senses: [State.sense, State.sense] },
@@ -124,27 +167,4 @@ test("test simple merge", async () => {
   await mockStore.dispatch<any>(mergeAll());
 
   expect(backend.mergeWords).toHaveBeenCalledWith(parent, children);
-});
-
-test("test multi step merge", async () => {
-  let parentA = { ...data.data.words.WA };
-  let parentB = { ...data.data.words.WB };
-
-  let childrenA = [
-    { wordID: "WA", senses: [State.sense, State.separate] },
-    { wordID: "WB", senses: [State.separate, State.sense] }
-  ];
-
-  let childrenB = [
-    { wordID: "WA_SEP", senses: [State.sense] },
-    { wordID: "WB_SEP", senses: [State.sense] }
-  ];
-
-  const mockStore = createMockStore({
-    ...mockStoreState,
-    mergeDuplicateGoal: { mergeTreeState: { ...data, ...treeB } }
-  });
-  await mockStore.dispatch<any>(mergeAll());
-  expect(backend.mergeWords).toHaveBeenCalledWith(parentA, childrenA);
-  //expect(backend.mergeWords).toHaveBeenCalledWith(parentB, childrenB);
 });

@@ -214,7 +214,6 @@ export async function mergeWord(
 ): Promise<Hash<{ srcWord: string; order: number }>> {
   // find and build MergeWord[]
   const word = getState().mergeDuplicateGoal.mergeTreeState.tree.words[wordID];
-  console.log(word);
   if (word) {
     const data = getState().mergeDuplicateGoal.mergeTreeState.data;
 
@@ -325,7 +324,6 @@ export async function mergeWord(
 
     // send database call
     let newWords = await backend.mergeWords(parent, children);
-    console.log(newWords);
     let separateIndex = 0;
     let keepCounts: number[] = [];
     for (let i in newWords) {
@@ -335,7 +333,6 @@ export async function mergeWord(
     for (let wordIndex in children) {
       let word = await backend.getWord(children[wordIndex].wordID);
       // get original wordID
-      console.log(wordIndex);
       let origWord = children[wordIndex];
 
       // if merge contains separate increment index
@@ -347,12 +344,11 @@ export async function mergeWord(
         let src = `${origWord.wordID}:${senseIndex}`;
         switch (origWord.senses[senseIndex]) {
           case State.sense:
-            console.log("sense");
+            if (!newWords) debugger;
             mapping[src] = { srcWord: newWords[0], order: keepCounts[0] };
             keepCounts[0]++;
             break;
           case State.separate:
-            console.log("separate", separateIndex);
             mapping[src] = {
               srcWord: newWords[separateIndex],
               order: keepCounts[separateIndex]
@@ -360,7 +356,6 @@ export async function mergeWord(
             keepCounts[separateIndex]++;
             break;
           case State.duplicate:
-            console.log("dup");
             mapping[src] = { srcWord: newWords[0], order: -1 };
             break;
           default:
@@ -368,7 +363,6 @@ export async function mergeWord(
       }
     }
   }
-  console.log(JSON.stringify(mapping, null, 2));
   return mapping;
 }
 
@@ -381,7 +375,6 @@ export function mergeAll() {
     for (let wordID of Object.keys(
       getState().mergeDuplicateGoal.mergeTreeState.tree.words
     )) {
-      console.log("Merge id: ", wordID);
       mapping = await mergeWord(wordID, getState, mapping);
     }
   };

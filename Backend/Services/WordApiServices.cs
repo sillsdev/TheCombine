@@ -63,8 +63,8 @@ namespace BackendFramework.Services
         {
             var newWordsList = new List<Word>();
 
-            var baseParent = mergeWords.Parent.Clone();
-            var addParent = baseParent.Clone();
+            var addParent = mergeWords.Parent.Clone();
+            addParent.History = new List<string>();
             //generate new child words form child word field
             foreach (var newChildWordState in mergeWords.ChildrenWords)
             {
