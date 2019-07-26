@@ -1,8 +1,9 @@
-import { Word, State } from "../../../../types/word";
+import { State } from "../../../../types/word";
 import { MergeDupData } from "../../MergeDups";
+import { uuid } from "../../../../utilities";
 
-const wordMock: Word = {
-  id: "",
+const wordMock = () => ({
+  id: uuid(),
   vernacular: "",
   senses: [],
   audio: "",
@@ -14,28 +15,28 @@ const wordMock: Word = {
   accessability: State.active,
   otherField: "",
   plural: ""
-};
+});
 
-const wordsArrayMock: Word[] = [
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock,
-  wordMock
+const wordsArrayMock = () => [
+  wordMock(),
+  wordMock(),
+  wordMock(),
+  wordMock(),
+  wordMock(),
+  wordMock(),
+  wordMock(),
+  wordMock()
 ];
 
 export const goalDataMock: MergeDupData = {
   plannedWords: [
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock,
-    wordsArrayMock
+    wordsArrayMock(),
+    wordsArrayMock(),
+    wordsArrayMock(),
+    wordsArrayMock(),
+    wordsArrayMock(),
+    wordsArrayMock(),
+    wordsArrayMock(),
+    wordsArrayMock()
   ]
 };
