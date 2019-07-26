@@ -92,18 +92,24 @@ export class DataEntryTable extends React.Component<
       })
     )
       .catch(err => console.log(err))
-      .then(res => {
+      .then(async res => {
         let word = res as Word;
+        this.allWords = await Backend.getFrontierWords();
         let dupId = this.vernInFrontier(word.vernacular);
+        if (dupId === lastRow.id) {
+          dupId = "";
+        }
 
-        // Create new ExistingRow
-        let newRow: Row = this.wordToExistingRow(word, 0);
+        let glossSpelledCorrectly = this.isSpelledCorrectly(lastRow.glosses);
+
+        let newRow: Row = this.wordToRow(word, 0);
+        newRow.id = word.id;
         newRow.dupId = dupId;
-        rows.push(newRow);
+        newRow.glossSpelledCorrectly = glossSpelledCorrectly;
+        rows[rows.length - 1] = newRow;
 
         // Clear the data entry row
-        let dataEntryRow: Row; // = lastRow;
-        dataEntryRow = {
+        let dataEntryRow: Row = {
           id: "",
           vernacular: "",
           glosses: "",
@@ -112,9 +118,9 @@ export class DataEntryTable extends React.Component<
           senseIndex: 0
         };
 
-        rows[rows.length - 1] = dataEntryRow;
-
+        rows.push(dataEntryRow);
         this.setState({ rows });
+
         this.focusVernInput();
         if (callback) callback(res);
       });
@@ -200,7 +206,7 @@ export class DataEntryTable extends React.Component<
     return this.props.spellChecker.getSpellingSuggestions(gloss);
   }
 
-  wordToExistingRow(word: Word, senseIndex: number): Row {
+  wordToRow(word: Word, senseIndex: number): Row {
     let row: Row = {
       vernacular: word.vernacular,
       glosses: "",
@@ -234,23 +240,36 @@ export class DataEntryTable extends React.Component<
     else this.setState({ rows });
   }
 
-  /** Update the word in the backend */
-  updateWord(index: number, callback?: Function) {
-    let row = this.state.rows[index] as Row; // TODO: Should fail if not an existing row
-    this.rowToExistingWord(row)
-      .catch(err => console.log(err))
-      .then(res =>
-        Backend.updateWord(res as Word)
-          .catch(err => console.log(err))
-          .then(res => {
-            // this.updateRow(
-            //   this.wordToExistingRow(res as Word, row.senseIndex),
-            //   index
-            // );
-            if (callback) callback();
-          })
-      );
+  /** Update an existing word, then update the view */
+  async updateWordInFrontAndBack(rowIndex: number) {
+    let row = this.state.rows[rowIndex];
+    let word = await this.rowToExistingWord(row);
+    let updatedWord = await Backend.updateWord(word);
+    let updatedRow = await this.wordToRow(updatedWord, 0);
+    this.updateRow(updatedRow, rowIndex);
+    console.log(word);
+    console.log(updatedWord);
+    console.log(row);
+    console.log(updatedRow);
   }
+
+  // /** Update the word in the backend */
+  // updateWord(index: number, callback?: Function) {
+  //   let row = this.state.rows[index];
+  //   this.rowToExistingWord(row)
+  //     .catch(err => console.log(err))
+  //     .then(res => {
+  //       console.log(res as Word);
+  //       Backend.updateWord(res as Word)
+  //         .catch(err => console.log(err))
+  //         .then(async updatedWord => {
+  //           console.log(updatedWord as Word);
+  //           this.allWords = await Backend.getFrontierWords();
+  //           console.log(this.allWords);
+  //           // if (callback) callback();
+  //         });
+  //     });
+  // }
 
   /** Add the fields in a row to the word it corresponds to in the database */
   async rowToExistingWord(row: Row): Promise<Word> {
@@ -259,6 +278,7 @@ export class DataEntryTable extends React.Component<
     let glosses: Gloss[] = [];
     let gloss: Gloss;
     let defs = row.glosses.split(",");
+    console.log(defs);
     for (let def of defs) {
       gloss = {
         language: "en",
@@ -272,6 +292,7 @@ export class DataEntryTable extends React.Component<
     };
 
     word.vernacular = row.vernacular;
+    console.log(word);
     return word;
   }
 
@@ -300,8 +321,8 @@ export class DataEntryTable extends React.Component<
 
   // Fix
   toggleDuplicateVernacularView(rowIndex: number) {
-    let row = this.state.rows[rowIndex];
-    let dupWord = this.getWord(row.dupId);
+    let row: Row = this.state.rows[rowIndex];
+    let dupWord: Word = this.getWord(row.dupId);
     row.dupVernacular = dupWord.vernacular;
     row.dupGlosses = [];
     for (let sense of dupWord.senses) {
@@ -327,18 +348,6 @@ export class DataEntryTable extends React.Component<
         item
         xs={12}
         key={"d" + rowIndex}
-        // onMouseEnter={() => {
-        //   let newRow: Row = {
-        //     ...this.state.rows[rowIndex]
-        //   };
-        //   this.updateRow(newRow, rowIndex);
-        // }}
-        // onMouseLeave={() => {
-        //   let newRow: Row = {
-        //     ...this.state.rows[rowIndex]
-        //   };
-        //   this.updateRow(newRow, rowIndex);
-        // }}
         style={{ background: "whitesmoke" }}
       >
         <Grid container>
@@ -375,7 +384,7 @@ export class DataEntryTable extends React.Component<
                   }}
                 />
               ))}
-            <Chip
+            {/* <Chip
               variant="outlined"
               label={"Add New Sense +"}
               onClick={() =>
@@ -387,7 +396,7 @@ export class DataEntryTable extends React.Component<
               style={{
                 margin: 4
               }}
-            />
+            /> */}
           </Grid>
         </Grid>
       </Grid>
@@ -412,21 +421,6 @@ export class DataEntryTable extends React.Component<
         item
         xs={12}
         key={"mispelled" + rowIndex}
-        // onMouseEnter={() => {
-        //   // Will this lose data since we may be updating an existing row?
-        //   // let newRow: Row = {
-        //   //   ...this.state.rows[rowIndex]
-        //   //   // hover: true
-        //   // };
-        //   // this.updateRow(newRow, rowIndex);
-        // }}
-        // onMouseLeave={() => {
-        //   // let newRow: Row = {
-        //   //   ...this.state.rows[rowIndex]
-        //   //   // hover: false
-        //   // };
-        //   // this.updateRow(newRow, rowIndex);
-        // }}
         style={{ background: "whitesmoke" }}
       >
         <Grid container>
@@ -474,21 +468,25 @@ export class DataEntryTable extends React.Component<
     );
   }
 
-  // May need to fix since we might be dealing with existing row
   chooseSpellingSuggestion(rowIndex: number, suggestion: string) {
     let row: Row = this.state.rows[rowIndex];
     row.glosses = suggestion;
-    let newRow: Row = {
-      ...row,
-      glossSpelledCorrectly: true
-    };
-    this.updateRow(newRow, rowIndex);
+    // let newRow: Row = {
+    //   ...row,
+    //   glossSpelledCorrectly: true
+    // };
+    this.updateWordInFrontAndBack(rowIndex)
+      .catch((err: string) => console.log(err))
+      .then(() => {
+        console.log("Updated word");
+      });
+    // this.updateRow(newRow, rowIndex);
+    // this.updateWord(rowIndex);
   }
 
   /** Switch a row to edit a sense of a word in the database */
-  // Fix
   switchToExistingWord(rowIndex: number, senseIndex: number) {
-    let row: Row = this.state.rows[rowIndex] as Row; // TODO: Should fail if not existing row
+    let row: Row = this.state.rows[rowIndex];
     if (row.dupId === "") {
       throw new Error("This row does not have a duplicate");
     } else {
@@ -506,18 +504,19 @@ export class DataEntryTable extends React.Component<
               id: row.dupId,
               senseIndex: senseIndex
             };
-            this.updateRow(newRow, rowIndex, () => this.updateWord(rowIndex));
+
+            this.updateRow(newRow, rowIndex);
           }
         });
     }
   }
 
-  /** Update the state */
-  updateState(row: Row, index: number) {
-    let rows = [...this.state.rows];
-    rows.splice(index, 1, { ...rows[index], ...row });
-    this.setState({ rows });
-  }
+  // /** Update the state */
+  // updateState(row: Row, index: number) {
+  //   let rows = [...this.state.rows];
+  //   rows.splice(index, 1, { ...rows[index], ...row });
+  //   this.setState({ rows });
+  // }
 
   /** Move the focus to the gloss textbox */
   focusGlossInput() {
@@ -588,6 +587,7 @@ export class DataEntryTable extends React.Component<
                             // if (dupId === (row as ExistingRow).id) {
                             //   dupId = ""; // the "duplicate" is the word we're already editing
                             // }
+
                             this.updateRow(
                               {
                                 ...row,
@@ -608,7 +608,7 @@ export class DataEntryTable extends React.Component<
                               this.focusGlossInput();
                           }}
                         />
-                        {this.state.rows[rowIndex].dupId && (
+                        {this.state.rows[rowIndex].dupId !== "" && (
                           <Tooltip
                             title={
                               this.props.translate(
@@ -655,13 +655,14 @@ export class DataEntryTable extends React.Component<
                             const isSpelledCorrectly = this.isSpelledCorrectly(
                               e.target.value
                             );
-                            let updatedRow: Row = {
-                              ...row,
-                              glosses: e.target.value,
-                              glossSpelledCorrectly: isSpelledCorrectly
-                            };
-
-                            this.updateState(updatedRow, rowIndex);
+                            this.updateRow(
+                              {
+                                ...row,
+                                glosses: e.target.value,
+                                glossSpelledCorrectly: isSpelledCorrectly
+                              },
+                              rowIndex
+                            );
                           }}
                           inputRef={this.glossInput}
                           // Move the focus to the previous box when the left arrow key is pressed
@@ -759,7 +760,9 @@ export class DataEntryTable extends React.Component<
                             );
                           }}
                           onBlur={() => {
-                            this.updateWord(rowIndex);
+                            this.updateWordInFrontAndBack(rowIndex).then(() =>
+                              console.log("Updated word")
+                            );
                           }}
                           onKeyDown={e => {
                             if (e.key === "Enter") {
@@ -822,7 +825,9 @@ export class DataEntryTable extends React.Component<
                             );
                           }}
                           onBlur={() => {
-                            this.updateWord(rowIndex);
+                            this.updateWordInFrontAndBack(rowIndex).then(() =>
+                              console.log("Updated word")
+                            );
                           }}
                           onKeyDown={e => {
                             if (e.key === "Enter") {
