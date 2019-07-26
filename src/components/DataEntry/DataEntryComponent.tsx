@@ -54,6 +54,7 @@ export class DataEntry extends React.Component<
           <DataEntryTable
             domain={this.props.domain}
             spellChecker={new SpellChecker()}
+            semanticDomain={this.props.domain}
           />
         </Paper>
 

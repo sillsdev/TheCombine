@@ -27,6 +27,7 @@ interface DataEntryTableProps {
   domain: DomainTree;
   translate: TranslateFunction;
   spellChecker: SpellChecker;
+  semanticDomain: SemanticDomain;
 }
 
 interface DataEntryState {
@@ -71,7 +72,6 @@ export class DataEntryTable extends React.Component<
   allWords: Word[] = [];
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
-  semanticDomain: SemanticDomain = { name: "Sky", id: "1.2" };
 
   async componentDidMount() {
     this.allWords = await Backend.getFrontierWords();
@@ -245,12 +245,12 @@ export class DataEntryTable extends React.Component<
     let row = this.state.rows[rowIndex];
     let word = await this.rowToExistingWord(row);
     let updatedWord = await Backend.updateWord(word);
+    this.allWords = await Backend.getFrontierWords();
     let updatedRow = await this.wordToRow(updatedWord, 0);
     this.updateRow(updatedRow, rowIndex);
-    console.log(word);
-    console.log(updatedWord);
-    console.log(row);
-    console.log(updatedRow);
+
+    console.log(this.state.rows);
+    console.log(this.allWords);
   }
 
   // /** Update the word in the backend */
@@ -288,11 +288,12 @@ export class DataEntryTable extends React.Component<
     }
     word.senses[row.senseIndex] = {
       glosses,
-      semanticDomains: [this.semanticDomain]
+      semanticDomains: [
+        { name: this.props.domain.name, id: this.props.domain.id }
+      ]
     };
 
     word.vernacular = row.vernacular;
-    console.log(word);
     return word;
   }
 
