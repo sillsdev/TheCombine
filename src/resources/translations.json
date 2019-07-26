@@ -190,9 +190,6 @@
       ]
     }
   },
-  "goalTimeline": {
-    "title": ["Goal Timeline", "Línea de tiempo de la meta"]
-  },
   "emptyGoal": {
     "message": [
       "This goal has not been implemented yet",
