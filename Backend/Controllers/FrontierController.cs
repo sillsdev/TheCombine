@@ -1,6 +1,7 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words/frontier")]
+    [EnableCors("AllowAll")]
     public class FrontierController : Controller
     {
         private readonly IWordRepository _repo;
@@ -20,7 +22,8 @@ namespace BackendFramework.Controllers
             _permissionService = permissionService;
         }
 
-        // GET: v1/project/{projectId}/words/frontier
+        /// <summary> Returns all words in a project's frontier </summary>
+        /// <remarks> GET: v1/project/{projectId}/words/frontier </remarks>
         [HttpGet]
         public async Task<IActionResult> GetFrontier(string projectId)
         {
@@ -32,7 +35,9 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _repo.GetFrontier(projectId));
         }
 
-        // POST: v1/project/{projectId}/words/frontier
+        /// <summary> Adds word to a project's frontier </summary>
+        /// <remarks> POST: v1/project/{projectId}/words/frontier </remarks>
+        /// <returns> Id of word created </returns>
         [HttpPost]
         public async Task<IActionResult> PostFrontier(string projectId, [FromBody]Word word)
         {
@@ -49,7 +54,8 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        // DELETE: v1/project/{projectId}/words/frontier/{wordId}
+        /// <summary> Deletes all words in a project's frontier </summary>
+        /// <remarks> DELETE: v1/project/{projectId}/words/frontier/{wordId} </remarks>
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> DeleteFrontier(string projectId, string wordId)
         {

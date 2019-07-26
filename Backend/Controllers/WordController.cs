@@ -12,6 +12,7 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words")]
+    [EnableCors("AllowAll")]
     public class WordController : Controller
     {
         private readonly IWordRepository _wordRepo;
@@ -26,8 +27,6 @@ namespace BackendFramework.Controllers
             _projectService = projectService;
             _permissionService = permissionService;
         }
-
-        [EnableCors("AllowAll")]
 
         // GET: v1/projects/{projectId}/words
         // Implements GetAllWords(),
@@ -114,7 +113,7 @@ namespace BackendFramework.Controllers
             word.ProjectId = projectId;
 
             //check if word is already in database
-            if (await _wordService.searchInDuplicates(word))
+            if (await _wordService.SearchInDuplicates(word))
             {
                 await _wordRepo.Create(word);
             }

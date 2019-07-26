@@ -113,11 +113,14 @@ export default class DupFinder {
         let currentWordlists: ScoredWordlist[] = [];
 
         //use each word as a parent and compare the resulting lists against each other
+        let remainingWords = this.maskedWords;
         for (let i = 0; i < this.maskedWords.length; i++) {
           //word list to compare against current words
           let newWordList: ScoredWordlist = this.getDuplicatesOfWord(
-            this.maskedWords[i]
+            this.maskedWords[i],
+            remainingWords
           );
+          remainingWords.shift();
 
           //ignore wordlists with less than 2 words
           if (newWordList[0].length <= 1) {
@@ -163,15 +166,20 @@ export default class DupFinder {
   }
 
   /** returns a scored collection of duplicates of the parent */
-  getDuplicatesOfWord(parent: Word | MaskedWord): ScoredWordlist {
+  getDuplicatesOfWord(
+    parent: Word | MaskedWord,
+    wordCollection?: MaskedWord[]
+  ): ScoredWordlist {
     if (!("mask" in parent)) parent = this.maskWord(parent);
 
-    if (this.maskedWords.length <= 0) {
+    if (!wordCollection) wordCollection = this.maskedWords;
+
+    if (wordCollection.length <= 0) {
       return [[], Number.MAX_SAFE_INTEGER];
     }
 
     //narrow down very different words
-    let words = this.filter(parent, this.maskedWords);
+    let words = this.filter(parent, wordCollection);
 
     //Used for testing duplicate finder. (See docs/bitmap_testing.md)
     //this.filterTest[0] += words.length;
@@ -189,17 +197,16 @@ export default class DupFinder {
   }
 
   /** controls the scoring of a particular child by calculating the Levenshtein distance in O(n^(1 + ε) */
-  getLevenshteinDistance(aInput: string, bInput: string): number {
+  getLevenshteinDistance(a: string, b: string): number {
     const matrix: number[][] = [];
-
-    //may need to change the way we split to preserve non-roman characters. Untested.
-    let a: string[] = aInput.split("");
-    let b: string[] = bInput.split("");
+    let alength = a.length + 1;
+    let blength = b.length + 1;
 
     if (a.length <= 0 || b.length <= 0) return 0;
-    for (let i = 0; i < a.length; i++) {
+
+    for (let i = 0; i < alength; i++) {
       matrix[i] = [];
-      for (let j = 0; j < b.length; j++) {
+      for (let j = 0; j < blength; j++) {
         //populate first column
         if (i === 0) {
           matrix[i][j] = j;
@@ -213,7 +220,9 @@ export default class DupFinder {
         }
 
         let thisSubCost = 0;
-        if (a[i] !== b[j]) thisSubCost = this.subsitutionCost;
+        if (a[i - 1] !== b[j - 1]) {
+          thisSubCost = this.subsitutionCost;
+        }
 
         matrix[i][j] = Math.min(
           matrix[i - 1][j] + this.deletionCost, //deletion
@@ -413,6 +422,8 @@ export default class DupFinder {
   private wordLevenshteinDistance(a: Word, b: Word): number {
     //get current word score
     let vernScore = this.getLevenshteinDistance(a.vernacular, b.vernacular);
+    if (vernScore <= 1) return vernScore;
+
     let glossScore = 0;
     if (hasSenses(a) && hasSenses(b)) {
       glossScore = this.getLevenshteinDistance(
@@ -421,7 +432,6 @@ export default class DupFinder {
       );
       if (glossScore === 0) return 1;
     }
-    if (vernScore <= 1) return vernScore;
 
     return vernScore + glossScore * 3;
   }

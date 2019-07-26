@@ -12,6 +12,7 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects")]
+    [EnableCors("AllowAll")]
     public class ProjectController : Controller
     {
         private readonly IProjectService _projectService;
@@ -29,11 +30,8 @@ namespace BackendFramework.Controllers
             _permissionService = permissionService;
         }
 
-        [EnableCors("AllowAll")]
-        // GET: v1/Project/
-        // Implements GetAllProjects(), 
-        // Arguments: 
-        // Default: null
+        /// <summary> Returns all <see cref="Project"/>s </summary>
+        /// <remarks> GET: v1/projects </remarks>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -44,10 +42,9 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _projectService.GetAllProjects());
         }
 
-        // GET: v1/Project/
-        // Implements GetAllUsers(), 
-        // Arguments: 
-        // Default: null
+        /// <summary> Get a list of <see cref="User"/>s of a specific project </summary>
+        /// <remarks> DELETE: v1/projects/{projectId}/users </remarks>
+        /// <returns> A list of <see cref="User"/>s </returns>
         [HttpGet("{projectId}/users")]
         public async Task<IActionResult> GetAllUsers(string projectId)
         {
@@ -66,6 +63,9 @@ namespace BackendFramework.Controllers
         // DELETE v1/Project/
         // Implements DeleteAllProjects()
         // DEBUG ONLY
+        /// <summary> Deletes all <see cref="Project"/>s </summary>
+        /// <remarks> DELETE: v1/projects </remarks>
+        /// <returns> true: if success, false: if there were no projects </returns>
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
@@ -80,8 +80,8 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        // GET: v1/Project/{projectId}
-        // Implements GetProject(), Arguments: string id 
+        /// <summary> Returns <see cref="Project"/> with specified id </summary>
+        /// <remarks> GET: v1/projects/{projectId} </remarks>
         [HttpGet("{projectId}")]
         public async Task<IActionResult> Get(string projectId)
         {
@@ -97,8 +97,9 @@ namespace BackendFramework.Controllers
             return new ObjectResult(project);
         }
 
-        // POST: v1/Project/
-        // Implements Create(), Arguments: new project from body
+        /// <summary> Creates a <see cref="Project"/> </summary>
+        /// <remarks> POST: v1/projects </remarks>
+        /// <returns> Id of created project </returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Project project)
         {
@@ -128,8 +129,9 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(project.Id);
         }
 
-        // PUT: v1/Project/{projectId}
-        // Implements Update(), Arguments: string id of target project, new project from body
+        /// <summary> Updates <see cref="Project"/> with specified id </summary>
+        /// <remarks> PUT: v1/projects/{projectId} </remarks>
+        /// <returns> Id of updated project </returns>
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
@@ -153,8 +155,8 @@ namespace BackendFramework.Controllers
             }
         }
 
-        // PUT: v1/Project/{projectId}
-        // Implements Update(), Arguments: string id of target project, new project from body
+        /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
+        /// <remarks> PUT: v1/projects/{projectId} </remarks>
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody]List<string> chars)
         {
@@ -165,13 +167,13 @@ namespace BackendFramework.Controllers
 
             var currentProj = await _projectService.GetProject(projectId);
             currentProj.ValidCharacters = chars;
-            _projectService.Update(projectId, currentProj);
+            await _projectService.Update(projectId, currentProj);
 
             return new OkObjectResult(currentProj);
         }
 
-        // DELETE: v1/Project/Projects/{projectId}
-        // Implements Delete(), Arguments: string id of target project
+        /// <summary> Deletes <see cref="Project"/> with specified id </summary>
+        /// <remarks> DELETE: v1/projects/{projectId} </remarks>
         [HttpDelete("{projectId}")]
         public async Task<IActionResult> Delete(string projectId)
         {
@@ -187,6 +189,8 @@ namespace BackendFramework.Controllers
             return new NotFoundResult();
         }
 
+        /// <summary> UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/> </summary>
+        /// <remarks> GET: v1/projects/{projectId}/semanticdomains </remarks>
         [HttpGet("{projectId}/semanticdomains")]
         public async Task<IActionResult> GetSemDoms(string projectId)
         {

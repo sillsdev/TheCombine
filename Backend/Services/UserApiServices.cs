@@ -19,18 +19,16 @@ namespace BackendFramework.Services
     public class UserService : IUserService
     {
         private readonly IUserContext _userDatabase;
-        private readonly AppSettings _jwtsettings;
         private readonly IUserRoleService _userRole;
 
-        public UserService(IUserContext collectionSettings, IOptions<AppSettings> appSettings, IUserRoleService userRole)
+        public UserService(IUserContext collectionSettings, IUserRoleService userRole)
         {
             _userDatabase = collectionSettings;
-            _jwtsettings = appSettings.Value;
             _userRole = userRole;
         }
-        
         public async Task<User> Authenticate(string username, string password)
         {
+            const int tokenExpirationMinutes = 60 * 4;
             try
             {
                 // Fetch the stored user
@@ -72,7 +70,7 @@ namespace BackendFramework.Services
                 //fetch the projects Id and the roles for each Id
                 List<ProjectPermissions> projectPermissionMap = new List<ProjectPermissions>();
 
-                foreach(var projectRolePair in foundUser.ProjectRoles)
+                foreach (var projectRolePair in foundUser.ProjectRoles)
                 {
                     //convert each userRole ID to its respective role && add to the mapping
                     var permissions = _userRole.GetUserRole(projectRolePair.Key, projectRolePair.Value).Result.Permissions;
@@ -86,12 +84,12 @@ namespace BackendFramework.Services
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim("UserId", foundUser.Id), 
+                    new Claim("UserId", foundUser.Id),
                     new Claim("UserRoleInfo", claimString)
                     }),
 
                     //This line here will cause serious debugging problems if not kept in mind
-                    Expires = DateTime.UtcNow.AddMinutes(30),
+                    Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
 
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
@@ -99,7 +97,7 @@ namespace BackendFramework.Services
                 foundUser.Token = tokenHandler.WriteToken(token);
 
                 // remove password before returning
-                if(await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
+                if (await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
                 {
                     throw (new KeyNotFoundException());
                 }

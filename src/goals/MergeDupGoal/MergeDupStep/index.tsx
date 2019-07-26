@@ -43,7 +43,7 @@ export function mapDispatchToProps(
       dispatch(orderDuplicate(ref, order));
     },
     mergeAll: () => {
-      dispatch(mergeAll());
+      return dispatch(mergeAll());
     }
   };
 }

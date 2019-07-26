@@ -11,6 +11,7 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/userroles")]
+    [EnableCors("AllowAll")]
     public class UserRoleController : Controller
     {
         private readonly IUserRoleService _userRoleService;
@@ -23,8 +24,6 @@ namespace BackendFramework.Controllers
             _projectService = projectService;
             _permissionService = permissionService;
         }
-
-        [EnableCors("AllowAll")]
 
         // GET: v1/Projects/{projectId}/UserRoles
         // Implements GetAllUserRoles()

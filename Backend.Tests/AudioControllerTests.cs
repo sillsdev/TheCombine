@@ -39,7 +39,7 @@ namespace Backend.Tests
 
             Utilities util = new Utilities();
 
-            Directory.Delete(util.GenerateFilePath(Utilities.filetype.dir, true, "", ""), true);
+            Directory.Delete(util.GenerateFilePath(Utilities.Filetype.dir, true, "", ""), true);
         }
 
 
