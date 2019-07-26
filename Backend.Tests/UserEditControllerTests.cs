@@ -18,6 +18,7 @@ namespace Backend.Tests
         private IProjectService _projectService;
         private string _projId;
         private IPermissionService _permissionService;
+        private IUserService _userService;
 
         [SetUp]
         public void Setup()
@@ -27,7 +28,8 @@ namespace Backend.Tests
             _userEditService = new UserEditService(_userEditRepo);
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
-            _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService, _permissionService);
+            _userService = new UserServiceMock();
+            _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService, _permissionService, _userService);
         }
 
         UserEdit RandomUserEdit()

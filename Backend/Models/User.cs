@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace BackendFramework.ValueModels
 {

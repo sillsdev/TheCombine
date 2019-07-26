@@ -18,13 +18,16 @@ namespace BackendFramework.Controllers
         private readonly IUserEditService _userEditService;
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
+        private readonly IUserService _userService;
 
-        public UserEditController(IUserEditRepository repo, IUserEditService userEditService, IProjectService projectService, IPermissionService permissionService)
+        public UserEditController(IUserEditRepository repo, IUserEditService userEditService, IProjectService projectService, IPermissionService permissionService, IUserService userService)
         {
             _repo = repo;
-            _userEditService = userEditService;
+            _userService = userService;
             _projectService = projectService;
+            _userEditService = userEditService;
             _permissionService = permissionService;
+
         }
 
         /// <summary> Returns all <see cref="UserEdit"/>s for specified <see cref="Project"/> </summary>
@@ -102,7 +105,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            if (!_permissionService.IsAuthenticated("3", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -123,6 +126,15 @@ namespace BackendFramework.Controllers
             {
                 return new UnauthorizedResult();
             }
+
+            //check to see if user is changing the correct user edit
+            var userId = _permissionService.GetUserId(HttpContext);
+            var userObj = await _userService.GetUser(userId);
+            if(userObj.WorkedProjects[projectId] != userEditId)
+            {
+                return new BadRequestObjectResult("You can not edit another users UserEdit");
+            }
+            
 
             //ensure project exists
             var isValid = _projectService.GetProject(projectId);

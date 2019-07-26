@@ -10,11 +10,6 @@ namespace BackendFramework.Services
     {
         const int projIdLength = 24;
 
-        public PermissionService()
-        {
-            
-        }
-
         public string GetUserId(HttpContext request)
         {
             var jwtToken = request.Request.Headers["Authorization"].ToString();
@@ -26,15 +21,26 @@ namespace BackendFramework.Services
             return userId;
         }
 
-        public bool IsAuthenticated(string value, HttpContext request)
+        private List<ProjectPermissions> getProjectPermissions(HttpContext request)
         {
-            //retrieve jwt token from http request and convert to object
+            //get authorization header i.e. JWT token
             var jwtToken = request.Request.Headers["Authorization"].ToString();
+
+            // "remove "Bearer" from beginning of token
             var token = jwtToken.Split(" ")[1];
+
+            //parse JWT for project permissions
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
             string userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();
             List<ProjectPermissions> permissionsObj = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProjectPermissions>>(userRoleInfo);
+            return permissionsObj;
+        }
+
+        public bool IsAuthenticated(string value, HttpContext request)
+        {
+            //retrieve jwt token from http request and convert to object
+            List<ProjectPermissions> permissionsObj = getProjectPermissions(request);
 
             //retrieve project Id from http request
             int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/");
@@ -43,7 +49,8 @@ namespace BackendFramework.Services
                 //there is no project Id, this is a database level query and must have database admin level permissions
                 return false;
             }
-            else {
+            else
+            {
                 string projId = request.Request.Path.ToString().Substring(indexOfProjId, projIdLength);
 
                 //assert that the user has permission for this function
@@ -63,10 +70,6 @@ namespace BackendFramework.Services
                 return false;
             }
         }
-
-        //public bool IsAuthenticated(string v, HttpContext request, string projectId)
-        //{
-            
-        //}
     }
 }
+

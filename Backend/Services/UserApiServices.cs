@@ -218,10 +218,10 @@ namespace BackendFramework.Services
     }
     public class ProjectPermissions
     {
-        public ProjectPermissions(string first, List<int> second)
+        public ProjectPermissions(string projectId, List<int> permissions)
         {
-            ProjectId = first;
-            Permissions = second;
+            ProjectId = projectId;
+            Permissions = permissions;
         }
         public string ProjectId { get; set; }
         public List<int> Permissions { get; set; }

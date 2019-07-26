@@ -1,4 +1,3 @@
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
@@ -43,12 +42,12 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Get a list of <see cref="User"/>s of a specific project </summary>
-        /// <remarks> DELETE: v1/projects/{projectId}/users </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/users </remarks>
         /// <returns> A list of <see cref="User"/>s </returns>
         [HttpGet("{projectId}/users")]
         public async Task<IActionResult> GetAllUsers(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsAuthenticated("5", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -59,8 +58,6 @@ namespace BackendFramework.Controllers
             return new ObjectResult(projectUsers);
         }
 
-
-        // DELETE v1/Project/
         // Implements DeleteAllProjects()
         // DEBUG ONLY
         /// <summary> Deletes all <see cref="Project"/>s </summary>
@@ -103,7 +100,6 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Project project)
         {
-
             await _projectService.Create(project);
 
             //get user 
@@ -158,7 +154,7 @@ namespace BackendFramework.Controllers
         /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
         /// <remarks> PUT: v1/projects/{projectId} </remarks>
         [HttpPut("{projectId}")]
-        public async Task<IActionResult> Put(string projectId, [FromBody]List<string> chars)
+        public async Task<IActionResult> Put(string projectId, [FromBody]List<string> acceptedChars, [FromBody]List<string> rejectedChars)
         {
             if (!_permissionService.IsAuthenticated("3", HttpContext))
             {
@@ -166,7 +162,8 @@ namespace BackendFramework.Controllers
             }
 
             var currentProj = await _projectService.GetProject(projectId);
-            currentProj.ValidCharacters = chars;
+            currentProj.ValidCharacters = acceptedChars;
+            currentProj.RejectedCharacters = rejectedChars;
             await _projectService.Update(projectId, currentProj);
 
             return new OkObjectResult(currentProj);
@@ -229,7 +226,7 @@ namespace BackendFramework.Controllers
             var changeUser = await _userService.GetUser(userId);
             var userRoleId = changeUser.ProjectRoles[projectId];
             var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
-            userRole.Permissions.AddRange(permissions);
+            userRole.Permissions = permissions;
 
             await _userRoleService.Update(userRoleId, userRole);
 

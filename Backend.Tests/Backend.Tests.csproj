@@ -24,6 +24,7 @@
     <PackageReference Include="SIL.DictionaryServices" Version="7.0.0-alpha0822">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
   </ItemGroup>
 
   <ItemGroup>

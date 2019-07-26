@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
     [EnableCors("AllowAll")]
@@ -28,7 +28,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            if (!_permissionService.IsAuthenticated("5", HttpContext))
+            if (!_permissionService.IsAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }

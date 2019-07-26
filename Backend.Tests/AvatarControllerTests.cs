@@ -17,9 +17,7 @@ namespace Backend.Tests
         private AvatarController _avatarController;
         private PermissionServiceMock _permissionService;
         private User _JwtAuthenticatedUser;
-
-
-
+        
         [SetUp]
         public void Setup()
         {
