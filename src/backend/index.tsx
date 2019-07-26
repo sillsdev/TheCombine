@@ -56,7 +56,7 @@ export async function getAllWords(): Promise<Word[]> {
 export async function mergeWords(
   parent: Word,
   children: MergeWord[]
-): Promise<string> {
+): Promise<string[]> {
   parent = JSON.parse(JSON.stringify(parent));
   parent.id = "";
   let childrenWords = children.map(child => ({
@@ -307,8 +307,11 @@ export async function getAllUserEdits(): Promise<Goal[]> {
 }
 
 export async function getSemanticDomains(): Promise<SemanticDomain[]> {
-  let resp = await backendServer.get(`projects/${getProjectId()}/semanticdomains`, {
-    headers: authHeader()
-  });
+  let resp = await backendServer.get(
+    `projects/${getProjectId()}/semanticdomains`,
+    {
+      headers: authHeader()
+    }
+  );
   return resp.data;
 }

@@ -22,12 +22,13 @@ namespace BackendFramework.Services
         {
             _userDatabase = collectionSettings;
         }
-        
+
         /// <summary> Confirms login credentials are valid </summary>
         /// <returns> User when credentials are correct, null otherwise </returns>
         public async Task<User> Authenticate(string username, string password)
         {
             //fetch the stored user
+            const int tokenExpirationMinutes = 60 * 4;
             var userList = await _userDatabase.Users.FindAsync(x => x.Username == username);
             User foundUser = userList.FirstOrDefault();
 
@@ -70,14 +71,14 @@ namespace BackendFramework.Services
                 }),
 
                 //This line here will cause serious debugging problems if not kept in mind
-                Expires = DateTime.UtcNow.AddMinutes(30),
+                    Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             foundUser.Token = tokenHandler.WriteToken(token);
 
-            if(await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
+            if (await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
             {
                 return null;
             }
@@ -195,6 +196,6 @@ namespace BackendFramework.Services
             {
                 return ResultOfUpdate.NoChange;
             }
-        }   
+        }
     }
 }
