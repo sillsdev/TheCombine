@@ -23,7 +23,7 @@ export default class AlignedList extends React.Component<AlignedListProps> {
                   }
                 : {}
             }
-            key={`alignedList${Math.random()}`}
+            key={`alignedList${index}`}
           >
             {value}
           </Grid>

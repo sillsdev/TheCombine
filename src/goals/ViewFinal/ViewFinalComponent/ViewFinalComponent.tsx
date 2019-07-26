@@ -136,40 +136,46 @@ export class ViewFinalComponent extends React.Component<
 
   render() {
     return (
-      <div>
-        <MaterialTable
-          icons={tableIcons}
-          title={<Translate id={"viewFinal.title"} />}
-          columns={columns}
-          data={this.props.words.map(word => ({
-            ...word,
-            senses: word.senses.filter(sense => !sense.deleted)
-          }))}
-          editable={{
-            onRowUpdate: (newData: ViewFinalWord, oldData: ViewFinalWord) =>
-              new Promise(async resolve => {
-                // Update database + update word ID. Awaited so that the user can't edit + submit a word with a bad ID before the ID is updated
-                await this.props.updateFrontierWord(
-                  newData,
-                  oldData,
-                  this.props.language
-                );
-                setTimeout(() => {
-                  resolve();
-                }, 500);
-              })
-          }}
-          options={{
-            filtering: true,
-            pageSize: Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
-            pageSizeOptions: this.removeDuplicates([
-              Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
-              Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
-              Math.min(this.props.words.length, ROWS_PER_PAGE[2])
-            ])
-          }}
-        />
-      </div>
+      <Translate>
+        {({ translate }) => (
+          <MaterialTable
+            icons={tableIcons}
+            title={<Translate id={"viewFinal.title"} />}
+            columns={columns}
+            data={this.props.words.map(word => ({
+              ...word,
+              senses: word.senses.filter(sense => !sense.deleted)
+            }))}
+            editable={{
+              onRowUpdate: (newData: ViewFinalWord, oldData: ViewFinalWord) =>
+                new Promise(async (resolve, reject) => {
+                  // Update database + update word ID. Awaited so that the user can't edit + submit a word with a bad ID before the ID is updated
+                  this.props
+                    .updateFrontierWord(newData, oldData, this.props.language)
+                    .then(() => {
+                      setTimeout(() => {
+                        resolve();
+                      }, 500);
+                    })
+                    .catch(reason => {
+                      // May wish to change this alert method
+                      alert(translate(reason));
+                      reject();
+                    });
+                })
+            }}
+            options={{
+              filtering: true,
+              pageSize: Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
+              pageSizeOptions: this.removeDuplicates([
+                Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
+                Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
+                Math.min(this.props.words.length, ROWS_PER_PAGE[2])
+              ])
+            }}
+          />
+        )}
+      </Translate>
     );
   }
 }
