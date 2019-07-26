@@ -1,5 +1,6 @@
 ﻿using BackendFramework.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,20 +9,18 @@ namespace BackendFramework.Services
 {
     public class PermissionService : IPermissionService
     {
-        const int projIdLength = 24;
+        private readonly IPermissionService _permissionService;
+        private readonly IUserService _userService;
 
-        public string GetUserId(HttpContext request)
+        public PermissionService(IPermissionService permissionService, IUserService userService)
         {
-            var jwtToken = request.Request.Headers["Authorization"].ToString();
-            var token = jwtToken.Split(" ")[1];
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token);
-            string userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
-
-            return userId;
+            _permissionService = permissionService;
+            _userService = userService;
         }
 
-        private List<ProjectPermissions> getProjectPermissions(HttpContext request)
+        const int projIdLength = 24;
+
+        private SecurityToken GetJWT(HttpContext request)
         {
             //get authorization header i.e. JWT token
             var jwtToken = request.Request.Headers["Authorization"].ToString();
@@ -32,6 +31,23 @@ namespace BackendFramework.Services
             //parse JWT for project permissions
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
+
+            return jsonToken;
+        }
+
+        public string GetUserId(HttpContext request)
+        {
+            var jsonToken = GetJWT(request);
+
+            string userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
+
+            return userId;
+        } 
+
+        public List<ProjectPermissions> GetProjectPermissions(HttpContext request)
+        {
+            var jsonToken = GetJWT(request);
+
             string userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();
             List<ProjectPermissions> permissionsObj = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProjectPermissions>>(userRoleInfo);
             return permissionsObj;
@@ -40,7 +56,7 @@ namespace BackendFramework.Services
         public bool IsAuthenticated(string value, HttpContext request)
         {
             //retrieve jwt token from http request and convert to object
-            List<ProjectPermissions> permissionsObj = getProjectPermissions(request);
+            List<ProjectPermissions> permissionsObj = GetProjectPermissions(request);
 
             //retrieve project Id from http request
             int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/");
@@ -69,6 +85,19 @@ namespace BackendFramework.Services
 
                 return false;
             }
+        }
+
+        public bool IsViolationEditAsync(HttpContext request, string userEditId, string projectId)
+        {
+            var userId = _permissionService.GetUserId(request);
+            var userObj = _userService.GetUser(userId).Result;
+
+            if (userObj.WorkedProjects[projectId] != userEditId)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

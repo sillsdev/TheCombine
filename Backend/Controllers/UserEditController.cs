@@ -128,13 +128,11 @@ namespace BackendFramework.Controllers
             }
 
             //check to see if user is changing the correct user edit
-            var userId = _permissionService.GetUserId(HttpContext);
-            var userObj = await _userService.GetUser(userId);
-            if(userObj.WorkedProjects[projectId] != userEditId)
+            if (_permissionService.IsViolationEditAsync(HttpContext, userEditId, projectId))
             {
                 return new BadRequestObjectResult("You can not edit another users UserEdit");
             }
-            
+
 
             //ensure project exists
             var isValid = _projectService.GetProject(projectId);

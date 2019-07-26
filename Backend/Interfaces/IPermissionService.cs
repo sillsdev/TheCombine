@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace BackendFramework.Interfaces
 {
@@ -6,5 +7,6 @@ namespace BackendFramework.Interfaces
     {
         bool IsAuthenticated(string value, HttpContext request);
         string GetUserId(HttpContext request);
+        bool IsViolationEditAsync(HttpContext request, string userEditId, string ProjectId);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using BackendFramework.Interfaces;
 using Microsoft.AspNetCore.Http;
 
+using System.Threading.Tasks;
+
 
 
 namespace Backend.Tests
@@ -16,6 +18,11 @@ namespace Backend.Tests
         public bool IsAuthenticated(string value, HttpContext request)
         {
             return true;
+        }
+
+        public bool IsViolationEditAsync(HttpContext request, string userEditId, string ProjectId)
+        {
+            return false;
         }
     }
 }

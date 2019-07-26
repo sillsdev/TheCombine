@@ -2,6 +2,7 @@
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;
@@ -25,11 +26,14 @@ namespace Backend.Tests
         {
             _permissionService = new PermissionServiceMock();
             _userEditRepo = new UserEditRepositoryMock();
-            _userEditService = new UserEditService(_userEditRepo);
+            _userEditService = new UserEditService(_userEditRepo, _permissionService, _userService);
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
             _userService = new UserServiceMock();
             _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService, _permissionService, _userService);
+
+            _userEditController.ControllerContext = new ControllerContext();
+            _userEditController.ControllerContext.HttpContext = new DefaultHttpContext();
         }
 
         UserEdit RandomUserEdit()
