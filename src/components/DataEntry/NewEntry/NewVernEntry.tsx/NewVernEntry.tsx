@@ -1,29 +1,22 @@
 import React from "react";
-import {
-  Typography,
-  TextField,
-  Grid,
-  IconButton,
-  Tooltip,
-  Chip,
-  Button
-} from "@material-ui/core";
-import theme from "../../../types/theme";
+import { TextField, Grid, Tooltip } from "@material-ui/core";
+import theme from "../../../../types/theme";
 
-import {
-  Translate,
-  TranslateFunction,
-  LocalizeContextProps,
-  withLocalize
-} from "react-localize-redux";
-import { Word, SemanticDomain, State, Gloss } from "../../../types/word";
-import { Delete } from "@material-ui/icons";
-import * as Backend from "../../../backend";
-import DuplicateFinder from "../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import DomainTree from "../../TreeView/SemanticDomain";
-import SpellChecker from "../Table/spellChecker";
+import { Translate, TranslateFunction } from "react-localize-redux";
+import { Row } from "../../Table/DataEntryTable";
 
-export class NewVernEntry extends React.Component {
+interface NewVernEntryProps {
+  row: Row;
+  rowIndex: number;
+  vernInput: React.RefObject<HTMLDivElement>;
+  vernInFrontier: (vernacular: string) => string;
+  updateRow: (row: Row, index: number, callback?: Function) => void;
+  focusGlossInput: () => void;
+  toggleDuplicateVernacularView: (rowIndex: number) => void;
+  translate: TranslateFunction;
+}
+
+export class NewVernEntry extends React.Component<NewVernEntryProps> {
   render() {
     return (
       <Grid
@@ -42,30 +35,30 @@ export class NewVernEntry extends React.Component {
           label={<Translate id="addWords.vernacular" />}
           fullWidth
           variant="outlined"
-          value={row.vernacular}
+          value={this.props.row.vernacular}
           onChange={e => {
-            let dupId = this.vernInFrontier(e.target.value);
-            this.updateRow(
+            let dupId = this.props.vernInFrontier(e.target.value);
+            this.props.updateRow(
               {
-                ...row,
+                ...this.props.row,
                 vernacular: e.target.value,
                 dupId: dupId
               },
-              rowIndex
+              this.props.rowIndex
             );
           }}
-          inputRef={this.vernInput}
+          inputRef={this.props.vernInput}
           // Move the focus to the next box when the right arrow key is pressed
           onKeyDown={e => {
             if (
               e.key === "ArrowRight" &&
               (e.target as HTMLInputElement).selectionStart ===
-                this.state.rows[rowIndex].vernacular.length
+                this.props.row.vernacular.length
             )
-              this.focusGlossInput();
+              this.props.focusGlossInput();
           }}
         />
-        {this.state.rows[rowIndex].dupId !== "" && (
+        {this.props.row.dupId !== "" && (
           <Tooltip
             title={this.props.translate("addWords.wordInDatabase") as string}
             placement="top"
@@ -81,7 +74,9 @@ export class NewVernEntry extends React.Component {
                 right: 48,
                 cursor: "pointer"
               }}
-              onClick={() => this.toggleDuplicateVernacularView(rowIndex)}
+              onClick={() =>
+                this.props.toggleDuplicateVernacularView(this.props.rowIndex)
+              }
             />
           </Tooltip>
         )}
