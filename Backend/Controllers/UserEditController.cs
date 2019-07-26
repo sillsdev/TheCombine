@@ -27,7 +27,6 @@ namespace BackendFramework.Controllers
             _projectService = projectService;
             _userEditService = userEditService;
             _permissionService = permissionService;
-
         }
 
         /// <summary> Returns all <see cref="UserEdit"/>s for specified <see cref="Project"/> </summary>
@@ -170,6 +169,12 @@ namespace BackendFramework.Controllers
             if (!_permissionService.IsAuthenticated("1", HttpContext))
             {
                 return new UnauthorizedResult();
+            }
+
+            //check to see if user is changing the correct user edit
+            if (_permissionService.IsViolationEditAsync(HttpContext, userEditId, projectId))
+            {
+                return new BadRequestObjectResult("You can not edit another users UserEdit");
             }
 
             //ensure project exists
