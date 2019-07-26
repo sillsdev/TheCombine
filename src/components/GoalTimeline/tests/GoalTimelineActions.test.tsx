@@ -239,7 +239,6 @@ describe("Test GoalsActions", () => {
     } catch (err) {
       fail(err);
     }
-    debugger;
     expect(mockStore.getActions()).toEqual([updateGoal, setWordData]);
   });
 
@@ -259,7 +258,6 @@ describe("Test GoalsActions", () => {
 
   it("should load goal data for MergeDups", async () => {
     let goal: Goal = new MergeDups();
-    debugger;
     try {
       goal = await mockStore.dispatch<any>(actions.loadGoalData(goal));
       let data = goal.data as MergeDupData;
