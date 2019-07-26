@@ -53,7 +53,7 @@ namespace BackendFramework.Services
 
                     //change tree depth level, eg. 1.1 to 1.1.1
                     length += 2;
-                    
+
                     //replace short length list with long length
                     sdOfShortLengthList.Clear();
                     sdOfShortLengthList.AddRange(sdOfLongLengthList);

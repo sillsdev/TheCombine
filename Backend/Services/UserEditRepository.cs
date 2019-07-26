@@ -41,7 +41,7 @@ namespace BackendFramework.Services
             var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
             var userEditList = await _userEditDatabase.UserEdits.FindAsync(filter);
-                        
+
             return userEditList.FirstOrDefault();
         }
 

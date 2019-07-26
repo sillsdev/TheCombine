@@ -189,7 +189,7 @@ namespace BackendFramework.Services
                             matchingVern.Senses[oldSenseIndex].SemanticDomains = matchingVern.Senses[newSenseIndex].SemanticDomains.Distinct().ToList();
                         }
 
-                        ++oldSenseIndex;
+                        oldSenseIndex++;
                     }
 
                     //if we never found a matching sense in the old word, the words are different
@@ -198,7 +198,7 @@ namespace BackendFramework.Services
                         break;
                     }
 
-                    ++newSenseIndex;
+                    newSenseIndex++;
                 }
 
                 //update the word only if all the senses were duplicates

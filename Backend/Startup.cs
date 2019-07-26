@@ -29,7 +29,7 @@ namespace BackendFramework
             public string CombineDatabase { get; set; }
         }
 
-        /// <summary> This method gets called by the runtime. Use this method to add services to the container. </summary>
+        /// <summary> This method gets called by the runtime. Use this method to add services for dependency injection. </summary>
         public void ConfigureServices(IServiceCollection services)
         {
 
