@@ -31,6 +31,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
         disabled={false}
         onBlur={[Function]}
         onClick={[Function]}
+        onDragLeave={[Function]}
         onFocus={[Function]}
         onKeyDown={[Function]}
         onKeyUp={[Function]}
@@ -144,7 +145,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                 >
                   <fieldset
                     aria-hidden={true}
-                    className="PrivateNotchedOutline-root-247 MuiOutlinedInput-notchedOutline"
+                    className="PrivateNotchedOutline-root-250 MuiOutlinedInput-notchedOutline"
                     style={
                       Object {
                         "paddingLeft": 8,
@@ -152,7 +153,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                     }
                   >
                     <legend
-                      className="PrivateNotchedOutline-legend-248"
+                      className="PrivateNotchedOutline-legend-251"
                       style={
                         Object {
                           "width": 0.01,
@@ -208,7 +209,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                 >
                   <fieldset
                     aria-hidden={true}
-                    className="PrivateNotchedOutline-root-247 MuiOutlinedInput-notchedOutline"
+                    className="PrivateNotchedOutline-root-250 MuiOutlinedInput-notchedOutline"
                     style={
                       Object {
                         "paddingLeft": 8,
@@ -216,7 +217,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                     }
                   >
                     <legend
-                      className="PrivateNotchedOutline-legend-248"
+                      className="PrivateNotchedOutline-legend-251"
                       style={
                         Object {
                           "width": 0.01,
@@ -260,6 +261,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
           className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
           disabled={false}
           onBlur={[Function]}
+          onDragLeave={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
           onKeyUp={[Function]}
@@ -290,7 +292,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-267"
+    className="MuiBox-root MuiBox-root-270"
     fullScreen={true}
     open={false}
   >
