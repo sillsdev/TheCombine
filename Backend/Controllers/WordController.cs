@@ -26,7 +26,7 @@ namespace BackendFramework.Controllers
             _projectService = projectService;
         }
 
-        /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/></summary>
+        /// <summary> Returns all <see cref="Word"/>s for specified <see cref="Project"/> </summary>
         /// <remarks> GET: v1/projects/{projectId}/words </remarks>
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
@@ -41,7 +41,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _wordRepo.GetAllWords(projectId));
         }
 
-        /// <summary> Deletes all <see cref="Word"/>s for specified <see cref="Project"/></summary>
+        /// <summary> Deletes all <see cref="Word"/>s for specified <see cref="Project"/> </summary>
         /// <remarks> DELETE: v1/projects/{projectId}/words </remarks>
         /// <returns> true: if success, false: if there were no words </returns> 
         [HttpDelete]
@@ -97,7 +97,7 @@ namespace BackendFramework.Controllers
             word.ProjectId = projectId;
 
             //if word is not already in frontier, add it
-            if (await _wordService.SearchInDuplicates(word))
+            if (await _wordService.WordIsUnique(word))
             {
                 await _wordRepo.Create(word);
             }

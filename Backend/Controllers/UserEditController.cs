@@ -145,6 +145,12 @@ namespace BackendFramework.Controllers
                 return new NotFoundResult();
             }
 
+            //ensure index exists
+            if (userEdit.GoalIndex >= document.Edits.Count)
+            {
+                return new BadRequestObjectResult("Goal index out of range");
+            }
+
             await _userEditService.AddStepToGoal(projectId, userEditId, userEdit.GoalIndex, userEdit.NewEdit);
 
             return new OkObjectResult(document.Edits[userEdit.GoalIndex].StepData.Count - 1); 
