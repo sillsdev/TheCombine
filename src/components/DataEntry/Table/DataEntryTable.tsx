@@ -85,19 +85,17 @@ export class DataEntryTable extends React.Component<
 
     if (lastRow.vernacular === "") return;
 
-    Backend.createWord(
-      this.rowToNewWord({
-        ...lastRow,
-        dupId: ""
-      })
-    )
+    let newWord = this.rowToNewWord(lastRow);
+    let dupId = this.vernInFrontier(newWord.vernacular); // Check if already exists before adding to backend
+
+    Backend.createWord(newWord)
       .catch(err => console.log(err))
       .then(async res => {
         let word = res as Word;
         this.allWords = await Backend.getFrontierWords();
-        let dupId = this.vernInFrontier(word.vernacular);
+
         if (dupId === lastRow.id) {
-          dupId = "";
+          console.log("Duplicate");
         }
 
         let glossSpelledCorrectly = this.isSpelledCorrectly(lastRow.glosses);
@@ -246,11 +244,18 @@ export class DataEntryTable extends React.Component<
     let word = await this.rowToExistingWord(row);
     let updatedWord = await Backend.updateWord(word);
     this.allWords = await Backend.getFrontierWords();
-    let updatedRow = await this.wordToRow(updatedWord, 0);
-    this.updateRow(updatedRow, rowIndex);
 
-    console.log(this.state.rows);
-    console.log(this.allWords);
+    let glossSpelledCorrectly = this.isSpelledCorrectly(row.glosses);
+
+    let updatedRow: Row = {
+      ...row,
+      id: updatedWord.id,
+      dupId: row.dupId,
+      glossSpelledCorrectly: glossSpelledCorrectly
+    };
+
+    // let updatedRow = await this.wordToRow(updatedWord, 0);
+    this.updateRow(updatedRow, rowIndex);
   }
 
   // /** Update the word in the backend */
@@ -472,17 +477,11 @@ export class DataEntryTable extends React.Component<
   chooseSpellingSuggestion(rowIndex: number, suggestion: string) {
     let row: Row = this.state.rows[rowIndex];
     row.glosses = suggestion;
-    // let newRow: Row = {
-    //   ...row,
-    //   glossSpelledCorrectly: true
-    // };
     this.updateWordInFrontAndBack(rowIndex)
       .catch((err: string) => console.log(err))
       .then(() => {
         console.log("Updated word");
       });
-    // this.updateRow(newRow, rowIndex);
-    // this.updateWord(rowIndex);
   }
 
   /** Switch a row to edit a sense of a word in the database */
@@ -749,6 +748,7 @@ export class DataEntryTable extends React.Component<
                           onChange={e => {
                             let dupId = this.vernInFrontier(e.target.value);
                             if (dupId === row.id) {
+                              console.log("Duplicate is same word");
                               dupId = ""; // the "duplicate" is the word we're already editing
                             }
                             this.updateRow(
