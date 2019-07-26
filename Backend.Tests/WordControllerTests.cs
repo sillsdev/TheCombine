@@ -17,15 +17,17 @@ namespace Backend.Tests
         private WordController _wordController;
         private IProjectService _projectService;
         private string _projId;
+        private IPermissionService _permissionService;
 
         [SetUp]
         public void Setup()
         {
+            _permissionService = new PermissionServiceMock();
             _repo = new WordRepositoryMock();
             _wordService = new WordService(_repo);
             _projectService = new ProjectServiceMock();
             _projectService = new ProjectServiceMock();
-            _wordController = new WordController(_repo, _wordService, _projectService);
+            _wordController = new WordController(_repo, _wordService, _projectService, _permissionService);
             _projId = _projectService.Create(new Project()).Result.Id;
         }
 
