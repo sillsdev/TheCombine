@@ -4,6 +4,7 @@ import theme from "../../../../types/theme";
 import CharacterInfo from "./CharacterInfo";
 import CharacterStatusControl from "./CharacterStatusControl";
 import CharacterWords from "./CharacterWords";
+import FindAndReplace from "./FindAndReplace";
 
 export interface CharacterDetailProps {
   character: string;
@@ -32,7 +33,7 @@ export default function CharacterDetail(props: CharacterDetailProps) {
         <CharacterWords character={props.character} />
       </Grid>
       <Grid item xs={12}>
-        Rules ->
+        <FindAndReplace initialFindValue={props.character} />
       </Grid>
       <Grid item xs={12} />
     </Grid>
