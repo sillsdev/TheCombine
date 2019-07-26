@@ -63,6 +63,33 @@ export class DataEntryTable extends React.Component<
     };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
+    this.submit = this.submit.bind(this);
+    this.rowToNewWord = this.rowToNewWord.bind(this);
+    this.splitGloses = this.splitGloses.bind(this);
+    this.vernInFrontier = this.vernInFrontier.bind(this);
+    this.isSpelledCorrectly = this.isSpelledCorrectly.bind(this);
+    this.getSpellingSuggestions = this.getSpellingSuggestions.bind(this);
+    this.wordToRow = this.wordToRow.bind(this);
+    this.focusVernInput = this.focusVernInput.bind(this);
+    this.updateRow = this.updateRow.bind(this);
+    this.updateWordInFrontAndBack = this.updateWordInFrontAndBack.bind(this);
+    this.rowToExistingWord = this.rowToExistingWord.bind(this);
+    this.removeWord = this.removeWord.bind(this);
+    this.removeRow = this.removeRow.bind(this);
+    this.getWord = this.getWord.bind(this);
+    this.toggleDuplicateVernacularView = this.toggleDuplicateVernacularView.bind(
+      this
+    );
+    this.displayDuplicates = this.displayDuplicates.bind(this);
+    this.toggleSpellingSuggestionsView = this.toggleSpellingSuggestionsView.bind(
+      this
+    );
+    this.displaySpellingSuggestions = this.displaySpellingSuggestions.bind(
+      this
+    );
+    this.chooseSpellingSuggestion = this.chooseSpellingSuggestion.bind(this);
+    this.switchToExistingWord = this.switchToExistingWord.bind(this);
+    this.focusGlossInput = this.focusGlossInput.bind(this);
   }
 
   allWords: Word[] = [];
@@ -562,18 +589,18 @@ export class DataEntryTable extends React.Component<
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  <Grid container>
-                    <Grid
-                      item
-                      xs={12}
-                      key={rowIndex}
-                      onMouseEnter={() => {
-                        this.setState({ hoverIndex: rowIndex });
-                      }}
-                      onMouseLeave={() => {
-                        this.setState({ hoverIndex: undefined });
-                      }}
-                    >
+                  <Grid
+                    item
+                    xs={12}
+                    key={rowIndex}
+                    onMouseEnter={() => {
+                      this.setState({ hoverIndex: rowIndex });
+                    }}
+                    onMouseLeave={() => {
+                      this.setState({ hoverIndex: undefined });
+                    }}
+                  >
+                    <Grid container>
                       <ExistingVernEntry
                         row={row}
                         rowIndex={rowIndex}
@@ -600,7 +627,15 @@ export class DataEntryTable extends React.Component<
                       />
 
                       <Grid item xs={2}>
-                        {this.state.hoverIndex === rowIndex && <DeleteRow />}
+                        {this.state.hoverIndex === rowIndex && (
+                          <DeleteRow
+                            rowId={row.id}
+                            rowIndex={rowIndex}
+                            translate={this.props.translate}
+                            removeWord={this.removeWord}
+                            removeRow={this.removeRow}
+                          />
+                        )}
                       </Grid>
                     </Grid>
                   </Grid>

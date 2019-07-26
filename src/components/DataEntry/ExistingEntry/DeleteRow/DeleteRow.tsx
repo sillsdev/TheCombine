@@ -1,15 +1,17 @@
 import React from "react";
 import { IconButton, Tooltip } from "@material-ui/core";
-
-import {
-  Translate,
-  TranslateFunction,
-  LocalizeContextProps,
-  withLocalize
-} from "react-localize-redux";
+import { TranslateFunction } from "react-localize-redux";
 import { Delete } from "@material-ui/icons";
 
-export class DeleteRow extends React.Component {
+interface DeleteRowProps {
+  rowId: string;
+  rowIndex: number;
+  translate: TranslateFunction;
+  removeWord: (id: string, callback?: Function) => void;
+  removeRow: (id: number) => void;
+}
+
+export class DeleteRow extends React.Component<DeleteRowProps> {
   render() {
     return (
       <React.Fragment>
@@ -20,7 +22,9 @@ export class DeleteRow extends React.Component {
           <IconButton
             size="small"
             onClick={() =>
-              this.removeWord(row.id, () => this.removeRow(rowIndex))
+              this.props.removeWord(this.props.rowId, () =>
+                this.props.removeRow(this.props.rowIndex)
+              )
             }
           >
             <Delete />

@@ -28,8 +28,6 @@ export class NewVernEntry extends React.Component<NewVernEntryProps> {
           position: "relative"
         }}
       >
-        {/* Vernacular new word entry */}
-
         <TextField
           autoFocus
           label={<Translate id="addWords.vernacular" />}
