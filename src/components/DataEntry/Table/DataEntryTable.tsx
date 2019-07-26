@@ -330,6 +330,8 @@ export class DataEntryTable extends React.Component<
   }
 
   // Fix
+  // Make sure that when adding a new sense, the dupGlosses
+  // are current
   toggleDuplicateVernacularView(rowIndex: number) {
     let row: Row = this.state.rows[rowIndex];
     let dupWord: Word = this.getWord(row.dupId);
@@ -394,7 +396,7 @@ export class DataEntryTable extends React.Component<
                   }}
                 />
               ))}
-            {/* <Chip
+            <Chip
               variant="outlined"
               label={"Add New Sense +"}
               onClick={() =>
@@ -406,7 +408,7 @@ export class DataEntryTable extends React.Component<
               style={{
                 margin: 4
               }}
-            /> */}
+            />
           </Grid>
         </Grid>
       </Grid>
@@ -504,7 +506,11 @@ export class DataEntryTable extends React.Component<
                 ? row.dupGlosses[senseIndex]
                 : row.glosses,
               dupId: "",
-              glossSpelledCorrectly: true,
+              glossSpelledCorrectly: this.isSpelledCorrectly(
+                row.dupGlosses[senseIndex]
+                  ? row.dupGlosses[senseIndex]
+                  : row.glosses
+              ),
               id: row.dupId,
               senseIndex: senseIndex
             };
@@ -514,13 +520,6 @@ export class DataEntryTable extends React.Component<
         });
     }
   }
-
-  // /** Update the state */
-  // updateState(row: Row, index: number) {
-  //   let rows = [...this.state.rows];
-  //   rows.splice(index, 1, { ...rows[index], ...row });
-  //   this.setState({ rows });
-  // }
 
   /** Move the focus to the gloss textbox */
   focusGlossInput() {
@@ -553,7 +552,6 @@ export class DataEntryTable extends React.Component<
             </Typography>
           </Grid>
 
-          {/* Rows of words */}
           {this.state.rows.map((row, rowIndex, array) => (
             <React.Fragment>
               {rowIndex === array.length - 1 ? (
