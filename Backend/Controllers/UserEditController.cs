@@ -80,7 +80,7 @@ namespace BackendFramework.Controllers
             return new ObjectResult(userEdit);
         }
 
-        /// <summary> Create a <see cref="UserEdit"/> </summary>
+        /// <summary> Creates a <see cref="UserEdit"/> </summary>
         /// <remarks> POST: v1/projects/{projectId}/useredits </remarks>
         /// <returns> Id of create UserEdit </returns>
         [HttpPost]
@@ -143,6 +143,12 @@ namespace BackendFramework.Controllers
             if (document == null)
             {
                 return new NotFoundResult();
+            }
+
+            //ensure index exists
+            if (userEdit.GoalIndex >= document.Edits.Count)
+            {
+                return new BadRequestObjectResult("Goal index out of range");
             }
 
             await _userEditService.AddStepToGoal(projectId, userEditId, userEdit.GoalIndex, userEdit.NewEdit);

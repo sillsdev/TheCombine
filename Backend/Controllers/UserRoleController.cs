@@ -3,7 +3,6 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
@@ -23,11 +22,12 @@ namespace BackendFramework.Controllers
             _projectService = projectService;
         }
 
-        // GET: v1/Projects/{projectId}/UserRoles
-        // Implements GetAllUserRoles()
+        /// <summary> Returns all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
+        /// <remarks> GET: v1/projects/{projectId}/userroles </remarks>
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -37,13 +37,14 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _userRoleService.GetAllUserRoles(projectId));
         }
 
-        // DELETE v1/Projects/{projectId}/UserRoles
-        // Implements DeleteAllUserRoles()
-        // DEBUG ONLY
+        /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
+        /// <remarks> DELETE: v1/projects/{projectId}/userroles </remarks>
+        /// <returns> true: if success, false: if there were no UserRoles </returns> 
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
 #if DEBUG
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -56,11 +57,12 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        // GET: v1/Projects/{projectId}/UserRoles/{userRoleId}
-        // Implements GetUserRole(), Arguments: string id of target userRole
+        /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
+        /// <remarks> GET: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
         [HttpGet("{userRoleId}")]
         public async Task<IActionResult> Get(string projectId, string userRoleId)
         {
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -72,14 +74,17 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundObjectResult(userRoleId);
             }
+
             return new ObjectResult(userRole);
         }
 
-        // POST v1/Projects/{projectId}/UserRoles
-        // Implements Create()
+        /// <summary> Creates a <see cref="UserRole"/> </summary>
+        /// <remarks> POST: v1/projects/{projectId}/userroles </remarks>
+        /// <returns> Id of updated UserRole </returns>
         [HttpPost]
         public async Task<IActionResult> Post(string projectId, [FromBody]UserRole userRole)
         {
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -95,11 +100,12 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(userRole.Id);
         }
 
-        // DELETE: v1/Projects/{projectId}/UserRoles/{userRoleId}
-        // Implements Delete(), Arguments: string id of target userRole
+        /// <summary> Deletes <see cref="UserRole"/> with specified id </summary>
+        /// <remarks> DELETE: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
         [HttpDelete("{userRoleId}")]
         public async Task<IActionResult> Delete(string projectId, string userRoleId)
         {
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -113,11 +119,13 @@ namespace BackendFramework.Controllers
             return new NotFoundObjectResult(userRoleId);
         }
 
-        // PUT: v1/Projects/{projectId}/UserRoles/{userRoleId}
-        // Implements Update()
+        /// <summary> Updates <see cref="UserRole"/> with specified id </summary>
+        /// <remarks> PUT: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
+        /// <returns> Id of updated UserRole </returns>
         [HttpPut("{userRoleId}")]
         public async Task<IActionResult> Put(string projectId, string userRoleId, [FromBody] UserRole userRole)
         {
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
