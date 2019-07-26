@@ -15,10 +15,12 @@ namespace BackendFramework.Controllers
     public class AvatarController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IPermissionService _permissionService;
 
-        public AvatarController(IUserService service)
+        public AvatarController(IUserService service, IPermissionService permissionService)
         {
             _userService = service;
+            _permissionService = permissionService;
         }
 
         // POST: v1/users/{userId}/upload/avatar
@@ -26,6 +28,11 @@ namespace BackendFramework.Controllers
         [HttpPost("users/{userId}/upload/avatar")]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload model)
         {
+            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
             var file = model.File;
 
             //ensure file is not empty

@@ -18,11 +18,13 @@ namespace BackendFramework.Controllers
     {
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
+        private readonly IPermissionService _permissionService;
 
-        public AudioController(IWordRepository repo, IWordService wordService)
+        public AudioController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
         {
             _wordRepo = repo;
             _wordService = wordService;
+            _permissionService = permissionService;
         }
 
         // POST: v1/projects/{projectId}/words/{wordId}/upload/audio
@@ -30,6 +32,10 @@ namespace BackendFramework.Controllers
         [HttpPost("{wordId}/upload/audio")]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, [FromForm] FileUpload model)
         {
+            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
             var file = model.File;
 
             if (file.Length > 0)

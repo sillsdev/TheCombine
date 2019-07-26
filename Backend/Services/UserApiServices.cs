@@ -3,6 +3,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -69,24 +70,24 @@ namespace BackendFramework.Services
                 var key = Encoding.ASCII.GetBytes(secretKey);
 
                 //fetch the projects Id and the roles for each Id
-                List<twoThings<string, List<int>>> projectPermissionMap = new List<twoThings<string, List<int>>>();
+                List<ProjectPermissions> projectPermissionMap = new List<ProjectPermissions>();
 
                 foreach(var projectRolePair in foundUser.ProjectRoles)
                 {
                     //convert each userRole ID to its respective role && add to the mapping
                     var permissions = _userRole.GetUserRole(projectRolePair.Key, projectRolePair.Value).Result.Permissions;
-                    var validEntry = new twoThings<string, List<int>>(projectRolePair.Key, permissions);
+                    var validEntry = new ProjectPermissions(projectRolePair.Key, permissions);
                     projectPermissionMap.Add(validEntry);
                 }
 
-                var claimString = ListToString(projectPermissionMap);
+                var claimString = projectPermissionMap.ToJson();
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim(ClaimTypes.Name, foundUser.Id), 
-                    new Claim(ClaimTypes.Anonymous, claimString)
+                    new Claim("UserId", foundUser.Id), 
+                    new Claim("UserRoleInfo", claimString)
                     }),
 
                     //This line here will cause serious debugging problems if not kept in mind
@@ -224,33 +225,15 @@ namespace BackendFramework.Services
                 return ResultOfUpdate.NoChange;
             }
         }
-        public class twoThings<T, W>
+    }
+    public class ProjectPermissions
+    {
+        public ProjectPermissions(string first, List<int> second)
         {
-            public twoThings(T first, W second)
-            {
-                ItemOne = first;
-                ItemTwo = second;
-            }
-            public T ItemOne { get; set; }
-            public W ItemTwo { get; set; }
-
-            public string ToString()
-            {
-                return ItemOne.ToString() + "," + ItemTwo.ToString();
-            }
-
+            ProjectId = first;
+            Permissions = second;
         }
-
-        public string ListToString(List<twoThings<string, List<int>>> objectValues)
-        {
-            string result = "";
-
-            foreach (var entry in objectValues)
-            {
-                result = result + "[" + entry.ToString() + "],";
-            }
-            return result;
-        }
-
+        public string ProjectId { get; set; }
+        public List<int> Permissions { get; set; }
     }
 }

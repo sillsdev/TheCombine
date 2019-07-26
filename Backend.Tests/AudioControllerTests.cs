@@ -1,4 +1,5 @@
-﻿using BackendFramework.Controllers;
+﻿using BackendFramework.Context;
+using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
@@ -20,6 +21,7 @@ namespace Backend.Tests
 
         private IProjectService _projectService;
         private string _projId;
+        private PermissionServiceMock _permissionService;
 
         [SetUp]
         public void Setup()
@@ -28,9 +30,10 @@ namespace Backend.Tests
             _wordService = new WordService(_wordrepo);
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
-            _wordController = new WordController(_wordrepo, _wordService, _projectService);
+            _permissionService = new PermissionServiceMock();
+            _wordController = new WordController(_wordrepo, _wordService, _projectService, _permissionService);
 
-            _audioController = new AudioController(_wordrepo, _wordService);
+            _audioController = new AudioController(_wordrepo, _wordService, _permissionService);
 
             
 

@@ -16,16 +16,18 @@ namespace Backend.Tests
         private UserEditController _userEditController;
 
         private IProjectService _projectService;
-        private string _projId; 
+        private string _projId;
+        private IPermissionService _permissionService;
 
         [SetUp]
         public void Setup()
         {
+            _permissionService = new PermissionServiceMock();
             _userEditRepo = new UserEditRepositoryMock();
             _userEditService = new UserEditService(_userEditRepo);
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
-            _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService);
+            _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService, _permissionService);
         }
 
         UserEdit RandomUserEdit()

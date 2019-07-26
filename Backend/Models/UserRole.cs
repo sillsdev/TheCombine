@@ -69,13 +69,25 @@ namespace BackendFramework.ValueModels
         }
     }
 
+    public class ProjectPermissions
+    {
+        public ProjectPermissions(string first, List<int> second)
+        {
+            ProjectId = first;
+            Permissions = second;
+        }
+        public string ProjectId { get; set; }
+        public List<int> Permissions { get; set; }  //this is a list of permissions but is represented as ints for ease of catching http requests
+    }
+
     public enum Permission
     {
-        CreateProject,
-        ImportLift,
-        ExportLift,
-        Goals,
-        DataEntry
+        DatabaseAdmin = 6,          //Has Total Control
+        EditSettingsNUsers = 5,     //5
+        ImportExport = 4,           //4
+        MergeNCharSet = 3,          //3
+        Unused = 2,                 //2
+        WordEntry = 1               //1
     }
 
     public enum ResultOfUpdate

@@ -22,12 +22,14 @@ namespace BackendFramework.Controllers
         private readonly IWordRepository _wordRepo;
         private readonly LiftService _liftService;
         private readonly IProjectService _projectService;
+        private readonly IPermissionService _permissionService;
 
-        public LiftController(IWordRepository repo, IProjectService projServ)
+        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService)
         {
             _wordRepo = repo;
             _projectService = projServ;
             _liftService = new LiftService(_wordRepo, _projectService);
+            _permissionService = permissionService;
         }
 
         // POST: v1/project/{projectId}/words/upload
@@ -35,6 +37,12 @@ namespace BackendFramework.Controllers
         [HttpPost("words/upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload model)
         {
+            if (!_permissionService.IsAuthenticated("4", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
+
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {
@@ -147,6 +155,11 @@ namespace BackendFramework.Controllers
         [HttpGet("words/download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
+            if (!_permissionService.IsAuthenticated("4", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
             var isValid = _projectService.GetProject(projectId);
             if (isValid == null)
             {
