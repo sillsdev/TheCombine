@@ -102,17 +102,10 @@ namespace BackendFramework.ValueModels
                 other.Vernacular.Equals(Vernacular) &&
                 other.Plural.Equals(Plural) &&
                 other.Audio.Equals(Audio) &&
-                other.Created.Equals(Created) &&
-                other.Modified.Equals(Modified) &&
+                
                 other.PartOfSpeech.Equals(PartOfSpeech) &&
                 other.OtherField.Equals(OtherField) &&
                 other.ProjectId.Equals(ProjectId) &&
-
-                other.EditedBy.Count == EditedBy.Count &&
-                other.EditedBy.All(EditedBy.Contains) &&
-
-                other.History.Count == History.Count &&
-                other.History.All(History.Contains) &&
 
                 other.Senses.Count == Senses.Count &&
                 other.Senses.All(Senses.Contains);
@@ -127,7 +120,15 @@ namespace BackendFramework.ValueModels
             else
             {
                 Word other = obj as Word;
-                return other.Id.Equals(Id) && this.ContentEquals(other);
+                return 
+                    other.Id.Equals(Id) &&
+                    this.ContentEquals(other) &&
+                    other.Created.Equals(Created) &&
+                    other.Modified.Equals(Modified) && 
+                    other.EditedBy.Count == EditedBy.Count &&
+                    other.EditedBy.All(EditedBy.Contains) &&
+                    other.History.Count == History.Count && 
+                    other.History.All(History.Contains);
             }
         }
 
