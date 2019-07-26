@@ -22,6 +22,9 @@ import * as Backend from "../../../backend";
 import DuplicateFinder from "../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import DomainTree from "../../TreeView/SemanticDomain";
 import SpellChecker from "./spellChecker";
+import { NewEntry } from "../NewEntry/NewEntry";
+import { DeleteRow } from "../ExistingEntry/DeleteRow/DeleteRow";
+import { ExistingEntry } from "../ExistingEntry/ExistingEntry";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -553,173 +556,164 @@ export class DataEntryTable extends React.Component<
           {this.state.rows.map((row, rowIndex, array) => (
             <React.Fragment>
               {rowIndex === array.length - 1 ? (
-                <React.Fragment>
-                  <Grid item xs={12}>
-                    <Grid container>
-                      {/* Vernacular new word entry */}
-                      <Grid
-                        item
-                        xs={5}
-                        style={{
-                          paddingLeft: theme.spacing(2),
-                          paddingRight: theme.spacing(2),
-                          position: "relative"
-                        }}
-                      >
-                        <TextField
-                          autoFocus
-                          label={<Translate id="addWords.vernacular" />}
-                          fullWidth
-                          variant="outlined"
-                          value={row.vernacular}
-                          onChange={e => {
-                            // let duplicateVernacular: boolean =
-                            //   this.vernInFrontier(row.vernacular) !== "";
-                            // let updatedRow: Row = {
-                            //   ...row,
-                            //   vernacular: e.target.value,
-                            //   duplicateVernacular: duplicateVernacular
-                            // };
-
-                            // this.updateState(updatedRow, rowIndex);
-
-                            let dupId = this.vernInFrontier(e.target.value);
-                            // if (dupId === (row as ExistingRow).id) {
-                            //   dupId = ""; // the "duplicate" is the word we're already editing
-                            // }
-
-                            this.updateRow(
-                              {
-                                ...row,
-                                vernacular: e.target.value,
-                                dupId: dupId
-                              },
-                              rowIndex
-                            );
-                          }}
-                          inputRef={this.vernInput}
-                          // Move the focus to the next box when the right arrow key is pressed
-                          onKeyDown={e => {
-                            if (
-                              e.key === "ArrowRight" &&
-                              (e.target as HTMLInputElement).selectionStart ===
-                                this.state.rows[rowIndex].vernacular.length
-                            )
-                              this.focusGlossInput();
-                          }}
-                        />
-                        {this.state.rows[rowIndex].dupId !== "" && (
-                          <Tooltip
-                            title={
-                              this.props.translate(
-                                "addWords.wordInDatabase"
-                              ) as string
-                            }
-                            placement="top"
-                          >
-                            <div
-                              style={{
-                                height: "5px",
-                                width: "5px",
-                                border: "2px solid red",
-                                borderRadius: "50%",
-                                position: "absolute",
-                                top: 24,
-                                right: 48,
-                                cursor: "pointer"
-                              }}
-                              onClick={() =>
-                                this.toggleDuplicateVernacularView(rowIndex)
-                              }
-                            />
-                          </Tooltip>
-                        )}
-                      </Grid>
-
-                      {/* Gloss new word entry */}
-                      <Grid
-                        item
-                        xs={5}
-                        style={{
-                          paddingLeft: theme.spacing(2),
-                          paddingRight: theme.spacing(2),
-                          position: "relative"
-                        }}
-                      >
-                        <TextField
-                          label={<Translate id="addWords.glosses" />}
-                          fullWidth
-                          variant="outlined"
-                          value={row.glosses}
-                          onChange={e => {
-                            const isSpelledCorrectly = this.isSpelledCorrectly(
-                              e.target.value
-                            );
-                            this.updateRow(
-                              {
-                                ...row,
-                                glosses: e.target.value,
-                                glossSpelledCorrectly: isSpelledCorrectly
-                              },
-                              rowIndex
-                            );
-                          }}
-                          inputRef={this.glossInput}
-                          // Move the focus to the previous box when the left arrow key is pressed
-                          onKeyDown={e => {
-                            if (
-                              e.key === "ArrowLeft" &&
-                              (e.target as HTMLInputElement).selectionStart ===
-                                0
-                            )
-                              this.focusVernInput();
-                          }}
-                          InputProps={
-                            !row.glossSpelledCorrectly
-                              ? {
-                                  style: {
-                                    color: "red"
-                                  }
-                                }
-                              : {
-                                  style: {
-                                    color: "black"
-                                  }
-                                }
-                          }
-                        />
-                        {!row.glossSpelledCorrectly && (
-                          <Tooltip
-                            title={
-                              this.props.translate(
-                                "addWords.mispelledWord"
-                              ) as string
-                            }
-                            placement="top"
-                          >
-                            <div
-                              style={{
-                                height: "5px",
-                                width: "5px",
-                                border: "2px solid red",
-                                borderRadius: "50%",
-                                position: "absolute",
-                                top: 24,
-                                right: 48,
-                                cursor: "pointer"
-                              }}
-                              onClick={() =>
-                                this.toggleSpellingSuggestionsView(rowIndex)
-                              }
-                            />
-                          </Tooltip>
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </React.Fragment>
+                <NewEntry />
               ) : (
-                <React.Fragment>
+                <ExistingEntry />
+                // <React.Fragment>
+                //   <Grid item xs={12}>
+                //     <Grid container>
+                //       {/* Vernacular new word entry */}
+                //       <Grid
+                //         item
+                //         xs={5}
+                //         style={{
+                //           paddingLeft: theme.spacing(2),
+                //           paddingRight: theme.spacing(2),
+                //           position: "relative"
+                //         }}
+                //       >
+                //         <TextField
+                //           autoFocus
+                //           label={<Translate id="addWords.vernacular" />}
+                //           fullWidth
+                //           variant="outlined"
+                //           value={row.vernacular}
+                //           onChange={e => {
+                //             let dupId = this.vernInFrontier(e.target.value);
+                //             this.updateRow(
+                //               {
+                //                 ...row,
+                //                 vernacular: e.target.value,
+                //                 dupId: dupId
+                //               },
+                //               rowIndex
+                //             );
+                //           }}
+                //           inputRef={this.vernInput}
+                //           // Move the focus to the next box when the right arrow key is pressed
+                //           onKeyDown={e => {
+                //             if (
+                //               e.key === "ArrowRight" &&
+                //               (e.target as HTMLInputElement).selectionStart ===
+                //                 this.state.rows[rowIndex].vernacular.length
+                //             )
+                //               this.focusGlossInput();
+                //           }}
+                //         />
+                //         {this.state.rows[rowIndex].dupId !== "" && (
+                //           <Tooltip
+                //             title={
+                //               this.props.translate(
+                //                 "addWords.wordInDatabase"
+                //               ) as string
+                //             }
+                //             placement="top"
+                //           >
+                //             <div
+                //               style={{
+                //                 height: "5px",
+                //                 width: "5px",
+                //                 border: "2px solid red",
+                //                 borderRadius: "50%",
+                //                 position: "absolute",
+                //                 top: 24,
+                //                 right: 48,
+                //                 cursor: "pointer"
+                //               }}
+                //               onClick={() =>
+                //                 this.toggleDuplicateVernacularView(rowIndex)
+                //               }
+                //             />
+                //           </Tooltip>
+                //         )}
+                //       </Grid>
+
+                //       {/* Gloss new word entry */}
+                //       <Grid
+                //         item
+                //         xs={5}
+                //         style={{
+                //           paddingLeft: theme.spacing(2),
+                //           paddingRight: theme.spacing(2),
+                //           position: "relative"
+                //         }}
+                //       >
+                //         <TextField
+                //           label={<Translate id="addWords.glosses" />}
+                //           fullWidth
+                //           variant="outlined"
+                //           value={row.glosses}
+                //           onChange={e => {
+                //             const isSpelledCorrectly = this.isSpelledCorrectly(
+                //               e.target.value
+                //             );
+                //             this.updateRow(
+                //               {
+                //                 ...row,
+                //                 glosses: e.target.value,
+                //                 glossSpelledCorrectly: isSpelledCorrectly
+                //               },
+                //               rowIndex
+                //             );
+                //           }}
+                //           inputRef={this.glossInput}
+                //           // Move the focus to the previous box when the left arrow key is pressed
+                //           onKeyDown={e => {
+                //             if (
+                //               e.key === "ArrowLeft" &&
+                //               (e.target as HTMLInputElement).selectionStart ===
+                //                 0
+                //             )
+                //               this.focusVernInput();
+                //           }}
+                //           InputProps={
+                //             !row.glossSpelledCorrectly
+                //               ? {
+                //                   style: {
+                //                     color: "red"
+                //                   }
+                //                 }
+                //               : {
+                //                   style: {
+                //                     color: "black"
+                //                   }
+                //                 }
+                //           }
+                //         />
+                //         {!row.glossSpelledCorrectly && (
+                //           <Tooltip
+                //             title={
+                //               this.props.translate(
+                //                 "addWords.mispelledWord"
+                //               ) as string
+                //             }
+                //             placement="top"
+                //           >
+                //             <div
+                //               style={{
+                //                 height: "5px",
+                //                 width: "5px",
+                //                 border: "2px solid red",
+                //                 borderRadius: "50%",
+                //                 position: "absolute",
+                //                 top: 24,
+                //                 right: 48,
+                //                 cursor: "pointer"
+                //               }}
+                //               onClick={() =>
+                //                 this.toggleSpellingSuggestionsView(rowIndex)
+                //               }
+                //             />
+                //           </Tooltip>
+                //         )}
+                //       </Grid>
+                //     </Grid>
+                //   </Grid>
+                // </React.Fragment>
+
+
+                // <React.Fragment>
+{/* 
                   <Grid
                     item
                     xs={12}
@@ -730,9 +724,9 @@ export class DataEntryTable extends React.Component<
                     onMouseLeave={() => {
                       this.setState({ hoverIndex: undefined });
                     }}
-                  >
-                    <Grid container>
-                      {/* Vernacular entry */}
+                  > */}
+                    {/* <Grid container> */}
+                      {/* Vernacular entry
                       <Grid
                         item
                         xs={5}
@@ -797,10 +791,10 @@ export class DataEntryTable extends React.Component<
                             />
                           </Tooltip>
                         )}
-                      </Grid>
+                      </Grid> */}
 
                       {/* Gloss entry */}
-                      <Grid
+                      {/* <Grid
                         item
                         xs={5}
                         style={{
@@ -875,8 +869,9 @@ export class DataEntryTable extends React.Component<
                             />
                           </Tooltip>
                         )}
-                      </Grid>
-                      <Grid item xs={2}>
+                      </Grid> */}
+
+                      {/* <Grid item xs={2}>
                         {this.state.hoverIndex === rowIndex && (
                           <React.Fragment>
                             <Tooltip
@@ -900,10 +895,10 @@ export class DataEntryTable extends React.Component<
                             </Tooltip>
                           </React.Fragment>
                         )}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </React.Fragment>
+                      </Grid> */}
+                    {/* </Grid>
+                  </Grid> */}
+                // </React.Fragment>
               )}
               {/* This is where it shows the duplicate if the red dot is clicked */}
               {this.state.rows[rowIndex].showDuplicate &&
