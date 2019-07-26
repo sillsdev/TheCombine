@@ -1,29 +1,22 @@
 import React from "react";
-import {
-  Typography,
-  TextField,
-  Grid,
-  IconButton,
-  Tooltip,
-  Chip,
-  Button
-} from "@material-ui/core";
-import theme from "../../../types/theme";
+import { TextField, Grid, Tooltip } from "@material-ui/core";
+import theme from "../../../../types/theme";
 
-import {
-  Translate,
-  TranslateFunction,
-  LocalizeContextProps,
-  withLocalize
-} from "react-localize-redux";
-import { Word, SemanticDomain, State, Gloss } from "../../../types/word";
-import { Delete } from "@material-ui/icons";
-import * as Backend from "../../../backend";
-import DuplicateFinder from "../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import DomainTree from "../../TreeView/SemanticDomain";
-import SpellChecker from "../Table/spellChecker";
+import { Translate, TranslateFunction } from "react-localize-redux";
+import { Row } from "../../Table/DataEntryTable";
 
-export class NewGlossEntry extends React.Component {
+interface NewGlossEntryProps {
+  row: Row;
+  rowIndex: number;
+  glossInput: React.RefObject<HTMLDivElement>;
+  isSpelledCorrectly: (gloss: string) => boolean;
+  updateRow: (row: Row, index: number, callback?: Function) => void;
+  focusVernInput: () => void;
+  toggleSpellingSuggestionsView: (rowIndex: number) => void;
+  translate: TranslateFunction;
+}
+
+export class NewGlossEntry extends React.Component<NewGlossEntryProps> {
   render() {
     return (
       <Grid
@@ -41,29 +34,31 @@ export class NewGlossEntry extends React.Component {
           label={<Translate id="addWords.glosses" />}
           fullWidth
           variant="outlined"
-          value={row.glosses}
+          value={this.props.row.glosses}
           onChange={e => {
-            const isSpelledCorrectly = this.isSpelledCorrectly(e.target.value);
-            this.updateRow(
+            const isSpelledCorrectly = this.props.isSpelledCorrectly(
+              e.target.value
+            );
+            this.props.updateRow(
               {
-                ...row,
+                ...this.props.row,
                 glosses: e.target.value,
                 glossSpelledCorrectly: isSpelledCorrectly
               },
-              rowIndex
+              this.props.rowIndex
             );
           }}
-          inputRef={this.glossInput}
+          inputRef={this.props.glossInput}
           // Move the focus to the previous box when the left arrow key is pressed
           onKeyDown={e => {
             if (
               e.key === "ArrowLeft" &&
               (e.target as HTMLInputElement).selectionStart === 0
             )
-              this.focusVernInput();
+              this.props.focusVernInput();
           }}
           InputProps={
-            !row.glossSpelledCorrectly
+            !this.props.row.glossSpelledCorrectly
               ? {
                   style: {
                     color: "red"
@@ -76,7 +71,7 @@ export class NewGlossEntry extends React.Component {
                 }
           }
         />
-        {!row.glossSpelledCorrectly && (
+        {!this.props.row.glossSpelledCorrectly && (
           <Tooltip
             title={this.props.translate("addWords.mispelledWord") as string}
             placement="top"
@@ -92,7 +87,9 @@ export class NewGlossEntry extends React.Component {
                 right: 48,
                 cursor: "pointer"
               }}
-              onClick={() => this.toggleSpellingSuggestionsView(rowIndex)}
+              onClick={() =>
+                this.props.toggleSpellingSuggestionsView(this.props.rowIndex)
+              }
             />
           </Tooltip>
         )}
