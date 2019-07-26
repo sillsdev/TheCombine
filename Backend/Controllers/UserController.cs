@@ -55,7 +55,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Logs in a <see cref="User"/> and gives a token </summary>
-        /// <remarks> DELETE: v1/users/authenticate </remarks>
+        /// <remarks> POST: v1/users/authenticate </remarks>
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]Credentials cred)

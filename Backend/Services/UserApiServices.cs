@@ -1,7 +1,5 @@
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -16,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Services
 {
+    /// <summary> All application logic for <see cref="User"/>s </summary>
     public class UserService : IUserService
     {
         private readonly IUserContext _userDatabase;
@@ -26,100 +25,96 @@ namespace BackendFramework.Services
             _userDatabase = collectionSettings;
             _userRole = userRole;
         }
+
+        /// <summary> Confirms login credentials are valid </summary>
+        /// <returns> User when credentials are correct, null otherwise </returns>
         public async Task<User> Authenticate(string username, string password)
         {
+            //fetch the stored user
             const int tokenExpirationMinutes = 60 * 4;
-            try
-            {
-                // Fetch the stored user
-                var user = await _userDatabase.Users.FindAsync(x => x.Username == username);
-                User foundUser = user.Single();
+            var userList = await _userDatabase.Users.FindAsync(x => x.Username == username);
+            User foundUser = userList.FirstOrDefault();
 
-                // return null if user not found
-                if (foundUser == null)
+            //return null if user wtih specified username not found
+            if (foundUser == null)
+            {
+                return null;
+            }
+
+            int saltLength = 16;
+            int hashLength = 20;
+
+            //extract the bytes from password
+            byte[] hashBytes = Convert.FromBase64String(foundUser.Password);
+            //get the salt from the first part of stored value
+            byte[] salt = new byte[saltLength];
+            Array.Copy(hashBytes, 0, salt, 0, saltLength);
+            //compute the hash on the password the user entered
+            var rfc = new Rfc2898DeriveBytes(password, salt, 10000);
+            byte[] hash = rfc.GetBytes(hashLength);
+
+            //check if the password given to us matches the hash we have stored (after the salt)
+            for (int i = 0; i < hashLength; i++)
+            {
+                if (hashBytes[i + saltLength] != hash[i])
                 {
                     return null;
                 }
+            }
 
-                int saltLength = 16;
-                int hashLength = 20;
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
+            var key = Encoding.ASCII.GetBytes(secretKey);
 
-                // Extract the bytes from password
-                byte[] hashBytes = Convert.FromBase64String(foundUser.Password);
-                // Get the salt
-                byte[] salt = new byte[saltLength];
-                Array.Copy(hashBytes, 0, salt, 0, saltLength);
-                // Compute the hash on the password the user entered
-                var rfc = new Rfc2898DeriveBytes(password, salt, 10000);
-                byte[] hash = rfc.GetBytes(hashLength);
+            //fetch the projects Id and the roles for each Id
+            List<ProjectPermissions> projectPermissionMap = new List<ProjectPermissions>();
 
-                // Check if the password given to us matches the hash we have stored (after the salt)
-                for (int i = 0; i < hashLength; i++)
+            foreach (var projectRolePair in foundUser.ProjectRoles)
+            {
+                //convert each userRole ID to its respective role && add to the mapping
+                var permissions = _userRole.GetUserRole(projectRolePair.Key, projectRolePair.Value).Result.Permissions;
+                var validEntry = new ProjectPermissions(projectRolePair.Key, permissions);
+                projectPermissionMap.Add(validEntry);
+            }
+
+            var claimString = projectPermissionMap.ToJson();
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
                 {
-                    if (hashBytes[i + saltLength] != hash[i])
-                    {
-                        throw new UnauthorizedAccessException();
-                    }
-                }
-
-                // authentication successful so generate jwt token
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
-                var key = Encoding.ASCII.GetBytes(secretKey);
-
-                //fetch the projects Id and the roles for each Id
-                List<ProjectPermissions> projectPermissionMap = new List<ProjectPermissions>();
-
-                foreach (var projectRolePair in foundUser.ProjectRoles)
-                {
-                    //convert each userRole ID to its respective role && add to the mapping
-                    var permissions = _userRole.GetUserRole(projectRolePair.Key, projectRolePair.Value).Result.Permissions;
-                    var validEntry = new ProjectPermissions(projectRolePair.Key, permissions);
-                    projectPermissionMap.Add(validEntry);
-                }
-
-                var claimString = projectPermissionMap.ToJson();
-
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(new Claim[]
-                    {
                     new Claim("UserId", foundUser.Id),
                     new Claim("UserRoleInfo", claimString)
-                    }),
+                }),
 
-                    //This line here will cause serious debugging problems if not kept in mind
-                    Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
+                //This line here will cause serious debugging problems if not kept in mind
+                Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
 
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                foundUser.Token = tokenHandler.WriteToken(token);
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            foundUser.Token = tokenHandler.WriteToken(token);
 
-                // remove password before returning
-                if (await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
-                {
-                    throw (new KeyNotFoundException());
-                }
-                foundUser.Password = "";
-
-                return foundUser;
-            }
-            catch (InvalidOperationException)
+            if (await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
             {
                 return null;
             }
-            catch (MongoInternalException)
-            {
-                return null;
-            }
+
+            // remove password before returning
+            foundUser.Password = "";
+
+            return foundUser;
         }
 
+        /// <summary> Finds all <see cref="User"/>s </summary>
         public async Task<List<User>> GetAllUsers()
         {
             return await _userDatabase.Users.Find(_ => true).ToListAsync();
         }
 
+        /// <summary> Removes all <see cref="User"/>s </summary>
+        /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUsers()
         {
             var deleted = await _userDatabase.Users.DeleteManyAsync(_ => true);
@@ -130,69 +125,66 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<User> GetUser(string Id)
+        /// <summary> Finds <see cref="User"/> with specified userId </summary>
+        public async Task<User> GetUser(string userId)
         {
             var filterDef = new FilterDefinitionBuilder<User>();
-            var filter = filterDef.Eq(x => x.Id, Id);
+            var filter = filterDef.Eq(x => x.Id, userId);
 
             var userList = await _userDatabase.Users.FindAsync(filter);
 
             return userList.FirstOrDefault();
         }
 
+        /// <summary> Adds a <see cref="User"/> </summary>
+        /// <returns> The user created </returns>
         public async Task<User> Create(User user)
         {
-            try
-            {
-                //check if collection is not empty
-                var users = await GetAllUsers();
+            //check if collection is not empty
+            var users = await GetAllUsers();
 
-                if (users.Count != 0)
-                {
-                    //check to see if username is taken
-                    if (_userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
-                    {
-                        throw new InvalidCastException();
-                    }
-                }
-
-                int saltLength = 16;
-                int hashLength = 20;
-
-                //create randomized salt 
-                byte[] salt;
-                new RNGCryptoServiceProvider().GetBytes(salt = new byte[saltLength]);
-
-                //hash the password along with the salt
-                var pbkdf2 = new Rfc2898DeriveBytes(user.Password, salt, 10000);
-                byte[] hash = pbkdf2.GetBytes(20);
-
-                //combine salt and hashed password for storage
-                byte[] hashBytes = new byte[saltLength + hashLength];
-                Array.Copy(salt, 0, hashBytes, 0, saltLength);
-                Array.Copy(hash, 0, hashBytes, saltLength, hashLength);
-
-                //replace pasword with hashed password
-                user.Password = Convert.ToBase64String(hashBytes);
-                await _userDatabase.Users.InsertOneAsync(user);
-
-                return user;
-            }
-            catch (Exception)
+            //check to see if username is taken
+            if (users.Count != 0 && _userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
             {
                 return null;
             }
+
+            int saltLength = 16;
+            int hashLength = 20;
+
+            //create cryptographically-secure randomized salt 
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[saltLength]);
+
+            //hash the password along with the salt
+            var pbkdf2 = new Rfc2898DeriveBytes(user.Password, salt, 10000);
+            byte[] hash = pbkdf2.GetBytes(20);
+
+            //combine salt and hashed password for storage
+            byte[] hashBytes = new byte[saltLength + hashLength];
+            Array.Copy(salt, 0, hashBytes, 0, saltLength);
+            Array.Copy(hash, 0, hashBytes, saltLength, hashLength);
+
+            //replace pasword with hashed password
+            user.Password = Convert.ToBase64String(hashBytes);
+            await _userDatabase.Users.InsertOneAsync(user);
+
+            return user;
         }
 
-        public async Task<bool> Delete(string Id)
+        /// <summary> Removes <see cref="User"/> with specified userId </summary>
+        /// <returns> A bool: success of operation </returns>
+        public async Task<bool> Delete(string userId)
         {
-            var deleted = await _userDatabase.Users.DeleteOneAsync(x => x.Id == Id);
+            var deleted = await _userDatabase.Users.DeleteOneAsync(x => x.Id == userId);
             return deleted.DeletedCount > 0;
         }
 
-        public async Task<ResultOfUpdate> Update(string Id, User user)
+        /// <summary> Updates <see cref="User"/> with specified userId </summary>
+        /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
+        public async Task<ResultOfUpdate> Update(string userId, User user)
         {
-            FilterDefinition<User> filter = Builders<User>.Filter.Eq(x => x.Id, Id);
+            FilterDefinition<User> filter = Builders<User>.Filter.Eq(x => x.Id, userId);
 
             //Note: Nulls out values not in update body
             var updateDef = Builders<User>.Update
