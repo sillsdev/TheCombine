@@ -141,14 +141,32 @@ export function loadGoalData(goal: Goal) {
         //Used for testing duplicate finder. (See docs/bitmap_testing.md)
         //let t0 = performance.now();
 
-        await finder.getNextDups(goal.numSteps).then(words => {
-          goal.data = { plannedWords: words };
-        });
-
-        await dispatch(refreshWords());
+        let groups = await finder.getNextDups(goal.numSteps);
 
         //Used for testing duplicate finder. (See docs/bitmap_testing.md)
         //console.log(performance.now() - t0);
+
+        let usedIDs: string[] = [];
+
+        let newGroups = [];
+
+        for (let group of groups){
+          let newGroup = [];
+          for (let word of group){
+            if (!usedIDs.includes(word.id)){
+              usedIDs.push(word.id);
+              newGroup.push(word);
+            }
+          }
+          newGroups.push(newGroup);
+        }
+
+        goal.data = { plannedWords: newGroups };
+        goal.numSteps = newGroups.length;
+        goal.currentStep = 0;
+        goal.steps = [];
+
+        await dispatch(refreshWords());
 
         break;
       case GoalType.CreateCharInv:
