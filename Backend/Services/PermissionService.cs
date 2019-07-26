@@ -87,7 +87,7 @@ namespace BackendFramework.Services
             }
         }
 
-        public bool IsViolationEditAsync(HttpContext request, string userEditId, string projectId)
+        public bool IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
             var userId = _permissionService.GetUserId(request);
             var userObj = _userService.GetUser(userId).Result;

@@ -20,7 +20,7 @@ namespace Backend.Tests
             return true;
         }
 
-        public bool IsViolationEditAsync(HttpContext request, string userEditId, string ProjectId)
+        public bool IsViolationEdit(HttpContext request, string userEditId, string ProjectId)
         {
             return false;
         }

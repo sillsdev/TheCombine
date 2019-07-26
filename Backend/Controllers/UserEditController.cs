@@ -127,7 +127,7 @@ namespace BackendFramework.Controllers
             }
 
             //check to see if user is changing the correct user edit
-            if (_permissionService.IsViolationEditAsync(HttpContext, userEditId, projectId))
+            if (_permissionService.IsViolationEdit(HttpContext, userEditId, projectId))
             {
                 return new BadRequestObjectResult("You can not edit another users UserEdit");
             }
@@ -172,7 +172,7 @@ namespace BackendFramework.Controllers
             }
 
             //check to see if user is changing the correct user edit
-            if (_permissionService.IsViolationEditAsync(HttpContext, userEditId, projectId))
+            if (_permissionService.IsViolationEdit(HttpContext, userEditId, projectId))
             {
                 return new BadRequestObjectResult("You can not edit another users UserEdit");
             }
