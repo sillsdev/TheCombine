@@ -1,4 +1,21 @@
-export class ExistingVernEntry extends React.Component {
+import React from "react";
+import { TextField, Grid, Tooltip } from "@material-ui/core";
+import theme from "../../../../types/theme";
+import { TranslateFunction } from "react-localize-redux";
+import { Row } from "../../Table/DataEntryTable";
+
+interface ExistingVernEntryProps {
+  row: Row;
+  rowIndex: number;
+  vernInFrontier: (vernacular: string) => string;
+  updateRow: (row: Row, index: number, callback?: Function) => void;
+  updateWordInFrontAndBack: (rowIndex: number) => Promise<void>;
+  focusVernInput: () => void;
+  toggleDuplicateVernacularView: (rowIndex: number) => void;
+  translate: TranslateFunction;
+}
+
+export class ExistingVernEntry extends React.Component<ExistingVernEntryProps> {
   render() {
     return (
       <Grid
@@ -14,34 +31,34 @@ export class ExistingVernEntry extends React.Component {
 
         <TextField
           fullWidth
-          value={row.vernacular}
+          value={this.props.row.vernacular}
           onChange={e => {
-            let dupId = this.vernInFrontier(e.target.value);
-            if (dupId === row.id) {
+            let dupId = this.props.vernInFrontier(e.target.value);
+            if (dupId === this.props.row.id) {
               console.log("Duplicate is same word");
               dupId = ""; // the "duplicate" is the word we're already editing
             }
-            this.updateRow(
+            this.props.updateRow(
               {
-                ...row,
+                ...this.props.row,
                 vernacular: e.target.value,
                 dupId: dupId
               },
-              rowIndex
+              this.props.rowIndex
             );
           }}
           onBlur={() => {
-            this.updateWordInFrontAndBack(rowIndex).then(() =>
-              console.log("Updated word")
-            );
+            this.props
+              .updateWordInFrontAndBack(this.props.rowIndex)
+              .then(() => console.log("Updated word"));
           }}
           onKeyDown={e => {
             if (e.key === "Enter") {
-              this.focusVernInput();
+              this.props.focusVernInput();
             }
           }}
         />
-        {row.dupId !== "" && (
+        {this.props.row.dupId !== "" && (
           <Tooltip
             title={this.props.translate("addWords.wordInDatabase") as string}
             placement="top"
@@ -57,7 +74,9 @@ export class ExistingVernEntry extends React.Component {
                 right: 48,
                 cursor: "pointer"
               }}
-              onClick={() => this.toggleDuplicateVernacularView(rowIndex)}
+              onClick={() =>
+                this.props.toggleDuplicateVernacularView(this.props.rowIndex)
+              }
             />
           </Tooltip>
         )}

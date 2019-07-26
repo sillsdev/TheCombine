@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Typography,
-  TextField,
-  Grid,
-  IconButton,
-  Tooltip,
-  Chip,
-  Button
-} from "@material-ui/core";
+import { Typography, Grid, Chip, Button } from "@material-ui/core";
 import theme from "../../../types/theme";
 
 import {
@@ -17,14 +9,15 @@ import {
   withLocalize
 } from "react-localize-redux";
 import { Word, SemanticDomain, State, Gloss } from "../../../types/word";
-import { Delete } from "@material-ui/icons";
 import * as Backend from "../../../backend";
 import DuplicateFinder from "../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import DomainTree from "../../TreeView/SemanticDomain";
 import SpellChecker from "./spellChecker";
-import { NewEntry } from "../NewEntry/NewEntry";
 import { DeleteRow } from "../ExistingEntry/DeleteRow/DeleteRow";
-import { ExistingEntry } from "../ExistingEntry/ExistingEntry";
+import { NewVernEntry } from "../NewEntry/NewVernEntry.tsx/NewVernEntry";
+import { NewGlossEntry } from "../NewEntry/NewGlossEntry.tsx/NewGlossEntry";
+import { ExistingVernEntry } from "../ExistingEntry/ExistingVernEntry/ExistingVernEntry";
+import { ExistingGlossEntry } from "../ExistingEntry/ExistingGlossEntry/ExistingGlossEntry";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -84,7 +77,7 @@ export class DataEntryTable extends React.Component<
     if (e) e.preventDefault();
 
     let rows = [...this.state.rows];
-    let lastRow: Row = rows[rows.length - 1]; // TODO: may need to fix
+    let lastRow: Row = rows[rows.length - 1];
 
     if (lastRow.vernacular === "") return;
 
@@ -257,27 +250,8 @@ export class DataEntryTable extends React.Component<
       glossSpelledCorrectly: glossSpelledCorrectly
     };
 
-    // let updatedRow = await this.wordToRow(updatedWord, 0);
     this.updateRow(updatedRow, rowIndex);
   }
-
-  // /** Update the word in the backend */
-  // updateWord(index: number, callback?: Function) {
-  //   let row = this.state.rows[index];
-  //   this.rowToExistingWord(row)
-  //     .catch(err => console.log(err))
-  //     .then(res => {
-  //       console.log(res as Word);
-  //       Backend.updateWord(res as Word)
-  //         .catch(err => console.log(err))
-  //         .then(async updatedWord => {
-  //           console.log(updatedWord as Word);
-  //           this.allWords = await Backend.getFrontierWords();
-  //           console.log(this.allWords);
-  //           // if (callback) callback();
-  //         });
-  //     });
-  // }
 
   /** Add the fields in a row to the word it corresponds to in the database */
   async rowToExistingWord(row: Row): Promise<Word> {
@@ -555,7 +529,83 @@ export class DataEntryTable extends React.Component<
           {/* Rows of words */}
           {this.state.rows.map((row, rowIndex, array) => (
             <React.Fragment>
-              {rowIndex === array.length - 1 ? <NewEntry /> : <ExistingEntry />}
+              {rowIndex === array.length - 1 ? (
+                <React.Fragment>
+                  <Grid item xs={12}>
+                    <Grid container>
+                      <NewVernEntry
+                        row={row}
+                        rowIndex={rowIndex}
+                        vernInput={this.vernInput}
+                        vernInFrontier={this.vernInFrontier}
+                        updateRow={this.updateRow}
+                        focusGlossInput={this.focusGlossInput}
+                        toggleDuplicateVernacularView={
+                          this.toggleDuplicateVernacularView
+                        }
+                        translate={this.props.translate}
+                      />
+                      <NewGlossEntry
+                        row={row}
+                        rowIndex={rowIndex}
+                        glossInput={this.glossInput}
+                        isSpelledCorrectly={this.isSpelledCorrectly}
+                        updateRow={this.updateRow}
+                        focusVernInput={this.focusVernInput}
+                        toggleSpellingSuggestionsView={
+                          this.toggleSpellingSuggestionsView
+                        }
+                        translate={this.props.translate}
+                      />
+                    </Grid>
+                  </Grid>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <Grid container>
+                    <Grid
+                      item
+                      xs={12}
+                      key={rowIndex}
+                      onMouseEnter={() => {
+                        this.setState({ hoverIndex: rowIndex });
+                      }}
+                      onMouseLeave={() => {
+                        this.setState({ hoverIndex: undefined });
+                      }}
+                    >
+                      <ExistingVernEntry
+                        row={row}
+                        rowIndex={rowIndex}
+                        vernInFrontier={this.vernInFrontier}
+                        updateRow={this.updateRow}
+                        updateWordInFrontAndBack={this.updateWordInFrontAndBack}
+                        focusVernInput={this.focusVernInput}
+                        toggleDuplicateVernacularView={
+                          this.toggleDuplicateVernacularView
+                        }
+                        translate={this.props.translate}
+                      />
+                      <ExistingGlossEntry
+                        row={row}
+                        rowIndex={rowIndex}
+                        isSpelledCorrectly={this.isSpelledCorrectly}
+                        updateRow={this.updateRow}
+                        updateWordInFrontAndBack={this.updateWordInFrontAndBack}
+                        focusVernInput={this.focusVernInput}
+                        toggleSpellingSuggestionsView={
+                          this.toggleSpellingSuggestionsView
+                        }
+                        translate={this.props.translate}
+                      />
+
+                      <Grid item xs={2}>
+                        {this.state.hoverIndex === rowIndex && <DeleteRow />}
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </React.Fragment>
+              )}
               {/* This is where it shows the duplicate if the red dot is clicked */}
               {this.state.rows[rowIndex].showDuplicate &&
                 row.dupId &&

@@ -1,4 +1,23 @@
-export class ExistingGlossEntry extends React.Component {
+import React from "react";
+import { TextField, Grid, Tooltip } from "@material-ui/core";
+import theme from "../../../../types/theme";
+import { TranslateFunction } from "react-localize-redux";
+import { Row } from "../../Table/DataEntryTable";
+
+interface ExistingGlossEntryProps {
+  row: Row;
+  rowIndex: number;
+  isSpelledCorrectly: (gloss: string) => boolean;
+  updateRow: (row: Row, index: number, callback?: Function) => void;
+  updateWordInFrontAndBack: (rowIndex: number) => Promise<void>;
+  focusVernInput: () => void;
+  toggleSpellingSuggestionsView: (rowIndex: number) => void;
+  translate: TranslateFunction;
+}
+
+export class ExistingGlossEntry extends React.Component<
+  ExistingGlossEntryProps
+> {
   render() {
     return (
       <Grid
@@ -14,30 +33,32 @@ export class ExistingGlossEntry extends React.Component {
 
         <TextField
           fullWidth
-          value={row.glosses}
+          value={this.props.row.glosses}
           onChange={e => {
-            const isSpelledCorrectly = this.isSpelledCorrectly(e.target.value);
-            this.updateRow(
+            const isSpelledCorrectly = this.props.isSpelledCorrectly(
+              e.target.value
+            );
+            this.props.updateRow(
               {
-                ...row,
+                ...this.props.row,
                 glosses: e.target.value,
                 glossSpelledCorrectly: isSpelledCorrectly
               },
-              rowIndex
+              this.props.rowIndex
             );
           }}
           onBlur={() => {
-            this.updateWordInFrontAndBack(rowIndex).then(() =>
-              console.log("Updated word")
-            );
+            this.props
+              .updateWordInFrontAndBack(this.props.rowIndex)
+              .then(() => console.log("Updated word"));
           }}
           onKeyDown={e => {
             if (e.key === "Enter") {
-              this.focusVernInput();
+              this.props.focusVernInput();
             }
           }}
           InputProps={
-            !row.glossSpelledCorrectly
+            !this.props.row.glossSpelledCorrectly
               ? {
                   style: {
                     color: "red"
@@ -50,7 +71,7 @@ export class ExistingGlossEntry extends React.Component {
                 }
           }
         />
-        {!row.glossSpelledCorrectly && (
+        {!this.props.row.glossSpelledCorrectly && (
           <Tooltip
             title={this.props.translate("addWords.mispelledWord") as string}
             placement="top"
@@ -66,7 +87,9 @@ export class ExistingGlossEntry extends React.Component {
                 right: 48,
                 cursor: "pointer"
               }}
-              onClick={() => this.toggleSpellingSuggestionsView(rowIndex)}
+              onClick={() =>
+                this.props.toggleSpellingSuggestionsView(this.props.rowIndex)
+              }
             />
           </Tooltip>
         )}
