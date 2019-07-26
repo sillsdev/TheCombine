@@ -1,12 +1,10 @@
 import React from "react";
 import { Grid, Typography, Tooltip } from "@material-ui/core";
 import { Help } from "@material-ui/icons";
-import { TranslateFunction, Translate } from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 import theme from "../../../../types/theme";
 
-export interface CharacterSetHeaderProps {
-  translate: TranslateFunction;
-}
+export interface CharacterSetHeaderProps {}
 
 export default function CharacterSetHeader(props: CharacterSetHeaderProps) {
   return (
@@ -17,12 +15,16 @@ export default function CharacterSetHeader(props: CharacterSetHeaderProps) {
         style={{ marginTop: theme.spacing(1) }}
       >
         <Translate id="charInventory.characterSet.title" />{" "}
-        <Tooltip
-          title={props.translate("charInventory.characterSet.help") as string}
-          placement="right"
-        >
-          <Help />
-        </Tooltip>
+        <Translate>
+          {({ translate }) => (
+            <Tooltip
+              title={translate("charInventory.characterSet.help") as string}
+              placement="right"
+            >
+              <Help />
+            </Tooltip>
+          )}
+        </Translate>
       </Typography>
     </Grid>
   );

@@ -1,13 +1,15 @@
 import * as React from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, IconButton } from "@material-ui/core";
 import theme from "../../../../types/theme";
 import CharacterInfo from "./CharacterInfo";
 import CharacterStatusControl from "./CharacterStatusControl";
 import CharacterWords from "./CharacterWords";
 import FindAndReplace from "./FindAndReplace";
+import { Close } from "@material-ui/icons";
 
 export interface CharacterDetailProps {
   character: string;
+  close: () => void;
 }
 
 export default function CharacterDetail(props: CharacterDetailProps) {
@@ -23,8 +25,14 @@ export default function CharacterDetail(props: CharacterDetailProps) {
       <Grid item xs={3}>
         <Typography variant="h1">{props.character}</Typography>
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={8}>
         <CharacterStatusControl character={props.character} />
+      </Grid>
+      <Grid item xs={1}>
+        <IconButton onClick={() => props.close()}>
+          {" "}
+          <Close />
+        </IconButton>
       </Grid>
       <Grid item xs={12}>
         <CharacterInfo character={props.character} />

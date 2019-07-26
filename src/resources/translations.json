@@ -147,7 +147,10 @@
         "Agrega caracteres ingresándolos en este cuadro"
       ],
       "advanced": ["Advanced", "Avanzado"],
-      "occurrences": ["occurrences", "ocurrencias"]
+      "occurrences": ["occurrences", "ocurrencias"],
+      "find": ["Find", "Encontrar"],
+      "replace": ["Replace with", "Reemplazar con"],
+      "apply": ["apply", "aplicar"]
     },
     "sampleWords": {
       "title": ["Sample Words", "Palabras de muestra"],

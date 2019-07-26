@@ -112,7 +112,7 @@ export function setAllWords(words: string[]): CharacterInventoryAction {
 
 export function fetchWords() {
   return async (dispatch: Dispatch<CharacterInventoryAction>) => {
-    let words = await backend.getAllWords();
+    let words = await backend.getFrontierWords();
     dispatch(setAllWords(words.map(word => word.vernacular)));
   };
 }

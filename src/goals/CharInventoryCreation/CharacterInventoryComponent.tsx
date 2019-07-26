@@ -2,8 +2,7 @@ import * as React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate,
-  TranslateFunction
+  Translate
 } from "react-localize-redux";
 import CharacterList from "./components/CharacterList";
 import {
@@ -33,7 +32,6 @@ export interface CharacterInventoryProps {
   validCharacters: string[];
   rejectedCharacters: string[];
   currentProject: Project;
-  translate: TranslateFunction;
   selectedCharacter: string;
 }
 
@@ -60,7 +58,7 @@ export class CharacterInventory extends React.Component<
 
   componentDidMount() {
     this.props.fetchWords();
-    this.props.setSelectedCharacter("-"); // DON'T LET SIMEON COMMIT THIS
+    this.props.setSelectedCharacter("");
   }
 
   handleClose() {
@@ -84,7 +82,7 @@ export class CharacterInventory extends React.Component<
               justify="flex-start"
               alignItems="center"
             >
-              <CharacterSetHeader translate={this.props.translate} />
+              <CharacterSetHeader />
               <CharacterEntry />
               <CharacterList />
             </Grid>
@@ -99,7 +97,10 @@ export class CharacterInventory extends React.Component<
                 )}
               />
             ) : (
-              <CharacterDetail character={this.props.selectedCharacter} />
+              <CharacterDetail
+                character={this.props.selectedCharacter}
+                close={() => this.props.setSelectedCharacter("")}
+              />
             )}
           </Grid>
 

@@ -107,6 +107,7 @@ export class SampleWords extends React.Component<
         direction="row"
         justify="flex-start"
         alignItems="center"
+        style={{ padding: theme.spacing(1) }}
       >
         <Grid item xs={12}>
           <Typography

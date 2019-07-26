@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Typography } from "@material-ui/core";
-import { ArrowRightAlt } from "@material-ui/icons";
+import { Typography, Link } from "@material-ui/core";
+import { highlight } from "../../../../../types/theme";
 
 export interface CharacterWordsProps {
   character: string;
@@ -10,15 +10,15 @@ export interface CharacterWordsProps {
 export default function CharacterWords(props: CharacterWordsProps) {
   return (
     <React.Fragment>
-      <Typography
-        variant="body1"
-        style={{ display: "inline-flex", verticalAlign: "middle" }}
-      >
-        Example words with character
-        <ArrowRightAlt />
+      <Typography>
+        <Link href={"#"} variant="overline">
+          Examples ⟶
+        </Link>
       </Typography>
       {getWordsContainingChar(props.character, props.allWords, 5).map(word => (
-        <Typography variant="body1">{word}</Typography>
+        <Typography variant="body1">
+          {highlightCharacterInWord(props.character, word)}
+        </Typography>
       ))}
     </React.Fragment>
   );
@@ -35,4 +35,25 @@ function getWordsContainingChar(
     if (wordsContainingChar.length >= maxCount) break;
   }
   return wordsContainingChar;
+}
+
+function highlightCharacterInWord(character: string, word: string) {
+  return word.split("").map((letter: string, index: number) => {
+    if (letter === character) {
+      return (
+        <span
+          key={index}
+          style={{
+            background: highlight,
+            padding: "3px 0"
+            //borderBottom: "2px solid red"
+          }}
+        >
+          {letter}
+        </span>
+      );
+    } else {
+      return letter;
+    }
+  });
 }
