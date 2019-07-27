@@ -1,6 +1,6 @@
 "use strict";
-import aff from "../../../resources/dictionaries/en-us.aff.js";
-import dictionary from "../../../resources/dictionaries/en-us.dic.js";
+import aff from "../../resources/dictionaries/en-us.aff.js";
+import dictionary from "../../resources/dictionaries/en-us.dic.js";
 
 const nspell = require("nspell");
 

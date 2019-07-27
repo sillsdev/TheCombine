@@ -9,9 +9,9 @@ import {
 } from "react-localize-redux";
 import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
-import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
-import DataEntryTable from "./Table/DataEntryTable";
-import SpellChecker from "./spellChecker";
+import DataEntryHeader from "../DataEntry/DataEntryHeader/DataEntryHeader";
+import SpellChecker from "../DataEntry/spellChecker";
+import DataEntryTable from "./DataEntryTable/DataEntryTable";
 
 interface DataEntryProps {
   domain: DomainTree;
@@ -22,7 +22,7 @@ interface DataEntryState {
   gettingSemanticDomain: boolean;
 }
 
-export class DataEntry extends React.Component<
+export class DataEntryComponent extends React.Component<
   DataEntryProps & LocalizeContextProps,
   DataEntryState
 > {
@@ -58,7 +58,6 @@ export class DataEntry extends React.Component<
           />
         </Paper>
 
-        {/** Tree modal */}
         <Dialog fullScreen open={this.state.gettingSemanticDomain}>
           <TreeViewComponent
             returnControlToCaller={() =>
@@ -73,4 +72,4 @@ export class DataEntry extends React.Component<
   }
 }
 
-export default withLocalize(DataEntry);
+export default withLocalize(DataEntryComponent);

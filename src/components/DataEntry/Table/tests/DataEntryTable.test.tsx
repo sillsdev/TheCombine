@@ -5,7 +5,7 @@ import LocalizedDataEntryTable, { DataEntryTable } from "../DataEntryTable";
 import configureMockStore from "redux-mock-store";
 import axios from "axios";
 import { Word } from "../../../../types/word";
-import SpellChecker from "../spellChecker";
+import SpellChecker from "../../spellChecker";
 
 jest.mock("@material-ui/core", () => {
   const material = jest.requireActual("@material-ui/core");

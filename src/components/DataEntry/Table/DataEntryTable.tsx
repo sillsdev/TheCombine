@@ -12,7 +12,7 @@ import { Word, SemanticDomain, State, Gloss } from "../../../types/word";
 import * as Backend from "../../../backend";
 import DuplicateFinder from "../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import DomainTree from "../../TreeView/SemanticDomain";
-import SpellChecker from "./spellChecker";
+import SpellChecker from "../spellChecker";
 import { DeleteRow } from "../ExistingEntry/DeleteRow/DeleteRow";
 import { NewVernEntry } from "../NewEntry/NewVernEntry.tsx/NewVernEntry";
 import { NewGlossEntry } from "../NewEntry/NewGlossEntry.tsx/NewGlossEntry";
