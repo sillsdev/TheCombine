@@ -3,6 +3,7 @@ import * as backend from "../../../backend";
 import { Project, defaultProject } from "../../../types/project";
 import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
 import history from "../../../history";
+import { User } from "../../../types/user";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;
@@ -45,7 +46,32 @@ export function asyncCreateProject(name: string, languageData?: File) {
         let createdProject = userProject.project;
         dispatch(setCurrentProject(createdProject));
 
-        localStorage.setItem("user", updatedUserString);
+        // let userString = localStorage.getItem("user");
+        // let yeOldeToken: string = "";
+        // if (userString != null) {
+        //   let user: User = JSON.parse(userString);
+        //   yeOldeToken = user.token;
+        // }
+
+        // localStorage.setItem("user", updatedUserString);
+
+        // let newUserString = localStorage.getItem("user");
+        // let newToekn: string = "";
+        // if (newUserString != null) {
+        //   let user: User = JSON.parse(newUserString);
+        //   newToekn = user.token;
+        // }
+
+        // if (yeOldeToken != "" && newToekn != "") {
+        //   if (yeOldeToken === newToekn) {
+        //     console.log("Same token");
+        //   } else {
+        //     console.log("Different token");
+        //   }
+        // } else {
+        //   console.log("some tokens empty");
+        // }
+
         // Upload words
         if (languageData) {
           backend.uploadLift(createdProject, languageData).then(res => {
