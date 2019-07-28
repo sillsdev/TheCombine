@@ -31,7 +31,6 @@ namespace BackendFramework.Services
         public async Task<User> Authenticate(string username, string password)
         {
             //fetch the stored user
-            const int tokenExpirationMinutes = 60 * 4;
             var userList = await _userDatabase.Users.FindAsync(x => x.Username == username);
             User foundUser = userList.FirstOrDefault();
 
@@ -63,6 +62,13 @@ namespace BackendFramework.Services
             }
 
             // authentication successful so generate jwt token
+            return await MakeJWT(foundUser);
+            
+        }
+
+        public async Task<User> MakeJWT(User user)
+        {
+            const int tokenExpirationMinutes = 60 * 4;
             var tokenHandler = new JwtSecurityTokenHandler();
             var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
             var key = Encoding.ASCII.GetBytes(secretKey);
@@ -70,7 +76,7 @@ namespace BackendFramework.Services
             //fetch the projects Id and the roles for each Id
             List<ProjectPermissions> projectPermissionMap = new List<ProjectPermissions>();
 
-            foreach (var projectRolePair in foundUser.ProjectRoles)
+            foreach (var projectRolePair in user.ProjectRoles)
             {
                 //convert each userRole ID to its respective role && add to the mapping
                 var permissions = _userRole.GetUserRole(projectRolePair.Key, projectRolePair.Value).Result.Permissions;
@@ -84,7 +90,7 @@ namespace BackendFramework.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("UserId", foundUser.Id),
+                    new Claim("UserId", user.Id),
                     new Claim("UserRoleInfo", claimString)
                 }),
 
@@ -94,17 +100,17 @@ namespace BackendFramework.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            foundUser.Token = tokenHandler.WriteToken(token);
+            user.Token = tokenHandler.WriteToken(token);
 
-            if (await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
+            if (await Update(user.Id, user) != ResultOfUpdate.Updated)
             {
                 return null;
             }
 
             // remove password before returning
-            foundUser.Password = "";
+            user.Password = "";
 
-            return foundUser;
+            return user;
         }
 
         /// <summary> Finds all <see cref="User"/>s </summary>
