@@ -40,29 +40,32 @@ export function asyncCreateProject(name: string, languageData?: File) {
     project.name = name;
     backend
       .createProject(project)
-      .then(createdProject => {
+      .then(userProject => {
+        let updatedUserString: string = JSON.stringify(userProject.user);
+        let createdProject = userProject.project;
         dispatch(setCurrentProject(createdProject));
 
+        localStorage.setItem("user", updatedUserString);
         // Upload words
         if (languageData) {
-          backend
-            .uploadLift(createdProject, languageData)
-            .then(res => {
-              backend.getProject(createdProject.id).then(res=>{
+          backend.uploadLift(createdProject, languageData).then(res => {
+            backend
+              .getProject(createdProject.id)
+              .then(res => {
                 dispatch(setCurrentProject(res));
                 dispatch(success(name));
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {
                   history.push("/goals");
                 }, 1000);
-
-              }).catch(err => {
+              })
+              .catch(err => {
                 dispatch(failure(name, err.response.statusText));
-            })
-            .catch(err => {
-              dispatch(failure(name, err.response.statusText));
-            });
-          })
+              })
+              .catch(err => {
+                dispatch(failure(name, err.response.statusText));
+              });
+          });
         } else {
           dispatch(success(name));
           setTimeout(() => {
