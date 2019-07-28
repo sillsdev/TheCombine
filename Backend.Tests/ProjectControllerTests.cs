@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System.Collections.Generic;
+using static BackendFramework.Controllers.ProjectController;
 
 namespace Backend.Tests
 {
@@ -96,7 +97,7 @@ namespace Backend.Tests
         public void TestCreateProject()
         {
             Project project = RandomProject();
-            string id = (_controller.Post(project).Result as ObjectResult).Value as string;
+            string id = ((_controller.Post(project).Result as ObjectResult).Value as CreateProjectReturnType).Project.Id;
             project.Id = id;
             Assert.Contains(project, _projectService.GetAllProjects().Result);
         }
