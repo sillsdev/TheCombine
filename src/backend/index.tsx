@@ -14,14 +14,7 @@ const backendServer = axios.create({
 });
 
 backendServer.interceptors.response.use(
-  resp => {
-    let user = JSON.parse(resp.data);
-    if (user.token != undefined) {
-      localStorage.setItem("user", user);
-      return Promise.resolve(resp.data.user);
-    }
-    return Promise.resolve(resp);
-  },
+  resp => resp,
   err => {
     if (err.response && err.response.status === 401) {
       history.push("/login");
