@@ -123,6 +123,7 @@ namespace BackendFramework.Controllers
             await _userService.Update(currentUserId, currentUser);
 
             var user = await _userService.GetUser(currentUserId);
+            user.Id = "";
 
             return new OkObjectResult(new CreateProjectReturnType(project, user));
         }
