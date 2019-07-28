@@ -120,9 +120,23 @@ namespace BackendFramework.Controllers
             }
 
             currentUser.ProjectRoles.Add(project.Id, usersRole.Id);
-            var result = await _userService.Update(currentUserId, currentUser);
+            await _userService.Update(currentUserId, currentUser);
 
-            return new OkObjectResult(project.Id);
+            var user = await _userService.GetUser(currentUserId);
+
+            return new OkObjectResult(new CreateProjectReturnType(project, user));
+        }
+
+        public class CreateProjectReturnType
+        {
+            public readonly Project Project;
+            public readonly User User;
+
+            public CreateProjectReturnType(Project project, User user)
+            {
+                Project = project;
+                User = user;
+            }
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>
