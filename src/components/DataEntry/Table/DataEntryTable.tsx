@@ -21,7 +21,6 @@ import { ExistingGlossEntry } from "../ExistingEntry/ExistingGlossEntry/Existing
 
 interface DataEntryTableProps {
   domain: DomainTree;
-  translate: TranslateFunction;
   spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
 }
@@ -568,7 +567,6 @@ export class DataEntryTable extends React.Component<
                         toggleDuplicateVernacularView={
                           this.toggleDuplicateVernacularView
                         }
-                        translate={this.props.translate}
                       />
                       <NewGlossEntry
                         row={row}
@@ -580,7 +578,6 @@ export class DataEntryTable extends React.Component<
                         toggleSpellingSuggestionsView={
                           this.toggleSpellingSuggestionsView
                         }
-                        translate={this.props.translate}
                       />
                     </Grid>
                   </Grid>
@@ -609,7 +606,6 @@ export class DataEntryTable extends React.Component<
                         toggleDuplicateVernacularView={
                           this.toggleDuplicateVernacularView
                         }
-                        translate={this.props.translate}
                       />
                       <ExistingGlossEntry
                         row={row}
@@ -621,7 +617,6 @@ export class DataEntryTable extends React.Component<
                         toggleSpellingSuggestionsView={
                           this.toggleSpellingSuggestionsView
                         }
-                        translate={this.props.translate}
                       />
 
                       <Grid item xs={2}>
@@ -629,7 +624,6 @@ export class DataEntryTable extends React.Component<
                           <DeleteRow
                             rowId={row.id}
                             rowIndex={rowIndex}
-                            translate={this.props.translate}
                             removeWord={this.removeWord}
                             removeRow={this.removeRow}
                           />

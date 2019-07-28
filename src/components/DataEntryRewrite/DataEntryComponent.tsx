@@ -2,20 +2,15 @@ import React from "react";
 import { Paper, Container, Divider, Dialog } from "@material-ui/core";
 import theme from "../../types/theme";
 
-import {
-  TranslateFunction,
-  withLocalize,
-  LocalizeContextProps
-} from "react-localize-redux";
+import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
-import DataEntryHeader from "../DataEntry/DataEntryHeader/DataEntryHeader";
+import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import SpellChecker from "../DataEntry/spellChecker";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
 
 interface DataEntryProps {
   domain: DomainTree;
-  translate: TranslateFunction;
 }
 
 interface DataEntryState {

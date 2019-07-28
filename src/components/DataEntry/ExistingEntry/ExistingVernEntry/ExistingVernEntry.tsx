@@ -1,7 +1,7 @@
 import React from "react";
 import { TextField, Grid, Tooltip } from "@material-ui/core";
 import theme from "../../../../types/theme";
-import { TranslateFunction } from "react-localize-redux";
+import { TranslateFunction, Translate } from "react-localize-redux";
 import { Row } from "../../Table/DataEntryTable";
 
 interface ExistingVernEntryProps {
@@ -12,7 +12,6 @@ interface ExistingVernEntryProps {
   updateWordInFrontAndBack: (rowIndex: number) => Promise<void>;
   focusVernInput: () => void;
   toggleDuplicateVernacularView: (rowIndex: number) => void;
-  translate: TranslateFunction;
 }
 
 export class ExistingVernEntry extends React.Component<ExistingVernEntryProps> {
@@ -60,7 +59,7 @@ export class ExistingVernEntry extends React.Component<ExistingVernEntryProps> {
         />
         {this.props.row.dupId !== "" && (
           <Tooltip
-            title={this.props.translate("addWords.wordInDatabase") as string}
+            title={<Translate id="addWords.wordInDatabase" />}
             placement="top"
           >
             <div

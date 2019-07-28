@@ -1,13 +1,13 @@
 import React from "react";
 import { Typography, Grid, Chip } from "@material-ui/core";
-import theme from "../../../types/theme";
+import theme from "../../../../types/theme";
 
-import { Word, Gloss, Sense, State } from "../../../types/word";
-import * as Backend from "../../../backend";
-import DuplicateFinder from "../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import SpellChecker from "../../DataEntry/spellChecker";
-import NewVernEntry from "../NewEntry/NewVernEntry/NewVernEntry";
-import NewGlossEntry from "../NewEntry/NewGlossEntry/NewGlossEntry";
+import { Word, Gloss, Sense, State } from "../../../../types/word";
+import * as Backend from "../../../../backend";
+import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import SpellChecker from "../../../DataEntry/spellChecker";
+import NewVernEntry from "./NewVernEntry/NewVernEntry";
+import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
 
 interface NewEntryProps {
   allWords: Word[];
@@ -23,11 +23,6 @@ interface NewEntryState {
   duplicate?: Word;
   isSpelledCorrectly: boolean;
   isDuplicate: boolean;
-}
-
-export interface Entry {
-  vernacular: string;
-  glosses: string[];
 }
 
 export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
@@ -66,6 +61,9 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isDuplicate: false
     };
 
+    this.vernInput = React.createRef<HTMLDivElement>();
+    this.glossInput = React.createRef<HTMLDivElement>();
+
     this.toggleSpellingSuggestionsView = this.toggleSpellingSuggestionsView.bind(
       this
     );
@@ -77,18 +75,23 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.isSpelledCorrectly = this.isSpelledCorrectly.bind(this);
   }
 
+  vernInput: React.RefObject<HTMLDivElement>;
+  glossInput: React.RefObject<HTMLDivElement>;
   spellChecker: SpellChecker;
 
+  // Same
   toggleSpellingSuggestionsView() {
     this.setState({
       displaySpellingSuggestions: !this.state.displaySpellingSuggestions
     });
   }
 
+  // Same
   toggleDuplicateResolutionView() {
     this.setState({ displayDuplicates: !this.state.displayDuplicates });
   }
 
+  // Same
   displaySpellingSuggestions(mispelledGloss: string) {
     let spellingSuggestions = this.getSpellingSuggestions(mispelledGloss);
     return (
@@ -139,6 +142,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     );
   }
 
+  // Almost the same
   displayDuplicates(newEntry: Word, existingEntry: Word) {
     return (
       <Grid
@@ -185,6 +189,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 );
 
                 this.props.updateWord(updatedWord);
+                this.resetEntry();
                 this.setState({
                   displayDuplicates: false,
                   isDuplicate: false,
@@ -199,8 +204,40 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     );
   }
 
+  resetEntry() {
+    this.setState({
+      newEntry: {
+        id: "",
+        vernacular: "",
+        senses: [
+          {
+            glosses: [
+              {
+                language: "en",
+                def: ""
+              }
+            ],
+            semanticDomains: []
+          }
+        ],
+        audio: "",
+        created: "",
+        modified: "",
+        history: [],
+        partOfSpeech: "",
+        editedBy: [],
+        accessability: State.active,
+        otherField: "",
+        plural: ""
+      }
+    });
+  }
+
+  // Almost the same
   chooseSpellingSuggestion(suggestion: string) {
     this.setState({
+      isSpelledCorrectly: true,
+      displaySpellingSuggestions: false,
       newEntry: {
         ...this.state.newEntry,
         senses: [
@@ -214,16 +251,13 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             semanticDomains: []
           }
         ]
-      },
-      isSpelledCorrectly: true,
-      displaySpellingSuggestions: false
+      }
     });
   }
 
+  // Same
   addSenseToExistingWord(existingWord: Word, newSense: string): Word {
-    let updatedWord: Word = {
-      ...existingWord
-    };
+    let updatedWord: Word = { ...existingWord };
 
     let newGloss: Gloss = {
       language: "en",
@@ -234,6 +268,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     return updatedWord;
   }
 
+  // Same
   updateGlossField(newValue: string) {
     let isSpelledCorrectly =
       newValue.trim() !== "" ? this.isSpelledCorrectly(newValue) : true;
@@ -252,6 +287,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
+  // Same
   updateVernField(newValue: string) {
     let duplicateId: string = this.vernInFrontier(newValue);
     let isDuplicate: boolean = duplicateId !== "";
@@ -270,6 +306,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
+  // Same
   /** If the venacular is in the frontier, returns that words id */
   vernInFrontier(vernacular: string): string {
     let Finder = new DuplicateFinder();
@@ -300,16 +337,19 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     return foundDuplicate[0];
   }
 
+  // Same
   getDuplicate(id: string): Word {
     let word = this.props.allWords.find(word => word.id === id);
     if (!word) throw new Error("No word exists with this id");
     return word;
   }
 
+  // Same
   isSpelledCorrectly(word: string): boolean {
     return this.spellChecker.correct(word);
   }
 
+  // Same
   getSpellingSuggestions(word: string): string[] {
     return this.spellChecker.getSpellingSuggestions(word);
   }
@@ -347,6 +387,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
+  /** Move the focus to the vernacular textbox */
+  focusVernInput() {
+    if (this.vernInput.current) this.vernInput.current.focus();
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -356,18 +401,21 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             onKeyDown={e => {
               if (e.key === "Enter") {
                 this.props.addNewWord(this.state.newEntry);
+                this.focusVernInput();
                 this.resetState();
               }
             }}
           >
             <NewVernEntry
               vernacular={this.state.newEntry.vernacular}
+              vernInput={this.vernInput}
               isDuplicate={this.state.isDuplicate}
               toggleDuplicateResolutionView={this.toggleDuplicateResolutionView}
               updateVernField={this.updateVernField}
             />
             <NewGlossEntry
               glosses={this.state.newEntry.senses[0].glosses[0].def}
+              glossInput={this.glossInput}
               isSpelledCorrectly={this.state.isSpelledCorrectly}
               toggleSpellingSuggestionsView={this.toggleSpellingSuggestionsView}
               updateGlossField={this.updateGlossField}

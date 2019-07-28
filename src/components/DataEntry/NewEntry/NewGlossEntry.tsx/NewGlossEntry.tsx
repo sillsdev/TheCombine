@@ -13,7 +13,6 @@ interface NewGlossEntryProps {
   updateRow: (row: Row, index: number, callback?: Function) => void;
   focusVernInput: () => void;
   toggleSpellingSuggestionsView: (rowIndex: number) => void;
-  translate: TranslateFunction;
 }
 
 export class NewGlossEntry extends React.Component<NewGlossEntryProps> {
@@ -73,7 +72,7 @@ export class NewGlossEntry extends React.Component<NewGlossEntryProps> {
         />
         {!this.props.row.glossSpelledCorrectly && (
           <Tooltip
-            title={this.props.translate("addWords.mispelledWord") as string}
+            title={<Translate id="addWords.mispelledWord" />}
             placement="top"
           >
             <div

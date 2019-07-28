@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid, TextField, Tooltip } from "@material-ui/core";
-import theme from "../../../../types/theme";
+import theme from "../../../../../types/theme";
 
 import {
   Translate,
@@ -11,6 +11,7 @@ import {
 interface NewVernEntryProps {
   vernacular: string;
   isDuplicate: boolean;
+  vernInput: React.RefObject<HTMLDivElement>;
   toggleDuplicateResolutionView: () => void;
   updateVernField: (newValue: string) => void;
 }
@@ -18,13 +19,6 @@ interface NewVernEntryProps {
 export class NewVernEntry extends React.Component<
   LocalizeContextProps & NewVernEntryProps
 > {
-  constructor(props: LocalizeContextProps & NewVernEntryProps) {
-    super(props);
-    this.vernInput = React.createRef<HTMLDivElement>();
-  }
-
-  vernInput: React.RefObject<HTMLDivElement>;
-
   render() {
     return (
       <Grid
@@ -43,7 +37,7 @@ export class NewVernEntry extends React.Component<
           variant="outlined"
           value={this.props.vernacular}
           onChange={e => this.props.updateVernField(e.target.value)}
-          inputRef={this.vernInput}
+          inputRef={this.props.vernInput}
         />
         {this.props.isDuplicate && (
           <Tooltip

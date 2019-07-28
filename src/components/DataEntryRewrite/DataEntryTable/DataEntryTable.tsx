@@ -3,7 +3,6 @@ import { Typography, Grid, Button } from "@material-ui/core";
 import theme from "../../../types/theme";
 import {
   Translate,
-  TranslateFunction,
   LocalizeContextProps,
   withLocalize
 } from "react-localize-redux";
@@ -11,12 +10,11 @@ import { Word, SemanticDomain, State } from "../../../types/word";
 import * as Backend from "../../../backend";
 import DomainTree from "../../TreeView/SemanticDomain";
 import SpellChecker from "../../DataEntry/spellChecker";
-import { ExistingEntry } from "../ExistingEntry/ExistingEntry";
-import { NewEntry } from "../NewEntry/NewEntry";
+import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
+import { NewEntry } from "./NewEntry/NewEntry";
 
 interface DataEntryTableProps {
   domain: DomainTree;
-  translate: TranslateFunction;
   spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
 }
@@ -227,6 +225,7 @@ export class DataEntryTableRewrite extends React.Component<
 
           {this.state.words.map((word, index) => (
             <ExistingEntry
+              key={word.id}
               allWords={this.state.words}
               entryIndex={index}
               entry={word}

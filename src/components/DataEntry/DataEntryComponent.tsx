@@ -9,13 +9,12 @@ import {
 } from "react-localize-redux";
 import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
-import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
+import DataEntryHeader from "../DataEntryRewrite/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./Table/DataEntryTable";
 import SpellChecker from "./spellChecker";
 
 interface DataEntryProps {
   domain: DomainTree;
-  translate: TranslateFunction;
 }
 
 interface DataEntryState {

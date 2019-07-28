@@ -77,6 +77,7 @@ beforeEach(() => {
       <LocalizedDataEntryTable
         spellChecker={new SpellChecker()}
         domain={{ name: "en", id: "1", subdomains: [] }}
+        semanticDomain={{ name: "", id: "" }}
       />
     );
   });

@@ -3,6 +3,7 @@ import { TextField, Grid, Tooltip } from "@material-ui/core";
 import theme from "../../../../types/theme";
 import { TranslateFunction } from "react-localize-redux";
 import { Row } from "../../Table/DataEntryTable";
+import { Translate } from "@material-ui/icons";
 
 interface ExistingGlossEntryProps {
   row: Row;
@@ -12,7 +13,6 @@ interface ExistingGlossEntryProps {
   updateWordInFrontAndBack: (rowIndex: number) => Promise<void>;
   focusVernInput: () => void;
   toggleSpellingSuggestionsView: (rowIndex: number) => void;
-  translate: TranslateFunction;
 }
 
 export class ExistingGlossEntry extends React.Component<
@@ -73,7 +73,7 @@ export class ExistingGlossEntry extends React.Component<
         />
         {!this.props.row.glossSpelledCorrectly && (
           <Tooltip
-            title={this.props.translate("addWords.mispelledWord") as string}
+            title={<Translate id="addWords.mispelledWord" />}
             placement="top"
           >
             <div

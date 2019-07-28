@@ -13,7 +13,6 @@ interface NewVernEntryProps {
   updateRow: (row: Row, index: number, callback?: Function) => void;
   focusGlossInput: () => void;
   toggleDuplicateVernacularView: (rowIndex: number) => void;
-  translate: TranslateFunction;
 }
 
 export class NewVernEntry extends React.Component<NewVernEntryProps> {
@@ -58,7 +57,7 @@ export class NewVernEntry extends React.Component<NewVernEntryProps> {
         />
         {this.props.row.dupId !== "" && (
           <Tooltip
-            title={this.props.translate("addWords.wordInDatabase") as string}
+            title={<Translate id="addWords.wordInDatabase" />}
             placement="top"
           >
             <div

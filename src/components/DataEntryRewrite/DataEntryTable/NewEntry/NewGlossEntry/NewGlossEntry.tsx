@@ -1,21 +1,22 @@
 import React from "react";
 import { Grid, TextField, Tooltip } from "@material-ui/core";
-import theme from "../../../../types/theme";
+import theme from "../../../../../types/theme";
 import {
   Translate,
   LocalizeContextProps,
   withLocalize
 } from "react-localize-redux";
 
-interface ExistingGlossEntryProps {
+interface NewGlossEntryProps {
   glosses: string;
+  glossInput: React.RefObject<HTMLDivElement>;
   isSpelledCorrectly: boolean;
   toggleSpellingSuggestionsView: () => void;
   updateGlossField: (newValue: string) => void;
 }
 
-export class ExistingGlossEntry extends React.Component<
-  ExistingGlossEntryProps & LocalizeContextProps
+export class NewGlossEntry extends React.Component<
+  NewGlossEntryProps & LocalizeContextProps
 > {
   render() {
     return (
@@ -29,9 +30,14 @@ export class ExistingGlossEntry extends React.Component<
         }}
       >
         <TextField
+          label={<Translate id="addWords.glosses" />}
           fullWidth
+          variant="outlined"
           value={this.props.glosses}
-          onChange={e => this.props.updateGlossField(e.target.value)}
+          onChange={e => {
+            this.props.updateGlossField(e.target.value);
+          }}
+          inputRef={this.props.glossInput}
           InputProps={
             this.props.isSpelledCorrectly
               ? {
@@ -58,7 +64,7 @@ export class ExistingGlossEntry extends React.Component<
                 border: "2px solid red",
                 borderRadius: "50%",
                 position: "absolute",
-                top: 8,
+                top: 24,
                 right: 48,
                 cursor: "pointer"
               }}
@@ -71,4 +77,4 @@ export class ExistingGlossEntry extends React.Component<
   }
 }
 
-export default withLocalize(ExistingGlossEntry);
+export default withLocalize(NewGlossEntry);

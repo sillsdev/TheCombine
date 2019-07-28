@@ -1,10 +1,10 @@
 import React from "react";
 import { Typography, Grid, Chip } from "@material-ui/core";
-import theme from "../../../types/theme";
-import { Word, Sense, Gloss } from "../../../types/word";
-import * as Backend from "../../../backend";
-import DuplicateFinder from "../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import SpellChecker from "../../DataEntry/spellChecker";
+import theme from "../../../../types/theme";
+import { Word, Sense, Gloss } from "../../../../types/word";
+import * as Backend from "../../../../backend";
+import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import SpellChecker from "../../../DataEntry/spellChecker";
 import ExistingVernEntry from "./ExistingVernEntry/ExistingVernEntry";
 import ExistingGlossEntry from "./ExistingGlossEntry/ExistingGlossEntry";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
@@ -17,6 +17,7 @@ interface ExistingEntryProps {
   removeWord: (id: string) => void;
 }
 
+// Almost the same
 interface ExistingEntryState {
   displaySpellingSuggestions: boolean;
   displayDuplicates: boolean;
@@ -59,96 +60,19 @@ export class ExistingEntry extends React.Component<
 
   spellChecker: SpellChecker;
 
+  // Same
   toggleSpellingSuggestionsView() {
     this.setState({
       displaySpellingSuggestions: !this.state.displaySpellingSuggestions
     });
   }
 
+  // Same
   toggleDuplicateResolutionView() {
     this.setState({ displayDuplicates: !this.state.displayDuplicates });
   }
 
-  updateGlossField(newValue: string) {
-    let isSpelledCorrectly =
-      newValue.trim() !== "" ? this.isSpelledCorrectly(newValue) : true;
-    this.setState({
-      isSpelledCorrectly: isSpelledCorrectly,
-      existingEntry: {
-        ...this.state.existingEntry,
-        senses: [
-          { glosses: [{ language: "en", def: newValue }], semanticDomains: [] }
-        ]
-      },
-      displaySpellingSuggestions:
-        this.state.displaySpellingSuggestions && isSpelledCorrectly
-          ? false
-          : this.state.displaySpellingSuggestions
-    });
-  }
-
-  updateVernField(newValue: string) {
-    let duplicateId: string = this.vernInFrontier(newValue);
-    let isDuplicate: boolean = duplicateId !== "";
-    this.setState({
-      isDuplicate: isDuplicate,
-      duplicate: duplicateId ? this.getDuplicate(duplicateId) : undefined,
-      existingEntry: {
-        ...this.state.existingEntry,
-        vernacular: newValue
-      },
-      duplicateId: duplicateId ? duplicateId : undefined,
-      displayDuplicates:
-        this.state.displayDuplicates && isDuplicate
-          ? this.state.displayDuplicates
-          : false
-    });
-  }
-
-  /** If the venacular is in the frontier, returns that words id */
-  vernInFrontier(vernacular: string): string {
-    let Finder = new DuplicateFinder();
-
-    //[vernacular form, levenshtein distance]
-    // the number defined here sets the upper bound on acceptable scores
-    let foundDuplicate: [string, number] = ["", 2];
-
-    for (let word of this.props.allWords) {
-      let accessible = false;
-      for (let sense of word.senses) {
-        if (sense.accessibility === 0) {
-          accessible = true;
-          break;
-        }
-      }
-      if (accessible) {
-        let levenD: number = Finder.getLevenshteinDistance(
-          vernacular,
-          word.vernacular
-        );
-        if (levenD < foundDuplicate[1]) {
-          foundDuplicate = [word.id, levenD];
-        }
-      }
-    }
-
-    return foundDuplicate[0];
-  }
-
-  getDuplicate(id: string): Word {
-    let word = this.props.allWords.find(word => word.id === id);
-    if (!word) throw new Error("No word exists with this id");
-    return word;
-  }
-
-  isSpelledCorrectly(word: string): boolean {
-    return this.spellChecker.correct(word);
-  }
-
-  getSpellingSuggestions(word: string): string[] {
-    return this.spellChecker.getSpellingSuggestions(word);
-  }
-
+  // Same
   displaySpellingSuggestions(mispelledGloss: string) {
     let spellingSuggestions = this.getSpellingSuggestions(mispelledGloss);
     return (
@@ -199,6 +123,7 @@ export class ExistingEntry extends React.Component<
     );
   }
 
+  // Almost the same
   displayDuplicates(newEntry: Word, existingEntry: Word) {
     return (
       <Grid
@@ -239,11 +164,12 @@ export class ExistingEntry extends React.Component<
               label={"Add New Sense +"}
               style={{ margin: 4 }}
               onClick={() => {
-                this.addSenseToExistingWord(
+                let updatedWord = this.addSenseToExistingWord(
                   existingEntry,
                   this.state.existingEntry.senses[0].glosses[0].def
                 );
 
+                this.props.updateWord(updatedWord);
                 this.setState({
                   displayDuplicates: false,
                   isDuplicate: false,
@@ -258,6 +184,7 @@ export class ExistingEntry extends React.Component<
     );
   }
 
+  // Almost the same
   chooseSpellingSuggestion(suggestion: string) {
     let updatedWord = { ...this.props.entry };
     updatedWord.senses[0].glosses[0].def = suggestion;
@@ -272,7 +199,10 @@ export class ExistingEntry extends React.Component<
         senses: [
           {
             glosses: [
-              { language: "en", def: this.props.entry.senses[0].glosses[0].def }
+              {
+                language: "en",
+                def: suggestion /*this.props.entry.senses[0].glosses[0].def*/
+              }
             ],
             semanticDomains: []
           }
@@ -281,7 +211,9 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  addSenseToExistingWord(existingWord: Word, newSense: string) {
+  // Same
+  // Move out of class
+  addSenseToExistingWord(existingWord: Word, newSense: string): Word {
     let updatedWord = { ...existingWord };
 
     let newGloss: Gloss = {
@@ -290,8 +222,97 @@ export class ExistingEntry extends React.Component<
     };
 
     updatedWord.senses[0].glosses.push(newGloss); // Fix which sense we are adding to
+    return updatedWord;
+  }
 
-    this.props.updateWord(updatedWord);
+  // Same
+  updateGlossField(newValue: string) {
+    let isSpelledCorrectly =
+      newValue.trim() !== "" ? this.isSpelledCorrectly(newValue) : true;
+    this.setState({
+      isSpelledCorrectly: isSpelledCorrectly,
+      existingEntry: {
+        ...this.state.existingEntry,
+        senses: [
+          { glosses: [{ language: "en", def: newValue }], semanticDomains: [] }
+        ]
+      },
+      displaySpellingSuggestions:
+        this.state.displaySpellingSuggestions && isSpelledCorrectly
+          ? false
+          : this.state.displaySpellingSuggestions
+    });
+  }
+
+  // Same
+  updateVernField(newValue: string) {
+    let duplicateId: string = this.vernInFrontier(newValue);
+    let isDuplicate: boolean = duplicateId !== "";
+    this.setState({
+      isDuplicate: isDuplicate,
+      duplicate: duplicateId ? this.getDuplicate(duplicateId) : undefined,
+      existingEntry: {
+        ...this.state.existingEntry,
+        vernacular: newValue
+      },
+      duplicateId: duplicateId ? duplicateId : undefined,
+      displayDuplicates:
+        this.state.displayDuplicates && isDuplicate
+          ? this.state.displayDuplicates
+          : false
+    });
+  }
+
+  // Same
+  // Maybe move out of class
+  /** If the venacular is in the frontier, returns that words id */
+  vernInFrontier(vernacular: string): string {
+    let Finder = new DuplicateFinder();
+
+    //[vernacular form, levenshtein distance]
+    // the number defined here sets the upper bound on acceptable scores
+    let foundDuplicate: [string, number] = ["", 2];
+
+    for (let word of this.props.allWords) {
+      let accessible = false;
+      for (let sense of word.senses) {
+        if (sense.accessibility === 0) {
+          accessible = true;
+          break;
+        }
+      }
+      if (accessible) {
+        let levenD: number = Finder.getLevenshteinDistance(
+          vernacular,
+          word.vernacular
+        );
+        if (levenD < foundDuplicate[1]) {
+          foundDuplicate = [word.id, levenD];
+        }
+      }
+    }
+
+    return foundDuplicate[0];
+  }
+
+  // Same
+  // Maybe move out of class
+  getDuplicate(id: string): Word {
+    let word = this.props.allWords.find(word => word.id === id);
+    if (!word) throw new Error("No word exists with this id");
+    return word;
+  }
+
+  // Same
+  // Move out of class
+  isSpelledCorrectly(word: string): boolean {
+    return this.spellChecker.correct(word);
+  }
+
+  // Same
+  // Move out of class
+  getSpellingSuggestions(word: string): string[] {
+    return this.spellChecker.getSpellingSuggestions(word);
   }
 
   removeWord(id: string, callback?: Function) {
@@ -308,6 +329,7 @@ export class ExistingEntry extends React.Component<
     }
   }
 
+  // Move out of class
   wordsAreEqual(a: Word, b: Word): boolean {
     let areEqual: boolean = false;
 
