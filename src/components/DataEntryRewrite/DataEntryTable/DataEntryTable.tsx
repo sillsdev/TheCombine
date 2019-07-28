@@ -33,11 +33,15 @@ export class DataEntryTableRewrite extends React.Component<
       words: []
     };
 
+    this.spellChecker = new SpellChecker();
+
     this.submit = this.submit.bind(this);
     this.updateWord = this.updateWord.bind(this);
     this.removeWord = this.removeWord.bind(this);
     this.addNewWord = this.addNewWord.bind(this);
   }
+
+  spellChecker: SpellChecker;
 
   componentDidMount() {
     let words: Word[] = [
@@ -231,12 +235,14 @@ export class DataEntryTableRewrite extends React.Component<
               entry={word}
               updateWord={this.updateWord}
               removeWord={this.removeWord}
+              spellChecker={this.spellChecker}
             />
           ))}
           <NewEntry
             allWords={this.state.words}
             updateWord={this.updateWord}
             addNewWord={this.addNewWord}
+            spellChecker={this.spellChecker}
           />
         </Grid>
 

@@ -8,11 +8,14 @@ import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/Dupl
 import SpellChecker from "../../../DataEntry/spellChecker";
 import NewVernEntry from "./NewVernEntry/NewVernEntry";
 import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
+import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
+import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 
 interface NewEntryProps {
   allWords: Word[];
   updateWord: (updatedWord: Word) => void;
   addNewWord: (newWord: Word) => void;
+  spellChecker: SpellChecker;
 }
 
 interface NewEntryState {
@@ -28,7 +31,6 @@ interface NewEntryState {
 export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   constructor(props: NewEntryProps) {
     super(props);
-    this.spellChecker = new SpellChecker();
 
     this.state = {
       displaySpellingSuggestions: false,
@@ -70,6 +72,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.toggleDuplicateResolutionView = this.toggleDuplicateResolutionView.bind(
       this
     );
+    this.chooseSpellingSuggestion = this.chooseSpellingSuggestion.bind(this);
+    this.addSense = this.addSense.bind(this);
     this.updateGlossField = this.updateGlossField.bind(this);
     this.updateVernField = this.updateVernField.bind(this);
     this.isSpelledCorrectly = this.isSpelledCorrectly.bind(this);
@@ -77,7 +81,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
-  spellChecker: SpellChecker;
 
   // Same
   toggleSpellingSuggestionsView() {
@@ -89,119 +92,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   // Same
   toggleDuplicateResolutionView() {
     this.setState({ displayDuplicates: !this.state.displayDuplicates });
-  }
-
-  // Same
-  displaySpellingSuggestions(mispelledGloss: string) {
-    let spellingSuggestions = this.getSpellingSuggestions(mispelledGloss);
-    return (
-      <Grid
-        item
-        xs={12}
-        key={"mispelledNewEntry"}
-        style={{ background: "whitesmoke" }}
-      >
-        <Grid container>
-          <Grid
-            item
-            xs={5}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2)
-            }}
-          >
-            <Typography variant="body1">
-              {"Mispelled gloss: " + mispelledGloss}
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={5}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2)
-            }}
-          >
-            <Typography variant="body1">{"Suggestions: "}</Typography>
-            {spellingSuggestions.length > 0 ? (
-              spellingSuggestions.map(suggestion => (
-                <Chip
-                  label={suggestion}
-                  style={{ margin: 4 }}
-                  onClick={() => this.chooseSpellingSuggestion(suggestion)}
-                />
-              ))
-            ) : (
-              <Typography variant="body1">
-                {"No suggestions available"}
-              </Typography>
-            )}
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-  }
-
-  // Almost the same
-  displayDuplicates(newEntry: Word, existingEntry: Word) {
-    return (
-      <Grid
-        item
-        xs={12}
-        key={"duplicateNewVernEntry"}
-        style={{ background: "whitesmoke" }}
-      >
-        <Grid container>
-          <Grid
-            item
-            xs={5}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2)
-            }}
-          >
-            <Typography variant="body1">
-              {"Duplicate in database: " + existingEntry.vernacular}
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={5}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2)
-            }}
-          >
-            <Typography variant="body1">{"Glosses: "}</Typography>
-            {existingEntry.senses.map((sense: Sense) =>
-              sense.glosses.map(gloss => (
-                <Chip label={gloss.def} style={{ margin: 4 }} />
-              ))
-            )}
-            <Chip
-              variant="outlined"
-              label={"Add New Sense +"}
-              style={{ margin: 4 }}
-              onClick={() => {
-                let updatedWord = this.addSenseToExistingWord(
-                  existingEntry,
-                  this.state.newEntry.senses[0].glosses[0].def
-                );
-
-                this.props.updateWord(updatedWord);
-                this.resetEntry();
-                this.setState({
-                  displayDuplicates: false,
-                  isDuplicate: false,
-                  duplicate: undefined,
-                  duplicateId: undefined
-                });
-              }}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
-    );
   }
 
   resetEntry() {
@@ -252,6 +142,18 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
           }
         ]
       }
+    });
+  }
+
+  addSense(existingWord: Word, newSense: string) {
+    let updatedWord = this.addSenseToExistingWord(existingWord, newSense);
+    this.props.updateWord(updatedWord);
+    this.resetEntry();
+    this.setState({
+      displayDuplicates: false,
+      isDuplicate: false,
+      duplicate: undefined,
+      duplicateId: undefined
     });
   }
 
@@ -346,12 +248,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   // Same
   isSpelledCorrectly(word: string): boolean {
-    return this.spellChecker.correct(word);
+    return this.props.spellChecker.correct(word);
   }
 
   // Same
   getSpellingSuggestions(word: string): string[] {
-    return this.spellChecker.getSpellingSuggestions(word);
+    return this.props.spellChecker.getSpellingSuggestions(word);
   }
 
   resetState() {
@@ -392,6 +294,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     if (this.vernInput.current) this.vernInput.current.focus();
   }
 
+  updateWord() {}
+
   render() {
     return (
       <React.Fragment>
@@ -420,14 +324,24 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               toggleSpellingSuggestionsView={this.toggleSpellingSuggestionsView}
               updateGlossField={this.updateGlossField}
             />
-            {this.state.displaySpellingSuggestions &&
-              this.displaySpellingSuggestions(
-                this.state.newEntry.senses[0].glosses[0].def
-              )}
+            {this.state.displaySpellingSuggestions && (
+              <SpellingSuggestionsView
+                mispelledWord={this.state.newEntry.senses[0].glosses[0].def}
+                spellingSuggestions={this.getSpellingSuggestions(
+                  this.state.newEntry.senses[0].glosses[0].def
+                )}
+                chooseSpellingSuggestion={this.chooseSpellingSuggestion}
+              />
+            )}
             {this.state.displayDuplicates &&
               this.state.isDuplicate &&
-              this.state.duplicate &&
-              this.displayDuplicates(this.state.newEntry, this.state.duplicate)}
+              this.state.duplicate && (
+                <DuplicateResolutionView
+                  existingEntry={this.state.duplicate}
+                  newSense={this.state.newEntry.senses[0].glosses[0].def}
+                  addSense={this.addSense}
+                />
+              )}
           </Grid>
         </Grid>
       </React.Fragment>
