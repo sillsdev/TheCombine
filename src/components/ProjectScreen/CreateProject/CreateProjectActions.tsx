@@ -46,35 +46,36 @@ export function asyncCreateProject(name: string, languageData?: File) {
         let createdProject = userProject.project;
         dispatch(setCurrentProject(createdProject));
 
-        // let userString = localStorage.getItem("user");
-        // let yeOldeToken: string = "";
-        // if (userString != null) {
-        //   let user: User = JSON.parse(userString);
-        //   yeOldeToken = user.token;
-        // }
+        let userString = localStorage.getItem("user");
+        let yeOldeToken: string = "";
+        if (userString != null) {
+          let user: User = JSON.parse(userString);
+          yeOldeToken = user.token;
+        }
 
-        // localStorage.setItem("user", updatedUserString);
+        localStorage.setItem("user", updatedUserString);
 
-        // let newUserString = localStorage.getItem("user");
-        // let newToekn: string = "";
-        // if (newUserString != null) {
-        //   let user: User = JSON.parse(newUserString);
-        //   newToekn = user.token;
-        // }
+        let newUserString = localStorage.getItem("user");
+        let newToekn: string = "";
+        if (newUserString != null) {
+          let user: User = JSON.parse(newUserString);
+          newToekn = user.token;
+        }
 
-        // if (yeOldeToken != "" && newToekn != "") {
-        //   if (yeOldeToken === newToekn) {
-        //     console.log("Same token");
-        //   } else {
-        //     console.log("Different token");
-        //   }
-        // } else {
-        //   console.log("some tokens empty");
-        // }
+        if (yeOldeToken != "" && newToekn != "") {
+          if (yeOldeToken === newToekn) {
+            console.log("Same token");
+          } else {
+            console.log("Different token");
+          }
+        } else {
+          console.log("some tokens empty");
+        }
 
         // Upload words
         if (languageData) {
           backend.uploadLift(createdProject, languageData).then(res => {
+            console.log("Uploaded lift");
             backend
               .getProject(createdProject.id)
               .then(res => {
