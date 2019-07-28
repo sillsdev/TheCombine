@@ -295,7 +295,7 @@ namespace BackendFramework.ValueModels
     /// <summary> Helper object that contains a wordId and the type of merge that should be performed </summary>
     public class MergeSourceWord
     {
-        public string SrcWordID;
+        public string SrcWordId;
         public List<State> SenseStates;
     }
 

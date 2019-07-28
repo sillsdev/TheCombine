@@ -72,8 +72,7 @@ namespace BackendFramework.Services
                 {
                     if (projectEntry.ProjectId == projId)
                     {
-                        int intValue;
-                        Int32.TryParse(value, out intValue);
+                        int.TryParse(value, out int intValue);
                         if (projectEntry.Permissions.Contains(intValue))
                         {
                             return true;

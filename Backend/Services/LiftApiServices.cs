@@ -13,22 +13,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
 namespace BackendFramework.Services
 {
+    /// <summary> Extension of <see cref="LiftWriter"/> to add audio pronunciation </summary>
     public class CombineLiftWriter : LiftWriter
     {
         public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle)
         {
         }
 
-        public CombineLiftWriter(StringBuilder builder, bool produceFragmentOnly) : base(builder, produceFragmentOnly)
-        {
-        }
-
+        /// <summary> Overrides empty function from the base SIL LiftWriter to properly add pronunciation correctly </summary>
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
             if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
@@ -41,7 +37,7 @@ namespace BackendFramework.Services
                     Writer.WriteAttributeString("href", entry.Pronunciations.First().Forms.First().Form);
                 }
 
-                //makes sure the writer does not write it again
+                //makes sure the writer does not write it again in the wrong format
                 entry.Pronunciations.Clear();
 
                 Writer.WriteEndElement();
@@ -52,27 +48,28 @@ namespace BackendFramework.Services
 
     public class LiftService : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
-
-
         private readonly IWordRepository _repo;
         private readonly IProjectService _projService;
-        private string projectId;
-        private List<SemanticDomain> sdList;
+        private string _projectId;
+        private readonly List<SemanticDomain> _sdList;
 
         public LiftService(IWordRepository repo, IProjectService projserv)
         {
             _repo = repo;
             _projService = projserv;
-            sdList = new List<SemanticDomain>();
-        }
-        public void SetProject(string id)
-        {
-            projectId = id;
+            _sdList = new List<SemanticDomain>();
         }
 
+        /// <summary> Allows projectId to be added to words being imported </summary>
+        public void SetProject(string projectId)
+        {
+            _projectId = projectId;
+        }
+
+        /// <summary> Imports main character set for a project from an ldml file </summary>
         public void LdmlImport(string filePath, string langTag)
         {
-            // SLDR is the SIL Locale Data repository, it is necessary for reading/writing ldml and 
+            // SLDR is the SIL locale data repository, it is necessary for reading/writing ldml 
             // It is being initialized in offline mode here to only pull local data
             Sldr.Initialize(true);
             try
@@ -81,77 +78,40 @@ namespace BackendFramework.Services
                 var wsf = new LdmlInFolderWritingSystemFactory(wsr);
                 wsf.Create(langTag, out WritingSystemDefinition wsDef);
 
-                try
+                //if there is a main character set, import it to the project
+                if (wsDef.CharacterSets.Contains("main"))
                 {
-                    if (wsDef.CharacterSets["main"] != null)
-                    {
-                        var newProj = _projService.GetProject(projectId).Result;
-                        newProj.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
-                        _projService.Update(projectId, newProj);
-                    }
-                }
-                catch
-                {
-                    //do nothing, there is no main character set
+                    var newProj = _projService.GetProject(_projectId).Result;
+                    newProj.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
+                    _projService.Update(_projectId, newProj);
                 }
             }
-            finally
+            finally //if there was somehow an error above, we still want to cleanup to prevent unhelpful errors later 
             {
                 Sldr.Cleanup();
             }
         }
 
-        private void LdmlExport(string filePath, string langTag)
-        {
-            Sldr.Initialize(true);
-            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
-            var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-
-            //There are no existing writing systems in this folder
-            wsf.Create(langTag, out WritingSystemDefinition wsDef);
-
-            var proj = _projService.GetProject(projectId).Result;
-            if (!wsDef.CharacterSets.TryGet("main", out CharacterSetDefinition chars))
-            {
-                chars = new CharacterSetDefinition("main");
-                wsDef.CharacterSets.Add(chars);
-            }
-            //= wsDef.CharacterSets["main"];
-
-            chars.Characters.Clear();
-            foreach (var character in proj.ValidCharacters)
-            {
-                chars.Characters.Add(character);
-            }
-            wsr.Set(wsDef);
-            wsr.Save();
-            Sldr.Cleanup();
-        }
-
-        /********************************
-        * Lift Export Implementation
-        ********************************/
-
+        /// <summary> Exports information from a project to a lift package zip </summary>
         public void LiftExport(string projectId)
         {
             //the helper tag must be included because there are also SIL.Utilitites
             Helper.Utilities util = new Helper.Utilities();
 
             //generate the zip dir
-            string filename = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Export"));
-            string zipdir = Path.Combine(filename, "LiftExport");
-            Directory.CreateDirectory(zipdir);
-
-            //generates file to be exported to
-            string exportFilePath = Path.Combine(zipdir, "EXPORTED-" + Path.GetRandomFileName());
+            string exportDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Export"));
+            string zipDir = Path.Combine(exportDir, "LiftExport");
+            Directory.CreateDirectory(zipDir);
 
             //add audio dir inside zip dir
-            string audiodir = Path.Combine(zipdir, "Audio");
-            Directory.CreateDirectory(audiodir);
-            string filepath = Path.Combine(zipdir, "NewLiftFile.lift");
+            string audioDir = Path.Combine(zipDir, "Audio");
+            Directory.CreateDirectory(audioDir);
+            string liftPath = Path.Combine(zipDir, "NewLiftFile.lift");
 
-            CombineLiftWriter writer = new CombineLiftWriter(filepath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
+            CombineLiftWriter writer = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
 
+            //TODO: generate header automatically
+            //write header of lift document
             string header =
                 @"
                     <ranges>
@@ -164,38 +124,35 @@ namespace BackendFramework.Services
                         </field>
                     </fields>
                 ";
-
             writer.WriteHeader(header);
 
+            //write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
-
             foreach (Word wordEntry in allWords)
             {
                 LexEntry entry = new LexEntry();
 
-                //add vernacular (lexical form)
-                AddVern(projectId, wordEntry, entry);
-
-                string audioSrc = Path.Combine(filename, "zips");
-                AddAudio(entry, wordEntry, audiodir);
-
-                //add sense
+                AddVern(entry, wordEntry, projectId);
                 AddSense(entry, wordEntry);
+                AddAudio(entry, wordEntry, audioDir);
 
                 writer.Add(entry);
             }
+
             writer.End();
 
-            //export ldml
-            string ldmlDir = Path.Combine(zipdir, "WritingSystems");
+            //export character set to ldml
+            string ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
             var proj = _projService.GetProject(projectId).Result;
             LdmlExport(ldmlDir, proj.VernacularWritingSystem);
 
-            ZipFile.CreateFromDirectory(zipdir, Path.Combine(zipdir, Path.Combine("..", "LiftExportCompressed-" + Path.GetRandomFileName() + ".zip")));
+            //compress everything
+            ZipFile.CreateFromDirectory(zipDir, Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
         }
 
-        public void AddVern(string projectId, Word wordEntry, LexEntry entry)
+        /// <summary> Adds vernacular of a word to be written out to lift </summary>
+        private void AddVern(LexEntry entry, Word wordEntry, string projectId)
         {
             LiftMultiText lexMultiText = new LiftMultiText();
             string lang = _projService.GetProject(projectId).Result.VernacularWritingSystem;
@@ -203,31 +160,7 @@ namespace BackendFramework.Services
             entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
         }
 
-        public void AddAudio(LexEntry entry, Word wordEntry, string path)
-        {
-            try
-            {
-                if (wordEntry.Audio != "")
-                {
-                    LexPhonetic lexPhonetic = new LexPhonetic();
-                    string dest = Path.Combine(path, wordEntry.Audio);
-
-                    Helper.Utilities util = new Helper.Utilities();
-                    string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), wordEntry.Audio);
-                    File.Copy(src, dest, true);
-
-                    LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
-                    lexPhonetic.MergeIn(MultiText.Create(proMultiText));
-                    entry.Pronunciations.Add(lexPhonetic);
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                //do nothing, the audio file isnt there so it won't be added
-            }
-        }
-
-        public void AddSense(LexEntry entry, Word wordEntry)
+        private void AddSense(LexEntry entry, Word wordEntry)
         {
             for (int i = 0; i < wordEntry.Senses.Count; i++)
             {
@@ -255,15 +188,72 @@ namespace BackendFramework.Services
             }
         }
 
+        private void AddAudio(LexEntry entry, Word wordEntry, string path)
+        {
+            try
+            {
+                if (wordEntry.Audio != "")
+                {
+                    LexPhonetic lexPhonetic = new LexPhonetic();
+                    string dest = Path.Combine(path, wordEntry.Audio);
 
-        /**************************************
-         * Import Lift File from Http req
-         * ***********************************/
+                    Helper.Utilities util = new Helper.Utilities();
+                    string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), wordEntry.Audio);
+                    File.Copy(src, dest, true);
+
+                    LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
+                    lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+                    entry.Pronunciations.Add(lexPhonetic);
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                //do nothing, the audio file isnt there so it won't be added
+            }
+        }
+
+        /// <summary> Exports main character set from a project to an ldml file </summary>
+        private void LdmlExport(string filePath, string langTag)
+        {
+            // SLDR is the SIL Locale Data repository, it is necessary for reading/writing ldml 
+            // It is being initialized in offline mode here to only pull local data
+            Sldr.Initialize(true);
+            try
+            {
+                var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
+                var wsf = new LdmlInFolderWritingSystemFactory(wsr);
+                wsf.Create(langTag, out WritingSystemDefinition wsDef);
+
+                var proj = _projService.GetProject(_projectId).Result;
+
+                //if there isn't already a main character set defined, make one and add it to the writing system definition
+                if (!wsDef.CharacterSets.TryGet("main", out CharacterSetDefinition chars))
+                {
+                    chars = new CharacterSetDefinition("main");
+                    wsDef.CharacterSets.Add(chars);
+                }
+
+                //replace all the characters found with our copy of the character set
+                chars.Characters.Clear();
+                foreach (var character in proj.ValidCharacters)
+                {
+                    chars.Characters.Add(character);
+                }
+
+                //write out the new definition
+                wsr.Set(wsDef);
+                wsr.Save();
+            }
+            finally //if there was somehow an error above, we still want to cleanup to prevent unhelpful errors later
+            {
+                Sldr.Cleanup();
+            }
+        }
 
         public async void FinishEntry(LiftEntry entry)
         {
             Word newWord = new Word();
-            var proj = _projService.GetProject(projectId).Result;
+            var proj = _projService.GetProject(_projectId).Result;
 
             //add vernacular
             if (!entry.CitationForm.IsEmpty) //prefer citation form for vernacular
@@ -272,7 +262,7 @@ namespace BackendFramework.Services
                 if (proj.VernacularWritingSystem == "")
                 {
                     proj.VernacularWritingSystem = entry.CitationForm.FirstValue.Key;
-                    await _projService.Update(projectId, proj);
+                    await _projService.Update(_projectId, proj);
                 }
             }
             else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
@@ -281,7 +271,7 @@ namespace BackendFramework.Services
                 if (proj.VernacularWritingSystem == "")
                 {
                     proj.VernacularWritingSystem = entry.LexicalForm.FirstValue.Key;
-                    await _projService.Update(projectId, proj);
+                    await _projService.Update(_projectId, proj);
                 }
             }
             else //this is not a word
@@ -291,8 +281,8 @@ namespace BackendFramework.Services
 
             if (proj.SemanticDomains.Count == 0)
             {
-                proj.SemanticDomains = sdList;
-                await _projService.Update(projectId, proj);
+                proj.SemanticDomains = _sdList;
+                await _projService.Update(_projectId, proj);
             }
 
             //add plural
@@ -309,7 +299,7 @@ namespace BackendFramework.Services
             Helper.Utilities util = new Helper.Utilities();
 
             //path to Import file ~/AmbigProjName/Import
-            var extractedPathToImport = util.GenerateFilePath(Helper.Utilities.Filetype.dir, false, "", Path.Combine(projectId, "Import"));
+            var extractedPathToImport = util.GenerateFilePath(Helper.Utilities.Filetype.dir, false, "", Path.Combine(_projectId, "Import"));
 
             //get path to ~/AmbigProjName/Import/ExtractedLiftDir/audio
             var importListArr = Directory.GetDirectories(extractedPathToImport);
@@ -355,8 +345,7 @@ namespace BackendFramework.Services
                 List<string> SemanticDomainStrings = new List<string>();
                 foreach (var trait in sense.Traits)
                 {
-                    Regex rgx = new Regex(@"semantic-domain");
-                    if (rgx.IsMatch(trait.Name))
+                    if (trait.Name.StartsWith("semantic-domain"))
                     {
                         SemanticDomainStrings.Add(trait.Value);
                     }
@@ -390,7 +379,7 @@ namespace BackendFramework.Services
                 newWord.Senses.Add(newSense);
             }
 
-            newWord.ProjectId = projectId;
+            newWord.ProjectId = _projectId;
             await _repo.Create(newWord);
         }
 
@@ -447,18 +436,19 @@ namespace BackendFramework.Services
 
         public LiftObject MergeInPronunciation(LiftEntry entry, LiftMultiText contents, string rawXml)
         {
-            var audioFile = Regex.Split(rawXml, "\"")[1];
+            var audioFile = rawXml.Split("\"")[1];
             LiftPhonetic phonetic = new LiftPhonetic();
             LiftUrlRef url = new LiftUrlRef { Url = audioFile };
             phonetic.Media.Add(url);
             entry.Pronunciations.Add(phonetic);
             return entry;
         }
+
         public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
         {
             if (range == "semantic-domain-ddp4")
             {
-                sdList.Add(new SemanticDomain() { Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
+                _sdList.Add(new SemanticDomain() { Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
             }
         }
 
@@ -501,6 +491,7 @@ namespace BackendFramework.Services
 
         public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
 
+        //TODO: can this replace the override?
         public void MergeInMedia(LiftObject pronunciation, string href, LiftMultiText caption) { }
 
         public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml) { }
@@ -519,10 +510,7 @@ namespace BackendFramework.Services
 
     public class EmptyLiftObject : LiftObject
     {
-        public EmptyLiftObject() : base()
-        {
-
-        }
+        public EmptyLiftObject() : base() {}
 
         public override string XmlTag => throw new NotImplementedException();
     }
