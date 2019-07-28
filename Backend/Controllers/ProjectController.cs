@@ -123,7 +123,7 @@ namespace BackendFramework.Controllers
             await _userService.Update(currentUserId, currentUser);
 
             var user = await _userService.GetUser(currentUserId);
-            user.Password = "";
+            user = await _userService.MakeJWT(user);
 
             return new OkObjectResult(new CreateProjectReturnType(project, user));
         }
