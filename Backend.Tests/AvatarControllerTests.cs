@@ -33,8 +33,7 @@ namespace Backend.Tests
             //user controller
             _userController.ControllerContext = new ControllerContext();
             _userController.ControllerContext.HttpContext = new DefaultHttpContext();
-
-            //_avatarController.ControllerContext.HttpContext.Request.Headers["device-id"] = "20317";
+            
             _JwtAuthenticatedUser = new User();
             _JwtAuthenticatedUser.Username = "user";
             _JwtAuthenticatedUser.Password = "pass";
