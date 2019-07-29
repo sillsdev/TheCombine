@@ -58,9 +58,7 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(projectUsers);
         }
-
-        // Implements DeleteAllProjects()
-        // DEBUG ONLY
+        
         /// <summary> Deletes all <see cref="Project"/>s </summary>
         /// <remarks> DELETE: v1/projects </remarks>
         /// <returns> true: if success, false: if there were no projects </returns>
@@ -120,8 +118,10 @@ namespace BackendFramework.Controllers
                 currentUser.ProjectRoles = new Dictionary<string, string>();
             }
 
+            //Generate the userRoles and update the user
             currentUser.ProjectRoles.Add(project.Id, usersRole.Id);
             await _userService.Update(currentUserId, currentUser);
+            //Generate the JWT based on those new userRoles
             currentUser = await _userService.MakeJWT(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
@@ -158,8 +158,8 @@ namespace BackendFramework.Controllers
 
         /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
         /// <remarks> PUT: v1/projects/{projectId} </remarks>
-        [HttpPut("{projectId}")]
-        public async Task<IActionResult> Put(string projectId, [FromBody]List<string> acceptedChars, [FromBody]List<string> rejectedChars)
+        [HttpPut("{projectId}/characters")]
+        public async Task<IActionResult> PutChars(string projectId, [FromBody]Project project)
         {
             if (!_permissionService.IsProjectAuthenticated("3", HttpContext))
             {
@@ -167,8 +167,8 @@ namespace BackendFramework.Controllers
             }
 
             var currentProj = await _projectService.GetProject(projectId);
-            currentProj.ValidCharacters = acceptedChars;
-            currentProj.RejectedCharacters = rejectedChars;
+            currentProj.ValidCharacters = project.ValidCharacters;
+            currentProj.RejectedCharacters = project.RejectedCharacters;
             await _projectService.Update(projectId, currentProj);
 
             return new OkObjectResult(currentProj);
