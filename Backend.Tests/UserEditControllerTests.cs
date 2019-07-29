@@ -26,7 +26,7 @@ namespace Backend.Tests
         {
             _permissionService = new PermissionServiceMock();
             _userEditRepo = new UserEditRepositoryMock();
-            _userEditService = new UserEditService(_userEditRepo, _permissionService, _userService);
+            _userEditService = new UserEditService(_userEditRepo);
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
             _userService = new UserServiceMock();

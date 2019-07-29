@@ -2,10 +2,9 @@ import * as React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate,
-  TranslateFunction
+  Translate
 } from "react-localize-redux";
-import CharacterSet from "./components/CharacterSet";
+import CharacterList from "./components/CharacterList";
 import {
   Grid,
   Button,
@@ -19,16 +18,21 @@ import { Project } from "../../types/project";
 import SampleWords from "./components/SampleWords";
 import { Save } from "@material-ui/icons";
 import history from "../../history";
+import CharacterEntry from "./components/CharacterEntry";
+import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
+import CharacterDetail from "./components/CharacterDetail";
 
 export interface CharacterInventoryProps {
   addToValidCharacters: (chars: string[]) => void;
   setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
+  setSelectedCharacter: (character: string) => void;
   uploadInventory: () => void;
+  fetchWords: () => void;
   validCharacters: string[];
   rejectedCharacters: string[];
   currentProject: Project;
-  translate: TranslateFunction;
+  selectedCharacter: string;
 }
 
 export const SAVE: string = "pushGoals";
@@ -52,6 +56,11 @@ export class CharacterInventory extends React.Component<
     this.state = { cancelDialogOpen: false };
   }
 
+  componentDidMount() {
+    this.props.fetchWords();
+    this.props.setSelectedCharacter("");
+  }
+
   handleClose() {
     this.setState({ cancelDialogOpen: false });
   }
@@ -66,21 +75,35 @@ export class CharacterInventory extends React.Component<
           style={{ background: "#fff" }}
         >
           <Grid item sm={9} xs={12} style={{ borderRight: "1px solid #ccc" }}>
-            <CharacterSet
-              setValidCharacters={this.props.setValidCharacters}
-              validCharacters={this.props.validCharacters}
-              setRejectedCharacters={this.props.setRejectedCharacters}
-              rejectedCharacters={this.props.rejectedCharacters}
-            />
+            <Grid
+              container
+              spacing={2}
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+            >
+              <CharacterSetHeader />
+              <CharacterEntry />
+              <CharacterList />
+            </Grid>
           </Grid>
+
           <Grid item sm={3} xs={12}>
-            <SampleWords
-              addToValidCharacters={this.props.addToValidCharacters}
-              allCharacters={this.props.validCharacters.concat(
-                this.props.rejectedCharacters
-              )}
-            />
+            {this.props.selectedCharacter === "" ? (
+              <SampleWords
+                addToValidCharacters={this.props.addToValidCharacters}
+                allCharacters={this.props.validCharacters.concat(
+                  this.props.rejectedCharacters
+                )}
+              />
+            ) : (
+              <CharacterDetail
+                character={this.props.selectedCharacter}
+                close={() => this.props.setSelectedCharacter("")}
+              />
+            )}
           </Grid>
+
           <Grid item xs={12} style={{ borderTop: "1px solid #ccc" }}>
             {/* submission buttons */}
             <Grid container justify="center">

@@ -28,7 +28,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -42,7 +42,7 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -81,7 +81,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> Get(string userId)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
             {
                 return new UnauthorizedResult();
             }
@@ -117,7 +117,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> Put(string userId, [FromBody] User user)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
             {
                 return new UnauthorizedResult();
             }
@@ -142,7 +142,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userId}")]
         public async Task<IActionResult> Delete(string userId)
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }

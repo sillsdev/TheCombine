@@ -10,7 +10,7 @@ namespace BackendFramework.Services
     {
         private readonly IUserEditRepository _repo;
 
-        public UserEditService(IUserEditRepository repo, IPermissionService permissionService, IUserService userService)
+        public UserEditService(IUserEditRepository repo)
         {
             _repo = repo;
         }

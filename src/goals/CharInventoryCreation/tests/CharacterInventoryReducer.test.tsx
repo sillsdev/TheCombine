@@ -30,11 +30,21 @@ describe("Test Character Inventory Reducer", () => {
         type: SET_VALID_CHARACTERS,
         payload: DATA
       } as CharacterInventoryAction)
-    ).toEqual({ validCharacters: DATA, rejectedCharacters: [] });
+    ).toEqual({
+      validCharacters: DATA,
+      allWords: [],
+      rejectedCharacters: [],
+      selectedCharacter: ""
+    });
   });
 
   it("Returns state passed in when passed an undefined action", () => {
-    let inv = { validCharacters: DATA, rejectedCharacters: [] };
+    let inv = {
+      validCharacters: DATA,
+      allWords: [],
+      rejectedCharacters: [],
+      selectedCharacter: ""
+    };
     expect(
       characterInventoryReducer(inv, {
         type: "" as SET_VALID_CHARACTERS,

@@ -33,13 +33,13 @@ namespace BackendFramework.Services
             return jsonToken;
         }
 
-        public string GetUserId(HttpContext request)
+        public bool IsUserIdAuthenticated(HttpContext request, string userId)
         {
             var jsonToken = GetJWT(request);
 
-            string userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
+            string foundUserId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
 
-            return userId;
+            return userId == foundUserId;
         } 
 
         public List<ProjectPermissions> GetProjectPermissions(HttpContext request)
@@ -51,17 +51,22 @@ namespace BackendFramework.Services
             return permissionsObj;
         }
 
-        public bool IsAuthenticated(string value, HttpContext request)
+        public bool IsProjectAuthenticated(string value, HttpContext request)
         {
             //retrieve jwt token from http request and convert to object
             List<ProjectPermissions> permissionsObj = GetProjectPermissions(request);
 
             //retrieve project Id from http request
-            int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/");
+            int begOfId = 9;
+            int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + begOfId;
             if (indexOfProjId + projIdLength > request.Request.Path.ToString().Length)
             {
-                //there is no project Id, this is a database level query and must have database admin level permissions
-                return false;
+                //check if admin
+                var userId = GetUserId(request);
+                var user = _userService.GetUser(userId).Result;
+
+                //if there is no project Id and they are not admin, do not allow changes
+                return user.IsAdmin;
             }
             else
             {
@@ -79,7 +84,6 @@ namespace BackendFramework.Services
                         }
                     }
                 }
-
                 return false;
             }
         }
@@ -95,6 +99,13 @@ namespace BackendFramework.Services
             }
 
             return false;
+        }
+
+        public string GetUserId(HttpContext request)
+        {
+            var jsonToken = GetJWT(request);
+            string permissionsObj = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
+            return permissionsObj;
         }
     }
 }

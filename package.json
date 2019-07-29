@@ -6,7 +6,7 @@
     "predatabase": "tsc setupMongo.ts && node setupMongo.js",
     "database": "mongod --dbpath=./mongo_database",
     "frontend": "react-scripts start",
-    "start": "npm install && npm-run-all --parallel database frontend api",
+    "start": "npm install && npm-run-all --parallel frontend database api",
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
     "test": "dotnet test Backend.Tests/Backend.Tests.csproj && react-scripts test",
@@ -16,11 +16,12 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@material-ui/core": "^4.0.2",
+    "@material-ui/core": "^4.2.1",
     "@material-ui/icons": "^4.1.0",
     "@material-ui/styles": "^4.0.2",
     "axios": "^0.19.0",
     "make-dir": "^3.0.0",
+    "material-table": "^1.40.1",
     "react": "^16.8.6",
     "react-beautiful-dnd": "^11.0.4",
     "react-dom": "^16.8.6",

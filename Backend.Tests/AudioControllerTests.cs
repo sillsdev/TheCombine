@@ -35,8 +35,6 @@ namespace Backend.Tests
 
             _audioController = new AudioController(_wordrepo, _wordService, _permissionService);
 
-            
-
             Utilities util = new Utilities();
 
             Directory.Delete(util.GenerateFilePath(Utilities.Filetype.dir, true, "", ""), true);
