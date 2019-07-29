@@ -13,7 +13,13 @@ const backendServer = axios.create({
 });
 
 backendServer.interceptors.response.use(
-  resp => resp,
+  resp => {
+    if (resp.data.__UpdatedUser){
+      localStorage.setItem("user", JSON.stringify(resp.data.__UpdatedUser));
+    }
+    delete resp.data.__UpdatedUser;
+    return resp;
+  },
   err => {
     if (err.response && err.response.status === 401) {
       history.push("/login");
@@ -147,7 +153,7 @@ export async function createProject(project: Project): Promise<Project> {
   let resp = await backendServer.post(`projects/`, project, {
     headers: authHeader()
   });
-  return { ...project, id: resp.data };
+  return { ...resp.data };
 }
 
 export async function getAllProjects(): Promise<Project[]> {
