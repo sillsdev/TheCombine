@@ -29,6 +29,10 @@ function print_usage()
   cat << .EOM
 Usage: $0 [options] user@machinename
  where:
+   -b, --build
+              will build/publish the UI and Backend server before deploying
+              The Combine
+
    -c, --copyid
               will use ssh-copy-id to copy your id to user@machinename
               so that you do not need to enter your password to connect
@@ -41,33 +45,56 @@ Usage: $0 [options] user@machinename
 
    -t, --test
               run the test portion of the playbook
+
+   -v <vaultpasswordfile>, --vault <vaultpasswordfile>
+              use <vaultpasswordfile> for the vault password. If not password
+              file is specified, the user will be prompted for the vault
+              password when it is needed.
 .EOM
 }
 
 COPYID=0
+BUILDAPP=0
 TAGS=""
+VAULTPASSWORDFILE=""
+
 declare -a TagList
 while [ "$#" -gt 0 ]; do
   case $1 in
+    "-b" | "--build")
+        BUILDAPP=1
+        ;;
+
     "-c" | "--copyid")
         COPYID=1
         ;;
+
     "-h" | "--help")
         print_usage
         exit 0
         ;;
+
     "-i" | "--install")
         TagList+=("install")
         ;;
+
     "-t" | "--test")
         TagList+=("test")
         ;;
+
+    "-v" | "--vault")
+        VAULTPASSWORDFILE=$2
+        shift
+        ;;
+
     -*)
         echo "option $1 not recognized - ignored"
         ;;
+
     *)
         TARGET=$1;
         ;;
+
   esac
   shift
 done
@@ -86,12 +113,30 @@ if [[ ! ( -n "$USER" && -n "$MACHINE" ) ]] ; then
   exit 1
 fi
 
+if [ "$BUILDAPP" -eq 1 ] ; then
+  echo "Building app"
+  cd ..
+  npm install
+  npm run build
+  cd Backend
+  dotnet publish -c Release
+  cd ../deploy
+fi
+
 echo "Setting up $TARGET"
 
 if [ "$COPYID" -eq 1 ] ; then
   echo "Copying ssh id to $USER@$MACHINE"
   ssh-copy-id "$USER@$MACHINE"
 fi
-CMD_STRING="ansible-playbook -i hosts playbook_setup.yml --limit $MACHINE -u $USER -K ${TAGS}"
+
+VAULTPASSWORDOPTION=""
+if [ -z "$VAULTPASSWORDFILE" ] ; then
+  VAULTPASSWORDOPTION="--ask-vault-pass"
+else
+  VAULTPASSWORDOPTION="--vault-password-file $VAULTPASSWORDFILE"
+fi
+
+CMD_STRING="ansible-playbook -i hosts playbook_setup.yml --limit $MACHINE -u $USER -K ${TAGS} ${VAULTPASSWORDOPTION}" 
 echo -e "Running \"${CMD_STRING}\""
 ${CMD_STRING}

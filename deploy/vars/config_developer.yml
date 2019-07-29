@@ -2,19 +2,6 @@
 
 # config_developer
 
-# path for The Combine application
-www_app_dir: "/var/www/thewordcombine.org/htdocs"
-
-# mongo_path: /hddlinux/mongodb
-mongo_path: /var/lib/mongodb
-
-### Version/distro
-base_distribution: "{{ansible_distribution | lower}}"
-base_distribution_release: "{{ansible_distribution_release}}"
-
-#node_version: 10.16.0
-#mongodb_version: 4.0
-
 #wifi access point variables
 ap_ssid: "thewordcombine_ap"
 ap_passphrase: "BigRed@1979"
@@ -23,7 +10,7 @@ ap_domain: thewordcombine.org
 ap_hostname: nuc.thewordcombine.org
 
 ### SSL config
-ssl_letsencrypt_install: true
+ssl_letsencrypt_install: false
 
 ssl_items:
   - name: thewordcombine
@@ -84,7 +71,7 @@ apache_vhosts:
       - RewriteEngine On
     virtual_hosts:
       - has_ssl: false
-        listen: "{{ ap_gateway }}"
+        listen: "*"
         port: 80
         server_alias:
           - thewordcombine.org
@@ -96,9 +83,11 @@ apache_vhosts:
         - '        Header Set Service-Worker-allowed "/"'
         - '    </Files>'
         - '</IfModule>'
+        reverse_proxy: true
         proxy:
-          - '/v1/ http://localhost:5001/'
+          - '/v1/ https://localhost:5001/'
       - has_ssl: true
+        listen: "*"
         port: 443
         certificate_file: "thewordcombine.pem"
         key_file: "thewordcombine.key"
@@ -108,5 +97,6 @@ apache_vhosts:
         - '        Header Set Service-Worker-allowed "/"'
         - '    </Files>'
         - '</IfModule>'
+        reverse_proxy: true
         proxy:
-          - '/v1/ http://localhost:5001/'
+          - '/v1/ https://localhost:5001/'

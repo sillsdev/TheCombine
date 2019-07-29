@@ -9,6 +9,7 @@
     vm_vendors:  [ "innotek GmbH" ]
 
   vars_files:
+    - "vars/config_common.yml"
     - "vars/config_{{ config }}.yml"
 
   roles:

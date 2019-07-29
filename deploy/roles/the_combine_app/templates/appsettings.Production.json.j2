@@ -1,0 +1,13 @@
+{
+  "Kestrel": {
+    "Endpoints": {
+      "HTTPS": {
+        "Url": "https://localhost:5001",
+        "Certificate": {
+          "Path": "/home/{{ combine_user }}/.ssl/localhost.pfx",
+          "Password": "{{ combine_cert_password }}"
+        }
+      }
+    }
+  }
+}

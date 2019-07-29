@@ -10,8 +10,8 @@
     deb:  /tmp/packages-microsoft-prod.deb
     state: present
 
-- name: Install .NET Core 2.2 Runtime
+- name: Install .NET Core 2.1 Runtime
   apt:
-    name: aspnetcore-runtime-2.2
+    name: aspnetcore-runtime-2.1
     state: present
     update_cache: yes

@@ -4,6 +4,7 @@ localhost ansible_connection=local
 [production]
 curly
 moe
+pils
 anglophone
 
 # NUCs by access point IP address
