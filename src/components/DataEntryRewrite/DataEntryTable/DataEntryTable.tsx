@@ -20,7 +20,8 @@ interface DataEntryTableProps {
 }
 
 interface DataEntryTableState {
-  words: Word[];
+  existingWords: Word[];
+  newWords: Word[];
 }
 
 export class DataEntryTableRewrite extends React.Component<
@@ -30,7 +31,8 @@ export class DataEntryTableRewrite extends React.Component<
   constructor(props: DataEntryTableProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      words: []
+      existingWords: [],
+      newWords: []
     };
 
     this.spellChecker = new SpellChecker();
@@ -45,7 +47,7 @@ export class DataEntryTableRewrite extends React.Component<
 
   async componentDidMount() {
     let allWords = await this.getWordsFromBackend();
-    this.setState({ words: allWords });
+    this.setState({ existingWords: allWords });
   }
 
   /** Go back to the tree view */
@@ -56,8 +58,10 @@ export class DataEntryTableRewrite extends React.Component<
 
   async addNewWord(wordToAdd: Word) {
     let updatedWord = await this.addWordToBackend(wordToAdd);
+    let updatedNewWords = { ...this.state.newWords };
+    updatedNewWords.push(updatedWord);
     let words: Word[] = await this.getWordsFromBackend();
-    this.setState({ words: words });
+    this.setState({ existingWords: words, newWords: updatedNewWords });
   }
 
   // Backend
@@ -73,6 +77,7 @@ export class DataEntryTableRewrite extends React.Component<
     return words;
   }
 
+  // MAYBE DELETE
   /** Filter out words that do not have correct accessibility */
   filterWords(words: Word[]): Word[] {
     for (let word of words) {
@@ -89,41 +94,57 @@ export class DataEntryTableRewrite extends React.Component<
   /** Update the word in the backend and the frontend. Implement. */
   // Remove console logs
   async updateWord(wordToUpdate: Word) {
-    let existingWord = this.state.words.find(
+    let existingWord = this.state.existingWords.find(
       word => word.id === wordToUpdate.id
     );
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
-    let index = this.state.words.indexOf(existingWord);
+    let index = this.state.existingWords.indexOf(existingWord);
     if (index === -1) throw new Error(wordToUpdate + " does not exist");
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
-    console.log(updatedWord);
-    let updatedWords = await this.getWordsFromBackend();
-    this.setState({ words: updatedWords });
+    // console.log(updatedWord);
+    // let updatedWords = await this.getWordsFromBackend();
+    // this.setState({ existingWords: updatedWords });
   }
 
   // Backend
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
     let updatedWord = await Backend.updateWord(wordToUpdate);
+    let updatedNewWords: Word[] = { ...this.state.newWords };
+
+    let indexOfUpdatedWord = 0;
+    for (const [index, word] of updatedNewWords.entries()) {
+      if (word.id === wordToUpdate.id) {
+        indexOfUpdatedWord = index;
+        break;
+      }
+    }
+
+    updatedNewWords.splice(indexOfUpdatedWord, 1, updatedWord);
+
     let words = await this.getWordsFromBackend();
-    this.setState({ words: words });
+    this.setState({ existingWords: words, newWords: updatedNewWords });
     return updatedWord;
   }
 
   async removeWord(id: string) {
-    await this.removeWordFromBackend(id);
+    let deletedWord: Word = await this.removeWordFromBackend(id);
+    let updatedNewWords: Word[] = this.state.newWords.filter(
+      word => word.id !== deletedWord.id
+    );
     let updatedWords: Word[] = await this.getWordsFromBackend();
-    this.setState({ words: updatedWords });
+    this.setState({ existingWords: updatedWords, newWords: updatedNewWords });
   }
 
   // Backend
   // TODO: pass in a word instead of an id
   /** Remove a word from the database. */
-  async removeWordFromBackend(id: string) {
-    let word = this.state.words.filter(word => word.id === id);
+  async removeWordFromBackend(id: string): Promise<Word> {
+    let word = this.state.newWords.filter(word => word.id === id);
     console.log(word);
-    Backend.deleteWord(word[0]);
+    let updatedWord = await Backend.deleteWord(word[0]);
+    return updatedWord;
   }
 
   render() {
@@ -151,10 +172,10 @@ export class DataEntryTableRewrite extends React.Component<
             </Typography>
           </Grid>
 
-          {this.state.words.map((word, index) => (
+          {this.state.newWords.map((word, index) => (
             <ExistingEntry
               key={word.id}
-              allWords={this.state.words}
+              allWords={this.state.newWords}
               entryIndex={index}
               entry={word}
               updateWord={this.updateWord}
@@ -163,7 +184,7 @@ export class DataEntryTableRewrite extends React.Component<
             />
           ))}
           <NewEntry
-            allWords={this.state.words}
+            allWords={this.state.newWords}
             updateWord={this.updateWord}
             addNewWord={this.addNewWord}
             spellChecker={this.spellChecker}
