@@ -119,7 +119,7 @@ namespace BackendFramework.Controllers
             {
                 currentUser.ProjectRoles = new Dictionary<string, string>();
             }
-            
+
             currentUser.ProjectRoles.Add(project.Id, usersRole.Id);
             await _userService.Update(currentUserId, currentUser);
             currentUser = await _userService.MakeJWT(currentUser);

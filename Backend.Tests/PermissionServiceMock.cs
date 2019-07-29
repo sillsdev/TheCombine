@@ -1,8 +1,6 @@
 ﻿using BackendFramework.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-
-
 namespace Backend.Tests
 {
     class PermissionServiceMock : IPermissionService

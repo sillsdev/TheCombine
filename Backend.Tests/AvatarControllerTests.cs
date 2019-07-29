@@ -61,7 +61,7 @@ namespace Backend.Tests
 
         [Test]
         public void TestAvatarImport()
-        { 
+        {
             string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "combine.png");
 
             FileStream fstream = File.OpenRead(filePath);

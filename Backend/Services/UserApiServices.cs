@@ -92,8 +92,7 @@ namespace BackendFramework.Services
                     new Claim("UserId", user.Id),
                     new Claim("UserRoleInfo", claimString)
                 }),
-
-                //This line here will cause serious debugging problems if not kept in mind
+                
                 Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

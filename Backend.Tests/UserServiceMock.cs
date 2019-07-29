@@ -76,7 +76,7 @@ namespace Backend.Tests
             catch (InvalidOperationException)
             {
                 return null;
-            }            
+            }
         }
 
         public Task<User> MakeJWT(User user)
