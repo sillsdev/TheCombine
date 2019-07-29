@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import DataEntryComponent from "../DataEntryComponent";
-import { mockDomainTree } from "../DataEntryTable/tests/DataEntryTable.test";
+import { mockDomainTree } from "../tests/MockDomainTree";
 
 jest.mock("../DataEntryHeader/DataEntryHeader");
 jest.mock("../DataEntryTable/DataEntryTable");

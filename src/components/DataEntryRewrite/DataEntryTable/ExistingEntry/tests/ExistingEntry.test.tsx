@@ -1,32 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { ExistingEntry } from "../ExistingEntry";
-import { Word, State } from "../../../../../types/word";
-
-const mockWord: Word = {
-  id: "",
-  vernacular: "",
-  senses: [
-    {
-      glosses: [
-        {
-          language: "en",
-          def: ""
-        }
-      ],
-      semanticDomains: []
-    }
-  ],
-  audio: "",
-  created: "",
-  modified: "",
-  history: [],
-  partOfSpeech: "",
-  editedBy: [],
-  accessability: State.active,
-  otherField: "",
-  plural: ""
-};
+import { Word } from "../../../../../types/word";
+import { mockWord } from "../../../tests/MockWord";
+import SpellChecker from "../../../../DataEntry/spellChecker";
 
 jest.mock("../ExistingVernEntry/ExistingVernEntry");
 jest.mock("../ExistingGlossEntry/ExistingGlossEntry");
@@ -42,6 +19,7 @@ describe("Tests ExistingEntry", () => {
         entry={mockWord}
         updateWord={(word: Word) => null}
         removeWord={(id: string) => null}
+        spellChecker={new SpellChecker()}
       />,
       div
     );

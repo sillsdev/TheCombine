@@ -1,16 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import DataEntryTable from "../DataEntryTable";
-
-import DomainTree from "../../../TreeView/SemanticDomain";
 import SpellChecker from "../../../DataEntry/spellChecker";
 import { SemanticDomain } from "../../../../types/word";
-
-export const mockDomainTree: DomainTree = {
-  name: "",
-  id: "",
-  subdomains: []
-};
+import { mockDomainTree } from "../../tests/MockDomainTree";
 
 const mockSemanticDomain: SemanticDomain = {
   name: "",

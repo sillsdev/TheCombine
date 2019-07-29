@@ -1,9 +1,6 @@
 import React from "react";
-import { Typography, Grid, Chip } from "@material-ui/core";
-import theme from "../../../../types/theme";
-
-import { Word, Gloss, Sense, State } from "../../../../types/word";
-import * as Backend from "../../../../backend";
+import { Grid } from "@material-ui/core";
+import { Word, Gloss, State } from "../../../../types/word";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import SpellChecker from "../../../DataEntry/spellChecker";
 import NewVernEntry from "./NewVernEntry/NewVernEntry";
@@ -157,9 +154,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  // Same
   addSenseToExistingWord(existingWord: Word, newSense: string): Word {
-    let updatedWord: Word = { ...existingWord };
+    let updatedWord = { ...existingWord };
 
     let newGloss: Gloss = {
       language: "en",
@@ -293,8 +289,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   focusVernInput() {
     if (this.vernInput.current) this.vernInput.current.focus();
   }
-
-  updateWord() {}
 
   render() {
     return (

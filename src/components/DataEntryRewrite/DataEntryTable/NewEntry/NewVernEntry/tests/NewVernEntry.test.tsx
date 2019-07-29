@@ -9,6 +9,7 @@ describe("Tests NewVernEntry", () => {
       <LocalizedNewVernEntry
         vernacular={""}
         isDuplicate={false}
+        vernInput={React.createRef<HTMLDivElement>()}
         toggleDuplicateResolutionView={() => null}
         updateVernField={(newValue: string) => null}
       />,
@@ -23,6 +24,7 @@ describe("Tests NewVernEntry", () => {
       <LocalizedNewVernEntry
         vernacular={""}
         isDuplicate={true}
+        vernInput={React.createRef<HTMLDivElement>()}
         toggleDuplicateResolutionView={() => null}
         updateVernField={(newValue: string) => null}
       />,

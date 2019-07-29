@@ -8,6 +8,7 @@ describe("Tests NewGlossEntry", () => {
     ReactDOM.render(
       <LocalizedNewGlossEntry
         glosses={""}
+        glossInput={React.createRef<HTMLDivElement>()}
         isSpelledCorrectly={true}
         toggleSpellingSuggestionsView={() => null}
         updateGlossField={(newValue: string) => null}
@@ -22,6 +23,7 @@ describe("Tests NewGlossEntry", () => {
     ReactDOM.render(
       <LocalizedNewGlossEntry
         glosses={""}
+        glossInput={React.createRef<HTMLDivElement>()}
         isSpelledCorrectly={false}
         toggleSpellingSuggestionsView={() => null}
         updateGlossField={(newValue: string) => null}

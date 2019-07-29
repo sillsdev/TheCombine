@@ -1,8 +1,6 @@
 import React from "react";
-import { Typography, Grid, Chip } from "@material-ui/core";
-import theme from "../../../../types/theme";
-import { Word, Sense, Gloss } from "../../../../types/word";
-import * as Backend from "../../../../backend";
+import { Grid } from "@material-ui/core";
+import { Word, Gloss } from "../../../../types/word";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import SpellChecker from "../../../DataEntry/spellChecker";
 import ExistingVernEntry from "./ExistingVernEntry/ExistingVernEntry";
@@ -113,7 +111,6 @@ export class ExistingEntry extends React.Component<
   }
 
   // Same
-  // Move out of class
   addSenseToExistingWord(existingWord: Word, newSense: string): Word {
     let updatedWord = { ...existingWord };
 
@@ -165,7 +162,7 @@ export class ExistingEntry extends React.Component<
   }
 
   // Same
-  // Maybe move out of class
+  // Move out of class
   /** If the venacular is in the frontier, returns that words id */
   vernInFrontier(vernacular: string): string {
     let Finder = new DuplicateFinder();
@@ -197,7 +194,7 @@ export class ExistingEntry extends React.Component<
   }
 
   // Same
-  // Maybe move out of class
+  // Move out of class
   getDuplicate(id: string): Word {
     let word = this.props.allWords.find(word => word.id === id);
     if (!word) throw new Error("No word exists with this id");

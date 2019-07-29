@@ -43,6 +43,7 @@ export class DataEntryTableRewrite extends React.Component<
 
   spellChecker: SpellChecker;
 
+  // Backend
   componentDidMount() {
     let words: Word[] = [
       {
@@ -152,6 +153,7 @@ export class DataEntryTableRewrite extends React.Component<
     console.log(words);
   }
 
+  // Backend
   async addWordToBackend(word: Word): Promise<Word> {
     let words = [...this.state.words];
     let wordId: number = parseInt(words[words.length - 1].id) + 1;
@@ -161,6 +163,7 @@ export class DataEntryTableRewrite extends React.Component<
     return word;
   }
 
+  // Backend
   async getWordsFromBackend(): Promise<Word[]> {
     return [...this.state.words];
   }
@@ -180,24 +183,38 @@ export class DataEntryTableRewrite extends React.Component<
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
     let updatedWords = await this.getWordsFromBackend();
     this.setState({ words: updatedWords });
-    this.updateWordInFrontend(updatedWord, index);
+    // this.updateWordInFrontend(updatedWord, index);
   }
 
-  async updateWordInBackend(word: Word): Promise<Word> {
-    let returnedWord: Word = { ...word };
-    let updatedId: number = parseInt(word.id) + 1;
+  // Backend
+  async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
+    let words: Word[] = [...this.state.words];
+    let wordIndex = words.findIndex(word => word.id === wordToUpdate.id);
+
+    let returnedWord: Word = { ...wordToUpdate };
+    let updatedId: number = parseInt(wordToUpdate.id) + 1;
     returnedWord.id = updatedId.toString();
+
+    words.splice(wordIndex, 1, returnedWord);
+    this.setState({ words: words });
     return returnedWord;
   }
 
-  updateWordInFrontend(word: Word, index: number) {
-    let words: Word[] = [...this.state.words];
-    words.splice(index, 1, word);
-    this.setState({ words: words });
+  // updateWordInFrontend(word: Word, index: number) {
+  //   let words: Word[] = [...this.state.words];
+  //   words.splice(index, 1, word);
+  //   this.setState({ words: words });
+  // }
+
+  async removeWord(id: string) {
+    await this.removeWordFromBackend(id);
+    let updatedWords: Word[] = await this.getWordsFromBackend();
+    this.setState({ words: updatedWords });
   }
 
-  /** Remove a word from the database. Implement */
-  async removeWord(id: string) {
+  // Backend
+  /** Remove a word from the database. */
+  async removeWordFromBackend(id: string) {
     let updatedWords: Word[] = this.state.words.filter(word => word.id !== id);
     this.setState({ words: updatedWords });
   }
