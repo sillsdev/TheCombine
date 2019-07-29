@@ -15,15 +15,17 @@ namespace Backend.Tests
         private UserRoleController _userRoleController;
 
         private IProjectService _projectService;
-        private string _projId; 
+        private string _projId;
+        private IPermissionService _permissionService;
 
         [SetUp]
         public void Setup()
         {
+            _permissionService = new PermissionServiceMock();
             _userRoleService = new UserRoleServiceMock();
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
-            _userRoleController = new UserRoleController(_userRoleService, _projectService);
+            _userRoleController = new UserRoleController(_userRoleService, _projectService, _permissionService);
         }
 
         UserRole RandomUserRole()
@@ -31,7 +33,7 @@ namespace Backend.Tests
             UserRole userRole = new UserRole
             {
                 ProjectId = _projId,
-                Permissions = new List<int>() { (int)Permission.CreateProject, (int)Permission.ImportLift, (int)Permission.ExportLift }
+                Permissions = new List<int>() { (int)Permission.EditSettingsNUsers, (int)Permission.ImportExport, (int)Permission.MergeNCharSet }
             };
             return userRole;
         }
@@ -83,7 +85,7 @@ namespace Backend.Tests
             UserRole userRole = RandomUserRole();
             _userRoleService.Create(userRole);
             UserRole updateRole = userRole.Clone();
-            updateRole.Permissions.Add((int)Permission.Goals);
+            updateRole.Permissions.Add((int)Permission.WordEntry);
 
             _ = _userRoleController.Put(_projId ,userRole.Id, updateRole).Result;
 

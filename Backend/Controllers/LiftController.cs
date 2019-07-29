@@ -24,12 +24,14 @@ namespace BackendFramework.Controllers
         private readonly IWordRepository _wordRepo;
         private readonly LiftService _liftService;
         private readonly IProjectService _projectService;
+        private readonly IPermissionService _permissionService;
 
-        public LiftController(IWordRepository repo, IProjectService projServ)
+        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService)
         {
             _wordRepo = repo;
             _projectService = projServ;
             _liftService = new LiftService(_wordRepo, _projectService);
+            _permissionService = permissionService;
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
@@ -38,6 +40,12 @@ namespace BackendFramework.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
+            if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
+
             //ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
@@ -151,9 +159,14 @@ namespace BackendFramework.Controllers
         [HttpGet("download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
+            if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
             //ensure project exists
-            var isValid = _projectService.GetProject(projectId);
-            if (isValid == null)
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
