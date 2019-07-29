@@ -11,30 +11,42 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/users")]
+    [EnableCors("AllowAll")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IPermissionService _permissionService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IPermissionService permissionService)
         {
             _userService = userService;
+            _permissionService = permissionService;
         }
 
-        [EnableCors("AllowAll")]
-
-        // GET: v1/users
-        // Implements GetAllUsers()
+        /// <summary> Returns all <see cref="User"/>s </summary>
+        /// <remarks> GET: v1/users </remarks>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
             return new ObjectResult(await _userService.GetAllUsers());
         }
 
-        // DELETE: v1/users
-        // Implements DeleteAllUsers()
+        /// <summary> Deletes all <see cref="User"/>s </summary>
+        /// <remarks> DELETE: v1/users </remarks>
+        /// <returns> true: if success, false: if there were no users </returns>
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
 #if DEBUG
             return new ObjectResult(await _userService.DeleteAllUsers());
 #else
@@ -42,66 +54,74 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        // GET: v1/Users/authenticate
-        // Implements Authenticate()
+        /// <summary> Logs in a <see cref="User"/> and gives a token </summary>
+        /// <remarks> POST: v1/users/authenticate </remarks>
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody]Credentials cred)
         {
-            User user;
             try
             {
-                user = await _userService.Authenticate(cred.Username, cred.Password);
+                User user = await _userService.Authenticate(cred.Username, cred.Password);
                 if (user == null)
                 {
                     return new UnauthorizedResult();
                 }
+
+                return new OkObjectResult(user);
             }
             catch (KeyNotFoundException)
             {
                 return new NotFoundResult();
             }
-
-            return new OkObjectResult(user);
         }
 
-        // GET: v1/Users/{userId}
-        // Implements GetUser(), Arguments: string id of target user
+        /// <summary> Returns <see cref="User"/> with specified id </summary>
+        /// <remarks> GET: v1/users/{userId} </remarks>
         [HttpGet("{userId}")]
         public async Task<IActionResult> Get(string userId)
         {
-            var user = await _userService.GetUser(userId);
+            if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
+            {
+                return new UnauthorizedResult();
+            }
 
+            var user = await _userService.GetUser(userId);
             if (user == null)
             {
                 return new NotFoundResult();
             }
+
             return new ObjectResult(user);
         }
 
-        // POST: v1/Users
-        // Implements Create(), Arguments: new user object from body
+        /// <summary> Creates a <see cref="User"/> </summary>
+        /// <remarks> POST: v1/users </remarks>
+        /// <returns> Id of created user </returns>
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]User user)
         {
-            //create a new user
             var returnUser = await _userService.Create(user);
-
-            //check if creations were valid
             if (returnUser == null)
             {
                 return BadRequest();
             }
+
             return new OkObjectResult(user.Id);
         }
 
-        // PUT: v1/Users/{userId}
-        // Implements Update(), 
-        // Arguments: string id of target user, user object with updates from body
+        /// <summary> Updates <see cref="User"/> with specified id </summary>
+        /// <remarks> PUT: v1/users/{userId} </remarks>
+        /// <returns> Id of updated user </returns>
         [HttpPut("{userId}")]
         public async Task<IActionResult> Put(string userId, [FromBody] User user)
         {
+            if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
+            {
+                return new UnauthorizedResult();
+            }
+
             var result = await _userService.Update(userId, user);
             if (result == ResultOfUpdate.NotFound)
             {
@@ -111,17 +131,22 @@ namespace BackendFramework.Controllers
             {
                 return new OkObjectResult(userId);
             }
-            else
+            else //not updated
             {
                 return new StatusCodeResult(304);
             }
         }
 
-        // DELETE: v1/ApiWithActions/{userId}
-        // Implements Delete(), Arguments: string id of target user
+        /// <summary> Deletes <see cref="User"/> with specified id </summary>
+        /// <remarks> DELETE: v1/users/{userId} </remarks>
         [HttpDelete("{userId}")]
         public async Task<IActionResult> Delete(string userId)
         {
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
 #if DEBUG
             if (await _userService.Delete(userId))
             {

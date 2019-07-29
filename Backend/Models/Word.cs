@@ -102,17 +102,10 @@ namespace BackendFramework.ValueModels
                 other.Vernacular.Equals(Vernacular) &&
                 other.Plural.Equals(Plural) &&
                 other.Audio.Equals(Audio) &&
-                other.Created.Equals(Created) &&
-                other.Modified.Equals(Modified) &&
+                
                 other.PartOfSpeech.Equals(PartOfSpeech) &&
                 other.OtherField.Equals(OtherField) &&
                 other.ProjectId.Equals(ProjectId) &&
-
-                other.EditedBy.Count == EditedBy.Count &&
-                other.EditedBy.All(EditedBy.Contains) &&
-
-                other.History.Count == History.Count &&
-                other.History.All(History.Contains) &&
 
                 other.Senses.Count == Senses.Count &&
                 other.Senses.All(Senses.Contains);
@@ -127,7 +120,15 @@ namespace BackendFramework.ValueModels
             else
             {
                 Word other = obj as Word;
-                return other.Id.Equals(Id) && this.ContentEquals(other);
+                return 
+                    other.Id.Equals(Id) &&
+                    this.ContentEquals(other) &&
+                    other.Created.Equals(Created) &&
+                    other.Modified.Equals(Modified) && 
+                    other.EditedBy.Count == EditedBy.Count &&
+                    other.EditedBy.All(EditedBy.Contains) &&
+                    other.History.Count == History.Count && 
+                    other.History.All(History.Contains);
             }
         }
 
@@ -148,19 +149,6 @@ namespace BackendFramework.ValueModels
             hash.Add(ProjectId);
             return hash.ToHashCode();
         }
-    }
-    
-    public class MergeSourceWord {
-      public string SrcWordID;
-      public List<state> SenseStates;
-    }
-
-    public class MergeWords
-    {
-        public Word Parent { get; set; }
-        public List<MergeSourceWord> ChildrenWords { get; set; }
-        public string MergedBy { get; set; }
-        public string Time { get; set; }
     }
 
     public class Sense
@@ -218,39 +206,6 @@ namespace BackendFramework.ValueModels
         }
     }
 
-    public class SemanticDomain
-    {
-        public string Name { get; set; }
-        public string Id { get; set; }
-
-        public SemanticDomain Clone()
-        {
-            return new SemanticDomain
-            {
-                Name = Name.Clone() as string,
-                Id = Id.Clone() as string
-            };
-        }
-
-        public override bool Equals(object obj)
-        {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            else
-            {
-                SemanticDomain other = obj as SemanticDomain;
-                return Name.Equals(other.Name) && Id.Equals(other.Id);
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Id);
-        }
-    }
-
     public class Gloss
     {
         public string Language { get; set; }
@@ -284,6 +239,40 @@ namespace BackendFramework.ValueModels
         }
     }
 
+    public class SemanticDomain
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+
+        public SemanticDomain Clone()
+        {
+            return new SemanticDomain
+            {
+                Name = Name.Clone() as string,
+                Id = Id.Clone() as string
+            };
+        }
+
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                SemanticDomain other = obj as SemanticDomain;
+                return Name.Equals(other.Name) && Id.Equals(other.Id);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Id);
+        }
+    }
+
+    /// <summary> Helper object that contains a file along with its name and path </summary>
     public class FileUpload
     {
         public IFormFile File { get; set; }
@@ -291,7 +280,27 @@ namespace BackendFramework.ValueModels
         public string FilePath { get; set; }
     }
 
-    public enum state
+    /// <summary> 
+    /// Helper object that contains a parent word and a number of children which will be merged into it 
+    /// along with the userId of who made the merge and at what time
+    /// </summary>
+    public class MergeWords
+    {
+        public Word Parent { get; set; }
+        public List<MergeSourceWord> ChildrenWords { get; set; }
+        public string MergedBy { get; set; }
+        public string Time { get; set; }
+    }
+
+    /// <summary> Helper object that contains a wordId and the type of merge that should be performed </summary>
+    public class MergeSourceWord
+    {
+        public string SrcWordID;
+        public List<State> SenseStates;
+    }
+
+    /// <summary> Information about the state of the word in that database used for merging </summary>
+    public enum State
     {
         active,
         deleted,

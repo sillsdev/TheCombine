@@ -9,6 +9,6 @@ namespace BackendFramework.Interfaces
         Task<bool> Update(string projectId, string wordId, Word word);
         Task<bool> Delete(string projectId, string wordId);
         Task<List<Word>> Merge(string projectId, MergeWords mergeWords);
-        Task<bool> searchInDuplicates(Word word);
+        Task<bool> WordIsUnique(Word word);
     }
 }

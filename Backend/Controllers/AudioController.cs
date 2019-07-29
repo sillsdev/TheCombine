@@ -2,8 +2,8 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using static BackendFramework.Helper.Utilities;
@@ -14,47 +14,57 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/words")]
+    [EnableCors("AllowAll")]
+
     public class AudioController : Controller
     {
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
+        private readonly IPermissionService _permissionService;
 
-        public AudioController(IWordRepository repo, IWordService wordService)
+        public AudioController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
         {
             _wordRepo = repo;
             _wordService = wordService;
+            _permissionService = permissionService;
         }
 
-        // POST: v1/projects/{projectId}/words/{wordId}/upload/audio
-        // Implements UploadAudio()
+        /// <summary> Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to ~/.CombineFiles/{ProjectId}/Import/Audio </summary>
+        /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/upload/audio </remarks>
+        /// <returns> Path to local audio file </returns>
         [HttpPost("{wordId}/upload/audio")]
-        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, [FromForm] FileUpload model)
+        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, [FromForm] FileUpload fileUpload)
         {
-            var file = model.File;
-
-            if (file.Length > 0)
+            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             {
-                //get path to home
-                Utilities util = new Utilities();
-                model.FilePath = util.GenerateFilePath(filetype.audio, false, wordId, Path.Combine(projectId, "Import", "Audio"));
+                return new UnauthorizedResult();
+            }
+            var file = fileUpload.File;
 
-                //copy the file data to the created file
-                using (var fs = new FileStream(model.FilePath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fs);
-                }
-
-                //add the relative path to the audio field
-                Word gotWord = await _wordRepo.GetWord(projectId, wordId); //TODO: this isnt relative
-                gotWord.Audio = model.FilePath;
-
-                //update the entry
-                _ = await _wordService.Update(projectId, wordId, gotWord);
-
-                return new ObjectResult(model.FilePath);
+            //ensure file is not empty
+            if (file.Length == 0)
+            {
+                return new BadRequestObjectResult("Empty File");
             }
 
-            return new BadRequestObjectResult("Empty File");
+            //get path to home
+            Utilities util = new Utilities();
+            fileUpload.FilePath = util.GenerateFilePath(Filetype.audio, false, wordId, Path.Combine(projectId, "Import", "Audio"));
+
+            //copy the file data to a new local file
+            using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fs);
+            }
+
+            //add the relative path to the audio field
+            Word gotWord = await _wordRepo.GetWord(projectId, wordId);
+            gotWord.Audio = fileUpload.FilePath; //TODO: this isnt relative
+
+            //update the word with new audio file
+            _ = await _wordService.Update(projectId, wordId, gotWord);
+
+            return new ObjectResult(fileUpload.FilePath);
         }
     }
 }

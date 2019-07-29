@@ -3,7 +3,6 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
@@ -11,24 +10,31 @@ namespace BackendFramework.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("v1/projects/{projectId}/userroles")]
+    [EnableCors("AllowAll")]
     public class UserRoleController : Controller
     {
         private readonly IUserRoleService _userRoleService;
         private readonly IProjectService _projectService;
+        private readonly IPermissionService _permissionService;
 
-        public UserRoleController(IUserRoleService userRoleService, IProjectService projectService)
+        public UserRoleController(IUserRoleService userRoleService, IProjectService projectService, IPermissionService permissionService)
         {
             _userRoleService = userRoleService;
             _projectService = projectService;
+            _permissionService = permissionService;
         }
 
-        [EnableCors("AllowAll")]
-
-        // GET: v1/Projects/{projectId}/UserRoles
-        // Implements GetAllUserRoles()
+        /// <summary> Returns all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
+        /// <remarks> GET: v1/projects/{projectId}/userroles </remarks>
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
+            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -38,13 +44,19 @@ namespace BackendFramework.Controllers
             return new ObjectResult(await _userRoleService.GetAllUserRoles(projectId));
         }
 
-        // DELETE v1/Projects/{projectId}/UserRoles
-        // Implements DeleteAllUserRoles()
-        // DEBUG ONLY
+        /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
+        /// <remarks> DELETE: v1/projects/{projectId}/userroles </remarks>
+        /// <returns> true: if success, false: if there were no UserRoles </returns> 
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
 #if DEBUG
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -57,11 +69,17 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        // GET: v1/Projects/{projectId}/UserRoles/{userRoleId}
-        // Implements GetUserRole(), Arguments: string id of target userRole
+        /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
+        /// <remarks> GET: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
         [HttpGet("{userRoleId}")]
         public async Task<IActionResult> Get(string projectId, string userRoleId)
         {
+            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -73,14 +91,22 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundObjectResult(userRoleId);
             }
+
             return new ObjectResult(userRole);
         }
 
-        // POST v1/Projects/{projectId}/UserRoles
-        // Implements Create()
+        /// <summary> Creates a <see cref="UserRole"/> </summary>
+        /// <remarks> POST: v1/projects/{projectId}/userroles </remarks>
+        /// <returns> Id of updated UserRole </returns>
         [HttpPost]
         public async Task<IActionResult> Post(string projectId, [FromBody]UserRole userRole)
         {
+            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -96,11 +122,17 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(userRole.Id);
         }
 
-        // DELETE: v1/Projects/{projectId}/UserRoles/{userRoleId}
-        // Implements Delete(), Arguments: string id of target userRole
+        /// <summary> Deletes <see cref="UserRole"/> with specified id </summary>
+        /// <remarks> DELETE: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
         [HttpDelete("{userRoleId}")]
         public async Task<IActionResult> Delete(string projectId, string userRoleId)
         {
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -114,11 +146,18 @@ namespace BackendFramework.Controllers
             return new NotFoundObjectResult(userRoleId);
         }
 
-        // PUT: v1/Projects/{projectId}/UserRoles/{userRoleId}
-        // Implements Update()
+        /// <summary> Updates <see cref="UserRole"/> with specified id </summary>
+        /// <remarks> PUT: v1/projects/{projectId}/userroles/{userRoleId} </remarks>
+        /// <returns> Id of updated UserRole </returns>
         [HttpPut("{userRoleId}")]
         public async Task<IActionResult> Put(string projectId, string userRoleId, [FromBody] UserRole userRole)
         {
+            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
+            //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -130,7 +169,7 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundObjectResult(userRoleId);
             }
-            else if(result == ResultOfUpdate.Updated)
+            else if (result == ResultOfUpdate.Updated)
             {
                 return new OkObjectResult(userRoleId);
             }

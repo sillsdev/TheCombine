@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Services
 {
+    /// <summary> More complex functions and application logic for <see cref="Word"/>s </summary>
     public class WordService : IWordService
     {
         private readonly IWordRepository _repo;
@@ -16,56 +17,65 @@ namespace BackendFramework.Services
             _repo = repo;
         }
 
+        /// <summary> Makes a new word in Frontier that has deleted tag on each sense </summary>
+        /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string wordId)
         {
             var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
 
+            //we only want to add the deleted word if the word started in the frontier
             if (wordIsInFrontier)
             {
                 Word wordToDelete = _repo.GetWord(projectId, wordId).Result;
-                wordToDelete.Id = null;
-                wordToDelete.History.Add(wordId);
+                wordToDelete.Id = "";
+                wordToDelete.History = new List<string>() { wordId };
 
                 foreach (var senseAcc in wordToDelete.Senses)
                 {
-                    senseAcc.Accessibility = (int)state.deleted;
+                    senseAcc.Accessibility = (int)State.deleted;
                 }
 
                 await _repo.Create(wordToDelete);
             }
+
             return wordIsInFrontier;
         }
 
+        /// <summary> Makes a new word in the Frontier with changes made </summary>
+        /// <returns> A bool: success of operation </returns>
         public async Task<bool> Update(string projectId, string wordId, Word word)
         {
             var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
+
+            //we only want to update words that are in the frontier
             if (wordIsInFrontier)
             {
-                word.Id = null;
+                word.Id = "";
                 word.ProjectId = projectId;
 
-                //If the word already has a history you dont want to overwrite it
-                if (word.History == null)
+                if (word.History == null) //keep track of the old word
                 {
                     word.History = new List<string> { wordId };
                 }
-                else
+                else //if we are updating the history, don't overwrite it, just add to the history
                 {
                     word.History.Add(wordId);
                 }
 
                 await _repo.Create(word);
             }
+
             return wordIsInFrontier;
         }
 
+        /// <summary> Makes a parent from merging other words and some number of separate words </summary>
+        /// <returns> List of words added: Parent first, followed by separate words in order added </returns>
         public async Task<List<Word>> Merge(string projectId, MergeWords mergeWords)
         {
             var newWordsList = new List<Word>();
-            mergeWords.Parent.Senses = new List<Sense>();
 
-            var baseParent = mergeWords.Parent.Clone();
-            var addParent = baseParent.Clone();
+            var addParent = mergeWords.Parent.Clone();
+            addParent.History = new List<string>();
             //generate new child words form child word field
             foreach (var newChildWordState in mergeWords.ChildrenWords)
             {
@@ -92,25 +102,25 @@ namespace BackendFramework.Services
                 var newChildWord = await _repo.Add(currentChildWord);
 
                 //handle different states
+
+                var separateWord = currentChildWord.Clone();
+                separateWord.Senses = new List<Sense>();
+                separateWord.Id = "";
                 for (int i = 0; i < currentChildWord.Senses.Count; i++)
                 {
-                    var separateWord = baseParent.Clone();
-
                     switch (newChildWordState.SenseStates[i])
                     {
-                        //add the sense to the parent word
-                        case state.sense:
-                            addParent.Senses.Add(currentChildWord.Senses[i]);
-                            goto case state.duplicate; //fall through
+                        case State.sense:
+                            goto case State.duplicate; //fall through
                         //add the word to the parent's history
-                        case state.duplicate:
+                        case State.duplicate:
                             if (!addParent.History.Contains(currentChildWord.Id))
                             {
                                 addParent.History.Add(currentChildWord.Id);
                             }
                             break;
                         //add the sense to a separate word and the word to its history
-                        case state.separate:
+                        case State.separate:
                             separateWord.Senses.Add(currentChildWord.Senses[i]);
                             if (!separateWord.History.Contains(currentChildWord.Id))
                             {
@@ -120,14 +130,14 @@ namespace BackendFramework.Services
                         default:
                             throw new NotSupportedException();
                     }
+                }
 
-                    //add a new word to the database with all of the senses with separate tags from this word
-                    if (separateWord.Senses.Count != 0)
-                    {
-                        separateWord.ProjectId = projectId;
-                        var newSeparate = await _repo.Create(separateWord);
-                        newWordsList.Add(newSeparate);
-                    }
+                //add a new word to the database with all of the senses with separate tags from this word
+                if (separateWord.Senses.Count != 0)
+                {
+                    separateWord.ProjectId = projectId;
+                    var newSeparate = await _repo.Create(separateWord);
+                    newWordsList.Add(newSeparate);
                 }
             }
 
@@ -139,71 +149,66 @@ namespace BackendFramework.Services
             return newWordsList;
         }
 
-        public async Task<bool> searchInDuplicates(Word word)
+        /// <summary> Checks if a word being added is an exact duplicate of a preexisting word </summary>
+        public async Task<bool> WordIsUnique(Word word)
         {
-            //get all words from database
-            var allWords = await _repo.GetAllWords(word.ProjectId);
+            //get all words from frontier
+            var allWords = await _repo.GetFrontier(word.ProjectId);
 
-            //search through all words for the correct vernacular
+            //find all words with matching vernacular
             var allVernaculars = allWords.FindAll(x => x.Vernacular == word.Vernacular);
 
-            //for each matching vern check its glosses 
+            var foundDuplicateSense = false;
+            var isUniqueWord = true;
 
-            /*this is terrible
-                -this code block checks if a word is a "duplicate" of an already existing word
-
-                -A duplicate is defined by:
-                    -having the same vern as another word as well as...
-                    -having a strict subset of the senses of the already existing word
-                        -having more than a subset will immidately indicate the word is not mergeable
-                    -all senses must have an strict subset of the matching sense's glosses
-                        -having more than a subset will immidately indicate the word is not mergeable
-
-                -If a word is mergeable then its semantic domains and editor 
-                    will be copied into the duplicate word.
-            */
-            Word differences = new Word();
-            bool duplicate = true;
-            bool same = false;
-
+            //iterate over words with the same vernacular
             foreach (var matchingVern in allVernaculars)
             {
-                foreach (var oldSense in matchingVern.Senses)
+                //iterate over senses of those words
+                foreach (var newSense in word.Senses)
                 {
-                    int senseIndex = 0;
-                    foreach (var newSense in word.Senses)
+                    int newSenseIndex = 0;
+                    foundDuplicateSense = false;
+
+                    //iterate over the senses of the new word
+                    foreach (var oldSense in matchingVern.Senses)
                     {
-                        //if the new sense isnt a strict subset then dont bother adding anything 
+                        int oldSenseIndex = 0;
+
+                        //if the new sense is a strict subset of the old one, then merge it in
                         if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
                         {
-                            same = true;
-                            foreach (var newGloss in newSense.Glosses)
-                            {
-                                //add semdom and edited by
-                                matchingVern.EditedBy.AddRange(word.EditedBy);
-                                matchingVern.Senses[senseIndex].SemanticDomains.AddRange(word.Senses[senseIndex].SemanticDomains);
-                                //remove dups
-                                matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
-                                matchingVern.Senses[senseIndex].SemanticDomains = matchingVern.Senses[senseIndex].SemanticDomains.Distinct().ToList();
+                            foundDuplicateSense = true;
 
-                                duplicate = false;
-                            }
+                            //add edited by and remove duplicates
+                            matchingVern.EditedBy.AddRange(word.EditedBy);
+                            matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
+
+                            //add semantic domains and remove duplicates
+                            matchingVern.Senses[oldSenseIndex].SemanticDomains.AddRange(word.Senses[newSenseIndex].SemanticDomains);
+                            matchingVern.Senses[oldSenseIndex].SemanticDomains = matchingVern.Senses[newSenseIndex].SemanticDomains.Distinct().ToList();
                         }
-                        else
-                        {
-                            //duplicate = false;
-                        }
-                        ++senseIndex;
+
+                        oldSenseIndex++;
                     }
-                    //update the database
-                    if (!duplicate && !same)
+
+                    //if we never found a matching sense in the old word, the words are different
+                    if (!foundDuplicateSense)
                     {
-                        await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
+                        break;
                     }
-                    same = false;
+
+                    newSenseIndex++;
+                }
+
+                //update the word only if all the senses were duplicates
+                if (foundDuplicateSense)
+                {
+                    isUniqueWord = false;
+                    await Update(matchingVern.ProjectId, matchingVern.Id, matchingVern);
                 }
             }
-            return duplicate;
+            return isUniqueWord;
         }
     }
 }

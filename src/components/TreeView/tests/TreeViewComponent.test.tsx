@@ -1,9 +1,7 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import TreeViewComponent from "../TreeViewComponent";
-import { defaultState } from "../TreeViewReducer";
 import SemanticDomain from "../SemanticDomain";
-import axios from "axios";
 import mockTree from "./MockSemanticTree";
 
 var treeMaster: ReactTestRenderer;
@@ -24,22 +22,22 @@ jest.mock("@material-ui/core", () => {
   };
 });
 
-// Mock axios instance to mock return data
-const mockAxios = axios as jest.Mocked<typeof axios>;
+// Mock createDomains
+jest.mock("../TreeViewReducer", () => {
+  const realReducer = jest.requireActual("../TreeViewReducer");
+  return {
+    ...realReducer,
+    createDomains: () => {
+      return { currentdomain: mockTree };
+    }
+  };
+});
+
+beforeAll(() => {
+  createTree();
+});
 
 beforeEach(() => {
-  mockAxios.get.mockImplementationOnce(() => Promise.resolve({ data: [defaultState.currentdomain] }));
-  renderer.act(() => {
-    treeMaster = renderer.create(
-      <TreeViewComponent
-        currentDomain={mockTree}
-        returnControlToCaller={RETURN_MOCK}
-        navigate={NAVIGATE_MOCK}
-      />
-    );
-  });
-  treeHandle = treeMaster.root.findByType(TreeViewComponent).instance;
-
   RETURN_MOCK.mockClear();
   NAVIGATE_MOCK.mockClear();
 });
@@ -47,10 +45,8 @@ beforeEach(() => {
 describe("Tests AddWords", () => {
   it("Constructs correctly", () => {
     // Default snapshot test
+    createTree();
     snapTest("default view");
-    expect(NAVIGATE_MOCK).toHaveBeenCalledWith({
-      name: "Semantic Domains",
-      id: "", subdomains: [defaultState.currentdomain]});
   });
 
   it("Sets a new domain upon navigation", () => {
@@ -73,6 +69,19 @@ describe("Tests AddWords", () => {
     expect(RETURN_MOCK).toHaveBeenCalledTimes(1);
   });
 });
+
+function createTree() {
+  renderer.act(() => {
+    treeMaster = renderer.create(
+      <TreeViewComponent
+        currentDomain={mockTree}
+        returnControlToCaller={RETURN_MOCK}
+        navigate={NAVIGATE_MOCK}
+      />
+    );
+  });
+  treeHandle = treeMaster.root.findByType(TreeViewComponent).instance;
+}
 
 // Perform a snapshot test
 function snapTest(name: string) {
