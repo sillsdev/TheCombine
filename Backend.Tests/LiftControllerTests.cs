@@ -15,15 +15,13 @@ namespace Backend.Tests
         private IWordRepository _wordrepo;
         private IProjectService _projServ;
         private LiftController _liftController;
-        private IPermissionService _permissionService;
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
-            _liftController = new LiftController(_wordrepo, _projServ, _permissionService);
+            _liftController = new LiftController(_wordrepo, _projServ);
         }
 
         Project RandomProject()

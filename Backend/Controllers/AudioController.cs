@@ -20,13 +20,11 @@ namespace BackendFramework.Controllers
     {
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
-        private readonly IPermissionService _permissionService;
 
-        public AudioController(IWordRepository repo, IWordService wordService, IPermissionService permissionService)
+        public AudioController(IWordRepository repo, IWordService wordService)
         {
             _wordRepo = repo;
             _wordService = wordService;
-            _permissionService = permissionService;
         }
 
         /// <summary> Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to ~/.CombineFiles/{ProjectId}/Import/Audio </summary>
@@ -35,10 +33,6 @@ namespace BackendFramework.Controllers
         [HttpPost("{wordId}/upload/audio")]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
             var file = fileUpload.File;
 
             //ensure file is not empty
