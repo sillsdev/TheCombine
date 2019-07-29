@@ -3,6 +3,7 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -98,7 +99,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects </remarks>
         /// <returns> Id of created project </returns>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Project project)
+        public async Task<IActionResult> Post([FromBody] ProjectWithUser project)
         {
             await _projectService.Create(project);
 
@@ -118,14 +119,15 @@ namespace BackendFramework.Controllers
             {
                 currentUser.ProjectRoles = new Dictionary<string, string>();
             }
-
+            
             currentUser.ProjectRoles.Add(project.Id, usersRole.Id);
             await _userService.Update(currentUserId, currentUser);
+            currentUser = await _userService.MakeJWT(currentUser);
+            await _userService.Update(currentUserId, currentUser);
 
-            var user = await _userService.GetUser(currentUserId);
-            user = await _userService.MakeJWT(user);
+            project.__UpdatedUser = currentUser;
 
-            return new OkObjectResult(new CreateProjectObject(project, user));
+            return new OkObjectResult(project);
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>
@@ -238,15 +240,15 @@ namespace BackendFramework.Controllers
 
     }
 
-    public class CreateProjectObject
+    public class ProjectWithUser : Project
     {
-        public readonly Project Project;
-        public readonly User __UpdatedUser;
+        public User __UpdatedUser;
 
-        public CreateProjectObject(Project project, User user)
+        public ProjectWithUser(Project baseObj)
         {
-            Project = project;
-            __UpdatedUser = user;
+            Id = baseObj.Id;
+            this.Name = baseObj.Name;
+            this.PartsOfSpeech = baseObj.PartsOfSpeech;
         }
     }
 }
