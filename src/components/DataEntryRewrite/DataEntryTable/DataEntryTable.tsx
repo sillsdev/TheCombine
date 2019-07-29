@@ -75,6 +75,14 @@ export class DataEntryTableRewrite extends React.Component<
 
   /** Filter out words that do not have correct accessibility */
   filterWords(words: Word[]): Word[] {
+    for (let word of words) {
+      for (let sense of word.senses) {
+        if (sense.accessibility !== State.active) {
+          // Don't include sense
+          console.log("Word not accessible");
+        }
+      }
+    }
     return words;
   }
 
