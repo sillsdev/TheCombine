@@ -134,8 +134,8 @@ namespace BackendFramework.Controllers
 
 
             //ensure project exists
-            var isValid = _projectService.GetProject(projectId);
-            if (isValid == null)
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -178,8 +178,8 @@ namespace BackendFramework.Controllers
             }
 
             //ensure project exists
-            var isValid = _projectService.GetProject(projectId);
-            if (isValid == null)
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
