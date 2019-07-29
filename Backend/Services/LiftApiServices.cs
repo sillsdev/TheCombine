@@ -20,11 +20,9 @@ namespace BackendFramework.Services
     /// <summary> Extension of <see cref="LiftWriter"/> to add audio pronunciation </summary>
     public class CombineLiftWriter : LiftWriter
     {
-        public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle)
-        {
-        }
+        public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle) {}
 
-        /// <summary> Overrides empty function from the base SIL LiftWriter to properly add pronunciation correctly </summary>
+        /// <summary> Overrides empty function from the base SIL LiftWriter to properly add pronunciation </summary>
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
             if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
@@ -133,7 +131,7 @@ namespace BackendFramework.Services
                 LexEntry entry = new LexEntry();
 
                 AddVern(entry, wordEntry, projectId);
-                AddSense(entry, wordEntry);
+                AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir);
 
                 writer.Add(entry);
@@ -154,17 +152,16 @@ namespace BackendFramework.Services
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
         private void AddVern(LexEntry entry, Word wordEntry, string projectId)
         {
-            LiftMultiText lexMultiText = new LiftMultiText();
             string lang = _projService.GetProject(projectId).Result.VernacularWritingSystem;
-            lexMultiText.Add(lang, wordEntry.Vernacular);
-            entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
+            entry.LexicalForm.MergeIn(MultiText.Create(new LiftMultiText { { lang, wordEntry.Vernacular } }));
         }
 
         /// <summary> Adds each sense of a word to be written out to lift </summary>
-        private void AddSense(LexEntry entry, Word wordEntry)
+        private void AddSenses(LexEntry entry, Word wordEntry)
         {
             for (int i = 0; i < wordEntry.Senses.Count; i++)
             {
+                //merge in senses
                 Dictionary<string, string> dict = new Dictionary<string, string>();
                 foreach (Gloss gloss in wordEntry.Senses[i].Glosses)
                 {
@@ -175,6 +172,7 @@ namespace BackendFramework.Services
                 lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
                 entry.Senses.Add(lexSense);
 
+                //merge in semantic domains
                 foreach (var semdom in wordEntry.Senses[i].SemanticDomains)
                 {
                     var orc = new OptionRefCollection();
@@ -188,13 +186,15 @@ namespace BackendFramework.Services
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
         private void AddAudio(LexEntry entry, Word wordEntry, string path)
         {
-            if (wordEntry.Audio != "")
+            foreach (var audioFile in wordEntry.Audio)
             {
                 LexPhonetic lexPhonetic = new LexPhonetic();
-                string dest = Path.Combine(path, wordEntry.Audio);
 
                 Helper.Utilities util = new Helper.Utilities();
-                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), wordEntry.Audio);
+                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), audioFile);
+
+                string dest = Path.Combine(path, audioFile);
+
                 if (File.Exists(src))
                 {
                     File.Copy(src, dest, true);
@@ -244,13 +244,21 @@ namespace BackendFramework.Services
             }
         }
 
-        /// <summary> The meat of lift import is done here. This reads in all necessary attributes of a word and adds it to the database. Called by  </summary>
+        /// <summary> The meat of lift import is done here. This reads in all necessary attributes of a word and adds it to the database. </summary>
         public async void FinishEntry(LiftEntry entry)
         {
             Word newWord = new Word();
             var proj = _projService.GetProject(_projectId).Result;
 
+            //only used when importing semantic domains from a lift-ranges file
+            if (_sdList.Count != 0 && proj.SemanticDomains.Count == 0)
+            {
+                proj.SemanticDomains = _sdList;
+                await _projService.Update(_projectId, proj);
+            }
+
             //add vernacular
+            //TODO: currently we just add the first listed option, we may want to choose eventually
             if (!entry.CitationForm.IsEmpty) //prefer citation form for vernacular
             {
                 newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
@@ -269,127 +277,121 @@ namespace BackendFramework.Services
                     await _projService.Update(_projectId, proj);
                 }
             }
-            else //this is not a word
+            else //this is not a word if there is no vernacular
             {
                 return;
             }
 
-            if (proj.SemanticDomains.Count == 0)
+            //this is not a word if there are no senses
+            if (entry.Senses.Count == 0)
             {
-                proj.SemanticDomains = _sdList;
-                await _projService.Update(_projectId, proj);
-            }
-
-            //add plural
-            foreach (var field in entry.Fields)
-            {
-                foreach (var plural in field.Content)
-                {
-                    string PluralForm = entry.Fields.First().Content.First().Value.Text;
-                    newWord.Plural = PluralForm;
-                }
-            }
-
-            //setup file path for audio files
-            Helper.Utilities util = new Helper.Utilities();
-
-            //path to Import file ~/AmbigProjName/Import
-            var extractedPathToImport = util.GenerateFilePath(Helper.Utilities.Filetype.dir, false, "", Path.Combine(_projectId, "Import"));
-
-            //get path to ~/AmbigProjName/Import/ExtractedLiftDir/audio
-            var importListArr = Directory.GetDirectories(extractedPathToImport);
-            var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
-
-            if (Directory.Exists(extractedAudioDir))
-            {
-                //try to read audio b/c it's prob there
-                //add audio
-                foreach (var pro in entry.Pronunciations)
-                {
-                    newWord.Audio = pro.Media.FirstOrDefault().Url;
-
-                    //get path to ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word mp3
-                    var extractedAudioMp3 = Path.Combine(extractedAudioDir, newWord.Audio);
-
-                    //move mp3 to audio folder at ~/AmbigProjName/Import/ExtractedLiftDir/Audio/word.mp3
-                    var audioFolder = Path.Combine(extractedPathToImport, "Audio");
-                    Directory.CreateDirectory(audioFolder);
-                    var audioDest = Path.Combine(audioFolder, newWord.Audio);
-
-                    //if there are duplicate filenames then add a (number) like windows does to the end of it
-                    int filecount = 1;
-                    var filename = Path.GetFileNameWithoutExtension(audioDest);
-
-                    while (File.Exists(audioDest))
-                    {
-                        audioDest = Path.Combine(audioFolder, filename + "(" + filecount++ + ")" + ".mp3");
-                    }
-                    File.Copy(extractedAudioMp3, audioDest);
-                }
+                return;
             }
 
             //add senses
             newWord.Senses = new List<Sense>();
             foreach (var sense in entry.Senses)
             {
-                Sense newSense = new Sense();
-                newSense.SemanticDomains = new List<SemanticDomain>();
-                newSense.Glosses = new List<Gloss>();
-
-                //add semantic domains
-                List<string> SemanticDomainStrings = new List<string>();
-                foreach (var trait in sense.Traits)
-                {
-                    if (trait.Name.StartsWith("semantic-domain"))
-                    {
-                        SemanticDomainStrings.Add(trait.Value);
-                    }
-                }
-                foreach (var SemanticDomainString in SemanticDomainStrings)
-                {
-                    string[] words = SemanticDomainString.Split(" ");
-
-                    SemanticDomain newSemanticDomain = new SemanticDomain();
-                    newSemanticDomain.Id = words[0];
-
-                    for (int i = 1; i < words.Length - 1; i++)
-                    {
-                        newSemanticDomain.Name += words[i] + " ";
-                    }
-                    newSemanticDomain.Name += words.Last();
-
-                    newSense.SemanticDomains.Add(newSemanticDomain);
-                }
+                Sense newSense = new Sense { SemanticDomains = new List<SemanticDomain>(), Glosses = new List<Gloss>() };
 
                 //add glosses
                 foreach (var gloss in sense.Gloss)
                 {
-                    Gloss newGloss = new Gloss();
-                    newGloss.Language = gloss.Key;
-                    newGloss.Def = gloss.Value.Text;
+                    newSense.Glosses.Add(new Gloss { Language = gloss.Key, Def = gloss.Value.Text });
+                }
 
-                    newSense.Glosses.Add(newGloss);
+                //find semantic domains
+                List<string> semanticDomainStrings = new List<string>();
+                foreach (var trait in sense.Traits)
+                {
+                    if (trait.Name.StartsWith("semantic-domain"))
+                    {
+                        semanticDomainStrings.Add(trait.Value);
+                    }
+                }
+
+                //add semantic domains
+                foreach (var semanticDomainString in semanticDomainStrings)
+                {
+                    //splits on the space between the number and name of the semantic domain
+                    string[] splitSemDom = semanticDomainString.Split(" ", 2);
+                    newSense.SemanticDomains.Add(new SemanticDomain { Id = splitSemDom[0], Name = splitSemDom[1] });
                 }
 
                 newWord.Senses.Add(newSense);
+            }
+
+            //add plural
+            foreach (var field in entry.Fields)
+            {
+                if (field.Type == "Plural")
+                {
+                    foreach (var plural in field.Content)
+                    {
+                        //if (entry.Fields["Type"])
+                        string PluralForm = entry.Fields.First().Content.First().Value.Text;
+                        newWord.Plural = PluralForm;
+                    }
+                }
+            }
+
+            //get path to dir containing local lift package ~/{projectId}/Import/ExtractedLocation
+            Helper.Utilities util = new Helper.Utilities();
+            var importDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, false, "", Path.Combine(_projectId, "Import"));
+            var extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
+
+            //get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio
+            var importListArr = Directory.GetDirectories(extractedPathToImport);
+            var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
+
+            //only add audio if the files exist
+            if (Directory.Exists(extractedAudioDir))
+            {
+                //add audio
+                foreach (var pro in entry.Pronunciations)
+                {
+                    //get path to audio file in lift package at ~/{projectId}/Import/ExtractedLocation/{liftName}/audio/{audioFile}.mp3
+                    var audioFile = pro.Media.First().Url;
+                    var extractedAudioMp3 = Path.Combine(extractedAudioDir, audioFile);
+
+                    //move mp3 to audio folder at ~/{projectId}/Import/Audio/{audioFile}.mp3
+                    var audioFolder = Path.Combine(importDir, "Audio");
+                    Directory.CreateDirectory(audioFolder);
+                    var audioDest = Path.Combine(audioFolder, audioFile);
+
+                    //if there are duplicate filenames then add a (number) like windows does to the end of it
+                    var filename = Path.GetFileNameWithoutExtension(audioDest);
+                    int filecount = 1;
+                    while (File.Exists(audioDest))
+                    {
+                        audioDest = Path.Combine(audioFolder, filename + "(" + filecount++ + ")" + ".mp3");
+                    }
+                    File.Copy(extractedAudioMp3, audioDest);
+
+                    //add file name to word's audio files
+                    newWord.Audio.Add(audioFile);
+                }
             }
 
             newWord.ProjectId = _projectId;
             await _repo.Create(newWord);
         }
 
+        /// <summary> Creates the object to transfer all the data from a word </summary>
         public LiftEntry GetOrMakeEntry(Extensible info, int order)
         {
-            return new EmptyLiftEntry(info, new Guid(), order);
+            return new LiftEntry(info, new Guid(), order) { LexicalForm = new LiftMultiText(), CitationForm = new LiftMultiText() };
         }
 
+        /// <summary> Creates an empty sense object and adds it to the entry </summary>
         public LiftSense GetOrMakeSense(LiftEntry entry, Extensible info, string rawXml)
         {
-            EmptyLiftSense sense = new EmptyLiftSense(info, new Guid(), entry);
+            LiftSense sense = new LiftSense(info, new Guid(), entry) { Gloss = new LiftMultiText() };
             entry.Senses.Add(sense);
             return sense;
         }
 
+        /// <summary> Adds each citation form to the entry for the vernacular </summary>
         public void MergeInCitationForm(LiftEntry entry, LiftMultiText contents)
         {
             foreach (var value in contents)
@@ -398,6 +400,7 @@ namespace BackendFramework.Services
             }
         }
 
+        /// <summary> Adds field to the entry for plural forms </summary>
         public void MergeInField(LiftObject extensible, string typeAttribute, DateTime dateCreated, DateTime dateModified, LiftMultiText contents, List<Trait> traits)
         {
             LiftMultiText textentry = new LiftMultiText(contents.FirstValue.Key.ToString(), contents.FirstValue.Value.Text.ToString());
@@ -405,6 +408,7 @@ namespace BackendFramework.Services
             extensible.Fields.Add(fieldentry);
         }
 
+        /// <summary> Adds senses to the entry </summary>
         public void MergeInGloss(LiftSense sense, LiftMultiText multiText)
         {
             foreach (var value in multiText)
@@ -413,6 +417,7 @@ namespace BackendFramework.Services
             }
         }
 
+        /// <summary> Adds each lexeme form to the entry for the vernacular </summary>
         public void MergeInLexemeForm(LiftEntry entry, LiftMultiText contents)
         {
             foreach (var key in contents)
@@ -421,123 +426,55 @@ namespace BackendFramework.Services
             }
         }
 
+        /// <summary> Adds field to the entry for semantic domains </summary>
         public void MergeInTrait(LiftObject extensible, Trait trait)
         {
-            LiftTrait newTrait = new LiftTrait();
-            newTrait.Name = trait.Name;
-            newTrait.Value = trait.Value;
-            extensible.Traits.Add(newTrait);
+            extensible.Traits.Add(new LiftTrait { Name = trait.Name, Value = trait.Value });
         }
 
+        /// <summary> Needs to be called before MergeInMedia </summary>
         public LiftObject MergeInPronunciation(LiftEntry entry, LiftMultiText contents, string rawXml)
         {
-            var audioFile = rawXml.Split("\"")[1];
-            LiftPhonetic phonetic = new LiftPhonetic();
-            LiftUrlRef url = new LiftUrlRef { Url = audioFile };
-            phonetic.Media.Add(url);
-            entry.Pronunciations.Add(phonetic);
             return entry;
         }
 
+        /// <summary> Adds in media for audio pronunciation </summary>
+        public void MergeInMedia(LiftObject pronunciation, string href, LiftMultiText caption)
+        {
+            var entry = (LiftEntry)pronunciation;
+            LiftPhonetic phonetic = new LiftPhonetic();
+            LiftUrlRef url = new LiftUrlRef { Url = href };
+            phonetic.Media.Add(url);
+            entry.Pronunciations.Add(phonetic);
+        }
+
+        /// <summary> Adds in each semantic domain to a list </summary>
         public void ProcessRangeElement(string range, string id, string guid, string parent, LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
         {
-            if (range == "semantic-domain-ddp4")
-            {
-                _sdList.Add(new SemanticDomain() { Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
-            }
+            /*uncomment this if you want to import semantic domains from a lift-ranges file*/
+            //if (range == "semantic-domain-ddp4")
+            //{
+            //    _sdList.Add(new SemanticDomain() { Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
+            //}
         }
 
-        // The following are unused and are not implemented, but must stay to satisfy the needs of the ILexiconMerger 
-        public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
-        {
-            return new EmptyLiftExample();
-        }
-
-        public LiftObject GetOrMakeParentReversal(LiftObject parent, LiftMultiText contents, string type)
-        {
-            return new EmptyLiftObject();
-        }
-
-        public LiftSense GetOrMakeSubsense(LiftSense sense, Extensible info, string rawXml)
-        {
-            return new EmptyLiftSense(info, new Guid(), sense);
-        }
-
-        public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form, LiftMultiText gloss, string rawXml)
-        {
-            return new EmptyLiftObject();
-        }
-
-        public LiftObject MergeInReversal(LiftSense sense, LiftObject parent, LiftMultiText contents, string type, string rawXml)
-        {
-            return new EmptyLiftObject();
-        }
-
-        public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml)
-        {
-            return new EmptyLiftObject();
-        }
-
+        // The following are unused and are not implemented, but may still be called by the Lexicon Merger
+        // They may be useful later if we need to add more complex attributes to words in The Combine
+        public LiftExample GetOrMakeExample(LiftSense sense, Extensible info) { return new LiftExample() { Content = new LiftMultiText() }; }
+        public LiftObject GetOrMakeParentReversal(LiftObject parent, LiftMultiText contents, string type) { return new LiftReversal(); }
+        public LiftSense GetOrMakeSubsense(LiftSense sense, Extensible info, string rawXml) { return new LiftSense(info, new Guid(), sense) { Gloss = new LiftMultiText() }; }
+        public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form, LiftMultiText gloss, string rawXml) { return new LiftEtymology(); }
+        public LiftObject MergeInReversal(LiftSense sense, LiftObject parent, LiftMultiText contents, string type, string rawXml) { return new LiftReversal(); }
+        public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml) { return new LiftVariant(); }
         public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
-
         public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText) { }
-
         public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
-
         public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
-
-        //TODO: can this replace the override?
-        public void MergeInMedia(LiftObject pronunciation, string href, LiftMultiText caption) { }
-
         public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml) { }
-
         public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
-
         public void MergeInRelation(LiftObject extensible, string relationTypeName, string targetId, string rawXml) { }
-
         public void MergeInSource(LiftExample example, string source) { }
-
         public void MergeInTranslationForm(LiftExample example, string type, LiftMultiText multiText, string rawXml) { }
-
         public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
-
-    }
-
-    public class EmptyLiftObject : LiftObject
-    {
-        public EmptyLiftObject() : base() {}
-
-        public override string XmlTag => throw new NotImplementedException();
-    }
-
-    public class EmptyLiftEntry : LiftEntry
-    {
-        public EmptyLiftEntry(Extensible info, Guid guid, int order) : base(info, guid, order)
-        {
-            LexicalForm = new LiftMultiText();
-            CitationForm = new LiftMultiText();
-        }
-
-        public override string XmlTag => throw new NotImplementedException();
-    }
-
-    public class EmptyLiftSense : LiftSense
-    {
-        public EmptyLiftSense(Extensible info, Guid guid, LiftObject owner) : base(info, guid, owner)
-        {
-            Gloss = new LiftMultiText();
-        }
-
-        public override string XmlTag => throw new NotImplementedException();
-    }
-
-    public class EmptyLiftExample : LiftExample
-    {
-        public EmptyLiftExample() : base()
-        {
-            Content = new LiftMultiText();
-        }
-
-        public override string XmlTag => throw new NotImplementedException();
     }
 }

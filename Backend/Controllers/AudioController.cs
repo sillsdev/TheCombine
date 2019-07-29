@@ -59,7 +59,7 @@ namespace BackendFramework.Controllers
 
             //add the relative path to the audio field
             Word gotWord = await _wordRepo.GetWord(projectId, wordId);
-            gotWord.Audio = fileUpload.FilePath; //TODO: this isnt relative
+            gotWord.Audio.Add(fileUpload.FilePath); //TODO: this isnt relative
 
             //update the word with new audio file
             _ = await _wordService.Update(projectId, wordId, gotWord);
