@@ -1,5 +1,9 @@
 import * as React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  withLocalize,
+  Translate
+} from "react-localize-redux";
 import {
   Grid,
   FormControl,
@@ -9,6 +13,7 @@ import {
 } from "@material-ui/core";
 import CharacterCard from "./CharacterCard";
 import { listChar } from "../../CharacterInventoryReducer";
+import { ArrowUpward } from "@material-ui/icons";
 
 export interface CharacterListProps {
   setSelectedCharacter: (character: string) => void;
@@ -42,7 +47,7 @@ export class CharacterList extends React.Component<
 
   render() {
     let orderedCharacters = sortBy(
-      this.props.allCharacters,
+      [...this.props.allCharacters],
       this.state.sortOrder
     );
 
@@ -50,7 +55,9 @@ export class CharacterList extends React.Component<
       <React.Fragment>
         <Grid item xs={12}>
           <FormControl>
-            <InputLabel htmlFor="sort-order">Sort Order</InputLabel>
+            <InputLabel htmlFor="sort-order">
+              <Translate id="charInventory.sortBy" />
+            </InputLabel>
             <Select
               value={this.state.sortOrder}
               onChange={e =>
@@ -61,25 +68,27 @@ export class CharacterList extends React.Component<
               }}
             >
               <MenuItem value={sortOrder.characterAscending}>
-                characterAscending
+                <Translate id="charInventory.characters" /> 🡡
               </MenuItem>
               <MenuItem value={sortOrder.characterDescending}>
-                characterDescending
+                <Translate id="charInventory.characters" /> 🡣
               </MenuItem>
               <MenuItem value={sortOrder.occurrencesAscending}>
-                occurrencesAscending
+                <Translate id="charInventory.occurrences" /> 🡡
               </MenuItem>
               <MenuItem value={sortOrder.occurrencesDescending}>
-                occurrencesDescending
+                <Translate id="charInventory.occurrences" /> 🡣
               </MenuItem>
-              <MenuItem value={sortOrder.status}>status</MenuItem>
+              <MenuItem value={sortOrder.status}>
+                <Translate id="charInventory.status" />
+              </MenuItem>
             </Select>
           </FormControl>
         </Grid>
         <React.Fragment>
           {/* The grid of character tiles */
 
-          this.props.allCharacters.map(character => (
+          orderedCharacters.map(character => (
             <CharacterCard
               char={character.character}
               key={character.character}

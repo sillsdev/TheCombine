@@ -23,7 +23,9 @@ export default function CharacterStatusControl(
         <Button onClick={() => props.accept(props.character)}>
           <Translate id="charInventory.characterSet.accept" />
         </Button>
-        <Button onClick={() => props.unset(props.character)}>Undecided</Button>
+        <Button onClick={() => props.unset(props.character)}>
+          <Translate id="charInventory.characterSet.undecided" />
+        </Button>
         <Button onClick={() => props.reject(props.character)}>
           <Translate id="charInventory.characterSet.reject" />
         </Button>
