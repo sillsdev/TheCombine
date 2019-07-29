@@ -12,14 +12,12 @@ namespace Backend.Tests
     {
         private IUserService _userService;
         private UserController _controller;
-        private IPermissionService _permissionService;
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
             _userService = new UserServiceMock();
-            _controller = new UserController(_userService, _permissionService);
+            _controller = new UserController(_userService);
         }
 
         User RandomUser()

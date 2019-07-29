@@ -1,7 +1,6 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -18,12 +17,10 @@ namespace BackendFramework.Services
     public class UserService : IUserService
     {
         private readonly IUserContext _userDatabase;
-        private readonly IUserRoleService _userRole;
 
-        public UserService(IUserContext collectionSettings, IUserRoleService userRole)
+        public UserService(IUserContext collectionSettings)
         {
             _userDatabase = collectionSettings;
-            _userRole = userRole;
         }
 
         /// <summary> Confirms login credentials are valid </summary>
@@ -62,34 +59,19 @@ namespace BackendFramework.Services
                 }
             }
 
-            // authentication successful so generate jwt token
+            //authentication successful, so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
             var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
             var key = Encoding.ASCII.GetBytes(secretKey);
-
-            //fetch the projects Id and the roles for each Id
-            List<ProjectPermissions> projectPermissionMap = new List<ProjectPermissions>();
-
-            foreach (var projectRolePair in foundUser.ProjectRoles)
-            {
-                //convert each userRole ID to its respective role && add to the mapping
-                var permissions = _userRole.GetUserRole(projectRolePair.Key, projectRolePair.Value).Result.Permissions;
-                var validEntry = new ProjectPermissions(projectRolePair.Key, permissions);
-                projectPermissionMap.Add(validEntry);
-            }
-
-            var claimString = projectPermissionMap.ToJson();
-
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("UserId", foundUser.Id),
-                    new Claim("UserRoleInfo", claimString)
+                new Claim(ClaimTypes.Name, foundUser.Id)
                 }),
 
                 //This line here will cause serious debugging problems if not kept in mind
-                Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
+                    Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -215,15 +197,5 @@ namespace BackendFramework.Services
                 return ResultOfUpdate.NoChange;
             }
         }
-    }
-    public class ProjectPermissions
-    {
-        public ProjectPermissions(string projectId, List<int> permissions)
-        {
-            ProjectId = projectId;
-            Permissions = permissions;
-        }
-        public string ProjectId { get; set; }
-        public List<int> Permissions { get; set; }
     }
 }

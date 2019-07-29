@@ -6,7 +6,7 @@
     "predatabase": "tsc setupMongo.ts && node setupMongo.js",
     "database": "mongod --dbpath=./mongo_database",
     "frontend": "react-scripts start",
-    "start": "npm install && npm run database && npm-run-all --parallel frontend api",
+    "start": "npm install && npm-run-all --parallel frontend database api",
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
     "test": "dotnet test Backend.Tests/Backend.Tests.csproj && react-scripts test",
