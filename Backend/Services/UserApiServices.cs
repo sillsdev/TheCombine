@@ -206,6 +206,8 @@ namespace BackendFramework.Services
                 .Set(x => x.UILang, user.UILang)
                 .Set(x => x.Token, user.Token);
 
+            //do not update admin privilages
+
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)
