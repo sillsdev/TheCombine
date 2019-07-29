@@ -125,19 +125,7 @@ namespace BackendFramework.Controllers
             var user = await _userService.GetUser(currentUserId);
             user = await _userService.MakeJWT(user);
 
-            return new OkObjectResult(new CreateProjectReturnType(project, user));
-        }
-
-        public class CreateProjectReturnType
-        {
-            public readonly Project Project;
-            public readonly User User;
-
-            public CreateProjectReturnType(Project project, User user)
-            {
-                Project = project;
-                User = user;
-            }
+            return new OkObjectResult(new CreateProjectObject(project, user));
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>
@@ -248,5 +236,17 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(userRole);
         }
 
+    }
+
+    public class CreateProjectObject
+    {
+        public readonly Project Project;
+        public readonly User __UpdatedUser;
+
+        public CreateProjectObject(Project project, User user)
+        {
+            Project = project;
+            __UpdatedUser = user;
+        }
     }
 }

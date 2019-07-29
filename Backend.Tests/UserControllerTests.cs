@@ -77,8 +77,8 @@ namespace Backend.Tests
 
             _ = _controller.Put(modUser.Id, modUser);
 
-            Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(1));
             List<User> users = _userService.GetAllUsers().Result;
+            Assert.That(users, Has.Count.EqualTo(1));
             Assert.Contains(modUser, users);
         }
 
