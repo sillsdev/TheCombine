@@ -63,7 +63,6 @@ namespace BackendFramework.Services
 
             // authentication successful so generate jwt token
             return await MakeJWT(foundUser);
-            
         }
 
         public async Task<User> MakeJWT(User user)

@@ -97,7 +97,7 @@ namespace Backend.Tests
         public void TestCreateProject()
         {
             Project project = RandomProject();
-            string id = ((_controller.Post(project).Result as ObjectResult).Value as CreateProjectReturnType).Project.Id;
+            string id = ((_controller.Post(project).Result as ObjectResult).Value as CreateProjectObject).Project.Id;
             project.Id = id;
             Assert.Contains(project, _projectService.GetAllProjects().Result);
         }

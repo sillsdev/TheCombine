@@ -57,19 +57,16 @@ namespace BackendFramework.Services
             List<ProjectPermissions> permissionsObj = GetProjectPermissions(request);
 
             //retrieve project Id from http request
-            int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + 9;
+            int begOfId = 9;
+            int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + begOfId;
             if (indexOfProjId + projIdLength > request.Request.Path.ToString().Length)
             {
                 //check if admin
                 var userId = GetUserId(request);
                 var user = _userService.GetUser(userId).Result;
 
-                if (user.IsAdmin)
-                {
-                    return true;
-                }
-                //there is no project Id, this is a database level query and must have database admin level permissions
-                return false;
+                //if there is no project Id and they are not admin, do not allow changes
+                return user.IsAdmin;
             }
             else
             {
