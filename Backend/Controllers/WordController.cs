@@ -184,7 +184,7 @@ namespace BackendFramework.Controllers
             {
                 return new OkResult();
             }
-            return new NotFoundResult();
+            return new NotFoundObjectResult("The project was found, but the word was not deleted");
         }
 
         /// <summary> Merge children <see cref="Word"/>s with the parent </summary>
