@@ -1,25 +1,19 @@
-import CharacterInventory from "./CharacterInventoryComponent";
+import CharacterListComponent from "./CharacterListComponent";
 import { connect } from "react-redux";
-import { StoreState } from "../../types";
 import { ThunkDispatch } from "redux-thunk";
 import {
   CharacterInventoryAction,
-  addToValidCharacters,
   setValidCharacters,
   setRejectedCharacters,
-  setSelectedCharacter,
-  uploadInventory,
-  fetchWords
-} from "./CharacterInventoryActions";
-import { getTranslate } from "react-localize-redux";
+  setSelectedCharacter
+} from "../../CharacterInventoryActions";
+import { StoreState } from "../../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
     validCharacters: state.characterInventoryState.validCharacters,
     rejectedCharacters: state.characterInventoryState.rejectedCharacters,
-    currentProject: state.currentProject,
-    translate: getTranslate(state.localize),
-    selectedCharacter: state.characterInventoryState.selectedCharacter
+    allWords: state.characterInventoryState.allWords
   };
 }
 
@@ -27,9 +21,6 @@ function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>
 ) {
   return {
-    addToValidCharacters: (chars: string[]) => {
-      dispatch(addToValidCharacters(chars));
-    },
     setValidCharacters: (inventory: string[]) => {
       dispatch(setValidCharacters(inventory));
     },
@@ -38,12 +29,6 @@ function mapDispatchToProps(
     },
     setSelectedCharacter: (character: string) => {
       dispatch(setSelectedCharacter(character));
-    },
-    uploadInventory: () => {
-      dispatch(uploadInventory());
-    },
-    fetchWords: () => {
-      dispatch(fetchWords());
     }
   };
 }
@@ -51,4 +36,4 @@ function mapDispatchToProps(
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CharacterInventory);
+)(CharacterListComponent);
