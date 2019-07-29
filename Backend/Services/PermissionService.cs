@@ -9,10 +9,12 @@ namespace BackendFramework.Services
 {
     public class PermissionService : IPermissionService
     {
+        private readonly IPermissionService _permissionService;
         private readonly IUserService _userService;
 
-        public PermissionService(IUserService userService)
-        { 
+        public PermissionService(IPermissionService permissionService, IUserService userService)
+        {
+            _permissionService = permissionService;
             _userService = userService;
         }
 
@@ -87,7 +89,7 @@ namespace BackendFramework.Services
 
         public bool IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
-            var userId = GetUserId(request);
+            var userId = _permissionService.GetUserId(request);
             var userObj = _userService.GetUser(userId).Result;
 
             if (userObj.WorkedProjects[projectId] != userEditId)
