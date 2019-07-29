@@ -21,6 +21,7 @@ import history from "../../history";
 import CharacterEntry from "./components/CharacterEntry";
 import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
 import CharacterDetail from "./components/CharacterDetail";
+import { listChar } from "./CharacterInventoryReducer";
 
 export interface CharacterInventoryProps {
   addToValidCharacters: (chars: string[]) => void;
@@ -33,6 +34,11 @@ export interface CharacterInventoryProps {
   rejectedCharacters: string[];
   currentProject: Project;
   selectedCharacter: string;
+  getAllCharacters: (
+    validCharacters: string[],
+    rejectedCharacters: string[]
+  ) => Promise<void>;
+  allCharacters: listChar[];
 }
 
 export const SAVE: string = "pushGoals";
@@ -58,6 +64,12 @@ export class CharacterInventory extends React.Component<
 
   componentDidMount() {
     this.props.fetchWords();
+    this.props
+      .getAllCharacters(
+        this.props.validCharacters,
+        this.props.rejectedCharacters
+      )
+      .then(() => console.log(this.props.allCharacters));
     this.props.setSelectedCharacter("");
   }
 
@@ -83,7 +95,8 @@ export class CharacterInventory extends React.Component<
               alignItems="center"
             >
               <CharacterSetHeader />
-              <CharacterEntry />
+              {/* This component doesn't work with the new structure of the character inventory */}
+              {/* <CharacterEntry /> */}
               <CharacterList />
             </Grid>
           </Grid>

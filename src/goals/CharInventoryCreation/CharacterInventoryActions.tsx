@@ -16,6 +16,7 @@ import * as backend from "../../backend";
 import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
 import { User } from "../../types/user";
+import { listChar, characterStatus } from "./CharacterInventoryReducer";
 
 export const SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS";
 export type SET_VALID_CHARACTERS = typeof SET_VALID_CHARACTERS;
@@ -35,6 +36,9 @@ export type SET_ALL_WORDS = typeof SET_ALL_WORDS;
 export const SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER";
 export type SET_SELECTED_CHARACTER = typeof SET_SELECTED_CHARACTER;
 
+export const SET_CHARACTER_SET = "SET_CHARACTER_SET";
+export type SET_CHARACTER_SET = typeof SET_CHARACTER_SET;
+
 export interface CharacterInventoryData {}
 
 type CharacterInventoryType =
@@ -43,13 +47,15 @@ type CharacterInventoryType =
   | ADD_TO_VALID_CHARACTERS
   | ADD_TO_REJECTED_CHARACTERS
   | SET_ALL_WORDS
-  | SET_SELECTED_CHARACTER;
+  | SET_SELECTED_CHARACTER
+  | SET_CHARACTER_SET;
 
 //action types
 
 export interface CharacterInventoryAction {
   type: CharacterInventoryType;
   payload: string[];
+  characterSet?: listChar[];
 }
 
 /**
@@ -124,6 +130,63 @@ export function setSelectedCharacter(
     type: SET_SELECTED_CHARACTER,
     payload: [character]
   };
+}
+
+export function setCharacterSet(
+  characterSet: listChar[]
+): CharacterInventoryAction {
+  return {
+    type: SET_CHARACTER_SET,
+    payload: [],
+    characterSet
+  };
+}
+
+export function getAllCharacters(
+  validCharacters: string[],
+  rejectedCharacters: string[]
+) {
+  return async (dispatch: Dispatch<CharacterInventoryAction>) => {
+    let words = await backend.getFrontierWords();
+    let characters: string[] = [];
+    words.forEach(word => characters.push(...word.vernacular));
+    characters = [...new Set(characters)];
+
+    let characterSet: listChar[] = [];
+    characters.forEach(letter => {
+      characterSet.push({
+        character: letter,
+        occurences: countCharacterOccurences(
+          letter,
+          words.map(word => word.vernacular)
+        ),
+        status: getCharacterStatus(letter, validCharacters, rejectedCharacters)
+      });
+    });
+    dispatch(setCharacterSet(characterSet));
+  };
+}
+
+function countCharacterOccurences(char: string, words: string[]) {
+  let count = 0;
+  for (let word of words) {
+    for (let letter of word) {
+      if (letter === char) {
+        count++;
+      }
+    }
+  }
+  return count;
+}
+
+function getCharacterStatus(
+  char: string,
+  validChars: string[],
+  rejectedChars: string[]
+): characterStatus {
+  if (validChars.includes(char)) return "accepted";
+  if (rejectedChars.includes(char)) return "rejected";
+  return "undecided";
 }
 
 async function saveChanges(

@@ -5,7 +5,8 @@ import {
   ADD_TO_VALID_CHARACTERS,
   SET_ALL_WORDS,
   SET_SELECTED_CHARACTER,
-  ADD_TO_REJECTED_CHARACTERS
+  ADD_TO_REJECTED_CHARACTERS,
+  SET_CHARACTER_SET
 } from "./CharacterInventoryActions";
 import { StoreActions, StoreAction } from "../../rootActions";
 
@@ -14,14 +15,26 @@ export interface CharacterInventoryState {
   rejectedCharacters: string[];
   allWords: string[];
   selectedCharacter: string;
+  characterSet: listChar[];
 }
 
 export const defaultState: CharacterInventoryState = {
   validCharacters: [],
   rejectedCharacters: [],
   allWords: [],
-  selectedCharacter: ""
+  selectedCharacter: "",
+  characterSet: []
 };
+
+// DON'T LET THIS COMMENT STAY IN THE PULL REQUEST
+// Don't love this name, if you think of a better one let me know
+export interface listChar {
+  character: string;
+  occurences: number;
+  status: characterStatus;
+}
+
+export type characterStatus = "accepted" | "undecided" | "rejected";
 
 export const characterInventoryReducer = (
   state: CharacterInventoryState = defaultState,
@@ -62,6 +75,10 @@ export const characterInventoryReducer = (
       return { ...state, allWords: action.payload };
     case SET_SELECTED_CHARACTER:
       return { ...state, selectedCharacter: action.payload[0] };
+    case SET_CHARACTER_SET:
+      return action.characterSet
+        ? { ...state, characterSet: action.characterSet }
+        : state;
     case StoreActions.RESET:
       return defaultState;
     default:
