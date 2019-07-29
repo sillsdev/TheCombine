@@ -160,6 +160,7 @@ namespace BackendFramework.Services
             entry.LexicalForm.MergeIn(MultiText.Create(lexMultiText));
         }
 
+        /// <summary> Adds each sense of a word to be written out to lift </summary>
         private void AddSense(LexEntry entry, Word wordEntry)
         {
             for (int i = 0; i < wordEntry.Senses.Count; i++)
@@ -167,7 +168,6 @@ namespace BackendFramework.Services
                 Dictionary<string, string> dict = new Dictionary<string, string>();
                 foreach (Gloss gloss in wordEntry.Senses[i].Glosses)
                 {
-                    //add gloss
                     dict.Add(gloss.Language, gloss.Def);
                 }
 
@@ -175,40 +175,34 @@ namespace BackendFramework.Services
                 lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
                 entry.Senses.Add(lexSense);
 
-
                 foreach (var semdom in wordEntry.Senses[i].SemanticDomains)
                 {
-                    //add semantic domain
                     var orc = new OptionRefCollection();
                     orc.Add(semdom.Id + " " + semdom.Name);
 
                     entry.Senses[i].Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
-
                 }
             }
         }
 
+        /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
         private void AddAudio(LexEntry entry, Word wordEntry, string path)
         {
-            try
+            if (wordEntry.Audio != "")
             {
-                if (wordEntry.Audio != "")
-                {
-                    LexPhonetic lexPhonetic = new LexPhonetic();
-                    string dest = Path.Combine(path, wordEntry.Audio);
+                LexPhonetic lexPhonetic = new LexPhonetic();
+                string dest = Path.Combine(path, wordEntry.Audio);
 
-                    Helper.Utilities util = new Helper.Utilities();
-                    string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), wordEntry.Audio);
+                Helper.Utilities util = new Helper.Utilities();
+                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), wordEntry.Audio);
+                if (File.Exists(src))
+                {
                     File.Copy(src, dest, true);
 
                     LiftMultiText proMultiText = new LiftMultiText { { "href", dest } };
                     lexPhonetic.MergeIn(MultiText.Create(proMultiText));
                     entry.Pronunciations.Add(lexPhonetic);
                 }
-            }
-            catch (FileNotFoundException)
-            {
-                //do nothing, the audio file isnt there so it won't be added
             }
         }
 
@@ -250,6 +244,7 @@ namespace BackendFramework.Services
             }
         }
 
+        /// <summary> The meat of lift import is done here. This reads in all necessary attributes of a word and adds it to the database. Called by  </summary>
         public async void FinishEntry(LiftEntry entry)
         {
             Word newWord = new Word();
