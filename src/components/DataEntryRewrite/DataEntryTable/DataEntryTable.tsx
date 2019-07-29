@@ -43,101 +43,9 @@ export class DataEntryTableRewrite extends React.Component<
 
   spellChecker: SpellChecker;
 
-  // Backend
-  componentDidMount() {
-    let words: Word[] = [
-      {
-        id: "1",
-        vernacular: "abcdefg",
-        senses: [
-          {
-            glosses: [
-              {
-                language: "en",
-                def: "Wait"
-              }
-            ],
-            semanticDomains: [
-              {
-                name: "Universe",
-                id: "1"
-              }
-            ],
-            accessibility: State.active
-          }
-        ],
-        audio: "",
-        created: "",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: State.active,
-        otherField: "",
-        plural: ""
-      },
-      {
-        id: "100",
-        vernacular: "word",
-        senses: [
-          {
-            glosses: [
-              {
-                language: "en",
-                def: "What"
-              }
-            ],
-            semanticDomains: [
-              {
-                name: "Universe",
-                id: "1"
-              }
-            ],
-            accessibility: State.active
-          }
-        ],
-        audio: "",
-        created: "",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: State.active,
-        otherField: "",
-        plural: ""
-      },
-      {
-        id: "200",
-        vernacular: "frontend",
-        senses: [
-          {
-            glosses: [
-              {
-                language: "en",
-                def: "javascript"
-              }
-            ],
-            semanticDomains: [
-              {
-                name: "Universe",
-                id: "1"
-              }
-            ],
-            accessibility: State.active
-          }
-        ],
-        audio: "",
-        created: "",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: State.active,
-        otherField: "",
-        plural: ""
-      }
-    ];
-    this.setState({ words: words });
+  async componentDidMount() {
+    let allWords = await this.getWordsFromBackend();
+    this.setState({ words: allWords });
   }
 
   /** Go back to the tree view */
@@ -147,29 +55,32 @@ export class DataEntryTableRewrite extends React.Component<
   }
 
   async addNewWord(wordToAdd: Word) {
-    await this.addWordToBackend(wordToAdd);
+    let updatedWord = await this.addWordToBackend(wordToAdd);
     let words: Word[] = await this.getWordsFromBackend();
     this.setState({ words: words });
   }
 
   // Backend
   async addWordToBackend(word: Word): Promise<Word> {
-    let words = [...this.state.words];
-    let wordId: number = parseInt(words[words.length - 1].id) + 1;
-    word.id = wordId.toString();
-    words.push(word);
-    this.setState({ words: words });
-    return word;
+    let updatedWord = await Backend.createWord(word);
+    return updatedWord;
   }
 
   // Backend
   async getWordsFromBackend(): Promise<Word[]> {
-    return [...this.state.words];
+    let words = await Backend.getFrontierWords();
+    words = this.filterWords(words);
+    return words;
+  }
+
+  /** Filter out words that do not have correct accessibility */
+  filterWords(words: Word[]): Word[] {
+    return words;
   }
 
   /** Update the word in the backend and the frontend. Implement. */
+  // Remove console logs
   async updateWord(wordToUpdate: Word) {
-    console.log(wordToUpdate);
     let existingWord = this.state.words.find(
       word => word.id === wordToUpdate.id
     );
@@ -179,23 +90,17 @@ export class DataEntryTableRewrite extends React.Component<
     if (index === -1) throw new Error(wordToUpdate + " does not exist");
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
+    console.log(updatedWord);
     let updatedWords = await this.getWordsFromBackend();
     this.setState({ words: updatedWords });
-    // this.updateWordInFrontend(updatedWord, index);
   }
 
   // Backend
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
-    let words: Word[] = [...this.state.words];
-    let wordIndex = words.findIndex(word => word.id === wordToUpdate.id);
-
-    let returnedWord: Word = { ...wordToUpdate };
-    let updatedId: number = parseInt(wordToUpdate.id) + 1;
-    returnedWord.id = updatedId.toString();
-
-    words.splice(wordIndex, 1, returnedWord);
+    let updatedWord = await Backend.updateWord(wordToUpdate);
+    let words = await this.getWordsFromBackend();
     this.setState({ words: words });
-    return returnedWord;
+    return updatedWord;
   }
 
   async removeWord(id: string) {
@@ -205,10 +110,12 @@ export class DataEntryTableRewrite extends React.Component<
   }
 
   // Backend
+  // TODO: pass in a word instead of an id
   /** Remove a word from the database. */
   async removeWordFromBackend(id: string) {
-    let updatedWords: Word[] = this.state.words.filter(word => word.id !== id);
-    this.setState({ words: updatedWords });
+    let word = this.state.words.filter(word => word.id === id);
+    console.log(word);
+    Backend.deleteWord(word[0]);
   }
 
   render() {
