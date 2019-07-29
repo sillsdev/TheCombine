@@ -15,7 +15,6 @@ const backendServer = axios.create({
 backendServer.interceptors.response.use(
   resp => {
     if (resp.data.__UpdatedUser){
-      debugger;
       localStorage.setItem("user", JSON.stringify(resp.data.__UpdatedUser));
     }
     delete resp.data.__updatedUser;
