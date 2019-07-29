@@ -7,14 +7,19 @@ import { Goal, GoalType } from "../types/goals";
 import { UserEdit } from "../types/userEdit";
 import history from "../history";
 import SemanticDomain from "../components/TreeView/SemanticDomain";
-import { UserProject } from "../types/userProject";
 
 const backendServer = axios.create({
   baseURL: "https://localhost:5001/v1"
 });
 
 backendServer.interceptors.response.use(
-  resp => resp,
+  resp => {
+    if (resp.data.__updatedUser){
+      localStorage.setItem("user", resp.data.__updatedUser);
+    }
+    delete resp.data.__updatedUser;
+    return resp;
+  },
   err => {
     if (err.response && err.response.status === 401) {
       history.push("/login");
@@ -144,7 +149,7 @@ export async function updateUser(user: User): Promise<User> {
   return { ...user, id: resp.data };
 }
 
-export async function createProject(project: Project): Promise<UserProject> {
+export async function createProject(project: Project): Promise<Project> {
   let resp = await backendServer.post(`projects/`, project, {
     headers: authHeader()
   });

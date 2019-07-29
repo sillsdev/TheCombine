@@ -3,7 +3,6 @@ import * as backend from "../../../backend";
 import { Project, defaultProject } from "../../../types/project";
 import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
 import history from "../../../history";
-import { User } from "../../../types/user";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;
@@ -41,58 +40,29 @@ export function asyncCreateProject(name: string, languageData?: File) {
     project.name = name;
     backend
       .createProject(project)
-      .then(userProject => {
-        let updatedUserString: string = JSON.stringify(userProject.user);
-        let createdProject = userProject.project;
+      .then(createdProject => {
         dispatch(setCurrentProject(createdProject));
-
-        let userString = localStorage.getItem("user");
-        let yeOldeToken: string = "";
-        if (userString != null) {
-          let user: User = JSON.parse(userString);
-          yeOldeToken = user.token;
-        }
-
-        localStorage.setItem("user", updatedUserString);
-
-        let newUserString = localStorage.getItem("user");
-        let newToekn: string = "";
-        if (newUserString != null) {
-          let user: User = JSON.parse(newUserString);
-          newToekn = user.token;
-        }
-
-        if (yeOldeToken != "" && newToekn != "") {
-          if (yeOldeToken === newToekn) {
-            console.log("Same token");
-          } else {
-            console.log("Different token");
-          }
-        } else {
-          console.log("some tokens empty");
-        }
 
         // Upload words
         if (languageData) {
-          backend.uploadLift(createdProject, languageData).then(res => {
-            console.log("Uploaded lift");
-            backend
-              .getProject(createdProject.id)
-              .then(res => {
+          backend
+            .uploadLift(createdProject, languageData)
+            .then(res => {
+              backend.getProject(createdProject.id).then(res=>{
                 dispatch(setCurrentProject(res));
                 dispatch(success(name));
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {
                   history.push("/goals");
                 }, 1000);
-              })
-              .catch(err => {
+
+              }).catch(err => {
                 dispatch(failure(name, err.response.statusText));
-              })
-              .catch(err => {
-                dispatch(failure(name, err.response.statusText));
-              });
-          });
+            })
+            .catch(err => {
+              dispatch(failure(name, err.response.statusText));
+            });
+          })
         } else {
           dispatch(success(name));
           setTimeout(() => {
