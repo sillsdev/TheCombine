@@ -244,6 +244,8 @@ namespace BackendFramework.Controllers
     {
         public User __UpdatedUser;
 
+        public ProjectWithUser() { }
+
         public ProjectWithUser(Project baseObj)
         {
             Id = baseObj.Id;
