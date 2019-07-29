@@ -160,10 +160,7 @@ export function setCharacterSet(
   };
 }
 
-export function getAllCharacters(
-  validCharacters: string[],
-  rejectedCharacters: string[]
-) {
+export function getAllCharacters() {
   return async (
     dispatch: Dispatch<CharacterInventoryAction>,
     getState: () => StoreState
@@ -178,7 +175,7 @@ export function getAllCharacters(
     characters.forEach(letter => {
       characterSet.push({
         character: letter,
-        occurences: countCharacterOccurences(
+        occurrences: countCharacterOccurences(
           letter,
           words.map(word => word.vernacular)
         ),

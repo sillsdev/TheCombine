@@ -7,12 +7,6 @@ import {
 } from "../../../CharacterInventoryActions";
 import { ThunkDispatch } from "redux-thunk";
 
-function mapStateToProps(state: StoreState) {
-  return {
-    validCharacters: state.characterInventoryState.validCharacters
-  };
-}
-
 function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>
 ) {
@@ -30,6 +24,6 @@ function mapDispatchToProps(
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(CharacterStatusControl);

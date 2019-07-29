@@ -24,20 +24,14 @@ import CharacterDetail from "./components/CharacterDetail";
 import { listChar } from "./CharacterInventoryReducer";
 
 export interface CharacterInventoryProps {
-  addToValidCharacters: (chars: string[]) => void;
   setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
   setSelectedCharacter: (character: string) => void;
   uploadInventory: () => void;
   fetchWords: () => void;
-  validCharacters: string[];
-  rejectedCharacters: string[];
   currentProject: Project;
   selectedCharacter: string;
-  getAllCharacters: (
-    validCharacters: string[],
-    rejectedCharacters: string[]
-  ) => Promise<void>;
+  getAllCharacters: () => Promise<void>;
   allCharacters: listChar[];
 }
 
@@ -64,10 +58,7 @@ export class CharacterInventory extends React.Component<
       this.props.currentProject.rejectedCharacters
     );
     this.props
-      .getAllCharacters(
-        this.props.validCharacters,
-        this.props.rejectedCharacters
-      )
+      .getAllCharacters()
       .then(() => console.log(this.props.allCharacters));
     this.props.setSelectedCharacter("");
   }

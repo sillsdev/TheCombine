@@ -31,7 +31,7 @@ export const defaultState: CharacterInventoryState = {
 // Don't love this name, if you think of a better one let me know
 export interface listChar {
   character: string;
-  occurences: number;
+  occurrences: number;
   status: characterStatus;
 }
 
