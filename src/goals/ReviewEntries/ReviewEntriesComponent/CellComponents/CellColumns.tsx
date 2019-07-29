@@ -140,24 +140,47 @@ export default [
     customSort: (a: any, b: any, type: "row" | "group"): number => {
       let count = 0;
       let compare: number = 0;
+
+      let domainsA: SemanticDomain[];
+      let domainsB: SemanticDomain[];
+
+      let codeA: number | undefined;
+      let codeB: number | undefined;
+      // -: a < b
+      // +: a > b
       while (
+        compare === 0 &&
         count < a.senses.length &&
-        count < b.senses.length &&
-        compare === 0
+        count < b.senses.length
       ) {
+        domainsA = a.senses[count].domains;
+        domainsB = b.senses[count].domains;
+
+        // If one has no domains, it is the lower rank
+        if (domainsA.length === 0) return 1;
+        else if (domainsB.length === 0) return -1;
+
+        // Check the domains
         for (
-          let i = 0;
-          i < a.senses[count].domains.length &&
-          i < b.senses[count].domains.length &&
-          compare === 0;
-          i++
+          let d = 0;
+          compare === 0 && d < domainsA.length && d < domainsB.length;
+          d++
         ) {
-          compare =
-            a.senses[count].domains[i].id.codePointAt(i) -
-            b.senses[count].domains[i].id.codePointAt(i);
+          for (
+            let c = 0;
+            compare === 0 &&
+            c < domainsA[d].id.length &&
+            c < domainsB[d].id.length;
+            c++
+          ) {
+            codeA = domainsA[d].id.codePointAt(c);
+            codeB = domainsB[d].id.codePointAt(c);
+            if (codeA && codeB) compare = codeA - codeB;
+          }
         }
         count++;
       }
+
       return compare;
     }
   },
