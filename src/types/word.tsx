@@ -2,7 +2,8 @@ export enum State {
   active,
   deleted,
   sense,
-  duplicate
+  duplicate,
+  separate
 }
 
 export interface Gloss {

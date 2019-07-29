@@ -1,12 +1,12 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Services
 {
+    /// <summary> Atomic database functions for <see cref="Project"/>s </summary>
     public class ProjectService : IProjectService
     {
         private readonly IProjectContext _projectDatabase;
@@ -16,23 +16,25 @@ namespace BackendFramework.Services
             _projectDatabase = collectionSettings;
         }
 
+        /// <summary> Finds all <see cref="Project"/>s </summary>
         public async Task<List<Project>> GetAllProjects()
         {
             return await _projectDatabase.Projects.Find(_ => true).ToListAsync();
         }
 
+        /// <summary> Removes all <see cref="Project"/>s </summary>
+        /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllProjects()
         {
             var deleted = await _projectDatabase.Projects.DeleteManyAsync(_ => true);
-
             if (deleted.DeletedCount != 0)
             {
                 return true;
             }
-
             return false;
         }
 
+        /// <summary> Finds <see cref="Project"/> with specified projectId </summary>
         public async Task<Project> GetProject(string projectId)
         {
             var filterDef = new FilterDefinitionBuilder<Project>();
@@ -43,18 +45,24 @@ namespace BackendFramework.Services
             return projectList.FirstOrDefault();
         }
 
+        /// <summary> Adds a <see cref="Project"/> </summary>
+        /// <returns> The project created </returns>
         public async Task<Project> Create(Project project)
         {
             await _projectDatabase.Projects.InsertOneAsync(project);
             return project;
         }
 
+        /// <summary> Removes <see cref="Project"/> with specified projectId </summary>
+        /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId)
         {
             var deleted = await _projectDatabase.Projects.DeleteOneAsync(x => x.Id == projectId);
             return deleted.DeletedCount > 0;
         }
 
+        /// <summary> Updates <see cref="Project"/> with specified projectId </summary>
+        /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string projectId, Project project)
         {
             FilterDefinition<Project> filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);

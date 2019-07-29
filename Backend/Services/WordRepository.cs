@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Services
 {
+    /// <summary> Atomic database functions for <see cref="Word"/>s </summary>
     public class WordRepository : IWordRepository
     {
         private readonly IWordContext _wordDatabase;
@@ -15,11 +16,13 @@ namespace BackendFramework.Services
             _wordDatabase = collectionSettings;
         }
 
+        /// <summary>  Finds all <see cref="Word"/>s with specified projectId </summary>
         public async Task<List<Word>> GetAllWords(string projectId)
         {
             return await _wordDatabase.Words.Find(w => w.ProjectId == projectId).ToListAsync();
         }
 
+        /// <summary> Finds <see cref="Word"/> with specified wordId and projectId </summary>
         public async Task<Word> GetWord(string projectId, string wordId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
@@ -30,6 +33,8 @@ namespace BackendFramework.Services
             return wordList.FirstOrDefault();
         }
 
+        /// <summary> Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified <see cref="Project"/> </summary>
+        /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllWords(string projectId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
@@ -44,6 +49,8 @@ namespace BackendFramework.Services
             return false;
         }
 
+        /// <summary> Adds a <see cref="Word"/> to the WordsCollection and Frontier </summary>
+        /// <returns> The word created </returns>
         public async Task<Word> Create(Word word)
         {
             await _wordDatabase.Words.InsertOneAsync(word);
@@ -51,29 +58,36 @@ namespace BackendFramework.Services
             return word;
         }
 
+        /// <summary> Adds a <see cref="Word"/> only to the WordsCollection </summary>
+        /// <returns> The word created </returns>
         public async Task<Word> Add(Word word)
         {
             await _wordDatabase.Words.InsertOneAsync(word);
             return word;
         }
 
+        /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<List<Word>> GetFrontier(string projectId)
         {
             return await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).ToListAsync();
         }
 
+        /// <summary> Adds a <see cref="Word"/> only to the Frontier </summary>
+        /// <returns> The word created </returns>
         public async Task<Word> AddFrontier(Word word)
         {
             await _wordDatabase.Frontier.InsertOneAsync(word);
             return word;
         }
 
+        /// <summary> Removes <see cref="Word"/> from the Frontier with specified wordId and projectId </summary>
+        /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteFrontier(string projectId, string wordId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
 
-            var deleted = await _wordDatabase.Frontier.DeleteManyAsync(filter);
+            var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
     }

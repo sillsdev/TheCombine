@@ -70,7 +70,6 @@ namespace BackendFramework.Controllers
             {
                 return new BadRequestObjectResult("A file has already been uploaded");
             }
-            
 
             //extract the zip to new directory
             var extractDir = Path.Combine(zipDest, "ExtractedLocation");
