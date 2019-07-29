@@ -34,7 +34,7 @@ export interface CreateProjectAction {
 export function asyncCreateProject(name: string, languageData?: File) {
   return async (dispatch: Dispatch<CreateProjectAction | ProjectAction>) => {
     dispatch(inProgress(name));
-
+    debugger;
     // Create project
     let project: Project = { ...defaultProject };
     project.name = name;
