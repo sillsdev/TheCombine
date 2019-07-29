@@ -34,7 +34,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -55,7 +55,7 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -78,7 +78,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{userEditId}")]
         public async Task<IActionResult> Get(string projectId, string userEditId)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -104,7 +104,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("3", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("3", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -121,7 +121,7 @@ namespace BackendFramework.Controllers
         [HttpPost("{userEditId}")]
         public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody]Edit newEdit)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -166,7 +166,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{userEditId}")]
         public async Task<IActionResult> Put(string projectId, string userEditId, [FromBody] UserEditObjectWrapper userEdit)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -207,7 +207,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userEditId}")]
         public async Task<IActionResult> Delete(string projectId, string userEditId)
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }

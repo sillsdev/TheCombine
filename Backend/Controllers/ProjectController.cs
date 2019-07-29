@@ -34,7 +34,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -47,7 +47,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/users")]
         public async Task<IActionResult> GetAllUsers(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("5", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -66,7 +66,7 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -82,7 +82,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}")]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("5", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -146,7 +146,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
-            if (!_permissionService.IsAuthenticated("5", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -171,7 +171,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody]List<string> acceptedChars, [FromBody]List<string> rejectedChars)
         {
-            if (!_permissionService.IsAuthenticated("3", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("3", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -189,7 +189,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{projectId}")]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -206,7 +206,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/semanticdomains")]
         public async Task<IActionResult> GetSemDoms(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -226,7 +226,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}/users/{userId}")]
         public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]List<int> permissions)
         {
-            if (!_permissionService.IsAuthenticated("5", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
             {
                 return new UnauthorizedResult();
             }

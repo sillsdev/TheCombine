@@ -40,7 +40,7 @@ namespace BackendFramework.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.IsAuthenticated("4", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -159,7 +159,7 @@ namespace BackendFramework.Controllers
         [HttpGet("download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("4", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
             {
                 return new UnauthorizedResult();
             }

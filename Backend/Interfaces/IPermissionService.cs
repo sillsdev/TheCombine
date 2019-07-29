@@ -5,7 +5,7 @@ namespace BackendFramework.Interfaces
 {
     public interface IPermissionService
     {
-        bool IsAuthenticated(string value, HttpContext request);
+        bool IsProjectAuthenticated(string value, HttpContext request);
         string GetUserId(HttpContext request);
         bool IsViolationEdit(HttpContext request, string userEditId, string ProjectId);
     }
