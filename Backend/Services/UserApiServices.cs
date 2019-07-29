@@ -92,7 +92,7 @@ namespace BackendFramework.Services
                     new Claim("UserId", user.Id),
                     new Claim("UserRoleInfo", claimString)
                 }),
-                
+
                 Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
