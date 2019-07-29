@@ -117,10 +117,10 @@ namespace BackendFramework.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> Put(string userId, [FromBody] User user)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
+            //if (!_permissionService.IsAuthenticated("1", HttpContext))
+            //{
+            //    return new UnauthorizedResult();
+            //}
 
             var result = await _userService.Update(userId, user);
             if (result == ResultOfUpdate.NotFound)

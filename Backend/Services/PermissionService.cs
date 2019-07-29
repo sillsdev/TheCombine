@@ -57,7 +57,7 @@ namespace BackendFramework.Services
             List<ProjectPermissions> permissionsObj = GetProjectPermissions(request);
 
             //retrieve project Id from http request
-            int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/");
+            int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + 9;
             if (indexOfProjId + projIdLength > request.Request.Path.ToString().Length)
             {
                 //there is no project Id, this is a database level query and must have database admin level permissions
