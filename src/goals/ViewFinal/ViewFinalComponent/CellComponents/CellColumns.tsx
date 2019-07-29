@@ -1,16 +1,14 @@
 import React from "react";
-import { TextField, Chip } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { TextField } from "@material-ui/core";
 
 import { ViewFinalWord, ViewFinalSense } from "../ViewFinalComponent";
 import { SemanticDomain } from "../../../../types/word";
-import AlignedList from "./AlignedList";
 import DomainCell from "./";
 import DeleteCell from "./DeleteCell";
-import { uuid } from "../../../../utilities";
 import { Translate } from "react-localize-redux";
+import SenseCell from "./SenseCell";
 
-interface FieldParameterStandard {
+export interface FieldParameterStandard {
   rowData: ViewFinalWord;
   value: any;
   onRowDataChange?: (...args: any) => any;
@@ -44,69 +42,7 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
   );
 }
 
-// Create the sense edit fields
-function senseField(props: FieldParameterStandard, editable: boolean) {
-  return (
-    <AlignedList
-      contents={props.rowData.senses.map((sense, index) => (
-        <Translate>
-          {({ translate }) => (
-            <TextField
-              key={`glosses${props.rowData.id}`}
-              value={props.value[index].glosses}
-              error={sense.glosses.length === 0}
-              placeholder={translate("viewFinal.nogloss").toString()}
-              disabled={sense.deleted}
-              InputProps={{
-                readOnly: !editable,
-                disableUnderline: !editable
-              }}
-              // Handles editing sense's local glosses
-              onChange={event =>
-                props.onRowDataChange &&
-                props.onRowDataChange({
-                  ...props.rowData,
-                  senses: [
-                    ...props.rowData.senses.slice(0, index),
-                    { ...sense, glosses: event.target.value },
-                    ...props.rowData.senses.slice(
-                      index + 1,
-                      props.rowData.senses.length
-                    )
-                  ]
-                })
-              }
-            />
-          )}
-        </Translate>
-      ))}
-      bottomCell={
-        editable ? (
-          <Chip
-            label={<Add />}
-            // Handles adding a new local sense
-            onClick={() =>
-              props.onRowDataChange &&
-              props.onRowDataChange({
-                ...props.rowData,
-                senses: [
-                  ...props.rowData.senses,
-                  {
-                    deleted: false,
-                    glosses: "",
-                    domains: [],
-                    senseId: uuid()
-                  }
-                ]
-              })
-            }
-          />
-        ) : null
-      }
-    />
-  );
-}
-
+// Define columns
 export default [
   // Vernacular column
   {
@@ -120,9 +56,17 @@ export default [
     title: "Glosses",
     field: "senses",
     disableClick: true,
-    render: (rowData: ViewFinalWord) =>
-      senseField({ rowData, value: rowData.senses }, false),
-    editComponent: (props: any) => senseField(props, true),
+    render: (rowData: ViewFinalWord) => (
+      <SenseCell value={rowData.senses} rowData={rowData} editable={false} />
+    ),
+    editComponent: (props: any) => (
+      <SenseCell
+        value={props.value}
+        rowData={props.rowData}
+        onRowDataChange={props.onRowDataChange}
+        editable={true}
+      />
+    ),
     customFilterAndSearch: (term: string, rowData: ViewFinalWord): boolean => {
       let regex: RegExp = new RegExp(term);
       for (let sense of rowData.senses)
@@ -233,3 +177,5 @@ export default [
     }
   }
 ];
+
+// export default columns;

@@ -6,7 +6,7 @@ export interface ViewFinalState {
   language: string;
 }
 
-const defaultState: ViewFinalState = {
+export const defaultState: ViewFinalState = {
   words: [],
   language: "en"
 };
@@ -31,7 +31,8 @@ export const viewFinalReducer = (
           if (word.id === action.id) {
             return {
               ...action.newWord,
-              id: action.id,
+              id: action.newId,
+              vernacular: action.newWord.vernacular,
               senses: action.newWord.senses.map(sense => ({
                 ...sense,
                 senseId: sense.senseId + OLD_SENSE

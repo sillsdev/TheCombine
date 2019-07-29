@@ -16,6 +16,7 @@ export default class App extends React.Component {
       <div className="App">
         <Switch>
           <PrivateRoute exact path="/" component={ProjectScreen} />
+          <PrivateRoute path="/goals" component={GoalRoute} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route component={PageNotFound} />

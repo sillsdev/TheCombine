@@ -29,6 +29,7 @@ interface ViewFinalProps {
 
 interface ViewFinalState {
   editingField: boolean;
+  errorMsg: string | undefined;
 }
 
 export interface ViewFinalWord {
@@ -57,7 +58,8 @@ export class ViewFinalComponent extends React.Component<
     super(props);
 
     this.state = {
-      editingField: false
+      editingField: false,
+      errorMsg: undefined
     };
   }
 
@@ -138,6 +140,7 @@ export class ViewFinalComponent extends React.Component<
     return (
       <Translate>
         {({ translate }) => (
+          //<React.Fragment>Test</React.Fragment>
           <MaterialTable
             icons={tableIcons}
             title={<Translate id={"viewFinal.title"} />}
@@ -170,7 +173,8 @@ export class ViewFinalComponent extends React.Component<
               pageSizeOptions: this.removeDuplicates([
                 Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
                 Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
-                Math.min(this.props.words.length, ROWS_PER_PAGE[2])
+                Math.min(this.props.words.length, ROWS_PER_PAGE[2]),
+                this.props.words.length
               ])
             }}
           />

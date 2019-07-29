@@ -1,7 +1,6 @@
 import React from "react";
 import { Chip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import AlignedList, { SPACER } from "./AlignedList";
 import { ViewFinalWord } from "../ViewFinalComponent";
@@ -11,23 +10,7 @@ interface DeleteCellProps {
   delete: (deleteIndex: string) => void;
 }
 
-interface DeleteCellState {
-  deleteSenseIndex: string;
-}
-
-class DeleteCell extends React.Component<
-  DeleteCellProps & LocalizeContextProps,
-  DeleteCellState
-> {
-  constructor(props: DeleteCellProps & LocalizeContextProps) {
-    super(props);
-    this.state = { deleteSenseIndex: "" };
-  }
-
-  close() {
-    this.setState({ deleteSenseIndex: "" });
-  }
-
+class DeleteCell extends React.Component<DeleteCellProps> {
   render() {
     return (
       <AlignedList
@@ -48,4 +31,4 @@ class DeleteCell extends React.Component<
   }
 }
 
-export default withLocalize(DeleteCell);
+export default DeleteCell;
