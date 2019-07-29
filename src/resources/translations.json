@@ -135,6 +135,9 @@
       "rejectedCharacters": ["Rejected Characters", "Caracteres Rechazados..."],
       "accepted": ["Accepted", "Aceptado"],
       "rejected": ["Rejected", "Rechazado"],
+      "undecided": ["Undecided", "Indeciso"],
+      "accept": ["Accept", "Aceptar"],
+      "reject": ["Reject", "Rechazar"],
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
         "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar."
@@ -142,7 +145,12 @@
       "required": [
         "Add characters by entering them in this box",
         "Agrega caracteres ingresándolos en este cuadro"
-      ]
+      ],
+      "advanced": ["Advanced", "Avanzado"],
+      "occurrences": ["occurrences", "ocurrencias"],
+      "find": ["Find", "Encontrar"],
+      "replace": ["Replace with", "Reemplazar con"],
+      "apply": ["apply", "aplicar"]
     },
     "sampleWords": {
       "title": ["Sample Words", "Palabras de muestra"],

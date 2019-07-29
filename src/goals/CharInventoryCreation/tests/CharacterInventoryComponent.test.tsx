@@ -7,6 +7,8 @@ import CharacterInventoryComponent, {
 import ReactDOM from "react-dom";
 import { Project } from "../../../types/project";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
+import { Provider } from "react-redux";
+import { store } from "../../../store";
 
 // Constants
 const SET_INV = jest.fn();
@@ -29,15 +31,20 @@ jest.mock("@material-ui/core", () => {
 beforeAll(() => {
   renderer.act(() => {
     charMaster = renderer.create(
-      <CharacterInventoryComponent
-        validCharacters={["a"]}
-        currentProject={{ validCharacters: ["a"] } as Project}
-        setValidCharacters={SET_INV}
-        uploadInventory={UPLOAD_INV}
-        addToValidCharacters={jest.fn()}
-        setRejectedCharacters={jest.fn()}
-        rejectedCharacters={[]}
-      />
+      <Provider store={store}>
+        <CharacterInventoryComponent
+          validCharacters={["a"]}
+          currentProject={{ validCharacters: ["a"] } as Project}
+          setValidCharacters={SET_INV}
+          uploadInventory={UPLOAD_INV}
+          addToValidCharacters={jest.fn()}
+          setRejectedCharacters={jest.fn()}
+          setSelectedCharacter={jest.fn()}
+          fetchWords={jest.fn()}
+          selectedCharacter={""}
+          rejectedCharacters={[]}
+        />
+      </Provider>
     );
   });
   charHandle = charMaster.root.findByType(CharacterInventory).instance;
@@ -52,15 +59,20 @@ describe("Testing Character Inventory Component", () => {
   it("Renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
-      <CharacterInventoryComponent
-        validCharacters={["a"]}
-        currentProject={{ validCharacters: ["a"] } as Project}
-        setValidCharacters={SET_INV}
-        uploadInventory={UPLOAD_INV}
-        addToValidCharacters={jest.fn()}
-        setRejectedCharacters={jest.fn()}
-        rejectedCharacters={[]}
-      />,
+      <Provider store={store}>
+        <CharacterInventoryComponent
+          validCharacters={["a"]}
+          currentProject={{ validCharacters: ["a"] } as Project}
+          setValidCharacters={SET_INV}
+          uploadInventory={UPLOAD_INV}
+          addToValidCharacters={jest.fn()}
+          setRejectedCharacters={jest.fn()}
+          setSelectedCharacter={jest.fn()}
+          fetchWords={jest.fn()}
+          selectedCharacter={""}
+          rejectedCharacters={[]}
+        />
+      </Provider>,
       div
     );
     expect(ReactDOM.unmountComponentAtNode(div)).toBeTruthy();

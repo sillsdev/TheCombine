@@ -2,18 +2,25 @@ import {
   SET_VALID_CHARACTERS,
   CharacterInventoryAction,
   SET_REJECTED_CHARACTERS,
-  ADD_TO_VALID_CHARACTERS
+  ADD_TO_VALID_CHARACTERS,
+  SET_ALL_WORDS,
+  SET_SELECTED_CHARACTER,
+  ADD_TO_REJECTED_CHARACTERS
 } from "./CharacterInventoryActions";
 import { StoreActions, StoreAction } from "../../rootActions";
 
 export interface CharacterInventoryState {
   validCharacters: string[];
   rejectedCharacters: string[];
+  allWords: string[];
+  selectedCharacter: string;
 }
 
 export const defaultState: CharacterInventoryState = {
   validCharacters: [],
-  rejectedCharacters: []
+  rejectedCharacters: [],
+  allWords: [],
+  selectedCharacter: ""
 };
 
 export const characterInventoryReducer = (
@@ -30,21 +37,31 @@ export const characterInventoryReducer = (
       );
       return { ...state, validCharacters: validCharacters, rejectedCharacters };
     case SET_REJECTED_CHARACTERS:
-      // Set prevents duplicate characters
       rejectedCharacters = [...new Set(action.payload)];
       validCharacters = state.validCharacters.filter(
         char => !rejectedCharacters.includes(char)
       );
       return { ...state, validCharacters: validCharacters, rejectedCharacters };
     case ADD_TO_VALID_CHARACTERS:
-      // Set prevents duplicate characters
       validCharacters = [
         ...new Set(state.validCharacters.concat(action.payload))
       ];
       rejectedCharacters = state.rejectedCharacters.filter(
         char => !validCharacters.includes(char)
       );
-      return { ...state, validCharacters: validCharacters, rejectedCharacters };
+      return { ...state, validCharacters, rejectedCharacters };
+    case ADD_TO_REJECTED_CHARACTERS:
+      rejectedCharacters = [
+        ...new Set(state.rejectedCharacters.concat(action.payload))
+      ];
+      validCharacters = state.validCharacters.filter(
+        char => !rejectedCharacters.includes(char)
+      );
+      return { ...state, validCharacters, rejectedCharacters };
+    case SET_ALL_WORDS:
+      return { ...state, allWords: action.payload };
+    case SET_SELECTED_CHARACTER:
+      return { ...state, selectedCharacter: action.payload[0] };
     case StoreActions.RESET:
       return defaultState;
     default:

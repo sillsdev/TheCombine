@@ -26,12 +26,24 @@ export type SET_REJECTED_CHARACTERS = typeof SET_REJECTED_CHARACTERS;
 export const ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS";
 export type ADD_TO_VALID_CHARACTERS = typeof ADD_TO_VALID_CHARACTERS;
 
+export const ADD_TO_REJECTED_CHARACTERS = "ADD_TO_REJECTED_CHARACTERS";
+export type ADD_TO_REJECTED_CHARACTERS = typeof ADD_TO_REJECTED_CHARACTERS;
+
+export const SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS";
+export type SET_ALL_WORDS = typeof SET_ALL_WORDS;
+
+export const SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER";
+export type SET_SELECTED_CHARACTER = typeof SET_SELECTED_CHARACTER;
+
 export interface CharacterInventoryData {}
 
 type CharacterInventoryType =
   | SET_VALID_CHARACTERS
   | SET_REJECTED_CHARACTERS
-  | ADD_TO_VALID_CHARACTERS;
+  | ADD_TO_VALID_CHARACTERS
+  | ADD_TO_REJECTED_CHARACTERS
+  | SET_ALL_WORDS
+  | SET_SELECTED_CHARACTER;
 
 //action types
 
@@ -66,21 +78,51 @@ export function addToValidCharacters(
   };
 }
 
-export function setValidCharacters(
-  payload: string[]
+export function addToRejectedCharacters(
+  chars: string[]
 ): CharacterInventoryAction {
   return {
+    type: ADD_TO_REJECTED_CHARACTERS,
+    payload: chars
+  };
+}
+
+export function setValidCharacters(chars: string[]): CharacterInventoryAction {
+  return {
     type: SET_VALID_CHARACTERS,
-    payload
+    payload: chars
   };
 }
 
 export function setRejectedCharacters(
-  payload: string[]
+  chars: string[]
 ): CharacterInventoryAction {
   return {
     type: SET_REJECTED_CHARACTERS,
-    payload
+    payload: chars
+  };
+}
+
+export function setAllWords(words: string[]): CharacterInventoryAction {
+  return {
+    type: SET_ALL_WORDS,
+    payload: words
+  };
+}
+
+export function fetchWords() {
+  return async (dispatch: Dispatch<CharacterInventoryAction>) => {
+    let words = await backend.getFrontierWords();
+    dispatch(setAllWords(words.map(word => word.vernacular)));
+  };
+}
+
+export function setSelectedCharacter(
+  character: string
+): CharacterInventoryAction {
+  return {
+    type: SET_SELECTED_CHARACTER,
+    payload: [character]
   };
 }
 
