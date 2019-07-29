@@ -30,7 +30,7 @@ namespace BackendFramework.Controllers
         [HttpPost("{userId}/upload/avatar")]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            if (_permissionService.GetUserId(HttpContext) != userId)
             {
                 return new UnauthorizedResult();
             }

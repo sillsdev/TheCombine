@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
         [HttpPost("{wordId}/upload/audio")]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             {
                 return new UnauthorizedResult();
             }

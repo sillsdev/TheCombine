@@ -51,7 +51,7 @@ namespace BackendFramework.Services
             return permissionsObj;
         }
 
-        public bool IsAuthenticated(string value, HttpContext request)
+        public bool IsProjectAuthenticated(string value, HttpContext request)
         {
             //retrieve jwt token from http request and convert to object
             List<ProjectPermissions> permissionsObj = GetProjectPermissions(request);
@@ -60,6 +60,14 @@ namespace BackendFramework.Services
             int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + 9;
             if (indexOfProjId + projIdLength > request.Request.Path.ToString().Length)
             {
+                //check if admin
+                var userId = GetUserId(request);
+                var user = _userService.GetUser(userId).Result;
+
+                if (user.IsAdmin)
+                {
+                    return true;
+                }
                 //there is no project Id, this is a database level query and must have database admin level permissions
                 return false;
             }
@@ -80,7 +88,6 @@ namespace BackendFramework.Services
                         }
                     }
                 }
-
                 return false;
             }
         }

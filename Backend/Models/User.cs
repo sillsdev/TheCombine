@@ -52,6 +52,10 @@ namespace BackendFramework.ValueModels
         [BsonElement("token")]
         public string Token { get; set; }
 
+        /// <summary> Is set to true of the user Is a Database admin, allows accesss to high level abilities </summary>
+        [BsonElement("isAdmin")]
+        public bool IsAdmin { get; set; }
+
         public User()
         {
             Id = "";

@@ -13,7 +13,7 @@ namespace Backend.Tests
             return userId;
         }
 
-        public bool IsAuthenticated(string value, HttpContext request)
+        public bool IsProjectAuthenticated(string value, HttpContext request)
         {
             return true;
         }
