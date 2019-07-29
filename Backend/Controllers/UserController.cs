@@ -81,7 +81,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> Get(string userId)
         {
-            if (_permissionService.GetUserId(HttpContext) != userId)
+            if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
             {
                 return new UnauthorizedResult();
             }
@@ -117,7 +117,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> Put(string userId, [FromBody] User user)
         {
-            if (_permissionService.GetUserId(HttpContext) != userId)
+            if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
             {
                 return new UnauthorizedResult();
             }

@@ -7,10 +7,9 @@ namespace Backend.Tests
 {
     class PermissionServiceMock : IPermissionService
     {
-        public string GetUserId(HttpContext request)
+        public bool IsUserIdAuthenticated(HttpContext request, string userId)
         {
-            var userId = request.Request.Headers["UserId"].ToString();
-            return userId;
+            return true;
         }
 
         public bool IsProjectAuthenticated(string value, HttpContext request)
@@ -21,6 +20,12 @@ namespace Backend.Tests
         public bool IsViolationEdit(HttpContext request, string userEditId, string ProjectId)
         {
             return false;
+        }
+
+        public string GetUserId(HttpContext request)
+        {
+            var userId = request.Request.Headers["UserId"].ToString();
+            return userId;
         }
     }
 }

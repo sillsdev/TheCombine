@@ -33,13 +33,13 @@ namespace BackendFramework.Services
             return jsonToken;
         }
 
-        public string GetUserId(HttpContext request)
+        public bool IsUserIdAuthenticated(HttpContext request, string userId)
         {
             var jsonToken = GetJWT(request);
 
-            string userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
+            string foundUserId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
 
-            return userId;
+            return userId == foundUserId;
         } 
 
         public List<ProjectPermissions> GetProjectPermissions(HttpContext request)
@@ -103,6 +103,12 @@ namespace BackendFramework.Services
             }
 
             return false;
+        }
+
+        public string GetUserId(HttpContext request)
+        {
+            var userId = request.Request.Headers["UserId"].ToString();
+            return userId;
         }
     }
 }
