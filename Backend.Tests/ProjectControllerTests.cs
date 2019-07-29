@@ -2,7 +2,6 @@
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using BackendFramework.ValueModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -14,32 +13,13 @@ namespace Backend.Tests
         private IProjectService _projectService;
         private ISemDomParser _semDomParser;
         private ProjectController _controller;
-        private UserRoleServiceMock _userRoleService;
-        private IUserService _userService;
-        private IPermissionService _permissionService;
-        private User _JwtAuthenticatedUser;
 
         [SetUp]
         public void Setup()
         {
-            _permissionService = new PermissionServiceMock();
             _projectService = new ProjectServiceMock();
             _semDomParser = new SemDomParser(_projectService);
-            _userRoleService = new UserRoleServiceMock();
-            _userService = new UserServiceMock();
-            _controller = new ProjectController(_projectService, _semDomParser, _userRoleService, _userService, _permissionService);
-
-            //mock the Http Context because this isnt an actual call
-            //avatar controller
-            _controller.ControllerContext = new ControllerContext();
-            _controller.ControllerContext.HttpContext = new DefaultHttpContext();
-            _JwtAuthenticatedUser = new User();
-            _JwtAuthenticatedUser.Username = "user";
-            _JwtAuthenticatedUser.Password = "pass";
-            _userService.Create(_JwtAuthenticatedUser);
-            _JwtAuthenticatedUser = _userService.Authenticate(_JwtAuthenticatedUser.Username, _JwtAuthenticatedUser.Password).Result;
-
-            _controller.ControllerContext.HttpContext.Request.Headers["UserId"] = _JwtAuthenticatedUser.Id;
+            _controller = new ProjectController(_projectService, _semDomParser);
         }
 
         Project RandomProject()

@@ -15,12 +15,10 @@ namespace BackendFramework.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-        private readonly IPermissionService _permissionService;
 
-        public UserController(IUserService userService, IPermissionService permissionService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _permissionService = permissionService;
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
@@ -28,11 +26,6 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             return new ObjectResult(await _userService.GetAllUsers());
         }
 
@@ -42,11 +35,6 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
 #if DEBUG
             return new ObjectResult(await _userService.DeleteAllUsers());
 #else
@@ -81,11 +69,6 @@ namespace BackendFramework.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> Get(string userId)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             var user = await _userService.GetUser(userId);
             if (user == null)
             {
@@ -117,11 +100,6 @@ namespace BackendFramework.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> Put(string userId, [FromBody] User user)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             var result = await _userService.Update(userId, user);
             if (result == ResultOfUpdate.NotFound)
             {
@@ -142,11 +120,6 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userId}")]
         public async Task<IActionResult> Delete(string userId)
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
 #if DEBUG
             if (await _userService.Delete(userId))
             {
