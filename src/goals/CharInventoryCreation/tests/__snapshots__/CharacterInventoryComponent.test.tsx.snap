@@ -46,7 +46,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
               onTouchEnd={[Function]}
               onTouchStart={[Function]}
               role="presentation"
-              title="Missing translationId: charInventory.characterSet.help for language: \${ languageCode }"
+              title={null}
               viewBox="0 0 24 24"
             >
               <path
