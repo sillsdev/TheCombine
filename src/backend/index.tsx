@@ -17,7 +17,7 @@ backendServer.interceptors.response.use(
     if (resp.data.__UpdatedUser){
       localStorage.setItem("user", JSON.stringify(resp.data.__UpdatedUser));
     }
-    delete resp.data.__updatedUser;
+    delete resp.data.__UpdatedUser;
     return resp;
   },
   err => {
