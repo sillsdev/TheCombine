@@ -16,12 +16,10 @@ namespace BackendFramework.Controllers
     public class AvatarController : Controller
     {
         private readonly IUserService _userService;
-        private readonly IPermissionService _permissionService;
 
-        public AvatarController(IUserService service, IPermissionService permissionService)
+        public AvatarController(IUserService service)
         {
             _userService = service;
-            _permissionService = permissionService;
         }
 
         /// <summary> Adds an avatar image to a <see cref="User"/> and saves locally to ~/.CombineFiles/{ProjectId}/Avatars </summary>
@@ -30,11 +28,6 @@ namespace BackendFramework.Controllers
         [HttpPost("{userId}/upload/avatar")]
         public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             var file = fileUpload.File;
 
             //ensure file is not empty

@@ -15,13 +15,11 @@ namespace BackendFramework.Controllers
     {
         private readonly IUserRoleService _userRoleService;
         private readonly IProjectService _projectService;
-        private readonly IPermissionService _permissionService;
 
-        public UserRoleController(IUserRoleService userRoleService, IProjectService projectService, IPermissionService permissionService)
+        public UserRoleController(IUserRoleService userRoleService, IProjectService projectService)
         {
             _userRoleService = userRoleService;
             _projectService = projectService;
-            _permissionService = permissionService;
         }
 
         /// <summary> Returns all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
@@ -29,11 +27,6 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
@@ -50,11 +43,6 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
 #if DEBUG
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
@@ -74,11 +62,6 @@ namespace BackendFramework.Controllers
         [HttpGet("{userRoleId}")]
         public async Task<IActionResult> Get(string projectId, string userRoleId)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
@@ -101,11 +84,6 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId, [FromBody]UserRole userRole)
         {
-            if (!_permissionService.IsAuthenticated("5", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
@@ -127,11 +105,6 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userRoleId}")]
         public async Task<IActionResult> Delete(string projectId, string userRoleId)
         {
-            if (!_permissionService.IsAuthenticated("6", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
@@ -152,11 +125,6 @@ namespace BackendFramework.Controllers
         [HttpPut("{userRoleId}")]
         public async Task<IActionResult> Put(string projectId, string userRoleId, [FromBody] UserRole userRole)
         {
-            if (!_permissionService.IsAuthenticated("5", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
@@ -169,7 +137,7 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundObjectResult(userRoleId);
             }
-            else if (result == ResultOfUpdate.Updated)
+            else if(result == ResultOfUpdate.Updated)
             {
                 return new OkObjectResult(userRoleId);
             }

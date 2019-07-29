@@ -97,9 +97,6 @@ namespace BackendFramework
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ISemDomParser, SemDomParser>();
-
-            // Permission types
-            services.AddTransient<IPermissionService, PermissionService>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline. </summary>

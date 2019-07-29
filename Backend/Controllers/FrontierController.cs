@@ -14,12 +14,10 @@ namespace BackendFramework.Controllers
     public class FrontierController : Controller
     {
         private readonly IWordRepository _repo;
-        private readonly IPermissionService _permissionService;
 
-        public FrontierController(IWordRepository repo, IPermissionService permissionService)
+        public FrontierController(IWordRepository repo)
         {
             _repo = repo;
-            _permissionService = permissionService;
         }
 
         /// <summary> Returns all words in a project's frontier </summary>
@@ -27,11 +25,6 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFrontier(string projectId)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             return new ObjectResult(await _repo.GetFrontier(projectId));
         }
 
@@ -41,10 +34,6 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> PostFrontier(string projectId, [FromBody]Word word)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
 #if DEBUG
             word.ProjectId = projectId;
             await _repo.AddFrontier(word);
@@ -59,11 +48,6 @@ namespace BackendFramework.Controllers
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> DeleteFrontier(string projectId, string wordId)
         {
-            if (!_permissionService.IsAuthenticated("1", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
 #if DEBUG
             if (await _repo.DeleteFrontier(projectId, wordId))
             {
