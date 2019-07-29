@@ -6,7 +6,8 @@ import {
   SET_ALL_WORDS,
   SET_SELECTED_CHARACTER,
   ADD_TO_REJECTED_CHARACTERS,
-  SET_CHARACTER_SET
+  SET_CHARACTER_SET,
+  SET_CHARACTER_STATUS
 } from "./CharacterInventoryActions";
 import { StoreActions, StoreAction } from "../../rootActions";
 
@@ -79,6 +80,19 @@ export const characterInventoryReducer = (
       return action.characterSet
         ? { ...state, characterSet: action.characterSet }
         : state;
+    case SET_CHARACTER_STATUS:
+      let characterSet = state.characterSet.map(character => {
+        if (
+          action.character &&
+          action.status &&
+          character.character === action.character
+        ) {
+          character.status = action.status;
+        }
+        return character;
+      });
+      return { ...state, characterSet };
+
     case StoreActions.RESET:
       return defaultState;
     default:

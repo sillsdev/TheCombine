@@ -7,11 +7,12 @@ import Typography from "@material-ui/core/Typography";
 import theme from "../../../../types/theme";
 import CharacterStatusText from "./CharacterStatusText";
 import { Translate } from "react-localize-redux";
+import { characterStatus } from "../../CharacterInventoryReducer";
 
 export interface CharacterCardProps {
   char: string;
   count: number;
-  status: "accepted" | "rejected";
+  status: characterStatus;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 

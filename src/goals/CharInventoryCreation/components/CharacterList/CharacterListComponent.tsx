@@ -6,6 +6,7 @@ import {
 } from "react-localize-redux";
 import { Grid, Typography } from "@material-ui/core";
 import CharacterCard from "./CharacterCard";
+import { listChar } from "../../CharacterInventoryReducer";
 
 export interface CharacterListProps {
   setValidCharacters: (inventory: string[]) => void;
@@ -14,6 +15,7 @@ export interface CharacterListProps {
   rejectedCharacters: string[];
   setSelectedCharacter: (character: string) => void;
   allWords: string[];
+  allCharacters: listChar[];
 }
 
 interface CharacterListState {
@@ -43,7 +45,20 @@ export class CharacterList extends React.Component<
           </Grid>
         ) : (
           <React.Fragment>
-            {/* The grid of character tiles */
+            {/* The grid of character tiles */ this.props.allCharacters.map(
+              character => (
+                <CharacterCard
+                  char={character.character}
+                  key={character.character}
+                  count={character.occurences}
+                  status={character.status}
+                  onClick={() =>
+                    this.props.setSelectedCharacter(character.character)
+                  }
+                />
+              )
+            )}
+            {/* 
             this.props.validCharacters.map((char, index) => (
               <CharacterCard
                 char={char}
@@ -61,7 +76,7 @@ export class CharacterList extends React.Component<
                 status={"rejected"}
                 onClick={() => this.props.setSelectedCharacter(char)}
               />
-            ))}
+            ))} */}
           </React.Fragment>
         )}
       </React.Fragment>

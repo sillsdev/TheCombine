@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import { StoreState } from "../../../../../types";
 import {
   CharacterInventoryAction,
-  addToValidCharacters,
-  addToRejectedCharacters
+  setCharacterStatus
 } from "../../../CharacterInventoryActions";
 import { ThunkDispatch } from "redux-thunk";
 
@@ -18,11 +17,14 @@ function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CharacterInventoryAction>
 ) {
   return {
-    accept: (chars: string) => {
-      dispatch(addToValidCharacters([chars]));
+    accept: (character: string) => {
+      dispatch(setCharacterStatus(character, "accepted"));
     },
-    reject: (chars: string) => {
-      dispatch(addToRejectedCharacters([chars]));
+    reject: (character: string) => {
+      dispatch(setCharacterStatus(character, "rejected"));
+    },
+    unset: (character: string) => {
+      dispatch(setCharacterStatus(character, "undecided"));
     }
   };
 }

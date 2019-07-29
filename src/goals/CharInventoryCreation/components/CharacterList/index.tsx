@@ -13,7 +13,8 @@ function mapStateToProps(state: StoreState) {
   return {
     validCharacters: state.characterInventoryState.validCharacters,
     rejectedCharacters: state.characterInventoryState.rejectedCharacters,
-    allWords: state.characterInventoryState.allWords
+    allWords: state.characterInventoryState.allWords,
+    allCharacters: state.characterInventoryState.characterSet
   };
 }
 

@@ -18,6 +18,9 @@ import { Project } from "../../types/project";
 import { User } from "../../types/user";
 import { listChar, characterStatus } from "./CharacterInventoryReducer";
 
+export const SET_CHARACTER_STATUS = "SET_CHARACTER_STATUS";
+export type SET_CHARACTER_STATUS = typeof SET_CHARACTER_STATUS;
+
 export const SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS";
 export type SET_VALID_CHARACTERS = typeof SET_VALID_CHARACTERS;
 
@@ -42,6 +45,7 @@ export type SET_CHARACTER_SET = typeof SET_CHARACTER_SET;
 export interface CharacterInventoryData {}
 
 type CharacterInventoryType =
+  | SET_CHARACTER_STATUS
   | SET_VALID_CHARACTERS
   | SET_REJECTED_CHARACTERS
   | ADD_TO_VALID_CHARACTERS
@@ -56,6 +60,8 @@ export interface CharacterInventoryAction {
   type: CharacterInventoryType;
   payload: string[];
   characterSet?: listChar[];
+  character?: string;
+  status?: characterStatus;
 }
 
 /**
@@ -72,6 +78,18 @@ export function uploadInventory() {
     let history: Goal[] = state.goalsState.historyState.history;
 
     await saveChanges(updatedGoal, history, project, dispatch);
+  };
+}
+
+export function setCharacterStatus(
+  character: string,
+  status: characterStatus
+): CharacterInventoryAction {
+  return {
+    type: SET_CHARACTER_STATUS,
+    character,
+    status,
+    payload: []
   };
 }
 
@@ -146,7 +164,11 @@ export function getAllCharacters(
   validCharacters: string[],
   rejectedCharacters: string[]
 ) {
-  return async (dispatch: Dispatch<CharacterInventoryAction>) => {
+  return async (
+    dispatch: Dispatch<CharacterInventoryAction>,
+    getState: () => StoreState
+  ) => {
+    let state = getState();
     let words = await backend.getFrontierWords();
     let characters: string[] = [];
     words.forEach(word => characters.push(...word.vernacular));
@@ -160,7 +182,11 @@ export function getAllCharacters(
           letter,
           words.map(word => word.vernacular)
         ),
-        status: getCharacterStatus(letter, validCharacters, rejectedCharacters)
+        status: getCharacterStatus(
+          letter,
+          state.currentProject.validCharacters,
+          state.currentProject.rejectedCharacters
+        )
       });
     });
     dispatch(setCharacterSet(characterSet));
@@ -228,8 +254,12 @@ async function saveChangesToProject(
 
 function updateCurrentProject(state: StoreState): Project {
   let project = state.currentProject;
-  project.validCharacters = state.characterInventoryState.validCharacters;
-  project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
+  project.validCharacters = state.characterInventoryState.characterSet
+    .filter(character => character.status === "accepted")
+    .map(character => character.character);
+  project.rejectedCharacters = state.characterInventoryState.characterSet
+    .filter(character => character.status === "rejected")
+    .map(character => character.character);
   return project;
 }
 

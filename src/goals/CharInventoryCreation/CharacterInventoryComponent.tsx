@@ -54,16 +54,15 @@ export class CharacterInventory extends React.Component<
 > {
   constructor(props: CharacterInventoryProps & LocalizeContextProps) {
     super(props);
-    // Load inventory from server
-    this.props.setValidCharacters(this.props.currentProject.validCharacters);
-    this.props.setRejectedCharacters(
-      this.props.currentProject.rejectedCharacters
-    );
     this.state = { cancelDialogOpen: false };
   }
 
   componentDidMount() {
     this.props.fetchWords();
+    this.props.setValidCharacters(this.props.currentProject.validCharacters);
+    this.props.setRejectedCharacters(
+      this.props.currentProject.rejectedCharacters
+    );
     this.props
       .getAllCharacters(
         this.props.validCharacters,
@@ -103,12 +102,13 @@ export class CharacterInventory extends React.Component<
 
           <Grid item sm={3} xs={12}>
             {this.props.selectedCharacter === "" ? (
-              <SampleWords
-                addToValidCharacters={this.props.addToValidCharacters}
-                allCharacters={this.props.validCharacters.concat(
-                  this.props.rejectedCharacters
-                )}
-              />
+              // <SampleWords
+              //   addToValidCharacters={this.props.addToValidCharacters}
+              //   allCharacters={this.props.validCharacters.concat(
+              //     this.props.rejectedCharacters
+              //   )}
+              // />
+              <React.Fragment />
             ) : (
               <CharacterDetail
                 character={this.props.selectedCharacter}
