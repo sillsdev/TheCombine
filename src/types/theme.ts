@@ -13,7 +13,10 @@ const error: string = red[600];
 const hover: string = blue[100];
 
 export const buttonSuccess = green[500]; // createProjectComponent and RegisterComponent
-export const greenHighlight = yellow[100]; // goals/CharInventoryCreation/components/SampleWords/WordTileComponent.tsx
+export const highlight = yellow[100]; // goals/CharInventoryCreation/components/SampleWords/WordTileComponent.tsx
+
+export const accepted = green[600];
+export const rejected = red[600];
 
 // Constants used in multiple themes
 const palette = {
