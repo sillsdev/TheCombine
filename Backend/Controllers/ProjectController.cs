@@ -247,8 +247,15 @@ namespace BackendFramework.Controllers
         public ProjectWithUser(Project baseObj)
         {
             Id = baseObj.Id;
-            this.Name = baseObj.Name;
-            this.PartsOfSpeech = baseObj.PartsOfSpeech;
+            Name = baseObj.Name;
+            PartsOfSpeech = baseObj.PartsOfSpeech;
+            RejectedCharacters = baseObj.RejectedCharacters;
+            SemanticDomains = baseObj.SemanticDomains;
+            VernacularWritingSystem = baseObj.VernacularWritingSystem;
+            WordFields = baseObj.WordFields;
+            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
+            CustomFields = baseObj.CustomFields;
+            ValidCharacters = baseObj.ValidCharacters;
         }
     }
 }
