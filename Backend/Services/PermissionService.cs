@@ -104,8 +104,9 @@ namespace BackendFramework.Services
 
         public string GetUserId(HttpContext request)
         {
-            var userId = request.Request.Headers["UserId"].ToString();
-            return userId;
+            var jsonToken = GetJWT(request);
+            string permissionsObj = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
+            return permissionsObj;
         }
     }
 }
