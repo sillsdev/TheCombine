@@ -270,8 +270,8 @@ function goalNameToGoalTypeId(goalName: string): string {
     case "spellCheckGloss":
       goalType = GoalType.SpellcheckGloss;
       break;
-    case "viewFinal":
-      goalType = GoalType.ViewFind;
+    case "reviewEntries":
+      goalType = GoalType.ReviewEntries;
       break;
     case "handleFlags":
       goalType = GoalType.HandleFlags;

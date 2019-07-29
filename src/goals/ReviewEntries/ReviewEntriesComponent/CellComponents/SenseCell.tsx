@@ -6,7 +6,7 @@ import { Add } from "@material-ui/icons";
 import { FieldParameterStandard } from "./CellColumns";
 import AlignedList from "./AlignedList";
 import { uuid } from "../../../../utilities";
-import { ViewFinalSense } from "../ViewFinalComponent";
+import { ReviewEntriesSense } from "../ReviewEntriesComponent";
 
 interface Editable {
   editable: boolean;
@@ -20,7 +20,7 @@ export default class SenseCell extends React.Component<
   }
 
   private inputField(
-    sense: ViewFinalSense,
+    sense: ReviewEntriesSense,
     index: number,
     noGloss: string
   ): ReactNode {
@@ -88,7 +88,7 @@ export default class SenseCell extends React.Component<
               this.inputField(
                 sense,
                 index,
-                translate("viewFinal.nogloss").toString()
+                translate("reviewEntries.nogloss").toString()
               )
             }
           </Translate>
