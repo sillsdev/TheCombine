@@ -77,7 +77,7 @@ export class DataEntryTableRewrite extends React.Component<
         plural: ""
       },
       {
-        id: "24",
+        id: "100",
         vernacular: "word",
         senses: [
           {
@@ -107,7 +107,7 @@ export class DataEntryTableRewrite extends React.Component<
         plural: ""
       },
       {
-        id: "13",
+        id: "200",
         vernacular: "frontend",
         senses: [
           {
@@ -150,7 +150,6 @@ export class DataEntryTableRewrite extends React.Component<
     await this.addWordToBackend(wordToAdd);
     let words: Word[] = await this.getWordsFromBackend();
     this.setState({ words: words });
-    console.log(words);
   }
 
   // Backend
@@ -174,11 +173,10 @@ export class DataEntryTableRewrite extends React.Component<
     let existingWord = this.state.words.find(
       word => word.id === wordToUpdate.id
     );
-    console.log(existingWord);
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
     let index = this.state.words.indexOf(existingWord);
-    if (!index) throw new Error(wordToUpdate + " does not exist");
+    if (index === -1) throw new Error(wordToUpdate + " does not exist");
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
     let updatedWords = await this.getWordsFromBackend();
@@ -199,12 +197,6 @@ export class DataEntryTableRewrite extends React.Component<
     this.setState({ words: words });
     return returnedWord;
   }
-
-  // updateWordInFrontend(word: Word, index: number) {
-  //   let words: Word[] = [...this.state.words];
-  //   words.splice(index, 1, word);
-  //   this.setState({ words: words });
-  // }
 
   async removeWord(id: string) {
     await this.removeWordFromBackend(id);
