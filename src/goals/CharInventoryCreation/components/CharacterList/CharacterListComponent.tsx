@@ -18,8 +18,6 @@ export interface CharacterListProps {
 
 interface CharacterListState {
   hoverChar: string;
-  dragChar: string;
-  dropChar: string;
 }
 
 export class CharacterList extends React.Component<
@@ -29,39 +27,8 @@ export class CharacterList extends React.Component<
   constructor(props: CharacterListProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      hoverChar: "",
-      dragChar: "",
-      dropChar: ""
+      hoverChar: ""
     };
-  }
-
-  // reorders the character inventory by moving one char
-  moveChar() {
-    if (this.state.dragChar === this.state.dropChar) {
-      this.setState({
-        dragChar: "",
-        dropChar: ""
-      });
-      return;
-    }
-
-    let inv = [...this.props.validCharacters];
-    let dragIndex = inv.indexOf(this.state.dragChar);
-    let dropIndex = inv.indexOf(this.state.dropChar);
-
-    inv.splice(dragIndex, 1);
-
-    if (dragIndex >= dropIndex) {
-      inv.splice(dropIndex, 0, this.state.dragChar);
-    } else {
-      inv.splice(dropIndex - 1, 0, this.state.dragChar);
-    }
-
-    this.setState({
-      dragChar: "",
-      dropChar: ""
-    });
-    this.props.setValidCharacters(inv);
   }
 
   render() {

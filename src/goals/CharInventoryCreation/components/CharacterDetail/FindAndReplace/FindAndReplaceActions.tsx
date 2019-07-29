@@ -2,8 +2,6 @@ import { Dispatch } from "react";
 import * as backend from "../../../../../backend";
 import { fetchWords } from "../../../CharacterInventoryActions";
 
-export interface CharacterInventoryData {}
-
 export function findAndReplace(findValue: string, replaceValue: string) {
   return async (dispatch: Dispatch<any>) => {
     try {

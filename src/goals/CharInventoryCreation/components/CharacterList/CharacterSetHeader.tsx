@@ -15,16 +15,12 @@ export default function CharacterSetHeader(props: CharacterSetHeaderProps) {
         style={{ marginTop: theme.spacing(1) }}
       >
         <Translate id="charInventory.characterSet.title" />{" "}
-        <Translate>
-          {({ translate }) => (
-            <Tooltip
-              title={translate("charInventory.characterSet.help") as string}
-              placement="right"
-            >
-              <Help />
-            </Tooltip>
-          )}
-        </Translate>
+        <Tooltip
+          title={<Translate id="charInventory.characterSet.help" />}
+          placement="right"
+        >
+          <Help />
+        </Tooltip>
       </Typography>
     </Grid>
   );

@@ -38,11 +38,11 @@ function getWordsContainingChar(
 }
 
 function highlightCharacterInWord(character: string, word: string) {
-  return word.split("").map((letter: string, index: number) => {
-    if (letter === character) {
-      return (
+  let newWord: (JSX.Element | string)[] = [];
+  for (const letter of word) {
+    if (letter === character)
+      newWord.push(
         <span
-          key={index}
           style={{
             background: highlight,
             padding: "3px 0"
@@ -52,8 +52,7 @@ function highlightCharacterInWord(character: string, word: string) {
           {letter}
         </span>
       );
-    } else {
-      return letter;
-    }
-  });
+    else newWord.push(letter);
+  }
+  return newWord;
 }
