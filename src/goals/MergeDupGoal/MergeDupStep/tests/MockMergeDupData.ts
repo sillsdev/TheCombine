@@ -6,13 +6,12 @@ const wordMock = () => ({
   id: uuid(),
   vernacular: "",
   senses: [],
-  audio: "",
+  audio: [""],
   created: "",
   modified: "",
   history: [""],
   partOfSpeech: "",
   editedBy: [""],
-  accessability: State.active,
   otherField: "",
   plural: ""
 });

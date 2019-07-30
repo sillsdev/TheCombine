@@ -51,13 +51,12 @@ const oldFrontierWord: Word = {
       semanticDomains: [domain0]
     }
   ],
-  audio: "",
+  audio: [],
   created: "",
   modified: "",
   history: [],
   partOfSpeech: "",
   editedBy: [],
-  accessability: State.active,
   otherField: "",
   plural: ""
 };

@@ -75,9 +75,6 @@ export class ViewFinalComponent extends React.Component<
     let currentWord: ViewFinalWord;
 
     for (let word of frontier) {
-      // Bypass deleted words
-      if (word.accessability === State.deleted) continue;
-
       // Create a new currentword
       currentWord = {
         id: word.id,

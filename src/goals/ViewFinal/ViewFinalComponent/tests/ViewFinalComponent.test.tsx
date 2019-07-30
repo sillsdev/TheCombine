@@ -107,13 +107,12 @@ function createMockWord(word: ViewFinalWord, language: string): Word {
     id: word.id,
     vernacular: word.vernacular,
     senses: word.senses.map(sense => createMockSense(sense, language)),
-    audio: "",
+    audio: [],
     created: "",
     modified: "",
     history: [],
     partOfSpeech: "",
     editedBy: [],
-    accessability: State.active,
     otherField: "",
     plural: ""
   };
