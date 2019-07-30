@@ -19,6 +19,7 @@ describe("Tests ExistingEntry", () => {
         entryIndex={0}
         entry={mockWord}
         updateWord={(word: Word) => null}
+        removeWord={(id: string) => null}
         spellChecker={new SpellChecker()}
         semanticDomain={{ name: "", id: "" }}
         displayDuplicates={true}

@@ -85,15 +85,20 @@ export class DataEntryTableRewrite extends React.Component<
   // MAYBE DELETE
   /** Filter out words that do not have correct accessibility */
   filterWords(words: Word[]): Word[] {
+    let filteredWords: Word[] = [];
     for (let word of words) {
+      let shouldInclude = true;
       for (let sense of word.senses) {
         if (sense.accessibility !== State.active) {
-          // Don't include sense
-          console.log("Word not accessible");
+          shouldInclude = false;
+          break;
         }
       }
+      if (shouldInclude) {
+        filteredWords.push(word);
+      }
     }
-    return words;
+    return filteredWords;
   }
 
   /** Update the word in the backend and the frontend */
@@ -152,15 +157,15 @@ export class DataEntryTableRewrite extends React.Component<
   }
 
   async removeWord(id: string) {
-    // let deletedWord: Word = await this.removeWordFromBackend(id);
-    // let updatedNewWords: Word[] = this.state.recentlyAddedWords.filter(
-    //   word => word.id !== deletedWord.id
-    // );
-    // let updatedWords: Word[] = await this.getWordsFromBackend();
-    // this.setState({
-    //   existingWords: updatedWords,
-    //   recentlyAddedWords: updatedNewWords
-    // });
+    let deletedWord: Word = await this.removeWordFromBackend(id);
+    let updatedNewWords: WordAccess[] = this.state.recentlyAddedWords.filter(
+      wordAccess => wordAccess.word.id !== id
+    );
+    let updatedWords: Word[] = await this.getWordsFromBackend();
+    this.setState({
+      existingWords: updatedWords,
+      recentlyAddedWords: updatedNewWords
+    });
   }
 
   toggleDisplayDuplicates(index: number) {
@@ -177,12 +182,13 @@ export class DataEntryTableRewrite extends React.Component<
 
   // TODO: pass in a word instead of an id
   /** Remove a word from the database. */
-  // async removeWordFromBackend(id: string): Promise<Word> {
-  //   let word = this.state.recentlyAddedWords.filter(word => word.id === id);
-  //   console.log(word);
-  //   let updatedWord = await Backend.deleteWord(word[0]);
-  //   return updatedWord;
-  // }
+  async removeWordFromBackend(id: string): Promise<Word> {
+    let word: WordAccess[] = this.state.recentlyAddedWords.filter(
+      wordAccess => wordAccess.word.id === id
+    );
+    let updatedWord = await Backend.deleteWord(word[0].word);
+    return updatedWord;
+  }
 
   render() {
     return (
@@ -235,6 +241,7 @@ export class DataEntryTableRewrite extends React.Component<
                       duplicate
                     )
                   }
+                  removeWord={(id: string) => this.removeWord(id)}
                   spellChecker={this.spellChecker}
                   semanticDomain={this.props.semanticDomain}
                   displayDuplicates={

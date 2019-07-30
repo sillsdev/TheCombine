@@ -8,7 +8,7 @@ jest.mock("../NewVernEntry/NewVernEntry");
 jest.mock("../NewGlossEntry/NewGlossEntry");
 
 describe("Tests NewEntry", () => {
-  it("renders without crashing when not displaying tooltip", () => {
+  it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <NewEntry
@@ -17,6 +17,10 @@ describe("Tests NewEntry", () => {
         addNewWord={(newWord: Word) => null}
         spellChecker={new SpellChecker()}
         semanticDomain={{ name: "", id: "" }}
+        displayDuplicates={true}
+        toggleDisplayDuplicates={() => null}
+        displaySpellingSuggestions={true}
+        toggleDisplaySpellingSuggestions={() => null}
       />,
       div
     );

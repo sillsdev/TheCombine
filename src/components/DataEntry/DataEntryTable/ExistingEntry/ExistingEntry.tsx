@@ -2,12 +2,13 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 import { Word, Gloss, Sense, State } from "../../../../types/word";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import SpellChecker from "../../spellChecker";
 import ExistingVernEntry from "./ExistingVernEntry/ExistingVernEntry";
 import ExistingGlossEntry from "./ExistingGlossEntry/ExistingGlossEntry";
 import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 import { SemanticDomain } from "../../../../types/word";
+import DeleteEntry from "./DeleteEntry/DeleteEntry";
+import SpellChecker from "../../spellChecker";
 
 interface ExistingEntryProps {
   wordsBeingAdded: Word[];
@@ -19,6 +20,7 @@ interface ExistingEntryProps {
     wordToDelete?: Word,
     duplicate?: Word
   ) => void;
+  removeWord: (id: string) => void;
   spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
   displayDuplicates: boolean;
@@ -35,6 +37,7 @@ interface ExistingEntryState {
   duplicate?: Word;
   isSpelledCorrectly: boolean;
   isDuplicate: boolean;
+  hovering: boolean;
 }
 
 export class ExistingEntry extends React.Component<
@@ -59,7 +62,8 @@ export class ExistingEntry extends React.Component<
       isSpelledCorrectly: true,
       isDuplicate: isDuplicate,
       duplicate: duplicateWord,
-      duplicateId: duplicateId
+      duplicateId: duplicateId,
+      hovering: false
     };
   }
 
@@ -281,7 +285,7 @@ export class ExistingEntry extends React.Component<
   }
 
   removeWord(id: string, callback?: Function) {
-    // this.props.removeWord(id);
+    this.props.removeWord(id);
   }
 
   removeEntry() {
@@ -307,7 +311,11 @@ export class ExistingEntry extends React.Component<
   render() {
     return (
       <Grid item xs={12} key={this.props.entryIndex}>
-        <Grid container>
+        <Grid
+          container
+          onMouseEnter={() => this.setState({ hovering: true })}
+          onMouseLeave={() => this.setState({ hovering: false })}
+        >
           <ExistingVernEntry
             vernacular={this.state.existingEntry.vernacular}
             isDuplicate={this.state.isDuplicate}
@@ -334,14 +342,14 @@ export class ExistingEntry extends React.Component<
               this.updateGlossField(newValue)
             }
           />
-          {/* <Grid item xs={2}>
+          <Grid item xs={2}>
             {this.state.hovering && (
               <DeleteEntry
                 entryIndex={this.props.entryIndex}
-                removeEntry={this.removeEntry}
+                removeEntry={() => this.removeEntry()}
               />
             )}
-          </Grid> */}
+          </Grid>
         </Grid>
         {this.props.displaySpellingSuggestions && (
           <SpellingSuggestionsView
