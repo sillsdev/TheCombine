@@ -6,7 +6,7 @@ import {
 } from "../CharacterInventoryReducer";
 import {
   CharacterInventoryAction,
-  SET_VALID_CHARACTERS
+  CharacterInventoryType
 } from "../CharacterInventoryActions";
 import { StoreActions, StoreAction } from "../../../rootActions";
 
@@ -18,7 +18,7 @@ describe("Test Character Inventory Reducer", () => {
   it("Returns default state when passed no state", () => {
     expect(
       characterInventoryReducer(undefined, {
-        type: "" as SET_VALID_CHARACTERS,
+        type: "" as CharacterInventoryType.SET_VALID_CHARACTERS,
         payload: BAD_RESP
       } as CharacterInventoryAction)
     ).toEqual(defaultState);
@@ -27,12 +27,13 @@ describe("Test Character Inventory Reducer", () => {
   it("Returns a state with a specified inventory when passed an inventory", () => {
     expect(
       characterInventoryReducer(undefined, {
-        type: SET_VALID_CHARACTERS,
+        type: CharacterInventoryType.SET_VALID_CHARACTERS,
         payload: DATA
       } as CharacterInventoryAction)
     ).toEqual({
       validCharacters: DATA,
       allWords: [],
+      characterSet: [],
       rejectedCharacters: [],
       selectedCharacter: ""
     });
@@ -42,12 +43,13 @@ describe("Test Character Inventory Reducer", () => {
     let inv = {
       validCharacters: DATA,
       allWords: [],
+      characterSet: [],
       rejectedCharacters: [],
       selectedCharacter: ""
     };
     expect(
       characterInventoryReducer(inv, {
-        type: "" as SET_VALID_CHARACTERS,
+        type: "" as CharacterInventoryType.SET_VALID_CHARACTERS,
         payload: BAD_RESP
       } as CharacterInventoryAction)
     ).toEqual(inv);

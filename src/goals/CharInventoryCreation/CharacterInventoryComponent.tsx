@@ -21,18 +21,18 @@ import history from "../../history";
 import CharacterEntry from "./components/CharacterEntry";
 import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
 import CharacterDetail from "./components/CharacterDetail";
+import { CharacterSetEntry } from "./CharacterInventoryReducer";
 
 export interface CharacterInventoryProps {
-  addToValidCharacters: (chars: string[]) => void;
   setValidCharacters: (inventory: string[]) => void;
   setRejectedCharacters: (inventory: string[]) => void;
   setSelectedCharacter: (character: string) => void;
   uploadInventory: () => void;
   fetchWords: () => void;
-  validCharacters: string[];
-  rejectedCharacters: string[];
   currentProject: Project;
   selectedCharacter: string;
+  getAllCharacters: () => Promise<void>;
+  allCharacters: CharacterSetEntry[];
 }
 
 export const SAVE: string = "pushGoals";
@@ -48,16 +48,16 @@ export class CharacterInventory extends React.Component<
 > {
   constructor(props: CharacterInventoryProps & LocalizeContextProps) {
     super(props);
-    // Load inventory from server
-    this.props.setValidCharacters(this.props.currentProject.validCharacters);
-    this.props.setRejectedCharacters(
-      this.props.currentProject.rejectedCharacters
-    );
     this.state = { cancelDialogOpen: false };
   }
 
   componentDidMount() {
     this.props.fetchWords();
+    this.props.setValidCharacters(this.props.currentProject.validCharacters);
+    this.props.setRejectedCharacters(
+      this.props.currentProject.rejectedCharacters
+    );
+    this.props.getAllCharacters();
     this.props.setSelectedCharacter("");
   }
 
@@ -83,19 +83,21 @@ export class CharacterInventory extends React.Component<
               alignItems="center"
             >
               <CharacterSetHeader />
-              <CharacterEntry />
+              {/* This component doesn't work with the new structure of the character inventory */}
+              {/* <CharacterEntry /> */}
               <CharacterList />
             </Grid>
           </Grid>
 
           <Grid item sm={3} xs={12}>
             {this.props.selectedCharacter === "" ? (
-              <SampleWords
-                addToValidCharacters={this.props.addToValidCharacters}
-                allCharacters={this.props.validCharacters.concat(
-                  this.props.rejectedCharacters
-                )}
-              />
+              // <SampleWords
+              //   addToValidCharacters={this.props.addToValidCharacters}
+              //   allCharacters={this.props.validCharacters.concat(
+              //     this.props.rejectedCharacters
+              //   )}
+              // />
+              <React.Fragment />
             ) : (
               <CharacterDetail
                 character={this.props.selectedCharacter}

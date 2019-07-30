@@ -1,6 +1,9 @@
 import { Dispatch } from "react";
 import * as backend from "../../../../../backend";
-import { fetchWords } from "../../../CharacterInventoryActions";
+import {
+  getAllCharacters,
+  fetchWords
+} from "../../../CharacterInventoryActions";
 
 export function findAndReplace(findValue: string, replaceValue: string) {
   return async (dispatch: Dispatch<any>) => {
@@ -18,6 +21,7 @@ export function findAndReplace(findValue: string, replaceValue: string) {
         await backend.updateWord(word);
       }
       dispatch(fetchWords());
+      dispatch(getAllCharacters());
     } catch (err) {
       console.log(err);
     }
