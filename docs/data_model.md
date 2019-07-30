@@ -2,17 +2,17 @@
 
 ## User
 
-- Avatar - makes it easier to distinguish users from one another when collaborating. We will look into automatically generating avatars for users.
+- Avatar
 
 - Name
 
-- E-mail
+- Email
 
 - Phone
 
-- Other Connection Field
+- Other Connection Field - Other form of contact if phone/email are unavailable 
 
-- Projects - A user may be involved with more than one project at a time.
+- Worked Projects - A user may be involved with more than one project at a time.
 
 - Agreement
 
@@ -30,15 +30,13 @@
 
 - Semantic Domains
 
-- User Roles
-
-- Words (Frontier)
-
 - Vernacular Writing System
 
 - Analysis Writing System(s)
 
-- Character Set
+- Valid Character Set
+
+- Rejected Character Set
 
 - Custom Fields[^1]
 
