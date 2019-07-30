@@ -57,9 +57,7 @@ export class CharacterInventory extends React.Component<
     this.props.setRejectedCharacters(
       this.props.currentProject.rejectedCharacters
     );
-    this.props
-      .getAllCharacters()
-      .then(() => console.log(this.props.allCharacters));
+    this.props.getAllCharacters();
     this.props.setSelectedCharacter("");
   }
 
