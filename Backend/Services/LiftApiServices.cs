@@ -20,7 +20,7 @@ namespace BackendFramework.Services
     /// <summary> Extension of <see cref="LiftWriter"/> to add audio pronunciation </summary>
     public class CombineLiftWriter : LiftWriter
     {
-        public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle) {}
+        public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle) { }
 
         /// <summary> Overrides empty function from the base SIL LiftWriter to properly add pronunciation </summary>
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
@@ -28,17 +28,18 @@ namespace BackendFramework.Services
             if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
             {
                 Writer.WriteStartElement("pronunciation");
-                Writer.WriteStartElement("media");
+                
 
                 foreach (var pro in entry.Pronunciations)
                 {
+                    Writer.WriteStartElement("media");
                     Writer.WriteAttributeString("href", entry.Pronunciations.First().Forms.First().Form);
+                    Writer.WriteEndElement();
                 }
 
                 //makes sure the writer does not write it again in the wrong format
                 entry.Pronunciations.Clear();
 
-                Writer.WriteEndElement();
                 Writer.WriteEndElement();
             }
         }
@@ -191,7 +192,7 @@ namespace BackendFramework.Services
                 LexPhonetic lexPhonetic = new LexPhonetic();
 
                 Helper.Utilities util = new Helper.Utilities();
-                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), audioFile);
+                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), _projectId, "Import", "Audio", audioFile);
 
                 string dest = Path.Combine(path, audioFile);
 
@@ -342,7 +343,7 @@ namespace BackendFramework.Services
 
             //get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio
             var importListArr = Directory.GetDirectories(extractedPathToImport);
-            var extractedAudioDir = Path.Combine(importListArr.Single(), Path.Combine("ExtractedLocation", "audio"));
+            var extractedAudioDir = Path.Combine(importListArr.Single(), Path.Combine("audio"));
 
             //only add audio if the files exist
             if (Directory.Exists(extractedAudioDir))
