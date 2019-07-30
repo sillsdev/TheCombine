@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core";
 import CharacterCard from "./CharacterCard";
 import { listChar } from "../../CharacterInventoryReducer";
-import { ArrowUpward } from "@material-ui/icons";
 
 export interface CharacterListProps {
   setSelectedCharacter: (character: string) => void;

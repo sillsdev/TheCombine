@@ -39,6 +39,8 @@ export default function CharacterCard(props: CharacterCardProps) {
       <CardActionArea>
         <Typography variant="h1" className={classes.header}>
           {props.char}
+          {/* There is a zero-width joiner here to make height consistent for non-printing characters: */}
+          {"‍"}
         </Typography>
         <CardContent>
           <Typography gutterBottom variant="h6" component="h2">
