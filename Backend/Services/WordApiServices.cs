@@ -76,11 +76,12 @@ namespace BackendFramework.Services
 
             var addParent = mergeWords.Parent.Clone();
             addParent.History = new List<string>();
+
             //generate new child words form child word field
             foreach (var newChildWordState in mergeWords.ChildrenWords)
             {
                 //get child word
-                var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordID);
+                var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
                 //remove child from frontier
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
@@ -94,15 +95,14 @@ namespace BackendFramework.Services
                     currentChildWord.Senses[i].Accessibility = (int)newChildWordState.SenseStates[i];
                 }
 
-                //change the child words history to its previous self
-                currentChildWord.History = new List<string>() { newChildWordState.SrcWordID };
+                //change the child word's history to its previous self
+                currentChildWord.History = new List<string>() { newChildWordState.SrcWordId };
 
                 //add child word to the database
-                currentChildWord.Id = null;
+                currentChildWord.Id = "";
                 var newChildWord = await _repo.Add(currentChildWord);
 
                 //handle different states
-
                 var separateWord = currentChildWord.Clone();
                 separateWord.Senses = new List<Sense>();
                 separateWord.Id = "";
@@ -110,9 +110,8 @@ namespace BackendFramework.Services
                 {
                     switch (newChildWordState.SenseStates[i])
                     {
-                        case State.sense:
-                            goto case State.duplicate; //fall through
                         //add the word to the parent's history
+                        case State.sense:
                         case State.duplicate:
                             if (!addParent.History.Contains(currentChildWord.Id))
                             {
@@ -121,6 +120,7 @@ namespace BackendFramework.Services
                             break;
                         //add the sense to a separate word and the word to its history
                         case State.separate:
+                            currentChildWord.Senses[i].Accessibility = (int)State.active;
                             separateWord.Senses.Add(currentChildWord.Senses[i]);
                             if (!separateWord.History.Contains(currentChildWord.Id))
                             {

@@ -38,13 +38,12 @@ const testWord: Word = {
       semanticDomains: []
     }
   ],
-  audio: "",
+  audio: [],
   created: "",
   modified: "",
   history: [],
   partOfSpeech: "",
   editedBy: [],
-  accessability: 0,
   otherField: "",
   plural: ""
 };
