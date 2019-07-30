@@ -117,8 +117,13 @@ export class DataEntryTableRewrite extends React.Component<
       }
     ];
 
-    let wordsWithAccess: WordAccess[] = allWords.map(word => {
-      let wordWithAccess: WordAccess = { word, mutable: false };
+    let wordsWithAccess: WordAccess[] = allWords.map((word, index) => {
+      let wordWithAccess: WordAccess;
+      if (index % 2 == 0) {
+        wordWithAccess = { word, mutable: false };
+      } else {
+        wordWithAccess = { word, mutable: true };
+      }
       return wordWithAccess;
     });
 

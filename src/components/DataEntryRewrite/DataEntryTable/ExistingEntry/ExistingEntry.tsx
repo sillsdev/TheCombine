@@ -30,7 +30,7 @@ interface ExistingEntryState {
   duplicate?: Word;
   isSpelledCorrectly: boolean;
   isDuplicate: boolean;
-  hovering: boolean;
+  // hovering: boolean;
 }
 
 export class ExistingEntry extends React.Component<
@@ -45,8 +45,8 @@ export class ExistingEntry extends React.Component<
       displayDuplicates: false,
       existingEntry: { ...this.props.entry },
       isSpelledCorrectly: true,
-      isDuplicate: false,
-      hovering: false
+      isDuplicate: false
+      // hovering: false
     };
 
     this.updateGlossField = this.updateGlossField.bind(this);
@@ -329,10 +329,10 @@ export class ExistingEntry extends React.Component<
         xs={12}
         key={this.props.entryIndex}
         onMouseEnter={() => {
-          this.setState({ hovering: true });
+          // this.setState({ hovering: true });
         }}
         onMouseLeave={() => {
-          this.setState({ hovering: false });
+          // this.setState({ hovering: false });
         }}
       >
         <Grid container>
@@ -349,14 +349,14 @@ export class ExistingEntry extends React.Component<
             toggleSpellingSuggestionsView={this.toggleSpellingSuggestionsView}
             updateGlossField={this.updateGlossField}
           />
-          <Grid item xs={2}>
+          {/* <Grid item xs={2}>
             {this.state.hovering && (
               <DeleteEntry
                 entryIndex={this.props.entryIndex}
                 removeEntry={this.removeEntry}
               />
             )}
-          </Grid>
+          </Grid> */}
         </Grid>
         {this.state.displaySpellingSuggestions && (
           <SpellingSuggestionsView
