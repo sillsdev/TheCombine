@@ -33,16 +33,15 @@ beforeAll(() => {
     charMaster = renderer.create(
       <Provider store={store}>
         <CharacterInventoryComponent
-          validCharacters={["a"]}
           currentProject={{ validCharacters: ["a"] } as Project}
           setValidCharacters={SET_INV}
           uploadInventory={UPLOAD_INV}
-          addToValidCharacters={jest.fn()}
           setRejectedCharacters={jest.fn()}
           setSelectedCharacter={jest.fn()}
+          getAllCharacters={jest.fn(() => Promise.resolve())}
           fetchWords={jest.fn()}
           selectedCharacter={""}
-          rejectedCharacters={[]}
+          allCharacters={[]}
         />
       </Provider>
     );
@@ -61,16 +60,15 @@ describe("Testing Character Inventory Component", () => {
     ReactDOM.render(
       <Provider store={store}>
         <CharacterInventoryComponent
-          validCharacters={["a"]}
-          currentProject={{ validCharacters: ["a"] } as Project}
           setValidCharacters={SET_INV}
-          uploadInventory={UPLOAD_INV}
-          addToValidCharacters={jest.fn()}
           setRejectedCharacters={jest.fn()}
           setSelectedCharacter={jest.fn()}
+          uploadInventory={UPLOAD_INV}
           fetchWords={jest.fn()}
+          currentProject={{ validCharacters: ["a"] } as Project}
           selectedCharacter={""}
-          rejectedCharacters={[]}
+          getAllCharacters={jest.fn(() => Promise.resolve())}
+          allCharacters={[]}
         />
       </Provider>,
       div
