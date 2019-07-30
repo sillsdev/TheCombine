@@ -12,11 +12,11 @@ import {
   MenuItem
 } from "@material-ui/core";
 import CharacterCard from "./CharacterCard";
-import { listChar } from "../../CharacterInventoryReducer";
+import { listCharacter } from "../../CharacterInventoryReducer";
 
 export interface CharacterListProps {
   setSelectedCharacter: (character: string) => void;
-  allCharacters: listChar[];
+  allCharacters: listCharacter[];
 }
 
 interface CharacterListState {
@@ -104,7 +104,7 @@ export class CharacterList extends React.Component<
   }
 }
 
-function sortBy(characterSet: listChar[], sort: sortOrder) {
+function sortBy(characterSet: listCharacter[], sort: sortOrder) {
   switch (sort) {
     case sortOrder.characterAscending:
       return characterSet.sort(sortFunction("character"));
@@ -121,8 +121,8 @@ function sortBy(characterSet: listChar[], sort: sortOrder) {
   }
 }
 
-function sortFunction<K extends keyof listChar>(prop: K) {
-  return (a: listChar, b: listChar) => {
+function sortFunction<K extends keyof listCharacter>(prop: K) {
+  return (a: listCharacter, b: listCharacter) => {
     if (a[prop] < b[prop]) return -1;
     if (a[prop] > b[prop]) return 1;
     return 0;

@@ -14,7 +14,7 @@ export interface CharacterInventoryState {
   rejectedCharacters: string[];
   allWords: string[];
   selectedCharacter: string;
-  characterSet: listChar[];
+  characterSet: listCharacter[];
 }
 
 export const defaultState: CharacterInventoryState = {
@@ -25,9 +25,8 @@ export const defaultState: CharacterInventoryState = {
   characterSet: []
 };
 
-// DON'T LET THIS COMMENT STAY IN THE PULL REQUEST
-// Don't love this name, if you think of a better one let me know
-export interface listChar {
+/** A character with its occurrences and status, for sorting and filtering in a list */
+export interface listCharacter {
   character: string;
   occurrences: number;
   status: characterStatus;

@@ -21,7 +21,7 @@ import history from "../../history";
 import CharacterEntry from "./components/CharacterEntry";
 import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
 import CharacterDetail from "./components/CharacterDetail";
-import { listChar } from "./CharacterInventoryReducer";
+import { listCharacter } from "./CharacterInventoryReducer";
 
 export interface CharacterInventoryProps {
   setValidCharacters: (inventory: string[]) => void;
@@ -32,7 +32,7 @@ export interface CharacterInventoryProps {
   currentProject: Project;
   selectedCharacter: string;
   getAllCharacters: () => Promise<void>;
-  allCharacters: listChar[];
+  allCharacters: listCharacter[];
 }
 
 export const SAVE: string = "pushGoals";

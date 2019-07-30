@@ -11,11 +11,11 @@ import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions"
 import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 import { User } from "../../../types/user";
-import { listChar } from "../CharacterInventoryReducer";
+import { listCharacter } from "../CharacterInventoryReducer";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
-const CHARACTER_SET_DATA: listChar[] = [
+const CHARACTER_SET_DATA: listCharacter[] = [
   {
     character: "a",
     status: "accepted",
