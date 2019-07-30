@@ -37,7 +37,11 @@ namespace Backend.Tests
 
             Utilities util = new Utilities();
 
-            Directory.Delete(util.GenerateFilePath(Utilities.Filetype.dir, true, "", ""), true);
+            var dirList = Directory.GetDirectories(util.GenerateFilePath(Utilities.Filetype.dir, true, "", ""));
+            foreach (var dir in dirList)
+            {
+                Directory.Delete(dir, true);
+            }
         }
 
 
@@ -74,6 +78,8 @@ namespace Backend.Tests
 
             var foundWord = (action as ObjectResult).Value as Word;
             Assert.IsNotNull(foundWord.Audio);
+
+            fstream.Close();
         }
     }
 }
