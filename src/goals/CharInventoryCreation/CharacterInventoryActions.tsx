@@ -27,11 +27,9 @@ export type SET_VALID_CHARACTERS = typeof SET_VALID_CHARACTERS;
 export const SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS";
 export type SET_REJECTED_CHARACTERS = typeof SET_REJECTED_CHARACTERS;
 
-export const ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS";
-export type ADD_TO_VALID_CHARACTERS = typeof ADD_TO_VALID_CHARACTERS;
-
-export const ADD_TO_REJECTED_CHARACTERS = "ADD_TO_REJECTED_CHARACTERS";
-export type ADD_TO_REJECTED_CHARACTERS = typeof ADD_TO_REJECTED_CHARACTERS;
+// Only needed for SampleWords component:
+// export const ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS";
+// export type ADD_TO_VALID_CHARACTERS = typeof ADD_TO_VALID_CHARACTERS;
 
 export const SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS";
 export type SET_ALL_WORDS = typeof SET_ALL_WORDS;
@@ -48,8 +46,8 @@ type CharacterInventoryType =
   | SET_CHARACTER_STATUS
   | SET_VALID_CHARACTERS
   | SET_REJECTED_CHARACTERS
-  | ADD_TO_VALID_CHARACTERS
-  | ADD_TO_REJECTED_CHARACTERS
+  // Only needed for SampleWords component:
+  // | ADD_TO_VALID_CHARACTERS
   | SET_ALL_WORDS
   | SET_SELECTED_CHARACTER
   | SET_CHARACTER_SET;
@@ -93,23 +91,15 @@ export function setCharacterStatus(
   };
 }
 
-export function addToValidCharacters(
-  chars: string[]
-): CharacterInventoryAction {
-  return {
-    type: ADD_TO_VALID_CHARACTERS,
-    payload: chars
-  };
-}
-
-export function addToRejectedCharacters(
-  chars: string[]
-): CharacterInventoryAction {
-  return {
-    type: ADD_TO_REJECTED_CHARACTERS,
-    payload: chars
-  };
-}
+// Only needed for SampleWords component
+// export function addToValidCharacters(
+//   chars: string[]
+// ): CharacterInventoryAction {
+//   return {
+//     type: ADD_TO_VALID_CHARACTERS,
+//     payload: chars
+//   };
+// }
 
 export function setValidCharacters(chars: string[]): CharacterInventoryAction {
   return {

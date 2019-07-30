@@ -2,10 +2,8 @@ import {
   SET_VALID_CHARACTERS,
   CharacterInventoryAction,
   SET_REJECTED_CHARACTERS,
-  ADD_TO_VALID_CHARACTERS,
   SET_ALL_WORDS,
   SET_SELECTED_CHARACTER,
-  ADD_TO_REJECTED_CHARACTERS,
   SET_CHARACTER_SET,
   SET_CHARACTER_STATUS
 } from "./CharacterInventoryActions";
@@ -56,22 +54,15 @@ export const characterInventoryReducer = (
         char => !rejectedCharacters.includes(char)
       );
       return { ...state, validCharacters: validCharacters, rejectedCharacters };
-    case ADD_TO_VALID_CHARACTERS:
-      validCharacters = [
-        ...new Set(state.validCharacters.concat(action.payload))
-      ];
-      rejectedCharacters = state.rejectedCharacters.filter(
-        char => !validCharacters.includes(char)
-      );
-      return { ...state, validCharacters, rejectedCharacters };
-    case ADD_TO_REJECTED_CHARACTERS:
-      rejectedCharacters = [
-        ...new Set(state.rejectedCharacters.concat(action.payload))
-      ];
-      validCharacters = state.validCharacters.filter(
-        char => !rejectedCharacters.includes(char)
-      );
-      return { ...state, validCharacters, rejectedCharacters };
+    // Only needed for SampleWords component:
+    // case ADD_TO_VALID_CHARACTERS:
+    //   validCharacters = [
+    //     ...new Set(state.validCharacters.concat(action.payload))
+    //   ];
+    //   rejectedCharacters = state.rejectedCharacters.filter(
+    //     char => !validCharacters.includes(char)
+    //   );
+    //   return { ...state, validCharacters, rejectedCharacters };
     case SET_ALL_WORDS:
       return { ...state, allWords: action.payload };
     case SET_SELECTED_CHARACTER:
