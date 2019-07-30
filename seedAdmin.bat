@@ -1,0 +1,1 @@
+mongo --eval "db.UsersCollection.insertOne({ \"name\": \"admin\", password: \"%ASPDOTNET_ADMIN_PASSWORD%\", username: \"DBAdmin\", \"isAdmin\": \"true\"})"; CombineDatabase

@@ -1,6 +1,7 @@
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,12 @@ namespace BackendFramework.Services
     public class UserService : IUserService
     {
         private readonly IUserContext _userDatabase;
+        private readonly IUserRoleService _userRole;
 
-        public UserService(IUserContext collectionSettings)
+        public UserService(IUserContext collectionSettings, IUserRoleService userRole)
         {
             _userDatabase = collectionSettings;
+            _userRole = userRole;
         }
 
         /// <summary> Confirms login credentials are valid </summary>
@@ -28,7 +31,6 @@ namespace BackendFramework.Services
         public async Task<User> Authenticate(string username, string password)
         {
             //fetch the stored user
-            const int tokenExpirationMinutes = 60 * 4;
             var userList = await _userDatabase.Users.FindAsync(x => x.Username == username);
             User foundUser = userList.FirstOrDefault();
 
@@ -59,34 +61,54 @@ namespace BackendFramework.Services
                 }
             }
 
-            //authentication successful, so generate jwt token
+            // authentication successful so generate jwt token
+            return await MakeJWT(foundUser);
+        }
+
+        public async Task<User> MakeJWT(User user)
+        {
+            const int tokenExpirationMinutes = 60 * 4;
             var tokenHandler = new JwtSecurityTokenHandler();
             var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
             var key = Encoding.ASCII.GetBytes(secretKey);
+
+            //fetch the projects Id and the roles for each Id
+            List<ProjectPermissions> projectPermissionMap = new List<ProjectPermissions>();
+
+            foreach (var projectRolePair in user.ProjectRoles)
+            {
+                //convert each userRole ID to its respective role && add to the mapping
+                var permissions = _userRole.GetUserRole(projectRolePair.Key, projectRolePair.Value).Result.Permissions;
+                var validEntry = new ProjectPermissions(projectRolePair.Key, permissions);
+                projectPermissionMap.Add(validEntry);
+            }
+
+            var claimString = projectPermissionMap.ToJson();
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                new Claim(ClaimTypes.Name, foundUser.Id)
+                    new Claim("UserId", user.Id),
+                    new Claim("UserRoleInfo", claimString)
                 }),
 
-                //This line here will cause serious debugging problems if not kept in mind
-                    Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
+                Expires = DateTime.UtcNow.AddMinutes(tokenExpirationMinutes),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            foundUser.Token = tokenHandler.WriteToken(token);
+            user.Token = tokenHandler.WriteToken(token);
 
-            if (await Update(foundUser.Id, foundUser) != ResultOfUpdate.Updated)
+            if (await Update(user.Id, user) != ResultOfUpdate.Updated)
             {
                 return null;
             }
 
             // remove password before returning
-            foundUser.Password = "";
+            user.Password = "";
 
-            return foundUser;
+            return user;
         }
 
         /// <summary> Finds all <see cref="User"/>s </summary>
@@ -182,6 +204,8 @@ namespace BackendFramework.Services
                 .Set(x => x.UILang, user.UILang)
                 .Set(x => x.Token, user.Token);
 
+            //do not update admin privilages
+
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)
@@ -197,5 +221,15 @@ namespace BackendFramework.Services
                 return ResultOfUpdate.NoChange;
             }
         }
+    }
+    public class ProjectPermissions
+    {
+        public ProjectPermissions(string projectId, List<int> permissions)
+        {
+            ProjectId = projectId;
+            Permissions = permissions;
+        }
+        public string ProjectId { get; set; }
+        public List<int> Permissions { get; set; }
     }
 }

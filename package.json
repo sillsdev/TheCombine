@@ -23,6 +23,7 @@
     "dictionary-en-us": "^2.1.1",
     "make-dir": "^3.0.0",
     "nspell": "^2.1.2",
+    "material-table": "^1.40.1",
     "react": "^16.8.6",
     "react-beautiful-dnd": "^11.0.4",
     "react-dom": "^16.8.6",
