@@ -1,7 +1,7 @@
 import {
   setValidCharacters,
-  SET_VALID_CHARACTERS,
-  uploadInventory
+  uploadInventory,
+  CharacterInventoryType
 } from "../CharacterInventoryActions";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -91,7 +91,7 @@ afterAll(() => {
 describe("Testing CharacterInventoryActions", () => {
   test("setInventory yields correct action", () => {
     expect(setValidCharacters(VALID_DATA)).toEqual({
-      type: SET_VALID_CHARACTERS,
+      type: CharacterInventoryType.SET_VALID_CHARACTERS,
       payload: VALID_DATA
     });
   });

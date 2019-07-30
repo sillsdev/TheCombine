@@ -21,39 +21,16 @@ import {
   characterStatus
 } from "./CharacterInventoryReducer";
 
-export const SET_CHARACTER_STATUS = "SET_CHARACTER_STATUS";
-export type SET_CHARACTER_STATUS = typeof SET_CHARACTER_STATUS;
-
-export const SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS";
-export type SET_VALID_CHARACTERS = typeof SET_VALID_CHARACTERS;
-
-export const SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS";
-export type SET_REJECTED_CHARACTERS = typeof SET_REJECTED_CHARACTERS;
-
-// Only needed for SampleWords component:
-// export const ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS";
-// export type ADD_TO_VALID_CHARACTERS = typeof ADD_TO_VALID_CHARACTERS;
-
-export const SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS";
-export type SET_ALL_WORDS = typeof SET_ALL_WORDS;
-
-export const SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER";
-export type SET_SELECTED_CHARACTER = typeof SET_SELECTED_CHARACTER;
-
-export const SET_CHARACTER_SET = "SET_CHARACTER_SET";
-export type SET_CHARACTER_SET = typeof SET_CHARACTER_SET;
-
-export interface CharacterInventoryData {}
-
-type CharacterInventoryType =
-  | SET_CHARACTER_STATUS
-  | SET_VALID_CHARACTERS
-  | SET_REJECTED_CHARACTERS
-  // Only needed for SampleWords component:
-  // | ADD_TO_VALID_CHARACTERS
-  | SET_ALL_WORDS
-  | SET_SELECTED_CHARACTER
-  | SET_CHARACTER_SET;
+export enum CharacterInventoryType {
+  SET_CHARACTER_STATUS = "SET_CHARACTER_STATUS",
+  SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
+  SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS",
+  // Only needed for SampleWords component
+  // ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS",
+  SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS",
+  SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER",
+  SET_CHARACTER_SET = "SET_CHARACTER_SET"
+}
 
 //action types
 
@@ -87,7 +64,7 @@ export function setCharacterStatus(
   status: characterStatus
 ): CharacterInventoryAction {
   return {
-    type: SET_CHARACTER_STATUS,
+    type: CharacterInventoryType.SET_CHARACTER_STATUS,
     character,
     status,
     payload: []
@@ -99,14 +76,14 @@ export function setCharacterStatus(
 //   chars: string[]
 // ): CharacterInventoryAction {
 //   return {
-//     type: ADD_TO_VALID_CHARACTERS,
+//     type: CharacterInventoryType.ADD_TO_VALID_CHARACTERS,
 //     payload: chars
 //   };
 // }
 
 export function setValidCharacters(chars: string[]): CharacterInventoryAction {
   return {
-    type: SET_VALID_CHARACTERS,
+    type: CharacterInventoryType.SET_VALID_CHARACTERS,
     payload: chars
   };
 }
@@ -115,14 +92,14 @@ export function setRejectedCharacters(
   chars: string[]
 ): CharacterInventoryAction {
   return {
-    type: SET_REJECTED_CHARACTERS,
+    type: CharacterInventoryType.SET_REJECTED_CHARACTERS,
     payload: chars
   };
 }
 
 export function setAllWords(words: string[]): CharacterInventoryAction {
   return {
-    type: SET_ALL_WORDS,
+    type: CharacterInventoryType.SET_ALL_WORDS,
     payload: words
   };
 }
@@ -138,7 +115,7 @@ export function setSelectedCharacter(
   character: string
 ): CharacterInventoryAction {
   return {
-    type: SET_SELECTED_CHARACTER,
+    type: CharacterInventoryType.SET_SELECTED_CHARACTER,
     payload: [character]
   };
 }
@@ -147,7 +124,7 @@ export function setCharacterSet(
   characterSet: CharacterSetEntry[]
 ): CharacterInventoryAction {
   return {
-    type: SET_CHARACTER_SET,
+    type: CharacterInventoryType.SET_CHARACTER_SET,
     payload: [],
     characterSet
   };

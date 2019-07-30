@@ -1,11 +1,6 @@
 import {
-  SET_VALID_CHARACTERS,
   CharacterInventoryAction,
-  SET_REJECTED_CHARACTERS,
-  SET_ALL_WORDS,
-  SET_SELECTED_CHARACTER,
-  SET_CHARACTER_SET,
-  SET_CHARACTER_STATUS
+  CharacterInventoryType
 } from "./CharacterInventoryActions";
 import { StoreActions, StoreAction } from "../../rootActions";
 
@@ -40,14 +35,14 @@ export const characterInventoryReducer = (
 ): CharacterInventoryState => {
   let validCharacters: string[], rejectedCharacters: string[];
   switch (action.type) {
-    case SET_VALID_CHARACTERS:
+    case CharacterInventoryType.SET_VALID_CHARACTERS:
       // Set prevents duplicate characters
       validCharacters = [...new Set(action.payload)];
       rejectedCharacters = state.rejectedCharacters.filter(
         char => !validCharacters.includes(char)
       );
       return { ...state, validCharacters: validCharacters, rejectedCharacters };
-    case SET_REJECTED_CHARACTERS:
+    case CharacterInventoryType.SET_REJECTED_CHARACTERS:
       rejectedCharacters = [...new Set(action.payload)];
       validCharacters = state.validCharacters.filter(
         char => !rejectedCharacters.includes(char)
@@ -62,15 +57,15 @@ export const characterInventoryReducer = (
     //     char => !validCharacters.includes(char)
     //   );
     //   return { ...state, validCharacters, rejectedCharacters };
-    case SET_ALL_WORDS:
+    case CharacterInventoryType.SET_ALL_WORDS:
       return { ...state, allWords: action.payload };
-    case SET_SELECTED_CHARACTER:
+    case CharacterInventoryType.SET_SELECTED_CHARACTER:
       return { ...state, selectedCharacter: action.payload[0] };
-    case SET_CHARACTER_SET:
+    case CharacterInventoryType.SET_CHARACTER_SET:
       return action.characterSet
         ? { ...state, characterSet: action.characterSet }
         : state;
-    case SET_CHARACTER_STATUS:
+    case CharacterInventoryType.SET_CHARACTER_STATUS:
       let characterSet = state.characterSet.map(character => {
         if (
           action.character &&
