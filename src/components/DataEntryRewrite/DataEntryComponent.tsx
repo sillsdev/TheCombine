@@ -6,7 +6,7 @@ import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
-import SpellChecker from "../DataEntry/spellChecker";
+import SpellChecker from "./spellChecker";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
 import { SemanticDomain } from "../../types/word";
 

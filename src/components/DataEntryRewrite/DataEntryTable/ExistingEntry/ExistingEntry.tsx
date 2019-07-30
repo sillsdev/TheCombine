@@ -2,7 +2,7 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 import { Word, Gloss, Sense, State } from "../../../../types/word";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import SpellChecker from "../../../DataEntry/spellChecker";
+import SpellChecker from "../../spellChecker";
 import ExistingVernEntry from "./ExistingVernEntry/ExistingVernEntry";
 import ExistingGlossEntry from "./ExistingGlossEntry/ExistingGlossEntry";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
@@ -23,6 +23,8 @@ interface ExistingEntryProps {
   // removeWord: (id: string) => void;
   spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
+  displayDuplicates: boolean;
+  toggleDisplayDuplicates: () => void;
 }
 
 // Almost the same
@@ -78,6 +80,22 @@ export class ExistingEntry extends React.Component<
     this.addSemanticDomain = this.addSemanticDomain.bind(this);
   }
 
+  componentDidMount() {
+    let isDuplicate: boolean = this.isADuplicate(this.props.entry.vernacular);
+    let duplicateId: string | undefined;
+    let duplicateWord: Word | undefined;
+    if (isDuplicate) {
+      duplicateId = this.vernInFrontier(this.props.entry.vernacular);
+      duplicateWord = this.getDuplicate(duplicateId);
+    }
+
+    this.setState({
+      isDuplicate,
+      duplicateId,
+      duplicate: duplicateWord
+    });
+  }
+
   // Same
   toggleSpellingSuggestionsView() {
     this.setState({
@@ -87,7 +105,8 @@ export class ExistingEntry extends React.Component<
 
   // Same
   toggleDuplicateResolutionView() {
-    this.setState({ displayDuplicates: !this.state.displayDuplicates });
+    // this.setState({ displayDuplicates: !this.state.displayDuplicates });
+    this.props.toggleDisplayDuplicates();
   }
 
   // Almost the same
@@ -394,7 +413,7 @@ export class ExistingEntry extends React.Component<
             chooseSpellingSuggestion={this.chooseSpellingSuggestion}
           />
         )}
-        {this.state.displayDuplicates &&
+        {this.props.displayDuplicates &&
           this.state.isDuplicate &&
           this.state.duplicate && (
             <DuplicateResolutionView

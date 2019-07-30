@@ -72,9 +72,9 @@
 
 - Edited By
 
-- Accessability 
+-
 
-- Other Field[^1]
+* Other Field[^1]
 
 ### Sense
 

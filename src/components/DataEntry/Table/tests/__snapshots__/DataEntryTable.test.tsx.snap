@@ -75,7 +75,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
             >
               <fieldset
                 aria-hidden={true}
-                className="PrivateNotchedOutline-root-187 MuiOutlinedInput-notchedOutline"
+                className="PrivateNotchedOutline-root-190 MuiOutlinedInput-notchedOutline"
                 style={
                   Object {
                     "paddingLeft": 8,
@@ -83,7 +83,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                 }
               >
                 <legend
-                  className="PrivateNotchedOutline-legend-188"
+                  className="PrivateNotchedOutline-legend-191"
                   style={
                     Object {
                       "width": 0.01,
@@ -145,7 +145,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
             >
               <fieldset
                 aria-hidden={true}
-                className="PrivateNotchedOutline-root-187 MuiOutlinedInput-notchedOutline"
+                className="PrivateNotchedOutline-root-190 MuiOutlinedInput-notchedOutline"
                 style={
                   Object {
                     "paddingLeft": 8,
@@ -153,7 +153,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                 }
               >
                 <legend
-                  className="PrivateNotchedOutline-legend-188"
+                  className="PrivateNotchedOutline-legend-191"
                   style={
                     Object {
                       "width": 0.01,
@@ -196,6 +196,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
         className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
         disabled={false}
         onBlur={[Function]}
+        onDragLeave={[Function]}
         onFocus={[Function]}
         onKeyDown={[Function]}
         onKeyUp={[Function]}

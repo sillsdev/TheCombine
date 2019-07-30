@@ -11,7 +11,7 @@ import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
 import DataEntryHeader from "../DataEntryRewrite/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./Table/DataEntryTable";
-import SpellChecker from "./spellChecker";
+import SpellChecker from "../DataEntryRewrite/spellChecker";
 
 interface DataEntryProps {
   domain: DomainTree;

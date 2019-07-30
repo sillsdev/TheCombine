@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import DataEntryTable from "../DataEntryTable";
-import SpellChecker from "../../../DataEntry/spellChecker";
+import SpellChecker from "../../spellChecker";
 import { SemanticDomain } from "../../../../types/word";
 import { mockDomainTree } from "../../tests/MockDomainTree";
 

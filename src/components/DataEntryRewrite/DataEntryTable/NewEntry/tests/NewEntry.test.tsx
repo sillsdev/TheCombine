@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { NewEntry } from "../NewEntry";
 import { Word } from "../../../../../types/word";
-import SpellChecker from "../../../../DataEntry/spellChecker";
+import SpellChecker from "../../../spellChecker";
 
 jest.mock("../NewVernEntry/NewVernEntry");
 jest.mock("../NewGlossEntry/NewGlossEntry");
@@ -16,6 +16,7 @@ describe("Tests NewEntry", () => {
         updateWord={(updatedWord: Word) => null}
         addNewWord={(newWord: Word) => null}
         spellChecker={new SpellChecker()}
+        semanticDomain={{ name: "", id: "" }}
       />,
       div
     );

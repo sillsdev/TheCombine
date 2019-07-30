@@ -1,4 +1,4 @@
-import { Word, State } from "../../../types/word";
+import { Word } from "../../../types/word";
 
 export const mockWord: Word = {
   id: "",
@@ -14,13 +14,12 @@ export const mockWord: Word = {
       semanticDomains: []
     }
   ],
-  audio: "",
+  audio: [],
   created: "",
   modified: "",
   history: [],
   partOfSpeech: "",
   editedBy: [],
-  accessability: State.active,
   otherField: "",
   plural: ""
 };

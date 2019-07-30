@@ -1,10 +1,11 @@
-"use strict";
 import aff from "../../resources/dictionaries/en-us.aff.js";
 import dictionary from "../../resources/dictionaries/en-us.dic.js";
 
 const nspell = require("nspell");
 
 class SpellChecker {
+  spell;
+
   constructor() {
     this.spell = nspell(aff, dictionary);
   }

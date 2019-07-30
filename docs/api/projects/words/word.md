@@ -18,7 +18,7 @@
 
 **editedBy** : List of collaborators
 
-**accessability** :
+\*\*\*\* :
 
 **otherField** :
 
@@ -35,7 +35,7 @@
   history: String[];
   partOfSpeech: String;
   editedBy: String;
-  accessability: <a href=state.md>State</a>;
+  : <a href=state.md>State</a>;
   otherField: String;
 }
 </pre>

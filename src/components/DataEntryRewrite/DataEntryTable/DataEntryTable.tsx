@@ -9,7 +9,7 @@ import {
 import { Word, SemanticDomain, State } from "../../../types/word";
 import * as Backend from "../../../backend";
 import DomainTree from "../../TreeView/SemanticDomain";
-import SpellChecker from "../../DataEntry/spellChecker";
+import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
@@ -30,6 +30,7 @@ interface WordAccess {
 interface DataEntryTableState {
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
+  displayDuplicatesIndex?: number;
 }
 
 export class DataEntryTableRewrite extends React.Component<
@@ -77,13 +78,13 @@ export class DataEntryTableRewrite extends React.Component<
     //         accessibility: State.active
     //       }
     //     ],
-    //     audio: "",
+    //     audio: [],
     //     created: "",
     //     modified: "",
     //     history: [],
     //     partOfSpeech: "",
     //     editedBy: [],
-    //     accessability: State.active,
+    //     : State.active,
     //     otherField: "",
     //     plural: ""
     //   },
@@ -107,13 +108,13 @@ export class DataEntryTableRewrite extends React.Component<
     //         accessibility: State.active
     //       }
     //     ],
-    //     audio: "",
+    //     audio: [],
     //     created: "",
     //     modified: "",
     //     history: [],
     //     partOfSpeech: "",
     //     editedBy: [],
-    //     accessability: State.active,
+    //     : State.active,
     //     otherField: "",
     //     plural: ""
     //   }
@@ -135,7 +136,7 @@ export class DataEntryTableRewrite extends React.Component<
   }
 
   /** Go back to the tree view */
-  // Implement
+  // TODO: Implement
   submit(e?: React.FormEvent<HTMLFormElement>, callback?: Function) {
     if (e) e.preventDefault();
   }
@@ -264,6 +265,12 @@ export class DataEntryTableRewrite extends React.Component<
     // });
   }
 
+  toggleDisplayDuplicates(index: number) {
+    if (this.state.displayDuplicatesIndex === index)
+      this.setState({ displayDuplicatesIndex: undefined });
+    else this.setState({ displayDuplicatesIndex: index });
+  }
+
   // Backend
   // TODO: pass in a word instead of an id
   /** Remove a word from the database. */
@@ -314,6 +321,12 @@ export class DataEntryTableRewrite extends React.Component<
                   // removeWord={this.removeWord}
                   spellChecker={this.spellChecker}
                   semanticDomain={this.props.semanticDomain}
+                  displayDuplicates={
+                    this.state.displayDuplicatesIndex === index
+                  }
+                  toggleDisplayDuplicates={() => {
+                    this.toggleDisplayDuplicates(index);
+                  }}
                 />
               </React.Fragment>
             ) : (

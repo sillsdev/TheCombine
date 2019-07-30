@@ -8,7 +8,7 @@ import {
   SemanticDomain
 } from "../../../../types/word";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import SpellChecker from "../../../DataEntry/spellChecker";
+import SpellChecker from "../../spellChecker";
 import NewVernEntry from "./NewVernEntry/NewVernEntry";
 import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
 import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
@@ -53,13 +53,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             semanticDomains: [this.props.semanticDomain]
           }
         ],
-        audio: "",
+        audio: [],
         created: "",
         modified: "",
         history: [],
         partOfSpeech: "",
         editedBy: [],
-        accessability: State.active,
         otherField: "",
         plural: ""
       },
@@ -115,13 +114,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             semanticDomains: [this.props.semanticDomain]
           }
         ],
-        audio: "",
+        audio: [],
         created: "",
         modified: "",
         history: [],
         partOfSpeech: "",
         editedBy: [],
-        accessability: State.active,
         otherField: "",
         plural: ""
       }
@@ -362,13 +360,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             semanticDomains: [this.props.semanticDomain]
           }
         ],
-        audio: "",
+        audio: [],
         created: "",
         modified: "",
         history: [],
         partOfSpeech: "",
         editedBy: [],
-        accessability: State.active,
         otherField: "",
         plural: ""
       },
