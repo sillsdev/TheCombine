@@ -1,9 +1,8 @@
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import ReviewEntriesComponent, {
-  ReviewEntriesWord
-} from "./ReviewEntriesComponent";
+import ReviewEntriesComponent from "./ReviewEntriesComponent";
+import { ReviewEntriesWord } from "./ReviewEntriesTypes";
 import {
   ReviewEntriesAction,
   updateAllWords,

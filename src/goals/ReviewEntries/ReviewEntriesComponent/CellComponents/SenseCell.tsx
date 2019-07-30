@@ -7,7 +7,7 @@ import { highlight } from "../../../../types/theme";
 import { FieldParameterStandard } from "./CellColumns";
 import AlignedList from "./AlignedList";
 import { uuid } from "../../../../utilities";
-import { ReviewEntriesSense } from "../ReviewEntriesComponent";
+import { ReviewEntriesSense } from "../ReviewEntriesTypes";
 
 interface SenseCellProps {
   editable: boolean;

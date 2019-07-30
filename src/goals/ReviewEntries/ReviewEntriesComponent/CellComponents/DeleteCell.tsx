@@ -3,7 +3,7 @@ import { Chip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 
 import AlignedList, { SPACER } from "./AlignedList";
-import { ReviewEntriesWord } from "../ReviewEntriesComponent";
+import { ReviewEntriesWord } from "../ReviewEntriesTypes";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
