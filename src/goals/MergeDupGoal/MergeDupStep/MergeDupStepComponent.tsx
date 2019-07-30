@@ -211,9 +211,10 @@ class MergeDupStep extends React.Component<
                       >
                         <CardContent>
                           <Typography variant={"h5"}>
-                            {entry.data.glosses
-                              .map(gloss => gloss.def)
-                              .reduce((gloss, acc) => `${acc}, ${gloss}`)}
+                            {entry.data.glosses.length > 1 &&
+                              entry.data.glosses
+                                .map(gloss => gloss.def)
+                                .reduce((gloss, acc) => `${acc}, ${gloss}`)}
                           </Typography>
                           <Grid container spacing={2}>
                             {entry.data.semanticDomains.map(semdom => (
