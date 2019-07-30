@@ -156,13 +156,12 @@ export default class AddWords extends React.Component<
           ]
         }
       ],
-      audio: "",
+      audio: [],
       created: "",
       modified: "",
       history: [],
       partOfSpeech: "",
       editedBy: [],
-      accessability: State.active,
       otherField: "",
       plural: ""
     };

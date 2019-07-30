@@ -75,9 +75,6 @@ export class ReviewEntriesComponent extends React.Component<
     let currentWord: ReviewEntriesWord;
 
     for (let word of frontier) {
-      // Bypass deleted words
-      if (word.accessability === State.deleted) continue;
-
       // Create a new currentword
       currentWord = {
         id: word.id,
