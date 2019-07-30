@@ -22,6 +22,7 @@ import CharacterEntry from "./components/CharacterEntry";
 import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
 import CharacterDetail from "./components/CharacterDetail";
 import { CharacterSetEntry } from "./CharacterInventoryReducer";
+import theme from "../../types/theme";
 
 export interface CharacterInventoryProps {
   setValidCharacters: (inventory: string[]) => void;
@@ -83,20 +84,13 @@ export class CharacterInventory extends React.Component<
               alignItems="center"
             >
               <CharacterSetHeader />
-              {/* This component doesn't work with the new structure of the character inventory */}
-              {/* <CharacterEntry /> */}
+              <CharacterEntry />
               <CharacterList />
             </Grid>
           </Grid>
 
           <Grid item sm={3} xs={12}>
             {this.props.selectedCharacter === "" ? (
-              // <SampleWords
-              //   addToValidCharacters={this.props.addToValidCharacters}
-              //   allCharacters={this.props.validCharacters.concat(
-              //     this.props.rejectedCharacters
-              //   )}
-              // />
               <React.Fragment />
             ) : (
               <CharacterDetail
@@ -117,7 +111,7 @@ export class CharacterInventory extends React.Component<
                   this.props.uploadInventory();
                   history.push("/goals");
                 }}
-                style={{ margin: 10 }} // remove when we can add theme
+                style={{ margin: theme.spacing(1) }}
               >
                 <Save /> <Translate id="charInventory.save" />
               </Button>
@@ -127,7 +121,7 @@ export class CharacterInventory extends React.Component<
                 onClick={() => {
                   this.setState({ cancelDialogOpen: true });
                 }}
-                style={{ margin: 10 }} // remove when we can add theme
+                style={{ margin: theme.spacing(1) }}
               >
                 {" "}
                 <Translate id="charInventory.cancel" />
