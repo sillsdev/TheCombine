@@ -33,6 +33,7 @@ describe("Test Character Inventory Reducer", () => {
     ).toEqual({
       validCharacters: DATA,
       allWords: [],
+      characterSet: [],
       rejectedCharacters: [],
       selectedCharacter: ""
     });
@@ -42,6 +43,7 @@ describe("Test Character Inventory Reducer", () => {
     let inv = {
       validCharacters: DATA,
       allWords: [],
+      characterSet: [],
       rejectedCharacters: [],
       selectedCharacter: ""
     };
