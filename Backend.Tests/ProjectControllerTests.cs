@@ -22,7 +22,7 @@ namespace Backend.Tests
         private User _JwtAuthenticatedUser;
 
         [SetUp]
-        public async System.Threading.Tasks.Task SetupAsync()
+        public void Setup()
         {
             _permissionService = new PermissionServiceMock();
             _projectService = new ProjectServiceMock();
@@ -39,7 +39,7 @@ namespace Backend.Tests
             _JwtAuthenticatedUser.Username = "user";
             _JwtAuthenticatedUser.Password = "pass";
             _userService.Create(_JwtAuthenticatedUser);
-            _JwtAuthenticatedUser = await _userService.Authenticate(_JwtAuthenticatedUser.Username, _JwtAuthenticatedUser.Password);
+            _JwtAuthenticatedUser = _userService.Authenticate(_JwtAuthenticatedUser.Username, _JwtAuthenticatedUser.Password).Result;
 
             _controller.ControllerContext.HttpContext.Request.Headers["UserId"] = _JwtAuthenticatedUser.Id;
         }
