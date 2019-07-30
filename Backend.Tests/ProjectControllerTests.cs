@@ -10,7 +10,7 @@ using static BackendFramework.Controllers.ProjectController;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
+    [Parallelizable(ParallelScope.All)]
     public class ProjectControllerTests
     {
         private IProjectService _projectService;
