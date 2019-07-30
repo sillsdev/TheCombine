@@ -9,7 +9,7 @@ import {
 } from "../../types/goals";
 import { User } from "../../types/user";
 
-export class ViewFinal implements Goal {
+export class ReviewEntries implements Goal {
   goalType: GoalType;
   name: string;
   user: User;
@@ -23,8 +23,8 @@ export class ViewFinal implements Goal {
   hash: string;
 
   constructor(steps: GoalStep[] = []) {
-    this.goalType = GoalType.ViewFind;
-    this.name = "viewFinal";
+    this.goalType = GoalType.ReviewEntries;
+    this.name = "reviewEntries";
     this.user = new User("", "", "");
     this.steps = steps;
     this.numSteps = 1;

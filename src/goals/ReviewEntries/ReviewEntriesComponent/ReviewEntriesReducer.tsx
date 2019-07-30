@@ -1,29 +1,32 @@
-import { ViewFinalWord, OLD_SENSE } from "./ViewFinalComponent";
-import { ViewFinalAction, ViewFinalActionTypes } from "./ViewFinalActions";
+import { ReviewEntriesWord, OLD_SENSE } from "./ReviewEntriesComponent";
+import {
+  ReviewEntriesAction,
+  ReviewEntriesActionTypes
+} from "./ReviewEntriesActions";
 
-export interface ViewFinalState {
-  words: ViewFinalWord[];
+export interface ReviewEntriesState {
+  words: ReviewEntriesWord[];
   language: string;
 }
 
-export const defaultState: ViewFinalState = {
+export const defaultState: ReviewEntriesState = {
   words: [],
   language: "en"
 };
 
-export const viewFinalReducer = (
-  state: ViewFinalState = defaultState, //createStore() calls each reducer with undefined state
-  action: ViewFinalAction
-): ViewFinalState => {
+export const reviewEntriesReducer = (
+  state: ReviewEntriesState = defaultState, //createStore() calls each reducer with undefined state
+  action: ReviewEntriesAction
+): ReviewEntriesState => {
   switch (action.type) {
-    case ViewFinalActionTypes.UpdateAllWords:
+    case ReviewEntriesActionTypes.UpdateAllWords:
       // Update the local words
       return {
         ...state,
         words: action.words
       };
 
-    case ViewFinalActionTypes.UpdateWord:
+    case ReviewEntriesActionTypes.UpdateWord:
       // Update the specified word's IDs and data
       return {
         ...state,

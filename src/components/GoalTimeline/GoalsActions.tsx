@@ -10,7 +10,7 @@ import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv"
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import { MergeDups, MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
-import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
+import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
 import { GoalType } from "../../types/goals";
@@ -150,10 +150,10 @@ export function loadGoalData(goal: Goal) {
 
         let newGroups = [];
 
-        for (let group of groups){
+        for (let group of groups) {
           let newGroup = [];
-          for (let word of group){
-            if (!usedIDs.includes(word.id)){
+          for (let word of group) {
+            if (!usedIDs.includes(word.id)) {
               usedIDs.push(word.id);
               newGroup.push(word);
             }
@@ -289,8 +289,8 @@ function goalTypeToGoal(type: number): Goal | undefined {
       return new MergeDups();
     case GoalType.SpellcheckGloss:
       return new SpellCheckGloss();
-    case GoalType.ViewFind:
-      return new ViewFinal();
+    case GoalType.ReviewEntries:
+      return new ReviewEntries();
     case GoalType.HandleFlags:
       return new HandleFlags();
     default:
