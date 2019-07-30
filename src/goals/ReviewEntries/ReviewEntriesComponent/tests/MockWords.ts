@@ -1,6 +1,6 @@
-import { ViewFinalWord } from "../ViewFinalComponent";
+import { ReviewEntriesWord } from "../ReviewEntriesComponent";
 
-const mockWords: ViewFinalWord[] = [
+const mockWords: ReviewEntriesWord[] = [
   {
     id: "0",
     vernacular: "toad",

@@ -2,21 +2,24 @@ import React from "react";
 import { Grid, Chip, Dialog, IconButton } from "@material-ui/core";
 import Add from "@material-ui/icons/Add";
 
-import { ViewFinalWord, ViewFinalSense } from "../ViewFinalComponent";
+import {
+  ReviewEntriesWord,
+  ReviewEntriesSense
+} from "../ReviewEntriesComponent";
 import { SemanticDomain } from "../../../../types/word";
 import TreeView from "../../../../components/TreeView";
 import AlignedList, { SPACER } from "./AlignedList";
 import { Translate } from "react-localize-redux";
 
 interface DomainCellProps {
-  rowData: ViewFinalWord;
+  rowData: ReviewEntriesWord;
   selectedDomain: SemanticDomain;
   editDomains?: (senseId: string, newDomains: SemanticDomain[]) => void;
 }
 
 interface DomainCellState {
   addingDomains: boolean;
-  senseToChange: ViewFinalSense;
+  senseToChange: ReviewEntriesSense;
 }
 
 export default class DomainCell extends React.Component<
@@ -26,14 +29,17 @@ export default class DomainCell extends React.Component<
   constructor(props: DomainCellProps) {
     super(props);
     // This data is set before any actions which depend on it, meaning that this line is a compiler-appeaser
-    this.state = { addingDomains: false, senseToChange: {} as ViewFinalSense };
+    this.state = {
+      addingDomains: false,
+      senseToChange: {} as ReviewEntriesSense
+    };
 
     this.prepAddDomain = this.prepAddDomain.bind(this);
     this.addDomain = this.addDomain.bind(this);
     this.deleteDomain = this.deleteDomain.bind(this);
   }
 
-  private prepAddDomain(sense: ViewFinalSense) {
+  private prepAddDomain(sense: ReviewEntriesSense) {
     this.setState({
       addingDomains: true,
       senseToChange: sense
@@ -54,7 +60,7 @@ export default class DomainCell extends React.Component<
       ]);
   }
 
-  private deleteDomain(toDelete: SemanticDomain, sense: ViewFinalSense) {
+  private deleteDomain(toDelete: SemanticDomain, sense: ReviewEntriesSense) {
     if (this.props.editDomains)
       this.props.editDomains(
         sense.senseId,
@@ -85,7 +91,7 @@ export default class DomainCell extends React.Component<
               ) : (
                 <Grid item xs key={`noDomain${sense.senseId}`}>
                   <Chip
-                    label={<Translate id="viewFinal.nodomain" />}
+                    label={<Translate id="reviewEntries.nodomain" />}
                     color="secondary"
                   />
                 </Grid>
