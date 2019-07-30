@@ -109,7 +109,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   chooseSpellingSuggestion(suggestion: string) {
-    this.props.toggleDisplaySpellingSuggestions();
     this.setState({
       isSpelledCorrectly: true,
       newEntry: {
@@ -127,6 +126,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         ]
       }
     });
+    this.props.toggleDisplaySpellingSuggestions();
   }
 
   addNewSense(existingWord: Word, newSense: string) {

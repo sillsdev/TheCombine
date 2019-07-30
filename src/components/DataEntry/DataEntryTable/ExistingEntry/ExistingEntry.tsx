@@ -93,7 +93,7 @@ export class ExistingEntry extends React.Component<
 
   chooseSpellingSuggestion(suggestion: string) {
     let updatedWord: Word = { ...this.props.entry };
-    updatedWord.senses[0].glosses[0].def = suggestion; // Should work because we are only allowed to change the spellings of brand new words
+    updatedWord.senses[0].glosses[0].def = suggestion; // Newly entered words only have one sense
 
     this.props.updateWord(updatedWord);
     this.props.toggleDisplaySpellingSuggestions();

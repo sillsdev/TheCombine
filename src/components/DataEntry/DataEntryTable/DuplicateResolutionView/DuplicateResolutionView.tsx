@@ -46,7 +46,7 @@ export class DuplicateResolutionView extends React.Component<
             {this.props.existingEntry.senses.map((sense: Sense, index) =>
               sense.glosses.map(gloss => (
                 <Chip
-                  label={gloss.def + sense.semanticDomains}
+                  label={gloss.def}
                   style={{ margin: 4 }}
                   onClick={() => {
                     this.props.addSemanticDomain(
