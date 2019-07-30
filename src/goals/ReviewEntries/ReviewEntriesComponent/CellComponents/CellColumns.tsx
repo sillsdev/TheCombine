@@ -11,6 +11,17 @@ import DeleteCell from "./DeleteCell";
 import { Translate } from "react-localize-redux";
 import SenseCell from "./SenseCell";
 
+enum SortStyle {
+  VERNACULAR,
+  GLOSS,
+  DOMAIN,
+  NONE
+}
+
+function domainNumberToArray(id: string) {
+  return id.split(".").map(digit => Number(digit));
+}
+
 export interface FieldParameterStandard {
   rowData: ReviewEntriesWord;
   value: any;
@@ -46,6 +57,7 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
 }
 
 // Define columns
+var currentSort: SortStyle = SortStyle.NONE;
 export default [
   // Vernacular column
   {
@@ -60,7 +72,12 @@ export default [
     field: "senses",
     disableClick: true,
     render: (rowData: ReviewEntriesWord) => (
-      <SenseCell value={rowData.senses} rowData={rowData} editable={false} />
+      <SenseCell
+        value={rowData.senses}
+        rowData={rowData}
+        editable={false}
+        sortingByGloss={currentSort === SortStyle.GLOSS}
+      />
     ),
     editComponent: (props: any) => (
       <SenseCell
@@ -68,6 +85,7 @@ export default [
         rowData={props.rowData}
         onRowDataChange={props.onRowDataChange}
         editable={true}
+        sortingByGloss={false}
       />
     ),
     customFilterAndSearch: (
@@ -82,6 +100,10 @@ export default [
     customSort: (a: any, b: any, type: "row" | "group"): number => {
       let count = 0;
       let compare: number = 0;
+
+      // IDs that we're sorting by gloss
+      if (currentSort !== SortStyle.GLOSS) currentSort = SortStyle.GLOSS;
+
       while (
         count < a.senses.length &&
         count < b.senses.length &&
@@ -105,7 +127,12 @@ export default [
   {
     title: "Domains",
     field: "domains",
-    render: (rowData: ReviewEntriesWord) => <DomainCell rowData={rowData} />,
+    render: (rowData: ReviewEntriesWord) => (
+      <DomainCell
+        rowData={rowData}
+        sortingByDomains={currentSort === SortStyle.DOMAIN}
+      />
+    ),
     editComponent: (props: any) => {
       const editDomains = (senseId: string, domains: SemanticDomain[]) => {
         if (props.onRowDataChange)
@@ -121,7 +148,13 @@ export default [
             })
           });
       };
-      return <DomainCell rowData={props.rowData} editDomains={editDomains} />;
+      return (
+        <DomainCell
+          rowData={props.rowData}
+          editDomains={editDomains}
+          sortingByDomains={false}
+        />
+      );
     },
     customFilterAndSearch: (
       term: string,
@@ -144,10 +177,16 @@ export default [
       let domainsA: SemanticDomain[];
       let domainsB: SemanticDomain[];
 
-      let codeA: number | undefined;
-      let codeB: number | undefined;
-      // -: a < b
-      // +: a > b
+      let codeA: number[];
+      let codeB: number[];
+
+      // Sets that we're sorting by domain
+      if (currentSort !== SortStyle.DOMAIN) currentSort = SortStyle.DOMAIN;
+
+      // Special case: no senses
+      if (a.senses === undefined || a.senses.length === 0) return 1;
+      else if (b.senses === undefined || b.senses.length === 0) return -1;
+
       while (
         compare === 0 &&
         count < a.senses.length &&
@@ -166,17 +205,18 @@ export default [
           compare === 0 && d < domainsA.length && d < domainsB.length;
           d++
         ) {
+          codeA = domainNumberToArray(domainsA[d].id);
+          codeB = domainNumberToArray(domainsB[d].id);
           for (
-            let c = 0;
-            compare === 0 &&
-            c < domainsA[d].id.length &&
-            c < domainsB[d].id.length;
-            c++
+            let i = 0;
+            i < codeA.length && i < codeB.length && compare === 0;
+            i++
           ) {
-            codeA = domainsA[d].id.codePointAt(c);
-            codeB = domainsB[d].id.codePointAt(c);
-            if (codeA && codeB) compare = codeA - codeB;
+            compare = codeA[i] - codeB[i];
           }
+
+          // If the two glosses SEEM identical, sort by length
+          if (compare === 0) compare = codeA.length - codeB.length;
         }
         count++;
       }
