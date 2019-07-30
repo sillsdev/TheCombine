@@ -2,12 +2,12 @@ import React from "react";
 import configureMockStore from "redux-mock-store";
 import axios from "axios";
 
-import ViewFinalConnected, {
-  ViewFinalWord,
-  ViewFinalSense,
+import ReviewEntriesConnected, {
+  ReviewEntriesWord,
+  ReviewEntriesSense,
   SEP_CHAR,
   OLD_SENSE
-} from "../ViewFinalComponent";
+} from "../ReviewEntriesComponent";
 import * as utilities from "../../../../utilities";
 import mockWords from "./MockWords";
 import { Provider } from "react-redux";
@@ -16,7 +16,7 @@ import ReactDOM from "react-dom";
 
 // Mock store + axios
 const state = {
-  viewFinalState: {
+  reviewEntriesState: {
     language: "en",
     words: mockWords
   },
@@ -75,7 +75,7 @@ beforeAll(() => {
   const div = document.createElement("div");
   ReactDOM.render(
     <Provider store={mockStore}>
-      <ViewFinalConnected
+      <ReviewEntriesConnected
         words={mockWords}
         language="en"
         updateAllWords={MOCK_UPDATE}
@@ -87,7 +87,7 @@ beforeAll(() => {
   ReactDOM.unmountComponentAtNode(div);
 });
 
-describe("Tests ViewFinalComponent", () => {
+describe("Tests ReviewEntriesComponent", () => {
   it("Initialized correctly in beforeAll", () => {
     // Check creation
     expect(MOCK_UPDATE).toHaveBeenCalledWith(
@@ -102,24 +102,23 @@ describe("Tests ViewFinalComponent", () => {
   });
 });
 
-function createMockWord(word: ViewFinalWord, language: string): Word {
+function createMockWord(word: ReviewEntriesWord, language: string): Word {
   return {
     id: word.id,
     vernacular: word.vernacular,
     senses: word.senses.map(sense => createMockSense(sense, language)),
-    audio: "",
+    audio: [],
     created: "",
     modified: "",
     history: [],
     partOfSpeech: "",
     editedBy: [],
-    accessability: State.active,
     otherField: "",
     plural: ""
   };
 }
 
-function createMockSense(sense: ViewFinalSense, language: string): Sense {
+function createMockSense(sense: ReviewEntriesSense, language: string): Sense {
   return {
     glosses: sense.glosses
       .split(SEP_CHAR)

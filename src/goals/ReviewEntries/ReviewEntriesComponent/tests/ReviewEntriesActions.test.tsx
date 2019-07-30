@@ -2,13 +2,13 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import axios from "axios";
 
-import { updateFrontierWord } from "../ViewFinalActions";
+import { updateFrontierWord } from "../ReviewEntriesActions";
 import {
-  ViewFinalWord,
+  ReviewEntriesWord,
   OLD_SENSE,
   SEP_CHAR,
-  ViewFinalSense
-} from "../ViewFinalComponent";
+  ReviewEntriesSense
+} from "../ReviewEntriesComponent";
 import {
   SemanticDomain,
   Word,
@@ -34,7 +34,7 @@ const sense0_frontier: Sense = {
   semanticDomains: [domain1],
   accessibility: State.active
 };
-const sense0_local: ViewFinalSense = {
+const sense0_local: ReviewEntriesSense = {
   senseId: "sense0",
   glosses: gloss1.def,
   domains: [domain1],
@@ -51,19 +51,18 @@ const oldFrontierWord: Word = {
       semanticDomains: [domain0]
     }
   ],
-  audio: "",
+  audio: [],
   created: "",
   modified: "",
   history: [],
   partOfSpeech: "",
   editedBy: [],
-  accessability: State.active,
   otherField: "",
   plural: ""
 };
 
 // oldWord: the version of this word in local memory
-const oldWord: ViewFinalWord = {
+const oldWord: ReviewEntriesWord = {
   id: "word",
   vernacular: "word",
   senses: [
@@ -83,7 +82,7 @@ beforeEach(() => {
   mockStore.clearActions();
 });
 
-describe("Test ViewFinalactions", () => {
+describe("Test ReviewEntriesActions", () => {
   // Tests adding data
   it("Changes the vernacular", async () => {
     await makeDispatch({ ...oldWord, vernacular: "foo2" }, oldWord);
@@ -337,8 +336,8 @@ function mockBackendReturn(data: Word) {
 }
 
 function makeDispatch(
-  newWord: ViewFinalWord,
-  oldWord: ViewFinalWord,
+  newWord: ReviewEntriesWord,
+  oldWord: ReviewEntriesWord,
   language = "en"
 ) {
   return mockStore.dispatch<any>(

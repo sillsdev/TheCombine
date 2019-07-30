@@ -1,6 +1,6 @@
-import { viewFinalReducer, defaultState } from "../ViewFinalReducer";
-import { OLD_SENSE } from "../ViewFinalComponent";
-import { ViewFinalActionTypes } from "../ViewFinalActions";
+import { reviewEntriesReducer, defaultState } from "../ReviewEntriesReducer";
+import { OLD_SENSE } from "../ReviewEntriesComponent";
+import { ReviewEntriesActionTypes } from "../ReviewEntriesActions";
 import mockWords from "./MockWords";
 
 const newWord = {
@@ -38,17 +38,17 @@ const mockState = {
   words: mockWords
 };
 
-describe("Test ViewFinalReducer", () => {
+describe("Test ReviewEntriesReducer", () => {
   it("Returns default state when passed undefined state", () => {
-    expect(viewFinalReducer(undefined, { type: undefined } as any)).toEqual(
+    expect(reviewEntriesReducer(undefined, { type: undefined } as any)).toEqual(
       defaultState
     );
   });
 
   it("Adds a set of words to a list when passed an UpdateAllWords action", () => {
     expect(
-      viewFinalReducer(defaultState, {
-        type: ViewFinalActionTypes.UpdateAllWords,
+      reviewEntriesReducer(defaultState, {
+        type: ReviewEntriesActionTypes.UpdateAllWords,
         words: mockWords
       })
     ).toEqual(mockState);
@@ -56,8 +56,8 @@ describe("Test ViewFinalReducer", () => {
 
   it("Updates a specified word when passed an UpdateWord action", () => {
     expect(
-      viewFinalReducer(mockState, {
-        type: ViewFinalActionTypes.UpdateWord,
+      reviewEntriesReducer(mockState, {
+        type: ReviewEntriesActionTypes.UpdateWord,
         id: mockWords[0].id,
         newId: result.id,
         newWord: newWord

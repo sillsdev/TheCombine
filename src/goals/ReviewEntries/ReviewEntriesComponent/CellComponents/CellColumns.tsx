@@ -1,15 +1,18 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
 
-import { ViewFinalWord, ViewFinalSense } from "../ViewFinalComponent";
+import {
+  ReviewEntriesWord,
+  ReviewEntriesSense
+} from "../ReviewEntriesComponent";
 import { SemanticDomain } from "../../../../types/word";
-import DomainCell from "./";
+import DomainCell from "../CellComponents";
 import DeleteCell from "./DeleteCell";
 import { Translate } from "react-localize-redux";
 import SenseCell from "./SenseCell";
 
 export interface FieldParameterStandard {
-  rowData: ViewFinalWord;
+  rowData: ReviewEntriesWord;
   value: any;
   onRowDataChange?: (...args: any) => any;
 }
@@ -23,7 +26,7 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
           key={`vernacular${props.rowData.id}`}
           value={props.value}
           error={props.value.length === 0}
-          placeholder={translate("viewFinal.novernacular").toString()}
+          placeholder={translate("reviewEntries.novernacular").toString()}
           InputProps={{
             readOnly: !editable,
             disableUnderline: !editable
@@ -48,7 +51,7 @@ export default [
   {
     title: "Vernacular",
     field: "vernacular",
-    render: (rowData: ViewFinalWord) =>
+    render: (rowData: ReviewEntriesWord) =>
       vernacularField({ rowData, value: rowData.vernacular }, false),
     editComponent: (props: any) => vernacularField(props, true)
   },
@@ -56,7 +59,7 @@ export default [
     title: "Glosses",
     field: "senses",
     disableClick: true,
-    render: (rowData: ViewFinalWord) => (
+    render: (rowData: ReviewEntriesWord) => (
       <SenseCell value={rowData.senses} rowData={rowData} editable={false} />
     ),
     editComponent: (props: any) => (
@@ -67,7 +70,10 @@ export default [
         editable={true}
       />
     ),
-    customFilterAndSearch: (term: string, rowData: ViewFinalWord): boolean => {
+    customFilterAndSearch: (
+      term: string,
+      rowData: ReviewEntriesWord
+    ): boolean => {
       let regex: RegExp = new RegExp(term);
       for (let sense of rowData.senses)
         if (regex.exec(sense.glosses) !== null) return true;
@@ -99,13 +105,13 @@ export default [
   {
     title: "Domains",
     field: "domains",
-    render: (rowData: ViewFinalWord) => <DomainCell rowData={rowData} />,
+    render: (rowData: ReviewEntriesWord) => <DomainCell rowData={rowData} />,
     editComponent: (props: any) => {
       const editDomains = (senseId: string, domains: SemanticDomain[]) => {
         if (props.onRowDataChange)
           props.onRowDataChange({
             ...props.rowData,
-            senses: props.rowData.senses.map((sense: ViewFinalSense) => {
+            senses: props.rowData.senses.map((sense: ReviewEntriesSense) => {
               if (sense.senseId === senseId)
                 return {
                   ...sense,
@@ -117,7 +123,10 @@ export default [
       };
       return <DomainCell rowData={props.rowData} editDomains={editDomains} />;
     },
-    customFilterAndSearch: (term: string, rowData: ViewFinalWord): boolean => {
+    customFilterAndSearch: (
+      term: string,
+      rowData: ReviewEntriesWord
+    ): boolean => {
       let regex: RegExp = new RegExp(term);
       for (let sense of rowData.senses)
         for (let domain of sense.domains)
@@ -157,7 +166,7 @@ export default [
     field: "id",
     filtering: false,
     sorting: false,
-    render: (rowData: ViewFinalWord) => null,
+    render: (rowData: ReviewEntriesWord) => null,
     editComponent: (props: FieldParameterStandard) => {
       const deleteSense = (senseId: string) => {
         if (props.onRowDataChange)
