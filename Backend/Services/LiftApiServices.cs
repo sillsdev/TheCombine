@@ -30,10 +30,10 @@ namespace BackendFramework.Services
                 Writer.WriteStartElement("pronunciation");
                 
 
-                foreach (var pro in entry.Pronunciations)
+                for (var pro = 0; pro < entry.Pronunciations.Count; pro++)
                 {
                     Writer.WriteStartElement("media");
-                    Writer.WriteAttributeString("href", Path.GetFileName(entry.Pronunciations.First().Forms.First().Form));
+                    Writer.WriteAttributeString("href", Path.GetFileName(entry.Pronunciations[pro].Forms.First().Form));
                     Writer.WriteEndElement();
                 }
 
@@ -99,7 +99,7 @@ namespace BackendFramework.Services
 
             //generate the zip dir
             string exportDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Export"));
-            string zipDir = Path.Combine(exportDir, "LiftExport");
+            string zipDir = Path.Combine(exportDir, "LiftExport", "Lift");
             Directory.CreateDirectory(zipDir);
 
             //add audio dir inside zip dir
@@ -147,7 +147,7 @@ namespace BackendFramework.Services
             LdmlExport(ldmlDir, proj.VernacularWritingSystem);
 
             //compress everything
-            ZipFile.CreateFromDirectory(zipDir, Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
+            ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
 
             return exportDir;
         }
