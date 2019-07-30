@@ -5,7 +5,7 @@ import {
   createDomains
 } from "../TreeViewReducer";
 import { TreeViewAction, TreeActionType } from "../TreeViewActions";
-import SemanticDomain from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../SemanticDomain";
 import { StoreAction, StoreActions } from "../../../rootActions";
 
 describe("Test the TreeViewReducer", () => {
@@ -73,8 +73,8 @@ describe("Test the TreeViewReducer", () => {
   });
 
   it("Returns state with a new SemanticDomain when requested to change this value", () => {
-    let payload: SemanticDomain = defaultState.currentdomain
-      .parentDomain as SemanticDomain;
+    let payload: SemanticDomainWithSubdomains = defaultState.currentdomain
+      .parentDomain as SemanticDomainWithSubdomains;
     expect(
       treeViewReducer(defaultState, {
         type: TreeActionType.TRAVERSE_TREE,
