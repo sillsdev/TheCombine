@@ -6,7 +6,7 @@ import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
-import { ViewFinal } from "../../../goals/ViewFinal/ViewFinal";
+import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
 import { User } from "../../../types/user";
 import {
   MergeTreeActions,
@@ -333,7 +333,7 @@ describe("Test GoalsActions", () => {
     const goal3: Goal = new MergeDups();
     const history: Goal[] = [goal, goal2, goal3];
 
-    const currentGoal: Goal = new ViewFinal();
+    const currentGoal: Goal = new ReviewEntries();
     let returnedIndex = actions.getIndexInHistory(history, currentGoal);
 
     expect(returnedIndex).toEqual(-1);

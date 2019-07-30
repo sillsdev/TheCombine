@@ -2,13 +2,13 @@ import React from "react";
 
 import columns from "../CellColumns";
 import mockWords from "../../tests/MockWords";
-import { ViewFinalWord, SEP_CHAR } from "../../ViewFinalComponent";
+import { ReviewEntriesWord, SEP_CHAR } from "../../ReviewEntriesComponent";
 import { SemanticDomain } from "../../../../../types/word";
 import ReactDOM from "react-dom";
 
 const GLOSS = "hoovy";
 const DOMAIN: SemanticDomain = { name: "Person", id: "0.1" };
-const WORD: ViewFinalWord = {
+const WORD: ReviewEntriesWord = {
   id: "id",
   vernacular: "pootis",
   senses: [

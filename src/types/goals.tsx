@@ -80,7 +80,7 @@ export enum GoalType {
   ValidateStrWords,
   MergeDups,
   SpellcheckGloss,
-  ViewFind,
+  ReviewEntries,
   HandleFlags
 }
 
