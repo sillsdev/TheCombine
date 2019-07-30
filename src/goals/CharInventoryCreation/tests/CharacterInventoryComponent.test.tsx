@@ -38,7 +38,7 @@ beforeAll(() => {
           uploadInventory={UPLOAD_INV}
           setRejectedCharacters={jest.fn()}
           setSelectedCharacter={jest.fn()}
-          getAllCharacters={jest.fn(() => new Promise(resolve => resolve()))}
+          getAllCharacters={jest.fn(() => Promise.resolve())}
           fetchWords={jest.fn()}
           selectedCharacter={""}
           allCharacters={[]}
