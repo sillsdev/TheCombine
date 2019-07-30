@@ -15,13 +15,15 @@ namespace Backend.Tests
         private IWordRepository _wordrepo;
         private IProjectService _projServ;
         private LiftController _liftController;
+        private IPermissionService _permissionService;
 
         [SetUp]
         public void Setup()
         {
+            _permissionService = new PermissionServiceMock();
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
-            _liftController = new LiftController(_wordrepo, _projServ);
+            _liftController = new LiftController(_wordrepo, _projServ, _permissionService);
         }
 
         Project RandomProject()
@@ -122,7 +124,7 @@ namespace Backend.Tests
 
             //get path to the starting zip
             //This is convoluted because the tests run in netcoreapp2.1 and the folder needed in in the great-grand-parent folder
-            string actualFilename = "SingleEntryLiftWithSound.zip";
+            string actualFilename = "SingleEntryLiftWithTwoSound.zip";
             string pathToStartZip = Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
             pathToStartZip = Path.Combine(pathToStartZip, "Assets", actualFilename);
 

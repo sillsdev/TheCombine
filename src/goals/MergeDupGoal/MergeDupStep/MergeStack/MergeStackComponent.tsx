@@ -172,13 +172,13 @@ class MergeStack extends React.Component<
               background: snapshot.isDragging ? "lightgreen" : "white"
             }}
           >
-            <CardContent style={{ position: "relative", paddingRight: 40}}>
+            <CardContent style={{ position: "relative", paddingRight: 40 }}>
               <div
                 style={{
                   position: "absolute",
                   top: "50%",
                   right: 0,
-                  transform: "translateY(-50%)",
+                  transform: "translateY(-50%)"
                 }}
               >
                 {showMoreButton && (
@@ -188,7 +188,9 @@ class MergeStack extends React.Component<
                 )}
               </div>
               <div>
-                <Typography variant={"h5"}>{glosses[0].def}</Typography>
+                {glosses.length > 0 && (
+                  <Typography variant={"h5"}>{glosses[0].def}</Typography>
+                )}
                 {/* List semantic domains */}
                 <Grid container spacing={2}>
                   {semDoms.map(dom => (

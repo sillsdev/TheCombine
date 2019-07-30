@@ -7,6 +7,7 @@ import { CharacterInventoryState } from "../goals/CharInventoryCreation/Characte
 import { Project } from "./project";
 import { MergeDuplicateState } from "../goals/MergeDupGoal/mergeDuplicateReducer";
 import { TreeViewState } from "../components/TreeView/TreeViewReducer";
+import { ReviewEntriesState } from "../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
 
 //root store structure
 export interface StoreState {
@@ -29,6 +30,9 @@ export interface StoreState {
   characterInventoryState: CharacterInventoryState;
 
   currentProject: Project;
+
+  // View Final goal
+  reviewEntriesState: ReviewEntriesState;
 
   //temporary
   tempState: TempState;

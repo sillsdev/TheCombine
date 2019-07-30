@@ -11,6 +11,7 @@ import { goalSelectReducer } from "./components/GoalTimeline/GoalSwitcher/GoalSe
 import { projectReducer } from "./components/Project/ProjectReducer";
 import mergeDuplicateReducer from "./goals/MergeDupGoal/mergeDuplicateReducer";
 import { treeViewReducer } from "./components/TreeView/TreeViewReducer";
+import { reviewEntriesReducer } from "./goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //handles localization through react-localize-redux utilities
@@ -32,6 +33,9 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   characterInventoryState: characterInventoryReducer,
 
   currentProject: projectReducer,
+
+  // View Final goal
+  reviewEntriesState: reviewEntriesReducer,
 
   //temporary
   tempState: tempReducer

@@ -7,6 +7,7 @@ import PageNotFound from "../../../components/PageNotFound/component";
 import EmptyGoalComponent from "../../../components/EmptyGoal/EmptyGoalComponent";
 import MergeDupStep from "../../MergeDupGoal/MergeDupStep";
 import CharInventoryCreation from "../../CharInventoryCreation";
+import ReviewEntriesComponent from "../../ReviewEntries/ReviewEntriesComponent";
 
 interface componentSteps {
   goal: GoalType;
@@ -39,8 +40,8 @@ const stepComponentDictionary: componentSteps[] = [
     steps: []
   },
   {
-    goal: GoalType.ViewFind,
-    steps: []
+    goal: GoalType.ReviewEntries,
+    steps: [<ReviewEntriesComponent />]
   },
   {
     goal: GoalType.HandleFlags,
