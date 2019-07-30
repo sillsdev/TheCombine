@@ -15,7 +15,6 @@ import {
   DialogActions
 } from "@material-ui/core";
 import { Project } from "../../types/project";
-import SampleWords from "./components/SampleWords";
 import { Save } from "@material-ui/icons";
 import history from "../../history";
 import CharacterEntry from "./components/CharacterEntry";

@@ -369,7 +369,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
           onTouchStart={[Function]}
           style={
             Object {
-              "margin": 10,
+              "margin": 16,
             }
           }
           tabIndex={0}
@@ -418,7 +418,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
           onTouchStart={[Function]}
           style={
             Object {
-              "margin": 10,
+              "margin": 16,
             }
           }
           tabIndex={0}
