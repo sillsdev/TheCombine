@@ -110,8 +110,8 @@
       "Validar caracteres estructurales"
     ]
   },
-  "viewFinal": {
-    "title": ["View Final", "Ver final"],
+  "reviewEntries": {
+    "title": ["Review Entries", "Revisar final"],
     "sense": ["Sense", "Sentido"],
     "novernacular": ["No vernacular input!", "No tenemos un vernáculo!"],
     "nogloss": ["No glosses input", "No tenemos un traduccion"],

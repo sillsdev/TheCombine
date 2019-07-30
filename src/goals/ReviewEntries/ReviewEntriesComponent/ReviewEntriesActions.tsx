@@ -1,36 +1,36 @@
 import { Word, Sense, State } from "../../../types/word";
 import {
-  ViewFinalWord,
+  ReviewEntriesWord,
   SEP_CHAR,
-  ViewFinalSense,
+  ReviewEntriesSense,
   OLD_SENSE
-} from "./ViewFinalComponent";
+} from "./ReviewEntriesComponent";
 import * as backend from "../../../backend";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../types";
 
-export enum ViewFinalActionTypes {
+export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD"
 }
 
-interface FinalUpdateWords {
-  type: ViewFinalActionTypes.UpdateAllWords;
-  words: ViewFinalWord[];
+interface ReviewUpdateWords {
+  type: ReviewEntriesActionTypes.UpdateAllWords;
+  words: ReviewEntriesWord[];
 }
 
-interface FinalUpdateWord {
-  type: ViewFinalActionTypes.UpdateWord;
+interface ReviewUpdateWord {
+  type: ReviewEntriesActionTypes.UpdateWord;
   id: string;
   newId: string;
-  newWord: ViewFinalWord;
+  newWord: ReviewEntriesWord;
 }
 
-export type ViewFinalAction = FinalUpdateWords | FinalUpdateWord;
+export type ReviewEntriesAction = ReviewUpdateWords | ReviewUpdateWord;
 
-export function updateAllWords(words: ViewFinalWord[]): FinalUpdateWords {
+export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
-    type: ViewFinalActionTypes.UpdateAllWords,
+    type: ReviewEntriesActionTypes.UpdateAllWords,
     words
   };
 }
@@ -38,10 +38,10 @@ export function updateAllWords(words: ViewFinalWord[]): FinalUpdateWords {
 function updateWord(
   id: string,
   newId: string,
-  newWord: ViewFinalWord
-): FinalUpdateWord {
+  newWord: ReviewEntriesWord
+): ReviewUpdateWord {
   return {
-    type: ViewFinalActionTypes.UpdateWord,
+    type: ReviewEntriesActionTypes.UpdateWord,
     id,
     newId,
     newWord
@@ -49,9 +49,9 @@ function updateWord(
 }
 
 // Return the translation code for our error, or undefined if there is no error
-function getError(sense: ViewFinalSense): string | undefined {
-  if (sense.glosses.length === 0) return "viewFinal.error.gloss";
-  else if (sense.domains.length === 0) return "viewFinal.error.domain";
+function getError(sense: ReviewEntriesSense): string | undefined {
+  if (sense.glosses.length === 0) return "reviewEntries.error.gloss";
+  else if (sense.domains.length === 0) return "reviewEntries.error.domain";
   else return undefined;
 }
 
@@ -64,11 +64,11 @@ function getError(sense: ViewFinalSense): string | undefined {
 // * If a new sense has a gloss but no domain, or a domain but no gloss, reject it
 // * If the user attempts to delete all senses, return old senses
 function cleanSenses(
-  senses: ViewFinalSense[],
-  oldSenses: ViewFinalSense[]
-): ViewFinalSense[] | string {
-  let cleanSenses: ViewFinalSense[] = [];
-  let senseBuffer: ViewFinalSense | undefined;
+  senses: ReviewEntriesSense[],
+  oldSenses: ReviewEntriesSense[]
+): ReviewEntriesSense[] | string {
+  let cleanSenses: ReviewEntriesSense[] = [];
+  let senseBuffer: ReviewEntriesSense | undefined;
   let error: string | undefined;
 
   for (let newSense of senses) {
@@ -116,27 +116,29 @@ function cleanSenses(
 // * If there's no vernacular field, add in the vernacular of old field
 // * If neither the word nor oldWord has a vernacular, reject
 function cleanWord(
-  word: ViewFinalWord,
-  oldWord: ViewFinalWord
-): ViewFinalWord | string {
+  word: ReviewEntriesWord,
+  oldWord: ReviewEntriesWord
+): ReviewEntriesWord | string {
   let vernacular =
     word.vernacular.length !== 0 ? word.vernacular : oldWord.vernacular;
   if (vernacular.length !== 0) {
     let senses = cleanSenses(word.senses, oldWord.senses);
     if (typeof senses !== "string") return { ...word, vernacular, senses };
     else return senses;
-  } else return "viewFinal.error.vernacular";
+  } else return "reviewEntries.error.vernacular";
 }
 
-// Converts the ViewFinalWord into a Word to send to the backend
+// Converts the ReviewEntriesWord into a Word to send to the backend
 export function updateFrontierWord(
-  newData: ViewFinalWord,
-  oldData: ViewFinalWord,
+  newData: ReviewEntriesWord,
+  oldData: ReviewEntriesWord,
   language: string
 ) {
-  return async (dispatch: ThunkDispatch<StoreState, any, ViewFinalAction>) => {
+  return async (
+    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>
+  ) => {
     // Clean + check data; if there's something irrepairably bad, return the error
-    let editSource: ViewFinalWord | string = cleanWord(newData, oldData);
+    let editSource: ReviewEntriesWord | string = cleanWord(newData, oldData);
     if (typeof editSource === "string") return Promise.reject(editSource);
 
     let editWord: Word;

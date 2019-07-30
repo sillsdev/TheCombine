@@ -6,7 +6,7 @@ import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { ViewFinal } from "../../goals/ViewFinal/ViewFinal";
+import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 
 let goal1: Goal = new CreateCharInv();
 let goal2: Goal = new CreateStrWordInv();
@@ -15,7 +15,7 @@ let goal4: Goal = new MergeDups();
 let goal5: Goal = new SpellCheckGloss();
 let goal6: Goal = new ValidateChars();
 let goal7: Goal = new ValidateStrWords();
-let goal8: Goal = new ViewFinal();
+let goal8: Goal = new ReviewEntries();
 let allTheGoals: Goal[] = [
   goal1,
   goal2,

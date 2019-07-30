@@ -3,10 +3,10 @@ import { Chip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 
 import AlignedList, { SPACER } from "./AlignedList";
-import { ViewFinalWord } from "../ViewFinalComponent";
+import { ReviewEntriesWord } from "../ReviewEntriesComponent";
 
 interface DeleteCellProps {
-  rowData: ViewFinalWord;
+  rowData: ReviewEntriesWord;
   delete: (deleteIndex: string) => void;
 }
 

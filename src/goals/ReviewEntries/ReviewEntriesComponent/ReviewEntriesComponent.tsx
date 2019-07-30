@@ -13,31 +13,31 @@ import columns from "./CellComponents/CellColumns";
 import { uuid } from "../../../utilities";
 
 // Component state/props
-interface ViewFinalProps {
+interface ReviewEntriesProps {
   // Props mapped to store
   language: string;
-  words: ViewFinalWord[];
+  words: ReviewEntriesWord[];
 
   // Dispatch changes
-  updateAllWords: (words: ViewFinalWord[]) => void;
+  updateAllWords: (words: ReviewEntriesWord[]) => void;
   updateFrontierWord: (
-    newData: ViewFinalWord,
-    oldData: ViewFinalWord,
+    newData: ReviewEntriesWord,
+    oldData: ReviewEntriesWord,
     language: string
   ) => Promise<void>;
 }
 
-interface ViewFinalState {
+interface ReviewEntriesState {
   editingField: boolean;
   errorMsg: string | undefined;
 }
 
-export interface ViewFinalWord {
+export interface ReviewEntriesWord {
   id: string;
   vernacular: string;
-  senses: ViewFinalSense[];
+  senses: ReviewEntriesSense[];
 }
-export interface ViewFinalSense {
+export interface ReviewEntriesSense {
   senseId: string;
   glosses: string;
   domains: SemanticDomain[];
@@ -50,11 +50,11 @@ export const SEP_CHAR: string = ",";
 const SEPARATOR: string = SEP_CHAR + " ";
 const ROWS_PER_PAGE: number[] = [10, 100, 1000];
 
-export class ViewFinalComponent extends React.Component<
-  ViewFinalProps & LocalizeContextProps,
-  ViewFinalState
+export class ReviewEntriesComponent extends React.Component<
+  ReviewEntriesProps & LocalizeContextProps,
+  ReviewEntriesState
 > {
-  constructor(props: ViewFinalProps & LocalizeContextProps) {
+  constructor(props: ReviewEntriesProps & LocalizeContextProps) {
     super(props);
 
     this.state = {
@@ -71,8 +71,8 @@ export class ViewFinalComponent extends React.Component<
 
   // Creates the local set of words from the frontier
   private updateLocalWords(frontier: Word[]) {
-    let newWords: ViewFinalWord[] = [];
-    let currentWord: ViewFinalWord;
+    let newWords: ReviewEntriesWord[] = [];
+    let currentWord: ReviewEntriesWord;
 
     for (let word of frontier) {
       // Bypass deleted words
@@ -95,10 +95,10 @@ export class ViewFinalComponent extends React.Component<
     this.props.updateAllWords(newWords);
   }
 
-  // Convert a Sense into a ViewFinalSense
+  // Convert a Sense into a ReviewEntriesSense
   private parseSense(sense: Sense) {
     let hasGloss: boolean;
-    let currentSense: ViewFinalSense = {
+    let currentSense: ReviewEntriesSense = {
       glosses: "",
       domains: [],
       deleted:
@@ -143,14 +143,17 @@ export class ViewFinalComponent extends React.Component<
           //<React.Fragment>Test</React.Fragment>
           <MaterialTable
             icons={tableIcons}
-            title={<Translate id={"viewFinal.title"} />}
+            title={<Translate id={"reviewEntries.title"} />}
             columns={columns}
             data={this.props.words.map(word => ({
               ...word,
               senses: word.senses.filter(sense => !sense.deleted)
             }))}
             editable={{
-              onRowUpdate: (newData: ViewFinalWord, oldData: ViewFinalWord) =>
+              onRowUpdate: (
+                newData: ReviewEntriesWord,
+                oldData: ReviewEntriesWord
+              ) =>
                 new Promise(async (resolve, reject) => {
                   // Update database + update word ID. Awaited so that the user can't edit + submit a word with a bad ID before the ID is updated
                   this.props
@@ -184,4 +187,4 @@ export class ViewFinalComponent extends React.Component<
   }
 }
 
-export default withLocalize(ViewFinalComponent);
+export default withLocalize(ReviewEntriesComponent);
