@@ -3,7 +3,7 @@ import { Grid, Zoom } from "@material-ui/core";
 
 import TreeProps from "./TreeProps";
 import TreeDepiction from "./TreeDepiction";
-import SemanticDomain from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "./SemanticDomain";
 import { createDomains } from "./TreeViewReducer";
 
 // Domain data
@@ -32,7 +32,7 @@ export default class TreeViewComponent extends React.Component<
     this.props.navigate(newDomain.currentdomain);
   }
 
-  animate(domain: SemanticDomain | undefined): Promise<void> {
+  animate(domain: SemanticDomainWithSubdomains | undefined): Promise<void> {
     if (this.state.visible) {
       this.setState({ visible: false });
       return new Promise(resolve =>
