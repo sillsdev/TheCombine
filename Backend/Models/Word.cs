@@ -23,7 +23,7 @@ namespace BackendFramework.ValueModels
         public List<Sense> Senses { get; set; }
 
         [BsonElement("audio")]
-        public string Audio { get; set; }
+        public List<string> Audio { get; set; }
 
         [BsonElement("created")]
         public string Created { get; set; }
@@ -51,12 +51,12 @@ namespace BackendFramework.ValueModels
             Id = "";
             Vernacular = "";
             Plural = "";
-            Audio = "";
             Created = "";
             Modified = "";
             PartOfSpeech = "";
             OtherField = "";
             ProjectId = "";
+            Audio = new List<string>();
             EditedBy = new List<string>();
             History = new List<string>();
             Senses = new List<Sense>();
@@ -69,17 +69,21 @@ namespace BackendFramework.ValueModels
                 Id = Id.Clone() as string,
                 Vernacular = Vernacular.Clone() as string,
                 Plural = Plural.Clone() as string,
-                Audio = Audio.Clone() as string,
                 Created = Created.Clone() as string,
                 Modified = Modified.Clone() as string,
                 PartOfSpeech = PartOfSpeech.Clone() as string,
                 OtherField = OtherField.Clone() as string,
                 ProjectId = ProjectId.Clone() as string,
+                Audio = new List<string>(),
                 EditedBy = new List<string>(),
                 History = new List<string>(),
                 Senses = new List<Sense>()
             };
 
+            foreach (string file in Audio)
+            {
+                clone.EditedBy.Add(file.Clone() as string);
+            }
             foreach (string id in EditedBy)
             {
                 clone.EditedBy.Add(id.Clone() as string);
@@ -101,11 +105,12 @@ namespace BackendFramework.ValueModels
             return
                 other.Vernacular.Equals(Vernacular) &&
                 other.Plural.Equals(Plural) &&
-                other.Audio.Equals(Audio) &&
-                
                 other.PartOfSpeech.Equals(PartOfSpeech) &&
                 other.OtherField.Equals(OtherField) &&
                 other.ProjectId.Equals(ProjectId) &&
+
+                other.Senses.Count == Senses.Count &&
+                other.Senses.All(Senses.Contains) &&
 
                 other.Senses.Count == Senses.Count &&
                 other.Senses.All(Senses.Contains);
@@ -297,7 +302,7 @@ namespace BackendFramework.ValueModels
     /// <summary> Helper object that contains a wordId and the type of merge that should be performed </summary>
     public class MergeSourceWord
     {
-        public string SrcWordID;
+        public string SrcWordId;
         public List<State> SenseStates;
     }
 
