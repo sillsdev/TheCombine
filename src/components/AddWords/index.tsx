@@ -1,10 +1,11 @@
-import DataEntryComponent from "./DataEntryComponent";
+import AddWords from "./AddWordsComponent";
 import { connect } from "react-redux";
 import { StoreState } from "../../types";
 import { getTranslate } from "react-localize-redux";
 
 function mapStateToProps(state: StoreState) {
   return {
+    translate: getTranslate(state.localize),
     domain: state.treeViewState.currentdomain
   };
 }
@@ -12,4 +13,4 @@ function mapStateToProps(state: StoreState) {
 export default connect(
   mapStateToProps,
   null
-)(DataEntryComponent);
+)(AddWords);
