@@ -7,7 +7,7 @@ jest.mock("../ExistingGlossEntry/ExistingGlossEntry");
 jest.mock("../DeleteEntry/DeleteEntry");
 
 describe("Tests ExistingEntry", () => {
-  it("renders without crashing when not displaying tooltip", () => {
+  it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(<ImmutableExistingEntry vernacular={""} gloss={""} />, div);
     ReactDOM.unmountComponentAtNode(div);
