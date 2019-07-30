@@ -1,7 +1,7 @@
-import SemanticDomain from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../SemanticDomain";
 
 // Parent
-const PAR: SemanticDomain = {
+const PAR: SemanticDomainWithSubdomains = {
   name: "parent",
   id: "1",
   subdomains: []

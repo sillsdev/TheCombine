@@ -6,7 +6,7 @@ import {
   Typography,
   Grid
 } from "@material-ui/core";
-import SemanticDomain from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 // Images
 import endcapL from "../../resources/tree/leftEndcap.svg";
@@ -24,8 +24,8 @@ export const MAX_TILE_WIDTH = 150;
 export const MIN_TILE_WIDTH = 75;
 
 interface TreeDepictionProps {
-  currentDomain: SemanticDomain;
-  animate: (domain: SemanticDomain) => Promise<void>;
+  currentDomain: SemanticDomainWithSubdomains;
+  animate: (domain: SemanticDomainWithSubdomains) => Promise<void>;
 }
 
 interface TreeDepictionState {
@@ -79,7 +79,7 @@ export default class TreeDepiction extends React.Component<
 
   // Renders the subdomains + their connectors to the current domain
   subDomains(): ReactNode {
-    let subDomains: SemanticDomain[] = this.props.currentDomain.subdomains;
+    let subDomains: SemanticDomainWithSubdomains[] = this.props.currentDomain.subdomains;
     if (this.props.currentDomain.subdomains.length > 1)
       return (
         <GridList
@@ -178,7 +178,7 @@ export default class TreeDepiction extends React.Component<
   }
 
   // Creates a semantic domain tile, which (if navigable) can be clicked on to navigate to that semantic domain
-  nameTile(domain: SemanticDomain): ReactNode {
+  nameTile(domain: SemanticDomainWithSubdomains): ReactNode {
     return (
       <Button
         id={domain.id}

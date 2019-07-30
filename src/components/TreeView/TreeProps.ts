@@ -1,6 +1,6 @@
-import SemanticDomain from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 export default interface TreeProps {
-  currentDomain: SemanticDomain;
-  navigate: (domain: SemanticDomain) => void;
+  currentDomain: SemanticDomainWithSubdomains;
+  navigate: (domain: SemanticDomainWithSubdomains) => void;
 }
