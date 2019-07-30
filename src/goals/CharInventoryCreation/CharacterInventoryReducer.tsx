@@ -14,7 +14,7 @@ export interface CharacterInventoryState {
   rejectedCharacters: string[];
   allWords: string[];
   selectedCharacter: string;
-  characterSet: listCharacter[];
+  characterSet: CharacterSetEntry[];
 }
 
 export const defaultState: CharacterInventoryState = {
@@ -26,7 +26,7 @@ export const defaultState: CharacterInventoryState = {
 };
 
 /** A character with its occurrences and status, for sorting and filtering in a list */
-export interface listCharacter {
+export interface CharacterSetEntry {
   character: string;
   occurrences: number;
   status: characterStatus;

@@ -16,7 +16,10 @@ import * as backend from "../../backend";
 import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
 import { User } from "../../types/user";
-import { listCharacter, characterStatus } from "./CharacterInventoryReducer";
+import {
+  CharacterSetEntry,
+  characterStatus
+} from "./CharacterInventoryReducer";
 
 export const SET_CHARACTER_STATUS = "SET_CHARACTER_STATUS";
 export type SET_CHARACTER_STATUS = typeof SET_CHARACTER_STATUS;
@@ -57,7 +60,7 @@ type CharacterInventoryType =
 export interface CharacterInventoryAction {
   type: CharacterInventoryType;
   payload: string[];
-  characterSet?: listCharacter[];
+  characterSet?: CharacterSetEntry[];
   character?: string;
   status?: characterStatus;
 }
@@ -141,7 +144,7 @@ export function setSelectedCharacter(
 }
 
 export function setCharacterSet(
-  characterSet: listCharacter[]
+  characterSet: CharacterSetEntry[]
 ): CharacterInventoryAction {
   return {
     type: SET_CHARACTER_SET,
@@ -161,7 +164,7 @@ export function getAllCharacters() {
     words.forEach(word => characters.push(...word.vernacular));
     characters = [...new Set(characters)];
 
-    let characterSet: listCharacter[] = [];
+    let characterSet: CharacterSetEntry[] = [];
     characters.forEach(letter => {
       characterSet.push({
         character: letter,
