@@ -1,6 +1,12 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
-import { Word, Gloss, State } from "../../../../types/word";
+import {
+  Word,
+  Gloss,
+  State,
+  Sense,
+  SemanticDomain
+} from "../../../../types/word";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import SpellChecker from "../../../DataEntry/spellChecker";
 import NewVernEntry from "./NewVernEntry/NewVernEntry";
@@ -10,9 +16,10 @@ import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateRes
 
 interface NewEntryProps {
   allWords: Word[];
-  updateWord: (updatedWord: Word) => void;
+  updateWord: (updatedWord: Word, shouldBeMutable?: boolean) => void;
   addNewWord: (newWord: Word) => void;
   spellChecker: SpellChecker;
+  semanticDomain: SemanticDomain;
 }
 
 interface NewEntryState {
@@ -43,7 +50,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 def: ""
               }
             ],
-            semanticDomains: []
+            semanticDomains: [this.props.semanticDomain]
           }
         ],
         audio: "",
@@ -70,10 +77,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       this
     );
     this.chooseSpellingSuggestion = this.chooseSpellingSuggestion.bind(this);
-    this.addSense = this.addSense.bind(this);
+    this.addNewSense = this.addNewSense.bind(this);
     this.updateGlossField = this.updateGlossField.bind(this);
     this.updateVernField = this.updateVernField.bind(this);
     this.isSpelledCorrectly = this.isSpelledCorrectly.bind(this);
+    this.addSemanticDomain = this.addSemanticDomain.bind(this);
   }
 
   vernInput: React.RefObject<HTMLDivElement>;
@@ -104,7 +112,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 def: ""
               }
             ],
-            semanticDomains: []
+            semanticDomains: [this.props.semanticDomain]
           }
         ],
         audio: "",
@@ -129,22 +137,22 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         ...this.state.newEntry,
         senses: [
           {
+            ...this.state.newEntry.senses[0],
             glosses: [
               {
                 language: "en",
                 def: suggestion
               }
-            ],
-            semanticDomains: []
+            ]
           }
         ]
       }
     });
   }
 
-  addSense(existingWord: Word, newSense: string) {
+  addNewSense(existingWord: Word, newSense: string) {
     let updatedWord = this.addSenseToExistingWord(existingWord, newSense);
-    this.props.updateWord(updatedWord);
+    this.props.updateWord(updatedWord, false);
     this.resetEntry();
     this.setState({
       displayDuplicates: false,
@@ -154,16 +162,97 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  addSenseToExistingWord(existingWord: Word, newSense: string): Word {
+  addSemanticDomain(existingWord: Word, sense: Sense) {
+    let updatedWord = this.addSemanticDomainToSense(existingWord, sense);
+    this.props.updateWord(updatedWord, false);
+    this.resetEntry();
+    this.setState({
+      displayDuplicates: false,
+      isDuplicate: false,
+      duplicate: undefined,
+      duplicateId: undefined
+    });
+  }
+
+  addSenseToExistingWord(existingWord: Word, sense: string): Word {
     let updatedWord = { ...existingWord };
 
     let newGloss: Gloss = {
       language: "en",
-      def: newSense
+      def: sense
     };
 
-    updatedWord.senses[0].glosses.push(newGloss); // Fix which sense we are adding to
+    let newSense: Sense = {
+      glosses: [newGloss],
+      semanticDomains: [this.props.semanticDomain],
+      accessibility: State.active
+    };
+
+    updatedWord.senses.push(newSense); // Fix which sense we are adding to
     return updatedWord;
+  }
+
+  addSemanticDomainToSense(existingWord: Word, sense: Sense): Word {
+    let updatedWord = { ...existingWord };
+
+    let newSense: Sense = {
+      ...sense,
+      semanticDomains: [this.props.semanticDomain]
+    };
+
+    let index = this.getIndexOfSenseInWord(existingWord, sense);
+    let senses = existingWord.senses;
+    let updatedSenses: Sense[] = this.updateSenses(senses, newSense, index);
+
+    updatedWord.senses = updatedSenses;
+    return updatedWord;
+  }
+
+  private getIndexOfSenseInWord(word: Word, sense: Sense): number {
+    let index = 0;
+    for (const [i, currentSense] of word.senses.entries()) {
+      if (this.areSensesEqual(currentSense, sense)) {
+        index = i;
+        break;
+      }
+    }
+    return index;
+  }
+
+  private areSensesEqual(a: Sense, b: Sense): boolean {
+    for (const [index, gloss] of a.glosses.entries()) {
+      if (gloss.def != b.glosses[index].def) {
+        return false;
+      }
+      if (gloss.language != b.glosses[index].def) {
+        return false;
+      }
+    }
+
+    for (const [index, semanticDomain] of a.semanticDomains.entries()) {
+      if (semanticDomain.id != b.semanticDomains[index].id) {
+        return false;
+      }
+
+      if (semanticDomain.name != b.semanticDomains[index].name) {
+        return false;
+      }
+    }
+
+    if (a.accessibility && b.accessibility) {
+      if (a.accessibility !== b.accessibility) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+    return true;
+  }
+
+  updateSenses(senses: Sense[], senseToUpdate: Sense, index: number): Sense[] {
+    let updatedSenses: Sense[] = [...senses];
+    updatedSenses.splice(index, 1, senseToUpdate);
+    return updatedSenses;
   }
 
   // Same
@@ -175,7 +264,10 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       newEntry: {
         ...this.state.newEntry,
         senses: [
-          { glosses: [{ language: "en", def: newValue }], semanticDomains: [] }
+          {
+            glosses: [{ language: "en", def: newValue }],
+            semanticDomains: [this.props.semanticDomain]
+          }
         ]
       },
       displaySpellingSuggestions:
@@ -267,7 +359,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 def: ""
               }
             ],
-            semanticDomains: []
+            semanticDomains: [this.props.semanticDomain]
           }
         ],
         audio: "",
@@ -333,7 +425,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 <DuplicateResolutionView
                   existingEntry={this.state.duplicate}
                   newSense={this.state.newEntry.senses[0].glosses[0].def}
-                  addSense={this.addSense}
+                  addSense={this.addNewSense}
+                  addSemanticDomain={this.addSemanticDomain}
                 />
               )}
           </Grid>

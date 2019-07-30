@@ -1,7 +1,7 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import TreeViewComponent from "../TreeViewComponent";
-import SemanticDomain from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../SemanticDomain";
 import mockTree from "./MockSemanticTree";
 
 var treeMaster: ReactTestRenderer;
@@ -50,7 +50,7 @@ describe("Tests AddWords", () => {
   });
 
   it("Sets a new domain upon navigation", () => {
-    let newDom: SemanticDomain = {
+    let newDom: SemanticDomainWithSubdomains = {
       name: "test",
       id: "test",
       subdomains: []

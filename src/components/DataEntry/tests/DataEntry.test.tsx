@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import ConnectedDataEntryComponent from "../";
 import LocalizedDataEntryComponent from "../DataEntryComponent";
-import SemanticDomain from "../../TreeView/SemanticDomain";
+import SemanticDomainWithSubdomains from "../../TreeView/SemanticDomain";
 
 const MOCK_TRANSLATE = jest.fn(_ => {
   return "dummy";
@@ -21,7 +21,7 @@ jest.mock("react-localize-redux", () => {
 
 const createMockStore = configureMockStore([]);
 
-const mockSemanticDomain: SemanticDomain = {
+const mockSemanticDomain: SemanticDomainWithSubdomains = {
   name: "",
   id: "",
   subdomains: []

@@ -14,7 +14,8 @@ describe("Tests ExistingEntry", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <ExistingEntry
-        allWords={[]}
+        wordsBeingAdded={[]}
+        existingWords={[]}
         entryIndex={0}
         entry={mockWord}
         updateWord={(word: Word) => null}

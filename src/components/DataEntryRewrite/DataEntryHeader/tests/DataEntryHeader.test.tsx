@@ -3,12 +3,12 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import LocalizedDataEntryHeader from "../DataEntryHeader";
 import configureMockStore from "redux-mock-store";
-import SemanticDomain from "../../../TreeView/SemanticDomain";
+import SemanticDomainWithSubdomains from "../../../TreeView/SemanticDomain";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 
-const mockDomain: SemanticDomain = {
+const mockDomain: SemanticDomainWithSubdomains = {
   name: "",
   id: "",
   subdomains: []

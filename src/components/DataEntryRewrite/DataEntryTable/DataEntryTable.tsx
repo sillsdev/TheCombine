@@ -12,6 +12,7 @@ import DomainTree from "../../TreeView/SemanticDomain";
 import SpellChecker from "../../DataEntry/spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
+import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -19,9 +20,14 @@ interface DataEntryTableProps {
   semanticDomain: SemanticDomain;
 }
 
+interface WordAccess {
+  word: Word;
+  mutable: boolean;
+}
+
 interface DataEntryTableState {
   existingWords: Word[];
-  newWords: Word[];
+  recentlyAddedWords: WordAccess[];
 }
 
 export class DataEntryTableRewrite extends React.Component<
@@ -32,13 +38,14 @@ export class DataEntryTableRewrite extends React.Component<
     super(props);
     this.state = {
       existingWords: [],
-      newWords: []
+      recentlyAddedWords: []
     };
 
     this.spellChecker = new SpellChecker();
 
     this.submit = this.submit.bind(this);
-    this.updateWord = this.updateWord.bind(this);
+    this.updateWordForNewEntry = this.updateWordForNewEntry.bind(this);
+    this.updateExistingWord = this.updateExistingWord.bind(this);
     this.removeWord = this.removeWord.bind(this);
     this.addNewWord = this.addNewWord.bind(this);
   }
@@ -46,8 +53,79 @@ export class DataEntryTableRewrite extends React.Component<
   spellChecker: SpellChecker;
 
   async componentDidMount() {
-    let allWords = await this.getWordsFromBackend();
-    this.setState({ existingWords: allWords });
+    // let allWords = await this.getWordsFromBackend();
+    let allWords: Word[] = [
+      {
+        id: "",
+        vernacular: "wapow",
+        senses: [
+          {
+            glosses: [
+              {
+                language: "en",
+                def: "to poop"
+              }
+            ],
+            semanticDomains: [
+              {
+                name: "Stuff",
+                id: "1.1.1"
+              }
+            ],
+            accessibility: State.active
+          }
+        ],
+        audio: "",
+        created: "",
+        modified: "",
+        history: [],
+        partOfSpeech: "",
+        editedBy: [],
+        accessability: State.active,
+        otherField: "",
+        plural: ""
+      },
+      {
+        id: "",
+        vernacular: "kaching",
+        senses: [
+          {
+            glosses: [
+              {
+                language: "en",
+                def: "money"
+              }
+            ],
+            semanticDomains: [
+              {
+                name: "Other",
+                id: "2.2.2"
+              }
+            ],
+            accessibility: State.active
+          }
+        ],
+        audio: "",
+        created: "",
+        modified: "",
+        history: [],
+        partOfSpeech: "",
+        editedBy: [],
+        accessability: State.active,
+        otherField: "",
+        plural: ""
+      }
+    ];
+
+    let wordsWithAccess: WordAccess[] = allWords.map(word => {
+      let wordWithAccess: WordAccess = { word, mutable: true };
+      return wordWithAccess;
+    });
+
+    this.setState({
+      existingWords: allWords,
+      recentlyAddedWords: wordsWithAccess
+    });
   }
 
   /** Go back to the tree view */
@@ -58,10 +136,13 @@ export class DataEntryTableRewrite extends React.Component<
 
   async addNewWord(wordToAdd: Word) {
     let updatedWord = await this.addWordToBackend(wordToAdd);
-    let updatedNewWords = { ...this.state.newWords };
-    updatedNewWords.push(updatedWord);
+    let updatedNewWords = [...this.state.recentlyAddedWords];
+    updatedNewWords.push({ word: updatedWord, mutable: true });
     let words: Word[] = await this.getWordsFromBackend();
-    this.setState({ existingWords: words, newWords: updatedNewWords });
+    this.setState({
+      existingWords: words,
+      recentlyAddedWords: updatedNewWords
+    });
   }
 
   // Backend
@@ -91,61 +172,89 @@ export class DataEntryTableRewrite extends React.Component<
     return words;
   }
 
+  // REMOVE MAYBE
   /** Update the word in the backend and the frontend. Implement. */
   // Remove console logs
-  async updateWord(wordToUpdate: Word) {
+  async updateWordForNewEntry(wordToUpdate: Word) {
     let existingWord = this.state.existingWords.find(
       word => word.id === wordToUpdate.id
     );
+
+    console.log(this.state.existingWords[10]);
+    console.log(existingWord);
+    if (!existingWord)
+      throw new Error("You are trying to update a nonexistent word");
+    let index = this.state.existingWords.indexOf(existingWord);
+    if (index === -1) throw new Error(wordToUpdate + " does not exist");
+
+    console.log(wordToUpdate);
+    let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
+    console.log(updatedWord);
+
+    let recentlyAddedWords = [...this.state.recentlyAddedWords];
+    let updatedWordAccess: WordAccess = { word: updatedWord, mutable: false };
+    recentlyAddedWords.push(updatedWordAccess);
+    this.setState({ recentlyAddedWords: recentlyAddedWords });
+    // this.updateWordInFrontend(index, updatedWordAccess);
+  }
+
+  async updateExistingWord(wordToUpdate: Word, shouldBeMutable?: boolean) {
+    let existingWord = this.state.existingWords.find(
+      word => word.id === wordToUpdate.id
+    );
+    console.log(wordToUpdate);
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
     let index = this.state.existingWords.indexOf(existingWord);
     if (index === -1) throw new Error(wordToUpdate + " does not exist");
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
-    // console.log(updatedWord);
-    // let updatedWords = await this.getWordsFromBackend();
-    // this.setState({ existingWords: updatedWords });
+
+    let recentlyAddedWords = [...this.state.recentlyAddedWords];
+    let updatedWordAccess: WordAccess = { word: updatedWord, mutable: true };
+    if (shouldBeMutable !== undefined && shouldBeMutable === false) {
+      updatedWordAccess = { word: updatedWord, mutable: false };
+    }
+    this.updateWordInFrontend(index, updatedWordAccess);
+  }
+
+  updateWordInFrontend(index: number, updatedWord: WordAccess) {
+    let updatedWordAccess: WordAccess[] = [...this.state.recentlyAddedWords];
+    console.log(updatedWordAccess);
+    updatedWordAccess.splice(index, 1, updatedWord);
+    console.log(updatedWordAccess);
+    this.setState({ recentlyAddedWords: updatedWordAccess });
   }
 
   // Backend
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
     let updatedWord = await Backend.updateWord(wordToUpdate);
-    let updatedNewWords: Word[] = { ...this.state.newWords };
-
-    let indexOfUpdatedWord = 0;
-    for (const [index, word] of updatedNewWords.entries()) {
-      if (word.id === wordToUpdate.id) {
-        indexOfUpdatedWord = index;
-        break;
-      }
-    }
-
-    updatedNewWords.splice(indexOfUpdatedWord, 1, updatedWord);
-
     let words = await this.getWordsFromBackend();
-    this.setState({ existingWords: words, newWords: updatedNewWords });
+    this.setState({ existingWords: words });
     return updatedWord;
   }
 
   async removeWord(id: string) {
-    let deletedWord: Word = await this.removeWordFromBackend(id);
-    let updatedNewWords: Word[] = this.state.newWords.filter(
-      word => word.id !== deletedWord.id
-    );
-    let updatedWords: Word[] = await this.getWordsFromBackend();
-    this.setState({ existingWords: updatedWords, newWords: updatedNewWords });
+    // let deletedWord: Word = await this.removeWordFromBackend(id);
+    // let updatedNewWords: Word[] = this.state.recentlyAddedWords.filter(
+    //   word => word.id !== deletedWord.id
+    // );
+    // let updatedWords: Word[] = await this.getWordsFromBackend();
+    // this.setState({
+    //   existingWords: updatedWords,
+    //   recentlyAddedWords: updatedNewWords
+    // });
   }
 
   // Backend
   // TODO: pass in a word instead of an id
   /** Remove a word from the database. */
-  async removeWordFromBackend(id: string): Promise<Word> {
-    let word = this.state.newWords.filter(word => word.id === id);
-    console.log(word);
-    let updatedWord = await Backend.deleteWord(word[0]);
-    return updatedWord;
-  }
+  // async removeWordFromBackend(id: string): Promise<Word> {
+  //   let word = this.state.recentlyAddedWords.filter(word => word.id === id);
+  //   console.log(word);
+  //   let updatedWord = await Backend.deleteWord(word[0]);
+  //   return updatedWord;
+  // }
 
   render() {
     return (
@@ -172,22 +281,40 @@ export class DataEntryTableRewrite extends React.Component<
             </Typography>
           </Grid>
 
-          {this.state.newWords.map((word, index) => (
-            <ExistingEntry
-              key={word.id}
-              allWords={this.state.newWords}
-              entryIndex={index}
-              entry={word}
-              updateWord={this.updateWord}
-              removeWord={this.removeWord}
-              spellChecker={this.spellChecker}
-            />
-          ))}
+          {this.state.recentlyAddedWords.map((wordAccess, index) =>
+            wordAccess.mutable ? (
+              <ExistingEntry
+                key={wordAccess.word.id}
+                wordsBeingAdded={this.state.recentlyAddedWords.map(
+                  wordAccess => wordAccess.word
+                )}
+                existingWords={this.state.existingWords}
+                entryIndex={index}
+                entry={wordAccess.word}
+                updateWord={this.updateExistingWord}
+                // removeWord={this.removeWord}
+                spellChecker={this.spellChecker}
+                semanticDomain={this.props.semanticDomain}
+              />
+            ) : (
+              <ImmutableExistingEntry
+                vernacular={wordAccess.word.vernacular}
+                gloss={
+                  wordAccess.word.senses[wordAccess.word.senses.length - 1]
+                    .glosses[
+                    wordAccess.word.senses[wordAccess.word.senses.length - 1]
+                      .glosses.length - 1
+                  ].def
+                }
+              />
+            )
+          )}
           <NewEntry
-            allWords={this.state.newWords}
-            updateWord={this.updateWord}
+            allWords={this.state.existingWords}
+            updateWord={this.updateWordForNewEntry}
             addNewWord={this.addNewWord}
             spellChecker={this.spellChecker}
+            semanticDomain={this.props.semanticDomain}
           />
         </Grid>
 
