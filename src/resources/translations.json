@@ -132,7 +132,11 @@
     }
   },
   "charInventory": {
-    "title": ["Create Character Inventory", "Crear inventario de personajes"],
+    "title": ["Create Character Inventory", "Crear inventario de caracteres"],
+    "characters": ["characters", "caracteres"],
+    "occurrences": ["occurrences", "ocurrencias"],
+    "status": ["status", "estado"],
+    "sortBy": ["Sort by", "Sort by"],
     "characterSet": {
       "title": ["Vernacular Character Set:", "Conjunto de caracteres:"],
       "help": [
