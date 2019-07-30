@@ -160,13 +160,14 @@ namespace BackendFramework.Services
                 liftRangesWriter.WriteStartElement("lift-ranges");
                 liftRangesWriter.WriteStartElement("range");
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
-
-                StreamReader reader = File.OpenText(Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.dir, false, "", ""), "sdList.txt"));
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                var sdLines = Properties.Resources.sdList.Split("\n");
+                foreach (var line in sdLines)
                 {
-                    string[] items = line.Split("\\");
-                    WriteRangeElement(liftRangesWriter, items[0], items[1], items[2], items[3]);
+                    if (line != "")
+                    {
+                        string[] items = line.Split("\\");
+                        WriteRangeElement(liftRangesWriter, items[0], items[1], items[2], items[3]);
+                    }
                 }
 
                 foreach (var sd in proj.SemanticDomains)
@@ -327,13 +328,6 @@ namespace BackendFramework.Services
             if (_sdList.Count != 0 && proj.SemanticDomains.Count == 0)
             {
                 proj.SemanticDomains = _sdList;
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(Properties.Resources.sdList))
-                {
-                    foreach (var sd in _sdList)
-                    {
-                        file.WriteLine(sd.Id + "\\" + sd.Name);
-                    }
-                }
                 await _projService.Update(_projectId, proj);
             }
 
@@ -533,7 +527,7 @@ namespace BackendFramework.Services
             /*uncomment this if you want to import semantic domains from a lift-ranges file*/
             //if (range == "semantic-domain-ddp4")
             //{
-            //    _sdList.Add(new SemanticDomain() { Name = label.ElementAt(0).Value.Text + "\\" + description.ElementAt(0).Value.Text , Id = abbrev.First().Value.Text + "\\" + guid });
+            //    _sdList.Add(new SemanticDomain() { Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
             //}
         }
 

@@ -37,11 +37,7 @@ namespace Backend.Tests
 
             Utilities util = new Utilities();
 
-            var dirList = Directory.GetDirectories(util.GenerateFilePath(Utilities.Filetype.dir, true, "", ""));
-            foreach (var dir in dirList)
-            {
-                Directory.Delete(dir, true);
-            }
+            Directory.Delete(util.GenerateFilePath(Utilities.Filetype.dir, true, "", ""), true);
         }
 
 
