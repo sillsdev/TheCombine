@@ -49,7 +49,7 @@ namespace BackendFramework.Controllers
 
             //get path to home
             Utilities util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(Filetype.audio, false, wordId, Path.Combine(projectId, "Import", "Audio"));
+            fileUpload.FilePath = util.GenerateFilePath(Filetype.audio, false, wordId, Path.Combine(projectId, Path.Combine("ExtractedLocation","Import"), "Audio"));
 
             //copy the file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))

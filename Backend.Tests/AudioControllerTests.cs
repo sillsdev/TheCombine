@@ -56,11 +56,13 @@ namespace Backend.Tests
         [Test]
         public void TestAudioImport()
         {
-
+            //get pathto sound in Assets folder, from debugging foler
             string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "sound.mp3");
 
+            //open the file to read to controller
             FileStream fstream = File.OpenRead(filePath);
 
+            //generate perameters for controller call 
             FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
             FileUpload fileUpload = new FileUpload();
             fileUpload.Name = "FileName";
@@ -68,7 +70,7 @@ namespace Backend.Tests
 
             Word word = _wordrepo.Create(RandomWord()).Result;
 
-            _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
+            _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;      //fileUpload contains the file stream and the name of the file
 
             var action = _wordController.Get(_projId, word.Id).Result;
 

@@ -137,25 +137,25 @@ namespace Backend.Tests
 
             //generate api perameter with filestream
             FileStream fstream = File.OpenRead(pathToStartZip);
-
             var fileUpload = InitFile(fstream, actualFilename);
 
             //make api call
             var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
             if(result is BadRequestObjectResult)
             {
-                //this will be removed in the next pull request
-                return;
+                Assert.That("The file was empty" != null);
             }
 
             var newProj = _projServ.GetProject(proj.Id).Result;
 
-            Assert.IsNotEmpty(newProj.VernacularWritingSystem);
+            Assert.AreEqual(newProj.VernacularWritingSystem, "ptn");
 
             fstream.Close();
 
             var allWords = _wordrepo.GetAllWords(proj.Id);
-            Assert.NotZero(allWords.Result.Count);
+            Assert.AreEqual(allWords.Result.Count, 1);
+            Assert.AreEqual(allWords.Result[0].Vernacular, "testing" );
+            //Assert.Equals();
 
             //export
             _ = _liftController.ExportLiftFile(proj.Id).Result;

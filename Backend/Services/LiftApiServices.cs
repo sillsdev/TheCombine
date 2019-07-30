@@ -313,7 +313,7 @@ namespace BackendFramework.Services
 
             //get path to ~/AmbigProjName/Import/ExtractedLiftDir/audio
             var importListArr = Directory.GetDirectories(extractedPathToImport);
-            var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
+            var extractedAudioDir = Path.Combine(importListArr.Single(), Path.Combine("ExtractedLocation", "audio"));
 
             if (Directory.Exists(extractedAudioDir))
             {
