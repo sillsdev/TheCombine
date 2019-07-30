@@ -14,11 +14,13 @@ namespace BackendFramework.Controllers
     public class FrontierController : Controller
     {
         private readonly IWordRepository _repo;
+        private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public FrontierController(IWordRepository repo, IPermissionService permissionService)
+        public FrontierController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService)
         {
             _repo = repo;
+            _projectService = projServ;
             _permissionService = permissionService;
         }
 
@@ -32,6 +34,13 @@ namespace BackendFramework.Controllers
                 return new UnauthorizedResult();
             }
 
+            //ensure project exists
+            var project = _projectService.GetProject(projectId);
+            if (project == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             return new ObjectResult(await _repo.GetFrontier(projectId));
         }
 
@@ -41,11 +50,19 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> PostFrontier(string projectId, [FromBody]Word word)
         {
+#if DEBUG
             if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             {
                 return new UnauthorizedResult();
             }
-#if DEBUG
+
+            //ensure project exists
+            var project = _projectService.GetProject(projectId);
+            if (project == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             word.ProjectId = projectId;
             await _repo.AddFrontier(word);
             return new OkObjectResult(word.Id);
@@ -59,12 +76,19 @@ namespace BackendFramework.Controllers
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> DeleteFrontier(string projectId, string wordId)
         {
+#if DEBUG
             if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             {
                 return new UnauthorizedResult();
             }
 
-#if DEBUG
+            //ensure project exists
+            var project = _projectService.GetProject(projectId);
+            if (project == null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             if (await _repo.DeleteFrontier(projectId, wordId))
             {
                 return new OkResult();
