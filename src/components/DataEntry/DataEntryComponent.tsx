@@ -15,7 +15,7 @@ interface DataEntryProps {
 }
 
 interface DataEntryState {
-  gettingSemanticDomain: boolean;
+  displaySemanticDomain: boolean;
 }
 
 export class DataEntryComponent extends React.Component<
@@ -25,7 +25,7 @@ export class DataEntryComponent extends React.Component<
   constructor(props: DataEntryProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      gettingSemanticDomain: true
+      displaySemanticDomain: true
     };
   }
 
@@ -47,23 +47,22 @@ export class DataEntryComponent extends React.Component<
         >
           <DataEntryHeader
             domain={this.props.domain}
-            notifyOfGettingSemanticDomain={(isGettingSemanticdomain: boolean) =>
-              this.setState({ gettingSemanticDomain: isGettingSemanticdomain })
+            displaySemanticDomainView={(isGettingSemanticdomain: boolean) =>
+              this.setState({ displaySemanticDomain: isGettingSemanticdomain })
             }
           />
           <Divider />
           <DataEntryTable
             domain={this.props.domain}
-            spellChecker={new SpellChecker()}
             semanticDomain={semanticDomain}
           />
         </Paper>
 
-        <Dialog fullScreen open={this.state.gettingSemanticDomain}>
+        <Dialog fullScreen open={this.state.displaySemanticDomain}>
           <TreeViewComponent
             returnControlToCaller={() =>
               this.setState({
-                gettingSemanticDomain: false
+                displaySemanticDomain: false
               })
             }
           />

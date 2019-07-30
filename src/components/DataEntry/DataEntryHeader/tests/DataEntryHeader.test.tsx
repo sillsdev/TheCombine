@@ -21,7 +21,7 @@ describe("Tests DataEntryHeader", () => {
       <Provider store={mockStore}>
         <LocalizedDataEntryHeader
           domain={mockDomain}
-          notifyOfGettingSemanticDomain={(isGetting: boolean) => null}
+          displaySemanticDomainView={(isGetting: boolean) => null}
         />
       </Provider>,
       div

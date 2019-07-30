@@ -11,7 +11,7 @@ import DomainTree from "../../TreeView/SemanticDomain";
 
 interface DataEntryHeaderProps {
   domain: DomainTree;
-  notifyOfGettingSemanticDomain: (isGettingSemanticDomain: boolean) => void;
+  displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
 }
 
 export class DataEntryHeader extends React.Component<
@@ -29,7 +29,7 @@ export class DataEntryHeader extends React.Component<
         {this.props.domain.name + " (" + this.props.domain.id + ")"}
         <IconButton
           onClick={() => {
-            this.props.notifyOfGettingSemanticDomain(true);
+            this.props.displaySemanticDomainView(true);
           }}
         >
           <Edit />

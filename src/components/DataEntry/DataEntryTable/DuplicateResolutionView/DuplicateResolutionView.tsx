@@ -7,7 +7,7 @@ interface DuplicateResolutionViewProps {
   existingEntry: Word;
   newSense: string;
   addSense: (existingWord: Word, newSense: string) => void;
-  addSemanticDomain: (existingWord: Word, sense: Sense) => void;
+  addSemanticDomain: (existingWord: Word, sense: Sense, index: number) => void;
 }
 
 export class DuplicateResolutionView extends React.Component<
@@ -43,7 +43,7 @@ export class DuplicateResolutionView extends React.Component<
             }}
           >
             <Typography variant="body1">{"Glosses: "}</Typography>
-            {this.props.existingEntry.senses.map((sense: Sense) =>
+            {this.props.existingEntry.senses.map((sense: Sense, index) =>
               sense.glosses.map(gloss => (
                 <Chip
                   label={gloss.def + sense.semanticDomains}
@@ -51,7 +51,8 @@ export class DuplicateResolutionView extends React.Component<
                   onClick={() => {
                     this.props.addSemanticDomain(
                       this.props.existingEntry,
-                      sense
+                      sense,
+                      index
                     );
                   }}
                 />

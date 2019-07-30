@@ -13,12 +13,9 @@ import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
-import { SpellingSuggestionsView } from "./SpellingSuggestions/SpellingSuggestions";
-import { DuplicateResolutionView } from "./DuplicateResolutionView/DuplicateResolutionView";
 
 interface DataEntryTableProps {
   domain: DomainTree;
-  spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
 }
 
@@ -31,6 +28,7 @@ interface DataEntryTableState {
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
   displayDuplicatesIndex?: number;
+  displaySpellingSuggestionsIndex?: number;
 }
 
 export class DataEntryTableRewrite extends React.Component<
@@ -45,97 +43,18 @@ export class DataEntryTableRewrite extends React.Component<
     };
 
     this.spellChecker = new SpellChecker();
-
-    this.submit = this.submit.bind(this);
-    this.updateWordForNewEntry = this.updateWordForNewEntry.bind(this);
-    this.updateExistingWord = this.updateExistingWord.bind(this);
-    this.removeWord = this.removeWord.bind(this);
-    this.addNewWord = this.addNewWord.bind(this);
   }
 
   spellChecker: SpellChecker;
 
   async componentDidMount() {
     let allWords = await this.getWordsFromBackend();
-    // let allWords: Word[] = [
-    //   {
-    //     id: "",
-    //     vernacular: "wapow",
-    //     senses: [
-    //       {
-    //         glosses: [
-    //           {
-    //             language: "en",
-    //             def: "to poop"
-    //           }
-    //         ],
-    //         semanticDomains: [
-    //           {
-    //             name: "Stuff",
-    //             id: "1.1.1"
-    //           }
-    //         ],
-    //         accessibility: State.active
-    //       }
-    //     ],
-    //     audio: [],
-    //     created: "",
-    //     modified: "",
-    //     history: [],
-    //     partOfSpeech: "",
-    //     editedBy: [],
-    //     : State.active,
-    //     otherField: "",
-    //     plural: ""
-    //   },
-    //   {
-    //     id: "",
-    //     vernacular: "kaching",
-    //     senses: [
-    //       {
-    //         glosses: [
-    //           {
-    //             language: "en",
-    //             def: "money"
-    //           }
-    //         ],
-    //         semanticDomains: [
-    //           {
-    //             name: "Other",
-    //             id: "2.2.2"
-    //           }
-    //         ],
-    //         accessibility: State.active
-    //       }
-    //     ],
-    //     audio: [],
-    //     created: "",
-    //     modified: "",
-    //     history: [],
-    //     partOfSpeech: "",
-    //     editedBy: [],
-    //     : State.active,
-    //     otherField: "",
-    //     plural: ""
-    //   }
-    // ];
-
-    // let wordsWithAccess: WordAccess[] = allWords.map((word, index) => {
-    //   let wordWithAccess: WordAccess;
-    //   if (index % 2 == 0) {
-    //     wordWithAccess = { word, mutable: false };
-    //   } else {
-    //     wordWithAccess = { word, mutable: true };
-    //   }
-    //   return wordWithAccess;
-    // });
-
     this.setState({
       existingWords: allWords
     });
   }
 
-  /** Go back to the tree view */
+  /** Finished with this page of words, select new semantic domain */
   // TODO: Implement
   submit(e?: React.FormEvent<HTMLFormElement>, callback?: Function) {
     if (e) e.preventDefault();
@@ -152,13 +71,11 @@ export class DataEntryTableRewrite extends React.Component<
     });
   }
 
-  // Backend
   async addWordToBackend(word: Word): Promise<Word> {
     let updatedWord = await Backend.createWord(word);
     return updatedWord;
   }
 
-  // Backend
   async getWordsFromBackend(): Promise<Word[]> {
     let words = await Backend.getFrontierWords();
     words = this.filterWords(words);
@@ -179,7 +96,7 @@ export class DataEntryTableRewrite extends React.Component<
     return words;
   }
 
-  /** Update the word in the backend and the frontend. Implement. */
+  /** Update the word in the backend and the frontend */
   async updateWordForNewEntry(wordToUpdate: Word) {
     let existingWord = this.state.existingWords.find(
       word => word.id === wordToUpdate.id
@@ -202,15 +119,6 @@ export class DataEntryTableRewrite extends React.Component<
     wordToDelete?: Word,
     duplicate?: Word
   ) {
-    let existingWord = this.state.existingWords.find(
-      word => word.id === wordToUpdate.id
-    );
-
-    if (!existingWord)
-      throw new Error("You are trying to update a nonexistent word");
-    let index = this.state.existingWords.indexOf(existingWord);
-    if (index === -1) throw new Error(wordToUpdate + " does not exist");
-
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
 
     let recentlyAddedWords = [...this.state.recentlyAddedWords];
@@ -223,20 +131,11 @@ export class DataEntryTableRewrite extends React.Component<
     let frontendWords: Word[] = this.state.recentlyAddedWords.map(
       wordAccess => wordAccess.word
     );
-    let newWordsIndex = this.getIndexOfWordWithId(wordToUpdate, frontendWords);
+    let newWordsIndex = frontendWords.findIndex(w => w.id === wordToUpdate.id);
     if (newWordsIndex === -1) {
       console.log("Word does not exist in recentlyAddedWords");
     }
     this.updateWordInFrontend(newWordsIndex, updatedWordAccess);
-  }
-
-  private getIndexOfWordWithId(wordToFind: Word, allWords: Word[]): number {
-    for (const [i, word] of allWords.entries()) {
-      if (word.id === wordToFind.id) {
-        return i;
-      }
-    }
-    return -1;
   }
 
   updateWordInFrontend(index: number, updatedWord: WordAccess) {
@@ -245,7 +144,6 @@ export class DataEntryTableRewrite extends React.Component<
     this.setState({ recentlyAddedWords: updatedWordAccess });
   }
 
-  // Backend
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
     let updatedWord = await Backend.updateWord(wordToUpdate);
     let words = await this.getWordsFromBackend();
@@ -271,7 +169,12 @@ export class DataEntryTableRewrite extends React.Component<
     else this.setState({ displayDuplicatesIndex: index });
   }
 
-  // Backend
+  toggleDisplaySpellingSuggestions(index: number) {
+    if (this.state.displaySpellingSuggestionsIndex === index)
+      this.setState({ displaySpellingSuggestionsIndex: undefined });
+    else this.setState({ displaySpellingSuggestionsIndex: index });
+  }
+
   // TODO: pass in a word instead of an id
   /** Remove a word from the database. */
   // async removeWordFromBackend(id: string): Promise<Word> {
@@ -283,7 +186,11 @@ export class DataEntryTableRewrite extends React.Component<
 
   render() {
     return (
-      <form onSubmit={e => this.submit(e)}>
+      <form
+        onSubmit={(e?: React.FormEvent<HTMLFormElement>, callback?: Function) =>
+          this.submit(e, callback)
+        }
+      >
         <input type="submit" style={{ display: "none" }} />
 
         <Grid container spacing={3}>
@@ -317,8 +224,17 @@ export class DataEntryTableRewrite extends React.Component<
                   existingWords={this.state.existingWords}
                   entryIndex={index}
                   entry={wordAccess.word}
-                  updateWord={this.updateExistingWord}
-                  // removeWord={this.removeWord}
+                  updateWord={(
+                    wordToUpdate: Word,
+                    wordToDelete?: Word,
+                    duplicate?: Word
+                  ) =>
+                    this.updateExistingWord(
+                      wordToUpdate,
+                      wordToDelete,
+                      duplicate
+                    )
+                  }
                   spellChecker={this.spellChecker}
                   semanticDomain={this.props.semanticDomain}
                   displayDuplicates={
@@ -326,6 +242,12 @@ export class DataEntryTableRewrite extends React.Component<
                   }
                   toggleDisplayDuplicates={() => {
                     this.toggleDisplayDuplicates(index);
+                  }}
+                  displaySpellingSuggestions={
+                    this.state.displaySpellingSuggestionsIndex === index
+                  }
+                  toggleDisplaySpellingSuggestions={() => {
+                    this.toggleDisplaySpellingSuggestions(index);
                   }}
                 />
               </React.Fragment>
@@ -344,10 +266,30 @@ export class DataEntryTableRewrite extends React.Component<
           )}
           <NewEntry
             allWords={this.state.existingWords}
-            updateWord={this.updateWordForNewEntry}
-            addNewWord={this.addNewWord}
+            updateWord={(wordToUpdate: Word) =>
+              this.updateWordForNewEntry(wordToUpdate)
+            }
+            addNewWord={(word: Word) => this.addNewWord(word)}
             spellChecker={this.spellChecker}
             semanticDomain={this.props.semanticDomain}
+            displayDuplicates={
+              this.state.displayDuplicatesIndex ===
+              this.state.recentlyAddedWords.length
+            }
+            toggleDisplayDuplicates={() => {
+              this.toggleDisplayDuplicates(
+                this.state.recentlyAddedWords.length
+              );
+            }}
+            displaySpellingSuggestions={
+              this.state.displaySpellingSuggestionsIndex ===
+              this.state.recentlyAddedWords.length
+            }
+            toggleDisplaySpellingSuggestions={() => {
+              this.toggleDisplaySpellingSuggestions(
+                this.state.recentlyAddedWords.length
+              );
+            }}
           />
         </Grid>
 

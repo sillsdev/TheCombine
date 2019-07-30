@@ -5,7 +5,6 @@ import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/Dupl
 import SpellChecker from "../../spellChecker";
 import ExistingVernEntry from "./ExistingVernEntry/ExistingVernEntry";
 import ExistingGlossEntry from "./ExistingGlossEntry/ExistingGlossEntry";
-import DeleteEntry from "./DeleteEntry/DeleteEntry";
 import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 import { SemanticDomain } from "../../../../types/word";
@@ -20,14 +19,14 @@ interface ExistingEntryProps {
     wordToDelete?: Word,
     duplicate?: Word
   ) => void;
-  // removeWord: (id: string) => void;
   spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
   displayDuplicates: boolean;
   toggleDisplayDuplicates: () => void;
+  displaySpellingSuggestions: boolean;
+  toggleDisplaySpellingSuggestions: () => void;
 }
 
-// Almost the same
 interface ExistingEntryState {
   displaySpellingSuggestions: boolean;
   displayDuplicates: boolean;
@@ -36,7 +35,6 @@ interface ExistingEntryState {
   duplicate?: Word;
   isSpelledCorrectly: boolean;
   isDuplicate: boolean;
-  // hovering: boolean;
 }
 
 export class ExistingEntry extends React.Component<
@@ -62,22 +60,7 @@ export class ExistingEntry extends React.Component<
       isDuplicate: isDuplicate,
       duplicate: duplicateWord,
       duplicateId: duplicateId
-      // hovering: false
     };
-
-    this.updateGlossField = this.updateGlossField.bind(this);
-    this.updateVernField = this.updateVernField.bind(this);
-    this.toggleSpellingSuggestionsView = this.toggleSpellingSuggestionsView.bind(
-      this
-    );
-    this.toggleDuplicateResolutionView = this.toggleDuplicateResolutionView.bind(
-      this
-    );
-    this.chooseSpellingSuggestion = this.chooseSpellingSuggestion.bind(this);
-    this.addNewSense = this.addNewSense.bind(this);
-    this.removeEntry = this.removeEntry.bind(this);
-    this.conditionallyUpdateWord = this.conditionallyUpdateWord.bind(this);
-    this.addSemanticDomain = this.addSemanticDomain.bind(this);
   }
 
   componentDidMount() {
@@ -96,26 +79,20 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  // Same
   toggleSpellingSuggestionsView() {
-    this.setState({
-      displaySpellingSuggestions: !this.state.displaySpellingSuggestions
-    });
+    this.props.toggleDisplaySpellingSuggestions();
   }
 
-  // Same
   toggleDuplicateResolutionView() {
-    // this.setState({ displayDuplicates: !this.state.displayDuplicates });
     this.props.toggleDisplayDuplicates();
   }
 
-  // Almost the same
   chooseSpellingSuggestion(suggestion: string) {
     let updatedWord: Word = { ...this.props.entry };
     updatedWord.senses[0].glosses[0].def = suggestion; // Should work because we are only allowed to change the spellings of brand new words
 
     this.props.updateWord(updatedWord);
-
+    this.props.toggleDisplaySpellingSuggestions();
     this.setState({
       isSpelledCorrectly: true,
       displaySpellingSuggestions: false,
@@ -142,6 +119,7 @@ export class ExistingEntry extends React.Component<
       return;
     }
     this.props.updateWord(updatedWord, this.props.entry, this.state.duplicate);
+    this.props.toggleDisplayDuplicates();
     this.setState({
       displayDuplicates: false,
       isDuplicate: false,
@@ -150,15 +128,13 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  addSemanticDomain(existingWord: Word, sense: Sense) {
-    let updatedWord = this.addSemanticDomainToSense(existingWord, sense);
+  addSemanticDomain(existingWord: Word, sense: Sense, index: number) {
+    let updatedWord = this.addSemanticDomainToSense(existingWord, sense, index);
     if (!this.state.duplicate) {
       return;
     }
-    console.log(updatedWord);
-    console.log(this.props.entry); // Word we want to delete
-    console.log(this.state.duplicate);
     this.props.updateWord(updatedWord, this.props.entry, this.state.duplicate);
+    this.props.toggleDisplayDuplicates();
     this.setState({
       displayDuplicates: false,
       isDuplicate: false,
@@ -167,7 +143,6 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  // Same
   addSenseToExistingWord(existingWord: Word, gloss: string): Word {
     let updatedWord = { ...existingWord };
 
@@ -186,60 +161,22 @@ export class ExistingEntry extends React.Component<
     return updatedWord;
   }
 
-  addSemanticDomainToSense(existingWord: Word, sense: Sense): Word {
+  addSemanticDomainToSense(
+    existingWord: Word,
+    sense: Sense,
+    index: number
+  ): Word {
     let updatedWord = { ...existingWord };
     let newSense: Sense = {
       ...sense,
       semanticDomains: [...sense.semanticDomains, this.props.semanticDomain]
     };
 
-    let index = this.getIndexOfSenseInWord(existingWord, sense);
     let senses = existingWord.senses;
     let updatedSenses: Sense[] = this.updateSenses(senses, newSense, index);
 
     updatedWord.senses = updatedSenses;
     return updatedWord;
-  }
-
-  private getIndexOfSenseInWord(word: Word, sense: Sense): number {
-    let index = 0;
-    for (const [i, currentSense] of word.senses.entries()) {
-      if (this.areSensesEqual(currentSense, sense)) {
-        index = i;
-        break;
-      }
-    }
-    return index;
-  }
-
-  private areSensesEqual(a: Sense, b: Sense): boolean {
-    for (const [index, gloss] of a.glosses.entries()) {
-      if (gloss.def != b.glosses[index].def) {
-        return false;
-      }
-      if (gloss.language != b.glosses[index].def) {
-        return false;
-      }
-    }
-
-    for (const [index, semanticDomain] of a.semanticDomains.entries()) {
-      if (semanticDomain.id != b.semanticDomains[index].id) {
-        return false;
-      }
-
-      if (semanticDomain.name != b.semanticDomains[index].name) {
-        return false;
-      }
-    }
-
-    if (a.accessibility && b.accessibility) {
-      if (a.accessibility !== b.accessibility) {
-        return false;
-      }
-    } else {
-      return false;
-    }
-    return true;
   }
 
   updateSenses(senses: Sense[], senseToUpdate: Sense, index: number): Sense[] {
@@ -248,7 +185,6 @@ export class ExistingEntry extends React.Component<
     return updatedSenses;
   }
 
-  // Same
   updateGlossField(newValue: string) {
     let isSpelledCorrectly =
       newValue.trim() !== "" ? this.isSpelledCorrectly(newValue) : true;
@@ -276,7 +212,6 @@ export class ExistingEntry extends React.Component<
     return isDuplicate;
   }
 
-  // Same
   updateVernField(newValue: string) {
     let isDuplicate: boolean = this.isADuplicate(newValue);
 
@@ -301,8 +236,6 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  // Same
-  // Move out of class
   /** If the venacular is in the frontier, returns that words id */
   vernInFrontier(vernacular: string): string {
     let Finder = new DuplicateFinder();
@@ -333,22 +266,16 @@ export class ExistingEntry extends React.Component<
     return foundDuplicate[0];
   }
 
-  // Same
-  // Move out of class
   getDuplicate(id: string): Word {
     let word = this.props.existingWords.find(word => word.id === id);
     if (!word) throw new Error("No word exists with this id");
     return word;
   }
 
-  // Same
-  // Move out of class
   isSpelledCorrectly(word: string): boolean {
     return this.props.spellChecker.correct(word);
   }
 
-  // Same
-  // Move out of class
   getSpellingSuggestions(word: string): string[] {
     return this.props.spellChecker.getSpellingSuggestions(word);
   }
@@ -367,7 +294,6 @@ export class ExistingEntry extends React.Component<
     }
   }
 
-  // Move out of class
   wordsAreEqual(a: Word, b: Word): boolean {
     let areEqual: boolean = false;
 
@@ -385,15 +311,28 @@ export class ExistingEntry extends React.Component<
           <ExistingVernEntry
             vernacular={this.state.existingEntry.vernacular}
             isDuplicate={this.state.isDuplicate}
-            toggleDuplicateResolutionView={this.toggleDuplicateResolutionView}
-            updateField={this.updateVernField}
-            updateWord={this.conditionallyUpdateWord}
+            toggleDuplicateResolutionView={() =>
+              this.toggleDuplicateResolutionView()
+            }
+            updateField={(newValue: string) => this.updateVernField(newValue)}
+            updateWord={() => this.conditionallyUpdateWord()}
           />
           <ExistingGlossEntry
-            glosses={this.state.existingEntry.senses[0].glosses[0].def}
+            glosses={
+              this.state.existingEntry.senses &&
+              this.state.existingEntry.senses[0] &&
+              this.state.existingEntry.senses[0].glosses &&
+              this.state.existingEntry.senses[0].glosses[0]
+                ? this.state.existingEntry.senses[0].glosses[0].def
+                : ""
+            }
             isSpelledCorrectly={this.state.isSpelledCorrectly}
-            toggleSpellingSuggestionsView={this.toggleSpellingSuggestionsView}
-            updateGlossField={this.updateGlossField}
+            toggleSpellingSuggestionsView={() =>
+              this.toggleSpellingSuggestionsView()
+            }
+            updateGlossField={(newValue: string) =>
+              this.updateGlossField(newValue)
+            }
           />
           {/* <Grid item xs={2}>
             {this.state.hovering && (
@@ -404,13 +343,27 @@ export class ExistingEntry extends React.Component<
             )}
           </Grid> */}
         </Grid>
-        {this.state.displaySpellingSuggestions && (
+        {this.props.displaySpellingSuggestions && (
           <SpellingSuggestionsView
-            mispelledWord={this.state.existingEntry.senses[0].glosses[0].def}
+            mispelledWord={
+              this.state.existingEntry.senses &&
+              this.state.existingEntry.senses[0] &&
+              this.state.existingEntry.senses[0].glosses &&
+              this.state.existingEntry.senses[0].glosses[0]
+                ? this.state.existingEntry.senses[0].glosses[0].def
+                : ""
+            }
             spellingSuggestions={this.getSpellingSuggestions(
-              this.state.existingEntry.senses[0].glosses[0].def
+              this.state.existingEntry.senses &&
+                this.state.existingEntry.senses[0] &&
+                this.state.existingEntry.senses[0].glosses &&
+                this.state.existingEntry.senses[0].glosses[0]
+                ? this.state.existingEntry.senses[0].glosses[0].def
+                : ""
             )}
-            chooseSpellingSuggestion={this.chooseSpellingSuggestion}
+            chooseSpellingSuggestion={(suggestion: string) =>
+              this.chooseSpellingSuggestion(suggestion)
+            }
           />
         )}
         {this.props.displayDuplicates &&
@@ -418,9 +371,22 @@ export class ExistingEntry extends React.Component<
           this.state.duplicate && (
             <DuplicateResolutionView
               existingEntry={this.state.duplicate}
-              newSense={this.state.existingEntry.senses[0].glosses[0].def}
-              addSense={this.addNewSense}
-              addSemanticDomain={this.addSemanticDomain}
+              newSense={
+                this.state.existingEntry.senses &&
+                this.state.existingEntry.senses[0] &&
+                this.state.existingEntry.senses[0].glosses &&
+                this.state.existingEntry.senses[0].glosses[0]
+                  ? this.state.existingEntry.senses[0].glosses[0].def
+                  : ""
+              }
+              addSense={(existingWord: Word, newSense: string) =>
+                this.addNewSense(existingWord, newSense)
+              }
+              addSemanticDomain={(
+                existingWord: Word,
+                sense: Sense,
+                index: number
+              ) => this.addSemanticDomain(existingWord, sense, index)}
             />
           )}
       </Grid>

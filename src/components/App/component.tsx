@@ -9,7 +9,7 @@ import Login from "../Login/LoginPage";
 import Register from "../Login/RegisterPage";
 import PageNotFound from "../PageNotFound/component";
 import { GoalRoute } from "../GoalRoute/component";
-import DataEntry from "../DataEntryRewrite";
+import DataEntry from "../DataEntry";
 
 export default class App extends React.Component {
   render() {
