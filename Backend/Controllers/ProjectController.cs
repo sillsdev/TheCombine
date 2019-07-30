@@ -113,7 +113,7 @@ namespace BackendFramework.Controllers
             usersRole = await _userRoleService.Create(usersRole);
 
             //update user with userRole
-            if (currentUser.ProjectRoles == null)
+            if (currentUser.ProjectRoles.Equals(null))
             {
                 currentUser.ProjectRoles = new Dictionary<string, string>();
             }
