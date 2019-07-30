@@ -15,7 +15,11 @@ interface ExistingEntryProps {
   existingWords: Word[];
   entryIndex: number;
   entry: Word;
-  updateWord: (updatedWord: Word, shouldBeMutable?: boolean) => void;
+  updateWord: (
+    wordToUpdate: Word,
+    wordToDelete?: Word,
+    duplicate?: Word
+  ) => void;
   // removeWord: (id: string) => void;
   spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
@@ -40,12 +44,22 @@ export class ExistingEntry extends React.Component<
   constructor(props: ExistingEntryProps) {
     super(props);
 
+    let isDuplicate: boolean = this.isADuplicate(this.props.entry.vernacular);
+    let duplicateId: string | undefined;
+    let duplicateWord: Word | undefined;
+    if (isDuplicate) {
+      duplicateId = this.vernInFrontier(this.props.entry.vernacular);
+      duplicateWord = this.getDuplicate(duplicateId);
+    }
+
     this.state = {
       displaySpellingSuggestions: false,
       displayDuplicates: false,
       existingEntry: { ...this.props.entry },
       isSpelledCorrectly: true,
-      isDuplicate: false
+      isDuplicate: isDuplicate,
+      duplicate: duplicateWord,
+      duplicateId: duplicateId
       // hovering: false
     };
 
@@ -81,7 +95,7 @@ export class ExistingEntry extends React.Component<
     let updatedWord: Word = { ...this.props.entry };
     updatedWord.senses[0].glosses[0].def = suggestion; // Should work because we are only allowed to change the spellings of brand new words
 
-    this.props.updateWord(updatedWord, true);
+    this.props.updateWord(updatedWord);
 
     this.setState({
       isSpelledCorrectly: true,
@@ -105,7 +119,10 @@ export class ExistingEntry extends React.Component<
 
   addNewSense(existingWord: Word, newSense: string) {
     let updatedWord = this.addSenseToExistingWord(existingWord, newSense);
-    this.props.updateWord(updatedWord, false);
+    if (!this.state.duplicate) {
+      return;
+    }
+    this.props.updateWord(updatedWord, this.props.entry, this.state.duplicate);
     this.setState({
       displayDuplicates: false,
       isDuplicate: false,
@@ -116,7 +133,13 @@ export class ExistingEntry extends React.Component<
 
   addSemanticDomain(existingWord: Word, sense: Sense) {
     let updatedWord = this.addSemanticDomainToSense(existingWord, sense);
-    this.props.updateWord(updatedWord, false);
+    if (!this.state.duplicate) {
+      return;
+    }
+    console.log(updatedWord);
+    console.log(this.props.entry); // Word we want to delete
+    console.log(this.state.duplicate);
+    this.props.updateWord(updatedWord, this.props.entry, this.state.duplicate);
     this.setState({
       displayDuplicates: false,
       isDuplicate: false,
@@ -146,10 +169,9 @@ export class ExistingEntry extends React.Component<
 
   addSemanticDomainToSense(existingWord: Word, sense: Sense): Word {
     let updatedWord = { ...existingWord };
-
     let newSense: Sense = {
       ...sense,
-      semanticDomains: [this.props.semanticDomain]
+      semanticDomains: [...sense.semanticDomains, this.props.semanticDomain]
     };
 
     let index = this.getIndexOfSenseInWord(existingWord, sense);
@@ -226,18 +248,33 @@ export class ExistingEntry extends React.Component<
     });
   }
 
+  isADuplicate(value: string): boolean {
+    let duplicateId: string = this.vernInFrontier(value);
+    let isDuplicate: boolean = duplicateId !== "";
+    if (duplicateId === this.props.entry.id) {
+      isDuplicate = false;
+    }
+    return isDuplicate;
+  }
+
   // Same
   updateVernField(newValue: string) {
-    let duplicateId: string = this.vernInFrontier(newValue);
-    let isDuplicate: boolean = duplicateId !== "";
+    let isDuplicate: boolean = this.isADuplicate(newValue);
+
+    if (isDuplicate) {
+      let duplicateId: string = this.vernInFrontier(newValue);
+      let duplicateWord: Word = this.getDuplicate(duplicateId);
+      this.setState({
+        isDuplicate: true,
+        duplicateId: duplicateId ? duplicateId : undefined,
+        duplicate: duplicateWord
+      });
+    }
     this.setState({
-      isDuplicate: isDuplicate,
-      duplicate: duplicateId ? this.getDuplicate(duplicateId) : undefined,
       existingEntry: {
         ...this.state.existingEntry,
         vernacular: newValue
       },
-      duplicateId: duplicateId ? duplicateId : undefined,
       displayDuplicates:
         this.state.displayDuplicates && isDuplicate
           ? this.state.displayDuplicates
@@ -280,7 +317,7 @@ export class ExistingEntry extends React.Component<
   // Same
   // Move out of class
   getDuplicate(id: string): Word {
-    let word = this.props.wordsBeingAdded.find(word => word.id === id);
+    let word = this.props.existingWords.find(word => word.id === id);
     if (!word) throw new Error("No word exists with this id");
     return word;
   }
@@ -324,17 +361,7 @@ export class ExistingEntry extends React.Component<
 
   render() {
     return (
-      <Grid
-        item
-        xs={12}
-        key={this.props.entryIndex}
-        onMouseEnter={() => {
-          // this.setState({ hovering: true });
-        }}
-        onMouseLeave={() => {
-          // this.setState({ hovering: false });
-        }}
-      >
+      <Grid item xs={12} key={this.props.entryIndex}>
         <Grid container>
           <ExistingVernEntry
             vernacular={this.state.existingEntry.vernacular}

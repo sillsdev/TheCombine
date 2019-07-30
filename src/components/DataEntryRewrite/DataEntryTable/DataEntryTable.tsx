@@ -13,6 +13,8 @@ import SpellChecker from "../../DataEntry/spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
+import { SpellingSuggestionsView } from "./SpellingSuggestions/SpellingSuggestions";
+import { DuplicateResolutionView } from "./DuplicateResolutionView/DuplicateResolutionView";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -53,83 +55,82 @@ export class DataEntryTableRewrite extends React.Component<
   spellChecker: SpellChecker;
 
   async componentDidMount() {
-    // let allWords = await this.getWordsFromBackend();
-    let allWords: Word[] = [
-      {
-        id: "",
-        vernacular: "wapow",
-        senses: [
-          {
-            glosses: [
-              {
-                language: "en",
-                def: "to poop"
-              }
-            ],
-            semanticDomains: [
-              {
-                name: "Stuff",
-                id: "1.1.1"
-              }
-            ],
-            accessibility: State.active
-          }
-        ],
-        audio: "",
-        created: "",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: State.active,
-        otherField: "",
-        plural: ""
-      },
-      {
-        id: "",
-        vernacular: "kaching",
-        senses: [
-          {
-            glosses: [
-              {
-                language: "en",
-                def: "money"
-              }
-            ],
-            semanticDomains: [
-              {
-                name: "Other",
-                id: "2.2.2"
-              }
-            ],
-            accessibility: State.active
-          }
-        ],
-        audio: "",
-        created: "",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        accessability: State.active,
-        otherField: "",
-        plural: ""
-      }
-    ];
+    let allWords = await this.getWordsFromBackend();
+    // let allWords: Word[] = [
+    //   {
+    //     id: "",
+    //     vernacular: "wapow",
+    //     senses: [
+    //       {
+    //         glosses: [
+    //           {
+    //             language: "en",
+    //             def: "to poop"
+    //           }
+    //         ],
+    //         semanticDomains: [
+    //           {
+    //             name: "Stuff",
+    //             id: "1.1.1"
+    //           }
+    //         ],
+    //         accessibility: State.active
+    //       }
+    //     ],
+    //     audio: "",
+    //     created: "",
+    //     modified: "",
+    //     history: [],
+    //     partOfSpeech: "",
+    //     editedBy: [],
+    //     accessability: State.active,
+    //     otherField: "",
+    //     plural: ""
+    //   },
+    //   {
+    //     id: "",
+    //     vernacular: "kaching",
+    //     senses: [
+    //       {
+    //         glosses: [
+    //           {
+    //             language: "en",
+    //             def: "money"
+    //           }
+    //         ],
+    //         semanticDomains: [
+    //           {
+    //             name: "Other",
+    //             id: "2.2.2"
+    //           }
+    //         ],
+    //         accessibility: State.active
+    //       }
+    //     ],
+    //     audio: "",
+    //     created: "",
+    //     modified: "",
+    //     history: [],
+    //     partOfSpeech: "",
+    //     editedBy: [],
+    //     accessability: State.active,
+    //     otherField: "",
+    //     plural: ""
+    //   }
+    // ];
 
-    let wordsWithAccess: WordAccess[] = allWords.map((word, index) => {
-      let wordWithAccess: WordAccess;
-      if (index % 2 == 0) {
-        wordWithAccess = { word, mutable: false };
-      } else {
-        wordWithAccess = { word, mutable: true };
-      }
-      return wordWithAccess;
-    });
+    // let wordsWithAccess: WordAccess[] = allWords.map((word, index) => {
+    //   let wordWithAccess: WordAccess;
+    //   if (index % 2 == 0) {
+    //     wordWithAccess = { word, mutable: false };
+    //   } else {
+    //     wordWithAccess = { word, mutable: true };
+    //   }
+    //   return wordWithAccess;
+    // });
 
     this.setState({
-      existingWords: allWords,
-      recentlyAddedWords: wordsWithAccess
+      existingWords: allWords
     });
   }
 
@@ -177,37 +178,33 @@ export class DataEntryTableRewrite extends React.Component<
     return words;
   }
 
-  // REMOVE MAYBE
   /** Update the word in the backend and the frontend. Implement. */
-  // Remove console logs
   async updateWordForNewEntry(wordToUpdate: Word) {
     let existingWord = this.state.existingWords.find(
       word => word.id === wordToUpdate.id
     );
-
-    console.log(this.state.existingWords[10]);
-    console.log(existingWord);
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
     let index = this.state.existingWords.indexOf(existingWord);
     if (index === -1) throw new Error(wordToUpdate + " does not exist");
 
-    console.log(wordToUpdate);
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
-    console.log(updatedWord);
 
     let recentlyAddedWords = [...this.state.recentlyAddedWords];
     let updatedWordAccess: WordAccess = { word: updatedWord, mutable: false };
     recentlyAddedWords.push(updatedWordAccess);
     this.setState({ recentlyAddedWords: recentlyAddedWords });
-    // this.updateWordInFrontend(index, updatedWordAccess);
   }
 
-  async updateExistingWord(wordToUpdate: Word, shouldBeMutable?: boolean) {
+  async updateExistingWord(
+    wordToUpdate: Word,
+    wordToDelete?: Word,
+    duplicate?: Word
+  ) {
     let existingWord = this.state.existingWords.find(
       word => word.id === wordToUpdate.id
     );
-    console.log(wordToUpdate);
+
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
     let index = this.state.existingWords.indexOf(existingWord);
@@ -217,17 +214,33 @@ export class DataEntryTableRewrite extends React.Component<
 
     let recentlyAddedWords = [...this.state.recentlyAddedWords];
     let updatedWordAccess: WordAccess = { word: updatedWord, mutable: true };
-    if (shouldBeMutable !== undefined && shouldBeMutable === false) {
+    if (duplicate && wordToDelete) {
+      // Delete word
+      recentlyAddedWords.filter(word => word.word.id !== wordToDelete.id);
       updatedWordAccess = { word: updatedWord, mutable: false };
     }
-    this.updateWordInFrontend(index, updatedWordAccess);
+    let frontendWords: Word[] = this.state.recentlyAddedWords.map(
+      wordAccess => wordAccess.word
+    );
+    let newWordsIndex = this.getIndexOfWordWithId(wordToUpdate, frontendWords);
+    if (newWordsIndex === -1) {
+      console.log("Word does not exist in recentlyAddedWords");
+    }
+    this.updateWordInFrontend(newWordsIndex, updatedWordAccess);
+  }
+
+  private getIndexOfWordWithId(wordToFind: Word, allWords: Word[]): number {
+    for (const [i, word] of allWords.entries()) {
+      if (word.id === wordToFind.id) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   updateWordInFrontend(index: number, updatedWord: WordAccess) {
     let updatedWordAccess: WordAccess[] = [...this.state.recentlyAddedWords];
-    console.log(updatedWordAccess);
     updatedWordAccess.splice(index, 1, updatedWord);
-    console.log(updatedWordAccess);
     this.setState({ recentlyAddedWords: updatedWordAccess });
   }
 
@@ -288,19 +301,21 @@ export class DataEntryTableRewrite extends React.Component<
 
           {this.state.recentlyAddedWords.map((wordAccess, index) =>
             wordAccess.mutable ? (
-              <ExistingEntry
-                key={wordAccess.word.id}
-                wordsBeingAdded={this.state.recentlyAddedWords.map(
-                  wordAccess => wordAccess.word
-                )}
-                existingWords={this.state.existingWords}
-                entryIndex={index}
-                entry={wordAccess.word}
-                updateWord={this.updateExistingWord}
-                // removeWord={this.removeWord}
-                spellChecker={this.spellChecker}
-                semanticDomain={this.props.semanticDomain}
-              />
+              <React.Fragment>
+                <ExistingEntry
+                  key={wordAccess.word.id}
+                  wordsBeingAdded={this.state.recentlyAddedWords.map(
+                    wordAccess => wordAccess.word
+                  )}
+                  existingWords={this.state.existingWords}
+                  entryIndex={index}
+                  entry={wordAccess.word}
+                  updateWord={this.updateExistingWord}
+                  // removeWord={this.removeWord}
+                  spellChecker={this.spellChecker}
+                  semanticDomain={this.props.semanticDomain}
+                />
+              </React.Fragment>
             ) : (
               <ImmutableExistingEntry
                 vernacular={wordAccess.word.vernacular}

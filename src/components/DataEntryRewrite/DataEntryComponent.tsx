@@ -8,6 +8,7 @@ import TreeViewComponent from "../TreeView";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import SpellChecker from "../DataEntry/spellChecker";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
+import { SemanticDomain } from "../../types/word";
 
 interface DataEntryProps {
   domain: DomainTree;
@@ -29,6 +30,11 @@ export class DataEntryComponent extends React.Component<
   }
 
   render() {
+    let semanticDomain: SemanticDomain = {
+      name: this.props.domain.name,
+      id: this.props.domain.id
+    };
+
     return (
       <Container>
         <Paper
@@ -49,7 +55,7 @@ export class DataEntryComponent extends React.Component<
           <DataEntryTable
             domain={this.props.domain}
             spellChecker={new SpellChecker()}
-            semanticDomain={this.props.domain}
+            semanticDomain={semanticDomain}
           />
         </Paper>
 
