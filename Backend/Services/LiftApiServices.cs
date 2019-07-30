@@ -33,7 +33,7 @@ namespace BackendFramework.Services
                 foreach (var pro in entry.Pronunciations)
                 {
                     Writer.WriteStartElement("media");
-                    Writer.WriteAttributeString("href", entry.Pronunciations.First().Forms.First().Form);
+                    Writer.WriteAttributeString("href", Path.GetFileName(entry.Pronunciations.First().Forms.First().Form));
                     Writer.WriteEndElement();
                 }
 
@@ -92,7 +92,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
-        public void LiftExport(string projectId)
+        public string LiftExport(string projectId)
         {
             //the helper tag must be included because there are also SIL.Utilitites
             Helper.Utilities util = new Helper.Utilities();
@@ -148,6 +148,8 @@ namespace BackendFramework.Services
 
             //compress everything
             ZipFile.CreateFromDirectory(zipDir, Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
+
+            return exportDir;
         }
 
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
