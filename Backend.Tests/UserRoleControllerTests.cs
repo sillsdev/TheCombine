@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.All)]
+    [Parallelizable(ParallelScope.Self)]
     public class UserRoleControllerTests
     {
         private IUserRoleService _userRoleService;

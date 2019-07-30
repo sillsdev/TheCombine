@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.All)]
+    [Parallelizable(ParallelScope.Self)]
     public class UserEditControllerTests
     {
         private IUserEditRepository _userEditRepo;

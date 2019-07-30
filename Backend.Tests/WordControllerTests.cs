@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.All)]
+    [Parallelizable(ParallelScope.Self)]
     public class WordControllerTests
     {
         private IWordRepository _repo;

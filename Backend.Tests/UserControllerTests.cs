@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.All)]
+    [Parallelizable(ParallelScope.Self)]
     public class UserControllerTests
     {
         private IUserService _userService;

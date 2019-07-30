@@ -10,7 +10,7 @@ using static BackendFramework.Controllers.ProjectController;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.All)]
+    [Parallelizable(ParallelScope.Self)]
     public class ProjectControllerTests
     {
         private IProjectService _projectService;
@@ -22,7 +22,7 @@ namespace Backend.Tests
         private User _JwtAuthenticatedUser;
 
         [SetUp]
-        public void Setup()
+        public async System.Threading.Tasks.Task SetupAsync()
         {
             _permissionService = new PermissionServiceMock();
             _projectService = new ProjectServiceMock();
@@ -39,7 +39,7 @@ namespace Backend.Tests
             _JwtAuthenticatedUser.Username = "user";
             _JwtAuthenticatedUser.Password = "pass";
             _userService.Create(_JwtAuthenticatedUser);
-            _JwtAuthenticatedUser = _userService.Authenticate(_JwtAuthenticatedUser.Username, _JwtAuthenticatedUser.Password).Result;
+            _JwtAuthenticatedUser = await _userService.Authenticate(_JwtAuthenticatedUser.Username, _JwtAuthenticatedUser.Password);
 
             _controller.ControllerContext.HttpContext.Request.Headers["UserId"] = _JwtAuthenticatedUser.Id;
         }
