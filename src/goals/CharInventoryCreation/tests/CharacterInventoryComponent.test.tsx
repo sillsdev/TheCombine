@@ -67,7 +67,7 @@ describe("Testing Character Inventory Component", () => {
           fetchWords={jest.fn()}
           currentProject={{ validCharacters: ["a"] } as Project}
           selectedCharacter={""}
-          getAllCharacters={jest.fn(() => new Promise(resolve => resolve()))}
+          getAllCharacters={jest.fn(() => Promise.resolve())}
           allCharacters={[]}
         />
       </Provider>,
