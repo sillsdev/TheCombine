@@ -11,6 +11,7 @@ const mockStore = createMockStore({});
 const mockDomain: SemanticDomainWithSubdomains = {
   name: "",
   id: "",
+  description: "",
   subdomains: []
 };
 
