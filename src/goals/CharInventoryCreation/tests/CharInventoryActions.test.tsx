@@ -1,7 +1,7 @@
 import {
   setValidCharacters,
-  SET_VALID_CHARACTERS,
-  uploadInventory
+  uploadInventory,
+  CharacterInventoryType
 } from "../CharacterInventoryActions";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -11,9 +11,37 @@ import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions"
 import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 import { User } from "../../../types/user";
+import { CharacterSetEntry } from "../CharacterInventoryReducer";
 
-const VALID_DATA: string[] = ["foo", "bar"];
-const REJECT_DATA: string[] = ["a", "b"];
+const VALID_DATA: string[] = ["a", "b"];
+const REJECT_DATA: string[] = ["y", "z"];
+const CHARACTER_SET_DATA: CharacterSetEntry[] = [
+  {
+    character: "a",
+    status: "accepted",
+    occurrences: 0
+  },
+  {
+    character: "b",
+    status: "accepted",
+    occurrences: 0
+  },
+  {
+    character: "y",
+    status: "rejected",
+    occurrences: 0
+  },
+  {
+    character: "z",
+    status: "rejected",
+    occurrences: 0
+  },
+  {
+    character: "m",
+    status: "undecided",
+    occurrences: 0
+  }
+];
 const goal: CreateCharInv = new CreateCharInv();
 const MOCK_STATE = {
   goalsState: {
@@ -26,7 +54,8 @@ const MOCK_STATE = {
   },
   characterInventoryState: {
     validCharacters: VALID_DATA,
-    rejectedCharacters: REJECT_DATA
+    rejectedCharacters: REJECT_DATA,
+    characterSet: CHARACTER_SET_DATA
   }
 };
 
@@ -62,7 +91,7 @@ afterAll(() => {
 describe("Testing CharacterInventoryActions", () => {
   test("setInventory yields correct action", () => {
     expect(setValidCharacters(VALID_DATA)).toEqual({
-      type: SET_VALID_CHARACTERS,
+      type: CharacterInventoryType.SET_VALID_CHARACTERS,
       payload: VALID_DATA
     });
   });

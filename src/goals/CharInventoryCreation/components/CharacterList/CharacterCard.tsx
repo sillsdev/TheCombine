@@ -7,11 +7,12 @@ import Typography from "@material-ui/core/Typography";
 import theme from "../../../../types/theme";
 import CharacterStatusText from "./CharacterStatusText";
 import { Translate } from "react-localize-redux";
+import { characterStatus } from "../../CharacterInventoryReducer";
 
 export interface CharacterCardProps {
   char: string;
   count: number;
-  status: "accepted" | "rejected";
+  status: characterStatus;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
@@ -38,6 +39,8 @@ export default function CharacterCard(props: CharacterCardProps) {
       <CardActionArea>
         <Typography variant="h1" className={classes.header}>
           {props.char}
+          {/* There is a zero-width joiner here to make height consistent for non-printing characters: */}
+          {"‍"}
         </Typography>
         <CardContent>
           <Typography gutterBottom variant="h6" component="h2">

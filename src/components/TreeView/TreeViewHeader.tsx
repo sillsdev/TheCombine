@@ -11,11 +11,11 @@ import {
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 
-import SemanticDomain from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 interface TreeHeaderProps {
-  currentDomain: SemanticDomain;
-  animate: (domain: SemanticDomain) => Promise<void>;
+  currentDomain: SemanticDomainWithSubdomains;
+  animate: (domain: SemanticDomainWithSubdomains) => Promise<void>;
 }
 
 interface TreeHeaderState {
@@ -62,7 +62,7 @@ export default class TreeViewHeader extends React.Component<
 
     if (event.key === "Enter") {
       // Find parent domain
-      let parent: SemanticDomain | undefined = this.props.currentDomain;
+      let parent: SemanticDomainWithSubdomains | undefined = this.props.currentDomain;
       while (parent.parentDomain !== undefined) parent = parent.parentDomain;
 
       // Search for domain
@@ -92,11 +92,11 @@ export default class TreeViewHeader extends React.Component<
   // Navigate tree via arrow keys
   navigateDomainArrowKeys(event: KeyboardEvent) {
     if (event.key === "ArrowLeft") {
-      let domain: SemanticDomain | undefined = this.getBrotherDomain(-1);
+      let domain: SemanticDomainWithSubdomains | undefined = this.getBrotherDomain(-1);
       if (domain && domain.id !== this.props.currentDomain.id)
         this.props.animate(domain);
     } else if (event.key === "ArrowRight") {
-      let domain: SemanticDomain | undefined = this.getBrotherDomain(1);
+      let domain: SemanticDomainWithSubdomains | undefined = this.getBrotherDomain(1);
       if (domain && domain.id !== this.props.currentDomain.id)
         this.props.animate(domain);
     } else if (event.key === "ArrowDown") {
@@ -107,9 +107,9 @@ export default class TreeViewHeader extends React.Component<
 
   // Search for a semantic domain by number
   searchDomainByNumber(
-    parent: SemanticDomain,
+    parent: SemanticDomainWithSubdomains,
     number: string
-  ): SemanticDomain | undefined {
+  ): SemanticDomainWithSubdomains | undefined {
     for (let domain of parent.subdomains)
       if (domain.id === number) return domain;
 
@@ -119,16 +119,16 @@ export default class TreeViewHeader extends React.Component<
 
   // Searches for a semantic domain by name
   searchDomainByName(
-    domain: SemanticDomain,
+    domain: SemanticDomainWithSubdomains,
     target: string
-  ): SemanticDomain | undefined {
-    let check = (checkAgainst: SemanticDomain | undefined) =>
+  ): SemanticDomainWithSubdomains | undefined {
+    let check = (checkAgainst: SemanticDomainWithSubdomains | undefined) =>
       checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
     if (check(domain)) return domain;
 
     // If there are subdomains
     if (domain.subdomains.length > 0) {
-      let tempDomain: SemanticDomain | undefined;
+      let tempDomain: SemanticDomainWithSubdomains | undefined;
       for (let sub of domain.subdomains) {
         tempDomain = this.searchDomainByName(sub, target);
         if (check(tempDomain)) return tempDomain;
@@ -139,7 +139,7 @@ export default class TreeViewHeader extends React.Component<
   // Switches currentDomain to the domain navigationAmount off from this domain, assuming that domain exists
   navigateDomain(navigationAmount: number) {
     if (this.props.currentDomain.parentDomain) {
-      let brotherDomain: SemanticDomain | undefined = this.getBrotherDomain(
+      let brotherDomain: SemanticDomainWithSubdomains | undefined = this.getBrotherDomain(
         navigationAmount
       );
       if (brotherDomain) this.props.animate(brotherDomain);
@@ -147,9 +147,9 @@ export default class TreeViewHeader extends React.Component<
   }
 
   // Gets the domain 'navigationAmount' away from the currentDomain (negative to the left, positive to the right)
-  getBrotherDomain(navigationAmount: number): SemanticDomain | undefined {
+  getBrotherDomain(navigationAmount: number): SemanticDomainWithSubdomains | undefined {
     if (this.props.currentDomain.parentDomain) {
-      let brotherDomains: SemanticDomain[] = this.props.currentDomain
+      let brotherDomains: SemanticDomainWithSubdomains[] = this.props.currentDomain
         .parentDomain.subdomains;
       let index: number = brotherDomains.findIndex(
         domain => this.props.currentDomain.id === domain.id
@@ -171,8 +171,8 @@ export default class TreeViewHeader extends React.Component<
 
   // Creates the L/R button + select button + search bar
   render() {
-    let domainL: SemanticDomain | undefined = this.getBrotherDomain(-1);
-    let domainR: SemanticDomain | undefined = this.getBrotherDomain(1);
+    let domainL: SemanticDomainWithSubdomains | undefined = this.getBrotherDomain(-1);
+    let domainR: SemanticDomainWithSubdomains | undefined = this.getBrotherDomain(1);
 
     return (
       <GridList cols={5} spacing={2} cellHeight={"auto"}>

@@ -2,9 +2,10 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { accepted, rejected } from "../../../../types/theme";
 import { Translate } from "react-localize-redux";
+import { characterStatus } from "../../CharacterInventoryReducer";
 
 export interface CharacterStatusTextProps {
-  status: "accepted" | "rejected";
+  status: characterStatus;
 }
 
 export default function CharacterStatusText(props: CharacterStatusTextProps) {
@@ -22,7 +23,7 @@ export default function CharacterStatusText(props: CharacterStatusTextProps) {
     );
   }
   return (
-    <Typography variant="body2" component="p">
+    <Typography variant="body2" color="textSecondary" component="p">
       <Translate id="charInventory.characterSet.undecided" />
     </Typography>
   );

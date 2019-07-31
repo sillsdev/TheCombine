@@ -43,7 +43,6 @@ export default function CharacterDetail(props: CharacterDetailProps) {
       <Grid item xs={12}>
         <FindAndReplace initialFindValue={props.character} />
       </Grid>
-      <Grid item xs={12} />
     </Grid>
   );
 }
