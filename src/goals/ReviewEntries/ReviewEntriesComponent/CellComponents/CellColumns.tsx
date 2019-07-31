@@ -19,7 +19,7 @@ enum SortStyle {
 }
 
 function domainNumberToArray(id: string) {
-  return id.split(".").map(digit => Number(digit));
+  return id.split(".").map(digit => parseInt(digit, 10));
 }
 
 export interface FieldParameterStandard {
@@ -57,7 +57,7 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
 }
 
 // Define columns
-var currentSort: SortStyle = SortStyle.NONE;
+let currentSort: SortStyle = SortStyle.NONE;
 export default [
   // Vernacular column
   {
