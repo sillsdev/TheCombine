@@ -74,6 +74,8 @@ namespace Backend.Tests
 
             var foundWord = (action as ObjectResult).Value as Word;
             Assert.IsNotNull(foundWord.Audio);
+
+            fstream.Close();
         }
     }
 }
