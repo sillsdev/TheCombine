@@ -128,23 +128,12 @@ export default class DupFinder {
           }
 
           //add wordlist if currentWords is not full yet
-          if (currentWordlists.length < n) {
-            currentWordlists.push(newWordList);
-            continue;
-          }
-
-          //add wordlist if it scores lower than the last element in currentWords
-          // and resort currentWords
-          if (
-            currentWordlists[currentWordlists.length - 1][1] < newWordList[1]
-          ) {
-            currentWordlists.push(newWordList);
-            currentWordlists.sort(function(a, b): number {
-              return a[1] - b[1];
-            });
-            currentWordlists.pop();
-          }
+          currentWordlists.push(newWordList);
+          continue;
         }
+        currentWordlists.sort(function(a, b): number {
+          return a[1] - b[1];
+        });
 
         //Used for testing duplicate finder. (See docs/bitmap_testing.md)
         // console.log(

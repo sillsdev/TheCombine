@@ -161,6 +161,11 @@ export function loadGoalData(goal: Goal) {
           newGroups.push(newGroup);
         }
 
+        debugger;
+        if (newGroups.length >= 8){
+          newGroups = newGroups.slice(0, 8);
+        }
+
         goal.data = { plannedWords: newGroups };
         goal.numSteps = newGroups.length;
         goal.currentStep = 0;
