@@ -1,10 +1,10 @@
-# Add language project
+# Add project
 
-**URL** : `/v1/projects/`
+**URL** : `/v1/projects`
 
 **Method** : `POST`
 
-**Auth required** :
+**Auth required** : No
 
 **Data type** : [`Project`](project.md)
 
@@ -12,4 +12,4 @@
 
 **Code** : `200 OK`
 
-**Data content** : `id: String`
+**Data content** : [`ProjectWithUser`](project_with_user.md)

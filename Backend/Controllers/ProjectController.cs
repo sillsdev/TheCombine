@@ -65,11 +65,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
+#if DEBUG
             if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
-#if DEBUG
             return new ObjectResult(await _projectService.DeleteAllProjects());
 #else
             return new UnauthorizedResult();
@@ -85,6 +85,7 @@ namespace BackendFramework.Controllers
             {
                 return new UnauthorizedResult();
             }
+
             var project = await _projectService.GetProject(projectId);
             if (project == null)
             {

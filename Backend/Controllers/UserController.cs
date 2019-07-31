@@ -42,12 +42,12 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
+#if DEBUG
             if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
 
-#if DEBUG
             return new ObjectResult(await _userService.DeleteAllUsers());
 #else
             return new UnauthorizedResult();
@@ -142,12 +142,12 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userId}")]
         public async Task<IActionResult> Delete(string userId)
         {
+#if DEBUG
             if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
 
-#if DEBUG
             if (await _userService.Delete(userId))
             {
                 return new OkResult();
