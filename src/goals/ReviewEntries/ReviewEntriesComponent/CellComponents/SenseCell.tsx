@@ -2,20 +2,22 @@ import React, { ReactNode } from "react";
 import { Translate } from "react-localize-redux";
 import { TextField, Chip } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
+import { highlight } from "../../../../types/theme";
 
 import { FieldParameterStandard } from "./CellColumns";
 import AlignedList from "./AlignedList";
 import { uuid } from "../../../../utilities";
 import { ReviewEntriesSense } from "../ReviewEntriesComponent";
 
-interface Editable {
+interface SenseCellProps {
   editable: boolean;
+  sortingByGloss: boolean;
 }
 
 export default class SenseCell extends React.Component<
-  FieldParameterStandard & Editable
+  FieldParameterStandard & SenseCellProps
 > {
-  constructor(props: FieldParameterStandard & Editable) {
+  constructor(props: FieldParameterStandard & SenseCellProps) {
     super(props);
   }
 
@@ -26,6 +28,7 @@ export default class SenseCell extends React.Component<
   ): ReactNode {
     return (
       <TextField
+        fullWidth
         key={`glosses${this.props.rowData.id}`}
         value={this.props.value[index].glosses}
         error={sense.glosses.length === 0}
@@ -33,7 +36,11 @@ export default class SenseCell extends React.Component<
         disabled={sense.deleted}
         InputProps={{
           readOnly: !this.props.editable,
-          disableUnderline: !this.props.editable
+          disableUnderline: !this.props.editable,
+          style:
+            this.props.sortingByGloss && index === 0
+              ? { backgroundColor: highlight }
+              : {}
         }}
         // Handles editing sense's local glosses
         onChange={event =>
