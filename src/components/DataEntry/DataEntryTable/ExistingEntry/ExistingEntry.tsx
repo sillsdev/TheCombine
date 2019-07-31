@@ -15,12 +15,8 @@ interface ExistingEntryProps {
   existingWords: Word[];
   entryIndex: number;
   entry: Word;
-  updateWord: (
-    wordToUpdate: Word,
-    wordToDelete?: Word,
-    duplicate?: Word
-  ) => void;
-  removeWord: (id: string) => void;
+  updateWord: (wordToUpdate: Word, wordToDelete?: Word) => void;
+  removeWord: (word: Word) => void;
   spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
   displayDuplicates: boolean;
@@ -122,7 +118,7 @@ export class ExistingEntry extends React.Component<
     if (!this.state.duplicate) {
       return;
     }
-    this.props.updateWord(updatedWord, this.props.entry, this.state.duplicate);
+    this.props.updateWord(updatedWord, this.props.entry);
     this.props.toggleDisplayDuplicates();
     this.setState({
       displayDuplicates: false,
@@ -137,7 +133,7 @@ export class ExistingEntry extends React.Component<
     if (!this.state.duplicate) {
       return;
     }
-    this.props.updateWord(updatedWord, this.props.entry, this.state.duplicate);
+    this.props.updateWord(updatedWord, this.props.entry);
     this.props.toggleDisplayDuplicates();
     this.setState({
       displayDuplicates: false,
@@ -284,12 +280,12 @@ export class ExistingEntry extends React.Component<
     return this.props.spellChecker.getSpellingSuggestions(word);
   }
 
-  removeWord(id: string, callback?: Function) {
-    this.props.removeWord(id);
+  removeWord(word: Word, callback?: Function) {
+    this.props.removeWord(word);
   }
 
   removeEntry() {
-    this.removeWord(this.props.entry.id);
+    this.removeWord(this.props.entry);
   }
 
   conditionallyUpdateWord() {
