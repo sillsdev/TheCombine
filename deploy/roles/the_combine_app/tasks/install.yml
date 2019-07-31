@@ -42,34 +42,6 @@
     group: "{{ combine_group }}"
     mode: 0755
 
-#- name: create CA Certificate
-#  shell: openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/C=US/ST=Texas/L=Dallas/O=Dis/CN=thewordcombine.org" -keyout /home/{{ combine_user }}/.ssl/CombineCA.key  -out www.example.com.cert path:
-#
-#
-#    size: 2048
-#    state: present
-#    type: RSA
-#    passphrase: "{{ combine_ca_passphrase }}"
-#    owner: "{{ combine_user }}"
-#    group: "{{ combine_group }}"
-#    mode: 0600
-
-#- name: create CA Certificate signing request
-#  openssl_csr:
-#    common_name: "Combine CA Certificate"
-#    country_name: "{{ combine_cert_country }}"
-#    state_or_province_name: "{{ combine_cert_state }}"
-#    locality_name: "{{ combine_cert_locality }}"
-#    email_address: "{{ combine_cert_email }}"
-#    key_usage:
-#      - digitalSignature
-#      - keyEncipherment
-#    path: "/home/{{ combine_user }}/.ssl/CombineCA.csr"
-#    privatekey_path: "/home/{{ combine_user }}/.ssl/CombineCA.key"
-
-#- name: create CA Certificate
-#  openssl_certificate:
-
 - name: copy CA certificate to certificate directory
   copy:
     src: CombineCA/
