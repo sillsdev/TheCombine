@@ -2,6 +2,11 @@
 
 # config_developer
 
+# Backend logging levels
+backend_loglevel_default: Debug
+backend_loglevel_system: Information
+backend_loglevel_microsoft: Information
+
 #wifi access point variables
 ap_ssid: "thewordcombine_ap"
 ap_passphrase: "BigRed@1979"
@@ -40,28 +45,9 @@ apache_module_enable:
   - ssl
 
 apache_site_enable:
-  - default_local.conf
   - thewordcombine_org.conf
 
 apache_vhosts:
-  - server_name: default.local
-    server_admin: jimgrady.jg@gmail.com
-    server_file_name: default_local
-    template: vhost_proxypath_ssl.conf.j2
-    document_root: "{{ www_app_dir }}"
-    directory_options:
-      - "+Indexes"
-      - "+FollowSymLinks"
-    directory_extra:
-      - RewriteEngine On
-    virtual_hosts:
-      - has_ssl: false
-        listen: "{{ ap_gateway }}"
-        port: 80
-        server_alias:
-          - localhost
-        proxy:
-          - '/v1/ http://localhost:5001/'
   - server_name: thewordcombine.org
     server_admin: jimgrady.jg@gmail.com
     server_file_name: thewordcombine_org
@@ -73,22 +59,12 @@ apache_vhosts:
       - has_ssl: false
         listen: "*"
         port: 80
-        server_alias:
-          - thewordcombine.org
-          - thewordcombine.localhost
-          - localhost
-        extra:
-        - '<ifModule mod_headers.c>'
-        - '    <Files "service-worker.js">'
-        - '        Header Set Service-Worker-allowed "/"'
-        - '    </Files>'
-        - '</IfModule>'
-        reverse_proxy: true
-        proxy:
-          - '/v1/ https://localhost:5001/'
+        has_redirect_permanent: true
+
       - has_ssl: true
         listen: "*"
         port: 443
+        log_level: debug
         certificate_file: "thewordcombine.pem"
         key_file: "thewordcombine.key"
         extra:
@@ -99,4 +75,4 @@ apache_vhosts:
         - '</IfModule>'
         reverse_proxy: true
         proxy:
-          - '/v1/ https://localhost:5001/'
+          - '/v1/ https://127.0.0.1:5001/v1/'

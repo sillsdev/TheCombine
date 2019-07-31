@@ -70,18 +70,16 @@ at the command prompt where you launched the VM.
 
 To connect to the VM using one of the methods described in [Logging Into the VM](#logging-into-the-vm) and run the following commands from the command prompt:
 ```
-cd src\TheCombine
-mkcombine
+cd src\TheCombine\deploy
+./setup-target.sh -b vagrant@localhost
 ```
-```mkcombine``` will build the project and then run the ansible playbook for installing and configuring it.
+`setup-target.sh` will build the project and then run the ansible playbook for installing and configuring it.
 
-*When* ```mkcombine``` *runs the installation scripts, you will be prompted for the BECOME password.  The BECOME password is* ```vagrant```
+*When* `setup-target.sh` *runs the installation scripts, you will be prompted for the BECOME password.  The BECOME password is* ```vagrant```.  You will also be prompted for the Ansible vault password.  The vault password is posted on the *Rocket.Chat* discussion, `#the-combine`
 
-Before running ```mkcombine``` consider updating your working directory by doing a ```git pull``` or by checking out your working branch.
+Before running `setup-target.sh` consider updating your working directory by doing a ```git pull``` or by checking out your working branch.
 
-Once ```mkcombine``` completes, you can test the build by connecting to http://localhost:8088 from your web browser.
-
-*Note: The SSL module has not been setup for the apache server yet.  You will see the login screen but will not be able to proceed from there.*
+Once `setup-target.sh` completes, you can test the build by connecting to http://localhost:8088 from your web browser.
 
 ## Stand Up a New Machine
 
@@ -129,6 +127,9 @@ A setup script, ```setup-target.sh```, is provided to perform the installation. 
 ```
 
 ### options:
+Usage: ./setup-target.sh [options] user@machinename
+ where:
+**`-b, --build`** will build/publish the UI and Backend server before deploying The Combine
 
 **```-c or --copyid```** causes the script to use ```ssh-copy-id``` to copy your ssh id to the target machine before running the playbook to setup the machine.  This obviates the need to enter your password every time that you connect to the machine.
 
@@ -140,6 +141,8 @@ A setup script, ```setup-target.sh```, is provided to perform the installation. 
 
 *if neither the -i nor the -t options are specified, the install and the test tasks will be run.*
 
+**`-v <vaultpasswordfile>, --vault <vaultpasswordfile>`** use <vaultpasswordfile> for the vault password. If no password file is specified, the user will be prompted for the vault password when it is needed.
+
 ## Roles
 
 If you need to create a playbook to run individual roles, the following roles are available in this project.
@@ -147,7 +150,9 @@ If you need to create a playbook to run individual roles, the following roles ar
   **ansible-depends** - installs the packages required to run subsequent Ansible
   modules
 
-  **apache** - installs the apache2 web server
+  **ssl-config** - creates the SSL certificate for the Apache web server
+
+  **apache-config** - installs and configures the apache2 web server
 
   **dotnet_core** - installs the ASP.NET Core 2.2 Runtime.  It does *not* install the SDK.
 
@@ -157,6 +162,6 @@ If you need to create a playbook to run individual roles, the following roles ar
 
   **nodejs** - installs node.js, npm, and yarn
 
-  **the_combine_app** - installs TheCombine application from the ```build``` directory.  The application must be built first; it is not built by the ansible playbook.
+  **the_combine_app** - installs TheCombine application from the ```build``` directory and the Backend `publish` directory.  The application must be built first; it is not built by the ansible playbook.
 
   **wifi_ap** - sets up the wifi interface as a wifi access point (hotspot)

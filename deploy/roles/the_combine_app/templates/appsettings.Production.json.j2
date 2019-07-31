@@ -1,4 +1,11 @@
 {
+  "Logging": {
+    "LogLevel": {
+      "Default": "{{ backend_loglevel_default }}",
+      "System": "{{ backend_loglevel_system }}",
+      "Microsoft": "{{ backend_loglevel_microsoft }}"
+    }
+  },
   "Kestrel": {
     "Endpoints": {
       "HTTPS": {

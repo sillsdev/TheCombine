@@ -47,7 +47,7 @@ Usage: $0 [options] user@machinename
               run the test portion of the playbook
 
    -v <vaultpasswordfile>, --vault <vaultpasswordfile>
-              use <vaultpasswordfile> for the vault password. If not password
+              use <vaultpasswordfile> for the vault password. If no password
               file is specified, the user will be prompted for the vault
               password when it is needed.
 .EOM
@@ -137,6 +137,6 @@ else
   VAULTPASSWORDOPTION="--vault-password-file $VAULTPASSWORDFILE"
 fi
 
-CMD_STRING="ansible-playbook -i hosts playbook_setup.yml --limit $MACHINE -u $USER -K ${TAGS} ${VAULTPASSWORDOPTION}" 
+CMD_STRING="ansible-playbook -i hosts playbook_setup.yml --limit $MACHINE -u $USER -K ${TAGS} ${VAULTPASSWORDOPTION}"
 echo -e "Running \"${CMD_STRING}\""
 ${CMD_STRING}
