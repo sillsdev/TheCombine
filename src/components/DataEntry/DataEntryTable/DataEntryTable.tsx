@@ -125,22 +125,42 @@ export class DataEntryTableRewrite extends React.Component<
     duplicate?: Word
   ) {
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
-
-    let recentlyAddedWords = [...this.state.recentlyAddedWords];
-    let updatedWordAccess: WordAccess = { word: updatedWord, mutable: true };
     if (duplicate && wordToDelete) {
-      // Delete word
-      recentlyAddedWords.filter(word => word.word.id !== wordToDelete.id);
-      updatedWordAccess = { word: updatedWord, mutable: false };
+      // Delete word from backend, then replace word in frontend with updated one
+      let recentlyAddedWords = [...this.state.recentlyAddedWords];
+      let frontendWords: Word[] = recentlyAddedWords.map(
+        wordAccess => wordAccess.word
+      );
+      let index = frontendWords.findIndex(w => w.id === wordToDelete.id);
+      if (index === -1) {
+        console.log("Word does not exist in recentlyAddedWords");
+      }
+
+      let updatedWordAccess: WordAccess = { word: updatedWord, mutable: false };
+      this.updateWordInFrontend(index, updatedWordAccess);
+      let deletedWord: Word = await Backend.deleteWord(wordToDelete);
+      let updatedExistingWords = await Backend.getFrontierWords();
+      this.setState({
+        existingWords: updatedExistingWords
+      });
+    } else {
+      // Update word
+      let recentlyAddedWords = [...this.state.recentlyAddedWords];
+      let updatedWordAccess: WordAccess = { word: updatedWord, mutable: true };
+
+      let frontendWords: Word[] = recentlyAddedWords.map(
+        wordAccess => wordAccess.word
+      );
+
+      let newWordsIndex = frontendWords.findIndex(
+        w => w.id === wordToUpdate.id
+      );
+      if (newWordsIndex === -1) {
+        console.log("Word does not exist in recentlyAddedWords");
+      }
+
+      this.updateWordInFrontend(newWordsIndex, updatedWordAccess);
     }
-    let frontendWords: Word[] = this.state.recentlyAddedWords.map(
-      wordAccess => wordAccess.word
-    );
-    let newWordsIndex = frontendWords.findIndex(w => w.id === wordToUpdate.id);
-    if (newWordsIndex === -1) {
-      console.log("Word does not exist in recentlyAddedWords");
-    }
-    this.updateWordInFrontend(newWordsIndex, updatedWordAccess);
   }
 
   updateWordInFrontend(index: number, updatedWord: WordAccess) {
@@ -223,7 +243,6 @@ export class DataEntryTableRewrite extends React.Component<
             wordAccess.mutable ? (
               <React.Fragment>
                 <ExistingEntry
-                  key={wordAccess.word.id}
                   wordsBeingAdded={this.state.recentlyAddedWords.map(
                     wordAccess => wordAccess.word
                   )}
