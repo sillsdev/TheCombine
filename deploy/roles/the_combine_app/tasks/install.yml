@@ -112,6 +112,10 @@
     group: "{{ combine_group }}"
     mode: 0755
 
+- name: create the NSS database
+  command: "certutil -N -d sql:/home/{{ combine_user }}/.pki/nssdb --empty-password"
+  become_user: "{{ combine_user }}"
+
 - name: trust the certificate (SSL)
   command: "pk12util -d sql:/home/{{ combine_user }}/.pki/nssdb -i localhost.pfx -W \"{{ combine_cert_password }}\""
   args:
