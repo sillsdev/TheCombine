@@ -160,6 +160,8 @@ namespace BackendFramework.Services
                 liftRangesWriter.WriteStartElement("lift-ranges");
                 liftRangesWriter.WriteStartElement("range");
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
+
+                //pull from resources file with all English semantic domains
                 var sdLines = Properties.Resources.sdList.Split("\n");
                 foreach (var line in sdLines)
                 {
@@ -170,13 +172,14 @@ namespace BackendFramework.Services
                     }
                 }
 
+                //pull from new semantic domains in project
                 foreach (var sd in proj.SemanticDomains)
                 {
-                    WriteRangeElement(liftRangesWriter, sd.Id, Guid.NewGuid().ToString(), sd.Name, ""/*TODO: sd.Description*/);
+                    WriteRangeElement(liftRangesWriter, sd.Id, Guid.NewGuid().ToString(), sd.Name, sd.Description);
                 }
 
-                liftRangesWriter.WriteEndElement();
-                liftRangesWriter.WriteEndElement();
+                liftRangesWriter.WriteEndElement(); //end semantic-domain-ddp4 range
+                liftRangesWriter.WriteEndElement(); //end lift-ranges
                 liftRangesWriter.WriteEndDocument();
 
                 liftRangesWriter.Flush();
@@ -298,24 +301,24 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteAttributeString("lang", "en");
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(name);
-            liftRangesWriter.WriteEndElement();
-            liftRangesWriter.WriteEndElement();
+            liftRangesWriter.WriteEndElement(); //end text
+            liftRangesWriter.WriteEndElement(); //end label
 
             liftRangesWriter.WriteStartElement("abbrev");
             liftRangesWriter.WriteAttributeString("lang", "en");
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(id);
-            liftRangesWriter.WriteEndElement();
-            liftRangesWriter.WriteEndElement();
+            liftRangesWriter.WriteEndElement(); //end text
+            liftRangesWriter.WriteEndElement(); //end label
 
             liftRangesWriter.WriteStartElement("description");
             liftRangesWriter.WriteAttributeString("lang", "en");
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(description);
-            liftRangesWriter.WriteEndElement();
-            liftRangesWriter.WriteEndElement();
+            liftRangesWriter.WriteEndElement(); //end text
+            liftRangesWriter.WriteEndElement(); //end label
 
-            liftRangesWriter.WriteEndElement();
+            liftRangesWriter.WriteEndElement(); //end range element
         }
 
         /// <summary> The meat of lift import is done here. This reads in all necessary attributes of a word and adds it to the database. </summary>
