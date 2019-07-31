@@ -53,10 +53,10 @@ You can login to the VM at the console window using the following credentials:
 
 #### Using a Secure Shell Client
 
-You can also connect using a secure shell client with the same credentials.  The host to use is:
-
-     host: localhost
-     port: 2222
+You can also connect using a secure shell client with the same credentials:
+```
+  ssh vagrant@10.10.0.2
+```
 
 #### Using Vagrant
 
