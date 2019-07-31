@@ -12,11 +12,12 @@ describe("Test the TreeViewReducer", () => {
   it("Creates a SemanticDomain from a JSON string using createDomains", () => {
     const parent = {
       name: "Foo",
-      id: "x"
+      id: "x",
+      description: "foo description"
     };
     const subdomains = [
-      { name: "Bar", id: "x.1", subdomains: [] },
-      { name: "Baz", id: "x.2", subdomains: [] }
+      { name: "Bar", id: "x.1", description: "bar desc", subdomains: [] },
+      { name: "Baz", id: "x.2", description: "baz desc", subdomains: [] }
     ];
     const initialJson = [
       {
@@ -28,6 +29,7 @@ describe("Test the TreeViewReducer", () => {
       currentdomain: {
         name: "Semantic Domains",
         id: "",
+        description: "",
         subdomains: [
           {
             ...parent,
@@ -37,13 +39,13 @@ describe("Test the TreeViewReducer", () => {
         ]
       }
     };
-    expected.currentdomain.subdomains[0].parentDomain = expected.currentdomain;
     expected.currentdomain.subdomains[0].subdomains.map(value => {
       return {
         ...value,
         parentDomains: expected.currentdomain.subdomains[0]
       };
     });
+    expected.currentdomain.subdomains[0].parentDomain = expected.currentdomain;
     expect(createDomains(initialJson)).toEqual(expected);
   });
 

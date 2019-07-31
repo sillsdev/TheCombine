@@ -1,5 +1,5 @@
-import aff from "../../resources/dictionaries/en-us.aff.js";
-import dictionary from "../../resources/dictionaries/en-us.dic.js";
+import aff from "../../resources/dictionaries/en-us.aff.ts";
+import dictionary from "../../resources/dictionaries/en-us.dic.ts";
 
 const nspell = require("nspell");
 
