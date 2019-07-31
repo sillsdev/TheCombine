@@ -1,0 +1,4 @@
+#! /bin/bash
+
+cd ${HOME}/src/TheCombine/deploy
+./setup-target.sh -b vagrant@localhost

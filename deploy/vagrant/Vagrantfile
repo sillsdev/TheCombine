@@ -57,6 +57,9 @@ Vagrant.configure("2") do |config|
    # Customize the amount of memory on the VM:
    vb.memory = "2048"
   end
+
+  # update the mkcombine script
+  config.vm.provision "file", source: "mkcombine", destination: "/home/vagrant/bin/mkcombine"
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -73,7 +76,7 @@ Vagrant.configure("2") do |config|
     fi
     cd /home/vagrant/src
     if [ ! -d TheCombine ] ; then
-       git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
+      git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
     fi
   SHELL
 end
