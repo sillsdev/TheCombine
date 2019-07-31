@@ -119,34 +119,45 @@ export class DataEntryTableRewrite extends React.Component<
     this.setState({ recentlyAddedWords: recentlyAddedWords });
   }
 
-  async updateExistingWord(
-    wordToUpdate: Word,
-    wordToDelete?: Word,
-    duplicate?: Word
-  ) {
+  async updateExistingWord(wordToUpdate: Word, wordToDelete?: Word) {
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
-
     let recentlyAddedWords = [...this.state.recentlyAddedWords];
-    let updatedWordAccess: WordAccess = { word: updatedWord, mutable: true };
-    if (duplicate && wordToDelete) {
-      // Delete word
-      recentlyAddedWords.filter(word => word.word.id !== wordToDelete.id);
-      updatedWordAccess = { word: updatedWord, mutable: false };
-    }
-    let frontendWords: Word[] = this.state.recentlyAddedWords.map(
+    let frontendWords: Word[] = recentlyAddedWords.map(
       wordAccess => wordAccess.word
     );
-    let newWordsIndex = frontendWords.findIndex(w => w.id === wordToUpdate.id);
-    if (newWordsIndex === -1) {
-      console.log("Word does not exist in recentlyAddedWords");
+
+    if (wordToDelete) {
+      // Delete word from backend, then replace word in frontend with updated one
+      let index = frontendWords.findIndex(w => w.id === wordToDelete.id);
+      if (index === -1) {
+        console.log("Word does not exist in recentlyAddedWords");
+      } else {
+        let updatedWordAccess: WordAccess = {
+          word: updatedWord,
+          mutable: false
+        };
+        this.updateWordInFrontend(index, updatedWordAccess);
+        this.deleteWordAndUpdateExistingWords(wordToDelete);
+      }
+    } else {
+      // Update word
+      let index = frontendWords.findIndex(w => w.id === wordToUpdate.id);
+      if (index === -1) {
+        console.log("Word does not exist in recentlyAddedWords");
+      } else {
+        let updatedWordAccess: WordAccess = {
+          word: updatedWord,
+          mutable: true
+        };
+        this.updateWordInFrontend(index, updatedWordAccess);
+      }
     }
-    this.updateWordInFrontend(newWordsIndex, updatedWordAccess);
   }
 
   updateWordInFrontend(index: number, updatedWord: WordAccess) {
-    let updatedWordAccess: WordAccess[] = [...this.state.recentlyAddedWords];
-    updatedWordAccess.splice(index, 1, updatedWord);
-    this.setState({ recentlyAddedWords: updatedWordAccess });
+    let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
+    recentlyAddedWords.splice(index, 1, updatedWord);
+    this.setState({ recentlyAddedWords });
   }
 
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
@@ -156,16 +167,22 @@ export class DataEntryTableRewrite extends React.Component<
     return updatedWord;
   }
 
-  async removeWord(id: string) {
-    let deletedWord: Word = await this.removeWordFromBackend(id);
-    let updatedNewWords: WordAccess[] = this.state.recentlyAddedWords.filter(
-      wordAccess => wordAccess.word.id !== id
+  async removeWord(word: Word) {
+    this.deleteWordAndUpdateExistingWords(word);
+    this.removeWordFromDisplay(word);
+  }
+
+  async deleteWordAndUpdateExistingWords(word: Word) {
+    let deletedWord = await Backend.deleteWord(word);
+    let existingWords: Word[] = await this.getWordsFromBackend();
+    this.setState({ existingWords });
+  }
+
+  removeWordFromDisplay(word: Word) {
+    let recentlyAddedWords: WordAccess[] = this.state.recentlyAddedWords.filter(
+      wordAccess => wordAccess.word.id !== word.id
     );
-    let updatedWords: Word[] = await this.getWordsFromBackend();
-    this.setState({
-      existingWords: updatedWords,
-      recentlyAddedWords: updatedNewWords
-    });
+    this.setState({ recentlyAddedWords });
   }
 
   toggleDisplayDuplicates(index: number) {
@@ -178,16 +195,6 @@ export class DataEntryTableRewrite extends React.Component<
     if (this.state.displaySpellingSuggestionsIndex === index)
       this.setState({ displaySpellingSuggestionsIndex: undefined });
     else this.setState({ displaySpellingSuggestionsIndex: index });
-  }
-
-  // TODO: pass in a word instead of an id
-  /** Remove a word from the database. */
-  async removeWordFromBackend(id: string): Promise<Word> {
-    let word: WordAccess[] = this.state.recentlyAddedWords.filter(
-      wordAccess => wordAccess.word.id === id
-    );
-    let updatedWord = await Backend.deleteWord(word[0].word);
-    return updatedWord;
   }
 
   render() {
@@ -223,25 +230,16 @@ export class DataEntryTableRewrite extends React.Component<
             wordAccess.mutable ? (
               <React.Fragment>
                 <ExistingEntry
-                  key={wordAccess.word.id}
                   wordsBeingAdded={this.state.recentlyAddedWords.map(
                     wordAccess => wordAccess.word
                   )}
                   existingWords={this.state.existingWords}
                   entryIndex={index}
                   entry={wordAccess.word}
-                  updateWord={(
-                    wordToUpdate: Word,
-                    wordToDelete?: Word,
-                    duplicate?: Word
-                  ) =>
-                    this.updateExistingWord(
-                      wordToUpdate,
-                      wordToDelete,
-                      duplicate
-                    )
+                  updateWord={(wordToUpdate: Word, wordToDelete?: Word) =>
+                    this.updateExistingWord(wordToUpdate, wordToDelete)
                   }
-                  removeWord={(id: string) => this.removeWord(id)}
+                  removeWord={(word: Word) => this.removeWord(word)}
                   spellChecker={this.spellChecker}
                   semanticDomain={this.props.semanticDomain}
                   displayDuplicates={
