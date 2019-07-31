@@ -118,6 +118,8 @@ if [ "$BUILDAPP" -eq 1 ] ; then
   cd ..
   npm install
   npm run build
+  echo -e "Replacing \"localhost:5001\" with \"thewordcombine.org\" in src/backend/index.tsx"
+  sed -i s/localhost\:5001/thewordcombine.org/ src/backend/index.tsx
   cd Backend
   dotnet publish -c Release
   cd ../deploy

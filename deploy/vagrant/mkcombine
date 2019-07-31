@@ -1,7 +1,7 @@
 #! /bin/bash
 
-# fix the baseURL for the React UI
-cd ${HOME}/src/TheCombine/src/backend
-sed -i s/baseURL: "https:\/\/localhost:5001\/v1"/baseURL: "https:\/\/thewordcombine.org\/v1"/ index.tsx
+# DEPRECATED: The functionality of this script has been implemented with the
+# '-b' option for the setup-target.sh script.
+
 cd ${HOME}/src/TheCombine/deploy
 ./setup-target.sh -b vagrant@localhost
