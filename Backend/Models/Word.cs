@@ -260,6 +260,13 @@ namespace BackendFramework.ValueModels
             };
         }
 
+        public SemanticDomain()
+        {
+            Name = "";
+            Id = "";
+            Description = "";
+        }
+
         public override bool Equals(object obj)
         {
             if ((obj == null) || !this.GetType().Equals(obj.GetType()))
