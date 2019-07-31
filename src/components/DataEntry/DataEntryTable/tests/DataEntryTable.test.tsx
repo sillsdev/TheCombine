@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import DataEntryTable from "../DataEntryTable";
-import SpellChecker from "../../spellChecker";
-import { SemanticDomain } from "../../../../types/word";
+import SemanticDomain from "../../../TreeView/SemanticDomain";
 import { mockDomainTree } from "../../tests/MockDomainTree";
 
 const mockSemanticDomain: SemanticDomain = {
   name: "",
-  id: ""
+  id: "",
+  description: "",
+  subdomains: []
 };
 
 describe("Tests DataEntryTable", () => {
@@ -16,7 +17,6 @@ describe("Tests DataEntryTable", () => {
     ReactDOM.render(
       <DataEntryTable
         domain={mockDomainTree}
-        spellChecker={new SpellChecker()}
         semanticDomain={mockSemanticDomain}
       />,
       div
