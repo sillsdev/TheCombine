@@ -8,7 +8,8 @@
     "wordInDatabase": [
       "This word is already in the database",
       "Esta palabra ya está en la base de datos"
-    ]
+    ],
+    "mispelledWord": ["This word is mispelled", "Esta palabra está mal escrita"]
   },
   "temp": {
     "buttonText": ["This is a button.", "Este es un botón."],
@@ -110,8 +111,8 @@
       "Validar caracteres estructurales"
     ]
   },
-  "viewFinal": {
-    "title": ["View Final", "Ver final"],
+  "reviewEntries": {
+    "title": ["Review Entries", "Revisar final"],
     "sense": ["Sense", "Sentido"],
     "novernacular": ["No vernacular input!", "No tenemos un vernáculo!"],
     "nogloss": ["No glosses input", "No tenemos un traduccion"],
@@ -132,7 +133,11 @@
     }
   },
   "charInventory": {
-    "title": ["Create Character Inventory", "Crear inventario de personajes"],
+    "title": ["Create Character Inventory", "Crear inventario de caracteres"],
+    "characters": ["characters", "caracteres"],
+    "occurrences": ["occurrences", "ocurrencias"],
+    "status": ["status", "estado"],
+    "sortBy": ["Sort by", "Sort by"],
     "characterSet": {
       "title": ["Vernacular Character Set:", "Conjunto de caracteres:"],
       "help": [

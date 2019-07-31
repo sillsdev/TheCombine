@@ -10,6 +10,7 @@ using System.Linq;
 
 namespace Backend.Tests
 {
+    [Parallelizable(ParallelScope.Self)]
     public class WordControllerTests
     {
         private IWordRepository _repo;
@@ -184,7 +185,7 @@ namespace Backend.Tests
             mergeObject.ChildrenWords = new List<MergeSourceWord>
             {
                 new MergeSourceWord {
-                    SrcWordID = thisWord.Id,
+                    SrcWordId = thisWord.Id,
                     SenseStates = new List<State> {State.sense, State.sense, State.sense }
                 }
             };
@@ -220,9 +221,9 @@ namespace Backend.Tests
             List<Word> childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
             foreach (Word child in childWords)
             {
-                //generate mergeSourceWord with new child ID and desired child state list 
+                //generate mergeSourceWord with new child Id and desired child state list 
                 MergeSourceWord newGenChild = new MergeSourceWord();
-                newGenChild.SrcWordID = _repo.Add(child).Result.Id;
+                newGenChild.SrcWordId = _repo.Add(child).Result.Id;
                 newGenChild.SenseStates = new List<State> { State.duplicate, State.sense, State.separate };
                 parentChildMergeObject.ChildrenWords.Add(newGenChild);
             }

@@ -4,20 +4,32 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography } from "@material-ui/core";
+import {
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
+} from "@material-ui/core";
 import CharacterCard from "./CharacterCard";
+import { CharacterSetEntry } from "../../CharacterInventoryReducer";
 
 export interface CharacterListProps {
-  setValidCharacters: (inventory: string[]) => void;
-  validCharacters: string[];
-  setRejectedCharacters: (inventory: string[]) => void;
-  rejectedCharacters: string[];
   setSelectedCharacter: (character: string) => void;
-  allWords: string[];
+  allCharacters: CharacterSetEntry[];
 }
 
 interface CharacterListState {
   hoverChar: string;
+  sortOrder: sortOrder;
+}
+
+enum sortOrder {
+  characterAscending,
+  characterDescending,
+  occurrencesAscending,
+  occurrencesDescending,
+  status
 }
 
 export class CharacterList extends React.Component<
@@ -27,58 +39,94 @@ export class CharacterList extends React.Component<
   constructor(props: CharacterListProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      hoverChar: ""
+      hoverChar: "",
+      sortOrder: sortOrder.characterAscending
     };
   }
 
   render() {
+    let orderedCharacters = sortBy(
+      [...this.props.allCharacters],
+      this.state.sortOrder
+    );
+
     return (
       <React.Fragment>
-        {this.props.validCharacters.length <= 0 &&
-        this.props.rejectedCharacters.length <= 0 ? (
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" style={{ color: "#999" }}>
-              <Translate id="charInventory.characterSet.noCharacters" />
-            </Typography>
-          </Grid>
-        ) : (
-          <React.Fragment>
-            {/* The grid of character tiles */
-            this.props.validCharacters.map((char, index) => (
-              <CharacterCard
-                char={char}
-                key={char}
-                count={countCharacterOccurences(char, this.props.allWords)}
-                status={"accepted"}
-                onClick={() => this.props.setSelectedCharacter(char)}
-              />
-            ))}
-            {this.props.rejectedCharacters.map(char => (
-              <CharacterCard
-                char={char}
-                key={char}
-                count={countCharacterOccurences(char, this.props.allWords)}
-                status={"rejected"}
-                onClick={() => this.props.setSelectedCharacter(char)}
-              />
-            ))}
-          </React.Fragment>
-        )}
+        <Grid item xs={12}>
+          <FormControl>
+            <InputLabel htmlFor="sort-order">
+              <Translate id="charInventory.sortBy" />
+            </InputLabel>
+            <Select
+              value={this.state.sortOrder}
+              onChange={e =>
+                this.setState({ sortOrder: e.target.value as sortOrder })
+              }
+              inputProps={{
+                id: "sort-order"
+              }}
+            >
+              <MenuItem value={sortOrder.characterAscending}>
+                <Translate id="charInventory.characters" /> 🡡
+              </MenuItem>
+              <MenuItem value={sortOrder.characterDescending}>
+                <Translate id="charInventory.characters" /> 🡣
+              </MenuItem>
+              <MenuItem value={sortOrder.occurrencesAscending}>
+                <Translate id="charInventory.occurrences" /> 🡡
+              </MenuItem>
+              <MenuItem value={sortOrder.occurrencesDescending}>
+                <Translate id="charInventory.occurrences" /> 🡣
+              </MenuItem>
+              <MenuItem value={sortOrder.status}>
+                <Translate id="charInventory.status" />
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <React.Fragment>
+          {/* The grid of character tiles */
+
+          orderedCharacters.map(character => (
+            <CharacterCard
+              char={character.character}
+              key={character.character}
+              count={character.occurrences}
+              status={character.status}
+              onClick={() =>
+                this.props.setSelectedCharacter(character.character)
+              }
+            />
+          ))}
+        </React.Fragment>
       </React.Fragment>
     );
   }
 }
 
-function countCharacterOccurences(char: string, words: string[]) {
-  let count = 0;
-  for (let word of words) {
-    for (let letter of word) {
-      if (letter === char) {
-        count++;
-      }
-    }
+function sortBy(characterSet: CharacterSetEntry[], sort: sortOrder) {
+  switch (sort) {
+    case sortOrder.characterAscending:
+      return characterSet.sort(sortFunction("character"));
+    case sortOrder.characterDescending:
+      return characterSet.sort(sortFunction("character")).reverse();
+    case sortOrder.occurrencesAscending:
+      return characterSet.sort(sortFunction("occurrences"));
+    case sortOrder.occurrencesDescending:
+      return characterSet.sort(sortFunction("occurrences")).reverse();
+    case sortOrder.status:
+      return characterSet.sort(sortFunction("status"));
+    default:
+      return characterSet;
   }
-  return count;
+}
+
+function sortFunction<K extends keyof CharacterSetEntry>(prop: K) {
+  return (a: CharacterSetEntry, b: CharacterSetEntry) => {
+    if (a[prop] < b[prop]) return -1;
+    if (a[prop] > b[prop]) return 1;
+    return 0;
+  };
 }
 
 export default withLocalize(CharacterList);

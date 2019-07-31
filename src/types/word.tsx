@@ -32,13 +32,12 @@ export interface Word {
   id: string;
   vernacular: string;
   senses: Sense[];
-  audio: string;
+  audio: string[];
   created: string;
   modified: string;
   history: string[];
   partOfSpeech: string;
   editedBy: string[];
-  accessability: State;
   otherField: string;
   plural: string;
 }
@@ -68,13 +67,12 @@ export function simpleWord(vern: string, gloss: string): Word {
     id: Math.floor(Math.random() * 9999999).toString(),
     vernacular: vern,
     senses: [makeSense(gloss)],
-    audio: "",
+    audio: [],
     created: "now",
     modified: "",
     history: [],
     partOfSpeech: "",
     editedBy: [],
-    accessability: State.active,
     otherField: "",
     plural: ""
   };
@@ -85,13 +83,12 @@ export function multiGlossWord(vern: string, glosses: string[]) {
     id: Math.floor(Math.random() * 9999999).toString(),
     vernacular: vern,
     senses: glosses.map(gloss => makeSense(gloss)),
-    audio: "",
+    audio: [],
     created: "now",
     modified: "",
     history: [],
     partOfSpeech: "",
     editedBy: [],
-    accessability: State.active,
     otherField: "",
     plural: ""
   };
