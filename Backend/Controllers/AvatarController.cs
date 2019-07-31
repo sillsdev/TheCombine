@@ -24,6 +24,27 @@ namespace BackendFramework.Controllers
             _permissionService = permissionService;
         }
 
+        /// <summary> Returns the url of the users avatar on disk </summary>
+        /// <remarks> GET: v1/users/{userId}/download/avatar </remarks>
+        /// <returns> Path to local avatar file </returns>
+        [HttpPost("{userId}/upload/avatar")]
+        public async Task<IActionResult> DownloadAvatar(string userId)
+        {
+           if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
+           {
+               return new UnauthorizedResult();
+           }
+
+           User currentUser = _userService.GetUser(userId);
+           if(currentUser = null){
+                return new NotFoundObjectResult(currentUser.Id);
+           }
+
+           return new OkObjectResult(currentUser.Avatar);
+        }
+
+
+
         /// <summary> Adds an avatar image to a <see cref="User"/> and saves locally to ~/.CombineFiles/{ProjectId}/Avatars </summary>
         /// <remarks> POST: v1/users/{userId}/upload/avatar </remarks>
         /// <returns> Path to local avatar file </returns>
