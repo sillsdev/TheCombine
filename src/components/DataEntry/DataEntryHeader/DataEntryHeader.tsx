@@ -27,6 +27,7 @@ export class DataEntryHeader extends React.Component<
         <Translate id="addWords.domain" />
         {": "}
         {this.props.domain.name + " (" + this.props.domain.id + ")"}
+        <Typography>{this.props.domain.description}</Typography>
         <IconButton
           onClick={() => {
             this.props.displaySemanticDomainView(true);
