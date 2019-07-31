@@ -97,7 +97,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects </remarks>
         /// <returns> Id of created project </returns>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ProjectWithUser project)
+        public async Task<IActionResult> Post([FromBody] Project project)
         {
             await _projectService.Create(project);
 
@@ -125,9 +125,11 @@ namespace BackendFramework.Controllers
             currentUser = await _userService.MakeJWT(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
-            project.__UpdatedUser = currentUser;
+            var output = new ProjectWithUser(project);
 
-            return new OkObjectResult(project);
+            output.__UpdatedUser = currentUser;
+
+            return new OkObjectResult(output);
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>
