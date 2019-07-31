@@ -131,20 +131,26 @@ export class DataEntryTableRewrite extends React.Component<
       let index = frontendWords.findIndex(w => w.id === wordToDelete.id);
       if (index === -1) {
         console.log("Word does not exist in recentlyAddedWords");
+      } else {
+        let updatedWordAccess: WordAccess = {
+          word: updatedWord,
+          mutable: false
+        };
+        this.updateWordInFrontend(index, updatedWordAccess);
+        this.deleteWordAndUpdateExistingWords(wordToDelete);
       }
-
-      let updatedWordAccess: WordAccess = { word: updatedWord, mutable: false };
-      this.updateWordInFrontend(index, updatedWordAccess);
-      this.deleteWordAndUpdateExistingWords(wordToDelete);
     } else {
       // Update word
       let index = frontendWords.findIndex(w => w.id === wordToUpdate.id);
       if (index === -1) {
         console.log("Word does not exist in recentlyAddedWords");
+      } else {
+        let updatedWordAccess: WordAccess = {
+          word: updatedWord,
+          mutable: true
+        };
+        this.updateWordInFrontend(index, updatedWordAccess);
       }
-
-      let updatedWordAccess: WordAccess = { word: updatedWord, mutable: true };
-      this.updateWordInFrontend(index, updatedWordAccess);
     }
   }
 
