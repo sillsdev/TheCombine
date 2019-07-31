@@ -1,4 +1,4 @@
-# Update UserRole of user on a project
+# Update a project
 
 **URL** : `/v1/projects/{projectId}`
 
