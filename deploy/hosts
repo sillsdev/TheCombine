@@ -7,6 +7,9 @@ moe
 pils
 anglophone
 
+# anglophone IP address
+172.20.1.58
+
 # NUCs by access point IP address
 10.10.0.1
 
