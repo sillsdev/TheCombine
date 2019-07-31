@@ -10,7 +10,6 @@ using System.IO;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class AvatarControllerTests
     {
         private IUserService _userService;

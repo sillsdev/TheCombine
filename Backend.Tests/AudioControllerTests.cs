@@ -12,7 +12,6 @@ using System.IO;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class AudioControllerTests
     {
         private IWordRepository _wordrepo;
