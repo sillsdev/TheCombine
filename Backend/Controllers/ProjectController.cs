@@ -196,14 +196,10 @@ namespace BackendFramework.Controllers
 
         /// <summary> UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/> </summary>
         /// <remarks> GET: v1/projects/{projectId}/semanticdomains </remarks>
+        [AllowAnonymous]
         [HttpGet("{projectId}/semanticdomains")]
         public async Task<IActionResult> GetSemDoms(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             try
             {
                 var result = await _semDomParser.ParseSemanticDomains(projectId);
