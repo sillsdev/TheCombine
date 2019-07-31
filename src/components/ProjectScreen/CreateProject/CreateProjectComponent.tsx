@@ -5,12 +5,12 @@ import {
   LocalizeContextProps,
   withLocalize
 } from "react-localize-redux";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import {
   Grid,
   Typography,
   CardContent,
+  TextField,
+  Button,
   Card,
   CircularProgress
 } from "@material-ui/core";
@@ -127,16 +127,17 @@ class CreateProject extends React.Component<
                 style={{ display: "none" }}
               />
               {/* ... and this button is tied to it with the htmlFor property */}
-              <Button variant="contained">
-                <label
-                  htmlFor="file-input"
-                  style={{
-                    cursor: "pointer"
-                  }}
-                >
+              <label
+                htmlFor="file-input"
+                style={{
+                  cursor: "pointer"
+                }}
+              >
+                <Button variant="contained" component="span">
                   <Translate id="createProject.browse" />
-                </label>
-              </Button>
+                </Button>
+              </label>
+
               {/* Displays the name of the selected file */}
               {this.state.fileName && (
                 <Typography variant="body1" noWrap style={{ marginTop: 30 }}>

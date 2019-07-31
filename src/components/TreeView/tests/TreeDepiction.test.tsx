@@ -2,7 +2,7 @@ import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import TreeDepiction from "../TreeDepiction";
 import MockTree from "./MockSemanticTree";
-import SemanticDomain from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../SemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 describe("Tests AddWords", () => {
@@ -26,14 +26,14 @@ describe("Tests AddWords", () => {
 });
 
 // Perform a snapshot test
-function testFromNode(message: string, node: SemanticDomain) {
+function testFromNode(message: string, node: SemanticDomainWithSubdomains) {
   it(message, () => {
     createTree(node);
     expect(treeMaster.toJSON()).toMatchSnapshot();
   });
 }
 
-function createTree(domain: SemanticDomain) {
+function createTree(domain: SemanticDomainWithSubdomains) {
   renderer.act(() => {
     treeMaster = renderer.create(
       <TreeDepiction currentDomain={domain} animate={jest.fn()} />

@@ -1,9 +1,9 @@
-export default interface SemanticDomain {
+export default interface SemanticDomainWithSubdomains {
   // Data of current domain
   name: string;
   id: string;
 
   // Data about tangential domains
-  parentDomain?: SemanticDomain;
-  subdomains: SemanticDomain[];
+  parentDomain?: SemanticDomainWithSubdomains;
+  subdomains: SemanticDomainWithSubdomains[];
 }
