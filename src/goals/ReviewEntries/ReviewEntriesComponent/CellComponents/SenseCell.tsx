@@ -89,6 +89,7 @@ export default class SenseCell extends React.Component<
   render() {
     return (
       <AlignedList
+        listId={`senses${this.props.rowData.id}`}
         contents={this.props.rowData.senses.map((sense, index) => (
           <Translate>
             {({ translate }) =>
