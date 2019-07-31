@@ -211,7 +211,7 @@ class MergeDupStep extends React.Component<
                       >
                         <CardContent>
                           <Typography variant={"h5"}>
-                            {entry.data.glosses.length > 1 &&
+                            {entry.data.glosses.length > 0 &&
                               entry.data.glosses
                                 .map(gloss => gloss.def)
                                 .reduce((gloss, acc) => `${acc}, ${gloss}`)}
