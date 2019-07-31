@@ -11,6 +11,7 @@
   vars_files:
     - "vars/config_common.yml"
     - "vars/config_{{ config }}.yml"
+    - "vars/vault_{{ config }}.yml"
 
   roles:
     - role: ansible-depends
