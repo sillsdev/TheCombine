@@ -6,20 +6,12 @@ import {
   Typography,
   IconButton,
   Grid,
-  Chip,
-  Select,
-  MenuItem
+  Chip
 } from "@material-ui/core";
 import { uuid } from "../../../../utilities";
-import {
-  Sort,
-  ArrowForwardIos,
-  ExpandMore,
-  ExpandLess
-} from "@material-ui/icons";
+import { ArrowForwardIos } from "@material-ui/icons";
 import React from "react";
-import { Draggable, Droppable } from "react-beautiful-dnd";
-import { Gloss } from "../../../../types/word";
+import { Draggable } from "react-beautiful-dnd";
 import { SideBar } from "../MergeDupStepComponent";
 
 //interface for component props
@@ -43,9 +35,6 @@ interface MergeStackState {
   expanded: boolean;
   duplicateCount: number;
 }
-
-// Constants
-const WIDTH: string = "16vw"; // Width of each card
 
 function arraysEqual<T>(arr1: T[], arr2: T[]) {
   if (arr1.length !== arr2.length) return false;
@@ -90,8 +79,6 @@ class MergeStack extends React.Component<
   }
 
   render() {
-    let lang = "en";
-
     let senses = Object.values(this.props.sense).map(
       senseID => this.props.senses[senseID]
     );
@@ -104,7 +91,7 @@ class MergeStack extends React.Component<
     if (senseEntries.length > this.state.duplicateCount) {
       this.expand();
       this.setState({ ...this.state, duplicateCount: senseEntries.length });
-    } else if (senseEntries.length != this.state.duplicateCount) {
+    } else if (senseEntries.length !== this.state.duplicateCount) {
       this.setState({ ...this.state, duplicateCount: senseEntries.length });
     }
 
