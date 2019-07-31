@@ -347,3 +347,10 @@ export async function getSemanticDomains(): Promise<
   );
   return resp.data;
 }
+
+export async function getUserRoles(projId: string): Promise<string> {
+  let resp = await backendServer.get(`projects/${projId}/userroles`, {
+    headers: authHeader()
+  });
+  return resp.data;
+}
