@@ -10,10 +10,12 @@ import { SemanticDomain } from "../../../../types/word";
 import TreeView from "../../../../components/TreeView";
 import AlignedList, { SPACER } from "./AlignedList";
 import { Translate } from "react-localize-redux";
+import { highlight } from "../../../../types/theme";
 
 interface DomainCellProps {
   rowData: ReviewEntriesWord;
   selectedDomain: SemanticDomain;
+  sortingByDomains: boolean;
   editDomains?: (senseId: string, newDomains: SemanticDomain[]) => void;
 }
 
@@ -68,17 +70,24 @@ export default class DomainCell extends React.Component<
       );
   }
 
+  private getChipStyle(senseIndex: number, domainIndex: number) {
+    return this.props.sortingByDomains && senseIndex === 0 && domainIndex === 0
+      ? { backgroundColor: highlight }
+      : {};
+  }
+
   render() {
     return (
       <React.Fragment>
         <AlignedList
-          contents={this.props.rowData.senses.map((sense, index) => (
+          contents={this.props.rowData.senses.map((sense, senseIndex) => (
             <Grid container direction="row" spacing={2}>
               {sense.domains.length > 0 ? (
-                sense.domains.map(domain => (
-                  <Grid item key={`domainFor${sense.senseId}-${index}`}>
+                sense.domains.map((domain, domainIndex) => (
+                  <Grid item key={`domainFor${sense.senseId}-${senseIndex}`}>
                     <Chip
-                      color={sense.deleted ? "default" : "primary"}
+                      color={sense.deleted ? "secondary" : "default"}
+                      style={this.getChipStyle(senseIndex, domainIndex)}
                       label={`${domain.id}: ${domain.name}`}
                       onDelete={
                         this.props.editDomains && !sense.deleted
@@ -92,7 +101,10 @@ export default class DomainCell extends React.Component<
                 <Grid item xs key={`noDomain${sense.senseId}`}>
                   <Chip
                     label={<Translate id="reviewEntries.nodomain" />}
-                    color="secondary"
+                    color={
+                      this.props.sortingByDomains ? "default" : "secondary"
+                    }
+                    style={this.getChipStyle(senseIndex, 0)}
                   />
                 </Grid>
               )}
