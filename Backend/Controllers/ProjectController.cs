@@ -126,9 +126,7 @@ namespace BackendFramework.Controllers
             currentUser = await _userService.MakeJWT(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
-            var output = new ProjectWithUser(project);
-
-            output.__UpdatedUser = currentUser;
+            var output = new ProjectWithUser(project) { __UpdatedUser = currentUser };
 
             return new OkObjectResult(output);
         }
@@ -232,9 +230,20 @@ namespace BackendFramework.Controllers
             var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
             userRole.Permissions = permissions;
 
-            await _userRoleService.Update(userRoleId, userRole);
+            var result = await _userRoleService.Update(userRoleId, userRole);
 
-            return new OkObjectResult(userRole);
+            if (result == ResultOfUpdate.NotFound)
+            {
+                return new NotFoundObjectResult(userId);
+            }
+            else if (result == ResultOfUpdate.Updated)
+            {
+                return new OkObjectResult(userId);
+            }
+            else
+            {
+                return new StatusCodeResult(304);
+            }
         }
 
     }

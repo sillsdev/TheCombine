@@ -6,8 +6,8 @@
 - [Get one project](projects/get.md) : `GET: /v1/projects/{projectId}`
 - [Get all users working on one project](projects/get_users.md) : `GET: /v1/projects/{projectId}/users`
 - [Update a project](projects/put.md) : `PUT: /v1/projects/{projectId}`
-- [Update character set of a project](projects/put.md) : `PUT: /v1/projects/{projectId}/characters`
-- [Update UserRole of User on one project](projects/put.md) : `PUT: /v1/projects/{projectId}/users/{userId}`
+- [Update character set of a project](projects/put_characters.md) : `PUT: /v1/projects/{projectId}/characters`
+- [Update UserRole of User on one project](projects/put_user.md) : `PUT: /v1/projects/{projectId}/users/{userId}`
 
 ### Word
 

@@ -1,16 +1,16 @@
 # Project
 
-**name** :
+**name** : Name of project
 
-**semanticDomains** :
+**semanticDomains** : Custom Semantic Domains for this project
 
-**words** : This should only contain [frontier](words/frontier.md) words
+**vernacularWritingSystem** : Language code of vernaculars
 
-**vernacularWritingSystem** :
+**analysisWritingSystems** : Language code of glossing systems
 
-**analysisWritingSystem** :
+**validCharacters** : 𠮷 appears to be a single character but is represented `"\uD842\uDFB7"` if we store characters as a single unicode codepoint this single character would be split in two.
 
-**characterSet** : 𠮷 appears to be a single character but is represented `"\uD842\uDFB7"` if we store characters as a single unicode codepoint this single character would be split in two.
+**rejectedCharacters** :
 
 **customFields** : Optional at this point. We may or may not include this in our final design.
 
@@ -41,10 +41,10 @@
 {
     name: String,
     semanticDomains: <a href=words/semanticDomain.md>semanticDomain</a>[],
-    words: <a href=words/word.md>Word</a>[],
     vernacularWritingSystem: String,
     analysisWritingSystems: String[],
-    characterSet: String[],
+    validCharacters: String[],
+    rejectedCharacters: String[],
     customFields: <a href=customField.md>CustomField</a>[],
     wordFields: String[],
     partsOfSpeech: String[]

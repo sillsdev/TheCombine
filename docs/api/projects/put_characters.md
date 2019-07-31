@@ -1,10 +1,10 @@
-# Update UserRole of user on a project
+# Update character set
 
-**URL** : `/v1/projects/{projectId}`
+**URL** : `/v1/projects/{projectId}/characters`
 
 **Method** : `PUT`
 
-**Auth required** : Project Admin
+**Auth required** : MergeNCharSet
 
 **Data type** : [`Project`](project.md)
 
@@ -12,7 +12,7 @@
 
 **Code** : `200 OK`
 
-**Data Content** : `string` projectId
+**Data Content** : `string` userId
 
 ## Redirect response
 
