@@ -323,7 +323,7 @@ namespace Backend.Tests
                     Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "audio")));
                     foreach (var audioFile in dataSet.Value.audioFiles)
                     {
-                        var path = Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio", audioFile);
+                        var path = Path.Combine(exportedFilepath, "LiftExport", "Lift", "audio", audioFile);
                         Assert.That(File.Exists(path), "The file " + audioFile + " can not be found at this path: " + path);
                     }
                     Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "WritingSystems")));
