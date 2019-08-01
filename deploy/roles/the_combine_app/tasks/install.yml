@@ -114,6 +114,8 @@
 
 - name: create the NSS database
   command: "certutil -N -d sql:/home/{{ combine_user }}/.pki/nssdb --empty-password"
+  args:
+    creates: "/home/{{ combine_user }}/.pki/nssdb/cert9.db"
   become_user: "{{ combine_user }}"
 
 - name: trust the certificate (SSL)
