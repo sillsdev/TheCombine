@@ -22,11 +22,10 @@ import {
 } from "./CharacterInventoryReducer";
 
 export enum CharacterInventoryType {
-  SET_CHARACTER_STATUS = "SET_CHARACTER_STATUS",
   SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
   SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS",
-  // Only needed for SampleWords component
-  // ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS",
+  ADD_TO_VALID_CHARACTERS = "ADD_TO_VALID_CHARACTERS",
+  ADD_TO_REJECTED_CHARACTERS = "ADD_TO_REJECTED_CHARACTERS",
   SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS",
   SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER",
   SET_CHARACTER_SET = "SET_CHARACTER_SET"
@@ -38,8 +37,6 @@ export interface CharacterInventoryAction {
   type: CharacterInventoryType;
   payload: string[];
   characterSet?: CharacterSetEntry[];
-  character?: string;
-  status?: characterStatus;
 }
 
 /**
@@ -59,27 +56,47 @@ export function uploadInventory() {
   };
 }
 
-export function setCharacterStatus(
-  character: string,
-  status: characterStatus
-): CharacterInventoryAction {
-  return {
-    type: CharacterInventoryType.SET_CHARACTER_STATUS,
-    character,
-    status,
-    payload: []
+export function setCharacterStatus(character: string, status: characterStatus) {
+  return (
+    dispatch: Dispatch<CharacterInventoryAction>,
+    getState: () => StoreState
+  ) => {
+    if (status === "accepted") dispatch(addToValidCharacters([character]));
+    else if (status === "rejected")
+      dispatch(addToRejectedCharacters([character]));
+    else if (status === "undecided") {
+      let state = getState();
+
+      let validCharacters = state.characterInventoryState.validCharacters.filter(
+        c => c !== character
+      );
+      dispatch(setValidCharacters(validCharacters));
+
+      let rejectedCharacters = state.characterInventoryState.rejectedCharacters.filter(
+        c => c !== character
+      );
+      dispatch(setRejectedCharacters(rejectedCharacters));
+    }
   };
 }
 
-// Only needed for SampleWords component
-// export function addToValidCharacters(
-//   chars: string[]
-// ): CharacterInventoryAction {
-//   return {
-//     type: CharacterInventoryType.ADD_TO_VALID_CHARACTERS,
-//     payload: chars
-//   };
-// }
+export function addToValidCharacters(
+  chars: string[]
+): CharacterInventoryAction {
+  return {
+    type: CharacterInventoryType.ADD_TO_VALID_CHARACTERS,
+    payload: chars
+  };
+}
+
+export function addToRejectedCharacters(
+  chars: string[]
+): CharacterInventoryAction {
+  return {
+    type: CharacterInventoryType.ADD_TO_REJECTED_CHARACTERS,
+    payload: chars
+  };
+}
 
 export function setValidCharacters(chars: string[]): CharacterInventoryAction {
   return {
@@ -172,7 +189,7 @@ function countCharacterOccurences(char: string, words: string[]) {
   return count;
 }
 
-function getCharacterStatus(
+export function getCharacterStatus(
   char: string,
   validChars: string[],
   rejectedChars: string[]
@@ -221,12 +238,8 @@ async function saveChangesToProject(
 
 function updateCurrentProject(state: StoreState): Project {
   let project = state.currentProject;
-  project.validCharacters = state.characterInventoryState.characterSet
-    .filter(character => character.status === "accepted")
-    .map(character => character.character);
-  project.rejectedCharacters = state.characterInventoryState.characterSet
-    .filter(character => character.status === "rejected")
-    .map(character => character.character);
+  project.validCharacters = state.characterInventoryState.validCharacters;
+  project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
   return project;
 }
 

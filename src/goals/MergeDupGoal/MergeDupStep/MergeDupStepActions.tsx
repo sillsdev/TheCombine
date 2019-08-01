@@ -229,12 +229,10 @@ export async function mergeWord(
       for (let sense of senseList) {
         let senseData = data.senses[sense];
         let wordID = senseData.srcWord;
-        let senseIndex = senseData.order;
 
         let map = mapping[`${wordID}:${senseData.order}`];
         if (map) {
           wordID = map.srcWord;
-          senseIndex = map.order;
         }
 
         if (!senses[wordID]) {
@@ -314,7 +312,6 @@ export async function mergeWord(
     }
 
     for (let wordIndex in children) {
-      let word = await backend.getWord(children[wordIndex].wordID);
       // get original wordID
       let origWord = children[wordIndex];
 

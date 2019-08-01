@@ -1,6 +1,7 @@
 ﻿using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
+using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace Backend.Tests
     public class LiftControllerTests
     {
         private IWordRepository _wordrepo;
+        private IWordService _wordService;
         private IProjectService _projServ;
         private LiftController _liftController;
         private IPermissionService _permissionService;
@@ -27,6 +29,7 @@ namespace Backend.Tests
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
             _liftController = new LiftController(_wordrepo, _projServ, _permissionService);
+            _wordService = new WordService(_wordrepo);
         }
 
         Project RandomProject()
@@ -42,7 +45,7 @@ namespace Backend.Tests
             name = Path.Combine(path, name);
             FileStream fs = File.OpenWrite(name);
 
-            string header = 
+            string header =
                 @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
                     <header>
@@ -78,7 +81,7 @@ namespace Backend.Tests
                 string trans2 = Util.randString(8);
                 string sdValue = $"\"{Util.randString(4)} {Util.randString(4)}\"";
 
-                string entry = 
+                string entry =
                     $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
                             <lexical-unit>
                                 <form lang = {vernLang}><text> {vern} </text></form>
@@ -107,12 +110,48 @@ namespace Backend.Tests
             return name;
         }
 
+        Word RandomWord(string projId)
+        {
+            Word word = new Word();
+            word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() };
+
+            foreach (Sense sense in word.Senses)
+            {
+
+                sense.Accessibility = (int)State.active;
+                sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
+
+                foreach (Gloss gloss in sense.Glosses)
+                {
+                    gloss.Def = Util.randString();
+                    gloss.Language = Util.randString(3);
+                }
+
+                sense.SemanticDomains = new List<SemanticDomain>() { new SemanticDomain(), new SemanticDomain(), new SemanticDomain() };
+
+                foreach (SemanticDomain semdom in sense.SemanticDomains)
+                {
+                    semdom.Name = Util.randString();
+                    semdom.Id = Util.randString();
+                    semdom.Description = Util.randString();
+                }
+            }
+
+            word.Created = Util.randString();
+            word.Vernacular = Util.randString();
+            word.Modified = Util.randString();
+            word.PartOfSpeech = Util.randString();
+            word.Plural = Util.randString();
+            word.History = new List<string>();
+            word.ProjectId = projId;
+
+            return word;
+        }
+
         private FileUpload InitFile(FileStream fstream, string filename)
         {
             FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
-            FileUpload fileUpload = new FileUpload();
-            fileUpload.Name = "FileName";
-            fileUpload.File = formFile;
+            FileUpload fileUpload = new FileUpload { Name = "FileName", File = formFile };
 
             return fileUpload;
         }
@@ -122,13 +161,37 @@ namespace Backend.Tests
             public string language { get; set; }
             public List<string> audioFiles { get; set; }
             public int numOfWords { get; set; }
-            
+
             public RoundTipObj(string lang, List<string> audio, int words)
             {
                 language = lang;
                 audioFiles = audio;
                 numOfWords = words;
             }
+        }
+
+        [Test]
+        public void TestExportDeleted()
+        {
+            var proj = RandomProject();
+            _projServ.Create(proj);
+
+            var word = RandomWord(proj.Id);
+            var createdWord = _wordrepo.Create(word).Result;
+
+            word.Id = "";
+            word.Vernacular = "updated";
+
+            _wordService.Update(proj.Id, createdWord.Id, word);
+
+            var result = _liftController.ExportLiftFile(proj.Id).Result;
+
+            Utilities util = new Utilities();
+            var combinePath = util.GenerateFilePath(Utilities.Filetype.dir, true, "", "");
+            string exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport", Path.Combine("Lift", "NewLiftFile.lift"));
+            string text = File.ReadAllText(exportPath, Encoding.UTF8);
+            //there is only one deleted word
+            Assert.AreEqual(text.IndexOf("dateDeleted"), text.LastIndexOf("dateDeleted"));
         }
 
         [Test]
@@ -149,7 +212,7 @@ namespace Backend.Tests
              */
             RoundTipObj Gusillaay = new RoundTipObj("gsl-Qaaa-x-orth", new List<string>(), 8045 /*number of words*/);
             fileMapping.Add("Gusillaay.zip", Gusillaay);
-            RoundTipObj Lotad = new RoundTipObj("dtr", new List<string>(),  5400);
+            RoundTipObj Lotad = new RoundTipObj("dtr", new List<string>(), 5400);
             fileMapping.Add("Lotad.zip", Lotad);
             RoundTipObj Natqgu = new RoundTipObj("qaa-x-stc-natqgu", new List<string>(), 11570 /*number of words*/);
             fileMapping.Add("Natqgu.zip", Natqgu);
@@ -164,7 +227,8 @@ namespace Backend.Tests
             RoundTipObj SingleEntryLiftWithTwoSound = new RoundTipObj("ptn", new List<string> { "short.mp3", "short1.mp3" }, 1 /*number of words*/);
             fileMapping.Add("SingleEntryLiftWithTwoSound.zip", SingleEntryLiftWithTwoSound);
 
-            foreach (var dataSet in fileMapping) {
+            foreach (var dataSet in fileMapping)
+            {
                 string actualFilename = dataSet.Key;
 
                 var pathToStartZip = Path.Combine(pathToStartZips, actualFilename);
@@ -203,7 +267,7 @@ namespace Backend.Tests
                 //Assert the file was created with desired heirarchy
                 Assert.That(Directory.Exists(exportedFilepath));
                 Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio")));
-                foreach(var audioFile in dataSet.Value.audioFiles)
+                foreach (var audioFile in dataSet.Value.audioFiles)
                 {
                     Assert.That(File.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio", audioFile)));
                 }
@@ -253,7 +317,8 @@ namespace Backend.Tests
                 Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio")));
                 foreach (var audioFile in dataSet.Value.audioFiles)
                 {
-                    Assert.That(File.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio", audioFile)));
+                    var path = Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio", audioFile);
+                    Assert.That(File.Exists(path), "The file " + audioFile + " can not be found at this path: " + path);
                 }
                 Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "WritingSystems")));
                 Assert.That(File.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "WritingSystems", dataSet.Value.language + ".ldml")));
