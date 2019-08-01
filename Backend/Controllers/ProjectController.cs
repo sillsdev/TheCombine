@@ -255,12 +255,11 @@ namespace BackendFramework.Controllers
                 return new UnauthorizedResult();
             }
 
-            if (_projectService.checkProj(projectId))
+            if (_projectService.CheckProj(projectId))
             {
                 return new OkResult();
             }
-
-            
+            return new BadRequestResult();
         }
 
     }

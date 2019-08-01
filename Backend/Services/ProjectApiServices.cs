@@ -97,7 +97,7 @@ namespace BackendFramework.Services
             }
         }
 
-        public bool checkProj(string projectId)
+        public bool CheckProj(string projectId)
         {
             Utilities util = new Utilities();
             var currentPath = util.GenerateFilePath(Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Import"));
