@@ -3,18 +3,12 @@
 This document describes how to install a build from *TheCombine* project for
 development work or for production use.  There are two methods described below.
 The first method, [Vagrant VM Setup](#vagrant-vm-setup), is the simplest method
-and is appropriate for testing the application in an environment that matches the
-production systems.
+and is appropriate for testing the application in an environment that CLOSELY matches the production systems.
 
 The second method, [Stand Up a New Machine](#stand-up-a-new-machine), describes
-how to install Ubuntu 18.04 Server on a new PC or virtual machine and then run
-the Ansible playbooks to install and configure *TheCombine* and its dependencies.
-Setting up a virtual machine has some additional steps that are required in order
-to connect to it over the network.
+how to install Ubuntu 18.04 Server on a new PC and then run the Ansible playbooks to install and configure *TheCombine* and its dependencies.
 
 ## Vagrant VM Setup
-
-The simplest way to test *TheCombine* application in an environment that mimics the production environment is to use a *Vagrant* virtual machine.
 
 ### System Requirements
 
@@ -31,14 +25,14 @@ The simplest way to test *TheCombine* application in an environment that mimics 
 ### Creating the VM
 
   1. open a command prompt and change directory to deploy/vagrant sub-folder of the cloned project directory, e.g.
-    ```
+
     cd TheCombine/deploy/vagrant
-    ```
+
   1. create and provision the VM:
-    ```
+
     vagrant up
-    ```
-    Note that it may take some time for this to complete.  When finished, there will be a window displaying the console of the virtual machine:
+
+Note that it may take some time for this to complete.  When finished, there will be a window displaying the console of the virtual machine:
     ![alt text](images/vm-console.png "Ubuntu Server Virtual Machine Console")
 
 ### Logging Into the VM
@@ -68,18 +62,30 @@ at the command prompt where you launched the VM.
 
 ### Building and Installing TheCombine
 
-To connect to the VM using one of the methods described in [Logging Into the VM](#logging-into-the-vm) and run the following commands from the command prompt:
+Connect to the VM using one of the methods described in [Logging Into the VM](#logging-into-the-vm).
+
+Consider updating your working directory by doing a ```git pull``` or by checking out your working branch.
+
+To build the project, install and configure it, run the following command from the command prompt:
 ```
-cd src\TheCombine\deploy
-./setup-target.sh -b vagrant@localhost
+mkcombine.
 ```
-`setup-target.sh` will build the project and then run the ansible playbook for installing and configuring it.
 
-*When* `setup-target.sh` *runs the installation scripts, you will be prompted for the BECOME password.  The BECOME password is* ```vagrant```.  You will also be prompted for the Ansible vault password.  The vault password is posted on the *Rocket.Chat* discussion, `#the-combine`
+*When* `mkcombine` *runs the installation scripts, you will be prompted for the* `BECOME password.`  *The BECOME password is* `vagrant`.  You will also be prompted for the Ansible vault password.  The vault password is posted on the *Rocket.Chat* discussion, `#the-combine`.
 
-Before running `setup-target.sh` consider updating your working directory by doing a ```git pull``` or by checking out your working branch.
+### Running TheCombine On The VM
 
-Once `setup-target.sh` completes, you can test the build by connecting to http://localhost:8088 from your web browser.
+In order to run *TheCombine*, you will need to make the following changes to your host PC:
+
+ 1. Install the Combine CA certificate in your web browser.  The Certificate is in TheCombine repo under `TheCombine/deploy/roles/the_combine_app/files/CombineCA/CombineCA.pem`.  This is the certificate that was used to sign the certificate for the Kestrel backend server.
+ 2. Add
+    ```
+    10.10.0.2   thewordcombine.org
+    ```
+    to your network hosts file.
+
+
+Once this is done, you can test out your vm installation by connecting to https://thewordcombine.org from your web browser.  The certificate for the front end is currently self-signed.  Your web browser will complain but click on the *Advanced* button and then on the *Proceed to thewordcombine.org (unsafe)* link.
 
 ## Stand Up a New Machine
 
@@ -115,11 +121,13 @@ To build the Combine application in the Ubuntu Environment, run the following co
 cd ~/src/TheCombine
 npm install
 npm run build
+cd Backend
+dotnet publish -c Release
 ```
 
 ### Installing the App
 
-The ```deploy``` folder of TheCombine project is a collection of Ansible playbooks that can be use to configure a new installation of Ubuntu Server.  Each playbook uses a set of Ansible roles to drive the configurations.
+The ```deploy``` folder of TheCombine project is a collection of Ansible playbooks that can be used to configure a new installation of Ubuntu Server.  Each playbook uses a set of Ansible roles to drive the configurations.
 
 A setup script, ```setup-target.sh```, is provided to perform the installation.  Its usage is:
 ```
@@ -143,25 +151,13 @@ Usage: ./setup-target.sh [options] user@machinename
 
 **`-v <vaultpasswordfile>, --vault <vaultpasswordfile>`** use <vaultpasswordfile> for the vault password. If no password file is specified, the user will be prompted for the vault password when it is needed.
 
-## Roles
+### Running TheCombine On The New Machine
 
-If you need to create a playbook to run individual roles, the following roles are available in this project.
+To run *TheCombine* on the new Ubuntu PC, you will need to:
 
-  **ansible-depends** - installs the packages required to run subsequent Ansible
-  modules
+  1. Install the Combine CA certificate in your web browser.  The Certificate is in TheCombine repo under `TheCombine/deploy/roles/the_combine_app/files/CombineCA/CombineCA.pem`.  This is the certificate that was used to sign the certificate for the Kestrel backend server.
+  2. Connect to the WiFi access point created by the server.  The access point SSID is `thewordcombine_ap` and the WiFi password is `BigRed@1979`.
 
-  **ssl-config** - creates the SSL certificate for the Apache web server
+Once you have connected to the WiFi Access Point, you can navigate to https://thewordcombine.org using your web browser.  You may need to accept the certificate for the web site.
 
-  **apache-config** - installs and configures the apache2 web server
-
-  **dotnet_core** - installs the ASP.NET Core 2.2 Runtime.  It does *not* install the SDK.
-
-  **headless** - sets configuration options that make sense when the device will be used as a headless node.  It currently updates the ```grub``` configuration so that there is not a 30 second wait during bootup when Ubuntu is installed with the Logical Volume Manager.  This is intended for a Server installation.
-
-  **mongodb** - installs the MongoDB database (from mongodb.org, *not* the Ubuntu package) and installs it as a service
-
-  **nodejs** - installs node.js, npm, and yarn
-
-  **the_combine_app** - installs TheCombine application from the ```build``` directory and the Backend `publish` directory.  The application must be built first; it is not built by the ansible playbook.
-
-  **wifi_ap** - sets up the wifi interface as a wifi access point (hotspot)
+Note: For development purposes, the Apache server will accept connections from the WiFi or Wired connection for the NUC.  In order to connect on the wired connection, you will have to set the NUC's IP address to thewordcombine.org in your hosts file.
