@@ -103,7 +103,7 @@ export default class DupFinder {
   /** get n lists of suspected duplicates from DB O(n^(4+ε)).
    * Returns [] if no duplicates have been found.
    */
-  async getNextDups(n: number = 1): Promise<Word[][]> {
+  async getNextDups(): Promise<Word[][]> {
     let wordCollections: Promise<Word[][]> = this.fetchWordsFromDB().then(
       gotWordsFromDB => {
         //return no words if DB empty
