@@ -10,7 +10,6 @@ using static BackendFramework.Controllers.ProjectController;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class ProjectControllerTests
     {
         private IProjectService _projectService;
@@ -52,13 +51,13 @@ namespace Backend.Tests
             project.SemanticDomains = new List<SemanticDomain>();
             for (int i = 1; i < 4; i++)
             {
-                project.SemanticDomains.Add(new SemanticDomain() { Id = $"{i}", Name = Util.randString() });
+                project.SemanticDomains.Add(new SemanticDomain() { Id = $"{i}", Name = Util.randString(), Description = Util.randString() });
                 for (int j = 1; j < 4; j++)
                 {
-                    project.SemanticDomains.Add(new SemanticDomain() { Id = $"{i}.{j}", Name = Util.randString() });
+                    project.SemanticDomains.Add(new SemanticDomain() { Id = $"{i}.{j}", Name = Util.randString(), Description = Util.randString() });
                     for (int k = 1; k < 4; k++)
                     {
-                        project.SemanticDomains.Add(new SemanticDomain() { Id = $"{i}.{j}.{k}", Name = Util.randString() });
+                        project.SemanticDomains.Add(new SemanticDomain() { Id = $"{i}.{j}.{k}", Name = Util.randString(), Description = Util.randString() });
                     }
                 }
             }
