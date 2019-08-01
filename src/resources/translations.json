@@ -57,6 +57,11 @@
       "Por favor, introduce una dirección de correo electrónico válida"
     ]
   },
+  "userMenu": {
+    "projectSettings": ["Project Settings", "Configuraciones del proyecto"],
+    "userSettings": ["User Settings", "Ajustes de usuario"],
+    "logout": ["Log Out", "cerrar sesión"]
+  },
   "createProject": {
     "title": ["Create Project", "Crear Proyecto"],
     "name": ["Project Name", "Nombre del Proyecto"],
