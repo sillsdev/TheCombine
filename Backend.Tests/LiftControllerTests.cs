@@ -281,9 +281,14 @@ namespace Backend.Tests
 
                 _wordrepo.DeleteAllWords(proj.Id);
 
+                /*
+                 * Roundtrip Part 2
+                 */
+
                 BackendFramework.Helper.Utilities util = new BackendFramework.Helper.Utilities();
                 pathToStartZip = util.GenerateFilePath(BackendFramework.Helper.Utilities.Filetype.zip, true, "", Path.Combine(proj.Id, "Export", "LiftExportCompressed-" + proj.Id));
                 pathToStartZip += ".zip";
+                
                 //upload the exported words again
                 //init the project the .zip info is added to 
                 var proj2 = RandomProject();
