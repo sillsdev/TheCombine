@@ -32,7 +32,8 @@ namespace BackendFramework.Controllers
         {
            User currentUser = await _userService.GetUser(userId);
 
-           if(currentUser == null){
+           if (currentUser == null)
+           {
                 return new NotFoundObjectResult(currentUser.Id);
            }
 
