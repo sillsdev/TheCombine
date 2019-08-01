@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(projectUsers);
         }
-        
+
         /// <summary> Deletes all <see cref="Project"/>s </summary>
         /// <remarks> DELETE: v1/projects </remarks>
         /// <returns> true: if success, false: if there were no projects </returns>
@@ -255,11 +255,11 @@ namespace BackendFramework.Controllers
                 return new UnauthorizedResult();
             }
 
-            if (_projectService.CheckProj(projectId))
+            if (!_projectService.CheckProj(projectId))
             {
-                return new OkResult();
+                return new OkObjectResult(true);
             }
-            return new BadRequestResult();
+            return new OkObjectResult(false);
         }
 
     }

@@ -85,13 +85,18 @@
       "analysis": ["Analysis", "Análisis"],
       "uiLang": ["Interface", "Interfaz"]
     },
+    "name": ["Project Name", "Nombre del Proyecto"],
     "import": {
       "header": ["Import Data", "Importar Información"],
       "body": [
         "Imported data will be added to this project. Combine will make no attempt to deduplicate, overwrite, or sync. File must be in a zipped LIFT file.",
         "No tengo tiempo por estó."
       ],
-      "upload": ["Upload", "Cargar"]
+      "upload": ["Upload", "Cargar"],
+      "done": ["Done!", "Completado!"]
+    },
+    "user": {
+      "header": ["Users", "Usarios"]
     }
   },
   "goal": {

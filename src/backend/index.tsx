@@ -356,8 +356,15 @@ export async function getSemanticDomains(): Promise<
   return resp.data;
 }
 
-export async function getUserRoles(projId: string): Promise<UserRole[]> {
-  let resp = await backendServer.get(`projects/${projId}/userroles`, {
+export async function getUserRoles(): Promise<UserRole[]> {
+  let resp = await backendServer.get(`projects/${getProjectId()}/userroles`, {
+    headers: authHeader()
+  });
+  return resp.data;
+}
+
+export async function getLiftUploaded(): Promise<boolean> {
+  let resp = await backendServer.get(`projects/${getProjectId()}/liftcheck`, {
     headers: authHeader()
   });
   return resp.data;

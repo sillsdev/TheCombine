@@ -4,17 +4,21 @@ import {
   Translate,
   withLocalize
 } from "react-localize-redux";
+import { Grid, Container } from "@material-ui/core";
 
 import { Project } from "../../types/project";
 import { User } from "../../types/user";
 import * as backend from "../../backend";
-import { Paper, Container } from "@material-ui/core";
 import AppBarComponent from "../AppBar/AppBarComponent";
+import { UserRole } from "../../types/userRole";
+
+import NameSettingsComponent from "./NameSettingsComponent";
 import LanguageSettingsComponent, {
   LanguageProps
 } from "./LanguageSettingsComponent";
 import ImportSettingsComponent from "./ImportSettingsComponent";
-import { UserRole } from "../../types/userRole";
+import theme from "../../types/theme";
+import UserSettingsComponent from "./UserSettingsComponent";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -31,10 +35,13 @@ class ProjectSettingsComponent extends React.Component<
   ProjectSettingsProps & LocalizeContextProps,
   ProjectSettingsState
 > {
+  constructor(props: ProjectSettingsProps & LocalizeContextProps) {
+    super(props);
+    this.state = {};
+  }
+
   async componentWillMount() {
-    let allPermissions: UserRole[] = await backend.getUserRoles(
-      this.props.project.id
-    );
+    let allPermissions: UserRole[] = await backend.getUserRoles();
     let currentRole: UserRole | undefined = allPermissions.find(
       value => value.projectId === this.props.project.id
     );
@@ -43,12 +50,13 @@ class ProjectSettingsComponent extends React.Component<
     if (currentRole)
       for (let role of currentRole.permissions) {
         if (role === 4) {
-          settings.imports = true;
+          settings.projectName = this.props.project.name;
           settings.languageSettings = {
             vernacular: this.props.project.vernacularWritingSystem,
             analysis: [...this.props.project.analysisWritingSystems],
             uiLang: this.props.activeLanguage.code
           };
+          settings.imports = await backend.getLiftUploaded();
         }
         if (role === 5) {
           settings.users = await backend.getAllUsersInCurrentProject();
@@ -62,16 +70,37 @@ class ProjectSettingsComponent extends React.Component<
     return (
       <Container>
         <AppBarComponent />
-        <Paper>
-          {this.state &&
-            this.state.languageSettings &&
-            LanguageSettingsComponent(this.state.languageSettings)}
-        </Paper>
-        <Paper>
-          {this.state && this.state.imports && (
-            <ImportSettingsComponent project={this.props.project} />
+        <Grid container direction="column" spacing={2}>
+          {/* Language settings */}
+          {this.state.languageSettings && (
+            <Grid item>
+              <LanguageSettingsComponent {...this.state.languageSettings} />
+            </Grid>
           )}
-        </Paper>
+
+          {/* Project name */}
+          {this.state.projectName && (
+            <Grid item>
+              <NameSettingsComponent project={this.props.project} />
+            </Grid>
+          )}
+
+          {/* Upload file */}
+          {this.state.imports && (
+            <Grid item>
+              <ImportSettingsComponent project={this.props.project} />
+            </Grid>
+          )}
+
+          {this.state.users && (
+            <UserSettingsComponent
+              users={this.state.users.map(user => ({
+                ...user,
+                role: "a role"
+              }))}
+            />
+          )}
+        </Grid>
       </Container>
     );
   }

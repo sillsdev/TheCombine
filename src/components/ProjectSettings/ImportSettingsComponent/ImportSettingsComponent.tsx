@@ -17,6 +17,12 @@ import * as backend from "../../../backend";
 import { Project } from "../../../types/project";
 import GetFileButton from "../../ProjectScreen/CreateProject/GetFileButton";
 
+enum UploadState {
+  Awaiting,
+  InProgress,
+  Done
+}
+
 interface ImportProps {
   project: Project;
   updateProject: (newProject: Project) => void;
@@ -24,7 +30,7 @@ interface ImportProps {
 
 interface ImportState {
   languageData?: File;
-  uploading: boolean;
+  uploadState: UploadState;
 }
 
 export class ImportSettingsComponent extends React.Component<
@@ -35,7 +41,7 @@ export class ImportSettingsComponent extends React.Component<
     super(props);
     this.updateLanguage = this.updateLanguage.bind(this);
     this.state = {
-      uploading: false
+      uploadState: UploadState.Awaiting
     };
   }
 
@@ -45,11 +51,11 @@ export class ImportSettingsComponent extends React.Component<
 
   private async uploadWords() {
     if (this.state.languageData) {
-      this.setState({ uploading: true });
+      this.setState({ uploadState: UploadState.InProgress });
       await backend.uploadLift(this.props.project, this.state.languageData);
       let newProject = await backend.getProject(this.props.project.id);
       this.props.updateProject(newProject);
-      this.setState({ uploading: false, languageData: undefined });
+      this.setState({ uploadState: UploadState.Done, languageData: undefined });
     }
   }
 
@@ -70,19 +76,29 @@ export class ImportSettingsComponent extends React.Component<
         <Grid item style={{ display: "flex", flexWrap: "nowrap" }}>
           <Grid container direction="row">
             <Grid item xs>
-              <GetFileButton updateLanguage={this.updateLanguage} />
+              <GetFileButton
+                updateLanguage={this.updateLanguage}
+                disabled={this.state.uploadState === UploadState.Done}
+              />
             </Grid>
             <Grid item xs>
               <Button
                 color="primary"
                 variant="contained"
                 disabled={
-                  this.state.languageData === undefined || this.state.uploading
+                  this.state.languageData === undefined ||
+                  this.state.uploadState === UploadState.InProgress
                 }
                 onClick={() => this.uploadWords()}
               >
-                <Translate id="settings.import.upload" />
-                {this.state.uploading && (
+                <Translate
+                  id={`settings.import.${
+                    this.state.uploadState === UploadState.Done
+                      ? "done"
+                      : "upload"
+                  }`}
+                />
+                {this.state.uploadState === UploadState.InProgress && (
                   <CircularProgress
                     size={24}
                     style={{

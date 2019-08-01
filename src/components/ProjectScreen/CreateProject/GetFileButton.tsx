@@ -4,6 +4,7 @@ import { Translate } from "react-localize-redux";
 
 export interface UploadProps {
   tagId?: string;
+  disabled?: boolean;
   updateLanguage: (languageData: File) => void;
 }
 
@@ -53,7 +54,11 @@ export default class GetFileButton extends React.Component<
             cursor: "pointer"
           }}
         >
-          <Button variant="contained" component="span">
+          <Button
+            variant="contained"
+            component="span"
+            disabled={this.props.disabled}
+          >
             <Translate id="createProject.browse" />
           </Button>
         </label>
