@@ -17,6 +17,7 @@ interface TreeViewComponentState {
   visible: boolean;
 }
 
+/** Displays semantic domains. */
 export default class TreeViewComponent extends React.Component<
   TreeViewProps,
   TreeViewComponentState

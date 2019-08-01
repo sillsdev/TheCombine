@@ -36,6 +36,9 @@ interface ExistingEntryState {
   hovering: boolean;
 }
 
+/**
+ * Displays a mutable word.
+ */
 export class ExistingEntry extends React.Component<
   ExistingEntryProps,
   ExistingEntryState

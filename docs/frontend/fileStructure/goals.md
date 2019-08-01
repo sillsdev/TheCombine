@@ -9,9 +9,9 @@ The goal types The Combine provides are:
 - Handle Flags
 - Merge Duplicates
 - Spell Check Gloss
-- Validate Chars
+- Validate Characters
 - Validate Structural Words
-- View Final
+- Review Entries
 
 Each directory should contain at least:
 

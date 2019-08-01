@@ -12,6 +12,7 @@ export interface CharacterDetailProps {
   close: () => void;
 }
 
+/** A view displaying detailed information about a character */
 export default function CharacterDetail(props: CharacterDetailProps) {
   return (
     <Grid

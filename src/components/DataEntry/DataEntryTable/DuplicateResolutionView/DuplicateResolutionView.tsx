@@ -10,6 +10,9 @@ interface DuplicateResolutionViewProps {
   addSemanticDomain: (existingWord: Word, sense: Sense, index: number) => void;
 }
 
+/**
+ * A view for adding a semantic domain to a sense, or a new sense to a word.
+ */
 export class DuplicateResolutionView extends React.Component<
   DuplicateResolutionViewProps
 > {

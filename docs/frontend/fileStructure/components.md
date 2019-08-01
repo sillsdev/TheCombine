@@ -1,16 +1,6 @@
 # Components
 
-Most React components are stored in this directory. Here are the ones currently
-provided:
-
-- App - App is the top-level component in The Combine. It should not contain
-  any logic. It should only render other components.
-- CreateProject - The Create Project component is where users create a project.
-- GoalTimeline - All the goals the user has selected appear here. The Combine
-  also gives suggestions to the user about which goals they should pursue.
-- Login - The login screen
-- PrivateRoute - A component that either navigates to a route if the user is
-  logged in, or redirects to the login screen.
+Most React components are stored in this directory.
 
 Each directory should contain at least:
 

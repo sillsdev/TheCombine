@@ -16,6 +16,10 @@ interface NewVernEntryProps {
   updateVernField: (newValue: string) => void;
 }
 
+/**
+ * An editable vernacular field for new words that indicates whether the
+ * vernacular already exists in a collection
+ */
 export class NewVernEntry extends React.Component<
   LocalizeContextProps & NewVernEntryProps
 > {

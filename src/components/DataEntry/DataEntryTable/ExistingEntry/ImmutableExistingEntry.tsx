@@ -7,6 +7,9 @@ interface ImmutableExistingEntryProps {
   gloss: string;
 }
 
+/**
+ * Displays an immutable word.
+ */
 export class ImmutableExistingEntry extends React.Component<
   ImmutableExistingEntryProps
 > {

@@ -12,6 +12,9 @@ interface DeleteEntryProps {
   removeEntry: () => void;
 }
 
+/**
+ * A delete button
+ */
 export class DeleteEntry extends React.Component<
   DeleteEntryProps & LocalizeContextProps
 > {
