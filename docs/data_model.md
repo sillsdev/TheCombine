@@ -56,7 +56,7 @@
 
 - Semantic Domains
 
-- Accesibility
+- Accessibility
 
 ### Gloss
 
