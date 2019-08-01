@@ -92,7 +92,7 @@ namespace BackendFramework.Services
             }
         }
 
-        private string GetProjectDir()
+        private string GetProjectDir(string projectId)
         {
             //generate path to home on linux
             var pathToHome = Environment.GetEnvironmentVariable("HOME");
@@ -103,7 +103,7 @@ namespace BackendFramework.Services
                 pathToHome = Environment.GetEnvironmentVariable("UserProfile");
             }
 
-            return pathToHome;
+            return Path.Combine(pathToHome, ".CombineFiles", projectId);
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
@@ -158,7 +158,7 @@ namespace BackendFramework.Services
 
             //export semantic domains to lift-ranges
             var proj = _projService.GetProject(projectId).Result;
-            string extractedPathToImport = Path.Combine(GetProjectDir(), "Import", "ExtractedLocation");
+            string extractedPathToImport = Path.Combine(GetProjectDir(projectId), "Import", "ExtractedLocation");
             var importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
