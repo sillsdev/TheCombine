@@ -30,11 +30,6 @@ namespace BackendFramework.Controllers
         [HttpPost("{userId}/upload/avatar")]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
-           if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
-           {
-               return new UnauthorizedResult();
-           }
-
            User currentUser = await _userService.GetUser(userId);
 
            if(currentUser == null){
