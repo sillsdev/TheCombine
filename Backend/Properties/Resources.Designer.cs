@@ -61,9 +61,9 @@ namespace BackendFramework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1\63403699-07c1-43f3-a47c-069d6e4316e5\Universe, creation\Use this domain for general words referring to the physical universe. Some languages may not have a single word for the universe and may have to use a phrase such as &apos;rain, soil, and things of the sky&apos; or &apos;sky, land, and water&apos; or a descriptive phrase such as &apos;everything you can see&apos; or &apos;everything that exists&apos;.
-        ///1.1\999581c4-1611-4acb-ae1b-5e6c1dfe6f0c\Sky\Use this domain for words related to the sky.
-        ///1.1.1\dc1a2c6f-1b32-4631-8823-36dacc8cb7bb\Sun\ [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 1`63403699-07c1-43f3-a47c-069d6e4316e5`Universe, creation`Use this domain for general words referring to the physical universe. Some languages may not have a single word for the universe and may have to use a phrase such as &apos;rain, soil, and things of the sky&apos; or &apos;sky, land, and water&apos; or a descriptive phrase such as &apos;everything you can see&apos; or &apos;everything that exists&apos;.
+        ///1.1`999581c4-1611-4acb-ae1b-5e6c1dfe6f0c`Sky`Use this domain for words related to the sky.
+        ///1.1.1`dc1a2c6f-1b32-4631-8823-36dacc8cb7bb`Sun` [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string sdList {
             get {

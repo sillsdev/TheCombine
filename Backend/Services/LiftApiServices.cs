@@ -111,7 +111,6 @@ namespace BackendFramework.Services
             CombineLiftWriter liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
             string rangesDest = Path.Combine(zipDir, "NewLiftFile.lift-ranges");
 
-            //TODO: generate header automatically
             //write header of lift document
             string header =
                 $@"
@@ -179,12 +178,12 @@ namespace BackendFramework.Services
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
                 //pull from resources file with all English semantic domains
-                var sdLines = Properties.Resources.sdList.Split("\n");
+                var sdLines = Properties.Resources.sdList.Split(Environment.NewLine);
                 foreach (var line in sdLines)
                 {
                     if (line != "")
                     {
-                        string[] items = line.Split("\\");
+                        string[] items = line.Split("`");
                         WriteRangeElement(liftRangesWriter, items[0], items[1], items[2], items[3]);
                     }
                 }
