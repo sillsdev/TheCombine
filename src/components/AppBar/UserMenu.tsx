@@ -39,7 +39,7 @@ export default function UserMenu() {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        {avatar && <Avatar alt="User Avatar" src={avatar} />}
+        <Avatar alt="User Avatar" src={avatar || ""} />
       </Button>
       <Menu
         getContentAnchorEl={null}

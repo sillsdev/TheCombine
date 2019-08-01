@@ -217,9 +217,9 @@ export async function uploadMp3(project: Project, mp3: File): Promise<string> {
   return resp.data;
 }
 
-export async function uploadAvatar(user: User, png: File): Promise<string> {
+export async function uploadAvatar(user: User, img: File): Promise<string> {
   let data = new FormData();
-  data.append("file", png);
+  data.append("file", img);
   let resp = await backendServer.post(`users/${user.id}/upload/avatar`, data, {
     headers: { ...authHeader(), "content-type": "application/json" }
   });
