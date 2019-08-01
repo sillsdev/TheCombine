@@ -282,7 +282,7 @@ namespace BackendFramework.Services
                 LexPhonetic lexPhonetic = new LexPhonetic();
 
                 Helper.Utilities util = new Helper.Utilities();
-                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), _projectId, "Import", "Audio", audioFile);
+                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), _projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio", audioFile);
 
                 string dest = Path.Combine(path, audioFile);
 
