@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Xml;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
@@ -178,7 +180,14 @@ namespace BackendFramework.Services
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
                 //pull from resources file with all English semantic domains
-                var sdLines = Properties.Resources.sdList.Split(Environment.NewLine);
+                var assembly = typeof(LiftService).GetTypeInfo().Assembly;
+                Stream resource = assembly.GetManifestResourceStream("BackendFramework.Data.sdList.txt");
+                string sdList;
+                using (var reader = new StreamReader(resource, Encoding.UTF8))
+                {
+                    sdList = reader.ReadToEndAsync().Result;
+                }
+                var sdLines = sdList.Split(Environment.NewLine);
                 foreach (var line in sdLines)
                 {
                     if (line != "")
