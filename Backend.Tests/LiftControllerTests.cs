@@ -320,7 +320,7 @@ namespace Backend.Tests
 
                     //Assert the file was created with desired heirarchy
                     Assert.That(Directory.Exists(exportedFilepath));
-                    Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio")));
+                    Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "audio")));
                     foreach (var audioFile in dataSet.Value.audioFiles)
                     {
                         var path = Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio", audioFile);
