@@ -6,7 +6,7 @@ import { authHeader } from "../components/Login/AuthHeaders";
 import { Goal, GoalType } from "../types/goals";
 import { UserEdit } from "../types/userEdit";
 import history from "../history";
-import SemanticDomain from "../components/TreeView/SemanticDomain";
+import SemanticDomainWithSubdomains from "../components/TreeView/SemanticDomain";
 
 const backendServer = axios.create({
   baseURL: "https://localhost:5001/v1"
@@ -312,12 +312,10 @@ export async function getAllUserEdits(): Promise<Goal[]> {
   return resp.data;
 }
 
-export async function getSemanticDomains(): Promise<SemanticDomain[]> {
+export async function getSemanticDomains(): Promise<SemanticDomainWithSubdomains[]> {
   let resp = await backendServer.get(
     `projects/${getProjectId()}/semanticdomains`,
-    {
-      headers: authHeader()
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }

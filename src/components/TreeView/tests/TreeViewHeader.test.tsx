@@ -1,6 +1,6 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import SemanticDomain from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../SemanticDomain";
 import TreeViewHeader from "../TreeViewHeader";
 import MockTree from "./MockSemanticTree";
 
@@ -126,7 +126,7 @@ describe("Tests TreeViewHeader", () => {
 });
 
 // Creates the tree
-function setTree(domain: SemanticDomain) {
+function setTree(domain: SemanticDomainWithSubdomains) {
   renderer.act(() => {
     treeMaster = renderer.create(
       <TreeViewHeader currentDomain={domain} animate={MOCK_ANIMATE} />

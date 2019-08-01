@@ -12,7 +12,6 @@ using System.IO;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class AudioControllerTests
     {
         private IWordRepository _wordrepo;
@@ -77,6 +76,8 @@ namespace Backend.Tests
 
             var foundWord = (action as ObjectResult).Value as Word;
             Assert.IsNotNull(foundWord.Audio);
+
+            fstream.Close();
         }
     }
 }

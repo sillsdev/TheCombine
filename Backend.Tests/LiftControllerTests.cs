@@ -13,7 +13,6 @@ using System.Text;
 
 namespace Backend.Tests
 {
-    [Parallelizable(ParallelScope.Self)]
     public class LiftControllerTests
     {
         private IWordRepository _wordrepo;

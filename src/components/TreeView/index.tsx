@@ -3,7 +3,7 @@ import { StoreState } from "../../types";
 import { connect } from "react-redux";
 import { Dispatch } from "react";
 import { TreeViewAction, TraverseTreeAction } from "./TreeViewActions";
-import SemanticDomain from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -13,7 +13,7 @@ function mapStateToProps(state: StoreState) {
 
 function mapDispatchToProps(dispatch: Dispatch<TreeViewAction>) {
   return {
-    navigate: (domain: SemanticDomain) => {
+    navigate: (domain: SemanticDomainWithSubdomains) => {
       dispatch(TraverseTreeAction(domain));
     }
   };

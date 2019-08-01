@@ -109,14 +109,14 @@ class MergeDupStep extends React.Component<
     if (res.combine) {
       let combineRef: MergeTreeReference = JSON.parse(res.combine.draggableId);
       // this is a combine operation
-      let destRefs = [];
-      for (let _ in srcRefs) {
+      let destRefs: MergeTreeReference[] = [];
+      srcRefs.forEach(() =>
         destRefs.push({
           word: combineRef.word,
           sense: combineRef.sense,
           duplicate: uuid()
-        });
-      }
+        })
+      );
       this.props.moveSenses(srcRefs, destRefs);
     } else if (res.destination) {
       if (res.source.droppableId !== res.destination.droppableId) {
@@ -211,7 +211,7 @@ class MergeDupStep extends React.Component<
                       >
                         <CardContent>
                           <Typography variant={"h5"}>
-                            {entry.data.glosses.length > 1 &&
+                            {entry.data.glosses.length > 0 &&
                               entry.data.glosses
                                 .map(gloss => gloss.def)
                                 .reduce((gloss, acc) => `${acc}, ${gloss}`)}
