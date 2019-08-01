@@ -562,10 +562,7 @@ namespace BackendFramework.Services
         public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form, LiftMultiText gloss, string rawXml) { return new LiftEtymology(); }
         public LiftObject MergeInReversal(LiftSense sense, LiftObject parent, LiftMultiText contents, string type, string rawXml) { return new LiftReversal(); }
         public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml) { return new LiftVariant(); }
-        public void EntryWasDeleted(Extensible info, DateTime dateDeleted)
-        {
-            info.ModificationTime = dateDeleted;
-        }
+        public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
         public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText) { }
         public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
         public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
