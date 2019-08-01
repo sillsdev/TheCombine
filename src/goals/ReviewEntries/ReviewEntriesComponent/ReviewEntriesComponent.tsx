@@ -90,7 +90,6 @@ export class ReviewEntriesComponent extends React.Component<
       newWords.push(currentWord);
     }
     this.props.updateAllWords(newWords);
-    this.forceUpdate();
   }
 
   // Convert a Sense into a ReviewEntriesSense
@@ -169,12 +168,14 @@ export class ReviewEntriesComponent extends React.Component<
             }}
             options={{
               filtering: true,
-              pageSize: Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
+              pageSize:
+                this.props.words.length > 0
+                  ? Math.min(this.props.words.length, ROWS_PER_PAGE[0])
+                  : ROWS_PER_PAGE[0],
               pageSizeOptions: this.removeDuplicates([
                 Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
                 Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
                 Math.min(this.props.words.length, ROWS_PER_PAGE[2])
-                // this.props.words.length
               ])
             }}
           />
