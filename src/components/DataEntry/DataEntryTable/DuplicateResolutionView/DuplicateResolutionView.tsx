@@ -44,19 +44,21 @@ export class DuplicateResolutionView extends React.Component<
           >
             <Typography variant="body1">{"Glosses: "}</Typography>
             {this.props.existingEntry.senses.map((sense: Sense, index) =>
-              sense.glosses.map(gloss => (
-                <Chip
-                  label={gloss.def}
-                  style={{ margin: 4 }}
-                  onClick={() => {
-                    this.props.addSemanticDomain(
-                      this.props.existingEntry,
-                      sense,
-                      index
-                    );
-                  }}
-                />
-              ))
+              sense.glosses
+                .filter(gloss => gloss.language === "en")
+                .map(gloss => (
+                  <Chip
+                    label={gloss.def}
+                    style={{ margin: 4 }}
+                    onClick={() => {
+                      this.props.addSemanticDomain(
+                        this.props.existingEntry,
+                        sense,
+                        index
+                      );
+                    }}
+                  />
+                ))
             )}
             <Chip
               variant="outlined"
