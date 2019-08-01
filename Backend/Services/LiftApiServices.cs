@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Xml;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
@@ -111,7 +113,6 @@ namespace BackendFramework.Services
             CombineLiftWriter liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
             string rangesDest = Path.Combine(zipDir, "NewLiftFile.lift-ranges");
 
-            //TODO: generate header automatically
             //write header of lift document
             string header =
                 $@"
@@ -129,7 +130,10 @@ namespace BackendFramework.Services
 
             //write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
-            foreach (Word wordEntry in allWords)
+            var frontier = _repo.GetFrontier(projectId).Result;
+            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.active).ToList();
+            var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();
+            foreach (Word wordEntry in activeWords)
             {
                 LexEntry entry = new LexEntry();
 
@@ -139,13 +143,27 @@ namespace BackendFramework.Services
 
                 liftWriter.Add(entry);
             }
+            foreach (Word wordEntry in deletedWords)
+            {
+                LexEntry entry = new LexEntry();
+
+                AddVern(entry, wordEntry, projectId);
+                AddSenses(entry, wordEntry);
+                AddAudio(entry, wordEntry, audioDir);
+
+                liftWriter.AddDeletedEntry(entry);
+            }
 
             liftWriter.End();
 
             //export semantic domains to lift-ranges
             var proj = _projService.GetProject(projectId).Result;
             string extractedPathToImport = Path.Combine(projectDir, "Import", "ExtractedLocation");
-            var importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
+            string importLiftDir = "";
+            if (Directory.Exists(extractedPathToImport))
+            {
+                importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
+            }
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
             //if there are no new semantic domains, and the old lift-ranges file is still around, just copy it
@@ -162,12 +180,19 @@ namespace BackendFramework.Services
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
                 //pull from resources file with all English semantic domains
-                var sdLines = Properties.Resources.sdList.Split("\n");
+                var assembly = typeof(LiftService).GetTypeInfo().Assembly;
+                Stream resource = assembly.GetManifestResourceStream("BackendFramework.Data.sdList.txt");
+                string sdList;
+                using (var reader = new StreamReader(resource, Encoding.UTF8))
+                {
+                    sdList = reader.ReadToEndAsync().Result;
+                }
+                var sdLines = sdList.Split(Environment.NewLine);
                 foreach (var line in sdLines)
                 {
                     if (line != "")
                     {
-                        string[] items = line.Split("\\");
+                        string[] items = line.Split("`");
                         WriteRangeElement(liftRangesWriter, items[0], items[1], items[2], items[3]);
                     }
                 }
@@ -190,7 +215,10 @@ namespace BackendFramework.Services
             //export character set to ldml
             string ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+            if (proj.VernacularWritingSystem != "")
+            {
+                LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+            }
 
             //compress everything
             ZipFile.CreateFromDirectory(zipDir, Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
