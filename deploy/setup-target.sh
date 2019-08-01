@@ -120,6 +120,8 @@ if [ "$BUILDAPP" -eq 1 ] ; then
   echo "Building app"
   npm install
   npm run build
+  echo -e "Restoring src/backend/index.tsx"
+  sed -i s/thewordcombine.org/localhost\:5001/ src/backend/index.tsx
   cd Backend
   dotnet publish -c Release
   cd ../deploy
