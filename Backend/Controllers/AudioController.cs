@@ -33,7 +33,7 @@ namespace BackendFramework.Controllers
         /// <summary> Returns the audio file in the form of a stream from disk</summary>
         /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/download/audio </remarks>
         /// <returns> Audio file stream </returns>
-        [HttpGet("{wordId}/upload/audio")]
+        [HttpGet("{wordId}/download/audio")]
         public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId)
         {
             if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
