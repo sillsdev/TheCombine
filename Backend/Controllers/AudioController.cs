@@ -4,6 +4,7 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using static BackendFramework.Helper.Utilities;
@@ -39,15 +40,21 @@ namespace BackendFramework.Controllers
             {
                 return new UnauthorizedResult();
             }
-                
-            var filepath = Path.Combine(Environment.GetEnvironmentVariable("Home"), ".CombineFiles", projectId, "Import", "ExtractedFiles", /*something*/, wordId /*.mp3*/);
-            Stream stream = File.OpenRead(filepath);
 
-            if (stream == null){
-                return BadRequestObjectResult("The file does not exist");
+            var filePath = _wordService.GetAudioFilePath(projectId, wordId);
+            
+            if(filePath == null)
+            {
+                return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
             }
 
-            return File(stream, "application/octet-stream"); // returns a FileStreamResult
+            Stream stream = System.IO.File.OpenRead(filePath);
+
+            if (stream == null){
+                return new BadRequestObjectResult("The file does not exist");
+            }
+
+            return File(stream, "application/octet-stream");
         }
 
 

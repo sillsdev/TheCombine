@@ -35,8 +35,9 @@ namespace BackendFramework.Controllers
                return new UnauthorizedResult();
            }
 
-           User currentUser = _userService.GetUser(userId);
-           if(currentUser = null){
+           User currentUser = await _userService.GetUser(userId);
+
+           if(currentUser == null){
                 return new NotFoundObjectResult(currentUser.Id);
            }
 
