@@ -141,7 +141,7 @@ export function loadGoalData(goal: Goal) {
         //Used for testing duplicate finder. (See docs/bitmap_testing.md)
         //let t0 = performance.now();
 
-        let groups = await finder.getNextDups(goal.numSteps);
+        let groups = await finder.getNextDups();
 
         //Used for testing duplicate finder. (See docs/bitmap_testing.md)
         //console.log(performance.now() - t0);
@@ -159,6 +159,10 @@ export function loadGoalData(goal: Goal) {
             }
           }
           newGroups.push(newGroup);
+        }
+
+        if (newGroups.length >= 8){
+          newGroups = newGroups.slice(0, 8);
         }
 
         goal.data = { plannedWords: newGroups };
