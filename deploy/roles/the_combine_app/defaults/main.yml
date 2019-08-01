@@ -13,7 +13,6 @@ combine_backend_dir: /home/combine/Backend
 combine_env_vars:
   ASPNETCORE_ENVIRONMENT: Production
   DOTNET_PRINT_TELEMETRY_MESSAGE: false
-  ASPNETCORE_JWT_SECRET_KEY: EiQQ7lBDy2Hyio0xjXS8odeO1zVvaa0SFifLvmFz5fHU4mJNpZvNKZ8rhkURWtr
 
 combine_cert_email:    jimgrady.jg@gmail.com
 combine_cert_country:  US
