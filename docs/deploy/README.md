@@ -98,7 +98,7 @@ The following requirements are for the host system that is used to install the C
   * Git
   * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
   * [Nodejs](https://github.com/nodesource/distributions/blob/master/README.md#debinstall), install the LTS version, 10.x.
-  * [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download/linux-package-manager/ubuntu18-04/sdk-2.2.300)
+  * [.NET Core 2.1 SDK](https://dotnet.microsoft.com/download/linux-package-manager/ubuntu18-04/sdk-2.1.801)
   * [MongoDB Community Edition](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
   * clone the project repo to the working folder of your choice, e.g. ```$HOME/src```
 
