@@ -129,7 +129,10 @@ namespace BackendFramework.Services
 
             //write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
-            foreach (Word wordEntry in allWords)
+            var frontier = _repo.GetFrontier(projectId).Result;
+            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.active).ToList();
+            var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();
+            foreach (Word wordEntry in activeWords)
             {
                 LexEntry entry = new LexEntry();
 
@@ -139,13 +142,27 @@ namespace BackendFramework.Services
 
                 liftWriter.Add(entry);
             }
+            foreach (Word wordEntry in deletedWords)
+            {
+                LexEntry entry = new LexEntry();
+
+                AddVern(entry, wordEntry, projectId);
+                AddSenses(entry, wordEntry);
+                AddAudio(entry, wordEntry, audioDir);
+
+                liftWriter.AddDeletedEntry(entry);
+            }
 
             liftWriter.End();
 
             //export semantic domains to lift-ranges
             var proj = _projService.GetProject(projectId).Result;
             string extractedPathToImport = Path.Combine(projectDir, "Import", "ExtractedLocation");
-            var importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
+            string importLiftDir = "";
+            if (Directory.Exists(extractedPathToImport))
+            {
+                importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
+            }
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
             //if there are no new semantic domains, and the old lift-ranges file is still around, just copy it
@@ -190,7 +207,10 @@ namespace BackendFramework.Services
             //export character set to ldml
             string ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+            if (proj.VernacularWritingSystem != "")
+            {
+                LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+            }
 
             //compress everything
             ZipFile.CreateFromDirectory(zipDir, Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
@@ -542,7 +562,10 @@ namespace BackendFramework.Services
         public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form, LiftMultiText gloss, string rawXml) { return new LiftEtymology(); }
         public LiftObject MergeInReversal(LiftSense sense, LiftObject parent, LiftMultiText contents, string type, string rawXml) { return new LiftReversal(); }
         public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml) { return new LiftVariant(); }
-        public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
+        public void EntryWasDeleted(Extensible info, DateTime dateDeleted)
+        {
+            info.ModificationTime = dateDeleted;
+        }
         public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText) { }
         public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
         public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
