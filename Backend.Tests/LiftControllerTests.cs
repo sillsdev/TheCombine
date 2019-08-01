@@ -242,6 +242,7 @@ namespace Backend.Tests
                 _projServ.Create(proj);
 
                 //generate api perameter with filestream
+		if (File.Exists(pathToStartZip)){
                 FileStream fstream = File.OpenRead(pathToStartZip);
                 var fileUpload = InitFile(fstream, actualFilename);
 
@@ -333,6 +334,7 @@ namespace Backend.Tests
                 Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedFilepath), dirlst.Single())));
 
                 _wordrepo.DeleteAllWords(proj.Id);
+		}
             }
         }
     }
