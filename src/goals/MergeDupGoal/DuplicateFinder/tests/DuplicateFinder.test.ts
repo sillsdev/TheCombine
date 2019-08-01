@@ -33,7 +33,7 @@ describe("dupFinder Tests", () => {
 
     let finder = new DupFinder();
 
-    await finder.getNextDups(7).then(wordCollections => {
+    await finder.getNextDups().then(wordCollections => {
       expect(wordCollections.length).toBeLessThanOrEqual(7);
     });
   });
