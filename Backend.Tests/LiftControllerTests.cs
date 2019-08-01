@@ -43,7 +43,7 @@ namespace Backend.Tests
             name = Path.Combine(path, name);
             FileStream fs = File.OpenWrite(name);
 
-            string header = 
+            string header =
                 @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
                     <header>
@@ -79,7 +79,7 @@ namespace Backend.Tests
                 string trans2 = Util.randString(8);
                 string sdValue = $"\"{Util.randString(4)} {Util.randString(4)}\"";
 
-                string entry = 
+                string entry =
                     $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
                             <lexical-unit>
                                 <form lang = {vernLang}><text> {vern} </text></form>
@@ -123,7 +123,7 @@ namespace Backend.Tests
             public string language { get; set; }
             public List<string> audioFiles { get; set; }
             public int numOfWords { get; set; }
-            
+
             public RoundTipObj(string lang, List<string> audio, int words)
             {
                 language = lang;
@@ -150,7 +150,7 @@ namespace Backend.Tests
              */
             RoundTipObj Gusillaay = new RoundTipObj("gsl-Qaaa-x-orth", new List<string>(), 8045 /*number of words*/);
             fileMapping.Add("Gusillaay.zip", Gusillaay);
-            RoundTipObj Lotad = new RoundTipObj("dtr", new List<string>(),  5400);
+            RoundTipObj Lotad = new RoundTipObj("dtr", new List<string>(), 5400);
             fileMapping.Add("Lotad.zip", Lotad);
             RoundTipObj Natqgu = new RoundTipObj("qaa-x-stc-natqgu", new List<string>(), 11570 /*number of words*/);
             fileMapping.Add("Natqgu.zip", Natqgu);
@@ -165,7 +165,8 @@ namespace Backend.Tests
             RoundTipObj SingleEntryLiftWithTwoSound = new RoundTipObj("ptn", new List<string> { "short.mp3", "short1.mp3" }, 1 /*number of words*/);
             fileMapping.Add("SingleEntryLiftWithTwoSound.zip", SingleEntryLiftWithTwoSound);
 
-            foreach (var dataSet in fileMapping) {
+            foreach (var dataSet in fileMapping)
+            {
                 string actualFilename = dataSet.Key;
 
                 var pathToStartZip = Path.Combine(pathToStartZips, actualFilename);
@@ -204,7 +205,7 @@ namespace Backend.Tests
                 //Assert the file was created with desired heirarchy
                 Assert.That(Directory.Exists(exportedFilepath));
                 Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio")));
-                foreach(var audioFile in dataSet.Value.audioFiles)
+                foreach (var audioFile in dataSet.Value.audioFiles)
                 {
                     Assert.That(File.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio", audioFile)));
                 }
@@ -254,7 +255,8 @@ namespace Backend.Tests
                 Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio")));
                 foreach (var audioFile in dataSet.Value.audioFiles)
                 {
-                    Assert.That(File.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio", audioFile)));
+                    var path = Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio", audioFile);
+                    Assert.That(File.Exists(path), "The file " + audioFile + " can not be found at this path: " + path));
                 }
                 Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "WritingSystems")));
                 Assert.That(File.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "WritingSystems", dataSet.Value.language + ".ldml")));
