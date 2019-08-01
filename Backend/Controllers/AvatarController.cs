@@ -27,7 +27,6 @@ namespace BackendFramework.Controllers
         /// <summary> Returns the url of the users avatar on disk </summary>
         /// <remarks> GET: v1/users/{userId}/download/avatar </remarks>
         /// <returns> Path to local avatar file </returns>
-        [AllowAnonymous]
         [HttpGet("{userId}/download/avatar")]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {

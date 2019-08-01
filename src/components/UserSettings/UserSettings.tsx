@@ -5,7 +5,7 @@ import { uploadAvatar } from "../../backend";
 import { User } from "../../types/user";
 
 /**
- * A button that redirects to the home page
+ * Page to edit user profile
  */
 export default function UserSettings() {
   const [file, setFile] = useState<File>();
@@ -24,9 +24,7 @@ export default function UserSettings() {
     e.preventDefault();
     const avatar = file;
 
-    // Temp
-    let userString = localStorage.getItem("user");
-    let user: User = userString ? JSON.parse(userString) : null;
+    const user = getCurrentUser();
 
     if (avatar) {
       uploadAvatar(user, avatar);
@@ -67,4 +65,9 @@ export default function UserSettings() {
       </Button>
     </form>
   );
+}
+
+export function getCurrentUser(): User {
+  const userString = localStorage.getItem("user");
+  return userString ? JSON.parse(userString) : null;
 }

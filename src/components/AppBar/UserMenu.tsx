@@ -5,7 +5,7 @@ import { Translate } from "react-localize-redux";
 import { Settings, ExitToApp, Person } from "@material-ui/icons";
 import theme from "../../types/theme";
 import { avatarSrc } from "../../backend";
-import { User } from "../../types/user";
+import { getCurrentUser } from "../UserSettings/UserSettings";
 
 /**
  * Avatar in appbar with dropdown (Project settings, user settings, log out)
@@ -14,6 +14,7 @@ export default function UserMenu() {
   const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(
     null
   );
+  const [avatar, setAvatar] = React.useState<null | string>(null);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorElement(event.currentTarget);
@@ -23,8 +24,13 @@ export default function UserMenu() {
     setAnchorElement(null);
   }
 
-  let userString = localStorage.getItem("user");
-  let user: User = userString ? JSON.parse(userString) : null;
+  async function getAvatar() {
+    const user = getCurrentUser();
+    const a = await avatarSrc(user);
+    setAvatar(a);
+  }
+
+  getAvatar();
 
   return (
     <div>
@@ -33,11 +39,7 @@ export default function UserMenu() {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <Avatar
-          alt="User Avatar"
-          // TODO: get user's avatar
-          src={avatarSrc(user)}
-        />
+        {avatar && <Avatar alt="User Avatar" src={avatar} />}
       </Button>
       <Menu
         getContentAnchorEl={null}

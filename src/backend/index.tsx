@@ -226,8 +226,19 @@ export async function uploadAvatar(user: User, png: File): Promise<string> {
   return resp.data;
 }
 
-export function avatarSrc(user: User): string {
-  return `${baseURL}/users/${user.id}/download/avatar`;
+/** Returns the string to display the image inline in Base64 <img src= */
+export async function avatarSrc(user: User): Promise<string> {
+  let resp = await backendServer.get(`users/${user.id}/download/avatar`, {
+    headers: authHeader(),
+    responseType: "arraybuffer"
+  });
+  let image = btoa(
+    new Uint8Array(resp.data).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ""
+    )
+  );
+  return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
 }
 
 export async function addGoalToUserEdit(
