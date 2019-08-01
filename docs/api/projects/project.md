@@ -8,7 +8,7 @@
 
 **analysisWritingSystems** : Language code of glossing systems
 
-**validCharacters** : 𠮷 appears to be a single character but is represented `"\uD842\uDFB7"` if we store characters as a single unicode codepoint this single character would be split in two.
+**validCharacters** : 𠮷 appears to be a single character but is represented with two unicode codepoints: `"\uD842\uDFB7"`. Currently, the front-end splits on codepoints, so this character would be broken up.
 
 **rejectedCharacters** :
 
