@@ -7,6 +7,7 @@ import { Goal, GoalType } from "../types/goals";
 import { UserEdit } from "../types/userEdit";
 import history from "../history";
 import SemanticDomainWithSubdomains from "../components/TreeView/SemanticDomain";
+import { UserRole } from "../types/userRole";
 
 const baseURL = "https://localhost:5001/v1";
 
@@ -136,6 +137,13 @@ export async function authenticateUser(
 
 export async function getAllUsers(): Promise<User[]> {
   let resp = await backendServer.get(`users`, { headers: authHeader() });
+  return resp.data;
+}
+
+export async function getAllUsersInCurrentProject(): Promise<User[]> {
+  let resp = await backendServer.get(`projects/${getProjectId()}/users`, {
+    headers: authHeader()
+  });
   return resp.data;
 }
 
@@ -348,7 +356,7 @@ export async function getSemanticDomains(): Promise<
   return resp.data;
 }
 
-export async function getUserRoles(projId: string): Promise<string> {
+export async function getUserRoles(projId: string): Promise<UserRole[]> {
   let resp = await backendServer.get(`projects/${projId}/userroles`, {
     headers: authHeader()
   });

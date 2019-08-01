@@ -1,11 +1,7 @@
-import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize
-} from "react-localize-redux";
+import React, { ReactNode } from "react";
+import { Translate } from "react-localize-redux";
 import { Language, AddCircleOutline } from "@material-ui/icons";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, Tooltip } from "@material-ui/core";
 
 export interface LanguageProps {
   vernacular: string;
@@ -13,47 +9,67 @@ export interface LanguageProps {
   uiLang: string;
 }
 
-class LanguageSettingsComponent extends React.Component<
-  LocalizeContextProps & LanguageProps
-> {
-  render() {
-    return (
-      <Grid container direction="column">
-        <Grid item xs={3} style={{ float: "left" }}>
-          <AddCircleOutline />
-          <Typography>
-            <Translate id="settings.language.header" />
-          </Typography>
+interface Style {
+  marginLeft: "auto" | number;
+  marginRight: "auto" | number;
+}
+function List(justify: "flex-start" | "flex-end", ...elements: ReactNode[]) {
+  return (
+    <Grid container direction="column" style={{ display: "flex" }}>
+      {elements.map(value => (
+        <Grid item justify={justify}>
+          {value}
         </Grid>
-
-        <Grid item xs={2} style={{ alignContent: "center" }}>
-          <Typography>
-            <Translate id="settings.language.vernacular" />
-            {`: ${this.props.vernacular}`}
-          </Typography>
-        </Grid>
-
-        <Grid item xs={2} style={{ alignContent: "center" }}>
-          <Typography>
-            <Translate id="settings.language.analysis" />
-            {": "}
-          </Typography>
-          {this.props.analysis.map((language, index) => (
-            <React.Fragment>
-              {index !== 0 ? ", " : ""} <Typography>{language}</Typography>
-            </React.Fragment>
-          ))}
-        </Grid>
-
-        <Grid item xs={2} style={{ alignContent: "center" }}>
-          <Typography>
-            <Translate id="settings.language.uiLang" />
-            {`: ${this.props.uiLang}`}
-          </Typography>
-        </Grid>
-      </Grid>
-    );
-  }
+      ))}
+    </Grid>
+  );
 }
 
-export default withLocalize(LanguageSettingsComponent);
+function generateTranslate(id: string): ReactNode {
+  return (
+    <Typography color="primary" variant="body1">
+      <Translate id={`settings.language.${id}`} />
+      {":"}
+    </Typography>
+  );
+}
+
+export default function LanguageSettingsComponent(
+  props: LanguageProps
+): ReactNode {
+  return (
+    <Grid container direction="column" spacing={2}>
+      {/** Language header */}
+      <Grid item style={{ display: "flex" }}>
+        <Tooltip title={<Translate id="createProject.title" />}>
+          <Language />
+        </Tooltip>
+        <Typography variant="h6">
+          <Translate id="settings.language.header" />
+        </Typography>
+      </Grid>
+
+      {/** Body */}
+      <Grid item style={{ display: "flex", flexWrap: "nowrap" }}>
+        {/** Headers */}
+        {List(
+          "flex-start",
+          generateTranslate("vernacular"),
+          generateTranslate("analysis"),
+          generateTranslate("uiLang")
+        )}
+        {List(
+          "flex-end",
+          <Typography variant="body1">{props.vernacular}</Typography>,
+          props.analysis.map((language, index) => (
+            <React.Fragment>
+              {index !== 0 ? ", " : ""}
+              <Typography variant="body1">{language}</Typography>
+            </React.Fragment>
+          )),
+          <Typography variant="body1">{props.uiLang}</Typography>
+        )}
+      </Grid>
+    </Grid>
+  );
+}

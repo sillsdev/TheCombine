@@ -16,6 +16,7 @@ import {
 } from "@material-ui/core";
 import { Check } from "@material-ui/icons";
 import { buttonSuccess } from "../../../types/theme";
+import GetFileButton from "./GetFileButton";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
@@ -28,7 +29,6 @@ export interface CreateProjectProps {
 interface CreateProjectState {
   name: string;
   languageData?: File;
-  fileName?: string;
   error: { name: boolean };
 }
 
@@ -39,6 +39,7 @@ class CreateProject extends React.Component<
   constructor(props: CreateProjectProps & LocalizeContextProps) {
     super(props);
     this.state = { name: "", error: { name: false } };
+    this.updateLanguageData = this.updateLanguageData.bind(this);
   }
 
   componentDidMount() {
@@ -59,13 +60,8 @@ class CreateProject extends React.Component<
     });
   }
 
-  updateLanguageData(files: FileList) {
-    const languageData = files[0];
-    if (languageData) {
-      const fileName = languageData.name;
-      const name = this.state.name;
-      this.setState({ languageData, name, fileName });
-    }
+  updateLanguageData(languageData: File) {
+    this.setState({ languageData });
   }
 
   createProject(e: React.FormEvent<EventTarget>) {
@@ -107,44 +103,11 @@ class CreateProject extends React.Component<
                 }
               />
 
-              {/* File upload */}
-              <Typography
-                variant="body1"
-                style={{ marginRight: 20 }}
-                display="inline"
-              >
-                <Translate id="createProject.upload?" />
-              </Typography>
-              {/* The actual file input element is hidden... */}
-              <input
-                id="file-input"
-                type="file"
-                name="name"
-                accept=".zip"
-                onChange={e =>
-                  this.updateLanguageData(e.target.files as FileList)
-                }
-                style={{ display: "none" }}
+              {/* Upload file */}
+              <GetFileButton
+                tagId="createProject.upload?"
+                updateLanguage={this.updateLanguageData}
               />
-              {/* ... and this button is tied to it with the htmlFor property */}
-              <label
-                htmlFor="file-input"
-                style={{
-                  cursor: "pointer"
-                }}
-              >
-                <Button variant="contained" component="span">
-                  <Translate id="createProject.browse" />
-                </Button>
-              </label>
-
-              {/* Displays the name of the selected file */}
-              {this.state.fileName && (
-                <Typography variant="body1" noWrap style={{ marginTop: 30 }}>
-                  <Translate id="createProject.fileSelected" />:{" "}
-                  {this.state.fileName}
-                </Typography>
-              )}
 
               {/* Form submission button */}
               <Grid container justify="flex-end">

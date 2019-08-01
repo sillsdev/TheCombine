@@ -1,0 +1,106 @@
+import React from "react";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize
+} from "react-localize-redux";
+import {
+  Grid,
+  Typography,
+  Button,
+  Dialog,
+  CircularProgress
+} from "@material-ui/core";
+import { PresentToAll } from "@material-ui/icons";
+
+import * as backend from "../../../backend";
+import { Project } from "../../../types/project";
+import GetFileButton from "../../ProjectScreen/CreateProject/GetFileButton";
+
+interface ImportProps {
+  project: Project;
+  updateProject: (newProject: Project) => void;
+}
+
+interface ImportState {
+  languageData?: File;
+  uploading: boolean;
+}
+
+export class ImportSettingsComponent extends React.Component<
+  ImportProps & LocalizeContextProps,
+  ImportState
+> {
+  constructor(props: ImportProps & LocalizeContextProps) {
+    super(props);
+    this.updateLanguage = this.updateLanguage.bind(this);
+    this.state = {
+      uploading: false
+    };
+  }
+
+  private updateLanguage(languageData: File) {
+    this.setState({ languageData });
+  }
+
+  private async uploadWords() {
+    if (this.state.languageData) {
+      this.setState({ uploading: true });
+      await backend.uploadLift(this.props.project, this.state.languageData);
+      let newProject = await backend.getProject(this.props.project.id);
+      this.props.updateProject(newProject);
+      this.setState({ uploading: false, languageData: undefined });
+    }
+  }
+
+  render() {
+    return (
+      <Grid container direction="column">
+        <Grid item style={{ display: "flex", flexWrap: "nowrap" }}>
+          <PresentToAll />
+          <Typography variant="h6">
+            <Translate id="settings.import.header" />
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="body1">
+            <Translate id="settings.import.body" />
+          </Typography>
+        </Grid>
+        <Grid item style={{ display: "flex", flexWrap: "nowrap" }}>
+          <Grid container direction="row">
+            <Grid item xs>
+              <GetFileButton updateLanguage={this.updateLanguage} />
+            </Grid>
+            <Grid item xs>
+              <Button
+                color="primary"
+                variant="contained"
+                disabled={
+                  this.state.languageData === undefined || this.state.uploading
+                }
+                onClick={() => this.uploadWords()}
+              >
+                <Translate id="settings.import.upload" />
+                {this.state.uploading && (
+                  <CircularProgress
+                    size={24}
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      marginTop: -12,
+                      marginLeft: -12
+                    }}
+                  />
+                )}
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    );
+  }
+}
+
+export default withLocalize(ImportSettingsComponent);

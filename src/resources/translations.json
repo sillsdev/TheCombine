@@ -78,6 +78,22 @@
   "selectProject": {
     "title": ["Select Project", "Select Project in spanish"]
   },
+  "settings": {
+    "language": {
+      "header": ["Language", "Lenguaje"],
+      "vernacular": ["Vernacular", "Vernáculo"],
+      "analysis": ["Analysis", "Análisis"],
+      "uiLang": ["Interface", "Interfaz"]
+    },
+    "import": {
+      "header": ["Import Data", "Importar Información"],
+      "body": [
+        "Imported data will be added to this project. Combine will make no attempt to deduplicate, overwrite, or sync. File must be in a zipped LIFT file.",
+        "No tengo tiempo por estó."
+      ],
+      "upload": ["Upload", "Cargar"]
+    }
+  },
   "goal": {
     "selector": {
       "selectOption": ["Select this goal", "Selecciona este objectivo"],

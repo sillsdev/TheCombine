@@ -4,16 +4,17 @@ import {
   Translate,
   withLocalize
 } from "react-localize-redux";
-import { Edit } from "@material-ui/icons";
 
 import { Project } from "../../types/project";
 import { User } from "../../types/user";
 import * as backend from "../../backend";
-import { Paper } from "@material-ui/core";
+import { Paper, Container } from "@material-ui/core";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import LanguageSettingsComponent, {
   LanguageProps
 } from "./LanguageSettingsComponent";
+import ImportSettingsComponent from "./ImportSettingsComponent";
+import { UserRole } from "../../types/userRole";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -31,30 +32,47 @@ class ProjectSettingsComponent extends React.Component<
   ProjectSettingsState
 > {
   async componentWillMount() {
-    let edit = await backend.getUserRoles(this.props.project.id);
+    let allPermissions: UserRole[] = await backend.getUserRoles(
+      this.props.project.id
+    );
+    let currentRole: UserRole | undefined = allPermissions.find(
+      value => value.projectId === this.props.project.id
+    );
     let settings: ProjectSettingsState = {};
 
-    if (edit === "4") {
-      settings.imports = true;
-      // settings.languages = {
-      //     analysis:
-      // }
-    }
-    if (edit === "5") {
-      settings.users = await backend.getAllUsers();
-    }
+    if (currentRole)
+      for (let role of currentRole.permissions) {
+        if (role === 4) {
+          settings.imports = true;
+          settings.languageSettings = {
+            vernacular: this.props.project.vernacularWritingSystem,
+            analysis: [...this.props.project.analysisWritingSystems],
+            uiLang: this.props.activeLanguage.code
+          };
+        }
+        if (role === 5) {
+          settings.users = await backend.getAllUsersInCurrentProject();
+        }
+      }
 
     this.setState(settings);
   }
 
   render() {
     return (
-      <Paper>
+      <Container>
         <AppBarComponent />
-        {this.state.languageSettings && (
-          <LanguageSettingsComponent {...this.state.languageSettings} />
-        )}
-      </Paper>
+        <Paper>
+          {this.state &&
+            this.state.languageSettings &&
+            LanguageSettingsComponent(this.state.languageSettings)}
+        </Paper>
+        <Paper>
+          {this.state && this.state.imports && (
+            <ImportSettingsComponent project={this.props.project} />
+          )}
+        </Paper>
+      </Container>
     );
   }
 }
