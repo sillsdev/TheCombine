@@ -1,7 +1,9 @@
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace BackendFramework.Services
@@ -93,6 +95,18 @@ namespace BackendFramework.Services
             {
                 return ResultOfUpdate.NoChange;
             }
+        }
+
+        public bool checkProj(string projectId)
+        {
+            Utilities util = new Utilities();
+            var currentPath = util.GenerateFilePath(Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Import"));
+            var zips = new List<string>(Directory.GetFiles(currentPath, "*.zip"));
+            if(zips.Count != 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

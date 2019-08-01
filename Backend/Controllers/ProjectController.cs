@@ -246,6 +246,23 @@ namespace BackendFramework.Controllers
             }
         }
 
+        //change user role using project Id
+        [HttpGet("{projectId}/liftcheck")]
+        public async Task<IActionResult> CheckLift(string projectId)
+        {
+            if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
+            if (_projectService.checkProj(projectId))
+            {
+                return new OkResult();
+            }
+
+            
+        }
+
     }
 
     public class ProjectWithUser : Project
