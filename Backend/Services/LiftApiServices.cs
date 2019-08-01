@@ -120,7 +120,7 @@ namespace BackendFramework.Services
             Directory.CreateDirectory(zipDir);
 
             //add audio dir inside zip dir
-            string audioDir = Path.Combine(zipDir, "Audio");
+            string audioDir = Path.Combine(zipDir, "audio");
             Directory.CreateDirectory(audioDir);
             string liftPath = Path.Combine(zipDir, "NewLiftFile.lift");
 
@@ -146,7 +146,7 @@ namespace BackendFramework.Services
             var allWords = _repo.GetAllWords(projectId).Result;
             var frontier = _repo.GetFrontier(projectId).Result;
             var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.active).ToList();
-            var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();
+            var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();//TODO: this is wrong, deleted is a subset of active, are not exclusive
             foreach (Word wordEntry in activeWords)
             {
                 LexEntry entry = new LexEntry();
@@ -282,7 +282,12 @@ namespace BackendFramework.Services
                 LexPhonetic lexPhonetic = new LexPhonetic();
 
                 Helper.Utilities util = new Helper.Utilities();
-                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), _projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio", audioFile);
+                
+                var projectPath = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", "") , _projectId);
+                projectPath = Path.Combine(projectPath, "Import", "ExtractedLocation");
+                var extractedDir = Directory.GetDirectories(projectPath);
+                projectPath = Path.Combine(projectPath, extractedDir.Single());
+                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), Path.Combine(projectPath, "audio", audioFile));
 
                 string dest = Path.Combine(path, audioFile);
 
@@ -472,21 +477,21 @@ namespace BackendFramework.Services
                 {
                     //get path to audio file in lift package at ~/{projectId}/Import/ExtractedLocation/{liftName}/audio/{audioFile}.mp3
                     var audioFile = pro.Media.First().Url;
-                    var extractedAudioMp3 = Path.Combine(extractedAudioDir, audioFile);
+                    //var extractedAudioMp3 = Path.Combine(extractedAudioDir, audioFile);
 
-                    //move mp3 to audio folder at ~/{projectId}/Import/Audio/{audioFile}.mp3
-                    var audioFolder = Path.Combine(importDir, "Audio");
-                    Directory.CreateDirectory(audioFolder);
-                    var audioDest = Path.Combine(audioFolder, audioFile);
+                    ////move mp3 to audio folder at ~/{projectId}/Import/Audio/{audioFile}.mp3
+                    //var audioFolder = Path.Combine(importDir, "Audio");
+                    //Directory.CreateDirectory(audioFolder);
+                    //var audioDest = Path.Combine(audioFolder, audioFile);
 
-                    //if there are duplicate filenames then add a (number) like windows does to the end of it
-                    var filename = Path.GetFileNameWithoutExtension(audioDest);
-                    int filecount = 1;
-                    while (File.Exists(audioDest))
-                    {
-                        audioDest = Path.Combine(audioFolder, filename + "(" + filecount++ + ")" + ".mp3");
-                    }
-                    File.Copy(extractedAudioMp3, audioDest);
+                    ////if there are duplicate filenames then add a (number) like windows does to the end of it
+                    //var filename = Path.GetFileNameWithoutExtension(audioDest);
+                    //int filecount = 1;
+                    //while (File.Exists(audioDest))
+                    //{
+                    //    audioDest = Path.Combine(audioFolder, filename + "(" + filecount++ + ")" + ".mp3");
+                    //}
+                    //File.Copy(extractedAudioMp3, audioDest);
 
                     //add file name to word's audio files
                     newWord.Audio.Add(audioFile);
