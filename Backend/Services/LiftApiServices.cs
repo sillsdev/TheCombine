@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Xml;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
 namespace BackendFramework.Services
@@ -97,7 +100,8 @@ namespace BackendFramework.Services
             Helper.Utilities util = new Helper.Utilities();
 
             //generate the zip dir
-            string exportDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Export"));
+            string projectDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", projectId);
+            string exportDir = Path.Combine(projectDir, "Export");
             string zipDir = Path.Combine(exportDir, "LiftExport");
             Directory.CreateDirectory(zipDir);
 
@@ -106,27 +110,30 @@ namespace BackendFramework.Services
             Directory.CreateDirectory(audioDir);
             string liftPath = Path.Combine(zipDir, "NewLiftFile.lift");
 
-            CombineLiftWriter writer = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
+            CombineLiftWriter liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
+            string rangesDest = Path.Combine(zipDir, "NewLiftFile.lift-ranges");
 
-            //TODO: generate header automatically
             //write header of lift document
             string header =
-                @"
+                $@"
                     <ranges>
-                        <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/FullerM/Documents/TheCombine/Backend.Tests/bin/testingdata.lift-ranges""/>
+                        <range id = ""semantic-domain-ddp4"" href = ""{rangesDest}""/>
                     </ranges>
                     <fields>
                         <field tag = ""Plural"">
                             <form lang = ""en""><text></text></form>
-                             <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+                            <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
                         </field>
                     </fields>
                 ";
-            writer.WriteHeader(header);
+            liftWriter.WriteHeader(header);
 
             //write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
-            foreach (Word wordEntry in allWords)
+            var frontier = _repo.GetFrontier(projectId).Result;
+            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.active).ToList();
+            var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();
+            foreach (Word wordEntry in activeWords)
             {
                 LexEntry entry = new LexEntry();
 
@@ -134,16 +141,84 @@ namespace BackendFramework.Services
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir);
 
-                writer.Add(entry);
+                liftWriter.Add(entry);
+            }
+            foreach (Word wordEntry in deletedWords)
+            {
+                LexEntry entry = new LexEntry();
+
+                AddVern(entry, wordEntry, projectId);
+                AddSenses(entry, wordEntry);
+                AddAudio(entry, wordEntry, audioDir);
+
+                liftWriter.AddDeletedEntry(entry);
             }
 
-            writer.End();
+            liftWriter.End();
+
+            //export semantic domains to lift-ranges
+            var proj = _projService.GetProject(projectId).Result;
+            string extractedPathToImport = Path.Combine(projectDir, "Import", "ExtractedLocation");
+            string importLiftDir = "";
+            if (Directory.Exists(extractedPathToImport))
+            {
+                importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
+            }
+            var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
+
+            //if there are no new semantic domains, and the old lift-ranges file is still around, just copy it
+            if (proj.SemanticDomains.Count == 0 && File.Exists(rangesSrc))
+            {
+                File.Copy(rangesSrc, rangesDest, true);
+            }
+            else //make a new lift-ranges file
+            {
+                XmlWriter liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings { Indent = true, NewLineOnAttributes = true });
+                liftRangesWriter.WriteStartDocument();
+                liftRangesWriter.WriteStartElement("lift-ranges");
+                liftRangesWriter.WriteStartElement("range");
+                liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
+
+                //pull from resources file with all English semantic domains
+                var assembly = typeof(LiftService).GetTypeInfo().Assembly;
+                Stream resource = assembly.GetManifestResourceStream("BackendFramework.Data.sdList.txt");
+                string sdList;
+                using (var reader = new StreamReader(resource, Encoding.UTF8))
+                {
+                    sdList = reader.ReadToEndAsync().Result;
+                }
+                var sdLines = sdList.Split(Environment.NewLine);
+                foreach (var line in sdLines)
+                {
+                    if (line != "")
+                    {
+                        string[] items = line.Split("`");
+                        WriteRangeElement(liftRangesWriter, items[0], items[1], items[2], items[3]);
+                    }
+                }
+
+                //pull from new semantic domains in project
+                foreach (var sd in proj.SemanticDomains)
+                {
+                    WriteRangeElement(liftRangesWriter, sd.Id, Guid.NewGuid().ToString(), sd.Name, sd.Description);
+                }
+
+                liftRangesWriter.WriteEndElement(); //end semantic-domain-ddp4 range
+                liftRangesWriter.WriteEndElement(); //end lift-ranges
+                liftRangesWriter.WriteEndDocument();
+
+                liftRangesWriter.Flush();
+                liftRangesWriter.Close();
+            }
+
 
             //export character set to ldml
             string ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            var proj = _projService.GetProject(projectId).Result;
-            LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+            if (proj.VernacularWritingSystem != "")
+            {
+                LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+            }
 
             //compress everything
             ZipFile.CreateFromDirectory(zipDir, Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
@@ -244,6 +319,36 @@ namespace BackendFramework.Services
             }
         }
 
+        private void WriteRangeElement(XmlWriter liftRangesWriter, string id, string guid, string name, string description)
+        {
+            liftRangesWriter.WriteStartElement("range-element");
+            liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
+            liftRangesWriter.WriteAttributeString("guid", guid);
+
+            liftRangesWriter.WriteStartElement("label");
+            liftRangesWriter.WriteAttributeString("lang", "en");
+            liftRangesWriter.WriteStartElement("text");
+            liftRangesWriter.WriteString(name);
+            liftRangesWriter.WriteEndElement(); //end text
+            liftRangesWriter.WriteEndElement(); //end label
+
+            liftRangesWriter.WriteStartElement("abbrev");
+            liftRangesWriter.WriteAttributeString("lang", "en");
+            liftRangesWriter.WriteStartElement("text");
+            liftRangesWriter.WriteString(id);
+            liftRangesWriter.WriteEndElement(); //end text
+            liftRangesWriter.WriteEndElement(); //end label
+
+            liftRangesWriter.WriteStartElement("description");
+            liftRangesWriter.WriteAttributeString("lang", "en");
+            liftRangesWriter.WriteStartElement("text");
+            liftRangesWriter.WriteString(description);
+            liftRangesWriter.WriteEndElement(); //end text
+            liftRangesWriter.WriteEndElement(); //end label
+
+            liftRangesWriter.WriteEndElement(); //end range element
+        }
+
         /// <summary> The meat of lift import is done here. This reads in all necessary attributes of a word and adds it to the database. </summary>
         public async void FinishEntry(LiftEntry entry)
         {
@@ -328,7 +433,6 @@ namespace BackendFramework.Services
                 {
                     foreach (var plural in field.Content)
                     {
-                        //if (entry.Fields["Type"])
                         string PluralForm = entry.Fields.First().Content.First().Value.Text;
                         newWord.Plural = PluralForm;
                     }

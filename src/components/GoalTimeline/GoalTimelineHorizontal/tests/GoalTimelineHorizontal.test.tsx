@@ -25,6 +25,7 @@ const mockStore = configureMockStore([])(STATE);
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();
+jest.mock("../../../AppBar/AppBarComponent", () => "div");
 
 // Constants
 const LOAD_EDITS = jest.fn();

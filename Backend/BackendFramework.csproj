@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\sdList.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\sdList.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="icu.net" Version="2.6.0-beta0033" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.1.4-beta" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
