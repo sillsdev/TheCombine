@@ -188,7 +188,7 @@ namespace Backend.Tests
 
             Utilities util = new Utilities();
             var combinePath = util.GenerateFilePath(Utilities.Filetype.dir, true, "", "");
-            string exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport", "NewLiftFile.lift");
+            string exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport", Path.Combine("Lift", "NewLiftFile.lift"));
             string text = File.ReadAllText(exportPath, Encoding.UTF8);
             //there is only one deleted word
             Assert.AreEqual(text.IndexOf("dateDeleted"), text.LastIndexOf("dateDeleted"));

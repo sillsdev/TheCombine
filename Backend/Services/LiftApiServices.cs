@@ -172,7 +172,7 @@ namespace BackendFramework.Services
 
             //export semantic domains to lift-ranges
             var proj = _projService.GetProject(projectId).Result;
-            string extractedPathToImport = Path.Combine(projectDir, "Import", "ExtractedLocation");
+            string extractedPathToImport = Path.Combine(GetProjectDir(projectId), "Import", "ExtractedLocation");
             string importLiftDir = "";
             if (Directory.Exists(extractedPathToImport))
             {
