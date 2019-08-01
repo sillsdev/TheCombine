@@ -10,6 +10,7 @@ import Register from "../Login/RegisterPage";
 import PageNotFound from "../PageNotFound/component";
 import { GoalRoute } from "../GoalRoute/component";
 import DataEntry from "../DataEntry";
+import UserSettings from "../UserSettings/UserSettings";
 
 export default class App extends React.Component {
   render() {
@@ -18,6 +19,7 @@ export default class App extends React.Component {
         <Switch>
           <PrivateRoute exact path="/" component={ProjectScreen} />
           <PrivateRoute exact path="/data-entry" component={DataEntry} />
+          <PrivateRoute exact path="/user-settings" component={UserSettings} />
           <PrivateRoute path="/goals" component={GoalRoute} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />

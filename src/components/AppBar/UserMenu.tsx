@@ -4,6 +4,8 @@ import { Button, Menu, MenuItem, Avatar } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 import { Settings, ExitToApp, Person } from "@material-ui/icons";
 import theme from "../../types/theme";
+import { avatarSrc } from "../../backend";
+import { User } from "../../types/user";
 
 /**
  * Avatar in appbar with dropdown (Project settings, user settings, log out)
@@ -21,6 +23,9 @@ export default function UserMenu() {
     setAnchorElement(null);
   }
 
+  let userString = localStorage.getItem("user");
+  let user: User = userString ? JSON.parse(userString) : null;
+
   return (
     <div>
       <Button
@@ -31,7 +36,7 @@ export default function UserMenu() {
         <Avatar
           alt="User Avatar"
           // TODO: get user's avatar
-          src="https://material-ui.com/static/images/avatar/1.jpg"
+          src={avatarSrc(user)}
         />
       </Button>
       <Menu

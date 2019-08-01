@@ -27,6 +27,7 @@ namespace BackendFramework.Controllers
         /// <summary> Returns the url of the users avatar on disk </summary>
         /// <remarks> GET: v1/users/{userId}/download/avatar </remarks>
         /// <returns> Path to local avatar file </returns>
+        [AllowAnonymous]
         [HttpGet("{userId}/download/avatar")]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
@@ -37,7 +38,8 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(currentUser.Id);
            }
 
-           return new OkObjectResult(currentUser.Avatar);
+            var image = System.IO.File.OpenRead(currentUser.Avatar);
+            return File(image, "image/jpeg");
         }
 
 

@@ -8,13 +8,15 @@ import { UserEdit } from "../types/userEdit";
 import history from "../history";
 import SemanticDomainWithSubdomains from "../components/TreeView/SemanticDomain";
 
+const baseURL = "https://localhost:5001/v1";
+
 const backendServer = axios.create({
-  baseURL: "https://localhost:5001/v1"
+  baseURL
 });
 
 backendServer.interceptors.response.use(
   resp => {
-    if (resp.data.__UpdatedUser){
+    if (resp.data.__UpdatedUser) {
       localStorage.setItem("user", JSON.stringify(resp.data.__UpdatedUser));
     }
     delete resp.data.__UpdatedUser;
@@ -215,6 +217,19 @@ export async function uploadMp3(project: Project, mp3: File): Promise<string> {
   return resp.data;
 }
 
+export async function uploadAvatar(user: User, png: File): Promise<string> {
+  let data = new FormData();
+  data.append("file", png);
+  let resp = await backendServer.post(`users/${user.id}/upload/avatar`, data, {
+    headers: { ...authHeader(), "content-type": "application/json" }
+  });
+  return resp.data;
+}
+
+export function avatarSrc(user: User): string {
+  return `${baseURL}/users/${user.id}/download/avatar`;
+}
+
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
@@ -312,7 +327,9 @@ export async function getAllUserEdits(): Promise<Goal[]> {
   return resp.data;
 }
 
-export async function getSemanticDomains(): Promise<SemanticDomainWithSubdomains[]> {
+export async function getSemanticDomains(): Promise<
+  SemanticDomainWithSubdomains[]
+> {
   let resp = await backendServer.get(
     `projects/${getProjectId()}/semanticdomains`,
     { headers: authHeader() }
