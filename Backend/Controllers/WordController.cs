@@ -69,7 +69,7 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(await _wordRepo.DeleteAllWords(projectId));
 #else
-            return new UnauthorizedResult();
+            return new NotFoundResult();
 #endif
         }
 

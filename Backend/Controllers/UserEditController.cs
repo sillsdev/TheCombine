@@ -70,7 +70,7 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(await _repo.DeleteAllUserEdits(projectId));
 #else
-            return new UnauthorizedResult();
+           return new NotFoundResult();
 #endif
         }
 

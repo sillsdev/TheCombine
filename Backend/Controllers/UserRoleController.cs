@@ -65,7 +65,7 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(await _userRoleService.DeleteAllUserRoles(projectId));
 #else
-            return new UnauthorizedResult();
+            return new NotFoundResult();
 #endif
         }
 

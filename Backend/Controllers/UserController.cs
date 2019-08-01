@@ -50,7 +50,7 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(await _userService.DeleteAllUsers());
 #else
-            return new UnauthorizedResult();
+            return new NotFoundResult();
 #endif
         }
 
@@ -154,7 +154,7 @@ namespace BackendFramework.Controllers
             }
             return new NotFoundResult();
 #else
-            return new UnauthorizedResult();
+            return new NotFoundResult();
 #endif
         }
     }

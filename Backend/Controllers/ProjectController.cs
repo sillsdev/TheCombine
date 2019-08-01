@@ -72,7 +72,7 @@ namespace BackendFramework.Controllers
             }
             return new ObjectResult(await _projectService.DeleteAllProjects());
 #else
-            return new UnauthorizedResult();
+            return new NotFoundResult();
 #endif
         }
 
