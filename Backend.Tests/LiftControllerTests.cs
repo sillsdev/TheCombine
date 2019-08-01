@@ -1,6 +1,7 @@
 ﻿using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
+using BackendFramework.Services;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace Backend.Tests
     public class LiftControllerTests
     {
         private IWordRepository _wordrepo;
+        private IWordService _wordService;
         private IProjectService _projServ;
         private LiftController _liftController;
         private IPermissionService _permissionService;
@@ -27,6 +29,7 @@ namespace Backend.Tests
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
             _liftController = new LiftController(_wordrepo, _projServ, _permissionService);
+            _wordService = new WordService(_wordrepo);
         }
 
         Project RandomProject()
@@ -107,12 +110,48 @@ namespace Backend.Tests
             return name;
         }
 
+        Word RandomWord(string projId)
+        {
+            Word word = new Word();
+            word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() };
+
+            foreach (Sense sense in word.Senses)
+            {
+
+                sense.Accessibility = (int)State.active;
+                sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
+
+                foreach (Gloss gloss in sense.Glosses)
+                {
+                    gloss.Def = Util.randString();
+                    gloss.Language = Util.randString(3);
+                }
+
+                sense.SemanticDomains = new List<SemanticDomain>() { new SemanticDomain(), new SemanticDomain(), new SemanticDomain() };
+
+                foreach (SemanticDomain semdom in sense.SemanticDomains)
+                {
+                    semdom.Name = Util.randString();
+                    semdom.Id = Util.randString();
+                    semdom.Description = Util.randString();
+                }
+            }
+
+            word.Created = Util.randString();
+            word.Vernacular = Util.randString();
+            word.Modified = Util.randString();
+            word.PartOfSpeech = Util.randString();
+            word.Plural = Util.randString();
+            word.History = new List<string>();
+            word.ProjectId = projId;
+
+            return word;
+        }
+
         private FileUpload InitFile(FileStream fstream, string filename)
         {
             FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
-            FileUpload fileUpload = new FileUpload();
-            fileUpload.Name = "FileName";
-            fileUpload.File = formFile;
+            FileUpload fileUpload = new FileUpload { Name = "FileName", File = formFile };
 
             return fileUpload;
         }
@@ -129,6 +168,30 @@ namespace Backend.Tests
                 audioFiles = audio;
                 numOfWords = words;
             }
+        }
+
+        [Test]
+        public void TestExportDeleted()
+        {
+            var proj = RandomProject();
+            _projServ.Create(proj);
+
+            var word = RandomWord(proj.Id);
+            var createdWord = _wordrepo.Create(word).Result;
+
+            word.Id = "";
+            word.Vernacular = "updated";
+
+            _wordService.Update(proj.Id, createdWord.Id, word);
+
+            var result = _liftController.ExportLiftFile(proj.Id).Result;
+
+            Utilities util = new Utilities();
+            var combinePath = util.GenerateFilePath(Utilities.Filetype.dir, true, "", "");
+            string exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport", "NewLiftFile.lift");
+            string text = File.ReadAllText(exportPath, Encoding.UTF8);
+            //there is only one deleted word
+            Assert.AreEqual(text.IndexOf("dateDeleted"), text.LastIndexOf("dateDeleted"));
         }
 
         [Test]
