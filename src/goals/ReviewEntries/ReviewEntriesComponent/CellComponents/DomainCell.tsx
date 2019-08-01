@@ -80,11 +80,18 @@ export default class DomainCell extends React.Component<
     return (
       <React.Fragment>
         <AlignedList
+          key={`domainCell:${this.props.rowData.id}`}
+          listId={`domains${this.props.rowData.id}`}
           contents={this.props.rowData.senses.map((sense, senseIndex) => (
             <Grid container direction="row" spacing={2}>
               {sense.domains.length > 0 ? (
                 sense.domains.map((domain, domainIndex) => (
-                  <Grid item key={`domainFor${sense.senseId}-${senseIndex}`}>
+                  <Grid
+                    item
+                    key={`${domain.name}::${this.props.rowData.id}:${
+                      sense.senseId
+                    }`}
+                  >
                     <Chip
                       color={sense.deleted ? "secondary" : "default"}
                       style={this.getChipStyle(senseIndex, domainIndex)}
