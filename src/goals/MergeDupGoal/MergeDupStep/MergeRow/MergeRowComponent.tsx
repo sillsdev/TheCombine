@@ -60,11 +60,14 @@ export class MergeRow extends React.Component<
     }
 
     // reset vern if not in vern list
-    if (this.props.words[this.props.wordID] && !verns.includes(this.props.words[this.props.wordID].vern)){
+    if (
+      this.props.words[this.props.wordID] &&
+      !verns.includes(this.props.words[this.props.wordID].vern)
+    ) {
       // set vern
-      this.props.setVern(this.props.wordID, verns[0] || "")
+      this.props.setVern(this.props.wordID, verns[0] || "");
     }
-    
+
     return (
       <Droppable
         key={this.props.wordID}
