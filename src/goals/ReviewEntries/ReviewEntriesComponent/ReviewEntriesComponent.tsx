@@ -90,6 +90,7 @@ export class ReviewEntriesComponent extends React.Component<
       newWords.push(currentWord);
     }
     this.props.updateAllWords(newWords);
+    this.forceUpdate();
   }
 
   // Convert a Sense into a ReviewEntriesSense
@@ -137,7 +138,6 @@ export class ReviewEntriesComponent extends React.Component<
     return (
       <Translate>
         {({ translate }) => (
-          //<React.Fragment>Test</React.Fragment>
           <MaterialTable
             icons={tableIcons}
             title={<Translate id={"reviewEntries.title"} />}
@@ -173,8 +173,8 @@ export class ReviewEntriesComponent extends React.Component<
               pageSizeOptions: this.removeDuplicates([
                 Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
                 Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
-                Math.min(this.props.words.length, ROWS_PER_PAGE[2]),
-                this.props.words.length
+                Math.min(this.props.words.length, ROWS_PER_PAGE[2])
+                // this.props.words.length
               ])
             }}
           />

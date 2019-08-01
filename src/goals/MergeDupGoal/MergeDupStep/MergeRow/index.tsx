@@ -7,7 +7,6 @@ import {
 import { StoreState } from "../../../../types";
 import { MergeTreeAction, setVern } from "../MergeDupStepActions";
 import MergeRowComponent from "./MergeRowComponent";
-import { MergeTreeReference } from "../MergeDupsTree";
 
 export function mapStateToProps(state: StoreState) {
   return {
