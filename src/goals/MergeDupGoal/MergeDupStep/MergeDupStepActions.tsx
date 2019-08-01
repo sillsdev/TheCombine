@@ -275,6 +275,16 @@ export async function mergeWord(
       // set each dup to be merged as duplicates
       dups.forEach(dup => {
         senses[dup.srcWord][dup.order].state = State.duplicate;
+        // put this sense's semdoms in the parent senses's
+        for (let semdom of senses[dup.srcWord][dup.order].semanticDomains) {
+          if (
+            !senses[wordID][senseIndex].semanticDomains
+              .map(a => a.id)
+              .includes(semdom.id)
+          ) {
+            senses[wordID][senseIndex].semanticDomains.push(semdom);
+          }
+        }
       });
     });
 
@@ -287,6 +297,7 @@ export async function mergeWord(
 
     // construct parent word
     let parent: Word = { ...data.words[wordID], senses: [] };
+
     // construct sense children
     let children = Object.values(senses).map(word => {
       word.forEach(sense => {

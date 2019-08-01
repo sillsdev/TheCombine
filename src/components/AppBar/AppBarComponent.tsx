@@ -3,7 +3,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import { Grid } from "@material-ui/core";
-import UserMenu from "../Login/UserMenu";
+import UserMenu from "./UserMenu";
 import GoToHomeButton from "../GoToHomeButton/GoToHomeButtonComponent";
 import theme from "../../types/theme";
 

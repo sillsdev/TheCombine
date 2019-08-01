@@ -5,6 +5,7 @@ import { Add } from "@material-ui/icons";
 export const SPACER: string = "spacer";
 interface AlignedListProps {
   contents: ReactNode[];
+  listId: string;
   bottomCell: ReactNode | typeof SPACER | null;
 }
 
@@ -16,6 +17,7 @@ export default class AlignedList extends React.Component<AlignedListProps> {
           <Grid
             item
             xs
+            key={`alignedList:${this.props.listId}:${index}`}
             style={
               this.props.bottomCell || index + 1 !== this.props.contents.length
                 ? {
@@ -23,7 +25,6 @@ export default class AlignedList extends React.Component<AlignedListProps> {
                   }
                 : {}
             }
-            key={`alignedList${index}`}
           >
             {value}
           </Grid>
