@@ -2,6 +2,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -209,6 +210,29 @@ namespace BackendFramework.Services
                 }
             }
             return isUniqueWord;
+        }
+
+        public string GetAudioFilePath(string projectId, string wordId)
+        {
+            //generate path to home on linux
+            var pathToHome = Environment.GetEnvironmentVariable("HOME");
+
+            //generate home on windows
+            if (pathToHome == null)
+            {
+                pathToHome = Environment.GetEnvironmentVariable("UserProfile");
+            }
+
+            var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId, "Import", "ExtractedFiles");
+            var listOfDirs = Directory.GetDirectories(filepath);
+
+            if(listOfDirs.Count() != 1)
+            {
+                return null;
+            }
+            filepath = Path.Combine(filepath, listOfDirs.Single(), wordId, ".mp3"); //there should only be one dir in that file
+
+            return filepath;
         }
     }
 }
