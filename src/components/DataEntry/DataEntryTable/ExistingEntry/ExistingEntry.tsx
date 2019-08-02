@@ -121,27 +121,20 @@ export function vernInFrontier(
 }
 
 export function isADuplicate(
-  existingWords: Word[],
+  words: Word[],
   entry: Word,
   value: string
 ): boolean {
-  let duplicateId: string = vernInFrontier(existingWords, value);
-  let isDuplicate: boolean = duplicateId !== "";
-  if (duplicateId === entry.id) {
-    isDuplicate = false;
-  }
-  return isDuplicate;
+  let duplicateId = vernInFrontier(words, value);
+  return duplicateId !== "" && duplicateId !== entry.id;
 }
 
 // extract, or remove altogether
 function wordsAreEqual(a: Word, b: Word): boolean {
-  let areEqual: boolean = false;
-
-  areEqual = a.vernacular === b.vernacular;
-  areEqual =
-    areEqual && a.senses[0].glosses[0].def === b.senses[0].glosses[0].def;
-
-  return areEqual;
+  return (
+    a.vernacular === b.vernacular &&
+    a.senses[0].glosses[0].def === b.senses[0].glosses[0].def
+  );
 }
 
 /**
