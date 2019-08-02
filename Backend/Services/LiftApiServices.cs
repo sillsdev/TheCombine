@@ -115,6 +115,10 @@ namespace BackendFramework.Services
 
             //generate the zip dir
             string exportDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Export"));
+            if (Directory.Exists(Path.Combine(exportDir, "LiftExport")))
+            {
+                Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
+            }
             string zipDir = Path.Combine(exportDir, "LiftExport", "Lift");
             Directory.CreateDirectory(zipDir);
 
@@ -234,9 +238,10 @@ namespace BackendFramework.Services
             }
 
             //compress everything
-            ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
+            var destinationFileName = Path.Combine(exportDir, Path.Combine($"LiftExportCompressed-{proj.Id}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}", DateTime.Now)}.zip"));
+            ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
 
-            return exportDir;
+            return destinationFileName;
         }
 
         /// <summary> Adds vernacular of a word to be written out to lift </summary>

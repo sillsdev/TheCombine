@@ -156,13 +156,14 @@ namespace BackendFramework.Controllers
 
         /// <summary> Packages project data into zip file </summary>
         /// <remarks> GET: v1/project/{projectId}/words/download </remarks>
+        [AllowAnonymous]
         [HttpGet("download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
+            //if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
+            //{
+            //    return new UnauthorizedResult();
+            //}
 
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
@@ -177,11 +178,13 @@ namespace BackendFramework.Controllers
             {
                 return new BadRequestResult();
             }
-
             //export the data to a zip directory
-           string exportedFilepath = _liftService.LiftExport(projectId);
+            _liftService.SetProject(projectId);
+            string exportedFilepath = _liftService.LiftExport(projectId);
 
-            return new OkObjectResult(exportedFilepath); //TODO We dont want to expose filesystem to frontend, also return a stream
+            var file = System.IO.File.ReadAllBytes(exportedFilepath);
+            var encodedFile = Convert.ToBase64String(file);
+            return new OkObjectResult(encodedFile);
         }
     }
 }

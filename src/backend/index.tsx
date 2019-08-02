@@ -204,6 +204,16 @@ export async function uploadLift(
   return parseInt(resp.toString());
 }
 
+export async function exportLift() {
+  let resp = await backendServer.get(
+    `projects/${getProjectId()}/words/download`,
+    {
+      headers: { ...authHeader(), Accept: "application/zip" }
+    }
+  );
+  return `data:application/zip;base64,${resp.data}`;
+}
+
 export async function uploadMp3(project: Project, mp3: File): Promise<string> {
   let data = new FormData();
   data.append("file", mp3);
