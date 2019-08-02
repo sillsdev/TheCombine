@@ -56,13 +56,13 @@ namespace Backend.Tests
         [Test]
         public void TestAudioImport()
         {
-            //get pathto sound in Assets folder, from debugging foler
+            //get path to sound in Assets folder, from debugging folder
             string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "sound.mp3");
 
             //open the file to read to controller
             FileStream fstream = File.OpenRead(filePath);
 
-            //generate perameters for controller call 
+            //generate parameters for controller call 
             FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
             FileUpload fileUpload = new FileUpload();
             fileUpload.Name = "FileName";

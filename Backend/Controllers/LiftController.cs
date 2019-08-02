@@ -181,7 +181,7 @@ namespace BackendFramework.Controllers
             //export the data to a zip directory
            string exportedFilepath = _liftService.LiftExport(projectId);
 
-            return new OkObjectResult(exportedFilepath);
+            return new OkObjectResult(exportedFilepath); //TODO We dont want to expose filesystem to frontend, also return a stream
         }
     }
 }

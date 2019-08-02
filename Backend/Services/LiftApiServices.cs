@@ -31,9 +31,8 @@ namespace BackendFramework.Services
             if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
             {
                 Writer.WriteStartElement("pronunciation");
-                
 
-                for (var pro = 0; pro < entry.Pronunciations.Count; pro++)
+                for (var i = 0; i < entry.Pronunciations.Count; i++)
                 {
                     Writer.WriteStartElement("media");
                     Writer.WriteAttributeString("href", Path.GetFileName(entry.Pronunciations[pro].Forms.First().Form));
@@ -467,7 +466,7 @@ namespace BackendFramework.Services
 
             //get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio
             var importListArr = Directory.GetDirectories(extractedPathToImport);
-            var extractedAudioDir = Path.Combine(importListArr.Single(), Path.Combine("audio"));
+            var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
 
             //only add audio if the files exist
             if (Directory.Exists(extractedAudioDir))
