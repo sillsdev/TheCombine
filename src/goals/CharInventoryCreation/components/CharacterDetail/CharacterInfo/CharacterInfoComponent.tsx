@@ -7,6 +7,7 @@ export interface CharacterInfoProps {
   allWords: string[];
 }
 
+/** Displays basic information about a character */
 export default function CharacterInfo(props: CharacterInfoProps) {
   return (
     <React.Fragment>

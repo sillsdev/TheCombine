@@ -7,6 +7,7 @@ export interface CharacterWordsProps {
   allWords: string[];
 }
 
+/** Displays words that contain a character */
 export default function CharacterWords(props: CharacterWordsProps) {
   return (
     <React.Fragment>

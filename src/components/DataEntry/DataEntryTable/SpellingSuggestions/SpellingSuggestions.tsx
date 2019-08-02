@@ -8,6 +8,10 @@ interface SpellingSuggestionsProps {
   chooseSpellingSuggestion: (suggestion: string) => void;
 }
 
+/**
+ * Displays spelling suggestions for a word, and allows choosing one of the
+ * suggestions
+ */
 export class SpellingSuggestionsView extends React.Component<
   SpellingSuggestionsProps
 > {

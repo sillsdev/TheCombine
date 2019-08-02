@@ -17,6 +17,10 @@ interface DataEntryState {
   displaySemanticDomain: boolean;
 }
 
+/**
+ * Allows users to add words to a project, add senses to an existing word,
+ * and add the current semantic domain to a sense
+ */
 export class DataEntryComponent extends React.Component<
   DataEntryProps & LocalizeContextProps,
   DataEntryState

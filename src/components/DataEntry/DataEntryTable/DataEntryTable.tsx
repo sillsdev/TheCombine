@@ -31,6 +31,7 @@ interface DataEntryTableState {
   displaySpellingSuggestionsIndex?: number;
 }
 
+
 async function getWordsFromBackend(): Promise<Word[]> {
   let words = await Backend.getFrontierWords();
   words = filterWords(words);
@@ -55,7 +56,11 @@ export function filterWords(words: Word[]): Word[] {
   return filteredWords;
 }
 
-export class DataEntryTableRewrite extends React.Component<
+/**
+ * A data entry table containing word entries
+ */
+export class DataEntryTable extends React.Component<
+
   DataEntryTableProps & LocalizeContextProps,
   DataEntryTableState
 > {
@@ -309,4 +314,4 @@ export class DataEntryTableRewrite extends React.Component<
   }
 }
 
-export default withLocalize(DataEntryTableRewrite);
+export default withLocalize(DataEntryTable);

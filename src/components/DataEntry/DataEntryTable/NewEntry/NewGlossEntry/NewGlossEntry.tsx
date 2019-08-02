@@ -15,6 +15,10 @@ interface NewGlossEntryProps {
   updateGlossField: (newValue: string) => void;
 }
 
+/**
+ * An editable gloss field for new words that indicates whether the gloss
+ * is mispelled
+ */
 export class NewGlossEntry extends React.Component<
   NewGlossEntryProps & LocalizeContextProps
 > {

@@ -144,6 +144,9 @@ function wordsAreEqual(a: Word, b: Word): boolean {
   return areEqual;
 }
 
+/**
+ * Displays a word a user can still make edits to
+ */
 export class ExistingEntry extends React.Component<
   ExistingEntryProps,
   ExistingEntryState

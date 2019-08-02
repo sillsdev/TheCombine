@@ -31,6 +31,9 @@ interface NewEntryState {
   isDuplicate: boolean;
 }
 
+/**
+ * Displays data related to creating a new word entry
+ */
 export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   constructor(props: NewEntryProps) {
     super(props);
