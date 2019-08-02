@@ -8,7 +8,7 @@ import { asyncAddGoalToHistory, AddGoalToHistoryAction } from "../GoalsActions";
 
 export function mapStateToProps(state: StoreState): GoalSwitcherState {
   return {
-    allPossibleGoals: state.goalsState.allPossibleGoals
+    goals: state.goalsState.allPossibleGoals
   };
 }
 

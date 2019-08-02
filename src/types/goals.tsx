@@ -47,7 +47,7 @@ export interface GoalSuggestionsState {
 }
 
 export interface GoalSwitcherState {
-  allPossibleGoals: Goal[];
+  goals: Goal[];
 }
 
 export interface GoalSelectorState {

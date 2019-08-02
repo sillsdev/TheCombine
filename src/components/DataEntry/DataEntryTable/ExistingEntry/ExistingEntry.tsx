@@ -87,7 +87,6 @@ function updateSenses(
   return updatedSenses;
 }
 
-// extract
 /** If the venacular is in the frontier, returns that words id */
 export function vernInFrontier(
   existingWords: Word[],
@@ -121,6 +120,30 @@ export function vernInFrontier(
   return foundDuplicate[0];
 }
 
+export function isADuplicate(
+  existingWords: Word[],
+  entry: Word,
+  value: string
+): boolean {
+  let duplicateId: string = vernInFrontier(existingWords, value);
+  let isDuplicate: boolean = duplicateId !== "";
+  if (duplicateId === entry.id) {
+    isDuplicate = false;
+  }
+  return isDuplicate;
+}
+
+// extract, or remove altogether
+function wordsAreEqual(a: Word, b: Word): boolean {
+  let areEqual: boolean = false;
+
+  areEqual = a.vernacular === b.vernacular;
+  areEqual =
+    areEqual && a.senses[0].glosses[0].def === b.senses[0].glosses[0].def;
+
+  return areEqual;
+}
+
 export class ExistingEntry extends React.Component<
   ExistingEntryProps,
   ExistingEntryState
@@ -128,12 +151,21 @@ export class ExistingEntry extends React.Component<
   constructor(props: ExistingEntryProps) {
     super(props);
 
-    let isDuplicate: boolean = this.isADuplicate(this.props.entry.vernacular);
+    let isDuplicate: boolean = isADuplicate(
+      this.props.existingWords,
+      this.props.entry,
+      this.props.entry.vernacular
+    );
     let duplicateId: string | undefined;
     let duplicateWord: Word | undefined;
     if (isDuplicate) {
-      duplicateId = this.vernInFrontier(this.props.entry.vernacular);
-      duplicateWord = this.getDuplicate(duplicateId);
+      duplicateId = vernInFrontier(
+        this.props.existingWords,
+        this.props.entry.vernacular
+      );
+      duplicateWord = this.props.existingWords.find(
+        word => word.id === duplicateId
+      );
     }
 
     this.state = {
@@ -149,12 +181,21 @@ export class ExistingEntry extends React.Component<
   }
 
   componentDidMount() {
-    let isDuplicate: boolean = this.isADuplicate(this.props.entry.vernacular);
+    let isDuplicate: boolean = isADuplicate(
+      this.props.existingWords,
+      this.props.entry,
+      this.props.entry.vernacular
+    );
     let duplicateId: string | undefined;
     let duplicateWord: Word | undefined;
     if (isDuplicate) {
-      duplicateId = this.vernInFrontier(this.props.entry.vernacular);
-      duplicateWord = this.getDuplicate(duplicateId);
+      duplicateId = vernInFrontier(
+        this.props.existingWords,
+        this.props.entry.vernacular
+      );
+      duplicateWord = this.props.existingWords.find(
+        word => word.id === duplicateId
+      );
     }
 
     this.setState({
@@ -255,22 +296,21 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  // extract
-  isADuplicate(value: string): boolean {
-    let duplicateId: string = this.vernInFrontier(value);
-    let isDuplicate: boolean = duplicateId !== "";
-    if (duplicateId === this.props.entry.id) {
-      isDuplicate = false;
-    }
-    return isDuplicate;
-  }
-
   updateVernField(newValue: string) {
-    let isDuplicate: boolean = this.isADuplicate(newValue);
+    let isDuplicate: boolean = isADuplicate(
+      this.props.existingWords,
+      this.props.entry,
+      newValue
+    );
 
     if (isDuplicate) {
-      let duplicateId: string = this.vernInFrontier(newValue);
-      let duplicateWord: Word = this.getDuplicate(duplicateId);
+      let duplicateId: string = vernInFrontier(
+        this.props.existingWords,
+        newValue
+      );
+      let duplicateWord: Word | undefined = this.props.existingWords.find(
+        word => word.id === duplicateId
+      );
       this.setState({
         isDuplicate: true,
         duplicateId: duplicateId ? duplicateId : undefined,
@@ -287,44 +327,6 @@ export class ExistingEntry extends React.Component<
           ? this.state.displayDuplicates
           : false
     });
-  }
-
-  // extract
-  /** If the venacular is in the frontier, returns that words id */
-  vernInFrontier(vernacular: string): string {
-    let Finder = new DuplicateFinder();
-
-    //[vernacular form, levenshtein distance]
-    // the number defined here sets the upper bound on acceptable scores
-    let foundDuplicate: [string, number] = ["", 2];
-
-    for (let word of this.props.existingWords) {
-      let accessible = false;
-      for (let sense of word.senses) {
-        if (sense.accessibility === 0) {
-          accessible = true;
-          break;
-        }
-      }
-      if (accessible) {
-        let levenD: number = Finder.getLevenshteinDistance(
-          vernacular,
-          word.vernacular
-        );
-        if (levenD < foundDuplicate[1]) {
-          foundDuplicate = [word.id, levenD];
-        }
-      }
-    }
-
-    return foundDuplicate[0];
-  }
-
-  // extract
-  getDuplicate(id: string): Word {
-    let word = this.props.existingWords.find(word => word.id === id);
-    if (!word) throw new Error("No word exists with this id");
-    return word;
   }
 
   isSpelledCorrectly(word: string): boolean {
@@ -344,20 +346,9 @@ export class ExistingEntry extends React.Component<
   }
 
   conditionallyUpdateWord() {
-    if (!this.wordsAreEqual(this.props.entry, this.state.existingEntry)) {
+    if (!wordsAreEqual(this.props.entry, this.state.existingEntry)) {
       this.props.updateWord(this.state.existingEntry);
     }
-  }
-
-  // extract, or remove altogether
-  wordsAreEqual(a: Word, b: Word): boolean {
-    let areEqual: boolean = false;
-
-    areEqual = a.vernacular === b.vernacular;
-    areEqual =
-      areEqual && a.senses[0].glosses[0].def === b.senses[0].glosses[0].def;
-
-    return areEqual;
   }
 
   render() {

@@ -1,18 +1,16 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
-import {
-  Word,
-  Gloss,
-  State,
-  Sense,
-  SemanticDomain
-} from "../../../../types/word";
-import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import { Word, Sense, SemanticDomain } from "../../../../types/word";
 import SpellChecker from "../../spellChecker";
 import NewVernEntry from "./NewVernEntry/NewVernEntry";
 import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
 import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
+import {
+  vernInFrontier,
+  addSenseToWord,
+  addSemanticDomainToSense
+} from "../ExistingEntry/ExistingEntry";
 
 interface NewEntryProps {
   allWords: Word[];
@@ -130,7 +128,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   addNewSense(existingWord: Word, newSense: string) {
-    let updatedWord = this.addSenseToExistingWord(existingWord, newSense);
+    let updatedWord = addSenseToWord(
+      this.props.semanticDomain,
+      existingWord,
+      newSense
+    );
     this.props.updateWord(updatedWord, false);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
@@ -141,7 +143,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   addSemanticDomain(existingWord: Word, sense: Sense, index: number) {
-    let updatedWord = this.addSemanticDomainToSense(existingWord, sense, index);
+    let updatedWord = addSemanticDomainToSense(
+      this.props.semanticDomain,
+      existingWord,
+      sense,
+      index
+    );
     this.props.updateWord(updatedWord, false);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
@@ -149,49 +156,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isDuplicate: false,
       duplicate: undefined
     });
-  }
-
-  addSenseToExistingWord(existingWord: Word, sense: string): Word {
-    let updatedWord = { ...existingWord };
-
-    let newGloss: Gloss = {
-      language: "en",
-      def: sense
-    };
-
-    let newSense: Sense = {
-      glosses: [newGloss],
-      semanticDomains: [this.props.semanticDomain],
-      accessibility: State.active
-    };
-
-    updatedWord.senses.push(newSense); // Fix which sense we are adding to
-    return updatedWord;
-  }
-
-  addSemanticDomainToSense(
-    existingWord: Word,
-    sense: Sense,
-    index: number
-  ): Word {
-    let updatedWord = { ...existingWord };
-
-    let newSense: Sense = {
-      ...sense,
-      semanticDomains: [this.props.semanticDomain]
-    };
-
-    let senses = existingWord.senses;
-    let updatedSenses: Sense[] = this.updateSenses(senses, newSense, index);
-
-    updatedWord.senses = updatedSenses;
-    return updatedWord;
-  }
-
-  updateSenses(senses: Sense[], senseToUpdate: Sense, index: number): Sense[] {
-    let updatedSenses: Sense[] = [...senses];
-    updatedSenses.splice(index, 1, senseToUpdate);
-    return updatedSenses;
   }
 
   updateGlossField(newValue: string) {
@@ -212,52 +176,18 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   updateVernField(newValue: string) {
-    let duplicateId: string = this.vernInFrontier(newValue);
+    let duplicateId: string = vernInFrontier(this.props.allWords, newValue);
     let isDuplicate: boolean = duplicateId !== "";
     this.setState({
       isDuplicate: isDuplicate,
-      duplicate: duplicateId ? this.getDuplicate(duplicateId) : undefined,
+      duplicate: duplicateId
+        ? this.props.allWords.find(word => word.id === duplicateId)
+        : undefined,
       newEntry: {
         ...this.state.newEntry,
         vernacular: newValue
       }
     });
-  }
-
-  /** If the venacular is in the frontier, returns that words id */
-  vernInFrontier(vernacular: string): string {
-    let Finder = new DuplicateFinder();
-
-    //[vernacular form, levenshtein distance]
-    // the number defined here sets the upper bound on acceptable scores
-    let foundDuplicate: [string, number] = ["", 2];
-
-    for (let word of this.props.allWords) {
-      let accessible = false;
-      for (let sense of word.senses) {
-        if (sense.accessibility === 0) {
-          accessible = true;
-          break;
-        }
-      }
-      if (accessible) {
-        let levenD: number = Finder.getLevenshteinDistance(
-          vernacular,
-          word.vernacular
-        );
-        if (levenD < foundDuplicate[1]) {
-          foundDuplicate = [word.id, levenD];
-        }
-      }
-    }
-
-    return foundDuplicate[0];
-  }
-
-  getDuplicate(id: string): Word {
-    let word = this.props.allWords.find(word => word.id === id);
-    if (!word) throw new Error("No word exists with this id");
-    return word;
   }
 
   isSpelledCorrectly(word: string): boolean {
@@ -309,7 +239,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         <Grid
           container
           onKeyDown={e => {
-            if (e.key === "Enter" && this.state.newEntry.vernacular != "") {
+            if (e.key === "Enter" && this.state.newEntry.vernacular !== "") {
               this.props.addNewWord(this.state.newEntry);
               this.focusVernInput();
               this.resetState();
