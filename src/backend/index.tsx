@@ -375,16 +375,18 @@ export async function getLiftUploaded(): Promise<boolean> {
   return resp.data;
 }
 
-export async function addUserRole(role: UserRole) {
-  let resp = await backendServer.post(
-    `projects/${getProjectId()}/userroles`,
-    role,
-    {
-      headers: authHeader()
-    }
+export async function addUserRole(role: UserRole): Promise<User | undefined> {
+  await backendServer.post(`projects/${getProjectId()}/userroles`, role, {
+    headers: authHeader()
+  });
+  let updatedUser: User | undefined = (await getAllUsers()).find(
+    user => user.id === role.id
   );
-  let updatedUser = await getUser(role.id);
-  updatedUser.workedProjects[getProjectId()] = resp.data;
 
-  return await updateUser(updatedUser);
+  // This will need fixed; this is a crash-preventing workaround, but it doesn't have the desired functionality
+  return updatedUser;
+  // if (updatedUser) {
+  //   updatedUser.workedProjects[getProjectId()] = "";
+  //   return await updateUser(updatedUser);
+  // } else return undefined;
 }

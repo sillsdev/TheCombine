@@ -1,15 +1,12 @@
-import UserSettingsComponent, {
-  UserProps,
-  UserWithRole
-} from "./UserSettingsComponent";
+import UserSettingsComponent, { UserWithRole } from "./UserSettingsComponent";
 import { StoreState } from "../../../types";
 import { connect } from "react-redux";
 import {
   ProjectSettingsAction,
   getUsers,
-  addUserToProject,
   removeUserFromProject,
-  addUser
+  addUser,
+  wipeUsers
 } from "../ProjectSettingsActions";
 import { ThunkDispatch } from "redux-thunk";
 import { UserRole } from "../../../types/userRole";
@@ -28,8 +25,12 @@ function mapDispatchToProps(
     getUsers: () => dispatch(getUsers()),
     addUserToProject: (userRole: UserRole, role: string) =>
       dispatch(addUser(userRole, role)),
-    removeUserFromProject: (removeUser: UserWithRole) =>
-      dispatch(removeUserFromProject(removeUser))
+    removeUserFromProject: (removeUser: UserWithRole) => {
+      dispatch(removeUserFromProject(removeUser));
+    },
+    resetUsers: () => {
+      dispatch(wipeUsers());
+    }
   };
 }
 

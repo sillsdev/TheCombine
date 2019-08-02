@@ -43,8 +43,9 @@ export interface UserProps {
   users: UserWithRole[];
   otherUsers: UserWithRole[];
   getUsers: () => Promise<void>;
-  addUserToProject: (userRole: UserRole, role: string) => void;
+  addUserToProject: (userRole: UserRole, role: string) => Promise<void>;
   removeUserFromProject: (removeUser: UserWithRole) => void;
+  resetUsers: () => void;
 }
 
 interface UserState {
@@ -87,8 +88,12 @@ class UserSettingsComponent extends React.Component<
     };
   }
 
-  async componentWillMount() {
+  componentWillMount() {
     this.props.getUsers();
+  }
+
+  componentWillUnmount() {
+    this.props.resetUsers();
   }
 
   private selectUser(userToAdd: User) {
@@ -181,7 +186,7 @@ class UserSettingsComponent extends React.Component<
             component="span"
             disabled={!this.state.rolesToAdd}
             onClick={() => {
-              if (this.state.userToAdd && this.state.rolesToAdd)
+              if (this.state.userToAdd && this.state.rolesToAdd) {
                 this.props.addUserToProject(
                   {
                     id: this.state.userToAdd.id,
@@ -190,6 +195,8 @@ class UserSettingsComponent extends React.Component<
                   },
                   this.getRoleName(this.state.rolesToAdd.permissions)
                 );
+                this.close();
+              }
             }}
           >
             <Translate id="settings.user.confirmUser" />

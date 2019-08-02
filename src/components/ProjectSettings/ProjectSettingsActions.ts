@@ -50,7 +50,7 @@ export function getUsers() {
       })
     );
     let otherUsers: UserWithRole[] = (await backend.getAllUsers())
-      .filter((user: User) => users.find(check => user.id !== check.id))
+      .filter(user => !users.find(check => user.id === check.id))
       .map((user: User) => ({
         ...user,
         role: "a role"
@@ -65,7 +65,7 @@ export function addUser(userRole: UserRole, role: string) {
     dispatch: ThunkDispatch<StoreState, any, ProjectSettingsAction>
   ) => {
     backend.addUserRole(userRole).then(value => {
-      dispatch(addUserToProject({ ...value, role }));
+      if (value) dispatch(addUserToProject({ ...value, role }));
     });
   };
 }

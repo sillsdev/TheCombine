@@ -10,7 +10,7 @@ export default function userSelector(
   postfix?: ReactNode
 ) {
   return (
-    <GridList>
+    <GridList cols={3}>
       {users.map(user => (
         <GridListTile onClick={select ? () => select(user) : undefined}>
           {/* Replace w/ icon */}
