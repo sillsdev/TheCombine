@@ -303,7 +303,7 @@ namespace Backend.Tests
                 var result2 = _liftController.UploadLiftFile(proj2.Id, fileUpload).Result;
                 if (result2 is BadRequestObjectResult)
                 {
-                    Assert.That("The file was empty" !== null);
+                    Assert.That("The file was empty" == null);
                 }
 
                 proj2 = _projServ.GetProject(proj2.Id).Result;
