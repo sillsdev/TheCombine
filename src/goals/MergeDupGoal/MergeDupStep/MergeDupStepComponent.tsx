@@ -83,9 +83,16 @@ class MergeDupStep extends React.Component<
       ...this.state,
       sideBar: { senses: [], wordID: "", senseID: "" }
     });
+    if (this.props.refreshWords) this.props.refreshWords();
+  }
+  saveContinue() {
+    this.setState({
+      ...this.state,
+      sideBar: { senses: [], wordID: "", senseID: "" }
+    });
     if (this.props.mergeAll) {
       this.props.mergeAll().then(() => {
-        if (this.props.refreshWords) this.props.refreshWords();
+        this.next();
       });
     }
   }
@@ -293,11 +300,22 @@ class MergeDupStep extends React.Component<
           }}
         >
           <Button
-            style={{ float: "right", marginRight: 30 }}
-            onClick={_ => this.next()}
+            style={{
+              background: theme.palette.primary.main,
+              float: "right",
+              marginRight: 30
+            }}
+            onClick={_ => this.saveContinue()}
             title={this.props.translate("mergeDups.helpText.next") as string}
           >
             <Translate id="goal.mergeDups.done" />
+          </Button>
+          <Button
+            style={{ float: "right", marginRight: 30 }}
+            onClick={_ => this.next()}
+            title={this.props.translate("mergeDups.helpText.skip") as string}
+          >
+            <Translate id="goal.mergeDups.skip" />
           </Button>
         </Paper>
       </Box>

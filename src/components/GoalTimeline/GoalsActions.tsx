@@ -153,7 +153,6 @@ export function loadGoalData(goal: Goal) {
         let blacklist: Hash<boolean> = JSON.parse(localStorage.getItem("mergedups_blacklist") || "{}")
 
         for (let group of groups) {
-          if (newGroups.length > 8) break;
           let newGroup = [];
           for (let word of group) {
             if (!usedIDs.includes(word.id)) {
@@ -163,10 +162,14 @@ export function loadGoalData(goal: Goal) {
           }
           // check blacklist
           let groupIds = newGroup.map(a => a.id).sort();
-          let groupHash = groupIds.reduce((val, acc) => `${acc}:${val}`);
+          let groupHash = groupIds.reduce((val, acc) => `${acc}:${val}`, "");
           if (!blacklist[groupHash] && newGroup.length > 0){
             newGroups.push(newGroup);
           }
+        }
+
+        if (newGroups.length >= 8){
+          newGroups = newGroups.slice(0, 8);
         }
 
         goal.data = { plannedWords: newGroups };
