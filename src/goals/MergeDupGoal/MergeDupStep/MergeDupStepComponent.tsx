@@ -252,8 +252,6 @@ class MergeDupStep extends React.Component<
         {/* Merging pane */}
         <div
           style={{
-            ...HEIGHT_STYLE,
-            overflow: "hidden",
             background: "#eee",
             padding: 8
           }}
@@ -261,12 +259,13 @@ class MergeDupStep extends React.Component<
           <GridList
             cellHeight="auto"
             style={{
-              flexWrap: "nowrap"
+              flexWrap: "nowrap",
+              overflow: "auto",
             }}
           >
             <DragDropContext onDragEnd={res => this.handleDrop(res)}>
               {Object.keys(this.props.words).map(key => (
-                <GridListTile key={key} style={{ margin: 8 }}>
+                <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
                   <MergeRow
                     sideBar={this.state.sideBar}
                     setSidebar={el =>
@@ -299,7 +298,7 @@ class MergeDupStep extends React.Component<
             zIndex: theme.zIndex.drawer
           }}
         >
-        <Button
+          <Button
             color="primary"
             variant="contained"
             style={{
