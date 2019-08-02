@@ -25,7 +25,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all words in a project's frontier </summary>
-        /// <remarks> GET: v1/project/{projectId}/words/frontier </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/words/frontier </remarks>
         [HttpGet]
         public async Task<IActionResult> GetFrontier(string projectId)
         {
@@ -45,7 +45,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Adds word to a project's frontier </summary>
-        /// <remarks> POST: v1/project/{projectId}/words/frontier </remarks>
+        /// <remarks> POST: v1/projects/{projectId}/words/frontier </remarks>
         /// <returns> Id of word created </returns>
         [HttpPost]
         public async Task<IActionResult> PostFrontier(string projectId, [FromBody]Word word)
@@ -72,7 +72,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Deletes all words in a project's frontier </summary>
-        /// <remarks> DELETE: v1/project/{projectId}/words/frontier/{wordId} </remarks>
+        /// <remarks> DELETE: v1/projects/{projectId}/words/frontier/{wordId} </remarks>
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> DeleteFrontier(string projectId, string wordId)
         {
