@@ -25,10 +25,10 @@ namespace BackendFramework.Controllers
 
         /// <summary> Returns all <see cref="User"/>s </summary>
         /// <remarks> GET: v1/users </remarks>
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("/projectId")]
+        public async Task<IActionResult> GetUsersProject(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
             {
                 return new UnauthorizedResult();
             }

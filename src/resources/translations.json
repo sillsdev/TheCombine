@@ -96,7 +96,8 @@
       "done": ["Done!", "Completado!"]
     },
     "user": {
-      "header": ["Users", "Usarios"]
+      "header": ["Users", "Usarios"],
+      "addUser": ["Add a user", "Añadir un usario"]
     }
   },
   "goal": {

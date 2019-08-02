@@ -136,7 +136,9 @@ export async function authenticateUser(
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  let resp = await backendServer.get(`users`, { headers: authHeader() });
+  let resp = await backendServer.get(`users/${getProjectId()}`, {
+    headers: authHeader()
+  });
   return resp.data;
 }
 
@@ -368,4 +370,18 @@ export async function getLiftUploaded(): Promise<boolean> {
     headers: authHeader()
   });
   return resp.data;
+}
+
+export async function addUserRole(role: UserRole) {
+  let resp = await backendServer.post(
+    `projects/${getProjectId()}/userroles`,
+    role,
+    {
+      headers: authHeader()
+    }
+  );
+  let updatedUser = await getUser(role.id);
+  updatedUser.workedProjects[getProjectId()] = resp.data;
+
+  return await updateUser(updatedUser);
 }
