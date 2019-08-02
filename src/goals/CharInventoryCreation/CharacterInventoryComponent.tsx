@@ -42,6 +42,9 @@ interface CharacterInventoryState {
   cancelDialogOpen: boolean;
 }
 
+/**
+ * Allows users to define a character inventory for a project
+ */
 export class CharacterInventory extends React.Component<
   CharacterInventoryProps & LocalizeContextProps,
   CharacterInventoryState

@@ -8,7 +8,6 @@ import {
   Grid,
   Chip
 } from "@material-ui/core";
-import { uuid } from "../../../../utilities";
 import { ArrowForwardIos } from "@material-ui/icons";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
@@ -16,10 +15,7 @@ import { SideBar } from "../MergeDupStepComponent";
 
 //interface for component props
 export interface MergeStackProps {
-  dropWord?: () => void;
-  dragWord?: (ref: MergeTreeReference) => void;
   moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
-  draggedWord?: MergeTreeReference;
   wordID: string;
   senseID: string;
   sense: Hash<string>;
@@ -51,18 +47,6 @@ class MergeStack extends React.Component<
   constructor(props: MergeStackProps & LocalizeContextProps) {
     super(props);
     this.state = { duplicateCount: 1, expanded: false };
-  }
-
-  dragDrop(event: React.DragEvent<HTMLElement>) {
-    event.preventDefault();
-    if (this.props.draggedWord && this.props.moveSense) {
-      let ref = {
-        word: this.props.wordID,
-        sense: this.props.senseID,
-        duplicate: uuid()
-      };
-      this.props.moveSense(this.props.draggedWord, ref);
-    }
   }
 
   expand() {
