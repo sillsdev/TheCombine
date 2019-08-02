@@ -51,7 +51,7 @@ class ChooseProject extends React.Component<
       <div className="ChooseProject">
         <Grid container justify="center" spacing={2}>
           <Grid item>
-            <Card style={{ width: 450 }}>
+            <Card style={{ width: "45vw" }}>
               <CardContent>
                 {/* Title */}
                 <Typography variant="h5" align="center" gutterBottom>

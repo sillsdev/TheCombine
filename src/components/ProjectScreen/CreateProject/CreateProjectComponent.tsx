@@ -85,7 +85,7 @@ class CreateProject extends React.Component<
     //visual definition
     return (
       <div className="CreateProject">
-        <Card style={{ width: 450 }}>
+        <Card style={{ width: "45vw" }}>
           <form onSubmit={e => this.createProject(e)}>
             <CardContent>
               {/* Title */}
