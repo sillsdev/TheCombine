@@ -4,7 +4,7 @@
 
 **Method** : `GET`
 
-**Auth required** :
+**Auth required** : Project Admin
 
 ## Success response
 

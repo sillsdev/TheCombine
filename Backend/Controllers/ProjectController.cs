@@ -65,14 +65,14 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
+#if DEBUG
             if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
-#if DEBUG
             return new ObjectResult(await _projectService.DeleteAllProjects());
 #else
-            return new UnauthorizedResult();
+            return new NotFoundResult();
 #endif
         }
 
@@ -85,6 +85,7 @@ namespace BackendFramework.Controllers
             {
                 return new UnauthorizedResult();
             }
+
             var project = await _projectService.GetProject(projectId);
             if (project == null)
             {
@@ -125,9 +126,7 @@ namespace BackendFramework.Controllers
             currentUser = await _userService.MakeJWT(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
-            var output = new ProjectWithUser(project);
-
-            output.__UpdatedUser = currentUser;
+            var output = new ProjectWithUser(project) { __UpdatedUser = currentUser };
 
             return new OkObjectResult(output);
         }
@@ -195,14 +194,10 @@ namespace BackendFramework.Controllers
 
         /// <summary> UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/> </summary>
         /// <remarks> GET: v1/projects/{projectId}/semanticdomains </remarks>
+        [AllowAnonymous]
         [HttpGet("{projectId}/semanticdomains")]
         public async Task<IActionResult> GetSemDoms(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
-            {
-                return new UnauthorizedResult();
-            }
-
             try
             {
                 var result = await _semDomParser.ParseSemanticDomains(projectId);
@@ -235,9 +230,20 @@ namespace BackendFramework.Controllers
             var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
             userRole.Permissions = permissions;
 
-            await _userRoleService.Update(userRoleId, userRole);
+            var result = await _userRoleService.Update(userRoleId, userRole);
 
-            return new OkObjectResult(userRole);
+            if (result == ResultOfUpdate.NotFound)
+            {
+                return new NotFoundObjectResult(userId);
+            }
+            else if (result == ResultOfUpdate.Updated)
+            {
+                return new OkObjectResult(userId);
+            }
+            else
+            {
+                return new StatusCodeResult(304);
+            }
         }
 
     }

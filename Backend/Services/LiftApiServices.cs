@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Xml;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
@@ -21,7 +23,7 @@ namespace BackendFramework.Services
     /// <summary> Extension of <see cref="LiftWriter"/> to add audio pronunciation </summary>
     public class CombineLiftWriter : LiftWriter
     {
-        public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle) {}
+        public CombineLiftWriter(string path, ByteOrderStyle byteOrderStyle) : base(path, byteOrderStyle) { }
 
         /// <summary> Overrides empty function from the base SIL LiftWriter to properly add pronunciation </summary>
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
@@ -29,17 +31,17 @@ namespace BackendFramework.Services
             if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
             {
                 Writer.WriteStartElement("pronunciation");
-                Writer.WriteStartElement("media");
 
-                foreach (var pro in entry.Pronunciations)
+                for (var i = 0; i < entry.Pronunciations.Count; i++)
                 {
-                    Writer.WriteAttributeString("href", entry.Pronunciations.First().Forms.First().Form);
+                    Writer.WriteStartElement("media");
+                    Writer.WriteAttributeString("href", Path.GetFileName(entry.Pronunciations[i].Forms.First().Form));
+                    Writer.WriteEndElement();
                 }
 
                 //makes sure the writer does not write it again in the wrong format
                 entry.Pronunciations.Clear();
 
-                Writer.WriteEndElement();
                 Writer.WriteEndElement();
             }
         }
@@ -91,27 +93,39 @@ namespace BackendFramework.Services
             }
         }
 
+        private string GetProjectDir(string projectId)
+        {
+            //generate path to home on linux
+            var pathToHome = Environment.GetEnvironmentVariable("HOME");
+
+            //generate home on windows
+            if (pathToHome == null)
+            {
+                pathToHome = Environment.GetEnvironmentVariable("UserProfile");
+            }
+
+            return Path.Combine(pathToHome, ".CombineFiles", projectId);
+        }
+
         /// <summary> Exports information from a project to a lift package zip </summary>
-        public void LiftExport(string projectId)
+        public string LiftExport(string projectId)
         {
             //the helper tag must be included because there are also SIL.Utilitites
             Helper.Utilities util = new Helper.Utilities();
 
             //generate the zip dir
-            string projectDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", projectId);
-            string exportDir = Path.Combine(projectDir, "Export");
-            string zipDir = Path.Combine(exportDir, "LiftExport");
+            string exportDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Export"));
+            string zipDir = Path.Combine(exportDir, "LiftExport", "Lift");
             Directory.CreateDirectory(zipDir);
 
             //add audio dir inside zip dir
-            string audioDir = Path.Combine(zipDir, "Audio");
+            string audioDir = Path.Combine(zipDir, "audio");
             Directory.CreateDirectory(audioDir);
             string liftPath = Path.Combine(zipDir, "NewLiftFile.lift");
 
             CombineLiftWriter liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
             string rangesDest = Path.Combine(zipDir, "NewLiftFile.lift-ranges");
 
-            //TODO: generate header automatically
             //write header of lift document
             string header =
                 $@"
@@ -129,7 +143,10 @@ namespace BackendFramework.Services
 
             //write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
-            foreach (Word wordEntry in allWords)
+            var frontier = _repo.GetFrontier(projectId).Result;
+            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.active).ToList();
+            var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();//TODO: this is wrong, deleted is a subset of active, are not exclusive
+            foreach (Word wordEntry in activeWords)
             {
                 LexEntry entry = new LexEntry();
 
@@ -139,13 +156,27 @@ namespace BackendFramework.Services
 
                 liftWriter.Add(entry);
             }
+            foreach (Word wordEntry in deletedWords)
+            {
+                LexEntry entry = new LexEntry();
+
+                AddVern(entry, wordEntry, projectId);
+                AddSenses(entry, wordEntry);
+                AddAudio(entry, wordEntry, audioDir);
+
+                liftWriter.AddDeletedEntry(entry);
+            }
 
             liftWriter.End();
 
             //export semantic domains to lift-ranges
             var proj = _projService.GetProject(projectId).Result;
-            string extractedPathToImport = Path.Combine(projectDir, "Import", "ExtractedLocation");
-            var importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
+            string extractedPathToImport = Path.Combine(GetProjectDir(projectId), "Import", "ExtractedLocation");
+            string importLiftDir = "";
+            if (Directory.Exists(extractedPathToImport))
+            {
+                importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
+            }
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
             //if there are no new semantic domains, and the old lift-ranges file is still around, just copy it
@@ -162,12 +193,19 @@ namespace BackendFramework.Services
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
                 //pull from resources file with all English semantic domains
-                var sdLines = Properties.Resources.sdList.Split("\n");
+                var assembly = typeof(LiftService).GetTypeInfo().Assembly;
+                Stream resource = assembly.GetManifestResourceStream("BackendFramework.Data.sdList.txt");
+                string sdList;
+                using (var reader = new StreamReader(resource, Encoding.UTF8))
+                {
+                    sdList = reader.ReadToEndAsync().Result;
+                }
+                var sdLines = sdList.Split(Environment.NewLine);
                 foreach (var line in sdLines)
                 {
                     if (line != "")
                     {
-                        string[] items = line.Split("\\");
+                        string[] items = line.Split("`");
                         WriteRangeElement(liftRangesWriter, items[0], items[1], items[2], items[3]);
                     }
                 }
@@ -190,10 +228,15 @@ namespace BackendFramework.Services
             //export character set to ldml
             string ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+            if (proj.VernacularWritingSystem != "")
+            {
+                LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+            }
 
             //compress everything
-            ZipFile.CreateFromDirectory(zipDir, Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
+            ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), Path.Combine(exportDir, Path.Combine("LiftExportCompressed-" + proj.Id + ".zip")));
+
+            return exportDir;
         }
 
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
@@ -238,7 +281,12 @@ namespace BackendFramework.Services
                 LexPhonetic lexPhonetic = new LexPhonetic();
 
                 Helper.Utilities util = new Helper.Utilities();
-                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), audioFile);
+                
+                var projectPath = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", "") , _projectId);
+                projectPath = Path.Combine(projectPath, "Import", "ExtractedLocation");
+                var extractedDir = Directory.GetDirectories(projectPath);
+                projectPath = Path.Combine(projectPath, extractedDir.Single());
+                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), Path.Combine(projectPath, "audio", audioFile));
 
                 string dest = Path.Combine(path, audioFile);
 
@@ -428,23 +476,7 @@ namespace BackendFramework.Services
                 {
                     //get path to audio file in lift package at ~/{projectId}/Import/ExtractedLocation/{liftName}/audio/{audioFile}.mp3
                     var audioFile = pro.Media.First().Url;
-                    var extractedAudioMp3 = Path.Combine(extractedAudioDir, audioFile);
-
-                    //move mp3 to audio folder at ~/{projectId}/Import/Audio/{audioFile}.mp3
-                    var audioFolder = Path.Combine(importDir, "Audio");
-                    Directory.CreateDirectory(audioFolder);
-                    var audioDest = Path.Combine(audioFolder, audioFile);
-
-                    //if there are duplicate filenames then add a (number) like windows does to the end of it
-                    var filename = Path.GetFileNameWithoutExtension(audioDest);
-                    int filecount = 1;
-                    while (File.Exists(audioDest))
-                    {
-                        audioDest = Path.Combine(audioFolder, filename + "(" + filecount++ + ")" + ".mp3");
-                    }
-                    File.Copy(extractedAudioMp3, audioDest);
-
-                    //add file name to word's audio files
+                   
                     newWord.Audio.Add(audioFile);
                 }
             }
