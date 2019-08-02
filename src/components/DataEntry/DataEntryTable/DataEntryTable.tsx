@@ -31,6 +31,25 @@ interface DataEntryTableState {
   displaySpellingSuggestionsIndex?: number;
 }
 
+// MAYBE DELETE
+/** Filter out words that do not have correct accessibility */
+function filterWords(words: Word[]): Word[] {
+  let filteredWords: Word[] = [];
+  for (let word of words) {
+    let shouldInclude = true;
+    for (let sense of word.senses) {
+      if (sense.accessibility !== State.active) {
+        shouldInclude = false;
+        break;
+      }
+    }
+    if (shouldInclude) {
+      filteredWords.push(word);
+    }
+  }
+  return filteredWords;
+}
+
 export class DataEntryTableRewrite extends React.Component<
   DataEntryTableProps & LocalizeContextProps,
   DataEntryTableState
@@ -61,7 +80,7 @@ export class DataEntryTableRewrite extends React.Component<
   }
 
   async addNewWord(wordToAdd: Word) {
-    let updatedWord = await this.addWordToBackend(wordToAdd);
+    let updatedWord = await Backend.createWord(wordToAdd);
     let updatedNewWords = [...this.state.recentlyAddedWords];
     updatedNewWords.push({ word: updatedWord, mutable: true });
     let words: Word[] = await this.getWordsFromBackend();
@@ -71,34 +90,10 @@ export class DataEntryTableRewrite extends React.Component<
     });
   }
 
-  async addWordToBackend(word: Word): Promise<Word> {
-    let updatedWord = await Backend.createWord(word);
-    return updatedWord;
-  }
-
   async getWordsFromBackend(): Promise<Word[]> {
     let words = await Backend.getFrontierWords();
-    words = this.filterWords(words);
+    words = filterWords(words);
     return words;
-  }
-
-  // MAYBE DELETE
-  /** Filter out words that do not have correct accessibility */
-  filterWords(words: Word[]): Word[] {
-    let filteredWords: Word[] = [];
-    for (let word of words) {
-      let shouldInclude = true;
-      for (let sense of word.senses) {
-        if (sense.accessibility !== State.active) {
-          shouldInclude = false;
-          break;
-        }
-      }
-      if (shouldInclude) {
-        filteredWords.push(word);
-      }
-    }
-    return filteredWords;
   }
 
   /** Update the word in the backend and the frontend */

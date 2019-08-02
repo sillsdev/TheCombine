@@ -36,6 +36,91 @@ interface ExistingEntryState {
   hovering: boolean;
 }
 
+export function addSenseToWord(
+  semanticDomain: SemanticDomain,
+  existingWord: Word,
+  gloss: string
+): Word {
+  let updatedWord = { ...existingWord };
+
+  let newGloss: Gloss = {
+    language: "en",
+    def: gloss
+  };
+
+  let newSense: Sense = {
+    glosses: [newGloss],
+    semanticDomains: [semanticDomain],
+    accessibility: State.active
+  };
+
+  updatedWord.senses.push(newSense); // Fix which sense we are adding to
+  return updatedWord;
+}
+
+export function addSemanticDomainToSense(
+  semanticDomain: SemanticDomain,
+  existingWord: Word,
+  sense: Sense,
+  index: number
+): Word {
+  let updatedWord = { ...existingWord };
+  let newSense: Sense = {
+    ...sense,
+    semanticDomains: [...sense.semanticDomains, semanticDomain]
+  };
+
+  let senses = existingWord.senses;
+  let updatedSenses: Sense[] = updateSenses(senses, newSense, index);
+
+  updatedWord.senses = updatedSenses;
+  return updatedWord;
+}
+
+function updateSenses(
+  senses: Sense[],
+  senseToUpdate: Sense,
+  index: number
+): Sense[] {
+  let updatedSenses: Sense[] = [...senses];
+  updatedSenses.splice(index, 1, senseToUpdate);
+  return updatedSenses;
+}
+
+// extract
+/** If the venacular is in the frontier, returns that words id */
+export function vernInFrontier(
+  existingWords: Word[],
+  vernacular: string
+): string {
+  let Finder = new DuplicateFinder();
+
+  //[vernacular form, levenshtein distance]
+  // the number defined here sets the upper bound on acceptable scores
+  let foundDuplicate: [string, number] = ["", 2];
+
+  for (let word of existingWords) {
+    let accessible = false;
+    for (let sense of word.senses) {
+      if (sense.accessibility === 0) {
+        accessible = true;
+        break;
+      }
+    }
+    if (accessible) {
+      let levenD: number = Finder.getLevenshteinDistance(
+        vernacular,
+        word.vernacular
+      );
+      if (levenD < foundDuplicate[1]) {
+        foundDuplicate = [word.id, levenD];
+      }
+    }
+  }
+
+  return foundDuplicate[0];
+}
+
 export class ExistingEntry extends React.Component<
   ExistingEntryProps,
   ExistingEntryState
@@ -114,7 +199,11 @@ export class ExistingEntry extends React.Component<
   }
 
   addNewSense(existingWord: Word, newSense: string) {
-    let updatedWord = this.addSenseToExistingWord(existingWord, newSense);
+    let updatedWord = addSenseToWord(
+      this.props.semanticDomain,
+      existingWord,
+      newSense
+    );
     if (!this.state.duplicate) {
       return;
     }
@@ -129,7 +218,12 @@ export class ExistingEntry extends React.Component<
   }
 
   addSemanticDomain(existingWord: Word, sense: Sense, index: number) {
-    let updatedWord = this.addSemanticDomainToSense(existingWord, sense, index);
+    let updatedWord = addSemanticDomainToSense(
+      this.props.semanticDomain,
+      existingWord,
+      sense,
+      index
+    );
     if (!this.state.duplicate) {
       return;
     }
@@ -141,48 +235,6 @@ export class ExistingEntry extends React.Component<
       duplicate: undefined,
       duplicateId: undefined
     });
-  }
-
-  addSenseToExistingWord(existingWord: Word, gloss: string): Word {
-    let updatedWord = { ...existingWord };
-
-    let newGloss: Gloss = {
-      language: "en",
-      def: gloss
-    };
-
-    let newSense: Sense = {
-      glosses: [newGloss],
-      semanticDomains: [this.props.semanticDomain],
-      accessibility: State.active
-    };
-
-    updatedWord.senses.push(newSense); // Fix which sense we are adding to
-    return updatedWord;
-  }
-
-  addSemanticDomainToSense(
-    existingWord: Word,
-    sense: Sense,
-    index: number
-  ): Word {
-    let updatedWord = { ...existingWord };
-    let newSense: Sense = {
-      ...sense,
-      semanticDomains: [...sense.semanticDomains, this.props.semanticDomain]
-    };
-
-    let senses = existingWord.senses;
-    let updatedSenses: Sense[] = this.updateSenses(senses, newSense, index);
-
-    updatedWord.senses = updatedSenses;
-    return updatedWord;
-  }
-
-  updateSenses(senses: Sense[], senseToUpdate: Sense, index: number): Sense[] {
-    let updatedSenses: Sense[] = [...senses];
-    updatedSenses.splice(index, 1, senseToUpdate);
-    return updatedSenses;
   }
 
   updateGlossField(newValue: string) {
@@ -203,6 +255,7 @@ export class ExistingEntry extends React.Component<
     });
   }
 
+  // extract
   isADuplicate(value: string): boolean {
     let duplicateId: string = this.vernInFrontier(value);
     let isDuplicate: boolean = duplicateId !== "";
@@ -236,6 +289,7 @@ export class ExistingEntry extends React.Component<
     });
   }
 
+  // extract
   /** If the venacular is in the frontier, returns that words id */
   vernInFrontier(vernacular: string): string {
     let Finder = new DuplicateFinder();
@@ -266,6 +320,7 @@ export class ExistingEntry extends React.Component<
     return foundDuplicate[0];
   }
 
+  // extract
   getDuplicate(id: string): Word {
     let word = this.props.existingWords.find(word => word.id === id);
     if (!word) throw new Error("No word exists with this id");
@@ -294,6 +349,7 @@ export class ExistingEntry extends React.Component<
     }
   }
 
+  // extract, or remove altogether
   wordsAreEqual(a: Word, b: Word): boolean {
     let areEqual: boolean = false;
 

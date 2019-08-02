@@ -1,14 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import DataEntryTable from "../DataEntryTable";
-import SemanticDomain from "../../../TreeView/SemanticDomain";
 import { mockDomainTree } from "../../tests/MockDomainTree";
+import { SemanticDomain } from "../../../../types/word";
 
-const mockSemanticDomain: SemanticDomain = {
+export const mockSemanticDomain: SemanticDomain = {
   name: "",
-  id: "",
-  description: "",
-  subdomains: []
+  id: ""
 };
 
 describe("Tests DataEntryTable", () => {
