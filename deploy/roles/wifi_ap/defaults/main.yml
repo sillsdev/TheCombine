@@ -3,3 +3,5 @@
 ap_ssid: "{{ansible_hostname}}_ap"
 ap_passphrase: ***REMOVED***
 ap_gateway: "10.10.0.1"
+ap_domain: thewordcombine.local
+ap_hostname: nuc.thewordcombine.local

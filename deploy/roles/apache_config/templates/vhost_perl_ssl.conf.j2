@@ -1,0 +1,75 @@
+{% for host in item.virtual_hosts %}
+<VirtualHost *:{{ host.port | default('80') }}>
+    ServerName {{ item.server_name }}
+{% if host.server_alias is defined %}    ServerAlias {{ host.server_alias | join(' ') }}
+{% endif %}
+{% if item.server_admin is defined %}    ServerAdmin {{ item.server_admin }}
+{% endif %}
+
+{% if host.has_ssl %}
+    SSLEngine On
+    SSLCertificateFile {{host.ssl_path | default(apache_ssl_path)}}/{{host.certificate_file}}
+    SSLCertificateKeyFile {{host.ssl_path | default(apache_ssl_path)}}/{{host.key_file}}
+{% if host.chain_file is defined %}    SSLCertificateChainFile {{host.ssl_path | default(apache_ssl_path)}}/{{ host.chain_file }}
+{% endif %}
+    
+{% endif %}
+    DocumentRoot {{ item.document_root }}
+{% if host.extra is defined %}
+
+{% for extra in host.extra %}
+    {{ extra }}
+{% endfor %}
+{% endif %}
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    <Directory "{{ item.document_root }}">
+{% if item.directory_options is defined %}
+        Options {{ host.directory_options | join(' ') }}
+{% else %}
+        Options -Indexes +FollowSymLinks
+{% endif %}
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+{% if host.directory_extra is defined %}{% for extra in host.directory_extra %}
+        {{ extra }}
+{% endfor %}{% endif %}
+    </Directory>
+{% if host.has_cgi | default(false) %}
+
+    <Directory "{{ item.document_root }}/cgi-bin">
+        AllowOverride All
+        Options ExecCGI
+        Order allow,deny
+        Allow from all
+    </Directory>
+{% endif %}
+
+{% if host.auth_location %}
+    <Location {{host.auth_location.location}}>
+        AuthType "{{ host.auth_location.auth_type }}"
+        AuthName "{{ host.auth_location.auth_name }}"
+
+{% if host.auth_location.extra is defined %}{% for extra in host.auth_location.extra %}
+        {{ extra }}
+{% endfor %}{% endif %}
+
+        Require valid-user
+
+    </Location>
+{% endif %}
+    
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
+
+    ErrorLog ${APACHE_LOG_DIR}/{{item.server_file_name}}_error.log
+    CustomLog ${APACHE_LOG_DIR}/{{item.server_file_name}}_access.log combined
+
+</VirtualHost>
+{% endfor %}
