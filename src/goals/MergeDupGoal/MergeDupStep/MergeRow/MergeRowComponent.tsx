@@ -14,10 +14,8 @@ import { SideBar } from "../MergeDupStepComponent";
 
 //interface for component props
 export interface MergeRowProps {
-  draggedWord?: MergeTreeReference;
   setVern: (wordID: string, vern: string) => void;
   wordID: string;
-  dropWord?: () => void;
   moveSense?: (src: MergeTreeReference, dest: MergeTreeReference) => void;
   words: Hash<MergeTreeWord>;
   data: MergeData;
