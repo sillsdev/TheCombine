@@ -20,6 +20,10 @@ interface CharacterEntryState {
   checked: boolean;
 }
 
+/**
+ * Allows for viewing and entering accepted and rejected characters in a
+ * character set
+ */
 export class CharacterEntry extends React.Component<
   CharacterEntryProps & LocalizeContextProps,
   CharacterEntryState

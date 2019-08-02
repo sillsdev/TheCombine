@@ -36,6 +36,9 @@ interface ExistingEntryState {
   hovering: boolean;
 }
 
+/**
+ * Displays a word a user can still make edits to
+ */
 export class ExistingEntry extends React.Component<
   ExistingEntryProps,
   ExistingEntryState

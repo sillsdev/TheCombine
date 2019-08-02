@@ -5,6 +5,7 @@ import AppBarComponent from "../AppBar/AppBarComponent";
 import ChooseProjectComponent from "./ChooseProject";
 import CreateProjectComponent from "./CreateProject";
 
+/** Where users create a project or choose an existing one */
 export default class ProjectScreen extends React.Component {
   render() {
     //visual definition
