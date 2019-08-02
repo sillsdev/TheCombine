@@ -37,7 +37,8 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(currentUser.Id);
            }
 
-           return new OkObjectResult(currentUser.Avatar);
+            var image = System.IO.File.OpenRead(currentUser.Avatar);
+            return File(image, "image/jpeg");
         }
 
 

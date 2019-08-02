@@ -1,12 +1,12 @@
-# Update a project
+# Update UserRole of user on a project
 
-**URL** : `/v1/projects/{projectId}`
+**URL** : `/v1/projects/{projectId}/users/{userId}`
 
 **Method** : `PUT`
 
 **Auth required** : Project Admin
 
-**Data type** : [`Project`](project.md)
+**Data type** : `int[]`
 
 ## Success response
 

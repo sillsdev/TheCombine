@@ -54,11 +54,12 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
+#if DEBUG
             if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
             {
                 return new UnauthorizedResult();
             }
-#if DEBUG
+
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
@@ -68,7 +69,7 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(await _wordRepo.DeleteAllWords(projectId));
 #else
-            return new UnauthorizedResult();
+            return new NotFoundResult();
 #endif
         }
 
