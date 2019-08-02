@@ -35,7 +35,7 @@ namespace BackendFramework.Services
                 for (var i = 0; i < entry.Pronunciations.Count; i++)
                 {
                     Writer.WriteStartElement("media");
-                    Writer.WriteAttributeString("href", Path.GetFileName(entry.Pronunciations[pro].Forms.First().Form));
+                    Writer.WriteAttributeString("href", Path.GetFileName(entry.Pronunciations[i].Forms.First().Form));
                     Writer.WriteEndElement();
                 }
 
