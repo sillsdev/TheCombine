@@ -250,10 +250,8 @@ namespace Backend.Tests
 
                     //make api call
                     var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
-                    if (result is BadRequestObjectResult)
-                    {
-                        Assert.That(!(result is BadRequestObjectResult));
-                    }
+
+                    Assert.That(!(result is BadRequestObjectResult));
 
                     proj = _projServ.GetProject(proj.Id).Result;
 
@@ -267,10 +265,10 @@ namespace Backend.Tests
 
                 //Assert the file was created with desired heirarchy
                 Assert.That(Directory.Exists(exportedFilepath));
-                Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio")));
+                Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "audio")));
                 foreach (var audioFile in dataSet.Value.audioFiles)
                 {
-                    Assert.That(File.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "Audio", audioFile)));
+                    Assert.That(File.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "audio", audioFile)));
                 }
                 Assert.That(Directory.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "WritingSystems")));
                 Assert.That(File.Exists(Path.Combine(exportedFilepath, "LiftExport", "Lift", "WritingSystems", dataSet.Value.language + ".ldml")));
@@ -301,10 +299,7 @@ namespace Backend.Tests
 
                 //make api call
                 var result2 = _liftController.UploadLiftFile(proj2.Id, fileUpload).Result;
-                if (result2 is BadRequestObjectResult)
-                {
-                        Assert.That(!(result is BadRequestObjectResult));
-                }
+                Assert.That(!(result is BadRequestObjectResult));
 
                 proj2 = _projServ.GetProject(proj2.Id).Result;
 
