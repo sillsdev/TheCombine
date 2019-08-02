@@ -476,23 +476,7 @@ namespace BackendFramework.Services
                 {
                     //get path to audio file in lift package at ~/{projectId}/Import/ExtractedLocation/{liftName}/audio/{audioFile}.mp3
                     var audioFile = pro.Media.First().Url;
-                    //var extractedAudioMp3 = Path.Combine(extractedAudioDir, audioFile);
-
-                    ////move mp3 to audio folder at ~/{projectId}/Import/Audio/{audioFile}.mp3
-                    //var audioFolder = Path.Combine(importDir, "Audio");
-                    //Directory.CreateDirectory(audioFolder);
-                    //var audioDest = Path.Combine(audioFolder, audioFile);
-
-                    ////if there are duplicate filenames then add a (number) like windows does to the end of it
-                    //var filename = Path.GetFileNameWithoutExtension(audioDest);
-                    //int filecount = 1;
-                    //while (File.Exists(audioDest))
-                    //{
-                    //    audioDest = Path.Combine(audioFolder, filename + "(" + filecount++ + ")" + ".mp3");
-                    //}
-                    //File.Copy(extractedAudioMp3, audioDest);
-
-                    //add file name to word's audio files
+                   
                     newWord.Audio.Add(audioFile);
                 }
             }
