@@ -25,8 +25,8 @@ namespace BackendFramework.Controllers
 
         /// <summary> Returns all <see cref="User"/>s </summary>
         /// <remarks> GET: v1/users </remarks>
-        [HttpGet("/projectId")]
-        public async Task<IActionResult> GetUsersProject(string projectId)
+        [HttpGet("{projectId}/allUsers")]
+        public async Task<IActionResult> GetAllUsers(string projectId)
         {
             if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
             {
