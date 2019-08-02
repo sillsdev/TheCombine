@@ -32,8 +32,12 @@ how to install Ubuntu 18.04 Server on a new PC and then run the Ansible playbook
 
     vagrant up
 
-Note that it may take some time for this to complete.  When finished, there will be a window displaying the console of the virtual machine:
+Notes:
+
+  * it may take some time for this to complete.  When finished, there will be a window displaying the console of the virtual machine:
     ![alt text](images/vm-console.png "Ubuntu Server Virtual Machine Console")
+
+  * if you created a Vagrant VM previously, see the section on [Maintaining the VM](#maintaining-the-vm).
 
 ### Logging Into the VM
 
@@ -68,10 +72,11 @@ Consider updating your working directory by doing a ```git pull``` or by checkin
 
 To build the project, install and configure it, run the following command from the command prompt:
 ```
-mkcombine.
+cd ~/src/TheCombine/deploy
+./setup-target.sh -b vagrant@localhost
 ```
 
-*When* `mkcombine` *runs the installation scripts, you will be prompted for the* `BECOME password.`  *The BECOME password is* `vagrant`.  You will also be prompted for the Ansible vault password.  The vault password is posted on the *Rocket.Chat* discussion, `#the-combine`.
+*When* `./setup-target.sh` *runs the installation scripts, you will be prompted for the* `BECOME password.`  *The BECOME password is* `vagrant`.  You will also be prompted for the Ansible vault password.  The vault password is posted on the *Rocket.Chat* discussion, `#the-combine`.
 
 ### Running TheCombine On The VM
 
@@ -85,7 +90,17 @@ In order to run *TheCombine*, you will need to make the following changes to you
     to your network hosts file.
 
 
-Once this is done, you can test out your vm installation by connecting to https://thewordcombine.org from your web browser.  The certificate for the front end is currently self-signed.  Your web browser will complain but click on the *Advanced* button and then on the *Proceed to thewordcombine.org (unsafe)* link.
+Once this is done, you can test out your VM installation by connecting to https://thewordcombine.org from your web browser.  The certificate for the front end is currently self-signed.  Your web browser will complain but click on the *Advanced* button and then on the *Proceed to thewordcombine.org (unsafe)* link.
+
+### Maintaining the VM
+
+The following commands are useful once you have created a Vagrant VM:
+
+`vagrant halt` will shutdown the currently running Vagrant VM.
+
+`vagrant up --provision` will reprovision the virtual machine by running the provisioning script when the VM is started.  Normally the provisioning script is only run when the VM is first created. The provisioning script is defined in TheCombine/deploy/vagrant/Vagrantfile.
+
+`vagrant destoy` destroys the current VM.  This is useful when the base image has been updated on [vagrantup.com](https://app.vagrantup.com/jmg227/boxes/combine-server).  If you destroy the VM, the next time you run `vagrant up` it will create a new VM using the specified version of the VM image and provision it.
 
 ## Stand Up a New Machine
 
