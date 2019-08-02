@@ -19,7 +19,6 @@ import LanguageSettingsComponent, {
 import ImportSettingsComponent from "./ImportSettingsComponent";
 import theme from "../../types/theme";
 import UserSettingsComponent from "./UserSettingsComponent";
-import { UserProps } from "./UserSettingsComponent/UserSettingsComponent";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -29,7 +28,7 @@ interface ProjectSettingsState {
   languageSettings?: LanguageProps;
   projectName?: string;
   imports?: boolean;
-  users?: UserProps;
+  editUsers?: boolean;
 }
 
 class ProjectSettingsComponent extends React.Component<
@@ -59,15 +58,7 @@ class ProjectSettingsComponent extends React.Component<
           };
           settings.imports = await backend.getLiftUploaded();
         }
-        if (role === 5) {
-          settings.users = {
-            users: (await backend.getAllUsersInCurrentProject()).map(user => ({
-              ...user,
-              role: "a role"
-            })),
-            allUsers: await backend.getAllUsers()
-          };
-        }
+        if (role === 5) settings.editUsers = true;
       }
 
     this.setState(settings);
@@ -99,7 +90,7 @@ class ProjectSettingsComponent extends React.Component<
             </Grid>
           )}
 
-          {this.state.users && <UserSettingsComponent {...this.state.users} />}
+          {this.state.editUsers && <UserSettingsComponent />}
         </Grid>
       </Container>
     );

@@ -97,7 +97,15 @@
     },
     "user": {
       "header": ["Users", "Usarios"],
-      "addUser": ["Add a user", "Añadir un usario"]
+      "addUser": ["Add a user", "Añadir un usario"],
+      "selectUser": ["Choose a user", "Escoger un usario"],
+      "selectRole": ["Choose their role", "Escoger el papel"],
+      "confirmUser": ["Select this user", "Elegir este usario"],
+      "roles": {
+        "typist": ["Typist", "Mecanógrafo"],
+        "cleaner": ["Cleaner", "Limpiador"],
+        "admin": ["Admin", "Administración"]
+      }
     }
   },
   "goal": {
