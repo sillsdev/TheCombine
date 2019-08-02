@@ -11,7 +11,8 @@ interface DuplicateResolutionViewProps {
 }
 
 /**
- * A view for adding a semantic domain to a sense, or a new sense to a word.
+ * Displays a duplicate word, and allows adding a semantic domain or a new sense
+ * to the word
  */
 export class DuplicateResolutionView extends React.Component<
   DuplicateResolutionViewProps

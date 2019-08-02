@@ -37,7 +37,7 @@ interface ExistingEntryState {
 }
 
 /**
- * Displays a mutable word.
+ * Displays a word a user can still make edits to
  */
 export class ExistingEntry extends React.Component<
   ExistingEntryProps,

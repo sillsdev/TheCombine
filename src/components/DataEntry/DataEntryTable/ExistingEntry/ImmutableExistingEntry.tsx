@@ -8,7 +8,7 @@ interface ImmutableExistingEntryProps {
 }
 
 /**
- * Displays an immutable word.
+ * Displays a word users cannot edit any more
  */
 export class ImmutableExistingEntry extends React.Component<
   ImmutableExistingEntryProps
