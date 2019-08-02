@@ -31,7 +31,10 @@ interface DataEntryTableState {
   displaySpellingSuggestionsIndex?: number;
 }
 
-export class DataEntryTableRewrite extends React.Component<
+/**
+ * A data entry table containing word entries
+ */
+export class DataEntryTable extends React.Component<
   DataEntryTableProps & LocalizeContextProps,
   DataEntryTableState
 > {
@@ -315,4 +318,4 @@ export class DataEntryTableRewrite extends React.Component<
   }
 }
 
-export default withLocalize(DataEntryTableRewrite);
+export default withLocalize(DataEntryTable);

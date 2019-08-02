@@ -1,4 +1,4 @@
-import CharacterWords from "./FindAndReplaceComponent";
+import FindAndReplace from "./FindAndReplaceComponent";
 import { connect } from "react-redux";
 import { StoreState } from "../../../../../types";
 import { ThunkDispatch } from "redux-thunk";
@@ -21,4 +21,4 @@ function mapDispatchToProps(dispatch: ThunkDispatch<StoreState, any, any>) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CharacterWords);
+)(FindAndReplace);

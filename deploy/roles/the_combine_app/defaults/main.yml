@@ -4,6 +4,24 @@ www_uploads_dir: /var/thecombine/uploads
 www_uploads_owner: www-data
 www_uploads_group: www-data
 
-www_app_dir: /var/www/html/TheCombine
+www_app_dir: /var/www/thewordcombine.org/htdocs
 www_app_owner: www-data
 www_app_group: www-data
+
+combine_backend_dir: /home/combine/Backend
+
+combine_env_vars:
+  ASPNETCORE_ENVIRONMENT: Production
+  DOTNET_PRINT_TELEMETRY_MESSAGE: false
+
+combine_cert_email:    jimgrady.jg@gmail.com
+combine_cert_country:  US
+combine_cert_state:    Texas
+combine_cert_locality: Dallas
+combine_cert_org:      SIL International
+
+combine_user: combine
+combine_group: combine
+
+# use mkpasswd --method=sha-512 to create a new password
+combine_password: "$6$emkg/VIsMcp$jbVsYFfLbR41kZFT39MRsPNkjkfNb14WF0gBBUfjnw/Bht6Kt8v6.XxAoOk1w5i7MrX1LetQMsmMknvwSShls0"

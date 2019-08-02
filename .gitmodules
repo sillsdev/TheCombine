@@ -1,3 +1,6 @@
 [submodule "deploy/roles/wifi_ap/files/create_ap"]
 	path = deploy/roles/wifi_ap/files/create_ap
 	url = https://github.com/jmgrady/create_ap.git
+[submodule "deploy/roles_common"]
+	path = deploy/roles_common
+	url = ../ops-ansible-common-roles.git

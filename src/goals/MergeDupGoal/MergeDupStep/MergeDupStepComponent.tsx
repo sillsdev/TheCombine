@@ -49,8 +49,6 @@ export interface SideBar {
 //interface for component props
 export interface MergeDupStepProps {
   words: { [wordID: string]: MergeTreeWord };
-  dropWord?: () => void;
-  draggedSense?: MergeTreeReference;
   moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
   orderSense: (wordID: string, senseID: string, order: number) => void;
   orderDuplicate: (ref: MergeTreeReference, order: number) => void;
@@ -167,7 +165,9 @@ class MergeDupStep extends React.Component<
         open={this.state.sideBar.senses.length > 1}
       >
         <Droppable
-          droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
+          droppableId={`${this.state.sideBar.wordID} ${
+            this.state.sideBar.senseID
+          }`}
         >
           {providedDroppable => (
             <div
