@@ -299,9 +299,10 @@ class MergeDupStep extends React.Component<
             zIndex: theme.zIndex.drawer
           }}
         >
-          <Button
+        <Button
+            color="primary"
+            variant="contained"
             style={{
-              background: theme.palette.primary.main,
               float: "right",
               marginRight: 30
             }}
