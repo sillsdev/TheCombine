@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
-        /// <remarks> POST: v1/project/{projectId}/words/upload </remarks>
+        /// <remarks> POST: v1/projects/{projectId}/words/upload </remarks>
         /// <returns> Number of words added </returns>
         [HttpPost("upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
@@ -155,7 +155,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> GET: v1/project/{projectId}/words/download </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
         [HttpGet("download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
@@ -179,9 +179,9 @@ namespace BackendFramework.Controllers
             }
 
             //export the data to a zip directory
-            _liftService.LiftExport(projectId);
+           string exportedFilepath = _liftService.LiftExport(projectId);
 
-            return new OkResult();
+            return new OkObjectResult(exportedFilepath); //TODO We dont want to expose filesystem to frontend, also return a stream
         }
     }
 }
