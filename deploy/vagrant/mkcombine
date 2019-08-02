@@ -1,7 +1,0 @@
-#! /bin/bash
-
-# DEPRECATED: The functionality of this script has been implemented with the
-# '-b' option for the setup-target.sh script.
-
-cd ${HOME}/src/TheCombine/deploy
-./setup-target.sh -b vagrant@localhost
