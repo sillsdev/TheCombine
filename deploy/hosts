@@ -3,10 +3,15 @@ localhost ansible_connection=local
 
 [production]
 curly
+moe
+pils
 anglophone
+
+# anglophone IP address
+172.20.1.58
 
 # NUCs by access point IP address
 10.10.0.1
 
 # VM for setting up vagrant box
-192.168.56.10
+10.10.0.2

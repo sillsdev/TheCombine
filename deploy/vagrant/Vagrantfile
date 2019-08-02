@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "jmg227/combine-server"
-  config.vm.box_version = "1.0.2"
+  config.vm.box_version = "1.0.4"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -29,11 +29,11 @@ Vagrant.configure("2") do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
   # via 127.0.0.1 to disable public access
-  config.vm.network "forwarded_port", guest: 80, host: 8088, host_ip: "127.0.0.1"
+  # config.vm.network "forwarded_port", guest: 80, host: 8088, host_ip: "127.0.0.1"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.56.10"
+  config.vm.network "private_network", ip: "10.10.0.2"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -57,6 +57,9 @@ Vagrant.configure("2") do |config|
    # Customize the amount of memory on the VM:
    vb.memory = "2048"
   end
+
+  # update the mkcombine script
+  # config.vm.provision "file", source: "mkcombine", destination: "/home/vagrant/bin/mkcombine"
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -68,12 +71,24 @@ Vagrant.configure("2") do |config|
     set -eux
     git config --global user.email "#{`git config --get user.email`.strip}"
     git config --global user.name "#{`git config --get user.name`.strip}"
+
+    # Remove the mkcombine script if it exists - deprecated
+    if [ -x /home/vagrant/bin/mkcombine ] ; then
+      rm /home/vagrant/bin/mkcombine
+    fi
+
     if [ ! -d /home/vagrant/src ] ; then
        mkdir -p /home/vagrant/src
     fi
     cd /home/vagrant/src
     if [ ! -d TheCombine ] ; then
-       git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
+      git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
+    else
+      echo "Update The Combine source tree and any submodules that have been added since the last provisioning"
+      cd TheCombine
+      git stash push --message "Provision VM"
+      git pull
+      git submodule update --init --recursive
     fi
   SHELL
 end

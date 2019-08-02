@@ -1,0 +1,20 @@
+[Unit]
+Description=The Combine Backend service.
+
+[Service]
+User={{ combine_user }}
+WorkingDirectory={{ combine_backend_dir }}/publish
+{% for item in combine_env_vars|dict2items %}
+Environment="{{ item.key }}={{ item.value }}"
+{% endfor %}
+{% for item in combine_private_env_vars|dict2items %}
+Environment="{{ item.key }}={{ item.value }}"
+{% endfor %}
+ExecStart=/usr/bin/dotnet {{ combine_backend_dir }}/publish/BackendFramework.dll
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+SyslogIdentifier=CombineBackend
+
+[Install]
+WantedBy=multi-user.target
