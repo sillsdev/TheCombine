@@ -34,7 +34,7 @@
 
 - Senses - consists of glosses and semantic domains
 
-- Audio 
+- Audio
 
 - Created
 
@@ -82,7 +82,7 @@
 
 - Phone
 
-- Other Connection Field - Other form of contact if phone/email are unavailable 
+- Other Connection Field - Other form of contact if phone/email are unavailable
 
 - Worked Projects - A user may be involved with more than one project at a time
 
