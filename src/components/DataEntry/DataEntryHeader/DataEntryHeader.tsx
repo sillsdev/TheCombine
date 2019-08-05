@@ -14,6 +14,9 @@ interface DataEntryHeaderProps {
   displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
 }
 
+/**
+ * Displays information about the current data entry view
+ */
 export class DataEntryHeader extends React.Component<
   DataEntryHeaderProps & LocalizeContextProps
 > {

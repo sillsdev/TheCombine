@@ -1,0 +1,13 @@
+---
+
+# Configuration variable that are common to production and development
+
+# path for The Combine application
+www_app_dir: "/var/www/thewordcombine.org/htdocs"
+
+# mongo_path: /hddlinux/mongodb
+mongo_path: /var/lib/mongodb
+
+### Version/distro
+base_distribution: "{{ansible_distribution | lower}}"
+base_distribution_release: "{{ansible_distribution_release}}"

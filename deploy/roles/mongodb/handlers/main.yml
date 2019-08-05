@@ -1,8 +1,0 @@
----
-
-- name: Start mongod
-  systemd:
-    name: mongod
-    daemon_reload: yes
-    enabled: yes
-    state: started
