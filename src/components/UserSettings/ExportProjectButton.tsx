@@ -1,21 +1,51 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@material-ui/core";
 import { exportLift } from "../../backend";
+import LoadingButton from "./LoadingButton";
+import { ButtonProps } from "@material-ui/core/Button";
+import { Translate } from "react-localize-redux";
 
 /**
- * Page to edit user profile
+ * Button for getting lift export from backend
  */
-export default function ExportProjectButton() {
-  const [file, setFile] = React.useState<null | string>(null);
+export default function ExportProjectButton(props: ButtonProps) {
+  const [exportedFile, setExportedFile] = React.useState<null | string>(null);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  let downloadLink = React.createRef<HTMLAnchorElement>();
+
   async function getFile() {
-    setFile(await exportLift());
+    setLoading(true);
+    setExportedFile(await exportLift());
+    setLoading(false);
   }
 
-  getFile();
+  useEffect(() => {
+    if (downloadLink.current && exportedFile !== null) {
+      downloadLink.current.click();
+      setExportedFile(null);
+    }
+  });
+
   return (
     <React.Fragment>
-      <Button variant="contained">Export Project</Button>
-      {file && <a href={file}>Here is your file</a>}
+      <LoadingButton
+        onClick={() => getFile()}
+        color="primary"
+        loading={loading}
+        {...props}
+      >
+        <Translate id="projectSettings.export" />
+      </LoadingButton>
+      {exportedFile && (
+        <a ref={downloadLink} href={exportedFile} style={{ display: "none" }}>
+          (This link should not be visible)
+        </a>
+      )}
+      <Button
+        onClick={() => {
+          if (downloadLink.current) downloadLink.current.click();
+        }}
+      />
     </React.Fragment>
   );
 }

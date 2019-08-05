@@ -78,6 +78,9 @@
   "selectProject": {
     "title": ["Select Project", "Select Project in spanish"]
   },
+  "projectSettings": {
+    "export": ["Export Project", "Proyecto de exportación"]
+  },
   "goal": {
     "selector": {
       "selectOption": ["Select this goal", "Selecciona este objectivo"],
