@@ -262,21 +262,21 @@ namespace Backend.Tests
                     var allWords = _wordrepo.GetAllWords(proj.Id);
                     //export
                     string exportedFilePath = _liftController.CreateLiftExport(proj.Id);
-                    string exportedFileDirPath = Path.GetDirectoryName(exportedFilePath);
+                    string exportedDirectory = Path.GetDirectoryName(exportedFilePath);
 
                     //Assert the file was created with desired heirarchy
-                    Assert.That(Directory.Exists(exportedFileDirPath));
-                    Assert.That(Directory.Exists(Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "audio")));
+                    Assert.That(Directory.Exists(exportedDirectory));
+                    Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio")));
                     foreach (var audioFile in dataSet.Value.audioFiles)
                     {
-                        Assert.That(File.Exists(Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "audio", audioFile)));
+                        Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio", audioFile)));
                     }
-                    Assert.That(Directory.Exists(Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "WritingSystems")));
-                    Assert.That(File.Exists(Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "WritingSystems", dataSet.Value.language + ".ldml")));
-                    Assert.That(File.Exists(Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "NewLiftFile.lift")));
-                    List<string> dirlst = new List<string>(Directory.GetDirectories(Path.GetDirectoryName(exportedFileDirPath)));
-                    dirlst.Remove(exportedFileDirPath);
-                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedFileDirPath), dirlst.Single())));
+                    Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems")));
+                    Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems", dataSet.Value.language + ".ldml")));
+                    Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "NewLiftFile.lift")));
+                    List<string> dirlst = new List<string>(Directory.GetDirectories(Path.GetDirectoryName(exportedDirectory)));
+                    dirlst.Remove(exportedDirectory);
+                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedDirectory), dirlst.Single())));
 
 
                     _wordrepo.DeleteAllWords(proj.Id);
@@ -309,22 +309,22 @@ namespace Backend.Tests
 
                     //export
                     exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
-                    exportedFileDirPath = Path.GetDirectoryName(exportedFilePath);
+                    exportedDirectory = Path.GetDirectoryName(exportedFilePath);
 
                     //Assert the file was created with desired heirarchy
-                    Assert.That(Directory.Exists(exportedFileDirPath));
-                    Assert.That(Directory.Exists(Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "audio")));
+                    Assert.That(Directory.Exists(exportedDirectory));
+                    Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio")));
                     foreach (var audioFile in dataSet.Value.audioFiles)
                     {
-                        var path = Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "audio", audioFile);
+                        var path = Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio", audioFile);
                         Assert.That(File.Exists(path), "The file " + audioFile + " can not be found at this path: " + path);
                     }
-                    Assert.That(Directory.Exists(Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "WritingSystems")));
-                    Assert.That(File.Exists(Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "WritingSystems", dataSet.Value.language + ".ldml")));
-                    Assert.That(File.Exists(Path.Combine(exportedFileDirPath, "LiftExport", "Lift", "NewLiftFile.lift")));
-                    dirlst = new List<string>(Directory.GetDirectories(Path.GetDirectoryName(exportedFileDirPath)));
-                    dirlst.Remove(exportedFileDirPath);
-                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedFileDirPath), dirlst.Single())));
+                    Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems")));
+                    Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems", dataSet.Value.language + ".ldml")));
+                    Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "NewLiftFile.lift")));
+                    dirlst = new List<string>(Directory.GetDirectories(Path.GetDirectoryName(exportedDirectory)));
+                    dirlst.Remove(exportedDirectory);
+                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedDirectory), dirlst.Single())));
 
                     _wordrepo.DeleteAllWords(proj.Id);
                 }
