@@ -19,5 +19,5 @@ namespace BackendFramework.Context
 
         public IMongoCollection<UserEdit> UserEdits => _db.GetCollection<UserEdit>("UserEditsCollection");
     }
-    
+
 }
