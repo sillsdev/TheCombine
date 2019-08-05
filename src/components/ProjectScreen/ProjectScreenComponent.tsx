@@ -12,10 +12,12 @@ export default class ProjectScreen extends React.Component {
       <div className="CreateProject">
         <AppBarComponent />
         <Grid container justify="center" spacing={2}>
-          <Grid item>
-            <ChooseProjectComponent />
+          <Grid item xs={12} sm={6}>
+            <Grid container justify="flex-end">
+              <ChooseProjectComponent />
+            </Grid>
           </Grid>
-          <Grid item>
+          <Grid item xs={12} sm={6}>
             <CreateProjectComponent />
           </Grid>
         </Grid>
