@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static BackendFramework.Helper.Utilities;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Backend.Tests")]
 namespace BackendFramework.Controllers
 {
     [Authorize]
@@ -157,11 +158,7 @@ namespace BackendFramework.Controllers
         /// <summary> Packages project data into zip file </summary>
         /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
         [HttpGet("download")]
-#if DEBUG
-        public async Task<IActionResult> ExportLiftFile(string projectId, bool unitTesting = false)
-#else
         public async Task<IActionResult> ExportLiftFile(string projectId)
-#endif
         {
             if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
             {
@@ -182,16 +179,19 @@ namespace BackendFramework.Controllers
                 return new BadRequestResult();
             }
             //export the data to a zip directory
-            _liftService.SetProject(projectId);
-            string exportedFilepath = _liftService.LiftExport(projectId);
-
-#if DEBUG
-            if (unitTesting) { return new OkObjectResult(exportedFilepath); }
-#endif
+            string exportedFilepath = CreateLiftExport(projectId);
 
             var file = System.IO.File.ReadAllBytes(exportedFilepath);
             var encodedFile = Convert.ToBase64String(file);
             return new OkObjectResult(encodedFile);
+        }
+
+        // This method is extracted so that it can be unit tested
+        internal string CreateLiftExport(string projectId)
+        {
+            _liftService.SetProject(projectId);
+            string exportedFilepath = _liftService.LiftExport(projectId);
+            return exportedFilepath;
         }
     }
 }
