@@ -1,4 +1,4 @@
-import ImportSettingsComponent from "./ImportSettingsComponent";
+import ProjectImport from "./ProjectImport";
 import { Project } from "../../../types/project";
 import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
 import { Dispatch } from "redux";
@@ -14,4 +14,4 @@ function mapDispatchToProps(dispatch: Dispatch<ProjectAction>) {
 export default connect(
   null,
   mapDispatchToProps
-)(ImportSettingsComponent);
+)(ProjectImport);

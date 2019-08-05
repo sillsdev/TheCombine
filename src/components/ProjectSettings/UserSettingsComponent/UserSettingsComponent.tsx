@@ -23,7 +23,7 @@ import {
 } from "@material-ui/core";
 
 import * as backend from "../../../backend";
-import settingsComponent from "../SettingsComponent";
+import BaseSettingsComponent from "../BaseSettingsComponent/BaseSettingsComponent";
 import { User } from "../../../types/user";
 import userSelector from "./UserSelectorComponent";
 import theme from "../../../types/theme";
@@ -207,8 +207,8 @@ class UserSettingsComponent extends React.Component<
   }
 
   render() {
-    return settingsComponent({
-      header: "settings.user.header",
+    return BaseSettingsComponent({
+      title: "settings.user.header",
       icon: <People />,
       body: userSelector(
         this.props.users,

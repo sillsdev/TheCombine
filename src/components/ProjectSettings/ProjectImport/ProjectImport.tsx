@@ -33,7 +33,7 @@ interface ImportState {
   uploadState: UploadState;
 }
 
-export class ImportSettingsComponent extends React.Component<
+export class ProjectImport extends React.Component<
   ImportProps & LocalizeContextProps,
   ImportState
 > {
@@ -119,4 +119,4 @@ export class ImportSettingsComponent extends React.Component<
   }
 }
 
-export default withLocalize(ImportSettingsComponent);
+export default withLocalize(ProjectImport);

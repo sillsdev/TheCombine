@@ -1,24 +1,25 @@
 import React from "react";
 import {
   LocalizeContextProps,
-  Translate,
-  withLocalize
+  withLocalize,
+  Translate
 } from "react-localize-redux";
-import { Grid, Container } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 
 import { Project } from "../../types/project";
-import { User } from "../../types/user";
 import * as backend from "../../backend";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { UserRole } from "../../types/userRole";
 
-import NameSettingsComponent from "./NameSettingsComponent";
 import LanguageSettingsComponent, {
   LanguageProps
-} from "./LanguageSettingsComponent";
-import ImportSettingsComponent from "./ImportSettingsComponent";
-import theme from "../../types/theme";
+} from "./Language/LanguageSettingsComponent";
+import ProjectImport from "./ProjectImport";
+import ProjectName from "./ProjectName";
 import UserSettingsComponent from "./UserSettingsComponent";
+import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
+import { Edit, Create } from "@material-ui/icons";
+import CreateProject from "../ProjectScreen/CreateProject";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -66,33 +67,29 @@ class ProjectSettingsComponent extends React.Component<
 
   render() {
     return (
-      <Container>
+      <React.Fragment>
         <AppBarComponent />
-        <Grid container direction="column" spacing={2}>
-          {/* Language settings */}
-          {this.state.languageSettings && (
-            <Grid item>
-              <LanguageSettingsComponent {...this.state.languageSettings} />
-            </Grid>
-          )}
-
+        <Grid container spacing={5}>
           {/* Project name */}
           {this.state.projectName && (
-            <Grid item>
-              <NameSettingsComponent project={this.props.project} />
-            </Grid>
+            <BaseSettingsComponent
+              icon={<Edit />}
+              title={<Translate id="settings.name" />}
+              body={<ProjectName />}
+            />
+          )}
+
+          {/* Language settings */}
+          {this.state.languageSettings && (
+            <LanguageSettingsComponent {...this.state.languageSettings} />
           )}
 
           {/* Upload file */}
-          {this.state.imports && (
-            <Grid item>
-              <ImportSettingsComponent project={this.props.project} />
-            </Grid>
-          )}
+          {this.state.imports && <ProjectImport project={this.props.project} />}
 
           {this.state.editUsers && <UserSettingsComponent />}
         </Grid>
-      </Container>
+      </React.Fragment>
     );
   }
 }
