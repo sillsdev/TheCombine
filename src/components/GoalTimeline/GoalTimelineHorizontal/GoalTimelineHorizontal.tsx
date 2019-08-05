@@ -40,18 +40,36 @@ export interface GoalTimelineHorizontalProps {
   suggestions: Goal[];
 }
 
+export interface GoalTimelineHorizontalState {
+  portrait: boolean;
+}
+
 /**
  * Displays the list of goals the user has decided they will work on, their
  * choices for the next goal, and suggestions for which goals they should choose
  * to work on.
  */
 export class GoalTimelineHorizontal extends React.Component<
-  GoalTimelineHorizontalProps & LocalizeContextProps
+  GoalTimelineHorizontalProps & LocalizeContextProps,
+  GoalTimelineHorizontalState
 > {
   constructor(props: GoalTimelineHorizontalProps & LocalizeContextProps) {
     super(props);
+    this.state = { portrait: window.innerWidth < window.innerHeight };
     this.handleChange = this.handleChange.bind(this);
   }
+
+  componentWillMount() {
+    window.addEventListener("resize", this.handleWindowSizeChange);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleWindowSizeChange);
+  }
+
+  handleWindowSizeChange = () => {
+    this.setState({ portrait: window.innerWidth < window.innerHeight });
+  };
 
   // Load history from database
   componentDidMount() {
@@ -122,7 +140,35 @@ export class GoalTimelineHorizontal extends React.Component<
     );
   }
 
-  render() {
+  renderPortrait() {
+    return (
+      <div className="GoalView">
+        <AppBarComponent />
+        {/* Alternatives */}
+        <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
+          <HorizontalDisplay
+            data={this.createSuggestionData()}
+            scrollToEnd={false}
+            handleChange={this.handleChange}
+            width={100}
+            numPanes={3}
+          />
+        </div>
+
+        {/* Recommendation */}
+        <div style={timelineStyle.paneStyling as any}>
+          <Typography variant="h5">
+            <Translate id={"goal.selector.present"} />
+          </Typography>
+          <div style={{ ...(timelineStyle.paneStyling as any), width: "80%" }}>
+            {this.goalButton()}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderLandscape() {
     return (
       <div className="GoalView">
         <AppBarComponent />
@@ -172,6 +218,10 @@ export class GoalTimelineHorizontal extends React.Component<
         </GridList>
       </div>
     );
+  }
+
+  render() {
+    return this.state.portrait ? this.renderPortrait() : this.renderLandscape();
   }
 }
 

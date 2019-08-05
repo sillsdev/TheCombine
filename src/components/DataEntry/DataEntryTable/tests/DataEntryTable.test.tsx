@@ -1,14 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import DataEntryTable from "../DataEntryTable";
-import SemanticDomain from "../../../TreeView/SemanticDomain";
+import DataEntryTable, { filterWords } from "../DataEntryTable";
 import { mockDomainTree } from "../../tests/MockDomainTree";
+import { SemanticDomain, Word, State } from "../../../../types/word";
+import { mockWord } from "../../tests/MockWord";
 
-const mockSemanticDomain: SemanticDomain = {
+export const mockSemanticDomain: SemanticDomain = {
   name: "",
-  id: "",
-  description: "",
-  subdomains: []
+  id: ""
 };
 
 describe("Tests DataEntryTable", () => {
@@ -22,5 +21,48 @@ describe("Tests DataEntryTable", () => {
       div
     );
     ReactDOM.unmountComponentAtNode(div);
+  });
+
+  it("should filter out words that are not accessible", () => {
+    let words: Word[] = [];
+    let expectedWords: Word[] = [];
+    expect(filterWords(words)).toEqual(expectedWords);
+  });
+
+  it("should filter out words that are inaccessible", () => {
+    let word = { ...mockWord };
+    word.senses[0].accessibility = State.active;
+    let words: Word[] = [
+      {
+        ...mockWord,
+        senses: [
+          {
+            glosses: [],
+            semanticDomains: []
+          }
+        ]
+      }
+    ];
+    let expectedWords: Word[] = [];
+    expect(filterWords(words)).toEqual(expectedWords);
+  });
+
+  it("should filter out words that are inaccessible", () => {
+    let word = { ...mockWord };
+    word.senses[0].accessibility = State.active;
+    let words: Word[] = [
+      {
+        ...mockWord,
+        senses: [
+          {
+            glosses: [],
+            semanticDomains: [],
+            accessibility: State.active
+          }
+        ]
+      }
+    ];
+    let expectedWords: Word[] = [...words];
+    expect(filterWords(words)).toEqual(expectedWords);
   });
 });
