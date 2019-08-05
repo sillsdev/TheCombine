@@ -157,12 +157,16 @@ namespace BackendFramework.Controllers
         /// <summary> Packages project data into zip file </summary>
         /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
         [HttpGet("download")]
+#if DEBUG
+        public async Task<IActionResult> ExportLiftFile(string projectId, bool unitTesting = false)
+#else
         public async Task<IActionResult> ExportLiftFile(string projectId)
+#endif
         {
-            //if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
-            //{
-            //    return new UnauthorizedResult();
-            //}
+            if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
 
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
@@ -180,6 +184,10 @@ namespace BackendFramework.Controllers
             //export the data to a zip directory
             _liftService.SetProject(projectId);
             string exportedFilepath = _liftService.LiftExport(projectId);
+
+#if DEBUG
+            if (unitTesting) { return new OkObjectResult(exportedFilepath); }
+#endif
 
             var file = System.IO.File.ReadAllBytes(exportedFilepath);
             var encodedFile = Convert.ToBase64String(file);
