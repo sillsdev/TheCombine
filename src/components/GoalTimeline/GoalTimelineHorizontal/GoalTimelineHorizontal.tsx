@@ -41,7 +41,7 @@ export interface GoalTimelineHorizontalProps {
 }
 
 export interface GoalTimelineHorizontalState {
-  mobile: boolean;
+  portrait: boolean;
 }
 
 /**
@@ -55,7 +55,7 @@ export class GoalTimelineHorizontal extends React.Component<
 > {
   constructor(props: GoalTimelineHorizontalProps & LocalizeContextProps) {
     super(props);
-    this.state = { mobile: window.innerWidth < window.innerHeight };
+    this.state = { portrait: window.innerWidth < window.innerHeight };
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -68,7 +68,7 @@ export class GoalTimelineHorizontal extends React.Component<
   }
 
   handleWindowSizeChange = () => {
-    this.setState({ mobile: window.innerWidth < window.innerHeight });
+    this.setState({ portrait: window.innerWidth < window.innerHeight });
   };
 
   // Load history from database
@@ -160,7 +160,9 @@ export class GoalTimelineHorizontal extends React.Component<
           <Typography variant="h5">
             <Translate id={"goal.selector.present"} />
           </Typography>
-          <div style={{ ...timelineStyle.paneStyling as any, width: "80%" }}>{this.goalButton()}</div>
+          <div style={{ ...(timelineStyle.paneStyling as any), width: "80%" }}>
+            {this.goalButton()}
+          </div>
         </div>
       </div>
     );
@@ -219,7 +221,7 @@ export class GoalTimelineHorizontal extends React.Component<
   }
 
   render() {
-    return this.state.mobile ? this.renderPortrait() : this.renderLandscape();
+    return this.state.portrait ? this.renderPortrait() : this.renderLandscape();
   }
 }
 
