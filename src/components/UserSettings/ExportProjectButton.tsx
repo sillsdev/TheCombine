@@ -41,11 +41,6 @@ export default function ExportProjectButton(props: ButtonProps) {
           (This link should not be visible)
         </a>
       )}
-      <Button
-        onClick={() => {
-          if (downloadLink.current) downloadLink.current.click();
-        }}
-      />
     </React.Fragment>
   );
 }
