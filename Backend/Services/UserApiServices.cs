@@ -107,6 +107,7 @@ namespace BackendFramework.Services
 
             // remove password before returning
             user.Password = "";
+            user.Avatar = "";
 
             return user;
         }
@@ -114,7 +115,8 @@ namespace BackendFramework.Services
         /// <summary> Finds all <see cref="User"/>s </summary>
         public async Task<List<User>> GetAllUsers()
         {
-            return await _userDatabase.Users.Find(_ => true).ToListAsync();
+            var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
+            return users.Select(c => { c.Avatar = ""; c.Password = ""; return c; }).ToList();
         }
 
         /// <summary> Removes all <see cref="User"/>s </summary>
@@ -137,7 +139,10 @@ namespace BackendFramework.Services
 
             var userList = await _userDatabase.Users.FindAsync(filter);
 
-            return userList.FirstOrDefault();
+            var user = userList.FirstOrDefault();
+            user.Avatar = "";
+            user.Password = "";
+            return user;
         }
 
         /// <summary> Adds a <see cref="User"/> </summary>
@@ -172,6 +177,8 @@ namespace BackendFramework.Services
             //replace pasword with hashed password
             user.Password = Convert.ToBase64String(hashBytes);
             await _userDatabase.Users.InsertOneAsync(user);
+            user.Password = "";
+            user.Avatar = "";
 
             return user;
         }

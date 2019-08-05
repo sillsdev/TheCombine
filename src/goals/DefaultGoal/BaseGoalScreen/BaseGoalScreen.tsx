@@ -49,6 +49,10 @@ const stepComponentDictionary: componentSteps[] = [
   }
 ];
 
+/**
+ * Decides which component should be rendered for a goal, based on the current
+ * step in the goal
+ */
 class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
   renderGoal(goal: Goal): ReactNode {
     return (

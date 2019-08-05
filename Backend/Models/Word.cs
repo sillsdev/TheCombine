@@ -125,14 +125,14 @@ namespace BackendFramework.ValueModels
             else
             {
                 Word other = obj as Word;
-                return 
+                return
                     other.Id.Equals(Id) &&
                     this.ContentEquals(other) &&
                     other.Created.Equals(Created) &&
-                    other.Modified.Equals(Modified) && 
+                    other.Modified.Equals(Modified) &&
                     other.EditedBy.Count == EditedBy.Count &&
                     other.EditedBy.All(EditedBy.Contains) &&
-                    other.History.Count == History.Count && 
+                    other.History.Count == History.Count &&
                     other.History.All(History.Contains);
             }
         }

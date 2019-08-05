@@ -1,0 +1,21 @@
+---
+
+################################
+# Playbook to test the role for configuring the Apache
+# Web Server
+#
+
+- name:  Configure Apache Web Server
+  hosts: all
+  become: yes
+
+  vars:
+    config: developer
+    vm_vendors:  [ "innotek GmbH" ]
+
+  vars_files:
+    - "vars/config_{{ config }}.yml"
+
+  roles:
+    - role: ssl_config
+    - role: apache_config

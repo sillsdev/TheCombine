@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(projectUsers);
         }
-        
+
         /// <summary> Deletes all <see cref="Project"/>s </summary>
         /// <remarks> DELETE: v1/projects </remarks>
         /// <returns> true: if success, false: if there were no projects </returns>
@@ -248,24 +248,4 @@ namespace BackendFramework.Controllers
 
     }
 
-    public class ProjectWithUser : Project
-    {
-        public User __UpdatedUser;
-
-        public ProjectWithUser() { }
-
-        public ProjectWithUser(Project baseObj)
-        {
-            Id = baseObj.Id;
-            Name = baseObj.Name;
-            PartsOfSpeech = baseObj.PartsOfSpeech;
-            RejectedCharacters = baseObj.RejectedCharacters;
-            SemanticDomains = baseObj.SemanticDomains;
-            VernacularWritingSystem = baseObj.VernacularWritingSystem;
-            WordFields = baseObj.WordFields;
-            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
-            CustomFields = baseObj.CustomFields;
-            ValidCharacters = baseObj.ValidCharacters;
-        }
-    }
 }

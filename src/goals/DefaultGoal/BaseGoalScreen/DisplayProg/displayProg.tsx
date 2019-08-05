@@ -11,6 +11,9 @@ interface ProgressProps {
   numSteps: number;
 }
 
+/**
+ * Displays how much progress has been made in a goal
+ */
 export class DisplayProg extends React.Component<
   ProgressProps & LocalizeContextProps
 > {

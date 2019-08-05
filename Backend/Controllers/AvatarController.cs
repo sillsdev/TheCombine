@@ -30,12 +30,12 @@ namespace BackendFramework.Controllers
         [HttpGet("{userId}/download/avatar")]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
-           User currentUser = await _userService.GetUser(userId);
+            User currentUser = await _userService.GetUser(userId);
 
-           if (currentUser == null)
-           {
+            if (currentUser == null)
+            {
                 return new NotFoundObjectResult(currentUser.Id);
-           }
+            }
 
             var image = System.IO.File.OpenRead(currentUser.Avatar);
             return File(image, "image/jpeg");
