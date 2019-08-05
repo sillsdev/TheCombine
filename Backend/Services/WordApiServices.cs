@@ -226,7 +226,7 @@ namespace BackendFramework.Services
             var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId, "Import", "ExtractedFiles");
             var listOfDirs = Directory.GetDirectories(filepath);
 
-            if(listOfDirs.Count() != 1)
+            if (listOfDirs.Count() != 1)
             {
                 return null;
             }

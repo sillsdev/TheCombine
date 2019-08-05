@@ -27,7 +27,7 @@ namespace BackendFramework.Services
         public async Task<bool> DeleteAllUserEdits(string projectId)
         {
             var deleted = await _userEditDatabase.UserEdits.DeleteManyAsync(u => u.ProjectId == projectId);
-            if(deleted.DeletedCount != 0)
+            if (deleted.DeletedCount != 0)
             {
                 return true;
             }

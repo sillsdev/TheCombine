@@ -36,7 +36,7 @@ namespace BackendFramework.ValueModels
                 Permissions = new List<int>()
             };
 
-            foreach(int permission in Permissions)
+            foreach (int permission in Permissions)
             {
                 clone.Permissions.Add(permission);
             }

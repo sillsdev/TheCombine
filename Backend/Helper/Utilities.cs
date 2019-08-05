@@ -28,7 +28,7 @@ namespace BackendFramework.Helper
             }
 
             //something is wrong
-            if(pathToHome == null)
+            if (pathToHome == null)
             {
                 throw new DesktopNotFoundException();
             }
