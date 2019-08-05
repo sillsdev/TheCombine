@@ -82,7 +82,7 @@ namespace BackendFramework.Controllers
 
             //get path to home
             Utilities util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(Filetype.audio, false, wordId, Path.Combine(projectId, Path.Combine("ExtractedLocation","Import"), "Audio"));
+            fileUpload.FilePath = util.GenerateFilePath(Filetype.audio, false, wordId, Path.Combine(projectId, Path.Combine("ExtractedLocation", "Import"), "Audio"));
 
             //copy the file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
@@ -92,7 +92,7 @@ namespace BackendFramework.Controllers
 
             //add the relative path to the audio field
             Word gotWord = await _wordRepo.GetWord(projectId, wordId);
-            gotWord.Audio.Add(Path.GetFileName(fileUpload.FilePath)); 
+            gotWord.Audio.Add(Path.GetFileName(fileUpload.FilePath));
 
             //update the word with new audio file
             _ = await _wordService.Update(projectId, wordId, gotWord);

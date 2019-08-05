@@ -19,5 +19,5 @@ namespace BackendFramework.Context
 
         public IMongoCollection<UserRole> UserRoles => _db.GetCollection<UserRole>("UserRolesCollection");
     }
-    
+
 }
