@@ -40,7 +40,7 @@ const typography = {
   // Copied from default theme
   fontFamily: ['"Roboto"', '"Helvetica"', '"Arial"', "sans-serif"].join(",")
 };
-const dynamicFontParams = { factor: 10 };
+const dynamicFontParams = { factor: 2 };
 
 // Theme for the entire project
 const baseTheme = createMuiTheme({
