@@ -48,32 +48,23 @@ class ChooseProject extends React.Component<
 
   render() {
     return (
-      <div className="ChooseProject">
-        <Grid container justify="center" spacing={2}>
-          <Grid item>
-            <Card style={{ width: 450 }}>
-              <CardContent>
-                {/* Title */}
-                <Typography variant="h5" align="center" gutterBottom>
-                  <Translate id="selectProject.title" />
-                </Typography>
+      <Card style={{ width: "100%", maxWidth: 450 }}>
+        <CardContent>
+          {/* Title */}
+          <Typography variant="h5" align="center" gutterBottom>
+            <Translate id="selectProject.title" />
+          </Typography>
 
-                {/* List of projects */}
-                <List>
-                  {this.state.projectList.map(project => (
-                    <ListItem
-                      button
-                      onClick={() => this.selectProject(project)}
-                    >
-                      <Typography variant="h6">{project.name}</Typography>
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </div>
+          {/* List of projects */}
+          <List>
+            {this.state.projectList.map(project => (
+              <ListItem button onClick={() => this.selectProject(project)}>
+                <Typography variant="h6">{project.name}</Typography>
+              </ListItem>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
     );
   }
 }
