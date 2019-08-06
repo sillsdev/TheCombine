@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import { GridList, GridListTile, GridListTileBar } from "@material-ui/core";
 
-import avatar from "../../../resources/TestAvatar.jpg";
 import { User } from "../../../types/user";
 
 export default function userSelector(
@@ -14,7 +13,11 @@ export default function userSelector(
       {users.map(user => (
         <GridListTile onClick={select ? () => select(user) : undefined}>
           {/* Replace w/ icon */}
-          <img src={avatar} />
+          <img
+            src={
+              "https://www.sil.org/sites/default/files/expertise/ld_language_assessment_domain_0.jpg" // temp
+            }
+          />
           <GridListTileBar title={user.name} />
         </GridListTile>
       ))}
