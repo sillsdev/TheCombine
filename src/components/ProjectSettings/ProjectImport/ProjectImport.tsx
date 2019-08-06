@@ -4,18 +4,12 @@ import {
   Translate,
   withLocalize
 } from "react-localize-redux";
-import {
-  Grid,
-  Typography,
-  Button,
-  Dialog,
-  CircularProgress
-} from "@material-ui/core";
-import { PresentToAll } from "@material-ui/icons";
+import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
 
 import * as backend from "../../../backend";
 import { Project } from "../../../types/project";
-import GetFileButton from "../../ProjectScreen/CreateProject/GetFileButton";
+import FileInputButton from "./FileInputButton";
+import { renderToStaticMarkup } from "react-dom/server";
 
 enum UploadState {
   Awaiting,
@@ -29,7 +23,8 @@ interface ImportProps {
 }
 
 interface ImportState {
-  languageData?: File;
+  liftFile?: File;
+  liftFilename?: string;
   uploadState: UploadState;
 }
 
@@ -39,82 +34,92 @@ export class ProjectImport extends React.Component<
 > {
   constructor(props: ImportProps & LocalizeContextProps) {
     super(props);
-    this.updateLanguage = this.updateLanguage.bind(this);
+    this.updateLiftFile = this.updateLiftFile.bind(this);
     this.state = {
       uploadState: UploadState.Awaiting
     };
   }
 
-  private updateLanguage(languageData: File) {
-    this.setState({ languageData });
+  private updateLiftFile(file: File) {
+    this.setState({ liftFile: file, liftFilename: file.name });
   }
 
   private async uploadWords() {
-    if (this.state.languageData) {
+    if (this.state.liftFile) {
       this.setState({ uploadState: UploadState.InProgress });
-      await backend.uploadLift(this.props.project, this.state.languageData);
+      await backend.uploadLift(this.props.project, this.state.liftFile);
       let newProject = await backend.getProject(this.props.project.id);
       this.props.updateProject(newProject);
-      this.setState({ uploadState: UploadState.Done, languageData: undefined });
+      this.setState({ uploadState: UploadState.Done, liftFile: undefined });
     }
   }
 
   render() {
     return (
-      <Grid container direction="column">
-        <Grid item style={{ display: "flex", flexWrap: "nowrap" }}>
-          <PresentToAll />
-          <Typography variant="h6">
-            <Translate id="projectSettings.import.header" />
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="body1">
-            <Translate id="projectSettings.import.body" />
-          </Typography>
-        </Grid>
-        <Grid item style={{ display: "flex", flexWrap: "nowrap" }}>
-          <Grid container direction="row">
-            <Grid item xs>
-              <GetFileButton
-                updateLanguage={this.updateLanguage}
-                disabled={this.state.uploadState === UploadState.Done}
+      <React.Fragment>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Typography variant="caption">
+              <Translate
+                id="projectSettings.import.body"
+                options={{ renderInnerHtml: true, renderToStaticMarkup }}
               />
-            </Grid>
-            <Grid item xs>
-              <Button
-                color="primary"
-                variant="contained"
-                disabled={
-                  this.state.languageData === undefined ||
-                  this.state.uploadState === UploadState.InProgress
-                }
-                onClick={() => this.uploadWords()}
-              >
-                <Translate
-                  id={`projectSettings.import.${
-                    this.state.uploadState === UploadState.Done
-                      ? "done"
-                      : "upload"
-                  }`}
+            </Typography>
+          </Grid>
+          <Grid item>
+            {/* Choose file button */}
+            <FileInputButton
+              updateFile={this.updateLiftFile}
+              disabled={this.state.uploadState === UploadState.Done}
+            >
+              Choose File
+            </FileInputButton>
+          </Grid>
+
+          <Grid item>
+            {/* Upload button */}
+            <Button
+              color="primary"
+              variant="contained"
+              disabled={
+                this.state.liftFile === undefined ||
+                this.state.uploadState === UploadState.InProgress
+              }
+              onClick={() => this.uploadWords()}
+            >
+              <Translate
+                id={`projectSettings.import.${
+                  this.state.uploadState === UploadState.Done
+                    ? "done"
+                    : "upload"
+                }`}
+              />
+              {this.state.uploadState === UploadState.InProgress && (
+                <CircularProgress
+                  size={24}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginTop: -12,
+                    marginLeft: -12
+                  }}
                 />
-                {this.state.uploadState === UploadState.InProgress && (
-                  <CircularProgress
-                    size={24}
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      marginTop: -12,
-                      marginLeft: -12
-                    }}
-                  />
-                )}
-              </Button>
-            </Grid>
+              )}
+            </Button>
+          </Grid>
+
+          <Grid item>
+            {/* Displays the name of the selected file */}
+            {this.state.liftFilename && (
+              <Typography variant="body1" noWrap>
+                <Translate id="createProject.fileSelected" />:{" "}
+                {this.state.liftFilename}
+              </Typography>
+            )}
           </Grid>
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

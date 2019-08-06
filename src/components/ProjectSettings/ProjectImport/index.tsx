@@ -3,6 +3,13 @@ import { Project } from "../../../types/project";
 import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
+import { StoreState } from "../../../types";
+
+function mapStateToProps(state: StoreState) {
+  return {
+    project: state.currentProject
+  };
+}
 
 function mapDispatchToProps(dispatch: Dispatch<ProjectAction>) {
   return {
@@ -12,6 +19,6 @@ function mapDispatchToProps(dispatch: Dispatch<ProjectAction>) {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(ProjectImport);

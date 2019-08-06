@@ -13,16 +13,12 @@ import {
   IconButton,
   DialogContent,
   FormControl,
-  FormLabel,
-  FormGroup,
   FormControlLabel,
-  Checkbox,
   RadioGroup,
   Radio,
   DialogActions
 } from "@material-ui/core";
 
-import * as backend from "../../../backend";
 import BaseSettingsComponent from "../BaseSettingsComponent/BaseSettingsComponent";
 import { User } from "../../../types/user";
 import userSelector from "./UserSelectorComponent";

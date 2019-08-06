@@ -10,7 +10,7 @@ interface SettingsProps {
 
 export default function BaseSettingsComponent(props: SettingsProps) {
   return (
-    <Grid item container xs={12} spacing={1}>
+    <Grid item container xs={12} spacing={1} style={{ flexWrap: "nowrap" }}>
       <Grid item style={{ marginTop: 4, color: "grey" }}>
         {props.icon}
       </Grid>

@@ -1,7 +1,6 @@
 import { User } from "../../types/user";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
-import { Project } from "../../types/project";
 import { UserWithRole } from "./UserSettingsComponent/UserSettingsComponent";
 import * as backend from "../../backend";
 import { UserRole } from "../../types/userRole";

@@ -1,5 +1,4 @@
 import { UserWithRole } from "./UserSettingsComponent/UserSettingsComponent";
-import { User } from "../../types/user";
 import {
   ProjectSettingsAction,
   ProjectSettingsActions

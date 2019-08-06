@@ -4,22 +4,20 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 
 import { Project } from "../../types/project";
 import * as backend from "../../backend";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { UserRole } from "../../types/userRole";
 
-import LanguageSettingsComponent, {
-  LanguageProps
-} from "./Language/LanguageSettingsComponent";
+import LanguageSettings, { LanguageProps } from "./Language/LanguageSettings";
 import ProjectImport from "./ProjectImport";
 import ProjectName from "./ProjectName";
 import UserSettingsComponent from "./UserSettingsComponent";
 import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
-import { Edit, Create } from "@material-ui/icons";
-import CreateProject from "../ProjectScreen/CreateProject";
+import { Edit, CloudUpload, GetApp, Language } from "@material-ui/icons";
+import ExportProjectButton from "./ProjectExport/ExportProjectButton";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -69,7 +67,7 @@ class ProjectSettingsComponent extends React.Component<
     return (
       <React.Fragment>
         <AppBarComponent />
-        <Grid container justify="center" spacing={5}>
+        <Grid container justify="center" spacing={3}>
           {/* Project name */}
           {this.state.projectName && (
             <BaseSettingsComponent
@@ -79,13 +77,36 @@ class ProjectSettingsComponent extends React.Component<
             />
           )}
 
+          {/* Import Lift file */}
+          <BaseSettingsComponent
+            icon={<CloudUpload />}
+            title={<Translate id="projectSettings.import.header" />}
+            body={
+              this.state.imports ? (
+                <ProjectImport />
+              ) : (
+                <Typography variant="caption">
+                  <Translate id="projectSettings.import.notAllowed" />
+                </Typography>
+              )
+            }
+          />
+
+          {/* Export Lift file */}
+          <BaseSettingsComponent
+            icon={<GetApp />}
+            title={<Translate id="projectSettings.export" />}
+            body={<ExportProjectButton />}
+          />
+
           {/* Language settings */}
           {this.state.languageSettings && (
-            <LanguageSettingsComponent {...this.state.languageSettings} />
+            <BaseSettingsComponent
+              icon={<Language />}
+              title={<Translate id="projectSettings.language.header" />}
+              body={<LanguageSettings {...this.state.languageSettings} />}
+            />
           )}
-
-          {/* Upload file */}
-          {this.state.imports && <ProjectImport project={this.props.project} />}
 
           {this.state.editUsers && <UserSettingsComponent />}
         </Grid>

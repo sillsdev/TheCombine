@@ -17,9 +17,6 @@ interface SenseCellProps {
 export default class SenseCell extends React.Component<
   FieldParameterStandard & SenseCellProps
 > {
-  constructor(props: FieldParameterStandard & SenseCellProps) {
-    super(props);
-  }
 
   private inputField(
     sense: ReviewEntriesSense,

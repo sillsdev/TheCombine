@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import { Button } from "@material-ui/core";
-import { exportLift } from "../../backend";
-import LoadingButton from "./LoadingButton";
+import { exportLift } from "../../../backend";
+import LoadingButton from "../../UserSettings/LoadingButton";
 import { ButtonProps } from "@material-ui/core/Button";
 import { Translate } from "react-localize-redux";
 
