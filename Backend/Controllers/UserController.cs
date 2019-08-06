@@ -26,7 +26,7 @@ namespace BackendFramework.Controllers
         /// <summary> Returns all <see cref="User"/>s </summary>
         /// <remarks> GET: v1/users </remarks>
         [HttpGet("projects/{projectId}/allusers")]
-        public async Task<IActionResult> GetAllUsers(string projectId)
+        public async Task<IActionResult> GetAllUsers()
         {
             if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
             {
@@ -121,7 +121,7 @@ namespace BackendFramework.Controllers
             // One solution is to change the updating user roles so that the backend updates a user's
             // worked projects when it updates their user roles
             //
-            // For the record, commenting this out was Mark's idea, not mine
+            // For the record, commenting this out was Mark's idea, not Micah's
             //
             // if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
             // {
