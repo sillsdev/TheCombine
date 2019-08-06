@@ -154,7 +154,7 @@ namespace BackendFramework.Services
             var userList = await _userDatabase.Users.FindAsync(filter);
 
             var user = userList.FirstOrDefault();
-            return user.Avatar;
+            return user?.Avatar;
         }
 
         /// <summary> Adds a <see cref="User"/> </summary>
