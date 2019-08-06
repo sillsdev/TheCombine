@@ -31,7 +31,7 @@ class LanguageSettingsComponent extends React.Component<
   private generateTranslate(id: string): ReactNode {
     return (
       <Typography color="primary" variant="body1">
-        <Translate id={`settings.language.${id}`} />
+        <Translate id={`projectSettings.language.${id}`} />
         {":"}
       </Typography>
     );
@@ -44,7 +44,7 @@ class LanguageSettingsComponent extends React.Component<
         <Grid item style={{ display: "flex" }}>
           <Language />
           <Typography variant="h6">
-            <Translate id="settings.language.header" />
+            <Translate id="projectSettings.language.header" />
           </Typography>
         </Grid>
 

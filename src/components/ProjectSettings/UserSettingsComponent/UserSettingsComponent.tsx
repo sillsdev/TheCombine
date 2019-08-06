@@ -61,15 +61,15 @@ interface Permission {
 
 const PERMISSIONS: Permission[] = [
   {
-    name: "settings.user.roles.admin",
+    name: "projectSettings.user.roles.admin",
     permissions: [1, 2, 3, 4, 5]
   },
   {
-    name: "settings.user.roles.cleaner",
+    name: "projectSettings.user.roles.cleaner",
     permissions: [3]
   },
   {
-    name: "settings.user.roles.typist",
+    name: "projectSettings.user.roles.typist",
     permissions: [1]
   }
 ];
@@ -111,7 +111,7 @@ class UserSettingsComponent extends React.Component<
     for (let permission of PERMISSIONS) {
       if (permission.permissions === roles) return permission.name;
     }
-    return "settings.user.roles.unknown";
+    return "projectSettings.user.roles.unknown";
   }
 
   private exitButton(): ReactNode {
@@ -147,7 +147,7 @@ class UserSettingsComponent extends React.Component<
         open={this.state.addingUser === UserAddProcess.SelectUser}
         onClose={this.close}
       >
-        {this.header("settings.user.selectUser")}
+        {this.header("projectSettings.user.selectUser")}
         <DialogContent>
           {userSelector(this.props.otherUsers, this.selectUser)}
         </DialogContent>
@@ -158,7 +158,7 @@ class UserSettingsComponent extends React.Component<
   private selectRoleDialog(): ReactNode {
     return (
       <Dialog open={this.state.addingUser === UserAddProcess.SelectRole}>
-        {this.header("settings.user.selectRole")}
+        {this.header("projectSettings.user.selectRole")}
         <DialogContent>
           <FormControl>
             {/* Interface */}
@@ -199,7 +199,7 @@ class UserSettingsComponent extends React.Component<
               }
             }}
           >
-            <Translate id="settings.user.confirmUser" />
+            <Translate id="projectSettings.user.confirmUser" />
           </Button>
         </DialogActions>
       </Dialog>
@@ -208,7 +208,7 @@ class UserSettingsComponent extends React.Component<
 
   render() {
     return BaseSettingsComponent({
-      title: "settings.user.header",
+      title: "projectSettings.user.header",
       icon: <People />,
       body: userSelector(
         this.props.users,
@@ -222,7 +222,7 @@ class UserSettingsComponent extends React.Component<
               this.setState({ addingUser: UserAddProcess.SelectUser })
             }
           >
-            <Translate id="settings.user.addUser" />
+            <Translate id="projectSettings.user.addUser" />
           </Button>
           {this.selectUserDialog()}
           {this.selectRoleDialog()}

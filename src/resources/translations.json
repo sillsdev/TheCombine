@@ -78,7 +78,7 @@
   "selectProject": {
     "title": ["Select Project", "Select Project in spanish"]
   },
-  "settings": {
+  "projectSettings": {
     "language": {
       "header": ["Language", "Lenguaje"],
       "vernacular": ["Vernacular", "Vernáculo"],
@@ -106,9 +106,7 @@
         "cleaner": ["Cleaner", "Limpiador"],
         "admin": ["Admin", "Administración"]
       }
-    }
-  },
-  "projectSettings": {
+    },
     "export": ["Export Project", "Proyecto de exportación"]
   },
   "goal": {

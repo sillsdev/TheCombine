@@ -65,12 +65,12 @@ export class ProjectImport extends React.Component<
         <Grid item style={{ display: "flex", flexWrap: "nowrap" }}>
           <PresentToAll />
           <Typography variant="h6">
-            <Translate id="settings.import.header" />
+            <Translate id="projectSettings.import.header" />
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant="body1">
-            <Translate id="settings.import.body" />
+            <Translate id="projectSettings.import.body" />
           </Typography>
         </Grid>
         <Grid item style={{ display: "flex", flexWrap: "nowrap" }}>
@@ -92,7 +92,7 @@ export class ProjectImport extends React.Component<
                 onClick={() => this.uploadWords()}
               >
                 <Translate
-                  id={`settings.import.${
+                  id={`projectSettings.import.${
                     this.state.uploadState === UploadState.Done
                       ? "done"
                       : "upload"

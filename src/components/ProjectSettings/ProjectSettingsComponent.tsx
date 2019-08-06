@@ -74,7 +74,7 @@ class ProjectSettingsComponent extends React.Component<
           {this.state.projectName && (
             <BaseSettingsComponent
               icon={<Edit />}
-              title={<Translate id="settings.name" />}
+              title={<Translate id="projectSettings.name" />}
               body={<ProjectName />}
             />
           )}
