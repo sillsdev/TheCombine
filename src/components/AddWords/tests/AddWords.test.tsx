@@ -1,220 +1,224 @@
-import React from "react";
+/**
+ * This test is commented out because this component is not currently used, it is replaced by DataEntry
+ * */
 
-import GoalSelectorScroll from "..";
+// import React from "react";
 
-import { Provider } from "react-redux";
-import { act, Simulate } from "react-dom/test-utils";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer
-} from "react-test-renderer";
-import AddWords from "../";
-import configureStore from "redux-mock-store";
-import AddWords_unconnected from "../AddWordsComponent";
-import { LocalizeProvider } from "react-localize-redux";
-import configureMockStore from "redux-mock-store";
-import createMockStore from "redux-mock-store";
-import { GoalSelectorState } from "../../../types/goals";
-import axios from "axios";
-import { Word } from "../../../types/word";
+// import GoalSelectorScroll from "..";
 
-jest.mock("@material-ui/core", () => {
-  const material = jest.requireActual("@material-ui/core");
-  return {
-    ...material,
-    Dialog: material.Box
-  };
-});
+// import { Provider } from "react-redux";
+// import { act, Simulate } from "react-dom/test-utils";
+// import renderer, {
+//   ReactTestInstance,
+//   ReactTestRenderer
+// } from "react-test-renderer";
+// import AddWords from "../";
+// import configureStore from "redux-mock-store";
+// import AddWords_unconnected from "../AddWordsComponent";
+// import { LocalizeProvider } from "react-localize-redux";
+// import configureMockStore from "redux-mock-store";
+// import createMockStore from "redux-mock-store";
+// import { GoalSelectorState } from "../../../types/goals";
+// import axios from "axios";
+// import { Word } from "../../../types/word";
 
-let master: renderer.ReactTestRenderer;
-let handle: renderer.ReactTestInstance;
+// jest.mock("@material-ui/core", () => {
+//   const material = jest.requireActual("@material-ui/core");
+//   return {
+//     ...material,
+//     Dialog: material.Box
+//   };
+// });
 
-const testWord: Word = {
-  id: "",
-  vernacular: "",
-  senses: [
-    {
-      glosses: [],
-      semanticDomains: []
-    }
-  ],
-  audio: [],
-  created: "",
-  modified: "",
-  history: [],
-  partOfSpeech: "",
-  editedBy: [],
-  otherField: "",
-  plural: ""
-};
+// let master: renderer.ReactTestRenderer;
+// let handle: renderer.ReactTestInstance;
 
-// Mock getTranslate
-const MOCK_TRANSLATE = jest.fn(_ => {
-  return "dummy";
-});
-jest.mock("react-localize-redux", () => {
-  const localize = jest.requireActual("react-localize-redux");
-  return {
-    ...localize,
-    getTranslate: jest.fn(_ => {
-      return MOCK_TRANSLATE;
-    })
-  };
-});
-jest.mock("axios");
-let mockedAxios = axios as jest.Mocked<typeof axios>;
+// const testWord: Word = {
+//   id: "",
+//   vernacular: "",
+//   senses: [
+//     {
+//       glosses: [],
+//       semanticDomains: []
+//     }
+//   ],
+//   audio: [],
+//   created: "",
+//   modified: "",
+//   history: [],
+//   partOfSpeech: "",
+//   editedBy: [],
+//   otherField: "",
+//   plural: ""
+// };
 
-// Circumvent unneeded store connections
-jest.mock("../../TreeView", () => {
-  const material = jest.requireActual("@material-ui/core");
-  return material.Container;
-});
+// // Mock getTranslate
+// const MOCK_TRANSLATE = jest.fn(_ => {
+//   return "dummy";
+// });
+// jest.mock("react-localize-redux", () => {
+//   const localize = jest.requireActual("react-localize-redux");
+//   return {
+//     ...localize,
+//     getTranslate: jest.fn(_ => {
+//       return MOCK_TRANSLATE;
+//     })
+//   };
+// });
+// jest.mock("axios");
+// let mockedAxios = axios as jest.Mocked<typeof axios>;
 
-// Mock store
-const mockStore = configureMockStore()({
-  treeViewState: { currentDomain: { name: "en", number: "1", subDomains: [] } }
-});
+// // Circumvent unneeded store connections
+// jest.mock("../../TreeView", () => {
+//   const material = jest.requireActual("@material-ui/core");
+//   return material.Container;
+// });
 
-beforeEach(() => {
-  // Here, use the act block to be able to render our AddWords into the DOM
-  // Re-created each time to prevent actions from previous runs from affecting future runs
-  act(() => {
-    // Getfrontierwords
-    mockedAxios.get.mockImplementationOnce(url => {
-      return Promise.resolve({ data: [] });
-    });
-    master = renderer.create(
-      <AddWords_unconnected
-        domain={{ name: "en", id: "1", subdomains: [] }}
-        translate={jest.fn(() => "ok")}
-      />
-    );
-  });
-  handle = master.root.findByType(AddWords_unconnected);
+// // Mock store
+// const mockStore = configureMockStore()({
+//   treeViewState: { currentDomain: { name: "en", number: "1", subDomains: [] } }
+// });
 
-  mockedAxios.put.mockClear();
-});
+// beforeEach(() => {
+//   // Here, use the act block to be able to render our AddWords into the DOM
+//   // Re-created each time to prevent actions from previous runs from affecting future runs
+//   act(() => {
+//     // Getfrontierwords
+//     mockedAxios.get.mockImplementationOnce(url => {
+//       return Promise.resolve({ data: [] });
+//     });
+//     master = renderer.create(
+//       <AddWords_unconnected
+//         domain={{ name: "en", id: "1", subdomains: [] }}
+//         translate={jest.fn(() => "ok")}
+//       />
+//     );
+//   });
+//   handle = master.root.findByType(AddWords_unconnected);
 
-afterAll(() => {
-  jest.unmock("../../TreeView");
-});
+//   mockedAxios.put.mockClear();
+// });
 
-describe("Tests AddWords", () => {
-  it("Constructs correctly", () => {
-    // Switch from the selectDomain view to normal view
-    handle.instance.setState({
-      ...handle.instance.state,
-      gettingSemanticDomain: false
-    });
-    snapTest("default view");
-  });
+// afterAll(() => {
+//   jest.unmock("../../TreeView");
+// });
 
-  it("Adds a word", done => {
-    handle.instance.setState({ newVern: "testVern", newGloss: "testGloss" });
-    mockedAxios.post.mockImplementationOnce((url, word: Word) => {
-      return Promise.resolve({ data: "123" });
-    });
-    handle.instance.submit(undefined, () => {
-      expect(handle.instance.state.rows).toEqual([
-        {
-          vernacular: "testVern",
-          glosses: "testGloss",
-          id: "123",
-          senseIndex: 0,
-          dupId: ""
-        }
-      ]);
-      done();
-    });
-  });
+// describe("Tests AddWords", () => {
+//   it("Constructs correctly", () => {
+//     // Switch from the selectDomain view to normal view
+//     handle.instance.setState({
+//       ...handle.instance.state,
+//       gettingSemanticDomain: false
+//     });
+//     snapTest("default view");
+//   });
 
-  it("Edits a word", done => {
-    handle.instance.setState({
-      rows: [
-        {
-          vernacular: "testVern1",
-          glosses: "testGloss1",
-          id: "123",
-          senseIndex: 0,
-          dupId: ""
-        },
-        {
-          vernacular: "testVern2",
-          glosses: "testGloss2",
-          id: "456",
-          senseIndex: 0,
-          dupId: ""
-        },
-        {
-          vernacular: "testVern3",
-          glosses: "testGloss3",
-          id: "789",
-          senseIndex: 0,
-          dupId: ""
-        }
-      ]
-    });
-    mockedAxios.get.mockResolvedValueOnce({ data: testWord });
-    mockedAxios.put.mockResolvedValueOnce({ data: 1 });
-    handle.instance.updateWord(1, () => {
-      expect(mockedAxios.put).toHaveBeenCalledTimes(1);
-      done();
-    });
-  });
+//   it("Adds a word", done => {
+//     handle.instance.setState({ newVern: "testVern", newGloss: "testGloss" });
+//     mockedAxios.post.mockImplementationOnce((url, word: Word) => {
+//       return Promise.resolve({ data: "123" });
+//     });
+//     handle.instance.submit(undefined, () => {
+//       expect(handle.instance.state.rows).toEqual([
+//         {
+//           vernacular: "testVern",
+//           glosses: "testGloss",
+//           id: "123",
+//           senseIndex: 0,
+//           dupId: ""
+//         }
+//       ]);
+//       done();
+//     });
+//   });
 
-  it("Removes a word", done => {
-    handle.instance.setState({
-      rows: [
-        {
-          vernacular: "testVern1",
-          glosses: "testGloss1",
-          id: "123",
-          senseIndex: 0,
-          dupId: ""
-        },
-        {
-          vernacular: "testVern2",
-          glosses: "testGloss2",
-          id: "456",
-          senseIndex: 0,
-          dupId: ""
-        },
-        {
-          vernacular: "testVern3",
-          glosses: "testGloss3",
-          id: "789",
-          senseIndex: 0,
-          dupId: ""
-        }
-      ]
-    });
-    mockedAxios.delete.mockResolvedValue(1);
-    handle.instance.removeWord(456, () => {
-      handle.instance.removeRow(1);
-      expect(handle.instance.state.rows).toEqual([
-        {
-          vernacular: "testVern1",
-          glosses: "testGloss1",
-          id: "123",
-          senseIndex: 0,
-          dupId: ""
-        },
-        {
-          vernacular: "testVern3",
-          glosses: "testGloss3",
-          id: "789",
-          senseIndex: 0,
-          dupId: ""
-        }
-      ]);
-      done();
-    });
-  });
-});
+//   it("Edits a word", done => {
+//     handle.instance.setState({
+//       rows: [
+//         {
+//           vernacular: "testVern1",
+//           glosses: "testGloss1",
+//           id: "123",
+//           senseIndex: 0,
+//           dupId: ""
+//         },
+//         {
+//           vernacular: "testVern2",
+//           glosses: "testGloss2",
+//           id: "456",
+//           senseIndex: 0,
+//           dupId: ""
+//         },
+//         {
+//           vernacular: "testVern3",
+//           glosses: "testGloss3",
+//           id: "789",
+//           senseIndex: 0,
+//           dupId: ""
+//         }
+//       ]
+//     });
+//     mockedAxios.get.mockResolvedValueOnce({ data: testWord });
+//     mockedAxios.put.mockResolvedValueOnce({ data: 1 });
+//     handle.instance.updateWord(1, () => {
+//       expect(mockedAxios.put).toHaveBeenCalledTimes(1);
+//       done();
+//     });
+//   });
 
-// Utility functions -----------------------------
+//   it("Removes a word", done => {
+//     handle.instance.setState({
+//       rows: [
+//         {
+//           vernacular: "testVern1",
+//           glosses: "testGloss1",
+//           id: "123",
+//           senseIndex: 0,
+//           dupId: ""
+//         },
+//         {
+//           vernacular: "testVern2",
+//           glosses: "testGloss2",
+//           id: "456",
+//           senseIndex: 0,
+//           dupId: ""
+//         },
+//         {
+//           vernacular: "testVern3",
+//           glosses: "testGloss3",
+//           id: "789",
+//           senseIndex: 0,
+//           dupId: ""
+//         }
+//       ]
+//     });
+//     mockedAxios.delete.mockResolvedValue(1);
+//     handle.instance.removeWord(456, () => {
+//       handle.instance.removeRow(1);
+//       expect(handle.instance.state.rows).toEqual([
+//         {
+//           vernacular: "testVern1",
+//           glosses: "testGloss1",
+//           id: "123",
+//           senseIndex: 0,
+//           dupId: ""
+//         },
+//         {
+//           vernacular: "testVern3",
+//           glosses: "testGloss3",
+//           id: "789",
+//           senseIndex: 0,
+//           dupId: ""
+//         }
+//       ]);
+//       done();
+//     });
+//   });
+// });
 
-// Perform a snapshot test
-function snapTest(name: string) {
-  expect(master.toJSON()).toMatchSnapshot();
-}
+// // Utility functions -----------------------------
+
+// // Perform a snapshot test
+// function snapTest(name: string) {
+//   expect(master.toJSON()).toMatchSnapshot();
+// }
