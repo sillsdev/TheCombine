@@ -30,7 +30,10 @@ function LanguageSettings(props: LanguageProps & LocalizeContextProps) {
             color={
               language !== props.activeLanguage.code ? "primary" : "default"
             }
-            onClick={() => props.setActiveLanguage(language)}
+            onClick={() => {
+              props.setActiveLanguage(language);
+              localStorage.setItem("language", language);
+            }}
           >
             <Translate id="projectSettings.language.save" />
           </Button>

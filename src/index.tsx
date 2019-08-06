@@ -21,7 +21,10 @@ import theme from "./types/theme";
 const localizeInit = {
   languages: [{ name: "English", code: "en" }, { name: "Spanish", code: "es" }],
   translation: globalTranslations,
-  options: { renderToStaticMarkup }
+  options: {
+    renderToStaticMarkup,
+    defaultLanguage: localStorage.getItem("language") || "en"
+  }
 };
 
 //Provider connects store to component containers
