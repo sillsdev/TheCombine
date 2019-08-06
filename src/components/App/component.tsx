@@ -13,6 +13,9 @@ import DataEntry from "../DataEntry";
 import UserSettings from "../UserSettings/UserSettings";
 import ProjectSettings from "../ProjectSettings";
 
+/**
+ * The top-level component
+ */
 export default class App extends React.Component {
   render() {
     return (

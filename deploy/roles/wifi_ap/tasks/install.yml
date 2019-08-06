@@ -49,6 +49,15 @@
   notify: Restart create_ap
 
 
+- name: Install hosts lists for access point
+  template:
+    src: create_ap.hosts.j2
+    dest: /etc/create_ap/create_ap.hosts
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart create_ap
+
 - name: Create service directory
   file:
     path: /usr/lib/systemd/system

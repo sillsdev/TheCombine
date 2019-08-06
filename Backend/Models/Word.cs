@@ -82,7 +82,7 @@ namespace BackendFramework.ValueModels
 
             foreach (string file in Audio)
             {
-                clone.EditedBy.Add(file.Clone() as string);
+                clone.Audio.Add(file.Clone() as string);
             }
             foreach (string id in EditedBy)
             {
@@ -109,8 +109,8 @@ namespace BackendFramework.ValueModels
                 other.OtherField.Equals(OtherField) &&
                 other.ProjectId.Equals(ProjectId) &&
 
-                other.Senses.Count == Senses.Count &&
-                other.Senses.All(Senses.Contains) &&
+                other.Audio.Count == Audio.Count &&
+                other.Audio.All(Audio.Contains) &&
 
                 other.Senses.Count == Senses.Count &&
                 other.Senses.All(Senses.Contains);
@@ -125,14 +125,14 @@ namespace BackendFramework.ValueModels
             else
             {
                 Word other = obj as Word;
-                return 
+                return
                     other.Id.Equals(Id) &&
                     this.ContentEquals(other) &&
                     other.Created.Equals(Created) &&
-                    other.Modified.Equals(Modified) && 
+                    other.Modified.Equals(Modified) &&
                     other.EditedBy.Count == EditedBy.Count &&
                     other.EditedBy.All(EditedBy.Contains) &&
-                    other.History.Count == History.Count && 
+                    other.History.Count == History.Count &&
                     other.History.All(History.Contains);
             }
         }

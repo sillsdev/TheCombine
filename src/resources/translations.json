@@ -108,6 +108,9 @@
       }
     }
   },
+  "projectSettings": {
+    "export": ["Export Project", "Proyecto de exportación"]
+  },
   "goal": {
     "selector": {
       "selectOption": ["Select this goal", "Selecciona este objectivo"],
@@ -122,7 +125,8 @@
       "of": ["of", "de"]
     },
     "mergeDups": {
-      "done": ["Save & Continue", "Ahorrar y Continuar"]
+      "done": ["Save & Continue", "Ahorrar y Continuar"],
+      "skip": ["Skip", "omitir"]
     }
   },
   "createStrWordInv": {
@@ -249,6 +253,10 @@
       "next": [
         "Merge all these words and load a new set of words",
         "Combina todas estas palabras y carga un nuevo conjunto de palabras"
+      ],
+      "skip": [
+        "Load a new set of words",
+        "Cargue un nuevo conjunto de palabras"
       ],
       "list": [
         "Drag this word to the right to start merging it with other words",

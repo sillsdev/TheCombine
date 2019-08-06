@@ -49,8 +49,6 @@ export interface SideBar {
 //interface for component props
 export interface MergeDupStepProps {
   words: { [wordID: string]: MergeTreeWord };
-  dropWord?: () => void;
-  draggedSense?: MergeTreeReference;
   moveSenses: (src: MergeTreeReference[], dest: MergeTreeReference[]) => void;
   orderSense: (wordID: string, senseID: string, order: number) => void;
   orderDuplicate: (ref: MergeTreeReference, order: number) => void;
@@ -83,9 +81,16 @@ class MergeDupStep extends React.Component<
       ...this.state,
       sideBar: { senses: [], wordID: "", senseID: "" }
     });
+    if (this.props.refreshWords) this.props.refreshWords();
+  }
+  saveContinue() {
+    this.setState({
+      ...this.state,
+      sideBar: { senses: [], wordID: "", senseID: "" }
+    });
     if (this.props.mergeAll) {
       this.props.mergeAll().then(() => {
-        if (this.props.refreshWords) this.props.refreshWords();
+        this.next();
       });
     }
   }
@@ -160,7 +165,9 @@ class MergeDupStep extends React.Component<
         open={this.state.sideBar.senses.length > 1}
       >
         <Droppable
-          droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
+          droppableId={`${this.state.sideBar.wordID} ${
+            this.state.sideBar.senseID
+          }`}
         >
           {providedDroppable => (
             <div
@@ -245,8 +252,6 @@ class MergeDupStep extends React.Component<
         {/* Merging pane */}
         <div
           style={{
-            ...HEIGHT_STYLE,
-            overflow: "hidden",
             background: "#eee",
             padding: 8
           }}
@@ -254,12 +259,13 @@ class MergeDupStep extends React.Component<
           <GridList
             cellHeight="auto"
             style={{
-              flexWrap: "nowrap"
+              flexWrap: "nowrap",
+              overflow: "auto",
             }}
           >
             <DragDropContext onDragEnd={res => this.handleDrop(res)}>
               {Object.keys(this.props.words).map(key => (
-                <GridListTile key={key} style={{ margin: 8 }}>
+                <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
                   <MergeRow
                     sideBar={this.state.sideBar}
                     setSidebar={el =>
@@ -293,11 +299,23 @@ class MergeDupStep extends React.Component<
           }}
         >
           <Button
-            style={{ float: "right", marginRight: 30 }}
-            onClick={_ => this.next()}
+            color="primary"
+            variant="contained"
+            style={{
+              float: "right",
+              marginRight: 30
+            }}
+            onClick={_ => this.saveContinue()}
             title={this.props.translate("mergeDups.helpText.next") as string}
           >
             <Translate id="goal.mergeDups.done" />
+          </Button>
+          <Button
+            style={{ float: "right", marginRight: 30 }}
+            onClick={_ => this.next()}
+            title={this.props.translate("mergeDups.helpText.skip") as string}
+          >
+            <Translate id="goal.mergeDups.skip" />
           </Button>
         </Paper>
       </Box>

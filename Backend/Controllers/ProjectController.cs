@@ -264,24 +264,4 @@ namespace BackendFramework.Controllers
 
     }
 
-    public class ProjectWithUser : Project
-    {
-        public User __UpdatedUser;
-
-        public ProjectWithUser() { }
-
-        public ProjectWithUser(Project baseObj)
-        {
-            Id = baseObj.Id;
-            Name = baseObj.Name;
-            PartsOfSpeech = baseObj.PartsOfSpeech;
-            RejectedCharacters = baseObj.RejectedCharacters;
-            SemanticDomains = baseObj.SemanticDomains;
-            VernacularWritingSystem = baseObj.VernacularWritingSystem;
-            WordFields = baseObj.WordFields;
-            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
-            CustomFields = baseObj.CustomFields;
-            ValidCharacters = baseObj.ValidCharacters;
-        }
-    }
 }

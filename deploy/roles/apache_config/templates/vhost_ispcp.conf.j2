@@ -1,0 +1,98 @@
+{% for host in item.virtual_hosts %}
+<VirtualHost *:{{ host.port | default('80') }}>
+
+    <IfModule suexec_module>
+           SuexecUserGroup {{item.ispcp_user}} {{item.ispcp_user}}
+    </IfModule>
+
+{% if item.server_admin is defined %}    ServerAdmin     {{ item.server_admin }}
+{% endif %}
+    DocumentRoot    {{ item.document_root }}
+ 
+    ServerName    {{ item.server_name }}
+{% if host.server_alias is defined %}    ServerAlias   {{ host.server_alias | join(' ') }}
+{% endif %}
+
+{% if host.has_ssl %}
+    SSLEngine On
+    SSLCertificateFile /etc/apache2/ssl/{{host.certificate_file}}
+    SSLCertificateKeyFile /etc/apache2/ssl/{{host.key_file}}
+{% if host.chain_file is defined %}    SSLCertificateChainFile /etc/apache2/ssl/{{ host.chain_file }}
+{% endif %}
+    
+{% endif %}
+
+    Alias /errors   {{item.base_path}}/errors/
+
+    RedirectMatch permanent ^/ftp[\/]?$         {{item.ispcp_admin_url}}/ftp/
+    RedirectMatch permanent ^/pma[\/]?$         {{item.ispcp_admin_url}}/pma/
+    RedirectMatch permanent ^/webmail[\/]?$     {{item.ispcp_admin_url}}/webmail/
+    RedirectMatch permanent ^/ispcp[\/]?$       {{item.ispcp_admin_url}}/
+
+    ErrorDocument 401 /errors/401.html
+    ErrorDocument 403 /errors/403.html
+    ErrorDocument 404 /errors/404.html
+    ErrorDocument 500 /errors/500.html
+    ErrorDocument 503 /errors/503.html
+
+    <IfModule mod_cband.c>
+        CBandUser {{ item.server_name }}
+    </IfModule>
+
+    # httpd awstats support BEGIN.
+
+   # httpd awstats support END.
+
+    # httpd dmn entry cgi support BEGIN.
+    ScriptAlias /cgi-bin/ {{item.base_path}}/cgi-bin/
+    <Directory {{item.base_path}}/cgi-bin>
+        AllowOverride AuthConfig
+        #Options ExecCGI
+        Order allow,deny
+        Allow from all
+    </Directory>
+    # httpd dmn entry cgi support END.
+
+    <Directory {{item.base_path}}/htdocs>
+        # httpd dmn entry PHP support BEGIN.
+        # httpd dmn entry PHP support END.
+        Options -Indexes Includes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+    
+    # httpd dmn entry PHP2 support BEGIN.
+    <IfModule mod_php5.c>
+        php_admin_value open_basedir "{{item.base_path}}/:{{item.base_path}}/phptmp/:/usr/share/php/"
+        php_admin_value upload_tmp_dir "{{item.base_path}}/phptmp/"
+        php_admin_value session.save_path "{{item.base_path}}/phptmp/"
+        php_admin_value sendmail_path '/usr/sbin/sendmail -f {{item.ispcp_user}} -t -i'
+    </IfModule>
+    <IfModule mod_fastcgi.c>
+        ScriptAlias /php5/ /var/www/fcgi/{{item.server_name}}/
+        <Directory "/var/www/fcgi/{{item.server_name}}">
+            AllowOverride None
+            Options +ExecCGI -MultiViews -Indexes
+            Order allow,deny
+            Allow from all
+        </Directory>
+    </IfModule>
+    <IfModule mod_fcgid.c>
+        <Directory {{item.base_path}}/htdocs>
+            FCGIWrapper /var/www/fcgi/{{item.server_name}}/php5-fcgi-starter .php
+            Options +ExecCGI
+        </Directory>
+        <Directory "/var/www/fcgi/{{item.server_name}}">
+            AllowOverride None
+            Options +ExecCGI MultiViews -Indexes
+            Order allow,deny
+            Allow from all
+        </Directory>
+    </IfModule>
+    # httpd dmn entry PHP2 support END.
+
+    Include /etc/apache2/ispcp/{{item.server_name}}.conf
+
+</VirtualHost>
+{% endfor %}

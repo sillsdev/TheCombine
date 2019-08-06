@@ -31,7 +31,36 @@ interface DataEntryTableState {
   displaySpellingSuggestionsIndex?: number;
 }
 
-export class DataEntryTableRewrite extends React.Component<
+
+async function getWordsFromBackend(): Promise<Word[]> {
+  let words = await Backend.getFrontierWords();
+  words = filterWords(words);
+  return words;
+}
+
+/** Filter out words that do not have correct accessibility */
+export function filterWords(words: Word[]): Word[] {
+  let filteredWords: Word[] = [];
+  for (let word of words) {
+    let shouldInclude = true;
+    for (let sense of word.senses) {
+      if (sense.accessibility !== State.active) {
+        shouldInclude = false;
+        break;
+      }
+    }
+    if (shouldInclude) {
+      filteredWords.push(word);
+    }
+  }
+  return filteredWords;
+}
+
+/**
+ * A data entry table containing word entries
+ */
+export class DataEntryTable extends React.Component<
+
   DataEntryTableProps & LocalizeContextProps,
   DataEntryTableState
 > {
@@ -48,7 +77,7 @@ export class DataEntryTableRewrite extends React.Component<
   spellChecker: SpellChecker;
 
   async componentDidMount() {
-    let allWords = await this.getWordsFromBackend();
+    let allWords = await getWordsFromBackend();
     this.setState({
       existingWords: allWords
     });
@@ -61,44 +90,14 @@ export class DataEntryTableRewrite extends React.Component<
   }
 
   async addNewWord(wordToAdd: Word) {
-    let updatedWord = await this.addWordToBackend(wordToAdd);
+    let updatedWord = await Backend.createWord(wordToAdd);
     let updatedNewWords = [...this.state.recentlyAddedWords];
     updatedNewWords.push({ word: updatedWord, mutable: true });
-    let words: Word[] = await this.getWordsFromBackend();
+    let words: Word[] = await getWordsFromBackend();
     this.setState({
       existingWords: words,
       recentlyAddedWords: updatedNewWords
     });
-  }
-
-  async addWordToBackend(word: Word): Promise<Word> {
-    let updatedWord = await Backend.createWord(word);
-    return updatedWord;
-  }
-
-  async getWordsFromBackend(): Promise<Word[]> {
-    let words = await Backend.getFrontierWords();
-    words = this.filterWords(words);
-    return words;
-  }
-
-  // MAYBE DELETE
-  /** Filter out words that do not have correct accessibility */
-  filterWords(words: Word[]): Word[] {
-    let filteredWords: Word[] = [];
-    for (let word of words) {
-      let shouldInclude = true;
-      for (let sense of word.senses) {
-        if (sense.accessibility !== State.active) {
-          shouldInclude = false;
-          break;
-        }
-      }
-      if (shouldInclude) {
-        filteredWords.push(word);
-      }
-    }
-    return filteredWords;
   }
 
   /** Update the word in the backend and the frontend */
@@ -162,7 +161,7 @@ export class DataEntryTableRewrite extends React.Component<
 
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
     let updatedWord = await Backend.updateWord(wordToUpdate);
-    let words = await this.getWordsFromBackend();
+    let words = await getWordsFromBackend();
     this.setState({ existingWords: words });
     return updatedWord;
   }
@@ -174,7 +173,7 @@ export class DataEntryTableRewrite extends React.Component<
 
   async deleteWordAndUpdateExistingWords(word: Word) {
     let deletedWord = await Backend.deleteWord(word);
-    let existingWords: Word[] = await this.getWordsFromBackend();
+    let existingWords: Word[] = await getWordsFromBackend();
     this.setState({ existingWords });
   }
 
@@ -315,4 +314,4 @@ export class DataEntryTableRewrite extends React.Component<
   }
 }
 
-export default withLocalize(DataEntryTableRewrite);
+export default withLocalize(DataEntryTable);

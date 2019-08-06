@@ -314,6 +314,15 @@ export async function mergeWord(
       };
     });
 
+    // a merge is an identity if all of its senses come from parent
+    // and it has the same number of senses as parent
+    if (!children.find(val => val.wordID !== wordID)) {
+      if (children.length === data.words[wordID].senses.length) {
+        // if the merge is an identity don't bother sending a merge
+        return mapping;
+      }
+    }
+
     // send database call
     let newWords = await backend.mergeWords(parent, children);
     let separateIndex = 0;
@@ -361,10 +370,22 @@ export function mergeAll() {
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
     getState: () => StoreState
   ) => {
+    // generate blacklist
+    let wordIDs = Object.keys(
+      getState().mergeDuplicateGoal.mergeTreeState.data.words
+    );
+    let hash = wordIDs.sort().reduce((val, acc) => `${acc}:${val}`, "");
+    let blacklist: Hash<boolean> = JSON.parse(
+      localStorage.getItem("mergedups_blacklist") || "{}"
+    );
+    blacklist[hash] = true;
+    localStorage.setItem("mergedups_blacklist", JSON.stringify(blacklist));
+    // merge words
     let mapping: Hash<{ srcWord: string; order: number }> = {};
-    for (let wordID of Object.keys(
+    const words = Object.keys(
       getState().mergeDuplicateGoal.mergeTreeState.tree.words
-    )) {
+    );
+    for (let wordID of words) {
       mapping = await mergeWord(wordID, getState, mapping);
     }
   };

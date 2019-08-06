@@ -7,6 +7,9 @@ interface ImmutableExistingEntryProps {
   gloss: string;
 }
 
+/**
+ * Displays a word users cannot edit any more
+ */
 export class ImmutableExistingEntry extends React.Component<
   ImmutableExistingEntryProps
 > {
