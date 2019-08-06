@@ -11,7 +11,7 @@ import renderer, {
   ReactTestInstance,
   ReactTestRenderer
 } from "react-test-renderer";
-import AddWords from "../";
+import AddWords from "..";
 import configureStore from "redux-mock-store";
 import AddWords_unconnected from "../AddWordsComponent";
 import { LocalizeProvider } from "react-localize-redux";
