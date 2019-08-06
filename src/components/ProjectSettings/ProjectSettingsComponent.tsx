@@ -108,7 +108,8 @@ class ProjectSettingsComponent extends React.Component<
             />
           )}
 
-          {this.state.editUsers && <UserSettingsComponent />}
+          {/* Add users to project - Not fully implemented yet */}
+          {/* {this.state.editUsers && <UserSettingsComponent />} */}
         </Grid>
       </React.Fragment>
     );
