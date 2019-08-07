@@ -46,7 +46,7 @@ const dynamicFontParams = { factor: 2 };
 const baseTheme = createMuiTheme({
   typography: { ...typography },
   palette: { ...palette } as PaletteOptions,
-  spacing: 16,
+  spacing: 8,
   props: {
     MuiButtonBase: {
       disableRipple: false
@@ -59,7 +59,7 @@ export const dynamicTheme = responsiveFontSizes(
   createMuiTheme({
     typography: { ...typography },
     palette: { ...palette } as PaletteOptions,
-    spacing: 16,
+    spacing: 8,
     props: {
       MuiButtonBase: {
         disableRipple: false
@@ -73,9 +73,7 @@ export const dynamicTheme = responsiveFontSizes(
           "&:hover": {
             color: primary,
             backgroundColor: hover
-          },
-          padding: "1vw",
-          margin: "1vw"
+          }
         }
       },
       MuiCard: {

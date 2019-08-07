@@ -113,13 +113,19 @@ export function logoutAndResetStore() {
   };
 }
 
-export function asyncRegister(name: string, user: string, password: string) {
+export function asyncRegister(
+  name: string,
+  user: string,
+  email: string,
+  password: string
+) {
   return async (
     dispatch: Dispatch<UserAction | ThunkAction<any, {}, {}, AnyAction>>
   ) => {
     dispatch(registerAttempt(user));
     // Create new user
     let newUser = new User(name, user, password);
+    newUser.email = email;
     await backend
       .addUser(newUser)
       .then(res => {
@@ -130,7 +136,9 @@ export function asyncRegister(name: string, user: string, password: string) {
         }, 1000);
       })
       .catch(err => {
-        dispatch(registerFailure(user));
+        dispatch(
+          registerFailure((err.response && err.response.status) || err.message)
+        );
       });
   };
 }
@@ -148,10 +156,10 @@ export function registerSuccess(user: string): UserAction {
   };
 }
 
-export function registerFailure(user: string): UserAction {
+export function registerFailure(errorMessage: string): UserAction {
   return {
     type: REGISTER_FAILURE,
-    payload: { user }
+    payload: { user: errorMessage }
   };
 }
 
