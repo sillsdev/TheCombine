@@ -1,11 +1,13 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { TextField, Grid, Button } from "@material-ui/core";
 
 import { updateProject } from "../../../backend";
 import { Project } from "../../../types/project";
+import { Translate } from "react-localize-redux";
 
 interface NameProps {
   project: Project;
+  setCurrentProject: (project: Project) => void;
 }
 
 function ProjectName(props: NameProps) {
@@ -14,18 +16,38 @@ function ProjectName(props: NameProps) {
   );
 
   function updateName() {
+    // Update backend
     updateProject({
+      ...props.project,
+      name: projectName
+    });
+
+    // Update redux store
+    props.setCurrentProject({
       ...props.project,
       name: projectName
     });
   }
 
   return (
-    <TextField
-      value={projectName}
-      onChange={e => setProjectName(e.target.value)}
-      onBlur={() => updateName()}
-    />
+    <Grid container spacing={1}>
+      <Grid item xs={12}>
+        <TextField
+          value={projectName}
+          onChange={e => setProjectName(e.target.value)}
+          onBlur={() => updateName()}
+        />
+      </Grid>
+      <Grid item>
+        <Button
+          variant="contained"
+          color={projectName !== props.project.name ? "primary" : "default"}
+          onClick={() => updateName()}
+        >
+          <Translate id="projectSettings.language.save" />
+        </Button>
+      </Grid>
+    </Grid>
   );
 }
 
