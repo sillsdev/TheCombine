@@ -9,7 +9,7 @@ function mapStateToProps(state: StoreState): RegisterStateProps {
   return {
     inProgress: state.loginState.registerAttempt,
     success: state.loginState.registerSuccess,
-    failure: state.loginState.registerFailure
+    failureMessage: state.loginState.registerFailure
   };
 }
 
@@ -17,8 +17,8 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, UserAction>
 ) {
   return {
-    register: (name: string, user: string, password: string) => {
-      dispatch(asyncRegister(name, user, password));
+    register: (name: string, user: string, email: string, password: string) => {
+      dispatch(asyncRegister(name, user, email, password));
     },
     reset: () => {
       dispatch(registerReset());

@@ -19,7 +19,7 @@ export interface LoginState {
   loginFailure: boolean;
   registerAttempt: boolean;
   registerSuccess: boolean;
-  registerFailure: boolean;
+  registerFailure: string;
 }
 
 export const defaultState: LoginState = {
@@ -29,7 +29,7 @@ export const defaultState: LoginState = {
   loginFailure: false,
   registerAttempt: false,
   registerSuccess: false,
-  registerFailure: false
+  registerFailure: ""
 };
 
 export const loginReducer = (
@@ -65,7 +65,7 @@ export const loginReducer = (
         user: action.payload.user,
         registerAttempt: true,
         registerSuccess: false,
-        registerFailure: false
+        registerFailure: ""
       };
     case REGISTER_SUCCESS:
       return {
@@ -77,10 +77,9 @@ export const loginReducer = (
     case REGISTER_FAILURE:
       return {
         ...state,
-        user: action.payload.user,
         registerAttempt: false,
         registerSuccess: false,
-        registerFailure: true
+        registerFailure: action.payload.user
       };
     case LOGIN_RESET:
     case LOGOUT:

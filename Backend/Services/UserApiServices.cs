@@ -164,8 +164,8 @@ namespace BackendFramework.Services
             //check if collection is not empty
             var users = await GetAllUsers();
 
-            //check to see if username is taken
-            if (users.Count != 0 && _userDatabase.Users.Find(x => x.Username == user.Username).ToList().Count > 0)
+            //check to see if username or email address is taken
+            if (users.Count != 0 && _userDatabase.Users.Find(x => (x.Username == user.Username || x.Email == user.Email)).ToList().Count > 0)
             {
                 return null;
             }

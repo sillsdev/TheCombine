@@ -19,14 +19,19 @@ import { Check } from "@material-ui/icons";
 import { buttonSuccess } from "../../../types/theme";
 
 export interface RegisterDispatchProps {
-  register?: (name: string, user: string, password: string) => void;
+  register?: (
+    name: string,
+    user: string,
+    email: string,
+    password: string
+  ) => void;
   reset: () => void;
 }
 
 export interface RegisterStateProps {
   inProgress: boolean;
   success: boolean;
-  failure: boolean | undefined;
+  failureMessage: string;
 }
 
 interface RegisterState {
@@ -112,11 +117,19 @@ class Register extends React.Component<
     ) {
       this.setState({ error });
     } else if (this.props.register) {
-      this.props.register(name, user, pass);
+      this.props.register(name, user, email, pass);
     }
   }
 
   render() {
+    // determine error message
+    let failureMessage;
+    // intentional weak comparasion. props.failureMessage may evaluate to number
+    if (this.props.failureMessage == "400") {
+      failureMessage = <Translate id="login.registerFailed" />;
+    } else {
+      failureMessage = <Translate id="login.networkError" />;
+    }
     return (
       <Grid container justify="center">
         <Card style={{ width: 450 }}>
@@ -228,12 +241,12 @@ class Register extends React.Component<
               />
 
               {/* "Failed to register" */}
-              {this.props.failure && (
+              {this.props.failureMessage !== "" && (
                 <Typography
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}
                 >
-                  <Translate id="login.registerFailed" />
+                  {failureMessage}
                 </Typography>
               )}
 
