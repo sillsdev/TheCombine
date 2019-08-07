@@ -17,18 +17,19 @@ import history from "./history";
 import { PersistGate } from "redux-persist/integration/react";
 import ThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import theme from "./types/theme";
-import {CssBaseline} from '@material-ui/core';
 
 const localizeInit = {
   languages: [{ name: "English", code: "en" }, { name: "Spanish", code: "es" }],
   translation: globalTranslations,
-  options: { renderToStaticMarkup }
+  options: {
+    renderToStaticMarkup,
+    defaultLanguage: localStorage.getItem("language") || "en"
+  }
 };
 
 //Provider connects store to component containers
 ReactDOM.render(
   <ThemeProvider theme={theme}>
-    <CssBaseline />
     <Provider store={store}>
       <LocalizeProvider store={store} initialize={localizeInit}>
         <Router history={history}>

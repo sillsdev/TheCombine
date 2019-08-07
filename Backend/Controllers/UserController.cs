@@ -25,10 +25,10 @@ namespace BackendFramework.Controllers
 
         /// <summary> Returns all <see cref="User"/>s </summary>
         /// <remarks> GET: v1/users </remarks>
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("projects/{projectId}/allusers")]
+        public async Task<IActionResult> GetAllUsers()
         {
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
             {
                 return new UnauthorizedResult();
             }
@@ -155,10 +155,16 @@ namespace BackendFramework.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> Put(string userId, [FromBody] User user)
         {
-            if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
-            {
-                return new UnauthorizedResult();
-            }
+            // The model seems to have flaws, and this prevents an admin from editing a user's user edits
+            // One solution is to change the updating user roles so that the backend updates a user's
+            // worked projects when it updates their user roles
+            //
+            // For the record, commenting this out was Mark's idea, not Micah's
+            //
+            // if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
+            // {
+            //     return new UnauthorizedResult();
+            // }
 
             var result = await _userService.Update(userId, user);
             if (result == ResultOfUpdate.NotFound)

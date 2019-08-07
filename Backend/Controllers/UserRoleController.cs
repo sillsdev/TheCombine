@@ -106,6 +106,8 @@ namespace BackendFramework.Controllers
                 return new UnauthorizedResult();
             }
 
+            userRole.ProjectId = projectId;
+
             //ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)

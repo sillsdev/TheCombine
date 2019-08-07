@@ -37,7 +37,7 @@ namespace Backend.Tests
             _userService.Create(RandomUser());
             _userService.Create(RandomUser());
 
-            var users = (_controller.Get().Result as ObjectResult).Value as List<User>;
+            var users = (_controller.GetAllUsers().Result as ObjectResult).Value as List<User>;
             Assert.That(users, Has.Count.EqualTo(3));
             _userService.GetAllUsers().Result.ForEach(user => Assert.Contains(user, users));
         }

@@ -76,9 +76,43 @@
     "success": ["Project Created!", "Proyecto creado!"]
   },
   "selectProject": {
-    "title": ["Select Project", "Select Project in spanish"]
+    "title": ["Select Project", "Seleccionar Proyecto"]
   },
   "projectSettings": {
+    "language": {
+      "header": ["Language", "Lenguaje"],
+      "vernacular": ["Vernacular", "Vernáculo"],
+      "analysis": ["Analysis", "Análisis"],
+      "uiLang": ["Interface", "Interfaz"],
+      "save": ["Save", "Guardar"],
+      "interfaceLanguage": ["Interface Language", "Lenguaje de interfaz"]
+    },
+    "name": ["Project Name", "Nombre del Proyecto"],
+    "import": {
+      "header": ["Import Data", "Importar Información"],
+      "body": [
+        "Imported data will be added to this project. Combine will make no attempt to deduplicate, overwrite, or sync. File must be a zipped archive in <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>.",
+        "Los datos importados se agregarán a este proyecto. Combine no intentará deduplicar, sobrescribir ni sincronizar. El archivo debe ser un archivo comprimido en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>."
+      ],
+      "upload": ["Upload", "Cargar"],
+      "done": ["Done!", "Completado!"],
+      "notAllowed": [
+        "You have already imported a Lift file to this project.",
+        "Ya ha importado un archivo Lift a este proyecto."
+      ]
+    },
+    "user": {
+      "header": ["Users", "Usarios"],
+      "addUser": ["Add a user", "Añadir un usario"],
+      "selectUser": ["Choose a user", "Escoger un usario"],
+      "selectRole": ["Choose their role", "Escoger el papel"],
+      "confirmUser": ["Select this user", "Elegir este usario"],
+      "roles": {
+        "typist": ["Typist", "Mecanógrafo"],
+        "cleaner": ["Cleaner", "Limpiador"],
+        "admin": ["Admin", "Administración"]
+      }
+    },
     "export": ["Export Project", "Proyecto de exportación"]
   },
   "goal": {

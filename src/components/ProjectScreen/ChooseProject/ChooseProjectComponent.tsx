@@ -5,7 +5,6 @@ import {
   withLocalize
 } from "react-localize-redux";
 import {
-  Grid,
   Typography,
   CardContent,
   Card,
