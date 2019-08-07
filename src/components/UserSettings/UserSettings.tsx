@@ -3,7 +3,7 @@ import { Button, Typography } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 import { uploadAvatar } from "../../backend";
 import { User } from "../../types/user";
-import ExportProjectButton from "./ExportProjectButton";
+import ExportProjectButton from "../ProjectSettings/ProjectExport/ExportProjectButton";
 
 /**
  * Page to edit user profile

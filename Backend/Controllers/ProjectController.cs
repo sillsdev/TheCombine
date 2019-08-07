@@ -246,6 +246,18 @@ namespace BackendFramework.Controllers
             }
         }
 
+        // Check if lift import has already happened for this project
+        [HttpGet("{projectId}/liftcheck")]
+        public async Task<IActionResult> CanUploadLift(string projectId)
+        {
+            if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
+            {
+                return new UnauthorizedResult();
+            }
+
+            return new OkObjectResult(_projectService.CanImportLift(projectId));
+        }
+
     }
 
 }
