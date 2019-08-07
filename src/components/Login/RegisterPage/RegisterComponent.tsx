@@ -17,7 +17,7 @@ import {
 import history from "../../../history";
 import { Check } from "@material-ui/icons";
 import { buttonSuccess } from "../../../types/theme";
-import { checkUsername, checkEmail } from "../../../backend";
+import { isUsernameTaken, isEmailTaken } from "../../../backend";
 
 export interface RegisterDispatchProps {
   register?: (
@@ -94,14 +94,14 @@ class Register extends React.Component<
   }
 
   async checkUsername(username: string) {
-    let usernameTaken = await checkUsername(username);
+    let usernameTaken = await isUsernameTaken(username);
     if (usernameTaken) {
       this.setState({ error: { ...this.state.error, user: true } });
     }
   }
 
   async checkEmail(username: string) {
-    let emailTaken = await checkEmail(username);
+    let emailTaken = await isEmailTaken(username);
     if (emailTaken) {
       this.setState({ error: { ...this.state.error, email: true } });
     }
