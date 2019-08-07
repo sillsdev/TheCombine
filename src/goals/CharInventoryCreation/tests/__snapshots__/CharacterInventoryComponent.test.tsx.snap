@@ -28,7 +28,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
             className="MuiTypography-root MuiTypography-h4"
             style={
               Object {
-                "marginTop": 16,
+                "marginTop": 8,
               }
             }
           >
@@ -68,7 +68,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
               Object {
                 "background": "whitesmoke",
                 "borderTop": "1px solid #ccc",
-                "padding": 16,
+                "padding": 8,
               }
             }
           >
@@ -143,7 +143,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                       className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
                       style={
                         Object {
-                          "marginTop": 16,
+                          "marginTop": 8,
                           "maxWidth": 512,
                         }
                       }
@@ -215,7 +215,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                       className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
                       style={
                         Object {
-                          "marginTop": 16,
+                          "marginTop": 8,
                           "maxWidth": 512,
                         }
                       }
@@ -369,7 +369,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
           onTouchStart={[Function]}
           style={
             Object {
-              "margin": 16,
+              "margin": 8,
             }
           }
           tabIndex={0}
@@ -418,7 +418,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
           onTouchStart={[Function]}
           style={
             Object {
-              "margin": 16,
+              "margin": 8,
             }
           }
           tabIndex={0}

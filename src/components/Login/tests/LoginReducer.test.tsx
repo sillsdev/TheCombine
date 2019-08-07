@@ -26,7 +26,7 @@ describe("LoginReducer Tests", () => {
     loginAttempt: true,
     loginFailure: false,
     registerAttempt: false,
-    registerFailure: false,
+    registerFailure: "",
     registerSuccess: false,
     success: false,
     user: "testUser"
@@ -66,7 +66,7 @@ describe("LoginReducer Tests", () => {
       loginAttempt: false,
       loginFailure: false,
       registerAttempt: true,
-      registerFailure: false,
+      registerFailure: "",
       registerSuccess: false,
       success: false,
       user: "testUser"
@@ -103,7 +103,7 @@ describe("LoginReducer Tests", () => {
       ...dummySt,
       registerAttempt: false,
       registerSuccess: false,
-      registerFailure: true
+      registerFailure: "testUser"
     };
     action.type = REGISTER_FAILURE;
     expect(reducer.loginReducer(dummySt, action)).toEqual(registerFailureState);

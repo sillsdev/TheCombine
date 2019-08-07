@@ -17,16 +17,22 @@ import {
 import history from "../../../history";
 import { Check } from "@material-ui/icons";
 import { buttonSuccess } from "../../../types/theme";
+import { isUsernameTaken, isEmailTaken } from "../../../backend";
 
 export interface RegisterDispatchProps {
-  register?: (name: string, user: string, password: string) => void;
+  register?: (
+    name: string,
+    user: string,
+    email: string,
+    password: string
+  ) => void;
   reset: () => void;
 }
 
 export interface RegisterStateProps {
   inProgress: boolean;
   success: boolean;
-  failure: boolean | undefined;
+  failureMessage: string;
 }
 
 interface RegisterState {
@@ -37,7 +43,7 @@ interface RegisterState {
   email: string;
   error: {
     password: boolean;
-    username: boolean;
+    user: boolean;
     confirmPassword: boolean;
     name: boolean;
     email: boolean;
@@ -60,7 +66,7 @@ class Register extends React.Component<
       email: "",
       error: {
         password: false,
-        username: false,
+        user: false,
         confirmPassword: false,
         name: false,
         email: false
@@ -87,6 +93,20 @@ class Register extends React.Component<
     } as Pick<RegisterState, K>);
   }
 
+  async checkUsername(username: string) {
+    let usernameTaken = await isUsernameTaken(username);
+    if (usernameTaken) {
+      this.setState({ error: { ...this.state.error, user: true } });
+    }
+  }
+
+  async checkEmail(username: string) {
+    let emailTaken = await isEmailTaken(username);
+    if (emailTaken) {
+      this.setState({ error: { ...this.state.error, email: true } });
+    }
+  }
+
   register(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let name = this.state.name.trim();
@@ -99,24 +119,32 @@ class Register extends React.Component<
     let error = { ...this.state.error };
     error.name = name === "";
     error.password = pass.length < 8;
-    error.username = user === "";
+    error.user = user === "";
     error.confirmPassword = pass !== confPass;
     error.email = email === "";
 
     if (
       error.name ||
       error.password ||
-      error.username ||
+      error.user ||
       error.confirmPassword ||
       error.email
     ) {
       this.setState({ error });
     } else if (this.props.register) {
-      this.props.register(name, user, pass);
+      this.props.register(name, user, email, pass);
     }
   }
 
   render() {
+    // determine error message
+    let failureMessage;
+    // intentional weak comparasion. props.failureMessage may evaluate to number
+    if (this.props.failureMessage == "400") {
+      failureMessage = <Translate id="login.registerFailed" />;
+    } else {
+      failureMessage = <Translate id="login.networkError" />;
+    }
     return (
       <Grid container justify="center">
         <Card style={{ width: 450 }}>
@@ -154,10 +182,11 @@ class Register extends React.Component<
                 label={<Translate id="login.username" />}
                 value={this.state.user}
                 onChange={e => this.updateField(e, "user")}
-                error={this.state.error["username"]}
+                onBlur={() => this.checkUsername(this.state.user)}
+                error={this.state.error["user"]}
                 helperText={
-                  this.state.error["username"] ? (
-                    <Translate id="login.required" />
+                  this.state.error["user"] ? (
+                    <Translate id="login.usernameTaken" />
                   ) : null
                 }
                 variant="outlined"
@@ -174,10 +203,11 @@ class Register extends React.Component<
                 label={<Translate id="login.email" />}
                 value={this.state.email}
                 onChange={e => this.updateField(e, "email")}
+                onBlur={() => this.checkEmail(this.state.email)}
                 error={this.state.error["email"]}
                 helperText={
                   this.state.error["email"] ? (
-                    <Translate id="login.emailError" />
+                    <Translate id="login.emailTaken" />
                   ) : null
                 }
                 variant="outlined"
@@ -228,12 +258,12 @@ class Register extends React.Component<
               />
 
               {/* "Failed to register" */}
-              {this.props.failure && (
+              {this.props.failureMessage !== "" && (
                 <Typography
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}
                 >
-                  <Translate id="login.registerFailed" />
+                  {failureMessage}
                 </Typography>
               )}
 
