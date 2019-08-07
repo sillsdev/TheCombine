@@ -11,7 +11,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
         "marginLeft": "auto",
         "marginRight": "auto",
         "maxWidth": 800,
-        "padding": 32,
+        "padding": 16,
       }
     }
   >
@@ -19,7 +19,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
       className="MuiTypography-root MuiTypography-h4 MuiTypography-alignCenter"
       style={
         Object {
-          "marginBottom": 32,
+          "marginBottom": 16,
         }
       }
     >
@@ -92,7 +92,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
             className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter"
             style={
               Object {
-                "marginTop": 32,
+                "marginTop": 16,
               }
             }
           >
@@ -106,7 +106,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
             className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter"
             style={
               Object {
-                "marginTop": 32,
+                "marginTop": 16,
               }
             }
           >
@@ -123,8 +123,8 @@ exports[`Tests AddWords Constructs correctly 1`] = `
               className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
               style={
                 Object {
-                  "paddingLeft": 32,
-                  "paddingRight": 32,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
                   "position": "relative",
                 }
               }
@@ -188,8 +188,8 @@ exports[`Tests AddWords Constructs correctly 1`] = `
               className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"
               style={
                 Object {
-                  "paddingLeft": 32,
-                  "paddingRight": 32,
+                  "paddingLeft": 16,
+                  "paddingRight": 16,
                 }
               }
             >
@@ -273,7 +273,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
           onTouchStart={[Function]}
           style={
             Object {
-              "marginTop": 32,
+              "marginTop": 16,
             }
           }
           tabIndex={0}
