@@ -130,6 +130,14 @@ export function checkUsername(username: string): Promise<boolean> {
     .catch(err => err.response && err.response.status == 400);
 }
 
+/** returns true if the email address is in use already */
+export function checkEmail(emailAddress: string): Promise<boolean> {
+  return backendServer
+    .post(`users/checkemail/${emailAddress}`)
+    .then(() => false)
+    .catch(err => err.response && err.response.status == 400);
+}
+
 export async function authenticateUser(
   username: string,
   password: string

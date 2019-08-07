@@ -111,9 +111,9 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(user.Id);
         }
 
-        /// <summary> Creates a <see cref="User"/> </summary>
+        /// <summary> Checks whether a username is taken </summary>
         /// <remarks> POST: v1/users/checkusername/ </remarks>
-        /// <returns> Id of created user </returns>
+        /// <returns> Bool </returns>
         [AllowAnonymous]
         [HttpPost("checkusername/{username}")]
         public async Task<IActionResult> CheckUsername(string username)
@@ -123,11 +123,30 @@ namespace BackendFramework.Controllers
             if (usernameTaken)
             {
                 return BadRequest();
-            } else
+            }
+            else
             {
                 return new OkResult();
             }
+        }
 
+        /// <summary> Checks whether a email is taken </summary>
+        /// <remarks> POST: v1/users/checkemail/ </remarks>
+        /// <returns> Bool </returns>
+        [AllowAnonymous]
+        [HttpPost("checkemail/{email}")]
+        public async Task<IActionResult> CheckEmail(string email)
+        {
+            bool emailTaken = (await _userService.GetAllUsers()).Find(x => x.Email == email) != null;
+
+            if (emailTaken)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return new OkResult();
+            }
         }
 
         /// <summary> Updates <see cref="User"/> with specified id </summary>

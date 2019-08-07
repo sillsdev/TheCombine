@@ -17,7 +17,7 @@ import {
 import history from "../../../history";
 import { Check } from "@material-ui/icons";
 import { buttonSuccess } from "../../../types/theme";
-import { checkUsername } from "../../../backend";
+import { checkUsername, checkEmail } from "../../../backend";
 
 export interface RegisterDispatchProps {
   register?: (
@@ -43,7 +43,7 @@ interface RegisterState {
   email: string;
   error: {
     password: boolean;
-    username: boolean;
+    user: boolean;
     confirmPassword: boolean;
     name: boolean;
     email: boolean;
@@ -66,7 +66,7 @@ class Register extends React.Component<
       email: "",
       error: {
         password: false,
-        username: false,
+        user: false,
         confirmPassword: false,
         name: false,
         email: false
@@ -96,7 +96,14 @@ class Register extends React.Component<
   async checkUsername(username: string) {
     let usernameTaken = await checkUsername(username);
     if (usernameTaken) {
-      this.setState({ error: { ...this.state.error, username: true } });
+      this.setState({ error: { ...this.state.error, user: true } });
+    }
+  }
+
+  async checkEmail(username: string) {
+    let emailTaken = await checkEmail(username);
+    if (emailTaken) {
+      this.setState({ error: { ...this.state.error, email: true } });
     }
   }
 
@@ -112,14 +119,14 @@ class Register extends React.Component<
     let error = { ...this.state.error };
     error.name = name === "";
     error.password = pass.length < 8;
-    error.username = user === "";
+    error.user = user === "";
     error.confirmPassword = pass !== confPass;
     error.email = email === "";
 
     if (
       error.name ||
       error.password ||
-      error.username ||
+      error.user ||
       error.confirmPassword ||
       error.email
     ) {
@@ -176,9 +183,9 @@ class Register extends React.Component<
                 value={this.state.user}
                 onChange={e => this.updateField(e, "user")}
                 onBlur={() => this.checkUsername(this.state.user)}
-                error={this.state.error["username"]}
+                error={this.state.error["user"]}
                 helperText={
-                  this.state.error["username"] ? (
+                  this.state.error["user"] ? (
                     <Translate id="login.usernameTaken" />
                   ) : null
                 }
@@ -196,10 +203,11 @@ class Register extends React.Component<
                 label={<Translate id="login.email" />}
                 value={this.state.email}
                 onChange={e => this.updateField(e, "email")}
+                onBlur={() => this.checkEmail(this.state.email)}
                 error={this.state.error["email"]}
                 helperText={
                   this.state.error["email"] ? (
-                    <Translate id="login.emailError" />
+                    <Translate id="login.emailTaken" />
                   ) : null
                 }
                 variant="outlined"
