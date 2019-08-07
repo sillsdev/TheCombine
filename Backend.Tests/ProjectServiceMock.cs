@@ -59,7 +59,7 @@ namespace Backend.Tests
             return Task.FromResult(ResultOfUpdate.NotFound);
         }
 
-        public bool CheckProj(string projectId)
+        public bool CanImportLift(string projectId)
         {
             return true;
         }
