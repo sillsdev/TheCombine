@@ -123,7 +123,7 @@ export async function addUser(user: User): Promise<User> {
 }
 
 /** returns true if the username is in use already */
-export function checkUsername(username: string): Promise<boolean> {
+export function isUsernameTaken(username: string): Promise<boolean> {
   return backendServer
     .post(`users/checkusername/${username}`)
     .then(() => false)
@@ -131,7 +131,7 @@ export function checkUsername(username: string): Promise<boolean> {
 }
 
 /** returns true if the email address is in use already */
-export function checkEmail(emailAddress: string): Promise<boolean> {
+export function isEmailTaken(emailAddress: string): Promise<boolean> {
   return backendServer
     .post(`users/checkemail/${emailAddress}`)
     .then(() => false)
