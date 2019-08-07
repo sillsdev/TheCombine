@@ -12,6 +12,6 @@ namespace BackendFramework.Interfaces
         Task<ResultOfUpdate> Update(string projectId, Project project);
         Task<bool> Delete(string projectId);
         Task<bool> DeleteAllProjects();
-        bool CheckProj(string projectId);
+        bool CanImportLift(string projectId);
     }
 }

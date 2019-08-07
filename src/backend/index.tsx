@@ -378,7 +378,7 @@ export async function getUserRoles(): Promise<UserRole[]> {
   return resp.data;
 }
 
-export async function getLiftUploaded(): Promise<boolean> {
+export async function canUploadLift(): Promise<boolean> {
   let resp = await backendServer.get(`projects/${getProjectId()}/liftcheck`, {
     headers: authHeader()
   });

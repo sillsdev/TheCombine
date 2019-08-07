@@ -76,7 +76,7 @@
     "success": ["Project Created!", "Proyecto creado!"]
   },
   "selectProject": {
-    "title": ["Select Project", "Select Project in spanish"]
+    "title": ["Select Project", "Seleccionar Proyecto"]
   },
   "projectSettings": {
     "language": {
@@ -92,7 +92,7 @@
       "header": ["Import Data", "Importar Información"],
       "body": [
         "Imported data will be added to this project. Combine will make no attempt to deduplicate, overwrite, or sync. File must be a zipped archive in <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>.",
-        "No tengo tiempo por estó."
+        "Los datos importados se agregarán a este proyecto. Combine no intentará deduplicar, sobrescribir ni sincronizar. El archivo debe ser un archivo comprimido en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>."
       ],
       "upload": ["Upload", "Cargar"],
       "done": ["Done!", "Completado!"],

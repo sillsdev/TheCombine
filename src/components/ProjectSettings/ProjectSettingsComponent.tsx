@@ -55,7 +55,7 @@ class ProjectSettingsComponent extends React.Component<
             analysis: [...this.props.project.analysisWritingSystems],
             uiLang: this.props.activeLanguage.code
           };
-          settings.imports = await backend.getLiftUploaded();
+          settings.imports = await backend.canUploadLift();
         }
         if (role === 5) settings.editUsers = true;
       }

@@ -246,20 +246,16 @@ namespace BackendFramework.Controllers
             }
         }
 
-        //change user role using project Id
+        // Check if lift import has already happened for this project
         [HttpGet("{projectId}/liftcheck")]
-        public async Task<IActionResult> CheckLift(string projectId)
+        public async Task<IActionResult> CanUploadLift(string projectId)
         {
             if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
             {
                 return new UnauthorizedResult();
             }
 
-            if (!_projectService.CheckProj(projectId))
-            {
-                return new OkObjectResult(true);
-            }
-            return new OkObjectResult(false);
+            return new OkObjectResult(_projectService.CanImportLift(projectId));
         }
 
     }

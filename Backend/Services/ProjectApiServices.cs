@@ -97,16 +97,12 @@ namespace BackendFramework.Services
             }
         }
 
-        public bool CheckProj(string projectId)
+        public bool CanImportLift(string projectId)
         {
             Utilities util = new Utilities();
             var currentPath = util.GenerateFilePath(Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Import"));
             var zips = new List<string>(Directory.GetFiles(currentPath, "*.zip"));
-            if(zips.Count != 0)
-            {
-                return true;
-            }
-            return false;
+            return zips.Count == 0;
         }
     }
 }
