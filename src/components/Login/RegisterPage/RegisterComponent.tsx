@@ -17,6 +17,7 @@ import {
 import history from "../../../history";
 import { Check } from "@material-ui/icons";
 import { buttonSuccess } from "../../../types/theme";
+import { checkUsername } from "../../../backend";
 
 export interface RegisterDispatchProps {
   register?: (
@@ -90,6 +91,13 @@ class Register extends React.Component<
       [field]: value,
       error: { ...this.state.error, [field]: false }
     } as Pick<RegisterState, K>);
+  }
+
+  async checkUsername(username: string) {
+    let usernameTaken = await checkUsername(username);
+    if (usernameTaken) {
+      this.setState({ error: { ...this.state.error, username: true } });
+    }
   }
 
   register(e: React.FormEvent<HTMLFormElement>) {
@@ -167,10 +175,11 @@ class Register extends React.Component<
                 label={<Translate id="login.username" />}
                 value={this.state.user}
                 onChange={e => this.updateField(e, "user")}
+                onBlur={() => this.checkUsername(this.state.user)}
                 error={this.state.error["username"]}
                 helperText={
                   this.state.error["username"] ? (
-                    <Translate id="login.required" />
+                    <Translate id="login.usernameTaken" />
                   ) : null
                 }
                 variant="outlined"

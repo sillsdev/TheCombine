@@ -111,6 +111,25 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(user.Id);
         }
 
+        /// <summary> Creates a <see cref="User"/> </summary>
+        /// <remarks> POST: v1/users/checkusername/ </remarks>
+        /// <returns> Id of created user </returns>
+        [AllowAnonymous]
+        [HttpPost("checkusername/{username}")]
+        public async Task<IActionResult> CheckUsername(string username)
+        {
+            bool usernameTaken = (await _userService.GetAllUsers()).Find(x => x.Username == username) != null;
+
+            if (usernameTaken)
+            {
+                return BadRequest();
+            } else
+            {
+                return new OkResult();
+            }
+
+        }
+
         /// <summary> Updates <see cref="User"/> with specified id </summary>
         /// <remarks> PUT: v1/users/{userId} </remarks>
         /// <returns> Id of updated user </returns>

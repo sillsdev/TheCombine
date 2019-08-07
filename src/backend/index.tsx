@@ -122,6 +122,14 @@ export async function addUser(user: User): Promise<User> {
   return { ...user, id: resp.data };
 }
 
+/** returns true if the username is in use already */
+export function checkUsername(username: string): Promise<boolean> {
+  return backendServer
+    .post(`users/checkusername/${username}`)
+    .then(() => false)
+    .catch(err => err.response && err.response.status == 400);
+}
+
 export async function authenticateUser(
   username: string,
   password: string

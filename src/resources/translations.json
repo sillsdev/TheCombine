@@ -40,6 +40,8 @@
     "registerNew": ["Register New User", "Registrar nuevo usuario"],
     "registerSuccess": ["User Created", "creado por el usuario"],
     "registerFailed": ["Failed to register", "Error al iniciar sesión"],
+    "usernameTaken": ["A user with this username already exists", ""],
+    "emailTaken": ["A user with this email already exists", ""],
     "networkError": ["Network error", "Error de red"],
     "loggingIn": ["Logging in...", "Iniciar sesión..."],
     "logout": ["Log out", "cerrar sesión"],
