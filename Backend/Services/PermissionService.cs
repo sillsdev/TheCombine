@@ -12,7 +12,7 @@ namespace BackendFramework.Services
         private readonly IUserService _userService;
 
         public PermissionService(IUserService userService)
-        { 
+        {
             _userService = userService;
         }
 
@@ -40,7 +40,7 @@ namespace BackendFramework.Services
             string foundUserId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
 
             return userId == foundUserId;
-        } 
+        }
 
         public List<ProjectPermissions> GetProjectPermissions(HttpContext request)
         {

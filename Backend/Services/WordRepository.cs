@@ -28,7 +28,7 @@ namespace BackendFramework.Services
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
 
-            var wordList =  await _wordDatabase.Words.FindAsync(filter);
+            var wordList = await _wordDatabase.Words.FindAsync(filter);
 
             return wordList.FirstOrDefault();
         }

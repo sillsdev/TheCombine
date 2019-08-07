@@ -98,21 +98,23 @@ export class MergeRow extends React.Component<
                 </Select>
               )}
             </Paper>
-            {filled &&
-              Object.keys(this.props.words[this.props.wordID].senses).map(
-                (item, index) => (
-                  <MergeStack
-                    sideBar={this.props.sideBar}
-                    setSidebar={this.props.setSidebar}
-                    key={item}
-                    index={index}
-                    wordID={this.props.wordID}
-                    senseID={item}
-                    sense={this.props.words[this.props.wordID].senses[item]}
-                  />
-                )
-              )}
-            {provided.placeholder}
+            <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
+              {filled &&
+                Object.keys(this.props.words[this.props.wordID].senses).map(
+                  (item, index) => (
+                    <MergeStack
+                      sideBar={this.props.sideBar}
+                      setSidebar={this.props.setSidebar}
+                      key={item}
+                      index={index}
+                      wordID={this.props.wordID}
+                      senseID={item}
+                      sense={this.props.words[this.props.wordID].senses[item]}
+                    />
+                  )
+                )}
+              {provided.placeholder}
+            </div>
             <div style={{ padding: 16, textAlign: "center" }}>
               <Typography variant="subtitle1">
                 Drag a card here to merge

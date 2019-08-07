@@ -35,7 +35,7 @@ namespace BackendFramework.ValueModels
                 Edits = new List<Edit>()
             };
 
-            foreach(Edit edit in Edits)
+            foreach (Edit edit in Edits)
             {
                 clone.Edits.Add(edit.Clone());
             }
@@ -143,11 +143,11 @@ namespace BackendFramework.ValueModels
             else
             {
                 Edit other = obj as Edit;
-                return 
+                return
                     GoalType.Equals(other.GoalType) &&
 
                     other.StepData.Count == StepData.Count &&
-                    other.StepData.All(StepData.Contains); 
+                    other.StepData.All(StepData.Contains);
             }
         }
 

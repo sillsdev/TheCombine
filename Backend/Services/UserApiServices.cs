@@ -105,7 +105,7 @@ namespace BackendFramework.Services
                 return null;
             }
 
-            // remove password before returning
+            // remove password and avatar filepath before returning
             user.Password = "";
             user.Avatar = "";
 
@@ -116,7 +116,7 @@ namespace BackendFramework.Services
         public async Task<List<User>> GetAllUsers()
         {
             var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
-            return users.Select(c => {c.Avatar = ""; c.Password = ""; return c;}).ToList();
+            return users.Select(c => { c.Avatar = ""; c.Password = ""; return c; }).ToList();
         }
 
         /// <summary> Removes all <see cref="User"/>s </summary>
@@ -139,10 +139,22 @@ namespace BackendFramework.Services
 
             var userList = await _userDatabase.Users.FindAsync(filter);
 
-           var user = userList.FirstOrDefault();
-           user.Avatar = "";
-           user.Password = "";
-           return user;
+            var user = userList.FirstOrDefault();
+            user.Avatar = "";
+            user.Password = "";
+            return user;
+        }
+
+        /// <summary> Finds <see cref="User"/> with specified userId and returns avatar filepath </summary>
+        public async Task<string> GetUserAvatar(string userId)
+        {
+            var filterDef = new FilterDefinitionBuilder<User>();
+            var filter = filterDef.Eq(x => x.Id, userId);
+
+            var userList = await _userDatabase.Users.FindAsync(filter);
+
+            var user = userList.FirstOrDefault();
+            return user.Avatar;
         }
 
         /// <summary> Adds a <see cref="User"/> </summary>

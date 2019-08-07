@@ -27,6 +27,12 @@ namespace Backend.Tests
             return Task.FromResult(foundUser.Clone());
         }
 
+        public Task<string> GetUserAvatar(string id)
+        {
+            var foundUser = _users.Single(user => user.Id == id);
+            return Task.FromResult(foundUser.Clone().Avatar);
+        }
+
         public Task<User> Create(User user)
         {
             user.Id = Guid.NewGuid().ToString();
