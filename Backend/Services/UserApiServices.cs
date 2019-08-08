@@ -212,7 +212,6 @@ namespace BackendFramework.Services
 
             //Note: Nulls out values not in update body
             var updateDef = Builders<User>.Update
-                .Set(x => x.Avatar, user.Avatar)
                 .Set(x => x.Name, user.Name)
                 .Set(x => x.Email, user.Email)
                 .Set(x => x.Phone, user.Phone)
@@ -221,8 +220,13 @@ namespace BackendFramework.Services
                 .Set(x => x.ProjectRoles, user.ProjectRoles)
                 .Set(x => x.Agreement, user.Agreement)
                 .Set(x => x.Username, user.Username)
-                .Set(x => x.UILang, user.UILang)
-                .Set(x => x.Token, user.Token);
+                .Set(x => x.UILang, user.UILang);
+
+            if (!string.IsNullOrEmpty(user.Avatar))
+                updateDef = updateDef.Set(x => x.Avatar, user.Avatar);
+
+            if (!string.IsNullOrEmpty(user.Token))
+                updateDef = updateDef.Set(x => x.Token, user.Token);
 
             //do not update admin privilages
 
