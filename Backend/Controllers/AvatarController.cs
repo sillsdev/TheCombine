@@ -81,16 +81,9 @@ namespace BackendFramework.Controllers
 
             //update the user's avatar file
             gotUser.Avatar = fileUpload.FilePath;
-            var result = await _userService.Update(userId, gotUser);
+            _ = await _userService.Update(userId, gotUser);
 
-            if (result == ResultOfUpdate.Updated)
-            {
-                return new OkObjectResult(fileUpload.FilePath);
-            }
-            else //there was no change
-            {
-                return new StatusCodeResult(304);
-            }
+            return new OkResult();
         }
     }
 }

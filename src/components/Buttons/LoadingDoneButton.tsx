@@ -8,6 +8,7 @@ import { Translate } from "react-localize-redux";
 interface Props {
   loading: boolean;
   done: boolean;
+  doneText?: React.ReactNode | string;
 }
 
 /**
@@ -21,20 +22,20 @@ export default function LoadingDoneButton(props: Props & ButtonProps) {
       {...props}
       disabled={props.loading}
       style={{
-        marginTop: 30,
         backgroundColor: props.done ? buttonSuccess : undefined,
-        color: props.done ? "white" : undefined
+        color: props.done ? "white" : undefined,
+        ...props.style
       }}
     >
       {props.done ? (
         <React.Fragment>
           <Check />
-          <Translate id="createProject.success" />
+          {props.doneText ? props.doneText : <Translate id="button.done" />}
         </React.Fragment>
       ) : (
         props.children
       )}
-      {props.loading && (
+      {props.loading && !props.done && (
         <CircularProgress
           size={24}
           style={{

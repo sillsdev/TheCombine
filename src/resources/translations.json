@@ -273,5 +273,8 @@
       "This goal has not been implemented yet",
       "Este objetivo aún no se ha implementado"
     ]
+  },
+  "button": {
+    "done": ["done", "hecho"]
   }
 }

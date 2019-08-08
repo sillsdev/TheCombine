@@ -10,8 +10,8 @@ import Register from "../Login/RegisterPage";
 import PageNotFound from "../PageNotFound/component";
 import { GoalRoute } from "../GoalRoute/component";
 import DataEntry from "../DataEntry";
-import UserSettings from "../UserSettings/UserSettings";
 import ProjectSettings from "../ProjectSettings";
+import UserSettings from "../UserSettings/UserSettings";
 
 /**
  * The top-level component

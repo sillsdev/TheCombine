@@ -136,6 +136,10 @@ class CreateProject extends React.Component<
                 loading={this.props.inProgress}
                 done={this.props.success}
                 color="primary"
+                style={{
+                  marginTop: 30
+                }}
+                doneText={<Translate id="createProject.success" />}
               >
                 <Translate id="createProject.create" />
               </LoadingDoneButton>

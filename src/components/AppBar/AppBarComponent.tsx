@@ -8,7 +8,7 @@ import GoToHomeButton from "../GoToHomeButton/GoToHomeButtonComponent";
 import theme from "../../types/theme";
 
 /** An app bar shown at the top of almost every page of The Combine */
-export function AppBarComponent() {
+function AppBarComponent() {
   return (
     <React.Fragment>
       <div
