@@ -11,6 +11,7 @@ interface Props {
   refreshWord: (oldId: string, newId: string) => void;
 }
 
+/** Used to connect the pronunciation component to the refreshWord action */
 class PronunciationsCell extends React.Component<Props> {
   render() {
     return (

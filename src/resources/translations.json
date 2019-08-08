@@ -278,6 +278,14 @@
     "recordTooltip": [
       "Press and hold to record.",
       "Mantenga presionado para grabar."
+    ],
+    "playTooltip": [
+      "Press to play, shift click to delete",
+      "Presiona para jugar, presiona shift para eliminar"
+    ],
+    "noMicAccess": [
+      "Recording error: Could not access a microphone",
+      "Error de grabación: no se pudo acceder a un micrófono"
     ]
   }
 }

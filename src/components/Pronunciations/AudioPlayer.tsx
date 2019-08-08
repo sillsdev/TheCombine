@@ -8,6 +8,7 @@ import {
 import { green } from "@material-ui/core/colors";
 import PlayArrow from "@material-ui/icons/PlayArrow";
 import React from "react";
+import { Translate } from "react-localize-redux";
 
 export interface PlayerProps {
   pronunciationUrl: string;
@@ -30,11 +31,10 @@ export default function AudioPlayer(props: PlayerProps) {
   const audio = new Audio(props.pronunciationUrl);
   audio.crossOrigin = "annonymous";
   let togglePlay = () => {
-    console.log(props.pronunciationUrl);
     audio.play();
   };
   return (
-    <Tooltip title="Press to play, shift click to delete">
+    <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
       <IconButton
         onClick={togglePlay}
         className={classes.button}

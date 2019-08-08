@@ -1,4 +1,4 @@
-const RecordRTC = require('recordrtc');
+const RecordRTC = require("recordrtc");
 
 export class Recorder {
   private recordRTC: any;
@@ -6,25 +6,26 @@ export class Recorder {
   private stream?: MediaStream;
 
   constructor() {
-    navigator.mediaDevices.getUserMedia({ audio: true })
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
       .then(audioStream => this.onMicrophoneAvailable(audioStream))
       .catch(error => Recorder.onError(error));
   }
 
   startRecording() {
-    this.recordRTC.reset();
-    this.recordRTC.startRecording();
+    if (this.recordRTC) {
+      this.recordRTC.reset();
+      this.recordRTC.startRecording();
+    }
   }
 
   stopRecording(): Promise<string> {
     return new Promise(resolve => {
       this.recordRTC.stopRecording(resolve);
-      console.log("Recorder: stoprecording complete.");
     });
   }
 
-  getBlob() : Blob {
-    console.log("Recorder: getBlob() called");
+  getBlob(): Blob {
     return this.recordRTC.getBlob();
   }
 
@@ -35,14 +36,14 @@ export class Recorder {
   private onMicrophoneAvailable(audioStream: MediaStream) {
     this.stream = audioStream;
     this.recordRTC = RecordRTC(audioStream, {
-      type: 'audio',
-      bitrate: '128000',
-      mimeType: 'audio/webm',
+      type: "audio",
+      bitrate: "128000",
+      mimeType: "audio/webm",
       ignoreMutedMedia: false
     });
   }
 
   private static onError(error: Error) {
-    console.error('Error getting audio stream!', error);
+    console.error("Error getting audio stream!", error);
   }
 }

@@ -17,17 +17,6 @@ jest.mock("../Recorder");
 
 // Variables
 var testRenderer: ReactTestRenderer;
-var pronunciationComponent: PronunciationsComponent;
-
-// This mock bypasses the fact that react-test-renderer does not support portals, with no clean solution. This bypasses the whole issue
-// by replacing the portal-creating object (the Dialog) with a lightweight, innocuous Material-Ui component with no such glitchy properties.
-jest.mock("@material-ui/core", () => {
-  const materialUiCore = jest.requireActual("@material-ui/core");
-  return {
-    ...materialUiCore,
-    Dialog: materialUiCore.Container
-  };
-});
 
 const mockStore = createMockStore(defaultState);
 
@@ -40,8 +29,6 @@ beforeAll(() => {
       </Provider>
     );
   });
-  pronunciationComponent = testRenderer.root.findByType(Pronunciations)
-    .instance;
 });
 
 it("renders one record button and one play button for each pronunciation file", () => {
