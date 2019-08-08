@@ -6,11 +6,11 @@ import {
   withLocalize
 } from "react-localize-redux";
 
-import { Word, SemanticDomain, State, Sense } from "../../../types/word";
+import { Word } from "../../../types/word";
 import tableIcons from "./icons";
 import * as backend from "../../../backend";
 import columns from "./CellComponents/CellColumns";
-import { uuid } from "../../../utilities";
+import { ReviewEntriesWord, parseWord } from "./ReviewEntriesTypes";
 
 // Component state/props
 interface ReviewEntriesProps {
@@ -32,22 +32,7 @@ interface ReviewEntriesState {
   errorMsg: string | undefined;
 }
 
-export interface ReviewEntriesWord {
-  id: string;
-  vernacular: string;
-  senses: ReviewEntriesSense[];
-}
-export interface ReviewEntriesSense {
-  senseId: string;
-  glosses: string;
-  domains: SemanticDomain[];
-  deleted: boolean;
-}
-
 // Constants
-export const OLD_SENSE: string = "-old";
-export const SEP_CHAR: string = ",";
-const SEPARATOR: string = SEP_CHAR + " ";
 const ROWS_PER_PAGE: number[] = [10, 100, 1000];
 
 export class ReviewEntriesComponent extends React.Component<
@@ -76,56 +61,12 @@ export class ReviewEntriesComponent extends React.Component<
 
     for (let word of frontier) {
       // Create a new currentword
-      currentWord = {
-        id: word.id,
-        vernacular: word.vernacular,
-        senses: []
-      };
-
-      for (let sense of word.senses) {
-        currentWord.senses.push(this.parseSense(sense));
-      }
+      currentWord = parseWord(word, this.props.language);
 
       // Remove the trailing newlines + push to newWords
       newWords.push(currentWord);
     }
     this.props.updateAllWords(newWords);
-  }
-
-  // Convert a Sense into a ReviewEntriesSense
-  private parseSense(sense: Sense) {
-    let hasGloss: boolean;
-    let currentSense: ReviewEntriesSense = {
-      glosses: "",
-      domains: [],
-      deleted:
-        sense.accessibility !== undefined &&
-        sense.accessibility === State.deleted,
-      senseId: uuid() + OLD_SENSE
-    };
-
-    // Add domains
-    if (sense.semanticDomains)
-      currentSense = {
-        ...currentSense,
-        domains: [...sense.semanticDomains]
-      };
-
-    // Find all glosses in the current language
-    hasGloss = false;
-    if (sense.glosses)
-      for (let gloss of sense.glosses)
-        if (gloss.language === this.props.language) {
-          hasGloss = true;
-          currentSense.glosses += gloss.def + SEPARATOR;
-        }
-
-    // Format the glosses + push them
-    if (hasGloss)
-      currentSense.glosses = currentSense.glosses.slice(0, -SEPARATOR.length);
-    else currentSense.glosses = "";
-
-    return currentSense;
   }
 
   // Remove the duplicates from an array; sugar syntax, as the place it's used is already hideous enough without adding more

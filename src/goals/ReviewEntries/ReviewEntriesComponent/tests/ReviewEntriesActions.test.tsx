@@ -8,7 +8,7 @@ import {
   OLD_SENSE,
   SEP_CHAR,
   ReviewEntriesSense
-} from "../ReviewEntriesComponent";
+} from "../ReviewEntriesTypes";
 import {
   SemanticDomain,
   Word,
@@ -72,7 +72,8 @@ const oldWord: ReviewEntriesWord = {
       domains: [domain0],
       deleted: false
     }
-  ]
+  ],
+  pronunciationFiles: []
 };
 
 beforeEach(() => {

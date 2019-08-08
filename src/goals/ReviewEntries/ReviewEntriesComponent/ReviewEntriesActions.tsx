@@ -3,8 +3,9 @@ import {
   ReviewEntriesWord,
   SEP_CHAR,
   ReviewEntriesSense,
-  OLD_SENSE
-} from "./ReviewEntriesComponent";
+  OLD_SENSE,
+  parseWord
+} from "./ReviewEntriesTypes";
 import * as backend from "../../../backend";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../types";
@@ -199,4 +200,25 @@ export function updateFrontierWord(
       )
     );
   };
+
 }
+  // Converts the ReviewEntriesWord into a Word to send to the backend
+  export function refreshWord(
+    oldWordId: string,
+    newWordId: string
+  ) {
+    return async (
+      dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>, getState: () => StoreState
+    ) => {
+      const newWord = await backend.getWord(newWordId);
+      const analysisLang = getState().currentProject.analysisWritingSystems[0]
+
+      dispatch(
+        updateWord(
+          oldWordId,
+          newWordId,
+          (parseWord(newWord, analysisLang))
+        )
+      );
+    };
+  }

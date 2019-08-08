@@ -1,10 +1,10 @@
-﻿using BackendFramework.Helper;
+﻿using System;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using static BackendFramework.Helper.Utilities;
@@ -33,15 +33,15 @@ namespace BackendFramework.Controllers
         /// <summary> Returns the audio file in the form of a stream from disk</summary>
         /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/download/audio </remarks>
         /// <returns> Audio file stream </returns>
-        [HttpGet("{wordId}/download/audio")]
-        public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId)
+        [HttpGet("{wordId}/download/audio/{fileName}")]
+        public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
         {
             if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             {
                 return new UnauthorizedResult();
             }
 
-            var filePath = _wordService.GetAudioFilePath(projectId, wordId);
+            var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
 
             if (filePath == null)
             {
@@ -58,10 +58,6 @@ namespace BackendFramework.Controllers
             return File(stream, "application/octet-stream");
         }
 
-
-
-
-
         /// <summary> Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to ~/.CombineFiles/{ProjectId}/Import/Audio </summary>
         /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/upload/audio </remarks>
         /// <returns> Path to local audio file </returns>
@@ -73,6 +69,11 @@ namespace BackendFramework.Controllers
                 return new UnauthorizedResult();
             }
             var file = fileUpload.File;
+            var requestedFileName = fileUpload.File?.FileName;
+            if (string.IsNullOrEmpty(requestedFileName))
+            {
+                requestedFileName = wordId + ".webm";
+            }
 
             //ensure file is not empty
             if (file.Length == 0)
@@ -95,9 +96,9 @@ namespace BackendFramework.Controllers
             gotWord.Audio.Add(Path.GetFileName(fileUpload.FilePath));
 
             //update the word with new audio file
-            _ = await _wordService.Update(projectId, wordId, gotWord);
+            await _wordService.Update(projectId, wordId, gotWord);
 
-            return new ObjectResult(fileUpload.FilePath);
+            return new ObjectResult(gotWord.Id);
         }
     }
 }

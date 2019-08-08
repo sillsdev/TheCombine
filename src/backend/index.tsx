@@ -243,17 +243,21 @@ export async function exportLift() {
   return `data:application/zip;base64,${resp.data}`;
 }
 
-export async function uploadMp3(project: Project, mp3: File): Promise<string> {
+export async function uploadAudio(wordId: string, audioFile: File): Promise<string> {
   let data = new FormData();
-  data.append("file", mp3);
+  data.append("file", audioFile);
   let resp = await backendServer.post(
-    `projects/${project.id}/words/upload/audio`,
+    `projects/${getProjectId()}/words/${wordId}/upload/audio`,
     data,
     {
       headers: { ...authHeader(), "content-type": "application/json" }
     }
   );
   return resp.data;
+}
+
+export function getAudioUrl(wordId: string, fileName: string): string {
+  return `projects/${getProjectId()}/words/${wordId}/download/audio/${fileName}`;
 }
 
 export async function uploadAvatar(user: User, img: File): Promise<string> {
