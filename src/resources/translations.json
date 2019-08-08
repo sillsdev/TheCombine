@@ -31,18 +31,18 @@
     ],
     "forgotPassword": ["Forgot password?", "¿Se te olvidó tu contraseña?"],
     "login": ["Login", "Iniciar sesión"],
-    "backToLogin": ["Back to login", "Atrás para iniciar sesión"],
-    "register": ["Register", "Registro"],
-    "registerNew": ["Register New User", "Registrar nuevo usuario"],
-    "registerSuccess": ["User Created", "creado por el usuario"],
     "failed": [
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
     ],
-    "registerFailed": [
-      "Failed to register: That username is already in use.",
-      "Error al iniciar sesión: Ese nombre de usuario ya está en uso."
-    ],
+    "backToLogin": ["Back to login", "Atrás para iniciar sesión"],
+    "register": ["Register", "Registro"],
+    "registerNew": ["Register New User", "Registrar nuevo usuario"],
+    "registerSuccess": ["User Created", "creado por el usuario"],
+    "registerFailed": ["Failed to register", "Error al iniciar sesión"],
+    "usernameTaken": ["A user with this username already exists", ""],
+    "emailTaken": ["A user with this email already exists", ""],
+    "networkError": ["Network error", "Error de red"],
     "loggingIn": ["Logging in...", "Iniciar sesión..."],
     "logout": ["Log out", "cerrar sesión"],
     "required": ["Required", "necesario"],
