@@ -1,5 +1,5 @@
 import { reviewEntriesReducer, defaultState } from "../ReviewEntriesReducer";
-import { OLD_SENSE } from "../ReviewEntriesComponent";
+import { OLD_SENSE } from "../ReviewEntriesTypes";
 import { ReviewEntriesActionTypes } from "../ReviewEntriesActions";
 import mockWords from "./MockWords";
 

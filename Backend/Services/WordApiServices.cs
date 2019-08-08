@@ -212,7 +212,7 @@ namespace BackendFramework.Services
             return isUniqueWord;
         }
 
-        public string GetAudioFilePath(string projectId, string wordId)
+        public string GetAudioFilePath(string projectId, string wordId, string fileName)
         {
             //generate path to home on linux
             var pathToHome = Environment.GetEnvironmentVariable("HOME");
@@ -228,10 +228,11 @@ namespace BackendFramework.Services
 
             if (listOfDirs.Count() != 1)
             {
-                return null;
+               return null;
             }
-            filepath = Path.Combine(filepath, listOfDirs.Single(), wordId, ".mp3"); //there should only be one dir in that file
-
+            //add the relative path to the audio field
+            filepath = Path.Combine(filepath, listOfDirs.Single(), filepath, ".mp3"); //there should only be one dir in that file
+            Console.WriteLine($"filePath: {filepath}");
             return filepath;
         }
     }

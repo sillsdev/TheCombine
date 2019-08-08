@@ -1,15 +1,19 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
 
-import {
-  ReviewEntriesWord,
-  ReviewEntriesSense
-} from "../ReviewEntriesComponent";
+import { ReviewEntriesWord, ReviewEntriesSense } from "../ReviewEntriesTypes";
 import { SemanticDomain } from "../../../../types/word";
 import DomainCell from "../CellComponents";
 import DeleteCell from "./DeleteCell";
 import { Translate } from "react-localize-redux";
 import SenseCell from "./SenseCell";
+import Pronunciations from "../../../../components/Pronunciations";
+import { Column } from "material-table";
+import { connect } from "react-redux";
+import { refreshWord, ReviewEntriesAction } from "../ReviewEntriesActions";
+import { ThunkDispatch } from "redux-thunk";
+import { StoreState } from "../../../../types";
+import PronunciationsCell from "./PronunciationsCell";
 
 enum SortStyle {
   VERNACULAR,
@@ -56,9 +60,8 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
   );
 }
 
-// Define columns
 let currentSort: SortStyle = SortStyle.NONE;
-export default [
+const columns: Column[] = [
   // Vernacular column
   {
     title: "Vernacular",
@@ -225,6 +228,19 @@ export default [
     }
   },
   {
+    title: "Pronunciations",
+    field: "pronunciations",
+    filtering: true,
+    sorting: true,
+    editable: "never",
+    render: (rowData: ReviewEntriesWord) => (
+      <PronunciationsCell
+        wordId={rowData.id}
+        pronunciationFiles={rowData.pronunciationFiles}
+      />
+    )
+  },
+  {
     title: "",
     field: "id",
     filtering: false,
@@ -250,4 +266,4 @@ export default [
   }
 ];
 
-// export default columns;
+export default columns;
