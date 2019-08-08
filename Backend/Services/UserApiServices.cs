@@ -116,7 +116,7 @@ namespace BackendFramework.Services
         public async Task<List<User>> GetAllUsers()
         {
             var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
-            return users.Select(c => { c.Avatar = ""; c.Password = ""; return c; }).ToList();
+            return users.Select(c => { c.Avatar = ""; c.Password = ""; c.Token = ""; return c; }).ToList();
         }
 
         /// <summary> Removes all <see cref="User"/>s </summary>
@@ -142,6 +142,7 @@ namespace BackendFramework.Services
             var user = userList.FirstOrDefault();
             user.Avatar = "";
             user.Password = "";
+            user.Token = "";
             return user;
         }
 

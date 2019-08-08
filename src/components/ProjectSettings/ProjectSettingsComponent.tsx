@@ -67,7 +67,7 @@ class ProjectSettingsComponent extends React.Component<
     return (
       <React.Fragment>
         <AppBarComponent />
-        <Grid container justify="center" spacing={3}>
+        <Grid container justify="center" spacing={6}>
           {/* Project name */}
           {this.state.projectName && (
             <BaseSettingsComponent

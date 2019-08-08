@@ -11,7 +11,10 @@ import theme from "../../types/theme";
 export function AppBarComponent() {
   return (
     <React.Fragment>
-      <div className="NavigationBar" style={{ marginBottom: theme.spacing(6) }}>
+      <div
+        className="NavigationBar"
+        style={{ marginBottom: theme.spacing(12) }}
+      >
         <AppBar position="fixed" style={{ zIndex: theme.zIndex.drawer + 1 }}>
           <Toolbar>
             <Grid
