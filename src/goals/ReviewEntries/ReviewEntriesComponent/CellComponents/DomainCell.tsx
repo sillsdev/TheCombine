@@ -2,10 +2,7 @@ import React from "react";
 import { Grid, Chip, Dialog, IconButton } from "@material-ui/core";
 import Add from "@material-ui/icons/Add";
 
-import {
-  ReviewEntriesWord,
-  ReviewEntriesSense
-} from "../ReviewEntriesComponent";
+import { ReviewEntriesWord, ReviewEntriesSense } from "../ReviewEntriesTypes";
 import { SemanticDomain } from "../../../../types/word";
 import TreeView from "../../../../components/TreeView";
 import AlignedList, { SPACER } from "./AlignedList";

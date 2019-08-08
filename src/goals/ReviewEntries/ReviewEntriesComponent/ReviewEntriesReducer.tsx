@@ -1,4 +1,4 @@
-import { ReviewEntriesWord, OLD_SENSE } from "./ReviewEntriesComponent";
+import { ReviewEntriesWord, OLD_SENSE } from "./ReviewEntriesTypes";
 import {
   ReviewEntriesAction,
   ReviewEntriesActionTypes

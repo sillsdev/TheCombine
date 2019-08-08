@@ -2,17 +2,18 @@ import React from "react";
 import configureMockStore from "redux-mock-store";
 import axios from "axios";
 
-import ReviewEntriesConnected, {
-  ReviewEntriesWord,
-  ReviewEntriesSense,
-  SEP_CHAR,
-  OLD_SENSE
-} from "../ReviewEntriesComponent";
+import ReviewEntriesConnected from "../ReviewEntriesComponent";
 import * as utilities from "../../../../utilities";
 import mockWords from "./MockWords";
 import { Provider } from "react-redux";
 import { Word, Sense, State } from "../../../../types/word";
 import ReactDOM from "react-dom";
+import {
+  OLD_SENSE,
+  ReviewEntriesWord,
+  ReviewEntriesSense,
+  SEP_CHAR
+} from "../ReviewEntriesTypes";
 
 // Mock store + axios
 const state = {

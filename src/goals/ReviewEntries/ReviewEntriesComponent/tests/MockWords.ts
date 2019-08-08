@@ -1,9 +1,10 @@
-import { ReviewEntriesWord } from "../ReviewEntriesComponent";
+import { ReviewEntriesWord } from "../ReviewEntriesTypes";
 
 const mockWords: ReviewEntriesWord[] = [
   {
     id: "0",
     vernacular: "toad",
+    pronunciationFiles: [],
     senses: [
       {
         senseId: "1",
@@ -16,6 +17,7 @@ const mockWords: ReviewEntriesWord[] = [
   {
     id: "1",
     vernacular: "vern",
+    pronunciationFiles: [],
     senses: [
       {
         senseId: "2",
