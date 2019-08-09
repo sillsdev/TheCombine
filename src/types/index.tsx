@@ -8,7 +8,7 @@ import { Project } from "./project";
 import { MergeDuplicateState } from "../goals/MergeDupGoal/mergeDuplicateReducer";
 import { TreeViewState } from "../components/TreeView/TreeViewReducer";
 import { ReviewEntriesState } from "../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
-import { ProjectSettingsState } from "../components/ProjectSettings/ProjectSettingsReducer";
+import { ProjectSettingsState } from "../components/ProjectSettings/OldUserSettingsComponent/ProjectSettingsReducer";
 
 //root store structure
 export interface StoreState {
