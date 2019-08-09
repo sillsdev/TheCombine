@@ -224,7 +224,7 @@ function getUserEditIdFromProjectId(
 ): string | undefined {
   let projectIds = Object.keys(workedProjects);
   let matches: string[] = projectIds.filter(project => projectId === project);
-  if (matches.length !== 0 && matches.length < 2) {
+  if (matches.length === 1) {
     return workedProjects[matches[0]];
   }
 }

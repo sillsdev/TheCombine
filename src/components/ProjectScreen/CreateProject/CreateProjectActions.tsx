@@ -3,6 +3,13 @@ import * as backend from "../../../backend";
 import { Project, defaultProject } from "../../../types/project";
 import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
 import history from "../../../history";
+import {
+  asyncGetUserEdits,
+  GoalAction,
+  UpdateGoalAction
+} from "../../GoalTimeline/GoalsActions";
+import { ThunkDispatch } from "redux-thunk";
+import { StoreState } from "../../../types";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;
@@ -32,7 +39,13 @@ export interface CreateProjectAction {
 
 //thunk action creator
 export function asyncCreateProject(name: string, languageData?: File) {
-  return async (dispatch: Dispatch<CreateProjectAction | ProjectAction>) => {
+  return async (
+    dispatch: ThunkDispatch<
+      StoreState,
+      any,
+      CreateProjectAction | ProjectAction | GoalAction
+    >
+  ) => {
     dispatch(inProgress(name));
     // Create project
     let project: Project = { ...defaultProject };
@@ -44,28 +57,30 @@ export function asyncCreateProject(name: string, languageData?: File) {
 
         // Upload words
         if (languageData) {
-          backend
-            .uploadLift(createdProject, languageData)
-            .then(res => {
-              backend.getProject(createdProject.id).then(res=>{
+          backend.uploadLift(createdProject, languageData).then(res => {
+            backend
+              .getProject(createdProject.id)
+              .then(res => {
                 dispatch(setCurrentProject(res));
                 dispatch(success(name));
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {
-                  history.push("/goals");
+                  dispatch(asyncGetUserEdits());
+                  history.push("/project-settings");
                 }, 1000);
-
-              }).catch(err => {
+              })
+              .catch(err => {
                 dispatch(failure(name, err.response.statusText));
-            })
-            .catch(err => {
-              dispatch(failure(name, err.response.statusText));
-            });
-          })
+              })
+              .catch(err => {
+                dispatch(failure(name, err.response.statusText));
+              });
+          });
         } else {
           dispatch(success(name));
           setTimeout(() => {
-            history.push("/goals");
+            dispatch(asyncGetUserEdits());
+            history.push("/project-settings");
           }, 1000);
         }
       })
