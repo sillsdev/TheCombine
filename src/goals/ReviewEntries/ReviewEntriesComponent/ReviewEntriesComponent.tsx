@@ -11,6 +11,7 @@ import tableIcons from "./icons";
 import * as backend from "../../../backend";
 import columns from "./CellComponents/CellColumns";
 import { ReviewEntriesWord, parseWord } from "./ReviewEntriesTypes";
+import { Recorder } from "../../../components/Pronunciations/Recorder";
 
 // Component state/props
 interface ReviewEntriesProps {
@@ -39,6 +40,8 @@ export class ReviewEntriesComponent extends React.Component<
   ReviewEntriesProps & LocalizeContextProps,
   ReviewEntriesState
 > {
+  recorder: Recorder;
+
   constructor(props: ReviewEntriesProps & LocalizeContextProps) {
     super(props);
 
@@ -46,6 +49,7 @@ export class ReviewEntriesComponent extends React.Component<
       editingField: false,
       errorMsg: undefined
     };
+    this.recorder = new Recorder();
   }
 
   componentDidMount() {
@@ -61,7 +65,7 @@ export class ReviewEntriesComponent extends React.Component<
 
     for (let word of frontier) {
       // Create a new currentword
-      currentWord = parseWord(word, this.props.language);
+      currentWord = parseWord(word, this.props.language, this.recorder);
 
       // Remove the trailing newlines + push to newWords
       newWords.push(currentWord);

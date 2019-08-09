@@ -10,6 +10,8 @@ export const mockSemanticDomain: SemanticDomain = {
   id: ""
 };
 
+jest.mock("../../../Pronunciations/Recorder");
+
 describe("Tests DataEntryTable", () => {
   it("renders without crashing when not displaying tooltip", () => {
     const div = document.createElement("div");
@@ -17,6 +19,7 @@ describe("Tests DataEntryTable", () => {
       <DataEntryTable
         domain={mockDomainTree}
         semanticDomain={mockSemanticDomain}
+        displaySemanticDomainView={(isGettingSemanticdomain: boolean) => {}}
       />,
       div
     );

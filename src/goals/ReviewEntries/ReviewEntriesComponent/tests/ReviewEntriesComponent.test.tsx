@@ -58,6 +58,9 @@ jest.mock("material-table", () => {
   };
 });
 
+// Mock the node module used by AudioRecorder
+jest.mock("../../../../components/Pronunciations/Recorder");
+
 // Mock to spy on updating words
 const MOCK_UPDATE = jest.fn();
 

@@ -11,6 +11,7 @@ import {
   addSenseToWord,
   addSemanticDomainToSense
 } from "../ExistingEntry/ExistingEntry";
+import theme from "../../../../types/theme";
 
 interface NewEntryProps {
   allWords: Word[];
@@ -249,73 +250,108 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             }
           }}
         >
-          <NewVernEntry
-            vernacular={this.state.newEntry.vernacular}
-            vernInput={this.vernInput}
-            isDuplicate={this.state.isDuplicate}
-            toggleDuplicateResolutionView={() =>
-              this.toggleDuplicateResolutionView()
-            }
-            updateVernField={(newValue: string) =>
-              this.updateVernField(newValue)
-            }
-          />
-          <NewGlossEntry
-            glosses={
-              this.state.newEntry.senses &&
-              this.state.newEntry.senses[0] &&
-              this.state.newEntry.senses[0].glosses &&
-              this.state.newEntry.senses[0].glosses[0]
-                ? this.state.newEntry.senses[0].glosses[0].def
-                : ""
-            }
-            glossInput={this.glossInput}
-            isSpelledCorrectly={this.state.isSpelledCorrectly}
-            toggleSpellingSuggestionsView={() =>
-              this.toggleSpellingSuggestionsView()
-            }
-            updateGlossField={(newValue: string) =>
-              this.updateGlossField(newValue)
-            }
-          />
-          {this.props.displaySpellingSuggestions && (
-            <SpellingSuggestionsView
-              mispelledWord={this.state.newEntry.senses[0].glosses[0].def}
-              spellingSuggestions={this.getSpellingSuggestions(
-                this.state.newEntry.senses &&
-                  this.state.newEntry.senses[0] &&
-                  this.state.newEntry.senses[0].glosses &&
-                  this.state.newEntry.senses[0].glosses[0]
-                  ? this.state.newEntry.senses[0].glosses[0].def
-                  : ""
-              )}
-              chooseSpellingSuggestion={(suggestion: string) =>
-                this.chooseSpellingSuggestion(suggestion)
+          {" "}
+          <Grid
+            item
+            xs={5}
+            style={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              position: "relative"
+            }}
+          >
+            <NewVernEntry
+              vernacular={this.state.newEntry.vernacular}
+              vernInput={this.vernInput}
+              isDuplicate={this.state.isDuplicate}
+              toggleDuplicateResolutionView={() =>
+                this.toggleDuplicateResolutionView()
+              }
+              updateVernField={(newValue: string) =>
+                this.updateVernField(newValue)
               }
             />
+          </Grid>
+          <Grid
+            item
+            xs={5}
+            style={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              position: "relative"
+            }}
+          >
+            <NewGlossEntry
+              glosses={
+                this.state.newEntry.senses &&
+                this.state.newEntry.senses[0] &&
+                this.state.newEntry.senses[0].glosses &&
+                this.state.newEntry.senses[0].glosses[0]
+                  ? this.state.newEntry.senses[0].glosses[0].def
+                  : ""
+              }
+              glossInput={this.glossInput}
+              isSpelledCorrectly={this.state.isSpelledCorrectly}
+              toggleSpellingSuggestionsView={() =>
+                this.toggleSpellingSuggestionsView()
+              }
+              updateGlossField={(newValue: string) =>
+                this.updateGlossField(newValue)
+              }
+            />
+          </Grid>
+          {this.props.displaySpellingSuggestions && (
+            <Grid
+              item
+              xs={12}
+              key={"mispelledNewEntry"}
+              style={{ background: "whitesmoke" }}
+            >
+              <SpellingSuggestionsView
+                mispelledWord={this.state.newEntry.senses[0].glosses[0].def}
+                spellingSuggestions={this.getSpellingSuggestions(
+                  this.state.newEntry.senses &&
+                    this.state.newEntry.senses[0] &&
+                    this.state.newEntry.senses[0].glosses &&
+                    this.state.newEntry.senses[0].glosses[0]
+                    ? this.state.newEntry.senses[0].glosses[0].def
+                    : ""
+                )}
+                chooseSpellingSuggestion={(suggestion: string) =>
+                  this.chooseSpellingSuggestion(suggestion)
+                }
+              />
+            </Grid>
           )}
           {this.props.displayDuplicates &&
             this.state.isDuplicate &&
             this.state.duplicate && (
-              <DuplicateResolutionView
-                existingEntry={this.state.duplicate}
-                newSense={
-                  this.state.newEntry.senses &&
-                  this.state.newEntry.senses[0] &&
-                  this.state.newEntry.senses[0].glosses &&
-                  this.state.newEntry.senses[0].glosses[0]
-                    ? this.state.newEntry.senses[0].glosses[0].def
-                    : ""
-                }
-                addSense={(existingWord: Word, newSense: string) =>
-                  this.addNewSense(existingWord, newSense)
-                }
-                addSemanticDomain={(
-                  existingWord: Word,
-                  sense: Sense,
-                  index: number
-                ) => this.addSemanticDomain(existingWord, sense, index)}
-              />
+              <Grid
+                item
+                xs={12}
+                key={"duplicateNewVernEntry"}
+                style={{ background: "whitesmoke" }}
+              >
+                <DuplicateResolutionView
+                  existingEntry={this.state.duplicate}
+                  newSense={
+                    this.state.newEntry.senses &&
+                    this.state.newEntry.senses[0] &&
+                    this.state.newEntry.senses[0].glosses &&
+                    this.state.newEntry.senses[0].glosses[0]
+                      ? this.state.newEntry.senses[0].glosses[0].def
+                      : ""
+                  }
+                  addSense={(existingWord: Word, newSense: string) =>
+                    this.addNewSense(existingWord, newSense)
+                  }
+                  addSemanticDomain={(
+                    existingWord: Word,
+                    sense: Sense,
+                    index: number
+                  ) => this.addSemanticDomain(existingWord, sense, index)}
+                />
+              </Grid>
             )}
         </Grid>
       </Grid>

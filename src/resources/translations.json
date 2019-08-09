@@ -3,7 +3,7 @@
     "domain": ["Domain", "Dominio"],
     "vernacular": ["Vernacular", "Vernáculo"],
     "glosses": ["Glosses", "Traducciones"],
-    "next": ["Next", "Siguiente"],
+    "done": ["Complete", "Completar"],
     "deleteRow": ["Delete this row", "borrar esta fila"],
     "wordInDatabase": [
       "This word is already in the database",

@@ -13,10 +13,12 @@ import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
+import { Recorder } from "../../Pronunciations/Recorder";
 
 interface DataEntryTableProps {
   domain: DomainTree;
   semanticDomain: SemanticDomain;
+  displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
 }
 
 interface WordAccess {
@@ -30,7 +32,6 @@ interface DataEntryTableState {
   displayDuplicatesIndex?: number;
   displaySpellingSuggestionsIndex?: number;
 }
-
 
 async function getWordsFromBackend(): Promise<Word[]> {
   let words = await Backend.getFrontierWords();
@@ -60,7 +61,6 @@ export function filterWords(words: Word[]): Word[] {
  * A data entry table containing word entries
  */
 export class DataEntryTable extends React.Component<
-
   DataEntryTableProps & LocalizeContextProps,
   DataEntryTableState
 > {
@@ -70,10 +70,11 @@ export class DataEntryTable extends React.Component<
       existingWords: [],
       recentlyAddedWords: []
     };
-
+    this.recorder = new Recorder();
     this.spellChecker = new SpellChecker();
   }
 
+  recorder: Recorder;
   spellChecker: SpellChecker;
 
   async componentDidMount() {
@@ -239,6 +240,7 @@ export class DataEntryTable extends React.Component<
                     this.updateExistingWord(wordToUpdate, wordToDelete)
                   }
                   removeWord={(word: Word) => this.removeWord(word)}
+                  recorder={this.recorder}
                   spellChecker={this.spellChecker}
                   semanticDomain={this.props.semanticDomain}
                   displayDuplicates={
@@ -304,8 +306,13 @@ export class DataEntryTable extends React.Component<
               variant="contained"
               color="primary"
               style={{ marginTop: theme.spacing(2) }}
+              onClick={() => {
+                let recentlyAddedWords: WordAccess[] = [];
+                this.props.displaySemanticDomainView(true);
+                this.setState({ recentlyAddedWords });
+              }}
             >
-              <Translate id="addWords.next" />
+              <Translate id="addWords.done" />
             </Button>
           </Grid>
         </Grid>

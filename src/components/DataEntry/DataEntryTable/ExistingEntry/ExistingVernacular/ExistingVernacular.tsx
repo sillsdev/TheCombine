@@ -24,15 +24,7 @@ export class ExistingVernEntry extends React.Component<
 > {
   render() {
     return (
-      <Grid
-        item
-        xs={5}
-        style={{
-          paddingLeft: theme.spacing(2),
-          paddingRight: theme.spacing(2),
-          position: "relative"
-        }}
-      >
+      <div>
         <TextField
           fullWidth
           value={this.props.vernacular}
@@ -59,7 +51,7 @@ export class ExistingVernEntry extends React.Component<
             />
           </Tooltip>
         )}
-      </Grid>
+      </div>
     );
   }
 }
