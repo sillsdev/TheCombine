@@ -35,9 +35,9 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
             return new ObjectResult(await _projectService.GetAllProjects());
         }
@@ -48,9 +48,9 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/users")]
         public async Task<IActionResult> GetAllUsers(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             var allUsers = await _userService.GetAllUsers();
@@ -66,9 +66,9 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
             return new ObjectResult(await _projectService.DeleteAllProjects());
 #else
@@ -81,9 +81,9 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}")]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             var project = await _projectService.GetProject(projectId);
@@ -137,9 +137,9 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
-            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             var result = await _projectService.Update(projectId, project);
@@ -162,9 +162,9 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}/characters")]
         public async Task<IActionResult> PutChars(string projectId, [FromBody]Project project)
         {
-            if (!_permissionService.IsProjectAuthenticated("3", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("3", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             var currentProj = await _projectService.GetProject(projectId);
@@ -180,9 +180,9 @@ namespace BackendFramework.Controllers
         [HttpDelete("{projectId}")]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             if (await _projectService.Delete(projectId))
@@ -213,9 +213,9 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}/users/{userId}")]
         public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]List<int> permissions)
         {
-            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             var proj = _projectService.GetProject(projectId);
@@ -250,9 +250,9 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/liftcheck")]
         public async Task<IActionResult> CanUploadLift(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("4", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("4", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             return new OkObjectResult(_projectService.CanImportLift(projectId));
