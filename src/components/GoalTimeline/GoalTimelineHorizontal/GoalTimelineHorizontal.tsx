@@ -59,10 +59,6 @@ export class GoalTimelineHorizontal extends React.Component<
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentWillMount() {
-    window.addEventListener("resize", this.handleWindowSizeChange);
-  }
-
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleWindowSizeChange);
   }
@@ -73,6 +69,7 @@ export class GoalTimelineHorizontal extends React.Component<
 
   // Load history from database
   componentDidMount() {
+    window.addEventListener("resize", this.handleWindowSizeChange);
     this.props.loadHistory();
   }
 

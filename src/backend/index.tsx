@@ -243,7 +243,10 @@ export async function exportLift() {
   return `data:application/zip;base64,${resp.data}`;
 }
 
-export async function uploadAudio(wordId: string, audioFile: File): Promise<string> {
+export async function uploadAudio(
+  wordId: string,
+  audioFile: File
+): Promise<string> {
   let data = new FormData();
   data.append("file", audioFile);
   let resp = await backendServer.post(
