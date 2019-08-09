@@ -26,11 +26,12 @@ interface WordAccess {
   mutable: boolean;
 }
 
-interface DataEntryTableState {
+export interface DataEntryTableState {
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
   displayDuplicatesIndex?: number;
   displaySpellingSuggestionsIndex?: number;
+  isReady: boolean;
 }
 
 async function getWordsFromBackend(): Promise<Word[]> {
@@ -68,7 +69,8 @@ export class DataEntryTable extends React.Component<
     super(props);
     this.state = {
       existingWords: [],
-      recentlyAddedWords: []
+      recentlyAddedWords: [],
+      isReady: false
     };
     this.recorder = new Recorder();
     this.spellChecker = new SpellChecker();
@@ -207,7 +209,7 @@ export class DataEntryTable extends React.Component<
         <input type="submit" style={{ display: "none" }} />
 
         <Grid container spacing={3}>
-          <Grid item xs={5}>
+          <Grid item xs={4}>
             <Typography
               variant="h5"
               align="center"
@@ -216,7 +218,7 @@ export class DataEntryTable extends React.Component<
               <Translate id="addWords.vernacular" />
             </Typography>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={4}>
             <Typography
               variant="h5"
               align="center"
@@ -270,33 +272,39 @@ export class DataEntryTable extends React.Component<
               />
             )
           )}
-          <NewEntry
-            allWords={this.state.existingWords}
-            updateWord={(wordToUpdate: Word) =>
-              this.updateWordForNewEntry(wordToUpdate)
-            }
-            addNewWord={(word: Word) => this.addNewWord(word)}
-            spellChecker={this.spellChecker}
-            semanticDomain={this.props.semanticDomain}
-            displayDuplicates={
-              this.state.displayDuplicatesIndex ===
-              this.state.recentlyAddedWords.length
-            }
-            toggleDisplayDuplicates={() => {
-              this.toggleDisplayDuplicates(
+
+          <Grid item xs={12}>
+            <NewEntry
+              allWords={this.state.existingWords}
+              updateWord={(wordToUpdate: Word) =>
+                this.updateWordForNewEntry(wordToUpdate)
+              }
+              addNewWord={(word: Word) => this.addNewWord(word)}
+              spellChecker={this.spellChecker}
+              semanticDomain={this.props.semanticDomain}
+              displayDuplicates={
+                this.state.displayDuplicatesIndex ===
                 this.state.recentlyAddedWords.length
-              );
-            }}
-            displaySpellingSuggestions={
-              this.state.displaySpellingSuggestionsIndex ===
-              this.state.recentlyAddedWords.length
-            }
-            toggleDisplaySpellingSuggestions={() => {
-              this.toggleDisplaySpellingSuggestions(
+              }
+              toggleDisplayDuplicates={() => {
+                this.toggleDisplayDuplicates(
+                  this.state.recentlyAddedWords.length
+                );
+              }}
+              displaySpellingSuggestions={
+                this.state.displaySpellingSuggestionsIndex ===
                 this.state.recentlyAddedWords.length
-              );
-            }}
-          />
+              }
+              toggleDisplaySpellingSuggestions={() => {
+                this.toggleDisplaySpellingSuggestions(
+                  this.state.recentlyAddedWords.length
+                );
+              }}
+              setIsReadyState={(isReady: boolean) =>
+                this.setState({ isReady: isReady })
+              }
+            />
+          </Grid>
         </Grid>
 
         <Grid container justify="flex-end" spacing={2}>
@@ -304,7 +312,7 @@ export class DataEntryTable extends React.Component<
             <Button
               type="submit"
               variant="contained"
-              color="primary"
+              color={this.state.isReady ? "primary" : "secondary"}
               style={{ marginTop: theme.spacing(2) }}
               onClick={() => {
                 let recentlyAddedWords: WordAccess[] = [];

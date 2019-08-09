@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { Word, Sense, SemanticDomain } from "../../../../types/word";
 import SpellChecker from "../../spellChecker";
 import NewVernEntry from "./NewVernEntry/NewVernEntry";
@@ -12,6 +12,7 @@ import {
   addSemanticDomainToSense
 } from "../ExistingEntry/ExistingEntry";
 import theme from "../../../../types/theme";
+import { Translate } from "react-localize-redux";
 
 interface NewEntryProps {
   allWords: Word[];
@@ -23,6 +24,7 @@ interface NewEntryProps {
   toggleDisplayDuplicates: () => void;
   displaySpellingSuggestions: boolean;
   toggleDisplaySpellingSuggestions: () => void;
+  setIsReadyState: (isReady: boolean) => void;
 }
 
 interface NewEntryState {
@@ -250,31 +252,39 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             }
           }}
         >
-          {" "}
           <Grid
+            container
             item
-            xs={5}
+            xs={4}
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
               position: "relative"
             }}
           >
-            <NewVernEntry
-              vernacular={this.state.newEntry.vernacular}
-              vernInput={this.vernInput}
-              isDuplicate={this.state.isDuplicate}
-              toggleDuplicateResolutionView={() =>
-                this.toggleDuplicateResolutionView()
-              }
-              updateVernField={(newValue: string) =>
-                this.updateVernField(newValue)
-              }
-            />
+            <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
+              <NewVernEntry
+                vernacular={this.state.newEntry.vernacular}
+                vernInput={this.vernInput}
+                isDuplicate={this.state.isDuplicate}
+                toggleDuplicateResolutionView={() =>
+                  this.toggleDuplicateResolutionView()
+                }
+                updateVernField={(newValue: string) => {
+                  this.updateVernField(newValue);
+                  this.props.setIsReadyState(newValue.trim().length > 0);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption">
+                {<Translate id="newentry.pressEnter" />}
+              </Typography>
+            </Grid>
           </Grid>
           <Grid
             item
-            xs={5}
+            xs={4}
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),

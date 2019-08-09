@@ -18,7 +18,7 @@ interface ExistingGlossEntryProps {
  * An editable gloss field for existing words that indicates whether the
  * gloss is mispelled
  */
-export class ExistingGlossEntry extends React.Component<
+export class ExistingGloss extends React.Component<
   ExistingGlossEntryProps & LocalizeContextProps
 > {
   render() {
@@ -67,4 +67,4 @@ export class ExistingGlossEntry extends React.Component<
   }
 }
 
-export default withLocalize(ExistingGlossEntry);
+export default withLocalize(ExistingGloss);

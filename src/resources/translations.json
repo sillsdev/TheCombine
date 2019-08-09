@@ -294,5 +294,11 @@
       "Recording error: Could not access a microphone",
       "Error de grabación: no se pudo acceder a un micrófono"
     ]
+  },
+  "newentry": {
+    "pressEnter": [
+      "Press enter to save word",
+      "Presione enter para guardar la palabra"
+    ]
   }
 }

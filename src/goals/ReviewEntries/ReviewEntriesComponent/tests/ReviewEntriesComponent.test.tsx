@@ -14,6 +14,7 @@ import {
   ReviewEntriesSense,
   SEP_CHAR
 } from "../ReviewEntriesTypes";
+import { Recorder } from "../../../../components/Pronunciations/Recorder";
 
 // Mock store + axios
 const state = {
@@ -71,9 +72,10 @@ beforeAll(() => {
       data: mockWords.map(word => createMockWord(word, "en"))
     });
   });
-  for (let word of mockWords)
+  for (let word of mockWords) {
     for (let sense of word.senses)
       MOCK_UUID.mockImplementationOnce(() => sense.senseId);
+  }
 
   // Create + mount + unmount
   const div = document.createElement("div");
@@ -100,7 +102,8 @@ describe("Tests ReviewEntriesComponent", () => {
         senses: value.senses.map(sense => ({
           ...sense,
           senseId: sense.senseId + OLD_SENSE
-        }))
+        })),
+        recorder: expect.any(Object)
       }))
     );
   });

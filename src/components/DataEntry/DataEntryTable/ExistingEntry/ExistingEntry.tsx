@@ -2,8 +2,8 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 import { Word, Gloss, Sense, State } from "../../../../types/word";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import ExistingVernEntry from "./ExistingVernacular/ExistingVernacular";
-import ExistingGlossEntry from "./ExistingGloss/ExistingGloss";
+import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
+import ExistingGloss from "./ExistingGloss/ExistingGloss";
 import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 import { SemanticDomain } from "../../../../types/word";
@@ -361,14 +361,14 @@ export class ExistingEntry extends React.Component<
         >
           <Grid
             item
-            xs={5}
+            xs={4}
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
               position: "relative"
             }}
           >
-            <ExistingVernEntry
+            <ExistingVernacular
               vernacular={this.state.existingEntry.vernacular}
               isDuplicate={this.state.isDuplicate}
               toggleDuplicateResolutionView={() =>
@@ -380,15 +380,14 @@ export class ExistingEntry extends React.Component<
           </Grid>
           <Grid
             item
-            xs={5}
+            xs={4}
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
               position: "relative"
             }}
           >
-            {" "}
-            <ExistingGlossEntry
+            <ExistingGloss
               glosses={
                 this.state.existingEntry.senses &&
                 this.state.existingEntry.senses[0] &&
@@ -408,7 +407,7 @@ export class ExistingEntry extends React.Component<
           </Grid>
           <Grid
             item
-            xs={1}
+            xs={3}
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
@@ -422,7 +421,15 @@ export class ExistingEntry extends React.Component<
               //TODO: wordUpdated={wordupdatemethod}
             />
           </Grid>
-          <Grid item xs={1}>
+          <Grid
+            item
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative"
+            }}
+          >
             {this.state.hovering && (
               <DeleteEntry
                 entryIndex={this.props.entryIndex}
