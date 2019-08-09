@@ -29,9 +29,9 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFrontier(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -51,9 +51,9 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> PostFrontier(string projectId, [FromBody]Word word)
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -77,9 +77,9 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> DeleteFrontier(string projectId, string wordId)
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists

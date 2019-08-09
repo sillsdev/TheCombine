@@ -33,7 +33,7 @@ namespace BackendFramework.Services
             return jsonToken;
         }
 
-        public bool IsUserIdAuthenticated(HttpContext request, string userId)
+        public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
             var jsonToken = GetJWT(request);
 
@@ -51,7 +51,7 @@ namespace BackendFramework.Services
             return permissionsObj;
         }
 
-        public bool IsProjectAuthenticated(string value, HttpContext request)
+        public bool IsProjectAuthorized(string value, HttpContext request)
         {
             //retrieve jwt token from http request and convert to object
             List<ProjectPermissions> permissionsObj = GetProjectPermissions(request);

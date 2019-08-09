@@ -36,9 +36,9 @@ namespace BackendFramework.Controllers
         [HttpGet("{wordId}/download/audio/{fileName}")]
         public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
@@ -64,9 +64,9 @@ namespace BackendFramework.Controllers
         [HttpPost("{wordId}/upload/audio")]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
             var file = fileUpload.File;
             var requestedFileName = fileUpload.File?.FileName;
