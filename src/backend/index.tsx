@@ -260,7 +260,7 @@ export async function uploadAudio(
 }
 
 export function getAudioUrl(wordId: string, fileName: string): string {
-  return `projects/${getProjectId()}/words/${wordId}/download/audio/${fileName}`;
+  return `${baseURL}/projects/${getProjectId()}/words/${wordId}/download/audio/${fileName}`;
 }
 
 export async function uploadAvatar(user: User, img: File): Promise<string> {

@@ -33,13 +33,15 @@ namespace BackendFramework.Controllers
         /// <summary> Returns the audio file in the form of a stream from disk</summary>
         /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/download/audio </remarks>
         /// <returns> Audio file stream </returns>
+        [AllowAnonymous]
         [HttpGet("{wordId}/download/audio/{fileName}")]
         public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
-            {
-                return new ForbidResult();
-            }
+            // if we require authorization and authentication for audio files, the frontend cannot just use the api endpoint as the src
+            //if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            //{
+            //    return new ForbidResult();
+            //}
 
             var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
 
@@ -55,10 +57,10 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("The file does not exist");
             }
 
-            return File(stream, "application/octet-stream");
+            return File(stream, "video/webm");
         }
 
-        /// <summary> Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to ~/.CombineFiles/{ProjectId}/Import/Audio </summary>
+        /// <summary> Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to ~/.CombineFiles/{ProjectId}/ExtractedLocation/Import/Audio </summary>
         /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/upload/audio </remarks>
         /// <returns> Path to local audio file </returns>
         [HttpPost("{wordId}/upload/audio")]
@@ -83,7 +85,7 @@ namespace BackendFramework.Controllers
 
             //get path to home
             Utilities util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(Filetype.audio, false, wordId, Path.Combine(projectId, Path.Combine("ExtractedLocation", "Import"), "Audio"));
+            fileUpload.FilePath = util.GenerateFilePath(Filetype.audio, false, wordId, Path.Combine(projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio"));
 
             //copy the file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
