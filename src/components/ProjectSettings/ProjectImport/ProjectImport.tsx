@@ -8,7 +8,7 @@ import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
 
 import * as backend from "../../../backend";
 import { Project } from "../../../types/project";
-import FileInputButton from "./FileInputButton";
+import FileInputButton from "../../Buttons/FileInputButton";
 import { renderToStaticMarkup } from "react-dom/server";
 
 enum UploadState {
@@ -71,6 +71,7 @@ export class ProjectImport extends React.Component<
             <FileInputButton
               updateFile={this.updateLiftFile}
               disabled={this.state.uploadState === UploadState.Done}
+              accept=".zip"
             >
               Choose File
             </FileInputButton>

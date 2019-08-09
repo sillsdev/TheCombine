@@ -24,7 +24,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
-        /// <remarks> GET: v1/users </remarks>
+        /// <remarks> GET: v1/users/projects/{projectId}/allusers </remarks>
         [HttpGet("projects/{projectId}/allusers")]
         public async Task<IActionResult> GetAllUsers()
         {
