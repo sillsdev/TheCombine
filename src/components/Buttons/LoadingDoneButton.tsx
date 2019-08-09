@@ -30,7 +30,7 @@ export default function LoadingDoneButton(props: Props & ButtonProps) {
       {props.done ? (
         <React.Fragment>
           <Check />
-          {props.doneText ? props.doneText : <Translate id="button.done" />}
+          {props.doneText ? props.doneText : <Translate id="buttons.done" />}
         </React.Fragment>
       ) : (
         props.children

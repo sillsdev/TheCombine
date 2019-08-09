@@ -10,12 +10,8 @@ import {
   Typography,
   CardContent,
   TextField,
-  Button,
-  Card,
-  CircularProgress
+  Card
 } from "@material-ui/core";
-import { Check } from "@material-ui/icons";
-import { buttonSuccess } from "../../../types/theme";
 import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 import FileInputButton from "../../Buttons/FileInputButton";
 

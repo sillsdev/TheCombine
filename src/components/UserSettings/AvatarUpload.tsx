@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography, Grid, Avatar } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 import { uploadAvatar } from "../../backend";
 import FileInputButton from "../Buttons/FileInputButton";

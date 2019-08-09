@@ -3,11 +3,9 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Link,
   Typography,
   Grid,
   Avatar,
-  Container,
   TextField,
   Button,
   Card,
@@ -17,20 +15,14 @@ import {
 import { User } from "../../types/user";
 import AvatarUpload from "./AvatarUpload";
 import AppBarComponent from "../AppBar/AppBarComponent";
-import {
-  getAllProjectsByUser,
-  avatarSrc,
-  getUser,
-  updateUser
-} from "../../backend";
-import { Phone, Email, Photo, Camera, CameraAlt } from "@material-ui/icons";
+import { avatarSrc, getUser, updateUser } from "../../backend";
+import { Phone, Email, CameraAlt } from "@material-ui/icons";
 import theme from "../../types/theme";
 import {
   LocalizeContextProps,
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { render } from "react-dom";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   return (
@@ -43,6 +35,7 @@ function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   );
 }
 
+/** An avatar with a camera icon when hovered */
 function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
   const classes = makeStyles({
     avatar: {
@@ -231,11 +224,13 @@ class UserSettings extends React.Component<
 
 export default withLocalize(UserSettings);
 
+/** Get user from localstorage */
 export function getCurrentUser(): User {
   const userString = localStorage.getItem("user");
   return userString ? JSON.parse(userString) : null;
 }
 
+/** Update user in localstorage with user from backend */
 export async function updateCurrentUser() {
   const userString = localStorage.getItem("user");
   const user: User = userString ? JSON.parse(userString) : null;
