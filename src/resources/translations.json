@@ -102,7 +102,7 @@
       ]
     },
     "user": {
-      "header": ["Users", "Usarios"],
+      "header": ["Users and Roles", "Usarios"],
       "addUser": ["Add a user", "Añadir un usario"],
       "selectUser": ["Choose a user", "Escoger un usario"],
       "selectRole": ["Choose their role", "Escoger el papel"],
