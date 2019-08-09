@@ -10,12 +10,12 @@ interface SettingsProps {
 
 export default function BaseSettingsComponent(props: SettingsProps) {
   return (
-    <Grid item container xs={12} spacing={1} style={{ flexWrap: "nowrap" }}>
+    <Grid item container xs={12} spacing={2} style={{ flexWrap: "nowrap" }}>
       <Grid item style={{ marginTop: 4, color: "grey" }}>
         {props.icon}
       </Grid>
       <Grid item>
-        <Typography variant="h6" style={{ marginBottom: theme.spacing(1) }}>
+        <Typography variant="h6" style={{ marginBottom: theme.spacing(2) }}>
           {props.title}
         </Typography>
         {props.body}

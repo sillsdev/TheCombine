@@ -10,12 +10,10 @@ import {
   Typography,
   CardContent,
   TextField,
-  Button,
-  Card,
-  CircularProgress
+  Card
 } from "@material-ui/core";
-import { Check } from "@material-ui/icons";
-import { buttonSuccess } from "../../../types/theme";
+import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
+import FileInputButton from "../../Buttons/FileInputButton";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
@@ -59,8 +57,7 @@ class CreateProject extends React.Component<
     });
   }
 
-  updateLanguageData(files: FileList) {
-    const languageData = files[0];
+  updateLanguageData(languageData: File) {
     if (languageData) {
       const fileName = languageData.name;
       const name = this.state.name;
@@ -114,28 +111,12 @@ class CreateProject extends React.Component<
             >
               <Translate id="createProject.upload?" />
             </Typography>
-            {/* The actual file input element is hidden... */}
-            <input
-              id="file-input"
-              type="file"
-              name="name"
+            <FileInputButton
+              updateFile={file => this.updateLanguageData(file)}
               accept=".zip"
-              onChange={e =>
-                this.updateLanguageData(e.target.files as FileList)
-              }
-              style={{ display: "none" }}
-            />
-            {/* ... and this button is tied to it with the htmlFor property */}
-            <label
-              htmlFor="file-input"
-              style={{
-                cursor: "pointer"
-              }}
             >
-              <Button variant="contained" component="span">
-                <Translate id="createProject.browse" />
-              </Button>
-            </label>
+              <Translate id="createProject.browse" />
+            </FileInputButton>
 
             {/* Displays the name of the selected file */}
             {this.state.fileName && (
@@ -147,40 +128,17 @@ class CreateProject extends React.Component<
 
             {/* Form submission button */}
             <Grid container justify="flex-end">
-              <Button
-                type="submit"
-                variant="contained"
+              <LoadingDoneButton
+                loading={this.props.inProgress}
+                done={this.props.success}
                 color="primary"
-                disabled={this.props.inProgress}
                 style={{
-                  marginTop: 30,
-                  backgroundColor: this.props.success
-                    ? buttonSuccess
-                    : undefined
+                  marginTop: 30
                 }}
+                doneText={<Translate id="createProject.success" />}
               >
-                {this.props.success ? (
-                  <React.Fragment>
-                    <Check />
-                    <Translate id="createProject.success" />
-                  </React.Fragment>
-                ) : (
-                  <Translate id="createProject.create" />
-                )}
-                {this.props.inProgress && (
-                  <CircularProgress
-                    size={24}
-                    style={{
-                      color: buttonSuccess,
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      marginTop: -12,
-                      marginLeft: -12
-                    }}
-                  />
-                )}
-              </Button>
+                <Translate id="createProject.create" />
+              </LoadingDoneButton>
             </Grid>
           </CardContent>
         </form>

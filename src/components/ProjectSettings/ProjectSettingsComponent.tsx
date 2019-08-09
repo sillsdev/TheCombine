@@ -14,7 +14,6 @@ import { UserRole } from "../../types/userRole";
 import LanguageSettings, { LanguageProps } from "./Language/LanguageSettings";
 import ProjectImport from "./ProjectImport";
 import ProjectName from "./ProjectName";
-import UserSettingsComponent from "./UserSettingsComponent";
 import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
 import { Edit, CloudUpload, GetApp, Language } from "@material-ui/icons";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
@@ -67,7 +66,7 @@ class ProjectSettingsComponent extends React.Component<
     return (
       <React.Fragment>
         <AppBarComponent />
-        <Grid container justify="center" spacing={3}>
+        <Grid container justify="center" spacing={6}>
           {/* Project name */}
           {this.state.projectName && (
             <BaseSettingsComponent
