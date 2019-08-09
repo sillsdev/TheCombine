@@ -5,12 +5,12 @@ namespace Backend.Tests
 {
     class PermissionServiceMock : IPermissionService
     {
-        public bool IsUserIdAuthenticated(HttpContext request, string userId)
+        public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
             return true;
         }
 
-        public bool IsProjectAuthenticated(string value, HttpContext request)
+        public bool IsProjectAuthorized(string value, HttpContext request)
         {
             return true;
         }

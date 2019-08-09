@@ -34,9 +34,9 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -56,9 +56,9 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete(string projectId)
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -79,9 +79,9 @@ namespace BackendFramework.Controllers
         [HttpGet("{userEditId}")]
         public async Task<IActionResult> Get(string projectId, string userEditId)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -105,9 +105,9 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("3", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("3", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             UserEdit userEdit = new UserEdit();
@@ -122,9 +122,9 @@ namespace BackendFramework.Controllers
         [HttpPost("{userEditId}")]
         public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody]Edit newEdit)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //check to see if user is changing the correct user edit
@@ -167,9 +167,9 @@ namespace BackendFramework.Controllers
         [HttpPut("{userEditId}")]
         public async Task<IActionResult> Put(string projectId, string userEditId, [FromBody] UserEditObjectWrapper userEdit)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //check to see if user is changing the correct user edit
@@ -208,9 +208,9 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userEditId}")]
         public async Task<IActionResult> Delete(string projectId, string userEditId)
         {
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists

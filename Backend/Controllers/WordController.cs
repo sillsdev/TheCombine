@@ -33,9 +33,9 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -55,9 +55,9 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete(string projectId)
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -78,9 +78,9 @@ namespace BackendFramework.Controllers
         [HttpGet("{wordId}")]
         public async Task<IActionResult> Get(string projectId, string wordId)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -104,9 +104,9 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId, [FromBody]Word word)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -137,9 +137,9 @@ namespace BackendFramework.Controllers
         [HttpPut("{wordId}")]
         public async Task<IActionResult> Put(string projectId, string wordId, [FromBody] Word word)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -168,9 +168,9 @@ namespace BackendFramework.Controllers
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> Delete(string projectId, string wordId)
         {
-            if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists
@@ -193,9 +193,9 @@ namespace BackendFramework.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(string projectId, [FromBody] MergeWords mergeWords)
         {
-            if (!_permissionService.IsProjectAuthenticated("3", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("3", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             //ensure project exists

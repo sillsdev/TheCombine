@@ -28,9 +28,9 @@ namespace BackendFramework.Controllers
         [HttpGet("projects/{projectId}/allusers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            if (!_permissionService.IsProjectAuthenticated("5", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             return new ObjectResult(await _userService.GetAllUsers());
@@ -43,9 +43,9 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             return new ObjectResult(await _userService.DeleteAllUsers());
@@ -81,9 +81,9 @@ namespace BackendFramework.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> Get(string userId)
         {
-            if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
+            if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             var user = await _userService.GetUser(userId);
@@ -163,7 +163,7 @@ namespace BackendFramework.Controllers
             //
             // if (!_permissionService.IsUserIdAuthenticated(HttpContext, userId))
             // {
-            //     return new UnauthorizedResult();
+            //     return new ForbidResult();
             // }
 
             var result = await _userService.Update(userId, user);
@@ -187,9 +187,9 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete(string userId)
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthenticated("6", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
             {
-                return new UnauthorizedResult();
+                return new ForbidResult();
             }
 
             if (await _userService.Delete(userId))
