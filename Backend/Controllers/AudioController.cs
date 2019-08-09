@@ -37,6 +37,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{wordId}/download/audio/{fileName}")]
         public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
         {
+            // if we require authorization and authentication for audio files, the frontend cannot just use the api endpoint as the src
             //if (!_permissionService.IsProjectAuthenticated("1", HttpContext))
             //{
             //    return new UnauthorizedResult();
@@ -84,7 +85,7 @@ namespace BackendFramework.Controllers
 
             //get path to home
             Utilities util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(Filetype.audio, false, wordId, Path.Combine(projectId, Path.Combine("ExtractedLocation", "Import"), "Audio"));
+            fileUpload.FilePath = util.GenerateFilePath(Filetype.audio, false, wordId, Path.Combine(projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio"));
 
             //copy the file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
