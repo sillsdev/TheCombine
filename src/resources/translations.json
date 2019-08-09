@@ -274,6 +274,9 @@
       "Este objetivo aún no se ha implementado"
     ]
   },
+  "buttons": {
+    "done": ["done", "hecho"]
+  },
   "pronunciations": {
     "recordTooltip": [
       "Press and hold to record.",
