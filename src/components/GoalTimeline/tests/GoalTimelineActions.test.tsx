@@ -106,23 +106,15 @@ describe("Test GoalsActions", () => {
     expect(actions.updateGoal(goal)).toEqual(expectedAction);
   });
 
-  it("should create an async action to load user edits", () => {
-    const mockDispatch = mockStore.dispatch<any>(
-      actions.asyncLoadExistingUserEdits("1", "1")
-    );
+  it("should create an async action to load user edits", async () => {
+    await mockStore.dispatch<any>(actions.asyncLoadExistingUserEdits("1", "1"));
 
     let loadUserEdits: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: []
     };
 
-    mockDispatch
-      .then(() => {
-        expect(mockStore.getActions()).toEqual([loadUserEdits]);
-      })
-      .catch((err: string) => {
-        fail(err);
-      });
+    expect(mockStore.getActions()).toEqual([loadUserEdits]);
   });
 
   it("should dispatch an action to load a user edit", async () => {
@@ -157,26 +149,18 @@ describe("Test GoalsActions", () => {
     expect(mockStore.getActions()).toEqual([]);
   });
 
-  it("should create an async action to add a goal to history", () => {
+  it("should create an async action to add a goal to history", async () => {
     const goal: Goal = new CreateCharInv();
     localStorage.setItem("projectId", mockProjectId);
     localStorage.setItem("user", JSON.stringify(mockUser));
-    const mockDispatch = mockStore.dispatch<any>(
-      actions.asyncAddGoalToHistory(goal)
-    );
+    await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
 
     let addGoalToHistory: actions.AddGoalToHistoryAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
       payload: [goal]
     };
 
-    mockDispatch
-      .then(() => {
-        expect(mockStore.getActions()).toEqual([addGoalToHistory]);
-      })
-      .catch((err: string) => {
-        fail(err);
-      });
+    expect(mockStore.getActions()).toEqual([addGoalToHistory]);
   });
 
   it("should return a user", () => {
