@@ -9,6 +9,7 @@ import { green } from "@material-ui/core/colors";
 import PlayArrow from "@material-ui/icons/PlayArrow";
 import React from "react";
 import { Translate } from "react-localize-redux";
+import { Stop } from "@material-ui/icons";
 
 export interface PlayerProps {
   pronunciationUrl: string;
@@ -27,12 +28,27 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function AudioPlayer(props: PlayerProps) {
+  const [playing, setPlaying] = React.useState<boolean>(false);
+  const [audio] = React.useState<HTMLAudioElement>(
+    new Audio(props.pronunciationUrl)
+  );
+
   const classes = useStyles();
-  const audio = new Audio(props.pronunciationUrl);
-  audio.crossOrigin = "annonymous";
+  // const audio = new Audio(props.pronunciationUrl);
+  // audio.crossOrigin = "annonymous";
+
   let togglePlay = () => {
-    audio.play();
+    if (!playing) {
+      audio.play();
+      setPlaying(true);
+      audio.addEventListener("ended", () => setPlaying(false));
+    } else {
+      audio.pause();
+      setPlaying(false);
+      audio.currentTime = 0;
+    }
   };
+
   return (
     <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
       <IconButton
@@ -40,7 +56,11 @@ export default function AudioPlayer(props: PlayerProps) {
         className={classes.button}
         aria-label="play"
       >
-        <PlayArrow className={classes.icon} color="primary" />
+        {playing ? (
+          <Stop className={classes.icon} />
+        ) : (
+          <PlayArrow className={classes.icon} color="primary" />
+        )}
       </IconButton>
     </Tooltip>
   );

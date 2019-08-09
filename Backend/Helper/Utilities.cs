@@ -73,7 +73,7 @@ namespace BackendFramework.Helper
             switch (type)
             {
                 case Filetype.audio:
-                    return ".mp3";
+                    return ".webm";
 
                 case Filetype.avatar:
                     return ".jpg";
