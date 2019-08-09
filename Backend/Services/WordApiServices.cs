@@ -223,7 +223,8 @@ namespace BackendFramework.Services
                 pathToHome = Environment.GetEnvironmentVariable("UserProfile");
             }
 
-            var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId, "Import", "ExtractedFiles");
+            // This will get files uploaded by the Pronunciation component, but not files from the lift import, which are at {projectId}/Import/ExtractedFiles/Audio
+            var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId, "ExtractedLocation", "Import");
             var listOfDirs = Directory.GetDirectories(filepath);
 
             if (listOfDirs.Count() != 1)
@@ -231,7 +232,7 @@ namespace BackendFramework.Services
                return null;
             }
             //add the relative path to the audio field
-            filepath = Path.Combine(filepath, listOfDirs.Single(), filepath, ".mp3"); //there should only be one dir in that file
+            filepath = Path.Combine(filepath, listOfDirs.Single(), fileName); //there should only be one dir in that file
             Console.WriteLine($"filePath: {filepath}");
             return filepath;
         }
