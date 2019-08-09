@@ -39,12 +39,10 @@ export default function AudioPlayer(props: PlayerProps) {
 
   let togglePlay = () => {
     if (!playing) {
-      console.log("go");
       audio.play();
       setPlaying(true);
       audio.addEventListener("ended", () => setPlaying(false));
     } else {
-      console.log("stop");
       audio.pause();
       setPlaying(false);
       audio.currentTime = 0;

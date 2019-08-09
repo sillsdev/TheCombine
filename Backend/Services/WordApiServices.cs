@@ -224,14 +224,6 @@ namespace BackendFramework.Services
             }
 
             var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId, "Import", "ExtractedLocation", "Lift", "audio", fileName);
-            //var listOfDirs = Directory.GetDirectories(filepath);
-
-            //if (listOfDirs.Count() != 1)
-            //{
-            //   return null;
-            //}
-            //add the relative path to the audio field
-            //filepath = Path.Combine(filepath, listOfDirs.Single(), fileName); //there should only be one dir in that file
             Console.WriteLine($"filePath: {filepath}");
             return filepath;
         }
