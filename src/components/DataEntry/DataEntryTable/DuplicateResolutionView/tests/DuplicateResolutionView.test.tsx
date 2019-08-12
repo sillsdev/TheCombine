@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { DuplicateResolutionView } from "../DuplicateResolutionView";
-import { Word } from "../../../../../types/word";
+import { Word, Sense } from "../../../../../types/word";
 import { mockWord } from "../../../tests/MockWord";
 
 describe("Tests DeleteEntry", () => {
@@ -12,6 +12,11 @@ describe("Tests DeleteEntry", () => {
         existingEntry={mockWord}
         newSense={""}
         addSense={(existingWord: Word, newSense: string) => null}
+        addSemanticDomain={(
+          existingWord: Word,
+          sense: Sense,
+          index: number
+        ) => {}}
       />,
       div
     );
