@@ -4,8 +4,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { withLocalize } from "react-localize-redux";
 import { Grid } from "@material-ui/core";
 import UserMenu from "./UserMenu";
-import GoToHomeButton from "../GoToHomeButton/GoToHomeButtonComponent";
+import Logo from "./Logo";
 import theme from "../../types/theme";
+import NavigationButtons from "./NavigationButtons";
 
 /** An app bar shown at the top of almost every page of The Combine */
 function AppBarComponent() {
@@ -24,7 +25,8 @@ function AppBarComponent() {
               alignItems="center"
             >
               <Grid item>
-                <GoToHomeButton />
+                <Logo />
+                <NavigationButtons />
               </Grid>
               <Grid item>
                 <UserMenu />

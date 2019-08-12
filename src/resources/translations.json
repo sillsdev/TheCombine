@@ -11,6 +11,10 @@
     ],
     "mispelledWord": ["This word is mispelled", "Esta palabra está mal escrita"]
   },
+  "appBar": {
+    "dataEntry": ["data entry", "entrada de datos"],
+    "dataCleanup": ["data cleanup", "limpieza de datos"]
+  },
   "temp": {
     "buttonText": ["This is a button.", "Este es un botón."],
     "labelText": ["This is a label", "Esto es una etiqueta."],
