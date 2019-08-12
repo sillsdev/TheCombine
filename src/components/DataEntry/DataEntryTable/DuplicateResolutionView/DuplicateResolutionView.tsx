@@ -19,63 +19,56 @@ export class DuplicateResolutionView extends React.Component<
 > {
   render() {
     return (
-      <Grid
-        item
-        xs={12}
-        key={"duplicateNewVernEntry"}
-        style={{ background: "whitesmoke" }}
-      >
-        <Grid container>
-          <Grid
-            item
-            xs={5}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2)
+      <Grid container>
+        <Grid
+          item
+          xs={5}
+          style={{
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2)
+          }}
+        >
+          <Typography variant="body1">
+            {"Duplicate in database: " + this.props.existingEntry.vernacular}
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          xs={5}
+          style={{
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2)
+          }}
+        >
+          <Typography variant="body1">{"Glosses: "}</Typography>
+          {this.props.existingEntry.senses.map((sense: Sense, index) =>
+            sense.glosses
+              .filter(gloss => gloss.language === "en")
+              .map(gloss => (
+                <Chip
+                  label={gloss.def}
+                  style={{ margin: 4 }}
+                  onClick={() => {
+                    this.props.addSemanticDomain(
+                      this.props.existingEntry,
+                      sense,
+                      index
+                    );
+                  }}
+                />
+              ))
+          )}
+          <Chip
+            variant="outlined"
+            label={"Add New Sense +"}
+            style={{ margin: 4 }}
+            onClick={() => {
+              this.props.addSense(
+                this.props.existingEntry,
+                this.props.newSense
+              );
             }}
-          >
-            <Typography variant="body1">
-              {"Duplicate in database: " + this.props.existingEntry.vernacular}
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={5}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2)
-            }}
-          >
-            <Typography variant="body1">{"Glosses: "}</Typography>
-            {this.props.existingEntry.senses.map((sense: Sense, index) =>
-              sense.glosses
-                .filter(gloss => gloss.language === "en")
-                .map(gloss => (
-                  <Chip
-                    label={gloss.def}
-                    style={{ margin: 4 }}
-                    onClick={() => {
-                      this.props.addSemanticDomain(
-                        this.props.existingEntry,
-                        sense,
-                        index
-                      );
-                    }}
-                  />
-                ))
-            )}
-            <Chip
-              variant="outlined"
-              label={"Add New Sense +"}
-              style={{ margin: 4 }}
-              onClick={() => {
-                this.props.addSense(
-                  this.props.existingEntry,
-                  this.props.newSense
-                );
-              }}
-            />
-          </Grid>
+          />
         </Grid>
       </Grid>
     );

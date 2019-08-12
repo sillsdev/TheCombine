@@ -7,12 +7,7 @@ import DomainCell from "../CellComponents";
 import DeleteCell from "./DeleteCell";
 import { Translate } from "react-localize-redux";
 import SenseCell from "./SenseCell";
-import Pronunciations from "../../../../components/Pronunciations";
 import { Column } from "material-table";
-import { connect } from "react-redux";
-import { refreshWord, ReviewEntriesAction } from "../ReviewEntriesActions";
-import { ThunkDispatch } from "redux-thunk";
-import { StoreState } from "../../../../types";
 import PronunciationsCell from "./PronunciationsCell";
 
 enum SortStyle {
@@ -237,6 +232,7 @@ const columns: Column[] = [
       <PronunciationsCell
         wordId={rowData.id}
         pronunciationFiles={rowData.pronunciationFiles}
+        recorder={rowData.recorder}
       />
     )
   },

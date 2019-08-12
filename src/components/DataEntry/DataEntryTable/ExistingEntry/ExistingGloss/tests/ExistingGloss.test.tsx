@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import LocalizedExistingGlossEntry from "../ExistingGlossEntry";
+import LocalizedExistingGlossEntry from "../ExistingGloss";
 
 describe("Tests ExistingGlossEntry", () => {
   it("renders without crashing when not displaying tooltip", () => {

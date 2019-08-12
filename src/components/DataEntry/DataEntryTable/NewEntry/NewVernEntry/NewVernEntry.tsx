@@ -25,15 +25,7 @@ export class NewVernEntry extends React.Component<
 > {
   render() {
     return (
-      <Grid
-        item
-        xs={5}
-        style={{
-          paddingLeft: theme.spacing(2),
-          paddingRight: theme.spacing(2),
-          position: "relative"
-        }}
-      >
+      <div>
         <TextField
           autoFocus
           label={<Translate id="addWords.vernacular" />}
@@ -63,7 +55,7 @@ export class NewVernEntry extends React.Component<
             />
           </Tooltip>
         )}
-      </Grid>
+      </div>
     );
   }
 }

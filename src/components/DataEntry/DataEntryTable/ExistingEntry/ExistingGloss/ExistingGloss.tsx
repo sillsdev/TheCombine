@@ -18,20 +18,12 @@ interface ExistingGlossEntryProps {
  * An editable gloss field for existing words that indicates whether the
  * gloss is mispelled
  */
-export class ExistingGlossEntry extends React.Component<
+export class ExistingGloss extends React.Component<
   ExistingGlossEntryProps & LocalizeContextProps
 > {
   render() {
     return (
-      <Grid
-        item
-        xs={5}
-        style={{
-          paddingLeft: theme.spacing(2),
-          paddingRight: theme.spacing(2),
-          position: "relative"
-        }}
-      >
+      <div>
         <TextField
           fullWidth
           value={this.props.glosses}
@@ -70,9 +62,9 @@ export class ExistingGlossEntry extends React.Component<
             />
           </Tooltip>
         )}
-      </Grid>
+      </div>
     );
   }
 }
 
-export default withLocalize(ExistingGlossEntry);
+export default withLocalize(ExistingGloss);

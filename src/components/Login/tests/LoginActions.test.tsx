@@ -63,7 +63,7 @@ describe("LoginAction Tests", () => {
   test("asyncRegister correctly affects state", () => {
     const mockStore = createMockStore(mockState);
     const mockDispatch = mockStore.dispatch<any>(
-      action.asyncRegister("name", user.user, user.password)
+      action.asyncRegister("name", user.user, "", user.password)
     );
 
     mockDispatch
