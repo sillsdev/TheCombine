@@ -1,13 +1,8 @@
-import { Dispatch } from "react";
 import * as backend from "../../../backend";
 import { Project, defaultProject } from "../../../types/project";
 import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
 import history from "../../../history";
-import {
-  asyncGetUserEdits,
-  GoalAction,
-  UpdateGoalAction
-} from "../../GoalTimeline/GoalsActions";
+import { asyncGetUserEdits, GoalAction } from "../../GoalTimeline/GoalsActions";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../types";
 
@@ -85,7 +80,13 @@ export function asyncCreateProject(name: string, languageData?: File) {
         }
       })
       .catch(err => {
-        dispatch(failure(name, err.response.statusText));
+        let errorMessage: string;
+        if (err.response === undefined) {
+          errorMessage = err.response;
+        } else {
+          errorMessage = err.response.statusText;
+        }
+        dispatch(failure(name, errorMessage));
       });
   };
 }
