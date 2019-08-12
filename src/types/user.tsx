@@ -7,6 +7,7 @@ export class User {
   email: string;
   phone: string;
   otherConnectionField: string;
+  projectRoles: Hash<string>;
   workedProjects: Hash<string>;
   agreement: boolean;
   password: string;
@@ -21,6 +22,7 @@ export class User {
     this.email = "";
     this.phone = "";
     this.otherConnectionField = "";
+    this.projectRoles = {};
     this.workedProjects = {};
     this.agreement = false;
     this.password = password;

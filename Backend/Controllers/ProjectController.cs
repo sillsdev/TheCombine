@@ -81,7 +81,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}")]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {
                 return new ForbidResult();
             }
@@ -91,6 +91,12 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundResult();
             }
+
+            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            {
+                // if there are fields we need to hide from lower users remove them here
+            }
+
             return new ObjectResult(project);
         }
 
@@ -211,7 +217,7 @@ namespace BackendFramework.Controllers
 
         //change user role using project Id
         [HttpPut("{projectId}/users/{userId}")]
-        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]List<int> permissions)
+        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]int[] permissions)
         {
             if (!_permissionService.IsProjectAuthorized("5", HttpContext))
             {
@@ -226,9 +232,25 @@ namespace BackendFramework.Controllers
 
             //fetch the user -> fetch user role -> update user role
             var changeUser = await _userService.GetUser(userId);
-            var userRoleId = changeUser.ProjectRoles[projectId];
+            string userRoleId;
+            if (changeUser.ProjectRoles.ContainsKey(projectId))
+            {
+                userRoleId = changeUser.ProjectRoles[projectId];
+            }
+            else
+            { 
+                UserRole usersRole = new UserRole();
+                userRoleId = usersRole.Id;
+                usersRole.ProjectId = projectId;
+
+                usersRole = await _userRoleService.Create(usersRole);
+
+                //Generate the userRoles and update the user
+                changeUser.ProjectRoles.Add(projectId, usersRole.Id);
+                await _userService.Update(changeUser.Id, changeUser);
+            }
             var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
-            userRole.Permissions = permissions;
+            userRole.Permissions = new List<int>(permissions);
 
             var result = await _userRoleService.Update(userRoleId, userRole);
 

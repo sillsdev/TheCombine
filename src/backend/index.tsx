@@ -193,7 +193,7 @@ export async function getAllProjects(): Promise<Project[]> {
 }
 
 export async function getAllProjectsByUser(user: User): Promise<Project[]> {
-  let projectIds: string[] = Object.keys(user.workedProjects);
+  let projectIds: string[] = Object.keys(user.projectRoles);
   let projects: Project[] = [];
   for (let projectId of projectIds) {
     await getProject(projectId).then(project => {
@@ -408,18 +408,15 @@ export async function canUploadLift(): Promise<boolean> {
   return resp.data;
 }
 
-export async function addUserRole(role: UserRole): Promise<User | undefined> {
-  await backendServer.post(`projects/${getProjectId()}/userroles`, role, {
-    headers: authHeader()
-  });
-  let updatedUser: User | undefined = (await getAllUsers()).find(
-    user => user.id === role.id
+export async function addUserRole(
+  permissions: number[],
+  user: User
+): Promise<void> {
+  await backendServer.put(
+    `projects/${getProjectId()}/users/${user.id}`,
+    permissions,
+    {
+      headers: authHeader()
+    }
   );
-
-  // This will need fixed; this is a crash-preventing workaround, but it doesn't have the desired functionality
-  return updatedUser;
-  // if (updatedUser) {
-  //   updatedUser.workedProjects[getProjectId()] = "";
-  //   return await updateUser(updatedUser);
-  // } else return undefined;
 }
