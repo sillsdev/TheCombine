@@ -14,9 +14,16 @@ import { UserRole } from "../../types/userRole";
 import LanguageSettings, { LanguageProps } from "./Language/LanguageSettings";
 import ProjectImport from "./ProjectImport";
 import ProjectName from "./ProjectName";
-import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
-import { Edit, CloudUpload, GetApp, Language } from "@material-ui/icons";
+import {
+  Edit,
+  CloudUpload,
+  GetApp,
+  Language,
+  People
+} from "@material-ui/icons";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
+import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
+import ProjectUsers from "./ProjectUsers";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -107,8 +114,14 @@ class ProjectSettingsComponent extends React.Component<
             />
           )}
 
-          {/* Add users to project - Not fully implemented yet */}
-          {/* {this.state.editUsers && <UserSettingsComponent />} */}
+          {/* Add users to project */}
+          {this.state.projectName && (
+            <BaseSettingsComponent
+              icon={<People />}
+              title={<Translate id="projectSettings.user.header" />}
+              body={<ProjectUsers />}
+            />
+          )}
         </Grid>
       </React.Fragment>
     );
