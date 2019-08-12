@@ -3,7 +3,7 @@
     "domain": ["Domain", "Dominio"],
     "vernacular": ["Vernacular", "Vernáculo"],
     "glosses": ["Glosses", "Traducciones"],
-    "next": ["Next", "Siguiente"],
+    "done": ["Complete", "Completar"],
     "deleteRow": ["Delete this row", "borrar esta fila"],
     "wordInDatabase": [
       "This word is already in the database",
@@ -293,6 +293,12 @@
     "noMicAccess": [
       "Recording error: Could not access a microphone",
       "Error de grabación: no se pudo acceder a un micrófono"
+    ]
+  },
+  "newentry": {
+    "pressEnter": [
+      "Press enter to save word",
+      "Presione enter para guardar la palabra"
     ]
   }
 }

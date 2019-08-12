@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import LocalizedExistingVernEntry from "../ExistingVernEntry";
+import LocalizedExistingVernEntry from "../ExistingVernacular";
 
 describe("Tests ExistingVernEntry", () => {
   it("renders without crashing when not displaying tooltip", () => {

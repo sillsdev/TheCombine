@@ -4,11 +4,13 @@ import AudioPlayer from "./AudioPlayer";
 import AudioRecorder from "./AudioRecorder";
 import * as Backend from "../../backend";
 import theme from "../../types/theme";
+import { Recorder } from "./Recorder";
 
 export interface PronunciationProps {
   wordId: string;
   pronunciationFiles: string[];
   wordUpdated?: (oldId: string, newId: string) => void;
+  recorder?: Recorder;
 }
 
 /** Audio recording/playing component */
@@ -36,6 +38,7 @@ export class Pronunciations extends React.Component<
       >
         <AudioRecorder
           wordId={this.props.wordId}
+          recorder={this.props.recorder}
           recordingFinished={this.props.wordUpdated}
         />
         {audioButtons}

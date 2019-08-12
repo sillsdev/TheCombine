@@ -13,10 +13,12 @@ import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
+import { Recorder } from "../../Pronunciations/Recorder";
 
 interface DataEntryTableProps {
   domain: DomainTree;
   semanticDomain: SemanticDomain;
+  displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
 }
 
 interface WordAccess {
@@ -24,13 +26,13 @@ interface WordAccess {
   mutable: boolean;
 }
 
-interface DataEntryTableState {
+export interface DataEntryTableState {
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
   displayDuplicatesIndex?: number;
   displaySpellingSuggestionsIndex?: number;
+  isReady: boolean;
 }
-
 
 async function getWordsFromBackend(): Promise<Word[]> {
   let words = await Backend.getFrontierWords();
@@ -60,7 +62,6 @@ export function filterWords(words: Word[]): Word[] {
  * A data entry table containing word entries
  */
 export class DataEntryTable extends React.Component<
-
   DataEntryTableProps & LocalizeContextProps,
   DataEntryTableState
 > {
@@ -68,12 +69,14 @@ export class DataEntryTable extends React.Component<
     super(props);
     this.state = {
       existingWords: [],
-      recentlyAddedWords: []
+      recentlyAddedWords: [],
+      isReady: false
     };
-
+    this.recorder = new Recorder();
     this.spellChecker = new SpellChecker();
   }
 
+  recorder: Recorder;
   spellChecker: SpellChecker;
 
   async componentDidMount() {
@@ -206,7 +209,7 @@ export class DataEntryTable extends React.Component<
         <input type="submit" style={{ display: "none" }} />
 
         <Grid container spacing={3}>
-          <Grid item xs={5}>
+          <Grid item xs={4}>
             <Typography
               variant="h5"
               align="center"
@@ -215,7 +218,7 @@ export class DataEntryTable extends React.Component<
               <Translate id="addWords.vernacular" />
             </Typography>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={4}>
             <Typography
               variant="h5"
               align="center"
@@ -239,6 +242,7 @@ export class DataEntryTable extends React.Component<
                     this.updateExistingWord(wordToUpdate, wordToDelete)
                   }
                   removeWord={(word: Word) => this.removeWord(word)}
+                  recorder={this.recorder}
                   spellChecker={this.spellChecker}
                   semanticDomain={this.props.semanticDomain}
                   displayDuplicates={
@@ -268,33 +272,39 @@ export class DataEntryTable extends React.Component<
               />
             )
           )}
-          <NewEntry
-            allWords={this.state.existingWords}
-            updateWord={(wordToUpdate: Word) =>
-              this.updateWordForNewEntry(wordToUpdate)
-            }
-            addNewWord={(word: Word) => this.addNewWord(word)}
-            spellChecker={this.spellChecker}
-            semanticDomain={this.props.semanticDomain}
-            displayDuplicates={
-              this.state.displayDuplicatesIndex ===
-              this.state.recentlyAddedWords.length
-            }
-            toggleDisplayDuplicates={() => {
-              this.toggleDisplayDuplicates(
+
+          <Grid item xs={12}>
+            <NewEntry
+              allWords={this.state.existingWords}
+              updateWord={(wordToUpdate: Word) =>
+                this.updateWordForNewEntry(wordToUpdate)
+              }
+              addNewWord={(word: Word) => this.addNewWord(word)}
+              spellChecker={this.spellChecker}
+              semanticDomain={this.props.semanticDomain}
+              displayDuplicates={
+                this.state.displayDuplicatesIndex ===
                 this.state.recentlyAddedWords.length
-              );
-            }}
-            displaySpellingSuggestions={
-              this.state.displaySpellingSuggestionsIndex ===
-              this.state.recentlyAddedWords.length
-            }
-            toggleDisplaySpellingSuggestions={() => {
-              this.toggleDisplaySpellingSuggestions(
+              }
+              toggleDisplayDuplicates={() => {
+                this.toggleDisplayDuplicates(
+                  this.state.recentlyAddedWords.length
+                );
+              }}
+              displaySpellingSuggestions={
+                this.state.displaySpellingSuggestionsIndex ===
                 this.state.recentlyAddedWords.length
-              );
-            }}
-          />
+              }
+              toggleDisplaySpellingSuggestions={() => {
+                this.toggleDisplaySpellingSuggestions(
+                  this.state.recentlyAddedWords.length
+                );
+              }}
+              setIsReadyState={(isReady: boolean) =>
+                this.setState({ isReady: isReady })
+              }
+            />
+          </Grid>
         </Grid>
 
         <Grid container justify="flex-end" spacing={2}>
@@ -302,10 +312,15 @@ export class DataEntryTable extends React.Component<
             <Button
               type="submit"
               variant="contained"
-              color="primary"
+              color={this.state.isReady ? "primary" : "secondary"}
               style={{ marginTop: theme.spacing(2) }}
+              onClick={() => {
+                let recentlyAddedWords: WordAccess[] = [];
+                this.props.displaySemanticDomainView(true);
+                this.setState({ recentlyAddedWords });
+              }}
             >
-              <Translate id="addWords.next" />
+              <Translate id="addWords.done" />
             </Button>
           </Grid>
         </Grid>

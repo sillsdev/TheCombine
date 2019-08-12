@@ -4,10 +4,12 @@ import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../../types";
 import { ReviewEntriesAction, refreshWord } from "../ReviewEntriesActions";
 import { connect } from "react-redux";
+import { Recorder } from "../../../../components/Pronunciations/Recorder";
 
 interface Props {
   wordId: string;
   pronunciationFiles: string[];
+  recorder?: Recorder;
   refreshWord: (oldId: string, newId: string) => void;
 }
 
@@ -18,6 +20,7 @@ class PronunciationsCell extends React.Component<Props> {
       <Pronunciations
         wordId={this.props.wordId}
         pronunciationFiles={this.props.pronunciationFiles}
+        recorder={this.props.recorder}
         wordUpdated={this.props.refreshWord}
       />
     );

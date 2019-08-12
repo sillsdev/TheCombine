@@ -19,20 +19,12 @@ interface ExistingVernEntryProps {
  * An editable vernacular field for existing words that indicates whether the
  * vernacular already exists in a collection
  */
-export class ExistingVernEntry extends React.Component<
+export class ExistingVernacular extends React.Component<
   ExistingVernEntryProps & LocalizeContextProps
 > {
   render() {
     return (
-      <Grid
-        item
-        xs={5}
-        style={{
-          paddingLeft: theme.spacing(2),
-          paddingRight: theme.spacing(2),
-          position: "relative"
-        }}
-      >
+      <div>
         <TextField
           fullWidth
           value={this.props.vernacular}
@@ -59,9 +51,9 @@ export class ExistingVernEntry extends React.Component<
             />
           </Tooltip>
         )}
-      </Grid>
+      </div>
     );
   }
 }
 
-export default withLocalize(ExistingVernEntry);
+export default withLocalize(ExistingVernacular);

@@ -1,6 +1,5 @@
 import React from "react";
 import { Typography, IconButton } from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
 import theme from "../../../types/theme";
 import {
   Translate,
@@ -11,7 +10,6 @@ import DomainTree from "../../TreeView/SemanticDomain";
 
 interface DataEntryHeaderProps {
   domain: DomainTree;
-  displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
 }
 
 /**
@@ -31,13 +29,6 @@ export class DataEntryHeader extends React.Component<
         {": "}
         {this.props.domain.name + " (" + this.props.domain.id + ")"}
         <Typography>{this.props.domain.description}</Typography>
-        <IconButton
-          onClick={() => {
-            this.props.displaySemanticDomainView(true);
-          }}
-        >
-          <Edit />
-        </IconButton>
       </Typography>
     );
   }

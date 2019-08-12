@@ -14,6 +14,7 @@ import { Translate } from "react-localize-redux";
 
 export interface RecorderProps {
   wordId: string;
+  recorder?: Recorder;
   recordingFinished?: (oldId: string, newId: string) => void;
 }
 
@@ -40,28 +41,30 @@ function getFileNameForWord(wordId: string): string {
 export default function AudioRecorder(props: RecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
   const classes = useStyles();
-  const audio = new Recorder();
+
+  const recorder =
+    props.recorder !== undefined ? props.recorder : new Recorder();
 
   return (
     <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
       <IconButton
         onMouseDown={() => {
-          audio.startRecording();
+          recorder.startRecording();
           setIsRecording(true);
         }}
         onMouseUp={() => {
           if (isRecording === true) {
-            audio
+            recorder
               .stopRecording()
               .then((audioUrl: string) => {
-                const blob = audio.getBlob();
+                const blob = recorder.getBlob();
                 const fileName = getFileNameForWord(props.wordId);
                 const file = new File([blob], fileName, {
                   type: blob.type,
                   lastModified: Date.now()
                 });
                 Backend.uploadAudio(props.wordId, file).then(newWordId => {
-                  audio.clearData();
+                  recorder.clearData();
                   if (props.recordingFinished) {
                     props.recordingFinished(props.wordId, newWordId);
                   }

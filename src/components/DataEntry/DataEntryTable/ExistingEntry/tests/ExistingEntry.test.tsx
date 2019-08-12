@@ -5,17 +5,18 @@ import {
   addSenseToWord,
   addSemanticDomainToSense,
   vernInFrontier,
-  isADuplicate,
-  getDuplicate
+  isADuplicate
 } from "../ExistingEntry";
 import { Word, SemanticDomain, State, Sense } from "../../../../../types/word";
 import { mockWord } from "../../../tests/MockWord";
 import SpellChecker from "../../../spellChecker";
 import { mockSemanticDomain } from "../../tests/DataEntryTable.test";
+import { Recorder } from "../../../../Pronunciations/Recorder";
 
-jest.mock("../ExistingVernEntry/ExistingVernEntry");
-jest.mock("../ExistingGlossEntry/ExistingGlossEntry");
+jest.mock("../ExistingVernacular/ExistingVernacular");
+jest.mock("../ExistingGloss/ExistingGloss");
 jest.mock("../DeleteEntry/DeleteEntry");
+jest.mock("../../../../Pronunciations/Recorder");
 
 describe("Tests ExistingEntry", () => {
   it("renders without crashing", () => {
@@ -34,6 +35,7 @@ describe("Tests ExistingEntry", () => {
         toggleDisplayDuplicates={() => null}
         displaySpellingSuggestions={true}
         toggleDisplaySpellingSuggestions={() => null}
+        recorder={new Recorder()}
       />,
       div
     );

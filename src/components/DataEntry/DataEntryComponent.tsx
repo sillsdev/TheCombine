@@ -51,18 +51,14 @@ export class DataEntryComponent extends React.Component<
               marginRight: "auto"
             }}
           >
-            <DataEntryHeader
-              domain={this.props.domain}
-              displaySemanticDomainView={(isGettingSemanticdomain: boolean) =>
-                this.setState({
-                  displaySemanticDomain: isGettingSemanticdomain
-                })
-              }
-            />
+          <DataEntryHeader domain={this.props.domain} />
             <Divider />
             <DataEntryTable
               domain={this.props.domain}
               semanticDomain={semanticDomain}
+            displaySemanticDomainView={(isGettingSemanticdomain: boolean) => {
+              this.setState({ displaySemanticDomain: isGettingSemanticdomain });
+            }}
             />
           </Paper>
 

@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../../App/DefaultState";
 import { Provider } from "react-redux";
-import { Pronunciations as PronunciationsComponent } from "../PronunciationsComponent";
 import Pronunciations from "../PronunciationsComponent";
 import AudioPlayer from "../AudioPlayer";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
@@ -12,7 +11,6 @@ import AudioRecorder from "../AudioRecorder";
 const createMockStore = configureMockStore([]);
 
 // Mock the node module used by AudioRecorder
-jest.mock("mic-recorder");
 jest.mock("../Recorder");
 
 // Variables

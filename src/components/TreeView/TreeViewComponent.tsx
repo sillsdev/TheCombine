@@ -31,6 +31,7 @@ export default class TreeViewComponent extends React.Component<
     this.animate = this.animate.bind(this);
 
     // TODO: add checking the user's language to select the semantic domains
+    // TODO: if the state has the current domain defined then use that in the navigate call
     let newDomain = createDomains(en);
     this.props.navigate(newDomain.currentdomain);
   }

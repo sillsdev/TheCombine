@@ -2,13 +2,16 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 import { Word, Gloss, Sense, State } from "../../../../types/word";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import ExistingVernEntry from "./ExistingVernEntry/ExistingVernEntry";
-import ExistingGlossEntry from "./ExistingGlossEntry/ExistingGlossEntry";
+import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
+import ExistingGloss from "./ExistingGloss/ExistingGloss";
 import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 import { SemanticDomain } from "../../../../types/word";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
 import SpellChecker from "../../spellChecker";
+import theme from "../../../../types/theme";
+import PronunciationsComponent from "../../../Pronunciations/PronunciationsComponent";
+import { Recorder } from "../../../Pronunciations/Recorder";
 
 interface ExistingEntryProps {
   wordsBeingAdded: Word[];
@@ -23,6 +26,7 @@ interface ExistingEntryProps {
   toggleDisplayDuplicates: () => void;
   displaySpellingSuggestions: boolean;
   toggleDisplaySpellingSuggestions: () => void;
+  recorder: Recorder;
 }
 
 interface ExistingEntryState {
@@ -355,33 +359,77 @@ export class ExistingEntry extends React.Component<
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
         >
-          <ExistingVernEntry
-            vernacular={this.state.existingEntry.vernacular}
-            isDuplicate={this.state.isDuplicate}
-            toggleDuplicateResolutionView={() =>
-              this.toggleDuplicateResolutionView()
-            }
-            updateField={(newValue: string) => this.updateVernField(newValue)}
-            updateWord={() => this.conditionallyUpdateWord()}
-          />
-          <ExistingGlossEntry
-            glosses={
-              this.state.existingEntry.senses &&
-              this.state.existingEntry.senses[0] &&
-              this.state.existingEntry.senses[0].glosses &&
-              this.state.existingEntry.senses[0].glosses[0]
-                ? this.state.existingEntry.senses[0].glosses[0].def
-                : ""
-            }
-            isSpelledCorrectly={this.state.isSpelledCorrectly}
-            toggleSpellingSuggestionsView={() =>
-              this.toggleSpellingSuggestionsView()
-            }
-            updateGlossField={(newValue: string) =>
-              this.updateGlossField(newValue)
-            }
-          />
-          <Grid item xs={2}>
+          <Grid
+            item
+            xs={4}
+            style={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              position: "relative"
+            }}
+          >
+            <ExistingVernacular
+              vernacular={this.state.existingEntry.vernacular}
+              isDuplicate={this.state.isDuplicate}
+              toggleDuplicateResolutionView={() =>
+                this.toggleDuplicateResolutionView()
+              }
+              updateField={(newValue: string) => this.updateVernField(newValue)}
+              updateWord={() => this.conditionallyUpdateWord()}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={4}
+            style={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              position: "relative"
+            }}
+          >
+            <ExistingGloss
+              glosses={
+                this.state.existingEntry.senses &&
+                this.state.existingEntry.senses[0] &&
+                this.state.existingEntry.senses[0].glosses &&
+                this.state.existingEntry.senses[0].glosses[0]
+                  ? this.state.existingEntry.senses[0].glosses[0].def
+                  : ""
+              }
+              isSpelledCorrectly={this.state.isSpelledCorrectly}
+              toggleSpellingSuggestionsView={() =>
+                this.toggleSpellingSuggestionsView()
+              }
+              updateGlossField={(newValue: string) =>
+                this.updateGlossField(newValue)
+              }
+            />
+          </Grid>
+          <Grid
+            item
+            xs={3}
+            style={{
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+              position: "relative"
+            }}
+          >
+            <PronunciationsComponent
+              wordId={this.state.existingEntry.id}
+              recorder={this.props.recorder}
+              pronunciationFiles={this.state.existingEntry.audio}
+              //TODO: wordUpdated={wordupdatemethod}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative"
+            }}
+          >
             {this.state.hovering && (
               <DeleteEntry
                 entryIndex={this.props.entryIndex}

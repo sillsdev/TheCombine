@@ -1,15 +1,17 @@
 import { SemanticDomain, Sense, Word, State } from "../../../types/word";
 import { uuid } from "../../../utilities";
+import { Recorder } from "../../../components/Pronunciations/Recorder";
 
 export const OLD_SENSE: string = "-old";
 export const SEP_CHAR: string = ",";
 const SEPARATOR: string = SEP_CHAR + " ";
 
 export interface ReviewEntriesWord {
-  pronunciationFiles: string[];
   id: string;
   vernacular: string;
   senses: ReviewEntriesSense[];
+  pronunciationFiles: string[];
+  recorder?: Recorder;
 }
 export interface ReviewEntriesSense {
   senseId: string;
@@ -18,12 +20,17 @@ export interface ReviewEntriesSense {
   deleted: boolean;
 }
 
-export function parseWord(word: Word, analysisLang: string) {
+export function parseWord(
+  word: Word,
+  analysisLang: string,
+  commonRecorder?: Recorder
+) {
   let currentWord: ReviewEntriesWord = {
     id: word.id,
     vernacular: word.vernacular,
     senses: [],
-    pronunciationFiles: word.audio
+    pronunciationFiles: word.audio,
+    recorder: commonRecorder
   };
 
   for (let sense of word.senses) {
