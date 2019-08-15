@@ -7,7 +7,7 @@ import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
 import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 import {
-  vernInFrontier,
+  duplicatesInFrontier,
   addSenseToWord,
   addSemanticDomainToSense
 } from "../ExistingEntry/ExistingEntry";
@@ -29,7 +29,7 @@ interface NewEntryProps {
 
 interface NewEntryState {
   newEntry: Word;
-  duplicate?: Word;
+  duplicates: Word[];
   isSpelledCorrectly: boolean;
   isDuplicate: boolean;
 }
@@ -66,7 +66,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         plural: ""
       },
       isSpelledCorrectly: true,
-      isDuplicate: false
+      isDuplicate: false,
+      duplicates: []
     };
 
     this.vernInput = React.createRef<HTMLDivElement>();
@@ -144,7 +145,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.resetEntry();
     this.setState({
       isDuplicate: false,
-      duplicate: undefined
+      duplicates: []
     });
   }
 
@@ -160,7 +161,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.resetEntry();
     this.setState({
       isDuplicate: false,
-      duplicate: undefined
+      duplicates: []
     });
   }
 
@@ -182,13 +183,17 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   updateVernField(newValue: string) {
-    let duplicateId: string = vernInFrontier(this.props.allWords, newValue);
-    let isDuplicate: boolean = duplicateId !== "";
+    let duplicateIds: string[] = duplicatesInFrontier(
+      this.props.allWords,
+      newValue,
+      5
+    );
+    let isDuplicate: boolean = duplicateIds.length > 0;
     this.setState({
       isDuplicate: isDuplicate,
-      duplicate: duplicateId
-        ? this.props.allWords.find(word => word.id === duplicateId)
-        : undefined,
+      duplicates: this.props.allWords.filter(word =>
+        duplicateIds.includes(word.id)
+      ),
       newEntry: {
         ...this.state.newEntry,
         vernacular: newValue
@@ -335,7 +340,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
           )}
           {this.props.displayDuplicates &&
             this.state.isDuplicate &&
-            this.state.duplicate && (
+            this.state.duplicates.map(duplicate => (
               <Grid
                 item
                 xs={12}
@@ -343,7 +348,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 style={{ background: "whitesmoke" }}
               >
                 <DuplicateResolutionView
-                  existingEntry={this.state.duplicate}
+                existingEntry={duplicate}
                   newSense={
                     this.state.newEntry.senses &&
                     this.state.newEntry.senses[0] &&
@@ -360,9 +365,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                     sense: Sense,
                     index: number
                   ) => this.addSemanticDomain(existingWord, sense, index)}
-                />
-              </Grid>
-            )}
+                /></Grid>
+            ))}
         </Grid>
       </Grid>
     );
