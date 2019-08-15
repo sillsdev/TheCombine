@@ -29,14 +29,15 @@ namespace BackendFramework
             public string ConnectionString { get; set; }
             public string CombineDatabase { get; set; }
         }
+        readonly string AllowedOrigins = "AllowAll";
 
-        /// <summary> This method gets called by the runtime. Use this method to add services for dependency injection. </summary>
-        public void ConfigureServices(IServiceCollection services)
+		/// <summary> This method gets called by the runtime. Use this method to add services for dependency injection. </summary>
+		public void ConfigureServices(IServiceCollection services)
         {
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
+                options.AddPolicy(AllowedOrigins,
                     builder => builder
                     .AllowAnyHeader()
                     .AllowAnyMethod()
@@ -117,11 +118,7 @@ namespace BackendFramework
             }
 
             app.UseHttpsRedirection();
-            app.UseCors(builder =>
-                builder
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod());
+            app.UseCors(AllowedOrigins);
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
