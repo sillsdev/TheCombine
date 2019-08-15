@@ -4,7 +4,7 @@ import {
   ExistingEntry,
   addSenseToWord,
   addSemanticDomainToSense,
-  vernInFrontier,
+  duplicatesInFrontier,
   isADuplicate
 } from "../ExistingEntry";
 import { Word, SemanticDomain, State, Sense } from "../../../../../types/word";
@@ -116,11 +116,13 @@ describe("Tests ExistingEntry", () => {
     ).toEqual(expectedWord);
   });
 
-  it("finds no dupliates", () => {
+  it("finds no duplicates", () => {
     let existingWords: Word[] = [];
     let vernacular: string = "vernacular";
 
-    expect(vernInFrontier(existingWords, vernacular)).toEqual("");
+    expect(duplicatesInFrontier(existingWords, vernacular, 1).length).toEqual(
+      0
+    );
   });
 
   it("finds a duplicate", () => {
@@ -130,7 +132,32 @@ describe("Tests ExistingEntry", () => {
     let existingWords: Word[] = [word];
     let vernacular: string = "test";
 
-    expect(vernInFrontier(existingWords, vernacular)).toEqual("1234567890");
+    expect(duplicatesInFrontier(existingWords, vernacular, 1)[0]).toEqual(
+      "1234567890"
+    );
+  });
+
+  it("finds multiple duplicates", () => {
+    let dupWord: Word = { ...mockWord };
+    dupWord.id = "1234567890";
+    dupWord.vernacular = "testing";
+
+    let dupWord2: Word = { ...mockWord };
+    dupWord2.id = "1234567891";
+    dupWord2.vernacular = "testind";
+
+    let newWord: Word = { ...mockWord };
+    newWord.id = "0492039";
+    newWord.vernacular = "testing";
+
+    let existingWords: Word[] = [dupWord, dupWord2];
+
+    expect(isADuplicate(existingWords, newWord, newWord.vernacular)).toEqual(
+      true
+    );
+    let foundDups = duplicatesInFrontier(existingWords, newWord.vernacular, 2);
+    console.log(foundDups);
+    expect(foundDups.length).toEqual(2);
   });
 
   it("finds no duplicate", () => {

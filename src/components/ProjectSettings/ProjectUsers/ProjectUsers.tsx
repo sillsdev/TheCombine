@@ -1,15 +1,29 @@
 import React from "react";
-import { List, ListItem, ListItemText } from "@material-ui/core";
-
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Avatar
+} from "@material-ui/core";
+import Done from "@material-ui/icons/Done";
 import { User } from "../../../types/user";
-import { getAllUsers, addUserRole } from "../../../backend";
+import {
+  getAllUsers,
+  getAllUsersInCurrentProject,
+  addUserRole,
+  avatarSrc
+} from "../../../backend";
+import theme from "../../../types/theme";
 
 interface UserProps {}
 
 interface UserState {
   allUsers: User[];
+  projUsers: User[];
   modalOpen: boolean;
   openUser?: User;
+  userAvatar: { [key: string]: string };
 }
 
 class ProjectUsers extends React.Component<UserProps, UserState> {
@@ -17,19 +31,48 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     super(props);
     this.state = {
       allUsers: [],
-      modalOpen: false
+      projUsers: [],
+      modalOpen: false,
+      userAvatar: {}
     };
   }
 
   componentDidMount() {
-    getAllUsers()
-      .then(allUsers => this.setState({ allUsers }))
+    this.populateUsers();
+  }
+
+  private populateUsers() {
+    getAllUsersInCurrentProject()
+      .then(projUsers => {
+        this.setState({ projUsers });
+        getAllUsers()
+          .then(returnedUsers => {
+            this.setState({
+              allUsers: returnedUsers.filter(
+                user => !this.state.projUsers.find(u => u.id == user.id)
+              )
+            });
+            returnedUsers.forEach((u: User, n: number, array: User[]) => {
+              avatarSrc(u)
+                .then(result => {
+                  let avatarsCopy = JSON.parse(
+                    JSON.stringify(this.state.userAvatar)
+                  );
+                  avatarsCopy[u.id] = result;
+                  this.setState({ userAvatar: avatarsCopy });
+                  console.log(avatarsCopy);
+                })
+                .catch(err => console.log(err));
+            });
+          })
+          .catch(err => console.log(err));
+      })
       .catch(err => console.log(err));
   }
 
   addToProject(user: User) {
     if (user.id !== this.getCurrentUser().id) {
-      addUserRole([1, 2, 3], user);
+      addUserRole([1, 2, 3], user).then(() => this.populateUsers());
     }
   }
 
@@ -43,6 +86,19 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     return (
       <React.Fragment>
         <List>
+          {this.state.projUsers.map(user => (
+            <ListItem button>
+              <ListItemIcon>
+                <Done />
+              </ListItemIcon>
+              <Avatar
+                alt="User Avatar"
+                src={this.state.userAvatar[user.id]}
+                style={{ marginRight: theme.spacing(1) }}
+              />
+              <ListItemText primary={`${user.name} (${user.username})`} />
+            </ListItem>
+          ))}
           {this.state.allUsers.map(user => (
             <ListItem button onClick={() => this.addToProject(user)}>
               <ListItemText primary={`${user.name} (${user.username})`} />
