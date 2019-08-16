@@ -3,6 +3,8 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace BackendFramework.ValueModels
 {
@@ -29,6 +31,10 @@ namespace BackendFramework.ValueModels
 
         [BsonElement("rejectedCharacters")]
         public List<string> RejectedCharacters { get; set; }
+
+        [BsonElement("autocompleteSetting")]
+        [BsonRepresentation(BsonType.String)]
+		public AutocompleteSetting AutocompleteSetting { get; set; }
 
         /// <summary> Not implemented: optional fields for projects </summary>
         [BsonElement("customFields")]
@@ -192,24 +198,33 @@ namespace BackendFramework.ValueModels
         }
     }
 
-    public class ProjectWithUser : Project
+	public class ProjectWithUser : Project
+	{
+		public User __UpdatedUser;
+
+		public ProjectWithUser() { }
+
+		public ProjectWithUser(Project baseObj)
+		{
+			Id = baseObj.Id;
+			Name = baseObj.Name;
+			PartsOfSpeech = baseObj.PartsOfSpeech;
+			RejectedCharacters = baseObj.RejectedCharacters;
+			SemanticDomains = baseObj.SemanticDomains;
+			VernacularWritingSystem = baseObj.VernacularWritingSystem;
+			WordFields = baseObj.WordFields;
+			AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
+			CustomFields = baseObj.CustomFields;
+			ValidCharacters = baseObj.ValidCharacters;
+		    AutocompleteSetting = baseObj.AutocompleteSetting;
+		}
+	}
+
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum AutocompleteSetting
     {
-        public User __UpdatedUser;
-
-        public ProjectWithUser() { }
-
-        public ProjectWithUser(Project baseObj)
-        {
-            Id = baseObj.Id;
-            Name = baseObj.Name;
-            PartsOfSpeech = baseObj.PartsOfSpeech;
-            RejectedCharacters = baseObj.RejectedCharacters;
-            SemanticDomains = baseObj.SemanticDomains;
-            VernacularWritingSystem = baseObj.VernacularWritingSystem;
-            WordFields = baseObj.WordFields;
-            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
-            CustomFields = baseObj.CustomFields;
-            ValidCharacters = baseObj.ValidCharacters;
-        }
+        Off,
+        OnRequest,
+        AlwaysOn
     }
 }

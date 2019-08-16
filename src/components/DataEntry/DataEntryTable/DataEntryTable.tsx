@@ -14,6 +14,8 @@ import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
 import { Recorder } from "../../Pronunciations/Recorder";
+import { getProjectId, getProject } from "../../../backend";
+import { AutoComplete } from "../../../types/project";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -32,12 +34,18 @@ export interface DataEntryTableState {
   displayDuplicatesIndex?: number;
   displaySpellingSuggestionsIndex?: number;
   isReady: boolean;
+  autoComplete: AutoComplete;
 }
 
 async function getWordsFromBackend(): Promise<Word[]> {
   let words = await Backend.getFrontierWords();
   words = filterWords(words);
   return words;
+}
+async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
+  let proj = await Backend.getProject(Backend.getProjectId());
+  console.log("AutoComplete value: " + proj.autocompleteSetting);
+  return proj.autocompleteSetting;
 }
 
 /** Filter out words that do not have correct accessibility */
@@ -70,7 +78,8 @@ export class DataEntryTable extends React.Component<
     this.state = {
       existingWords: [],
       recentlyAddedWords: [],
-      isReady: false
+      isReady: false,
+      autoComplete: AutoComplete.Off
     };
     this.recorder = new Recorder();
     this.spellChecker = new SpellChecker();
@@ -81,8 +90,10 @@ export class DataEntryTable extends React.Component<
 
   async componentDidMount() {
     let allWords = await getWordsFromBackend();
+    let autoCompleteSetting = await getProjectAutocompleteSetting();
     this.setState({
-      existingWords: allWords
+      existingWords: allWords,
+      autoComplete: autoCompleteSetting
     });
   }
 
@@ -246,6 +257,7 @@ export class DataEntryTable extends React.Component<
                   spellChecker={this.spellChecker}
                   semanticDomain={this.props.semanticDomain}
                   displayDuplicates={
+                    this.state.autoComplete !== AutoComplete.Off &&
                     this.state.displayDuplicatesIndex === index
                   }
                   toggleDisplayDuplicates={() => {
@@ -283,8 +295,9 @@ export class DataEntryTable extends React.Component<
               spellChecker={this.spellChecker}
               semanticDomain={this.props.semanticDomain}
               displayDuplicates={
+                this.state.autoComplete !== AutoComplete.Off &&
                 this.state.displayDuplicatesIndex ===
-                this.state.recentlyAddedWords.length
+                  this.state.recentlyAddedWords.length
               }
               toggleDisplayDuplicates={() => {
                 this.toggleDisplayDuplicates(

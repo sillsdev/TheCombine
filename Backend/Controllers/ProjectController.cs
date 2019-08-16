@@ -3,7 +3,6 @@ using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -112,10 +111,19 @@ namespace BackendFramework.Controllers
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userService.GetUser(currentUserId);
 
-            //give admin privilages
-            UserRole usersRole = new UserRole();
-            usersRole.Permissions = new List<int>() { (int)Permission.EditSettingsNUsers, (int)Permission.ImportExport, (int)Permission.MergeNCharSet, (int)Permission.Unused, (int)Permission.WordEntry };
-            usersRole.ProjectId = project.Id;
+            //give admin privileges
+            UserRole usersRole = new UserRole
+            {
+                Permissions = new List<int>
+                {
+                    (int) Permission.EditSettingsNUsers,
+                    (int) Permission.ImportExport,
+                    (int) Permission.MergeNCharSet,
+                    (int) Permission.Unused,
+                    (int) Permission.WordEntry
+                },
+                ProjectId = project.Id
+            };
 
             usersRole = await _userRoleService.Create(usersRole);
 
@@ -258,14 +266,12 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundObjectResult(userId);
             }
-            else if (result == ResultOfUpdate.Updated)
+            if (result == ResultOfUpdate.Updated)
             {
                 return new OkObjectResult(userId);
             }
-            else
-            {
-                return new StatusCodeResult(304);
-            }
+
+            return new StatusCodeResult(304);
         }
 
         // Check if lift import has already happened for this project
@@ -281,5 +287,4 @@ namespace BackendFramework.Controllers
         }
 
     }
-
 }

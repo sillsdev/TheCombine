@@ -21,6 +21,7 @@ describe("Tests NewEntry", () => {
         toggleDisplayDuplicates={() => null}
         displaySpellingSuggestions={true}
         toggleDisplaySpellingSuggestions={() => null}
+        setIsReadyState={() => null}
       />,
       div
     );

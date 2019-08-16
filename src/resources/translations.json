@@ -117,7 +117,13 @@
         "admin": ["Admin", "Administración"]
       }
     },
-    "export": ["Export Project", "Proyecto de exportación"]
+    "export": ["Export Project", "Proyecto de exportación"],
+    "autocomplete": {
+      "label": ["Autocomplete", "Autocompletar"],
+      "off": ["Off", "Apagar"],
+      "request": ["Optional", "Opcional"],
+      "always": ["Always On", "Siempre Encendido"]
+    }
   },
   "goal": {
     "selector": {
