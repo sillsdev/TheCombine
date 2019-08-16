@@ -79,7 +79,8 @@ namespace BackendFramework.Services
                 .Set(x => x.RejectedCharacters, project.RejectedCharacters)
                 .Set(x => x.CustomFields, project.CustomFields)
                 .Set(x => x.WordFields, project.WordFields)
-                .Set(x => x.PartsOfSpeech, project.PartsOfSpeech);
+                .Set(x => x.PartsOfSpeech, project.PartsOfSpeech)
+                .Set(x => x.AutocompleteSetting, project.AutocompleteSetting);
 
             var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 

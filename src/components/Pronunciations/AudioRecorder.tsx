@@ -45,38 +45,53 @@ export default function AudioRecorder(props: RecorderProps) {
   const recorder =
     props.recorder !== undefined ? props.recorder : new Recorder();
 
+  function safeStartRecording(
+    event: Event | React.TouchEvent | React.MouseEvent
+  ) {
+    if (!isRecording) {
+      event.preventDefault();
+      recorder.startRecording();
+      setIsRecording(true);
+    }
+  }
+
+  function safeStopRecording(
+    event: Event | React.TouchEvent | React.MouseEvent
+  ) {
+    if (isRecording) {
+      event.preventDefault();
+      recorder
+        .stopRecording()
+        .then((audioUrl: string) => {
+          const blob = recorder.getBlob();
+          const fileName = getFileNameForWord(props.wordId);
+          const file = new File([blob], fileName, {
+            type: blob.type,
+            lastModified: Date.now()
+          });
+          Backend.uploadAudio(props.wordId, file).then(newWordId => {
+            recorder.clearData();
+            if (props.recordingFinished) {
+              props.recordingFinished(props.wordId, newWordId);
+            }
+          });
+        })
+        .catch(() => {
+          console.log("Error recording, probably no mic access");
+          // <Translate id="pronunciations.noMicAccess" />;
+          // TODO: Show alert dialog here
+        })
+        .finally(() => setIsRecording(false));
+    }
+  }
+
   return (
     <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
       <IconButton
-        onMouseDown={() => {
-          recorder.startRecording();
-          setIsRecording(true);
-        }}
-        onMouseUp={() => {
-          if (isRecording === true) {
-            recorder
-              .stopRecording()
-              .then((audioUrl: string) => {
-                const blob = recorder.getBlob();
-                const fileName = getFileNameForWord(props.wordId);
-                const file = new File([blob], fileName, {
-                  type: blob.type,
-                  lastModified: Date.now()
-                });
-                Backend.uploadAudio(props.wordId, file).then(newWordId => {
-                  recorder.clearData();
-                  if (props.recordingFinished) {
-                    props.recordingFinished(props.wordId, newWordId);
-                  }
-                });
-              })
-              .catch(() => {
-                console.log("Error recording, probably no mic access");
-                // <Translate id="pronunciations.noMicAccess" />;
-                // TODO: Show alert dialog here
-              });
-          }
-        }}
+        onMouseDown={safeStartRecording}
+        onTouchStart={safeStartRecording}
+        onMouseUp={safeStopRecording}
+        onTouchEnd={safeStopRecording}
         className={classes.button}
         aria-label="record"
       >

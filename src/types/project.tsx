@@ -18,6 +18,13 @@ export interface Project {
   partsOfSpeech: string[];
   words: Word[];
   customFields: CustomField[];
+  autocompleteSetting: AutoComplete;
+}
+
+export enum AutoComplete {
+  Off = "Off",
+  OnRequest = "OnRequest",
+  AlwaysOn = "AlwaysOn"
 }
 
 export const defaultProject = {
@@ -32,5 +39,6 @@ export const defaultProject = {
   customFields: [],
   wordFields: [],
   partsOfSpeech: [],
-  words: []
+  words: [],
+  autocompleteSetting: "Off"
 } as Project;

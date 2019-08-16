@@ -4,9 +4,15 @@ import {
   withLocalize,
   Translate
 } from "react-localize-redux";
-import { Grid, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  FormControl,
+  MenuItem,
+  Select
+} from "@material-ui/core";
 
-import { Project } from "../../types/project";
+import { Project, AutoComplete } from "../../types/project";
 import * as backend from "../../backend";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { UserRole } from "../../types/userRole";
@@ -34,6 +40,7 @@ interface ProjectSettingsState {
   projectName?: string;
   imports?: boolean;
   editUsers?: boolean;
+  autocompleteSetting?: AutoComplete;
 }
 
 class ProjectSettingsComponent extends React.Component<
@@ -61,6 +68,7 @@ class ProjectSettingsComponent extends React.Component<
             analysis: [...this.props.project.analysisWritingSystems],
             uiLang: this.props.activeLanguage.code
           };
+          settings.autocompleteSetting = this.props.project.autocompleteSetting;
           settings.imports = await backend.canUploadLift();
         }
         if (role === 5) settings.editUsers = true;
@@ -113,6 +121,44 @@ class ProjectSettingsComponent extends React.Component<
               body={<LanguageSettings {...this.state.languageSettings} />}
             />
           )}
+
+          <BaseSettingsComponent
+            icon={<GetApp />}
+            title={<Translate id="projectSettings.autocomplete.label" />}
+            body={
+              <FormControl>
+                <Select
+                  value={this.props.project.autocompleteSetting}
+                  onChange={(
+                    event: React.ChangeEvent<{ name?: string; value: unknown }>
+                  ) => {
+                    this.props.project.autocompleteSetting = event.target
+                      .value as AutoComplete;
+                    this.setState({
+                      autocompleteSetting: event.target.value as AutoComplete
+                    });
+                    backend
+                      .updateProject(this.props.project)
+                      .catch(() =>
+                        console.log(
+                          "failed: " + this.props.project.autocompleteSetting
+                        )
+                      );
+                  }}
+                >
+                  <MenuItem value="Off">
+                    <Translate id="projectSettings.autocomplete.off" />
+                  </MenuItem>
+                  <MenuItem value="OnRequest">
+                    <Translate id="projectSettings.autocomplete.request" />
+                  </MenuItem>
+                  <MenuItem value="AlwaysOn">
+                    <Translate id="projectSettings.autocomplete.always" />
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            }
+          />
 
           {/* Add users to project */}
           {this.state.projectName && (
