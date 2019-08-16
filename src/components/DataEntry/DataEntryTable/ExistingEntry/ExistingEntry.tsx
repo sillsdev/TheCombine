@@ -360,7 +360,9 @@ export class ExistingEntry extends React.Component<
           >
             <ExistingVernacular
               vernacular={this.state.existingEntry.vernacular}
-              isDuplicate={this.state.isDuplicate}
+              isDuplicate={
+                this.state.displayDuplicates && this.state.isDuplicate
+              }
               toggleDuplicateResolutionView={() =>
                 this.toggleDuplicateResolutionView()
               }

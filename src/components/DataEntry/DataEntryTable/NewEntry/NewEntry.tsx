@@ -190,7 +190,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       this.props.allWords,
       newValue
     );
-    let isDuplicate: boolean = autoCompleteWords.length > 0;
+    let isDuplicate: boolean =
+      this.props.displayDuplicates && autoCompleteWords.length > 0;
     this.setState({
       isDuplicate: isDuplicate,
       duplicates: autoCompleteWords,
