@@ -29,7 +29,7 @@ export class DuplicateResolutionView extends React.Component<
           }}
         >
           <Typography variant="body1">
-            {"Duplicate in database: " + this.props.existingEntry.vernacular}
+            {"Similar word: " + this.props.existingEntry.vernacular}
           </Typography>
         </Grid>
         <Grid
