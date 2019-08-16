@@ -7,9 +7,9 @@ import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
 import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 import {
-  duplicatesInFrontier,
   addSenseToWord,
-  addSemanticDomainToSense
+  addSemanticDomainToSense,
+  duplicatesFromFrontier
 } from "../ExistingEntry/ExistingEntry";
 import theme from "../../../../types/theme";
 import { Translate } from "react-localize-redux";
@@ -73,6 +73,9 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
   }
+
+  readonly maxStartsWith: number = 4;
+  readonly maxDuplicates: number = 2;
 
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
@@ -183,17 +186,14 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   updateVernField(newValue: string) {
-    let duplicateIds: string[] = duplicatesInFrontier(
+    let autoCompleteWords: Word[] = this.autoCompleteCandidates(
       this.props.allWords,
-      newValue,
-      5
+      newValue
     );
-    let isDuplicate: boolean = duplicateIds.length > 0;
+    let isDuplicate: boolean = autoCompleteWords.length > 0;
     this.setState({
       isDuplicate: isDuplicate,
-      duplicates: this.props.allWords.filter(word =>
-        duplicateIds.includes(word.id)
-      ),
+      duplicates: autoCompleteWords,
       newEntry: {
         ...this.state.newEntry,
         vernacular: newValue
@@ -237,6 +237,40 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isSpelledCorrectly: true,
       isDuplicate: false
     });
+  }
+
+  /** Returns autocomplete choices from the frontier words
+   * Populates maxStartsWith 'starts with' options and then
+   * adds up to maxDuplicates options
+   */
+  autoCompleteCandidates(existingWords: Word[], vernacular: string): Word[] {
+    // filter existingWords to those that start with vernacular
+    // then map them into an array sorted by length and take the 2 shortest
+    // and the rest longest (should make finding the long words easier)
+    let scoredStartsWith: [Word, number][] = [];
+    let startsWith = existingWords.filter(word =>
+      word.vernacular.startsWith(vernacular)
+    );
+    for (let w of startsWith) {
+      scoredStartsWith.push([w, w.vernacular.length]);
+    }
+    var keepers = scoredStartsWith
+      .sort((a, b) => a[1] - b[1])
+      .map(word => word[0]);
+    if (keepers.length > 4) {
+      keepers.splice(2, keepers.length - this.maxStartsWith);
+    }
+    for (let d of duplicatesFromFrontier(
+      existingWords,
+      vernacular,
+      this.maxDuplicates
+    )) {
+      let word = existingWords.find(word => word.id === d);
+      if (word !== undefined && !keepers.includes(word)) {
+        keepers.push(word);
+      }
+    }
+    return keepers;
   }
 
   /** Move the focus to the vernacular textbox */
@@ -348,7 +382,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 style={{ background: "whitesmoke" }}
               >
                 <DuplicateResolutionView
-                existingEntry={duplicate}
+                  existingEntry={duplicate}
                   newSense={
                     this.state.newEntry.senses &&
                     this.state.newEntry.senses[0] &&
@@ -365,7 +399,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                     sense: Sense,
                     index: number
                   ) => this.addSemanticDomain(existingWord, sense, index)}
-                /></Grid>
+                />
+              </Grid>
             ))}
         </Grid>
       </Grid>

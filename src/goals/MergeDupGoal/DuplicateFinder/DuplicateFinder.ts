@@ -191,7 +191,7 @@ export default class DupFinder {
     let alength = a.length + 1;
     let blength = b.length + 1;
 
-    if (a.length <= 0 || b.length <= 0) return 0;
+    if (a.length <= 0 || b.length <= 0) return this.maxScore;
 
     for (let i = 0; i < alength; i++) {
       matrix[i] = [];
