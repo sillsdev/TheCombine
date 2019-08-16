@@ -91,11 +91,11 @@ function updateSenses(
   return updatedSenses;
 }
 
-/** Returns possible duplicates from the frontier words */
-export function duplicatesInFrontier(
+export function duplicatesFromFrontier(
   existingWords: Word[],
   vernacular: string,
-  maximum: number
+  maximum: number,
+  entryToExclude?: string
 ): string[] {
   let Finder = new DuplicateFinder();
 
@@ -114,7 +114,10 @@ export function duplicatesInFrontier(
         word.vernacular
       );
       // 2 here is the maximum acceptable score
-      if (levenD < 2) {
+      if (
+        levenD < 2 &&
+        (entryToExclude === undefined || word.id != entryToExclude)
+      ) {
         duplicateWords.push([word.id, levenD]);
       }
     }
@@ -123,18 +126,6 @@ export function duplicatesInFrontier(
   let sorted = duplicateWords.sort((a, b) => a[1] - b[1]);
   sorted.length = Math.min(duplicateWords.length, maximum);
   return sorted.map(item => item[0]);
-}
-
-export function isADuplicate(
-  words: Word[],
-  entry: Word,
-  value: string
-): boolean {
-  let duplicateIds = duplicatesInFrontier(words, value, 2);
-  return (
-    duplicateIds.length > 1 ||
-    (duplicateIds.length > 0 && duplicateIds[0] != entry.id)
-  );
 }
 
 // extract, or remove altogether
@@ -152,24 +143,21 @@ export class ExistingEntry extends React.Component<
   ExistingEntryProps,
   ExistingEntryState
 > {
+  readonly maxDuplicates: number = 5;
   constructor(props: ExistingEntryProps) {
     super(props);
 
-    let isDuplicate: boolean = isADuplicate(
+    let possibleDups = duplicatesFromFrontier(
       this.props.existingWords,
-      this.props.entry,
-      this.props.entry.vernacular
+      this.props.entry.vernacular,
+      this.maxDuplicates,
+      props.entry.id
     );
-    let duplicateIds: string[] | undefined;
+    let isDuplicate: boolean = possibleDups.length > 0;
     let duplicateWords: Word[] | undefined;
     if (isDuplicate) {
-      duplicateIds = duplicatesInFrontier(
-        this.props.existingWords,
-        this.props.entry.vernacular,
-        5
-      );
       duplicateWords = this.props.existingWords.filter(word =>
-        duplicateIds!.includes(word.id)
+        possibleDups.includes(word.id)
       );
     }
 
@@ -180,25 +168,23 @@ export class ExistingEntry extends React.Component<
       isSpelledCorrectly: true,
       isDuplicate: isDuplicate,
       duplicates: duplicateWords,
-      duplicateIds: duplicateIds,
+      duplicateIds: possibleDups,
       hovering: false
     };
   }
 
   componentDidMount() {
-    let isDuplicate: boolean = isADuplicate(
+    let possibleDups = duplicatesFromFrontier(
       this.props.existingWords,
-      this.props.entry,
-      this.props.entry.vernacular
+      this.props.entry.vernacular,
+      this.maxDuplicates,
+      this.props.entry.id
     );
+    let isDuplicate: boolean = possibleDups.length > 0;
     let duplicateIds: string[] | undefined;
     let duplicateWords: Word[] | undefined;
     if (isDuplicate) {
-      duplicateIds = duplicatesInFrontier(
-        this.props.existingWords,
-        this.props.entry.vernacular,
-        5
-      );
+      duplicateIds = possibleDups;
       duplicateWords = this.props.existingWords.filter(word =>
         duplicateIds!.includes(word.id)
       );
@@ -303,24 +289,21 @@ export class ExistingEntry extends React.Component<
   }
 
   updateVernField(newValue: string) {
-    let isDuplicate: boolean = isADuplicate(
+    let possibleDups = duplicatesFromFrontier(
       this.props.existingWords,
-      this.props.entry,
-      newValue
+      newValue,
+      this.maxDuplicates,
+      this.props.entry.id
     );
+    let isDuplicate: boolean = possibleDups.length > 0;
 
     if (isDuplicate) {
-      let duplicateIds: string[] = duplicatesInFrontier(
-        this.props.existingWords,
-        newValue,
-        5
-      );
       let duplicateWords: Word[] | undefined = this.props.existingWords.filter(
-        word => duplicateIds.includes(word.id)
+        word => possibleDups.includes(word.id)
       );
       this.setState({
         isDuplicate: true,
-        duplicateIds: duplicateIds ? duplicateIds : undefined,
+        duplicateIds: possibleDups,
         duplicates: duplicateWords
       });
     }

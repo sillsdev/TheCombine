@@ -97,6 +97,30 @@ describe("dupFinder Tests", () => {
     expect(finder.getLevenshteinDistance("testing", "toasting")).toEqual(3);
   });
 
+  test("Levenshtein Distance with single substitution", () => {
+    let finder = new DupFinder();
+    //one insertion, one substitution
+    expect(finder.getLevenshteinDistance("testing", "tasting")).toEqual(
+      DefaultParams.subCost
+    );
+  });
+
+  test("Levenshtein Distance with single deletion", () => {
+    let finder = new DupFinder();
+    //one insertion, one substitution
+    expect(finder.getLevenshteinDistance("testin", "testing")).toEqual(
+      DefaultParams.delCost
+    );
+  });
+
+  test("Levenshtein Distance with single addition", () => {
+    let finder = new DupFinder();
+    //one insertion, one substitution
+    expect(finder.getLevenshteinDistance("testing", "testin")).toEqual(
+      DefaultParams.insCost
+    );
+  });
+
   test("Levenshtein Distance with distinct Word", () => {
     let finder = new DupFinder();
     expect(
