@@ -129,6 +129,28 @@ The following requirements are for the host system that is used to install the C
      1. *Make sure that you select the OpenSSH server when prompted to select the software for your server:*
   ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
 
+### Note for Windows Users
+The scripts for installing TheCombine use *Ansible* to manage an installation of *TheCombine*.  *Ansible* is not available for Windows.  There is a *Vagrant* vm that is available to provide an Ubuntu environment to build and install the application on another PC, such as an *Intel NUC* to deploy to the field.  If you only have access to a Windows PC, follow these instructions to build and deploy *TheCombine*.
+
+  1. See the [System Requirements](#system-requirements) section for the minimum system for running the vagrant vm;
+  2. open a command prompt and change directory to deploy/vagrant-installer sub-folder of the cloned project directory, e.g.
+```
+    cd TheCombine/deploy/vagrant-installer
+```
+  3. create and provision the VM:
+```
+    vagrant up
+```
+  4. Once the vm is created, the Ubuntu login screen will be displayed.  Log in with the following credentials:
+```
+     Username: vagrant
+     Password: vagrant
+```
+  5. Open a terminal window (*Ctrl-Alt-T*).  This terminal window may be used to run the commands in the following sections.
+
+Note that *TheCombine* project is only cloned the first time the vm is created and provisioned.  If you have created a vagrant-installer vm in the past, use `git pull` to update your repo and install the updated software on a target.
+
+
 ### Build the App
 
 To build the Combine application in the Ubuntu Environment, run the following command (assumes the repo was cloned into ```$HOME/src```):
@@ -139,6 +161,8 @@ npm run build
 cd Backend
 dotnet publish -c Release
 ```
+
+Note: these commands are listed so that the application can be built independently of deploying it.  For normal updating of a NUC or other PC, it is simplest to use the `-b` option of the `setup-target.sh` script that is described in [Installing the App](#installing-the-app)
 
 ### Installing the App
 
