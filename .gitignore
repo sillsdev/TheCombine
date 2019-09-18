@@ -57,4 +57,5 @@ Backend.Tests/bin/Avatars/*
 deploy/site_info/
 deploy/site_files/
 deploy/**/*.retry
-
+# host file to be used for ad hoc testing/development
+deploy/*.hosts
