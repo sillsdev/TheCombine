@@ -1,6 +1,5 @@
 import React from "react";
-import { Grid, TextField, Tooltip } from "@material-ui/core";
-import theme from "../../../../../types/theme";
+import { TextField, Tooltip } from "@material-ui/core";
 
 import {
   Translate,
@@ -10,9 +9,9 @@ import {
 
 interface NewVernEntryProps {
   vernacular: string;
-  isDuplicate: boolean;
+  showAutocompleteToggle: boolean;
   vernInput: React.RefObject<HTMLDivElement>;
-  toggleDuplicateResolutionView: () => void;
+  toggleAutocompleteView: () => void;
   updateVernField: (newValue: string) => void;
 }
 
@@ -35,7 +34,7 @@ export class NewVernEntry extends React.Component<
           onChange={e => this.props.updateVernField(e.target.value)}
           inputRef={this.props.vernInput}
         />
-        {this.props.isDuplicate && (
+        {this.props.showAutocompleteToggle && (
           <Tooltip
             title={<Translate id="addWords.wordInDatabase" />}
             placement="top"
@@ -51,7 +50,7 @@ export class NewVernEntry extends React.Component<
                 right: 48,
                 cursor: "pointer"
               }}
-              onClick={() => this.props.toggleDuplicateResolutionView()}
+              onClick={() => this.props.toggleAutocompleteView()}
             />
           </Tooltip>
         )}

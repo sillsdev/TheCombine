@@ -13,7 +13,7 @@ export function findAndReplace(findValue: string, replaceValue: string) {
         word.vernacular.includes(findValue)
       );
       let findRegExp = new RegExp(
-        findValue.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"),
+        findValue.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&"),
         "g"
       );
       for (let word of changedWords) {

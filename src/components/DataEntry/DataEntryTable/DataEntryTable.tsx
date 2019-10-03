@@ -14,8 +14,7 @@ import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
 import { Recorder } from "../../Pronunciations/Recorder";
-import { getProjectId, getProject } from "../../../backend";
-import { AutoComplete } from "../../../types/project";
+import { AutoComplete } from "../../../types/AutoComplete";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -44,7 +43,6 @@ async function getWordsFromBackend(): Promise<Word[]> {
 }
 async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
   let proj = await Backend.getProject(Backend.getProjectId());
-  console.log("AutoComplete value: " + proj.autocompleteSetting);
   return proj.autocompleteSetting;
 }
 
@@ -186,7 +184,7 @@ export class DataEntryTable extends React.Component<
   }
 
   async deleteWordAndUpdateExistingWords(word: Word) {
-    let deletedWord = await Backend.deleteWord(word);
+    await Backend.deleteWord(word);
     let existingWords: Word[] = await getWordsFromBackend();
     this.setState({ existingWords });
   }
@@ -241,8 +239,9 @@ export class DataEntryTable extends React.Component<
 
           {this.state.recentlyAddedWords.map((wordAccess, index) =>
             wordAccess.mutable ? (
-              <React.Fragment>
+              <React.Fragment key={wordAccess.word.id}>
                 <ExistingEntry
+                  key={wordAccess.word.id}
                   wordsBeingAdded={this.state.recentlyAddedWords.map(
                     wordAccess => wordAccess.word
                   )}
@@ -257,7 +256,6 @@ export class DataEntryTable extends React.Component<
                   spellChecker={this.spellChecker}
                   semanticDomain={this.props.semanticDomain}
                   displayDuplicates={
-                    this.state.autoComplete !== AutoComplete.Off &&
                     this.state.displayDuplicatesIndex === index
                   }
                   toggleDisplayDuplicates={() => {
@@ -273,6 +271,7 @@ export class DataEntryTable extends React.Component<
               </React.Fragment>
             ) : (
               <ImmutableExistingEntry
+                key={wordAccess.word.id}
                 vernacular={wordAccess.word.vernacular}
                 gloss={
                   wordAccess.word.senses[wordAccess.word.senses.length - 1]
@@ -294,8 +293,9 @@ export class DataEntryTable extends React.Component<
               addNewWord={(word: Word) => this.addNewWord(word)}
               spellChecker={this.spellChecker}
               semanticDomain={this.props.semanticDomain}
+              autocompleteSetting={this.state.autoComplete}
               displayDuplicates={
-                this.state.autoComplete !== AutoComplete.Off &&
+                this.state.autoComplete === AutoComplete.AlwaysOn ||
                 this.state.displayDuplicatesIndex ===
                   this.state.recentlyAddedWords.length
               }

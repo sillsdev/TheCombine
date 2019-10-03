@@ -140,6 +140,7 @@ class Register extends React.Component<
     // determine error message
     let failureMessage;
     // intentional weak comparasion. props.failureMessage may evaluate to number
+    /* eslint-disable-next-line */
     if (this.props.failureMessage == "400") {
       failureMessage = <Translate id="login.registerFailed" />;
     } else {

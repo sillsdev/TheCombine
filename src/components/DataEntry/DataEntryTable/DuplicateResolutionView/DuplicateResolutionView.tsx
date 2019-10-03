@@ -46,6 +46,7 @@ export class DuplicateResolutionView extends React.Component<
               .filter(gloss => gloss.language === "en")
               .map(gloss => (
                 <Chip
+                  key={gloss.def + "_" + index}
                   label={gloss.def}
                   style={{ margin: 4 }}
                   onClick={() => {

@@ -116,7 +116,7 @@ export function duplicatesFromFrontier(
       // 2 here is the maximum acceptable score
       if (
         levenD < 2 &&
-        (entryToExclude === undefined || word.id != entryToExclude)
+        (entryToExclude === undefined || word.id !== entryToExclude)
       ) {
         duplicateWords.push([word.id, levenD]);
       }

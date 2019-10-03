@@ -13,7 +13,7 @@ import {
 } from "../../../components/GoalTimeline/GoalsActions";
 import { Goal, GoalHistoryState } from "../../../types/goals";
 import { Dispatch } from "redux";
-import { MergeDups } from "../MergeDups";
+import { MergeDups, MergeStepData } from "../MergeDups";
 import navigationHistory from "../../../history";
 import { User } from "../../../types/user";
 
@@ -177,13 +177,17 @@ export function refreshWords() {
     let historyState: GoalHistoryState = getState().goalsState.historyState;
     let goal: Goal = historyState.history[historyState.history.length - 1];
 
+    // Push the current step into the history state and load the data.
     await goToNextStep(dispatch, goal, historyState).then(() => {
       historyState = getState().goalsState.historyState;
       goal = historyState.history[historyState.history.length - 1];
       if (goal.currentStep <= goal.numSteps) {
-        let words: Word[] = (goal as MergeDups).steps[goal.currentStep - 1]
-          .words;
-        dispatch(setWordData(words));
+        let stepData: MergeStepData = (goal as MergeDups).steps[
+          goal.currentStep - 1
+        ];
+        if (stepData) {
+          dispatch(setWordData(stepData.words));
+        }
       } else {
         navigationHistory.push("/goals");
       }

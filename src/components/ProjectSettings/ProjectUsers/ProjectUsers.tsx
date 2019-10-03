@@ -49,7 +49,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
           .then(returnedUsers => {
             this.setState({
               allUsers: returnedUsers.filter(
-                user => !this.state.projUsers.find(u => u.id == user.id)
+                user => !this.state.projUsers.find(u => u.id === user.id)
               )
             });
             returnedUsers.forEach((u: User, n: number, array: User[]) => {
