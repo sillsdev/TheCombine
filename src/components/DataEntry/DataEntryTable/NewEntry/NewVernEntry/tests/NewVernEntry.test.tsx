@@ -8,9 +8,9 @@ describe("Tests NewVernEntry", () => {
     ReactDOM.render(
       <LocalizedNewVernEntry
         vernacular={""}
-        isDuplicate={false}
+        showAutocompleteToggle={false}
         vernInput={React.createRef<HTMLDivElement>()}
-        toggleDuplicateResolutionView={() => null}
+        toggleAutocompleteView={() => null}
         updateVernField={(newValue: string) => null}
       />,
       div
@@ -23,9 +23,9 @@ describe("Tests NewVernEntry", () => {
     ReactDOM.render(
       <LocalizedNewVernEntry
         vernacular={""}
-        isDuplicate={true}
+        showAutocompleteToggle={true}
         vernInput={React.createRef<HTMLDivElement>()}
-        toggleDuplicateResolutionView={() => null}
+        toggleAutocompleteView={() => null}
         updateVernField={(newValue: string) => null}
       />,
       div

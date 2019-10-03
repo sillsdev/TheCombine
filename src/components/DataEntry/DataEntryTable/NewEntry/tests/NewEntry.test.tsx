@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { NewEntry } from "../NewEntry";
 import { Word } from "../../../../../types/word";
 import SpellChecker from "../../../spellChecker";
+import { AutoComplete } from "../../../../../types/AutoComplete";
 
 jest.mock("../NewVernEntry/NewVernEntry");
 jest.mock("../NewGlossEntry/NewGlossEntry");
@@ -17,7 +18,8 @@ describe("Tests NewEntry", () => {
         addNewWord={(newWord: Word) => null}
         spellChecker={new SpellChecker()}
         semanticDomain={{ name: "", id: "" }}
-        displayDuplicates={true}
+        displayDuplicates={false}
+        autocompleteSetting={AutoComplete.OnRequest}
         toggleDisplayDuplicates={() => null}
         displaySpellingSuggestions={true}
         toggleDisplaySpellingSuggestions={() => null}

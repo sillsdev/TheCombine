@@ -13,6 +13,7 @@ import {
 } from "../ExistingEntry/ExistingEntry";
 import theme from "../../../../types/theme";
 import { Translate } from "react-localize-redux";
+import { AutoComplete } from "../../../../types/AutoComplete";
 
 interface NewEntryProps {
   allWords: Word[];
@@ -20,6 +21,7 @@ interface NewEntryProps {
   addNewWord: (newWord: Word) => void;
   spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
+  autocompleteSetting: AutoComplete;
   displayDuplicates: boolean;
   toggleDisplayDuplicates: () => void;
   displaySpellingSuggestions: boolean;
@@ -40,7 +42,6 @@ interface NewEntryState {
 export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   constructor(props: NewEntryProps) {
     super(props);
-
     this.state = {
       newEntry: {
         id: "",
@@ -191,7 +192,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       newValue
     );
     let isDuplicate: boolean =
-      this.props.displayDuplicates && autoCompleteWords.length > 0;
+      this.props.autocompleteSetting !== AutoComplete.Off &&
+      autoCompleteWords.length > 0;
     this.setState({
       isDuplicate: isDuplicate,
       duplicates: autoCompleteWords,
@@ -203,10 +205,18 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   isSpelledCorrectly(word: string): boolean {
-    return this.props.spellChecker.correct(word);
+    // split on space to allow phrases
+    let words = word.split(" ");
+    let allCorrect = true;
+    words.forEach(w => {
+      let result = this.props.spellChecker.correct(w);
+      allCorrect = allCorrect && result;
+    });
+    return allCorrect;
   }
 
   getSpellingSuggestions(word: string): string[] {
+    // TODO: handle spelling suggestions for phrases
     return this.props.spellChecker.getSpellingSuggestions(word);
   }
 
@@ -306,8 +316,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               <NewVernEntry
                 vernacular={this.state.newEntry.vernacular}
                 vernInput={this.vernInput}
-                isDuplicate={this.state.isDuplicate}
-                toggleDuplicateResolutionView={() =>
+                showAutocompleteToggle={
+                  this.props.autocompleteSetting === AutoComplete.OnRequest &&
+                  this.state.isDuplicate
+                }
+                toggleAutocompleteView={() =>
                   this.toggleDuplicateResolutionView()
                 }
                 updateVernField={(newValue: string) => {
@@ -373,13 +386,14 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               />
             </Grid>
           )}
-          {this.props.displayDuplicates &&
+          {this.props.autocompleteSetting !== AutoComplete.Off &&
+            this.props.displayDuplicates &&
             this.state.isDuplicate &&
             this.state.duplicates.map(duplicate => (
               <Grid
                 item
                 xs={12}
-                key={"duplicateNewVernEntry"}
+                key={"duplicateNewVernEntry" + duplicate.id}
                 style={{ background: "whitesmoke" }}
               >
                 <DuplicateResolutionView

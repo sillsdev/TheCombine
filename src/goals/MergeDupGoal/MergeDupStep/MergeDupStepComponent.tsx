@@ -34,12 +34,6 @@ import {
 } from "react-beautiful-dnd";
 import { ArrowForwardIos } from "@material-ui/icons";
 
-const MAX_VIEW: string = "75vh";
-const HEIGHT_STYLE: React.CSSProperties = {
-  //minHeight: MIN_VIEW,
-  height: MAX_VIEW
-};
-
 export interface SideBar {
   senses: { id: string; data: TreeDataSense }[];
   wordID: string;
@@ -128,6 +122,7 @@ class MergeDupStep extends React.Component<
         // move to different word
         let destRefs = [];
         let destSense = uuid();
+        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
         for (let _ in srcRefs) {
           destRefs.push({
             word: res.destination.droppableId,
@@ -165,9 +160,8 @@ class MergeDupStep extends React.Component<
         open={this.state.sideBar.senses.length > 1}
       >
         <Droppable
-          droppableId={`${this.state.sideBar.wordID} ${
-            this.state.sideBar.senseID
-          }`}
+          droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
+          key={this.state.sideBar.senseID}
         >
           {providedDroppable => (
             <div
@@ -260,7 +254,7 @@ class MergeDupStep extends React.Component<
             cellHeight="auto"
             style={{
               flexWrap: "nowrap",
-              overflow: "auto",
+              overflow: "auto"
             }}
           >
             <DragDropContext onDragEnd={res => this.handleDrop(res)}>
