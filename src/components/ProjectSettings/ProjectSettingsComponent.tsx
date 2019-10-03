@@ -12,7 +12,8 @@ import {
   Select
 } from "@material-ui/core";
 
-import { Project, AutoComplete } from "../../types/project";
+import { Project } from "../../types/project";
+import { AutoComplete } from "../../types/AutoComplete";
 import * as backend from "../../backend";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { UserRole } from "../../types/userRole";

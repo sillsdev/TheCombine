@@ -1,6 +1,5 @@
 import React from "react";
-import { Grid, TextField, Tooltip } from "@material-ui/core";
-import theme from "../../../../../types/theme";
+import { TextField, Tooltip } from "@material-ui/core";
 import {
   Translate,
   LocalizeContextProps,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, IconButton } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import theme from "../../../types/theme";
 import {
   Translate,

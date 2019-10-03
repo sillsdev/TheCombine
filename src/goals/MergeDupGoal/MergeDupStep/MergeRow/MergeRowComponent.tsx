@@ -91,7 +91,7 @@ export class MergeRow extends React.Component<
                   }
                 >
                   {verns.map(vern => (
-                    <MenuItem value={vern}>
+                    <MenuItem value={vern} key={this.props.wordID + vern}>
                       <Typography variant="h5">{vern}</Typography>
                     </MenuItem>
                   ))}

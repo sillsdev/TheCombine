@@ -23,7 +23,7 @@ export default function ExportProjectButton(props: ButtonProps) {
       downloadLink.current.click();
       setExportedFile(null);
     }
-  });
+  }, [downloadLink, exportedFile]);
 
   return (
     <React.Fragment>

@@ -1,4 +1,5 @@
 import { Word, SemanticDomain } from "./word";
+import { AutoComplete } from "./AutoComplete";
 
 export interface CustomField {
   name: string;
@@ -19,12 +20,6 @@ export interface Project {
   words: Word[];
   customFields: CustomField[];
   autocompleteSetting: AutoComplete;
-}
-
-export enum AutoComplete {
-  Off = "Off",
-  OnRequest = "OnRequest",
-  AlwaysOn = "AlwaysOn"
 }
 
 export const defaultProject = {

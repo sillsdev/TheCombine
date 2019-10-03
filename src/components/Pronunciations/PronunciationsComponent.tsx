@@ -37,6 +37,7 @@ export class Pronunciations extends React.Component<
         style={{ paddingRight: theme.spacing(1) }}
       >
         <AudioRecorder
+          key={this.props.wordId}
           wordId={this.props.wordId}
           recorder={this.props.recorder}
           recordingFinished={this.props.wordUpdated}

@@ -57,7 +57,11 @@ class ChooseProject extends React.Component<
           {/* List of projects */}
           <List>
             {this.state.projectList.map(project => (
-              <ListItem button onClick={() => this.selectProject(project)}>
+              <ListItem
+                key={project.id}
+                button
+                onClick={() => this.selectProject(project)}
+              >
                 <Typography variant="h6">{project.name}</Typography>
               </ListItem>
             ))}
