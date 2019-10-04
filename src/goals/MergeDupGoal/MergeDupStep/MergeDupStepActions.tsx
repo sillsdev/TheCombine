@@ -169,6 +169,19 @@ async function addStepToGoal(goal: Goal, indexInHistory: number) {
   }
 }
 
+export function advanceStep() {
+  return async (
+    dispatch: ThunkDispatch<any, any, MergeTreeAction>,
+    getState: () => StoreState
+  ) => {
+    let historyState: GoalHistoryState = getState().goalsState.historyState;
+    let goal: Goal = historyState.history[historyState.history.length - 1];
+    goal.currentStep++;
+    // Push the current step into the history state and load the data.
+    dispatch(refreshWords());
+  };
+}
+
 export function refreshWords() {
   return async (
     dispatch: ThunkDispatch<any, any, MergeTreeAction>,
@@ -178,12 +191,12 @@ export function refreshWords() {
     let goal: Goal = historyState.history[historyState.history.length - 1];
 
     // Push the current step into the history state and load the data.
-    await goToNextStep(dispatch, goal, historyState).then(() => {
+    await updateStep(dispatch, goal, historyState).then(() => {
       historyState = getState().goalsState.historyState;
       goal = historyState.history[historyState.history.length - 1];
-      if (goal.currentStep <= goal.numSteps) {
+      if (goal.currentStep < goal.numSteps) {
         let stepData: MergeStepData = (goal as MergeDups).steps[
-          goal.currentStep - 1
+          goal.currentStep
         ];
         if (stepData) {
           dispatch(setWordData(stepData.words));
@@ -195,7 +208,8 @@ export function refreshWords() {
   };
 }
 
-function goToNextStep(
+//
+function updateStep(
   dispatch: Dispatch<UpdateGoalAction>,
   goal: Goal,
   state: GoalHistoryState

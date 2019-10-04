@@ -24,7 +24,7 @@ export class DisplayProg extends React.Component<
           <Grid item xs>
             <Typography variant={"h4"}>
               <Translate id="goal.progress.step" />
-              {` ${this.props.currentStep} `}
+              {` ${this.props.currentStep + 1} `}
               <Translate id="goal.progress.of" />
               {` ${this.props.numSteps}`}
             </Typography>

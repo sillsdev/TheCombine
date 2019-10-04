@@ -200,7 +200,6 @@ export function updateStepData(goal: Goal): Goal {
       goal.steps[goal.currentStep] = {
         words: currentGoalData.plannedWords[goal.currentStep]
       };
-      goal.currentStep++;
       break;
     }
     default:

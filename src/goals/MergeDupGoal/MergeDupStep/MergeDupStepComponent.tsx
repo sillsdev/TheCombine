@@ -47,7 +47,10 @@ export interface MergeDupStepProps {
   orderSense: (wordID: string, senseID: string, order: number) => void;
   orderDuplicate: (ref: MergeTreeReference, order: number) => void;
   mergeAll?: () => Promise<void>;
+  // Should update the words content in this GoalStep
   refreshWords?: () => void;
+  // Will advance to the next goal step and update the words content
+  advanceStep?: () => void;
 }
 
 //interface for component state
@@ -68,6 +71,9 @@ class MergeDupStep extends React.Component<
       portrait: true,
       sideBar: { senses: [], wordID: "WORD", senseID: "SENSE" }
     };
+    if (this.props.refreshWords) {
+      this.props.refreshWords();
+    }
   }
 
   next() {
@@ -75,7 +81,12 @@ class MergeDupStep extends React.Component<
       ...this.state,
       sideBar: { senses: [], wordID: "", senseID: "" }
     });
-    if (this.props.refreshWords) this.props.refreshWords();
+    if (this.props.advanceStep) {
+      this.props.advanceStep();
+    }
+    if (this.props.refreshWords) {
+      this.props.refreshWords();
+    }
   }
   saveContinue() {
     this.setState({

@@ -3,6 +3,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../types";
 import {
   MergeTreeAction,
+  advanceStep,
   refreshWords,
   moveSenses,
   mergeAll,
@@ -22,6 +23,9 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, MergeTreeAction>
 ) {
   return {
+    advanceStep: () => {
+      dispatch(advanceStep());
+    },
     refreshWords: () => {
       dispatch(refreshWords());
     },
