@@ -188,6 +188,7 @@ class MergeDupStep extends React.Component<
               </Typography>
               {this.state.sideBar.senses.map((entry, index) => (
                 <Draggable
+                  key={entry.id}
                   draggableId={JSON.stringify({
                     word: this.state.sideBar.wordID,
                     sense: this.state.sideBar.senseID,
@@ -207,7 +208,9 @@ class MergeDupStep extends React.Component<
                           marginTop: 8,
                           background: snapshot.isDragging
                             ? "lightgreen"
-                            : "white"
+                            : index === 0
+                            ? "white"
+                            : "lightgrey"
                         }}
                       >
                         <CardContent>
@@ -219,7 +222,7 @@ class MergeDupStep extends React.Component<
                           </Typography>
                           <Grid container spacing={2}>
                             {entry.data.semanticDomains.map(semdom => (
-                              <Grid item xs>
+                              <Grid item xs key={semdom.name}>
                                 <Chip label={`${semdom.name} ${semdom.id}`} />
                               </Grid>
                             ))}
