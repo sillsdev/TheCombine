@@ -182,7 +182,7 @@ describe("Test GoalsActions", () => {
     ];
 
     let expectedUpdatedGoal: Goal = new MergeDups();
-    expectedUpdatedGoal.currentStep = 1;
+    expectedUpdatedGoal.currentStep = 0;
     expectedUpdatedGoal.hash = goalToUpdate.hash;
     expectedUpdatedGoal.numSteps = goalToUpdate.numSteps;
     expectedUpdatedGoal.data = {
@@ -271,7 +271,7 @@ describe("Test GoalsActions", () => {
     const updatedGoal: MergeDups = actions.updateStepData(goal) as MergeDups;
 
     expect(updatedGoal.steps[0].words).toEqual(goal.data.plannedWords[0]);
-    expect(updatedGoal.currentStep).toEqual(1);
+    expect(updatedGoal.currentStep).toEqual(0);
   });
 
   it("Should not update the step data of an unimplemented goal", () => {
