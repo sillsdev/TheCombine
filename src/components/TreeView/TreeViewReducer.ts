@@ -7,7 +7,9 @@ export interface TreeViewState {
 }
 
 // Parses a list of semantic domains (to be received from backend)
-export function createDomains(data: SemanticDomainWithSubdomains[]): TreeViewState {
+export function createDomains(
+  data: SemanticDomainWithSubdomains[]
+): TreeViewState {
   let state: TreeViewState = {
     currentdomain: {
       ...defaultState.currentdomain,
@@ -33,7 +35,7 @@ function addParentDomains(parent: SemanticDomainWithSubdomains) {
 // Creates a dummy default state
 export const defaultState: TreeViewState = {
   currentdomain: {
-    name: "Semantic Domains",
+    name: "",
     id: "",
     description: "",
     subdomains: []
