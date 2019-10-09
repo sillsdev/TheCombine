@@ -18,12 +18,21 @@ import { PersistGate } from "redux-persist/integration/react";
 import ThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import theme from "./types/theme";
 
+const localizedLanguages = [
+  { name: "English", code: "en" },
+  { name: "Spanish", code: "es" },
+  { name: "French", code: "fr" }
+];
+
 const localizeInit = {
-  languages: [{ name: "English", code: "en" }, { name: "Spanish", code: "es" }],
+  languages: localizedLanguages,
   translation: globalTranslations,
   options: {
     renderToStaticMarkup,
-    defaultLanguage: localStorage.getItem("language") || "en"
+    defaultLanguage:
+      localizedLanguages.find(l => l.code == navigator.language) !== undefined
+        ? navigator.language
+        : "en"
   }
 };
 

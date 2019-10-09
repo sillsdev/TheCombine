@@ -1,310 +1,496 @@
 {
   "addWords": {
-    "domain": ["Domain", "Dominio"],
-    "vernacular": ["Vernacular", "Vernáculo"],
-    "glosses": ["Glosses", "Traducciones"],
-    "done": ["Complete", "Completar"],
-    "deleteRow": ["Delete this row", "borrar esta fila"],
+    "domain": ["Domain", "Dominio", "Domaine"],
+    "vernacular": ["Vernacular", "Vernáculo", "Vernaculaire"],
+    "glosses": ["Glosses", "Traducciones", "Gloses"],
+    "done": ["Complete", "Completar", "Complète"],
+    "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
     "wordInDatabase": [
       "This word is already in the database",
-      "Esta palabra ya está en la base de datos"
+      "Esta palabra ya está en la base de datos",
+      "Ce mot est déjà dans la base de données"
     ],
-    "mispelledWord": ["This word is mispelled", "Esta palabra está mal escrita"]
+    "mispelledWord": [
+      "This word is mispelled",
+      "Esta palabra está mal escrita",
+      "Ce mot est mal orthographié"
+    ]
   },
   "appBar": {
-    "dataEntry": ["data entry", "entrada de datos"],
-    "dataCleanup": ["data cleanup", "limpieza de datos"]
+    "dataEntry": ["data entry", "entrada de datos", "saisie"],
+    "dataCleanup": [
+      "data cleanup",
+      "limpieza de datos",
+      "nettoyage des données"
+    ]
   },
   "temp": {
-    "buttonText": ["This is a button.", "Este es un botón."],
-    "labelText": ["This is a label", "Esto es una etiqueta."],
-    "makeSpanish": ["Make Spanish", "Hacer español."],
+    "buttonText": [
+      "This is a button.",
+      "Este es un botón.",
+      "C'est un bouton."
+    ],
+    "labelText": [
+      "This is a label",
+      "Esto es una etiqueta.",
+      "Ceci est une étiquette"
+    ],
+    "makeSpanish": ["Make Spanish", "Hacer español.", "Make Spanish"],
     "wasPassedInFromStore": [
       "was passed into this test object.",
-      " fue pasado a este objeto de prueba."
+      " fue pasado a este objeto de prueba.",
+      "a été passé dans cet objet de test."
     ]
   },
   "login": {
-    "title": ["Log In", "iniciar sesión"],
-    "name": ["Your Name", "Tu Nombre"],
-    "username": ["Username", "Nombre de usuario"],
-    "password": ["Password", "Contraseña"],
+    "title": ["Log In", "iniciar sesión", "Ouvrir une session"],
+    "name": ["Your Name", "Tu Nombre", "Votre nom"],
+    "username": ["Username", "Nombre de usuario", "Nom d'utilisateur"],
+    "password": ["Password", "Contraseña", "Mot de passe"],
     "passwordRequirements": [
       "Password must be 8 characters or longer.",
-      "La contraseña debe tener 8 caracteres o más."
+      "La contraseña debe tener 8 caracteres o más.",
+      "Le mot de passe doit comporter 8 caractères ou plus."
     ],
-    "forgotPassword": ["Forgot password?", "¿Se te olvidó tu contraseña?"],
-    "login": ["Login", "Iniciar sesión"],
+    "forgotPassword": [
+      "Forgot password?",
+      "¿Se te olvidó tu contraseña?",
+      "Mot de passe oublié ?"
+    ],
+    "login": ["Login", "Iniciar sesión", "Connexion"],
     "failed": [
       "Failed to log in. Please check your username and password.",
-      "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña."
+      "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña.",
+      "N'a pas réussi à se connecter. Veuillez vérifier votre nom d'utilisateur et votre mot de passe."
     ],
-    "backToLogin": ["Back to login", "Atrás para iniciar sesión"],
-    "register": ["Register", "Registro"],
-    "registerNew": ["Register New User", "Registrar nuevo usuario"],
-    "registerSuccess": ["User Created", "creado por el usuario"],
-    "registerFailed": ["Failed to register", "Error al iniciar sesión"],
-    "usernameTaken": ["A user with this username already exists", ""],
-    "emailTaken": ["A user with this email already exists", ""],
-    "networkError": ["Network error", "Error de red"],
-    "loggingIn": ["Logging in...", "Iniciar sesión..."],
-    "logout": ["Log out", "cerrar sesión"],
-    "required": ["Required", "necesario"],
-    "confirmPassword": ["Confirm Password", "confirmar contraseña"],
+    "backToLogin": [
+      "Back to login",
+      "Atrás para iniciar sesión",
+      "Retour au login"
+    ],
+    "register": ["Register", "Registro", "S'inscrire"],
+    "registerNew": [
+      "Register New User",
+      "Registrar nuevo usuario",
+      "Enregistrer un nouvel utilisateur"
+    ],
+    "registerSuccess": [
+      "User Created",
+      "creado por el usuario",
+      "Utilisateur a été créé"
+    ],
+    "registerFailed": [
+      "Failed to register",
+      "Error al iniciar sesión",
+      "N'a pas réussi à s'inscrire"
+    ],
+    "usernameTaken": [
+      "A user with this username already exists",
+      null,
+      "Un utilisateur avec ce nom d'utilisateur existe déjà"
+    ],
+    "emailTaken": [
+      "A user with this email already exists",
+      null,
+      "Un utilisateur avec cet email existe déjà"
+    ],
+    "networkError": ["Network error", "Error de red", "Erreur réseau"],
+    "loggingIn": ["Logging in...", "Iniciar sesión...", "Se connecter..."],
+    "logout": ["Log out", "cerrar sesión", "Déconnexion"],
+    "required": ["Required", "necesario", "Requis"],
+    "confirmPassword": [
+      "Confirm Password",
+      "confirmar contraseña",
+      "Confirmer le mot de passe"
+    ],
     "confirmPasswordError": [
       "Passwords do not match",
-      "Las contraseñas no coinciden"
+      "Las contraseñas no coinciden",
+      "Les mots de passe ne correspondent pas"
     ],
-    "email": ["Email", "dirección de correo electrónico"],
+    "email": ["Email", "dirección de correo electrónico", "Email"],
     "emailError": [
       "Please enter a valid email",
-      "Por favor, introduce una dirección de correo electrónico válida"
+      "Por favor, introduce una dirección de correo electrónico válida",
+      "Veuillez entrer un email valide"
     ]
   },
   "userMenu": {
-    "projectSettings": ["Project Settings", "Configuraciones del proyecto"],
-    "userSettings": ["User Settings", "Ajustes de usuario"],
-    "logout": ["Log Out", "cerrar sesión"]
+    "projectSettings": [
+      "Project Settings",
+      "Configuraciones del proyecto",
+      "Paramètres du projet"
+    ],
+    "userSettings": [
+      "User Settings",
+      "Ajustes de usuario",
+      "Réglages utilisateur"
+    ],
+    "logout": ["Log Out", "cerrar sesión", "Déconnexion"]
   },
   "createProject": {
-    "title": ["Create Project", "Crear Proyecto"],
-    "name": ["Project Name", "Nombre del Proyecto"],
+    "title": ["Create Project", "Crear Proyecto", "Créer un projet"],
+    "name": ["Project Name", "Nombre del Proyecto", "Nom du projet"],
     "languageData": [
       ".zip language data file",
-      "archivo de datos de idioma .zip"
+      "archivo de datos de idioma .zip",
+      "Fichier .zip de données de langue"
     ],
-    "upload?": ["Upload .zip project file?", "Subir archivo de proyecto .zip?"],
-    "browse": ["Browse", "Navegar"],
-    "create": ["Create Project", "Crear Proyecto"],
-    "fileSelected": ["File selected", "Archivo seleccionado"],
-    "success": ["Project Created!", "Proyecto creado!"]
+    "upload?": [
+      "Upload .zip project file?",
+      "Subir archivo de proyecto .zip?",
+      "Télécharger le fichier .zip de projet ?"
+    ],
+    "browse": ["Browse", "Navegar", "Parcourir"],
+    "create": ["Create Project", "Crear Proyecto", "Créer un projet"],
+    "fileSelected": [
+      "File selected",
+      "Archivo seleccionado",
+      "Fichier sélectionné"
+    ],
+    "success": ["Project Created!", "Proyecto creado!", "Projet créé !"]
   },
   "selectProject": {
-    "title": ["Select Project", "Seleccionar Proyecto"]
+    "title": [
+      "Select Project",
+      "Seleccionar Proyecto",
+      "Sélectionner un projet"
+    ]
   },
   "projectSettings": {
     "language": {
-      "header": ["Language", "Lenguaje"],
-      "vernacular": ["Vernacular", "Vernáculo"],
-      "analysis": ["Analysis", "Análisis"],
-      "uiLang": ["Interface", "Interfaz"],
-      "save": ["Save", "Guardar"],
-      "interfaceLanguage": ["Interface Language", "Lenguaje de interfaz"]
+      "header": ["Language", "Lenguaje", "Langue"],
+      "vernacular": ["Vernacular", "Vernáculo", "Vernaculaire"],
+      "analysis": ["Analysis", "Análisis", "Analyse"],
+      "uiLang": ["Interface", "Interfaz", "Interface"],
+      "save": ["Save", "Guardar", "Enregistrer"],
+      "interfaceLanguage": [
+        "Interface Language",
+        "Lenguaje de interfaz",
+        "Langue de l'interface"
+      ]
     },
-    "name": ["Project Name", "Nombre del Proyecto"],
+    "name": ["Project Name", "Nombre del Proyecto", "Nom du projet"],
     "import": {
-      "header": ["Import Data", "Importar Información"],
+      "header": ["Import Data", "Importar Información", "Importer des données"],
       "body": [
         "Imported data will be added to this project. Combine will make no attempt to deduplicate, overwrite, or sync. File must be a zipped archive in <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>.",
-        "Los datos importados se agregarán a este proyecto. Combine no intentará deduplicar, sobrescribir ni sincronizar. El archivo debe ser un archivo comprimido en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>."
+        "Los datos importados se agregarán a este proyecto. Combine no intentará deduplicar, sobrescribir ni sincronizar. El archivo debe ser un archivo comprimido en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>.",
+        "Les données importées seront ajoutées à ce projet. Combine n'essaiera pas de dédupliquer, d'écraser ou de synchroniser. Le fichier doit être une archive zippée en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>."
       ],
-      "upload": ["Upload", "Cargar"],
-      "done": ["Done!", "Completado!"],
+      "upload": ["Upload", "Cargar", "Télécharger"],
+      "done": ["Done!", "Completado!", "Achevé!"],
       "notAllowed": [
         "You have already imported a Lift file to this project.",
-        "Ya ha importado un archivo Lift a este proyecto."
+        "Ya ha importado un archivo Lift a este proyecto.",
+        "Vous avez déjà importé un fichier LIFT dans ce projet."
       ]
     },
     "user": {
-      "header": ["Users and Roles", "Usarios"],
-      "addUser": ["Add a user", "Añadir un usario"],
-      "selectUser": ["Choose a user", "Escoger un usario"],
-      "selectRole": ["Choose their role", "Escoger el papel"],
-      "confirmUser": ["Select this user", "Elegir este usario"],
+      "header": ["Users and Roles", "Usarios", "Utilisateurs et rôles"],
+      "addUser": ["Add a user", "Añadir un usario", "Ajouter un utilisateur"],
+      "selectUser": [
+        "Choose a user",
+        "Escoger un usario",
+        "Choisissez un utilisateur"
+      ],
+      "selectRole": [
+        "Choose their role",
+        "Escoger el papel",
+        "Choisissez leur rôle"
+      ],
+      "confirmUser": [
+        "Select this user",
+        "Elegir este usario",
+        "Sélectionnez cet utilisateur"
+      ],
       "roles": {
-        "typist": ["Typist", "Mecanógrafo"],
-        "cleaner": ["Cleaner", "Limpiador"],
-        "admin": ["Admin", "Administración"]
+        "typist": ["Typist", "Mecanógrafo", "Dactylographe"],
+        "cleaner": ["Cleaner", "Limpiador", "Nettoyant"],
+        "admin": ["Admin", "Administración", "Admin"]
       }
     },
-    "export": ["Export Project", "Proyecto de exportación"],
+    "export": [
+      "Export Project",
+      "Proyecto de exportación",
+      "Exporter le projet"
+    ],
     "autocomplete": {
-      "label": ["Autocomplete", "Autocompletar"],
-      "off": ["Off", "Apagar"],
-      "request": ["Optional", "Opcional"],
-      "always": ["Always On", "Siempre Encendido"]
+      "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
+      "off": ["Off", "Apagar", "Éteint"],
+      "request": ["Optional", "Opcional", "En option"],
+      "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
     }
   },
   "goal": {
     "selector": {
-      "selectOption": ["Select this goal", "Selecciona este objectivo"],
-      "past": ["You've completed:", "Completó:"],
-      "present": ["Our recommendation:", "Nuestra recomendación:"],
-      "other": ["Other options:", "Otras opciónas:"],
-      "noHistory": ["Nothing yet", "Nada ahora"],
-      "done": ["All done", "Esta listo"]
+      "selectOption": [
+        "Select this goal",
+        "Selecciona este objectivo",
+        "Sélectionnez cet objectif"
+      ],
+      "past": ["You've completed:", "Completó:", "Vous avez terminé :"],
+      "present": [
+        "Our recommendation:",
+        "Nuestra recomendación:",
+        "Notre recommandation :"
+      ],
+      "other": ["Other options:", "Otras opciónas:", "Autres options :"],
+      "noHistory": ["Nothing yet", "Nada ahora", "Rien pour l'instant"],
+      "done": ["All done", "Esta listo", "Tout est fait"]
     },
     "progress": {
-      "step": ["Step", "Paso"],
-      "of": ["of", "de"]
+      "step": ["Step", "Paso", "Étape"],
+      "of": ["of", "de", "sur"]
     },
     "mergeDups": {
-      "done": ["Save & Continue", "Ahorrar y Continuar"],
-      "skip": ["Skip", "omitir"]
+      "done": [
+        "Save & Continue",
+        "Ahorrar y Continuar",
+        "Enregistrer & Continuer"
+      ],
+      "skip": ["Skip", "omitir", "Sauter"]
     }
   },
   "createStrWordInv": {
     "title": [
       "Create Structural Word Inventory",
-      "Crear inventario de palabras estructurales"
+      "Crear inventario de palabras estructurales",
+      "Créer un inventaire des mots grammaticaux"
     ]
   },
   "handleFlags": {
-    "title": ["Handle Flags", "Banderas de la manija"]
+    "title": ["Handle Flags", "Banderas de la manija", "Gérer les drapeaux"]
   },
   "spellCheckGloss": {
-    "title": ["Spell Check Glossary", "Glosario de corrección ortográfica"]
+    "title": [
+      "Spell Check Glossary",
+      "Glosario de corrección ortográfica",
+      "Vérifier l'orthographe du glossaire"
+    ]
   },
   "validateChars": {
-    "title": ["Validate Characters", "Validar caracteres"]
+    "title": [
+      "Validate Characters",
+      "Validar caracteres",
+      "Valider les caractères"
+    ]
   },
   "validateStrWords": {
     "title": [
       "Validate Structural Characters",
-      "Validar caracteres estructurales"
+      "Validar caracteres estructurales",
+      "Validate Structural Characters"
     ]
   },
   "reviewEntries": {
-    "title": ["Review Entries", "Revisar final"],
-    "sense": ["Sense", "Sentido"],
-    "novernacular": ["No vernacular input!", "No tenemos un vernáculo!"],
-    "nogloss": ["No glosses input", "No tenemos un traduccion"],
-    "nodomain": ["No domain selected", "No tenemos un domain"],
+    "title": ["Review Entries", "Revisar final", "Examiner les entrées"],
+    "sense": ["Sense", "Sentido", "Sens"],
+    "novernacular": [
+      "No vernacular input!",
+      "No tenemos un vernáculo!",
+      "Pas d'entrée vernaculaire !"
+    ],
+    "nogloss": [
+      "No glosses input",
+      "No tenemos un traduccion",
+      "Pas d'entrée de gloses"
+    ],
+    "nodomain": [
+      "No domain selected",
+      "No tenemos un domain",
+      "Aucun domaine sélectionné"
+    ],
     "error": {
       "gloss": [
         "Glosses cannot be left blank",
-        "No guardar sentidos sin glossarios"
+        "No guardar sentidos sin glossarios",
+        "Les gloses ne peuvent pas être laissés vides"
       ],
       "domain": [
         "Domains cannot be left blank",
-        "No guardar sentidos sin dominios"
+        "No guardar sentidos sin dominios",
+        "Les domaines ne peuvent pas être laissés vides"
       ],
       "vernacular": [
         "Vernacular cannot be left blank",
-        "No guardar sentidos sin un vernáculo"
+        "No guardar sentidos sin un vernáculo",
+        "Le vernaculaire ne peut pas être laissé vide"
       ]
     }
   },
   "charInventory": {
-    "title": ["Create Character Inventory", "Crear inventario de caracteres"],
-    "characters": ["characters", "caracteres"],
-    "occurrences": ["occurrences", "ocurrencias"],
-    "status": ["status", "estado"],
-    "sortBy": ["Sort by", "Sort by"],
+    "title": [
+      "Create Character Inventory",
+      "Crear inventario de caracteres",
+      "Créer un inventaire de caractères"
+    ],
+    "characters": ["characters", "caracteres", "caractères"],
+    "occurrences": ["occurrences", "ocurrencias", "occurrences"],
+    "status": ["status", "estado", "statut"],
+    "sortBy": ["Sort by", "Sort by", "Trier par"],
     "characterSet": {
-      "title": ["Vernacular Character Set:", "Conjunto de caracteres:"],
+      "title": [
+        "Vernacular Character Set:",
+        "Conjunto de caracteres:",
+        "Jeu de caractères vernaculaires :"
+      ],
       "help": [
         "Define the characters that are valid for this language",
-        "Define los caracteres que son válidos para este idioma"
+        "Define los caracteres que son válidos para este idioma",
+        "Définir les caractères valides pour cette langue"
       ],
-      "addButton": ["Add Chars", "Añadir caracteres"],
+      "addButton": ["Add Chars", "Añadir caracteres", "Ajouter des caractères"],
       "addButtonTitle": [
         "Add the characters in the box to the character set",
-        ""
+        null,
+        "Ajouter les caractères de la boîte au jeu de caractères"
       ],
-      "deleteButton": ["Delete Selected", "Eliminar seleccionados"],
+      "deleteButton": [
+        "Delete Selected",
+        "Eliminar seleccionados",
+        "Supprimer Sélectionné"
+      ],
       "deleteButtonTitle": [
         "Remove the selected characters from the character set",
-        ""
+        null,
+        "Supprimer les caractères sélectionnés du jeu de caractères"
       ],
-      "acceptedCharacters": ["Accepted Characters", "Caracteres Aceptados..."],
-      "rejectedCharacters": ["Rejected Characters", "Caracteres Rechazados..."],
-      "accepted": ["Accepted", "Aceptado"],
-      "rejected": ["Rejected", "Rechazado"],
-      "undecided": ["Undecided", "Indeciso"],
-      "accept": ["Accept", "Aceptar"],
-      "reject": ["Reject", "Rechazar"],
+      "acceptedCharacters": [
+        "Accepted Characters",
+        "Caracteres Aceptados...",
+        "Caractères approuvés"
+      ],
+      "rejectedCharacters": [
+        "Rejected Characters",
+        "Caracteres Rechazados...",
+        "Caractères rejetés"
+      ],
+      "accepted": ["Accepted", "Aceptado", "Acceptée"],
+      "rejected": ["Rejected", "Rechazado", "Rejeté"],
+      "undecided": ["Undecided", "Indeciso", "Incertain"],
+      "accept": ["Accept", "Aceptar", "Accepter"],
+      "reject": ["Reject", "Rechazar", "Rejeter"],
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
-        "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar."
+        "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar.",
+        "Aucun caractère existe. Tapez les caractères dans la case ci-dessous pour commencer."
       ],
       "required": [
         "Add characters by entering them in this box",
-        "Agrega caracteres ingresándolos en este cuadro"
+        "Agrega caracteres ingresándolos en este cuadro",
+        "Ajouter des caractères en les saisissant dans cette case"
       ],
-      "advanced": ["Advanced", "Avanzado"],
-      "occurrences": ["occurrences", "ocurrencias"],
-      "find": ["Find", "Encontrar"],
-      "replace": ["Replace with", "Reemplazar con"],
-      "apply": ["apply", "aplicar"]
+      "advanced": ["Advanced", "Avanzado", "Avancé"],
+      "occurrences": ["occurrences", "ocurrencias", "occurrences"],
+      "find": ["Find", "Encontrar", "Rechercher"],
+      "replace": ["Replace with", "Reemplazar con", "Remplacer avec"],
+      "apply": ["apply", "aplicar", "appliquer"]
     },
     "sampleWords": {
-      "title": ["Sample Words", "Palabras de muestra"],
+      "title": ["Sample Words", "Palabras de muestra", "Exemples de mots"],
       "description": [
         "Here are some words that don't fit your current character set:",
-        "Aquí hay algunas palabras que no se ajustan a tu conjunto de caracteres actual:"
+        "Aquí hay algunas palabras que no se ajustan a tu conjunto de caracteres actual:",
+        "Voici quelques mots qui ne correspondent pas à votre jeu de caractères actuel :"
       ],
-      "ignore": ["Ignore this word for now", "Ignorar esta palabra por ahora"],
+      "ignore": [
+        "Ignore this word for now",
+        "Ignorar esta palabra por ahora",
+        "Ignorer ce mot pour l'instant"
+      ],
       "add": [
         "Add characters in this word to the set",
-        "Añadir caracteres en esta palabra al conjunto."
+        "Añadir caracteres en esta palabra al conjunto.",
+        "Ajouter les caractères dans ce mot au jeu"
       ]
     },
-    "save": ["Save", "Guardar"],
-    "cancel": ["Cancel", "Cancelar"],
+    "save": ["Save", "Guardar", "Enregistrer"],
+    "cancel": ["Cancel", "Cancelar", "Annuler"],
     "dialog": {
-      "title": ["Unsaved changes", "Cambios no guardados"],
+      "title": [
+        "Unsaved changes",
+        "Cambios no guardados",
+        "Modifications non sauvegardées"
+      ],
       "content": [
         "Discard your changes to the character set?",
-        "Descarta tus cambios en el conjunto de caracteres"
+        "Descarta tus cambios en el conjunto de caracteres",
+        "Supprimer les modifications apportées au jeu de caractères ?"
       ],
-      "yes": ["yes", "si"],
-      "no": ["no", "no"]
+      "yes": ["yes", "si", "oui"],
+      "no": ["no", "no", "non"]
     }
   },
   "mergeDups": {
-    "title": ["Merge Duplicates", "Fusionar duplicados"],
+    "title": [
+      "Merge Duplicates",
+      "Fusionar duplicados",
+      "Fusionner les doublons"
+    ],
     "helpText": {
       "root": [
         "Drag words here to start merging them",
-        "Arrastra las palabras aquí para comenzar a fusionarlas"
+        "Arrastra las palabras aquí para comenzar a fusionarlas",
+        "Faites glisser les mots ici pour commencer à les fusionner"
       ],
       "dups": [
         "Drag duplicate words here",
-        "Arrastra palabras duplicadas aquí"
+        "Arrastra palabras duplicadas aquí",
+        "Faites glisser les mots en double ici"
       ],
-      "sense": ["Drag new sense here", "Arrastra un nuevo sentido aquí"],
+      "sense": [
+        "Drag new sense here",
+        "Arrastra un nuevo sentido aquí",
+        "Faites glisser un nouveau sens ici"
+      ],
       "next": [
         "Merge all these words and load a new set of words",
-        "Combina todas estas palabras y carga un nuevo conjunto de palabras"
+        "Combina todas estas palabras y carga un nuevo conjunto de palabras",
+        "Fusionner tous ces mots et charger un nouvel ensemble de mots"
       ],
       "skip": [
         "Load a new set of words",
-        "Cargue un nuevo conjunto de palabras"
+        "Cargue un nuevo conjunto de palabras",
+        "Charger un nouvel ensemble de mots"
       ],
       "list": [
         "Drag this word to the right to start merging it with other words",
-        "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras"
+        "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras",
+        "Faites glisser ce mot vers la droite pour commencer à le fusionner avec d'autres mots"
       ]
     }
   },
   "emptyGoal": {
     "message": [
       "This goal has not been implemented yet",
-      "Este objetivo aún no se ha implementado"
+      "Este objetivo aún no se ha implementado",
+      "Cet objectif n'a pas encore été mis en œuvre"
     ]
   },
-  "buttons": {
-    "done": ["done", "hecho"]
-  },
+  "buttons": { "done": ["done", "hecho", "achevé"] },
   "pronunciations": {
     "recordTooltip": [
       "Press and hold to record.",
-      "Mantenga presionado para grabar."
+      "Mantenga presionado para grabar.",
+      "Maintenez le bouton enfoncée pour enregistrer."
     ],
     "playTooltip": [
       "Press to play, shift click to delete",
-      "Presiona para jugar, presiona shift para eliminar"
+      "Presiona para jugar, presiona shift para eliminar",
+      "Appuyez sur pour lire, Maj + clic pour effacer"
     ],
     "noMicAccess": [
       "Recording error: Could not access a microphone",
-      "Error de grabación: no se pudo acceder a un micrófono"
+      "Error de grabación: no se pudo acceder a un micrófono",
+      "Erreur d'enregistrement : Impossible d'accéder à un microphone"
     ]
   },
   "newentry": {
     "pressEnter": [
       "Press enter to save word",
-      "Presione enter para guardar la palabra"
+      "Presione enter para guardar la palabra",
+      "Appuyez sur Entrée pour enregistrer le mot"
     ]
   }
 }

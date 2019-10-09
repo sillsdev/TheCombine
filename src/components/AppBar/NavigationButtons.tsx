@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@material-ui/core";
 import history from "../../history";
+import { Translate } from "react-localize-redux";
 
 /** A button that redirects to the home page */
 export default function NavigationButtons() {
@@ -14,7 +15,7 @@ export default function NavigationButtons() {
         }}
         color="inherit"
       >
-        data entry
+        <Translate id="appBar.dataEntry" />
       </Button>
       <Button
         onClick={() => {
@@ -24,7 +25,7 @@ export default function NavigationButtons() {
         }}
         color="inherit"
       >
-        data cleanup
+        <Translate id="appBar.dataCleanup" />
       </Button>
     </React.Fragment>
   );

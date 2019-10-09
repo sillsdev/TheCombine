@@ -27,7 +27,7 @@ describe("Test the TreeViewReducer", () => {
     ];
     let expected = {
       currentdomain: {
-        name: "Semantic Domains",
+        name: "",
         id: "",
         description: "",
         subdomains: [

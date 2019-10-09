@@ -1,11 +1,13 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import TreeViewComponent from "../TreeViewComponent";
+import TreeViewComponent, { TreeView } from "../TreeViewComponent";
 import SemanticDomainWithSubdomains from "../SemanticDomain";
 import mockTree from "./MockSemanticTree";
+import { store } from "../../../store";
+import { Provider } from "react-redux";
 
 var treeMaster: ReactTestRenderer;
-var treeHandle: TreeViewComponent;
+var treeHandle: TreeView;
 
 const RETURN_MOCK = jest.fn();
 const NAVIGATE_MOCK = jest.fn();
@@ -53,6 +55,7 @@ describe("Tests AddWords", () => {
     let newDom: SemanticDomainWithSubdomains = {
       name: "test",
       id: "test",
+      description: "super testy",
       subdomains: []
     };
 
@@ -73,14 +76,16 @@ describe("Tests AddWords", () => {
 function createTree() {
   renderer.act(() => {
     treeMaster = renderer.create(
-      <TreeViewComponent
-        currentDomain={mockTree}
-        returnControlToCaller={RETURN_MOCK}
-        navigate={NAVIGATE_MOCK}
-      />
+      <Provider store={store}>
+        <TreeViewComponent
+          currentDomain={mockTree}
+          returnControlToCaller={RETURN_MOCK}
+          navigate={NAVIGATE_MOCK}
+        />
+      </Provider>
     );
   });
-  treeHandle = treeMaster.root.findByType(TreeViewComponent).instance;
+  treeHandle = treeMaster.root.findByType(TreeView).instance;
 }
 
 // Perform a snapshot test
