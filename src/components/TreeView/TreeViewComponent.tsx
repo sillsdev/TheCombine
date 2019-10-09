@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid, Zoom } from "@material-ui/core";
-
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import TreeProps from "./TreeProps";
 import TreeDepiction from "./TreeDepiction";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
@@ -8,6 +8,8 @@ import { createDomains } from "./TreeViewReducer";
 
 // Domain data
 import en from "../../resources/semantic-domains/en.json";
+import es from "../../resources/semantic-domains/es.json";
+import fr from "../../resources/semantic-domains/fr.json";
 
 interface TreeViewProps extends TreeProps {
   returnControlToCaller: () => void;
@@ -20,19 +22,36 @@ interface TreeViewComponentState {
 /**
  * Lets users navigate around a semantic domain hierarchy
  */
-export default class TreeViewComponent extends React.Component<
-  TreeViewProps,
+export class TreeView extends React.Component<
+  TreeViewProps & LocalizeContextProps,
   TreeViewComponentState
 > {
-  constructor(props: TreeViewProps) {
+  constructor(props: TreeViewProps & LocalizeContextProps) {
     super(props);
     this.state = { visible: true };
 
     this.animate = this.animate.bind(this);
 
-    // TODO: add checking the user's language to select the semantic domains
+    var domains = en;
+    if (props.activeLanguage) {
+      // not defined in unit tests
+      switch (props.activeLanguage.code) {
+        case "fr":
+          domains = fr;
+          break;
+        case "es":
+          domains = es;
+          break;
+      }
+    }
     // TODO: if the state has the current domain defined then use that in the navigate call
-    let newDomain = createDomains(en);
+    let newDomain = createDomains(domains);
+    // If the current domain is the default then set the name to the translation of "Semantic Domain"
+    if (newDomain.currentdomain.name === "") {
+      newDomain.currentdomain.name = this.props.translate(
+        "addWords.domain"
+      ) as string;
+    }
     this.props.navigate(newDomain.currentdomain);
   }
 
@@ -75,3 +94,5 @@ export default class TreeViewComponent extends React.Component<
     );
   }
 }
+
+export default withLocalize(TreeView);

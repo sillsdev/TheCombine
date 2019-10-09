@@ -114,15 +114,6 @@ class ProjectSettingsComponent extends React.Component<
             body={<ExportProjectButton />}
           />
 
-          {/* Language settings */}
-          {this.state.languageSettings && (
-            <BaseSettingsComponent
-              icon={<Language />}
-              title={<Translate id="projectSettings.language.header" />}
-              body={<LanguageSettings {...this.state.languageSettings} />}
-            />
-          )}
-
           <BaseSettingsComponent
             icon={<GetApp />}
             title={<Translate id="projectSettings.autocomplete.label" />}
