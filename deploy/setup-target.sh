@@ -115,13 +115,13 @@ fi
 
 if [ "$BUILDAPP" -eq 1 ] ; then
   cd ..
-  echo -e "Replacing \"localhost:5001\" with \"thewordcombine.org\" in src/backend/index.tsx"
-  sed -i s/localhost\:5001/thewordcombine.org/ src/backend/index.tsx
+  echo -e "Replacing \"localhost:5001\" with \"${TARGET}\" in src/backend/index.tsx"
+  sed -i s/localhost\:5001/${TARGET}/ src/backend/index.tsx
   echo "Building app"
   npm install
   npm run build
   echo -e "Restoring src/backend/index.tsx"
-  sed -i s/thewordcombine.org/localhost\:5001/ src/backend/index.tsx
+  sed -i s/${TARGET}/localhost\:5001/ src/backend/index.tsx
   cd Backend
   dotnet publish -c Release
   cd ../deploy

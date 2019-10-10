@@ -22,5 +22,7 @@
     - role: ssl_config
     - role: apache_config
     - role: wifi_ap
-      when: ansible_system_vendor not in vm_vendors
+      when:
+        - ansible_system_vendor not in vm_vendors
+        - has_wifi == "yes"
     - role: the_combine_app

@@ -1,8 +1,16 @@
 [all]
 localhost ansible_connection=local
 
-[production]
-wordcombine[1:2]
+[NUC]
+thecombine[1:2].languagetechnology.org
 
-[production:vars]
-config=production
+[server]
+thecombine.languagetechnology.org
+
+[NUC:vars]
+config=developer
+has_wifi=yes
+
+[server:vars]
+config=developer
+has_wifi=no
