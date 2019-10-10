@@ -11,8 +11,8 @@ backend_loglevel_microsoft: Information
 ap_ssid: "thewordcombine_ap"
 ap_passphrase: "BigRed@1979"
 ap_gateway: "10.10.10.1"
-ap_domain: thewordcombine.org
-ap_hostname: nuc.thewordcombine.org
+ap_domain: languagetechnology.org
+ap_hostname: "{{ ansible_hostname }}.languagetechnology.org"
 
 ### SSL config
 ssl_letsencrypt_install: false
@@ -26,12 +26,12 @@ ssl_items:
         locality: "Dallas"
         organization: "SIL"
         organization_unit: ""
-        common_name: "thewordcombine.org"
+        common_name: "{{ ansible_fqdn }}"
         alt_names:
           - key: DNS.1
-            value: "www.thewordcombine.org"
+            value: "thecombine.languagetechnology.org"
           - key: DNS.2
-            value: "thewordcombine.org"
+            value: "{{ ansible_hostname }}.languagetechnology.org"
     sign:
 
 
@@ -48,7 +48,7 @@ apache_site_enable:
   - thewordcombine_org.conf
 
 apache_vhosts:
-  - server_name: thewordcombine.org
+  - server_name: "{{ ansible_fqdn }}"
     server_admin: jimgrady.jg@gmail.com
     server_file_name: thewordcombine_org
     template: vhost_proxypath_ssl.conf.j2
