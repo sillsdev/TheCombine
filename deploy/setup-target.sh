@@ -115,8 +115,8 @@ fi
 
 if [ "$BUILDAPP" -eq 1 ] ; then
   cd ..
-  echo -e "Replacing \"localhost:5001\" with \"${TARGET}\" in src/backend/index.tsx"
-  sed -i s/localhost\:5001/${TARGET}/ src/backend/index.tsx
+  echo -e "Replacing \"localhost:5001\" with \"${MACHINE}\" in src/backend/index.tsx"
+  sed -i s/localhost\:5001/${MACHINE}/ src/backend/index.tsx
   echo "Building app"
   npm install
   npm run build
