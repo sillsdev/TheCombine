@@ -5,6 +5,9 @@ import renderer, {
   ReactTestRenderer,
   ReactTestInstance
 } from "react-test-renderer";
+jest.mock("@matt-block/react-recaptcha-v2", () => () => (
+  <div id="mockRecaptcha">Recaptcha'ed</div>
+));
 
 const LOGOUT = jest.fn();
 var loginMaster: ReactTestRenderer;

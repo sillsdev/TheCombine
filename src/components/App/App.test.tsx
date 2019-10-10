@@ -6,6 +6,9 @@ import { defaultState } from "./DefaultState";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { MemoryRouter } from "react-router-dom";
+jest.mock("@matt-block/react-recaptcha-v2", () => () => (
+  <div id="mockRecaptcha">Recaptcha'ed</div>
+));
 
 const createMockStore = configureMockStore([thunk]);
 

@@ -30,7 +30,7 @@ const localizeInit = {
   options: {
     renderToStaticMarkup,
     defaultLanguage:
-      localizedLanguages.find(l => l.code == navigator.language) !== undefined
+      localizedLanguages.find(l => l.code === navigator.language) !== undefined
         ? navigator.language
         : "en"
   }

@@ -16,6 +16,7 @@ import {
   Link
 } from "@material-ui/core";
 import history from "../../../history";
+import ReCaptcha from "@matt-block/react-recaptcha-v2";
 
 export interface LoginDispatchProps {
   login?: (user: string, password: string) => void;
@@ -31,6 +32,7 @@ export interface LoginStateProps {
 export interface LoginState {
   user: string;
   password: string;
+  isVerified: boolean;
   error: { password: boolean; username: boolean };
 }
 
@@ -46,9 +48,14 @@ export class Login extends React.Component<
     this.state = {
       user: "",
       password: "",
+      isVerified: false,
       error: { password: false, username: false }
     };
   }
+
+  captchaStyle = {
+    margin: "5px"
+  };
 
   componentDidMount() {
     this.props.reset();
@@ -151,6 +158,23 @@ export class Login extends React.Component<
                 </Typography>
               )}
 
+              <div
+                className="form-group"
+                id="captcha-holder"
+                style={this.captchaStyle}
+              >
+                <ReCaptcha
+                  siteKey="6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+                  theme="light"
+                  size="normal"
+                  onSuccess={captcha => this.setState({ isVerified: true })}
+                  onExpire={() => this.setState({ isVerified: false })}
+                  onError={() =>
+                    console.log("Something went wrong, check your conenction")
+                  }
+                />
+              </div>
+
               {/* Register and Login buttons */}
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item>
@@ -163,7 +187,12 @@ export class Login extends React.Component<
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button type="submit" variant="contained" color="primary">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={!this.state.isVerified}
+                  >
                     <Translate id="login.login" />
                   </Button>
                 </Grid>
