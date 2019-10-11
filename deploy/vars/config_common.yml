@@ -3,7 +3,7 @@
 # Configuration variable that are common to production and development
 
 # path for The Combine application
-www_app_dir: "/var/www/thewordcombine.org/htdocs"
+www_app_dir: "/var/www/{{ ansible_hostname }}.org/htdocs"
 
 # mongo_path: /hddlinux/mongodb
 mongo_path: /var/lib/mongodb

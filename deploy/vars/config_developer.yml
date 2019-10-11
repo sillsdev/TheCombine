@@ -45,12 +45,12 @@ apache_module_enable:
   - ssl
 
 apache_site_enable:
-  - thewordcombine_org.conf
+  - "{{ ansible_hostname }}_org.conf"
 
 apache_vhosts:
   - server_name: "{{ ansible_fqdn }}"
     server_admin: jimgrady.jg@gmail.com
-    server_file_name: thewordcombine_org
+    server_file_name: "{{ ansible_hostname }}_org"
     template: vhost_proxypath_ssl.conf.j2
     document_root: "{{ www_app_dir }}"
     directory_extra:
