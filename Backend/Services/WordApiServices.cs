@@ -223,7 +223,7 @@ namespace BackendFramework.Services
                 pathToHome = Environment.GetEnvironmentVariable("UserProfile");
             }
 
-            var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId, "Import", "ExtractedLocation", "Lift", "audio", fileName);
+            var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId, "Import", "ExtractedLocation", "Lift", "Audio", fileName);
             Console.WriteLine($"filePath: {filepath}");
             return filepath;
         }
