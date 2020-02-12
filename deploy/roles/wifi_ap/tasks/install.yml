@@ -48,6 +48,13 @@
     mode: 0644
   notify: Restart create_ap
 
+- name: Set /etc/hosts to redirect thecombine to WiFi address
+  template:
+    src: etc_hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Install hosts lists for access point
   template:

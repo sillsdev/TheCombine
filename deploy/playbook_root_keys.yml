@@ -1,0 +1,17 @@
+---
+
+- name: Generate root ssh keys and export public key
+  hosts: nuc
+  become: yes
+
+  tasks:
+  - name: Generate ssh keys for root user
+    user:
+      name: root
+      generate_ssh_key: yes
+
+  - name: Fetch root key from NUC
+    fetch:
+      src: /root/.ssh/id_rsa.pub
+      dest: "site_files/root_keys/{{ ansible_hostname }}.pub"
+      flat: yes

@@ -12,7 +12,7 @@
     - apache_hosts
 
 - name: Ensure apache SSL path exists
-  file: path="{{apache_ssl_path}}" state=directory
+  file: path="{{ apache_ssl_path }}" state=directory
   tags:
     - apache_dir_check
 

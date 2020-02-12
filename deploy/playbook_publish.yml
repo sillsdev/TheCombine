@@ -1,0 +1,31 @@
+---
+
+################################
+# Playbook to test the role for deploying the application
+#
+
+- name:  Deploy TheCombine application
+  hosts: all
+  become: yes
+
+  vars_files:
+    - "vars/config_common.yml"
+    - "vars/vault_config.yml"
+
+  tasks:
+    - name: create user for backend process
+      user:
+        name: "{{ combine_user }}"
+        state: present
+        password: "{{ combine_password }}"
+        shell: /bin/bash
+        append: yes
+        generate_ssh_key: yes
+
+    - name: create cert for backend web server
+      import_role:
+        name: ssl_config
+
+    - name: install TheCombine application
+      import_role:
+        name: the_combine_app

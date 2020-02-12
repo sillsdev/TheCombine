@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 import history from "../../../history";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
+import { RuntimeConfig } from "../../../types/runtimeConfig";
 
 export interface LoginDispatchProps {
   login?: (user: string, password: string) => void;
@@ -45,10 +46,11 @@ export class Login extends React.Component<
   ) {
     super(props);
     this.props.logout(); //Hitting the login page will log a user out (doubles as a logout page, essentially)
+
     this.state = {
       user: "",
       password: "",
-      isVerified: false,
+      isVerified: !RuntimeConfig.getInstance().captchaRequired(),
       error: { password: false, username: false }
     };
   }
@@ -158,13 +160,14 @@ export class Login extends React.Component<
                 </Typography>
               )}
 
+             { (RuntimeConfig.getInstance().captchaRequired()) && (
               <div
                 className="form-group"
                 id="captcha-holder"
                 style={this.captchaStyle}
               >
                 <ReCaptcha
-                  siteKey="6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+                  siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
                   theme="light"
                   size="normal"
                   onSuccess={captcha => this.setState({ isVerified: true })}
@@ -174,7 +177,7 @@ export class Login extends React.Component<
                   }
                 />
               </div>
-
+              )}
               {/* Register and Login buttons */}
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item>

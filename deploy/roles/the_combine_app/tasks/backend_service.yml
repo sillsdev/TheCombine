@@ -1,0 +1,25 @@
+---
+
+- name: Create service directory
+  file:
+    path: /usr/lib/systemd/system
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: install backend service file
+  template:
+    src: combine_backend.service.j2
+    dest: /usr/lib/systemd/system/combine_backend.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart combine_backend
+
+- name: Start combine_backend
+  systemd:
+    name: combine_backend
+    daemon_reload: yes
+    enabled: yes
+    state: started

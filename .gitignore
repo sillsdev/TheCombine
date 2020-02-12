@@ -57,5 +57,11 @@ Backend.Tests/bin/Avatars/*
 deploy/site_info/
 deploy/site_files/
 deploy/**/*.retry
+deploy/roles_galaxy/
 # host file to be used for ad hoc testing/development
 deploy/*.hosts
+# playbooks for ad hoc testing/development
+deploy/_playbook*.yml
+
+# Emacs backup files (this is Jim's fault)
+*~

@@ -8,8 +8,9 @@ import { UserEdit } from "../types/userEdit";
 import history from "../history";
 import SemanticDomainWithSubdomains from "../components/TreeView/SemanticDomain";
 import { UserRole } from "../types/userRole";
+import { RuntimeConfig } from "../types/runtimeConfig"
 
-const baseURL = "https://localhost:5001/v1";
+const baseURL = RuntimeConfig.getInstance().baseUrl();
 
 const backendServer = axios.create({
   baseURL

@@ -1,8 +1,0 @@
----
-
-- name: Install node.js
-  hosts: all
-  become: yes
-
-  roles:
-    - role: nodejs

@@ -13,7 +13,7 @@
   assert:
     that:
       - node_version.stdout is version("10.16", ">=")
-      - node_version.stdout is version("10.17", "<")
+#      - node_version.stdout is version("10.17", "<")
 
 - name: Read version of npm
   command: npm --version

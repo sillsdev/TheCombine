@@ -5,11 +5,6 @@
     url:   https://deb.nodesource.com/gpgkey/nodesource.gpg.key
     state: present
 
-- name: Import public key for yarn package manager repository
-  apt_key:
-    url:   https://dl.yarnpkg.com/debian/pubkey.gpg
-    state: present
-
 - name: Add repository for node.js
   apt_repository:
     repo: deb https://deb.nodesource.com/{{ nodejs_repo }} {{ ansible_distribution_release }} main
@@ -18,11 +13,6 @@
 - name: Add src repository for node.js
   apt_repository:
     repo: deb-src https://deb.nodesource.com/{{ nodejs_repo }} {{ ansible_distribution_release }} main
-    state: present
-
-- name: Add repository for yarn package manager
-  apt_repository:
-    repo: deb https://dl.yarnpkg.com/debian/ stable main
     state: present
 
 - name: Install nodejs

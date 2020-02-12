@@ -1,0 +1,4 @@
+---
+config_base_url: "https://thecombine.languagetechnology.org/v1"
+config_captcha_required: "false"
+config_captcha_sitekey: "''"

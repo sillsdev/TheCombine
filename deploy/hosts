@@ -1,8 +1,8 @@
-[all]
+[local]
 localhost ansible_connection=local
 
-[production]
-wordcombine[1:2]
+[server]
+thecombine
 
-[production:vars]
-config=production
+[nuc]
+thecombine[1:100].languagetechnology.org

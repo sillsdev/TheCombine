@@ -11,8 +11,8 @@
       "HTTPS": {
         "Url": "https://localhost:5001",
         "Certificate": {
-          "Path": "/home/{{ combine_user }}/.ssl/localhost.pfx",
-          "Password": "{{ combine_cert_password }}"
+          "Path": "{{ ssl_path }}/{{ backend_pfx_cert_name }}",
+          "Password": "{{ backend_cert_password }}"
         }
       }
     }

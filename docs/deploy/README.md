@@ -1,202 +1,155 @@
 # How To Deploy TheCombine Application
 
-This document describes how to install a build from *TheCombine* project for
-development work or for production use.  There are two methods described below.
-The first method, [Vagrant VM Setup](#vagrant-vm-setup), is the simplest method
-and is appropriate for testing the application in an environment that CLOSELY matches the production systems.
+This document describes how to build and deploy *TheCombine* project.  It is designed to run on an Intel NUC, for use in the field, or on the demonstration server, thecombine.languagetechnology.org.
 
-The second method, [Stand Up a New Machine](#stand-up-a-new-machine), describes
-how to install Ubuntu 18.04 Server on a new PC and then run the Ansible playbooks to install and configure *TheCombine* and its dependencies.
+### Intended Audience
 
-## Vagrant VM Setup
+These instructions are for developers that have login access to thecombine.languagetechnology.org and have <tt>sudo</tt> priveleges there.
 
-### System Requirements
+### Conventions
 
-  1. PC with a 64-bit Windows or Linux operating system.
-  2. Hardware virtualization enabled
-  3. At least 4 GB RAM
+  * most of the commands described in this document are to be run from within the <tt>git</tt> repository for *TheCombine* that has been cloned on the host machine.  This directory shall referred to as <tt>${COMBINE}</tt>.
 
-### Installing the Environment
+## Contents
+ 1. [Step-by-step Instructions](#step-by-step-instructions)
+    1. [Prepare your host system](#prepare-your-host-system)
+       1. [Linux Host](#linux-host)
+       2. [Windows Host](#windows-host)
+       3. [Create SSH config](#create-ssh-config)
+    2. [Installing *TheCombine*](#installing-thecombine)
+    3. [Running *TheCombine*](#running-thecombine)
+    4. [Updating *TheCombine*](#updating-thecombine)
+ 2. [Additional Details](#additional-details)
+    1. [Install Ubuntu Server](#install-ubuntu-bionic-server)
+    2. [Setup NUC Options](#setup-nuc-options)
+    3. [Demo Server](#demo-server)
 
-  1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
-  2. Install [Vagrant](https://www.vagrantup.com/downloads.html).  Note that if you are installing Vagrant on an Ubuntu host, you should select the Debian package rather than the generic Linux package.
-  3. Clone the project repo, https://github.com/sillsdev/TheCombine
+## Step-by-step Instructions
+This section gives you step-by-step instructions for installing *The Combine* on a new NUC/PC with links to more detailed information.
 
-### Creating the VM
+### Prepare your host system
+#### Linux Host
 
-  1. open a command prompt and change directory to deploy/vagrant sub-folder of the cloned project directory, e.g.
+Install the following components:
+ * Ubuntu 18.04 Desktop, 64-bit
+ * Git
+ * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
+ * [Nodejs](https://github.com/nodesource/distributions/blob/master/README.md#debinstall), install the LTS version, 10.x.
+ * [.NET Core 2.1 SDK](https://dotnet.microsoft.com/download/linux-package-manager/ubuntu18-04/sdk-2.1.801) Be sure to select *Ubuntu 18.04 - x64* from the dropdown menu on the page.
+ * clone the project [repo](https://github.com/sillsdev/TheCombine) to the working folder of your choice, e.g. <tt>$HOME/src</tt>
 
-    cd TheCombine/deploy/vagrant
+#### Windows host
+The scripts for installing TheCombine use *Ansible* to manage an installation of *TheCombine*.  *Ansible* is not available for Windows.  There is a *Vagrant* vm that is available to provide an Ubuntu environment to build and install the application on an *Intel NUC* that can be deployed in the field.  If you only have access to a Windows PC, follow these instructions to build and deploy *TheCombine*.
 
-  1. create and provision the VM:
-
-    vagrant up
-
-Notes:
-
-  * it may take some time for this to complete.  When finished, there will be a window displaying the console of the virtual machine:
-    ![alt text](images/vm-console.png "Ubuntu Server Virtual Machine Console")
-
-  * if you created a Vagrant VM previously, see the section on [Maintaining the VM](#maintaining-the-vm).
-
-### Logging Into the VM
-
-#### At the VM Console
-
-By default, when you run ```vagrant up```, VirtualBox will display a window showing the console for the VM.
-You can login to the VM at the console window using the following credentials:
-
-     Username: vagrant
-     Password: vagrant
-
-#### Using a Secure Shell Client
-
-You can also connect using a secure shell client with the same credentials:
-```
-  ssh vagrant@10.10.0.2
-```
-
-#### Using Vagrant
-
-Last of all, you can type
-```
-    vagrant ssh
-```
-at the command prompt where you launched the VM.
-
-### Building and Installing TheCombine
-
-Connect to the VM using one of the methods described in [Logging Into the VM](#logging-into-the-vm).
-
-Consider updating your working directory by doing a ```git pull``` or by checking out your working branch.
-
-To build the project, install and configure it, run the following command from the command prompt:
-```
-cd ~/src/TheCombine/deploy
-./setup-target.sh -b vagrant@localhost
-```
-
-*When* `./setup-target.sh` *runs the installation scripts, you will be prompted for the* `BECOME password.`  *The BECOME password is* `vagrant`.  You will also be prompted for the Ansible vault password.  The vault password is posted on the *Rocket.Chat* discussion, `#the-combine`.
-
-### Running TheCombine On The VM
-
-In order to run *TheCombine*, you will need to make the following changes to your host PC:
-
- 1. Install the Combine CA certificate in your web browser.  The Certificate is in TheCombine repo under `TheCombine/deploy/roles/the_combine_app/files/CombineCA/CombineCA.pem`.  This is the certificate that was used to sign the certificate for the Kestrel backend server.
- 2. Add
+  * Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
+  * Install [Vagrant](https://www.vagrantup.com/downloads.html).  Note that if you are installing Vagrant on an Ubuntu host, you should select the Debian package rather than the generic Linux package.
+  * Clone the project repo:
     ```
-    10.10.0.2   thewordcombine.org
+    git clone --recurse-submodules https://github.com/sillsdev/TheCombine
     ```
-    to your network hosts file.
+  * open a command prompt and change directory to deploy/vagrant-installer sub-folder of the cloned project directory:
+    ```
+      cd ${COMBINE}/deploy/vagrant-installer
+    ```
+  * create and provision the VM:
+    ```
+      vagrant up
+    ```
+  * Once the vm is created, the Ubuntu login screen will be displayed.  Log in with the following credentials:
+    ```
+       Username: vagrant
+       Password: vagrant
+    ```
+  * Open a terminal window (*Ctrl-Alt-T*).  This terminal window may be used to run the commands in the [Installing *TheCombine*](#installing-thecombine) section.
+
+  Note that *TheCombine* project is only cloned the first time the vm is created and provisioned.  If you have created a vagrant-installer vm in the past, use <tt>git pull</tt> to update your repo and install the updated software on a target.
+
+#### Create SSH config
+
+In order to run the playbook that registers the NUC on the certificate server (or "demo server") you need to be able to <tt>ssh</tt> to the certificate server from your host machine (or from the VM if you are running Windows on your host machine).
+
+Create an SSH config file (<tt>~/.ssh/config</tt>) to enable an <tt>ssh</tt> connection to the demo server.  The SSH config file shall contain the following configuration:
+```
+    Host thecombine
+    HostName <ip_address_for_thecombine.languagetechnology.org>
+    User <demo_server_login>
+    IdentityFile ~/.ssh/id_rsa
+
+```
+Notes
+  - the IP address for thecombine.languagetechnology.org is the actual IP address, not the one published by CloudFlare.
+  - the demo_server_login account must have <tt>sudo</tt> priveleges on thecombine.languagetechnology.org.
 
 
-Once this is done, you can test out your VM installation by connecting to https://thewordcombine.org from your web browser.  The certificate for the front end is currently self-signed.  Your web browser will complain but click on the *Advanced* button and then on the *Proceed to thewordcombine.org (unsafe)* link.
+### Installing *TheCombine*
+These instructions are for installing *TheCombine* on a blank device. See [Updating *TheCombine*](#updating-thecombine) for instructions on updating the application on an existing installation.
 
-### Maintaining the VM
+| Step                                                                                                                                                             | Comments                                                                                                                                                                                                          |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Install Ubuntu Server 18.04; the machinename should be of the form thecombineN where 'N' is  a number between 1 and 100.                                                                                                                                   | See [Install Ubuntu Server](#install-ubuntu-bionic-server) for more details                                                                                                                                       |
+| 2. cd to <tt>${COMBINE}/deploy</tt> on the host system                                                                                                           |                                                                                                                                                                                                                   |
+| 3. ping the fully-qualified domain name of the new system (thecombineN.languagetechnolgy.org).  If the machine cannot be reached, add it to your <tt>/etc/hosts</tt> file.                                                               |                                                                                            |
+| 4. Run `./setup-nuc.sh --copyid user@machine`                                                                                                                    | <p>where <tt>user</tt> is your login on the NUC and <tt>machine</tt> is the machinename of the NUC that is in <tt>${COMBINE}/deploy/hosts</tt>.</p><p>  The <tt>BECOME password</tt> is your login password for the NUC.</p> <p>See [Setup NUC Options](#setup-nuc-options) for additional options</p> |
+| 5. Run `./build.sh`                                                                                                                                              | builds *TheCombine* frontend and backend applications                                                                                                                                                             |
+| 6. run `ansible-playbook playbook_publish.yml --limit <machine> -u <user> -K`                                                                                    | Installs *TheCombine* on the NUC. <tt>machine</tt> and user are the same as for the <tt>setup-nuc.sh</tt> script.                                                                                                 |
+| 7. See [Running *TheCombine*](#running-thecombine) for instructions on connecting to the newly installed application | |
+| 8. Open your browser, clear the cache, and navigate to "thecombine.languagetechnolgy.org".  Verify that you can register a new user, login and create a project. |   |
 
-The following commands are useful once you have created a Vagrant VM:
+### Running *TheCombine*
 
-`vagrant halt` will shutdown the currently running Vagrant VM.
+To run *TheCombine* on the NUC, connect to the WiFi access point created by the server; the access point SSID is *nuc_hostname*<tt>_ap</tt>.
 
-`vagrant up --provision` will reprovision the virtual machine by running the provisioning script when the VM is started.  Normally the provisioning script is only run when the VM is first created. The provisioning script is defined in TheCombine/deploy/vagrant/Vagrantfile.
+Once you have connected to the WiFi Access Point, connect to the local instance of *TheCombine* by navigating to https://thecombine.languagetechnology.org with your web browser.
 
-`vagrant destoy` destroys the current VM.  This is useful when the base image has been updated on [vagrantup.com](https://app.vagrantup.com/jmg227/boxes/combine-server).  If you destroy the VM, the next time you run `vagrant up` it will create a new VM using the specified version of the VM image and provision it.
+### Updating *TheCombine*
 
-## Stand Up a New Machine
+Once *TheCombine* has been installed on the NUC, you can update the application by running steps 5 - 8 in the section [Installing *TheCombine*](#installing-thecombine).
 
-This section describes how to install Ubuntu Server and TheCombine application on a new PC.
+# Additional Details
 
-### Host System Requirements
+## Install Ubuntu Bionic Server
 
-The following requirements are for the host system that is used to install the Combine application onto a new PC:
-  * Ubuntu 18.04 Desktop, 64-bit
-  * Git
-  * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
-  * [Nodejs](https://github.com/nodesource/distributions/blob/master/README.md#debinstall), install the LTS version, 10.x.
-  * [.NET Core 2.1 SDK](https://dotnet.microsoft.com/download/linux-package-manager/ubuntu18-04/sdk-2.1.801)
-  * [MongoDB Community Edition](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
-  * clone the project repo to the working folder of your choice, e.g. ```$HOME/src```
+  1. Download the ISO image for Ubuntu Server from Ubuntu (currently at http://cdimage.ubuntu.com/releases/18.04.3/release/ubuntu-18.04.3-server-amd64.iso)
 
-### Install Ubuntu Bionic Server
-
-  1. Download the ISO image for Ubuntu Server from Ubuntu (currently at http://cdimage.ubuntu.com/releases/18.04.2/release/ubuntu-18.04.2-server-amd64.iso)
-
-  1. Use the *Startup Disk Creator* to copy the .iso file to a bootable USB stick.
+  1. copy the .iso file to a bootable USB stick:
+     1. Ubuntu host: Use the *Startup Disk Creator*, or
+     2. Windows host: follow the [tutorial](https://ubuntu.com/tutorials/tutorial-create-a-usb-stick-on-windows#1-overview) on ubuntu.com.
 
   1. Boot the PC from the bootable media and follow the installation instructions.  In particular,
-     1. You will want the installer to format the entire (virtual) disk and use LVM (that's the default)
+     1. You will want the installer to format the entire \[virtual\] disk. Using LVM is not recommended.
 
      1. *Make sure that you select the OpenSSH server when prompted to select the software for your server:*
   ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
 
-### Note for Windows Users
-The scripts for installing TheCombine use *Ansible* to manage an installation of *TheCombine*.  *Ansible* is not available for Windows.  There is a *Vagrant* vm that is available to provide an Ubuntu environment to build and install the application on another PC, such as an *Intel NUC* to deploy to the field.  If you only have access to a Windows PC, follow these instructions to build and deploy *TheCombine*.
+## Setup NUC Options
 
-  1. See the [System Requirements](#system-requirements) section for the minimum system for running the vagrant vm;
-  2. open a command prompt and change directory to deploy/vagrant-installer sub-folder of the cloned project directory, e.g.
-```
-    cd TheCombine/deploy/vagrant-installer
-```
-  3. create and provision the VM:
-```
-    vagrant up
-```
-  4. Once the vm is created, the Ubuntu login screen will be displayed.  Log in with the following credentials:
-```
-     Username: vagrant
-     Password: vagrant
-```
-  5. Open a terminal window (*Ctrl-Alt-T*).  This terminal window may be used to run the commands in the following sections.
+There are some additional options for using the <tt>setup-nuc.sh</tt> script
+and the <tt>playbook_publish.yml</tt> playbook.
 
-Note that *TheCombine* project is only cloned the first time the vm is created and provisioned.  If you have created a vagrant-installer vm in the past, use `git pull` to update your repo and install the updated software on a target.
+1. <tt>setup-nuc.sh</tt> recognizes the following options:
+   - <tt>--copyid</tt> copies your ssh public key to the NUC
+   - <tt>--vault</tt> or <tt>--vault-password-file</tt> allows you to specify the name of a file that holds the Ansible vault password as the next argumnt.
+   - <tt>-h</tt> or <tt>--help</tt> prints the usage text and exits
+1. Any options that are not recognized by <tt>setup-nuc.sh</tt> are passed to the ansible playbooks that are called by <tt>setup-nuc.sh</tt>.  This is especially useful for specifying an alternate inventory file for development or testing purposes.  Note that files whose names end in <tt>".hosts"</tt> are ignored by git.
+1. You can set the environment variable <tt>ANSIBLE_VAULT_PASSWORD_FILE</tt> to the path of a file that holds the vault password.  This prevents you from needing to provide the vault password whenever you run an ansible playbook, either directly or from within a script such as <tt>setup-nuc.sh</tt>.  *Make sure that you are the only one with read permission for the password file!*
 
 
-### Build the App
+## Demo Server
 
-To build the Combine application in the Ubuntu Environment, run the following command (assumes the repo was cloned into ```$HOME/src```):
-```
-cd ~/src/TheCombine
-npm install
-npm run build
-cd Backend
-dotnet publish -c Release
-```
+The Demo Server has two purposes:
+  1. it makes *TheCombine* available on the internet for demonstrations; and
+  2. it creates and renews the SSL certificate for the demo server and all NUCs.
 
-Note: these commands are listed so that the application can be built independently of deploying it.  For normal updating of a NUC or other PC, it is simplest to use the `-b` option of the `setup-target.sh` script that is described in [Installing the App](#installing-the-app)
-
-### Installing the App
-
-The ```deploy``` folder of TheCombine project is a collection of Ansible playbooks that can be used to configure a new installation of Ubuntu Server.  Each playbook uses a set of Ansible roles to drive the configurations.
-
-A setup script, ```setup-target.sh```, is provided to perform the installation.  Its usage is:
-```
-./setup-target.sh [options] user@machinename
-```
-
-### options:
-Usage: ./setup-target.sh [options] user@machinename
- where:
-**`-b, --build`** will build/publish the UI and Backend server before deploying The Combine
-
-**```-c or --copyid```** causes the script to use ```ssh-copy-id``` to copy your ssh id to the target machine before running the playbook to setup the machine.  This obviates the need to enter your password every time that you connect to the machine.
-
-**```-h or --help```** print the basic usage message.  The usage message is also printed if the script is run without a user@machine name argument.
-
-**```-i or --install```** only run the tasks for installing TheCombine
-
-**```-t or --test```**  only run the tasks for testing the installation of TheCombine.
-
-*if neither the -i nor the -t options are specified, the install and the test tasks will be run.*
-
-**`-v <vaultpasswordfile>, --vault <vaultpasswordfile>`** use <vaultpasswordfile> for the vault password. If no password file is specified, the user will be prompted for the vault password when it is needed.
-
-### Running TheCombine On The New Machine
-
-To run *TheCombine* on the new Ubuntu PC, you will need to:
-
-  1. Install the Combine CA certificate in your web browser.  The Certificate is in TheCombine repo under `TheCombine/deploy/roles/the_combine_app/files/CombineCA/CombineCA.pem`.  This is the certificate that was used to sign the certificate for the Kestrel backend server.
-  2. Connect to the WiFi access point created by the server.  The access point SSID is `thewordcombine_ap` and the WiFi password is `BigRed@1979`.
-
-Once you have connected to the WiFi Access Point, you can navigate to https://thewordcombine.org using your web browser.  You may need to accept the certificate for the web site.
-
-Note: For development purposes, the Apache server will accept connections from the WiFi or Wired connection for the NUC.  In order to connect on the wired connection, you will have to set the NUC's IP address to thewordcombine.org in your hosts file.
+In order to setup the Demo Server,
+  * create an SSH config file - see [Create SSH Config](#create-ssh-config)
+  * run the following commands from the directory for *TheCombine* repo:
+    ```
+    cd deploy
+    ansible-galaxy install -r requirements.yml -p roles_galaxy
+    ansible-playbook playbook-server.yml -K
+    certbot certonly --webroot --force-renewal
+    ansible-playbook playbook-publish.yml -K --limit thecombine --ask-vault-pass
+    ```
+    Notes:
+    - <tt>playbook_server.yml</tt> only needs to be run once.  In order to update to a newer version of *TheCombine*, only the <tt>playbook-publish.yml</tt> needs to be run.
+    - <tt>playbook_server.yml</tt> currently uses the geerlingguy.certbot role to create the letsencrypt SSL certificate.  This role only supports the <tt>standalone</tt> challenge method.  Run the specified <tt>certbot</tt> command to convert the renewal to use webroot.  The <tt>standalone</tt> certificate requires shutting down the Apache web server to renew the certificate and then restarting it.

@@ -1,5 +1,6 @@
 import { Dispatch } from "react";
 import axios from "axios";
+import { RuntimeConfig } from "../../types/runtimeConfig"
 
 export const PRESS_BUTTON = "PRESS_BUTTON";
 export type PRESS_BUTTON = typeof PRESS_BUTTON;
@@ -10,7 +11,7 @@ export interface ButtonPressed {
 }
 
 var server = axios.create({
-  baseURL: "https://localhost:5001/v1/Project",
+  baseURL: RuntimeConfig.getInstance().baseUrl(),
   timeout: 1000,
   headers: { "Content-Type": "application/json" }
 });

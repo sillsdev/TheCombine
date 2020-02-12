@@ -15,16 +15,6 @@
     owner: "{{ www_app_owner }}"
     group: "{{ www_app_group }}"
 
-- name: create user for backend process
-  user:
-    name: "{{ combine_user }}"
-    state: present
-    password: "{{ combine_password }}"
-    shell: /bin/bash
-    groups: ssl-cert
-    append: yes
-    generate_ssh_key: yes
-
 - name: install backend framework
   copy:
     src: ../Backend/bin/Release/netcoreapp2.1/
@@ -32,131 +22,9 @@
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
 
-# install in ${HOME}/.dotnet/corefx/cryptography/x509stores/my
-# so that Kestrel web server will find it automatically
-- name: create directory for self-signed certificate for backend
-  file:
-    path: "/home/{{ combine_user }}/.ssl"
-    state: directory
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0755
-
-- name: copy CA certificate to certificate directory
-  copy:
-    src: CombineCA/
-    dest: "/home/{{ combine_user }}/.ssl"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0644
-
-- name: create the private key
-  openssl_privatekey:
-    path: "/home/{{ combine_user }}/.ssl/localhost.pem"
-    size: 2048
-    state: present
-    type: RSA
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0600
-
-- name: create certificate signing request
-  openssl_csr:
-    common_name: "Localhost dev cert"
-    country_name: "{{ combine_cert_country }}"
-    state_or_province_name: "{{ combine_cert_state }}"
-    locality_name: "{{ combine_cert_locality }}"
-    email_address: "{{ combine_cert_email }}"
-    key_usage:
-      - digitalSignature
-      - keyEncipherment
-    path: "/home/{{ combine_user }}/.ssl/localhost.csr"
-    privatekey_path: "/home/{{ combine_user }}/.ssl/localhost.pem"
-
-- name: create certificate
-  openssl_certificate:
-    path: "/home/{{ combine_user }}/.ssl/localhost.crt"
-    privatekey_path:  "/home/{{ combine_user }}/.ssl/localhost.pem"
-    csr_path: "/home/{{ combine_user }}/.ssl/localhost.csr"
-    ownca_path: "/home/{{ combine_user }}/.ssl/CombineCA.pem"
-    ownca_privatekey_path: "/home/{{ combine_user }}/.ssl/CombineCA.key"
-    ownca_privatekey_passphrase: "{{ combine_ca_passphrase }}"
-    provider: ownca
-#    provider: selfsigned
-
-- name: install OpenSSL Python library
-  pip:
-    name: pyOpenSSL
-
-- name: export PKCS12 certificate
-  openssl_pkcs12:
-    action: export
-    certificate_path: "/home/{{ combine_user }}/.ssl/localhost.crt"
-    privatekey_path: "/home/{{ combine_user }}/.ssl/localhost.pem"
-    path: "/home/{{ combine_user }}/.ssl/localhost.pfx"
-    friendly_name: "The Combine Internal Certificate"
-    group:  "{{ combine_group }}"
-    owner:  "{{ combine_user }}"
-    mode:   0600
-    passphrase: "{{ combine_cert_password }}"
-
-- name: install the cert utils
-  apt:
-    name: libnss3-tools
-
-- name: create directory for the certificate database
-  file:
-    path: "/home/{{ combine_user }}/.pki/nssdb"
-    state: directory
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0755
-
-- name: create the NSS database
-  command: "certutil -N -d sql:/home/{{ combine_user }}/.pki/nssdb --empty-password"
-  args:
-    creates: "/home/{{ combine_user }}/.pki/nssdb/cert9.db"
-  become_user: "{{ combine_user }}"
-
-- name: trust the certificate (SSL)
-  command: "pk12util -d sql:/home/{{ combine_user }}/.pki/nssdb -i localhost.pfx -W \"{{ combine_cert_password }}\""
-  args:
-    chdir: "/home/{{ combine_user }}/.ssl"
-  become_user: "{{ combine_user }}"
-
-- name: Trust a self-signed server certificate
-  command: "certutil -d sql:/home/{{ combine_user }}/.pki/nssdb -A -t \"P,,\" -n 'dev cert' -i localhost.crt"
-  args:
-    chdir: "/home/{{ combine_user }}/.ssl"
-  become_user: "{{ combine_user }}"
-
-- name: update the appsettings to configure Kestrel to use the new certificate
+- name: install runtime configuration
   template:
-    src: appsettings.Production.json.j2
-    dest: "{{ combine_backend_dir }}/publish/appsettings.Production.json"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0600
-
-- name: Create service directory
-  file:
-    path: /usr/lib/systemd/system
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-
-- name: install backend service file
-  template:
-    src: combine_backend.service.j2
-    dest: /usr/lib/systemd/system/combine_backend.service
-    owner: root
-    group: root
-    mode: 0644
-
-- name: Start combine_backend
-  systemd:
-    name: combine_backend
-    daemon_reload: yes
-    enabled: yes
-    state: started
+    src: config.js.j2
+    dest: "{{ www_app_dir }}/config.js"
+    owner: "{{ www_app_owner }}"
+    group: "{{ www_app_group }}"
