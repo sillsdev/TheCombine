@@ -6,12 +6,6 @@
 url_domain: "{{ lookup('env', 'TOPLEVELDOMAIN') | default('languagetechnology.org', true) }}"
 url_hostname: "thecombine"
 
-#wifi access point variables
-ap_ssid: "{{ ansible_hostname }}_ap"
-ap_gateway: "10.10.10.1"
-ap_domain: "{{ url_domain }}"
-ap_hostname: "{{ url_hostname }}"
-ap_passphrase: "BigRed@1979"
 
 www_app_dir: "/var/www/{{ url_hostname }}.org/htdocs"
 www_app_owner: www-data
@@ -121,12 +115,12 @@ apache_vhosts:
       - RewriteEngine On
     virtual_hosts:
       - has_ssl: false
-        listen: "{{ ap_gateway }}"
+        listen: "{{ apache_listen_address }}"
         port: 80
         has_redirect_permanent: true
 
       - has_ssl: true
-        listen: "{{ ap_gateway }}"
+        listen: "{{ apache_listen_address }}"
         port: 443
         log_level: debug
         ssl_path: "/etc/letsencrypt/live/{{ apache_server_name }}"
