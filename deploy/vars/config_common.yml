@@ -47,8 +47,8 @@ combine_group: combine
 #  -e app_loglevel='Debug'
 ###############################################
 backend_loglevel_default: "{{ app_loglevel | default('Information') }}"
-backend_loglevel_system: Information
-backend_loglevel_microsoft: Information
+backend_loglevel_system: "{{ sys_loglevel | default('Information') }}"
+backend_loglevel_microsoft: "{{ ms_loglevel | default('Information') }}"
 
 
 ###############################################

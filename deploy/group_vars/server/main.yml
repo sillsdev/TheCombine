@@ -11,6 +11,13 @@ config_captcha_sitekey: "6LemQNgUAAAAAAwJ6dps-Uncg5xsNuDdMxehfW8d"
 
 #apache web server config items
 apache_listen_address: "*"
+
+#set backend logging levels
+app_loglevel: "Debug"
+sys_loglevel: "Debug"
+ms_loglevel: "Debug"
+
+
 certbot_install_from_source: no
 certbot_auto_renew: true
 certbot_auto_renew_user: root

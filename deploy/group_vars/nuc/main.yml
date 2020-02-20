@@ -8,6 +8,7 @@
 config_base_url: "https://thecombine.languagetechnology.org/v1"
 config_captcha_required: "false"
 config_captcha_sitekey: "''"
+
 #wifi access point variables
 ap_ssid: "{{ ansible_hostname }}_ap"
 ap_gateway: "10.10.10.1"
@@ -18,3 +19,7 @@ ap_passphrase: "BigRed@1979"
 #apache web server config items
 apache_listen_address: "{{ ap_gateway }}"
 
+#set backend logging levels
+app_loglevel: "Debug"
+sys_loglevel: "Debug"
+ms_loglevel: "Debug"
