@@ -8,6 +8,24 @@
     group: root
     mode: 0755
 
+- name: Create logging directory for Combine Backend
+  file:
+    path: "{{ combine_log_directory }}/{{ combine_log_file }}"
+    state: touch
+    owner: syslog
+    group: adm
+    mode: 0640
+  notify: Restart rsyslog
+
+- name: Setup rsyslog to log to separate file
+  template:
+    src: rsyslog.conf.j2
+    dest: /etc/rsyslog.d/30-combinebackend.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart rsyslog
+
 - name: install backend service file
   template:
     src: combine_backend.service.j2

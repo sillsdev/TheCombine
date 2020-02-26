@@ -1,6 +1,11 @@
 ---
 
+- name: Restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+
 - name: Restart combine_backend
   service:
-    name=combine_backend
-    state=restarted
+    name: combine_backend
+    state: restarted
