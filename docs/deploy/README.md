@@ -89,11 +89,10 @@ These instructions are for installing *TheCombine* on a blank device. See [Updat
 | 1. Install Ubuntu Server 18.04; the machinename should be of the form thecombineN where 'N' is  a number between 1 and 100.                                                                                                                                   | See [Install Ubuntu Server](#install-ubuntu-bionic-server) for more details                                                                                                                                       |
 | 2. cd to <tt>${COMBINE}/deploy</tt> on the host system                                                                                                           |                                                                                                                                                                                                                   |
 | 3. ping the fully-qualified domain name of the new system (thecombineN.languagetechnolgy.org).  If the machine cannot be reached, add it to your <tt>/etc/hosts</tt> file.                                                               |                                                                                            |
-| 4. Run `./setup-nuc.sh --copyid user@machine`                                                                                                                    | <p>where <tt>user</tt> is your login on the NUC and <tt>machine</tt> is the machinename of the NUC that is in <tt>${COMBINE}/deploy/hosts</tt>.</p><p>  The <tt>BECOME password</tt> is your login password for the NUC.</p> <p>See [Setup NUC Options](#setup-nuc-options) for additional options</p> |
+| 4. Run `./setup-nuc.sh --copyid user@machine`                                                                                                                    | <p>where <tt>user</tt> is your login on the NUC and <tt>machine</tt> is the machinename of the NUC that is in <tt>${COMBINE}/deploy/hosts</tt>.</p><p>  The <tt>BECOME password</tt> is your login password for the NUC.</p><p>See [Setup NUC Options](#setup-nuc-options) for additional options</p> |
 | 5. Run `./build.sh`                                                                                                                                              | builds *TheCombine* frontend and backend applications                                                                                                                                                             |
-| 6. run `ansible-playbook playbook_publish.yml --limit <machine> -u <user> -K`                                                                                    | Installs *TheCombine* on the NUC. <tt>machine</tt> and user are the same as for the <tt>setup-nuc.sh</tt> script.                                                                                                 |
-| 7. See [Running *TheCombine*](#running-thecombine) for instructions on connecting to the newly installed application | |
-| 8. Open your browser, clear the cache, and navigate to "thecombine.languagetechnolgy.org".  Verify that you can register a new user, login and create a project. |   |
+| 6. run `ansible-playbook playbook_publish.yml --limit <machine> -u <user> -K --ask-vault-pass`                                                                                    | <p>Installs *TheCombine* on the NUC. <tt>machine</tt> and <tt>user</tt> are the same as for the <tt>setup-nuc.sh</tt> script.</p><p>See [Vault Password](#vault-password) for information on the vault password</p> |
+
 
 ### Running *TheCombine*
 
@@ -121,6 +120,16 @@ Once *TheCombine* has been installed on the NUC, you can update the application 
      1. *Make sure that you select the OpenSSH server when prompted to select the software for your server:*
   ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
 
+## Vault Password
+The Ansible playbooks require that some of the variable files are encrypted.  When running one of the playbooks, you will need to provide the password for the encrypted files.  The password can be provided by:
+  1. entering the password when prompted.  Add the <tt>--ask-vault-pass</tt> option for <tt>ansible-playbook</tt> to be prompted for the password when it is required.  This is the default for <tt>./setup-nuc.sh</tt>
+  2. specify a file that has the password.  Add the <tt>--vault-password-file</tt> option for <tt>ansible-playbook</tt> followed by the path of a file that holds the vault password.
+  3. set the environment variable <tt>ANSIBLE_VAULT_PASSWORD_FILE</tt> to the path of a file that holds the vault password.  This prevents you from needing to provide the vault password whenever you run an ansible playbook, either directly or from within a script such as <tt>setup-nuc.sh</tt>.  *Make sure that you are the only one with read permission for the password file!*
+
+If you use a file to hold the vault password, then:
+  * *Make sure that you are the only one with read permission for the password file!*
+  * *Make sure that the password file is not tracked in the git repository!*  <p>For example, use hidden file in your home directory, such as <tt>$HOME/.ansible-vault</tt>, with mode of <tt>0600</tt>.</p>
+
 ## Setup NUC Options
 
 There are some additional options for using the <tt>setup-nuc.sh</tt> script
@@ -131,8 +140,6 @@ and the <tt>playbook_publish.yml</tt> playbook.
    - <tt>--vault</tt> or <tt>--vault-password-file</tt> allows you to specify the name of a file that holds the Ansible vault password as the next argumnt.
    - <tt>-h</tt> or <tt>--help</tt> prints the usage text and exits
 1. Any options that are not recognized by <tt>setup-nuc.sh</tt> are passed to the ansible playbooks that are called by <tt>setup-nuc.sh</tt>.  This is especially useful for specifying an alternate inventory file for development or testing purposes.  Note that files whose names end in <tt>".hosts"</tt> are ignored by git.
-1. You can set the environment variable <tt>ANSIBLE_VAULT_PASSWORD_FILE</tt> to the path of a file that holds the vault password.  This prevents you from needing to provide the vault password whenever you run an ansible playbook, either directly or from within a script such as <tt>setup-nuc.sh</tt>.  *Make sure that you are the only one with read permission for the password file!*
-
 
 ## Demo Server
 

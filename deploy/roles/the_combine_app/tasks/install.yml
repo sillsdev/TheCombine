@@ -21,6 +21,7 @@
     dest: "{{ combine_backend_dir }}"
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
+  notify: Restart combine_backend
 
 - name: install runtime configuration
   template:
