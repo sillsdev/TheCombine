@@ -1,0 +1,15 @@
+---
+
+cert_sync_command: "rsync -avz cert-user@{{ cert_server }}:/etc/letsencrypt/archive :/etc/letsencrypt/live /etc/letsencrypt"
+cert_directory: "/etc/letsencrypt"
+cert_file:  cert.pem
+cert_site_url: "{{ apache_server_name | default('thecombine.languagetechnology.org') }}"
+cert_renew_period: "30d"
+synccert_env_vars:
+  VERBOSE: true
+
+#############################
+# setup logging
+cert_sync_log_directory: /var/log
+cert_sync_log_file:  certsync.log
+cert_sync_id: CertSync

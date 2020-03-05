@@ -1,0 +1,20 @@
+[Unit]
+Description=Certificate Update service.
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+WorkingDirectory=/etc/letsencrypt
+{% for item in synccert_env_vars|dict2items %}
+Environment="{{ item.key }}={{ item.value }}"
+{% endfor %}
+ExecStart=/usr/local/bin/sync_cert.sh
+Restart=always
+# Restart service after 10 seconds if the script crashes:
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier={{ cert_sync_id }}
+
+[Install]
+WantedBy=multi-user.target

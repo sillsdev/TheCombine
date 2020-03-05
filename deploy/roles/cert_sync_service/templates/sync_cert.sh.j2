@@ -1,0 +1,64 @@
+#!/bin/bash
+
+function debug_log {
+  if [ -n "$VERBOSE" ] ; then
+    echo $*
+  fi
+}
+
+function set_cert_dates {
+
+  CERT_FILE="{{ cert_directory }}/live/{{ cert_site_url }}/{{ cert_file }}"
+  if [ -e ${CERT_FILE} ] ; then
+    CERT_EXPIRE=`openssl x509 -enddate -noout -in ${CERT_FILE} | sed s/^notAfter=//`
+    CERT_EXPIRE=`date -d "${CERT_EXPIRE}" +%Y-%m-%d`
+  else
+    CERT_EXPIRE=`date  +%Y-%m-%d`
+  fi
+  CERT_RENEW_DATE=`dateutils.dadd ${CERT_EXPIRE} -{{ cert_renew_period}}`
+  echo "Certificate Expiration Date: ${CERT_EXPIRE}"
+  debug_log "Certificate Renewal Date: ${CERT_RENEW_DATE}"
+}
+
+function sync_cert {
+  if [ "$#" -gt 0 ] ; then
+    echo $*
+  fi
+  if dateutils.dtest today --gt ${CERT_RENEW_DATE}; then
+    wget --spider --quiet https://sil.org
+    if [ "$?" == 0 ]; then
+      echo "syncing ${CERT_FILE} with thecombine.languagetechnology.org"
+      if [ -z "$TESTONLY" ] ; then
+        {{ cert_sync_command }}
+      fi
+      set_cert_dates
+    fi
+  fi
+  return 0
+}
+
+trap "echo 'manual update triggered'; set_cert_dates" SIGUSR1
+
+VERBOSE=${VERBOSE:=''}
+TESTONLY=${TESTONLY:=''}
+while [ "$#" -gt 0 ]; do
+  case $1 in
+    "-v")
+        VERBOSE="true"
+        ;;
+    "-t") # test script logic only - don't actually run rsync
+        TESTONLY="true"
+        ;;
+  esac
+  shift
+done
+
+set_cert_dates
+
+while /bin/true ; do
+  sync_cert
+  sleep 300 &
+  wait $!
+done
+
+exit 0
