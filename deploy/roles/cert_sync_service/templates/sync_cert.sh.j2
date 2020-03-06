@@ -25,13 +25,16 @@ function sync_cert {
     echo $*
   fi
   if dateutils.dtest today --gt ${CERT_RENEW_DATE}; then
-    wget --spider --quiet https://sil.org
-    if [ "$?" == 0 ]; then
+    {{ sync_cert_net_connect_test }}
+    RES=$?
+    if [ "$RES" == 0 ]; then
       echo "syncing ${CERT_FILE} with thecombine.languagetechnology.org"
       if [ -z "$TESTONLY" ] ; then
         {{ cert_sync_command }}
       fi
       set_cert_dates
+    else
+      debug_log "'{{ sync_cert_net_connect_test }}' returned ${RES}"
     fi
   fi
   return 0
