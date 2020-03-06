@@ -79,11 +79,25 @@
 
 - name: install support scripts
   copy:
-    src: "{{ item }}"
-    dest: /usr/local/bin/trigger_cert_sync.sh
+    src: relink_cert
+    dest: /usr/local/bin/relink_cert
     owner: root
     group: root
     mode: 0755
-  with_items:
-    - trigger_cert_sync.sh
-    - relink_cert
+
+- name: install script to check certificate on demand
+  template:
+    src: trigger_cert_sync.j2
+    dest: /usr/local/bin/trigger_cert_sync
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Trigger certificate check when wired ethernet is connected
+  file:
+    src: "/usr/local/bin/trigger_cert_sync"
+    dest: "/usr/lib/networkd-dispatcher/routable.d/10-trigger_cert_sync"
+    state: link
+    owner: root
+    group: root
+    mode: 0755
