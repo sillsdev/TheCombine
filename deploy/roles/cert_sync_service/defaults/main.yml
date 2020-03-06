@@ -5,9 +5,9 @@ cert_directory: "/etc/letsencrypt"
 cert_file:  cert.pem
 cert_site_url: "{{ apache_server_name | default('thecombine.languagetechnology.org') }}"
 cert_renew_period: "30d"
-synccert_env_vars:
+sync_cert_env:
   VERBOSE: true
-
+sync_cert_net_connect_test: "wget --spider --quiet https://www.sil.org"
 #############################
 # setup logging
 cert_sync_log_directory: /var/log

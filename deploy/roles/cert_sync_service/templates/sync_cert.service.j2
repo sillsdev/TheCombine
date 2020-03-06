@@ -5,7 +5,7 @@ After=network-online.target
 
 [Service]
 WorkingDirectory=/etc/letsencrypt
-{% for item in synccert_env_vars|dict2items %}
+{% for item in sync_cert_env|dict2items %}
 Environment="{{ item.key }}={{ item.value }}"
 {% endfor %}
 ExecStart=/usr/local/bin/sync_cert.sh
