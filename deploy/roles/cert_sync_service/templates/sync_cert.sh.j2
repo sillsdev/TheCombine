@@ -1,11 +1,41 @@
 #!/bin/bash
 
+#######################################################
+# sync_cert.sh is a bash shell script that uses rsync
+# to update the SSL certificates on a NUC with the
+# certificates from thecombine.languagetechnology.org.
+# The script is intended to run as a service.
+#
+# When the script is started, it will attempt to update
+# the certificates and then will sleep for 5 minutes before
+# updating again.  The update can also be triggered by
+# sending a SIGUSR1 signal to the process.  The
+# trigger_cert_sync script is provided to look up the
+# PID of the service and send the signal.
+#
+# The script will attempt to update the certificate
+# if and only if:
+#
+#  1. the current certificate will expire in less than
+#     the cert_renew_period (30 days by default); and
+#  2. the internet can be reached.
+#
+#######################################################
+
+# debug_log
+# function to echo the function arguments to STDOUT if
+# the $VERBOSE environment variable is set.
 function debug_log {
   if [ -n "$VERBOSE" ] ; then
     echo $*
   fi
 }
 
+# set_cert_dates
+# function to set environment variables for the expiration
+# date and renewal date for the current certificate.  These
+# variables are set for the process when it starts and when
+# the certificate is updated.
 function set_cert_dates {
 
   CERT_FILE="{{ cert_directory }}/live/{{ cert_site_url }}/{{ cert_file }}"
@@ -20,6 +50,10 @@ function set_cert_dates {
   debug_log "Certificate Renewal Date: ${CERT_RENEW_DATE}"
 }
 
+# sync_cert
+# function to determine if the certificate can be updated.
+# If it can, the update command is run and the certifcate
+# dates are updated as well.
 function sync_cert {
   if [ "$#" -gt 0 ] ; then
     echo $*
@@ -29,9 +63,7 @@ function sync_cert {
     RES=$?
     if [ "$RES" == 0 ]; then
       echo "syncing ${CERT_FILE} with thecombine.languagetechnology.org"
-      if [ -z "$TESTONLY" ] ; then
-        {{ cert_sync_command }}
-      fi
+      {{ cert_sync_command }}
       set_cert_dates
     else
       debug_log "'{{ sync_cert_net_connect_test }}' returned ${RES}"
@@ -40,26 +72,37 @@ function sync_cert {
   return 0
 }
 
+# main loop
+
+# trap SIGUSR1.  The trap logs that the update is from a manual
+# operation and updates the certificate dates before continuing
+# the the main loop to see if the certificates need to be updated
+# Calling 'set_cert_dates' is mainly needed for cases, such as
+# testing, where the certificate gets updated by an outside
+# process.
 trap "echo 'manual update triggered'; set_cert_dates" SIGUSR1
 
+# initialize the VERBOSE variable.  VERBOSE increases the amount
+# of information in the system logs
 VERBOSE=${VERBOSE:=''}
-TESTONLY=${TESTONLY:=''}
 while [ "$#" -gt 0 ]; do
   case $1 in
     "-v")
         VERBOSE="true"
         ;;
-    "-t") # test script logic only - don't actually run rsync
-        TESTONLY="true"
-        ;;
   esac
   shift
 done
 
+# initialize the certificate expiration and renewal dates
 set_cert_dates
 
 while /bin/true ; do
+  # update the certificate if needed
   sync_cert
+  # sleep for 5 min.  The 'wait' command allows the process
+  # to wake up when signaled rather than wait until the 5 min.
+  # expires.
   sleep 300 &
   wait $!
 done
