@@ -77,14 +77,6 @@
     enabled: yes
     state: started
 
-- name: install support scripts
-  copy:
-    src: relink_cert
-    dest: /usr/local/bin/relink_cert
-    owner: root
-    group: root
-    mode: 0755
-
 - name: install script to check certificate on demand
   template:
     src: trigger_cert_sync.j2
