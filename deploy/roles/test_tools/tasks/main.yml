@@ -1,0 +1,16 @@
+---
+
+- name: install required packages
+  apt:
+    name:
+      - perl
+
+- name: install support scripts
+  copy:
+    src:  "{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - relink_cert
