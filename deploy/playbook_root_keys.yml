@@ -1,7 +1,7 @@
 ---
 
 - name: Generate root ssh keys and export public key
-  hosts: nuc
+  hosts: nuc:local
   become: yes
 
   tasks:

@@ -27,16 +27,9 @@
         path: "/root/.ssh/known_hosts"
         state: present
 
-    - name: create letsencrypt directory
-      file:
-        path: /etc/letsencrypt
-        state: directory
-        owner: root
-        group: root
-        mode: 0755
-
-    - name: get certs from thecombine.languagetechnology.org
-      command: "rsync -avz cert-user@{{ cert_server }}:/etc/letsencrypt/archive :/etc/letsencrypt/live /etc/letsencrypt"
+    - name: setup Let's Encrypt cert for nuc
+      import_role:
+        name: cert_sync_service
 
     - name: create WiFi access point
       import_role:
