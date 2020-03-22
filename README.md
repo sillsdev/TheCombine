@@ -4,14 +4,19 @@ A rapid word collection tool.
 
 ## Getting Started with Development
 
-1. Clone this repo
+1. Clone this repo:<br>
+   `git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git`<br>
+   The `--recurse-submodules` is used to fetch many of the Ansible roles used by the Ansible playbooks in the deploy folder. If you've already cloned the repo without `--recurse-submodules`, run<br>
+   `git submodule update --init --recursive`<br>
+   to pull and initialize them.
 2. Install:
    - [Node.js](https://nodejs.org/en/) (LTS)
    - [.NET Core Runtime](https://dotnet.microsoft.com/download)
    - [MongoDB Server](https://www.mongodb.com/download-center/community) and add /bin to PATH Environment Variable
    - [VS Code](https://code.visualstudio.com/download) and Pretter code formatting extension
 3. Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL certificate
-4. Run `npm start` from the project directory to install dependencies and start the project
+4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string of your choice, such as *This is a secret key*.  Set it in your `.profile` (Linux) or the *System* app (Windows).
+5. Run `npm start` from the project directory to install dependencies and start the project
 
 ## Available Scripts
 
