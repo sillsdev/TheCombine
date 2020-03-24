@@ -110,11 +110,6 @@ else
   VAULTPASSWORDOPTION="--vault-password-file $VAULTPASSWORDFILE"
 fi
 
-# Install any required roles from Ansible Galaxy
-if [ ! -d roles_galaxy ] ; then
-  mkdir roles_galaxy
-fi
-
 CMD_STRING="ansible-playbook ${ANSIBLE_OPTS[*]} playbook_root_keys.yml --limit $MACHINE -u $USER -K"
 echo -e "Running:\n\t${CMD_STRING}"
 ${CMD_STRING}
@@ -126,7 +121,3 @@ ${CMD_STRING}
 CMD_STRING="ansible-playbook ${ANSIBLE_OPTS[*]} playbook_nuc.yml --limit $MACHINE -u $USER -K ${VAULTPASSWORDOPTION}"
 echo -e "Running:\n\t${CMD_STRING}"
 ${CMD_STRING}
-
-# CMD_STRING="ansible-playbook ${ANSIBLE_OPTS[*]} playbook_publish.yml --limit $MACHINE -u $USER -K ${VAULTPASSWORDOPTION}"
-# echo -e "Running:\n\t${CMD_STRING}"
-# ${CMD_STRING}
