@@ -152,6 +152,7 @@ In order to setup the Demo Server,
   * run the following commands from the directory for *TheCombine* repo:
     ```
     cd deploy
+    mkdir roles_galaxy
     ansible-galaxy install -r requirements.yml -p roles_galaxy
     ansible-playbook playbook-server.yml -K
     certbot certonly --webroot --force-renewal
