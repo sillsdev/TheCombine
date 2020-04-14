@@ -12,7 +12,7 @@ declare global {
 }
 
 const defaultConfig : RuntimeConfigItems = {
-  baseUrl:  'https://localhost:5000/v1',
+  baseUrl:  'https://localhost:5001/v1',
   captchaRequired:  true,
   captchaSiteKey: '6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3'
 }
@@ -32,7 +32,7 @@ export class RuntimeConfig {
   {
     if (!this._instance)
     {
-      this._instance = new RuntimeConfig;
+      this._instance = new RuntimeConfig();
     }
     return this._instance;
   }
