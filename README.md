@@ -11,12 +11,16 @@ A rapid word collection tool.
    to pull and initialize them.
 2. Install:
    - [Node.js](https://nodejs.org/en/) (LTS)
-   - [.NET Core Runtime](https://dotnet.microsoft.com/download)
+     - On Windows, if using [Chocolately][chocolatey]: `choco install nodejs-lts`
+   - [.NET Core SDK 2.1](https://dotnet.microsoft.com/download/dotnet-core/2.1) (LTS)
    - [MongoDB Server](https://www.mongodb.com/download-center/community) and add /bin to PATH Environment Variable
-   - [VS Code](https://code.visualstudio.com/download) and Pretter code formatting extension
+     - On Windows, if using [Chocolately][chocolatey]: `choco install mongodb`
+   - [VS Code](https://code.visualstudio.com/download) and Prettier code formatting extension
 3. Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL certificate
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string of your choice, such as *This is a secret key*.  Set it in your `.profile` (Linux) or the *System* app (Windows).
 5. Run `npm start` from the project directory to install dependencies and start the project
+
+[chocolatey]: https://chocolatey.org/
 
 ## Available Scripts
 
@@ -29,6 +33,9 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
+
+> Note: You may need to first browse to https://localhost:5001 and accept the certificate warning in your
+  browser if you get Network Errors the first time you try to run the application locally.
 
 #### `npm run frontend`
 
