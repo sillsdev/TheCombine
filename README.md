@@ -10,8 +10,8 @@ A rapid word collection tool.
    `git submodule update --init --recursive`<br>
    to pull and initialize them.
 2. Install:
-   - [Node.js](https://nodejs.org/en/) (LTS)
-     - On Windows, if using [Chocolately][chocolatey]: `choco install nodejs-lts`
+   - [Node.js 10](https://nodejs.org/en/) (LTS)
+     - On Windows, if using [Chocolately][chocolatey]: `choco install nodejs-lts  --version 10.20.1`
    - [.NET Core SDK 2.1](https://dotnet.microsoft.com/download/dotnet-core/2.1) (LTS)
    - [MongoDB Server](https://www.mongodb.com/download-center/community) and add /bin to PATH Environment Variable
      - On Windows, if using [Chocolately][chocolatey]: `choco install mongodb`
