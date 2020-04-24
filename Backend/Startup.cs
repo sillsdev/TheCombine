@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SIL.Lift.Parsing;
 using System;
@@ -17,11 +18,14 @@ namespace BackendFramework
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(ILogger<Startup> logger, IConfiguration configuration)
         {
+            _logger = logger;
             Configuration = configuration;
         }
 
+        private readonly ILogger<Startup> _logger;
+        
         public IConfiguration Configuration { get; }
 
         public class Settings
@@ -29,7 +33,12 @@ namespace BackendFramework
             public string ConnectionString { get; set; }
             public string CombineDatabase { get; set; }
         }
-        readonly string AllowedOrigins = "AllowAll";
+
+        private const string AllowedOrigins = "AllowAll";
+
+        private class EnvironmentNotConfiguredException : Exception
+        {
+        }
 
 		/// <summary> This method gets called by the runtime. Use this method to add services for dependency injection. </summary>
 		public void ConfigureServices(IServiceCollection services)
@@ -44,8 +53,20 @@ namespace BackendFramework
                     .AllowAnyOrigin());
             });
 
-            // configure jwt authentication
-            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY"));
+            // Configure JWT Authentication
+            const string secretKeyEnvName = "ASPNETCORE_JWT_SECRET_KEY";
+            var secretKey = Environment.GetEnvironmentVariable(secretKeyEnvName);
+
+            // The JWT key size must be at least 128 bits long.
+            const int minKeyLength = 128 / 8;
+            if (secretKey == null || secretKey.Length < minKeyLength)
+            {
+                _logger.LogError($"Must set {secretKeyEnvName} environment variable " +
+                                 $"to string of length {minKeyLength} or longer.");
+                throw new EnvironmentNotConfiguredException();
+            }
+
+            var key = Encoding.ASCII.GetBytes(secretKey);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
