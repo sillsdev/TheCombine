@@ -65,3 +65,6 @@ deploy/_playbook*.yml
 
 # Emacs backup files (this is Jim's fault)
 *~
+
+# JetBrains Rider
+.idea
