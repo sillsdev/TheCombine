@@ -2,7 +2,6 @@
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
-using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
@@ -119,7 +118,7 @@ namespace Backend.Tests
             foreach (Sense sense in word.Senses)
             {
 
-                sense.Accessibility = (int)State.active;
+                sense.Accessibility = (int)State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
                 foreach (Gloss gloss in sense.Glosses)
@@ -235,10 +234,10 @@ namespace Backend.Tests
                 var pathToStartZip = Path.Combine(pathToStartZips, actualFilename);
 
                 /*
-                 * Upload the zip file 
+                 * Upload the zip file
                  */
 
-                //init the project the .zip info is added to 
+                //init the project the .zip info is added to
                 var proj = RandomProject();
                 _projServ.Create(proj);
 
@@ -287,7 +286,7 @@ namespace Backend.Tests
                      */
 
                     //upload the exported words again
-                    //init the project the .zip info is added to 
+                    //init the project the .zip info is added to
                     var proj2 = RandomProject();
                     _projServ.Create(proj2);
 

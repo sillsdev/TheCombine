@@ -1,10 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace BackendFramework.ValueModels
+namespace BackendFramework.Models
 {
     /// <summary> The permissions a user has on a particular project </summary>
     public class UserRole
@@ -29,7 +29,7 @@ namespace BackendFramework.ValueModels
 
         public UserRole Clone()
         {
-            UserRole clone = new UserRole
+            var clone = new UserRole
             {
                 Id = Id.Clone() as string,
                 ProjectId = ProjectId.Clone() as string,
@@ -60,7 +60,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                UserRole other = obj as UserRole;
+                var other = obj as UserRole;
                 return other.Id.Equals(Id) && ContentEquals(other);
             }
         }
@@ -79,17 +79,30 @@ namespace BackendFramework.ValueModels
             Permissions = permissions;
         }
         public string ProjectId { get; set; }
-        public List<int> Permissions { get; set; }  //this is a list of permissions but is represented as ints for ease of catching http requests
+
+        /// This is a list of permissions but is represented as ints for ease of catching HTTP requests.
+        public List<int> Permissions { get; set; }
     }
 
     public enum Permission
     {
-        DatabaseAdmin = 6,          //Database Admin, has no limitations
-        EditSettingsNUsers = 5,     //Project Admin, can edit project settings and add and remove users, change userRoles
-        ImportExport = 4,           //Can import and export lift 
-        MergeNCharSet = 3,          //Can merge words and change the char set
-        Unused = 2,                 //Unused
-        WordEntry = 1               //Can enter words
+        /// <summary> Database Admin, has no limitations </summary>
+        DatabaseAdmin = 6,
+
+        /// <summary> Project Admin, can edit project settings and add and remove users, change userRoles </summary>
+        EditSettingsNUsers = 5,
+
+        /// <summary> Can import and export lift </summary>
+        ImportExport = 4,
+
+        /// <summary> Can merge words and change the char set </summary>
+        MergeNCharSet = 3,
+
+        /// <summary> Unused </summary>
+        Unused = 2,
+
+        /// <summary> Can enter words </summary>
+        WordEntry = 1
     }
 
     /// <summary> Return type of Update functions </summary>

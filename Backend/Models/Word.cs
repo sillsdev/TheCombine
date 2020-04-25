@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace BackendFramework.ValueModels
+namespace BackendFramework.Models
 {
     public class Word
     {
@@ -64,7 +64,7 @@ namespace BackendFramework.ValueModels
 
         public Word Clone()
         {
-            Word clone = new Word
+            var clone = new Word
             {
                 Id = Id.Clone() as string,
                 Vernacular = Vernacular.Clone() as string,
@@ -233,7 +233,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                Gloss other = obj as Gloss;
+                var other = obj as Gloss;
                 return Language.Equals(other.Language) && Def.Equals(other.Def);
             }
         }
@@ -275,7 +275,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                SemanticDomain other = obj as SemanticDomain;
+                var other = obj as SemanticDomain;
                 return Name.Equals(other.Name) && Id.Equals(other.Id) && Description.Equals(other.Description);
             }
         }
@@ -294,8 +294,8 @@ namespace BackendFramework.ValueModels
         public string FilePath { get; set; }
     }
 
-    /// <summary> 
-    /// Helper object that contains a parent word and a number of children which will be merged into it 
+    /// <summary>
+    /// Helper object that contains a parent word and a number of children which will be merged into it
     /// along with the userId of who made the merge and at what time
     /// </summary>
     public class MergeWords
@@ -316,10 +316,10 @@ namespace BackendFramework.ValueModels
     /// <summary> Information about the state of the word in that database used for merging </summary>
     public enum State
     {
-        active,
-        deleted,
-        sense,
-        duplicate,
-        separate
+        Active,
+        Deleted,
+        Sense,
+        Duplicate,
+        Separate
     }
 }

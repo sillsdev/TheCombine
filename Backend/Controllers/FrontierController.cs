@@ -1,9 +1,9 @@
 using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using BackendFramework.Models;
 
 namespace BackendFramework.Controllers
 {

@@ -1,10 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace BackendFramework.ValueModels
+namespace BackendFramework.Models
 {
     public class User
     {
@@ -75,7 +75,7 @@ namespace BackendFramework.ValueModels
 
         public User Clone()
         {
-            User clone = new User
+            var clone = new User
             {
                 Id = Id.Clone() as string,
                 Avatar = Avatar.Clone() as string,
@@ -135,7 +135,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                User other = obj as User;
+                var other = obj as User;
                 return other.Id.Equals(Id) && ContentEquals(other);
             }
         }
@@ -160,7 +160,7 @@ namespace BackendFramework.ValueModels
         }
     }
 
-    /// <summary> Contains username and password for authenitcation </summary>
+    /// <summary> Contains username and password for authentication. </summary>
     public class Credentials
     {
         public string Username { get; set; }

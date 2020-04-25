@@ -1,10 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace BackendFramework.ValueModels
+namespace BackendFramework.Models
 {
     /// <summary> The changes a user has made on a particular project </summary>
     public class UserEdit
@@ -59,7 +59,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                UserEdit other = obj as UserEdit;
+                var other = obj as UserEdit;
                 return other.Id.Equals(Id) && ContentEquals(other);
             }
         }
@@ -92,7 +92,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                UserEditObjectWrapper other = obj as UserEditObjectWrapper;
+                var other = obj as UserEditObjectWrapper;
                 return other.GoalIndex.Equals(GoalIndex) && other.NewEdit.Equals(NewEdit);
             }
         }
@@ -105,7 +105,7 @@ namespace BackendFramework.ValueModels
 
     public class Edit
     {
-        /// <summary> Integer representation of enum <see cref="ValueModels.GoalType"/> </summary>
+        /// <summary> Integer representation of enum <see cref="Models.GoalType"/> </summary>
         [BsonElement("goalType")]
         public int GoalType { get; set; }
 

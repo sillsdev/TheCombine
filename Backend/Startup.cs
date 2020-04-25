@@ -18,15 +18,17 @@ namespace BackendFramework
 {
     public class Startup
     {
+        private const string AllowedOrigins = "AllowAll";
+        
+        private readonly ILogger<Startup> _logger;
+        
+        public IConfiguration Configuration { get; }
+
         public Startup(ILogger<Startup> logger, IConfiguration configuration)
         {
             _logger = logger;
             Configuration = configuration;
         }
-
-        private readonly ILogger<Startup> _logger;
-        
-        public IConfiguration Configuration { get; }
 
         public class Settings
         {
@@ -34,16 +36,14 @@ namespace BackendFramework
             public string CombineDatabase { get; set; }
         }
 
-        private const string AllowedOrigins = "AllowAll";
-
         private class EnvironmentNotConfiguredException : Exception
         {
         }
 
-		/// <summary> This method gets called by the runtime. Use this method to add services for dependency injection. </summary>
+		/// <summary> This method gets called by the runtime. Use this method to add services for dependency injection.
+		/// </summary>
 		public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddCors(options =>
             {
                 options.AddPolicy(AllowedOrigins,
@@ -125,7 +125,8 @@ namespace BackendFramework
             services.AddTransient<IPermissionService, PermissionService>();
         }
 
-        /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline. </summary>
+        /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -134,7 +135,8 @@ namespace BackendFramework
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                // The default HSTS value is 30 days. You may want to change this for production scenarios,
+                // see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

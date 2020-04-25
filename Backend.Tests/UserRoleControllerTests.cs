@@ -1,7 +1,6 @@
 ﻿using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
-using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;

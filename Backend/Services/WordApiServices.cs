@@ -1,10 +1,10 @@
 using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendFramework.Models;
 
 namespace BackendFramework.Services
 {
@@ -33,7 +33,7 @@ namespace BackendFramework.Services
 
                 foreach (var senseAcc in wordToDelete.Senses)
                 {
-                    senseAcc.Accessibility = (int)State.deleted;
+                    senseAcc.Accessibility = (int)State.Deleted;
                 }
 
                 await _repo.Create(wordToDelete);
@@ -112,16 +112,16 @@ namespace BackendFramework.Services
                     switch (newChildWordState.SenseStates[i])
                     {
                         //add the word to the parent's history
-                        case State.sense:
-                        case State.duplicate:
+                        case State.Sense:
+                        case State.Duplicate:
                             if (!addParent.History.Contains(currentChildWord.Id))
                             {
                                 addParent.History.Add(currentChildWord.Id);
                             }
                             break;
                         //add the sense to a separate word and the word to its history
-                        case State.separate:
-                            currentChildWord.Senses[i].Accessibility = (int)State.active;
+                        case State.Separate:
+                            currentChildWord.Senses[i].Accessibility = (int)State.Active;
                             separateWord.Senses.Add(currentChildWord.Senses[i]);
                             if (!separateWord.History.Contains(currentChildWord.Id))
                             {

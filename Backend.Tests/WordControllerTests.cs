@@ -1,7 +1,6 @@
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
-using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;
@@ -40,7 +39,7 @@ namespace Backend.Tests
             foreach (Sense sense in word.Senses)
             {
 
-                sense.Accessibility = (int)State.active;
+                sense.Accessibility = (int)State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
                 foreach (Gloss gloss in sense.Glosses)
@@ -188,7 +187,7 @@ namespace Backend.Tests
             {
                 new MergeSourceWord {
                     SrcWordId = thisWord.Id,
-                    SenseStates = new List<State> {State.sense, State.sense, State.sense }
+                    SenseStates = new List<State> {State.Sense, State.Sense, State.Sense }
                 }
             };
 
@@ -226,7 +225,7 @@ namespace Backend.Tests
                 //generate mergeSourceWord with new child Id and desired child state list 
                 MergeSourceWord newGenChild = new MergeSourceWord();
                 newGenChild.SrcWordId = _repo.Add(child).Result.Id;
-                newGenChild.SenseStates = new List<State> { State.duplicate, State.sense, State.separate };
+                newGenChild.SenseStates = new List<State> { State.Duplicate, State.Sense, State.Separate };
                 parentChildMergeObject.ChildrenWords.Add(newGenChild);
             }
 

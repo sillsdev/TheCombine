@@ -1,5 +1,4 @@
 using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -141,7 +140,7 @@ namespace BackendFramework.Controllers
             currentUser = await _userService.MakeJWT(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
-            var output = new ProjectWithUser(project) { __UpdatedUser = currentUser };
+            var output = new ProjectWithUser(project) { UpdatedUser = currentUser };
 
             return new OkObjectResult(output);
         }

@@ -1,5 +1,4 @@
 using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
 using MongoDB.Driver;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
@@ -16,6 +15,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using BackendFramework.Models;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
 namespace BackendFramework.Services
@@ -148,7 +148,7 @@ namespace BackendFramework.Services
             //write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
             var frontier = _repo.GetFrontier(projectId).Result;
-            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.active).ToList();
+            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.Active).ToList();
             var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();//TODO: this is wrong, deleted is a subset of active, are not exclusive
             foreach (Word wordEntry in activeWords)
             {

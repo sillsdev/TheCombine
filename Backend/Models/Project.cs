@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BackendFramework.ValueModels;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -64,7 +63,7 @@ namespace BackendFramework.Models
 
         public Project Clone()
         {
-            Project clone = new Project
+            var clone = new Project
             {
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
@@ -146,7 +145,7 @@ namespace BackendFramework.Models
             }
             else
             {
-                Project other = obj as Project;
+                var other = obj as Project;
                 return other.Id.Equals(Id) && ContentEquals(other);
             }
         }
@@ -201,7 +200,7 @@ namespace BackendFramework.Models
 
 	public class ProjectWithUser : Project
 	{
-		public User __UpdatedUser;
+		public User UpdatedUser;
 
 		public ProjectWithUser() { }
 
