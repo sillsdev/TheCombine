@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System.Collections.Generic;
+using BackendFramework.Models;
 using static BackendFramework.Controllers.ProjectController;
 
 namespace Backend.Tests

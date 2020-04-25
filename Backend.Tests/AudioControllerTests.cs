@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using System;
 using System.IO;
+using BackendFramework.Models;
 
 namespace Backend.Tests
 {

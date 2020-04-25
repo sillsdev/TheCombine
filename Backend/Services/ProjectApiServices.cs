@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using BackendFramework.Models;
 
 namespace BackendFramework.Services
 {

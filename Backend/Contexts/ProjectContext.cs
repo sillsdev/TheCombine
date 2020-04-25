@@ -1,4 +1,5 @@
 ﻿using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using BackendFramework.ValueModels;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
