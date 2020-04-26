@@ -1,10 +1,9 @@
-﻿using Backend.Tests;
+﻿using System.Collections.Generic;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using System.Collections.Generic;
-using BackendFramework.Models;
 
 namespace Backend.Tests
 {
