@@ -34,7 +34,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {
@@ -56,7 +56,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {
@@ -82,7 +82,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {

@@ -20,7 +20,8 @@ namespace BackendFramework.Controllers
         private readonly IUserService _userService;
         private readonly IPermissionService _permissionService;
 
-        public ProjectController(IProjectService projectService, ISemDomParser semDomParser, IUserRoleService userRoleService, IUserService userService, IPermissionService permissionService)
+        public ProjectController(IProjectService projectService, ISemDomParser semDomParser,
+            IUserRoleService userRoleService, IUserService userService, IPermissionService permissionService)
         {
             _projectService = projectService;
             _semDomParser = semDomParser;
@@ -85,7 +86,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var project = await _projectService.GetProject(projectId);
+            Project project = await _projectService.GetProject(projectId);
             if (project == null)
             {
                 return new NotFoundResult();
@@ -107,12 +108,12 @@ namespace BackendFramework.Controllers
         {
             await _projectService.Create(project);
 
-            //get user 
-            var currentUserId = _permissionService.GetUserId(HttpContext);
-            var currentUser = await _userService.GetUser(currentUserId);
+            // Get user
+            string currentUserId = _permissionService.GetUserId(HttpContext);
+            User currentUser = await _userService.GetUser(currentUserId);
 
-            //give admin privileges
-            UserRole usersRole = new UserRole
+            // Give admin privileges
+            var usersRole = new UserRole
             {
                 Permissions = new List<int>
                 {
@@ -127,16 +128,16 @@ namespace BackendFramework.Controllers
 
             usersRole = await _userRoleService.Create(usersRole);
 
-            //update user with userRole
+            // Update user with userRole
             if (currentUser.ProjectRoles.Equals(null))
             {
                 currentUser.ProjectRoles = new Dictionary<string, string>();
             }
 
-            //Generate the userRoles and update the user
+            // Generate the userRoles and update the user
             currentUser.ProjectRoles.Add(project.Id, usersRole.Id);
             await _userService.Update(currentUserId, currentUser);
-            //Generate the JWT based on those new userRoles
+            // Generate the JWT based on those new userRoles
             currentUser = await _userService.MakeJwt(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
@@ -156,7 +157,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var result = await _projectService.Update(projectId, project);
+            ResultOfUpdate result = await _projectService.Update(projectId, project);
             if (result == ResultOfUpdate.NotFound)
             {
                 return new NotFoundObjectResult(projectId);
@@ -181,7 +182,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var currentProj = await _projectService.GetProject(projectId);
+            Project currentProj = await _projectService.GetProject(projectId);
             currentProj.ValidCharacters = project.ValidCharacters;
             currentProj.RejectedCharacters = project.RejectedCharacters;
             await _projectService.Update(projectId, currentProj);
@@ -206,7 +207,9 @@ namespace BackendFramework.Controllers
             return new NotFoundResult();
         }
 
-        /// <summary> UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/> </summary>
+        /// <summary>
+        /// UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/>
+        /// </summary>
         /// <remarks> GET: v1/projects/{projectId}/semanticdomains </remarks>
         [AllowAnonymous]
         [HttpGet("{projectId}/semanticdomains")]
@@ -223,7 +226,7 @@ namespace BackendFramework.Controllers
             }
         }
 
-        //change user role using project Id
+        // Change user role using project Id
         [HttpPut("{projectId}/users/{userId}")]
         public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]int[] permissions)
         {
@@ -238,7 +241,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            //fetch the user -> fetch user role -> update user role
+            // Fetch the user -> fetch user role -> update user role
             var changeUser = await _userService.GetUser(userId);
             string userRoleId;
             if (changeUser.ProjectRoles.ContainsKey(projectId))
@@ -246,21 +249,21 @@ namespace BackendFramework.Controllers
                 userRoleId = changeUser.ProjectRoles[projectId];
             }
             else
-            { 
+            {
                 UserRole usersRole = new UserRole();
                 userRoleId = usersRole.Id;
                 usersRole.ProjectId = projectId;
 
                 usersRole = await _userRoleService.Create(usersRole);
 
-                //Generate the userRoles and update the user
+                // Generate the userRoles and update the user
                 changeUser.ProjectRoles.Add(projectId, usersRole.Id);
                 await _userService.Update(changeUser.Id, changeUser);
             }
-            var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
+            UserRole userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
             userRole.Permissions = new List<int>(permissions);
 
-            var result = await _userRoleService.Update(userRoleId, userRole);
+            ResultOfUpdate result = await _userRoleService.Update(userRoleId, userRole);
 
             if (result == ResultOfUpdate.NotFound)
             {

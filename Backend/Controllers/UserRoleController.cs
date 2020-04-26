@@ -46,7 +46,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
         /// <remarks> DELETE: v1/projects/{projectId}/userroles </remarks>
-        /// <returns> true: if success, false: if there were no UserRoles </returns> 
+        /// <returns> true: if success, false: if there were no UserRoles </returns>
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
@@ -56,7 +56,7 @@ namespace BackendFramework.Controllers
             }
 
 #if DEBUG
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -79,14 +79,14 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
+            UserRole userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
             if (userRole == null)
             {
                 return new NotFoundObjectResult(userRoleId);
@@ -108,14 +108,14 @@ namespace BackendFramework.Controllers
 
             userRole.ProjectId = projectId;
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var returnUserRole = await _userRoleService.Create(userRole);
+            UserRole returnUserRole = await _userRoleService.Create(userRole);
             if (returnUserRole == null)
             {
                 return BadRequest();
@@ -134,7 +134,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -159,14 +159,14 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var result = await _userRoleService.Update(userRoleId, userRole);
+            ResultOfUpdate result = await _userRoleService.Update(userRoleId, userRole);
             if (result == ResultOfUpdate.NotFound)
             {
                 return new NotFoundObjectResult(userRoleId);

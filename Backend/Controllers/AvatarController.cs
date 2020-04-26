@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
 using BackendFramework.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Controllers
 {
@@ -37,13 +38,13 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(userId);
             }
 
-            var image = System.IO.File.OpenRead(avatar);
+            FileStream image = System.IO.File.OpenRead(avatar);
             return File(image, "image/jpeg");
         }
 
-
-
-        /// <summary> Adds an avatar image to a <see cref="User"/> and saves locally to ~/.CombineFiles/{ProjectId}/Avatars </summary>
+        /// <summary>
+        /// Adds an avatar image to a <see cref="User"/> and saves locally to ~/.CombineFiles/{ProjectId}/Avatars
+        /// </summary>
         /// <remarks> POST: v1/users/{userId}/upload/avatar </remarks>
         /// <returns> Path to local avatar file </returns>
         [HttpPost("{userId}/upload/avatar")]
@@ -54,32 +55,33 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var file = fileUpload.File;
+            IFormFile file = fileUpload.File;
 
-            //ensure file is not empty
+            // Ensure file is not empty
             if (file.Length == 0)
             {
                 return new BadRequestObjectResult("Empty File");
             }
 
-            //get user to apply avatar to
+            // Get user to apply avatar to
             User gotUser = await _userService.GetUser(userId);
             if (gotUser == null)
             {
                 return new NotFoundObjectResult(gotUser.Id);
             }
 
-            //get path to home
-            Utilities util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(Utilities.FileType.Avatar, false, userId, "Avatars");
+            // Get path to home
+            var util = new Utilities();
+            fileUpload.FilePath = util.GenerateFilePath(
+                Utilities.FileType.Avatar, false, userId, "Avatars");
 
-            //copy file data to a new local file
+            // Copy file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
             }
 
-            //update the user's avatar file
+            // Update the user's avatar file
             gotUser.Avatar = fileUpload.FilePath;
             _ = await _userService.Update(userId, gotUser);
 

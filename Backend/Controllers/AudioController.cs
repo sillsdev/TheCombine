@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
 using BackendFramework.Models;
+using Microsoft.AspNetCore.Http;
 using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers
@@ -43,7 +44,7 @@ namespace BackendFramework.Controllers
             //    return new ForbidResult();
             //}
 
-            var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
+            string filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
 
             if (filePath == null)
             {
@@ -70,34 +71,36 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
-            var file = fileUpload.File;
-            var requestedFileName = fileUpload.File?.FileName;
+            IFormFile file = fileUpload.File;
+            string requestedFileName = fileUpload.File?.FileName;
             if (string.IsNullOrEmpty(requestedFileName))
             {
                 requestedFileName = wordId + ".webm";
             }
 
-            //ensure file is not empty
+            // Ensure file is not empty
             if (file.Length == 0)
             {
                 return new BadRequestObjectResult("Empty File");
             }
 
-            //get path to home
-            Utilities util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(FileType.Audio, false, wordId, Path.Combine(projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio"));
+            // Get path to home
+            var util = new Utilities();
+            fileUpload.FilePath = util.GenerateFilePath(
+                FileType.Audio, false, wordId, Path.Combine(
+                    projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio"));
 
-            //copy the file data to a new local file
+            // Copy the file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
             {
                 await file.CopyToAsync(fs);
             }
 
-            //add the relative path to the audio field
+            // Add the relative path to the audio field
             Word gotWord = await _wordRepo.GetWord(projectId, wordId);
             gotWord.Audio.Add(Path.GetFileName(fileUpload.FilePath));
 
-            //update the word with new audio file
+            // Update the word with new audio file
             await _wordService.Update(projectId, wordId, gotWord);
 
             return new ObjectResult(gotWord.Id);

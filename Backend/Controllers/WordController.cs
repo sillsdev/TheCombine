@@ -38,7 +38,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -50,7 +50,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes all <see cref="Word"/>s for specified <see cref="Project"/> </summary>
         /// <remarks> DELETE: v1/projects/{projectId}/words </remarks>
-        /// <returns> true: if success, false: if there were no words </returns> 
+        /// <returns> true: if success, false: if there were no words </returns>
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
@@ -60,7 +60,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -83,14 +83,14 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            var word = await _wordRepo.GetWord(projectId, wordId);
+            Word word = await _wordRepo.GetWord(projectId, wordId);
             if (word == null)
             {
                 return new NotFoundObjectResult(wordId);
@@ -109,7 +109,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -118,12 +118,12 @@ namespace BackendFramework.Controllers
 
             word.ProjectId = projectId;
 
-            //if word is not already in frontier, add it
+            // If word is not already in frontier, add it
             if (await _wordService.WordIsUnique(word))
             {
                 await _wordRepo.Create(word);
             }
-            else //otherwise it is a duplicate
+            else // Otherwise it is a duplicate
             {
                 return new OkObjectResult("Duplicate");
             }
@@ -142,15 +142,15 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            //ensure word exists
-            var document = await _wordRepo.GetWord(projectId, wordId);
+            // Ensure word exists
+            Word document = await _wordRepo.GetWord(projectId, wordId);
             if (document == null)
             {
                 return new NotFoundResult();
@@ -173,7 +173,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -198,14 +198,14 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            //ensure MergeWords is alright
+            // Ensure MergeWords is alright
             if (mergeWords == null || mergeWords.Parent == null)
             {
                 return new BadRequestResult();

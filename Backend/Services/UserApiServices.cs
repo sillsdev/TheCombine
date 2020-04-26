@@ -43,8 +43,6 @@ namespace BackendFramework.Services
                 return null;
             }
 
-
-
             // Extract the bytes from password
             var hashBytes = Convert.FromBase64String(foundUser.Password);
             // Get the salt from the first part of stored value

@@ -86,7 +86,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var user = await _userService.GetUser(userId);
+            User user = await _userService.GetUser(userId);
             if (user == null)
             {
                 return new NotFoundResult();
@@ -166,7 +166,7 @@ namespace BackendFramework.Controllers
             //     return new ForbidResult();
             // }
 
-            var result = await _userService.Update(userId, user);
+            ResultOfUpdate result = await _userService.Update(userId, user);
             if (result == ResultOfUpdate.NotFound)
             {
                 return new NotFoundObjectResult(userId);
