@@ -1,12 +1,3 @@
-using BackendFramework.Interfaces;
-using MongoDB.Driver;
-using SIL.DictionaryServices.Lift;
-using SIL.DictionaryServices.Model;
-using SIL.Lift;
-using SIL.Lift.Options;
-using SIL.Lift.Parsing;
-using SIL.Text;
-using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +6,15 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Lift.Parsing;
+using SIL.Text;
+using SIL.WritingSystems;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
 namespace BackendFramework.Services

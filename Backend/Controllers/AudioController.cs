@@ -1,13 +1,12 @@
-﻿using System;
+﻿using System.IO;
+using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
-using System.IO;
-using System.Threading.Tasks;
-using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using static BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Controllers

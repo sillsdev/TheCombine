@@ -1,9 +1,10 @@
-﻿using BackendFramework.Interfaces;
+﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using BackendFramework.Models;
+using Newtonsoft.Json;
 
 namespace BackendFramework.Services
 {
@@ -45,7 +46,7 @@ namespace BackendFramework.Services
             SecurityToken jsonToken = GetJwt(request);
 
             var userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();
-            var permissionsObj = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProjectPermissions>>(userRoleInfo);
+            var permissionsObj = JsonConvert.DeserializeObject<List<ProjectPermissions>>(userRoleInfo);
             return permissionsObj;
         }
 

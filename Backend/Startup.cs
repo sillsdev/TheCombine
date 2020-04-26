@@ -1,4 +1,7 @@
-﻿using BackendFramework.Interfaces;
+﻿using System;
+using System.Text;
+using BackendFramework.Contexts;
+using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -10,9 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SIL.Lift.Parsing;
-using System;
-using System.Text;
-using BackendFramework.Contexts;
 
 namespace BackendFramework
 {
