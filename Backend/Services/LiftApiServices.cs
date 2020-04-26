@@ -114,7 +114,7 @@ namespace BackendFramework.Services
             var util = new Helper.Utilities();
 
             // Generate the zip dir.
-            string exportDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "",
+            string exportDir = util.GenerateFilePath(Helper.Utilities.FileType.Dir, true, "",
                 Path.Combine(projectId, "Export"));
             if (Directory.Exists(Path.Combine(exportDir, "LiftExport")))
             {
@@ -295,11 +295,11 @@ namespace BackendFramework.Services
                 var util = new Helper.Utilities();
 
                 string projectPath = Path.Combine(util.GenerateFilePath(
-                    Helper.Utilities.Filetype.dir, true, "", ""), _projectId);
+                    Helper.Utilities.FileType.Dir, true, "", ""), _projectId);
                 projectPath = Path.Combine(projectPath, "Import", "ExtractedLocation");
                 var extractedDir = Directory.GetDirectories(projectPath);
                 projectPath = Path.Combine(projectPath, extractedDir.Single());
-                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), Path.Combine(projectPath, "audio", audioFile));
+                string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.FileType.Audio, true), Path.Combine(projectPath, "audio", audioFile));
                 string dest = Path.Combine(path, audioFile);
 
                 if (File.Exists(src))
@@ -475,7 +475,7 @@ namespace BackendFramework.Services
             // Get path to dir containing local lift package ~/{projectId}/Import/ExtractedLocation
             Helper.Utilities util = new Helper.Utilities();
             string importDir = util.GenerateFilePath(
-                Helper.Utilities.Filetype.dir, false, "", Path.Combine(_projectId, "Import"));
+                Helper.Utilities.FileType.Dir, false, "", Path.Combine(_projectId, "Import"));
             string extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
 
             // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio

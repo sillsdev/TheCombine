@@ -34,7 +34,7 @@ namespace Backend.Tests
             _audioController = new AudioController(_wordrepo, _wordService, _permissionService);
 
             var util = new Utilities();
-            Directory.Delete(util.GenerateFilePath(Utilities.Filetype.dir, true, "", ""), true);
+            Directory.Delete(util.GenerateFilePath(Utilities.FileType.Dir, true, "", ""), true);
         }
 
         private static string RandomString(int length = 16)

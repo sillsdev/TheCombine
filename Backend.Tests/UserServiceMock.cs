@@ -76,7 +76,7 @@ namespace Backend.Tests
                     return null;
                 }
 
-                foundUser = MakeJWT(foundUser).Result;
+                foundUser = MakeJwt(foundUser).Result;
                 return Task.FromResult(foundUser);
             }
             catch (InvalidOperationException)
@@ -85,7 +85,7 @@ namespace Backend.Tests
             }
         }
 
-        public Task<User> MakeJWT(User user)
+        public Task<User> MakeJwt(User user)
         {
             /*
              * The JWT Token below is generated here if you need to change its contents

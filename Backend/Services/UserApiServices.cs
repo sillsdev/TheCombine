@@ -64,10 +64,10 @@ namespace BackendFramework.Services
             }
 
             // Authentication successful so generate jwt token
-            return await MakeJWT(foundUser);
+            return await MakeJwt(foundUser);
         }
 
-        public async Task<User> MakeJWT(User user)
+        public async Task<User> MakeJwt(User user)
         {
             const int tokenExpirationMinutes = 60 * 4;
             var tokenHandler = new JwtSecurityTokenHandler();

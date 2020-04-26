@@ -64,7 +64,7 @@ namespace BackendFramework.Controllers
 
             //get path to where we will copy the zip file
             Utilities util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(Filetype.zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine(projectId, "Import"));
+            fileUpload.FilePath = util.GenerateFilePath(FileType.Zip, false, "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now), Path.Combine(projectId, "Import"));
 
             //copy file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))

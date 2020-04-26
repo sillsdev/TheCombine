@@ -71,7 +71,7 @@ namespace BackendFramework.Controllers
 
             //get path to home
             Utilities util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(Utilities.Filetype.avatar, false, userId, "Avatars");
+            fileUpload.FilePath = util.GenerateFilePath(Utilities.FileType.Avatar, false, userId, "Avatars");
 
             //copy file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))

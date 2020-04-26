@@ -98,7 +98,7 @@ namespace BackendFramework.Services
         {
             var util = new Utilities();
             string currentPath = util.GenerateFilePath(
-                Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Import"));
+                Utilities.FileType.Dir, true, "", Path.Combine(projectId, "Import"));
             var zips = new List<string>(Directory.GetFiles(currentPath, "*.zip"));
             return zips.Count == 0;
         }

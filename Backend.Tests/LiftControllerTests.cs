@@ -187,7 +187,7 @@ namespace Backend.Tests
             var result = _liftController.ExportLiftFile(proj.Id).Result;
 
             Utilities util = new Utilities();
-            var combinePath = util.GenerateFilePath(Utilities.Filetype.dir, true, "", "");
+            var combinePath = util.GenerateFilePath(Utilities.FileType.Dir, true, "", "");
             string exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport", Path.Combine("Lift", "NewLiftFile.lift"));
             string text = File.ReadAllText(exportPath, Encoding.UTF8);
             //there is only one deleted word

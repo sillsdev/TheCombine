@@ -14,6 +14,6 @@ namespace BackendFramework.Interfaces
         Task<bool> Delete(string userId);
         Task<bool> DeleteAllUsers();
         Task<User> Authenticate(string username, string password);
-        Task<User> MakeJWT(User user);
+        Task<User> MakeJwt(User user);
     }
 }
