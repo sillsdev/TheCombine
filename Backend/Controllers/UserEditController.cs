@@ -19,7 +19,8 @@ namespace BackendFramework.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IUserService _userService;
 
-        public UserEditController(IUserEditRepository repo, IUserEditService userEditService, IProjectService projectService, IPermissionService permissionService, IUserService userService)
+        public UserEditController(IUserEditRepository repo, IUserEditService userEditService,
+            IProjectService projectService, IPermissionService permissionService, IUserService userService)
         {
             _repo = repo;
             _userService = userService;

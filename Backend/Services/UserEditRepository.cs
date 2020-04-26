@@ -51,7 +51,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Removes <see cref="UserEdit"/> with specified userRoleId and projectId </summary>
-        /// <returns> A bool: sucess of operation </returns>
+        /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string userEditId)
         {
             var filterDef = new FilterDefinitionBuilder<UserEdit>();
@@ -70,7 +70,7 @@ namespace BackendFramework.Services
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
-            var result = await _userEditDatabase.UserEdits.ReplaceOneAsync(filter, userEdit);
+            ReplaceOneResult result = await _userEditDatabase.UserEdits.ReplaceOneAsync(filter, userEdit);
             return result.IsAcknowledged && result.ModifiedCount == 1;
         }
     }

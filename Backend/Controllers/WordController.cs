@@ -20,7 +20,8 @@ namespace BackendFramework.Controllers
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public WordController(IWordRepository repo, IWordService wordService, IProjectService projectService, IPermissionService permissionService)
+        public WordController(IWordRepository repo, IWordService wordService, IProjectService projectService,
+            IPermissionService permissionService)
         {
             _wordRepo = repo;
             _wordService = wordService;

@@ -250,7 +250,7 @@ namespace BackendFramework.Controllers
             }
             else
             {
-                UserRole usersRole = new UserRole();
+                var usersRole = new UserRole();
                 userRoleId = usersRole.Id;
                 usersRole.ProjectId = projectId;
 
@@ -288,6 +288,5 @@ namespace BackendFramework.Controllers
 
             return new OkObjectResult(_projectService.CanImportLift(projectId));
         }
-
     }
 }

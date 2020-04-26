@@ -48,7 +48,6 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)

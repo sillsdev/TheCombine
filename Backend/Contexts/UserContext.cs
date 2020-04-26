@@ -6,7 +6,6 @@ using static BackendFramework.Startup;
 
 namespace BackendFramework.Contexts
 {
-
     public class UserContext : IUserContext
     {
         private readonly IMongoDatabase _db;
@@ -19,5 +18,4 @@ namespace BackendFramework.Contexts
 
         public IMongoCollection<User> Users => _db.GetCollection<User>("UsersCollection");
     }
-
 }

@@ -6,7 +6,6 @@ using static BackendFramework.Startup;
 
 namespace BackendFramework.Contexts
 {
-
     public class UserEditContext : IUserEditContext
     {
         private readonly IMongoDatabase _db;
@@ -19,5 +18,4 @@ namespace BackendFramework.Contexts
 
         public IMongoCollection<UserEdit> UserEdits => _db.GetCollection<UserEdit>("UserEditsCollection");
     }
-
 }

@@ -6,7 +6,6 @@ using static BackendFramework.Startup;
 
 namespace BackendFramework.Contexts
 {
-
     public class WordContext : IWordContext
     {
         private readonly IMongoDatabase _db;
@@ -20,5 +19,4 @@ namespace BackendFramework.Contexts
         public IMongoCollection<Word> Words => _db.GetCollection<Word>("WordsCollection");
         public IMongoCollection<Word> Frontier => _db.GetCollection<Word>("FrontierCollection");
     }
-
 }

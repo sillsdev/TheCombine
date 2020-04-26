@@ -37,7 +37,8 @@ namespace BackendFramework.Controllers
         [HttpGet("{wordId}/download/audio/{fileName}")]
         public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
         {
-            // if we require authorization and authentication for audio files, the frontend cannot just use the api endpoint as the src
+            // if we require authorization and authentication for audio files, the frontend cannot just use the api
+            // endpoint as the src
             //if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             //{
             //    return new ForbidResult();
@@ -60,11 +61,15 @@ namespace BackendFramework.Controllers
             return File(stream, "video/webm");
         }
 
-        /// <summary> Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to ~/.CombineFiles/{ProjectId}/ExtractedLocation/Import/Audio </summary>
+        /// <summary>
+        /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to
+        /// ~/.CombineFiles/{ProjectId}/ExtractedLocation/Import/Audio
+        /// </summary>
         /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/upload/audio </remarks>
         /// <returns> Path to local audio file </returns>
         [HttpPost("{wordId}/upload/audio")]
-        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, [FromForm] FileUpload fileUpload)
+        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
+            [FromForm] FileUpload fileUpload)
         {
             if (!_permissionService.IsProjectAuthorized("1", HttpContext))
             {

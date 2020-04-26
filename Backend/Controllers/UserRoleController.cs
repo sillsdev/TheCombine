@@ -17,7 +17,8 @@ namespace BackendFramework.Controllers
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public UserRoleController(IUserRoleService userRoleService, IProjectService projectService, IPermissionService permissionService)
+        public UserRoleController(IUserRoleService userRoleService, IProjectService projectService,
+            IPermissionService permissionService)
         {
             _userRoleService = userRoleService;
             _projectService = projectService;

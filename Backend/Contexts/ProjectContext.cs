@@ -6,7 +6,6 @@ using static BackendFramework.Startup;
 
 namespace BackendFramework.Contexts
 {
-
     public class ProjectContext : IProjectContext
     {
         private readonly IMongoDatabase _db;
@@ -19,5 +18,4 @@ namespace BackendFramework.Contexts
 
         public IMongoCollection<Project> Projects => _db.GetCollection<Project>("ProjectsCollection");
     }
-
 }
