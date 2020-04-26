@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using static BackendFramework.Startup;
 
-namespace BackendFramework.Context
+namespace BackendFramework.Contexts
 {
 
     public class UserContext : IUserContext
