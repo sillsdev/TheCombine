@@ -25,8 +25,8 @@ namespace Backend.Tests
         User RandomUser()
         {
             User user = new User();
-            user.Username = Util.randString();
-            user.Password = Util.randString();
+            user.Username = Util.RandString();
+            user.Password = Util.RandString();
             return user;
         }
 

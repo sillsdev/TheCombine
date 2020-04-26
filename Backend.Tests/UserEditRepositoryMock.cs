@@ -49,8 +49,8 @@ namespace Backend.Tests
 
         public Task<bool> Replace(string projectId, string userEditId, UserEdit userEdit)
         {
-            var foundUserEdit = _userEdits.Single(ue => ue.Id == userEditId);
-            var success = _userEdits.Remove(foundUserEdit);
+            UserEdit foundUserEdit = _userEdits.Single(ue => ue.Id == userEditId);
+            bool success = _userEdits.Remove(foundUserEdit);
             _userEdits.Add(userEdit);
             return Task.FromResult(success);
         }

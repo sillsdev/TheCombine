@@ -41,11 +41,11 @@ namespace Backend.Tests
 
         public string RandomLiftFile(string path)
         {
-            string name = "TEST-TO_BE_STREAMED-" + Util.randString() + ".lift";
+            string name = "TEST-TO_BE_STREAMED-" + Util.RandString() + ".lift";
             name = Path.Combine(path, name);
             FileStream fs = File.OpenWrite(name);
 
-            string header =
+            var header =
                 @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
                     <header>
@@ -61,25 +61,25 @@ namespace Backend.Tests
                     </header>
                 ";
 
-            byte[] headerArray = Encoding.ASCII.GetBytes(header);
+            var headerArray = Encoding.ASCII.GetBytes(header);
             fs.Write(headerArray);
 
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
-                string dateCreated = $"\"{Util.randString(20)}\"";
-                string dateModified = $"\"{Util.randString(20)}\"";
-                string id = $"\"{Util.randString()}\"";
-                string guid = $"\"{Util.randString()}\"";
-                string vernLang = $"\"{Util.randString(3)}\"";
-                string vern = Util.randString(6);
-                string plural = Util.randString(8);
-                string audio = $"\"{Util.randString(3)}.mp3\"";
-                string senseId = $"\"{Util.randString()}\"";
-                string transLang1 = $"\"{Util.randString(3)}\"";
-                string transLang2 = $"\"{Util.randString(3)}\"";
-                string trans1 = Util.randString(6);
-                string trans2 = Util.randString(8);
-                string sdValue = $"\"{Util.randString(4)} {Util.randString(4)}\"";
+                string dateCreated = $"\"{Util.RandString(20)}\"";
+                string dateModified = $"\"{Util.RandString(20)}\"";
+                string id = $"\"{Util.RandString()}\"";
+                string guid = $"\"{Util.RandString()}\"";
+                string vernLang = $"\"{Util.RandString(3)}\"";
+                string vern = Util.RandString(6);
+                string plural = Util.RandString(8);
+                string audio = $"\"{Util.RandString(3)}.mp3\"";
+                string senseId = $"\"{Util.RandString()}\"";
+                string transLang1 = $"\"{Util.RandString(3)}\"";
+                string transLang2 = $"\"{Util.RandString(3)}\"";
+                string trans1 = Util.RandString(6);
+                string trans2 = Util.RandString(8);
+                string sdValue = $"\"{Util.RandString(4)} {Util.RandString(4)}\"";
 
                 string entry =
                     $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
@@ -99,56 +99,57 @@ namespace Backend.Tests
                             </sense> 
                         </entry>
                         ";
-                byte[] entryArray = Encoding.ASCII.GetBytes(entry);
+                var entryArray = Encoding.ASCII.GetBytes(entry);
                 fs.Write(entryArray);
             }
 
-            byte[] close = Encoding.ASCII.GetBytes("</lift>");
+            var close = Encoding.ASCII.GetBytes("</lift>");
             fs.Write(close);
 
             fs.Close();
             return name;
         }
 
-        Word RandomWord(string projId)
+        private static Word RandomWord(string projId)
         {
-            Word word = new Word();
-            word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() };
+            var word = new Word {Senses = new List<Sense>() {new Sense(), new Sense(), new Sense()}};
 
             foreach (Sense sense in word.Senses)
             {
-
                 sense.Accessibility = (int)State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
                 foreach (Gloss gloss in sense.Glosses)
                 {
-                    gloss.Def = Util.randString();
-                    gloss.Language = Util.randString(3);
+                    gloss.Def = Util.RandString();
+                    gloss.Language = Util.RandString(3);
                 }
 
-                sense.SemanticDomains = new List<SemanticDomain>() { new SemanticDomain(), new SemanticDomain(), new SemanticDomain() };
+                sense.SemanticDomains = new List<SemanticDomain>()
+                {
+                    new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
+                };
 
                 foreach (SemanticDomain semdom in sense.SemanticDomains)
                 {
-                    semdom.Name = Util.randString();
-                    semdom.Id = Util.randString();
-                    semdom.Description = Util.randString();
+                    semdom.Name = Util.RandString();
+                    semdom.Id = Util.RandString();
+                    semdom.Description = Util.RandString();
                 }
             }
 
-            word.Created = Util.randString();
-            word.Vernacular = Util.randString();
-            word.Modified = Util.randString();
-            word.PartOfSpeech = Util.randString();
-            word.Plural = Util.randString();
+            word.Created = Util.RandString();
+            word.Vernacular = Util.RandString();
+            word.Modified = Util.RandString();
+            word.PartOfSpeech = Util.RandString();
+            word.Plural = Util.RandString();
             word.History = new List<string>();
             word.ProjectId = projId;
 
             return word;
         }
 
-        private FileUpload InitFile(FileStream fstream, string filename)
+        private static FileUpload InitFile(FileStream fstream, string filename)
         {
             FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
             FileUpload fileUpload = new FileUpload { Name = "FileName", File = formFile };
@@ -156,175 +157,173 @@ namespace Backend.Tests
             return fileUpload;
         }
 
-        class RoundTripObj
+        private class RoundTripObj
         {
-            public string language { get; set; }
-            public List<string> audioFiles { get; set; }
-            public int numOfWords { get; set; }
+            public string Language { get; set; }
+            public List<string> AudioFiles { get; set; }
+            public int NumOfWords { get; set; }
 
             public RoundTripObj(string lang, List<string> audio, int words)
             {
-                language = lang;
-                audioFiles = audio;
-                numOfWords = words;
+                Language = lang;
+                AudioFiles = audio;
+                NumOfWords = words;
             }
         }
 
         [Test]
         public void TestExportDeleted()
         {
-            var proj = RandomProject();
+            Project proj = RandomProject();
             _projServ.Create(proj);
 
-            var word = RandomWord(proj.Id);
-            var createdWord = _wordrepo.Create(word).Result;
+            Word word = RandomWord(proj.Id);
+            Word createdWord = _wordrepo.Create(word).Result;
 
             word.Id = "";
             word.Vernacular = "updated";
 
             _wordService.Update(proj.Id, createdWord.Id, word);
 
-            var result = _liftController.ExportLiftFile(proj.Id).Result;
+            IActionResult result = _liftController.ExportLiftFile(proj.Id).Result;
 
-            Utilities util = new Utilities();
-            var combinePath = util.GenerateFilePath(Utilities.FileType.Dir, true, "", "");
-            string exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport", Path.Combine("Lift", "NewLiftFile.lift"));
+            var util = new Utilities();
+            string combinePath = util.GenerateFilePath(Utilities.FileType.Dir, true, "", "");
+            string exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport",
+                Path.Combine("Lift", "NewLiftFile.lift"));
             string text = File.ReadAllText(exportPath, Encoding.UTF8);
-            //there is only one deleted word
+            // There is only one deleted word
             Assert.AreEqual(text.IndexOf("dateDeleted"), text.LastIndexOf("dateDeleted"));
         }
 
         [Test]
         public void TestRoundtrip()
         {
-            /*
-             * This test assumes you have the starting .zip included in your project files.
-             */
+            // This test assumes you have the starting .zip included in your project files.
 
-            //get path to the starting dir
-            string pathToStartZips = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets");
+            // Get path to the starting dir
+            string pathToStartZips = Path.Combine(Directory.GetParent(Directory.GetParent(
+                Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets");
             var testZips = Directory.GetFiles(pathToStartZips, "*.zip");
 
-            Dictionary<string, RoundTripObj> fileMapping = new Dictionary<string, RoundTripObj>();
+            var fileMapping = new Dictionary<string, RoundTripObj>();
 
-            /*
-             * Add new .zip file information here
-             */
-            RoundTripObj Gusillaay = new RoundTripObj("gsl-Qaaa-x-orth", new List<string>(), 8045 /*number of words*/);
-            fileMapping.Add("Gusillaay.zip", Gusillaay);
-            RoundTripObj Lotad = new RoundTripObj("dtr", new List<string>(), 5400);
-            fileMapping.Add("Lotad.zip", Lotad);
-            RoundTripObj Natqgu = new RoundTripObj("qaa-x-stc-natqgu", new List<string>(), 11570 /*number of words*/);
-            fileMapping.Add("Natqgu.zip", Natqgu);
-            RoundTripObj Resembli = new RoundTripObj("ags", new List<string>(), 255 /*number of words*/);
-            fileMapping.Add("Resembli.zip", Resembli);
-            RoundTripObj RWC = new RoundTripObj("es", new List<string>(), 132 /*number of words*/);
-            fileMapping.Add("RWC.zip", RWC);
-            RoundTripObj Sena = new RoundTripObj("seh", new List<string>(), 1462 /*number of words*/);
-            fileMapping.Add("Sena.zip", Sena);
-            RoundTripObj SingleEntryLiftWithSound = new RoundTripObj("ptn", new List<string> { "short.mp3" }, 1 /*number of words*/);
-            fileMapping.Add("SingleEntryLiftWithSound.zip", SingleEntryLiftWithSound);
-            RoundTripObj SingleEntryLiftWithTwoSound = new RoundTripObj("ptn", new List<string> { "short.mp3", "short1.mp3" }, 1 /*number of words*/);
-            fileMapping.Add("SingleEntryLiftWithTwoSound.zip", SingleEntryLiftWithTwoSound);
+            // Add new .zip file information here
+            var gusillaay = new RoundTripObj("gsl-Qaaa-x-orth", new List<string>(), 8045 /*number of words*/);
+            fileMapping.Add("Gusillaay.zip", gusillaay);
+            var lotad = new RoundTripObj("dtr", new List<string>(), 5400);
+            fileMapping.Add("Lotad.zip", lotad);
+            var natqgu = new RoundTripObj("qaa-x-stc-natqgu", new List<string>(), 11570 /*number of words*/);
+            fileMapping.Add("Natqgu.zip", natqgu);
+            var resembli = new RoundTripObj("ags", new List<string>(), 255 /*number of words*/);
+            fileMapping.Add("Resembli.zip", resembli);
+            var rwc = new RoundTripObj("es", new List<string>(), 132 /*number of words*/);
+            fileMapping.Add("RWC.zip", rwc);
+            var sena = new RoundTripObj("seh", new List<string>(), 1462 /*number of words*/);
+            fileMapping.Add("Sena.zip", sena);
+            var singleEntryLiftWithSound = new RoundTripObj(
+                "ptn", new List<string> { "short.mp3" }, 1 /*number of words*/);
+            fileMapping.Add("SingleEntryLiftWithSound.zip", singleEntryLiftWithSound);
+            var singleEntryLiftWithTwoSound = new RoundTripObj(
+                "ptn",
+                new List<string> { "short.mp3", "short1.mp3" }, 1 /*number of words*/);
+            fileMapping.Add("SingleEntryLiftWithTwoSound.zip", singleEntryLiftWithTwoSound);
 
             foreach (var dataSet in fileMapping)
             {
                 string actualFilename = dataSet.Key;
 
-                var pathToStartZip = Path.Combine(pathToStartZips, actualFilename);
+                string pathToStartZip = Path.Combine(pathToStartZips, actualFilename);
 
-                /*
-                 * Upload the zip file
-                 */
+                // Upload the zip file
 
-                //init the project the .zip info is added to
-                var proj = RandomProject();
+                // Init the project the .zip info is added to
+                Project proj = RandomProject();
                 _projServ.Create(proj);
 
-                //generate api perameter with filestream
+                // Generate api parameter with filestream
                 if (File.Exists(pathToStartZip))
                 {
-
                     FileStream fstream = File.OpenRead(pathToStartZip);
-                    var fileUpload = InitFile(fstream, actualFilename);
+                    FileUpload fileUpload = InitFile(fstream, actualFilename);
 
-                    //make api call
-                    var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
-
+                    // Make api call
+                    IActionResult result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
                     Assert.That(!(result is BadRequestObjectResult));
 
                     proj = _projServ.GetProject(proj.Id).Result;
-
-                    Assert.AreEqual(proj.VernacularWritingSystem, dataSet.Value.language);
+                    Assert.AreEqual(proj.VernacularWritingSystem, dataSet.Value.Language);
 
                     fstream.Close();
 
                     var allWords = _wordrepo.GetAllWords(proj.Id);
-                    //export
+                    // Export
                     string exportedFilePath = _liftController.CreateLiftExport(proj.Id);
                     string exportedDirectory = Path.GetDirectoryName(exportedFilePath);
 
-                    //Assert the file was created with desired heirarchy
+                    // Assert the file was created with desired heirarchy
                     Assert.That(Directory.Exists(exportedDirectory));
                     Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio")));
-                    foreach (var audioFile in dataSet.Value.audioFiles)
+                    foreach (string audioFile in dataSet.Value.AudioFiles)
                     {
-                        Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio", audioFile)));
+                        Assert.That(File.Exists(Path.Combine(
+                            exportedDirectory, "LiftExport", "Lift", "audio", audioFile)));
                     }
                     Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems")));
-                    Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems", dataSet.Value.language + ".ldml")));
+                    Assert.That(File.Exists(Path.Combine(
+                        exportedDirectory,
+                        "LiftExport", "Lift", "WritingSystems", dataSet.Value.Language + ".ldml")));
                     Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "NewLiftFile.lift")));
-                    List<string> dirlst = new List<string>(Directory.GetDirectories(Path.GetDirectoryName(exportedDirectory)));
-                    dirlst.Remove(exportedDirectory);
-                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedDirectory), dirlst.Single())));
-
+                    var dirList = new List<string>(
+                        Directory.GetDirectories(Path.GetDirectoryName(exportedDirectory)));
+                    dirList.Remove(exportedDirectory);
+                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedDirectory), dirList.Single())));
 
                     _wordrepo.DeleteAllWords(proj.Id);
 
-                    /*
-                     * Roundtrip Part 2
-                     */
+                    // Roundtrip Part 2
 
-                    //upload the exported words again
-                    //init the project the .zip info is added to
-                    var proj2 = RandomProject();
+                    // Upload the exported words again
+                    // Init the project the .zip info is added to
+                    Project proj2 = RandomProject();
                     _projServ.Create(proj2);
 
-                    //generate api perameter with filestream
+                    // Generate api parameter with filestream
                     fstream = File.OpenRead(exportedFilePath);
                     fileUpload = InitFile(fstream, actualFilename);
 
-                    //make api call
+                    // Make api call
                     var result2 = _liftController.UploadLiftFile(proj2.Id, fileUpload).Result;
                     Assert.That(!(result is BadRequestObjectResult));
 
                     proj2 = _projServ.GetProject(proj2.Id).Result;
-
-                    Assert.AreEqual(proj2.VernacularWritingSystem, dataSet.Value.language);
+                    Assert.AreEqual(proj2.VernacularWritingSystem, dataSet.Value.Language);
 
                     fstream.Close();
 
                     allWords = _wordrepo.GetAllWords(proj2.Id);
-                    Assert.AreEqual(allWords.Result.Count, dataSet.Value.numOfWords);
+                    Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
 
-                    //export
+                    // Export
                     exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
                     exportedDirectory = Path.GetDirectoryName(exportedFilePath);
 
-                    //Assert the file was created with desired heirarchy
+                    // Assert the file was created with desired hierarchy
                     Assert.That(Directory.Exists(exportedDirectory));
                     Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio")));
-                    foreach (var audioFile in dataSet.Value.audioFiles)
+                    foreach (string audioFile in dataSet.Value.AudioFiles)
                     {
-                        var path = Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio", audioFile);
+                        string path = Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio", audioFile);
                         Assert.That(File.Exists(path), "The file " + audioFile + " can not be found at this path: " + path);
                     }
                     Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems")));
-                    Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems", dataSet.Value.language + ".ldml")));
+                    Assert.That(File.Exists(Path.Combine(
+                        exportedDirectory,
+                        "LiftExport", "Lift", "WritingSystems", dataSet.Value.Language + ".ldml")));
                     Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "NewLiftFile.lift")));
-                    dirlst = new List<string>(Directory.GetDirectories(Path.GetDirectoryName(exportedDirectory)));
-                    dirlst.Remove(exportedDirectory);
-                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedDirectory), dirlst.Single())));
+                    dirList = new List<string>(Directory.GetDirectories(Path.GetDirectoryName(exportedDirectory)));
+                    dirList.Remove(exportedDirectory);
+                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedDirectory), dirList.Single())));
 
                     _wordrepo.DeleteAllWords(proj.Id);
                 }

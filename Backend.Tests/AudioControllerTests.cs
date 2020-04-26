@@ -34,7 +34,8 @@ namespace Backend.Tests
             _audioController = new AudioController(_wordrepo, _wordService, _permissionService);
 
             var util = new Utilities();
-            Directory.Delete(util.GenerateFilePath(Utilities.FileType.Dir, true, "", ""), true);
+            Directory.Delete(util.GenerateFilePath(
+                Utilities.FileType.Dir, true, "", ""), true);
         }
 
         private static string RandomString(int length = 16)
@@ -52,7 +53,7 @@ namespace Backend.Tests
         public void TestAudioImport()
         {
             // Get path to sound in Assets folder, from debugging folder.
-            var filePath = Path.Combine(Directory.GetParent(Directory.GetParent(
+            string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(
                 Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(),
                 "Assets", "sound.mp3");
 

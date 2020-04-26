@@ -33,7 +33,10 @@ namespace Backend.Tests
             UserRole userRole = new UserRole
             {
                 ProjectId = _projId,
-                Permissions = new List<int>() { (int)Permission.EditSettingsNUsers, (int)Permission.ImportExport, (int)Permission.MergeNCharSet }
+                Permissions = new List<int>()
+                {
+                    (int)Permission.EditSettingsNUsers, (int)Permission.ImportExport, (int)Permission.MergeNCharSet
+                }
             };
             return userRole;
         }
@@ -49,9 +52,9 @@ namespace Backend.Tests
 
             Assert.IsInstanceOf<ObjectResult>(getResult);
 
-            var Roles = (getResult as ObjectResult).Value as List<UserRole>;
-            Assert.That(Roles, Has.Count.EqualTo(3));
-            _userRoleService.GetAllUserRoles(_projId).Result.ForEach(Role => Assert.Contains(Role, Roles));
+            var roles = (getResult as ObjectResult).Value as List<UserRole>;
+            Assert.That(roles, Has.Count.EqualTo(3));
+            _userRoleService.GetAllUserRoles(_projId).Result.ForEach(Role => Assert.Contains(Role, roles));
         }
 
         [Test]
@@ -62,7 +65,7 @@ namespace Backend.Tests
             _userRoleService.Create(RandomUserRole());
             _userRoleService.Create(RandomUserRole());
 
-            var action = _userRoleController.Get(_projId, userRole.Id).Result;
+            IActionResult action = _userRoleController.Get(_projId, userRole.Id).Result;
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
@@ -74,7 +77,7 @@ namespace Backend.Tests
         public void TestCreateUserRole()
         {
             UserRole userRole = RandomUserRole();
-            string id = (_userRoleController.Post(_projId, userRole).Result as ObjectResult).Value as string;
+            var id = (_userRoleController.Post(_projId, userRole).Result as ObjectResult).Value as string;
             userRole.Id = id;
             Assert.Contains(userRole, _userRoleService.GetAllUserRoles(_projId).Result);
         }

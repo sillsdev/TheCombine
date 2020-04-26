@@ -23,7 +23,7 @@ namespace Backend.Tests
 
         public Task<Project> GetProject(string id)
         {
-            var foundProjects = _projects.Where(project => project.Id == id).Single();
+            Project foundProjects = _projects.Where(project => project.Id == id).Single();
             return Task.FromResult(foundProjects.Clone());
         }
 
@@ -40,17 +40,17 @@ namespace Backend.Tests
             return Task.FromResult(true);
         }
 
-        public Task<bool> Delete(string Id)
+        public Task<bool> Delete(string id)
         {
-            var foundProject = _projects.Single(project => project.Id == Id);
+            var foundProject = _projects.Single(project => project.Id == id);
             var success = _projects.Remove(foundProject);
             return Task.FromResult(success);
         }
 
-        public Task<ResultOfUpdate> Update(string Id, Project project)
+        public Task<ResultOfUpdate> Update(string id, Project project)
         {
-            var foundProject = _projects.Single(u => u.Id == Id);
-            var success = _projects.Remove(foundProject);
+            Project foundProject = _projects.Single(u => u.Id == id);
+            bool success = _projects.Remove(foundProject);
             if (success)
             {
                 _projects.Add(project.Clone());

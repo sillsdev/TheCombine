@@ -44,25 +44,25 @@ namespace Backend.Tests
 
                 foreach (Gloss gloss in sense.Glosses)
                 {
-                    gloss.Def = Util.randString();
-                    gloss.Language = Util.randString(3);
+                    gloss.Def = Util.RandString();
+                    gloss.Language = Util.RandString(3);
                 }
 
                 sense.SemanticDomains = new List<SemanticDomain>() { new SemanticDomain(), new SemanticDomain(), new SemanticDomain() };
 
                 foreach (SemanticDomain semdom in sense.SemanticDomains)
                 {
-                    semdom.Name = Util.randString();
-                    semdom.Id = Util.randString();
-                    semdom.Description = Util.randString();
+                    semdom.Name = Util.RandString();
+                    semdom.Id = Util.RandString();
+                    semdom.Description = Util.RandString();
                 }
             }
 
-            word.Created = Util.randString();
-            word.Vernacular = Util.randString();
-            word.Modified = Util.randString();
-            word.PartOfSpeech = Util.randString();
-            word.Plural = Util.randString();
+            word.Created = Util.RandString();
+            word.Vernacular = Util.RandString();
+            word.Modified = Util.RandString();
+            word.PartOfSpeech = Util.RandString();
+            word.Plural = Util.RandString();
             word.History = new List<string>();
             word.ProjectId = _projId;
 
@@ -215,7 +215,7 @@ namespace Backend.Tests
             //the parent word is inherently correct as it is calculated by the frontend as the desired result of the merge
             MergeWords parentChildMergeObject = new MergeWords();
             parentChildMergeObject.Parent = RandomWord();
-            parentChildMergeObject.Time = Util.randString();
+            parentChildMergeObject.Time = Util.RandString();
             parentChildMergeObject.ChildrenWords = new List<MergeSourceWord>();
 
             //set the child info

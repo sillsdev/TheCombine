@@ -43,14 +43,14 @@ namespace Backend.Tests
 
         public Task<bool> Delete(string projectId, string userRoleId)
         {
-            var foundUserRole = _userRoles.Single(userRole => userRole.Id == userRoleId);
+            UserRole foundUserRole = _userRoles.Single(userRole => userRole.Id == userRoleId);
             return Task.FromResult(_userRoles.Remove(foundUserRole));
         }
 
         public Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
-            var foundUserRole = _userRoles.Single(ur => ur.Id == userRoleId);
-            var success = _userRoles.Remove(foundUserRole);
+            UserRole foundUserRole = _userRoles.Single(ur => ur.Id == userRoleId);
+            bool success = _userRoles.Remove(foundUserRole);
             if (success)
             {
                 _userRoles.Add(userRole.Clone());

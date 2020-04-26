@@ -23,13 +23,13 @@ namespace Backend.Tests
 
         public Task<User> GetUser(string id)
         {
-            var foundUser = _users.Single(user => user.Id == id);
+            User foundUser = _users.Single(user => user.Id == id);
             return Task.FromResult(foundUser.Clone());
         }
 
         public Task<string> GetUserAvatar(string id)
         {
-            var foundUser = _users.Single(user => user.Id == id);
+            User foundUser = _users.Single(user => user.Id == id);
             return Task.FromResult(foundUser.Clone().Avatar);
         }
 
@@ -46,17 +46,17 @@ namespace Backend.Tests
             return Task.FromResult(true);
         }
 
-        public Task<bool> Delete(string Id)
+        public Task<bool> Delete(string id)
         {
-            var foundUser = _users.Single(user => user.Id == Id);
-            var success = _users.Remove(foundUser);
+            User foundUser = _users.Single(user => user.Id == id);
+            bool success = _users.Remove(foundUser);
             return Task.FromResult(success);
         }
 
-        public Task<ResultOfUpdate> Update(string Id, User user)
+        public Task<ResultOfUpdate> Update(string id, User user)
         {
-            var foundUser = _users.Single(u => u.Id == Id);
-            var success = _users.Remove(foundUser);
+            User foundUser = _users.Single(u => u.Id == id);
+            bool success = _users.Remove(foundUser);
             if (success)
             {
                 _users.Add(user.Clone());
@@ -69,7 +69,7 @@ namespace Backend.Tests
         {
             try
             {
-                var foundUser = _users.Single(u => u.Username == username && u.Password == password);
+                User foundUser = _users.Single(u => u.Username == username && u.Password == password);
 
                 if (foundUser == null)
                 {
@@ -87,10 +87,8 @@ namespace Backend.Tests
 
         public Task<User> MakeJwt(User user)
         {
-            /*
-             * The JWT Token below is generated here if you need to change its contents
-            * https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxMjM0MzQ1NiIsIlBlcm1pc3Npb25zIjp7IlByb2plY3RJZCI6IiIsIlBlcm1pc3Npb24iOlsiMSIsIjIiLCIzIiwiNCIsIjUiXX19.nK2zBCYYlvoIkkfq5XwArEUewiDRz0kpPwP9NaacDLk
-            */
+            // The JWT Token below is generated here if you need to change its contents
+            // https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxMjM0MzQ1NiIsIlBlcm1pc3Npb25zIjp7IlByb2plY3RJZCI6IiIsIlBlcm1pc3Npb24iOlsiMSIsIjIiLCIzIiwiNCIsIjUiXX19.nK2zBCYYlvoIkkfq5XwArEUewiDRz0kpPwP9NaacDLk
             user.Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiIxMjM0MzQ1NiIsIlBlcm1pc3Npb25zIjp7IlByb2plY3RJZCI6IiIsIlBlcm1pc3Npb24iOlsiMSIsIjIiLCIzIiwiNCIsIjUiXX19.nK2zBCYYlvoIkkfq5XwArEUewiDRz0kpPwP9NaacDLk";
             Update(user.Id, user);
             user.Password = "";

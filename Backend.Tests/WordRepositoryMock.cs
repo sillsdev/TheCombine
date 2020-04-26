@@ -25,7 +25,7 @@ namespace Backend.Tests
 
         public Task<Word> GetWord(string projectId, string wordId)
         {
-            var foundWord = _words.Where(word => word.Id == wordId).Single();
+            Word foundWord = _words.Where(word => word.Id == wordId).Single();
             return Task.FromResult(foundWord.Clone());
         }
 
@@ -57,7 +57,7 @@ namespace Backend.Tests
 
         public Task<bool> DeleteFrontier(string projectId, string wordId)
         {
-            var origLength = _frontier.Count;
+            int origLength = _frontier.Count;
             _frontier.RemoveAll(word => word.Id == wordId);
             return Task.FromResult(origLength != _frontier.Count);
 

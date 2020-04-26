@@ -16,7 +16,7 @@ namespace Backend.Tests
         private UserController _userController;
         private AvatarController _avatarController;
         private PermissionServiceMock _permissionService;
-        private User _JwtAuthenticatedUser;
+        private User _jwtAuthenticatedUser;
 
         [SetUp]
         public void Setup()
@@ -26,22 +26,18 @@ namespace Backend.Tests
             _userController = new UserController(_userService, _permissionService);
             _avatarController = new AvatarController(_userService, _permissionService);
 
-            //mock the Http Context because this isnt an actual call
-            //avatar controller
-            _avatarController.ControllerContext = new ControllerContext();
-            _avatarController.ControllerContext.HttpContext = new DefaultHttpContext();
-            //user controller
-            _userController.ControllerContext = new ControllerContext();
-            _userController.ControllerContext.HttpContext = new DefaultHttpContext();
-            
-            _JwtAuthenticatedUser = new User();
-            _JwtAuthenticatedUser.Username = "user";
-            _JwtAuthenticatedUser.Password = "pass";
-            _userService.Create(_JwtAuthenticatedUser);
-            _JwtAuthenticatedUser = _userService.Authenticate(_JwtAuthenticatedUser.Username, _JwtAuthenticatedUser.Password).Result;
+            // Mock the Http Context because this isn't an actual call avatar controller
+            _avatarController.ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()};
+            // User controller
+            _userController.ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()};
+
+            _jwtAuthenticatedUser = new User {Username = "user", Password = "pass"};
+            _userService.Create(_jwtAuthenticatedUser);
+            _jwtAuthenticatedUser = _userService.Authenticate(
+                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
         }
 
-        string RandomString(int length = 0)
+        private static string RandomString(int length = 0)
         {
             if (length == 0)
             {
@@ -50,29 +46,27 @@ namespace Backend.Tests
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, length);
         }
 
-        User RandomUser()
+        private User RandomUser()
         {
-            User user = new User();
-            user.Username = RandomString(4);
-            user.Password = RandomString(4);
+            var user = new User {Username = RandomString(4), Password = RandomString(4)};
             return user;
         }
 
         [Test]
         public void TestAvatarImport()
         {
-            string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "combine.png");
+            string filePath = Path.Combine(Directory.GetParent(
+                Directory.GetParent(Directory.GetParent(
+                    Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "combine.png");
 
             FileStream fstream = File.OpenRead(filePath);
 
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "dave", "combine.png");
-            FileUpload fileUpload = new FileUpload();
-            fileUpload.Name = "FileName";
-            fileUpload.File = formFile;
+            var formFile = new FormFile(fstream, 0, fstream.Length, "dave", "combine.png");
+            var fileUpload = new FileUpload {Name = "FileName", File = formFile};
 
-            _ = _avatarController.UploadAvatar(_JwtAuthenticatedUser.Id, fileUpload).Result;
+            _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, fileUpload).Result;
 
-            var action = _userController.Get(_JwtAuthenticatedUser.Id).Result;
+            IActionResult action = _userController.Get(_jwtAuthenticatedUser.Id).Result;
 
             var foundUser = (action as ObjectResult).Value as User;
             Assert.IsNotNull(foundUser.Avatar);
