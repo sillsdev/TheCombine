@@ -28,7 +28,7 @@ namespace BackendFramework.Models
 
         public UserEdit Clone()
         {
-            UserEdit clone = new UserEdit
+            var clone = new UserEdit
             {
                 Id = Id.Clone() as string,
                 ProjectId = ProjectId.Clone() as string,
@@ -120,7 +120,7 @@ namespace BackendFramework.Models
 
         public Edit Clone()
         {
-            Edit clone = new Edit
+            var clone = new Edit
             {
                 GoalType = GoalType,
                 StepData = new List<string>()
@@ -142,7 +142,7 @@ namespace BackendFramework.Models
             }
             else
             {
-                Edit other = obj as Edit;
+                var other = obj as Edit;
                 return
                     GoalType.Equals(other.GoalType) &&
 

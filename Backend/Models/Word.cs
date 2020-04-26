@@ -195,7 +195,7 @@ namespace BackendFramework.Models
             }
             else
             {
-                Sense other = obj as Sense;
+                var other = obj as Sense;
                 return
                     other.Glosses.Count == Glosses.Count &&
                     other.Glosses.All(Glosses.Contains) &&
