@@ -28,12 +28,8 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllProjects()
         {
-            var deleted = await _projectDatabase.Projects.DeleteManyAsync(_ => true);
-            if (deleted.DeletedCount != 0)
-            {
-                return true;
-            }
-            return false;
+            DeleteResult deleted = await _projectDatabase.Projects.DeleteManyAsync(_ => true);
+            return deleted.DeletedCount != 0;
         }
 
         /// <summary> Finds <see cref="Project"/> with specified projectId </summary>
@@ -59,7 +55,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId)
         {
-            var deleted = await _projectDatabase.Projects.DeleteOneAsync(x => x.Id == projectId);
+            DeleteResult deleted = await _projectDatabase.Projects.DeleteOneAsync(x => x.Id == projectId);
             return deleted.DeletedCount > 0;
         }
 
@@ -67,7 +63,7 @@ namespace BackendFramework.Services
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string projectId, Project project)
         {
-            FilterDefinition<Project> filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);
+            var filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);
 
             //Note: Nulls out values not in update body
             var updateDef = Builders<Project>.Update
@@ -82,7 +78,7 @@ namespace BackendFramework.Services
                 .Set(x => x.PartsOfSpeech, project.PartsOfSpeech)
                 .Set(x => x.AutocompleteSetting, project.AutocompleteSetting);
 
-            var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
+            UpdateResult updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)
             {
@@ -100,8 +96,9 @@ namespace BackendFramework.Services
 
         public bool CanImportLift(string projectId)
         {
-            Utilities util = new Utilities();
-            var currentPath = util.GenerateFilePath(Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Import"));
+            var util = new Utilities();
+            string currentPath = util.GenerateFilePath(
+                Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Import"));
             var zips = new List<string>(Directory.GetFiles(currentPath, "*.zip"));
             return zips.Count == 0;
         }

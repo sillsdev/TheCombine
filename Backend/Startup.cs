@@ -19,9 +19,9 @@ namespace BackendFramework
     public class Startup
     {
         private const string AllowedOrigins = "AllowAll";
-        
+
         private readonly ILogger<Startup> _logger;
-        
+
         public IConfiguration Configuration { get; }
 
         public Startup(ILogger<Startup> logger, IConfiguration configuration)
@@ -55,7 +55,7 @@ namespace BackendFramework
 
             // Configure JWT Authentication
             const string secretKeyEnvName = "ASPNETCORE_JWT_SECRET_KEY";
-            var secretKey = Environment.GetEnvironmentVariable(secretKeyEnvName);
+            string secretKey = Environment.GetEnvironmentVariable(secretKeyEnvName);
 
             // The JWT key size must be at least 128 bits long.
             const int minKeyLength = 128 / 8;

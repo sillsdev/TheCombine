@@ -26,19 +26,16 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUserEdits(string projectId)
         {
-            var deleted = await _userEditDatabase.UserEdits.DeleteManyAsync(u => u.ProjectId == projectId);
-            if (deleted.DeletedCount != 0)
-            {
-                return true;
-            }
-            return false;
+            DeleteResult deleted = await _userEditDatabase.UserEdits.DeleteManyAsync(u => u.ProjectId == projectId);
+            return deleted.DeletedCount != 0;
         }
 
         /// <summary> Finds <see cref="UserEdit"/> with specified userRoleId and projectId </summary>
         public async Task<UserEdit> GetUserEdit(string projectId, string userEditId)
         {
             var filterDef = new FilterDefinitionBuilder<UserEdit>();
-            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
+            var filter = filterDef.And(filterDef.Eq(
+                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
             var userEditList = await _userEditDatabase.UserEdits.FindAsync(filter);
 
@@ -58,7 +55,8 @@ namespace BackendFramework.Services
         public async Task<bool> Delete(string projectId, string userEditId)
         {
             var filterDef = new FilterDefinitionBuilder<UserEdit>();
-            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
+            var filter = filterDef.And(filterDef.Eq(
+                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
             var deleted = await _userEditDatabase.UserEdits.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
@@ -69,7 +67,8 @@ namespace BackendFramework.Services
         public async Task<bool> Replace(string projectId, string userEditId, UserEdit userEdit)
         {
             var filterDef = new FilterDefinitionBuilder<UserEdit>();
-            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
+            var filter = filterDef.And(filterDef.Eq(
+                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
             var result = await _userEditDatabase.UserEdits.ReplaceOneAsync(filter, userEdit);
             return result.IsAcknowledged && result.ModifiedCount == 1;

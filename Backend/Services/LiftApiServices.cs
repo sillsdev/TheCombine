@@ -32,14 +32,14 @@ namespace BackendFramework.Services
             {
                 Writer.WriteStartElement("pronunciation");
 
-                for (var i = 0; i < entry.Pronunciations.Count; i++)
+                foreach (LexPhonetic phonetic in entry.Pronunciations)
                 {
                     Writer.WriteStartElement("media");
-                    Writer.WriteAttributeString("href", Path.GetFileName(entry.Pronunciations[i].Forms.First().Form));
+                    Writer.WriteAttributeString("href", Path.GetFileName(phonetic.Forms.First().Form));
                     Writer.WriteEndElement();
                 }
 
-                //makes sure the writer does not write it again in the wrong format
+                // Make sure the writer does not write it again in the wrong format.
                 entry.Pronunciations.Clear();
 
                 Writer.WriteEndElement();
@@ -54,10 +54,10 @@ namespace BackendFramework.Services
         private string _projectId;
         private readonly List<SemanticDomain> _sdList;
 
-        public LiftService(IWordRepository repo, IProjectService projserv)
+        public LiftService(IWordRepository repo, IProjectService projService)
         {
             _repo = repo;
-            _projService = projserv;
+            _projService = projService;
             _sdList = new List<SemanticDomain>();
         }
 
@@ -70,7 +70,7 @@ namespace BackendFramework.Services
         /// <summary> Imports main character set for a project from an ldml file </summary>
         public void LdmlImport(string filePath, string langTag)
         {
-            // SLDR is the SIL locale data repository, it is necessary for reading/writing ldml 
+            // SLDR is the SIL locale data repository, it is necessary for reading/writing ldml
             // It is being initialized in offline mode here to only pull local data
             Sldr.Initialize(true);
             try
@@ -82,12 +82,12 @@ namespace BackendFramework.Services
                 //if there is a main character set, import it to the project
                 if (wsDef.CharacterSets.Contains("main"))
                 {
-                    var newProj = _projService.GetProject(_projectId).Result;
+                    Project newProj = _projService.GetProject(_projectId).Result;
                     newProj.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
                     _projService.Update(_projectId, newProj);
                 }
             }
-            finally //if there was somehow an error above, we still want to cleanup to prevent unhelpful errors later 
+            finally //if there was somehow an error above, we still want to cleanup to prevent unhelpful errors later
             {
                 Sldr.Cleanup();
             }
@@ -95,10 +95,10 @@ namespace BackendFramework.Services
 
         private string GetProjectDir(string projectId)
         {
-            //generate path to home on linux
-            var pathToHome = Environment.GetEnvironmentVariable("HOME");
+            // Generate path to home on linux
+            string pathToHome = Environment.GetEnvironmentVariable("HOME");
 
-            //generate home on windows
+            // Generate home on windows
             if (pathToHome == null)
             {
                 pathToHome = Environment.GetEnvironmentVariable("UserProfile");
@@ -110,11 +110,12 @@ namespace BackendFramework.Services
         /// <summary> Exports information from a project to a lift package zip </summary>
         public string LiftExport(string projectId)
         {
-            //the helper tag must be included because there are also SIL.Utilitites
-            Helper.Utilities util = new Helper.Utilities();
+            // The helper tag must be included because there are also SIL.Utilities.
+            var util = new Helper.Utilities();
 
-            //generate the zip dir
-            string exportDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Export"));
+            // Generate the zip dir.
+            string exportDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "",
+                Path.Combine(projectId, "Export"));
             if (Directory.Exists(Path.Combine(exportDir, "LiftExport")))
             {
                 Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
@@ -122,15 +123,16 @@ namespace BackendFramework.Services
             string zipDir = Path.Combine(exportDir, "LiftExport", "Lift");
             Directory.CreateDirectory(zipDir);
 
-            //add audio dir inside zip dir
+            // Add audio dir inside zip dir.
             string audioDir = Path.Combine(zipDir, "audio");
             Directory.CreateDirectory(audioDir);
             string liftPath = Path.Combine(zipDir, "NewLiftFile.lift");
 
-            CombineLiftWriter liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);   //noBOM will work with PrinceXML
+            // noBOM will work with PrinceXML
+            var liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);
             string rangesDest = Path.Combine(zipDir, "NewLiftFile.lift-ranges");
 
-            //write header of lift document
+            // write header of lift document
             string header =
                 $@"
                     <ranges>
@@ -145,14 +147,14 @@ namespace BackendFramework.Services
                 ";
             liftWriter.WriteHeader(header);
 
-            //write out every word with all of its information
+            // Write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
             var frontier = _repo.GetFrontier(projectId).Result;
             var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.Active).ToList();
             var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();//TODO: this is wrong, deleted is a subset of active, are not exclusive
             foreach (Word wordEntry in activeWords)
             {
-                LexEntry entry = new LexEntry();
+                var entry = new LexEntry();
 
                 AddVern(entry, wordEntry, projectId);
                 AddSenses(entry, wordEntry);
@@ -162,7 +164,7 @@ namespace BackendFramework.Services
             }
             foreach (Word wordEntry in deletedWords)
             {
-                LexEntry entry = new LexEntry();
+                var entry = new LexEntry();
 
                 AddVern(entry, wordEntry, projectId);
                 AddSenses(entry, wordEntry);
@@ -173,30 +175,34 @@ namespace BackendFramework.Services
 
             liftWriter.End();
 
-            //export semantic domains to lift-ranges
+            // Export semantic domains to lift-ranges
             var proj = _projService.GetProject(projectId).Result;
             string extractedPathToImport = Path.Combine(GetProjectDir(projectId), "Import", "ExtractedLocation");
-            string importLiftDir = "";
+            var importLiftDir = "";
             if (Directory.Exists(extractedPathToImport))
             {
                 importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
             }
-            var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
+            string rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
-            //if there are no new semantic domains, and the old lift-ranges file is still around, just copy it
+            // If there are no new semantic domains, and the old lift-ranges file is still around, just copy it
             if (proj.SemanticDomains.Count == 0 && File.Exists(rangesSrc))
             {
                 File.Copy(rangesSrc, rangesDest, true);
             }
-            else //make a new lift-ranges file
+            else // Make a new lift-ranges file
             {
-                XmlWriter liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings { Indent = true, NewLineOnAttributes = true });
+                var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
+                {
+                    Indent = true,
+                    NewLineOnAttributes = true
+                });
                 liftRangesWriter.WriteStartDocument();
                 liftRangesWriter.WriteStartElement("lift-ranges");
                 liftRangesWriter.WriteStartElement("range");
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-                //pull from resources file with all English semantic domains
+                // Pull from resources file with all English semantic domains
                 var assembly = typeof(LiftService).GetTypeInfo().Assembly;
                 Stream resource = assembly.GetManifestResourceStream("BackendFramework.Data.sdList.txt");
                 string sdList;
@@ -214,8 +220,8 @@ namespace BackendFramework.Services
                     }
                 }
 
-                //pull from new semantic domains in project
-                foreach (var sd in proj.SemanticDomains)
+                // Pull from new semantic domains in project
+                foreach (SemanticDomain sd in proj.SemanticDomains)
                 {
                     WriteRangeElement(liftRangesWriter, sd.Id, Guid.NewGuid().ToString(), sd.Name, sd.Description);
                 }
@@ -229,7 +235,7 @@ namespace BackendFramework.Services
             }
 
 
-            //export character set to ldml
+            // Export character set to ldml
             string ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
             if (proj.VernacularWritingSystem != "")
@@ -237,8 +243,9 @@ namespace BackendFramework.Services
                 LdmlExport(ldmlDir, proj.VernacularWritingSystem);
             }
 
-            //compress everything
-            var destinationFileName = Path.Combine(exportDir, Path.Combine($"LiftExportCompressed-{proj.Id}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}", DateTime.Now)}.zip"));
+            // Compress everything
+            string destinationFileName = Path.Combine(exportDir,
+                Path.Combine($"LiftExportCompressed-{proj.Id}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}", DateTime.Now)}.zip"));
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
 
             return destinationFileName;
@@ -254,21 +261,21 @@ namespace BackendFramework.Services
         /// <summary> Adds each sense of a word to be written out to lift </summary>
         private void AddSenses(LexEntry entry, Word wordEntry)
         {
-            for (int i = 0; i < wordEntry.Senses.Count; i++)
+            for (var i = 0; i < wordEntry.Senses.Count; i++)
             {
-                //merge in senses
-                Dictionary<string, string> dict = new Dictionary<string, string>();
+                // Merge in senses
+                var dict = new Dictionary<string, string>();
                 foreach (Gloss gloss in wordEntry.Senses[i].Glosses)
                 {
                     dict.Add(gloss.Language, gloss.Def);
                 }
 
-                LexSense lexSense = new LexSense();
+                var lexSense = new LexSense();
                 lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
                 entry.Senses.Add(lexSense);
 
-                //merge in semantic domains
-                foreach (var semdom in wordEntry.Senses[i].SemanticDomains)
+                // Merge in semantic domains
+                foreach (SemanticDomain semdom in wordEntry.Senses[i].SemanticDomains)
                 {
                     var orc = new OptionRefCollection();
                     orc.Add(semdom.Id + " " + semdom.Name);
@@ -281,18 +288,18 @@ namespace BackendFramework.Services
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
         private void AddAudio(LexEntry entry, Word wordEntry, string path)
         {
-            foreach (var audioFile in wordEntry.Audio)
+            foreach (string audioFile in wordEntry.Audio)
             {
-                LexPhonetic lexPhonetic = new LexPhonetic();
+                var lexPhonetic = new LexPhonetic();
 
-                Helper.Utilities util = new Helper.Utilities();
+                var util = new Helper.Utilities();
 
-                var projectPath = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.dir, true, "", ""), _projectId);
+                string projectPath = Path.Combine(util.GenerateFilePath(
+                    Helper.Utilities.Filetype.dir, true, "", ""), _projectId);
                 projectPath = Path.Combine(projectPath, "Import", "ExtractedLocation");
                 var extractedDir = Directory.GetDirectories(projectPath);
                 projectPath = Path.Combine(projectPath, extractedDir.Single());
                 string src = Path.Combine(util.GenerateFilePath(Helper.Utilities.Filetype.audio, true), Path.Combine(projectPath, "audio", audioFile));
-
                 string dest = Path.Combine(path, audioFile);
 
                 if (File.Exists(src))
@@ -309,7 +316,7 @@ namespace BackendFramework.Services
         /// <summary> Exports main character set from a project to an ldml file </summary>
         private void LdmlExport(string filePath, string langTag)
         {
-            // SLDR is the SIL Locale Data repository, it is necessary for reading/writing ldml 
+            // SLDR is the SIL Locale Data repository, it is necessary for reading/writing ldml
             // It is being initialized in offline mode here to only pull local data
             Sldr.Initialize(true);
             try
@@ -320,26 +327,27 @@ namespace BackendFramework.Services
 
                 var proj = _projService.GetProject(_projectId).Result;
 
-                //if there isn't already a main character set defined, make one and add it to the writing system definition
+                // If there isn't already a main character set defined, make one and add it to the writing system definition
                 if (!wsDef.CharacterSets.TryGet("main", out CharacterSetDefinition chars))
                 {
                     chars = new CharacterSetDefinition("main");
                     wsDef.CharacterSets.Add(chars);
                 }
 
-                //replace all the characters found with our copy of the character set
+                // Replace all the characters found with our copy of the character set
                 chars.Characters.Clear();
                 foreach (var character in proj.ValidCharacters)
                 {
                     chars.Characters.Add(character);
                 }
 
-                //write out the new definition
+                // Write out the new definition
                 wsr.Set(wsDef);
                 wsr.Save();
             }
-            finally //if there was somehow an error above, we still want to cleanup to prevent unhelpful errors later
+            finally
             {
+                // If there was somehow an error above, we still want to cleanup to prevent unhelpful errors later
                 Sldr.Cleanup();
             }
         }
@@ -377,19 +385,19 @@ namespace BackendFramework.Services
         /// <summary> The meat of lift import is done here. This reads in all necessary attributes of a word and adds it to the database. </summary>
         public async void FinishEntry(LiftEntry entry)
         {
-            Word newWord = new Word();
+            var newWord = new Word();
             var proj = _projService.GetProject(_projectId).Result;
 
-            //only used when importing semantic domains from a lift-ranges file
+            // Only used when importing semantic domains from a lift-ranges file
             if (_sdList.Count != 0 && proj.SemanticDomains.Count == 0)
             {
                 proj.SemanticDomains = _sdList;
                 await _projService.Update(_projectId, proj);
             }
 
-            //add vernacular
-            //TODO: currently we just add the first listed option, we may want to choose eventually
-            if (!entry.CitationForm.IsEmpty) //prefer citation form for vernacular
+            // Add vernacular
+            // TODO: currently we just add the first listed option, we may want to choose eventually
+            if (!entry.CitationForm.IsEmpty) // Prefer citation form for vernacular
             {
                 newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
                 if (proj.VernacularWritingSystem == "")
@@ -398,7 +406,7 @@ namespace BackendFramework.Services
                     await _projService.Update(_projectId, proj);
                 }
             }
-            else if (!entry.LexicalForm.IsEmpty) //lexeme form for backup
+            else if (!entry.LexicalForm.IsEmpty) // lexeme form for backup
             {
                 newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
                 if (proj.VernacularWritingSystem == "")
@@ -407,32 +415,32 @@ namespace BackendFramework.Services
                     await _projService.Update(_projectId, proj);
                 }
             }
-            else //this is not a word if there is no vernacular
+            else // this is not a word if there is no vernacular
             {
                 return;
             }
 
-            //this is not a word if there are no senses
+            // This is not a word if there are no senses
             if (entry.Senses.Count == 0)
             {
                 return;
             }
 
-            //add senses
+            // Add senses
             newWord.Senses = new List<Sense>();
             foreach (var sense in entry.Senses)
             {
-                Sense newSense = new Sense { SemanticDomains = new List<SemanticDomain>(), Glosses = new List<Gloss>() };
+                var newSense = new Sense { SemanticDomains = new List<SemanticDomain>(), Glosses = new List<Gloss>() };
 
-                //add glosses
-                foreach (var gloss in sense.Gloss)
+                // Add glosses
+                foreach ((string key, LiftString value) in sense.Gloss)
                 {
-                    newSense.Glosses.Add(new Gloss { Language = gloss.Key, Def = gloss.Value.Text });
+                    newSense.Glosses.Add(new Gloss { Language = key, Def = value.Text });
                 }
 
-                //find semantic domains
-                List<string> semanticDomainStrings = new List<string>();
-                foreach (var trait in sense.Traits)
+                // Find semantic domains
+                var semanticDomainStrings = new List<string>();
+                foreach (LiftTrait trait in sense.Traits)
                 {
                     if (trait.Name.StartsWith("semantic-domain"))
                     {
@@ -440,8 +448,8 @@ namespace BackendFramework.Services
                     }
                 }
 
-                //add semantic domains
-                foreach (var semanticDomainString in semanticDomainStrings)
+                // Add semantic domains
+                foreach (string semanticDomainString in semanticDomainStrings)
                 {
                     //splits on the space between the number and name of the semantic domain
                     string[] splitSemDom = semanticDomainString.Split(" ", 2);
@@ -451,8 +459,8 @@ namespace BackendFramework.Services
                 newWord.Senses.Add(newSense);
             }
 
-            //add plural
-            foreach (var field in entry.Fields)
+            // Add plural
+            foreach (LiftField field in entry.Fields)
             {
                 if (field.Type == "Plural")
                 {
@@ -464,24 +472,25 @@ namespace BackendFramework.Services
                 }
             }
 
-            //get path to dir containing local lift package ~/{projectId}/Import/ExtractedLocation
+            // Get path to dir containing local lift package ~/{projectId}/Import/ExtractedLocation
             Helper.Utilities util = new Helper.Utilities();
-            var importDir = util.GenerateFilePath(Helper.Utilities.Filetype.dir, false, "", Path.Combine(_projectId, "Import"));
-            var extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
+            string importDir = util.GenerateFilePath(
+                Helper.Utilities.Filetype.dir, false, "", Path.Combine(_projectId, "Import"));
+            string extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
 
-            //get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio
+            // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio
             var importListArr = Directory.GetDirectories(extractedPathToImport);
-            var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
+            string extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
 
-            //only add audio if the files exist
+            // Only add audio if the files exist
             if (Directory.Exists(extractedAudioDir))
             {
-                //add audio
-                foreach (var pro in entry.Pronunciations)
+                // Add audio
+                foreach (LiftPhonetic pro in entry.Pronunciations)
                 {
-                    //get path to audio file in lift package at ~/{projectId}/Import/ExtractedLocation/{liftName}/audio/{audioFile}.mp3
-                    var audioFile = pro.Media.First().Url;
-
+                    // get path to audio file in lift package at
+                    // ~/{projectId}/Import/ExtractedLocation/{liftName}/audio/{audioFile}.mp3
+                    string audioFile = pro.Media.First().Url;
                     newWord.Audio.Add(audioFile);
                 }
             }
@@ -493,7 +502,10 @@ namespace BackendFramework.Services
         /// <summary> Creates the object to transfer all the data from a word </summary>
         public LiftEntry GetOrMakeEntry(Extensible info, int order)
         {
-            return new LiftEntry(info, new Guid(), order) { LexicalForm = new LiftMultiText(), CitationForm = new LiftMultiText() };
+            return new LiftEntry(info, new Guid(), order)
+            {
+                LexicalForm = new LiftMultiText(), CitationForm = new LiftMultiText()
+            };
         }
 
         /// <summary> Creates an empty sense object and adds it to the entry </summary>
@@ -507,35 +519,37 @@ namespace BackendFramework.Services
         /// <summary> Adds each citation form to the entry for the vernacular </summary>
         public void MergeInCitationForm(LiftEntry entry, LiftMultiText contents)
         {
-            foreach (var value in contents)
+            foreach ((string key, LiftString value) in contents)
             {
-                entry.CitationForm.Add(value.Key, value.Value.Text);
+                entry.CitationForm.Add(key, value.Text);
             }
         }
 
         /// <summary> Adds field to the entry for plural forms </summary>
-        public void MergeInField(LiftObject extensible, string typeAttribute, DateTime dateCreated, DateTime dateModified, LiftMultiText contents, List<Trait> traits)
+        public void MergeInField(LiftObject extensible, string typeAttribute, DateTime dateCreated,
+            DateTime dateModified, LiftMultiText contents, List<Trait> traits)
         {
-            LiftMultiText textentry = new LiftMultiText(contents.FirstValue.Key.ToString(), contents.FirstValue.Value.Text.ToString());
-            LiftField fieldentry = new LiftField(typeAttribute, textentry);
-            extensible.Fields.Add(fieldentry);
+            var textEntry = new LiftMultiText(contents.FirstValue.Key.ToString(),
+                contents.FirstValue.Value.Text.ToString());
+            var fieldEntry = new LiftField(typeAttribute, textEntry);
+            extensible.Fields.Add(fieldEntry);
         }
 
         /// <summary> Adds senses to the entry </summary>
         public void MergeInGloss(LiftSense sense, LiftMultiText multiText)
         {
-            foreach (var value in multiText)
+            foreach ((string key, LiftString value) in multiText)
             {
-                sense.Gloss.Add(value.Key, value.Value.Text);
+                sense.Gloss.Add(key, value.Text);
             }
         }
 
         /// <summary> Adds each lexeme form to the entry for the vernacular </summary>
         public void MergeInLexemeForm(LiftEntry entry, LiftMultiText contents)
         {
-            foreach (var key in contents)
+            foreach ((string key, LiftString value) in contents)
             {
-                entry.LexicalForm.Add(key.Key, key.Value);
+                entry.LexicalForm.Add(key, value);
             }
         }
 

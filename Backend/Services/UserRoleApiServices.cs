@@ -26,12 +26,8 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUserRoles(string projectId)
         {
-            var deleted = await _userRoleDatabase.UserRoles.DeleteManyAsync(u => u.ProjectId == projectId);
-            if (deleted.DeletedCount != 0)
-            {
-                return true;
-            }
-            return false;
+            DeleteResult deleted = await _userRoleDatabase.UserRoles.DeleteManyAsync(u => u.ProjectId == projectId);
+            return deleted.DeletedCount != 0;
         }
 
         /// <summary> Finds <see cref="UserRole"/> with specified userRoleId and projectId </summary>
@@ -58,9 +54,10 @@ namespace BackendFramework.Services
         public async Task<bool> Delete(string projectId, string userRoleId)
         {
             var filterDef = new FilterDefinitionBuilder<UserRole>();
-            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
+            var filter = filterDef.And(filterDef.Eq(
+                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
 
-            var deleted = await _userRoleDatabase.UserRoles.DeleteOneAsync(filter);
+            DeleteResult deleted = await _userRoleDatabase.UserRoles.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
 
@@ -68,11 +65,10 @@ namespace BackendFramework.Services
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
-            FilterDefinition<UserRole> filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
-
-            var updateDef = Builders<UserRole>.Update.Set(x => x.Permissions, userRole.Permissions);
-
-            var updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);
+            var filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
+            var updateDef = Builders<UserRole>.Update.Set(
+                x => x.Permissions, userRole.Permissions);
+            UpdateResult updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)
             {

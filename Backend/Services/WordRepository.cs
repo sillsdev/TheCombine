@@ -26,21 +26,23 @@ namespace BackendFramework.Services
         public async Task<Word> GetWord(string projectId, string wordId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
+            var filter = filterDef.And(filterDef.Eq(
+                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
 
             var wordList = await _wordDatabase.Words.FindAsync(filter);
 
             return wordList.FirstOrDefault();
         }
 
-        /// <summary> Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified <see cref="Project"/> </summary>
+        /// <summary> Removes all <see cref="Word"/>s from the WordsCollection and Frontier for specified
+        /// <see cref="Project"/> </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllWords(string projectId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.Eq(x => x.ProjectId, projectId);
 
-            var deleted = await _wordDatabase.Words.DeleteManyAsync(filter);
+            DeleteResult deleted = await _wordDatabase.Words.DeleteManyAsync(filter);
             await _wordDatabase.Frontier.DeleteManyAsync(filter);
             if (deleted.DeletedCount != 0)
             {
@@ -85,9 +87,10 @@ namespace BackendFramework.Services
         public async Task<bool> DeleteFrontier(string projectId, string wordId)
         {
             var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
+            var filter = filterDef.And(filterDef.Eq(
+                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
 
-            var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
+            DeleteResult deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
     }

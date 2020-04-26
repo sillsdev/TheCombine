@@ -19,21 +19,21 @@ namespace BackendFramework.Services
         /// <returns> Tuple of a bool: success of operation and int: index at which the new edit was placed </returns>
         public async Task<Tuple<bool, int>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
-            //get userEdit to change
-            var userEntry = await _repo.GetUserEdit(projectId, userEditId);
+            // Get userEdit to change
+            UserEdit userEntry = await _repo.GetUserEdit(projectId, userEditId);
             UserEdit newUserEdit = userEntry.Clone();
 
-            //add the new goal index to Edits list
+            // Add the new goal index to Edits list
             newUserEdit.Edits.Add(edit);
 
-            //replace the old UserEdit object with the new one that contains the new list entry
+            // Replace the old UserEdit object with the new one that contains the new list entry
             bool replaceSucceeded = _repo.Replace(projectId, userEditId, newUserEdit).Result;
 
             int indexOfNewestEdit = -1;
 
             if (replaceSucceeded)
             {
-                var newestEdit = _repo.GetUserEdit(projectId, userEditId).Result;
+                UserEdit newestEdit = _repo.GetUserEdit(projectId, userEditId).Result;
                 indexOfNewestEdit = newestEdit.Edits.Count - 1;
             }
 
