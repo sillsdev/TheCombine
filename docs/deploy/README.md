@@ -154,10 +154,10 @@ In order to setup the Demo Server,
     cd deploy
     mkdir roles_galaxy
     ansible-galaxy install -r requirements.yml -p roles_galaxy
-    ansible-playbook playbook-server.yml -K
+    ansible-playbook playbook_server.yml -K
     certbot certonly --webroot --force-renewal
-    ansible-playbook playbook-publish.yml -K --limit thecombine --ask-vault-pass
+    ansible-playbook playbook_publish.yml -K --limit thecombine --ask-vault-pass
     ```
     Notes:
-    - <tt>playbook_server.yml</tt> only needs to be run once.  In order to update to a newer version of *TheCombine*, only the <tt>playbook-publish.yml</tt> needs to be run.
+    - <tt>playbook_server.yml</tt> only needs to be run once.  In order to update to a newer version of *TheCombine*, only the <tt>playbook_publish.yml</tt> needs to be run.
     - <tt>playbook_server.yml</tt> currently uses the geerlingguy.certbot role to create the letsencrypt SSL certificate.  This role only supports the <tt>standalone</tt> challenge method.  Run the specified <tt>certbot</tt> command to convert the renewal to use webroot.  The <tt>standalone</tt> certificate requires shutting down the Apache web server to renew the certificate and then restarting it.
