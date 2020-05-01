@@ -32,7 +32,7 @@ namespace Backend.Tests
             _wordService = new WordService(_wordrepo);
         }
 
-        Project RandomProject()
+        static Project RandomProject()
         {
             var project = new Project
             {

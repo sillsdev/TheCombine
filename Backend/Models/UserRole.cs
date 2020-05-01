@@ -71,19 +71,6 @@ namespace BackendFramework.Models
         }
     }
 
-    public class ProjectPermissions
-    {
-        public ProjectPermissions(string projectId, List<int> permissions)
-        {
-            ProjectId = projectId;
-            Permissions = permissions;
-        }
-        public string ProjectId { get; set; }
-
-        /// This is a list of permissions but is represented as ints for ease of catching HTTP requests.
-        public List<int> Permissions { get; set; }
-    }
-
     public enum Permission
     {
         /// <summary> Database Admin, has no limitations </summary>
