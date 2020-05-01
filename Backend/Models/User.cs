@@ -69,6 +69,7 @@ namespace BackendFramework.Models
             Username = "";
             UILang = "";
             Token = "";
+            IsAdmin = false;
             WorkedProjects = new Dictionary<string, string>();
             ProjectRoles = new Dictionary<string, string>();
         }
@@ -133,11 +134,9 @@ namespace BackendFramework.Models
             {
                 return false;
             }
-            else
-            {
-                var other = obj as User;
-                return other.Id.Equals(Id) && ContentEquals(other);
-            }
+
+            var other = obj as User;
+            return other.Id.Equals(Id) && ContentEquals(other);
         }
 
         public override int GetHashCode()

@@ -112,14 +112,14 @@ namespace BackendFramework.Controllers
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userService.GetUser(currentUserId);
 
-            // Give admin privileges
+            // Give Project admin privileges to user who creates a Project
             var usersRole = new UserRole
             {
                 Permissions = new List<int>
                 {
-                    (int) Permission.EditSettingsNUsers,
+                    (int) Permission.EditSettingsAndUsers,
                     (int) Permission.ImportExport,
-                    (int) Permission.MergeNCharSet,
+                    (int) Permission.MergeAndCharSet,
                     (int) Permission.Unused,
                     (int) Permission.WordEntry
                 },

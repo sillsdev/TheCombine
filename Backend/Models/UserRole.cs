@@ -58,11 +58,9 @@ namespace BackendFramework.Models
             {
                 return false;
             }
-            else
-            {
-                var other = obj as UserRole;
-                return other.Id.Equals(Id) && ContentEquals(other);
-            }
+
+            var other = obj as UserRole;
+            return other.Id.Equals(Id) && ContentEquals(other);
         }
 
         public override int GetHashCode()
@@ -77,13 +75,13 @@ namespace BackendFramework.Models
         DatabaseAdmin = 6,
 
         /// <summary> Project Admin, can edit project settings and add and remove users, change userRoles </summary>
-        EditSettingsNUsers = 5,
+        EditSettingsAndUsers = 5,
 
         /// <summary> Can import and export lift </summary>
         ImportExport = 4,
 
         /// <summary> Can merge words and change the char set </summary>
-        MergeNCharSet = 3,
+        MergeAndCharSet = 3,
 
         /// <summary> Unused </summary>
         Unused = 2,

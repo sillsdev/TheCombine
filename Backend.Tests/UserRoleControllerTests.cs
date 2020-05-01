@@ -33,7 +33,7 @@ namespace Backend.Tests
                 ProjectId = _projId,
                 Permissions = new List<int>()
                 {
-                    (int)Permission.EditSettingsNUsers, (int)Permission.ImportExport, (int)Permission.MergeNCharSet
+                    (int)Permission.EditSettingsAndUsers, (int)Permission.ImportExport, (int)Permission.MergeAndCharSet
                 }
             };
             return userRole;

@@ -123,10 +123,8 @@ namespace BackendFramework.Controllers
             {
                 return BadRequest();
             }
-            else
-            {
-                return new OkResult();
-            }
+
+            return new OkResult();
         }
 
         /// <summary> Checks whether a email is taken </summary>
@@ -141,10 +139,8 @@ namespace BackendFramework.Controllers
             {
                 return BadRequest();
             }
-            else
-            {
-                return new OkResult();
-            }
+
+            return new OkResult();
         }
 
         /// <summary> Updates <see cref="User"/> with specified id </summary>
