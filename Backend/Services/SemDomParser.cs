@@ -1,8 +1,8 @@
-using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
 
 namespace BackendFramework.Services
 {
@@ -16,55 +16,56 @@ namespace BackendFramework.Services
             _projectService = projectService;
         }
 
-        /// <summary> Return <see cref="SemanticDomainWithSubdomains"/> object from a <see cref="SemanticDomain"/> list of a <see cref="Project"/> </summary>
+        /// <summary> Return <see cref="SemanticDomainWithSubdomains"/> object from a
+        /// <see cref="SemanticDomain"/> list of a <see cref="Project"/> </summary>
         public async Task<List<SemanticDomainWithSubdomains>> ParseSemanticDomains(string projectId)
         {
-            //ensure project exists
+            // Ensure project exists
             var proj = await _projectService.GetProject(projectId);
             if (proj == null)
             {
                 throw new Exception("Project not found");
             }
 
-            //ensure semantic domains exist
+            // Ensure semantic domains exist
             var sdList = proj.SemanticDomains;
             if (sdList.Count == 0)
             {
                 throw new Exception("No semantic domains found");
             }
 
-            //get list in nesting order
+            // Get list in nesting order
             sdList.Sort(new SemDomComparer());
 
             var sdOfShortLengthList = new List<SemanticDomainWithSubdomains>();
             var sdOfLongLengthList = new List<SemanticDomainWithSubdomains>();
             var returnList = new List<SemanticDomainWithSubdomains>();
-            int length = sdList[0].Id.Length;
+            var length = sdList[0].Id.Length;
 
             foreach (var sd in sdList)
             {
                 if (sd.Id.Length != length)
                 {
-                    //add base level of semdom once we have hit the first entry of subdomains
+                    // Add base level of semdom once we have hit the first entry of subdomains
                     if (length == 3)
                     {
                         returnList.AddRange(sdOfShortLengthList);
                     }
 
-                    //change tree depth level, eg. 1.1 to 1.1.1
+                    // Change tree depth level, eg. 1.1 to 1.1.1
                     length += 2;
 
-                    //replace short length list with long length
+                    // Replace short length list with long length
                     sdOfShortLengthList.Clear();
                     sdOfShortLengthList.AddRange(sdOfLongLengthList);
                     sdOfLongLengthList.Clear();
                 }
 
-                //transform semdom type and keep track of it
+                // Transform semdom type and keep track of it
                 var sdToAdd = new SemanticDomainWithSubdomains(sd);
                 sdOfLongLengthList.Add(sdToAdd);
 
-                //if there are any, find short length semdom with same preceding number and add to children
+                // If there are any, find short length semdom with same preceding number and add to children
                 if (sdOfShortLengthList.Count != 0)
                 {
                     foreach (var shortSd in sdOfShortLengthList)
@@ -85,7 +86,7 @@ namespace BackendFramework.Services
         {
             public int Compare(SemanticDomain x, SemanticDomain y)
             {
-                int lengthComparison = x.Id.Length.CompareTo(y.Id.Length);
+                var lengthComparison = x.Id.Length.CompareTo(y.Id.Length);
                 if (lengthComparison == 0)
                 {
                     return x.Id.CompareTo(y.Id);

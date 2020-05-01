@@ -1,4 +1,4 @@
-﻿using BackendFramework.ValueModels;
+﻿using BackendFramework.Models;
 using MongoDB.Driver;
 
 namespace BackendFramework.Interfaces

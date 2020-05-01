@@ -1,9 +1,9 @@
-﻿using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
 
 namespace Backend.Tests
 {
@@ -40,16 +40,16 @@ namespace Backend.Tests
             return Task.FromResult(true);
         }
 
-        public Task<bool> Delete(string Id)
+        public Task<bool> Delete(string id)
         {
-            var foundProject = _projects.Single(project => project.Id == Id);
+            var foundProject = _projects.Single(project => project.Id == id);
             var success = _projects.Remove(foundProject);
             return Task.FromResult(success);
         }
 
-        public Task<ResultOfUpdate> Update(string Id, Project project)
+        public Task<ResultOfUpdate> Update(string id, Project project)
         {
-            var foundProject = _projects.Single(u => u.Id == Id);
+            var foundProject = _projects.Single(u => u.Id == id);
             var success = _projects.Remove(foundProject);
             if (success)
             {

@@ -1,9 +1,9 @@
-﻿using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+﻿using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
@@ -17,7 +17,8 @@ namespace BackendFramework.Controllers
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public UserRoleController(IUserRoleService userRoleService, IProjectService projectService, IPermissionService permissionService)
+        public UserRoleController(IUserRoleService userRoleService, IProjectService projectService,
+            IPermissionService permissionService)
         {
             _userRoleService = userRoleService;
             _projectService = projectService;
@@ -34,7 +35,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -46,7 +47,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
         /// <remarks> DELETE: v1/projects/{projectId}/userroles </remarks>
-        /// <returns> true: if success, false: if there were no UserRoles </returns> 
+        /// <returns> true: if success, false: if there were no UserRoles </returns>
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
@@ -56,7 +57,7 @@ namespace BackendFramework.Controllers
             }
 
 #if DEBUG
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -79,7 +80,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -108,7 +109,7 @@ namespace BackendFramework.Controllers
 
             userRole.ProjectId = projectId;
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -134,7 +135,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -159,7 +160,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {

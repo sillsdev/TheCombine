@@ -1,9 +1,10 @@
-﻿using BackendFramework.Interfaces;
+﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+using Newtonsoft.Json;
 
 namespace BackendFramework.Services
 {
@@ -16,17 +17,17 @@ namespace BackendFramework.Services
             _userService = userService;
         }
 
-        const int projIdLength = 24;
+        private const int ProjIdLength = 24;
 
-        private SecurityToken GetJWT(HttpContext request)
+        private static SecurityToken GetJwt(HttpContext request)
         {
-            //get authorization header i.e. JWT token
+            // Get authorization header i.e. JWT token
             var jwtToken = request.Request.Headers["Authorization"].ToString();
 
-            // "remove "Bearer" from beginning of token
+            // Remove "Bearer" from beginning of token
             var token = jwtToken.Split(" ")[1];
 
-            //parse JWT for project permissions
+            // Parse JWT for project permissions
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token);
 
@@ -35,49 +36,46 @@ namespace BackendFramework.Services
 
         public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
-            var jsonToken = GetJWT(request);
-
-            string foundUserId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
-
+            var jsonToken = GetJwt(request);
+            var foundUserId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
             return userId == foundUserId;
         }
 
-        public List<ProjectPermissions> GetProjectPermissions(HttpContext request)
+        public static List<ProjectPermissions> GetProjectPermissions(HttpContext request)
         {
-            var jsonToken = GetJWT(request);
-
-            string userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();
-            List<ProjectPermissions> permissionsObj = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ProjectPermissions>>(userRoleInfo);
+            var jsonToken = GetJwt(request);
+            var userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();
+            var permissionsObj = JsonConvert.DeserializeObject<List<ProjectPermissions>>(userRoleInfo);
             return permissionsObj;
         }
 
         public bool IsProjectAuthorized(string value, HttpContext request)
         {
-            //retrieve jwt token from http request and convert to object
-            List<ProjectPermissions> permissionsObj = GetProjectPermissions(request);
+            // Retrieve JWT token from http request and convert to object
+            var permissionsObj = GetProjectPermissions(request);
 
-            //retrieve project Id from http request
-            int begOfId = 9;
-            int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + begOfId;
-            if (indexOfProjId + projIdLength > request.Request.Path.ToString().Length)
+            // Retrieve project Id from http request
+            const int begOfId = 9;
+            var indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + begOfId;
+            if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
             {
-                //check if admin
+                // Check if admin
                 var userId = GetUserId(request);
                 var user = _userService.GetUser(userId).Result;
 
-                //if there is no project Id and they are not admin, do not allow changes
+                // If there is no project Id and they are not admin, do not allow changes
                 return user.IsAdmin;
             }
             else
             {
-                string projId = request.Request.Path.ToString().Substring(indexOfProjId, projIdLength);
+                var projId = request.Request.Path.ToString().Substring(indexOfProjId, ProjIdLength);
 
-                //assert that the user has permission for this function
+                // Assert that the user has permission for this function
                 foreach (var projectEntry in permissionsObj)
                 {
                     if (projectEntry.ProjectId == projId)
                     {
-                        int.TryParse(value, out int intValue);
+                        int.TryParse(value, out var intValue);
                         if (projectEntry.Permissions.Contains(intValue))
                         {
                             return true;
@@ -92,19 +90,13 @@ namespace BackendFramework.Services
         {
             var userId = GetUserId(request);
             var userObj = _userService.GetUser(userId).Result;
-
-            if (userObj.WorkedProjects[projectId] != userEditId)
-            {
-                return true;
-            }
-
-            return false;
+            return userObj.WorkedProjects[projectId] != userEditId;
         }
 
         public string GetUserId(HttpContext request)
         {
-            var jsonToken = GetJWT(request);
-            string permissionsObj = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
+            var jsonToken = GetJwt(request);
+            var permissionsObj = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
             return permissionsObj;
         }
     }

@@ -1,10 +1,10 @@
-﻿using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
@@ -62,7 +62,7 @@ namespace BackendFramework.Controllers
         {
             try
             {
-                User user = await _userService.Authenticate(cred.Username, cred.Password);
+                var user = await _userService.Authenticate(cred.Username, cred.Password);
                 if (user == null)
                 {
                     return new UnauthorizedResult();
@@ -118,8 +118,7 @@ namespace BackendFramework.Controllers
         [HttpPost("checkusername/{username}")]
         public async Task<IActionResult> CheckUsername(string username)
         {
-            bool usernameTaken = (await _userService.GetAllUsers()).Find(x => x.Username == username) != null;
-
+            var usernameTaken = (await _userService.GetAllUsers()).Find(x => x.Username == username) != null;
             if (usernameTaken)
             {
                 return BadRequest();
@@ -137,8 +136,7 @@ namespace BackendFramework.Controllers
         [HttpPost("checkemail/{email}")]
         public async Task<IActionResult> CheckEmail(string email)
         {
-            bool emailTaken = (await _userService.GetAllUsers()).Find(x => x.Email == email) != null;
-
+            var emailTaken = (await _userService.GetAllUsers()).Find(x => x.Email == email) != null;
             if (emailTaken)
             {
                 return BadRequest();

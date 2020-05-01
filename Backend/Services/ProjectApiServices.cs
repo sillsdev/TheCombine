@@ -1,10 +1,10 @@
-using BackendFramework.Helper;
-using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
-using MongoDB.Driver;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
+using MongoDB.Driver;
 
 namespace BackendFramework.Services
 {
@@ -29,11 +29,7 @@ namespace BackendFramework.Services
         public async Task<bool> DeleteAllProjects()
         {
             var deleted = await _projectDatabase.Projects.DeleteManyAsync(_ => true);
-            if (deleted.DeletedCount != 0)
-            {
-                return true;
-            }
-            return false;
+            return deleted.DeletedCount != 0;
         }
 
         /// <summary> Finds <see cref="Project"/> with specified projectId </summary>
@@ -67,9 +63,9 @@ namespace BackendFramework.Services
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string projectId, Project project)
         {
-            FilterDefinition<Project> filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);
+            var filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);
 
-            //Note: Nulls out values not in update body
+            // Note: Nulls out values not in update body
             var updateDef = Builders<Project>.Update
                 .Set(x => x.Name, project.Name)
                 .Set(x => x.SemanticDomains, project.SemanticDomains)
@@ -100,8 +96,9 @@ namespace BackendFramework.Services
 
         public bool CanImportLift(string projectId)
         {
-            Utilities util = new Utilities();
-            var currentPath = util.GenerateFilePath(Utilities.Filetype.dir, true, "", Path.Combine(projectId, "Import"));
+            var util = new Utilities();
+            var currentPath = util.GenerateFilePath(
+                Utilities.FileType.Dir, true, "", Path.Combine(projectId, "Import"));
             var zips = new List<string>(Directory.GetFiles(currentPath, "*.zip"));
             return zips.Count == 0;
         }

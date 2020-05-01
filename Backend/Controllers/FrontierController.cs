@@ -1,9 +1,9 @@
+using System.Threading.Tasks;
 using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
@@ -34,7 +34,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {
@@ -56,7 +56,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {
@@ -82,7 +82,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {

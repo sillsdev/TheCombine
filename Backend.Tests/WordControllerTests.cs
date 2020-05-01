@@ -1,12 +1,11 @@
-using BackendFramework.Controllers;
-using BackendFramework.Interfaces;
-using BackendFramework.Services;
-using BackendFramework.ValueModels;
-using Microsoft.AspNetCore.Mvc;
-using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using BackendFramework.Controllers;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
+using BackendFramework.Services;
+using Microsoft.AspNetCore.Mvc;
+using NUnit.Framework;
 
 namespace Backend.Tests
 {
@@ -33,36 +32,38 @@ namespace Backend.Tests
 
         Word RandomWord()
         {
-            Word word = new Word();
-            word.Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() };
+            var word = new Word {Senses = new List<Sense>() {new Sense(), new Sense(), new Sense()}};
 
-            foreach (Sense sense in word.Senses)
+            foreach (var sense in word.Senses)
             {
 
-                sense.Accessibility = (int)State.active;
+                sense.Accessibility = (int)State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
-                foreach (Gloss gloss in sense.Glosses)
+                foreach (var gloss in sense.Glosses)
                 {
-                    gloss.Def = Util.randString();
-                    gloss.Language = Util.randString(3);
+                    gloss.Def = Util.RandString();
+                    gloss.Language = Util.RandString(3);
                 }
 
-                sense.SemanticDomains = new List<SemanticDomain>() { new SemanticDomain(), new SemanticDomain(), new SemanticDomain() };
-
-                foreach (SemanticDomain semdom in sense.SemanticDomains)
+                sense.SemanticDomains = new List<SemanticDomain>()
                 {
-                    semdom.Name = Util.randString();
-                    semdom.Id = Util.randString();
-                    semdom.Description = Util.randString();
+                    new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
+                };
+
+                foreach (var semdom in sense.SemanticDomains)
+                {
+                    semdom.Name = Util.RandString();
+                    semdom.Id = Util.RandString();
+                    semdom.Description = Util.RandString();
                 }
             }
 
-            word.Created = Util.randString();
-            word.Vernacular = Util.randString();
-            word.Modified = Util.randString();
-            word.PartOfSpeech = Util.randString();
-            word.Plural = Util.randString();
+            word.Created = Util.RandString();
+            word.Vernacular = Util.RandString();
+            word.Modified = Util.RandString();
+            word.PartOfSpeech = Util.RandString();
+            word.Plural = Util.RandString();
             word.History = new List<string>();
             word.ProjectId = _projId;
 
@@ -84,7 +85,7 @@ namespace Backend.Tests
         [Test]
         public void TestGetWord()
         {
-            Word word = _repo.Create(RandomWord()).Result;
+            var word = _repo.Create(RandomWord()).Result;
 
             _repo.Create(RandomWord());
             _repo.Create(RandomWord());
@@ -100,16 +101,16 @@ namespace Backend.Tests
         [Test]
         public void AddWord()
         {
-            Word word = RandomWord();
+            var word = RandomWord();
 
-            string id = (_wordController.Post(_projId, word).Result as ObjectResult).Value as string;
+            var id = (_wordController.Post(_projId, word).Result as ObjectResult).Value as string;
             word.Id = id;
 
             Assert.AreEqual(word, _repo.GetAllWords(_projId).Result[0]);
             Assert.AreEqual(word, _repo.GetFrontier(_projId).Result[0]);
 
-            Word oldDuplicate = RandomWord();
-            Word newDuplicate = oldDuplicate.Clone();
+            var oldDuplicate = RandomWord();
+            var newDuplicate = oldDuplicate.Clone();
 
             _ = _wordController.Post(_projId, oldDuplicate).Result;
             var result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
@@ -127,14 +128,14 @@ namespace Backend.Tests
         [Test]
         public void UpdateWord()
         {
-            Word origWord = _repo.Create(RandomWord()).Result;
+            var origWord = _repo.Create(RandomWord()).Result;
 
-            Word modWord = origWord.Clone();
+            var modWord = origWord.Clone();
             modWord.Vernacular = "Yoink";
 
-            string id = (_wordController.Put(_projId, modWord.Id, modWord).Result as ObjectResult).Value as string;
+            var id = (_wordController.Put(_projId, modWord.Id, modWord).Result as ObjectResult).Value as string;
 
-            Word finalWord = modWord.Clone();
+            var finalWord = modWord.Clone();
             finalWord.Id = id;
             finalWord.History = new List<string> { origWord.Id };
 
@@ -148,28 +149,27 @@ namespace Backend.Tests
         [Test]
         public void DeleteWord()
         {
-            //fill test database
-            Word origWord = _repo.Create(RandomWord()).Result;
+            // Fill test database
+            var origWord = _repo.Create(RandomWord()).Result;
 
-            //test delete function
+            // Test delete function
             var action = _wordController.Delete(_projId, origWord.Id).Result;
 
-            //original word persists
+            // Original word persists
             Assert.Contains(origWord, _repo.GetAllWords(_projId).Result);
 
-            //get the new deleted word from the database
+            // Get the new deleted word from the database
             var wordRepo = _repo.GetFrontier(_projId).Result;
 
-
-            //ensure the word is valid
+            // Ensure the word is valid
             Assert.IsTrue(wordRepo.Count == 1);
             Assert.IsTrue(wordRepo[0].Id != origWord.Id);
             Assert.IsTrue(wordRepo[0].History.Count == 1);
 
-            //test the fronteir
+            // Test the frontier
             Assert.That(_repo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
 
-            //ensure the deleted word is in the fronteir
+            // Ensure the deleted word is in the frontier
             Assert.IsTrue(wordRepo.Count == 1);
             Assert.IsTrue(wordRepo[0].Id != origWord.Id);
             Assert.IsTrue(wordRepo[0].History.Count == 1);
@@ -178,16 +178,19 @@ namespace Backend.Tests
         [Test]
         public void MergeWordsIdentity()
         {
-            Word thisWord = RandomWord();
+            var thisWord = RandomWord();
             thisWord = _repo.Create(thisWord).Result;
 
-            MergeWords mergeObject = new MergeWords();
-            mergeObject.Parent = thisWord;
-            mergeObject.ChildrenWords = new List<MergeSourceWord>
+            var mergeObject = new MergeWords
             {
-                new MergeSourceWord {
-                    SrcWordId = thisWord.Id,
-                    SenseStates = new List<State> {State.sense, State.sense, State.sense }
+                Parent = thisWord,
+                ChildrenWords = new List<MergeSourceWord>
+                {
+                    new MergeSourceWord
+                    {
+                        SrcWordId = thisWord.Id,
+                        SenseStates = new List<State> {State.Sense, State.Sense, State.Sense}
+                    }
                 }
             };
 
@@ -202,7 +205,7 @@ namespace Backend.Tests
             Assert.That(frontier, Has.Count.EqualTo(1));
             Assert.AreEqual(frontier.First(), newWords.First());
 
-            // check that new word has the right history
+            // Check that new word has the right history
             Assert.That(newWords.First().History, Has.Count.EqualTo(1));
             var intermediateWord = _repo.GetWord(_projId, newWords.First().History.First()).Result;
             Assert.That(intermediateWord.History, Has.Count.EqualTo(1));
@@ -212,32 +215,35 @@ namespace Backend.Tests
         [Test]
         public void MergeWords()
         {
-            //the parent word is inherently correct as it is calculated by the frontend as the desired result of the merge
-            MergeWords parentChildMergeObject = new MergeWords();
-            parentChildMergeObject.Parent = RandomWord();
-            parentChildMergeObject.Time = Util.randString();
-            parentChildMergeObject.ChildrenWords = new List<MergeSourceWord>();
-
-            //set the child info
-            List<Word> childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
-            foreach (Word child in childWords)
+            // The parent word is inherently correct as it is calculated by the frontend as the desired result of the
+            // merge
+            var parentChildMergeObject = new MergeWords
             {
-                //generate mergeSourceWord with new child Id and desired child state list 
-                MergeSourceWord newGenChild = new MergeSourceWord();
-                newGenChild.SrcWordId = _repo.Add(child).Result.Id;
-                newGenChild.SenseStates = new List<State> { State.duplicate, State.sense, State.separate };
+                Parent = RandomWord(), Time = Util.RandString(), ChildrenWords = new List<MergeSourceWord>()
+            };
+
+            // Set the child info
+            var childWords = new List<Word> { RandomWord(), RandomWord(), RandomWord() };
+            foreach (var child in childWords)
+            {
+                // Generate mergeSourceWord with new child Id and desired child state list
+                var newGenChild = new MergeSourceWord
+                {
+                    SrcWordId = _repo.Add(child).Result.Id,
+                    SenseStates = new List<State> {State.Duplicate, State.Sense, State.Separate}
+                };
                 parentChildMergeObject.ChildrenWords.Add(newGenChild);
             }
 
             var newWordList = _wordService.Merge(_projId, parentChildMergeObject).Result;
 
-            //check for parent is in the db
+            // Check for parent is in the db
             var dbParent = newWordList.FirstOrDefault();
             Assert.IsNotNull(dbParent);
             Assert.AreEqual(dbParent.Senses.Count, 3);
             Assert.AreEqual(dbParent.History.Count, 3);
 
-            //check the separarte words were made
+            // Check the separarte words were made
             Assert.AreEqual(newWordList.Count, 4);
 
             foreach (var word in newWordList)

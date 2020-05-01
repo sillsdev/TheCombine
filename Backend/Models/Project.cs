@@ -1,12 +1,12 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace BackendFramework.ValueModels
+namespace BackendFramework.Models
 {
     public class Project
     {
@@ -63,7 +63,7 @@ namespace BackendFramework.ValueModels
 
         public Project Clone()
         {
-            Project clone = new Project
+            var clone = new Project
             {
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
@@ -77,31 +77,31 @@ namespace BackendFramework.ValueModels
                 PartsOfSpeech = new List<string>()
             };
 
-            foreach (SemanticDomain sd in SemanticDomains)
+            foreach (var sd in SemanticDomains)
             {
                 clone.SemanticDomains.Add(sd.Clone());
             }
-            foreach (string aws in AnalysisWritingSystems)
+            foreach (var aws in AnalysisWritingSystems)
             {
                 clone.AnalysisWritingSystems.Add(aws.Clone() as string);
             }
-            foreach (string cs in ValidCharacters)
+            foreach (var cs in ValidCharacters)
             {
                 clone.ValidCharacters.Add(cs.Clone() as string);
             }
-            foreach (string cs in RejectedCharacters)
+            foreach (var cs in RejectedCharacters)
             {
                 clone.RejectedCharacters.Add(cs.Clone() as string);
             }
-            foreach (CustomField cf in CustomFields)
+            foreach (var cf in CustomFields)
             {
                 clone.CustomFields.Add(cf.Clone());
             }
-            foreach (string wf in WordFields)
+            foreach (var wf in WordFields)
             {
                 clone.WordFields.Add(wf.Clone() as string);
             }
-            foreach (string pos in PartsOfSpeech)
+            foreach (var pos in PartsOfSpeech)
             {
                 clone.PartsOfSpeech.Add(pos.Clone() as string);
             }
@@ -145,7 +145,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                Project other = obj as Project;
+                var other = obj as Project;
                 return other.Id.Equals(Id) && ContentEquals(other);
             }
         }
@@ -200,7 +200,7 @@ namespace BackendFramework.ValueModels
 
 	public class ProjectWithUser : Project
 	{
-		public User __UpdatedUser;
+		public User UpdatedUser;
 
 		public ProjectWithUser() { }
 

@@ -1,10 +1,9 @@
-﻿using Backend.Tests;
+﻿using System.Collections.Generic;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Backend.Tests
 {
@@ -22,11 +21,9 @@ namespace Backend.Tests
             _controller = new UserController(_userService, _permissionService);
         }
 
-        User RandomUser()
+        private static User RandomUser()
         {
-            User user = new User();
-            user.Username = Util.randString();
-            user.Password = Util.randString();
+            var user = new User {Username = Util.RandString(), Password = Util.RandString()};
             return user;
         }
 
@@ -45,7 +42,7 @@ namespace Backend.Tests
         [Test]
         public void TestGetUser()
         {
-            User user = _userService.Create(RandomUser()).Result;
+            var user = _userService.Create(RandomUser()).Result;
 
             _userService.Create(RandomUser());
             _userService.Create(RandomUser());
@@ -61,8 +58,8 @@ namespace Backend.Tests
         [Test]
         public void TestCreateUser()
         {
-            User user = RandomUser();
-            string id = (_controller.Post(user).Result as ObjectResult).Value as string;
+            var user = RandomUser();
+            var id = (_controller.Post(user).Result as ObjectResult).Value as string;
             user.Id = id;
             Assert.Contains(user, _userService.GetAllUsers().Result);
         }
@@ -70,14 +67,14 @@ namespace Backend.Tests
         [Test]
         public void TestUpdateUser()
         {
-            User origUser = _userService.Create(RandomUser()).Result;
+            var origUser = _userService.Create(RandomUser()).Result;
 
-            User modUser = origUser.Clone();
+            var modUser = origUser.Clone();
             modUser.Username = "Mark";
 
             _ = _controller.Put(modUser.Id, modUser);
 
-            List<User> users = _userService.GetAllUsers().Result;
+            var users = _userService.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
             Assert.Contains(modUser, users);
         }
@@ -85,7 +82,7 @@ namespace Backend.Tests
         [Test]
         public void TestDeleteUser()
         {
-            User origUser = _userService.Create(RandomUser()).Result;
+            var origUser = _userService.Create(RandomUser()).Result;
 
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(1));
 

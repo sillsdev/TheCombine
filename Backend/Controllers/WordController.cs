@@ -1,11 +1,11 @@
-﻿using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
@@ -20,7 +20,8 @@ namespace BackendFramework.Controllers
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public WordController(IWordRepository repo, IWordService wordService, IProjectService projectService, IPermissionService permissionService)
+        public WordController(IWordRepository repo, IWordService wordService, IProjectService projectService,
+            IPermissionService permissionService)
         {
             _wordRepo = repo;
             _wordService = wordService;
@@ -38,7 +39,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -50,7 +51,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes all <see cref="Word"/>s for specified <see cref="Project"/> </summary>
         /// <remarks> DELETE: v1/projects/{projectId}/words </remarks>
-        /// <returns> true: if success, false: if there were no words </returns> 
+        /// <returns> true: if success, false: if there were no words </returns>
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
@@ -60,7 +61,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -83,7 +84,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -109,7 +110,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -118,12 +119,12 @@ namespace BackendFramework.Controllers
 
             word.ProjectId = projectId;
 
-            //if word is not already in frontier, add it
+            // If word is not already in frontier, add it
             if (await _wordService.WordIsUnique(word))
             {
                 await _wordRepo.Create(word);
             }
-            else //otherwise it is a duplicate
+            else // Otherwise it is a duplicate
             {
                 return new OkObjectResult("Duplicate");
             }
@@ -142,14 +143,14 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            //ensure word exists
+            // Ensure word exists
             var document = await _wordRepo.GetWord(projectId, wordId);
             if (document == null)
             {
@@ -173,7 +174,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -198,14 +199,14 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            //ensure MergeWords is alright
+            // Ensure MergeWords is alright
             if (mergeWords == null || mergeWords.Parent == null)
             {
                 return new BadRequestResult();

@@ -1,8 +1,8 @@
-using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
-using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
+using MongoDB.Driver;
 
 namespace BackendFramework.Services
 {
@@ -27,18 +27,15 @@ namespace BackendFramework.Services
         public async Task<bool> DeleteAllUserRoles(string projectId)
         {
             var deleted = await _userRoleDatabase.UserRoles.DeleteManyAsync(u => u.ProjectId == projectId);
-            if (deleted.DeletedCount != 0)
-            {
-                return true;
-            }
-            return false;
+            return deleted.DeletedCount != 0;
         }
 
         /// <summary> Finds <see cref="UserRole"/> with specified userRoleId and projectId </summary>
         public async Task<UserRole> GetUserRole(string projectId, string userRoleId)
         {
             var filterDef = new FilterDefinitionBuilder<UserRole>();
-            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
+            var filter = filterDef.And(filterDef.Eq(
+                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
 
             var userRoleList = await _userRoleDatabase.UserRoles.FindAsync(filter);
 
@@ -58,7 +55,8 @@ namespace BackendFramework.Services
         public async Task<bool> Delete(string projectId, string userRoleId)
         {
             var filterDef = new FilterDefinitionBuilder<UserRole>();
-            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
+            var filter = filterDef.And(filterDef.Eq(
+                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
 
             var deleted = await _userRoleDatabase.UserRoles.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
@@ -68,10 +66,9 @@ namespace BackendFramework.Services
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
         public async Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
-            FilterDefinition<UserRole> filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
-
-            var updateDef = Builders<UserRole>.Update.Set(x => x.Permissions, userRole.Permissions);
-
+            var filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
+            var updateDef = Builders<UserRole>.Update.Set(
+                x => x.Permissions, userRole.Permissions);
             var updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)

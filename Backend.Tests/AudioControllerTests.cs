@@ -1,14 +1,13 @@
-﻿using BackendFramework.Context;
+﻿using System;
+using System.IO;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using BackendFramework.Services;
-using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using System;
-using System.IO;
 
 namespace Backend.Tests
 {
@@ -32,45 +31,43 @@ namespace Backend.Tests
             _projId = _projectService.Create(new Project()).Result.Id;
             _permissionService = new PermissionServiceMock();
             _wordController = new WordController(_wordrepo, _wordService, _projectService, _permissionService);
-
             _audioController = new AudioController(_wordrepo, _wordService, _permissionService);
 
-            Utilities util = new Utilities();
-
-            Directory.Delete(util.GenerateFilePath(Utilities.Filetype.dir, true, "", ""), true);
+            var util = new Utilities();
+            Directory.Delete(util.GenerateFilePath(
+                Utilities.FileType.Dir, true, "", ""), true);
         }
 
-
-        string RandomString(int length = 16)
+        private static string RandomString(int length = 16)
         {
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, length);
         }
 
-        Word RandomWord()
+        private static Word RandomWord()
         {
-            Word word = new Word();
-            word.Vernacular = RandomString(4);
+            var word = new Word {Vernacular = RandomString(4)};
             return word;
         }
 
         [Test]
         public void TestAudioImport()
         {
-            //get path to sound in Assets folder, from debugging folder
-            string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "sound.mp3");
+            // Get path to sound in Assets folder, from debugging folder.
+            var filePath = Path.Combine(Directory.GetParent(Directory.GetParent(
+                Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(),
+                "Assets", "sound.mp3");
 
-            //open the file to read to controller
-            FileStream fstream = File.OpenRead(filePath);
+            // Open the file to read to controller.
+            var fstream = File.OpenRead(filePath);
 
-            //generate parameters for controller call 
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
-            FileUpload fileUpload = new FileUpload();
-            fileUpload.Name = "FileName";
-            fileUpload.File = formFile;
+            // Generate parameters for controller call.
+            var formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
+            var fileUpload = new FileUpload {Name = "FileName", File = formFile};
 
-            Word word = _wordrepo.Create(RandomWord()).Result;
+            var word = _wordrepo.Create(RandomWord()).Result;
 
-            _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;      //fileUpload contains the file stream and the name of the file
+            // `fileUpload` contains the file stream and the name of the file.
+            _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
 
             var action = _wordController.Get(_projId, word.Id).Result;
 

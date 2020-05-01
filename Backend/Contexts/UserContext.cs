@@ -1,12 +1,11 @@
 ﻿using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+using BackendFramework.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using static BackendFramework.Startup;
 
-namespace BackendFramework.Context
+namespace BackendFramework.Contexts
 {
-
     public class UserContext : IUserContext
     {
         private readonly IMongoDatabase _db;
@@ -19,5 +18,4 @@ namespace BackendFramework.Context
 
         public IMongoCollection<User> Users => _db.GetCollection<User>("UsersCollection");
     }
-
 }

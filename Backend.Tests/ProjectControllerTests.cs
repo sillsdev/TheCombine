@@ -1,12 +1,11 @@
-﻿using BackendFramework.Controllers;
+﻿using System.Collections.Generic;
+using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using BackendFramework.Services;
-using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using System.Collections.Generic;
-using static BackendFramework.Controllers.ProjectController;
 
 namespace Backend.Tests
 {
@@ -18,7 +17,7 @@ namespace Backend.Tests
         private UserRoleServiceMock _userRoleService;
         private IUserService _userService;
         private IPermissionService _permissionService;
-        private User _JwtAuthenticatedUser;
+        private User _jwtAuthenticatedUser;
 
         [SetUp]
         public void Setup()
@@ -28,36 +27,42 @@ namespace Backend.Tests
             _semDomParser = new SemDomParser(_projectService);
             _userRoleService = new UserRoleServiceMock();
             _userService = new UserServiceMock();
-            _controller = new ProjectController(_projectService, _semDomParser, _userRoleService, _userService, _permissionService);
+            _controller = new ProjectController(_projectService, _semDomParser, _userRoleService, _userService,
+                _permissionService)
+            {
+                // Mock the Http Context because this isn't an actual call avatar controller
+                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
+            };
 
-            //mock the Http Context because this isnt an actual call
-            //avatar controller
-            _controller.ControllerContext = new ControllerContext();
-            _controller.ControllerContext.HttpContext = new DefaultHttpContext();
-            _JwtAuthenticatedUser = new User();
-            _JwtAuthenticatedUser.Username = "user";
-            _JwtAuthenticatedUser.Password = "pass";
-            _userService.Create(_JwtAuthenticatedUser);
-            _JwtAuthenticatedUser = _userService.Authenticate(_JwtAuthenticatedUser.Username, _JwtAuthenticatedUser.Password).Result;
+            _jwtAuthenticatedUser = new User {Username = "user", Password = "pass"};
+            _userService.Create(_jwtAuthenticatedUser);
+            _jwtAuthenticatedUser = _userService.Authenticate(_jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
 
-            _controller.ControllerContext.HttpContext.Request.Headers["UserId"] = _JwtAuthenticatedUser.Id;
+            _controller.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
         }
 
-        Project RandomProject()
+        private static Project RandomProject()
         {
-            Project project = new Project();
-            project.Name = Util.randString();
+            var project = new Project {Name = Util.RandString(), SemanticDomains = new List<SemanticDomain>()};
 
-            project.SemanticDomains = new List<SemanticDomain>();
-            for (int i = 1; i < 4; i++)
+            for (var i = 1; i < 4; i++)
             {
-                project.SemanticDomains.Add(new SemanticDomain() { Id = $"{i}", Name = Util.randString(), Description = Util.randString() });
-                for (int j = 1; j < 4; j++)
+                project.SemanticDomains.Add(new SemanticDomain()
                 {
-                    project.SemanticDomains.Add(new SemanticDomain() { Id = $"{i}.{j}", Name = Util.randString(), Description = Util.randString() });
-                    for (int k = 1; k < 4; k++)
+                    Id = $"{i}", Name = Util.RandString(), Description = Util.RandString()
+                });
+                for (var j = 1; j < 4; j++)
+                {
+                    project.SemanticDomains.Add(new SemanticDomain()
                     {
-                        project.SemanticDomains.Add(new SemanticDomain() { Id = $"{i}.{j}.{k}", Name = Util.randString(), Description = Util.randString() });
+                        Id = $"{i}.{j}", Name = Util.RandString(), Description = Util.RandString()
+                    });
+                    for (var k = 1; k < 4; k++)
+                    {
+                        project.SemanticDomains.Add(new SemanticDomain()
+                        {
+                            Id = $"{i}.{j}.{k}", Name = Util.RandString(), Description = Util.RandString()
+                        });
                     }
                 }
             }
@@ -80,13 +85,12 @@ namespace Backend.Tests
         [Test]
         public void TestGetProject()
         {
-            Project project = _projectService.Create(RandomProject()).Result;
+            var project = _projectService.Create(RandomProject()).Result;
 
             _projectService.Create(RandomProject());
             _projectService.Create(RandomProject());
 
             var action = _controller.Get(project.Id).Result;
-
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
             var foundProjects = (action as ObjectResult).Value as Project;
@@ -97,8 +101,8 @@ namespace Backend.Tests
         public void TestCreateProject()
         {
             var project = RandomProject();
-            ProjectWithUser projectUser = new ProjectWithUser(project);
-            string id = ((_controller.Post(projectUser).Result as ObjectResult).Value as ProjectWithUser).Id as string;
+            var projectUser = new ProjectWithUser(project);
+            var id = ((_controller.Post(projectUser).Result as ObjectResult).Value as ProjectWithUser).Id as string;
             project.Id = id;
             Assert.Contains(project, _projectService.GetAllProjects().Result);
         }
@@ -106,9 +110,8 @@ namespace Backend.Tests
         [Test]
         public void TestUpdateProject()
         {
-            Project origProject = _projectService.Create(RandomProject()).Result;
-
-            Project modProject = origProject.Clone();
+            var origProject = _projectService.Create(RandomProject()).Result;
+            var modProject = origProject.Clone();
             modProject.Name = "Mark";
 
             _ = _controller.Put(modProject.Id, modProject);
@@ -120,7 +123,7 @@ namespace Backend.Tests
         [Test]
         public void TestDeleteProject()
         {
-            Project origProject = _projectService.Create(RandomProject()).Result;
+            var origProject = _projectService.Create(RandomProject()).Result;
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(1));
 
@@ -147,7 +150,8 @@ namespace Backend.Tests
         public void TestParseSemanticDomains()
         {
             var project = _projectService.Create(RandomProject()).Result;
-            var sdList = (_controller.GetSemDoms(project.Id).Result as ObjectResult).Value as List<SemanticDomainWithSubdomains>;
+            var sdList = (
+                _controller.GetSemDoms(project.Id).Result as ObjectResult).Value as List<SemanticDomainWithSubdomains>;
             Assert.That(sdList, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
