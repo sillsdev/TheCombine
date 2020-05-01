@@ -92,12 +92,12 @@ namespace BackendFramework.Models
                 ProjectRoles = new Dictionary<string, string>()
             };
 
-            foreach (string projId in WorkedProjects.Keys)
+            foreach (var projId in WorkedProjects.Keys)
             {
                 clone.WorkedProjects.Add(projId.Clone() as string, WorkedProjects[projId].Clone() as string);
             }
 
-            foreach (string projId in ProjectRoles.Keys)
+            foreach (var projId in ProjectRoles.Keys)
             {
                 clone.ProjectRoles.Add(projId.Clone() as string, ProjectRoles[projId].Clone() as string);
             }

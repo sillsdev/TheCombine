@@ -55,7 +55,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            IFormFile file = fileUpload.File;
+            var file = fileUpload.File;
 
             // Ensure file is not empty
             if (file.Length == 0)
@@ -78,7 +78,7 @@ namespace BackendFramework.Controllers
             }
 
             // Make destination for extracted files
-            string zipDest = Path.GetDirectoryName(fileUpload.FilePath);
+            var zipDest = Path.GetDirectoryName(fileUpload.FilePath);
             Directory.CreateDirectory(zipDest);
             if (Directory.Exists(Path.Combine(zipDest, "ExtractedLocation")))
             {
@@ -86,7 +86,7 @@ namespace BackendFramework.Controllers
             }
 
             // Extract the zip to new directory
-            string extractDir = Path.Combine(zipDest, "ExtractedLocation");
+            var extractDir = Path.Combine(zipDest, "ExtractedLocation");
             Directory.CreateDirectory(extractDir);
             ZipFile.ExtractToDirectory(fileUpload.FilePath, extractDir);
 
@@ -103,7 +103,7 @@ namespace BackendFramework.Controllers
             else if (directoriesExtracted.Length == 2)
             {
                 var numDirs = 0;
-                foreach (string dir in directoriesExtracted)
+                foreach (var dir in directoriesExtracted)
                 {
                     if (dir.EndsWith("__MACOSX"))
                     {
@@ -145,10 +145,10 @@ namespace BackendFramework.Controllers
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_liftService);
 
                 // Import words from lift file
-                int resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
+                var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
 
                 // Add character set to project from ldml file
-                Project proj = _projectService.GetProject(projectId).Result;
+                var proj = _projectService.GetProject(projectId).Result;
                 _liftService.LdmlImport(
                     Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem);
 
@@ -185,10 +185,10 @@ namespace BackendFramework.Controllers
                 return new BadRequestResult();
             }
             // Export the data to a zip directory
-            string exportedFilepath = CreateLiftExport(projectId);
+            var exportedFilepath = CreateLiftExport(projectId);
 
             var file = System.IO.File.ReadAllBytes(exportedFilepath);
-            string encodedFile = Convert.ToBase64String(file);
+            var encodedFile = Convert.ToBase64String(file);
             return new OkObjectResult(encodedFile);
         }
 
@@ -196,7 +196,7 @@ namespace BackendFramework.Controllers
         internal string CreateLiftExport(string projectId)
         {
             _liftService.SetProject(projectId);
-            string exportedFilepath = _liftService.LiftExport(projectId);
+            var exportedFilepath = _liftService.LiftExport(projectId);
             return exportedFilepath;
         }
     }

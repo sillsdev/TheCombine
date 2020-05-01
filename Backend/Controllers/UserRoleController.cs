@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -87,7 +87,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            UserRole userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
+            var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
             if (userRole == null)
             {
                 return new NotFoundObjectResult(userRoleId);
@@ -116,7 +116,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            UserRole returnUserRole = await _userRoleService.Create(userRole);
+            var returnUserRole = await _userRoleService.Create(userRole);
             if (returnUserRole == null)
             {
                 return BadRequest();
@@ -167,7 +167,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            ResultOfUpdate result = await _userRoleService.Update(userRoleId, userRole);
+            var result = await _userRoleService.Update(userRoleId, userRole);
             if (result == ResultOfUpdate.NotFound)
             {
                 return new NotFoundObjectResult(userRoleId);

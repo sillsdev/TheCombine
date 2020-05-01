@@ -35,7 +35,7 @@ namespace BackendFramework.Services
         {
             // Fetch the stored user
             var userList = await _userDatabase.Users.FindAsync(x => x.Username == username);
-            User foundUser = userList.FirstOrDefault();
+            var foundUser = userList.FirstOrDefault();
 
             // Return null if user with specified username not found
             if (foundUser == null)
@@ -69,7 +69,7 @@ namespace BackendFramework.Services
         {
             const int tokenExpirationMinutes = 60 * 4;
             var tokenHandler = new JwtSecurityTokenHandler();
-            string secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
+            var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
             var key = Encoding.ASCII.GetBytes(secretKey);
 
             // Fetch the projects Id and the roles for each Id
@@ -83,7 +83,7 @@ namespace BackendFramework.Services
                 projectPermissionMap.Add(validEntry);
             }
 
-            string claimString = projectPermissionMap.ToJson();
+            var claimString = projectPermissionMap.ToJson();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -97,7 +97,7 @@ namespace BackendFramework.Services
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
             user.Token = tokenHandler.WriteToken(token);
 
             if (await Update(user.Id, user) != ResultOfUpdate.Updated)
@@ -123,7 +123,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUsers()
         {
-            DeleteResult deleted = await _userDatabase.Users.DeleteManyAsync(_ => true);
+            var deleted = await _userDatabase.Users.DeleteManyAsync(_ => true);
             return deleted.DeletedCount != 0;
         }
 
@@ -149,8 +149,7 @@ namespace BackendFramework.Services
             var filter = filterDef.Eq(x => x.Id, userId);
 
             var userList = await _userDatabase.Users.FindAsync(filter);
-
-            User user = userList.FirstOrDefault();
+            var user = userList.FirstOrDefault();
             return string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
         }
 
@@ -158,10 +157,10 @@ namespace BackendFramework.Services
         /// <returns> The user created </returns>
         public async Task<User> Create(User user)
         {
-            //check if collection is not empty
+            // Check if collection is not empty
             var users = await GetAllUsers();
 
-            //check to see if username or email address is taken
+            // Check to see if username or email address is taken
             if (users.Count != 0 && _userDatabase.Users.Find(
                 x => (x.Username == user.Username || x.Email == user.Email)).ToList().Count > 0)
             {
@@ -194,7 +193,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string userId)
         {
-            DeleteResult deleted = await _userDatabase.Users.DeleteOneAsync(x => x.Id == userId);
+            var deleted = await _userDatabase.Users.DeleteOneAsync(x => x.Id == userId);
             return deleted.DeletedCount > 0;
         }
 

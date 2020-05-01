@@ -34,19 +34,20 @@ namespace Backend.Tests
 
         Project RandomProject()
         {
-            Project project = new Project();
-            project.Name = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4);
+            var project = new Project
+            {
+                Name = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 4)
+            };
             return project;
         }
 
         public string RandomLiftFile(string path)
         {
-            string name = "TEST-TO_BE_STREAMED-" + Util.RandString() + ".lift";
+            var name = "TEST-TO_BE_STREAMED-" + Util.RandString() + ".lift";
             name = Path.Combine(path, name);
-            FileStream fs = File.OpenWrite(name);
+            var fs = File.OpenWrite(name);
 
-            var header =
-                @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            const string header = @"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
                     <header>
                         <ranges>
@@ -66,22 +67,22 @@ namespace Backend.Tests
 
             for (var i = 0; i < 3; i++)
             {
-                string dateCreated = $"\"{Util.RandString(20)}\"";
-                string dateModified = $"\"{Util.RandString(20)}\"";
-                string id = $"\"{Util.RandString()}\"";
-                string guid = $"\"{Util.RandString()}\"";
-                string vernLang = $"\"{Util.RandString(3)}\"";
-                string vern = Util.RandString(6);
-                string plural = Util.RandString(8);
-                string audio = $"\"{Util.RandString(3)}.mp3\"";
-                string senseId = $"\"{Util.RandString()}\"";
-                string transLang1 = $"\"{Util.RandString(3)}\"";
-                string transLang2 = $"\"{Util.RandString(3)}\"";
-                string trans1 = Util.RandString(6);
-                string trans2 = Util.RandString(8);
-                string sdValue = $"\"{Util.RandString(4)} {Util.RandString(4)}\"";
+                var dateCreated = $"\"{Util.RandString(20)}\"";
+                var dateModified = $"\"{Util.RandString(20)}\"";
+                var id = $"\"{Util.RandString()}\"";
+                var guid = $"\"{Util.RandString()}\"";
+                var vernLang = $"\"{Util.RandString(3)}\"";
+                var vern = Util.RandString(6);
+                var plural = Util.RandString(8);
+                var audio = $"\"{Util.RandString(3)}.mp3\"";
+                var senseId = $"\"{Util.RandString()}\"";
+                var transLang1 = $"\"{Util.RandString(3)}\"";
+                var transLang2 = $"\"{Util.RandString(3)}\"";
+                var trans1 = Util.RandString(6);
+                var trans2 = Util.RandString(8);
+                var sdValue = $"\"{Util.RandString(4)} {Util.RandString(4)}\"";
 
-                string entry =
+                var entry =
                     $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
                             <lexical-unit>
                                 <form lang = {vernLang}><text> {vern} </text></form>
@@ -114,7 +115,7 @@ namespace Backend.Tests
         {
             var word = new Word {Senses = new List<Sense>() {new Sense(), new Sense(), new Sense()}};
 
-            foreach (Sense sense in word.Senses)
+            foreach (var sense in word.Senses)
             {
                 sense.Accessibility = (int)State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
@@ -130,7 +131,7 @@ namespace Backend.Tests
                     new SemanticDomain(), new SemanticDomain(), new SemanticDomain()
                 };
 
-                foreach (SemanticDomain semdom in sense.SemanticDomains)
+                foreach (var semdom in sense.SemanticDomains)
                 {
                     semdom.Name = Util.RandString();
                     semdom.Id = Util.RandString();
@@ -151,8 +152,8 @@ namespace Backend.Tests
 
         private static FileUpload InitFile(FileStream fstream, string filename)
         {
-            FormFile formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
-            FileUpload fileUpload = new FileUpload { Name = "FileName", File = formFile };
+            var formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
+            var fileUpload = new FileUpload { Name = "FileName", File = formFile };
 
             return fileUpload;
         }
@@ -174,24 +175,24 @@ namespace Backend.Tests
         [Test]
         public void TestExportDeleted()
         {
-            Project proj = RandomProject();
+            var proj = RandomProject();
             _projServ.Create(proj);
 
-            Word word = RandomWord(proj.Id);
-            Word createdWord = _wordrepo.Create(word).Result;
+            var word = RandomWord(proj.Id);
+            var createdWord = _wordrepo.Create(word).Result;
 
             word.Id = "";
             word.Vernacular = "updated";
 
             _wordService.Update(proj.Id, createdWord.Id, word);
 
-            IActionResult result = _liftController.ExportLiftFile(proj.Id).Result;
+            var result = _liftController.ExportLiftFile(proj.Id).Result;
 
             var util = new Utilities();
-            string combinePath = util.GenerateFilePath(Utilities.FileType.Dir, true, "", "");
-            string exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport",
+            var combinePath = util.GenerateFilePath(Utilities.FileType.Dir, true, "", "");
+            var exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport",
                 Path.Combine("Lift", "NewLiftFile.lift"));
-            string text = File.ReadAllText(exportPath, Encoding.UTF8);
+            var text = File.ReadAllText(exportPath, Encoding.UTF8);
             // There is only one deleted word
             Assert.AreEqual(text.IndexOf("dateDeleted"), text.LastIndexOf("dateDeleted"));
         }
@@ -202,7 +203,7 @@ namespace Backend.Tests
             // This test assumes you have the starting .zip included in your project files.
 
             // Get path to the starting dir
-            string pathToStartZips = Path.Combine(Directory.GetParent(Directory.GetParent(
+            var pathToStartZips = Path.Combine(Directory.GetParent(Directory.GetParent(
                 Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets");
             var testZips = Directory.GetFiles(pathToStartZips, "*.zip");
 
@@ -231,24 +232,23 @@ namespace Backend.Tests
 
             foreach (var dataSet in fileMapping)
             {
-                string actualFilename = dataSet.Key;
-
-                string pathToStartZip = Path.Combine(pathToStartZips, actualFilename);
+                var actualFilename = dataSet.Key;
+                var pathToStartZip = Path.Combine(pathToStartZips, actualFilename);
 
                 // Upload the zip file
 
                 // Init the project the .zip info is added to
-                Project proj = RandomProject();
+                var proj = RandomProject();
                 _projServ.Create(proj);
 
                 // Generate api parameter with filestream
                 if (File.Exists(pathToStartZip))
                 {
-                    FileStream fstream = File.OpenRead(pathToStartZip);
-                    FileUpload fileUpload = InitFile(fstream, actualFilename);
+                    var fstream = File.OpenRead(pathToStartZip);
+                    var fileUpload = InitFile(fstream, actualFilename);
 
                     // Make api call
-                    IActionResult result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
+                    var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
                     Assert.That(!(result is BadRequestObjectResult));
 
                     proj = _projServ.GetProject(proj.Id).Result;
@@ -258,13 +258,13 @@ namespace Backend.Tests
 
                     var allWords = _wordrepo.GetAllWords(proj.Id);
                     // Export
-                    string exportedFilePath = _liftController.CreateLiftExport(proj.Id);
-                    string exportedDirectory = Path.GetDirectoryName(exportedFilePath);
+                    var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
+                    var exportedDirectory = Path.GetDirectoryName(exportedFilePath);
 
                     // Assert the file was created with desired heirarchy
                     Assert.That(Directory.Exists(exportedDirectory));
                     Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio")));
-                    foreach (string audioFile in dataSet.Value.AudioFiles)
+                    foreach (var audioFile in dataSet.Value.AudioFiles)
                     {
                         Assert.That(File.Exists(Path.Combine(
                             exportedDirectory, "LiftExport", "Lift", "audio", audioFile)));
@@ -285,7 +285,7 @@ namespace Backend.Tests
 
                     // Upload the exported words again
                     // Init the project the .zip info is added to
-                    Project proj2 = RandomProject();
+                    var proj2 = RandomProject();
                     _projServ.Create(proj2);
 
                     // Generate api parameter with filestream
@@ -311,10 +311,11 @@ namespace Backend.Tests
                     // Assert the file was created with desired hierarchy
                     Assert.That(Directory.Exists(exportedDirectory));
                     Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio")));
-                    foreach (string audioFile in dataSet.Value.AudioFiles)
+                    foreach (var audioFile in dataSet.Value.AudioFiles)
                     {
-                        string path = Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio", audioFile);
-                        Assert.That(File.Exists(path), "The file " + audioFile + " can not be found at this path: " + path);
+                        var path = Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio", audioFile);
+                        Assert.That(File.Exists(path),
+                            "The file " + audioFile + " can not be found at this path: " + path);
                     }
                     Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems")));
                     Assert.That(File.Exists(Path.Combine(

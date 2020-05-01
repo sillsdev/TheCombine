@@ -91,7 +91,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            Word word = await _wordRepo.GetWord(projectId, wordId);
+            var word = await _wordRepo.GetWord(projectId, wordId);
             if (word == null)
             {
                 return new NotFoundObjectResult(wordId);
@@ -151,7 +151,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure word exists
-            Word document = await _wordRepo.GetWord(projectId, wordId);
+            var document = await _wordRepo.GetWord(projectId, wordId);
             if (document == null)
             {
                 return new NotFoundResult();

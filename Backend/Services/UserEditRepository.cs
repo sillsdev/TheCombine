@@ -26,7 +26,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUserEdits(string projectId)
         {
-            DeleteResult deleted = await _userEditDatabase.UserEdits.DeleteManyAsync(u => u.ProjectId == projectId);
+            var deleted = await _userEditDatabase.UserEdits.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
@@ -70,7 +70,7 @@ namespace BackendFramework.Services
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
-            ReplaceOneResult result = await _userEditDatabase.UserEdits.ReplaceOneAsync(filter, userEdit);
+            var result = await _userEditDatabase.UserEdits.ReplaceOneAsync(filter, userEdit);
             return result.IsAcknowledged && result.ModifiedCount == 1;
         }
     }

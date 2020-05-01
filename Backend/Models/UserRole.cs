@@ -36,7 +36,7 @@ namespace BackendFramework.Models
                 Permissions = new List<int>()
             };
 
-            foreach (int permission in Permissions)
+            foreach (var permission in Permissions)
             {
                 clone.Permissions.Add(permission);
             }

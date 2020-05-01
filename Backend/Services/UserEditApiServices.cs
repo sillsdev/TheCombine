@@ -20,20 +20,18 @@ namespace BackendFramework.Services
         public async Task<Tuple<bool, int>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
             // Get userEdit to change
-            UserEdit userEntry = await _repo.GetUserEdit(projectId, userEditId);
-            UserEdit newUserEdit = userEntry.Clone();
+            var userEntry = await _repo.GetUserEdit(projectId, userEditId);
+            var newUserEdit = userEntry.Clone();
 
             // Add the new goal index to Edits list
             newUserEdit.Edits.Add(edit);
 
             // Replace the old UserEdit object with the new one that contains the new list entry
-            bool replaceSucceeded = _repo.Replace(projectId, userEditId, newUserEdit).Result;
-
-            int indexOfNewestEdit = -1;
-
+            var replaceSucceeded = _repo.Replace(projectId, userEditId, newUserEdit).Result;
+            var indexOfNewestEdit = -1;
             if (replaceSucceeded)
             {
-                UserEdit newestEdit = _repo.GetUserEdit(projectId, userEditId).Result;
+                var newestEdit = _repo.GetUserEdit(projectId, userEditId).Result;
                 indexOfNewestEdit = newestEdit.Edits.Count - 1;
             }
 
@@ -44,13 +42,10 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> AddStepToGoal(string projectId, string userEditId, int goalIndex, string userEdit)
         {
-            UserEdit addUserEdit = await _repo.GetUserEdit(projectId, userEditId);
-            UserEdit newUserEdit = addUserEdit.Clone();
-
+            var addUserEdit = await _repo.GetUserEdit(projectId, userEditId);
+            var newUserEdit = addUserEdit.Clone();
             newUserEdit.Edits[goalIndex].StepData.Add(userEdit);
-
-            bool updateResult = _repo.Replace(projectId, userEditId, newUserEdit).Result;
-
+            var updateResult = _repo.Replace(projectId, userEditId, newUserEdit).Result;
             return updateResult;
         }
     }

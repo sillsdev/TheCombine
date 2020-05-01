@@ -44,15 +44,13 @@ namespace BackendFramework.Controllers
             //    return new ForbidResult();
             //}
 
-            string filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
-
+            var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
             if (filePath == null)
             {
                 return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
             }
 
             Stream stream = System.IO.File.OpenRead(filePath);
-
             if (stream == null)
             {
                 return new BadRequestObjectResult("The file does not exist");
@@ -75,8 +73,8 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
-            IFormFile file = fileUpload.File;
-            string requestedFileName = fileUpload.File?.FileName;
+            var file = fileUpload.File;
+            var requestedFileName = fileUpload.File?.FileName;
             if (string.IsNullOrEmpty(requestedFileName))
             {
                 requestedFileName = wordId + ".webm";
@@ -101,7 +99,7 @@ namespace BackendFramework.Controllers
             }
 
             // Add the relative path to the audio field
-            Word gotWord = await _wordRepo.GetWord(projectId, wordId);
+            var gotWord = await _wordRepo.GetWord(projectId, wordId);
             gotWord.Audio.Add(Path.GetFileName(fileUpload.FilePath));
 
             // Update the word with new audio file

@@ -55,7 +55,7 @@ namespace BackendFramework
 
             // Configure JWT Authentication
             const string secretKeyEnvName = "ASPNETCORE_JWT_SECRET_KEY";
-            string secretKey = Environment.GetEnvironmentVariable(secretKeyEnvName);
+            var secretKey = Environment.GetEnvironmentVariable(secretKeyEnvName);
 
             // The JWT key size must be at least 128 bits long.
             const int minKeyLength = 128 / 8;

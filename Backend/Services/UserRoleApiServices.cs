@@ -26,7 +26,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllUserRoles(string projectId)
         {
-            DeleteResult deleted = await _userRoleDatabase.UserRoles.DeleteManyAsync(u => u.ProjectId == projectId);
+            var deleted = await _userRoleDatabase.UserRoles.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
@@ -34,7 +34,8 @@ namespace BackendFramework.Services
         public async Task<UserRole> GetUserRole(string projectId, string userRoleId)
         {
             var filterDef = new FilterDefinitionBuilder<UserRole>();
-            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
+            var filter = filterDef.And(filterDef.Eq(
+                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
 
             var userRoleList = await _userRoleDatabase.UserRoles.FindAsync(filter);
 
@@ -57,7 +58,7 @@ namespace BackendFramework.Services
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userRoleId));
 
-            DeleteResult deleted = await _userRoleDatabase.UserRoles.DeleteOneAsync(filter);
+            var deleted = await _userRoleDatabase.UserRoles.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
 
@@ -68,7 +69,7 @@ namespace BackendFramework.Services
             var filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
             var updateDef = Builders<UserRole>.Update.Set(
                 x => x.Permissions, userRole.Permissions);
-            UpdateResult updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)
             {

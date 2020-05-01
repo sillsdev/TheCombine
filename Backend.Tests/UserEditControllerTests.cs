@@ -41,7 +41,7 @@ namespace Backend.Tests
         private UserEdit RandomUserEdit()
         {
             var rnd = new Random();
-            int count = rnd.Next(0, 7);
+            var count = rnd.Next(0, 7);
 
             var userEdit = new UserEdit();
             var edit = new Edit
@@ -61,7 +61,7 @@ namespace Backend.Tests
             _userEditRepo.Create(RandomUserEdit());
             _userEditRepo.Create(RandomUserEdit());
 
-            IActionResult getResult = _userEditController.Get(_projId).Result;
+            var getResult = _userEditController.Get(_projId).Result;
             Assert.IsInstanceOf<ObjectResult>(getResult);
 
             var edits = (getResult as ObjectResult).Value as List<UserEdit>;
@@ -72,12 +72,12 @@ namespace Backend.Tests
         [Test]
         public void TestGetUserEdit()
         {
-            UserEdit userEdit = _userEditRepo.Create(RandomUserEdit()).Result;
+            var userEdit = _userEditRepo.Create(RandomUserEdit()).Result;
 
             _userEditRepo.Create(RandomUserEdit());
             _userEditRepo.Create(RandomUserEdit());
 
-            IActionResult action = _userEditController.Get(_projId, userEdit.Id).Result;
+            var action = _userEditController.Get(_projId, userEdit.Id).Result;
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
             var foundUserEdit = (action as ObjectResult).Value as UserEdit;
@@ -96,11 +96,11 @@ namespace Backend.Tests
         [Test]
         public void TestAddEditsToGoal()
         {
-            UserEdit userEdit = RandomUserEdit();
+            var userEdit = RandomUserEdit();
             _userEditRepo.Create(userEdit);
             var newEditStep = new Edit();
             newEditStep.StepData.Add("This is a new step");
-            UserEdit updateEdit = userEdit.Clone();
+            var updateEdit = userEdit.Clone();
             updateEdit.Edits.Add(newEditStep);
 
             _ = _userEditController.Post(_projId, userEdit.Id, newEditStep).Result;
@@ -114,16 +114,16 @@ namespace Backend.Tests
         {
             // Generate db entry to test
             var rnd = new Random();
-            int count = rnd.Next(1, 13);
+            var count = rnd.Next(1, 13);
 
             for (var i = 0; i < count; i++)
             {
                 _ = _userEditRepo.Create(RandomUserEdit()).Result;
             }
-            UserEdit origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
+            var origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
 
             // Generate correct result for comparison
-            UserEdit modUserEdit = origUserEdit.Clone();
+            var modUserEdit = origUserEdit.Clone();
             const string stringUserEdit = "This is another step added";
             modUserEdit.Edits[0].StepData.Add(stringUserEdit);
 
@@ -141,7 +141,7 @@ namespace Backend.Tests
         [Test]
         public void TestDeleteUserEdit()
         {
-            UserEdit origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
+            var origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(1));
 

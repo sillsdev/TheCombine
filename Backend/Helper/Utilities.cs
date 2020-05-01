@@ -19,7 +19,7 @@ namespace BackendFramework.Helper
             string customDirPath = "")
         {
             // Generate path to home on linux
-            string pathToHome = Environment.GetEnvironmentVariable("HOME");
+            var pathToHome = Environment.GetEnvironmentVariable("HOME");
 
             // Generate home on windows
             if (pathToHome == null)
@@ -34,7 +34,7 @@ namespace BackendFramework.Helper
             }
 
             // Path to the base data folder
-            string returnFilepath = Path.Combine(pathToHome, ".CombineFiles", customDirPath);
+            var returnFilepath = Path.Combine(pathToHome, ".CombineFiles", customDirPath);
 
             // Establish path to the typed file in the base folder
 

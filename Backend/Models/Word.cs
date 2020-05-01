@@ -80,19 +80,19 @@ namespace BackendFramework.Models
                 Senses = new List<Sense>()
             };
 
-            foreach (string file in Audio)
+            foreach (var file in Audio)
             {
                 clone.Audio.Add(file.Clone() as string);
             }
-            foreach (string id in EditedBy)
+            foreach (var id in EditedBy)
             {
                 clone.EditedBy.Add(id.Clone() as string);
             }
-            foreach (string id in History)
+            foreach (var id in History)
             {
                 clone.History.Add(id.Clone() as string);
             }
-            foreach (Sense sense in Senses)
+            foreach (var sense in Senses)
             {
                 clone.Senses.Add(sense.Clone());
             }
@@ -124,7 +124,7 @@ namespace BackendFramework.Models
             }
             else
             {
-                Word other = obj as Word;
+                var other = obj as Word;
                 return
                     other.Id.Equals(Id) &&
                     this.ContentEquals(other) &&
@@ -169,17 +169,17 @@ namespace BackendFramework.Models
 
         public Sense Clone()
         {
-            Sense clone = new Sense
+            var clone = new Sense
             {
                 Glosses = new List<Gloss>(),
                 SemanticDomains = new List<SemanticDomain>()
             };
 
-            foreach (Gloss gloss in Glosses)
+            foreach (var gloss in Glosses)
             {
                 clone.Glosses.Add(gloss.Clone());
             }
-            foreach (SemanticDomain sd in SemanticDomains)
+            foreach (var sd in SemanticDomains)
             {
                 clone.SemanticDomains.Add(sd.Clone());
             }

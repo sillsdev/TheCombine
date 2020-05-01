@@ -42,7 +42,7 @@ namespace BackendFramework.Services
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.Eq(x => x.ProjectId, projectId);
 
-            DeleteResult deleted = await _wordDatabase.Words.DeleteManyAsync(filter);
+            var deleted = await _wordDatabase.Words.DeleteManyAsync(filter);
             await _wordDatabase.Frontier.DeleteManyAsync(filter);
             if (deleted.DeletedCount != 0)
             {
@@ -90,7 +90,7 @@ namespace BackendFramework.Services
             var filter = filterDef.And(filterDef.Eq(
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, wordId));
 
-            DeleteResult deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
+            var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
             return deleted.DeletedCount > 0;
         }
     }

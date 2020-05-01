@@ -86,7 +86,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            Project project = await _projectService.GetProject(projectId);
+            var project = await _projectService.GetProject(projectId);
             if (project == null)
             {
                 return new NotFoundResult();
@@ -109,8 +109,8 @@ namespace BackendFramework.Controllers
             await _projectService.Create(project);
 
             // Get user
-            string currentUserId = _permissionService.GetUserId(HttpContext);
-            User currentUser = await _userService.GetUser(currentUserId);
+            var currentUserId = _permissionService.GetUserId(HttpContext);
+            var currentUser = await _userService.GetUser(currentUserId);
 
             // Give admin privileges
             var usersRole = new UserRole
@@ -157,7 +157,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            ResultOfUpdate result = await _projectService.Update(projectId, project);
+            var result = await _projectService.Update(projectId, project);
             if (result == ResultOfUpdate.NotFound)
             {
                 return new NotFoundObjectResult(projectId);
@@ -182,7 +182,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            Project currentProj = await _projectService.GetProject(projectId);
+            var currentProj = await _projectService.GetProject(projectId);
             currentProj.ValidCharacters = project.ValidCharacters;
             currentProj.RejectedCharacters = project.RejectedCharacters;
             await _projectService.Update(projectId, currentProj);
@@ -260,10 +260,10 @@ namespace BackendFramework.Controllers
                 changeUser.ProjectRoles.Add(projectId, usersRole.Id);
                 await _userService.Update(changeUser.Id, changeUser);
             }
-            UserRole userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
+            var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
             userRole.Permissions = new List<int>(permissions);
 
-            ResultOfUpdate result = await _userRoleService.Update(userRoleId, userRole);
+            var result = await _userRoleService.Update(userRoleId, userRole);
 
             if (result == ResultOfUpdate.NotFound)
             {

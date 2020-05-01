@@ -28,7 +28,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllProjects()
         {
-            DeleteResult deleted = await _projectDatabase.Projects.DeleteManyAsync(_ => true);
+            var deleted = await _projectDatabase.Projects.DeleteManyAsync(_ => true);
             return deleted.DeletedCount != 0;
         }
 
@@ -55,7 +55,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId)
         {
-            DeleteResult deleted = await _projectDatabase.Projects.DeleteOneAsync(x => x.Id == projectId);
+            var deleted = await _projectDatabase.Projects.DeleteOneAsync(x => x.Id == projectId);
             return deleted.DeletedCount > 0;
         }
 
@@ -65,7 +65,7 @@ namespace BackendFramework.Services
         {
             var filter = Builders<Project>.Filter.Eq(x => x.Id, projectId);
 
-            //Note: Nulls out values not in update body
+            // Note: Nulls out values not in update body
             var updateDef = Builders<Project>.Update
                 .Set(x => x.Name, project.Name)
                 .Set(x => x.SemanticDomains, project.SemanticDomains)
@@ -78,7 +78,7 @@ namespace BackendFramework.Services
                 .Set(x => x.PartsOfSpeech, project.PartsOfSpeech)
                 .Set(x => x.AutocompleteSetting, project.AutocompleteSetting);
 
-            UpdateResult updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
+            var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)
             {
@@ -97,7 +97,7 @@ namespace BackendFramework.Services
         public bool CanImportLift(string projectId)
         {
             var util = new Utilities();
-            string currentPath = util.GenerateFilePath(
+            var currentPath = util.GenerateFilePath(
                 Utilities.FileType.Dir, true, "", Path.Combine(projectId, "Import"));
             var zips = new List<string>(Directory.GetFiles(currentPath, "*.zip"));
             return zips.Count == 0;

@@ -23,7 +23,7 @@ namespace Backend.Tests
 
         public Task<User> GetUser(string id)
         {
-            User foundUser = _users.Single(user => user.Id == id);
+            var foundUser = _users.Single(user => user.Id == id);
             return Task.FromResult(foundUser.Clone());
         }
 
@@ -48,15 +48,15 @@ namespace Backend.Tests
 
         public Task<bool> Delete(string id)
         {
-            User foundUser = _users.Single(user => user.Id == id);
-            bool success = _users.Remove(foundUser);
+            var foundUser = _users.Single(user => user.Id == id);
+            var success = _users.Remove(foundUser);
             return Task.FromResult(success);
         }
 
         public Task<ResultOfUpdate> Update(string id, User user)
         {
-            User foundUser = _users.Single(u => u.Id == id);
-            bool success = _users.Remove(foundUser);
+            var foundUser = _users.Single(u => u.Id == id);
+            var success = _users.Remove(foundUser);
             if (success)
             {
                 _users.Add(user.Clone());
@@ -69,7 +69,7 @@ namespace Backend.Tests
         {
             try
             {
-                User foundUser = _users.Single(u => u.Username == username && u.Password == password);
+                var foundUser = _users.Single(u => u.Username == username && u.Password == password);
 
                 if (foundUser == null)
                 {

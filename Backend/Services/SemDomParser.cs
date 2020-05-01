@@ -21,7 +21,7 @@ namespace BackendFramework.Services
         public async Task<List<SemanticDomainWithSubdomains>> ParseSemanticDomains(string projectId)
         {
             // Ensure project exists
-            Project proj = await _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj == null)
             {
                 throw new Exception("Project not found");
@@ -40,9 +40,9 @@ namespace BackendFramework.Services
             var sdOfShortLengthList = new List<SemanticDomainWithSubdomains>();
             var sdOfLongLengthList = new List<SemanticDomainWithSubdomains>();
             var returnList = new List<SemanticDomainWithSubdomains>();
-            int length = sdList[0].Id.Length;
+            var length = sdList[0].Id.Length;
 
-            foreach (SemanticDomain sd in sdList)
+            foreach (var sd in sdList)
             {
                 if (sd.Id.Length != length)
                 {
@@ -68,7 +68,7 @@ namespace BackendFramework.Services
                 // If there are any, find short length semdom with same preceding number and add to children
                 if (sdOfShortLengthList.Count != 0)
                 {
-                    foreach (SemanticDomainWithSubdomains shortSd in sdOfShortLengthList)
+                    foreach (var shortSd in sdOfShortLengthList)
                     {
                         if (sd.Id.StartsWith(shortSd.Id))
                         {
@@ -86,7 +86,7 @@ namespace BackendFramework.Services
         {
             public int Compare(SemanticDomain x, SemanticDomain y)
             {
-                int lengthComparison = x.Id.Length.CompareTo(y.Id.Length);
+                var lengthComparison = x.Id.Length.CompareTo(y.Id.Length);
                 if (lengthComparison == 0)
                 {
                     return x.Id.CompareTo(y.Id);

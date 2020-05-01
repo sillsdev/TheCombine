@@ -31,14 +31,13 @@ namespace BackendFramework.Controllers
         [HttpGet("{userId}/download/avatar")]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
-            string avatar = await _userService.GetUserAvatar(userId);
-
+            var avatar = await _userService.GetUserAvatar(userId);
             if (avatar == null)
             {
                 return new NotFoundObjectResult(userId);
             }
 
-            FileStream image = System.IO.File.OpenRead(avatar);
+            var image = System.IO.File.OpenRead(avatar);
             return File(image, "image/jpeg");
         }
 
@@ -55,7 +54,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            IFormFile file = fileUpload.File;
+            var file = fileUpload.File;
 
             // Ensure file is not empty
             if (file.Length == 0)
@@ -64,7 +63,7 @@ namespace BackendFramework.Controllers
             }
 
             // Get user to apply avatar to
-            User gotUser = await _userService.GetUser(userId);
+            var gotUser = await _userService.GetUser(userId);
             if (gotUser == null)
             {
                 return new NotFoundObjectResult(gotUser.Id);

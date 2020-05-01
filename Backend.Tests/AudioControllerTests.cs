@@ -53,18 +53,18 @@ namespace Backend.Tests
         public void TestAudioImport()
         {
             // Get path to sound in Assets folder, from debugging folder.
-            string filePath = Path.Combine(Directory.GetParent(Directory.GetParent(
+            var filePath = Path.Combine(Directory.GetParent(Directory.GetParent(
                 Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(),
                 "Assets", "sound.mp3");
 
             // Open the file to read to controller.
-            FileStream fstream = File.OpenRead(filePath);
+            var fstream = File.OpenRead(filePath);
 
             // Generate parameters for controller call.
             var formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
             var fileUpload = new FileUpload {Name = "FileName", File = formFile};
 
-            Word word = _wordrepo.Create(RandomWord()).Result;
+            var word = _wordrepo.Create(RandomWord()).Result;
 
             // `fileUpload` contains the file stream and the name of the file.
             _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;

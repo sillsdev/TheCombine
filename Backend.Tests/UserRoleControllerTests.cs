@@ -26,9 +26,9 @@ namespace Backend.Tests
             _userRoleController = new UserRoleController(_userRoleService, _projectService, _permissionService);
         }
 
-        UserRole RandomUserRole()
+        private UserRole RandomUserRole()
         {
-            UserRole userRole = new UserRole
+            var userRole = new UserRole
             {
                 ProjectId = _projId,
                 Permissions = new List<int>()
@@ -58,12 +58,12 @@ namespace Backend.Tests
         [Test]
         public void TestGetUserRole()
         {
-            UserRole userRole = _userRoleService.Create(RandomUserRole()).Result;
+            var userRole = _userRoleService.Create(RandomUserRole()).Result;
 
             _userRoleService.Create(RandomUserRole());
             _userRoleService.Create(RandomUserRole());
 
-            IActionResult action = _userRoleController.Get(_projId, userRole.Id).Result;
+            var action = _userRoleController.Get(_projId, userRole.Id).Result;
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
@@ -74,7 +74,7 @@ namespace Backend.Tests
         [Test]
         public void TestCreateUserRole()
         {
-            UserRole userRole = RandomUserRole();
+            var userRole = RandomUserRole();
             var id = (_userRoleController.Post(_projId, userRole).Result as ObjectResult).Value as string;
             userRole.Id = id;
             Assert.Contains(userRole, _userRoleService.GetAllUserRoles(_projId).Result);
@@ -83,9 +83,9 @@ namespace Backend.Tests
         [Test]
         public void TestUpdateUserRole()
         {
-            UserRole userRole = RandomUserRole();
+            var userRole = RandomUserRole();
             _userRoleService.Create(userRole);
-            UserRole updateRole = userRole.Clone();
+            var updateRole = userRole.Clone();
             updateRole.Permissions.Add((int)Permission.WordEntry);
 
             _ = _userRoleController.Put(_projId ,userRole.Id, updateRole).Result;
@@ -98,7 +98,7 @@ namespace Backend.Tests
         [Test]
         public void TestDeleteUserRole()
         {
-            UserRole origUserRole = _userRoleService.Create(RandomUserRole()).Result;
+            var origUserRole = _userRoleService.Create(RandomUserRole()).Result;
 
             Assert.That(_userRoleService.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(1));
 

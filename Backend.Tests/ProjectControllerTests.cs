@@ -27,10 +27,13 @@ namespace Backend.Tests
             _semDomParser = new SemDomParser(_projectService);
             _userRoleService = new UserRoleServiceMock();
             _userService = new UserServiceMock();
-            _controller = new ProjectController(_projectService, _semDomParser, _userRoleService, _userService, _permissionService);
+            _controller = new ProjectController(_projectService, _semDomParser, _userRoleService, _userService,
+                _permissionService)
+            {
+                // Mock the Http Context because this isn't an actual call avatar controller
+                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
+            };
 
-            // Mock the Http Context because this isn't an actual call avatar controller
-            _controller.ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()};
             _jwtAuthenticatedUser = new User {Username = "user", Password = "pass"};
             _userService.Create(_jwtAuthenticatedUser);
             _jwtAuthenticatedUser = _userService.Authenticate(_jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
@@ -54,7 +57,7 @@ namespace Backend.Tests
                     {
                         Id = $"{i}.{j}", Name = Util.RandString(), Description = Util.RandString()
                     });
-                    for (int k = 1; k < 4; k++)
+                    for (var k = 1; k < 4; k++)
                     {
                         project.SemanticDomains.Add(new SemanticDomain()
                         {
@@ -82,12 +85,12 @@ namespace Backend.Tests
         [Test]
         public void TestGetProject()
         {
-            Project project = _projectService.Create(RandomProject()).Result;
+            var project = _projectService.Create(RandomProject()).Result;
 
             _projectService.Create(RandomProject());
             _projectService.Create(RandomProject());
 
-            IActionResult action = _controller.Get(project.Id).Result;
+            var action = _controller.Get(project.Id).Result;
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
             var foundProjects = (action as ObjectResult).Value as Project;
@@ -97,7 +100,7 @@ namespace Backend.Tests
         [Test]
         public void TestCreateProject()
         {
-            Project project = RandomProject();
+            var project = RandomProject();
             var projectUser = new ProjectWithUser(project);
             var id = ((_controller.Post(projectUser).Result as ObjectResult).Value as ProjectWithUser).Id as string;
             project.Id = id;
@@ -107,9 +110,8 @@ namespace Backend.Tests
         [Test]
         public void TestUpdateProject()
         {
-            Project origProject = _projectService.Create(RandomProject()).Result;
-
-            Project modProject = origProject.Clone();
+            var origProject = _projectService.Create(RandomProject()).Result;
+            var modProject = origProject.Clone();
             modProject.Name = "Mark";
 
             _ = _controller.Put(modProject.Id, modProject);
@@ -121,7 +123,7 @@ namespace Backend.Tests
         [Test]
         public void TestDeleteProject()
         {
-            Project origProject = _projectService.Create(RandomProject()).Result;
+            var origProject = _projectService.Create(RandomProject()).Result;
 
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(1));
 
@@ -148,7 +150,8 @@ namespace Backend.Tests
         public void TestParseSemanticDomains()
         {
             var project = _projectService.Create(RandomProject()).Result;
-            var sdList = (_controller.GetSemDoms(project.Id).Result as ObjectResult).Value as List<SemanticDomainWithSubdomains>;
+            var sdList = (
+                _controller.GetSemDoms(project.Id).Result as ObjectResult).Value as List<SemanticDomainWithSubdomains>;
             Assert.That(sdList, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));

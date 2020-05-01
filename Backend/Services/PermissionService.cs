@@ -24,27 +24,26 @@ namespace BackendFramework.Services
             // Get authorization header i.e. JWT token
             var jwtToken = request.Request.Headers["Authorization"].ToString();
 
-            // "remove "Bearer" from beginning of token
-            string token = jwtToken.Split(" ")[1];
+            // Remove "Bearer" from beginning of token
+            var token = jwtToken.Split(" ")[1];
 
             // Parse JWT for project permissions
             var handler = new JwtSecurityTokenHandler();
-            SecurityToken jsonToken = handler.ReadToken(token);
+            var jsonToken = handler.ReadToken(token);
 
             return jsonToken;
         }
 
         public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
-            SecurityToken jsonToken = GetJwt(request);
+            var jsonToken = GetJwt(request);
             var foundUserId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
             return userId == foundUserId;
         }
 
         public static List<ProjectPermissions> GetProjectPermissions(HttpContext request)
         {
-            SecurityToken jsonToken = GetJwt(request);
-
+            var jsonToken = GetJwt(request);
             var userRoleInfo = ((JwtSecurityToken)jsonToken).Payload["UserRoleInfo"].ToString();
             var permissionsObj = JsonConvert.DeserializeObject<List<ProjectPermissions>>(userRoleInfo);
             return permissionsObj;
@@ -57,26 +56,26 @@ namespace BackendFramework.Services
 
             // Retrieve project Id from http request
             const int begOfId = 9;
-            int indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + begOfId;
+            var indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + begOfId;
             if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
             {
                 // Check if admin
-                string userId = GetUserId(request);
-                User user = _userService.GetUser(userId).Result;
+                var userId = GetUserId(request);
+                var user = _userService.GetUser(userId).Result;
 
                 // If there is no project Id and they are not admin, do not allow changes
                 return user.IsAdmin;
             }
             else
             {
-                string projId = request.Request.Path.ToString().Substring(indexOfProjId, ProjIdLength);
+                var projId = request.Request.Path.ToString().Substring(indexOfProjId, ProjIdLength);
 
                 // Assert that the user has permission for this function
-                foreach (ProjectPermissions projectEntry in permissionsObj)
+                foreach (var projectEntry in permissionsObj)
                 {
                     if (projectEntry.ProjectId == projId)
                     {
-                        int.TryParse(value, out int intValue);
+                        int.TryParse(value, out var intValue);
                         if (projectEntry.Permissions.Contains(intValue))
                         {
                             return true;
@@ -89,15 +88,14 @@ namespace BackendFramework.Services
 
         public bool IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
-            string userId = GetUserId(request);
-            User userObj = _userService.GetUser(userId).Result;
-
+            var userId = GetUserId(request);
+            var userObj = _userService.GetUser(userId).Result;
             return userObj.WorkedProjects[projectId] != userEditId;
         }
 
         public string GetUserId(HttpContext request)
         {
-            SecurityToken jsonToken = GetJwt(request);
+            var jsonToken = GetJwt(request);
             var permissionsObj = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
             return permissionsObj;
         }

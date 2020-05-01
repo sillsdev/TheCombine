@@ -35,7 +35,7 @@ namespace BackendFramework.Models
                 Edits = new List<Edit>()
             };
 
-            foreach (Edit edit in Edits)
+            foreach (var edit in Edits)
             {
                 clone.Edits.Add(edit.Clone());
             }
@@ -126,7 +126,7 @@ namespace BackendFramework.Models
                 StepData = new List<string>()
             };
 
-            foreach (string stepData in StepData)
+            foreach (var stepData in StepData)
             {
                 clone.StepData.Add(stepData.Clone() as string);
             }

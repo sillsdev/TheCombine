@@ -77,31 +77,31 @@ namespace BackendFramework.Models
                 PartsOfSpeech = new List<string>()
             };
 
-            foreach (SemanticDomain sd in SemanticDomains)
+            foreach (var sd in SemanticDomains)
             {
                 clone.SemanticDomains.Add(sd.Clone());
             }
-            foreach (string aws in AnalysisWritingSystems)
+            foreach (var aws in AnalysisWritingSystems)
             {
                 clone.AnalysisWritingSystems.Add(aws.Clone() as string);
             }
-            foreach (string cs in ValidCharacters)
+            foreach (var cs in ValidCharacters)
             {
                 clone.ValidCharacters.Add(cs.Clone() as string);
             }
-            foreach (string cs in RejectedCharacters)
+            foreach (var cs in RejectedCharacters)
             {
                 clone.RejectedCharacters.Add(cs.Clone() as string);
             }
-            foreach (CustomField cf in CustomFields)
+            foreach (var cf in CustomFields)
             {
                 clone.CustomFields.Add(cf.Clone());
             }
-            foreach (string wf in WordFields)
+            foreach (var wf in WordFields)
             {
                 clone.WordFields.Add(wf.Clone() as string);
             }
-            foreach (string pos in PartsOfSpeech)
+            foreach (var pos in PartsOfSpeech)
             {
                 clone.PartsOfSpeech.Add(pos.Clone() as string);
             }

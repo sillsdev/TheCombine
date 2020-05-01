@@ -22,12 +22,12 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string wordId)
         {
-            bool wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
+            var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
 
             // We only want to add the deleted word if the word started in the frontier
             if (wordIsInFrontier)
             {
-                Word wordToDelete = _repo.GetWord(projectId, wordId).Result;
+                var wordToDelete = _repo.GetWord(projectId, wordId).Result;
                 wordToDelete.Id = "";
                 wordToDelete.History = new List<string>() { wordId };
 
@@ -46,7 +46,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Update(string projectId, string wordId, Word word)
         {
-            bool wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
+            var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
 
             // We only want to update words that are in the frontier
             if (wordIsInFrontier)
@@ -77,14 +77,14 @@ namespace BackendFramework.Services
         {
             var newWordsList = new List<Word>();
 
-            Word addParent = mergeWords.Parent.Clone();
+            var addParent = mergeWords.Parent.Clone();
             addParent.History = new List<string>();
 
             // Generate new child words form child word field
-            foreach (MergeSourceWord newChildWordState in mergeWords.ChildrenWords)
+            foreach (var newChildWordState in mergeWords.ChildrenWords)
             {
                 // Get child word
-                Word currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
+                var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
                 // Remove child from frontier
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
@@ -103,10 +103,10 @@ namespace BackendFramework.Services
 
                 // Add child word to the database
                 currentChildWord.Id = "";
-                Word newChildWord = await _repo.Add(currentChildWord);
+                var newChildWord = await _repo.Add(currentChildWord);
 
                 // Handle different states
-                Word separateWord = currentChildWord.Clone();
+                var separateWord = currentChildWord.Clone();
                 separateWord.Senses = new List<Sense>();
                 separateWord.Id = "";
                 for (var i = 0; i < currentChildWord.Senses.Count; i++)
@@ -139,16 +139,15 @@ namespace BackendFramework.Services
                 if (separateWord.Senses.Count != 0)
                 {
                     separateWord.ProjectId = projectId;
-                    Word newSeparate = await _repo.Create(separateWord);
+                    var newSeparate = await _repo.Create(separateWord);
                     newWordsList.Add(newSeparate);
                 }
             }
 
             // Add parent with child history to the database
             addParent.ProjectId = projectId;
-            Word newParent = await _repo.Create(addParent);
+            var newParent = await _repo.Create(addParent);
             newWordsList.Insert(0, newParent);
-
             return newWordsList;
         }
 
@@ -165,16 +164,16 @@ namespace BackendFramework.Services
             var isUniqueWord = true;
 
             // Iterate over words with the same vernacular
-            foreach (Word matchingVern in allVernaculars)
+            foreach (var matchingVern in allVernaculars)
             {
                 // Iterate over senses of those words
-                foreach (Sense newSense in word.Senses)
+                foreach (var newSense in word.Senses)
                 {
                     var newSenseIndex = 0;
                     foundDuplicateSense = false;
 
                     // Iterate over the senses of the new word
-                    foreach (Sense oldSense in matchingVern.Senses)
+                    foreach (var oldSense in matchingVern.Senses)
                     {
                         var oldSenseIndex = 0;
 
@@ -219,7 +218,7 @@ namespace BackendFramework.Services
         public string GetAudioFilePath(string projectId, string wordId, string fileName)
         {
             // Generate path to home on linux
-            string pathToHome = Environment.GetEnvironmentVariable("HOME");
+            var pathToHome = Environment.GetEnvironmentVariable("HOME");
 
             // Generate home on windows
             if (pathToHome == null)
@@ -227,7 +226,7 @@ namespace BackendFramework.Services
                 pathToHome = Environment.GetEnvironmentVariable("UserProfile");
             }
 
-            string filepath = Path.Combine(pathToHome, ".CombineFiles", projectId,
+            var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId,
                 "Import", "ExtractedLocation", "Lift", "Audio", fileName);
             Console.WriteLine($"filePath: {filepath}");
             return filepath;

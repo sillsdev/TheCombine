@@ -39,7 +39,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -61,7 +61,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -91,7 +91,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            UserEdit userEdit = await _repo.GetUserEdit(projectId, userEditId);
+            var userEdit = await _repo.GetUserEdit(projectId, userEditId);
             if (userEdit == null)
             {
                 return new NotFoundObjectResult(userEditId);
@@ -140,7 +140,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure userEdit exists
-            UserEdit toBeMod = await _repo.GetUserEdit(projectId, userEditId);
+            var toBeMod = await _repo.GetUserEdit(projectId, userEditId);
             if (toBeMod == null)
             {
                 return new NotFoundObjectResult(userEditId);
@@ -185,7 +185,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure userEdit exists
-            UserEdit document = await _repo.GetUserEdit(projectId, userEditId);
+            var document = await _repo.GetUserEdit(projectId, userEditId);
             if (document == null)
             {
                 return new NotFoundResult();
