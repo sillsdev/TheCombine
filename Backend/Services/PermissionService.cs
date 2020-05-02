@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -48,20 +49,26 @@ namespace BackendFramework.Services
             return permissionsObj;
         }
 
-        public bool IsProjectAuthorized(string value, HttpContext request)
+        public bool HasProjectPermission(Permission permission, HttpContext request)
         {
+            var userId = GetUserId(request);
+            var user = _userService.GetUser(userId).Result;
+
+            // Database administrators implicitly possess all permissions.
+            if (user.IsAdmin)
+            {
+                return true;
+            }
+
             // Retrieve JWT token from HTTP request and convert to object
             var permissionsObj = GetProjectPermissions(request);
 
             // Retrieve project ID from HTTP request
+            // TODO: This method of retrieving the project ID is brittle, should use regex or some other method.
             const int begOfId = 9;
             var indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + begOfId;
             if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
             {
-                // Check if admin
-                var userId = GetUserId(request);
-                var user = _userService.GetUser(userId).Result;
-
                 // If there is no project ID and they are not admin, do not allow changes
                 return user.IsAdmin;
             }
@@ -73,8 +80,7 @@ namespace BackendFramework.Services
             {
                 if (projectEntry.ProjectId == projId)
                 {
-                    int.TryParse(value, out var intValue);
-                    if (projectEntry.Permissions.Contains(intValue))
+                    if (projectEntry.Permissions.Contains((int)permission))
                     {
                         return true;
                     }

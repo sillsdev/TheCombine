@@ -28,7 +28,7 @@ namespace BackendFramework.Controllers
         [HttpGet("projects/{projectId}/allusers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -43,7 +43,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -181,7 +181,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete(string userId)
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }

@@ -72,10 +72,12 @@ namespace BackendFramework.Models
     public enum Permission
     {
         /// <summary> Database Admin, has no limitations </summary>
+        // TODO: This "permission" is redundant with User.IsAdmin() and feels out of place because it isn't a
+        //    "Project-specific" permission like the others in this enum.
         DatabaseAdmin = 6,
 
         /// <summary> Project Admin, can edit project settings and add and remove users, change userRoles </summary>
-        EditSettingsAndUsers = 5,
+        DeleteEditSettingsAndUsers = 5,
 
         /// <summary> Can import and export lift </summary>
         ImportExport = 4,

@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -48,7 +48,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/users")]
         public async Task<IActionResult> GetAllUsers(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -66,7 +66,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete()
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -81,7 +81,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}")]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -92,7 +92,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundResult();
             }
 
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 // if there are fields we need to hide from lower users remove them here
             }
@@ -117,7 +117,7 @@ namespace BackendFramework.Controllers
             {
                 Permissions = new List<int>
                 {
-                    (int) Permission.EditSettingsAndUsers,
+                    (int) Permission.DeleteEditSettingsAndUsers,
                     (int) Permission.ImportExport,
                     (int) Permission.MergeAndCharSet,
                     (int) Permission.Unused,
@@ -152,7 +152,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -177,7 +177,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}/characters")]
         public async Task<IActionResult> PutChars(string projectId, [FromBody]Project project)
         {
-            if (!_permissionService.IsProjectAuthorized("3", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.MergeAndCharSet, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -195,7 +195,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{projectId}")]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -230,7 +230,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}/users/{userId}")]
         public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]int[] permissions)
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -281,7 +281,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/liftcheck")]
         public async Task<IActionResult> CanUploadLift(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("4", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {
                 return new ForbidResult();
             }
