@@ -65,15 +65,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-#if DEBUG
             if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
             return new ObjectResult(await _projectService.DeleteAllProjects());
-#else
-            return new NotFoundResult();
-#endif
         }
 
         /// <summary> Returns <see cref="Project"/> with specified id </summary>

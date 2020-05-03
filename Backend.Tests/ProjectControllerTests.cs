@@ -36,7 +36,8 @@ namespace Backend.Tests
 
             _jwtAuthenticatedUser = new User {Username = "user", Password = "pass"};
             _userService.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = _userService.Authenticate(_jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
+            _jwtAuthenticatedUser = _userService.Authenticate(
+                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
 
             _controller.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
         }
@@ -115,7 +116,6 @@ namespace Backend.Tests
             modProject.Name = "Mark";
 
             _ = _controller.Put(modProject.Id, modProject);
-
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(1));
             Assert.Contains(modProject, _projectService.GetAllProjects().Result);
         }
@@ -124,11 +124,9 @@ namespace Backend.Tests
         public void TestDeleteProject()
         {
             var origProject = _projectService.Create(RandomProject()).Result;
-
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(1));
 
             _ = _controller.Delete(origProject.Id).Result;
-
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
 
@@ -138,11 +136,9 @@ namespace Backend.Tests
             _projectService.Create(RandomProject());
             _projectService.Create(RandomProject());
             _projectService.Create(RandomProject());
-
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(3));
 
             _ = _controller.Delete().Result;
-
             Assert.That(_projectService.GetAllProjects().Result, Has.Count.EqualTo(0));
         }
 
