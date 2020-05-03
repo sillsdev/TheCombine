@@ -17,6 +17,7 @@ namespace BackendFramework.Services
             _userService = userService;
         }
 
+        // TODO: This appears intrinsic to mongodb implementation and is brittle.
         private const int ProjIdLength = 24;
 
         private static SecurityToken GetJwt(HttpContext request)

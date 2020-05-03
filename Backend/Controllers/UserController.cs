@@ -180,7 +180,6 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userId}")]
         public async Task<IActionResult> Delete(string userId)
         {
-#if DEBUG
             if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
@@ -191,9 +190,6 @@ namespace BackendFramework.Controllers
                 return new OkResult();
             }
             return new NotFoundResult();
-#else
-            return new NotFoundResult();
-#endif
         }
     }
 }

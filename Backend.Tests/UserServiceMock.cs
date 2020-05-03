@@ -29,7 +29,7 @@ namespace Backend.Tests
 
         public Task<string> GetUserAvatar(string id)
         {
-            User foundUser = _users.Single(user => user.Id == id);
+            var foundUser = _users.Single(user => user.Id == id);
             return Task.FromResult(foundUser.Clone().Avatar);
         }
 
@@ -70,7 +70,6 @@ namespace Backend.Tests
             try
             {
                 var foundUser = _users.Single(u => u.Username == username && u.Password == password);
-
                 if (foundUser == null)
                 {
                     return null;

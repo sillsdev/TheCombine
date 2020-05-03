@@ -164,7 +164,7 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(word.Id);
         }
 
-        /// <summary> Deletes <see cref="Word"/> with specified id </summary>
+        /// <summary> Deletes <see cref="Word"/> with specified ID </summary>
         /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId} </remarks>
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> Delete(string projectId, string wordId)
