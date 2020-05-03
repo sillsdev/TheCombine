@@ -52,7 +52,9 @@ namespace BackendFramework.Models
         [BsonElement("token")]
         public string Token { get; set; }
 
-        /// <summary> Is set to true if the user is a Database admin, allows access to high level abilities </summary>
+        /// <summary>
+        /// Is set to true if the user is a Database Admin, implicitly grants ALL permissions for ALL Projects
+        /// </summary>
         [BsonElement("isAdmin")]
         public bool IsAdmin { get; set; }
 

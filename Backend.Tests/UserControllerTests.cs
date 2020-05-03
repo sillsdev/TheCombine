@@ -48,7 +48,6 @@ namespace Backend.Tests
             _userService.Create(RandomUser());
 
             var action = _controller.Get(user.Id).Result;
-
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
             var foundUser = (action as ObjectResult).Value as User;
@@ -83,11 +82,9 @@ namespace Backend.Tests
         public void TestDeleteUser()
         {
             var origUser = _userService.Create(RandomUser()).Result;
-
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(1));
 
             _ = _controller.Delete(origUser.Id).Result;
-
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
 
@@ -97,11 +94,9 @@ namespace Backend.Tests
             _userService.Create(RandomUser());
             _userService.Create(RandomUser());
             _userService.Create(RandomUser());
-
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(3));
 
             _ = _controller.Delete().Result;
-
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
     }
