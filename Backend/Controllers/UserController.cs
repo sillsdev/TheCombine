@@ -42,16 +42,12 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-#if DEBUG
             if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            return new ObjectResult(await _userService.DeleteAllUsers());
-#else
-            return new NotFoundResult();
-#endif
+            return new OkObjectResult(await _userService.DeleteAllUsers());
         }
 
         /// <summary> Logs in a <see cref="User"/> and gives a token </summary>
