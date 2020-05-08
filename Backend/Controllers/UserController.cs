@@ -165,7 +165,7 @@ namespace BackendFramework.Controllers
             {
                 return new OkObjectResult(userId);
             }
-            else //not updated
+            else // Not updated
             {
                 return new StatusCodeResult(304);
             }

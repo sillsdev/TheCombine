@@ -90,7 +90,7 @@ namespace BackendFramework.Controllers
 
             if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
-                // if there are fields we need to hide from lower users remove them here
+                // If there are fields we need to hide from lower users remove them here
             }
 
             return new ObjectResult(project);
@@ -98,7 +98,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Creates a <see cref="Project"/> </summary>
         /// <remarks> POST: v1/projects </remarks>
-        /// <returns> Id of created project </returns>
+        /// <returns> Id of created Project </returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Project project)
         {
@@ -109,7 +109,7 @@ namespace BackendFramework.Controllers
             var currentUser = await _userService.GetUser(currentUserId);
 
             // Give Project admin privileges to user who creates a Project
-            var usersRole = new UserRole
+            var userRole = new UserRole
             {
                 Permissions = new List<int>
                 {
@@ -121,8 +121,7 @@ namespace BackendFramework.Controllers
                 },
                 ProjectId = project.Id
             };
-
-            usersRole = await _userRoleService.Create(usersRole);
+            userRole = await _userRoleService.Create(userRole);
 
             // Update user with userRole
             if (currentUser.ProjectRoles.Equals(null))
@@ -131,7 +130,7 @@ namespace BackendFramework.Controllers
             }
 
             // Generate the userRoles and update the user
-            currentUser.ProjectRoles.Add(project.Id, usersRole.Id);
+            currentUser.ProjectRoles.Add(project.Id, userRole.Id);
             await _userService.Update(currentUserId, currentUser);
             // Generate the JWT based on those new userRoles
             currentUser = await _userService.MakeJwt(currentUser);
@@ -144,7 +143,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>
         /// <remarks> PUT: v1/projects/{projectId} </remarks>
-        /// <returns> Id of updated project </returns>
+        /// <returns> Id of updated Project </returns>
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {

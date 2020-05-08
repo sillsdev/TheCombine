@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
 {
-    /// <summary> The permissions a user has on a particular project </summary>
+    /// <summary> The permissions a <see cref="User"/> has on a particular <see cref="Project"/> </summary>
     public class UserRole
     {
         [BsonId]

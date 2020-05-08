@@ -154,7 +154,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds a <see cref="User"/> </summary>
-        /// <returns> The user created </returns>
+        /// <returns> The <see cref="User"/> created, or null if the user could not be created. </returns>
         public async Task<User> Create(User user)
         {
             // Check if collection is not empty
@@ -216,15 +216,17 @@ namespace BackendFramework.Services
                 .Set(x => x.UILang, user.UILang);
 
             if (!string.IsNullOrEmpty(user.Avatar))
+            {
                 updateDef = updateDef.Set(x => x.Avatar, user.Avatar);
+            }
 
             if (!string.IsNullOrEmpty(user.Token))
+            {
                 updateDef = updateDef.Set(x => x.Token, user.Token);
+            }
 
-            //do not update admin privilages
-
+            // Do not update admin privileges
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
-
             if (!updateResult.IsAcknowledged)
             {
                 return ResultOfUpdate.NotFound;

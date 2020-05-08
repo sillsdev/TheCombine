@@ -97,11 +97,12 @@ namespace BackendFramework.Services
             return userObj.WorkedProjects[projectId] != userEditId;
         }
 
+        /// <summary>Retrieve the User ID from the JWT in a request. </summary>
         public string GetUserId(HttpContext request)
         {
             var jsonToken = GetJwt(request);
-            var permissionsObj = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
-            return permissionsObj;
+            var userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
+            return userId;
         }
     }
 }
