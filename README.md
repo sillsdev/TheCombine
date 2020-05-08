@@ -68,6 +68,15 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+## Create Database Admin User
+
+To grant a user database administrator rights (all permissions for all database objects), create a user normally and then
+execute:
+
+```batch
+> setAdminUser.bat <USER_NAME>
+```
+
 ## Features
 
 TODO
