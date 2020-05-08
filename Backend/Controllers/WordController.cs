@@ -55,7 +55,6 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
-#if DEBUG
             if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
@@ -69,9 +68,6 @@ namespace BackendFramework.Controllers
             }
 
             return new ObjectResult(await _wordRepo.DeleteAllWords(projectId));
-#else
-            return new NotFoundResult();
-#endif
         }
 
         /// <summary> Returns <see cref="Word"/> with specified id </summary>

@@ -56,7 +56,6 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-#if DEBUG
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
@@ -65,9 +64,6 @@ namespace BackendFramework.Controllers
             }
 
             return new ObjectResult(await _userRoleService.DeleteAllUserRoles(projectId));
-#else
-            return new NotFoundResult();
-#endif
         }
 
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
