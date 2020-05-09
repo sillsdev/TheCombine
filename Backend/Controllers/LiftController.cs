@@ -10,12 +10,11 @@ using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
 using static BackendFramework.Helper.Utilities;
 
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Backend.Tests")]
+[assembly: InternalsVisibleTo("Backend.Tests")]
 namespace BackendFramework.Controllers
 {
     [Authorize]
@@ -43,7 +42,7 @@ namespace BackendFramework.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.IsProjectAuthorized("4", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -166,7 +165,7 @@ namespace BackendFramework.Controllers
         [HttpGet("download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("4", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {
                 return new ForbidResult();
             }

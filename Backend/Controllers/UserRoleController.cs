@@ -30,7 +30,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -51,12 +51,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
 
-#if DEBUG
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
@@ -65,9 +64,6 @@ namespace BackendFramework.Controllers
             }
 
             return new ObjectResult(await _userRoleService.DeleteAllUserRoles(projectId));
-#else
-            return new NotFoundResult();
-#endif
         }
 
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
@@ -75,7 +71,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{userRoleId}")]
         public async Task<IActionResult> Get(string projectId, string userRoleId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -102,7 +98,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId, [FromBody]UserRole userRole)
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -130,7 +126,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userRoleId}")]
         public async Task<IActionResult> Delete(string projectId, string userRoleId)
         {
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -155,7 +151,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{userRoleId}")]
         public async Task<IActionResult> Put(string projectId, string userRoleId, [FromBody] UserRole userRole)
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }

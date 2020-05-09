@@ -52,7 +52,9 @@ namespace BackendFramework.Models
         [BsonElement("token")]
         public string Token { get; set; }
 
-        /// <summary> Is set to true if the user is a Database admin, allows access to high level abilities </summary>
+        /// <summary>
+        /// Is set to true if the user is a Database Admin, implicitly grants ALL permissions for ALL Projects
+        /// </summary>
         [BsonElement("isAdmin")]
         public bool IsAdmin { get; set; }
 
@@ -69,6 +71,7 @@ namespace BackendFramework.Models
             Username = "";
             UILang = "";
             Token = "";
+            IsAdmin = false;
             WorkedProjects = new Dictionary<string, string>();
             ProjectRoles = new Dictionary<string, string>();
         }
@@ -133,11 +136,9 @@ namespace BackendFramework.Models
             {
                 return false;
             }
-            else
-            {
-                var other = obj as User;
-                return other.Id.Equals(Id) && ContentEquals(other);
-            }
+
+            var other = obj as User;
+            return other.Id.Equals(Id) && ContentEquals(other);
         }
 
         public override int GetHashCode()

@@ -1,4 +1,5 @@
 ﻿using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace Backend.Tests
@@ -10,7 +11,7 @@ namespace Backend.Tests
             return true;
         }
 
-        public bool IsProjectAuthorized(string value, HttpContext request)
+        public bool HasProjectPermission(Permission permission, HttpContext request)
         {
             return true;
         }

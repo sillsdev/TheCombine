@@ -34,7 +34,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -55,8 +55,7 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(string projectId)
         {
-#if DEBUG
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -69,9 +68,6 @@ namespace BackendFramework.Controllers
             }
 
             return new ObjectResult(await _wordRepo.DeleteAllWords(projectId));
-#else
-            return new NotFoundResult();
-#endif
         }
 
         /// <summary> Returns <see cref="Word"/> with specified id </summary>
@@ -79,7 +75,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{wordId}")]
         public async Task<IActionResult> Get(string projectId, string wordId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -105,7 +101,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId, [FromBody]Word word)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -138,7 +134,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{wordId}")]
         public async Task<IActionResult> Put(string projectId, string wordId, [FromBody] Word word)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -164,12 +160,12 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(word.Id);
         }
 
-        /// <summary> Deletes <see cref="Word"/> with specified id </summary>
+        /// <summary> Deletes <see cref="Word"/> with specified ID </summary>
         /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId} </remarks>
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> Delete(string projectId, string wordId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -194,7 +190,7 @@ namespace BackendFramework.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(string projectId, [FromBody] MergeWords mergeWords)
         {
-            if (!_permissionService.IsProjectAuthorized("3", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.MergeAndCharSet, HttpContext))
             {
                 return new ForbidResult();
             }

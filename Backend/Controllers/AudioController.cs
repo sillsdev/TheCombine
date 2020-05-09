@@ -5,7 +5,6 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static BackendFramework.Helper.Utilities;
 
@@ -69,7 +68,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
             [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }

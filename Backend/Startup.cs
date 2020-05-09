@@ -149,7 +149,6 @@ namespace BackendFramework
             });
 
             app.UseAuthentication();
-
             app.UseMvc();
         }
     }

@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
 {
-    /// <summary> The permissions a user has on a particular project </summary>
+    /// <summary> The permissions a <see cref="User"/> has on a particular <see cref="Project"/> </summary>
     public class UserRole
     {
         [BsonId]
@@ -58,11 +58,9 @@ namespace BackendFramework.Models
             {
                 return false;
             }
-            else
-            {
-                var other = obj as UserRole;
-                return other.Id.Equals(Id) && ContentEquals(other);
-            }
+
+            var other = obj as UserRole;
+            return other.Id.Equals(Id) && ContentEquals(other);
         }
 
         public override int GetHashCode()
@@ -71,32 +69,21 @@ namespace BackendFramework.Models
         }
     }
 
-    public class ProjectPermissions
-    {
-        public ProjectPermissions(string projectId, List<int> permissions)
-        {
-            ProjectId = projectId;
-            Permissions = permissions;
-        }
-        public string ProjectId { get; set; }
-
-        /// This is a list of permissions but is represented as ints for ease of catching HTTP requests.
-        public List<int> Permissions { get; set; }
-    }
-
     public enum Permission
     {
         /// <summary> Database Admin, has no limitations </summary>
+        // TODO: This "permission" is redundant with User.IsAdmin() and feels out of place because it isn't a
+        //    "Project-specific" permission like the others in this enum.
         DatabaseAdmin = 6,
 
         /// <summary> Project Admin, can edit project settings and add and remove users, change userRoles </summary>
-        EditSettingsNUsers = 5,
+        DeleteEditSettingsAndUsers = 5,
 
         /// <summary> Can import and export lift </summary>
         ImportExport = 4,
 
         /// <summary> Can merge words and change the char set </summary>
-        MergeNCharSet = 3,
+        MergeAndCharSet = 3,
 
         /// <summary> Unused </summary>
         Unused = 2,
