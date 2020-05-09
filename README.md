@@ -30,7 +30,8 @@ In the project directory, you can run:
 
 ## `npm start`
 
-> Note: To avoid browser tabs from being opened automatically, set `BROWSER=none` environment variable. 
+> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set 
+ [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable. 
 
 Installs the necessary packages and runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
