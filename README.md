@@ -6,7 +6,8 @@ A rapid word collection tool.
 
 1. Clone this repo:<br>
    `git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git`<br>
-   The `--recurse-submodules` is used to fetch many of the Ansible roles used by the Ansible playbooks in the deploy folder. If you've already cloned the repo without `--recurse-submodules`, run<br>
+   The `--recurse-submodules` is used to fetch many of the Ansible roles used by the Ansible playbooks in 
+   the deploy folder. If you've already cloned the repo without `--recurse-submodules`, run<br>
    `git submodule update --init --recursive`<br>
    to pull and initialize them.
 2. Install:
@@ -17,7 +18,8 @@ A rapid word collection tool.
      - On Windows, if using [Chocolately][chocolately]: `choco install mongodb`
    - [VS Code](https://code.visualstudio.com/download) and Prettier code formatting extension
 3. Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL certificate
-4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as *This is a secret key*. Set it in your `.profile` (Linux) or the *System* app (Windows).
+4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, 
+   such as *This is a secret key*. Set it in your `.profile` (Linux) or the *System* app (Windows).
 5. Run `npm start` from the project directory to install dependencies and start the project
 
 [chocolately]: https://chocolatey.org/
@@ -27,6 +29,8 @@ A rapid word collection tool.
 In the project directory, you can run:
 
 ## `npm start`
+
+> Note: To avoid browser tabs from being opened automatically, set `BROWSER=none` environment variable. 
 
 Installs the necessary packages and runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -52,7 +56,8 @@ Runs only the mongo database
 ## `npm test`
 
 Launches the test runners in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more 
+information.
 
 #### `npm run coverage`
 
@@ -70,8 +75,8 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## Create Database Admin User
 
-To grant a user database administrator rights (all permissions for all database objects), create a user normally and then
-execute:
+To grant a user database administrator rights (all permissions for all database objects), create a user normally and 
+then execute:
 
 ```batch
 > setAdminUser.bat <USER_NAME>
