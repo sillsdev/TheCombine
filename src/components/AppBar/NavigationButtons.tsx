@@ -27,6 +27,9 @@ export default function NavigationButtons() {
       >
         <Translate id="appBar.dataCleanup" />
       </Button>
+      <Button color="inherit">
+        <Translate id="appBar.siteSettings" />
+      </Button>
     </React.Fragment>
   );
 }
