@@ -3,7 +3,7 @@ import { TextField, Tooltip } from "@material-ui/core";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 
 interface ExistingVernEntryProps {
@@ -27,7 +27,7 @@ export class ExistingVernacular extends React.Component<
         <TextField
           fullWidth
           value={this.props.vernacular}
-          onChange={e => this.props.updateField(e.target.value)}
+          onChange={(e) => this.props.updateField(e.target.value)}
           onBlur={() => this.props.updateWord()}
         />
         {this.props.isDuplicate && (
@@ -44,7 +44,7 @@ export class ExistingVernacular extends React.Component<
                 position: "absolute",
                 top: 8,
                 right: 48,
-                cursor: "pointer"
+                cursor: "pointer",
               }}
               onClick={() => this.props.toggleDuplicateResolutionView()}
             />

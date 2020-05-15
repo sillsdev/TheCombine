@@ -4,7 +4,7 @@ import theme from "../../../types/theme";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 import { Word, SemanticDomain, State } from "../../../types/word";
 import * as Backend from "../../../backend";
@@ -77,7 +77,7 @@ export class DataEntryTable extends React.Component<
       existingWords: [],
       recentlyAddedWords: [],
       isReady: false,
-      autoComplete: AutoComplete.Off
+      autoComplete: AutoComplete.Off,
     };
     this.recorder = new Recorder();
     this.spellChecker = new SpellChecker();
@@ -91,7 +91,7 @@ export class DataEntryTable extends React.Component<
     let autoCompleteSetting = await getProjectAutocompleteSetting();
     this.setState({
       existingWords: allWords,
-      autoComplete: autoCompleteSetting
+      autoComplete: autoCompleteSetting,
     });
   }
 
@@ -108,14 +108,14 @@ export class DataEntryTable extends React.Component<
     let words: Word[] = await getWordsFromBackend();
     this.setState({
       existingWords: words,
-      recentlyAddedWords: updatedNewWords
+      recentlyAddedWords: updatedNewWords,
     });
   }
 
   /** Update the word in the backend and the frontend */
   async updateWordForNewEntry(wordToUpdate: Word) {
     let existingWord = this.state.existingWords.find(
-      word => word.id === wordToUpdate.id
+      (word) => word.id === wordToUpdate.id
     );
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
@@ -134,31 +134,31 @@ export class DataEntryTable extends React.Component<
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
     let recentlyAddedWords = [...this.state.recentlyAddedWords];
     let frontendWords: Word[] = recentlyAddedWords.map(
-      wordAccess => wordAccess.word
+      (wordAccess) => wordAccess.word
     );
 
     if (wordToDelete) {
       // Delete word from backend, then replace word in frontend with updated one
-      let index = frontendWords.findIndex(w => w.id === wordToDelete.id);
+      let index = frontendWords.findIndex((w) => w.id === wordToDelete.id);
       if (index === -1) {
         console.log("Word does not exist in recentlyAddedWords");
       } else {
         let updatedWordAccess: WordAccess = {
           word: updatedWord,
-          mutable: false
+          mutable: false,
         };
         this.updateWordInFrontend(index, updatedWordAccess);
         this.deleteWordAndUpdateExistingWords(wordToDelete);
       }
     } else {
       // Update word
-      let index = frontendWords.findIndex(w => w.id === wordToUpdate.id);
+      let index = frontendWords.findIndex((w) => w.id === wordToUpdate.id);
       if (index === -1) {
         console.log("Word does not exist in recentlyAddedWords");
       } else {
         let updatedWordAccess: WordAccess = {
           word: updatedWord,
-          mutable: true
+          mutable: true,
         };
         this.updateWordInFrontend(index, updatedWordAccess);
       }
@@ -191,7 +191,7 @@ export class DataEntryTable extends React.Component<
 
   removeWordFromDisplay(word: Word) {
     let recentlyAddedWords: WordAccess[] = this.state.recentlyAddedWords.filter(
-      wordAccess => wordAccess.word.id !== word.id
+      (wordAccess) => wordAccess.word.id !== word.id
     );
     this.setState({ recentlyAddedWords });
   }
@@ -243,7 +243,7 @@ export class DataEntryTable extends React.Component<
                 <ExistingEntry
                   key={wordAccess.word.id}
                   wordsBeingAdded={this.state.recentlyAddedWords.map(
-                    wordAccess => wordAccess.word
+                    (wordAccess) => wordAccess.word
                   )}
                   existingWords={this.state.existingWords}
                   entryIndex={index}

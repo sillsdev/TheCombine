@@ -3,7 +3,7 @@ import { TextField, Button, Typography } from "@material-ui/core";
 import {
   withLocalize,
   LocalizeContextProps,
-  Translate
+  Translate,
 } from "react-localize-redux";
 
 export interface FindAndReplaceProps {
@@ -25,7 +25,7 @@ export class FindAndReplace extends React.Component<
     super(props);
     this.state = {
       findValue: props.initialFindValue,
-      replaceValue: ""
+      replaceValue: "",
     };
   }
 
@@ -33,7 +33,7 @@ export class FindAndReplace extends React.Component<
     if (prevProps.initialFindValue !== this.props.initialFindValue)
       this.setState({
         findValue: this.props.initialFindValue,
-        replaceValue: ""
+        replaceValue: "",
       });
   }
 
@@ -47,7 +47,7 @@ export class FindAndReplace extends React.Component<
     const value = e.target.value;
 
     this.setState({
-      [field]: value
+      [field]: value,
     } as Pick<FindAndReplaceState, K>);
   }
 
@@ -58,7 +58,7 @@ export class FindAndReplace extends React.Component<
         <TextField
           label={<Translate id="charInventory.characterSet.find" />}
           value={this.state.findValue}
-          onChange={e => this.updateField(e, "findValue")}
+          onChange={(e) => this.updateField(e, "findValue")}
           variant="outlined"
           style={{ width: "100%" }}
           margin="normal"
@@ -67,7 +67,7 @@ export class FindAndReplace extends React.Component<
         <TextField
           label={<Translate id="charInventory.characterSet.replace" />}
           value={this.state.replaceValue}
-          onChange={e => this.updateField(e, "replaceValue")}
+          onChange={(e) => this.updateField(e, "replaceValue")}
           variant="outlined"
           style={{ width: "100%" }}
           margin="normal"

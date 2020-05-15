@@ -1,7 +1,7 @@
 import { ReviewEntriesWord, OLD_SENSE } from "./ReviewEntriesTypes";
 import {
   ReviewEntriesAction,
-  ReviewEntriesActionTypes
+  ReviewEntriesActionTypes,
 } from "./ReviewEntriesActions";
 
 export interface ReviewEntriesState {
@@ -11,7 +11,7 @@ export interface ReviewEntriesState {
 
 export const defaultState: ReviewEntriesState = {
   words: [],
-  language: "en"
+  language: "en",
 };
 
 export const reviewEntriesReducer = (
@@ -23,26 +23,26 @@ export const reviewEntriesReducer = (
       // Update the local words
       return {
         ...state,
-        words: action.words
+        words: action.words,
       };
 
     case ReviewEntriesActionTypes.UpdateWord:
       // Update the specified word's IDs and data
       return {
         ...state,
-        words: state.words.map(word => {
+        words: state.words.map((word) => {
           if (word.id === action.id) {
             return {
               ...action.newWord,
               id: action.newId,
               vernacular: action.newWord.vernacular,
-              senses: action.newWord.senses.map(sense => ({
+              senses: action.newWord.senses.map((sense) => ({
                 ...sense,
-                senseId: sense.senseId + OLD_SENSE
-              }))
+                senseId: sense.senseId + OLD_SENSE,
+              })),
             };
           } else return word;
-        })
+        }),
       };
 
     default:

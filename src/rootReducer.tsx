@@ -38,5 +38,5 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   reviewEntriesState: reviewEntriesReducer,
 
   //temporary
-  tempState: tempReducer
+  tempState: tempReducer,
 });

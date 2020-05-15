@@ -6,7 +6,7 @@ describe("Test TraverseTreeAction", () => {
     const domain = {};
     expect(TraverseTreeAction(domain as SemanticDomainWithSubdomains)).toEqual({
       type: TreeActionType.TRAVERSE_TREE,
-      payload: domain
+      payload: domain,
     });
   });
 });

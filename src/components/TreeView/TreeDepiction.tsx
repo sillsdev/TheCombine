@@ -4,7 +4,7 @@ import {
   GridListTile,
   Button,
   Typography,
-  Grid
+  Grid,
 } from "@material-ui/core";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 
@@ -79,7 +79,8 @@ export default class TreeDepiction extends React.Component<
 
   // Renders the subdomains + their connectors to the current domain
   subDomains(): ReactNode {
-    let subDomains: SemanticDomainWithSubdomains[] = this.props.currentDomain.subdomains;
+    let subDomains: SemanticDomainWithSubdomains[] = this.props.currentDomain
+      .subdomains;
     if (this.props.currentDomain.subdomains.length > 1)
       return (
         <GridList
@@ -89,7 +90,7 @@ export default class TreeDepiction extends React.Component<
           style={{
             width:
               (this.props.currentDomain.subdomains.length * 2 - 1) *
-              this.state.tileWidth
+              this.state.tileWidth,
           }}
         >
           {/* Content */}
@@ -112,7 +113,7 @@ export default class TreeDepiction extends React.Component<
           spacing={0}
           cellHeight={"auto"}
           style={{
-            width: this.state.tileWidth
+            width: this.state.tileWidth,
           }}
         >
           <GridListTile>{this.nameTile(subDomains[0])}</GridListTile>
@@ -193,7 +194,7 @@ export default class TreeDepiction extends React.Component<
           bottom: 0,
           width: "90%",
           height: "90%",
-          margin: "5%"
+          margin: "5%",
         }}
         onClick={() => {
           this.props.animate(domain);

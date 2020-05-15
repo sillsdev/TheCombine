@@ -2,7 +2,7 @@ import React from "react";
 import CharacterInventoryComponent, {
   CharacterInventory,
   SAVE,
-  CANCEL
+  CANCEL,
 } from "../CharacterInventoryComponent";
 import ReactDOM from "react-dom";
 import { Project } from "../../../types/project";
@@ -24,7 +24,7 @@ jest.mock("@material-ui/core", () => {
   const materialUiCore = jest.requireActual("@material-ui/core");
   return {
     ...materialUiCore,
-    Dialog: materialUiCore.Container
+    Dialog: materialUiCore.Container,
   };
 });
 

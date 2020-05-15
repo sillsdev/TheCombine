@@ -8,20 +8,20 @@ const createMockStore = configureMockStore([thunk]);
 
 const project = {
   name: "testProjectName",
-  languageData: new File([], "testFile.lift")
+  languageData: new File([], "testFile.lift"),
 };
 
 describe("CreateProjectAction Tests", () => {
   let mockState: reducer.CreateProjectState = reducer.defaultState;
   let CreateProject: action.CreateProjectAction = {
     type: action.IN_PROGRESS,
-    payload: { name: project.name }
+    payload: { name: project.name },
   };
 
   test("inProgress returns correct value", () => {
     expect(action.inProgress(project.name)).toEqual({
       type: IN_PROGRESS,
-      payload: { name: project.name }
+      payload: { name: project.name },
     });
   });
 

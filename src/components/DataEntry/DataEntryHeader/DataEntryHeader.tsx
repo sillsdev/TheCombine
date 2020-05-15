@@ -4,7 +4,7 @@ import theme from "../../../types/theme";
 import {
   Translate,
   withLocalize,
-  LocalizeContextProps
+  LocalizeContextProps,
 } from "react-localize-redux";
 import DomainTree from "../../TreeView/SemanticDomain";
 

@@ -5,7 +5,7 @@ import {
   GoalOption,
   GoalType,
   GoalStep,
-  generateGuid
+  generateGuid,
 } from "../../types/goals";
 import { User } from "../../types/user";
 

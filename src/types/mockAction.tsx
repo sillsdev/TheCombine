@@ -19,5 +19,5 @@ const goal: Goal = new CreateCharInv();
 // Used for passing a non-existent action to a reducer
 export const MockActionInstance: MockAction = {
   type: MOCK_TYPE,
-  payload: goal
+  payload: goal,
 };

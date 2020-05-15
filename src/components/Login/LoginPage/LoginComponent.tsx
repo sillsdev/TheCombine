@@ -3,7 +3,7 @@ import * as React from "react";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -13,7 +13,7 @@ import {
   CardContent,
   CircularProgress,
   Typography,
-  Link
+  Link,
 } from "@material-ui/core";
 import history from "../../../history";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
@@ -51,12 +51,12 @@ export class Login extends React.Component<
       user: "",
       password: "",
       isVerified: !RuntimeConfig.getInstance().captchaRequired(),
-      error: { password: false, username: false }
+      error: { password: false, username: false },
     };
   }
 
   captchaStyle = {
-    margin: "5px"
+    margin: "5px",
   };
 
   componentDidMount() {
@@ -73,7 +73,7 @@ export class Login extends React.Component<
     const value = e.target.value;
 
     this.setState({
-      [field]: value
+      [field]: value,
     } as Pick<LoginState, K>);
   }
 
@@ -96,7 +96,7 @@ export class Login extends React.Component<
     return (
       <Grid container justify="center">
         <Card style={{ width: 450 }}>
-          <form onSubmit={e => this.login(e)}>
+          <form onSubmit={(e) => this.login(e)}>
             <CardContent>
               {/* Title */}
               <Typography variant="h5" align="center" gutterBottom>
@@ -109,7 +109,7 @@ export class Login extends React.Component<
                 autoComplete="username"
                 label={<Translate id="login.username" />}
                 value={this.state.user}
-                onChange={e => this.updateField(e, "user")}
+                onChange={(e) => this.updateField(e, "user")}
                 error={this.state.error["username"]}
                 helperText={
                   this.state.error["username"] ? (
@@ -130,7 +130,7 @@ export class Login extends React.Component<
                 label={<Translate id="login.password" />}
                 type="password"
                 value={this.state.password}
-                onChange={e => this.updateField(e, "password")}
+                onChange={(e) => this.updateField(e, "password")}
                 error={this.state.error["password"]}
                 helperText={
                   this.state.error["password"] ? (
@@ -160,23 +160,23 @@ export class Login extends React.Component<
                 </Typography>
               )}
 
-             { (RuntimeConfig.getInstance().captchaRequired()) && (
-              <div
-                className="form-group"
-                id="captcha-holder"
-                style={this.captchaStyle}
-              >
-                <ReCaptcha
-                  siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
-                  theme="light"
-                  size="normal"
-                  onSuccess={captcha => this.setState({ isVerified: true })}
-                  onExpire={() => this.setState({ isVerified: false })}
-                  onError={() =>
-                    console.log("Something went wrong, check your conenction")
-                  }
-                />
-              </div>
+              {RuntimeConfig.getInstance().captchaRequired() && (
+                <div
+                  className="form-group"
+                  id="captcha-holder"
+                  style={this.captchaStyle}
+                >
+                  <ReCaptcha
+                    siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
+                    theme="light"
+                    size="normal"
+                    onSuccess={(captcha) => this.setState({ isVerified: true })}
+                    onExpire={() => this.setState({ isVerified: false })}
+                    onError={() =>
+                      console.log("Something went wrong, check your conenction")
+                    }
+                  />
+                </div>
               )}
               {/* Register and Login buttons */}
               <Grid container justify="flex-end" spacing={2}>

@@ -2,7 +2,7 @@ import React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 import { Typography, GridList, GridListTile, Button } from "@material-ui/core";
 
@@ -14,12 +14,12 @@ const style = {
     flexWrap: "wrap",
     justifyContent: "space-around",
     overflowY: "hidden",
-    overflowX: "scroll"
+    overflowX: "scroll",
   },
   buttonStyle: {
     height: "95%",
-    padding: "1vw"
-  }
+    padding: "1vw",
+  },
 };
 
 export interface HorizontalDisplayProps {
@@ -89,7 +89,7 @@ export class HorizontalDisplay extends React.Component<
           flexWrap: "nowrap",
           width: this.props.width + "vw",
           overflowX: "scroll",
-          overflowY: "hidden"
+          overflowY: "hidden",
         }}
         cols={this.props.numPanes}
       >

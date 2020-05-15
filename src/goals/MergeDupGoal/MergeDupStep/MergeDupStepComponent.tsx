@@ -10,27 +10,27 @@ import {
   Typography,
   Chip,
   Drawer,
-  Paper
+  Paper,
 } from "@material-ui/core";
 import React from "react";
 import {
   LocalizeContextProps,
   Translate,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 import theme from "../../../types/theme";
 import { uuid } from "../../../utilities";
 import {
   TreeDataSense,
   MergeTreeReference,
-  MergeTreeWord
+  MergeTreeWord,
 } from "./MergeDupsTree";
 import MergeRow from "./MergeRow";
 import {
   Droppable,
   Draggable,
   DragDropContext,
-  DropResult
+  DropResult,
 } from "react-beautiful-dnd";
 import { ArrowForwardIos } from "@material-ui/icons";
 
@@ -69,7 +69,7 @@ class MergeDupStep extends React.Component<
     this.state = {
       colCount: 2,
       portrait: true,
-      sideBar: { senses: [], wordID: "WORD", senseID: "SENSE" }
+      sideBar: { senses: [], wordID: "WORD", senseID: "SENSE" },
     };
     if (this.props.refreshWords) {
       this.props.refreshWords();
@@ -79,7 +79,7 @@ class MergeDupStep extends React.Component<
   next() {
     this.setState({
       ...this.state,
-      sideBar: { senses: [], wordID: "", senseID: "" }
+      sideBar: { senses: [], wordID: "", senseID: "" },
     });
     if (this.props.advanceStep) {
       this.props.advanceStep();
@@ -91,7 +91,7 @@ class MergeDupStep extends React.Component<
   saveContinue() {
     this.setState({
       ...this.state,
-      sideBar: { senses: [], wordID: "", senseID: "" }
+      sideBar: { senses: [], wordID: "", senseID: "" },
     });
     if (this.props.mergeAll) {
       this.props.mergeAll().then(() => {
@@ -109,7 +109,7 @@ class MergeDupStep extends React.Component<
         srcRefs.push({
           word: srcRef.word,
           sense: srcRef.sense,
-          duplicate: key
+          duplicate: key,
         });
       }
     } else {
@@ -124,7 +124,7 @@ class MergeDupStep extends React.Component<
         destRefs.push({
           word: combineRef.word,
           sense: combineRef.sense,
-          duplicate: uuid()
+          duplicate: uuid(),
         })
       );
       this.props.moveSenses(srcRefs, destRefs);
@@ -138,7 +138,7 @@ class MergeDupStep extends React.Component<
           destRefs.push({
             word: res.destination.droppableId,
             sense: destSense,
-            duplicate: uuid()
+            duplicate: uuid(),
           });
         }
         this.props.moveSenses(srcRefs, destRefs);
@@ -174,7 +174,7 @@ class MergeDupStep extends React.Component<
           droppableId={`${this.state.sideBar.wordID} ${this.state.sideBar.senseID}`}
           key={this.state.sideBar.senseID}
         >
-          {providedDroppable => (
+          {(providedDroppable) => (
             <div
               ref={providedDroppable.innerRef}
               {...providedDroppable.droppableProps}
@@ -188,7 +188,7 @@ class MergeDupStep extends React.Component<
                 onClick={() =>
                   this.setState({
                     ...this.state,
-                    sideBar: { senses: [], senseID: "", wordID: "" }
+                    sideBar: { senses: [], senseID: "", wordID: "" },
                   })
                 }
               >
@@ -203,7 +203,7 @@ class MergeDupStep extends React.Component<
                   draggableId={JSON.stringify({
                     word: this.state.sideBar.wordID,
                     sense: this.state.sideBar.senseID,
-                    duplicate: entry.id
+                    duplicate: entry.id,
                   })}
                   index={index}
                 >
@@ -221,18 +221,18 @@ class MergeDupStep extends React.Component<
                             ? "lightgreen"
                             : index === 0
                             ? "white"
-                            : "lightgrey"
+                            : "lightgrey",
                         }}
                       >
                         <CardContent>
                           <Typography variant={"h5"}>
                             {entry.data.glosses.length > 0 &&
                               entry.data.glosses
-                                .map(gloss => gloss.def)
+                                .map((gloss) => gloss.def)
                                 .reduce((gloss, acc) => `${acc}, ${gloss}`)}
                           </Typography>
                           <Grid container spacing={2}>
-                            {entry.data.semanticDomains.map(semdom => (
+                            {entry.data.semanticDomains.map((semdom) => (
                               <Grid item xs key={semdom.name}>
                                 <Chip label={`${semdom.name} ${semdom.id}`} />
                               </Grid>
@@ -261,22 +261,22 @@ class MergeDupStep extends React.Component<
         <div
           style={{
             background: "#eee",
-            padding: 8
+            padding: 8,
           }}
         >
           <GridList
             cellHeight="auto"
             style={{
               flexWrap: "nowrap",
-              overflow: "auto"
+              overflow: "auto",
             }}
           >
-            <DragDropContext onDragEnd={res => this.handleDrop(res)}>
-              {Object.keys(this.props.words).map(key => (
+            <DragDropContext onDragEnd={(res) => this.handleDrop(res)}>
+              {Object.keys(this.props.words).map((key) => (
                 <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
                   <MergeRow
                     sideBar={this.state.sideBar}
-                    setSidebar={el =>
+                    setSidebar={(el) =>
                       this.setState({ ...this.state, sideBar: el })
                     }
                     portrait={this.state.portrait}
@@ -287,7 +287,7 @@ class MergeDupStep extends React.Component<
               <GridListTile key={newId} style={{ margin: 8 }}>
                 <MergeRow
                   sideBar={this.state.sideBar}
-                  setSidebar={_ => {}}
+                  setSidebar={(_) => {}}
                   portrait={this.state.portrait}
                   wordID={newId}
                 />
@@ -303,7 +303,7 @@ class MergeDupStep extends React.Component<
             position: "fixed",
             width: "100vw",
             height: "25vh",
-            zIndex: theme.zIndex.drawer
+            zIndex: theme.zIndex.drawer,
           }}
         >
           <Button
@@ -311,16 +311,16 @@ class MergeDupStep extends React.Component<
             variant="contained"
             style={{
               float: "right",
-              marginRight: 30
+              marginRight: 30,
             }}
-            onClick={_ => this.saveContinue()}
+            onClick={(_) => this.saveContinue()}
             title={this.props.translate("mergeDups.helpText.next") as string}
           >
             <Translate id="goal.mergeDups.done" />
           </Button>
           <Button
             style={{ float: "right", marginRight: 30 }}
-            onClick={_ => this.next()}
+            onClick={(_) => this.next()}
             title={this.props.translate("mergeDups.helpText.skip") as string}
           >
             <Translate id="goal.mergeDups.skip" />

@@ -24,7 +24,7 @@ export class GoalSwitcher extends React.Component<
   // Given a change event, find which goal the user selected, and choose it
   // as the next goal to work on.
   handleChange(name: string) {
-    let goal: Goal | undefined = this.props.goals.find(g => g.name === name);
+    let goal: Goal | undefined = this.props.goals.find((g) => g.name === name);
     if (goal) {
       this.props.chooseGoal(goal);
     }

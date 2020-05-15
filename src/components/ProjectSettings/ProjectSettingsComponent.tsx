@@ -2,14 +2,14 @@ import React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 import {
   Grid,
   Typography,
   FormControl,
   MenuItem,
-  Select
+  Select,
 } from "@material-ui/core";
 
 import { Project } from "../../types/project";
@@ -50,7 +50,7 @@ class ProjectSettingsComponent extends React.Component<
   async componentWillMount() {
     let allPermissions: UserRole[] = await backend.getUserRoles();
     let currentRole: UserRole | undefined = allPermissions.find(
-      value => value.projectId === this.props.project.id
+      (value) => value.projectId === this.props.project.id
     );
     let settings: ProjectSettingsState = {};
 
@@ -61,7 +61,7 @@ class ProjectSettingsComponent extends React.Component<
           settings.languageSettings = {
             vernacular: this.props.project.vernacularWritingSystem,
             analysis: [...this.props.project.analysisWritingSystems],
-            uiLang: this.props.activeLanguage.code
+            uiLang: this.props.activeLanguage.code,
           };
           settings.autocompleteSetting = this.props.project.autocompleteSetting;
           settings.imports = await backend.canUploadLift();
@@ -121,7 +121,7 @@ class ProjectSettingsComponent extends React.Component<
                     this.props.project.autocompleteSetting = event.target
                       .value as AutoComplete;
                     this.setState({
-                      autocompleteSetting: event.target.value as AutoComplete
+                      autocompleteSetting: event.target.value as AutoComplete,
                     });
                     backend
                       .updateProject(this.props.project)

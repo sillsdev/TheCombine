@@ -1,7 +1,7 @@
 import {
   setValidCharacters,
   uploadInventory,
-  CharacterInventoryType
+  CharacterInventoryType,
 } from "../CharacterInventoryActions";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -19,44 +19,44 @@ const CHARACTER_SET_DATA: CharacterSetEntry[] = [
   {
     character: "a",
     status: "accepted",
-    occurrences: 0
+    occurrences: 0,
   },
   {
     character: "b",
     status: "accepted",
-    occurrences: 0
+    occurrences: 0,
   },
   {
     character: "y",
     status: "rejected",
-    occurrences: 0
+    occurrences: 0,
   },
   {
     character: "z",
     status: "rejected",
-    occurrences: 0
+    occurrences: 0,
   },
   {
     character: "m",
     status: "undecided",
-    occurrences: 0
-  }
+    occurrences: 0,
+  },
 ];
 const goal: CreateCharInv = new CreateCharInv();
 const MOCK_STATE = {
   goalsState: {
     historyState: {
-      history: [goal]
-    }
+      history: [goal],
+    },
   },
   currentProject: {
-    characterSet: null
+    characterSet: null,
   },
   characterInventoryState: {
     validCharacters: VALID_DATA,
     rejectedCharacters: REJECT_DATA,
-    characterSet: CHARACTER_SET_DATA
-  }
+    characterSet: CHARACTER_SET_DATA,
+  },
 };
 
 let oldUser: string | null;
@@ -92,7 +92,7 @@ describe("Testing CharacterInventoryActions", () => {
   test("setInventory yields correct action", () => {
     expect(setValidCharacters(VALID_DATA)).toEqual({
       type: CharacterInventoryType.SET_VALID_CHARACTERS,
-      payload: VALID_DATA
+      payload: VALID_DATA,
     });
   });
 
@@ -108,22 +108,22 @@ describe("Testing CharacterInventoryActions", () => {
 
     const updatedGoal: CreateCharInv = goal;
     updatedGoal.data = {
-      inventory: [[...MOCK_STATE.characterInventoryState.validCharacters]]
+      inventory: [[...MOCK_STATE.characterInventoryState.validCharacters]],
     };
     expect(axios.put).toHaveBeenCalledTimes(2);
     expect(mockStore.getActions()).toEqual([
       {
         type: GoalsActions.UPDATE_GOAL,
-        payload: [updatedGoal]
+        payload: [updatedGoal],
       },
       {
         type: SET_CURRENT_PROJECT,
         payload: {
           characterSet: null,
           validCharacters: VALID_DATA,
-          rejectedCharacters: REJECT_DATA
-        }
-      }
+          rejectedCharacters: REJECT_DATA,
+        },
+      },
     ]);
   });
 });

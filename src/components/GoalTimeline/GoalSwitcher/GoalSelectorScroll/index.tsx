@@ -2,7 +2,7 @@ import GoalSelectorScroll from "./GoalSelectorScroll";
 import {
   GoalScrollAction,
   scrollSelectorIndexAction,
-  scrollSelectorMouseAction
+  scrollSelectorMouseAction,
 } from "./GoalSelectorAction";
 
 import { connect } from "react-redux";
@@ -15,7 +15,7 @@ export function mapStateToProps(state: StoreState): GoalSelectorState {
     allPossibleGoals: state.goalsState.allPossibleGoals,
     selectedIndex: state.goalSelectorState.selectedIndex,
     mouseX: state.goalSelectorState.mouseX,
-    lastIndex: state.goalsState.allPossibleGoals.length - 1
+    lastIndex: state.goalsState.allPossibleGoals.length - 1,
   };
 }
 
@@ -26,11 +26,8 @@ export function mapDispatchToProps(dispatch: Dispatch<GoalScrollAction>) {
     },
     swapMouseX: (iX: number) => {
       dispatch(scrollSelectorMouseAction(iX));
-    }
+    },
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(GoalSelectorScroll);
+export default connect(mapStateToProps, mapDispatchToProps)(GoalSelectorScroll);

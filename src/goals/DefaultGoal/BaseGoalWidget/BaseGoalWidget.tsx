@@ -3,7 +3,7 @@ import React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 import { Card, CardContent } from "@material-ui/core";
 
@@ -17,8 +17,8 @@ class BaseGoalSelect extends React.Component<GoalProps & LocalizeContextProps> {
       width: DESELECTED_WIDTH,
       margin: (WIDTH - DESELECTED_WIDTH) / 2,
       backgroundColor: "lightGray",
-      color: "gray"
-    }
+      color: "gray",
+    },
   };
 
   render() {

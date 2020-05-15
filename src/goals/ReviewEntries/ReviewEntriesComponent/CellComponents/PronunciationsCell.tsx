@@ -32,11 +32,8 @@ function mapDispatchToProps(
 ) {
   return {
     refreshWord: (oldWordId: string, newWordId: string) =>
-      dispatch(refreshWord(oldWordId, newWordId))
+      dispatch(refreshWord(oldWordId, newWordId)),
   };
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(PronunciationsCell);
+export default connect(null, mapDispatchToProps)(PronunciationsCell);

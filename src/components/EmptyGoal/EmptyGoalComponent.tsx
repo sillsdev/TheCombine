@@ -2,7 +2,7 @@ import React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 import { Typography } from "@material-ui/core";
 

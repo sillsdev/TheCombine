@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from "@material-ui/core";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 import { Delete } from "@material-ui/icons";
 

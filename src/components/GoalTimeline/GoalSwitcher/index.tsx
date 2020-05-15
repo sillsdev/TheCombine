@@ -8,7 +8,7 @@ import { asyncAddGoalToHistory, AddGoalToHistoryAction } from "../GoalsActions";
 
 export function mapStateToProps(state: StoreState): GoalSwitcherState {
   return {
-    goals: state.goalsState.allPossibleGoals
+    goals: state.goalsState.allPossibleGoals,
   };
 }
 
@@ -18,11 +18,8 @@ export function mapDispatchToProps(
   return {
     chooseGoal: (goal: Goal) => {
       dispatch(asyncAddGoalToHistory(goal));
-    }
+    },
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(GoalSwitcher);
+export default connect(mapStateToProps, mapDispatchToProps)(GoalSwitcher);

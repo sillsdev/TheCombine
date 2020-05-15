@@ -45,7 +45,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
   }
 
   return (
-    <form onSubmit={e => upload(e)}>
+    <form onSubmit={(e) => upload(e)}>
       {/* Displays the name of the selected file */}
       {filename && (
         <Typography variant="body1" noWrap>
@@ -54,7 +54,10 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
       )}
       <Grid container spacing={1} justify="flex-start">
         <Grid item>
-          <FileInputButton updateFile={file => updateFile(file)} accept=".jpg">
+          <FileInputButton
+            updateFile={(file) => updateFile(file)}
+            accept=".jpg"
+          >
             <Translate id="createProject.browse" />
           </FileInputButton>
         </Grid>

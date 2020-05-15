@@ -3,14 +3,14 @@ import * as React from "react";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 import {
   Grid,
   Typography,
   CardContent,
   TextField,
-  Card
+  Card,
 } from "@material-ui/core";
 import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 import FileInputButton from "../../Buttons/FileInputButton";
@@ -53,7 +53,7 @@ class CreateProject extends React.Component<
     this.setState({
       languageData,
       name,
-      error: { name: name === "" }
+      error: { name: name === "" },
     });
   }
 
@@ -82,7 +82,7 @@ class CreateProject extends React.Component<
     //visual definition
     return (
       <Card style={{ width: "100%", maxWidth: 450 }}>
-        <form onSubmit={e => this.createProject(e)}>
+        <form onSubmit={(e) => this.createProject(e)}>
           <CardContent>
             {/* Title */}
             <Typography variant="h5" align="center" gutterBottom>
@@ -93,7 +93,7 @@ class CreateProject extends React.Component<
             <TextField
               label={<Translate id="createProject.name" />}
               value={this.state.name}
-              onChange={e => this.updateName(e)}
+              onChange={(e) => this.updateName(e)}
               variant="outlined"
               style={{ width: "100%", marginBottom: 30 }}
               margin="normal"
@@ -112,7 +112,7 @@ class CreateProject extends React.Component<
               <Translate id="createProject.upload?" />
             </Typography>
             <FileInputButton
-              updateFile={file => this.updateLanguageData(file)}
+              updateFile={(file) => this.updateLanguageData(file)}
               accept=".zip"
             >
               <Translate id="createProject.browse" />
@@ -133,7 +133,7 @@ class CreateProject extends React.Component<
                 done={this.props.success}
                 color="primary"
                 style={{
-                  marginTop: 30
+                  marginTop: 30,
                 }}
                 doneText={<Translate id="createProject.success" />}
               >

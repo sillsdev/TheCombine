@@ -13,7 +13,7 @@ import { StoreAction, StoreActions } from "../../../rootActions";
 
 const loadUserEditsAction: actions.GoalAction = {
   type: actions.GoalsActions.LOAD_USER_EDITS,
-  payload: []
+  payload: [],
 };
 
 describe("Test GoalsReducers", () => {
@@ -24,16 +24,16 @@ describe("Test GoalsReducers", () => {
   it("Should return the default state", () => {
     const state: GoalsState = {
       historyState: {
-        history: []
+        history: [],
       },
       allPossibleGoals: [],
       suggestionsState: {
-        suggestions: []
-      }
+        suggestions: [],
+      },
     };
 
     const action: StoreAction = {
-      type: StoreActions.RESET
+      type: StoreActions.RESET,
     };
     expect(goalsReducer(state, action)).toEqual(defaultState);
   });
@@ -44,26 +44,26 @@ describe("Test GoalsReducers", () => {
 
     const state: GoalsState = {
       historyState: {
-        history: []
+        history: [],
       },
       allPossibleGoals: [],
       suggestionsState: {
-        suggestions: suggestionsArray
-      }
+        suggestions: suggestionsArray,
+      },
     };
 
     const addGoalAction: actions.GoalAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [goal]
+      payload: [goal],
     };
     const newState: GoalsState = {
       historyState: {
-        history: suggestionsArray
+        history: suggestionsArray,
       },
       allPossibleGoals: [],
       suggestionsState: {
-        suggestions: []
-      }
+        suggestions: [],
+      },
     };
     expect(goalsReducer(state, addGoalAction)).toEqual(newState);
   });
@@ -73,26 +73,26 @@ describe("Test GoalsReducers", () => {
 
     const state: GoalsState = {
       historyState: {
-        history: []
+        history: [],
       },
       allPossibleGoals: [],
       suggestionsState: {
-        suggestions: []
-      }
+        suggestions: [],
+      },
     };
 
     const addGoalAction: actions.GoalAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [goal]
+      payload: [goal],
     };
     const newState: GoalsState = {
       historyState: {
-        history: [goal]
+        history: [goal],
       },
       allPossibleGoals: [],
       suggestionsState: {
-        suggestions: []
-      }
+        suggestions: [],
+      },
     };
     expect(goalsReducer(state, addGoalAction)).toEqual(newState);
   });
@@ -103,28 +103,28 @@ describe("Test GoalsReducers", () => {
 
     const state: GoalsState = {
       historyState: {
-        history: []
+        history: [],
       },
       allPossibleGoals: [],
       suggestionsState: {
-        suggestions: suggestionsArray
-      }
+        suggestions: suggestionsArray,
+      },
     };
 
     const chosenGoal: Goal = new HandleFlags();
 
     const addGoalAction: actions.GoalAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [chosenGoal]
+      payload: [chosenGoal],
     };
     const newState: GoalsState = {
       historyState: {
-        history: [chosenGoal]
+        history: [chosenGoal],
       },
       allPossibleGoals: [],
       suggestionsState: {
-        suggestions: suggestionsArray
-      }
+        suggestions: suggestionsArray,
+      },
     };
     expect(goalsReducer(state, addGoalAction)).toEqual(newState);
   });
@@ -141,12 +141,12 @@ describe("Test GoalsReducers", () => {
 
     const state: GoalsState = {
       historyState: {
-        history: historyArray
+        history: historyArray,
       },
       allPossibleGoals: allPossibleGoalsArray,
       suggestionsState: {
-        suggestions: suggestionsArray
-      }
+        suggestions: suggestionsArray,
+      },
     };
 
     const goal6: Goal = new HandleFlags();
@@ -154,17 +154,17 @@ describe("Test GoalsReducers", () => {
 
     const loadUserEditsAction: actions.GoalAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,
-      payload: [goal6, goal7]
+      payload: [goal6, goal7],
     };
 
     const newState: GoalsState = {
       historyState: {
-        history: [goal6, goal7]
+        history: [goal6, goal7],
       },
       allPossibleGoals: allPossibleGoalsArray,
       suggestionsState: {
-        suggestions: suggestionsArray
-      }
+        suggestions: suggestionsArray,
+      },
     };
 
     expect(goalsReducer(state, loadUserEditsAction)).toEqual(newState);
@@ -182,12 +182,12 @@ describe("Test GoalsReducers", () => {
 
     const state: GoalsState = {
       historyState: {
-        history: historyArray
+        history: historyArray,
       },
       allPossibleGoals: allPossibleGoalsArray,
       suggestionsState: {
-        suggestions: suggestionsArray
-      }
+        suggestions: suggestionsArray,
+      },
     };
 
     const updatedGoal: Goal = Object.assign(goal2);
@@ -197,17 +197,17 @@ describe("Test GoalsReducers", () => {
 
     const updateGoalAction: actions.GoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
-      payload: [goal2]
+      payload: [goal2],
     };
 
     const newState: GoalsState = {
       historyState: {
-        history: updatedHistory
+        history: updatedHistory,
       },
       allPossibleGoals: allPossibleGoalsArray,
       suggestionsState: {
-        suggestions: suggestionsArray
-      }
+        suggestions: suggestionsArray,
+      },
     };
 
     expect(goalsReducer(state, updateGoalAction)).toEqual(newState);

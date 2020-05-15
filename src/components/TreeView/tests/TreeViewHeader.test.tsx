@@ -10,8 +10,8 @@ var event = {
   key: "Enter",
   preventDefault: jest.fn(),
   target: {
-    value: ""
-  }
+    value: "",
+  },
 };
 
 // Handles
@@ -25,7 +25,7 @@ const REMOVE_LISTENER = window.removeEventListener.prototype;
 window = {
   ...window,
   addEventListener: jest.fn(),
-  removeEventListener: jest.fn()
+  removeEventListener: jest.fn(),
 };
 
 beforeEach(() => {
@@ -37,7 +37,7 @@ afterAll(() => {
   window = {
     ...window,
     addEventListener: ADD_LISTENER,
-    removeEventListener: REMOVE_LISTENER
+    removeEventListener: REMOVE_LISTENER,
   };
 });
 

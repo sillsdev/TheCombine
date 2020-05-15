@@ -35,5 +35,5 @@ export const defaultProject = {
   wordFields: [],
   partsOfSpeech: [],
   words: [],
-  autocompleteSetting: "Off"
+  autocompleteSetting: "Off",
 } as Project;

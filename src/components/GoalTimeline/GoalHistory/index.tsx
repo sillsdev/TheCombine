@@ -6,7 +6,7 @@ import { StoreState } from "../../../types";
 
 export function mapStateToProps(state: StoreState): GoalHistoryState {
   return {
-    history: state.goalsState.historyState.history
+    history: state.goalsState.historyState.history,
   };
 }
 

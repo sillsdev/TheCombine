@@ -49,13 +49,13 @@ export function addSenseToWord(
 
   let newGloss: Gloss = {
     language: "en",
-    def: gloss
+    def: gloss,
   };
 
   let newSense: Sense = {
     glosses: [newGloss],
     semanticDomains: [semanticDomain],
-    accessibility: State.active
+    accessibility: State.active,
   };
 
   updatedWord.senses.push(newSense); // Fix which sense we are adding to
@@ -71,7 +71,7 @@ export function addSemanticDomainToSense(
   let updatedWord = { ...existingWord };
   let newSense: Sense = {
     ...sense,
-    semanticDomains: [...sense.semanticDomains, semanticDomain]
+    semanticDomains: [...sense.semanticDomains, semanticDomain],
   };
 
   let senses = existingWord.senses;
@@ -125,7 +125,7 @@ export function duplicatesFromFrontier(
 
   let sorted = duplicateWords.sort((a, b) => a[1] - b[1]);
   sorted.length = Math.min(duplicateWords.length, maximum);
-  return sorted.map(item => item[0]);
+  return sorted.map((item) => item[0]);
 }
 
 // extract, or remove altogether
@@ -156,7 +156,7 @@ export class ExistingEntry extends React.Component<
     let isDuplicate: boolean = possibleDups.length > 0;
     let duplicateWords: Word[] | undefined;
     if (isDuplicate) {
-      duplicateWords = this.props.existingWords.filter(word =>
+      duplicateWords = this.props.existingWords.filter((word) =>
         possibleDups.includes(word.id)
       );
     }
@@ -169,7 +169,7 @@ export class ExistingEntry extends React.Component<
       isDuplicate: isDuplicate,
       duplicates: duplicateWords,
       duplicateIds: possibleDups,
-      hovering: false
+      hovering: false,
     };
   }
 
@@ -185,7 +185,7 @@ export class ExistingEntry extends React.Component<
     let duplicateWords: Word[] | undefined;
     if (isDuplicate) {
       duplicateIds = possibleDups;
-      duplicateWords = this.props.existingWords.filter(word =>
+      duplicateWords = this.props.existingWords.filter((word) =>
         duplicateIds!.includes(word.id)
       );
     }
@@ -193,7 +193,7 @@ export class ExistingEntry extends React.Component<
     this.setState({
       isDuplicate,
       duplicateIds,
-      duplicates: duplicateWords
+      duplicates: duplicateWords,
     });
   }
 
@@ -222,12 +222,12 @@ export class ExistingEntry extends React.Component<
             glosses: [
               {
                 language: "en",
-                def: suggestion
-              }
-            ]
-          }
-        ]
-      }
+                def: suggestion,
+              },
+            ],
+          },
+        ],
+      },
     });
   }
 
@@ -246,7 +246,7 @@ export class ExistingEntry extends React.Component<
       displayDuplicates: false,
       isDuplicate: false,
       duplicates: undefined,
-      duplicateIds: undefined
+      duplicateIds: undefined,
     });
   }
 
@@ -266,7 +266,7 @@ export class ExistingEntry extends React.Component<
       displayDuplicates: false,
       isDuplicate: false,
       duplicates: undefined,
-      duplicateIds: undefined
+      duplicateIds: undefined,
     });
   }
 
@@ -278,13 +278,13 @@ export class ExistingEntry extends React.Component<
       existingEntry: {
         ...this.state.existingEntry,
         senses: [
-          { glosses: [{ language: "en", def: newValue }], semanticDomains: [] }
-        ]
+          { glosses: [{ language: "en", def: newValue }], semanticDomains: [] },
+        ],
       },
       displaySpellingSuggestions:
         this.state.displaySpellingSuggestions && isSpelledCorrectly
           ? false
-          : this.state.displaySpellingSuggestions
+          : this.state.displaySpellingSuggestions,
     });
   }
 
@@ -298,24 +298,26 @@ export class ExistingEntry extends React.Component<
     let isDuplicate: boolean = possibleDups.length > 0;
 
     if (isDuplicate) {
-      let duplicateWords: Word[] | undefined = this.props.existingWords.filter(
-        word => possibleDups.includes(word.id)
+      let duplicateWords:
+        | Word[]
+        | undefined = this.props.existingWords.filter((word) =>
+        possibleDups.includes(word.id)
       );
       this.setState({
         isDuplicate: true,
         duplicateIds: possibleDups,
-        duplicates: duplicateWords
+        duplicates: duplicateWords,
       });
     }
     this.setState({
       existingEntry: {
         ...this.state.existingEntry,
-        vernacular: newValue
+        vernacular: newValue,
       },
       displayDuplicates:
         this.state.displayDuplicates && isDuplicate
           ? this.state.displayDuplicates
-          : false
+          : false,
     });
   }
 
@@ -355,7 +357,7 @@ export class ExistingEntry extends React.Component<
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
-              position: "relative"
+              position: "relative",
             }}
           >
             <ExistingVernacular
@@ -376,7 +378,7 @@ export class ExistingEntry extends React.Component<
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
-              position: "relative"
+              position: "relative",
             }}
           >
             <ExistingGloss
@@ -403,7 +405,7 @@ export class ExistingEntry extends React.Component<
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
-              position: "relative"
+              position: "relative",
             }}
           >
             <PronunciationsComponent
@@ -419,7 +421,7 @@ export class ExistingEntry extends React.Component<
             style={{
               paddingLeft: theme.spacing(1),
               paddingRight: theme.spacing(1),
-              position: "relative"
+              position: "relative",
             }}
           >
             {this.state.hovering && (
@@ -456,7 +458,7 @@ export class ExistingEntry extends React.Component<
         {this.props.displayDuplicates &&
           this.state.isDuplicate &&
           this.state.duplicates &&
-          this.state.duplicates.map(duplicate => (
+          this.state.duplicates.map((duplicate) => (
             <DuplicateResolutionView
               existingEntry={duplicate}
               newSense={

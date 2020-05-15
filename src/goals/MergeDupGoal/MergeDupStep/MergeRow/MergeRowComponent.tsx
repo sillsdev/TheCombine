@@ -5,7 +5,7 @@ import {
   MergeTreeReference,
   Hash,
   MergeTreeWord,
-  MergeData
+  MergeData,
 } from "../MergeDupsTree";
 import { Paper, Typography, Select, MenuItem } from "@material-ui/core";
 import MergeStack from "../MergeStack";
@@ -45,15 +45,15 @@ export class MergeRow extends React.Component<
       verns = [
         ...new Set(
           Object.values(this.props.words[this.props.wordID].senses)
-            .map(dups =>
+            .map((dups) =>
               Object.values(dups).map(
-                senseID =>
+                (senseID) =>
                   this.props.data.words[this.props.data.senses[senseID].srcWord]
                     .vernacular
               )
             )
             .flat()
-        )
+        ),
       ];
     }
 
@@ -72,12 +72,12 @@ export class MergeRow extends React.Component<
         droppableId={this.props.wordID}
         isCombineEnabled={true}
       >
-        {provided => (
+        {(provided) => (
           <Paper
             ref={provided.innerRef}
             style={{
               backgroundColor: "lightgrey",
-              paddingBottom: 8
+              paddingBottom: 8,
             }}
             {...provided.droppableProps}
           >
@@ -85,12 +85,14 @@ export class MergeRow extends React.Component<
               {filled && (
                 <Select
                   value={this.props.words[this.props.wordID].vern}
-                  onChange={e =>
-                    this.props.setVern(this.props.wordID, e.target
-                      .value as string)
+                  onChange={(e) =>
+                    this.props.setVern(
+                      this.props.wordID,
+                      e.target.value as string
+                    )
                   }
                 >
-                  {verns.map(vern => (
+                  {verns.map((vern) => (
                     <MenuItem value={vern} key={this.props.wordID + vern}>
                       <Typography variant="h5">{vern}</Typography>
                     </MenuItem>
@@ -100,19 +102,19 @@ export class MergeRow extends React.Component<
             </Paper>
             <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
               {filled &&
-                Object.keys(this.props.words[this.props.wordID].senses).map(
-                  (item, index) => (
-                    <MergeStack
-                      sideBar={this.props.sideBar}
-                      setSidebar={this.props.setSidebar}
-                      key={item}
-                      index={index}
-                      wordID={this.props.wordID}
-                      senseID={item}
-                      sense={this.props.words[this.props.wordID].senses[item]}
-                    />
-                  )
-                )}
+                Object.keys(
+                  this.props.words[this.props.wordID].senses
+                ).map((item, index) => (
+                  <MergeStack
+                    sideBar={this.props.sideBar}
+                    setSidebar={this.props.setSidebar}
+                    key={item}
+                    index={index}
+                    wordID={this.props.wordID}
+                    senseID={item}
+                    sense={this.props.words[this.props.wordID].senses[item]}
+                  />
+                ))}
               {provided.placeholder}
             </div>
             <div style={{ padding: 16, textAlign: "center" }}>

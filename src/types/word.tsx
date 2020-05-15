@@ -3,7 +3,7 @@ export enum State {
   deleted,
   sense,
   duplicate,
-  separate
+  separate,
 }
 
 export interface Gloss {
@@ -24,7 +24,7 @@ export interface Sense {
 export function makeSense(val: string) {
   return {
     glosses: [{ def: val, language: "" }],
-    semanticDomains: []
+    semanticDomains: [],
   };
 }
 
@@ -74,7 +74,7 @@ export function simpleWord(vern: string, gloss: string): Word {
     partOfSpeech: "",
     editedBy: [],
     otherField: "",
-    plural: ""
+    plural: "",
   };
 }
 
@@ -82,7 +82,7 @@ export function multiGlossWord(vern: string, glosses: string[]) {
   return {
     id: Math.floor(Math.random() * 9999999).toString(),
     vernacular: vern,
-    senses: glosses.map(gloss => makeSense(gloss)),
+    senses: glosses.map((gloss) => makeSense(gloss)),
     audio: [],
     created: "now",
     modified: "",
@@ -90,7 +90,7 @@ export function multiGlossWord(vern: string, glosses: string[]) {
     partOfSpeech: "",
     editedBy: [],
     otherField: "",
-    plural: ""
+    plural: "",
   };
 }
 
@@ -108,6 +108,6 @@ export function testWordList(): Word[] {
     multiGlossWord("Yuino", ["Love", "Boba Fett", "Life"]),
     multiGlossWord("Yuilo", ["Sadness", "Tree bark"]),
     simpleWord("Yes", "Wumbo"),
-    simpleWord("Yes", "Mayonnaise")
+    simpleWord("Yes", "Mayonnaise"),
   ];
 }

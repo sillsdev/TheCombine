@@ -5,11 +5,8 @@ import { StoreState } from "../../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
-    selectedDomain: state.treeViewState.currentdomain
+    selectedDomain: state.treeViewState.currentdomain,
   };
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(DomainCell);
+export default connect(mapStateToProps, null)(DomainCell);
