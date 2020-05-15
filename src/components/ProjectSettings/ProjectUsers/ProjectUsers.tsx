@@ -4,7 +4,7 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Avatar
+  Avatar,
 } from "@material-ui/core";
 import Done from "@material-ui/icons/Done";
 import { User } from "../../../types/user";
@@ -12,7 +12,7 @@ import {
   getAllUsers,
   getAllUsersInCurrentProject,
   addUserRole,
-  avatarSrc
+  avatarSrc,
 } from "../../../backend";
 import theme from "../../../types/theme";
 
@@ -33,7 +33,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
       allUsers: [],
       projUsers: [],
       modalOpen: false,
-      userAvatar: {}
+      userAvatar: {},
     };
   }
 
@@ -43,18 +43,18 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
 
   private populateUsers() {
     getAllUsersInCurrentProject()
-      .then(projUsers => {
+      .then((projUsers) => {
         this.setState({ projUsers });
         getAllUsers()
-          .then(returnedUsers => {
+          .then((returnedUsers) => {
             this.setState({
               allUsers: returnedUsers.filter(
-                user => !this.state.projUsers.find(u => u.id === user.id)
-              )
+                (user) => !this.state.projUsers.find((u) => u.id === user.id)
+              ),
             });
             returnedUsers.forEach((u: User, n: number, array: User[]) => {
               avatarSrc(u)
-                .then(result => {
+                .then((result) => {
                   let avatarsCopy = JSON.parse(
                     JSON.stringify(this.state.userAvatar)
                   );
@@ -62,12 +62,12 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
                   this.setState({ userAvatar: avatarsCopy });
                   console.log(avatarsCopy);
                 })
-                .catch(err => console.log(err));
+                .catch((err) => console.log(err));
             });
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }
 
   addToProject(user: User) {
@@ -86,7 +86,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     return (
       <React.Fragment>
         <List>
-          {this.state.projUsers.map(user => (
+          {this.state.projUsers.map((user) => (
             <ListItem button>
               <ListItemIcon>
                 <Done />
@@ -99,7 +99,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
               <ListItemText primary={`${user.name} (${user.username})`} />
             </ListItem>
           ))}
-          {this.state.allUsers.map(user => (
+          {this.state.allUsers.map((user) => (
             <ListItem button onClick={() => this.addToProject(user)}>
               <ListItemText primary={`${user.name} (${user.username})`} />
             </ListItem>

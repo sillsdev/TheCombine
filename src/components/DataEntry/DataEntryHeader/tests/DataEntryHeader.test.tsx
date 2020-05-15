@@ -12,7 +12,7 @@ const mockDomain: SemanticDomainWithSubdomains = {
   name: "",
   id: "",
   description: "",
-  subdomains: []
+  subdomains: [],
 };
 
 describe("Tests DataEntryHeader", () => {

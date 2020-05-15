@@ -30,7 +30,7 @@ export default class DomainCell extends React.Component<
     // This data is set before any actions which depend on it, meaning that this line is a compiler-appeaser
     this.state = {
       addingDomains: false,
-      senseToChange: {} as ReviewEntriesSense
+      senseToChange: {} as ReviewEntriesSense,
     };
 
     this.prepAddDomain = this.prepAddDomain.bind(this);
@@ -41,21 +41,21 @@ export default class DomainCell extends React.Component<
   private prepAddDomain(sense: ReviewEntriesSense) {
     this.setState({
       addingDomains: true,
-      senseToChange: sense
+      senseToChange: sense,
     });
   }
 
   private addDomain() {
     this.setState({
-      addingDomains: false
+      addingDomains: false,
     });
     if (this.props.editDomains)
       this.props.editDomains(this.state.senseToChange.senseId, [
         ...this.state.senseToChange.domains,
         {
           name: this.props.selectedDomain.name,
-          id: this.props.selectedDomain.id
-        }
+          id: this.props.selectedDomain.id,
+        },
       ]);
   }
 
@@ -63,7 +63,7 @@ export default class DomainCell extends React.Component<
     if (this.props.editDomains)
       this.props.editDomains(
         sense.senseId,
-        sense.domains.filter(domain => domain.id !== toDelete.id)
+        sense.domains.filter((domain) => domain.id !== toDelete.id)
       );
   }
 
@@ -85,9 +85,7 @@ export default class DomainCell extends React.Component<
                 sense.domains.map((domain, domainIndex) => (
                   <Grid
                     item
-                    key={`${domain.name}::${this.props.rowData.id}:${
-                      sense.senseId
-                    }`}
+                    key={`${domain.name}::${this.props.rowData.id}:${sense.senseId}`}
                   >
                     <Chip
                       color={sense.deleted ? "secondary" : "default"}

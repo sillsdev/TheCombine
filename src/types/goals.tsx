@@ -3,20 +3,20 @@ import { MergeStepData, MergeDupData } from "../goals/MergeDupGoal/MergeDups";
 import { MergeDupProps } from "../goals/MergeDupGoal/MergeDups";
 import {
   CreateCharInvData,
-  CreateCharInvStepData
+  CreateCharInvStepData,
 } from "../goals/CreateCharInv/CreateCharInv";
 
 export enum GoalOption {
   Complete,
   Abandon,
-  Current
+  Current,
 }
 
 export enum Tools {
   TempTool, // To be removed once testing is finished
   FixDups,
   CharInv,
-  CharCreate
+  CharCreate,
 }
 
 export type GoalProps = MergeDupProps;
@@ -81,7 +81,7 @@ export enum GoalType {
   MergeDups,
   SpellcheckGloss,
   ReviewEntries,
-  HandleFlags
+  HandleFlags,
 }
 
 export function generateGuid(): string {

@@ -8,7 +8,7 @@ import { Project } from "../../../types/project";
 
 function mapStateToProps(state: StoreState) {
   return {
-    project: state.currentProject
+    project: state.currentProject,
   };
 }
 
@@ -16,10 +16,7 @@ export function mapDispatchToProps(dispatch: Dispatch<ProjectAction>) {
   return {
     setCurrentProject: (project: Project) => {
       dispatch(setCurrentProject(project));
-    }
+    },
   };
 }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProjectName);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectName);

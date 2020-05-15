@@ -2,7 +2,7 @@ import { goalSelectReducer, defaultState } from "../GoalSelectorReducer";
 import {
   SELECT_ACTION,
   GoalScrollAction,
-  MOUSE_ACTION
+  MOUSE_ACTION,
 } from "../GoalSelectorAction";
 import { GoalSelectorState } from "../../../../../types/goals";
 import { StoreActions, StoreAction } from "../../../../../rootActions";
@@ -10,19 +10,19 @@ import { StoreActions, StoreAction } from "../../../../../rootActions";
 const VAL = 5;
 const scrollAct: GoalScrollAction = {
   type: SELECT_ACTION,
-  payload: VAL
+  payload: VAL,
 };
 const scrollResultStore: GoalSelectorState = {
   ...defaultState,
-  selectedIndex: VAL
+  selectedIndex: VAL,
 };
 const mouseAct: GoalScrollAction = {
   type: MOUSE_ACTION,
-  payload: VAL
+  payload: VAL,
 };
 const mouseResultStore: GoalSelectorState = {
   ...defaultState,
-  mouseX: VAL
+  mouseX: VAL,
 };
 
 describe("Testing goal select reducer", () => {
@@ -44,14 +44,14 @@ describe("Testing goal select reducer", () => {
     expect(
       goalSelectReducer(scrollResultStore, ({
         type: "",
-        payload: 0
+        payload: 0,
       } as unknown) as GoalScrollAction)
     ).toEqual(scrollResultStore);
   });
 
   it("Should return the default state", () => {
     const action: StoreAction = {
-      type: StoreActions.RESET
+      type: StoreActions.RESET,
     };
     expect(goalSelectReducer(scrollResultStore, action)).toEqual(defaultState);
   });

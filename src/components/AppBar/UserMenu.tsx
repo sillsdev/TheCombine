@@ -50,11 +50,11 @@ export default function UserMenu() {
         onClose={handleClose}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "right"
+          horizontal: "right",
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "right"
+          horizontal: "right",
         }}
       >
         {/* Don't show project settings on the project creation page ("/") */}

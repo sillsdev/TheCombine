@@ -9,7 +9,7 @@ import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateRes
 import {
   addSenseToWord,
   addSemanticDomainToSense,
-  duplicatesFromFrontier
+  duplicatesFromFrontier,
 } from "../ExistingEntry/ExistingEntry";
 import theme from "../../../../types/theme";
 import { Translate } from "react-localize-redux";
@@ -51,11 +51,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             glosses: [
               {
                 language: "en",
-                def: ""
-              }
+                def: "",
+              },
             ],
-            semanticDomains: [this.props.semanticDomain]
-          }
+            semanticDomains: [this.props.semanticDomain],
+          },
         ],
         audio: [],
         created: "",
@@ -64,11 +64,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         partOfSpeech: "",
         editedBy: [],
         otherField: "",
-        plural: ""
+        plural: "",
       },
       isSpelledCorrectly: true,
       isDuplicate: false,
-      duplicates: []
+      duplicates: [],
     };
 
     this.vernInput = React.createRef<HTMLDivElement>();
@@ -99,11 +99,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             glosses: [
               {
                 language: "en",
-                def: ""
-              }
+                def: "",
+              },
             ],
-            semanticDomains: [this.props.semanticDomain]
-          }
+            semanticDomains: [this.props.semanticDomain],
+          },
         ],
         audio: [],
         created: "",
@@ -112,8 +112,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         partOfSpeech: "",
         editedBy: [],
         otherField: "",
-        plural: ""
-      }
+        plural: "",
+      },
     });
   }
 
@@ -128,12 +128,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             glosses: [
               {
                 language: "en",
-                def: suggestion
-              }
-            ]
-          }
-        ]
-      }
+                def: suggestion,
+              },
+            ],
+          },
+        ],
+      },
     });
     this.props.toggleDisplaySpellingSuggestions();
   }
@@ -149,7 +149,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.resetEntry();
     this.setState({
       isDuplicate: false,
-      duplicates: []
+      duplicates: [],
     });
   }
 
@@ -165,7 +165,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.resetEntry();
     this.setState({
       isDuplicate: false,
-      duplicates: []
+      duplicates: [],
     });
   }
 
@@ -179,10 +179,10 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         senses: [
           {
             glosses: [{ language: "en", def: newValue }],
-            semanticDomains: [this.props.semanticDomain]
-          }
-        ]
-      }
+            semanticDomains: [this.props.semanticDomain],
+          },
+        ],
+      },
     });
   }
 
@@ -199,8 +199,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       duplicates: autoCompleteWords,
       newEntry: {
         ...this.state.newEntry,
-        vernacular: newValue
-      }
+        vernacular: newValue,
+      },
     });
   }
 
@@ -208,7 +208,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     // split on space to allow phrases
     let words = word.split(" ");
     let allCorrect = true;
-    words.forEach(w => {
+    words.forEach((w) => {
       let result = this.props.spellChecker.correct(w);
       allCorrect = allCorrect && result;
     });
@@ -230,11 +230,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             glosses: [
               {
                 language: "en",
-                def: ""
-              }
+                def: "",
+              },
             ],
-            semanticDomains: [this.props.semanticDomain]
-          }
+            semanticDomains: [this.props.semanticDomain],
+          },
         ],
         audio: [],
         created: "",
@@ -243,10 +243,10 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         partOfSpeech: "",
         editedBy: [],
         otherField: "",
-        plural: ""
+        plural: "",
       },
       isSpelledCorrectly: true,
-      isDuplicate: false
+      isDuplicate: false,
     });
   }
 
@@ -259,7 +259,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     // then map them into an array sorted by length and take the 2 shortest
     // and the rest longest (should make finding the long words easier)
     let scoredStartsWith: [Word, number][] = [];
-    let startsWith = existingWords.filter(word =>
+    let startsWith = existingWords.filter((word) =>
       word.vernacular.startsWith(vernacular)
     );
     for (let w of startsWith) {
@@ -267,7 +267,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     }
     var keepers = scoredStartsWith
       .sort((a, b) => a[1] - b[1])
-      .map(word => word[0]);
+      .map((word) => word[0]);
     if (keepers.length > 4) {
       keepers.splice(2, keepers.length - this.maxStartsWith);
     }
@@ -276,7 +276,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       vernacular,
       this.maxDuplicates
     )) {
-      let word = existingWords.find(word => word.id === d);
+      let word = existingWords.find((word) => word.id === d);
       if (word !== undefined && !keepers.includes(word)) {
         keepers.push(word);
       }
@@ -294,7 +294,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       <Grid item xs={12}>
         <Grid
           container
-          onKeyDown={e => {
+          onKeyDown={(e) => {
             if (e.key === "Enter" && this.state.newEntry.vernacular !== "") {
               this.props.addNewWord(this.state.newEntry);
               this.focusVernInput();
@@ -309,7 +309,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
-              position: "relative"
+              position: "relative",
             }}
           >
             <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
@@ -341,7 +341,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
-              position: "relative"
+              position: "relative",
             }}
           >
             <NewGlossEntry
@@ -389,7 +389,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
           {this.props.autocompleteSetting !== AutoComplete.Off &&
             this.props.displayDuplicates &&
             this.state.isDuplicate &&
-            this.state.duplicates.map(duplicate => (
+            this.state.duplicates.map((duplicate) => (
               <Grid
                 item
                 xs={12}

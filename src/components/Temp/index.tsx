@@ -9,7 +9,7 @@ import { ThunkDispatch } from "redux-thunk";
 
 export function mapStateToProps(state: StoreState) {
   return {
-    text: state.tempState.tempText
+    text: state.tempState.tempText,
   };
 }
 
@@ -20,11 +20,8 @@ export function mapDispatchToProps(
     buttonClicked: () => {
       //console.log('clicked test!');
       dispatch(actions.asyncPressButton());
-    }
+    },
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Temp);
+export default connect(mapStateToProps, mapDispatchToProps)(Temp);

@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import ReactDOM from "react-dom";
 
 import GoalTimelineHorizontal, {
-  GoalTimelineHorizontal as GTHorizontal
+  GoalTimelineHorizontal as GTHorizontal,
 } from "../GoalTimelineHorizontal";
 import { defaultState } from "../../DefaultState";
 import { Goal } from "../../../../types/goals";
@@ -14,12 +14,12 @@ import { Provider } from "react-redux";
 const STATE = {
   goalsState: {
     historyState: {
-      history: [...defaultState.allPossibleGoals]
+      history: [...defaultState.allPossibleGoals],
     },
     suggestionsState: {
-      suggestions: [...defaultState.allPossibleGoals]
-    }
-  }
+      suggestions: [...defaultState.allPossibleGoals],
+    },
+  },
 };
 const mockStore = configureMockStore([])(STATE);
 

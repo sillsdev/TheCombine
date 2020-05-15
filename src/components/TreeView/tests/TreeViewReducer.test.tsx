@@ -2,7 +2,7 @@ import {
   treeViewReducer,
   defaultState,
   TreeViewState,
-  createDomains
+  createDomains,
 } from "../TreeViewReducer";
 import { TreeViewAction, TreeActionType } from "../TreeViewActions";
 import SemanticDomainWithSubdomains from "../SemanticDomain";
@@ -13,17 +13,17 @@ describe("Test the TreeViewReducer", () => {
     const parent = {
       name: "Foo",
       id: "x",
-      description: "foo description"
+      description: "foo description",
     };
     const subdomains = [
       { name: "Bar", id: "x.1", description: "bar desc", subdomains: [] },
-      { name: "Baz", id: "x.2", description: "baz desc", subdomains: [] }
+      { name: "Baz", id: "x.2", description: "baz desc", subdomains: [] },
     ];
     const initialJson = [
       {
         ...parent,
-        subdomains: subdomains
-      }
+        subdomains: subdomains,
+      },
     ];
     let expected = {
       currentdomain: {
@@ -34,15 +34,15 @@ describe("Test the TreeViewReducer", () => {
           {
             ...parent,
             parentDomain: {},
-            subdomains: [...subdomains]
-          }
-        ]
-      }
+            subdomains: [...subdomains],
+          },
+        ],
+      },
     };
-    expected.currentdomain.subdomains[0].subdomains.map(value => {
+    expected.currentdomain.subdomains[0].subdomains.map((value) => {
       return {
         ...value,
-        parentDomains: expected.currentdomain.subdomains[0]
+        parentDomains: expected.currentdomain.subdomains[0],
       };
     });
     expected.currentdomain.subdomains[0].parentDomain = expected.currentdomain;
@@ -57,7 +57,7 @@ describe("Test the TreeViewReducer", () => {
 
   it("Returns default state when reset action is passed", () => {
     const action: StoreAction = {
-      type: StoreActions.RESET
+      type: StoreActions.RESET,
     };
 
     expect(treeViewReducer({} as TreeViewState, action)).toEqual(defaultState);
@@ -78,7 +78,7 @@ describe("Test the TreeViewReducer", () => {
     expect(
       treeViewReducer(defaultState, {
         type: TreeActionType.TRAVERSE_TREE,
-        payload: payload
+        payload: payload,
       })
     );
   });

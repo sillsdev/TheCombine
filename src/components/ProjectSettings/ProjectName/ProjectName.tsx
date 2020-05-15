@@ -19,13 +19,13 @@ function ProjectName(props: NameProps) {
     // Update backend
     updateProject({
       ...props.project,
-      name: projectName
+      name: projectName,
     });
 
     // Update redux store
     props.setCurrentProject({
       ...props.project,
-      name: projectName
+      name: projectName,
     });
   }
 
@@ -34,7 +34,7 @@ function ProjectName(props: NameProps) {
       <Grid item xs={12}>
         <TextField
           value={projectName}
-          onChange={e => setProjectName(e.target.value)}
+          onChange={(e) => setProjectName(e.target.value)}
           onBlur={() => updateName()}
         />
       </Grid>

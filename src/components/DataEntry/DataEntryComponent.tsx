@@ -29,14 +29,14 @@ export class DataEntryComponent extends React.Component<
   constructor(props: DataEntryProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      displaySemanticDomain: true
+      displaySemanticDomain: true,
     };
   }
 
   render() {
     let semanticDomain: SemanticDomain = {
       name: this.props.domain.name,
-      id: this.props.domain.id
+      id: this.props.domain.id,
     };
 
     return (
@@ -48,17 +48,19 @@ export class DataEntryComponent extends React.Component<
               padding: theme.spacing(2),
               maxWidth: 800,
               marginLeft: "auto",
-              marginRight: "auto"
+              marginRight: "auto",
             }}
           >
-          <DataEntryHeader domain={this.props.domain} />
+            <DataEntryHeader domain={this.props.domain} />
             <Divider />
             <DataEntryTable
               domain={this.props.domain}
               semanticDomain={semanticDomain}
-            displaySemanticDomainView={(isGettingSemanticdomain: boolean) => {
-              this.setState({ displaySemanticDomain: isGettingSemanticdomain });
-            }}
+              displaySemanticDomainView={(isGettingSemanticdomain: boolean) => {
+                this.setState({
+                  displaySemanticDomain: isGettingSemanticdomain,
+                });
+              }}
             />
           </Paper>
 
@@ -66,7 +68,7 @@ export class DataEntryComponent extends React.Component<
             <TreeViewComponent
               returnControlToCaller={() =>
                 this.setState({
-                  displaySemanticDomain: false
+                  displaySemanticDomain: false,
                 })
               }
             />

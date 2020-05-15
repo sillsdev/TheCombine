@@ -2,14 +2,14 @@ import React from "react";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 import {
   Typography,
   CardContent,
   Card,
   List,
-  ListItem
+  ListItem,
 } from "@material-ui/core";
 import { Project } from "../../../types/project";
 import { getAllProjectsByUser } from "../../../backend";
@@ -34,7 +34,7 @@ class ChooseProject extends React.Component<
     let user: string | null = localStorage.getItem("user");
     if (user) {
       let userObject: User = JSON.parse(user);
-      getAllProjectsByUser(userObject).then(projects => {
+      getAllProjectsByUser(userObject).then((projects) => {
         this.setState({ ...this.state, projectList: projects });
       });
     }
@@ -56,7 +56,7 @@ class ChooseProject extends React.Component<
 
           {/* List of projects */}
           <List>
-            {this.state.projectList.map(project => (
+            {this.state.projectList.map((project) => (
               <ListItem
                 key={project.id}
                 button

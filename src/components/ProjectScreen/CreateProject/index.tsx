@@ -6,7 +6,7 @@ import { ThunkDispatch } from "redux-thunk";
 import {
   CreateProjectAction,
   asyncCreateProject,
-  reset
+  reset,
 } from "./CreateProjectActions";
 import { ProjectAction } from "../../Project/ProjectActions";
 
@@ -15,7 +15,7 @@ function mapStateToProps(state: StoreState) {
     project: state.currentProject,
     inProgress: state.createProjectState.inProgress,
     success: state.createProjectState.success,
-    errorMsg: state.createProjectState.errorMsg
+    errorMsg: state.createProjectState.errorMsg,
   };
 }
 
@@ -28,11 +28,8 @@ export function mapDispatchToProps(
     },
     reset: () => {
       dispatch(reset());
-    }
+    },
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateProject);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateProject);

@@ -15,13 +15,13 @@ export function scrollSelectorIndexAction(
 ): GoalScrollAction {
   return {
     type: SELECT_ACTION,
-    payload: selectedIndex
+    payload: selectedIndex,
   };
 }
 
 export function scrollSelectorMouseAction(mouseX: number): GoalScrollAction {
   return {
     type: MOUSE_ACTION,
-    payload: mouseX
+    payload: mouseX,
   };
 }

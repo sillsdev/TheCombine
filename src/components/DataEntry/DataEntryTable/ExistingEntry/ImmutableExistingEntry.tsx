@@ -24,7 +24,7 @@ export class ImmutableExistingEntry extends React.Component<
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
-              position: "relative"
+              position: "relative",
             }}
           >
             <TextField disabled fullWidth value={this.props.vernacular} />
@@ -36,7 +36,7 @@ export class ImmutableExistingEntry extends React.Component<
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
-              position: "relative"
+              position: "relative",
             }}
           >
             <TextField disabled fullWidth value={this.props.gloss} />

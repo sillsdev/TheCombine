@@ -8,8 +8,8 @@ export class Recorder {
   constructor() {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
-      .then(audioStream => this.onMicrophoneAvailable(audioStream))
-      .catch(error => Recorder.onError(error));
+      .then((audioStream) => this.onMicrophoneAvailable(audioStream))
+      .catch((error) => Recorder.onError(error));
   }
 
   startRecording() {
@@ -20,7 +20,7 @@ export class Recorder {
   }
 
   stopRecording(): Promise<string> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.recordRTC.stopRecording(resolve);
     });
   }
@@ -39,7 +39,7 @@ export class Recorder {
       type: "audio",
       bitrate: "128000",
       mimeType: "audio/webm",
-      ignoreMutedMedia: false
+      ignoreMutedMedia: false,
     });
   }
 

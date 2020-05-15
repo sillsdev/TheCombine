@@ -8,7 +8,7 @@ import {
   REGISTER_ATTEMPT,
   REGISTER_SUCCESS,
   REGISTER_RESET,
-  LOGOUT
+  LOGOUT,
 } from "./LoginActions";
 import { StoreAction, StoreActions } from "../../rootActions";
 
@@ -29,7 +29,7 @@ export const defaultState: LoginState = {
   loginFailure: false,
   registerAttempt: false,
   registerSuccess: false,
-  registerFailure: ""
+  registerFailure: "",
 };
 
 export const loginReducer = (
@@ -43,7 +43,7 @@ export const loginReducer = (
         user: action.payload.user,
         success: false,
         loginAttempt: true,
-        loginFailure: false
+        loginFailure: false,
       };
     case LOGIN_FAILURE:
       return {
@@ -51,13 +51,13 @@ export const loginReducer = (
         user: action.payload.user,
         success: false,
         loginAttempt: false,
-        loginFailure: true
+        loginFailure: true,
       };
     case LOGIN_SUCCESS:
       return {
         ...state,
         user: action.payload.user,
-        success: true
+        success: true,
       };
     case REGISTER_ATTEMPT:
       return {
@@ -65,21 +65,21 @@ export const loginReducer = (
         user: action.payload.user,
         registerAttempt: true,
         registerSuccess: false,
-        registerFailure: ""
+        registerFailure: "",
       };
     case REGISTER_SUCCESS:
       return {
         ...state,
         user: action.payload.user,
         registerAttempt: false,
-        registerSuccess: true
+        registerSuccess: true,
       };
     case REGISTER_FAILURE:
       return {
         ...state,
         registerAttempt: false,
         registerSuccess: false,
-        registerFailure: action.payload.user
+        registerFailure: action.payload.user,
       };
     case LOGIN_RESET:
     case LOGOUT:

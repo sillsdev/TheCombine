@@ -25,17 +25,17 @@ let allTheGoals: Goal[] = [
   // goal5,
   // goal6,
   // goal7,
-  goal8
+  goal8,
 ];
 
 let suggestionsArray: Goal[] = [...allTheGoals];
 
 export const defaultState: GoalsState = {
   historyState: {
-    history: []
+    history: [],
   },
   allPossibleGoals: allTheGoals,
   suggestionsState: {
-    suggestions: suggestionsArray
-  }
+    suggestions: suggestionsArray,
+  },
 };

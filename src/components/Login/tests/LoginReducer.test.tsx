@@ -8,7 +8,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAILURE,
   LOGIN_RESET,
-  REGISTER_RESET
+  REGISTER_RESET,
 } from "../LoginActions";
 import { StoreActions, StoreAction } from "../../../rootActions";
 
@@ -18,7 +18,7 @@ describe("LoginReducer Tests", () => {
   let dummySt: reducer.LoginState = {
     ...reducer.defaultState,
     user: user.user,
-    success: false
+    success: false,
   };
 
   //The state while attempting to log in
@@ -29,12 +29,12 @@ describe("LoginReducer Tests", () => {
     registerFailure: "",
     registerSuccess: false,
     success: false,
-    user: "testUser"
+    user: "testUser",
   };
 
   let action: UserAction = {
     type: LOGIN_ATTEMPT,
-    payload: user
+    payload: user,
   };
 
   // Test with no state
@@ -54,7 +54,7 @@ describe("LoginReducer Tests", () => {
       loginAttempt: false,
       loginFailure: true,
       user: user.user,
-      success: false
+      success: false,
     };
 
     action.type = LOGIN_FAILURE;
@@ -69,7 +69,7 @@ describe("LoginReducer Tests", () => {
       registerFailure: "",
       registerSuccess: false,
       success: false,
-      user: "testUser"
+      user: "testUser",
     };
     action.type = REGISTER_ATTEMPT;
 
@@ -80,7 +80,7 @@ describe("LoginReducer Tests", () => {
     let loginSuccessState: reducer.LoginState = {
       ...dummySt,
       user: user.user,
-      success: true
+      success: true,
     };
     action.type = LOGIN_SUCCESS;
 
@@ -92,7 +92,7 @@ describe("LoginReducer Tests", () => {
       ...dummySt,
       user: user.user,
       registerAttempt: false,
-      registerSuccess: true
+      registerSuccess: true,
     };
     action.type = REGISTER_SUCCESS;
     expect(reducer.loginReducer(dummySt, action)).toEqual(registerSuccessState);
@@ -103,7 +103,7 @@ describe("LoginReducer Tests", () => {
       ...dummySt,
       registerAttempt: false,
       registerSuccess: false,
-      registerFailure: "testUser"
+      registerFailure: "testUser",
     };
     action.type = REGISTER_FAILURE;
     expect(reducer.loginReducer(dummySt, action)).toEqual(registerFailureState);
@@ -125,7 +125,7 @@ describe("LoginReducer Tests", () => {
 
   test("non-default state, expecting reset", () => {
     const resetAction: StoreAction = {
-      type: StoreActions.RESET
+      type: StoreActions.RESET,
     };
 
     expect(reducer.loginReducer({} as reducer.LoginState, resetAction)).toEqual(

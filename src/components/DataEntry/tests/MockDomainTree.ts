@@ -4,5 +4,5 @@ export const mockDomainTree: DomainTree = {
   name: "",
   id: "",
   description: "",
-  subdomains: []
+  subdomains: [],
 };

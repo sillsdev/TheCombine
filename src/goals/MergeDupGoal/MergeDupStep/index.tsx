@@ -8,14 +8,14 @@ import {
   moveSenses,
   mergeAll,
   orderSense,
-  orderDuplicate
+  orderDuplicate,
 } from "./MergeDupStepActions";
 import MergeDupStepComponent from "./MergeDupStepComponent";
 import { MergeTreeReference } from "./MergeDupsTree";
 
 export function mapStateToProps(state: StoreState) {
   return {
-    words: state.mergeDuplicateGoal.mergeTreeState.tree.words
+    words: state.mergeDuplicateGoal.mergeTreeState.tree.words,
   };
 }
 
@@ -40,7 +40,7 @@ export function mapDispatchToProps(
     },
     mergeAll: () => {
       return dispatch(mergeAll());
-    }
+    },
   };
 }
 

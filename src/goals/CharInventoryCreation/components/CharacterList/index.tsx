@@ -3,13 +3,13 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
   CharacterInventoryAction,
-  setSelectedCharacter
+  setSelectedCharacter,
 } from "../../CharacterInventoryActions";
 import { StoreState } from "../../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
-    allCharacters: state.characterInventoryState.characterSet
+    allCharacters: state.characterInventoryState.characterSet,
   };
 }
 
@@ -19,7 +19,7 @@ function mapDispatchToProps(
   return {
     setSelectedCharacter: (character: string) => {
       dispatch(setSelectedCharacter(character));
-    }
+    },
   };
 }
 

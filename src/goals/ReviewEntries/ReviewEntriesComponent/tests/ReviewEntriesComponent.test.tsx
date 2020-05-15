@@ -12,7 +12,7 @@ import {
   OLD_SENSE,
   ReviewEntriesWord,
   ReviewEntriesSense,
-  SEP_CHAR
+  SEP_CHAR,
 } from "../ReviewEntriesTypes";
 import { Recorder } from "../../../../components/Pronunciations/Recorder";
 
@@ -20,15 +20,15 @@ import { Recorder } from "../../../../components/Pronunciations/Recorder";
 const state = {
   reviewEntriesState: {
     language: "en",
-    words: mockWords
+    words: mockWords,
   },
   treeViewState: {
     currentdomain: {
       name: "domain",
       id: "number",
-      subdomains: []
-    }
-  }
+      subdomains: [],
+    },
+  },
 };
 const mockStore = configureMockStore([])(state);
 const mockAxios = axios as jest.Mocked<typeof axios>;
@@ -38,14 +38,14 @@ jest.mock("@material-ui/core", () => {
   const material = jest.requireActual("@material-ui/core");
   return {
     ...material,
-    Dialog: material.Container
+    Dialog: material.Container,
   };
 });
 
 // Mock uuid generation
 jest.mock("../../../../utilities", () => {
   return {
-    uuid: jest.fn()
+    uuid: jest.fn(),
   };
 });
 const MOCK_UUID = (utilities as jest.Mocked<typeof utilities>).uuid;
@@ -55,7 +55,7 @@ jest.mock("material-table", () => {
   const material = jest.requireActual("@material-ui/core");
   return {
     __esModule: true,
-    default: material.Container
+    default: material.Container,
   };
 });
 
@@ -69,7 +69,7 @@ beforeAll(() => {
   // Prep for component creation
   mockAxios.get.mockImplementationOnce(() => {
     return Promise.resolve({
-      data: mockWords.map(word => createMockWord(word, "en"))
+      data: mockWords.map((word) => createMockWord(word, "en")),
     });
   });
   for (let word of mockWords) {
@@ -97,13 +97,13 @@ describe("Tests ReviewEntriesComponent", () => {
   it("Initialized correctly in beforeAll", () => {
     // Check creation
     expect(MOCK_UPDATE).toHaveBeenCalledWith(
-      mockWords.map(value => ({
+      mockWords.map((value) => ({
         ...value,
-        senses: value.senses.map(sense => ({
+        senses: value.senses.map((sense) => ({
           ...sense,
-          senseId: sense.senseId + OLD_SENSE
+          senseId: sense.senseId + OLD_SENSE,
         })),
-        recorder: expect.any(Object)
+        recorder: expect.any(Object),
       }))
     );
   });
@@ -113,7 +113,7 @@ function createMockWord(word: ReviewEntriesWord, language: string): Word {
   return {
     id: word.id,
     vernacular: word.vernacular,
-    senses: word.senses.map(sense => createMockSense(sense, language)),
+    senses: word.senses.map((sense) => createMockSense(sense, language)),
     audio: [],
     created: "",
     modified: "",
@@ -121,7 +121,7 @@ function createMockWord(word: ReviewEntriesWord, language: string): Word {
     partOfSpeech: "",
     editedBy: [],
     otherField: "",
-    plural: ""
+    plural: "",
   };
 }
 
@@ -129,8 +129,8 @@ function createMockSense(sense: ReviewEntriesSense, language: string): Sense {
   return {
     glosses: sense.glosses
       .split(SEP_CHAR)
-      .map(value => ({ def: value.trim(), language })),
+      .map((value) => ({ def: value.trim(), language })),
     semanticDomains: sense.domains,
-    accessibility: State.active
+    accessibility: State.active,
   };
 }

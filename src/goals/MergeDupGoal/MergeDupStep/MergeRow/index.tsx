@@ -7,7 +7,7 @@ import MergeRowComponent from "./MergeRowComponent";
 export function mapStateToProps(state: StoreState) {
   return {
     words: state.mergeDuplicateGoal.mergeTreeState.tree.words,
-    data: state.mergeDuplicateGoal.mergeTreeState.data
+    data: state.mergeDuplicateGoal.mergeTreeState.data,
   };
 }
 
@@ -17,11 +17,8 @@ export function mapDispatchToProps(
   return {
     setVern: (wordID: string, vern: string) => {
       dispatch(setVern(wordID, vern));
-    }
+    },
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MergeRowComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(MergeRowComponent);

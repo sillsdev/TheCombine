@@ -5,7 +5,7 @@ import { defaultState as goalSelectorState } from "../GoalTimeline/GoalSwitcher/
 
 export const defaultState = {
   draggedWordState: {
-    draggedWord: simpleWord("Ye", "You")
+    draggedWord: simpleWord("Ye", "You"),
   },
   mergeDupStepProps: {
     parentWords: [
@@ -14,25 +14,25 @@ export const defaultState = {
         senses: [
           {
             id: 2,
-            dups: [simpleWord("Thee", "You"), simpleWord("Yes", "No")]
-          }
-        ]
-      }
+            dups: [simpleWord("Thee", "You"), simpleWord("Yes", "No")],
+          },
+        ],
+      },
     ],
     addParent: (word: Word) => word,
     dropWord: () => null,
     clearMerges: () => null,
-    draggedWord: simpleWord("Thou", "You")
+    draggedWord: simpleWord("Thou", "You"),
   },
   goalsState: {
-    ...goalTimelineState
+    ...goalTimelineState,
   },
   createProjectState: {
     ...createProjectState,
     name: "Test",
-    success: true
+    success: true,
   },
   goalSelectorState: {
-    ...goalSelectorState
-  }
+    ...goalSelectorState,
+  },
 };

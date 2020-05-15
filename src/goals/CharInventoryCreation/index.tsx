@@ -9,7 +9,7 @@ import {
   setSelectedCharacter,
   uploadInventory,
   fetchWords,
-  getAllCharacters
+  getAllCharacters,
 } from "./CharacterInventoryActions";
 import { getTranslate } from "react-localize-redux";
 
@@ -18,7 +18,7 @@ function mapStateToProps(state: StoreState) {
     currentProject: state.currentProject,
     translate: getTranslate(state.localize),
     selectedCharacter: state.characterInventoryState.selectedCharacter,
-    allCharacters: state.characterInventoryState.characterSet
+    allCharacters: state.characterInventoryState.characterSet,
   };
 }
 
@@ -34,11 +34,8 @@ function mapDispatchToProps(
       dispatch(setSelectedCharacter(character)),
     uploadInventory: () => dispatch(uploadInventory()),
     fetchWords: () => dispatch(fetchWords()),
-    getAllCharacters: () => dispatch(getAllCharacters())
+    getAllCharacters: () => dispatch(getAllCharacters()),
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CharacterInventory);
+export default connect(mapStateToProps, mapDispatchToProps)(CharacterInventory);

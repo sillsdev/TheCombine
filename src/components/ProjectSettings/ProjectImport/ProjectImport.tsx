@@ -2,7 +2,7 @@ import React from "react";
 import {
   LocalizeContextProps,
   Translate,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 import { Grid, Typography, Button, CircularProgress } from "@material-ui/core";
 
@@ -14,7 +14,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 enum UploadState {
   Awaiting,
   InProgress,
-  Done
+  Done,
 }
 
 interface ImportProps {
@@ -36,7 +36,7 @@ export class ProjectImport extends React.Component<
     super(props);
     this.updateLiftFile = this.updateLiftFile.bind(this);
     this.state = {
-      uploadState: UploadState.Awaiting
+      uploadState: UploadState.Awaiting,
     };
   }
 
@@ -103,7 +103,7 @@ export class ProjectImport extends React.Component<
                     top: "50%",
                     left: "50%",
                     marginTop: -12,
-                    marginLeft: -12
+                    marginLeft: -12,
                   }}
                 />
               )}

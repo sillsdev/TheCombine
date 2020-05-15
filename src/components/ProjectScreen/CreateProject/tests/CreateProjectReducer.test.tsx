@@ -2,13 +2,13 @@ import * as reducer from "../CreateProjectReducer";
 import {
   CreateProjectAction,
   IN_PROGRESS,
-  RESET
+  RESET,
 } from "../CreateProjectActions";
 import { StoreActions, StoreAction } from "../../../../rootActions";
 
 const project = {
   name: "testProjectName",
-  languageData: new File([], "testFile.lift")
+  languageData: new File([], "testFile.lift"),
 };
 
 describe("createActionReducer Tests", () => {
@@ -16,12 +16,12 @@ describe("createActionReducer Tests", () => {
     name: project.name,
     success: false,
     inProgress: true,
-    errorMsg: ""
+    errorMsg: "",
   };
 
   let inProgress: CreateProjectAction = {
     type: IN_PROGRESS,
-    payload: project
+    payload: project,
   };
 
   // Test with no state
@@ -29,7 +29,7 @@ describe("createActionReducer Tests", () => {
     expect(
       reducer.createProjectReducer(undefined, {
         type: RESET,
-        payload: project
+        payload: project,
       })
     ).toEqual(reducer.defaultState);
   });
@@ -42,7 +42,7 @@ describe("createActionReducer Tests", () => {
 
   test("non-default state, expecting default state", () => {
     const resetAction: StoreAction = {
-      type: StoreActions.RESET
+      type: StoreActions.RESET,
     };
 
     expect(

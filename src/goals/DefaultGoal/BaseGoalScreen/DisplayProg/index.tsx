@@ -8,7 +8,7 @@ function mapStateToProps(state: StoreState) {
   let history: Goal[] = state.goalsState.historyState.history;
   return {
     currentStep: history[history.length - 1].currentStep,
-    numSteps: history[history.length - 1].numSteps
+    numSteps: history[history.length - 1].numSteps,
   };
 }
 

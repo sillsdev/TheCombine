@@ -7,14 +7,14 @@ import {
   ReviewEntriesWord,
   OLD_SENSE,
   SEP_CHAR,
-  ReviewEntriesSense
+  ReviewEntriesSense,
 } from "../ReviewEntriesTypes";
 import {
   SemanticDomain,
   Word,
   State,
   Gloss,
-  Sense
+  Sense,
 } from "../../../../types/word";
 
 // Mocks
@@ -32,13 +32,13 @@ const domain1: SemanticDomain = { name: "Shadow", id: "8.3.3.2.1" };
 const sense0_frontier: Sense = {
   glosses: [gloss1],
   semanticDomains: [domain1],
-  accessibility: State.active
+  accessibility: State.active,
 };
 const sense0_local: ReviewEntriesSense = {
   senseId: "sense0",
   glosses: gloss1.def,
   domains: [domain1],
-  deleted: false
+  deleted: false,
 };
 
 // Old frontier word: the version of this word in the frontier
@@ -48,8 +48,8 @@ const oldFrontierWord: Word = {
   senses: [
     {
       glosses: [gloss0, gloss_foreign],
-      semanticDomains: [domain0]
-    }
+      semanticDomains: [domain0],
+    },
   ],
   audio: [],
   created: "",
@@ -58,7 +58,7 @@ const oldFrontierWord: Word = {
   partOfSpeech: "",
   editedBy: [],
   otherField: "",
-  plural: ""
+  plural: "",
 };
 
 // oldWord: the version of this word in local memory
@@ -70,10 +70,10 @@ const oldWord: ReviewEntriesWord = {
       senseId: "oldWordSense" + OLD_SENSE,
       glosses: gloss0.def,
       domains: [domain0],
-      deleted: false
-    }
+      deleted: false,
+    },
   ],
-  pronunciationFiles: []
+  pronunciationFiles: [],
 };
 
 beforeEach(() => {
@@ -94,12 +94,12 @@ describe("Test ReviewEntriesActions", () => {
     await makeDispatch(
       {
         ...oldWord,
-        senses: oldWord.senses.map(value => {
+        senses: oldWord.senses.map((value) => {
           return {
             ...value,
-            glosses: value.glosses + SEP_CHAR + gloss1.def
+            glosses: value.glosses + SEP_CHAR + gloss1.def,
           };
-        })
+        }),
       },
       oldWord
     );
@@ -108,9 +108,9 @@ describe("Test ReviewEntriesActions", () => {
       senses: [
         {
           ...oldFrontierWord.senses[0],
-          glosses: [gloss0, gloss1, gloss_foreign]
-        }
-      ]
+          glosses: [gloss0, gloss1, gloss_foreign],
+        },
+      ],
     });
   });
 
@@ -118,23 +118,23 @@ describe("Test ReviewEntriesActions", () => {
     await makeDispatch(
       {
         ...oldWord,
-        senses: oldWord.senses.map(value => {
+        senses: oldWord.senses.map((value) => {
           return {
             ...value,
-            domains: [...value.domains, domain1]
+            domains: [...value.domains, domain1],
           };
-        })
+        }),
       },
       oldWord
     );
     checkResultantData({
       ...oldFrontierWord,
-      senses: oldFrontierWord.senses.map(sense => {
+      senses: oldFrontierWord.senses.map((sense) => {
         return {
           ...sense,
-          semanticDomains: [...sense.semanticDomains, domain1]
+          semanticDomains: [...sense.semanticDomains, domain1],
         };
-      })
+      }),
     });
   });
 
@@ -142,13 +142,13 @@ describe("Test ReviewEntriesActions", () => {
     await makeDispatch(
       {
         ...oldWord,
-        senses: [...oldWord.senses, sense0_local]
+        senses: [...oldWord.senses, sense0_local],
       },
       oldWord
     );
     checkResultantData({
       ...oldFrontierWord,
-      senses: [...oldFrontierWord.senses, sense0_frontier]
+      senses: [...oldFrontierWord.senses, sense0_frontier],
     });
   });
 
@@ -158,8 +158,8 @@ describe("Test ReviewEntriesActions", () => {
       ...oldFrontierWord,
       senses: [
         ...oldFrontierWord.senses,
-        { ...sense0_frontier, glosses: [...sense0_frontier.glosses, gloss0] }
-      ]
+        { ...sense0_frontier, glosses: [...sense0_frontier.glosses, gloss0] },
+      ],
     });
     await makeDispatch(
       { ...oldWord, senses: [...oldWord.senses, sense0_local] },
@@ -169,14 +169,14 @@ describe("Test ReviewEntriesActions", () => {
           ...oldWord.senses,
           {
             ...sense0_local,
-            glosses: sense0_local.glosses + SEP_CHAR + gloss0.def
-          }
-        ]
+            glosses: sense0_local.glosses + SEP_CHAR + gloss0.def,
+          },
+        ],
       }
     );
     checkResultantData({
       ...oldFrontierWord,
-      senses: [...oldFrontierWord.senses, sense0_frontier]
+      senses: [...oldFrontierWord.senses, sense0_frontier],
     });
   });
 
@@ -187,9 +187,9 @@ describe("Test ReviewEntriesActions", () => {
         ...oldFrontierWord.senses,
         {
           ...sense0_frontier,
-          semanticDomains: [...sense0_frontier.semanticDomains, domain0]
-        }
-      ]
+          semanticDomains: [...sense0_frontier.semanticDomains, domain0],
+        },
+      ],
     });
     await makeDispatch(
       { ...oldWord, senses: [...oldWord.senses, sense0_local] },
@@ -199,25 +199,25 @@ describe("Test ReviewEntriesActions", () => {
           ...oldWord.senses,
           {
             ...sense0_local,
-            domains: [...sense0_local.domains, domain0]
-          }
-        ]
+            domains: [...sense0_local.domains, domain0],
+          },
+        ],
       }
     );
     checkResultantData({
       ...oldFrontierWord,
-      senses: [...oldFrontierWord.senses, sense0_frontier]
+      senses: [...oldFrontierWord.senses, sense0_frontier],
     });
   });
 
   it("Removes a sense", async () => {
     mockBackendReturn({
       ...oldFrontierWord,
-      senses: [...oldFrontierWord.senses, sense0_frontier]
+      senses: [...oldFrontierWord.senses, sense0_frontier],
     });
     await makeDispatch(oldWord, {
       ...oldWord,
-      senses: [...oldWord.senses, sense0_local]
+      senses: [...oldWord.senses, sense0_local],
     });
     checkResultantData(oldFrontierWord);
   });
@@ -226,12 +226,12 @@ describe("Test ReviewEntriesActions", () => {
   it("Restores vernacular when vernacular deleted", async () => {
     mockBackendReturn({
       ...oldFrontierWord,
-      vernacular: ""
+      vernacular: "",
     });
     await makeDispatch(
       {
         ...oldWord,
-        vernacular: ""
+        vernacular: "",
       },
       oldWord
     );
@@ -244,8 +244,8 @@ describe("Test ReviewEntriesActions", () => {
         ...oldWord,
         senses: [
           ...oldWord.senses,
-          { ...sense0_local, glosses: "", domains: [] }
-        ]
+          { ...sense0_local, glosses: "", domains: [] },
+        ],
       },
       oldWord
     );
@@ -256,7 +256,7 @@ describe("Test ReviewEntriesActions", () => {
     await makeDispatch(
       {
         ...oldWord,
-        senses: oldWord.senses.map(value => ({ ...value, glosses: "" }))
+        senses: oldWord.senses.map((value) => ({ ...value, glosses: "" })),
       },
       oldWord
     );
@@ -267,7 +267,7 @@ describe("Test ReviewEntriesActions", () => {
     await makeDispatch(
       {
         ...oldWord,
-        senses: oldWord.senses.map(value => ({ ...value, domains: [] }))
+        senses: oldWord.senses.map((value) => ({ ...value, domains: [] })),
       },
       oldWord
     );
@@ -278,7 +278,7 @@ describe("Test ReviewEntriesActions", () => {
     await makeDispatch(
       {
         ...oldWord,
-        senses: []
+        senses: [],
       },
       oldWord
     );
@@ -303,7 +303,7 @@ describe("Test ReviewEntriesActions", () => {
       await makeDispatch(
         {
           ...oldWord,
-          senses: [...oldWord.senses, { ...sense0_local, glosses: "" }]
+          senses: [...oldWord.senses, { ...sense0_local, glosses: "" }],
         },
         oldWord
       )
@@ -317,7 +317,7 @@ describe("Test ReviewEntriesActions", () => {
       await makeDispatch(
         {
           ...oldWord,
-          senses: [...oldWord.senses, { ...sense0_local, domains: [] }]
+          senses: [...oldWord.senses, { ...sense0_local, domains: [] }],
         },
         oldWord
       )
@@ -331,7 +331,7 @@ function mockBackendReturn(data: Word) {
   mockAxios.get.mockClear();
   mockAxios.get.mockImplementationOnce(() =>
     Promise.resolve({
-      data: JSON.parse(JSON.stringify(data))
+      data: JSON.parse(JSON.stringify(data)),
     })
   );
 }

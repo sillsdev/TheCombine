@@ -20,13 +20,13 @@ import { StoreState } from "../../types";
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   refreshWords,
-  MergeTreeAction
+  MergeTreeAction,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
   ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY",
-  UPDATE_GOAL = "UPDATE_GOAL"
+  UPDATE_GOAL = "UPDATE_GOAL",
 }
 
 export type GoalAction =
@@ -56,11 +56,11 @@ export function asyncLoadExistingUserEdits(
   return async (dispatch: Dispatch<GoalAction>) => {
     await backend
       .getUserEditById(projectId, userEditId)
-      .then(userEdit => {
+      .then((userEdit) => {
         let history: Goal[] = convertEditsToArrayOfGoals(userEdit.edits);
         dispatch(loadUserEdits(history));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
@@ -74,7 +74,7 @@ function asyncCreateNewUserEditsObject(projectId: string) {
         let updatedUser: User = updateUserIfExists(projectId, userEditId);
         await backend.updateUser(updatedUser);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
@@ -107,11 +107,11 @@ export function asyncAddGoalToHistory(goal: Goal) {
       let userEditId: string | undefined = getUserEditId(user);
       if (userEditId !== undefined) {
         dispatch(loadGoalData(goal)).then(
-          returnedGoal => (goal = returnedGoal)
+          (returnedGoal) => (goal = returnedGoal)
         );
         await backend
           .addGoalToUserEdit(userEditId, goal)
-          .then(resp => {
+          .then((resp) => {
             dispatch(addGoalToHistory(goal));
             history.push(`/goals/${resp}`);
           })
@@ -163,7 +163,7 @@ export function loadGoalData(goal: Goal) {
             }
           }
           // check blacklist
-          let groupIds = newGroup.map(a => a.id).sort();
+          let groupIds = newGroup.map((a) => a.id).sort();
           let groupHash = groupIds.reduce((val, acc) => `${acc}:${val}`, "");
           if (!blacklist[groupHash] && newGroup.length > 1) {
             newGroups.push(newGroup);
@@ -198,7 +198,7 @@ export function updateStepData(goal: Goal): Goal {
         JSON.stringify(goal.data as MergeDupData)
       );
       goal.steps[goal.currentStep] = {
-        words: currentGoalData.plannedWords[goal.currentStep]
+        words: currentGoalData.plannedWords[goal.currentStep],
       };
       break;
     }
@@ -222,7 +222,7 @@ function getUserEditIdFromProjectId(
   projectId: string
 ): string | undefined {
   let projectIds = Object.keys(workedProjects);
-  let matches: string[] = projectIds.filter(project => projectId === project);
+  let matches: string[] = projectIds.filter((project) => projectId === project);
   if (matches.length === 1) {
     return workedProjects[matches[0]];
   }

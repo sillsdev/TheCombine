@@ -22,7 +22,7 @@ export class Pronunciations extends React.Component<
     if (this.props.pronunciationFiles === undefined) {
       audioButtons = null;
     } else {
-      audioButtons = this.props.pronunciationFiles.map(file => {
+      audioButtons = this.props.pronunciationFiles.map((file) => {
         return (
           <AudioPlayer
             key={file}

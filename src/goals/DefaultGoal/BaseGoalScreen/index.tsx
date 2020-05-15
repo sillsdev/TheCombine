@@ -19,7 +19,7 @@ export function mapStateToProps(
     goal = state.goalsState.historyState.history[idNumber];
   }
   return {
-    goal: goal
+    goal: goal,
   };
 }
 

@@ -24,7 +24,7 @@ export default function LoadingDoneButton(props: Props & ButtonProps) {
       style={{
         backgroundColor: props.done ? buttonSuccess : undefined,
         color: props.done ? "white" : undefined,
-        ...props.style
+        ...props.style,
       }}
     >
       {props.done ? (
@@ -44,7 +44,7 @@ export default function LoadingDoneButton(props: Props & ButtonProps) {
             top: "50%",
             left: "50%",
             marginTop: -12,
-            marginLeft: -12
+            marginLeft: -12,
           }}
         />
       )}
