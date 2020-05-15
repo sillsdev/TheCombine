@@ -2,7 +2,12 @@ import history from "../../history";
 import React from "react";
 import { Button, Menu, MenuItem, Avatar } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
-import { Settings, ExitToApp, Person } from "@material-ui/icons";
+import {
+  Settings,
+  SettingsApplications,
+  ExitToApp,
+  Person,
+} from "@material-ui/icons";
 import theme from "../../types/theme";
 import { avatarSrc } from "../../backend";
 import { getCurrentUser } from "../UserSettings/UserSettings";
@@ -57,6 +62,15 @@ export default function UserMenu() {
           horizontal: "right",
         }}
       >
+        <MenuItem
+          onClick={() => {
+            history.push("/site-settings");
+          }}
+        >
+          <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
+          <Translate id="userMenu.siteSettings" />
+        </MenuItem>
+
         {/* Don't show project settings on the project creation page ("/") */}
         {history.location.pathname !== "/" && (
           <MenuItem

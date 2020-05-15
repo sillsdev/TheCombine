@@ -22,11 +22,6 @@
       "data cleanup",
       "limpieza de datos",
       "nettoyage des données"
-    ],
-    "siteSettings": [
-      "site settings",
-      "configuración del sitio",
-      "paramètres du site"
     ]
   },
   "temp": {
@@ -121,6 +116,11 @@
     ]
   },
   "userMenu": {
+    "siteSettings": [
+      "Site Settings",
+      "Configuración del Sitio",
+      "Paramètres du Site"
+    ],
     "projectSettings": [
       "Project Settings",
       "Configuraciones del proyecto",
