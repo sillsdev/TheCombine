@@ -21,7 +21,7 @@ import theme from "./types/theme";
 const localizedLanguages = [
   { name: "English", code: "en" },
   { name: "Spanish", code: "es" },
-  { name: "French", code: "fr" }
+  { name: "French", code: "fr" },
 ];
 
 const localizeInit = {
@@ -30,10 +30,11 @@ const localizeInit = {
   options: {
     renderToStaticMarkup,
     defaultLanguage:
-      localizedLanguages.find(l => l.code === navigator.language) !== undefined
+      localizedLanguages.find((l) => l.code === navigator.language) !==
+      undefined
         ? navigator.language
-        : "en"
-  }
+        : "en",
+  },
 };
 
 //Provider connects store to component containers

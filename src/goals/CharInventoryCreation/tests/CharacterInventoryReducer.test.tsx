@@ -2,11 +2,11 @@ import axios from "axios";
 import {
   characterInventoryReducer,
   defaultState,
-  CharacterInventoryState
+  CharacterInventoryState,
 } from "../CharacterInventoryReducer";
 import {
   CharacterInventoryAction,
-  CharacterInventoryType
+  CharacterInventoryType,
 } from "../CharacterInventoryActions";
 import { StoreActions, StoreAction } from "../../../rootActions";
 
@@ -19,7 +19,7 @@ describe("Test Character Inventory Reducer", () => {
     expect(
       characterInventoryReducer(undefined, {
         type: "" as CharacterInventoryType.SET_VALID_CHARACTERS,
-        payload: BAD_RESP
+        payload: BAD_RESP,
       } as CharacterInventoryAction)
     ).toEqual(defaultState);
   });
@@ -28,14 +28,14 @@ describe("Test Character Inventory Reducer", () => {
     expect(
       characterInventoryReducer(undefined, {
         type: CharacterInventoryType.SET_VALID_CHARACTERS,
-        payload: DATA
+        payload: DATA,
       } as CharacterInventoryAction)
     ).toEqual({
       validCharacters: DATA,
       allWords: [],
       characterSet: [],
       rejectedCharacters: [],
-      selectedCharacter: ""
+      selectedCharacter: "",
     });
   });
 
@@ -45,19 +45,19 @@ describe("Test Character Inventory Reducer", () => {
       allWords: [],
       characterSet: [],
       rejectedCharacters: [],
-      selectedCharacter: ""
+      selectedCharacter: "",
     };
     expect(
       characterInventoryReducer(inv, {
         type: "" as CharacterInventoryType.SET_VALID_CHARACTERS,
-        payload: BAD_RESP
+        payload: BAD_RESP,
       } as CharacterInventoryAction)
     ).toEqual(inv);
   });
 
   it("Returns default state when passed reset action", () => {
     let action: StoreAction = {
-      type: StoreActions.RESET
+      type: StoreActions.RESET,
     };
 
     expect(

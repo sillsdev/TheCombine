@@ -5,11 +5,11 @@ import { StoreAction, StoreActions } from "../../../rootActions";
 describe("tempReducer Tests", () => {
   let dummySt: reducer.TempState = reducer.defaultState;
   let resultState: reducer.TempState = {
-    tempText: "BUTTON PRESSED! REDUX WORKING!"
+    tempText: "BUTTON PRESSED! REDUX WORKING!",
   };
 
   let dummyAc: TempAction = {
-    type: PRESS_BUTTON
+    type: PRESS_BUTTON,
   };
 
   // Test with no state
@@ -26,7 +26,7 @@ describe("tempReducer Tests", () => {
 
   test("passing reset action returns default state", () => {
     const action: StoreAction = {
-      type: StoreActions.RESET
+      type: StoreActions.RESET,
     };
 
     expect(reducer.tempReducer({} as reducer.TempState, action)).toEqual(

@@ -30,7 +30,7 @@ export function parseWord(
     vernacular: word.vernacular,
     senses: [],
     pronunciationFiles: word.audio,
-    recorder: commonRecorder
+    recorder: commonRecorder,
   };
 
   for (let sense of word.senses) {
@@ -47,14 +47,14 @@ function parseSense(sense: Sense, analysisLang: string) {
     deleted:
       sense.accessibility !== undefined &&
       sense.accessibility === State.deleted,
-    senseId: uuid() + OLD_SENSE
+    senseId: uuid() + OLD_SENSE,
   };
 
   // Add domains
   if (sense.semanticDomains)
     currentSense = {
       ...currentSense,
-      domains: [...sense.semanticDomains]
+      domains: [...sense.semanticDomains],
     };
 
   // Find all glosses in the current language

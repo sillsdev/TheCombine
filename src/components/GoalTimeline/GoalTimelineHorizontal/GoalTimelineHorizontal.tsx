@@ -7,28 +7,28 @@ import HorizontalDisplay from "./HorizontalDisplay";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 
 const timelineStyle = {
   centerDisplays: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   centerButton: {
     padding: "70px 0",
     textAlign: "center",
     width: "100%",
-    height: "80%"
+    height: "80%",
   },
   paneStyling: {
     display: "block",
     marginLeft: "auto",
     marginRight: "auto",
     justifyContent: "center",
-    textAlign: "center"
-  }
+    textAlign: "center",
+  },
 };
 
 export interface GoalTimelineHorizontalProps {

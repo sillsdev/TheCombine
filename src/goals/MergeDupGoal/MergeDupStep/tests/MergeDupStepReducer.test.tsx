@@ -2,14 +2,14 @@ import { setWordData, moveSense, clearTree } from "../MergeDupStepActions";
 import { testWordList } from "../../../../types/word";
 import mergeDupStepReducer, {
   MergeTreeState,
-  defaultState
+  defaultState,
 } from "../MergeDupStepReducer";
 import {
   Hash,
   MergeTreeWord,
   MergeTreeReference,
   defaultData,
-  defaultTree
+  defaultTree,
 } from "../MergeDupsTree";
 import { randElement, uuid } from "../../../../utilities";
 import { StoreAction, StoreActions } from "../../../../rootActions";
@@ -36,7 +36,7 @@ describe("MergeDupStep reducer tests", () => {
             return {
               word: wordID,
               sense: senseID,
-              duplicate: dupID
+              duplicate: dupID,
             };
           }
         }
@@ -54,7 +54,7 @@ describe("MergeDupStep reducer tests", () => {
     return {
       word: wordID,
       sense: senseID,
-      duplicate: dupID
+      duplicate: dupID,
     };
   };
 
@@ -87,11 +87,11 @@ describe("MergeDupStep reducer tests", () => {
       for (let [index, sense] of word.senses.entries()) {
         let treeSense = { ...sense, srcWord: word.id, order: index };
         expect(
-          Object.values(data.data.senses).map(a => JSON.stringify(a))
+          Object.values(data.data.senses).map((a) => JSON.stringify(a))
         ).toContain(JSON.stringify(treeSense));
         let ids = Object.keys(data.data.senses);
         let id_res = ids.find(
-          id =>
+          (id) =>
             JSON.stringify(data.data.senses[id]) === JSON.stringify(treeSense)
         );
         expect(id_res).toBeTruthy();
@@ -137,7 +137,7 @@ describe("MergeDupStep reducer tests", () => {
 
   test("Reset returns default state", () => {
     let action: StoreAction = {
-      type: StoreActions.RESET
+      type: StoreActions.RESET,
     };
 
     expect(mergeDupStepReducer({} as MergeTreeState, action)).toEqual(

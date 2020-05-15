@@ -22,23 +22,23 @@ export const rejected = red[600];
 const palette = {
   type: "light",
   primary: {
-    main: primary
+    main: primary,
   },
   secondary: {
-    main: secondary
+    main: secondary,
   },
   error: {
-    main: error
+    main: error,
   },
   background: {
-    default: secondary
+    default: secondary,
   },
   contrastThreshold: 3,
-  tonalOffset: 0.2
+  tonalOffset: 0.2,
 };
 const typography = {
   // Copied from default theme
-  fontFamily: ['"Roboto"', '"Helvetica"', '"Arial"', "sans-serif"].join(",")
+  fontFamily: ['"Roboto"', '"Helvetica"', '"Arial"', "sans-serif"].join(","),
 };
 const dynamicFontParams = { factor: 2 };
 
@@ -49,9 +49,9 @@ const baseTheme = createMuiTheme({
   spacing: 8,
   props: {
     MuiButtonBase: {
-      disableRipple: false
-    }
-  }
+      disableRipple: false,
+    },
+  },
 });
 
 // Theme used when dynamic cards wanted
@@ -62,8 +62,8 @@ export const dynamicTheme = responsiveFontSizes(
     spacing: 8,
     props: {
       MuiButtonBase: {
-        disableRipple: false
-      }
+        disableRipple: false,
+      },
     },
     overrides: {
       MuiButton: {
@@ -72,9 +72,9 @@ export const dynamicTheme = responsiveFontSizes(
           backgroundColor: primary,
           "&:hover": {
             color: primary,
-            backgroundColor: hover
-          }
-        }
+            backgroundColor: hover,
+          },
+        },
       },
       MuiCard: {
         root: {
@@ -82,11 +82,11 @@ export const dynamicTheme = responsiveFontSizes(
           backgroundColor: primary,
           "&:hover": {
             color: primary,
-            backgroundColor: hover
-          }
-        }
-      }
-    }
+            backgroundColor: hover,
+          },
+        },
+      },
+    },
   }),
   dynamicFontParams
 );
@@ -95,8 +95,8 @@ export const dynamicTheme = responsiveFontSizes(
 export const styleAddendum = {
   inactive: {
     color: grey[600],
-    backgroundColor: grey[400]
-  }
+    backgroundColor: grey[400],
+  },
 };
 
 // Can have a number of additional options passed in; here, sticks with defaults

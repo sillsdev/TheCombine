@@ -16,22 +16,22 @@ const mockStoreState = {
     mergeTreeState: {
       data: {
         words: {},
-        senses: {}
+        senses: {},
       },
       tree: {
         senses: {},
-        words: {}
-      }
+        words: {},
+      },
     },
     wordDragState: {
-      draggedWord: undefined
-    }
+      draggedWord: undefined,
+    },
   },
   goalsState: {
     historyState: {
-      history: [{ currentStep: 1, numSteps: 5 }]
-    }
-  }
+      history: [{ currentStep: 1, numSteps: 5 }],
+    },
+  },
 };
 
 it("renders without crashing", () => {

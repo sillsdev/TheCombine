@@ -13,8 +13,8 @@ export function createDomains(
   let state: TreeViewState = {
     currentdomain: {
       ...defaultState.currentdomain,
-      subdomains: data
-    }
+      subdomains: data,
+    },
   };
   addParentDomains(state.currentdomain);
   // while (state.currentDomain.subDomains.length > 0)
@@ -38,8 +38,8 @@ export const defaultState: TreeViewState = {
     name: "",
     id: "",
     description: "",
-    subdomains: []
-  }
+    subdomains: [],
+  },
 };
 
 export const treeViewReducer = (

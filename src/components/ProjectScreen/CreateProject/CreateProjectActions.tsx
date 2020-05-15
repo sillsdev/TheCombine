@@ -47,15 +47,15 @@ export function asyncCreateProject(name: string, languageData?: File) {
     project.name = name;
     backend
       .createProject(project)
-      .then(createdProject => {
+      .then((createdProject) => {
         dispatch(setCurrentProject(createdProject));
 
         // Upload words
         if (languageData) {
-          backend.uploadLift(createdProject, languageData).then(res => {
+          backend.uploadLift(createdProject, languageData).then((res) => {
             backend
               .getProject(createdProject.id)
-              .then(res => {
+              .then((res) => {
                 dispatch(setCurrentProject(res));
                 dispatch(success(name));
                 // we manually pause so they have a chance to see the success message
@@ -64,10 +64,10 @@ export function asyncCreateProject(name: string, languageData?: File) {
                   history.push("/project-settings");
                 }, 1000);
               })
-              .catch(err => {
+              .catch((err) => {
                 dispatch(failure(name, err.response.statusText));
               })
-              .catch(err => {
+              .catch((err) => {
                 dispatch(failure(name, err.response.statusText));
               });
           });
@@ -79,7 +79,7 @@ export function asyncCreateProject(name: string, languageData?: File) {
           }, 1000);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         let errorMessage: string;
         if (err.response === undefined) {
           errorMessage = err.response;
@@ -94,14 +94,14 @@ export function asyncCreateProject(name: string, languageData?: File) {
 export function inProgress(name: string): CreateProjectAction {
   return {
     type: IN_PROGRESS,
-    payload: { name }
+    payload: { name },
   };
 }
 
 export function success(name: string): CreateProjectAction {
   return {
     type: SUCCESS,
-    payload: { name }
+    payload: { name },
   };
 }
 
@@ -111,7 +111,7 @@ export function failure(
 ): CreateProjectAction {
   return {
     type: FAILURE,
-    payload: { name, errorMsg }
+    payload: { name, errorMsg },
   };
 }
 

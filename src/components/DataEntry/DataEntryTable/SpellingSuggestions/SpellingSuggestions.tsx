@@ -23,7 +23,7 @@ export class SpellingSuggestionsView extends React.Component<
           xs={5}
           style={{
             paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2)
+            paddingRight: theme.spacing(2),
           }}
         >
           <Typography variant="body1">
@@ -35,12 +35,12 @@ export class SpellingSuggestionsView extends React.Component<
           xs={5}
           style={{
             paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2)
+            paddingRight: theme.spacing(2),
           }}
         >
           <Typography variant="body1">{"Suggestions: "}</Typography>
           {this.props.spellingSuggestions.length > 0 ? (
-            this.props.spellingSuggestions.map(suggestion => (
+            this.props.spellingSuggestions.map((suggestion) => (
               <Chip
                 label={suggestion}
                 style={{ margin: 4 }}

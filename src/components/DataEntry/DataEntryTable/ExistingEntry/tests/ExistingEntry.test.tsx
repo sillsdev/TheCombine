@@ -4,7 +4,7 @@ import {
   ExistingEntry,
   addSenseToWord,
   addSemanticDomainToSense,
-  duplicatesFromFrontier
+  duplicatesFromFrontier,
 } from "../ExistingEntry";
 import { Word, SemanticDomain, State, Sense } from "../../../../../types/word";
 import { mockWord } from "../../../tests/MockWord";
@@ -49,12 +49,12 @@ describe("Tests ExistingEntry", () => {
     let newSense: Sense = {
       glosses: [{ language: "en", def: gloss }],
       semanticDomains: [semanticDomain],
-      accessibility: State.active
+      accessibility: State.active,
     };
 
     const expectedWord: Word = {
       ...word,
-      senses: [...word.senses, newSense]
+      senses: [...word.senses, newSense],
     };
 
     expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
@@ -64,22 +64,22 @@ describe("Tests ExistingEntry", () => {
     let semanticDomain: SemanticDomain = mockSemanticDomain;
     let existingSense: Sense = {
       glosses: [{ language: "", def: "" }],
-      semanticDomains: [{ name: "domain", id: "10.2" }]
+      semanticDomains: [{ name: "domain", id: "10.2" }],
     };
     let word: Word = {
       ...mockWord,
-      senses: [...mockWord.senses, existingSense]
+      senses: [...mockWord.senses, existingSense],
     };
     let gloss = "yeet";
     let expectedSense: Sense = {
       glosses: [{ language: "en", def: gloss }],
       semanticDomains: [semanticDomain],
-      accessibility: State.active
+      accessibility: State.active,
     };
 
     const expectedWord: Word = {
       ...word,
-      senses: [...word.senses, expectedSense]
+      senses: [...word.senses, expectedSense],
     };
 
     expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
@@ -90,11 +90,11 @@ describe("Tests ExistingEntry", () => {
     let sense: Sense = {
       glosses: [{ language: "en", def: "yeet" }],
       semanticDomains: [],
-      accessibility: State.active
+      accessibility: State.active,
     };
     let word: Word = {
       ...mockWord,
-      senses: [...mockWord.senses, sense]
+      senses: [...mockWord.senses, sense],
     };
 
     let senseIndex = word.senses.length - 1;
@@ -105,9 +105,9 @@ describe("Tests ExistingEntry", () => {
         ...mockWord.senses,
         {
           ...sense,
-          semanticDomains: [semanticDomain]
-        }
-      ]
+          semanticDomains: [semanticDomain],
+        },
+      ],
     };
 
     expect(

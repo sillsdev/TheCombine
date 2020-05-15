@@ -9,7 +9,7 @@ import {
   getUser,
   updateGoal,
   UpdateGoalAction,
-  updateStepData
+  updateStepData,
 } from "../../../components/GoalTimeline/GoalsActions";
 import { Goal, GoalHistoryState } from "../../../types/goals";
 import { Dispatch } from "redux";
@@ -25,7 +25,7 @@ export enum MergeTreeActions {
   SET_SENSE = "SET_SENSE",
   SET_DATA = "SET_DATA",
   CLEAR_TREE = "CLEAR_TREE",
-  ORDER_DUPLICATE = "ORDER_DUPLICATE"
+  ORDER_DUPLICATE = "ORDER_DUPLICATE",
 }
 
 interface MergeDataAction {
@@ -72,14 +72,14 @@ export type MergeTreeAction =
 export function setVern(wordID: string, vern: string): MergeTreeAction {
   return {
     type: MergeTreeActions.SET_VERNACULAR,
-    payload: { wordID, data: vern }
+    payload: { wordID, data: vern },
   };
 }
 
 export function setPlural(wordID: string, plural: string): MergeTreeAction {
   return {
     type: MergeTreeActions.SET_PLURAL,
-    payload: { wordID, data: plural }
+    payload: { wordID, data: plural },
   };
 }
 
@@ -93,7 +93,7 @@ export function moveSenses(
 ): MergeTreeAction {
   return {
     type: MergeTreeActions.MOVE_SENSE,
-    payload: { src, dest }
+    payload: { src, dest },
   };
 }
 
@@ -111,7 +111,7 @@ export function setSense(
 ): MergeTreeAction {
   return {
     type: MergeTreeActions.SET_SENSE,
-    payload: { ref, data }
+    payload: { ref, data },
   };
 }
 
@@ -122,7 +122,7 @@ export function removeSense(ref: MergeTreeReference): MergeTreeAction {
 export function setWordData(words: Word[]): MergeDataAction {
   return {
     type: MergeTreeActions.SET_DATA,
-    payload: words
+    payload: words,
   };
 }
 
@@ -135,7 +135,7 @@ export function orderSense(
     type: MergeTreeActions.ORDER_SENSE,
     wordID: wordID,
     senseID: senseID,
-    order: order
+    order: order,
   };
 }
 
@@ -146,7 +146,7 @@ export function orderDuplicate(
   return {
     type: MergeTreeActions.ORDER_DUPLICATE,
     ref,
-    order
+    order,
   };
 }
 
@@ -238,7 +238,7 @@ export async function mergeWord(
     // create a list of all senses and add merge type tags slit by src word
     let senses: Hash<SenseWithState[]> = {};
 
-    let allSenses = Object.values(word.senses).map(sense =>
+    let allSenses = Object.values(word.senses).map((sense) =>
       Object.values(sense)
     );
 
@@ -263,7 +263,7 @@ export async function mergeWord(
               ...sense,
               srcWord: wordID,
               order: senses[wordID].length,
-              state: State.separate
+              state: State.separate,
             });
           }
         }
@@ -271,7 +271,7 @@ export async function mergeWord(
     }
 
     // Set sense and duplicate senses
-    Object.values(word.senses).forEach(sense => {
+    Object.values(word.senses).forEach((sense) => {
       let senseIDs = Object.values(sense);
       let senseData = data.senses[senseIDs[0]];
       let wordID = senseData.srcWord;
@@ -288,16 +288,16 @@ export async function mergeWord(
       // we want a list of all senses skipping the first
       let dups = senseIDs
         .slice(1)
-        .map(id => ({ ...data.senses[id], state: State.duplicate }));
+        .map((id) => ({ ...data.senses[id], state: State.duplicate }));
 
       // set each dup to be merged as duplicates
-      dups.forEach(dup => {
+      dups.forEach((dup) => {
         senses[dup.srcWord][dup.order].state = State.duplicate;
         // put this sense's semdoms in the parent senses's
         for (let semdom of senses[dup.srcWord][dup.order].semanticDomains) {
           if (
             !senses[wordID][senseIndex].semanticDomains
-              .map(a => a.id)
+              .map((a) => a.id)
               .includes(semdom.id)
           ) {
             senses[wordID][senseIndex].semanticDomains.push(semdom);
@@ -308,7 +308,7 @@ export async function mergeWord(
 
     // clean order of senses in each src word to reflect
     // the order in the backend
-    Object.values(senses).forEach(wordSenses => {
+    Object.values(senses).forEach((wordSenses) => {
       wordSenses = wordSenses.sort((a, b) => a.order - b.order);
       senses[wordSenses[0].srcWord] = wordSenses;
     });
@@ -317,24 +317,24 @@ export async function mergeWord(
     let parent: Word = { ...data.words[wordID], senses: [] };
 
     // construct sense children
-    let children = Object.values(senses).map(word => {
-      word.forEach(sense => {
+    let children = Object.values(senses).map((word) => {
+      word.forEach((sense) => {
         if (sense.state === State.sense || sense.state === State.active) {
           parent.senses.push({
             glosses: sense.glosses,
-            semanticDomains: sense.semanticDomains
+            semanticDomains: sense.semanticDomains,
           });
         }
       });
       return {
         wordID: word[0].srcWord,
-        senses: word.map(sense => sense.state)
+        senses: word.map((sense) => sense.state),
       };
     });
 
     // a merge is an identity if all of its senses come from parent
     // and it has the same number of senses as parent
-    if (!children.find(val => val.wordID !== wordID)) {
+    if (!children.find((val) => val.wordID !== wordID)) {
       if (children.length === data.words[wordID].senses.length) {
         // if the merge is an identity don't bother sending a merge
         return mapping;
@@ -368,7 +368,7 @@ export async function mergeWord(
           case State.separate:
             mapping[src] = {
               srcWord: newWords[separateIndex],
-              order: keepCounts[separateIndex]
+              order: keepCounts[separateIndex],
             };
             keepCounts[separateIndex]++;
             break;

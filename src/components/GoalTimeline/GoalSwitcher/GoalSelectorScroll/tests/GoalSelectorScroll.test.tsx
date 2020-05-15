@@ -8,12 +8,12 @@ import {
   GoalSelectorScroll as GSScroll,
   percentToPixels,
   WIDTH,
-  WRAP_AROUND_THRESHHOLD
+  WRAP_AROUND_THRESHHOLD,
 } from "../GoalSelectorScroll";
 import {
   GoalScrollAction,
   SELECT_ACTION,
-  MOUSE_ACTION
+  MOUSE_ACTION,
 } from "../GoalSelectorAction";
 
 import configureMockStore from "redux-mock-store";
@@ -22,7 +22,7 @@ import { Provider } from "react-redux";
 import { act, Simulate } from "react-dom/test-utils";
 import renderer, {
   ReactTestInstance,
-  ReactTestRenderer
+  ReactTestRenderer,
 } from "react-test-renderer";
 
 const labels: string[] = ["handleDuplicates", "handleFlags", "grammarCheck"];
@@ -33,8 +33,8 @@ const storeState: any = {
   innerWidth: 500,
   goalSelectorState: gsState,
   goalsState: {
-    allPossibleGoals: gsState.allPossibleGoals
-  }
+    allPossibleGoals: gsState.allPossibleGoals,
+  },
 };
 const createMockStore = configureMockStore([thunk]);
 const store = createMockStore(storeState);
@@ -44,7 +44,7 @@ jest.autoMockOn();
 
 // Bypass getScroll relying on refs, which fail in jest testing
 var scroller: any = {
-  scrollLeft: WRAP_AROUND_THRESHHOLD
+  scrollLeft: WRAP_AROUND_THRESHHOLD,
 };
 GSScroll.prototype.getScroll = jest.fn(() => {
   return scroller as HTMLElement;
@@ -53,7 +53,7 @@ GSScroll.prototype.getScroll = jest.fn(() => {
 window = {
   ...window,
   addEventListener: jest.fn(),
-  removeEventListener: jest.fn()
+  removeEventListener: jest.fn(),
 };
 
 // Variables used in testing: contain various parts of the UI
@@ -63,11 +63,11 @@ var scrollHandle: ReactTestInstance;
 // Action constants
 const select: GoalScrollAction = {
   type: SELECT_ACTION,
-  payload: 0
+  payload: 0,
 };
 const mouse: GoalScrollAction = {
   type: MOUSE_ACTION,
-  payload: 0
+  payload: 0,
 };
 
 beforeEach(() => {
@@ -101,7 +101,7 @@ describe("Testing the goal selector scroll ui", () => {
   it("Dispatches ndx to store on navigate left", () => {
     let action: GoalScrollAction = {
       type: SELECT_ACTION,
-      payload: 2
+      payload: 2,
     };
     scrollHandle.instance.scrollLeft();
     expect(store.getActions()).toEqual([action]);
@@ -112,30 +112,30 @@ describe("Testing the goal selector scroll ui", () => {
     expect(store.getActions()).toEqual([
       {
         type: SELECT_ACTION,
-        payload: 1
-      }
+        payload: 1,
+      },
     ]);
   });
 
   it("Dispatches a MouseMoveAct to the store on scrollStart", () => {
     scrollHandle.instance.scrollStart({
-      screenX: mouse.payload
+      screenX: mouse.payload,
     });
     expect(store.getActions()).toEqual([mouse]);
 
     // Remove extra listeners
     scrollHandle.instance.scrollEnd({
-      screenX: 0
+      screenX: 0,
     });
   });
 
   it("Dispatches a MouseMoveAct on scrollDur-short stroke", () => {
     let shortStroke: GoalScrollAction = {
       type: MOUSE_ACTION,
-      payload: -1
+      payload: -1,
     };
     scrollHandle.instance.scrollDur({
-      screenX: shortStroke.payload
+      screenX: shortStroke.payload,
     });
     expect(store.getActions()).toEqual([shortStroke]);
   });
@@ -143,14 +143,14 @@ describe("Testing the goal selector scroll ui", () => {
   it("Dispatches a MouseMoveAct and a ScrollSelectorAct on scrollDur-long stroke", () => {
     let newMouse: GoalScrollAction = {
       type: MOUSE_ACTION,
-      payload: -percentToPixels(WIDTH)
+      payload: -percentToPixels(WIDTH),
     };
     let newSelect: GoalScrollAction = {
       type: SELECT_ACTION,
-      payload: 1
+      payload: 1,
     };
     scrollHandle.instance.scrollDur({
-      screenX: newMouse.payload
+      screenX: newMouse.payload,
     });
     expect(store.getActions()).toEqual([newMouse, newSelect]);
   });
@@ -158,18 +158,18 @@ describe("Testing the goal selector scroll ui", () => {
   it("Dispatches a MouseMoveAct 1 out of every 2 times scrollDur is called", () => {
     let shortStroke: GoalScrollAction = {
       type: MOUSE_ACTION,
-      payload: -1
+      payload: -1,
     };
     for (let i: number = 0; i < 4; i++)
       scrollHandle.instance.scrollDur({
-        screenX: shortStroke.payload
+        screenX: shortStroke.payload,
       });
     expect(store.getActions()).toEqual([shortStroke, shortStroke]);
   });
 
   it("Dispatches a ScrollSelectorAct on scrollEnd", () => {
     scrollHandle.instance.scrollEnd({
-      screenX: mouse.payload
+      screenX: mouse.payload,
     });
     expect(store.getActions()).toEqual([select]);
   });
@@ -177,7 +177,7 @@ describe("Testing the goal selector scroll ui", () => {
   it("Calls handleChange on click to the active card", () => {
     scrollHandle.instance.cardHandleClick(
       {
-        type: "click"
+        type: "click",
       },
       gsState.selectedIndex
     );
@@ -189,15 +189,15 @@ describe("Testing the goal selector scroll ui", () => {
   it("Swaps index on click to a non-active card", () => {
     scrollHandle.instance.cardHandleClick(
       {
-        type: "click"
+        type: "click",
       },
       gsState.selectedIndex + 1
     );
     expect(store.getActions()).toEqual([
       {
         type: SELECT_ACTION,
-        payload: gsState.selectedIndex + 1
-      }
+        payload: gsState.selectedIndex + 1,
+      },
     ]);
   });
 });
@@ -221,7 +221,7 @@ function createTempState(): GoalSelectorState {
     selectedIndex: 0,
     allPossibleGoals: [...goals],
     mouseX: 0,
-    lastIndex: 3
+    lastIndex: 3,
   };
 }
 

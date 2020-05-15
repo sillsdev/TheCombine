@@ -2,14 +2,14 @@ import { Dispatch } from "react";
 import * as backend from "../../../../../backend";
 import {
   getAllCharacters,
-  fetchWords
+  fetchWords,
 } from "../../../CharacterInventoryActions";
 
 export function findAndReplace(findValue: string, replaceValue: string) {
   return async (dispatch: Dispatch<any>) => {
     try {
       let allWords = await backend.getFrontierWords();
-      let changedWords = allWords.filter(word =>
+      let changedWords = allWords.filter((word) =>
         word.vernacular.includes(findValue)
       );
       let findRegExp = new RegExp(

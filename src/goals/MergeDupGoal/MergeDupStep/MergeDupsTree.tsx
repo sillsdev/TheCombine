@@ -26,10 +26,10 @@ export interface MergeTree {
 }
 
 export const defaultTree = {
-  words: {}
+  words: {},
 };
 
 export const defaultData = {
   words: {},
-  senses: {}
+  senses: {},
 };

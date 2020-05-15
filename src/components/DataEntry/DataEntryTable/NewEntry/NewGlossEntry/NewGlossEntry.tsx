@@ -3,7 +3,7 @@ import { TextField, Tooltip } from "@material-ui/core";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 
 interface NewGlossEntryProps {
@@ -29,7 +29,7 @@ export class NewGlossEntry extends React.Component<
           fullWidth
           variant="outlined"
           value={this.props.glosses}
-          onChange={e => {
+          onChange={(e) => {
             this.props.updateGlossField(e.target.value);
           }}
           inputRef={this.props.glossInput}
@@ -37,13 +37,13 @@ export class NewGlossEntry extends React.Component<
             this.props.isSpelledCorrectly
               ? {
                   style: {
-                    color: "black"
-                  }
+                    color: "black",
+                  },
                 }
               : {
                   style: {
-                    color: "red"
-                  }
+                    color: "red",
+                  },
                 }
           }
         />
@@ -61,7 +61,7 @@ export class NewGlossEntry extends React.Component<
                 position: "absolute",
                 top: 24,
                 right: 48,
-                cursor: "pointer"
+                cursor: "pointer",
               }}
               onClick={() => this.props.toggleSpellingSuggestionsView()}
             />

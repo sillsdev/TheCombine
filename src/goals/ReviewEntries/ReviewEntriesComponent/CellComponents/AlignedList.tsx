@@ -21,7 +21,7 @@ export default class AlignedList extends React.Component<AlignedListProps> {
             style={
               this.props.bottomCell || index + 1 !== this.props.contents.length
                 ? {
-                    borderBottom: "1px solid lightgrey"
+                    borderBottom: "1px solid lightgrey",
                   }
                 : {}
             }

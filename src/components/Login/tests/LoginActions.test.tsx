@@ -13,31 +13,31 @@ describe("LoginAction Tests", () => {
 
   let loginAttempt: action.UserAction = {
     type: action.LOGIN_ATTEMPT,
-    payload: { user: user.user }
+    payload: { user: user.user },
   };
 
   let loginSuccess: action.UserAction = {
     type: action.LOGIN_SUCCESS,
-    payload: { user: user.user }
+    payload: { user: user.user },
   };
 
   let logout: action.UserAction = {
     type: action.LOGOUT,
-    payload: { user: user.user }
+    payload: { user: user.user },
   };
 
   let reset: rootAction.StoreAction = {
-    type: rootAction.StoreActions.RESET
+    type: rootAction.StoreActions.RESET,
   };
 
   let registerAttempt: action.UserAction = {
     type: action.REGISTER_ATTEMPT,
-    payload: { user: user.user }
+    payload: { user: user.user },
   };
 
   let registerFailure: action.UserAction = {
     type: action.REGISTER_FAILURE,
-    payload: { user: user.user }
+    payload: { user: user.user },
   };
 
   test("register returns correct value", () => {
@@ -70,7 +70,7 @@ describe("LoginAction Tests", () => {
       .then(() => {
         expect(mockStore.getActions()).toEqual([
           registerAttempt,
-          registerFailure
+          registerFailure,
         ]);
       })
       .catch((err: any) => {
@@ -106,14 +106,14 @@ describe("LoginAction Tests", () => {
   test("loginReset returns correct value", () => {
     expect(action.loginReset()).toEqual({
       type: action.LOGIN_RESET,
-      payload: { user: "" }
+      payload: { user: "" },
     });
   });
 
   test("registerReset returns correct value", () => {
     expect(action.registerReset()).toEqual({
       type: action.REGISTER_RESET,
-      payload: { user: "" }
+      payload: { user: "" },
     });
   });
 
@@ -136,6 +136,6 @@ function testActionCreatorAgainst(
 ) {
   expect(action(user.user)).toEqual({
     type: type,
-    payload: { user: user.user }
+    payload: { user: user.user },
   });
 }

@@ -6,14 +6,14 @@ import { ReviewEntriesWord } from "./ReviewEntriesTypes";
 import {
   ReviewEntriesAction,
   updateAllWords,
-  updateFrontierWord
+  updateFrontierWord,
 } from "./ReviewEntriesActions";
 import { StoreState } from "../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
     language: state.reviewEntriesState.language,
-    words: state.reviewEntriesState.words
+    words: state.reviewEntriesState.words,
   };
 }
 
@@ -27,7 +27,7 @@ function mapDispatchToProps(
       newData: ReviewEntriesWord,
       oldData: ReviewEntriesWord,
       language: string
-    ) => dispatch(updateFrontierWord(newData, oldData, language))
+    ) => dispatch(updateFrontierWord(newData, oldData, language)),
   };
 }
 

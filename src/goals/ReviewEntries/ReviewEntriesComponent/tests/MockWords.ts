@@ -10,9 +10,9 @@ const mockWords: ReviewEntriesWord[] = [
         senseId: "1",
         glosses: "bup, AHHHHHH",
         domains: [{ name: "domain", id: "number" }],
-        deleted: false
-      }
-    ]
+        deleted: false,
+      },
+    ],
   },
   {
     id: "1",
@@ -23,10 +23,10 @@ const mockWords: ReviewEntriesWord[] = [
         senseId: "2",
         glosses: "gloss",
         domains: [{ name: "domain", id: "number" }],
-        deleted: false
-      }
-    ]
-  }
+        deleted: false,
+      },
+    ],
+  },
 ];
 
 export default mockWords;

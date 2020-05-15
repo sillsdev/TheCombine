@@ -68,5 +68,5 @@ export default {
   )),
   ViewColumn: forwardRef((props: any, ref: Ref<SVGSVGElement>) => (
     <ViewColumn {...props} ref={ref} />
-  ))
+  )),
 };

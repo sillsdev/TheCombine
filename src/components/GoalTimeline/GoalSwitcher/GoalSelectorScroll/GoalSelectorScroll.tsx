@@ -6,7 +6,7 @@ import { Goal } from "../../../../types/goals";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 import ContextMenu from "../../../ContextMenu/ContextMenu";
 import { styleAddendum } from "../../../../types/theme";
@@ -66,7 +66,7 @@ export class GoalSelectorScroll extends React.Component<
       padding: "2vw",
       display: "flex",
       flexWrap: "nowrap",
-      overflow: "hidden"
+      overflow: "hidden",
     },
     pane: {
       padding: "2vw",
@@ -74,20 +74,20 @@ export class GoalSelectorScroll extends React.Component<
       display: "flex",
       flexWrap: "nowrap",
       overflow: "hidden",
-      width: VIEW_WIDTH + "vw"
+      width: VIEW_WIDTH + "vw",
     },
     scroll: {
       flexWrap: "nowrap",
-      display: "flex"
+      display: "flex",
     },
     selectedCard: {
-      width: WIDTH + "vw"
+      width: WIDTH + "vw",
     },
     inactiveCard: {
       ...styleAddendum.inactive,
       width: DESELECTED_WIDTH + "vw",
-      margin: (WIDTH - DESELECTED_WIDTH) / 2 + "vw"
-    }
+      margin: (WIDTH - DESELECTED_WIDTH) / 2 + "vw",
+    },
   };
 
   scrollRef: any;
@@ -109,7 +109,7 @@ export class GoalSelectorScroll extends React.Component<
         return [
           element.name,
           index + this.LENGTH - AMT_OF_PADDING,
-          index + this.LENGTH - AMT_OF_PADDING
+          index + this.LENGTH - AMT_OF_PADDING,
         ];
       });
     this.END_PADDING = props.allPossibleGoals
@@ -313,8 +313,8 @@ export class GoalSelectorScroll extends React.Component<
                 this.props.handleChange(
                   this.props.allPossibleGoals[index].name
                 );
-              }
-            ]
+              },
+            ],
           ]}
         />
       </Card>
@@ -350,8 +350,8 @@ export class GoalSelectorScroll extends React.Component<
                 this.props.handleChange(
                   this.props.allPossibleGoals[dummyGoal[2]].name
                 );
-              }
-            ]
+              },
+            ],
           ]}
         />
       </Card>

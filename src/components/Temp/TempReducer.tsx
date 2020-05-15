@@ -7,7 +7,7 @@ export interface TempState {
 }
 
 export const defaultState: TempState = {
-  tempText: "default text from reducer"
+  tempText: "default text from reducer",
 };
 
 export const tempReducer = (

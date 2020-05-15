@@ -23,7 +23,7 @@ describe("dupFinder Tests", () => {
     simpleWord("Yuino", "Love"),
     simpleWord("Yuino", "Boba Fett"),
     simpleWord("Yes", "Wumbo"),
-    simpleWord("Yes", "Mayonnaise")
+    simpleWord("Yes", "Mayonnaise"),
   ];
 
   test("getNextDups returns correct number of word collections", async () => {
@@ -33,7 +33,7 @@ describe("dupFinder Tests", () => {
 
     let finder = new DupFinder();
 
-    await finder.getNextDups().then(wordCollections => {
+    await finder.getNextDups().then((wordCollections) => {
       expect(wordCollections.length).toBeLessThanOrEqual(7);
     });
   });
@@ -47,7 +47,7 @@ describe("dupFinder Tests", () => {
 
     expect(finder.maskedWords.length).toBe(0);
 
-    await finder.fetchWordsFromDB().then(gotWords => {
+    await finder.fetchWordsFromDB().then((gotWords) => {
       expect(gotWords).toBe(true);
       expect(finder.maskedWords.length).toBe(testWordList.length);
     });
@@ -63,10 +63,10 @@ describe("dupFinder Tests", () => {
     let parent = simpleWord("Yank", "Mayonnaise");
 
     let duplicates: [Word[], number] = [[], Number.MIN_SAFE_INTEGER];
-    await finder.fetchWordsFromDB().then(gotWords => {
+    await finder.fetchWordsFromDB().then((gotWords) => {
       duplicates = finder.getDuplicatesOfWord(parent);
 
-      duplicates[0].forEach(duplicate => {
+      duplicates[0].forEach((duplicate) => {
         let vernScore = finder.getLevenshteinDistance(
           duplicate.vernacular,
           parent.vernacular

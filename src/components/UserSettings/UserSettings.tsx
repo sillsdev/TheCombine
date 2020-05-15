@@ -10,7 +10,7 @@ import {
   Button,
   Card,
   CardContent,
-  makeStyles
+  makeStyles,
 } from "@material-ui/core";
 import { User } from "../../types/user";
 import AvatarUpload from "./AvatarUpload";
@@ -21,7 +21,7 @@ import theme from "../../types/theme";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
@@ -40,20 +40,20 @@ function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
   const classes = makeStyles({
     avatar: {
       width: 60,
-      height: 60
+      height: 60,
     },
     avatarOverlay: {
       transition: "opacity 0.2s",
       "&:hover": {
-        opacity: 0.9
+        opacity: 0.9,
       },
       position: "absolute",
       width: 60,
       height: 60,
       top: 0,
       opacity: 0,
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   })();
 
   return (
@@ -90,7 +90,7 @@ class UserSettings extends React.Component<
       name: user.name,
       phone: user.phone,
       email: user.email,
-      avatarDialogOpen: false
+      avatarDialogOpen: false,
     };
     this.getAvatar();
   }
@@ -111,7 +111,7 @@ class UserSettings extends React.Component<
     const value = e.target.value;
 
     this.setState({
-      [field]: value
+      [field]: value,
     } as Pick<UserSettingsState, K>);
   }
 
@@ -130,7 +130,7 @@ class UserSettings extends React.Component<
         <AppBarComponent />
         <Grid container justify="center">
           <Card style={{ width: 450 }}>
-            <form onSubmit={e => this.onSubmit(e)}>
+            <form onSubmit={(e) => this.onSubmit(e)}>
               <CardContent>
                 <Grid item container spacing={6}>
                   <Grid item container spacing={2} alignItems="center">
@@ -148,10 +148,10 @@ class UserSettings extends React.Component<
                         variant="outlined"
                         value={this.state.name}
                         label={<Translate id="login.name" />}
-                        onChange={e => this.updateField(e, "name")}
+                        onChange={(e) => this.updateField(e, "name")}
                         inputProps={{ maxLength: 100 }}
                         style={{
-                          margin: (theme.spacing(1) + "px ").repeat(3) + " 0" // "8px 8px 8px 0"
+                          margin: (theme.spacing(1) + "px ").repeat(3) + " 0", // "8px 8px 8px 0"
                         }}
                       />
                       <Typography variant="subtitle2" style={{ color: "grey" }}>
@@ -176,7 +176,7 @@ class UserSettings extends React.Component<
                           variant="outlined"
                           value={this.state.phone}
                           label="Phone"
-                          onChange={e => this.updateField(e, "phone")}
+                          onChange={(e) => this.updateField(e, "phone")}
                           type="tel"
                         />
                       </Grid>
@@ -192,7 +192,7 @@ class UserSettings extends React.Component<
                           variant="outlined"
                           value={this.state.email}
                           label={<Translate id="login.email" />}
-                          onChange={e => this.updateField(e, "email")}
+                          onChange={(e) => this.updateField(e, "email")}
                           type="email"
                         />
                       </Grid>

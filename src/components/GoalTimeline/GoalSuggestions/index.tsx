@@ -6,7 +6,7 @@ import { StoreState } from "../../../types";
 
 export function mapStateToProps(state: StoreState): GoalSuggestionsState {
   return {
-    suggestions: state.goalsState.suggestionsState.suggestions
+    suggestions: state.goalsState.suggestionsState.suggestions,
   };
 }
 

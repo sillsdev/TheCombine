@@ -15,11 +15,11 @@ describe("TempAction Tests", () => {
   let mockState = {
     // Missing localize variable, but that's fine for our test
     tempState: {
-      ...defaultState
-    }
+      ...defaultState,
+    },
   };
   let bP: action.ButtonPressed = {
-    type: action.PRESS_BUTTON
+    type: action.PRESS_BUTTON,
   };
 
   // Test whether pressButton returns a proper value

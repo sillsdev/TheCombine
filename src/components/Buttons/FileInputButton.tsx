@@ -24,7 +24,7 @@ export default function FileInputButton(props: BrowseProps & ButtonProps) {
         type="file"
         name="name"
         accept={props.accept}
-        onChange={e => updateFile(e.target.files as FileList)}
+        onChange={(e) => updateFile(e.target.files as FileList)}
         style={{ display: "none" }}
       />
 

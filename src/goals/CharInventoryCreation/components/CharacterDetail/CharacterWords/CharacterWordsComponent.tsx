@@ -16,11 +16,13 @@ export default function CharacterWords(props: CharacterWordsProps) {
           Examples ⟶
         </Link>
       </Typography>
-      {getWordsContainingChar(props.character, props.allWords, 5).map(word => (
-        <Typography variant="body1">
-          {highlightCharacterInWord(props.character, word)}
-        </Typography>
-      ))}
+      {getWordsContainingChar(props.character, props.allWords, 5).map(
+        (word) => (
+          <Typography variant="body1">
+            {highlightCharacterInWord(props.character, word)}
+          </Typography>
+        )
+      )}
     </React.Fragment>
   );
 }
@@ -46,7 +48,7 @@ function highlightCharacterInWord(character: string, word: string) {
         <span
           style={{
             background: highlight,
-            padding: "3px 0"
+            padding: "3px 0",
             //borderBottom: "2px solid red"
           }}
         >

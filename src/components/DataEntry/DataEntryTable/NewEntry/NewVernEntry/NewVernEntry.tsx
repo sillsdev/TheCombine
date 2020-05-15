@@ -4,7 +4,7 @@ import { TextField, Tooltip } from "@material-ui/core";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 
 interface NewVernEntryProps {
@@ -31,7 +31,7 @@ export class NewVernEntry extends React.Component<
           fullWidth
           variant="outlined"
           value={this.props.vernacular}
-          onChange={e => this.props.updateVernField(e.target.value)}
+          onChange={(e) => this.props.updateVernField(e.target.value)}
           inputRef={this.props.vernInput}
         />
         {this.props.showAutocompleteToggle && (
@@ -48,7 +48,7 @@ export class NewVernEntry extends React.Component<
                 position: "absolute",
                 top: 24,
                 right: 48,
-                cursor: "pointer"
+                cursor: "pointer",
               }}
               onClick={() => this.props.toggleAutocompleteView()}
             />

@@ -1,7 +1,7 @@
 import {
   CharacterInventoryAction,
   CharacterInventoryType,
-  getCharacterStatus
+  getCharacterStatus,
 } from "./CharacterInventoryActions";
 import { StoreActions, StoreAction } from "../../rootActions";
 
@@ -18,7 +18,7 @@ export const defaultState: CharacterInventoryState = {
   rejectedCharacters: [],
   allWords: [],
   selectedCharacter: "",
-  characterSet: []
+  characterSet: [],
 };
 
 /** A character with its occurrences and status, for sorting and filtering in a list */
@@ -41,11 +41,11 @@ export const characterInventoryReducer = (
       // Set prevents duplicate characters
       validCharacters = [...new Set(action.payload)];
       rejectedCharacters = state.rejectedCharacters.filter(
-        char => !validCharacters.includes(char)
+        (char) => !validCharacters.includes(char)
       );
 
       // Set status of characters in character set
-      characterSet = state.characterSet.map(entry => {
+      characterSet = state.characterSet.map((entry) => {
         entry.status = getCharacterStatus(
           entry.character,
           validCharacters,
@@ -57,11 +57,11 @@ export const characterInventoryReducer = (
     case CharacterInventoryType.SET_REJECTED_CHARACTERS:
       rejectedCharacters = [...new Set(action.payload)];
       validCharacters = state.validCharacters.filter(
-        char => !rejectedCharacters.includes(char)
+        (char) => !rejectedCharacters.includes(char)
       );
 
       // Set status of characters in character set
-      characterSet = state.characterSet.map(entry => {
+      characterSet = state.characterSet.map((entry) => {
         entry.status = getCharacterStatus(
           entry.character,
           validCharacters,
@@ -73,14 +73,14 @@ export const characterInventoryReducer = (
 
     case CharacterInventoryType.ADD_TO_VALID_CHARACTERS:
       validCharacters = [
-        ...new Set(state.validCharacters.concat(action.payload))
+        ...new Set(state.validCharacters.concat(action.payload)),
       ];
       rejectedCharacters = state.rejectedCharacters.filter(
-        char => !validCharacters.includes(char)
+        (char) => !validCharacters.includes(char)
       );
 
       // Set status of characters in character set
-      characterSet = state.characterSet.map(entry => {
+      characterSet = state.characterSet.map((entry) => {
         entry.status = getCharacterStatus(
           entry.character,
           validCharacters,
@@ -92,14 +92,14 @@ export const characterInventoryReducer = (
 
     case CharacterInventoryType.ADD_TO_REJECTED_CHARACTERS:
       rejectedCharacters = [
-        ...new Set(state.rejectedCharacters.concat(action.payload))
+        ...new Set(state.rejectedCharacters.concat(action.payload)),
       ];
       validCharacters = state.validCharacters.filter(
-        char => !rejectedCharacters.includes(char)
+        (char) => !rejectedCharacters.includes(char)
       );
 
       // Set status of characters in character set
-      characterSet = state.characterSet.map(entry => {
+      characterSet = state.characterSet.map((entry) => {
         entry.status = getCharacterStatus(
           entry.character,
           validCharacters,

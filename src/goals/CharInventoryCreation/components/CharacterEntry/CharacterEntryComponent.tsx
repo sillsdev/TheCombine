@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 import { Grid, Collapse, Button } from "@material-ui/core";
 import { KeyboardArrowDown } from "@material-ui/icons";
@@ -31,7 +31,7 @@ export class CharacterEntry extends React.Component<
   constructor(props: CharacterEntryProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      checked: false
+      checked: false,
     };
   }
 
@@ -44,7 +44,7 @@ export class CharacterEntry extends React.Component<
             style={{
               padding: theme.spacing(1),
               background: "whitesmoke",
-              borderTop: "1px solid #ccc"
+              borderTop: "1px solid #ccc",
             }}
             spacing={2}
           >
@@ -57,7 +57,7 @@ export class CharacterEntry extends React.Component<
                   transform: this.state.checked
                     ? "rotate(180deg)"
                     : "rotate(0deg)",
-                  transition: "all 200ms"
+                  transition: "all 200ms",
                 }}
               />
             </Button>
@@ -66,7 +66,9 @@ export class CharacterEntry extends React.Component<
               <Grid item xs={12}>
                 <CharactersInput
                   characters={this.props.validCharacters}
-                  setCharacters={chars => this.props.setValidCharacters(chars)}
+                  setCharacters={(chars) =>
+                    this.props.setValidCharacters(chars)
+                  }
                   label={
                     <Translate id="charInventory.characterSet.acceptedCharacters" />
                   }
@@ -78,7 +80,7 @@ export class CharacterEntry extends React.Component<
               <Grid item xs={12}>
                 <CharactersInput
                   characters={this.props.rejectedCharacters}
-                  setCharacters={chars =>
+                  setCharacters={(chars) =>
                     this.props.setRejectedCharacters(chars)
                   }
                   label={

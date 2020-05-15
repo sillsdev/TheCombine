@@ -2,15 +2,16 @@ import React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 import { Button, TextField, Grid } from "@material-ui/core";
 
 export interface LanguageProps {}
 
 function LanguageSettings(props: LanguageProps & LocalizeContextProps) {
-  const [language, setLanguage] = React.useState<string>(props.activeLanguage
-    .code as string);
+  const [language, setLanguage] = React.useState<string>(
+    props.activeLanguage.code as string
+  );
 
   return (
     <React.Fragment>
@@ -21,7 +22,7 @@ function LanguageSettings(props: LanguageProps & LocalizeContextProps) {
               <Translate id="projectSettings.language.interfaceLanguage" />
             }
             value={language}
-            onChange={e => setLanguage(e.target.value)}
+            onChange={(e) => setLanguage(e.target.value)}
           />
         </Grid>
         <Grid item>
