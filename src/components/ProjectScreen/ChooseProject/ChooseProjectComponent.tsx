@@ -15,7 +15,7 @@ import {
 import { Project } from "../../../types/project";
 import { getAllProjectsByUser } from "../../../backend";
 import history from "../../../history";
-import { getUserFromLocalStorage } from "../../../localStorage";
+import { getUser } from "../../../backend/localStorage";
 
 export interface ChooseProjectProps {
   setCurrentProject: (project: Project) => void;
@@ -32,7 +32,7 @@ class ChooseProject extends React.Component<
   constructor(props: ChooseProjectProps & LocalizeContextProps) {
     super(props);
     this.state = { projectList: [] };
-    const user = getUserFromLocalStorage();
+    const user = getUser();
     if (user) {
       getAllProjectsByUser(user).then((projects) => {
         this.setState({ ...this.state, projectList: projects });
