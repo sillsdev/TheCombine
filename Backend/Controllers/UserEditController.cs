@@ -1,10 +1,9 @@
-﻿using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+﻿using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
@@ -20,7 +19,8 @@ namespace BackendFramework.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IUserService _userService;
 
-        public UserEditController(IUserEditRepository repo, IUserEditService userEditService, IProjectService projectService, IPermissionService permissionService, IUserService userService)
+        public UserEditController(IUserEditRepository repo, IUserEditService userEditService,
+            IProjectService projectService, IPermissionService permissionService, IUserService userService)
         {
             _repo = repo;
             _userService = userService;
@@ -34,12 +34,12 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -56,12 +56,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Delete(string projectId)
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -79,12 +79,12 @@ namespace BackendFramework.Controllers
         [HttpGet("{userEditId}")]
         public async Task<IActionResult> Get(string projectId, string userEditId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
@@ -105,13 +105,12 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("3", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.MergeAndCharSet, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            UserEdit userEdit = new UserEdit();
-            userEdit.ProjectId = projectId;
+            var userEdit = new UserEdit {ProjectId = projectId};
             await _repo.Create(userEdit);
             return new OkObjectResult(userEdit.Id);
         }
@@ -122,35 +121,34 @@ namespace BackendFramework.Controllers
         [HttpPost("{userEditId}")]
         public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody]Edit newEdit)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            //check to see if user is changing the correct user edit
+            // Check to see if user is changing the correct user edit
             if (_permissionService.IsViolationEdit(HttpContext, userEditId, projectId))
             {
                 return new BadRequestObjectResult("You can not edit another users UserEdit");
             }
 
-
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            //ensure userEdit exists
-            UserEdit toBeMod = await _repo.GetUserEdit(projectId, userEditId);
+            // Ensure userEdit exists
+            var toBeMod = await _repo.GetUserEdit(projectId, userEditId);
             if (toBeMod == null)
             {
                 return new NotFoundObjectResult(userEditId);
             }
 
-            Tuple<bool, int> result = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
+            var result = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
 
-            //if the replacement was successful
+            // If the replacement was successful
             if (result.Item1)
             {
                 return new OkObjectResult(result.Item2);
@@ -165,34 +163,35 @@ namespace BackendFramework.Controllers
         /// <remarks> PUT: v1/projects/{projectId}/useredits/{userEditId} </remarks>
         /// <returns> Index of newest edit </returns>
         [HttpPut("{userEditId}")]
-        public async Task<IActionResult> Put(string projectId, string userEditId, [FromBody] UserEditObjectWrapper userEdit)
+        public async Task<IActionResult> Put(string projectId, string userEditId,
+            [FromBody] UserEditObjectWrapper userEdit)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            //check to see if user is changing the correct user edit
+            // Check to see if user is changing the correct user edit
             if (_permissionService.IsViolationEdit(HttpContext, userEditId, projectId))
             {
                 return new BadRequestObjectResult("You can not edit another users UserEdit");
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            //ensure userEdit exists
+            // Ensure userEdit exists
             var document = await _repo.GetUserEdit(projectId, userEditId);
             if (document == null)
             {
                 return new NotFoundResult();
             }
 
-            //ensure index exists
+            // Ensure index exists
             if (userEdit.GoalIndex >= document.Edits.Count)
             {
                 return new BadRequestObjectResult("Goal index out of range");
@@ -208,12 +207,12 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userEditId}")]
         public async Task<IActionResult> Delete(string projectId, string userEditId)
         {
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
             {

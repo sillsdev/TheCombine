@@ -1,11 +1,9 @@
-﻿using BackendFramework.Controllers;
+﻿using System.Collections.Generic;
+using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
-using BackendFramework.Services;
-using BackendFramework.ValueModels;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace Backend.Tests
 {
@@ -28,12 +26,17 @@ namespace Backend.Tests
             _userRoleController = new UserRoleController(_userRoleService, _projectService, _permissionService);
         }
 
-        UserRole RandomUserRole()
+        private UserRole RandomUserRole()
         {
-            UserRole userRole = new UserRole
+            var userRole = new UserRole
             {
                 ProjectId = _projId,
-                Permissions = new List<int>() { (int)Permission.EditSettingsNUsers, (int)Permission.ImportExport, (int)Permission.MergeNCharSet }
+                Permissions = new List<int>()
+                {
+                    (int)Permission.DeleteEditSettingsAndUsers,
+                    (int)Permission.ImportExport,
+                    (int)Permission.MergeAndCharSet
+                }
             };
             return userRole;
         }
@@ -49,15 +52,15 @@ namespace Backend.Tests
 
             Assert.IsInstanceOf<ObjectResult>(getResult);
 
-            var Roles = (getResult as ObjectResult).Value as List<UserRole>;
-            Assert.That(Roles, Has.Count.EqualTo(3));
-            _userRoleService.GetAllUserRoles(_projId).Result.ForEach(Role => Assert.Contains(Role, Roles));
+            var roles = (getResult as ObjectResult).Value as List<UserRole>;
+            Assert.That(roles, Has.Count.EqualTo(3));
+            _userRoleService.GetAllUserRoles(_projId).Result.ForEach(Role => Assert.Contains(Role, roles));
         }
 
         [Test]
         public void TestGetUserRole()
         {
-            UserRole userRole = _userRoleService.Create(RandomUserRole()).Result;
+            var userRole = _userRoleService.Create(RandomUserRole()).Result;
 
             _userRoleService.Create(RandomUserRole());
             _userRoleService.Create(RandomUserRole());
@@ -73,8 +76,8 @@ namespace Backend.Tests
         [Test]
         public void TestCreateUserRole()
         {
-            UserRole userRole = RandomUserRole();
-            string id = (_userRoleController.Post(_projId, userRole).Result as ObjectResult).Value as string;
+            var userRole = RandomUserRole();
+            var id = (_userRoleController.Post(_projId, userRole).Result as ObjectResult).Value as string;
             userRole.Id = id;
             Assert.Contains(userRole, _userRoleService.GetAllUserRoles(_projId).Result);
         }
@@ -82,9 +85,9 @@ namespace Backend.Tests
         [Test]
         public void TestUpdateUserRole()
         {
-            UserRole userRole = RandomUserRole();
+            var userRole = RandomUserRole();
             _userRoleService.Create(userRole);
-            UserRole updateRole = userRole.Clone();
+            var updateRole = userRole.Clone();
             updateRole.Permissions.Add((int)Permission.WordEntry);
 
             _ = _userRoleController.Put(_projId ,userRole.Id, updateRole).Result;
@@ -97,7 +100,7 @@ namespace Backend.Tests
         [Test]
         public void TestDeleteUserRole()
         {
-            UserRole origUserRole = _userRoleService.Create(RandomUserRole()).Result;
+            var origUserRole = _userRoleService.Create(RandomUserRole()).Result;
 
             Assert.That(_userRoleService.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(1));
 

@@ -1,18 +1,18 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.js
 
-# testing
+# Testing
 /coverage
 /Backend.Tests/coverage.json
 
-# production
+# Production
 /build
 
-# misc
+# Misc
 .DS_Store
 .env.local
 .env.development.local
@@ -27,7 +27,7 @@ yarn-error.log*
 # Visual Studio
 .vs/*
 
-#Backend
+# Backend
 Backend/.vs/**/*
 Backend/bin
 Backend/obj
@@ -35,6 +35,7 @@ Backend/obj
 Backend.Tests/bin
 Backend.Tests/obj
 Backend/BackendFramework.csproj.user
+BackendFramework.sln.DotSettings.user
 Backend/.vscode/**/*
 Backend/SIL.Lift/**/*
 start_mongo.bat
@@ -53,14 +54,14 @@ Backend.Tests/bin/Avatars/*
 # Python
 *.pyc
 
-# auto-generated SSL keys and certificate requests
+# Auto-generated SSL keys and certificate requests
 deploy/site_info/
 deploy/site_files/
 deploy/**/*.retry
 deploy/roles_galaxy/
-# host file to be used for ad hoc testing/development
+# Host file to be used for ad hoc testing/development
 deploy/*.hosts
-# playbooks for ad hoc testing/development
+# Playbooks for ad hoc testing/development
 deploy/_playbook*.yml
 
 # Emacs backup files (this is Jim's fault)

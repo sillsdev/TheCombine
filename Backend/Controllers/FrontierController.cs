@@ -1,9 +1,9 @@
+using System.Threading.Tasks;
 using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
@@ -29,12 +29,12 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFrontier(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {
@@ -51,12 +51,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> PostFrontier(string projectId, [FromBody]Word word)
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {
@@ -77,12 +77,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> DeleteFrontier(string projectId, string wordId)
         {
 #if DEBUG
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            //ensure project exists
+            // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
             {

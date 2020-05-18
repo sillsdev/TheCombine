@@ -3,23 +3,22 @@ using System.Text;
 
 namespace Backend.Tests
 {
-    public class Util
+    public static class Util
     {
-        public static string randString(int length)
+        public static string RandString(int length)
         {
-            Random rnd = new Random();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < length; i++)
+            var rnd = new Random();
+            var sb = new StringBuilder();
+            for (var i = 0; i < length; i++)
             {
                 sb.Append((char)rnd.Next('a', 'z'));
             }
             return sb.ToString();
         }
-        public static string randString()
+        public static string RandString()
         {
-            Random rnd = new Random();
-            return randString(rnd.Next(4, 10));
+            var rnd = new Random();
+            return RandString(rnd.Next(4, 10));
         }
-
     }
 }

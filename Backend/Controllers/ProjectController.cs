@@ -1,10 +1,10 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
@@ -20,7 +20,8 @@ namespace BackendFramework.Controllers
         private readonly IUserService _userService;
         private readonly IPermissionService _permissionService;
 
-        public ProjectController(IProjectService projectService, ISemDomParser semDomParser, IUserRoleService userRoleService, IUserService userService, IPermissionService permissionService)
+        public ProjectController(IProjectService projectService, ISemDomParser semDomParser,
+            IUserRoleService userRoleService, IUserService userService, IPermissionService permissionService)
         {
             _projectService = projectService;
             _semDomParser = semDomParser;
@@ -34,7 +35,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -47,7 +48,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/users")]
         public async Task<IActionResult> GetAllUsers(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -64,15 +65,11 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-#if DEBUG
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
             return new ObjectResult(await _projectService.DeleteAllProjects());
-#else
-            return new NotFoundResult();
-#endif
         }
 
         /// <summary> Returns <see cref="Project"/> with specified id </summary>
@@ -80,7 +77,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}")]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("1", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -91,9 +88,9 @@ namespace BackendFramework.Controllers
                 return new NotFoundResult();
             }
 
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
-                // if there are fields we need to hide from lower users remove them here
+                // If there are fields we need to hide from lower users remove them here
             }
 
             return new ObjectResult(project);
@@ -101,57 +98,56 @@ namespace BackendFramework.Controllers
 
         /// <summary> Creates a <see cref="Project"/> </summary>
         /// <remarks> POST: v1/projects </remarks>
-        /// <returns> Id of created project </returns>
+        /// <returns> Id of created Project </returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Project project)
         {
             await _projectService.Create(project);
 
-            //get user 
+            // Get user
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userService.GetUser(currentUserId);
 
-            //give admin privileges
-            UserRole usersRole = new UserRole
+            // Give Project admin privileges to user who creates a Project
+            var userRole = new UserRole
             {
                 Permissions = new List<int>
                 {
-                    (int) Permission.EditSettingsNUsers,
+                    (int) Permission.DeleteEditSettingsAndUsers,
                     (int) Permission.ImportExport,
-                    (int) Permission.MergeNCharSet,
+                    (int) Permission.MergeAndCharSet,
                     (int) Permission.Unused,
                     (int) Permission.WordEntry
                 },
                 ProjectId = project.Id
             };
+            userRole = await _userRoleService.Create(userRole);
 
-            usersRole = await _userRoleService.Create(usersRole);
-
-            //update user with userRole
+            // Update user with userRole
             if (currentUser.ProjectRoles.Equals(null))
             {
                 currentUser.ProjectRoles = new Dictionary<string, string>();
             }
 
-            //Generate the userRoles and update the user
-            currentUser.ProjectRoles.Add(project.Id, usersRole.Id);
+            // Generate the userRoles and update the user
+            currentUser.ProjectRoles.Add(project.Id, userRole.Id);
             await _userService.Update(currentUserId, currentUser);
-            //Generate the JWT based on those new userRoles
-            currentUser = await _userService.MakeJWT(currentUser);
+            // Generate the JWT based on those new userRoles
+            currentUser = await _userService.MakeJwt(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
-            var output = new ProjectWithUser(project) { __UpdatedUser = currentUser };
+            var output = new ProjectWithUser(project) { UpdatedUser = currentUser };
 
             return new OkObjectResult(output);
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>
         /// <remarks> PUT: v1/projects/{projectId} </remarks>
-        /// <returns> Id of updated project </returns>
+        /// <returns> Id of updated Project </returns>
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -176,7 +172,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}/characters")]
         public async Task<IActionResult> PutChars(string projectId, [FromBody]Project project)
         {
-            if (!_permissionService.IsProjectAuthorized("3", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.MergeAndCharSet, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -194,7 +190,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{projectId}")]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -206,7 +202,9 @@ namespace BackendFramework.Controllers
             return new NotFoundResult();
         }
 
-        /// <summary> UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/> </summary>
+        /// <summary>
+        /// UNUSED: Returns tree of <see cref="SemanticDomainWithSubdomains"/> for specified <see cref="Project"/>
+        /// </summary>
         /// <remarks> GET: v1/projects/{projectId}/semanticdomains </remarks>
         [AllowAnonymous]
         [HttpGet("{projectId}/semanticdomains")]
@@ -223,11 +221,11 @@ namespace BackendFramework.Controllers
             }
         }
 
-        //change user role using project Id
+        // Change user role using project Id
         [HttpPut("{projectId}/users/{userId}")]
         public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]int[] permissions)
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -238,7 +236,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            //fetch the user -> fetch user role -> update user role
+            // Fetch the user -> fetch user role -> update user role
             var changeUser = await _userService.GetUser(userId);
             string userRoleId;
             if (changeUser.ProjectRoles.ContainsKey(projectId))
@@ -246,14 +244,14 @@ namespace BackendFramework.Controllers
                 userRoleId = changeUser.ProjectRoles[projectId];
             }
             else
-            { 
-                UserRole usersRole = new UserRole();
+            {
+                var usersRole = new UserRole();
                 userRoleId = usersRole.Id;
                 usersRole.ProjectId = projectId;
 
                 usersRole = await _userRoleService.Create(usersRole);
 
-                //Generate the userRoles and update the user
+                // Generate the userRoles and update the user
                 changeUser.ProjectRoles.Add(projectId, usersRole.Id);
                 await _userService.Update(changeUser.Id, changeUser);
             }
@@ -278,13 +276,12 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/liftcheck")]
         public async Task<IActionResult> CanUploadLift(string projectId)
         {
-            if (!_permissionService.IsProjectAuthorized("4", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {
                 return new ForbidResult();
             }
 
             return new OkObjectResult(_projectService.CanImportLift(projectId));
         }
-
     }
 }

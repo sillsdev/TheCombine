@@ -1,10 +1,10 @@
-﻿using BackendFramework.Interfaces;
-using BackendFramework.ValueModels;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BackendFramework.Controllers
 {
@@ -28,7 +28,7 @@ namespace BackendFramework.Controllers
         [HttpGet("projects/{projectId}/allusers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            if (!_permissionService.IsProjectAuthorized("5", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -42,16 +42,12 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-#if DEBUG
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
 
-            return new ObjectResult(await _userService.DeleteAllUsers());
-#else
-            return new NotFoundResult();
-#endif
+            return new OkObjectResult(await _userService.DeleteAllUsers());
         }
 
         /// <summary> Logs in a <see cref="User"/> and gives a token </summary>
@@ -62,7 +58,7 @@ namespace BackendFramework.Controllers
         {
             try
             {
-                User user = await _userService.Authenticate(cred.Username, cred.Password);
+                var user = await _userService.Authenticate(cred.Username, cred.Password);
                 if (user == null)
                 {
                     return new UnauthorizedResult();
@@ -118,16 +114,13 @@ namespace BackendFramework.Controllers
         [HttpPost("checkusername/{username}")]
         public async Task<IActionResult> CheckUsername(string username)
         {
-            bool usernameTaken = (await _userService.GetAllUsers()).Find(x => x.Username == username) != null;
-
+            var usernameTaken = (await _userService.GetAllUsers()).Find(x => x.Username == username) != null;
             if (usernameTaken)
             {
                 return BadRequest();
             }
-            else
-            {
-                return new OkResult();
-            }
+
+            return new OkResult();
         }
 
         /// <summary> Checks whether a email is taken </summary>
@@ -137,16 +130,13 @@ namespace BackendFramework.Controllers
         [HttpPost("checkemail/{email}")]
         public async Task<IActionResult> CheckEmail(string email)
         {
-            bool emailTaken = (await _userService.GetAllUsers()).Find(x => x.Email == email) != null;
-
+            var emailTaken = (await _userService.GetAllUsers()).Find(x => x.Email == email) != null;
             if (emailTaken)
             {
                 return BadRequest();
             }
-            else
-            {
-                return new OkResult();
-            }
+
+            return new OkResult();
         }
 
         /// <summary> Updates <see cref="User"/> with specified id </summary>
@@ -175,7 +165,7 @@ namespace BackendFramework.Controllers
             {
                 return new OkObjectResult(userId);
             }
-            else //not updated
+            else // Not updated
             {
                 return new StatusCodeResult(304);
             }
@@ -186,8 +176,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userId}")]
         public async Task<IActionResult> Delete(string userId)
         {
-#if DEBUG
-            if (!_permissionService.IsProjectAuthorized("6", HttpContext))
+            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
             {
                 return new ForbidResult();
             }
@@ -197,9 +186,6 @@ namespace BackendFramework.Controllers
                 return new OkResult();
             }
             return new NotFoundResult();
-#else
-            return new NotFoundResult();
-#endif
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace BackendFramework.ValueModels
+namespace BackendFramework.Models
 {
     /// <summary> The changes a user has made on a particular project </summary>
     public class UserEdit
@@ -28,14 +28,14 @@ namespace BackendFramework.ValueModels
 
         public UserEdit Clone()
         {
-            UserEdit clone = new UserEdit
+            var clone = new UserEdit
             {
                 Id = Id.Clone() as string,
                 ProjectId = ProjectId.Clone() as string,
                 Edits = new List<Edit>()
             };
 
-            foreach (Edit edit in Edits)
+            foreach (var edit in Edits)
             {
                 clone.Edits.Add(edit.Clone());
             }
@@ -59,7 +59,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                UserEdit other = obj as UserEdit;
+                var other = obj as UserEdit;
                 return other.Id.Equals(Id) && ContentEquals(other);
             }
         }
@@ -92,7 +92,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                UserEditObjectWrapper other = obj as UserEditObjectWrapper;
+                var other = obj as UserEditObjectWrapper;
                 return other.GoalIndex.Equals(GoalIndex) && other.NewEdit.Equals(NewEdit);
             }
         }
@@ -105,7 +105,7 @@ namespace BackendFramework.ValueModels
 
     public class Edit
     {
-        /// <summary> Integer representation of enum <see cref="ValueModels.GoalType"/> </summary>
+        /// <summary> Integer representation of enum <see cref="Models.GoalType"/> </summary>
         [BsonElement("goalType")]
         public int GoalType { get; set; }
 
@@ -120,13 +120,13 @@ namespace BackendFramework.ValueModels
 
         public Edit Clone()
         {
-            Edit clone = new Edit
+            var clone = new Edit
             {
                 GoalType = GoalType,
                 StepData = new List<string>()
             };
 
-            foreach (string stepData in StepData)
+            foreach (var stepData in StepData)
             {
                 clone.StepData.Add(stepData.Clone() as string);
             }
@@ -142,7 +142,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                Edit other = obj as Edit;
+                var other = obj as Edit;
                 return
                     GoalType.Equals(other.GoalType) &&
 

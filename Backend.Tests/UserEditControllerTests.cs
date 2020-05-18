@@ -1,12 +1,12 @@
-﻿using BackendFramework.Controllers;
+﻿using System;
+using System.Collections.Generic;
+using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using BackendFramework.Services;
-using BackendFramework.ValueModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace Backend.Tests
 {
@@ -30,22 +30,24 @@ namespace Backend.Tests
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
             _userService = new UserServiceMock();
-            _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService, _permissionService, _userService);
+            _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService,
+                _permissionService, _userService)
+            {
+                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
+            };
 
-            _userEditController.ControllerContext = new ControllerContext();
-            _userEditController.ControllerContext.HttpContext = new DefaultHttpContext();
         }
 
-        UserEdit RandomUserEdit()
+        private UserEdit RandomUserEdit()
         {
-            Random rnd = new Random();
-            int count = rnd.Next(0, 7);
+            var rnd = new Random();
+            var count = rnd.Next(0, 7);
 
-            UserEdit userEdit = new UserEdit();
-            Edit edit = new Edit
+            var userEdit = new UserEdit();
+            var edit = new Edit
             {
                 GoalType = count,
-                StepData = new List<string>() { Util.randString() }
+                StepData = new List<string>() { Util.RandString() }
             };
             userEdit.ProjectId = _projId;
             userEdit.Edits.Add(edit);
@@ -60,7 +62,6 @@ namespace Backend.Tests
             _userEditRepo.Create(RandomUserEdit());
 
             var getResult = _userEditController.Get(_projId).Result;
-
             Assert.IsInstanceOf<ObjectResult>(getResult);
 
             var edits = (getResult as ObjectResult).Value as List<UserEdit>;
@@ -71,13 +72,12 @@ namespace Backend.Tests
         [Test]
         public void TestGetUserEdit()
         {
-            UserEdit userEdit = _userEditRepo.Create(RandomUserEdit()).Result;
+            var userEdit = _userEditRepo.Create(RandomUserEdit()).Result;
 
             _userEditRepo.Create(RandomUserEdit());
             _userEditRepo.Create(RandomUserEdit());
 
             var action = _userEditController.Get(_projId, userEdit.Id).Result;
-
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
             var foundUserEdit = (action as ObjectResult).Value as UserEdit;
@@ -87,9 +87,8 @@ namespace Backend.Tests
         [Test]
         public void TestCreateUserEdit()
         {
-            UserEdit userEdit = new UserEdit();
-            userEdit.ProjectId = _projId;
-            string id = (_userEditController.Post(_projId).Result as ObjectResult).Value as string;
+            var userEdit = new UserEdit {ProjectId = _projId};
+            var id = (_userEditController.Post(_projId).Result as ObjectResult).Value as string;
             userEdit.Id = id;
             Assert.Contains(userEdit, _userEditRepo.GetAllUserEdits(_projId).Result);
         }
@@ -97,52 +96,52 @@ namespace Backend.Tests
         [Test]
         public void TestAddEditsToGoal()
         {
-            UserEdit userEdit = RandomUserEdit();
+            var userEdit = RandomUserEdit();
             _userEditRepo.Create(userEdit);
-            Edit newEditStep = new Edit();
+            var newEditStep = new Edit();
             newEditStep.StepData.Add("This is a new step");
-            UserEdit updateEdit = userEdit.Clone();
+            var updateEdit = userEdit.Clone();
             updateEdit.Edits.Add(newEditStep);
 
             _ = _userEditController.Post(_projId, userEdit.Id, newEditStep).Result;
 
             var allUserEdits = _userEditRepo.GetAllUserEdits(_projId).Result;
-
             Assert.Contains(updateEdit, allUserEdits);
         }
 
         [Test]
         public void TestGoalToUserEdit()
         {
-            //generate db entry to test
-            Random rnd = new Random();
-            int count = rnd.Next(1, 13);
+            // Generate db entry to test
+            var rnd = new Random();
+            var count = rnd.Next(1, 13);
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 _ = _userEditRepo.Create(RandomUserEdit()).Result;
             }
-            UserEdit origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
+            var origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
 
-            //generate correct result for comparison
+            // Generate correct result for comparison
             var modUserEdit = origUserEdit.Clone();
-            string stringUserEdit = "This is another step added";
+            const string stringUserEdit = "This is another step added";
             modUserEdit.Edits[0].StepData.Add(stringUserEdit);
 
-            //create wrapper object
-            int modGoalIndex = 0;
-            UserEditObjectWrapper wrapperobj = new UserEditObjectWrapper(modGoalIndex, stringUserEdit);
+            // Create wrapper object
+            const int modGoalIndex = 0;
+            var wrapperObj = new UserEditObjectWrapper(modGoalIndex, stringUserEdit);
 
-            var action = _userEditController.Put(_projId, origUserEdit.Id, wrapperobj);
+            var action = _userEditController.Put(_projId, origUserEdit.Id, wrapperObj);
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(count + 1));
-            Assert.Contains(stringUserEdit, _userEditRepo.GetUserEdit(_projId, origUserEdit.Id).Result.Edits[modGoalIndex].StepData);
+            Assert.Contains(stringUserEdit, _userEditRepo.GetUserEdit(
+                _projId, origUserEdit.Id).Result.Edits[modGoalIndex].StepData);
         }
 
         [Test]
         public void TestDeleteUserEdit()
         {
-            UserEdit origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
+            var origUserEdit = _userEditRepo.Create(RandomUserEdit()).Result;
 
             Assert.That(_userEditRepo.GetAllUserEdits(_projId).Result, Has.Count.EqualTo(1));
 

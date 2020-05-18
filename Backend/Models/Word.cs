@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace BackendFramework.ValueModels
+namespace BackendFramework.Models
 {
     public class Word
     {
@@ -64,7 +64,7 @@ namespace BackendFramework.ValueModels
 
         public Word Clone()
         {
-            Word clone = new Word
+            var clone = new Word
             {
                 Id = Id.Clone() as string,
                 Vernacular = Vernacular.Clone() as string,
@@ -80,19 +80,19 @@ namespace BackendFramework.ValueModels
                 Senses = new List<Sense>()
             };
 
-            foreach (string file in Audio)
+            foreach (var file in Audio)
             {
                 clone.Audio.Add(file.Clone() as string);
             }
-            foreach (string id in EditedBy)
+            foreach (var id in EditedBy)
             {
                 clone.EditedBy.Add(id.Clone() as string);
             }
-            foreach (string id in History)
+            foreach (var id in History)
             {
                 clone.History.Add(id.Clone() as string);
             }
-            foreach (Sense sense in Senses)
+            foreach (var sense in Senses)
             {
                 clone.Senses.Add(sense.Clone());
             }
@@ -124,7 +124,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                Word other = obj as Word;
+                var other = obj as Word;
                 return
                     other.Id.Equals(Id) &&
                     this.ContentEquals(other) &&
@@ -169,17 +169,17 @@ namespace BackendFramework.ValueModels
 
         public Sense Clone()
         {
-            Sense clone = new Sense
+            var clone = new Sense
             {
                 Glosses = new List<Gloss>(),
                 SemanticDomains = new List<SemanticDomain>()
             };
 
-            foreach (Gloss gloss in Glosses)
+            foreach (var gloss in Glosses)
             {
                 clone.Glosses.Add(gloss.Clone());
             }
-            foreach (SemanticDomain sd in SemanticDomains)
+            foreach (var sd in SemanticDomains)
             {
                 clone.SemanticDomains.Add(sd.Clone());
             }
@@ -195,7 +195,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                Sense other = obj as Sense;
+                var other = obj as Sense;
                 return
                     other.Glosses.Count == Glosses.Count &&
                     other.Glosses.All(Glosses.Contains) &&
@@ -233,7 +233,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                Gloss other = obj as Gloss;
+                var other = obj as Gloss;
                 return Language.Equals(other.Language) && Def.Equals(other.Def);
             }
         }
@@ -275,7 +275,7 @@ namespace BackendFramework.ValueModels
             }
             else
             {
-                SemanticDomain other = obj as SemanticDomain;
+                var other = obj as SemanticDomain;
                 return Name.Equals(other.Name) && Id.Equals(other.Id) && Description.Equals(other.Description);
             }
         }
@@ -294,8 +294,8 @@ namespace BackendFramework.ValueModels
         public string FilePath { get; set; }
     }
 
-    /// <summary> 
-    /// Helper object that contains a parent word and a number of children which will be merged into it 
+    /// <summary>
+    /// Helper object that contains a parent word and a number of children which will be merged into it
     /// along with the userId of who made the merge and at what time
     /// </summary>
     public class MergeWords
@@ -316,10 +316,10 @@ namespace BackendFramework.ValueModels
     /// <summary> Information about the state of the word in that database used for merging </summary>
     public enum State
     {
-        active,
-        deleted,
-        sense,
-        duplicate,
-        separate
+        Active,
+        Deleted,
+        Sense,
+        Duplicate,
+        Separate
     }
 }
