@@ -3,8 +3,8 @@
 /**
  * Gets the current user from local storage.
  */
-export function getUser(): User | null {
-  const user: string | null = localStorage.getItem("user");
+export function getCurrentUser(): User | null {
+  const user = localStorage.getItem("user");
   return user ? JSON.parse(user) : null;
 }
 

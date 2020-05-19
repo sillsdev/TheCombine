@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Typography, Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
+
 import { uploadAvatar } from "../../backend";
 import FileInputButton from "../Buttons/FileInputButton";
 import LoadingDoneButton from "../Buttons/LoadingDoneButton";
-import { getCurrentUser } from "./UserSettings";
+import { getCurrentUser } from "../../backend/localStorage";
 
 /**
  * Allows the current user to select an image and upload as their avatar
@@ -27,8 +28,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
     e.preventDefault();
     const avatar = file;
 
-    const user = getCurrentUser();
-
+    const user = getCurrentUser()!;
     if (avatar) {
       setLoading(true);
       uploadAvatar(user, avatar)

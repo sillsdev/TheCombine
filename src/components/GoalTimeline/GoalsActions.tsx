@@ -81,7 +81,7 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const user = LocalStorage.getUser();
+    const user = LocalStorage.getCurrentUser();
     if (user) {
       const projectId: string = LocalStorage.getProjectId();
       const userEditId: string | undefined = getUserEditIdFromProjectId(

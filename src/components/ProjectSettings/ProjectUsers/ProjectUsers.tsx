@@ -16,7 +16,7 @@ import {
   getAllUsersInCurrentProject,
 } from "../../../backend";
 import theme from "../../../types/theme";
-import { getUser } from "../../../backend/localStorage";
+import { getCurrentUser } from "../../../backend/localStorage";
 
 interface UserProps {}
 
@@ -73,7 +73,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   }
 
   addToProject(user: User) {
-    const currentUser = getUser();
+    const currentUser = getCurrentUser();
     if (currentUser && user.id !== currentUser.id) {
       addUserRole([1, 2, 3], user).then(() => this.populateUsers());
     }
