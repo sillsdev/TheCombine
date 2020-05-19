@@ -5,10 +5,7 @@
  */
 export function getUser(): User | null {
   const user: string | null = localStorage.getItem("user");
-  if (user != null) {
-    return JSON.parse(user);
-  }
-  return null;
+  return user ? JSON.parse(user) : null;
 }
 
 export function setProjectID(id: string) {
