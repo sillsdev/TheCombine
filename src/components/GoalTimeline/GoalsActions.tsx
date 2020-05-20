@@ -197,8 +197,8 @@ export function updateStepData(goal: Goal): Goal {
 }
 
 export function getUserEditId(user: User): string | undefined {
-  let projectId = LocalStorage.getProjectId();
-  let userEditId: string | undefined = getUserEditIdFromProjectId(
+  const projectId = LocalStorage.getProjectId();
+  const userEditId: string | undefined = getUserEditIdFromProjectId(
     user.workedProjects,
     projectId
   );
