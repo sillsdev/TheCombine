@@ -1,21 +1,21 @@
-import { StoreState } from "../../../types";
+import { Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { MergeTreeReference, Hash, TreeDataSense } from "./MergeDupsTree";
-import { Word, State } from "../../../types/word";
-import * as backend from "../../../backend";
+
+import { StoreState } from "../../../types";
+import { Hash, MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
+import { State, Word } from "../../../types/word";
 import {
-  getUserEditId,
   getIndexInHistory,
-  getUser,
+  getUserEditId,
   updateGoal,
   UpdateGoalAction,
   updateStepData,
 } from "../../../components/GoalTimeline/GoalsActions";
 import { Goal, GoalHistoryState } from "../../../types/goals";
-import { Dispatch } from "redux";
 import { MergeDups, MergeStepData } from "../MergeDups";
 import navigationHistory from "../../../history";
-import { User } from "../../../types/user";
+import * as backend from "../../../backend";
+import * as LocalStorage from "../../../backend/localStorage";
 
 export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
@@ -160,8 +160,8 @@ export function mergeSense() {
 }
 
 async function addStepToGoal(goal: Goal, indexInHistory: number) {
-  let user: User | undefined = getUser();
-  if (user !== undefined) {
+  const user = LocalStorage.getCurrentUser();
+  if (user) {
     let userEditId: string | undefined = getUserEditId(user);
     if (userEditId !== undefined) {
       await backend.addStepToGoal(userEditId, indexInHistory, goal);

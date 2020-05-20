@@ -1,6 +1,8 @@
-import { Goal } from "../../types/goals";
-import { ActionWithPayload } from "../../types/mockAction";
 import { Dispatch } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+
+import { Goal, GoalType } from "../../types/goals";
+import { ActionWithPayload } from "../../types/mockAction";
 import * as Backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
 import history from "../../history";
@@ -9,19 +11,17 @@ import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDups, MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
-import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
-  refreshWords,
   MergeTreeAction,
+  refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 
 export enum GoalsActions {
@@ -100,8 +100,8 @@ export function asyncGetUserEdits() {
 
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    let user: User | undefined = getUser();
-    if (user !== undefined) {
+    const user = LocalStorage.getCurrentUser();
+    if (user) {
       let userEditId: string | undefined = getUserEditId(user);
       if (userEditId !== undefined) {
         dispatch(loadGoalData(goal)).then(
