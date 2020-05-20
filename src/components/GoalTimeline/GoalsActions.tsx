@@ -120,15 +120,6 @@ export function asyncAddGoalToHistory(goal: Goal) {
   };
 }
 
-export function getUser(): User | undefined {
-  let userString: string | null = localStorage.getItem("user");
-  let user: User | undefined;
-  if (userString) {
-    user = JSON.parse(userString);
-  }
-  return user;
-}
-
 export function loadGoalData(goal: Goal) {
   return async (dispatch: ThunkDispatch<any, any, MergeTreeAction>) => {
     switch (goal.goalType) {

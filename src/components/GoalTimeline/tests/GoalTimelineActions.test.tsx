@@ -1,9 +1,10 @@
+import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
+import thunk from "redux-thunk";
+
 import * as actions from "../GoalsActions";
 import { Goal } from "../../../types/goals";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
-import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
-import thunk from "redux-thunk";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
@@ -13,6 +14,7 @@ import {
   MergeTreeAction,
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { defaultState as goalsDefaultState } from "../DefaultState";
+import * as LocalStorage from "../../../backend/localStorage";
 
 jest.mock(
   ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
@@ -165,11 +167,11 @@ describe("Test GoalsActions", () => {
 
   it("should return a user", () => {
     localStorage.setItem("user", JSON.stringify(mockUser));
-    expect(actions.getUser()).toEqual(mockUser);
+    expect(LocalStorage.getCurrentUser()).toEqual(mockUser);
   });
 
   it("should return undefined when there is no user", () => {
-    expect(actions.getUser()).toEqual(undefined);
+    expect(LocalStorage.getCurrentUser()).toEqual(null);
   });
 
   it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
