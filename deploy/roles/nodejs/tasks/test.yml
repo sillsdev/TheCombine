@@ -9,18 +9,17 @@
   register: node_version
   changed_when: false
 
-- name: verify node version is 10.16.n
+- name: verify node version at least 12.16
   assert:
     that:
-      - node_version.stdout is version("10.16", ">=")
-#      - node_version.stdout is version("10.17", "<")
+      - node_version.stdout is version("12.16", ">=")
 
 - name: Read version of npm
   command: npm --version
   register: npm_version
   changed_when: false
 
-- name: verify npm version is > 6.9
+- name: verify npm version is > 6.14
   assert:
     that:
-      - npm_version.stdout is version("6.9", ">=")
+      - npm_version.stdout is version("6.14", ">=")
