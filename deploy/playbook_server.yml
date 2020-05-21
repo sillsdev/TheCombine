@@ -44,10 +44,6 @@
       import_role:
         name: dotnet_core
 
-    # - name: setup combine user
-    #   import_role:
-    #     name: combine_user
-    #
     - name: configure front-end webserver
       import_role:
         name: apache_config
