@@ -31,10 +31,10 @@ namespace Backend.Tests
                 _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
-                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
+                ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
 
-            _jwtAuthenticatedUser = new User {Username = "user", Password = "pass"};
+            _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userService.Create(_jwtAuthenticatedUser);
             _jwtAuthenticatedUser = _userService.Authenticate(
                 _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
@@ -44,25 +44,31 @@ namespace Backend.Tests
 
         private static Project RandomProject()
         {
-            var project = new Project {Name = Util.RandString(), SemanticDomains = new List<SemanticDomain>()};
+            var project = new Project { Name = Util.RandString(), SemanticDomains = new List<SemanticDomain>() };
 
             for (var i = 1; i < 4; i++)
             {
                 project.SemanticDomains.Add(new SemanticDomain()
                 {
-                    Id = $"{i}", Name = Util.RandString(), Description = Util.RandString()
+                    Id = $"{i}",
+                    Name = Util.RandString(),
+                    Description = Util.RandString()
                 });
                 for (var j = 1; j < 4; j++)
                 {
                     project.SemanticDomains.Add(new SemanticDomain()
                     {
-                        Id = $"{i}.{j}", Name = Util.RandString(), Description = Util.RandString()
+                        Id = $"{i}.{j}",
+                        Name = Util.RandString(),
+                        Description = Util.RandString()
                     });
                     for (var k = 1; k < 4; k++)
                     {
                         project.SemanticDomains.Add(new SemanticDomain()
                         {
-                            Id = $"{i}.{j}.{k}", Name = Util.RandString(), Description = Util.RandString()
+                            Id = $"{i}.{j}.{k}",
+                            Name = Util.RandString(),
+                            Description = Util.RandString()
                         });
                     }
                 }

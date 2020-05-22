@@ -1,0 +1,7 @@
+﻿root = true
+
+[*.{js,jsx,ts,tsx}]
+max_line_length = 80
+
+[*.cs]
+max_line_length = 120

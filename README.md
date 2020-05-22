@@ -4,11 +4,20 @@ A rapid word collection tool.
 
 ## Getting Started with Development
 
-1. Clone this repo:<br>
-   `git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git`<br>
-   The `--recurse-submodules` is used to fetch many of the Ansible roles used by the Ansible playbooks in the deploy folder. If you've already cloned the repo without `--recurse-submodules`, run<br>
-   `git submodule update --init --recursive`<br>
-   to pull and initialize them.
+1. Clone this repo:
+    
+    ```bash
+    # The `--recurse-submodules` is used to fetch many of the Ansible roles used 
+    # by the Ansible playbooks in the deploy folder. 
+    git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
+    ```
+   
+   If you've already cloned the repo without `--recurse-submodules`, run: 
+   
+   ```bash
+   git submodule update --init --recursive
+   ```
+
 2. Install:
    - [Node.js 12 (LTS)](https://nodejs.org/en/)
      - On Windows, if using [Chocolately][chocolately]: `choco install nodejs-lts`
@@ -16,6 +25,7 @@ A rapid word collection tool.
    - [MongoDB Server](https://www.mongodb.com/download-center/community) and add /bin to PATH Environment Variable
      - On Windows, if using [Chocolately][chocolately]: `choco install mongodb`
    - [VS Code](https://code.visualstudio.com/download) and Prettier code formatting extension
+   - [dotnet-format](https://github.com/dotnet/format): `dotnet tool install -g dotnet-format --version 3.3.111304`
 3. Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to generate and trust an SSL certificate
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as *This is a secret key*. Set it in your `.profile` (Linux) or the *System* app (Windows).
 5. Run `npm start` from the project directory to install dependencies and start the project
