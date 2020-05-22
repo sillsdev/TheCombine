@@ -12,7 +12,7 @@ A rapid word collection tool.
 2. Install:
    - [Node.js 12 (LTS)](https://nodejs.org/en/)
      - On Windows, if using [Chocolately][chocolately]: `choco install nodejs-lts`
-   - [.NET Core SDK 2.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/2.1)
+   - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
    - [MongoDB Server](https://www.mongodb.com/download-center/community) and add /bin to PATH Environment Variable
      - On Windows, if using [Chocolately][chocolately]: `choco install mongodb`
    - [VS Code](https://code.visualstudio.com/download) and Prettier code formatting extension
