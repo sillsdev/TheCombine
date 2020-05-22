@@ -44,6 +44,9 @@
     "extends": "react-app",
     "env": {
       "jest": true
+    },
+    "rules": {
+      "no-undef": "off"
     }
   },
   "browserslist": {
