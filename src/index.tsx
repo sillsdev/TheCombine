@@ -24,7 +24,7 @@ const localizedLanguages = [
   { name: "French", code: "fr" },
 ];
 
-const localizeInit={
+const localizeInit = {
   languages: localizedLanguages,
   translation: globalTranslations,
   options: {
