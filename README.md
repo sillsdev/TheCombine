@@ -83,6 +83,10 @@ back ends of the app.
 
 Automatically format the C# source files in the backend.
 
+## `npm run prettier`
+
+Auto-format frontend code in the `src` folder.
+
 ## `npm run build`
 
 Builds the app for production to the `build` folder.

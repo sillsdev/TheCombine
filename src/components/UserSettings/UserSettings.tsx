@@ -22,7 +22,7 @@ import { CameraAlt, Email, Phone } from "@material-ui/icons";
 import { User } from "../../types/user";
 import AvatarUpload from "./AvatarUpload";
 import AppBarComponent from "../AppBar/AppBarComponent";
-import {avatarSrc, getUser, updateUser} from "../../backend";
+import { avatarSrc, getUser, updateUser } from "../../backend";
 import theme from "../../types/theme";
 import { getCurrentUser } from "../../backend/localStorage";
 
