@@ -1,11 +1,12 @@
-import history from "../../history";
 import React from "react";
-import { Button, Menu, MenuItem, Avatar } from "@material-ui/core";
+import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
-import { Settings, ExitToApp, Person } from "@material-ui/icons";
+import { ExitToApp, Person, Settings } from "@material-ui/icons";
+
+import history from "../../history";
 import theme from "../../types/theme";
 import { avatarSrc } from "../../backend";
-import { getCurrentUser } from "../UserSettings/UserSettings";
+import { getCurrentUser } from "../../backend/localStorage";
 
 /**
  * Avatar in appbar with dropdown (Project settings, user settings, log out)
@@ -25,7 +26,7 @@ export default function UserMenu() {
   }
 
   async function getAvatar() {
-    const user = getCurrentUser();
+    const user = getCurrentUser()!;
     const a = await avatarSrc(user);
     setAvatar(a);
   }

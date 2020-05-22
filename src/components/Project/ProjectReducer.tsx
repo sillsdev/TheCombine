@@ -1,6 +1,6 @@
 import { ProjectAction, SET_CURRENT_PROJECT } from "./ProjectActions";
 import { Project, defaultProject } from "../../types/project";
-import { setProjectID } from "../../backend";
+import { setProjectID } from "../../backend/localStorage";
 import { StoreActions, StoreAction } from "../../rootActions";
 
 export const projectReducer = (

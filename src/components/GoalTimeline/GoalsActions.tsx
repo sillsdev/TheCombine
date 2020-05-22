@@ -1,26 +1,27 @@
-import { Goal } from "../../types/goals";
-import { ActionWithPayload } from "../../types/mockAction";
 import { Dispatch } from "redux";
-import * as backend from "../../backend";
+import { ThunkDispatch } from "redux-thunk";
+
+import { Goal, GoalType } from "../../types/goals";
+import { ActionWithPayload } from "../../types/mockAction";
+import * as Backend from "../../backend";
+import * as LocalStorage from "../../backend/localStorage";
 import history from "../../history";
 import { User } from "../../types/user";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDups, MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
-import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
-  refreshWords,
   MergeTreeAction,
+  refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 
 export enum GoalsActions {
@@ -54,8 +55,7 @@ export function asyncLoadExistingUserEdits(
   userEditId: string
 ) {
   return async (dispatch: Dispatch<GoalAction>) => {
-    await backend
-      .getUserEditById(projectId, userEditId)
+    await Backend.getUserEditById(projectId, userEditId)
       .then((userEdit) => {
         let history: Goal[] = convertEditsToArrayOfGoals(userEdit.edits);
         dispatch(loadUserEdits(history));
@@ -68,11 +68,10 @@ export function asyncLoadExistingUserEdits(
 
 function asyncCreateNewUserEditsObject(projectId: string) {
   return async () => {
-    await backend
-      .createUserEdit()
+    await Backend.createUserEdit()
       .then(async (userEditId: string) => {
         let updatedUser: User = updateUserIfExists(projectId, userEditId);
-        await backend.updateUser(updatedUser);
+        await Backend.updateUser(updatedUser);
       })
       .catch((err) => {
         console.log(err);
@@ -82,12 +81,11 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    let currentUserString = localStorage.getItem("user");
-    if (currentUserString) {
-      let currentUserObject: User = JSON.parse(currentUserString);
-      let projectId: string = backend.getProjectId();
-      let userEditId: string | undefined = getUserEditIdFromProjectId(
-        currentUserObject.workedProjects,
+    const user = LocalStorage.getCurrentUser();
+    if (user) {
+      const projectId: string = LocalStorage.getProjectId();
+      const userEditId: string | undefined = getUserEditIdFromProjectId(
+        user.workedProjects,
         projectId
       );
 
@@ -102,15 +100,14 @@ export function asyncGetUserEdits() {
 
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    let user: User | undefined = getUser();
-    if (user !== undefined) {
+    const user = LocalStorage.getCurrentUser();
+    if (user) {
       let userEditId: string | undefined = getUserEditId(user);
       if (userEditId !== undefined) {
         dispatch(loadGoalData(goal)).then(
           (returnedGoal) => (goal = returnedGoal)
         );
-        await backend
-          .addGoalToUserEdit(userEditId, goal)
+        await Backend.addGoalToUserEdit(userEditId, goal)
           .then((resp) => {
             dispatch(addGoalToHistory(goal));
             history.push(`/goals/${resp}`);
@@ -121,15 +118,6 @@ export function asyncAddGoalToHistory(goal: Goal) {
       }
     }
   };
-}
-
-export function getUser(): User | undefined {
-  let userString: string | null = localStorage.getItem("user");
-  let user: User | undefined;
-  if (userString) {
-    user = JSON.parse(userString);
-  }
-  return user;
 }
 
 export function loadGoalData(goal: Goal) {
@@ -209,8 +197,8 @@ export function updateStepData(goal: Goal): Goal {
 }
 
 export function getUserEditId(user: User): string | undefined {
-  let projectId = backend.getProjectId();
-  let userEditId: string | undefined = getUserEditIdFromProjectId(
+  const projectId = LocalStorage.getProjectId();
+  const userEditId: string | undefined = getUserEditIdFromProjectId(
     user.workedProjects,
     projectId
   );

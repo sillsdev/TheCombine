@@ -1,25 +1,25 @@
 import { Dispatch } from "react";
+
 import { StoreState } from "../../types";
 import {
-  setCurrentProject,
   ProjectAction,
+  setCurrentProject,
 } from "../../components/Project/ProjectActions";
 import {
-  updateGoal,
-  getUserEditId,
   getIndexInHistory,
+  getUserEditId,
   GoalAction,
-  getUser,
+  updateGoal,
 } from "../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
-import * as backend from "../../backend";
 import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
-import { User } from "../../types/user";
 import {
   CharacterSetEntry,
   characterStatus,
 } from "./CharacterInventoryReducer";
+import * as backend from "../../backend";
+import * as LocalStorage from "../../backend/localStorage";
 
 export enum CharacterInventoryType {
   SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
@@ -214,8 +214,8 @@ async function saveChangesToGoal(
   history: Goal[],
   dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
-  let user: User | undefined = getUser();
-  if (user !== undefined) {
+  const user = LocalStorage.getCurrentUser();
+  if (user) {
     let userEditId: string | undefined = getUserEditId(user);
     if (userEditId !== undefined) {
       let indexInHistory: number = getIndexInHistory(history, updatedGoal);
