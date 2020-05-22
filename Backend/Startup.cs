@@ -141,6 +141,7 @@ namespace BackendFramework
             }
 
             app.UseHttpsRedirection();
+            app.UseRouting();
             app.UseCors(AllowedOrigins);
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -149,7 +150,11 @@ namespace BackendFramework
             });
 
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }
