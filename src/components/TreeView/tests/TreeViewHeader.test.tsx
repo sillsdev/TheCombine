@@ -23,6 +23,9 @@ const MOCK_ANIMATE = jest.fn();
 // Mock out window
 const ADD_LISTENER = window.addEventListener.prototype;
 const REMOVE_LISTENER = window.removeEventListener.prototype;
+
+// TODO: Should this lint be disabled?
+// eslint-disable-next-line no-native-reassign
 window = {
   ...window,
   addEventListener: jest.fn(),
@@ -35,6 +38,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
+  // eslint-disable-next-line no-native-reassign
   window = {
     ...window,
     addEventListener: ADD_LISTENER,

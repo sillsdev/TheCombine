@@ -133,7 +133,7 @@ class MergeDupStep extends React.Component<
         // move to different word
         let destRefs = [];
         let destSense = uuid();
-        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (let _ in srcRefs) {
           destRefs.push({
             word: res.destination.droppableId,
@@ -178,7 +178,7 @@ class MergeDupStep extends React.Component<
             <div
               ref={providedDroppable.innerRef}
               {...providedDroppable.droppableProps}
-              /* 
+              /*
                   Set padding to 30 and add the height of the appbar (64) to the
                   top padding
               */

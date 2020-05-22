@@ -49,6 +49,8 @@ GSScroll.prototype.getScroll = jest.fn(() => {
   return scroller as HTMLElement;
 });
 
+// TODO: Should this lint be disabled?
+// eslint-disable-next-line no-native-reassign
 window = {
   ...window,
   addEventListener: jest.fn(),
