@@ -6,15 +6,14 @@ import ReviewEntriesConnected from "../ReviewEntriesComponent";
 import * as utilities from "../../../../utilities";
 import mockWords from "./MockWords";
 import { Provider } from "react-redux";
-import { Word, Sense, State } from "../../../../types/word";
+import { Sense, State, Word } from "../../../../types/word";
 import ReactDOM from "react-dom";
 import {
   OLD_SENSE,
-  ReviewEntriesWord,
   ReviewEntriesSense,
+  ReviewEntriesWord,
   SEP_CHAR,
 } from "../ReviewEntriesTypes";
-import { Recorder } from "../../../../components/Pronunciations/Recorder";
 
 // Mock store + axios
 const state = {

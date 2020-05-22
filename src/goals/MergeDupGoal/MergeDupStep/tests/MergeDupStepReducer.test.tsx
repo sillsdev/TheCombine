@@ -28,7 +28,6 @@ describe("MergeDupStep reducer tests", () => {
     id: string,
     words: Hash<MergeTreeWord>
   ): MergeTreeReference | undefined => {
-    let found = undefined;
     for (let wordID of Object.keys(words)) {
       for (let senseID of Object.keys(words[wordID].senses)) {
         for (let dupID of Object.keys(words[wordID].senses[senseID])) {
@@ -124,7 +123,7 @@ describe("MergeDupStep reducer tests", () => {
     let srcRef = getRandomRef(fullState.tree.words);
     while (
       Object.values(fullState.tree.words[srcRef.word].senses[srcRef.sense])
-        .length != 1
+        .length !== 1
     ) {
       srcRef = getRandomRef(fullState.tree.words);
     }

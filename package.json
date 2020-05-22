@@ -41,7 +41,10 @@
     "redux-thunk": "^2.3.0"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "env": {
+      "jest": true
+    }
   },
   "browserslist": {
     "production": [
