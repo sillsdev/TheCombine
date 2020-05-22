@@ -1,20 +1,22 @@
 import React from "react";
 import {
+  Avatar,
   List,
   ListItem,
-  ListItemText,
   ListItemIcon,
-  Avatar,
+  ListItemText,
 } from "@material-ui/core";
 import Done from "@material-ui/icons/Done";
+
 import { User } from "../../../types/user";
 import {
-  getAllUsers,
-  getAllUsersInCurrentProject,
   addUserRole,
   avatarSrc,
+  getAllUsers,
+  getAllUsersInCurrentProject,
 } from "../../../backend";
 import theme from "../../../types/theme";
+import { getCurrentUser } from "../../../backend/localStorage";
 
 interface UserProps {}
 
@@ -71,15 +73,10 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   }
 
   addToProject(user: User) {
-    if (user.id !== this.getCurrentUser().id) {
+    const currentUser = getCurrentUser();
+    if (currentUser && user.id !== currentUser.id) {
       addUserRole([1, 2, 3], user).then(() => this.populateUsers());
     }
-  }
-
-  /** Get user from localstorage */
-  getCurrentUser(): User {
-    const userString = localStorage.getItem("user");
-    return userString ? JSON.parse(userString) : null;
   }
 
   render() {
