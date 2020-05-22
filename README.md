@@ -68,6 +68,10 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 Launches the test runners to calculate the test coverage of the front and back ends of the app.
 
+## `npm run dotnet-format`
+
+Automatically format the C# source files in the backend.
+
 ## `npm run build`
 
 Builds the app for production to the `build` folder.<br>
