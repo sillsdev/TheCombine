@@ -90,7 +90,7 @@ namespace Backend.Tests
             var updateRole = userRole.Clone();
             updateRole.Permissions.Add((int)Permission.WordEntry);
 
-            _ = _userRoleController.Put(_projId ,userRole.Id, updateRole).Result;
+            _ = _userRoleController.Put(_projId, userRole.Id, updateRole).Result;
 
             var allUserRoles = _userRoleService.GetAllUserRoles(_projId).Result;
 

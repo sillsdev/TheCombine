@@ -110,7 +110,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var userEdit = new UserEdit {ProjectId = projectId};
+            var userEdit = new UserEdit { ProjectId = projectId };
             await _repo.Create(userEdit);
             return new OkObjectResult(userEdit.Id);
         }

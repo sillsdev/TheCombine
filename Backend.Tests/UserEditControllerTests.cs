@@ -33,7 +33,7 @@ namespace Backend.Tests
             _userEditController = new UserEditController(_userEditRepo, _userEditService, _projectService,
                 _permissionService, _userService)
             {
-                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
+                ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
 
         }
@@ -87,7 +87,7 @@ namespace Backend.Tests
         [Test]
         public void TestCreateUserEdit()
         {
-            var userEdit = new UserEdit {ProjectId = _projId};
+            var userEdit = new UserEdit { ProjectId = _projId };
             var id = (_userEditController.Post(_projId).Result as ObjectResult).Value as string;
             userEdit.Id = id;
             Assert.Contains(userEdit, _userEditRepo.GetAllUserEdits(_projId).Result);

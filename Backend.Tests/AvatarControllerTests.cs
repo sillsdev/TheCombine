@@ -27,13 +27,13 @@ namespace Backend.Tests
             _avatarController = new AvatarController(_userService, _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
-                ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()}
+                ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
 
             // User controller
-            _userController.ControllerContext = new ControllerContext {HttpContext = new DefaultHttpContext()};
+            _userController.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
 
-            _jwtAuthenticatedUser = new User {Username = "user", Password = "pass"};
+            _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userService.Create(_jwtAuthenticatedUser);
             _jwtAuthenticatedUser = _userService.Authenticate(
                 _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
@@ -50,7 +50,7 @@ namespace Backend.Tests
 
         private User RandomUser()
         {
-            var user = new User {Username = RandomString(4), Password = RandomString(4)};
+            var user = new User { Username = RandomString(4), Password = RandomString(4) };
             return user;
         }
 
@@ -64,7 +64,7 @@ namespace Backend.Tests
             var fstream = File.OpenRead(filePath);
 
             var formFile = new FormFile(fstream, 0, fstream.Length, "dave", "combine.png");
-            var fileUpload = new FileUpload {Name = "FileName", File = formFile};
+            var fileUpload = new FileUpload { Name = "FileName", File = formFile };
 
             _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, fileUpload).Result;
 
