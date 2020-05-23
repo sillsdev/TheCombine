@@ -1,7 +1,12 @@
 import React from "react";
 import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
-import { ExitToApp, Person, Settings, SettingsApplications } from "@material-ui/icons";
+import {
+  ExitToApp,
+  Person,
+  Settings,
+  SettingsApplications,
+} from "@material-ui/icons";
 
 import history from "../../history";
 import theme from "../../types/theme";
