@@ -35,6 +35,8 @@ const MOCK_ADD = jest.fn((name: string, callback: (event: any) => void) => {
   if (name === "contextmenu") documentRightClick = callback;
 });
 const MOCK_REM = jest.fn((_) => {
+  // TODO: Should this lint be disabled?
+  // eslint-disable-next-line no-restricted-globals
   if (name === "contextmenu") documentRightClick = jest.fn;
 });
 const MOCK_EVENT = {

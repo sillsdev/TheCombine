@@ -83,6 +83,10 @@ back ends of the app.
 
 Automatically format the C# source files in the backend.
 
+## `npm run lint`
+
+Runs ESLint on the codebase to detect code problems that should be fixed.
+
 ## `npm run prettier`
 
 Auto-format frontend code in the `src` folder.
