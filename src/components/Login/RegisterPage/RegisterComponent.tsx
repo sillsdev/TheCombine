@@ -1,4 +1,3 @@
-//external modules
 import * as React from "react";
 import {
   Translate,
@@ -14,8 +13,9 @@ import {
   TextField,
   CircularProgress,
 } from "@material-ui/core";
-import history from "../../../history";
 import { Check } from "@material-ui/icons";
+
+import history from "../../../history";
 import { buttonSuccess } from "../../../types/theme";
 import { isUsernameTaken, isEmailTaken } from "../../../backend";
 
@@ -137,10 +137,10 @@ class Register extends React.Component<
   }
 
   render() {
-    // determine error message
+    // Determine error message
     let failureMessage;
-    // intentional weak comparasion. props.failureMessage may evaluate to number
-    /* eslint-disable-next-line */
+    // Intentional weak comparision. props.failureMessage may evaluate to number
+    // eslint-disable-next-line eqeqeq
     if (this.props.failureMessage == "400") {
       failureMessage = <Translate id="login.registerFailed" />;
     } else {

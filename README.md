@@ -58,6 +58,10 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 
 Launches the test runners to calculate the test coverage of the front and back ends of the app.
 
+## `npm run lint`
+
+Runs ESLint on the codebase to detect code problems that should be fixed.
+
 ## `npm run prettier`
 
 Auto-format frontend code in the `src` folder.

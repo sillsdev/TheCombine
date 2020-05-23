@@ -1,10 +1,12 @@
 import React from "react";
-import LoginComponent, { Login, LoginState } from "../LoginComponent";
 import ReactDOM from "react-dom";
 import renderer, {
-  ReactTestRenderer,
   ReactTestInstance,
+  ReactTestRenderer,
 } from "react-test-renderer";
+
+import LoginComponent, { Login } from "../LoginComponent";
+
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>
 ));
@@ -19,11 +21,6 @@ const MOCK_EVENT = {
   target: {
     value: DATA,
   },
-};
-const ERROR_STATE: LoginState = {
-  user: "",
-  password: "",
-  error: { password: true, username: true },
 };
 
 describe("Testing login component", () => {

@@ -95,7 +95,7 @@ describe("Tests cell column functions", () => {
   it("Returns false when searching a word for an extant gloss", () => {
     if (columns[1].customFilterAndSearch)
       expect(
-        columns[1].customFilterAndSearch("${GLOSS}-NOT!", WORD)
+        columns[1].customFilterAndSearch(`${GLOSS}-NOT!`, WORD)
       ).toBeFalsy();
     else
       fail(

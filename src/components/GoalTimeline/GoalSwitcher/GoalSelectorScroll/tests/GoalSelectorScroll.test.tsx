@@ -1,4 +1,12 @@
 import React from "react";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
+import { Provider } from "react-redux";
+import { act } from "react-dom/test-utils";
+import renderer, {
+  ReactTestInstance,
+  ReactTestRenderer,
+} from "react-test-renderer";
 
 import GoalSelectorScroll from "../";
 import { Goal, GoalSelectorState, GoalType } from "../../../../../types/goals";
@@ -12,18 +20,9 @@ import {
 } from "../GoalSelectorScroll";
 import {
   GoalScrollAction,
-  SELECT_ACTION,
   MOUSE_ACTION,
+  SELECT_ACTION,
 } from "../GoalSelectorAction";
-
-import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk";
-import { Provider } from "react-redux";
-import { act, Simulate } from "react-dom/test-utils";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
 
 const labels: string[] = ["handleDuplicates", "handleFlags", "grammarCheck"];
 
@@ -50,6 +49,8 @@ GSScroll.prototype.getScroll = jest.fn(() => {
   return scroller as HTMLElement;
 });
 
+// TODO: Should this lint be disabled?
+// eslint-disable-next-line no-native-reassign
 window = {
   ...window,
   addEventListener: jest.fn(),

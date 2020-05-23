@@ -11,6 +11,7 @@
     "build": "react-scripts build",
     "test": "dotnet test Backend.Tests/Backend.Tests.csproj && react-scripts test",
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
+    "lint": "eslint --ext js,ts,tsx,jsx src",
     "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
     "coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true && react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
@@ -41,7 +42,13 @@
     "redux-thunk": "^2.3.0"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "env": {
+      "jest": true
+    },
+    "rules": {
+      "no-undef": "off"
+    }
   },
   "browserslist": {
     "production": [
