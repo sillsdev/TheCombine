@@ -120,7 +120,7 @@ namespace Backend.Tests
                 sense.Accessibility = (int)State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
-                foreach (Gloss gloss in sense.Glosses)
+                foreach (var gloss in sense.Glosses)
                 {
                     gloss.Def = Util.RandString();
                     gloss.Language = Util.RandString(3);
