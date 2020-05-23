@@ -52,9 +52,7 @@ jest.mock("../../../../backend", () => {
       return Promise.resolve(mergeList[args]);
     }),
     getWord: jest.fn((id: string) => {
-      const { multiGlossWord, State } = jest.requireActual(
-        "../../../../types/word"
-      );
+      const { multiGlossWord } = jest.requireActual("../../../../types/word");
       const wordList = {
         WA: { ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
         WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },

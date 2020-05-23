@@ -1,13 +1,15 @@
 import React from "react";
 import { Typography, Grid, Button } from "@material-ui/core";
-import theme from "../../../types/theme";
 import {
   Translate,
   LocalizeContextProps,
   withLocalize,
 } from "react-localize-redux";
+
+import theme from "../../../types/theme";
 import { Word, SemanticDomain, State } from "../../../types/word";
 import * as Backend from "../../../backend";
+import * as LocalStorage from "../../../backend/localStorage";
 import DomainTree from "../../TreeView/SemanticDomain";
 import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
@@ -42,7 +44,7 @@ async function getWordsFromBackend(): Promise<Word[]> {
   return words;
 }
 async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
-  let proj = await Backend.getProject(Backend.getProjectId());
+  let proj = await Backend.getProject(LocalStorage.getProjectId());
   return proj.autocompleteSetting;
 }
 

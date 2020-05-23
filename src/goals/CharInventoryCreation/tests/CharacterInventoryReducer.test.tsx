@@ -1,17 +1,15 @@
-import axios from "axios";
 import {
   characterInventoryReducer,
-  defaultState,
   CharacterInventoryState,
+  defaultState,
 } from "../CharacterInventoryReducer";
 import {
   CharacterInventoryAction,
   CharacterInventoryType,
 } from "../CharacterInventoryActions";
-import { StoreActions, StoreAction } from "../../../rootActions";
+import { StoreAction, StoreActions } from "../../../rootActions";
 
 const DATA: string[] = ["a", "b"];
-const DATA2: string[] = ["c", "d"];
 const BAD_RESP: string[] = ["If", "this", "appears", "there's", "an", "issue"];
 
 describe("Test Character Inventory Reducer", () => {

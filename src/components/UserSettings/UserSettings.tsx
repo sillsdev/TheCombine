@@ -1,28 +1,30 @@
 import React from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography,
-  Grid,
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
+import {
   Avatar,
-  TextField,
   Button,
   Card,
   CardContent,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
   makeStyles,
+  TextField,
+  Typography,
 } from "@material-ui/core";
+import { CameraAlt, Email, Phone } from "@material-ui/icons";
+
 import { User } from "../../types/user";
 import AvatarUpload from "./AvatarUpload";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { avatarSrc, getUser, updateUser } from "../../backend";
-import { Phone, Email, CameraAlt } from "@material-ui/icons";
 import theme from "../../types/theme";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate,
-} from "react-localize-redux";
+import { getCurrentUser } from "../../backend/localStorage";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   return (
@@ -84,7 +86,7 @@ class UserSettings extends React.Component<
 > {
   constructor(props: LocalizeContextProps) {
     super(props);
-    const user = getCurrentUser();
+    const user = getCurrentUser()!;
     this.state = {
       user,
       name: user.name,
@@ -96,7 +98,7 @@ class UserSettings extends React.Component<
   }
 
   async getAvatar() {
-    const user = getCurrentUser();
+    const user = getCurrentUser()!;
     const a = await avatarSrc(user);
     this.setState({ avatar: a });
   }
@@ -223,12 +225,6 @@ class UserSettings extends React.Component<
 }
 
 export default withLocalize(UserSettings);
-
-/** Get user from localstorage */
-export function getCurrentUser(): User {
-  const userString = localStorage.getItem("user");
-  return userString ? JSON.parse(userString) : null;
-}
 
 /** Update user in localstorage with user from backend */
 export async function updateCurrentUser() {

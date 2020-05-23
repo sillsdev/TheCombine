@@ -45,7 +45,7 @@ namespace Backend.Tests
 
         private static Word RandomWord()
         {
-            var word = new Word {Vernacular = RandomString(4)};
+            var word = new Word { Vernacular = RandomString(4) };
             return word;
         }
 
@@ -62,7 +62,7 @@ namespace Backend.Tests
 
             // Generate parameters for controller call.
             var formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
-            var fileUpload = new FileUpload {Name = "FileName", File = formFile};
+            var fileUpload = new FileUpload { Name = "FileName", File = formFile };
 
             var word = _wordrepo.Create(RandomWord()).Result;
 

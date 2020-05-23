@@ -113,7 +113,7 @@ namespace Backend.Tests
 
         private static Word RandomWord(string projId)
         {
-            var word = new Word {Senses = new List<Sense>() {new Sense(), new Sense(), new Sense()}};
+            var word = new Word { Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() } };
 
             foreach (var sense in word.Senses)
             {
