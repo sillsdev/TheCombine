@@ -35,6 +35,8 @@
     - name: install nodejs
       import_role:
         name: nodejs
+      tags:
+        - update_node
 
     - name: install mongodb
       import_role:
