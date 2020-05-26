@@ -1,28 +1,30 @@
 import React from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography,
-  Grid,
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
+import {
   Avatar,
-  TextField,
   Button,
   Card,
   CardContent,
-  makeStyles
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  makeStyles,
+  TextField,
+  Typography,
 } from "@material-ui/core";
+import { CameraAlt, Email, Phone } from "@material-ui/icons";
+
 import { User } from "../../types/user";
 import AvatarUpload from "./AvatarUpload";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { avatarSrc, getUser, updateUser } from "../../backend";
-import { Phone, Email, CameraAlt } from "@material-ui/icons";
 import theme from "../../types/theme";
-import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate
-} from "react-localize-redux";
+import { getCurrentUser } from "../../backend/localStorage";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   return (
@@ -40,20 +42,20 @@ function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
   const classes = makeStyles({
     avatar: {
       width: 60,
-      height: 60
+      height: 60,
     },
     avatarOverlay: {
       transition: "opacity 0.2s",
       "&:hover": {
-        opacity: 0.9
+        opacity: 0.9,
       },
       position: "absolute",
       width: 60,
       height: 60,
       top: 0,
       opacity: 0,
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   })();
 
   return (
@@ -84,19 +86,19 @@ class UserSettings extends React.Component<
 > {
   constructor(props: LocalizeContextProps) {
     super(props);
-    const user = getCurrentUser();
+    const user = getCurrentUser()!;
     this.state = {
       user,
       name: user.name,
       phone: user.phone,
       email: user.email,
-      avatarDialogOpen: false
+      avatarDialogOpen: false,
     };
     this.getAvatar();
   }
 
   async getAvatar() {
-    const user = getCurrentUser();
+    const user = getCurrentUser()!;
     const a = await avatarSrc(user);
     this.setState({ avatar: a });
   }
@@ -111,7 +113,7 @@ class UserSettings extends React.Component<
     const value = e.target.value;
 
     this.setState({
-      [field]: value
+      [field]: value,
     } as Pick<UserSettingsState, K>);
   }
 
@@ -130,7 +132,7 @@ class UserSettings extends React.Component<
         <AppBarComponent />
         <Grid container justify="center">
           <Card style={{ width: 450 }}>
-            <form onSubmit={e => this.onSubmit(e)}>
+            <form onSubmit={(e) => this.onSubmit(e)}>
               <CardContent>
                 <Grid item container spacing={6}>
                   <Grid item container spacing={2} alignItems="center">
@@ -148,10 +150,10 @@ class UserSettings extends React.Component<
                         variant="outlined"
                         value={this.state.name}
                         label={<Translate id="login.name" />}
-                        onChange={e => this.updateField(e, "name")}
+                        onChange={(e) => this.updateField(e, "name")}
                         inputProps={{ maxLength: 100 }}
                         style={{
-                          margin: (theme.spacing(1) + "px ").repeat(3) + " 0" // "8px 8px 8px 0"
+                          margin: (theme.spacing(1) + "px ").repeat(3) + " 0", // "8px 8px 8px 0"
                         }}
                       />
                       <Typography variant="subtitle2" style={{ color: "grey" }}>
@@ -176,7 +178,7 @@ class UserSettings extends React.Component<
                           variant="outlined"
                           value={this.state.phone}
                           label="Phone"
-                          onChange={e => this.updateField(e, "phone")}
+                          onChange={(e) => this.updateField(e, "phone")}
                           type="tel"
                         />
                       </Grid>
@@ -192,7 +194,7 @@ class UserSettings extends React.Component<
                           variant="outlined"
                           value={this.state.email}
                           label={<Translate id="login.email" />}
-                          onChange={e => this.updateField(e, "email")}
+                          onChange={(e) => this.updateField(e, "email")}
                           type="email"
                         />
                       </Grid>
@@ -223,12 +225,6 @@ class UserSettings extends React.Component<
 }
 
 export default withLocalize(UserSettings);
-
-/** Get user from localstorage */
-export function getCurrentUser(): User {
-  const userString = localStorage.getItem("user");
-  return userString ? JSON.parse(userString) : null;
-}
 
 /** Update user in localstorage with user from backend */
 export async function updateCurrentUser() {

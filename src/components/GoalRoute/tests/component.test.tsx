@@ -10,7 +10,7 @@ const createMockStore = configureMockStore([]);
 
 it("renders without crashing", () => {
   const mockStore = createMockStore({
-    ...defaultState
+    ...defaultState,
   });
   const div = document.createElement("div");
   ReactDOM.render(

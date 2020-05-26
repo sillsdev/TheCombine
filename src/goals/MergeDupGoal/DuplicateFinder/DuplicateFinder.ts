@@ -24,7 +24,7 @@ export const DefaultParams: FinderParams = {
   delCost: 2,
   qualVal: 0,
   bitfilterAt: 3,
-  lengthFilter: 2
+  lengthFilter: 2,
 };
 
 export interface ScoredWord {
@@ -105,7 +105,7 @@ export default class DupFinder {
    */
   async getNextDups(): Promise<Word[][]> {
     let wordCollections: Promise<Word[][]> = this.fetchWordsFromDB().then(
-      gotWordsFromDB => {
+      (gotWordsFromDB) => {
         //return no words if DB empty
         if (!gotWordsFromDB) return this.empty2dArray;
 
@@ -131,7 +131,7 @@ export default class DupFinder {
           currentWordlists.push(newWordList);
           continue;
         }
-        currentWordlists.sort(function(a, b): number {
+        currentWordlists.sort(function (a, b): number {
           return a[1] - b[1];
         });
 
@@ -146,7 +146,7 @@ export default class DupFinder {
         if (currentWordlists.length <= 0) return this.empty2dArray;
 
         //return the wordlist from the scored list
-        return currentWordlists.map(function(scoredList) {
+        return currentWordlists.map(function (scoredList) {
           return scoredList[0];
         });
       }
@@ -227,7 +227,7 @@ export default class DupFinder {
    * returns whether any words existed in the database
    */
   async fetchWordsFromDB(): Promise<boolean> {
-    return backend.getFrontierWords().then(wordsFromDB => {
+    return backend.getFrontierWords().then((wordsFromDB) => {
       if (wordsFromDB.length <= 0) {
         return false;
       }
@@ -237,13 +237,13 @@ export default class DupFinder {
       this.glossmap.clear();
 
       //define bitmaps
-      wordsFromDB.forEach(word => {
-        word.vernacular.split("").forEach(char => {
+      wordsFromDB.forEach((word) => {
+        word.vernacular.split("").forEach((char) => {
           this.vernmap.add(char);
         });
 
         if (hasSenses(word)) {
-          word.senses[0].glosses[0].def.split("").forEach(char => {
+          word.senses[0].glosses[0].def.split("").forEach((char) => {
             this.glossmap.add(char);
           });
         }
@@ -253,7 +253,7 @@ export default class DupFinder {
       this.maskedWords = [];
 
       //map and store current words
-      wordsFromDB.forEach(word => {
+      wordsFromDB.forEach((word) => {
         this.maskedWords.push(this.maskWord(word));
       });
 
@@ -271,7 +271,7 @@ export default class DupFinder {
     //mask glosses
     let glossMasks: number[] = [];
     word.senses.forEach((sense, i) => {
-      sense.glosses.forEach(gloss =>
+      sense.glosses.forEach((gloss) =>
         glossMasks.concat(this.mapString(gloss.def, this.glossmap))
       );
     });
@@ -280,8 +280,8 @@ export default class DupFinder {
       word,
       mask: {
         vernMask,
-        glossMasks
-      } as Bitmask
+        glossMasks,
+      } as Bitmask,
     } as MaskedWord;
   }
 
@@ -291,7 +291,7 @@ export default class DupFinder {
     var splitInput = input.split("");
 
     let i: number = 0;
-    map.forEach(character => {
+    map.forEach((character) => {
       if (splitInput.includes(character)) output = output | (1 << i);
       i++;
     });
@@ -308,8 +308,8 @@ export default class DupFinder {
     )
       return true;
 
-    a.glossMasks.forEach(agloss => {
-      b.glossMasks.forEach(bgloss => {
+    a.glossMasks.forEach((agloss) => {
+      b.glossMasks.forEach((bgloss) => {
         if (
           this.calculateMaskScore(agloss & ~bgloss) +
             this.calculateMaskScore(bgloss & ~agloss) <
@@ -336,7 +336,7 @@ export default class DupFinder {
     let bitFilteredWords: Word[] = [];
 
     //filter words with bitmap
-    words.forEach(mappedWord => {
+    words.forEach((mappedWord) => {
       if (this.masksAreSimilar(parent.mask, mappedWord.mask))
         bitFilteredWords.push(mappedWord.word);
     });
@@ -344,7 +344,7 @@ export default class DupFinder {
     let filteredWords: Word[] = [];
 
     //filter based on word length - may not be worth the computation time
-    bitFilteredWords.forEach(word => {
+    bitFilteredWords.forEach((word) => {
       if (
         Math.abs(parent.word.vernacular.length - word.vernacular.length) <
         this.lengthFilter
@@ -366,7 +366,7 @@ export default class DupFinder {
     words = quicksort<ScoredWord>(words, getScore);
 
     //apply thresholds (score is redundant)
-    words.forEach(scoredword => {
+    words.forEach((scoredword) => {
       if (
         scoredword.score <= this.maxScore &&
         outputCollection[0].length <= this.maxCount
@@ -384,7 +384,7 @@ export default class DupFinder {
     let scoredWords: ScoredWord[] = [];
 
     //step through each word and compare it to the parent
-    words.forEach(word => {
+    words.forEach((word) => {
       //check for automatic qualifiers
       if (
         word.vernacular === parent.vernacular ||

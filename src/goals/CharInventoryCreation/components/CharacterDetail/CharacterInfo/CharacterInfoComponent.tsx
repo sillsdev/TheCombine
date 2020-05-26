@@ -24,10 +24,7 @@ export default function CharacterInfo(props: CharacterInfoProps) {
 }
 
 function charToHexValue(char: string) {
-  let hex: string = char
-    .charCodeAt(0)
-    .toString(16)
-    .toUpperCase();
+  let hex: string = char.charCodeAt(0).toString(16).toUpperCase();
   while (hex.length < 4) {
     hex = "0" + hex;
   }

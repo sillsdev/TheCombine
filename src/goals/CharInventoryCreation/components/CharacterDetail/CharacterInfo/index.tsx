@@ -4,11 +4,8 @@ import { StoreState } from "../../../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
-    allWords: state.characterInventoryState.allWords
+    allWords: state.characterInventoryState.allWords,
   };
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(CharacterInfo);
+export default connect(mapStateToProps, null)(CharacterInfo);

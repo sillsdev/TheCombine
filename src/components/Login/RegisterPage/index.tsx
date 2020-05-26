@@ -9,7 +9,7 @@ function mapStateToProps(state: StoreState): RegisterStateProps {
   return {
     inProgress: state.loginState.registerAttempt,
     success: state.loginState.registerSuccess,
-    failureMessage: state.loginState.registerFailure
+    failureMessage: state.loginState.registerFailure,
   };
 }
 
@@ -22,11 +22,8 @@ export function mapDispatchToProps(
     },
     reset: () => {
       dispatch(registerReset());
-    }
+    },
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Register);
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

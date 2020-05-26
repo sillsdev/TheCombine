@@ -58,7 +58,7 @@ export class TreeView extends React.Component<
   animate(domain: SemanticDomainWithSubdomains | undefined): Promise<void> {
     if (this.state.visible) {
       this.setState({ visible: false });
-      return new Promise(resolve =>
+      return new Promise((resolve) =>
         setTimeout(() => {
           if (domain && this.state.visible === false) {
             if (domain.id !== this.props.currentDomain.id) {

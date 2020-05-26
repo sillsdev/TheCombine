@@ -15,6 +15,6 @@ export interface ProjectAction {
 export function setCurrentProject(payload: Project): ProjectAction {
   return {
     type: SET_CURRENT_PROJECT,
-    payload
+    payload,
   };
 }

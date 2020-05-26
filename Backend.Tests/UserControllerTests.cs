@@ -23,7 +23,7 @@ namespace Backend.Tests
 
         private static User RandomUser()
         {
-            var user = new User {Username = Util.RandString(), Password = Util.RandString()};
+            var user = new User { Username = Util.RandString(), Password = Util.RandString() };
             return user;
         }
 

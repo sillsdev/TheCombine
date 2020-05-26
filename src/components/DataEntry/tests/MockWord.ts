@@ -8,11 +8,11 @@ export const mockWord: Word = {
       glosses: [
         {
           language: "en",
-          def: ""
-        }
+          def: "",
+        },
       ],
-      semanticDomains: []
-    }
+      semanticDomains: [],
+    },
   ],
   audio: [],
   created: "",
@@ -21,5 +21,5 @@ export const mockWord: Word = {
   partOfSpeech: "",
   editedBy: [],
   otherField: "",
-  plural: ""
+  plural: "",
 };

@@ -6,7 +6,7 @@ import { MergeTreeAction } from "../MergeDupStepActions";
 
 export function mapStateToProps(state: StoreState) {
   return {
-    senses: state.mergeDuplicateGoal.mergeTreeState.data.senses
+    senses: state.mergeDuplicateGoal.mergeTreeState.data.senses,
   };
 }
 

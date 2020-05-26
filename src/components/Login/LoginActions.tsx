@@ -68,7 +68,7 @@ export function asyncLogin(user: string, password: string) {
         dispatch(loginSuccess(user));
         history.push("/");
       })
-      .catch(err => {
+      .catch((err) => {
         dispatch(loginFailure(user));
       });
   };
@@ -77,28 +77,28 @@ export function asyncLogin(user: string, password: string) {
 export function loginAttempt(user: string): UserAction {
   return {
     type: LOGIN_ATTEMPT,
-    payload: { user }
+    payload: { user },
   };
 }
 
 export function loginFailure(user: string): UserAction {
   return {
     type: LOGIN_FAILURE,
-    payload: { user }
+    payload: { user },
   };
 }
 
 export function loginSuccess(user: string): UserAction {
   return {
     type: LOGIN_SUCCESS,
-    payload: { user }
+    payload: { user },
   };
 }
 
 export function loginReset(): UserAction {
   return {
     type: LOGIN_RESET,
-    payload: { user: "" }
+    payload: { user: "" },
   };
 }
 
@@ -128,14 +128,14 @@ export function asyncRegister(
     newUser.email = email;
     await backend
       .addUser(newUser)
-      .then(res => {
+      .then((res) => {
         dispatch(registerSuccess(user));
         setTimeout(() => {
           dispatch(registerReset());
           history.push("/login");
         }, 1000);
       })
-      .catch(err => {
+      .catch((err) => {
         dispatch(
           registerFailure((err.response && err.response.status) || err.message)
         );
@@ -145,34 +145,34 @@ export function asyncRegister(
 export function registerAttempt(user: string): UserAction {
   return {
     type: REGISTER_ATTEMPT,
-    payload: { user }
+    payload: { user },
   };
 }
 
 export function registerSuccess(user: string): UserAction {
   return {
     type: REGISTER_SUCCESS,
-    payload: { user }
+    payload: { user },
   };
 }
 
 export function registerFailure(errorMessage: string): UserAction {
   return {
     type: REGISTER_FAILURE,
-    payload: { user: errorMessage }
+    payload: { user: errorMessage },
   };
 }
 
 export function registerReset(): UserAction {
   return {
     type: REGISTER_RESET,
-    payload: { user: "" }
+    payload: { user: "" },
   };
 }
 
 function logout(user: string): UserAction {
   return {
     type: LOGOUT,
-    payload: { user: user }
+    payload: { user: user },
   };
 }

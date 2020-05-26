@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 import CharacterList from "./components/CharacterList";
 import {
@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,
 } from "@material-ui/core";
 import { Project } from "../../types/project";
 import { Save } from "@material-ui/icons";

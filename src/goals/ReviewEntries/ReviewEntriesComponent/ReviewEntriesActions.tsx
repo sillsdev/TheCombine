@@ -4,7 +4,7 @@ import {
   SEP_CHAR,
   ReviewEntriesSense,
   OLD_SENSE,
-  parseWord
+  parseWord,
 } from "./ReviewEntriesTypes";
 import * as backend from "../../../backend";
 import { ThunkDispatch } from "redux-thunk";
@@ -12,7 +12,7 @@ import { StoreState } from "../../../types";
 
 export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
-  UpdateWord = "UPDATE_WORD"
+  UpdateWord = "UPDATE_WORD",
 }
 
 interface ReviewUpdateWords {
@@ -32,7 +32,7 @@ export type ReviewEntriesAction = ReviewUpdateWords | ReviewUpdateWord;
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
     type: ReviewEntriesActionTypes.UpdateAllWords,
-    words
+    words,
   };
 }
 
@@ -45,7 +45,7 @@ function updateWord(
     type: ReviewEntriesActionTypes.UpdateWord,
     id,
     newId,
-    newWord
+    newWord,
   };
 }
 
@@ -81,7 +81,7 @@ function cleanSenses(
     if (newSense.glosses.length === 0 || newSense.domains.length === 0) {
       // New sense is missing information, attempt to retrieve it
       senseBuffer = oldSenses.find(
-        oldSense => oldSense.senseId === newSense.senseId
+        (oldSense) => oldSense.senseId === newSense.senseId
       );
 
       if (senseBuffer) {
@@ -107,7 +107,7 @@ function cleanSenses(
   }
 
   // Check to see if the user is attempting to delete all senses and correct accordingly
-  if (cleanSenses.filter(value => !value.deleted).length === 0)
+  if (cleanSenses.filter((value) => !value.deleted).length === 0)
     cleanSenses = oldSenses;
 
   return cleanSenses;
@@ -149,7 +149,7 @@ export function updateFrontierWord(
 
     originalIndex = 0;
     editWord.vernacular = editSource.vernacular;
-    editWord.senses = editSource.senses.map(newSense => {
+    editWord.senses = editSource.senses.map((newSense) => {
       // Get the next original gloss, if it exists
       if (originalIndex < editWord.senses.length) {
         editSense = editWord.senses[originalIndex];
@@ -161,7 +161,7 @@ export function updateFrontierWord(
         if (!editSense)
           editSense = ({
             glosses: [],
-            accessibility: State.active
+            accessibility: State.active,
           } as any) as Sense;
 
         // Take all glosses from what the user edited, then add all glosses from the original word which are not in the current language
@@ -170,25 +170,27 @@ export function updateFrontierWord(
           return {
             ...editSense,
             glosses: [
-              ...newSense.glosses.split(SEP_CHAR).map(gloss => {
+              ...newSense.glosses.split(SEP_CHAR).map((gloss) => {
                 return {
                   language: language,
-                  def: gloss.trim()
+                  def: gloss.trim(),
                 };
               }),
-              ...editSense.glosses.filter(gloss => gloss.language !== language)
+              ...editSense.glosses.filter(
+                (gloss) => gloss.language !== language
+              ),
             ],
-            semanticDomains: newSense.domains
+            semanticDomains: newSense.domains,
           };
         else
           return {
             ...editSense,
-            semanticDomains: newSense.domains
+            semanticDomains: newSense.domains,
           };
       } else
         return ({
           ...editSense,
-          accessibility: State.deleted
+          accessibility: State.deleted,
         } as any) as Sense;
     });
 

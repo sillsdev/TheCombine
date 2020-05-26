@@ -20,7 +20,7 @@ jest.mock("@material-ui/core", () => {
   const realMaterialUi = jest.requireActual("@material-ui/core");
   return {
     ...realMaterialUi,
-    Zoom: realMaterialUi.Container
+    Zoom: realMaterialUi.Container,
   };
 });
 
@@ -31,7 +31,7 @@ jest.mock("../TreeViewReducer", () => {
     ...realReducer,
     createDomains: () => {
       return { currentdomain: mockTree };
-    }
+    },
   };
 });
 
@@ -56,7 +56,7 @@ describe("Tests AddWords", () => {
       name: "test",
       id: "test",
       description: "super testy",
-      subdomains: []
+      subdomains: [],
     };
 
     treeHandle.animate(newDom);

@@ -3,7 +3,7 @@ import {
   SUCCESS,
   FAILURE,
   RESET,
-  CreateProjectAction
+  CreateProjectAction,
 } from "./CreateProjectActions";
 import { Project } from "../../../types/project";
 import { StoreAction, StoreActions } from "../../../rootActions";
@@ -20,7 +20,7 @@ export const defaultState: CreateProjectState = {
   name: "",
   success: false,
   inProgress: false,
-  errorMsg: ""
+  errorMsg: "",
 };
 
 export const createProjectReducer = (
@@ -33,21 +33,21 @@ export const createProjectReducer = (
         name: action.payload.name,
         success: false,
         inProgress: true,
-        errorMsg: ""
+        errorMsg: "",
       };
     case SUCCESS:
       return {
         name: action.payload.name,
         success: true,
         inProgress: false,
-        errorMsg: ""
+        errorMsg: "",
       };
     case FAILURE:
       return {
         name: action.payload.name,
         success: false,
         inProgress: false,
-        errorMsg: action.payload.errorMsg || ""
+        errorMsg: action.payload.errorMsg || "",
       };
     case RESET:
       return defaultState;

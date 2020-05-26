@@ -17,7 +17,6 @@ interface SenseCellProps {
 export default class SenseCell extends React.Component<
   FieldParameterStandard & SenseCellProps
 > {
-
   private inputField(
     sense: ReviewEntriesSense,
     index: number,
@@ -37,10 +36,10 @@ export default class SenseCell extends React.Component<
           style:
             this.props.sortingByGloss && index === 0
               ? { backgroundColor: highlight }
-              : {}
+              : {},
         }}
         // Handles editing sense's local glosses
-        onChange={event =>
+        onChange={(event) =>
           this.props.onRowDataChange &&
           this.props.onRowDataChange({
             ...this.props.rowData,
@@ -50,8 +49,8 @@ export default class SenseCell extends React.Component<
               ...this.props.rowData.senses.slice(
                 index + 1,
                 this.props.rowData.senses.length
-              )
-            ]
+              ),
+            ],
           })
         }
       />
@@ -73,9 +72,9 @@ export default class SenseCell extends React.Component<
                 deleted: false,
                 glosses: "",
                 domains: [],
-                senseId: uuid()
-              }
-            ]
+                senseId: uuid(),
+              },
+            ],
           })
         }
       />

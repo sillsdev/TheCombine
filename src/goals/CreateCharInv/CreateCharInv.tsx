@@ -3,7 +3,7 @@ import {
   Tools,
   GoalOption,
   GoalType,
-  generateGuid
+  generateGuid,
 } from "../../types/goals";
 import { User } from "../../types/user";
 

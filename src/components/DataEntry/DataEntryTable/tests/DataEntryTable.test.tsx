@@ -7,7 +7,7 @@ import { mockWord } from "../../tests/MockWord";
 
 export const mockSemanticDomain: SemanticDomain = {
   name: "",
-  id: ""
+  id: "",
 };
 
 jest.mock("../../../Pronunciations/Recorder");
@@ -41,10 +41,10 @@ describe("Tests DataEntryTable", () => {
         senses: [
           {
             glosses: [],
-            semanticDomains: []
-          }
-        ]
-      }
+            semanticDomains: [],
+          },
+        ],
+      },
     ];
     let expectedWords: Word[] = [];
     expect(filterWords(words)).toEqual(expectedWords);
@@ -60,10 +60,10 @@ describe("Tests DataEntryTable", () => {
           {
             glosses: [],
             semanticDomains: [],
-            accessibility: State.active
-          }
-        ]
-      }
+            accessibility: State.active,
+          },
+        ],
+      },
     ];
     let expectedWords: Word[] = [...words];
     expect(filterWords(words)).toEqual(expectedWords);

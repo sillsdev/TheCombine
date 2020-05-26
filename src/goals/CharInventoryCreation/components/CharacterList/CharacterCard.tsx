@@ -19,15 +19,15 @@ export interface CharacterCardProps {
 const useStyles = makeStyles(
   createStyles({
     header: {
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing(1),
     },
     card: {
       maxWidth: 345,
-      margin: theme.spacing(1)
+      margin: theme.spacing(1),
     },
     media: {
-      height: 140
-    }
+      height: 140,
+    },
   })
 );
 
@@ -58,10 +58,7 @@ export default function CharacterCard(props: CharacterCardProps) {
 }
 
 function charToHexValue(char: string) {
-  let hex: string = char
-    .charCodeAt(0)
-    .toString(16)
-    .toUpperCase();
+  let hex: string = char.charCodeAt(0).toString(16).toUpperCase();
   while (hex.length < 4) {
     hex = "0" + hex;
   }

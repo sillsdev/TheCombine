@@ -17,36 +17,36 @@ interface componentSteps {
 const stepComponentDictionary: componentSteps[] = [
   {
     goal: GoalType.CreateCharInv,
-    steps: [<CharInventoryCreation />]
+    steps: [<CharInventoryCreation />],
   },
   {
     goal: GoalType.ValidateChars,
-    steps: []
+    steps: [],
   },
   {
     goal: GoalType.CreateStrWordInv,
-    steps: []
+    steps: [],
   },
   {
     goal: GoalType.ValidateStrWords,
-    steps: []
+    steps: [],
   },
   {
     goal: GoalType.MergeDups,
-    steps: [<MergeDupStep />]
+    steps: [<MergeDupStep />],
   },
   {
     goal: GoalType.SpellcheckGloss,
-    steps: []
+    steps: [],
   },
   {
     goal: GoalType.ReviewEntries,
-    steps: [<ReviewEntriesComponent />]
+    steps: [<ReviewEntriesComponent />],
   },
   {
     goal: GoalType.HandleFlags,
-    steps: []
-  }
+    steps: [],
+  },
 ];
 
 /**

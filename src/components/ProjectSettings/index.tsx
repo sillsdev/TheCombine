@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 function mapStateToProps(state: StoreState) {
   return {
-    project: state.currentProject
+    project: state.currentProject,
   };
 }
 

@@ -16,7 +16,7 @@ class DeleteCell extends React.Component<DeleteCellProps> {
       <AlignedList
         key={`delete:${this.props.rowData.id}`}
         listId={`delete${this.props.rowData.id}`}
-        contents={this.props.rowData.senses.map(value => (
+        contents={this.props.rowData.senses.map((value) => (
           <React.Fragment>
             <Chip
               color={value.deleted ? "secondary" : "default"}

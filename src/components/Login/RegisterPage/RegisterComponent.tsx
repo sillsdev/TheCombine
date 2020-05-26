@@ -1,9 +1,8 @@
-//external modules
 import * as React from "react";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 import {
   Grid,
@@ -12,10 +11,11 @@ import {
   Typography,
   Button,
   TextField,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
-import history from "../../../history";
 import { Check } from "@material-ui/icons";
+
+import history from "../../../history";
 import { buttonSuccess } from "../../../types/theme";
 import { isUsernameTaken, isEmailTaken } from "../../../backend";
 
@@ -69,8 +69,8 @@ class Register extends React.Component<
         user: false,
         confirmPassword: false,
         name: false,
-        email: false
-      }
+        email: false,
+      },
     };
   }
 
@@ -89,7 +89,7 @@ class Register extends React.Component<
 
     this.setState({
       [field]: value,
-      error: { ...this.state.error, [field]: false }
+      error: { ...this.state.error, [field]: false },
     } as Pick<RegisterState, K>);
   }
 
@@ -137,10 +137,10 @@ class Register extends React.Component<
   }
 
   render() {
-    // determine error message
+    // Determine error message
     let failureMessage;
-    // intentional weak comparasion. props.failureMessage may evaluate to number
-    /* eslint-disable-next-line */
+    // Intentional weak comparision. props.failureMessage may evaluate to number
+    // eslint-disable-next-line eqeqeq
     if (this.props.failureMessage == "400") {
       failureMessage = <Translate id="login.registerFailed" />;
     } else {
@@ -149,7 +149,7 @@ class Register extends React.Component<
     return (
       <Grid container justify="center">
         <Card style={{ width: 450 }}>
-          <form onSubmit={e => this.register(e)}>
+          <form onSubmit={(e) => this.register(e)}>
             <CardContent>
               {/* Title */}
               <Typography variant="h5" align="center" gutterBottom>
@@ -163,7 +163,7 @@ class Register extends React.Component<
                 autoComplete="name"
                 label={<Translate id="login.name" />}
                 value={this.state.name}
-                onChange={e => this.updateField(e, "name")}
+                onChange={(e) => this.updateField(e, "name")}
                 error={this.state.error["name"]}
                 helperText={
                   this.state.error["name"] ? (
@@ -182,7 +182,7 @@ class Register extends React.Component<
                 autoComplete="username"
                 label={<Translate id="login.username" />}
                 value={this.state.user}
-                onChange={e => this.updateField(e, "user")}
+                onChange={(e) => this.updateField(e, "user")}
                 onBlur={() => this.checkUsername(this.state.user)}
                 error={this.state.error["user"]}
                 helperText={
@@ -203,7 +203,7 @@ class Register extends React.Component<
                 autoComplete="email"
                 label={<Translate id="login.email" />}
                 value={this.state.email}
-                onChange={e => this.updateField(e, "email")}
+                onChange={(e) => this.updateField(e, "email")}
                 onBlur={() => this.checkEmail(this.state.email)}
                 error={this.state.error["email"]}
                 helperText={
@@ -224,7 +224,7 @@ class Register extends React.Component<
                 label={<Translate id="login.password" />}
                 type="password"
                 value={this.state.password}
-                onChange={e => this.updateField(e, "password")}
+                onChange={(e) => this.updateField(e, "password")}
                 error={this.state.error["password"]}
                 helperText={
                   this.state.error["password"] ? (
@@ -245,7 +245,7 @@ class Register extends React.Component<
                 label={<Translate id="login.confirmPassword" />}
                 type="password"
                 value={this.state.confirmPassword}
-                onChange={e => this.updateField(e, "confirmPassword")}
+                onChange={(e) => this.updateField(e, "confirmPassword")}
                 error={this.state.error["confirmPassword"]}
                 helperText={
                   this.state.error["confirmPassword"] ? (
@@ -289,7 +289,7 @@ class Register extends React.Component<
                     style={{
                       backgroundColor: this.props.success
                         ? buttonSuccess
-                        : undefined
+                        : undefined,
                     }}
                   >
                     {this.props.success ? (
@@ -309,7 +309,7 @@ class Register extends React.Component<
                           top: "50%",
                           left: "50%",
                           marginTop: -12,
-                          marginLeft: -12
+                          marginLeft: -12,
                         }}
                       />
                     )}

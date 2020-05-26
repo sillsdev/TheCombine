@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import axios from "axios";
-import { RuntimeConfig } from "../../types/runtimeConfig"
+import { RuntimeConfig } from "../../types/runtimeConfig";
 
 export const PRESS_BUTTON = "PRESS_BUTTON";
 export type PRESS_BUTTON = typeof PRESS_BUTTON;
@@ -13,7 +13,7 @@ export interface ButtonPressed {
 var server = axios.create({
   baseURL: RuntimeConfig.getInstance().baseUrl(),
   timeout: 1000,
-  headers: { "Content-Type": "application/json" }
+  headers: { "Content-Type": "application/json" },
 });
 
 //thunk action creator
@@ -26,9 +26,9 @@ export function asyncPressButton() {
         Vernacular: "test",
         Gloss: "test2",
         Audio: "sound",
-        Timestamp: "now"
+        Timestamp: "now",
       })
-      .then(function(response) {
+      .then(function (response) {
         //console.log(response);
       });
   };
@@ -38,7 +38,7 @@ export function asyncPressButton() {
 export function pressButton(): ButtonPressed {
   //console.log('PressButton called');
   return {
-    type: PRESS_BUTTON
+    type: PRESS_BUTTON,
   };
 }
 

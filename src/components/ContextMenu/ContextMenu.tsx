@@ -3,7 +3,7 @@ import React, { ReactElement } from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 
 export type MenuType = [string, () => void];

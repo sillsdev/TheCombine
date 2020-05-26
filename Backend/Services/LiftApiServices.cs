@@ -509,7 +509,8 @@ namespace BackendFramework.Services
         {
             return new LiftEntry(info, new Guid(), order)
             {
-                LexicalForm = new LiftMultiText(), CitationForm = new LiftMultiText()
+                LexicalForm = new LiftMultiText(),
+                CitationForm = new LiftMultiText()
             };
         }
 
@@ -608,9 +609,11 @@ namespace BackendFramework.Services
             return new LiftSense(info, new Guid(), sense) { Gloss = new LiftMultiText() };
         }
         public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form,
-            LiftMultiText gloss, string rawXml) { return new LiftEtymology(); }
+            LiftMultiText gloss, string rawXml)
+        { return new LiftEtymology(); }
         public LiftObject MergeInReversal(LiftSense sense, LiftObject parent, LiftMultiText contents, string type,
-            string rawXml) { return new LiftReversal(); }
+            string rawXml)
+        { return new LiftReversal(); }
 
         public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml)
         {

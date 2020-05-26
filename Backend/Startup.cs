@@ -40,9 +40,9 @@ namespace BackendFramework
         {
         }
 
-		/// <summary> This method gets called by the runtime. Use this method to add services for dependency injection.
-		/// </summary>
-		public void ConfigureServices(IServiceCollection services)
+        /// <summary> This method gets called by the runtime. Use this method to add services for dependency injection.
+        /// </summary>
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
             {

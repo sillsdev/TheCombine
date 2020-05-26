@@ -8,11 +8,8 @@ export function mapDispatchToProps(dispatch: Dispatch<ProjectAction>) {
   return {
     setCurrentProject: (project: Project) => {
       dispatch(setCurrentProject(project));
-    }
+    },
   };
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(ChooseProjectComponent);
+export default connect(null, mapDispatchToProps)(ChooseProjectComponent);

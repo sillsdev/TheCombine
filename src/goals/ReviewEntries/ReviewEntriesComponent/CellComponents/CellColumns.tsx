@@ -14,11 +14,11 @@ enum SortStyle {
   VERNACULAR,
   GLOSS,
   DOMAIN,
-  NONE
+  NONE,
 }
 
 function domainNumberToArray(id: string) {
-  return id.split(".").map(digit => parseInt(digit, 10));
+  return id.split(".").map((digit) => parseInt(digit, 10));
 }
 
 export interface FieldParameterStandard {
@@ -39,14 +39,14 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
           placeholder={translate("reviewEntries.novernacular").toString()}
           InputProps={{
             readOnly: !editable,
-            disableUnderline: !editable
+            disableUnderline: !editable,
           }}
           // Handles editing word's local vernacular
-          onChange={event =>
+          onChange={(event) =>
             props.onRowDataChange &&
             props.onRowDataChange({
               ...props.rowData,
-              vernacular: event.target.value
+              vernacular: event.target.value,
             })
           }
         />
@@ -63,7 +63,7 @@ const columns: Column[] = [
     field: "vernacular",
     render: (rowData: ReviewEntriesWord) =>
       vernacularField({ rowData, value: rowData.vernacular }, false),
-    editComponent: (props: any) => vernacularField(props, true)
+    editComponent: (props: any) => vernacularField(props, true),
   },
   {
     title: "Glosses",
@@ -120,7 +120,7 @@ const columns: Column[] = [
         count++;
       }
       return compare;
-    }
+    },
   },
   {
     title: "Domains",
@@ -140,10 +140,10 @@ const columns: Column[] = [
               if (sense.senseId === senseId)
                 return {
                   ...sense,
-                  domains
+                  domains,
                 };
               else return sense;
-            })
+            }),
           });
       };
       return (
@@ -220,7 +220,7 @@ const columns: Column[] = [
       }
 
       return compare;
-    }
+    },
   },
   {
     title: "Pronunciations",
@@ -234,7 +234,7 @@ const columns: Column[] = [
         pronunciationFiles={rowData.pronunciationFiles}
         recorder={rowData.recorder}
       />
-    )
+    ),
   },
   {
     title: "",
@@ -247,19 +247,19 @@ const columns: Column[] = [
         if (props.onRowDataChange)
           props.onRowDataChange({
             ...props.rowData,
-            senses: props.rowData.senses.map(sense => {
+            senses: props.rowData.senses.map((sense) => {
               if (sense.senseId === senseId)
                 return {
                   ...sense,
-                  deleted: !sense.deleted
+                  deleted: !sense.deleted,
                 };
               else return sense;
-            })
+            }),
           });
       };
       return <DeleteCell rowData={props.rowData} delete={deleteSense} />;
-    }
-  }
+    },
+  },
 ];
 
 export default columns;

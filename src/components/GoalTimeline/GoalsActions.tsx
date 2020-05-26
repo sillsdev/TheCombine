@@ -1,32 +1,33 @@
-import { Goal } from "../../types/goals";
-import { ActionWithPayload } from "../../types/mockAction";
 import { Dispatch } from "redux";
-import * as backend from "../../backend";
+import { ThunkDispatch } from "redux-thunk";
+
+import { Goal, GoalType } from "../../types/goals";
+import { ActionWithPayload } from "../../types/mockAction";
+import * as Backend from "../../backend";
+import * as LocalStorage from "../../backend/localStorage";
 import history from "../../history";
 import { User } from "../../types/user";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDups, MergeDupData } from "../../goals/MergeDupGoal/MergeDups";
+import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import { Edit } from "../../types/userEdit";
-import { GoalType } from "../../types/goals";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../types";
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
+  MergeTreeAction,
   refreshWords,
-  MergeTreeAction
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
   ADD_GOAL_TO_HISTORY = "ADD_GOAL_TO_HISTORY",
-  UPDATE_GOAL = "UPDATE_GOAL"
+  UPDATE_GOAL = "UPDATE_GOAL",
 }
 
 export type GoalAction =
@@ -54,13 +55,12 @@ export function asyncLoadExistingUserEdits(
   userEditId: string
 ) {
   return async (dispatch: Dispatch<GoalAction>) => {
-    await backend
-      .getUserEditById(projectId, userEditId)
-      .then(userEdit => {
+    await Backend.getUserEditById(projectId, userEditId)
+      .then((userEdit) => {
         let history: Goal[] = convertEditsToArrayOfGoals(userEdit.edits);
         dispatch(loadUserEdits(history));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
@@ -68,13 +68,12 @@ export function asyncLoadExistingUserEdits(
 
 function asyncCreateNewUserEditsObject(projectId: string) {
   return async () => {
-    await backend
-      .createUserEdit()
+    await Backend.createUserEdit()
       .then(async (userEditId: string) => {
         let updatedUser: User = updateUserIfExists(projectId, userEditId);
-        await backend.updateUser(updatedUser);
+        await Backend.updateUser(updatedUser);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
@@ -82,12 +81,11 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    let currentUserString = localStorage.getItem("user");
-    if (currentUserString) {
-      let currentUserObject: User = JSON.parse(currentUserString);
-      let projectId: string = backend.getProjectId();
-      let userEditId: string | undefined = getUserEditIdFromProjectId(
-        currentUserObject.workedProjects,
+    const user = LocalStorage.getCurrentUser();
+    if (user) {
+      const projectId: string = LocalStorage.getProjectId();
+      const userEditId: string | undefined = getUserEditIdFromProjectId(
+        user.workedProjects,
         projectId
       );
 
@@ -102,16 +100,15 @@ export function asyncGetUserEdits() {
 
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    let user: User | undefined = getUser();
-    if (user !== undefined) {
+    const user = LocalStorage.getCurrentUser();
+    if (user) {
       let userEditId: string | undefined = getUserEditId(user);
       if (userEditId !== undefined) {
         dispatch(loadGoalData(goal)).then(
-          returnedGoal => (goal = returnedGoal)
+          (returnedGoal) => (goal = returnedGoal)
         );
-        await backend
-          .addGoalToUserEdit(userEditId, goal)
-          .then(resp => {
+        await Backend.addGoalToUserEdit(userEditId, goal)
+          .then((resp) => {
             dispatch(addGoalToHistory(goal));
             history.push(`/goals/${resp}`);
           })
@@ -121,15 +118,6 @@ export function asyncAddGoalToHistory(goal: Goal) {
       }
     }
   };
-}
-
-export function getUser(): User | undefined {
-  let userString: string | null = localStorage.getItem("user");
-  let user: User | undefined;
-  if (userString) {
-    user = JSON.parse(userString);
-  }
-  return user;
 }
 
 export function loadGoalData(goal: Goal) {
@@ -163,7 +151,7 @@ export function loadGoalData(goal: Goal) {
             }
           }
           // check blacklist
-          let groupIds = newGroup.map(a => a.id).sort();
+          let groupIds = newGroup.map((a) => a.id).sort();
           let groupHash = groupIds.reduce((val, acc) => `${acc}:${val}`, "");
           if (!blacklist[groupHash] && newGroup.length > 1) {
             newGroups.push(newGroup);
@@ -198,7 +186,7 @@ export function updateStepData(goal: Goal): Goal {
         JSON.stringify(goal.data as MergeDupData)
       );
       goal.steps[goal.currentStep] = {
-        words: currentGoalData.plannedWords[goal.currentStep]
+        words: currentGoalData.plannedWords[goal.currentStep],
       };
       break;
     }
@@ -209,8 +197,8 @@ export function updateStepData(goal: Goal): Goal {
 }
 
 export function getUserEditId(user: User): string | undefined {
-  let projectId = backend.getProjectId();
-  let userEditId: string | undefined = getUserEditIdFromProjectId(
+  const projectId = LocalStorage.getProjectId();
+  const userEditId: string | undefined = getUserEditIdFromProjectId(
     user.workedProjects,
     projectId
   );
@@ -222,7 +210,7 @@ function getUserEditIdFromProjectId(
   projectId: string
 ): string | undefined {
   let projectIds = Object.keys(workedProjects);
-  let matches: string[] = projectIds.filter(project => projectId === project);
+  let matches: string[] = projectIds.filter((project) => projectId === project);
   if (matches.length === 1) {
     return workedProjects[matches[0]];
   }

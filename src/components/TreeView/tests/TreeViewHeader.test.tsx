@@ -1,5 +1,6 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
+
 import SemanticDomainWithSubdomains from "../SemanticDomain";
 import TreeViewHeader from "../TreeViewHeader";
 import MockTree from "./MockSemanticTree";
@@ -10,8 +11,8 @@ var event = {
   key: "Enter",
   preventDefault: jest.fn(),
   target: {
-    value: ""
-  }
+    value: "",
+  },
 };
 
 // Handles
@@ -22,10 +23,13 @@ const MOCK_ANIMATE = jest.fn();
 // Mock out window
 const ADD_LISTENER = window.addEventListener.prototype;
 const REMOVE_LISTENER = window.removeEventListener.prototype;
+
+// TODO: Should this lint be disabled?
+// eslint-disable-next-line no-native-reassign
 window = {
   ...window,
   addEventListener: jest.fn(),
-  removeEventListener: jest.fn()
+  removeEventListener: jest.fn(),
 };
 
 beforeEach(() => {
@@ -34,10 +38,11 @@ beforeEach(() => {
 });
 
 afterAll(() => {
+  // eslint-disable-next-line no-native-reassign
   window = {
     ...window,
     addEventListener: ADD_LISTENER,
-    removeEventListener: REMOVE_LISTENER
+    removeEventListener: REMOVE_LISTENER,
   };
 });
 

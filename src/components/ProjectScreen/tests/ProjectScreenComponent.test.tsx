@@ -13,8 +13,8 @@ it("renders without crashing", () => {
       name: "",
       inProgress: false,
       success: false,
-      errorMsg: ""
-    }
+      errorMsg: "",
+    },
   };
   const mockStore = createMockStore(state);
   const div = document.createElement("div");

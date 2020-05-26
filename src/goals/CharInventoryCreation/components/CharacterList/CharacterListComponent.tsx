@@ -2,14 +2,14 @@ import * as React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
-  Translate
+  Translate,
 } from "react-localize-redux";
 import {
   Grid,
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
 import CharacterCard from "./CharacterCard";
 import { CharacterSetEntry } from "../../CharacterInventoryReducer";
@@ -29,7 +29,7 @@ enum sortOrder {
   characterDescending,
   occurrencesAscending,
   occurrencesDescending,
-  status
+  status,
 }
 
 export class CharacterList extends React.Component<
@@ -40,7 +40,7 @@ export class CharacterList extends React.Component<
     super(props);
     this.state = {
       hoverChar: "",
-      sortOrder: sortOrder.characterAscending
+      sortOrder: sortOrder.characterAscending,
     };
   }
 
@@ -59,11 +59,11 @@ export class CharacterList extends React.Component<
             </InputLabel>
             <Select
               value={this.state.sortOrder}
-              onChange={e =>
+              onChange={(e) =>
                 this.setState({ sortOrder: e.target.value as sortOrder })
               }
               inputProps={{
-                id: "sort-order"
+                id: "sort-order",
               }}
             >
               <MenuItem value={sortOrder.characterAscending}>
@@ -85,19 +85,21 @@ export class CharacterList extends React.Component<
           </FormControl>
         </Grid>
         <React.Fragment>
-          {/* The grid of character tiles */
+          {
+            /* The grid of character tiles */
 
-          orderedCharacters.map(character => (
-            <CharacterCard
-              char={character.character}
-              key={character.character}
-              count={character.occurrences}
-              status={character.status}
-              onClick={() =>
-                this.props.setSelectedCharacter(character.character)
-              }
-            />
-          ))}
+            orderedCharacters.map((character) => (
+              <CharacterCard
+                char={character.character}
+                key={character.character}
+                count={character.occurrences}
+                status={character.status}
+                onClick={() =>
+                  this.props.setSelectedCharacter(character.character)
+                }
+              />
+            ))
+          }
         </React.Fragment>
       </React.Fragment>
     );

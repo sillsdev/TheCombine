@@ -1,5 +1,5 @@
 export enum StoreActions {
-  RESET = "RESET"
+  RESET = "RESET",
 }
 
 interface Reset {
@@ -10,6 +10,6 @@ export type StoreAction = Reset;
 
 export function reset(): StoreAction {
   return {
-    type: StoreActions.RESET
+    type: StoreActions.RESET,
   };
 }

@@ -1,4 +1,3 @@
-import { State } from "../../../../types/word";
 import { MergeDupData } from "../../MergeDups";
 import { uuid } from "../../../../utilities";
 
@@ -13,7 +12,7 @@ const wordMock = () => ({
   partOfSpeech: "",
   editedBy: [""],
   otherField: "",
-  plural: ""
+  plural: "",
 });
 
 const wordsArrayMock = () => [
@@ -24,7 +23,7 @@ const wordsArrayMock = () => [
   wordMock(),
   wordMock(),
   wordMock(),
-  wordMock()
+  wordMock(),
 ];
 
 export const goalDataMock: MergeDupData = {
@@ -36,6 +35,6 @@ export const goalDataMock: MergeDupData = {
     wordsArrayMock(),
     wordsArrayMock(),
     wordsArrayMock(),
-    wordsArrayMock()
-  ]
+    wordsArrayMock(),
+  ],
 };

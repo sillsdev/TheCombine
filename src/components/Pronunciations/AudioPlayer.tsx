@@ -3,7 +3,7 @@ import {
   Theme,
   createStyles,
   Tooltip,
-  IconButton
+  IconButton,
 } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
 import PlayArrow from "@material-ui/icons/PlayArrow";
@@ -19,11 +19,11 @@ export interface PlayerProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
-      margin: theme.spacing(1)
+      margin: theme.spacing(1),
     },
     icon: {
-      color: green[800]
-    }
+      color: green[800],
+    },
   })
 );
 

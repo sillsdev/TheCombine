@@ -32,7 +32,7 @@ namespace Backend.Tests
 
         Word RandomWord()
         {
-            var word = new Word {Senses = new List<Sense>() {new Sense(), new Sense(), new Sense()}};
+            var word = new Word { Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() } };
 
             foreach (var sense in word.Senses)
             {
@@ -219,7 +219,9 @@ namespace Backend.Tests
             // merge
             var parentChildMergeObject = new MergeWords
             {
-                Parent = RandomWord(), Time = Util.RandString(), ChildrenWords = new List<MergeSourceWord>()
+                Parent = RandomWord(),
+                Time = Util.RandString(),
+                ChildrenWords = new List<MergeSourceWord>()
             };
 
             // Set the child info
@@ -230,7 +232,7 @@ namespace Backend.Tests
                 var newGenChild = new MergeSourceWord
                 {
                     SrcWordId = _repo.Add(child).Result.Id,
-                    SenseStates = new List<State> {State.Duplicate, State.Sense, State.Separate}
+                    SenseStates = new List<State> { State.Duplicate, State.Sense, State.Separate }
                 };
                 parentChildMergeObject.ChildrenWords.Add(newGenChild);
             }

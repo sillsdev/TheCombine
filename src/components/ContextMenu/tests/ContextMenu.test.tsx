@@ -4,7 +4,7 @@ import { act } from "react-dom/test-utils";
 import renderer from "react-test-renderer";
 import ContextMenu, {
   MenuType,
-  ContextMenu as ContextMenuClass
+  ContextMenu as ContextMenuClass,
 } from "../ContextMenu";
 
 // Mock DOM
@@ -19,10 +19,10 @@ document.getElementsByClassName = jest.fn((name: string) => {
         ...tmp,
         addEventListener: MOCK_ADD,
         removeEventListener: MOCK_REM,
-        className: name
+        className: name,
       };
     },
-    namedItem: jest.fn()
+    namedItem: jest.fn(),
   } as any) as HTMLCollectionOf<Element>;
 });
 
@@ -34,19 +34,21 @@ ContextMenuClass.prototype.setState = MOCK_SET;
 const MOCK_ADD = jest.fn((name: string, callback: (event: any) => void) => {
   if (name === "contextmenu") documentRightClick = callback;
 });
-const MOCK_REM = jest.fn(_ => {
+const MOCK_REM = jest.fn((_) => {
+  // TODO: Should this lint be disabled?
+  // eslint-disable-next-line no-restricted-globals
   if (name === "contextmenu") documentRightClick = jest.fn;
 });
 const MOCK_EVENT = {
   preventDefault: jest.fn(),
-  stopPropagation: jest.fn()
+  stopPropagation: jest.fn(),
 } as any;
 
 const CLASS_WITH_DROPDOWN: string = "dropdown";
 const CLASS_WITHOUT_DROPDOWN: string = "noDropdown";
 const TEST_OPTIONS: MenuType[] = [
   ["option0", jest.fn()],
-  ["options1", jest.fn()]
+  ["options1", jest.fn()],
 ];
 
 // Variables used in testing
@@ -61,7 +63,7 @@ beforeAll(() => {
     documentHandle = (
       <div
         className={CLASS_WITH_DROPDOWN}
-        onContextMenu={e => {
+        onContextMenu={(e) => {
           documentRightClick(e);
         }}
       />
@@ -94,13 +96,13 @@ describe("Testing the ContextMenu via a mock component", () => {
   it("Opens when openMenu called with target being proper element", () => {
     contextHandle.instance.openMenu({
       ...MOCK_EVENT,
-      currentTarget: <div className={CLASS_WITHOUT_DROPDOWN} />
+      currentTarget: <div className={CLASS_WITHOUT_DROPDOWN} />,
     });
     expect(MOCK_SET).toBeCalledTimes(0);
 
     contextHandle.instance.openMenu({
       ...MOCK_EVENT,
-      currentTarget: contextHandle.instance.anchor
+      currentTarget: contextHandle.instance.anchor,
     });
     expect(MOCK_SET).toHaveBeenCalledWith({ isOpen: true });
   });

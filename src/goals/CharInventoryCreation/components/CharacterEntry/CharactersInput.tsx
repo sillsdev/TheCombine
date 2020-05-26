@@ -13,7 +13,7 @@ export default function CharactersInput(props: CharactersInputProps) {
   return (
     <TextField
       value={props.characters.join("")}
-      onChange={e =>
+      onChange={(e) =>
         props.setCharacters(e.target.value.replace(/\s/g, "").split(""))
       }
       label={props.label}
@@ -22,7 +22,7 @@ export default function CharactersInput(props: CharactersInputProps) {
       style={{ maxWidth: 512, marginTop: theme.spacing(1) }}
       inputProps={{
         style: { letterSpacing: 5 },
-        spellCheck: false
+        spellCheck: false,
       }}
       autoComplete="off"
       id={props.id}

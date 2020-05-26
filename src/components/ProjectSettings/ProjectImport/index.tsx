@@ -7,18 +7,15 @@ import { StoreState } from "../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
-    project: state.currentProject
+    project: state.currentProject,
   };
 }
 
 function mapDispatchToProps(dispatch: Dispatch<ProjectAction>) {
   return {
     updateProject: (newProject: Project) =>
-      dispatch(setCurrentProject(newProject))
+      dispatch(setCurrentProject(newProject)),
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProjectImport);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectImport);

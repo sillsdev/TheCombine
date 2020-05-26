@@ -5,11 +5,8 @@ import Pronunciations from "./PronunciationsComponent";
 
 function mapStateToProps(state: StoreState) {
   return {
-    translate: getTranslate(state.localize)
+    translate: getTranslate(state.localize),
   };
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(Pronunciations);
+export default connect(mapStateToProps, null)(Pronunciations);

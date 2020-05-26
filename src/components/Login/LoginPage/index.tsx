@@ -7,13 +7,13 @@ import {
   asyncLogin,
   UserAction,
   loginReset,
-  logoutAndResetStore
+  logoutAndResetStore,
 } from "../LoginActions";
 
 function mapStateToProps(state: StoreState): LoginStateProps {
   return {
     loginAttempt: state.loginState && state.loginState.loginAttempt,
-    loginFailure: state.loginState && state.loginState.loginFailure
+    loginFailure: state.loginState && state.loginState.loginFailure,
   };
 }
 
@@ -29,11 +29,8 @@ export function mapDispatchToProps(
     },
     reset: () => {
       dispatch(loginReset());
-    }
+    },
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

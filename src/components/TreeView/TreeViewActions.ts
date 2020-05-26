@@ -1,7 +1,7 @@
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 export enum TreeActionType {
-  TRAVERSE_TREE = "traverseTree"
+  TRAVERSE_TREE = "traverseTree",
 }
 
 export interface TreeViewAction {
@@ -9,6 +9,8 @@ export interface TreeViewAction {
   payload: SemanticDomainWithSubdomains;
 }
 
-export function TraverseTreeAction(newDomain: SemanticDomainWithSubdomains): TreeViewAction {
+export function TraverseTreeAction(
+  newDomain: SemanticDomainWithSubdomains
+): TreeViewAction {
   return { type: TreeActionType.TRAVERSE_TREE, payload: newDomain };
 }

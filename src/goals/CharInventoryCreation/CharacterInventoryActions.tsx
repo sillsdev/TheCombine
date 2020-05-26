@@ -1,25 +1,25 @@
 import { Dispatch } from "react";
+
 import { StoreState } from "../../types";
 import {
+  ProjectAction,
   setCurrentProject,
-  ProjectAction
 } from "../../components/Project/ProjectActions";
 import {
-  updateGoal,
-  getUserEditId,
   getIndexInHistory,
+  getUserEditId,
   GoalAction,
-  getUser
+  updateGoal,
 } from "../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
-import * as backend from "../../backend";
 import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
-import { User } from "../../types/user";
 import {
   CharacterSetEntry,
-  characterStatus
+  characterStatus,
 } from "./CharacterInventoryReducer";
+import * as backend from "../../backend";
+import * as LocalStorage from "../../backend/localStorage";
 
 export enum CharacterInventoryType {
   SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
@@ -28,7 +28,7 @@ export enum CharacterInventoryType {
   ADD_TO_REJECTED_CHARACTERS = "ADD_TO_REJECTED_CHARACTERS",
   SET_ALL_WORDS = "CHARINV_SET_ALL_WORDS",
   SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER",
-  SET_CHARACTER_SET = "SET_CHARACTER_SET"
+  SET_CHARACTER_SET = "SET_CHARACTER_SET",
 }
 
 //action types
@@ -68,12 +68,12 @@ export function setCharacterStatus(character: string, status: characterStatus) {
       let state = getState();
 
       let validCharacters = state.characterInventoryState.validCharacters.filter(
-        c => c !== character
+        (c) => c !== character
       );
       dispatch(setValidCharacters(validCharacters));
 
       let rejectedCharacters = state.characterInventoryState.rejectedCharacters.filter(
-        c => c !== character
+        (c) => c !== character
       );
       dispatch(setRejectedCharacters(rejectedCharacters));
     }
@@ -85,7 +85,7 @@ export function addToValidCharacters(
 ): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.ADD_TO_VALID_CHARACTERS,
-    payload: chars
+    payload: chars,
   };
 }
 
@@ -94,14 +94,14 @@ export function addToRejectedCharacters(
 ): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.ADD_TO_REJECTED_CHARACTERS,
-    payload: chars
+    payload: chars,
   };
 }
 
 export function setValidCharacters(chars: string[]): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.SET_VALID_CHARACTERS,
-    payload: chars
+    payload: chars,
   };
 }
 
@@ -110,21 +110,21 @@ export function setRejectedCharacters(
 ): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.SET_REJECTED_CHARACTERS,
-    payload: chars
+    payload: chars,
   };
 }
 
 export function setAllWords(words: string[]): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.SET_ALL_WORDS,
-    payload: words
+    payload: words,
   };
 }
 
 export function fetchWords() {
   return async (dispatch: Dispatch<CharacterInventoryAction>) => {
     let words = await backend.getFrontierWords();
-    dispatch(setAllWords(words.map(word => word.vernacular)));
+    dispatch(setAllWords(words.map((word) => word.vernacular)));
   };
 }
 
@@ -133,7 +133,7 @@ export function setSelectedCharacter(
 ): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.SET_SELECTED_CHARACTER,
-    payload: [character]
+    payload: [character],
   };
 }
 
@@ -143,7 +143,7 @@ export function setCharacterSet(
   return {
     type: CharacterInventoryType.SET_CHARACTER_SET,
     payload: [],
-    characterSet
+    characterSet,
   };
 }
 
@@ -155,22 +155,22 @@ export function getAllCharacters() {
     let state = getState();
     let words = await backend.getFrontierWords();
     let characters: string[] = [];
-    words.forEach(word => characters.push(...word.vernacular));
+    words.forEach((word) => characters.push(...word.vernacular));
     characters = [...new Set(characters)];
 
     let characterSet: CharacterSetEntry[] = [];
-    characters.forEach(letter => {
+    characters.forEach((letter) => {
       characterSet.push({
         character: letter,
         occurrences: countCharacterOccurences(
           letter,
-          words.map(word => word.vernacular)
+          words.map((word) => word.vernacular)
         ),
         status: getCharacterStatus(
           letter,
           state.currentProject.validCharacters,
           state.currentProject.rejectedCharacters
-        )
+        ),
       });
     });
     dispatch(setCharacterSet(characterSet));
@@ -214,8 +214,8 @@ async function saveChangesToGoal(
   history: Goal[],
   dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
-  let user: User | undefined = getUser();
-  if (user !== undefined) {
+  const user = LocalStorage.getCurrentUser();
+  if (user) {
     let userEditId: string | undefined = getUserEditId(user);
     if (userEditId !== undefined) {
       let indexInHistory: number = getIndexInHistory(history, updatedGoal);

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { StoreState } from "../../../../../types";
 import {
   CharacterInventoryAction,
-  setCharacterStatus
+  setCharacterStatus,
 } from "../../../CharacterInventoryActions";
 import { ThunkDispatch } from "redux-thunk";
 
@@ -19,11 +19,8 @@ function mapDispatchToProps(
     },
     unset: (character: string) => {
       dispatch(setCharacterStatus(character, "undecided"));
-    }
+    },
   };
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(CharacterStatusControl);
+export default connect(null, mapDispatchToProps)(CharacterStatusControl);

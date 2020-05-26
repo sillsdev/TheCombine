@@ -1,18 +1,20 @@
+import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
+import thunk from "redux-thunk";
+
 import * as actions from "../GoalsActions";
 import { Goal } from "../../../types/goals";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
-import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
-import thunk from "redux-thunk";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
 import { User } from "../../../types/user";
 import {
   MergeTreeActions,
-  MergeTreeAction
+  MergeTreeAction,
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { defaultState as goalsDefaultState } from "../DefaultState";
+import * as LocalStorage from "../../../backend/localStorage";
 
 jest.mock(
   ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
@@ -24,7 +26,7 @@ jest.mock(
       ...dupFinder,
       getNextDups: jest.fn(() => {
         return Promise.resolve(mockGoalData.plannedWords);
-      })
+      }),
     }));
   }
 );
@@ -52,13 +54,13 @@ beforeAll(() => {
   const mockStoreState = {
     goalsState: {
       historyState: {
-        history: [...goalsDefaultState.historyState.history]
+        history: [...goalsDefaultState.historyState.history],
       },
       allPossibleGoals: [...goalsDefaultState.allPossibleGoals],
       suggestionsState: {
-        suggestions: [...goalsDefaultState.suggestionsState.suggestions]
-      }
-    }
+        suggestions: [...goalsDefaultState.suggestionsState.suggestions],
+      },
+    },
   };
 
   mockStore = createMockStore(mockStoreState);
@@ -83,7 +85,7 @@ describe("Test GoalsActions", () => {
     const goal: Goal = new CreateCharInv();
     const expectedAction: actions.AddGoalToHistoryAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [goal]
+      payload: [goal],
     };
     expect(actions.addGoalToHistory(goal)).toEqual(expectedAction);
   });
@@ -92,7 +94,7 @@ describe("Test GoalsActions", () => {
     const goalHistory: Goal[] = [new CreateCharInv(), new MergeDups()];
     const expectedAction: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,
-      payload: goalHistory
+      payload: goalHistory,
     };
     expect(actions.loadUserEdits(goalHistory)).toEqual(expectedAction);
   });
@@ -101,7 +103,7 @@ describe("Test GoalsActions", () => {
     const goal: Goal = new CreateCharInv();
     const expectedAction: actions.UpdateGoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
-      payload: [goal]
+      payload: [goal],
     };
     expect(actions.updateGoal(goal)).toEqual(expectedAction);
   });
@@ -111,7 +113,7 @@ describe("Test GoalsActions", () => {
 
     let loadUserEdits: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,
-      payload: []
+      payload: [],
     };
 
     expect(mockStore.getActions()).toEqual([loadUserEdits]);
@@ -130,7 +132,7 @@ describe("Test GoalsActions", () => {
 
     let loadUserEditsAction: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,
-      payload: []
+      payload: [],
     };
 
     expect(mockStore.getActions()).toEqual([loadUserEditsAction]);
@@ -157,7 +159,7 @@ describe("Test GoalsActions", () => {
 
     let addGoalToHistory: actions.AddGoalToHistoryAction = {
       type: actions.GoalsActions.ADD_GOAL_TO_HISTORY,
-      payload: [goal]
+      payload: [goal],
     };
 
     expect(mockStore.getActions()).toEqual([addGoalToHistory]);
@@ -165,11 +167,11 @@ describe("Test GoalsActions", () => {
 
   it("should return a user", () => {
     localStorage.setItem("user", JSON.stringify(mockUser));
-    expect(actions.getUser()).toEqual(mockUser);
+    expect(LocalStorage.getCurrentUser()).toEqual(mockUser);
   });
 
   it("should return undefined when there is no user", () => {
-    expect(actions.getUser()).toEqual(undefined);
+    expect(LocalStorage.getCurrentUser()).toEqual(null);
   });
 
   it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
@@ -177,8 +179,8 @@ describe("Test GoalsActions", () => {
     goalToUpdate.numSteps = 8;
     goalToUpdate.steps = [
       {
-        words: [...goalDataMock.plannedWords[0]]
-      }
+        words: [...goalDataMock.plannedWords[0]],
+      },
     ];
 
     let expectedUpdatedGoal: Goal = new MergeDups();
@@ -186,34 +188,34 @@ describe("Test GoalsActions", () => {
     expectedUpdatedGoal.hash = goalToUpdate.hash;
     expectedUpdatedGoal.numSteps = goalToUpdate.numSteps;
     expectedUpdatedGoal.data = {
-      plannedWords: [...goalDataMock.plannedWords]
+      plannedWords: [...goalDataMock.plannedWords],
     };
     expectedUpdatedGoal.steps = [
       {
-        words: [...goalDataMock.plannedWords[0]]
-      }
+        words: [...goalDataMock.plannedWords[0]],
+      },
     ];
 
     let updateGoal: actions.UpdateGoalAction = {
       type: actions.GoalsActions.UPDATE_GOAL,
-      payload: [expectedUpdatedGoal]
+      payload: [expectedUpdatedGoal],
     };
 
     let setWordData: MergeTreeAction = {
       type: MergeTreeActions.SET_DATA,
-      payload: [...goalDataMock.plannedWords[0]]
+      payload: [...goalDataMock.plannedWords[0]],
     };
 
     const mockStoreState = {
       goalsState: {
         historyState: {
-          history: [goalToUpdate]
+          history: [goalToUpdate],
         },
         allPossibleGoals: [...goalsDefaultState.allPossibleGoals],
         suggestionsState: {
-          suggestions: [...goalsDefaultState.suggestionsState.suggestions]
-        }
-      }
+          suggestions: [...goalsDefaultState.suggestionsState.suggestions],
+        },
+      },
     };
 
     mockStore = createMockStore(mockStoreState);

@@ -1,20 +1,21 @@
 import React from "react";
 import {
-  Translate,
   LocalizeContextProps,
-  withLocalize
+  Translate,
+  withLocalize,
 } from "react-localize-redux";
 import {
-  Typography,
-  CardContent,
   Card,
+  CardContent,
   List,
-  ListItem
+  ListItem,
+  Typography,
 } from "@material-ui/core";
+
 import { Project } from "../../../types/project";
 import { getAllProjectsByUser } from "../../../backend";
 import history from "../../../history";
-import { User } from "../../../types/user";
+import { getCurrentUser } from "../../../backend/localStorage";
 
 export interface ChooseProjectProps {
   setCurrentProject: (project: Project) => void;
@@ -31,10 +32,9 @@ class ChooseProject extends React.Component<
   constructor(props: ChooseProjectProps & LocalizeContextProps) {
     super(props);
     this.state = { projectList: [] };
-    let user: string | null = localStorage.getItem("user");
+    const user = getCurrentUser();
     if (user) {
-      let userObject: User = JSON.parse(user);
-      getAllProjectsByUser(userObject).then(projects => {
+      getAllProjectsByUser(user).then((projects) => {
         this.setState({ ...this.state, projectList: projects });
       });
     }
@@ -56,7 +56,7 @@ class ChooseProject extends React.Component<
 
           {/* List of projects */}
           <List>
-            {this.state.projectList.map(project => (
+            {this.state.projectList.map((project) => (
               <ListItem
                 key={project.id}
                 button

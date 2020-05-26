@@ -1,5 +1,7 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
+
+import { getCurrentUser } from "../../backend/localStorage";
 
 /**
  * Redirects to /login if there is no `user` in localStorage
@@ -7,8 +9,8 @@ import { Route, Redirect } from "react-router-dom";
 export const PrivateRoute = ({ component: Component, ...rest }: any) => (
   <Route
     {...rest}
-    render={props =>
-      localStorage.getItem("user") ? (
+    render={(props) =>
+      getCurrentUser() ? (
         <Component {...props} />
       ) : (
         <Redirect

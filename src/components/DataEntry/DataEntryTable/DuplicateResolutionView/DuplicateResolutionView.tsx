@@ -25,7 +25,7 @@ export class DuplicateResolutionView extends React.Component<
           xs={5}
           style={{
             paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2)
+            paddingRight: theme.spacing(2),
           }}
         >
           <Typography variant="body1">
@@ -37,14 +37,14 @@ export class DuplicateResolutionView extends React.Component<
           xs={5}
           style={{
             paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2)
+            paddingRight: theme.spacing(2),
           }}
         >
           <Typography variant="body1">{"Glosses: "}</Typography>
           {this.props.existingEntry.senses.map((sense: Sense, index) =>
             sense.glosses
-              .filter(gloss => gloss.language === "en")
-              .map(gloss => (
+              .filter((gloss) => gloss.language === "en")
+              .map((gloss) => (
                 <Chip
                   key={gloss.def + "_" + index}
                   label={gloss.def}

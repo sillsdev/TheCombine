@@ -1,25 +1,25 @@
 import React, { ReactElement } from "react";
 import ReactDOM from "react-dom";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+import { Provider } from "react-redux";
 
 import GoalTimelineHorizontal, {
-  GoalTimelineHorizontal as GTHorizontal
+  GoalTimelineHorizontal as GTHorizontal,
 } from "../GoalTimelineHorizontal";
 import { defaultState } from "../../DefaultState";
 import { Goal } from "../../../../types/goals";
-import renderer, { ReactTestRenderer, create } from "react-test-renderer";
-import configureMockStore from "redux-mock-store";
-import { Provider } from "react-redux";
 
 // Mock store
 const STATE = {
   goalsState: {
     historyState: {
-      history: [...defaultState.allPossibleGoals]
+      history: [...defaultState.allPossibleGoals],
     },
     suggestionsState: {
-      suggestions: [...defaultState.allPossibleGoals]
-    }
-  }
+      suggestions: [...defaultState.allPossibleGoals],
+    },
+  },
 };
 const mockStore = configureMockStore([])(STATE);
 

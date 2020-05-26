@@ -1,20 +1,22 @@
 import React from "react";
 import {
+  Avatar,
   List,
   ListItem,
-  ListItemText,
   ListItemIcon,
-  Avatar
+  ListItemText,
 } from "@material-ui/core";
 import Done from "@material-ui/icons/Done";
+
 import { User } from "../../../types/user";
 import {
+  addUserRole,
+  avatarSrc,
   getAllUsers,
   getAllUsersInCurrentProject,
-  addUserRole,
-  avatarSrc
 } from "../../../backend";
 import theme from "../../../types/theme";
+import { getCurrentUser } from "../../../backend/localStorage";
 
 interface UserProps {}
 
@@ -33,7 +35,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
       allUsers: [],
       projUsers: [],
       modalOpen: false,
-      userAvatar: {}
+      userAvatar: {},
     };
   }
 
@@ -43,18 +45,18 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
 
   private populateUsers() {
     getAllUsersInCurrentProject()
-      .then(projUsers => {
+      .then((projUsers) => {
         this.setState({ projUsers });
         getAllUsers()
-          .then(returnedUsers => {
+          .then((returnedUsers) => {
             this.setState({
               allUsers: returnedUsers.filter(
-                user => !this.state.projUsers.find(u => u.id === user.id)
-              )
+                (user) => !this.state.projUsers.find((u) => u.id === user.id)
+              ),
             });
             returnedUsers.forEach((u: User, n: number, array: User[]) => {
               avatarSrc(u)
-                .then(result => {
+                .then((result) => {
                   let avatarsCopy = JSON.parse(
                     JSON.stringify(this.state.userAvatar)
                   );
@@ -62,31 +64,26 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
                   this.setState({ userAvatar: avatarsCopy });
                   console.log(avatarsCopy);
                 })
-                .catch(err => console.log(err));
+                .catch((err) => console.log(err));
             });
           })
-          .catch(err => console.log(err));
+          .catch((err) => console.log(err));
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }
 
   addToProject(user: User) {
-    if (user.id !== this.getCurrentUser().id) {
+    const currentUser = getCurrentUser();
+    if (currentUser && user.id !== currentUser.id) {
       addUserRole([1, 2, 3], user).then(() => this.populateUsers());
     }
-  }
-
-  /** Get user from localstorage */
-  getCurrentUser(): User {
-    const userString = localStorage.getItem("user");
-    return userString ? JSON.parse(userString) : null;
   }
 
   render() {
     return (
       <React.Fragment>
         <List>
-          {this.state.projUsers.map(user => (
+          {this.state.projUsers.map((user) => (
             <ListItem button>
               <ListItemIcon>
                 <Done />
@@ -99,7 +96,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
               <ListItemText primary={`${user.name} (${user.username})`} />
             </ListItem>
           ))}
-          {this.state.allUsers.map(user => (
+          {this.state.allUsers.map((user) => (
             <ListItem button onClick={() => this.addToProject(user)}>
               <ListItemText primary={`${user.name} (${user.username})`} />
             </ListItem>

@@ -7,7 +7,7 @@ import * as React from "react";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 import Button from "@material-ui/core/Button";
 

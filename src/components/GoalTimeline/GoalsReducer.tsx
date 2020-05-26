@@ -15,8 +15,8 @@ export const goalsReducer = (
       return {
         ...state,
         historyState: {
-          history: [...action.payload]
-        }
+          history: [...action.payload],
+        },
       };
     case GoalsActions.ADD_GOAL_TO_HISTORY: // Remove top suggestion if same as goal to add
       let suggestions = state.suggestionsState.suggestions;
@@ -24,13 +24,13 @@ export const goalsReducer = (
       return {
         ...state,
         historyState: {
-          history: [...state.historyState.history, goalToAdd]
+          history: [...state.historyState.history, goalToAdd],
         },
         suggestionsState: {
           suggestions: suggestions.filter(
             (goal, index) => index !== 0 || goalToAdd.name !== goal.name
-          )
-        }
+          ),
+        },
       };
     case GoalsActions.UPDATE_GOAL: {
       return {
@@ -38,9 +38,9 @@ export const goalsReducer = (
         historyState: {
           history: [
             ...state.historyState.history.slice(0, -1),
-            action.payload[0]
-          ]
-        }
+            action.payload[0],
+          ],
+        },
       };
     }
     case StoreActions.RESET:

@@ -3,7 +3,7 @@ import MaterialTable from "material-table";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize
+  withLocalize,
 } from "react-localize-redux";
 
 import { Word } from "../../../types/word";
@@ -47,7 +47,7 @@ export class ReviewEntriesComponent extends React.Component<
 
     this.state = {
       editingField: false,
-      errorMsg: undefined
+      errorMsg: undefined,
     };
     this.recorder = new Recorder();
   }
@@ -86,9 +86,9 @@ export class ReviewEntriesComponent extends React.Component<
             icons={tableIcons}
             title={<Translate id={"reviewEntries.title"} />}
             columns={columns}
-            data={this.props.words.map(word => ({
+            data={this.props.words.map((word) => ({
               ...word,
-              senses: word.senses.filter(sense => !sense.deleted)
+              senses: word.senses.filter((sense) => !sense.deleted),
             }))}
             editable={{
               onRowUpdate: (
@@ -104,12 +104,12 @@ export class ReviewEntriesComponent extends React.Component<
                         resolve();
                       }, 500);
                     })
-                    .catch(reason => {
+                    .catch((reason) => {
                       // May wish to change this alert method
                       alert(translate(reason));
                       reject();
                     });
-                })
+                }),
             }}
             options={{
               filtering: true,
@@ -120,8 +120,8 @@ export class ReviewEntriesComponent extends React.Component<
               pageSizeOptions: this.removeDuplicates([
                 Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
                 Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
-                Math.min(this.props.words.length, ROWS_PER_PAGE[2])
-              ])
+                Math.min(this.props.words.length, ROWS_PER_PAGE[2]),
+              ]),
             }}
           />
         )}

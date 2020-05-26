@@ -15,16 +15,19 @@ const WORD: ReviewEntriesWord = {
     {
       senseId: "sense0",
       glosses: "meaning of life" + SEP_CHAR + "life's meaning",
-      domains: [{ name: "Universe", id: "1" }, { name: "Joke", id: "0.0" }],
-      deleted: false
+      domains: [
+        { name: "Universe", id: "1" },
+        { name: "Joke", id: "0.0" },
+      ],
+      deleted: false,
     },
     {
       senseId: "sense1",
       glosses: "heavy noise" + SEP_CHAR + GLOSS,
       domains: [DOMAIN, { name: "Joke", id: "0" }],
-      deleted: false
-    }
-  ]
+      deleted: false,
+    },
+  ],
 };
 
 // Last sort sense is the sense that should bubble to the end, first sort sense to the front
@@ -34,9 +37,9 @@ const WORD_0 = {
       senseId: "",
       glosses: "~",
       domains: [{ name: "", id: "7.7.6" }],
-      deleted: false
-    }
-  ]
+      deleted: false,
+    },
+  ],
 };
 const WORD_1 = {
   senses: [
@@ -44,9 +47,9 @@ const WORD_1 = {
       senseId: "",
       glosses: "a",
       domains: [{ name: "", id: "9.9.9.9.9" }],
-      deleted: false
-    }
-  ]
+      deleted: false,
+    },
+  ],
 };
 const WORD_2 = {
   senses: [
@@ -54,9 +57,9 @@ const WORD_2 = {
       senseId: "",
       glosses: "b",
       domains: [{ name: "", id: "0.0.0.0.0" }],
-      deleted: false
-    }
-  ]
+      deleted: false,
+    },
+  ],
 };
 const WORD_3 = {
   senses: [
@@ -64,9 +67,9 @@ const WORD_3 = {
       senseId: "",
       glosses: "\0",
       domains: [{ name: "", id: "7.7.7" }],
-      deleted: false
-    }
-  ]
+      deleted: false,
+    },
+  ],
 };
 const SORT_BY_GLOSSES = [WORD_3, WORD_1, WORD_2, WORD_0];
 const SORT_BY_DOMAINS = [WORD_2, WORD_0, WORD_3, WORD_1];
@@ -92,7 +95,7 @@ describe("Tests cell column functions", () => {
   it("Returns false when searching a word for an extant gloss", () => {
     if (columns[1].customFilterAndSearch)
       expect(
-        columns[1].customFilterAndSearch("${GLOSS}-NOT!", WORD)
+        columns[1].customFilterAndSearch(`${GLOSS}-NOT!`, WORD)
       ).toBeFalsy();
     else
       fail(

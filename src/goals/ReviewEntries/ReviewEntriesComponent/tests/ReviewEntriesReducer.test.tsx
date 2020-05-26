@@ -12,11 +12,11 @@ const newWord = {
       glosses: "bupBUP",
       domains: [
         { name: "domain", id: "number" },
-        { name: "domain2", id: "number2" }
+        { name: "domain2", id: "number2" },
       ],
-      deleted: false
-    }
-  ]
+      deleted: false,
+    },
+  ],
 };
 const result = {
   id: "a new mock id",
@@ -27,15 +27,15 @@ const result = {
       glosses: "bupBUP",
       domains: [
         { name: "domain", id: "number" },
-        { name: "domain2", id: "number2" }
+        { name: "domain2", id: "number2" },
       ],
-      deleted: false
-    }
-  ]
+      deleted: false,
+    },
+  ],
 };
 const mockState = {
   ...defaultState,
-  words: mockWords
+  words: mockWords,
 };
 
 describe("Test ReviewEntriesReducer", () => {
@@ -49,7 +49,7 @@ describe("Test ReviewEntriesReducer", () => {
     expect(
       reviewEntriesReducer(defaultState, {
         type: ReviewEntriesActionTypes.UpdateAllWords,
-        words: mockWords
+        words: mockWords,
       })
     ).toEqual(mockState);
   });
@@ -60,7 +60,7 @@ describe("Test ReviewEntriesReducer", () => {
         type: ReviewEntriesActionTypes.UpdateWord,
         id: mockWords[0].id,
         newId: result.id,
-        newWord: newWord
+        newWord: newWord,
       })
     ).toEqual({ ...mockState, words: [result, mockWords[1]] });
   });

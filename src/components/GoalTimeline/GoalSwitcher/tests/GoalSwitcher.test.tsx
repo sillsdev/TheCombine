@@ -12,11 +12,11 @@ const createMockStore = configureMockStore([]);
 it("renders without crashing", () => {
   const mockStore = createMockStore({
     goalsState: {
-      ...defaultState
+      ...defaultState,
     },
     goalSelectorState: {
-      ...selectorState
-    }
+      ...selectorState,
+    },
   });
   const container = document.createElement("div");
   act(() => {
