@@ -45,6 +45,8 @@
     - name: install .NET core
       import_role:
         name: dotnet_core
+      tags:
+        - update_dotnet
 
     - name: configure front-end webserver
       import_role:

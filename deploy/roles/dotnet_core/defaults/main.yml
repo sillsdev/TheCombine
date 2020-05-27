@@ -4,5 +4,7 @@
 #   Runtime: aspnetcore-runtime-2.1
 #   SDK: dotnet-sdk-2.1
 
-dotnet_pkg: aspnetcore-runtime-2.1
+dotnet_pkg:
+  - aspnetcore-runtime-2.1
+  - aspnetcore-runtime-3.1
 #dotnet_pkg: dotnet-sdk-2.1
