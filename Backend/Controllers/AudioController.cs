@@ -60,7 +60,7 @@ namespace BackendFramework.Controllers
 
         /// <summary>
         /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to
-        /// ~/.CombineFiles/{ProjectId}/ExtractedLocation/Import/ExtractedLocation/<.*>/audio
+        /// ~/.CombineFiles/{ProjectId}/ExtractedLocation/Import/ExtractedLocation/Lift/audio
         /// </summary>
         /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/upload/audio </remarks>
         /// <returns> Path to local audio file </returns>
