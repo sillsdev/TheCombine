@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SIL.Lift.Parsing;
@@ -85,7 +86,14 @@ namespace BackendFramework
                 };
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                // NewtonsoftJson needed when porting from .NET Core 2.2 to 3.0
+                // https://dev.to/wattengard/why-your-posted-models-may-stop-working-after-upgrading-to-asp-net-core-3-1-4ekp
+                // TODO: This may be able to be removed by reviewing the raw JSON from the frontend to see if there
+                //    is malformed data, such as an integer sent as a string ("10"). .NET Core 3.0's JSON parser
+                //    no longer automatically tries to coerce these values.
+                .AddNewtonsoftJson();
             services.Configure<Settings>(
             options =>
             {
@@ -127,7 +135,7 @@ namespace BackendFramework
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -141,6 +149,7 @@ namespace BackendFramework
             }
 
             app.UseHttpsRedirection();
+            app.UseRouting();
             app.UseCors(AllowedOrigins);
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -149,7 +158,11 @@ namespace BackendFramework
             });
 
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }
