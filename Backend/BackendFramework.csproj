@@ -15,6 +15,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
+    <!-- https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30#use-newtonsoftjson-in-an-aspnet-core-30-mvc-project -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
     <PackageReference Include="icu.net" Version="2.6.0-beta0033" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.1.4-beta" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.5.0" />
