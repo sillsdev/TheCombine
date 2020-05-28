@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
-using static BackendFramework.Helper.Utilities;
+using static BackendFramework.Helper.FileUtilities;
 
 [assembly: InternalsVisibleTo("Backend.Tests")]
 namespace BackendFramework.Controllers
@@ -63,8 +63,7 @@ namespace BackendFramework.Controllers
             }
 
             // Get path to where we will copy the zip file
-            var util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(
+            fileUpload.FilePath = GenerateFilePath(
                 FileType.Zip,
                 false,
                 "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now),

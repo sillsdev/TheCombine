@@ -3,7 +3,7 @@ using System.IO;
 
 namespace BackendFramework.Helper
 {
-    public class Utilities
+    public static class FileUtilities
     {
         public enum FileType
         {
@@ -15,7 +15,7 @@ namespace BackendFramework.Helper
         }
 
         // TODO: split this function in two that generate directories or files
-        public string GenerateFilePath(FileType type, bool isDirectory, string customFileName = "",
+        public static string GenerateFilePath(FileType type, bool isDirectory, string customFileName = "",
             string customDirPath = "")
         {
             // Generate path to home on linux
@@ -47,7 +47,7 @@ namespace BackendFramework.Helper
             return returnFilepath;
         }
 
-        private string FileTypeFolder(FileType type)
+        private static string FileTypeFolder(FileType type)
         {
             switch (type)
             {
