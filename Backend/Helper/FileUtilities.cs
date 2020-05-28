@@ -85,7 +85,7 @@ namespace BackendFramework.Helper
                     return ".zip";
 
                 default:
-                    return ""; ;
+                    return "";
             }
         }
 
