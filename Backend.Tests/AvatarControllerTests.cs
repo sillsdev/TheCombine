@@ -4,7 +4,6 @@ using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 

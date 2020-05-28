@@ -5,7 +5,7 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
-using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
