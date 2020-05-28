@@ -8,7 +8,7 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
-using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
@@ -120,7 +120,7 @@ namespace Backend.Tests
                 sense.Accessibility = (int)State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
-                foreach (Gloss gloss in sense.Glosses)
+                foreach (var gloss in sense.Glosses)
                 {
                     gloss.Def = Util.RandString();
                     gloss.Language = Util.RandString(3);
