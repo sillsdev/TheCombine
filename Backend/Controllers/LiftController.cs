@@ -126,10 +126,10 @@ namespace BackendFramework.Controllers
             }
 
             // Get the directory and rename to be easier to reference elsewhere if needed
-            var correctPath = Path.Combine(extractedDirPath, "Lift");
-            if (extractedDirPath.Equals(correctPath))
+            var correctPath = Path.Combine(extractDir, "Lift");
+            if (!extractedDirPath.Equals(correctPath))
             {
-                Directory.Move(extractedDirPath, Path.Combine(extractDir, "Lift"));
+                Directory.Move(extractedDirPath, correctPath);
                 extractedDirPath = Path.Combine(extractDir, "Lift");
             }
 
