@@ -125,6 +125,14 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("Your zip file structure has the wrong number of directories");
             }
 
+            // Get the directory and rename to be easier to reference elsewhere if needed
+            var correctPath = Path.Combine(extractedDirPath, "Lift");
+            if (extractedDirPath.Equals(correctPath))
+            {
+                Directory.Move(extractedDirPath, Path.Combine(extractDir, "Lift"));
+                extractedDirPath = Path.Combine(extractDir, "Lift");
+            }
+
             // Search for the lift file within the extracted files
             var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
             var extractedLiftPath = Array.FindAll(extractedLiftNameArr, x => x.EndsWith(".lift"));

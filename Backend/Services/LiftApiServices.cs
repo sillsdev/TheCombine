@@ -297,13 +297,8 @@ namespace BackendFramework.Services
 
                 var util = new Utilities();
 
-                var projectPath = Path.Combine(util.GenerateFilePath(
-                    Utilities.FileType.Dir, true, "", ""), _projectId);
-                projectPath = Path.Combine(projectPath, "Import", "ExtractedLocation");
-                var extractedDir = Directory.GetDirectories(projectPath);
-                projectPath = Path.Combine(projectPath, extractedDir.Single());
-                var src = Path.Combine(util.GenerateFilePath(
-                    Utilities.FileType.Audio, true), Path.Combine(projectPath, "audio", audioFile));
+                var projectPath = Path.Combine(_projectId, "Import", "ExtractedLocation", "Lift", "audio");
+                var src = util.GenerateFilePath(Utilities.FileType.Audio, true, audioFile, projectPath);
                 var dest = Path.Combine(path, audioFile);
 
                 if (File.Exists(src))

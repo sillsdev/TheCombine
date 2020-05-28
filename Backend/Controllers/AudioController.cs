@@ -60,7 +60,7 @@ namespace BackendFramework.Controllers
 
         /// <summary>
         /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to
-        /// ~/.CombineFiles/{ProjectId}/ExtractedLocation/Import/Audio
+        /// ~/.CombineFiles/{ProjectId}/ExtractedLocation/Import/ExtractedLocation/<.*>/audio
         /// </summary>
         /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/upload/audio </remarks>
         /// <returns> Path to local audio file </returns>
@@ -87,9 +87,9 @@ namespace BackendFramework.Controllers
 
             // Get path to home
             var util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(
-                FileType.Audio, false, wordId, Path.Combine(
-                    projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio"));
+            var projPath = Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio");
+
+            fileUpload.FilePath = util.GenerateFilePath(FileType.Audio, false, wordId, projPath);
 
             // Copy the file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
