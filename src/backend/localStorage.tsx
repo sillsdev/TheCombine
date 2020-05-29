@@ -8,7 +8,7 @@ export function getCurrentUser(): User | null {
   return user ? JSON.parse(user) : null;
 }
 
-export function setProjectID(id: string) {
+export function setProjectId(id: string) {
   localStorage.setItem("projectId", id);
 }
 
