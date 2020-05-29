@@ -1,12 +1,11 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using static BackendFramework.Helper.Utilities;
+using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
 {
@@ -86,10 +85,8 @@ namespace BackendFramework.Controllers
             }
 
             // Get path to home
-            var util = new Utilities();
-            var projPath = Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio");
-
-            fileUpload.FilePath = util.GenerateFilePath(FileType.Audio, false, wordId, projPath);
+            fileUpload.FilePath = GenerateFilePath(
+                FileType.Audio, false, wordId, Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio"));
 
             // Copy the file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
