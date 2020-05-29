@@ -54,6 +54,8 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
+            projectId =  (await _projectService.GetAllProjects()).Select(p => p.Id).Where(id => id.Equals(projectId)).Single();
+
             var file = fileUpload.File;
 
             // Ensure file is not empty
