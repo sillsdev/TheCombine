@@ -8,21 +8,13 @@ export default function NavigationButtons() {
   return (
     <React.Fragment>
       <Button
-        onClick={() => {
-          history.location.pathname === "/"
-            ? history.push("/")
-            : history.push("/data-entry");
-        }}
+        onClick={() => {history.push("/data-entry");}}
         color="inherit"
       >
         <Translate id="appBar.dataEntry" />
       </Button>
       <Button
-        onClick={() => {
-          history.location.pathname === "/"
-            ? history.push("/")
-            : history.push("/goals");
-        }}
+        onClick={() => {history.push("/goals");}}
         color="inherit"
       >
         <Translate id="appBar.dataCleanup" />
