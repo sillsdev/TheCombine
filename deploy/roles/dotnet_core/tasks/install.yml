@@ -10,8 +10,13 @@
     deb:  /tmp/packages-microsoft-prod.deb
     state: present
 
-- name: Install .NET Core 2.1 Runtime/SDK
+- name: Install .NET Core Runtime/SDK
   apt:
     name: "{{ dotnet_pkg }}"
     state: present
     update_cache: yes
+
+- name: Remove deprecated packages
+  apt:
+    name: "{{ deprecated_pkgs }}"
+    state: absent
