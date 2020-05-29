@@ -85,7 +85,7 @@ class ProjectSettingsComponent extends React.Component<
               body={<ProjectName />}
             />
           )}
-
+          
           {/* Import Lift file */}
           <BaseSettingsComponent
             icon={<CloudUpload />}
