@@ -109,6 +109,14 @@ See the section about
 [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
 more information.
 
+## Drop Database
+
+To completely erase the current Mongo database, run:
+
+```batch
+> npm run drop-database
+```
+
 ## Create Database Admin User
 
 To grant a user database administrator rights (all permissions for all
