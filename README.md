@@ -6,11 +6,11 @@ A rapid word collection tool.
 
 1. Clone this repo:
 
-    ```bash
-    # The `--recurse-submodules` is used to fetch many of the Ansible roles used
-    # by the Ansible playbooks in the deploy folder.
-    git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
-    ```
+   ```bash
+   # The `--recurse-submodules` is used to fetch many of the Ansible roles used
+   # by the Ansible playbooks in the deploy folder.
+   git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
+   ```
 
    If you've already cloned the repo without `--recurse-submodules`, run:
 
@@ -32,9 +32,12 @@ A rapid word collection tool.
 3. Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
-   **containing at least 16 characters**, such as *This is a secret key*. Set
-   it in your `.profile` (Linux) or the *System* app (Windows).
-5. Run `npm start` from the project directory to install dependencies and start
+   **containing at least 16 characters**, such as _This is a secret key_. Set
+   it in your `.profile` (Linux) or the _System_ app (Windows).
+5. (VS Code Users Only) Enable automatic formatting on save.
+   - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
+     check the box.
+6. Run `npm start` from the project directory to install dependencies and start
    the project
 
 [chocolatey]: https://chocolatey.org/
@@ -52,8 +55,8 @@ The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
 > Note: You may need to first browse to https://localhost:5001 and accept the
-  certificate warning in your browser if you get Network Errors the first time
-  you try to run the application locally.
+> certificate warning in your browser if you get Network Errors the first time
+> you try to run the application locally.
 
 #### `npm run frontend`
 
