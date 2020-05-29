@@ -123,7 +123,8 @@ To grant a user database administrator rights (all permissions for all
 database objects), create a user normally and then execute:
 
 ```batch
-> setAdminUser.bat <USER_NAME>
+# Note the -- before the user name.
+> npm run set-admin-user -- <USER_NAME>
 ```
 
 ## Features

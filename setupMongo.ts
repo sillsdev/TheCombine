@@ -1,9 +1,9 @@
 import * as makeDir from "make-dir";
 
-let directory = "../mongo_database";
+const directory = "../mongo_database";
 
 const makeMongoDirectory = async () => {
-  const path = await makeDir(directory);
+  await makeDir(directory);
 };
 
-makeMongoDirectory();
+makeMongoDirectory().catch(console.error);

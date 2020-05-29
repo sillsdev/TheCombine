@@ -6,6 +6,7 @@
     "predatabase": "tsc setupMongo.ts && node setupMongo.js",
     "database": "mongod --dbpath=./mongo_database",
     "drop-database": "tsc dropDB.ts && node dropDB.js",
+    "set-admin-user": "tsc setAdminUser.ts && node setAdminUser.js",
     "frontend": "react-scripts start",
     "start": "npm install && npm-run-all --parallel frontend database api",
     "api": "dotnet run --project Backend/BackendFramework.csproj",
