@@ -34,9 +34,12 @@ Install the following components:
  * Ubuntu 18.04 Desktop, 64-bit
  * Git
  * [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
- * [Nodejs](https://github.com/nodesource/distributions/blob/master/README.md#debinstall), install the LTS version, 10.x.
- * [.NET Core 2.1 SDK](https://dotnet.microsoft.com/download/linux-package-manager/ubuntu18-04/sdk-2.1.801) Be sure to select *Ubuntu 18.04 - x64* from the dropdown menu on the page.
- * clone the project [repo](https://github.com/sillsdev/TheCombine) to the working folder of your choice, e.g. <tt>$HOME/src</tt>
+ * [Nodejs](https://github.com/nodesource/distributions/blob/master/README.md#debinstall), install the LTS version, 12.x.
+ * [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/linux-package-manager/ubuntu18-04) Be sure to select *Ubuntu 18.04 - x64* from the dropdown menu on the page.
+ * clone the project  repo:
+   ```
+   git clone --recurse-submodules https://github.com/sillsdev/TheCombine
+   ```
 
 #### Windows host
 The scripts for installing TheCombine use *Ansible* to manage an installation of *TheCombine*.  *Ansible* is not available for Windows.  There is a *Vagrant* vm that is available to provide an Ubuntu environment to build and install the application on an *Intel NUC* that can be deployed in the field.  If you only have access to a Windows PC, follow these instructions to build and deploy *TheCombine*.
@@ -154,10 +157,10 @@ In order to setup the Demo Server,
     cd deploy
     mkdir roles_galaxy
     ansible-galaxy install -r requirements.yml -p roles_galaxy
-    ansible-playbook playbook-server.yml -K
+    ansible-playbook playbook_server.yml -K
     certbot certonly --webroot --force-renewal
-    ansible-playbook playbook-publish.yml -K --limit thecombine --ask-vault-pass
+    ansible-playbook playbook_publish.yml -K --limit thecombine --ask-vault-pass
     ```
     Notes:
-    - <tt>playbook_server.yml</tt> only needs to be run once.  In order to update to a newer version of *TheCombine*, only the <tt>playbook-publish.yml</tt> needs to be run.
+    - <tt>playbook_server.yml</tt> only needs to be run once.  In order to update to a newer version of *TheCombine*, only the <tt>playbook_publish.yml</tt> needs to be run.
     - <tt>playbook_server.yml</tt> currently uses the geerlingguy.certbot role to create the letsencrypt SSL certificate.  This role only supports the <tt>standalone</tt> challenge method.  Run the specified <tt>certbot</tt> command to convert the renewal to use webroot.  The <tt>standalone</tt> certificate requires shutting down the Apache web server to renew the certificate and then restarting it.
