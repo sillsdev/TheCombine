@@ -34,6 +34,8 @@ namespace BackendFramework.Controllers
         /// <returns> Audio file stream </returns>
         [AllowAnonymous]
         [HttpGet("{wordId}/download/audio/{fileName}")]
+        // Temporarily disable warning about missing await in this method.
+        // It's needed for the return type to be correct, but nothing inside the function is awaiting yet.
 #pragma warning disable 1998
         public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
 #pragma warning restore 1998
