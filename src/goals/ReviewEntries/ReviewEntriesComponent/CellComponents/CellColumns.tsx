@@ -260,7 +260,6 @@ const columns: Column[] = [
       />
     ),
   },
-  
 ];
 
 export default columns;
