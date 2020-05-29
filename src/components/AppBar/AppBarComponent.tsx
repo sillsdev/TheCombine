@@ -27,9 +27,7 @@ function AppBarComponent() {
             >
               <Grid item>
                 <Logo />
-                {getProjectId() !== "" && (
-                  <NavigationButtons />
-                )}
+                {getProjectId() !== "" && <NavigationButtons />}
               </Grid>
               <Grid item>
                 <UserMenu />
