@@ -183,6 +183,7 @@
         "Los datos importados se agregarán a este proyecto. Combine no intentará deduplicar, sobrescribir ni sincronizar. El archivo debe ser un archivo comprimido en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>.",
         "Les données importées seront ajoutées à ce projet. Combine n'essaiera pas de dédupliquer, d'écraser ou de synchroniser. Le fichier doit être une archive zippée en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>."
       ],
+      "chooseFile": ["Choose File", "Escoger Archivo", "Choisissez Fichier"],
       "upload": ["Upload", "Cargar", "Télécharger"],
       "done": ["Done!", "Completado!", "Achevé!"],
       "notAllowed": [
