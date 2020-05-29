@@ -46,6 +46,10 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
+
+            // whitelist projectId
+            projectId = (await _projectService.GetAllProjects()).Select(p => p.Id).Where(id => id == projectIdUser).Single();
+
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
@@ -167,6 +171,9 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
+
+            // whitelist projectId
+            projectId = (await _projectService.GetAllProjects()).Select(p => p.Id).Where(id => id == projectIdUser).Single();
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
