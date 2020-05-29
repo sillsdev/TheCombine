@@ -274,7 +274,9 @@ namespace BackendFramework.Controllers
 
         // Check if lift import has already happened for this project
         [HttpGet("{projectId}/liftcheck")]
+#pragma warning disable 1998
         public async Task<IActionResult> CanUploadLift(string projectId)
+#pragma warning restore 1998
         {
             if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {

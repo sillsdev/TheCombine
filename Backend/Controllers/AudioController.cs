@@ -34,7 +34,9 @@ namespace BackendFramework.Controllers
         /// <returns> Audio file stream </returns>
         [AllowAnonymous]
         [HttpGet("{wordId}/download/audio/{fileName}")]
+#pragma warning disable 1998
         public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
+#pragma warning restore 1998
         {
             // if we require authorization and authentication for audio files, the frontend cannot just use the api
             // endpoint as the src
@@ -92,7 +94,7 @@ namespace BackendFramework.Controllers
                     projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio"));
 
             // Copy the file data to a new local file
-            using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
+            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
             {
                 await file.CopyToAsync(fs);
             }
