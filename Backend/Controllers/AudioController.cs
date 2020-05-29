@@ -1,12 +1,11 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using static BackendFramework.Helper.Utilities;
+using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
 {
@@ -90,8 +89,7 @@ namespace BackendFramework.Controllers
             }
 
             // Get path to home
-            var util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(
+            fileUpload.FilePath = GenerateFilePath(
                 FileType.Audio, false, wordId, Path.Combine(
                     projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio"));
 

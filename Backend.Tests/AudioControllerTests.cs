@@ -33,9 +33,8 @@ namespace Backend.Tests
             _wordController = new WordController(_wordrepo, _wordService, _projectService, _permissionService);
             _audioController = new AudioController(_wordrepo, _wordService, _permissionService);
 
-            var util = new Utilities();
-            Directory.Delete(util.GenerateFilePath(
-                Utilities.FileType.Dir, true, "", ""), true);
+            Directory.Delete(FileUtilities.GenerateFilePath(
+                FileUtilities.FileType.Dir, true, "", ""), true);
         }
 
         private static string RandomString(int length = 16)
