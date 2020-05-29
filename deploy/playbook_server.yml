@@ -35,6 +35,8 @@
     - name: install nodejs
       import_role:
         name: nodejs
+      tags:
+        - update_node
 
     - name: install mongodb
       import_role:
@@ -43,11 +45,9 @@
     - name: install .NET core
       import_role:
         name: dotnet_core
+      tags:
+        - update_dotnet
 
-    # - name: setup combine user
-    #   import_role:
-    #     name: combine_user
-    #
     - name: configure front-end webserver
       import_role:
         name: apache_config
