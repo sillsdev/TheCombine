@@ -9,9 +9,7 @@ export default function NavigationButtons() {
     <React.Fragment>
       <Button
         onClick={() => {
-          history.location.pathname === "/"
-            ? history.push("/")
-            : history.push("/data-entry");
+          history.push("/data-entry");
         }}
         color="inherit"
       >
@@ -19,9 +17,7 @@ export default function NavigationButtons() {
       </Button>
       <Button
         onClick={() => {
-          history.location.pathname === "/"
-            ? history.push("/")
-            : history.push("/goals");
+          history.push("/goals");
         }}
         color="inherit"
       >

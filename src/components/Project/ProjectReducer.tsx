@@ -1,6 +1,6 @@
 import { ProjectAction, SET_CURRENT_PROJECT } from "./ProjectActions";
 import { Project, defaultProject } from "../../types/project";
-import { setProjectID } from "../../backend/localStorage";
+import { setProjectId } from "../../backend/localStorage";
 import { StoreActions, StoreAction } from "../../rootActions";
 
 export const projectReducer = (
@@ -9,7 +9,7 @@ export const projectReducer = (
 ): Project => {
   switch (action.type) {
     case SET_CURRENT_PROJECT:
-      setProjectID(action.payload.id);
+      setProjectId(action.payload.id);
       return action.payload;
     case StoreActions.RESET:
       return { ...defaultProject };
