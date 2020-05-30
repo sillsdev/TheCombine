@@ -25,6 +25,7 @@ import { Edit, CloudUpload, GetApp, People } from "@material-ui/icons";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
 import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
 import ProjectUsers from "./ProjectUsers";
+import ProjectSwitch from "./ProjectSwitch";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -77,6 +78,15 @@ class ProjectSettingsComponent extends React.Component<
       <React.Fragment>
         <AppBarComponent />
         <Grid container justify="center" spacing={6}>
+          {/* Project List */}
+          {this.state.projectName && (
+            <BaseSettingsComponent
+              icon={<Edit />}
+              title={<Translate id="projectSettings.list" />}
+              body={<ProjectSwitch />}
+            />
+          )}
+
           {/* Project name */}
           {this.state.projectName && (
             <BaseSettingsComponent
