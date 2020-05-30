@@ -21,7 +21,7 @@ import { UserRole } from "../../types/userRole";
 import { LanguageProps } from "./Language/LanguageSettings";
 import ProjectImport from "./ProjectImport";
 import ProjectName from "./ProjectName";
-import { Edit, CloudUpload, GetApp, People } from "@material-ui/icons";
+import { Edit, CloudUpload, GetApp, People, List } from "@material-ui/icons";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
 import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
 import ProjectUsers from "./ProjectUsers";
@@ -79,13 +79,11 @@ class ProjectSettingsComponent extends React.Component<
         <AppBarComponent />
         <Grid container justify="center" spacing={6}>
           {/* Project List */}
-          {this.state.projectName && (
-            <BaseSettingsComponent
-              icon={<Edit />}
-              title={<Translate id="projectSettings.list" />}
-              body={<ProjectSwitch />}
-            />
-          )}
+          <BaseSettingsComponent
+            icon={<List />}
+            title={<Translate id="projectSettings.list" />}
+            body={<ProjectSwitch />}
+          />
 
           {/* Project name */}
           {this.state.projectName && (

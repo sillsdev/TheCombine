@@ -51,18 +51,20 @@ class ProjectSwitch extends React.Component<
       return (
         <List>
           {this.state.projectList.map((project) => {
-            let textColor: TypographyProps["color"] = "textSecondary";
-
-            if (project.name == this.props.project.name) {
-              textColor = "inherit";
-            }
             return (
               <ListItem
                 key={project.id}
                 button
                 onClick={() => this.selectProject(project)}
               >
-                <Typography variant="h6" color={textColor}>
+                <Typography
+                  variant="h6"
+                  color={
+                    project.name !== this.props.project.name
+                      ? "textSecondary"
+                      : "inherit"
+                  }
+                >
                   {project.name}
                 </Typography>
               </ListItem>
