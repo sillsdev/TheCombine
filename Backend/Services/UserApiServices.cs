@@ -19,6 +19,7 @@ namespace BackendFramework.Services
     {
         private const int SaltLength = 16;
         private const int HashLength = 20;
+        private const int HashIterations = 10000;
 
         private readonly IUserContext _userDatabase;
         private readonly IUserRoleService _userRole;
@@ -49,7 +50,7 @@ namespace BackendFramework.Services
             var salt = new byte[SaltLength];
             Array.Copy(hashBytes, 0, salt, 0, SaltLength);
             // Compute the hash on the password the user entered
-            var rfc = new Rfc2898DeriveBytes(password, salt, 10000);
+            var rfc = new Rfc2898DeriveBytes(password, salt, HashIterations);
             var hash = rfc.GetBytes(HashLength);
 
             // Check if the password given to us matches the hash we have stored (after the salt)
@@ -172,8 +173,8 @@ namespace BackendFramework.Services
             new RNGCryptoServiceProvider().GetBytes(salt = new byte[SaltLength]);
 
             // Hash the password along with the salt
-            var pbkdf2 = new Rfc2898DeriveBytes(user.Password, salt, 10000);
-            var hash = pbkdf2.GetBytes(20);
+            var pbkdf2 = new Rfc2898DeriveBytes(user.Password, salt, HashIterations);
+            var hash = pbkdf2.GetBytes(HashLength);
 
             // Combine salt and hashed password for storage
             var hashBytes = new byte[SaltLength + HashLength];
