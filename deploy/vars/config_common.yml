@@ -49,7 +49,7 @@ combine_group: combine
 backend_loglevel_default: "{{ app_loglevel | default('Information') }}"
 backend_loglevel_system: "{{ sys_loglevel | default('Information') }}"
 backend_loglevel_microsoft: "{{ ms_loglevel | default('Information') }}"
-
+backend_dotnet_version:  "{{ lookup('pipe', 'grep TargetFramework ../Backend/BackendFramework.csproj') | regex_replace('.*<TargetFramework>netcoreapp([\\d\\.]+).*', '\\1') }}"
 
 ###############################################
 # SSL config for certificate for Backend Web Server (Kestrel)

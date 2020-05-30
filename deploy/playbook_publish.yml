@@ -13,6 +13,10 @@
     - "vars/vault_config.yml"
 
   tasks:
+    - name: print .NET version
+      debug:
+        var: backend_dotnet_version
+
     - name: create user for backend process
       user:
         name: "{{ combine_user }}"

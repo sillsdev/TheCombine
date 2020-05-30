@@ -15,9 +15,13 @@
     owner: "{{ www_app_owner }}"
     group: "{{ www_app_group }}"
 
+- name: print build directory
+  debug:
+    var: combine_build_dir
+
 - name: install backend framework
   copy:
-    src: ../Backend/bin/Release/netcoreapp2.1/
+    src: "{{ combine_build_dir }}"
     dest: "{{ combine_backend_dir }}"
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
