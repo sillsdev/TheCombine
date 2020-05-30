@@ -68,17 +68,17 @@ export default function UserMenu() {
           horizontal: "right",
         }}
       >
-          {/* Only show Site Settings link to Admin users. */}
-          {isAdmin && (
-              <MenuItem
-                  onClick={() => {
-                      history.push("/site-settings");
-                  }}
-              >
-                  <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
-                  <Translate id="userMenu.siteSettings" />
-              </MenuItem>
-          )}
+        {/* Only show Site Settings link to Admin users. */}
+        {isAdmin && (
+          <MenuItem
+            onClick={() => {
+              history.push("/site-settings");
+            }}
+          >
+            <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
+            <Translate id="userMenu.siteSettings" />
+          </MenuItem>
+        )}
 
         {/* Don't show project settings in the menu if a project hasn't been selected. */}
         {getProjectId() !== "" && (
