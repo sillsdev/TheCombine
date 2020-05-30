@@ -2,10 +2,12 @@ import React from "react";
 import { Project } from "../../../types/project";
 import { getCurrentUser } from "../../../backend/localStorage";
 import { getAllProjectsByUser } from "../../../backend";
-import { Typography, List, ListItem } from "@material-ui/core";
+import { List, ListItem, Typography } from "@material-ui/core";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { User } from "../../../types/user";
 import LoadingButton from "../../Buttons/LoadingButton";
+import { TypographyProps } from "@material-ui/core/Typography";
+import { TypographyStyle } from "@material-ui/core/styles";
+import { CSSProperties } from "@material-ui/core/styles/withStyles";
 
 interface SwitchProps {
   project: Project;
@@ -48,15 +50,24 @@ class ProjectSwitch extends React.Component<
     } else {
       return (
         <List>
-          {this.state.projectList.map((project) => (
-            <ListItem
-              key={project.id}
-              button
-              onClick={() => this.selectProject(project)}
-            >
-              <Typography variant="h6">{project.name}</Typography>
-            </ListItem>
-          ))}
+          {this.state.projectList.map((project) => {
+            let textColor: TypographyProps["color"] = "textSecondary";
+
+            if (project.name == this.props.project.name) {
+              textColor = "inherit";
+            }
+            return (
+              <ListItem
+                key={project.id}
+                button
+                onClick={() => this.selectProject(project)}
+              >
+                <Typography variant="h6" color={textColor}>
+                  {project.name}
+                </Typography>
+              </ListItem>
+            );
+          })}
         </List>
       );
     }
