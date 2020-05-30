@@ -4,11 +4,13 @@ import { Grid } from "@material-ui/core";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import ChooseProjectComponent from "./ChooseProject";
 import CreateProjectComponent from "./CreateProject";
+import { setProjectId } from "../../backend/localStorage";
 
 /** Where users create a project or choose an existing one */
 export default class ProjectScreen extends React.Component {
   render() {
-    //visual definition
+    /* Disable Data Entry, Data Cleanup, Project Settings until a project is selected or created. */
+    setProjectId("");
     return (
       <div className="CreateProject">
         <AppBarComponent />
