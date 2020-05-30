@@ -1,12 +1,11 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using static BackendFramework.Helper.Utilities;
+using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
 {
@@ -34,7 +33,11 @@ namespace BackendFramework.Controllers
         /// <returns> Audio file stream </returns>
         [AllowAnonymous]
         [HttpGet("{wordId}/download/audio/{fileName}")]
+        // Temporarily disable warning about missing await in this method.
+        // It's needed for the return type to be correct, but nothing inside the function is awaiting yet.
+#pragma warning disable 1998
         public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
+#pragma warning restore 1998
         {
             // if we require authorization and authentication for audio files, the frontend cannot just use the api
             // endpoint as the src
@@ -86,13 +89,12 @@ namespace BackendFramework.Controllers
             }
 
             // Get path to home
-            var util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(
+            fileUpload.FilePath = GenerateFilePath(
                 FileType.Audio, false, wordId, Path.Combine(
                     projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio"));
 
             // Copy the file data to a new local file
-            using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
+            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
             {
                 await file.CopyToAsync(fs);
             }

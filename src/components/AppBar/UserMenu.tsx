@@ -11,7 +11,7 @@ import {
 import history from "../../history";
 import theme from "../../types/theme";
 import { avatarSrc } from "../../backend";
-import { getCurrentUser } from "../../backend/localStorage";
+import { getCurrentUser, getProjectId } from "../../backend/localStorage";
 
 /**
  * Avatar in appbar with dropdown (Project settings, user settings, log out)
@@ -68,20 +68,20 @@ export default function UserMenu() {
           horizontal: "right",
         }}
       >
-        {/* Only show Site Settings link to Admin users. */}
-        {isAdmin && (
-          <MenuItem
-            onClick={() => {
-              history.push("/site-settings");
-            }}
-          >
-            <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
-            <Translate id="userMenu.siteSettings" />
-          </MenuItem>
-        )}
+          {/* Only show Site Settings link to Admin users. */}
+          {isAdmin && (
+              <MenuItem
+                  onClick={() => {
+                      history.push("/site-settings");
+                  }}
+              >
+                  <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
+                  <Translate id="userMenu.siteSettings" />
+              </MenuItem>
+          )}
 
-        {/* Don't show project settings on the project creation page ("/") */}
-        {history.location.pathname !== "/" && (
+        {/* Don't show project settings in the menu if a project hasn't been selected. */}
+        {getProjectId() !== "" && (
           <MenuItem
             onClick={() => {
               history.push("/project-settings");
