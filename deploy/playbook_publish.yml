@@ -1,16 +1,18 @@
 ---
-
 ################################
 # Playbook to test the role for deploying the application
 #
 
-- name:  Deploy TheCombine application
+- name: Deploy TheCombine application
   hosts: all
   become: yes
 
   vars_files:
     - "vars/config_common.yml"
     - "vars/vault_config.yml"
+
+  vars:
+    - backend_dotnet_version: "{{ lookup('pipe', 'grep TargetFramework ../Backend/BackendFramework.csproj') | regex_replace('.*<TargetFramework>netcoreapp([\\d\\.]+).*', '\\1') }}"
 
   tasks:
     - name: print .NET version

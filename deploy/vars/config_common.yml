@@ -1,11 +1,9 @@
 ---
-
 # Configuration variable that are common to production and development
 
 # configure URL to access the application
 url_domain: "{{ lookup('env', 'TOPLEVELDOMAIN') | default('languagetechnology.org', true) }}"
 url_hostname: "thecombine"
-
 
 www_app_dir: "/var/www/{{ url_hostname }}.org/htdocs"
 www_app_owner: www-data
@@ -16,7 +14,6 @@ www_uploads_dir: /var/thecombine/uploads
 www_uploads_owner: www-data
 www_uploads_group: www-data
 
-
 combine_backend_dir: /home/{{ combine_user }}/Backend
 
 ###############################################
@@ -24,7 +21,7 @@ combine_backend_dir: /home/{{ combine_user }}/Backend
 # the certificate server,
 #(thecombine.languagetechnology.org)
 ###############################################
-cert_server_user:  cert-user
+cert_server_user: cert-user
 cert_server_login_key_path: site_files/root_keys
 
 # mongo_path: /hddlinux/mongodb
@@ -49,21 +46,20 @@ combine_group: combine
 backend_loglevel_default: "{{ app_loglevel | default('Information') }}"
 backend_loglevel_system: "{{ sys_loglevel | default('Information') }}"
 backend_loglevel_microsoft: "{{ ms_loglevel | default('Information') }}"
-backend_dotnet_version:  "{{ lookup('pipe', 'grep TargetFramework ../Backend/BackendFramework.csproj') | regex_replace('.*<TargetFramework>netcoreapp([\\d\\.]+).*', '\\1') }}"
 
 ###############################################
 # SSL config for certificate for Backend Web Server (Kestrel)
 ###############################################
 backend_cert_name: "localhost.pem"
-backend_key_name:  "localhost.key"
-backend_csr_name:  "localhost.csr"
+backend_key_name: "localhost.key"
+backend_csr_name: "localhost.csr"
 
-backend_pfx_cert_name:    "localhost.pfx"
-backend_cert_email:    jimgrady.jg@gmail.com
-backend_cert_country:  US
-backend_cert_state:    Texas
+backend_pfx_cert_name: "localhost.pfx"
+backend_cert_email: jimgrady.jg@gmail.com
+backend_cert_country: US
+backend_cert_state: Texas
 backend_cert_locality: Dallas
-backend_cert_org:      SIL International
+backend_cert_org: SIL International
 
 ssl_path: "/home/{{ combine_user }}/.ssl"
 ssl_path_owner: "{{ combine_user }}"
@@ -72,18 +68,18 @@ ssl_path_group: "{{ combine_user }}"
 ssl_letsencrypt_install: false
 
 ssl_items:
-  - name:  "localhost"
+  - name: "localhost"
     state: selfsign
     request:
-        country_code: "{{ backend_cert_country }}"
-        state: "{{ backend_cert_state }}"
-        locality: "{{ backend_cert_locality }}"
-        organization: "{{ backend_cert_org }}"
-        organization_unit: "Language Technology"
-        common_name: "{{ url_hostname }}"
-        alt_names:
-          - key: DNS.1
-            value: "localhost"
+      country_code: "{{ backend_cert_country }}"
+      state: "{{ backend_cert_state }}"
+      locality: "{{ backend_cert_locality }}"
+      organization: "{{ backend_cert_org }}"
+      organization_unit: "Language Technology"
+      common_name: "{{ url_hostname }}"
+      alt_names:
+        - key: DNS.1
+          value: "localhost"
     sign:
 
 # Apache configuration
@@ -126,13 +122,13 @@ apache_vhosts:
         ssl_path: "/etc/letsencrypt/live/{{ apache_server_name }}"
         certificate_file: "cert.pem"
         key_file: "privkey.pem"
-#        chain_file: "fullchain.pem"
+        #        chain_file: "fullchain.pem"
         extra:
-        - '<ifModule mod_headers.c>'
-        - '    <Files "service-worker.js">'
-        - '        Header Set Service-Worker-allowed "/"'
-        - '    </Files>'
-        - '</IfModule>'
+          - "<ifModule mod_headers.c>"
+          - '    <Files "service-worker.js">'
+          - '        Header Set Service-Worker-allowed "/"'
+          - "    </Files>"
+          - "</IfModule>"
         reverse_proxy: true
         proxy:
-          - '/v1/ https://127.0.0.1:5001/v1/'
+          - "/v1/ https://127.0.0.1:5001/v1/"
