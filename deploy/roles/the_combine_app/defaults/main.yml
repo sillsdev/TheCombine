@@ -12,7 +12,6 @@ www_app_owner: www-data
 www_app_group: www-data
 
 combine_backend_dir: /home/combine/Backend
-combine_build_dir: "../Backend/bin/Release/netcoreapp{{ backend_dotnet_version | default('3.1') }}/"
 
 #############################
 # setup logging
