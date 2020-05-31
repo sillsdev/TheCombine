@@ -15,10 +15,6 @@
     owner: "{{ www_app_owner }}"
     group: "{{ www_app_group }}"
 
-- name: print build directory
-  debug:
-    var: combine_build_dir
-
 - name: install backend framework
   copy:
     src: "{{ combine_build_dir }}"
