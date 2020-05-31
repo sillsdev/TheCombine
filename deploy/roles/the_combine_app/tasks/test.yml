@@ -1,6 +1,10 @@
 ---
 
 
-- name: Test TheCombine application installation
-  debug:
-    msg: "TO DO: TheCombine application installation tests"
+- name: get service facts
+  service_facts:
+
+- name: Verify backend is running
+  assert:
+    that:
+      - ansible_facts.services['combine_backend.service'].state == 'running'
