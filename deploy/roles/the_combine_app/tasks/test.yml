@@ -8,6 +8,5 @@
   assert:
     success_msg: Combine Backend is running
     fail_msg: "Combine Backend is {{ ansible_facts.services['combine_backend.service'].state }}"
-    quiet: yes
     that:
       - ansible_facts.services['combine_backend.service'].state == 'running'
