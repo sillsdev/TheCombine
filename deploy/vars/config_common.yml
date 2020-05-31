@@ -124,11 +124,11 @@ apache_vhosts:
         key_file: "privkey.pem"
         #        chain_file: "fullchain.pem"
         extra:
-          - "<ifModule mod_headers.c>"
+          - '<ifModule mod_headers.c>'
           - '    <Files "service-worker.js">'
           - '        Header Set Service-Worker-allowed "/"'
-          - "    </Files>"
-          - "</IfModule>"
+          - '    </Files>'
+          - '</IfModule>'
         reverse_proxy: true
         proxy:
-          - "/v1/ https://127.0.0.1:5001/v1/"
+          - '/v1/ https://127.0.0.1:5001/v1/'
