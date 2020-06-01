@@ -119,9 +119,9 @@ describe("Tests cell column functions", () => {
 
   // Test searching domains
   it("Returns true when searching a word for an extant domain", () => {
-    if (columns[2].customFilterAndSearch) {
-      expect(columns[2].customFilterAndSearch(DOMAIN.id, WORD)).toBeTruthy();
-      expect(columns[2].customFilterAndSearch(DOMAIN.name, WORD)).toBeTruthy();
+    if (columns[3].customFilterAndSearch) {
+      expect(columns[3].customFilterAndSearch(DOMAIN.id, WORD)).toBeTruthy();
+      expect(columns[3].customFilterAndSearch(DOMAIN.name, WORD)).toBeTruthy();
     } else
       fail(
         "There is no customFilterAndSearch on column[2]: domains.\nDid the domains get moved to a different column?"
@@ -129,8 +129,8 @@ describe("Tests cell column functions", () => {
   });
 
   it("Returns true when searching a word for an extant domain", () => {
-    if (columns[2].customFilterAndSearch) {
-      expect(columns[2].customFilterAndSearch(GLOSS, WORD)).toBeFalsy();
+    if (columns[3].customFilterAndSearch) {
+      expect(columns[3].customFilterAndSearch(GLOSS, WORD)).toBeFalsy();
     } else
       fail(
         "There is no customFilterAndSearch on column[2]: domains.\nDid the domains get moved to a different column?"
@@ -139,10 +139,10 @@ describe("Tests cell column functions", () => {
 
   // Test sorting domains
   it("Properly sorts a list by domains", () => {
-    if (columns[2].customSort)
+    if (columns[3].customSort)
       expect(
         [...SORT_BY_GLOSSES].sort((a, b) =>
-          columns[2].customSort ? columns[2].customSort(a, b, "row") : 0
+          columns[3].customSort ? columns[3].customSort(a, b, "row") : 0
         )
       ).toEqual(SORT_BY_DOMAINS);
     else
