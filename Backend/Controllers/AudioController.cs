@@ -42,6 +42,11 @@ namespace BackendFramework.Controllers
             //    return new ForbidResult();
             //}
 
+            // sanitize user input
+            if ((!sanitizeId(projectId)) || (!sanitizeId(wordId))){
+                return new UnsupportedMediaTypeResult();
+            }
+
             var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
             if (filePath == null)
             {
@@ -71,6 +76,12 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
+
+            // sanitize user input
+            if ((!sanitizeId(projectId)) || (!sanitizeId(wordId))){
+                return new UnsupportedMediaTypeResult();
+            }
+
             var file = fileUpload.File;
             var requestedFileName = fileUpload.File?.FileName;
             if (string.IsNullOrEmpty(requestedFileName))
