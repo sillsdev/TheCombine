@@ -1,10 +1,9 @@
 ---
-
 ################################
 # Playbook to test the role for deploying the application
 #
 
-- name:  Deploy TheCombine application
+- name: Deploy TheCombine application
   hosts: all
   become: yes
 
@@ -12,7 +11,14 @@
     - "vars/config_common.yml"
     - "vars/vault_config.yml"
 
+  vars:
+    - combine_build_dir: "../Backend/bin/Release/{{ lookup('pipe', 'grep TargetFramework ../Backend/BackendFramework.csproj') | regex_replace('.*<TargetFramework>([^<]+).*', '\\1') }}"
+
   tasks:
+    - name: print backend software location
+      debug:
+        var: combine_build_dir
+
     - name: create user for backend process
       user:
         name: "{{ combine_user }}"
