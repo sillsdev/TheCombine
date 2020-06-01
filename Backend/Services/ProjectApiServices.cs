@@ -96,9 +96,8 @@ namespace BackendFramework.Services
 
         public bool CanImportLift(string projectId)
         {
-            var util = new Utilities();
-            var currentPath = util.GenerateFilePath(
-                Utilities.FileType.Dir, true, "", Path.Combine(projectId, "Import"));
+            var currentPath = FileUtilities.GenerateFilePath(
+                FileUtilities.FileType.Dir, true, "", Path.Combine(projectId, "Import"));
             var zips = new List<string>(Directory.GetFiles(currentPath, "*.zip"));
             return zips.Count == 0;
         }
