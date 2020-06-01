@@ -45,7 +45,7 @@ export class TreeView extends React.Component<
       }
     }
     // If the state has the current domain defined then use that in the navigateTree call
-    if (this.props.currentDomain.name !== "") {
+    if ( this.props.currentDomain.name !== "") {
       this.props.navigateTree(props.currentDomain);
     } else {
       let newDomain = createDomains(domains);

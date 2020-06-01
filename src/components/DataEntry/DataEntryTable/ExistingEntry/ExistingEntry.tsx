@@ -27,6 +27,7 @@ interface ExistingEntryProps {
   displaySpellingSuggestions: boolean;
   toggleDisplaySpellingSuggestions: () => void;
   recorder: Recorder;
+  focusNewEntry: () => void;
 }
 
 interface ExistingEntryState {
@@ -140,7 +141,7 @@ function wordsAreEqual(a: Word, b: Word): boolean {
  * Displays a word a user can still make edits to
  */
 export class ExistingEntry extends React.Component<
-  ExistingEntryProps,
+  ExistingEntryProps, 
   ExistingEntryState
 > {
   readonly maxDuplicates: number = 5;
@@ -343,6 +344,11 @@ export class ExistingEntry extends React.Component<
     }
   }
 
+  focusOnNewEntry = () => {
+    this.props.focusNewEntry();
+    //reference NewEntry's focus thing here
+  }
+
   render() {
     return (
       <Grid item xs={12} key={this.props.entryIndex}>
@@ -350,6 +356,11 @@ export class ExistingEntry extends React.Component<
           container
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && this.state.existingEntry.vernacular !== "" ) {
+              this.focusOnNewEntry();
+            }
+          }}
         >
           <Grid
             item
@@ -397,6 +408,7 @@ export class ExistingEntry extends React.Component<
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
+              
             />
           </Grid>
           <Grid

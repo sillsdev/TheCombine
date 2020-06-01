@@ -35,7 +35,6 @@ interface NewEntryState {
   isSpelledCorrectly: boolean;
   isDuplicate: boolean;
 }
-
 /**
  * Displays data related to creating a new word entry
  */
@@ -69,8 +68,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isSpelledCorrectly: true,
       isDuplicate: false,
       duplicates: [],
+      
     };
-
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
   }
@@ -80,6 +79,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
+
+
 
   toggleSpellingSuggestionsView() {
     this.props.toggleDisplaySpellingSuggestions();
