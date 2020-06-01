@@ -43,7 +43,8 @@ namespace BackendFramework.Controllers
             //}
 
             // sanitize user input
-            if ((!sanitizeId(projectId)) || (!sanitizeId(wordId))){
+            if ((!SanitizeId(projectId)) || (!SanitizeId(wordId)))
+            {
                 return new UnsupportedMediaTypeResult();
             }
 
@@ -78,7 +79,8 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if ((!sanitizeId(projectId)) || (!sanitizeId(wordId))){
+            if ((!SanitizeId(projectId)) || (!SanitizeId(wordId)))
+            {
                 return new UnsupportedMediaTypeResult();
             }
 

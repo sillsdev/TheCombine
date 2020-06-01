@@ -284,7 +284,8 @@ namespace BackendFramework.Controllers
 
 
             // sanitize user input
-            if (!sanitizeId(projectId)){
+            if (!SanitizeId(projectId))
+            {
                 return new UnsupportedMediaTypeResult();
             }
 
