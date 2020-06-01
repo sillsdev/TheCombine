@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using SIL.DictionaryServices.Lift;
@@ -16,7 +17,6 @@ using SIL.Lift.Parsing;
 using SIL.Text;
 using SIL.WritingSystems;
 using static SIL.DictionaryServices.Lift.LiftWriter;
-using Utilities = BackendFramework.Helper.Utilities;
 
 namespace BackendFramework.Services
 {
@@ -110,11 +110,8 @@ namespace BackendFramework.Services
         /// <summary> Exports information from a project to a lift package zip </summary>
         public string LiftExport(string projectId)
         {
-            // The helper tag must be included because there are also SIL.Utilities.
-            var util = new Utilities();
-
             // Generate the zip dir.
-            var exportDir = util.GenerateFilePath(Utilities.FileType.Dir, true, "",
+            var exportDir = FileUtilities.GenerateFilePath(FileUtilities.FileType.Dir, true, "",
                 Path.Combine(projectId, "Export"));
             if (Directory.Exists(Path.Combine(exportDir, "LiftExport")))
             {
@@ -294,16 +291,8 @@ namespace BackendFramework.Services
             foreach (var audioFile in wordEntry.Audio)
             {
                 var lexPhonetic = new LexPhonetic();
-
-                var util = new Utilities();
-
-                var projectPath = Path.Combine(util.GenerateFilePath(
-                    Utilities.FileType.Dir, true, "", ""), _projectId);
-                projectPath = Path.Combine(projectPath, "Import", "ExtractedLocation");
-                var extractedDir = Directory.GetDirectories(projectPath);
-                projectPath = Path.Combine(projectPath, extractedDir.Single());
-                var src = Path.Combine(util.GenerateFilePath(
-                    Utilities.FileType.Audio, true), Path.Combine(projectPath, "audio", audioFile));
+                var projectPath = Path.Combine(_projectId, "Import", "ExtractedLocation", "Lift", "audio");
+                var src = FileUtilities.GenerateFilePath(FileUtilities.FileType.Audio, true, audioFile, projectPath);
                 var dest = Path.Combine(path, audioFile);
 
                 if (File.Exists(src))
@@ -478,9 +467,8 @@ namespace BackendFramework.Services
             }
 
             // Get path to dir containing local lift package ~/{projectId}/Import/ExtractedLocation
-            var util = new Utilities();
-            var importDir = util.GenerateFilePath(
-                Utilities.FileType.Dir, false, "", Path.Combine(_projectId, "Import"));
+            var importDir = FileUtilities.GenerateFilePath(
+                FileUtilities.FileType.Dir, false, "", Path.Combine(_projectId, "Import"));
             var extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
 
             // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio
