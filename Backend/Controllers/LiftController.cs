@@ -178,6 +178,7 @@ namespace BackendFramework.Controllers
             if (!sanitizeId(projectId)){
                 return new UnsupportedMediaTypeResult();
             }
+            
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)

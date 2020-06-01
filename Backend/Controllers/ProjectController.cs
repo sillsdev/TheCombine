@@ -281,6 +281,12 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
+
+            // sanitize user input
+            if (!sanitizeId(projectId)){
+                return new UnsupportedMediaTypeResult();
+            }
+
             return new OkObjectResult(_projectService.CanImportLift(projectId));
         }
     }
