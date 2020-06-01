@@ -30,7 +30,7 @@ jest.mock("../TreeViewReducer", () => {
   return {
     ...realReducer,
     createDomains: () => {
-      return { currentdomain: mockTree };
+      return { currentDomain: mockTree };
     },
   };
 });
@@ -80,7 +80,7 @@ function createTree() {
         <TreeViewComponent
           currentDomain={mockTree}
           returnControlToCaller={RETURN_MOCK}
-          navigate={NAVIGATE_MOCK}
+          navigateTree={NAVIGATE_MOCK}
         />
       </Provider>
     );
