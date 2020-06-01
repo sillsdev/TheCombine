@@ -19,7 +19,7 @@
     },
     "BackendFramework": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "v1/",
       "environmentVariables": {
         "Key": "Value",
