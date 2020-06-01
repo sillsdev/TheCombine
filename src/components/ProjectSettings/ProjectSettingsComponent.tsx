@@ -21,7 +21,7 @@ import { UserRole } from "../../types/userRole";
 import { LanguageProps } from "./Language/LanguageSettings";
 import ProjectImport from "./ProjectImport";
 import ProjectName from "./ProjectName";
-import { Edit, CloudUpload, GetApp, People, List } from "@material-ui/icons";
+import { Edit, CloudUpload, GetApp, People } from "@material-ui/icons";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
 import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
 import ProjectUsers from "./ProjectUsers";

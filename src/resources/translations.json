@@ -171,7 +171,6 @@
       ]
     },
     "name": ["Project Name", "Nombre del Proyecto", "Nom du projet"],
-    "list": ["Project List", "Lista de Proyectos", "Liste des projets"],
     "import": {
       "header": ["Import Data", "Importar Información", "Importer des données"],
       "body": [
