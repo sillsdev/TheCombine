@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace BackendFramework.Helper
 {
@@ -12,6 +13,13 @@ namespace BackendFramework.Helper
             Lift,
             Zip,
             Dir
+        }
+
+        public static bool sanitizeId(String id){
+            if (id.All((x => char.IsLetterOrDigit(x) | x == '-'))){
+                return true;
+            }
+            return false;
         }
 
         // TODO: split this function in two that generate directories or files

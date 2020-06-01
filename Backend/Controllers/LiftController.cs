@@ -47,8 +47,10 @@ namespace BackendFramework.Controllers
             }
 
 
-            // whitelist projectId
-            projectId = (await _projectService.GetAllProjects()).Select(p => p.Id).Where(id => id == projectIdUser).Single();
+            // sanitize projectId
+            if (!sanitizeId(projectId)){
+                return new UnsupportedMediaTypeResult();
+            }
 
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
@@ -172,9 +174,10 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            // whitelist projectId
-            projectId = (await _projectService.GetAllProjects()).Select(p => p.Id).Where(id => id == projectIdUser).Single();
-
+            // sanitize projectId
+            if (!sanitizeId(projectId)){
+                return new UnsupportedMediaTypeResult();
+            }
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj == null)
