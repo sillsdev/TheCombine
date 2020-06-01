@@ -5,9 +5,6 @@ import { getAllProjectsByUser } from "../../../backend";
 import { List, ListItem, Typography } from "@material-ui/core";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import LoadingButton from "../../Buttons/LoadingButton";
-import { TypographyProps } from "@material-ui/core/Typography";
-import { TypographyStyle } from "@material-ui/core/styles";
-import { CSSProperties } from "@material-ui/core/styles/withStyles";
 
 interface SwitchProps {
   project: Project;
