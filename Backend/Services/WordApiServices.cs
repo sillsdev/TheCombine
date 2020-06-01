@@ -227,7 +227,7 @@ namespace BackendFramework.Services
             }
 
             var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId,
-                "Import", "ExtractedLocation", "Lift", "Audio", fileName);
+                "Import", "ExtractedLocation", "Lift", "audio", fileName);
             Console.WriteLine($"filePath: {filepath}");
             return filepath;
         }
