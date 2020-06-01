@@ -2,7 +2,7 @@ import React from "react";
 
 import columns from "../CellColumns";
 import mockWords from "../../tests/MockWords";
-import { ReviewEntriesWord, SEP_CHAR } from "../../ReviewEntriesComponent";
+import { ReviewEntriesWord, SEP_CHAR } from "../../ReviewEntriesTypes";
 import { SemanticDomain } from "../../../../../types/word";
 import ReactDOM from "react-dom";
 
