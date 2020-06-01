@@ -8,7 +8,9 @@ import history from "../../history";
 export default function Logo() {
   return (
     <Button
-      onClick={() => {history.push("/")}}
+      onClick={() => {
+        history.push("/");
+      }}
     >
       <img
         srcSet={`${logo} 1200w, ${smallLogo} 600w`}
