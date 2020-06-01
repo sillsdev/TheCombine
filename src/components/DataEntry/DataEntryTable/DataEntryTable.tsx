@@ -66,6 +66,7 @@ export function filterWords(words: Word[]): Word[] {
   return filteredWords;
 }
 
+
 /**
  * A data entry table containing word entries
  */
@@ -73,6 +74,7 @@ export class DataEntryTable extends React.Component<
   DataEntryTableProps & LocalizeContextProps,
   DataEntryTableState
 > {
+  refNewEntry: React.RefObject<NewEntry>;
   constructor(props: DataEntryTableProps & LocalizeContextProps) {
     super(props);
     this.state = {
@@ -81,6 +83,7 @@ export class DataEntryTable extends React.Component<
       isReady: false,
       autoComplete: AutoComplete.Off,
     };
+    this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
     this.spellChecker = new SpellChecker();
   }
@@ -210,6 +213,7 @@ export class DataEntryTable extends React.Component<
     else this.setState({ displaySpellingSuggestionsIndex: index });
   }
 
+
   render() {
     return (
       <form
@@ -269,6 +273,8 @@ export class DataEntryTable extends React.Component<
                   toggleDisplaySpellingSuggestions={() => {
                     this.toggleDisplaySpellingSuggestions(index);
                   }}
+                  focusNewEntry = {()=> 
+                    {if (this.refNewEntry.current) this.refNewEntry.current.focusVernInput();}}
                 />
               </React.Fragment>
             ) : (
@@ -288,6 +294,7 @@ export class DataEntryTable extends React.Component<
 
           <Grid item xs={12}>
             <NewEntry
+              ref={this.refNewEntry}
               allWords={this.state.existingWords}
               updateWord={(wordToUpdate: Word) =>
                 this.updateWordForNewEntry(wordToUpdate)

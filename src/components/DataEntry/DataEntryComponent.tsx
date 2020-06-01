@@ -38,7 +38,7 @@ export class DataEntryComponent extends React.Component<
       name: this.props.domain.name,
       id: this.props.domain.id,
     };
-
+  
     return (
       <React.Fragment>
         <AppBarComponent />
