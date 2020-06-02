@@ -12,18 +12,6 @@
   import_role:
     name: ssl_config
 
-# - name: add the combine user to ACL for certificate files
-#   acl:
-#     name: "{{ item }}"
-#     state: present
-#     permissions: rw
-#     entity: "{{ combine_user }}"
-#     etype:  user
-#     recursive: no
-#     default: yes
-#   with_items:
-#     - "{{ ssl_path }}/localhost.key"
-
 - name: export PKCS12 certificate
   openssl_pkcs12:
     action: export
