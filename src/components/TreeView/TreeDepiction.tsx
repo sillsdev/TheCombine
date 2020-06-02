@@ -19,6 +19,7 @@ import teeUpRight from "../../resources/tree/teeUpRight.svg";
 import teeDown from "../../resources/tree/teeDown.svg";
 import intersect from "../../resources/tree/intersect.svg";
 import TreeViewHeader from "./TreeViewHeader";
+import ReturnImage from "./ReturnImage";
 
 export const MAX_TILE_WIDTH = 150;
 export const MIN_TILE_WIDTH = 75;
@@ -222,6 +223,14 @@ export default class TreeDepiction extends React.Component<
     );
   }
 
+  checkIfOrigin(): Boolean {
+    let isOriginDomain: Boolean = true;
+    if (this.props.currentDomain.parentDomain === undefined) {
+      isOriginDomain = false;
+    }
+    return isOriginDomain;
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -252,6 +261,7 @@ export default class TreeDepiction extends React.Component<
             </GridList>
           )}
         </Grid>
+        <ReturnImage origin={this.checkIfOrigin()} />
       </React.Fragment>
     );
   }
