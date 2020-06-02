@@ -4,7 +4,7 @@ import { getCurrentUser } from "../../../backend/localStorage";
 import { getAllProjectsByUser } from "../../../backend";
 import { List, ListItem, Typography } from "@material-ui/core";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import LoadingButton from "../../Buttons/LoadingButton";
+import { User } from "../../../types/user";
 
 interface SwitchProps {
   project: Project;
@@ -14,6 +14,8 @@ interface SwitchProps {
 interface SwitchState {
   projectList: Array<Project>;
   loading: boolean;
+  currentProjectID: string;
+  currentUser: User | null;
 }
 
 class ProjectSwitch extends React.Component<
@@ -22,28 +24,42 @@ class ProjectSwitch extends React.Component<
 > {
   constructor(props: SwitchProps & LocalizeContextProps) {
     super(props);
+
     this.state = {
       projectList: [],
       loading: true,
+      currentProjectID: props.project.id,
+      currentUser: getCurrentUser(),
     };
   }
 
   componentWillMount() {
-    const user = getCurrentUser();
-    if (user) {
-      getAllProjectsByUser(user).then((projects) => {
+    if (this.state.currentUser) {
+      getAllProjectsByUser(this.state.currentUser).then((projects) => {
+        this.setState({ projectList: projects, loading: false });
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps: SwitchProps) {
+    if (
+      prevProps.project.name !== this.props.project.name &&
+      this.state.currentUser
+    ) {
+      getAllProjectsByUser(this.state.currentUser).then((projects) => {
         this.setState({ projectList: projects, loading: false });
       });
     }
   }
 
   private selectProject(project: Project) {
+    this.setState({ currentProjectID: project.id });
     this.props.setCurrentProject(project);
   }
 
   render() {
     if (this.state.loading) {
-      return LoadingButton;
+      return <List></List>;
     } else {
       return (
         <List>
@@ -57,7 +73,7 @@ class ProjectSwitch extends React.Component<
                 <Typography
                   variant="h6"
                   color={
-                    project.name !== this.props.project.name
+                    project.id !== this.props.project.id
                       ? "textSecondary"
                       : "inherit"
                   }

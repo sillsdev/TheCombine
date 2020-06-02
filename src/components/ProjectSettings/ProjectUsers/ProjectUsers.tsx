@@ -17,8 +17,11 @@ import {
 } from "../../../backend";
 import theme from "../../../types/theme";
 import { getCurrentUser } from "../../../backend/localStorage";
+import { Project } from "../../../types/project";
 
-interface UserProps {}
+interface UserProps {
+  project: Project;
+}
 
 interface UserState {
   allUsers: User[];
@@ -41,6 +44,12 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
 
   componentDidMount() {
     this.populateUsers();
+  }
+
+  componentDidUpdate(prevProps: UserProps) {
+    if (this.props.project.name !== prevProps.project.name) {
+      this.populateUsers();
+    }
   }
 
   private populateUsers() {
