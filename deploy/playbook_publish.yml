@@ -12,7 +12,7 @@
     - "vars/vault_config.yml"
 
   vars:
-    - combine_build_dir: "../Backend/bin/Release/{{ lookup('pipe', 'grep TargetFramework ../Backend/BackendFramework.csproj') | regex_replace('.*<TargetFramework>([^<]+).*', '\\1') }}"
+    - combine_build_dir: "../Backend/bin/Release/{{ lookup('pipe', 'grep TargetFramework ../Backend/BackendFramework.csproj') | regex_replace('.*<TargetFramework>([^<]+).*', '\\1') }}/"
 
   tasks:
     - name: print backend software location
