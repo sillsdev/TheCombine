@@ -136,7 +136,7 @@ namespace BackendFramework.Controllers
             currentUser = await _userService.MakeJwt(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
-            var output = new ProjectWithUser(project) { UpdatedUser = currentUser };
+            var output = new ProjectWithUser(project) { __UpdatedUser = currentUser };
 
             return new OkObjectResult(output);
         }
