@@ -19,7 +19,7 @@ import teeUpRight from "../../resources/tree/teeUpRight.svg";
 import teeDown from "../../resources/tree/teeDown.svg";
 import intersect from "../../resources/tree/intersect.svg";
 import TreeViewHeader from "./TreeViewHeader";
-import ReturnImage from "./ReturnImage";
+import ReturnSymbol from "../../resources/ReturnSymbol.png";
 
 export const MAX_TILE_WIDTH = 150;
 export const MIN_TILE_WIDTH = 75;
@@ -258,10 +258,20 @@ export default class TreeDepiction extends React.Component<
               <GridListTile>
                 {this.nameTile(this.props.currentDomain.parentDomain)}
               </GridListTile>
+              <GridListTile>
+                {/* Don't show return symbol on root domain */}
+                {this.props.currentDomain.parentDomain !== undefined && (
+                  <img
+                    src={ReturnSymbol}
+                    alt="Return Symbol"
+                    width="40px"
+                    height="auto"
+                  />
+                )}
+              </GridListTile>
             </GridList>
           )}
         </Grid>
-        <ReturnImage origin={this.checkIfOrigin()} />
       </React.Fragment>
     );
   }
