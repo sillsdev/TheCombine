@@ -65,7 +65,7 @@ namespace BackendFramework.Controllers
             var gotUser = await _userService.GetUser(userId);
             if (gotUser == null)
             {
-                return new NotFoundObjectResult(gotUser.Id);
+                return new NotFoundObjectResult(userId);
             }
 
             // Get path to home
