@@ -16,7 +16,6 @@ interface NameProps {
 
 interface NameState {
   projectName: string;
-  projectID: string;
 }
 
 class ProjectName extends React.Component<
@@ -27,7 +26,6 @@ class ProjectName extends React.Component<
     super(props);
     this.state = {
       projectName: props.project.name,
-      projectID: props.project.id,
     };
   }
 
@@ -45,7 +43,7 @@ class ProjectName extends React.Component<
     });
   }
 
-  componentDidUpdate(prevProps: NameProps, prevState: NameState) {
+  componentDidUpdate(prevProps: NameProps) {
     if (prevProps.project.id !== this.props.project.id) {
       this.setState({ projectName: this.props.project.name });
     }

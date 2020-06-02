@@ -14,7 +14,6 @@ interface SwitchProps {
 interface SwitchState {
   projectList: Array<Project>;
   loading: boolean;
-  currentProjectID: string;
   currentUser: User | null;
 }
 
@@ -28,7 +27,6 @@ class ProjectSwitch extends React.Component<
     this.state = {
       projectList: [],
       loading: true,
-      currentProjectID: props.project.id,
       currentUser: getCurrentUser(),
     };
   }
@@ -53,7 +51,6 @@ class ProjectSwitch extends React.Component<
   }
 
   private selectProject(project: Project) {
-    this.setState({ currentProjectID: project.id });
     this.props.setCurrentProject(project);
   }
 
