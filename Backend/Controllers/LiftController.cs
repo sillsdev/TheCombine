@@ -46,6 +46,13 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
+
+            // sanitize projectId
+            if (!SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
@@ -174,6 +181,12 @@ namespace BackendFramework.Controllers
             if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {
                 return new ForbidResult();
+            }
+
+            // sanitize projectId
+            if (!SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
             }
 
             // Ensure project exists

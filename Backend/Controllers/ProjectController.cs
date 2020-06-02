@@ -5,6 +5,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
 {
@@ -283,6 +284,13 @@ namespace BackendFramework.Controllers
             if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {
                 return new ForbidResult();
+            }
+
+
+            // sanitize user input
+            if (!SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
             }
 
             return new OkObjectResult(_projectService.CanImportLift(projectId));
