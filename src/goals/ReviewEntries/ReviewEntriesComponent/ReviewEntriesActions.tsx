@@ -106,10 +106,6 @@ function cleanSenses(
     if (senseBuffer) cleanSenses.push(senseBuffer);
   }
 
-  // Check to see if the user is attempting to delete all senses and correct accordingly
-  if (cleanSenses.filter((value) => !value.deleted).length === 0)
-    cleanSenses = oldSenses;
-
   return cleanSenses;
 }
 
