@@ -123,6 +123,30 @@ const columns: Column[] = [
     },
   },
   {
+    title: "",
+    field: "id",
+    filtering: false,
+    sorting: false,
+    render: (rowData: ReviewEntriesWord) => null,
+    editComponent: (props: FieldParameterStandard) => {
+      const deleteSense = (senseId: string) => {
+        if (props.onRowDataChange)
+          props.onRowDataChange({
+            ...props.rowData,
+            senses: props.rowData.senses.map((sense) => {
+              if (sense.senseId === senseId)
+                return {
+                  ...sense,
+                  deleted: !sense.deleted,
+                };
+              else return sense;
+            }),
+          });
+      };
+      return <DeleteCell rowData={props.rowData} delete={deleteSense} />;
+    },
+  },
+  {
     title: "Domains",
     field: "domains",
     render: (rowData: ReviewEntriesWord) => (
@@ -235,30 +259,6 @@ const columns: Column[] = [
         recorder={rowData.recorder}
       />
     ),
-  },
-  {
-    title: "",
-    field: "id",
-    filtering: false,
-    sorting: false,
-    render: (rowData: ReviewEntriesWord) => null,
-    editComponent: (props: FieldParameterStandard) => {
-      const deleteSense = (senseId: string) => {
-        if (props.onRowDataChange)
-          props.onRowDataChange({
-            ...props.rowData,
-            senses: props.rowData.senses.map((sense) => {
-              if (sense.senseId === senseId)
-                return {
-                  ...sense,
-                  deleted: !sense.deleted,
-                };
-              else return sense;
-            }),
-          });
-      };
-      return <DeleteCell rowData={props.rowData} delete={deleteSense} />;
-    },
   },
 ];
 
