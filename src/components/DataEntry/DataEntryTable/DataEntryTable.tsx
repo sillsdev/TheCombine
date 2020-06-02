@@ -112,7 +112,6 @@ export class DataEntryTable extends React.Component<
       existingWords: words,
       recentlyAddedWords: updatedNewWords,
     });
-    window.scrollTo(0, document.body.scrollHeight);
   }
 
   /** Update the word in the backend and the frontend */
