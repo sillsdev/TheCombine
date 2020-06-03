@@ -67,8 +67,9 @@ export default class TreeViewHeader extends React.Component<
       while (parent.parentDomain !== undefined) parent = parent.parentDomain;
 
       // Search for domain
-      if (!isNaN(parseInt(this.state.input)))
-        for (let i: number = 0; i < 4 && parent; i++) {
+      if (!isNaN(parseInt(this.state.input))) {
+        let i: number = 0;
+        while (parent) {
           parent = this.searchDomainByNumber(
             parent,
             this.state.input.slice(0, i * 2 + 1)
@@ -77,9 +78,13 @@ export default class TreeViewHeader extends React.Component<
             this.props.animate(parent);
             this.setState({ input: "" });
             (event.target as any).value = "";
-          } else if (!parent) break;
+            break;
+          } else if (parent && parent.subdomains.length === 0) {
+            break;
+          }
+          i++;
         }
-      else {
+      } else {
         parent = this.searchDomainByName(parent, this.state.input);
         if (parent) {
           this.props.animate(parent);
