@@ -890,6 +890,27 @@ Array [
           </button>
         </div>
       </li>
+      <li
+        className="MuiGridListTile-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          className="MuiGridListTile-tile"
+        >
+          <img
+            alt="Return Symbol"
+            height="auto"
+            src="ReturnSymbol.png"
+            width="40px"
+          />
+        </div>
+      </li>
     </ul>
   </div>,
 ]
@@ -1667,6 +1688,27 @@ Array [
           </button>
         </div>
       </li>
+      <li
+        className="MuiGridListTile-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          className="MuiGridListTile-tile"
+        >
+          <img
+            alt="Return Symbol"
+            height="auto"
+            src="ReturnSymbol.png"
+            width="40px"
+          />
+        </div>
+      </li>
     </ul>
   </div>,
 ]
@@ -1910,6 +1952,27 @@ Array [
               className="MuiTouchRipple-root"
             />
           </button>
+        </div>
+      </li>
+      <li
+        className="MuiGridListTile-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          className="MuiGridListTile-tile"
+        >
+          <img
+            alt="Return Symbol"
+            height="auto"
+            src="ReturnSymbol.png"
+            width="40px"
+          />
         </div>
       </li>
     </ul>
@@ -2619,6 +2682,27 @@ Array [
               className="MuiTouchRipple-root"
             />
           </button>
+        </div>
+      </li>
+      <li
+        className="MuiGridListTile-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          className="MuiGridListTile-tile"
+        >
+          <img
+            alt="Return Symbol"
+            height="auto"
+            src="ReturnSymbol.png"
+            width="40px"
+          />
         </div>
       </li>
     </ul>
