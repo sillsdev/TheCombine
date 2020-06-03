@@ -274,17 +274,6 @@ describe("Test ReviewEntriesActions", () => {
     checkResultantData(oldFrontierWord);
   });
 
-  it("Reverts senses when all senses of an old word removed", async () => {
-    await makeDispatch(
-      {
-        ...oldWord,
-        senses: [],
-      },
-      oldWord
-    );
-    checkResultantData(oldFrontierWord);
-  });
-
   // Tests rejection of bad data
   it("Rejects a vernacular which is empty and cannot be restored", async () => {
     mockBackendReturn({ ...oldFrontierWord, vernacular: "" });
