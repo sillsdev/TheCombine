@@ -51,6 +51,13 @@ describe("Tests AddWords", () => {
     snapTest("default view");
   });
 
+  // This assumes mockTree was used in createTree() below and mockTree.name !== ""
+  it("Navigates to .currentDomain in construction", () => {
+    createTree();
+    expect(NAVIGATE_MOCK).toHaveBeenCalledTimes(1);
+    expect(NAVIGATE_MOCK).toHaveBeenCalledWith(mockTree);
+  });
+
   it("Sets a new domain upon navigation", () => {
     let newDom: SemanticDomainWithSubdomains = {
       name: "test",
