@@ -223,14 +223,6 @@ export default class TreeDepiction extends React.Component<
     );
   }
 
-  checkIfOrigin(): Boolean {
-    let isOriginDomain: Boolean = true;
-    if (this.props.currentDomain.parentDomain === undefined) {
-      isOriginDomain = false;
-    }
-    return isOriginDomain;
-  }
-
   render() {
     return (
       <React.Fragment>
