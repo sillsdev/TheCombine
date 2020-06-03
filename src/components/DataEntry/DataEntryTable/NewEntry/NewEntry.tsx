@@ -286,7 +286,10 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   /** Move the focus to the vernacular textbox */
   focusVernInput() {
-    if (this.vernInput.current) this.vernInput.current.focus();
+    if (this.vernInput.current) {
+      this.vernInput.current.focus();
+      this.vernInput.current.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
   render() {
