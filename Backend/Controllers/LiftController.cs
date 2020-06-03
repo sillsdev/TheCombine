@@ -4,7 +4,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
@@ -12,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SIL.Lift.Parsing;
-using static BackendFramework.Helper.Utilities;
+using static BackendFramework.Helper.FileUtilities;
 
 [assembly: InternalsVisibleTo("Backend.Tests")]
 namespace BackendFramework.Controllers
@@ -47,6 +46,13 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
+
+            // sanitize projectId
+            if (!SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
             if (project == null)
@@ -63,8 +69,7 @@ namespace BackendFramework.Controllers
             }
 
             // Get path to where we will copy the zip file
-            var util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(
+            fileUpload.FilePath = GenerateFilePath(
                 FileType.Zip,
                 false,
                 "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now),
@@ -125,6 +130,14 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("Your zip file structure has the wrong number of directories");
             }
 
+            // Get the directory and rename to be easier to reference elsewhere if needed
+            var correctPath = Path.Combine(extractDir, "Lift");
+            if (!extractedDirPath.Equals(correctPath))
+            {
+                Directory.Move(extractedDirPath, correctPath);
+                extractedDirPath = Path.Combine(extractDir, "Lift");
+            }
+
             // Search for the lift file within the extracted files
             var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
             var extractedLiftPath = Array.FindAll(extractedLiftNameArr, x => x.EndsWith(".lift"));
@@ -168,6 +181,12 @@ namespace BackendFramework.Controllers
             if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {
                 return new ForbidResult();
+            }
+
+            // sanitize projectId
+            if (!SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
             }
 
             // Ensure project exists

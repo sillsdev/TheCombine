@@ -19,6 +19,9 @@
 .env.test.local
 .env.production.local
 Session.vim
+setupMongo.js
+dropDB.js
+setAdminUser.js
 
 npm-debug.log*
 yarn-debug.log*
@@ -39,6 +42,7 @@ BackendFramework.sln.DotSettings.user
 Backend/.vscode/**/*
 Backend/SIL.Lift/**/*
 start_mongo.bat
+Backend/ql-database
 /**/*.xml
 /**/*.lift
 /**/*.orig

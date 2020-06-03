@@ -5,6 +5,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
 {
@@ -274,11 +275,22 @@ namespace BackendFramework.Controllers
 
         // Check if lift import has already happened for this project
         [HttpGet("{projectId}/liftcheck")]
+        // Temporarily disable warning about missing await in this method.
+        // It's needed for the return type to be correct, but nothing inside the function is awaiting yet.
+#pragma warning disable 1998
         public async Task<IActionResult> CanUploadLift(string projectId)
+#pragma warning restore 1998
         {
             if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {
                 return new ForbidResult();
+            }
+
+
+            // sanitize user input
+            if (!SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
             }
 
             return new OkObjectResult(_projectService.CanImportLift(projectId));

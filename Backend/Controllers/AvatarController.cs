@@ -65,13 +65,12 @@ namespace BackendFramework.Controllers
             var gotUser = await _userService.GetUser(userId);
             if (gotUser == null)
             {
-                return new NotFoundObjectResult(gotUser.Id);
+                return new NotFoundObjectResult(userId);
             }
 
             // Get path to home
-            var util = new Utilities();
-            fileUpload.FilePath = util.GenerateFilePath(
-                Utilities.FileType.Avatar, false, userId, "Avatars");
+            fileUpload.FilePath = FileUtilities.GenerateFilePath(
+                FileUtilities.FileType.Avatar, false, userId, "Avatars");
 
             // Copy file data to a new local file
             using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))

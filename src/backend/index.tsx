@@ -197,7 +197,7 @@ export async function getAllProjects(): Promise<Project[]> {
 }
 
 export async function getAllProjectsByUser(user: User): Promise<Project[]> {
-  let projectIds: string[] = Object.keys(user.projectRoles);
+  let projectIds: string[] = Object.keys(user.workedProjects);
   let projects: Project[] = [];
   for (let projectId of projectIds) {
     await getProject(projectId).then((project) => {

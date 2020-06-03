@@ -53,7 +53,10 @@ namespace BackendFramework.Controllers
         /// <remarks> DELETE: v1/projects/{projectId}/useredits </remarks>
         /// <returns> true: if success, false: if there were no projects </returns>
         [HttpDelete]
+        // TODO: Remove this warning suppression when the function is implemented for release mode.
+#pragma warning disable 1998
         public async Task<IActionResult> Delete(string projectId)
+#pragma warning restore 1998
         {
 #if DEBUG
             if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
