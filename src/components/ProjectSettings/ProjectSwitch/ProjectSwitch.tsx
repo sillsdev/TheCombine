@@ -1,9 +1,9 @@
-import React from "react";
-import { Project } from "../../../types/project";
-import { getCurrentUser } from "../../../backend/localStorage";
-import { getAllProjectsByUser } from "../../../backend";
 import { List, ListItem, Typography } from "@material-ui/core";
+import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { getAllProjectsByUser } from "../../../backend";
+import { getCurrentUser } from "../../../backend/localStorage";
+import { Project } from "../../../types/project";
 import { User } from "../../../types/user";
 
 interface SwitchProps {
@@ -13,11 +13,10 @@ interface SwitchProps {
 
 interface SwitchState {
   projectList: Array<Project>;
-  loading: boolean;
   currentUser: User | null;
 }
 
-class ProjectSwitch extends React.Component<
+export class ProjectSwitch extends React.Component<
   SwitchProps & LocalizeContextProps,
   SwitchState
 > {
@@ -26,7 +25,6 @@ class ProjectSwitch extends React.Component<
 
     this.state = {
       projectList: [],
-      loading: true,
       currentUser: getCurrentUser(),
     };
   }
@@ -34,7 +32,7 @@ class ProjectSwitch extends React.Component<
   componentWillMount() {
     if (this.state.currentUser) {
       getAllProjectsByUser(this.state.currentUser).then((projects) => {
-        this.setState({ projectList: projects, loading: false });
+        this.setState({ projectList: projects });
       });
     }
   }
@@ -45,7 +43,7 @@ class ProjectSwitch extends React.Component<
       this.state.currentUser
     ) {
       getAllProjectsByUser(this.state.currentUser).then((projects) => {
-        this.setState({ projectList: projects, loading: false });
+        this.setState({ projectList: projects });
       });
     }
   }
@@ -54,35 +52,29 @@ class ProjectSwitch extends React.Component<
     this.props.setCurrentProject(project);
   }
 
-  render() {
-    if (this.state.loading) {
-      return <List></List>;
-    } else {
+  getListItems() {
+    return this.state.projectList.map((project) => {
       return (
-        <List>
-          {this.state.projectList.map((project) => {
-            return (
-              <ListItem
-                key={project.id}
-                button
-                onClick={() => this.selectProject(project)}
-              >
-                <Typography
-                  variant="h6"
-                  color={
-                    project.id !== this.props.project.id
-                      ? "textSecondary"
-                      : "inherit"
-                  }
-                >
-                  {project.name}
-                </Typography>
-              </ListItem>
-            );
-          })}
-        </List>
+        <ListItem
+          key={project.id}
+          button
+          onClick={() => this.selectProject(project)}
+        >
+          <Typography
+            variant="h6"
+            color={
+              project.id !== this.props.project.id ? "textSecondary" : "inherit"
+            }
+          >
+            {project.name}
+          </Typography>
+        </ListItem>
       );
-    }
+    });
+  }
+
+  render() {
+    return <List>{this.getListItems()}</List>;
   }
 }
 
