@@ -902,17 +902,16 @@ Array [
       >
         <div
           className="MuiGridListTile-tile"
-        >
-          <img
-            alt="Return Symbol"
-            height="auto"
-            src="ReturnSymbol.png"
-            width="40px"
-          />
-        </div>
+        />
       </li>
     </ul>
   </div>,
+  <img
+    alt="Return Symbol"
+    height="auto"
+    src="ReturnSymbol.png"
+    width="40px"
+  />,
 ]
 `;
 
@@ -1700,17 +1699,16 @@ Array [
       >
         <div
           className="MuiGridListTile-tile"
-        >
-          <img
-            alt="Return Symbol"
-            height="auto"
-            src="ReturnSymbol.png"
-            width="40px"
-          />
-        </div>
+        />
       </li>
     </ul>
   </div>,
+  <img
+    alt="Return Symbol"
+    height="auto"
+    src="ReturnSymbol.png"
+    width="40px"
+  />,
 ]
 `;
 
@@ -1966,17 +1964,16 @@ Array [
       >
         <div
           className="MuiGridListTile-tile"
-        >
-          <img
-            alt="Return Symbol"
-            height="auto"
-            src="ReturnSymbol.png"
-            width="40px"
-          />
-        </div>
+        />
       </li>
     </ul>
   </div>,
+  <img
+    alt="Return Symbol"
+    height="auto"
+    src="ReturnSymbol.png"
+    width="40px"
+  />,
 ]
 `;
 
@@ -2696,16 +2693,15 @@ Array [
       >
         <div
           className="MuiGridListTile-tile"
-        >
-          <img
-            alt="Return Symbol"
-            height="auto"
-            src="ReturnSymbol.png"
-            width="40px"
-          />
-        </div>
+        />
       </li>
     </ul>
   </div>,
+  <img
+    alt="Return Symbol"
+    height="auto"
+    src="ReturnSymbol.png"
+    width="40px"
+  />,
 ]
 `;

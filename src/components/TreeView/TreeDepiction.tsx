@@ -250,20 +250,19 @@ export default class TreeDepiction extends React.Component<
               <GridListTile>
                 {this.nameTile(this.props.currentDomain.parentDomain)}
               </GridListTile>
-              <GridListTile>
-                {/* Don't show return symbol on root domain */}
-                {this.props.currentDomain.parentDomain !== undefined && (
-                  <img
-                    src={ReturnSymbol}
-                    alt="Return Symbol"
-                    width="40px"
-                    height="auto"
-                  />
-                )}
-              </GridListTile>
+              <GridListTile></GridListTile>
             </GridList>
           )}
         </Grid>
+        {/* Don't show return symbol on root domain */}
+        {this.props.currentDomain.parentDomain !== undefined && (
+          <img
+            src={ReturnSymbol}
+            alt="Return Symbol"
+            width="40px"
+            height="auto"
+          />
+        )}
       </React.Fragment>
     );
   }
