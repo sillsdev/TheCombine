@@ -10,9 +10,12 @@ import PlayArrow from "@material-ui/icons/PlayArrow";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import { Stop } from "@material-ui/icons";
+import * as Backend from "../../backend";
 
 export interface PlayerProps {
   pronunciationUrl: string;
+  wordId: string;
+  fileName: string;
   isPlaying?: boolean;
 }
 
@@ -37,8 +40,10 @@ export default function AudioPlayer(props: PlayerProps) {
   // const audio = new Audio(props.pronunciationUrl);
   // audio.crossOrigin = "annonymous";
 
-  let togglePlay = () => {
-    if (!playing) {
+  let deleteOrTogglePlay = (event: any) => {
+    if (event.shiftKey) {
+      Backend.deleteAudio(props.wordId, props.fileName);
+    } else if (!playing) {
       audio.play();
       setPlaying(true);
       audio.addEventListener("ended", () => setPlaying(false));
@@ -52,7 +57,7 @@ export default function AudioPlayer(props: PlayerProps) {
   return (
     <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
       <IconButton
-        onClick={togglePlay}
+        onClick={deleteOrTogglePlay}
         className={classes.button}
         aria-label="play"
       >
