@@ -7,13 +7,13 @@ import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 function mapStateToProps(state: StoreState) {
   return {
-    currentDomain: state.treeViewState.currentdomain,
+    currentDomain: state.treeViewState.currentDomain,
   };
 }
 
 function mapDispatchToProps(dispatch: Dispatch<TreeViewAction>) {
   return {
-    navigate: (domain: SemanticDomainWithSubdomains) => {
+    navigateTree: (domain: SemanticDomainWithSubdomains) => {
       dispatch(TraverseTreeAction(domain));
     },
   };
