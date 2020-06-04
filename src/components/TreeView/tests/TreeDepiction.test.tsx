@@ -1,27 +1,27 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import TreeDepiction from "../TreeDepiction";
-import MockTree from "./MockSemanticTree";
+import MockDomain from "./MockSemanticDomain";
 import SemanticDomainWithSubdomains from "../SemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 describe("Tests AddWords", () => {
-  testFromNode("Renders correctly: from Parent", MockTree);
+  testFromNode("Renders correctly: from Parent", MockDomain);
   testFromNode(
     "Renders correctly: node w/ even # of subdomains",
-    MockTree.subdomains[0]
+    MockDomain.subdomains[0]
   );
   testFromNode(
     "Renders correctly: node w/ odd # of subdomains",
-    MockTree.subdomains[1]
+    MockDomain.subdomains[1]
   );
   testFromNode(
     "Renders correctly: node w/ 1 subdomains",
-    MockTree.subdomains[2]
+    MockDomain.subdomains[2]
   );
   testFromNode(
     "Renders correctly: node w/ no subdomains",
-    MockTree.subdomains[2].subdomains[0]
+    MockDomain.subdomains[2].subdomains[0]
   );
 });
 
