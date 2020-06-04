@@ -22,7 +22,7 @@ const state = {
     words: mockWords,
   },
   treeViewState: {
-    currentdomain: {
+    currentDomain: {
       name: "domain",
       id: "number",
       subdomains: [],
