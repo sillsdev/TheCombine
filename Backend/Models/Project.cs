@@ -200,7 +200,7 @@ namespace BackendFramework.Models
 
     public class ProjectWithUser : Project
     {
-        public User UpdatedUser;
+        public User __UpdatedUser;
 
         public ProjectWithUser() { }
 
