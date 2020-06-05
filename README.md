@@ -21,12 +21,9 @@ A rapid word collection tool.
 2. Install:
    - [Node.js 12 (LTS)](https://nodejs.org/en/)
      - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
-     - On Ubuntu 18.04:
-        ```bash
-        $ sudo apt install curl
-        $ curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-        $ sudo apt install nodejs
-        ```
+     - On Ubuntu, follow
+       [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
+       using the appropriate Node.js version.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
      - On Ubuntu 18.04, follow these 
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
