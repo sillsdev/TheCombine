@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -17,9 +18,6 @@ namespace BackendFramework.Services
     /// <summary> All application logic for <see cref="User"/>s </summary>
     public class UserService : IUserService
     {
-        private const int SaltLength = 16;
-        private const int HashLength = 20;
-
         private readonly IUserContext _userDatabase;
         private readonly IUserRoleService _userRole;
 
@@ -29,40 +27,97 @@ namespace BackendFramework.Services
             _userRole = userRole;
         }
 
-        /// <summary> Confirms login credentials are valid </summary>
-        /// <returns> User when credentials are correct, null otherwise </returns>
+        /// <summary> Password hashing and validation. </summary>
+        private static class PasswordHash
+        {
+            private const int SaltLength = 16;
+
+            /// <summary> Use SHA1 length. </summary>
+            private const int HashLength = 160 / 8;
+
+            /// <summary> Hash iterations to slow down brute force password cracking. </summary>
+            /// It's important that this value is not too low, or password cracking is made easier.
+            private const int HashIterations = 10000;
+
+            /// <summary>
+            /// Hash a password with a generated salt and return the combined bytes suitable for storage.
+            /// </summary>
+            public static byte[] HashPassword(string password)
+            {
+                var salt = CreateSalt();
+
+                // Hash the password along with the salt
+                var hash = HashPassword(password, salt);
+
+                // Combine salt and hashed password for storage
+                var hashBytes = new byte[SaltLength + HashLength];
+                Array.Copy(salt, 0, hashBytes, 0, SaltLength);
+                Array.Copy(hash, 0, hashBytes, SaltLength, HashLength);
+
+                return hashBytes;
+            }
+
+            /// <summary>
+            /// Validate that a user-supplied password matches a previously hashed password.
+            /// </summary>
+            /// <param name="storedHash"> Stored password hash for a user. </param>
+            /// <param name="password"> The password that a user supplied to be validated. </param>
+            public static bool ValidatePassword(byte[] storedHash, string password)
+            {
+                // Get the salt from the first part of stored value.
+                var salt = new byte[SaltLength];
+                Array.Copy(storedHash, 0, salt, 0, SaltLength);
+
+                // Compute the hash on the password the user entered.
+                var computedHash = HashPassword(password, salt);
+
+                // Check if the password given to us matches the hash we have stored (after the salt).
+                for (var i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != storedHash[i + SaltLength])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            /// <summary> Hash a password and salt using PBKDF2. </summary>
+            private static byte[] HashPassword(string password, byte[] salt)
+            {
+                using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, HashIterations, HashAlgorithmName.SHA1);
+                return pbkdf2.GetBytes(HashLength);
+            }
+
+            /// <summary> Create cryptographically-secure randomized salt. </summary>
+            private static byte[] CreateSalt()
+            {
+                byte[] salt;
+                using var crypto = new RNGCryptoServiceProvider();
+                crypto.GetBytes(salt = new byte[SaltLength]);
+                return salt;
+            }
+        }
+
+        /// <summary> Confirms login credentials are valid. </summary>
+        /// <returns> User when credentials are correct, null otherwise. </returns>
         public async Task<User> Authenticate(string username, string password)
         {
-            // Fetch the stored user
+            // Fetch the stored user.
             var userList = await _userDatabase.Users.FindAsync(x => x.Username == username);
             var foundUser = userList.FirstOrDefault();
 
-            // Return null if user with specified username not found
+            // Return null if user with specified username not found.
             if (foundUser == null)
             {
                 return null;
             }
 
-            // Extract the bytes from password
-            var hashBytes = Convert.FromBase64String(foundUser.Password);
-            // Get the salt from the first part of stored value
-            var salt = new byte[SaltLength];
-            Array.Copy(hashBytes, 0, salt, 0, SaltLength);
-            // Compute the hash on the password the user entered
-            var rfc = new Rfc2898DeriveBytes(password, salt, 10000);
-            var hash = rfc.GetBytes(HashLength);
+            // Extract the bytes from encoded password.
+            var hashedPassword = Convert.FromBase64String(foundUser.Password);
 
-            // Check if the password given to us matches the hash we have stored (after the salt)
-            for (var i = 0; i < HashLength; i++)
-            {
-                if (hashBytes[i + SaltLength] != hash[i])
-                {
-                    return null;
-                }
-            }
-
-            // Authentication successful so generate jwt token
-            return await MakeJwt(foundUser);
+            // If authentication is successful, generate jwt token.
+            return PasswordHash.ValidatePassword(hashedPassword, password) ? await MakeJwt(foundUser) : null;
         }
 
         public async Task<User> MakeJwt(User user)
@@ -167,22 +222,13 @@ namespace BackendFramework.Services
                 return null;
             }
 
-            // Create cryptographically-secure randomized salt
-            byte[] salt;
-            new RNGCryptoServiceProvider().GetBytes(salt = new byte[SaltLength]);
+            var hash = PasswordHash.HashPassword(user.Password);
 
-            // Hash the password along with the salt
-            var pbkdf2 = new Rfc2898DeriveBytes(user.Password, salt, 10000);
-            var hash = pbkdf2.GetBytes(20);
-
-            // Combine salt and hashed password for storage
-            var hashBytes = new byte[SaltLength + HashLength];
-            Array.Copy(salt, 0, hashBytes, 0, SaltLength);
-            Array.Copy(hash, 0, hashBytes, SaltLength, HashLength);
-
-            // Replace password with hashed password
-            user.Password = Convert.ToBase64String(hashBytes);
+            // Replace password with encoded, hashed password.
+            user.Password = Convert.ToBase64String(hash);
             await _userDatabase.Users.InsertOneAsync(user);
+
+            // Important, don't send plaintext password back to user.
             user.Password = "";
             user.Avatar = "";
 

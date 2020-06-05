@@ -44,15 +44,19 @@ export class TreeView extends React.Component<
           break;
       }
     }
-    // TODO: if the state has the current domain defined then use that in the navigate call
-    let newDomain = createDomains(domains);
-    // If the current domain is the default then set the name to the translation of "Semantic Domain"
-    if (newDomain.currentdomain.name === "") {
-      newDomain.currentdomain.name = this.props.translate(
-        "addWords.domain"
-      ) as string;
+    // If the state has the current domain defined then use that in the navigateTree call
+    if (this.props.currentDomain.name !== "") {
+      this.props.navigateTree(props.currentDomain);
+    } else {
+      let newDomain = createDomains(domains);
+      // If the current domain is the default then set the name to the translation of "Semantic Domain"
+      if (newDomain.currentDomain.name === "") {
+        newDomain.currentDomain.name = this.props.translate(
+          "addWords.domain"
+        ) as string;
+      }
+      this.props.navigateTree(newDomain.currentDomain);
     }
-    this.props.navigate(newDomain.currentdomain);
   }
 
   animate(domain: SemanticDomainWithSubdomains | undefined): Promise<void> {
@@ -62,7 +66,7 @@ export class TreeView extends React.Component<
         setTimeout(() => {
           if (domain && this.state.visible === false) {
             if (domain.id !== this.props.currentDomain.id) {
-              this.props.navigate(domain);
+              this.props.navigateTree(domain);
               this.setState({ visible: true });
             } else {
               this.props.returnControlToCaller();

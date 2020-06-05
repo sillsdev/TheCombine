@@ -3,7 +3,7 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import SemanticDomainWithSubdomains from "../SemanticDomain";
 import TreeViewHeader from "../TreeViewHeader";
-import MockTree from "./MockSemanticTree";
+import MockDomain from "./MockSemanticDomain";
 
 // Variable event
 var event = {
@@ -20,30 +20,9 @@ var treeMaster: ReactTestRenderer;
 var treeHandle: TreeViewHeader;
 const MOCK_ANIMATE = jest.fn();
 
-// Mock out window
-const ADD_LISTENER = window.addEventListener.prototype;
-const REMOVE_LISTENER = window.removeEventListener.prototype;
-
-// TODO: Should this lint be disabled?
-// eslint-disable-next-line no-native-reassign
-window = {
-  ...window,
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-};
-
 beforeEach(() => {
-  setTree(MockTree.subdomains[1]);
+  setTree(MockDomain.subdomains[1]);
   MOCK_ANIMATE.mockClear();
-});
-
-afterAll(() => {
-  // eslint-disable-next-line no-native-reassign
-  window = {
-    ...window,
-    addEventListener: ADD_LISTENER,
-    removeEventListener: REMOVE_LISTENER,
-  };
 });
 
 describe("Tests TreeViewHeader", () => {
@@ -54,11 +33,11 @@ describe("Tests TreeViewHeader", () => {
 
   // onKeyDown
   it("Search & select domain switches semantic domain if given number found", () => {
-    treeHandle.setState({ input: MockTree.id });
+    treeHandle.setState({ input: MockDomain.id });
     event.target.value = "not empty";
     treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
 
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree);
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
     expect(treeHandle.state.input).toEqual("");
     expect(event.target.value).toEqual("");
   });
@@ -74,12 +53,39 @@ describe("Tests TreeViewHeader", () => {
     expect(event.target.value).toEqual(TEST);
   });
 
+  it("Search & select domain switches on a length 5 number", () => {
+    const leafNode: SemanticDomainWithSubdomains =
+      MockDomain.subdomains[2].subdomains[0].subdomains[0].subdomains[0];
+    treeHandle.setState({
+      input: leafNode.id,
+    });
+    event.target.value = leafNode.id;
+    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(leafNode);
+    expect(treeHandle.state.input).toEqual("");
+    expect(event.target.value).toEqual("");
+  });
+
+  it("Search & select domain does not switch semantic domain on a number of length past a leaf node", () => {
+    const TEST: string =
+      MockDomain.subdomains[2].subdomains[0].subdomains[0].subdomains[0].id +
+      ".1";
+    treeHandle.setState({ input: TEST });
+    event.target.value = TEST;
+    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+    expect(treeHandle.state.input).toEqual(TEST);
+    expect(event.target.value).toEqual(TEST);
+  });
+
   it("Search & select domain switches semantic domain if given name found", () => {
-    treeHandle.setState({ input: MockTree.subdomains[2].name });
+    treeHandle.setState({ input: MockDomain.subdomains[2].name });
     event.target.value = "not empty";
     treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
 
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subdomains[2]);
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
     expect(treeHandle.state.input).toEqual("");
     expect(event.target.value).toEqual("");
   });
@@ -98,15 +104,15 @@ describe("Tests TreeViewHeader", () => {
   // getBrotherDomain
   it("provides the proper brother domains", () => {
     // Standard navigation
-    expect(treeHandle.getBrotherDomain(-1)).toEqual(MockTree.subdomains[0]);
-    expect(treeHandle.getBrotherDomain(1)).toEqual(MockTree.subdomains[2]);
+    expect(treeHandle.getBrotherDomain(-1)).toEqual(MockDomain.subdomains[0]);
+    expect(treeHandle.getBrotherDomain(1)).toEqual(MockDomain.subdomains[2]);
 
     // Check with indices out-of-bounds
     expect(treeHandle.getBrotherDomain(-2)).toEqual(undefined);
     expect(treeHandle.getBrotherDomain(2)).toEqual(undefined);
 
     // Check that a domain w/ no parentDomain has no brotherDomains
-    setTree(MockTree);
+    setTree(MockDomain);
     expect(treeHandle.getBrotherDomain(-1)).toEqual(undefined);
   });
 
@@ -114,19 +120,19 @@ describe("Tests TreeViewHeader", () => {
   it("navigateKeys w/ Arrow Down switches to parent domain", () => {
     event.key = "ArrowDown";
     treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree);
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
   });
 
   it("navigateKeys w/ Arrow Left switches to left brother domain", () => {
     event.key = "ArrowLeft";
     treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subdomains[0]);
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
   });
 
   it("navigateKeys w/ Arrow Right switches to right brother domain", () => {
     event.key = "ArrowRight";
     treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockTree.subdomains[2]);
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
   });
 });
 
