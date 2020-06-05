@@ -1676,7 +1676,108 @@ exports[`Tests AddWords Renders correctly: node w/ no subdomains 1`] = `
 Array [
   <div
     className="MuiGrid-root MuiGrid-item"
-  />,
+  >
+    <ul
+      className="MuiGridList-root"
+      style={
+        Object {
+          "margin": -0,
+          "width": 75,
+        }
+      }
+    >
+      <li
+        className="MuiGridListTile-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          className="MuiGridListTile-tile"
+        >
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+            disabled={false}
+            id="1.2.1.1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            style={
+              Object {
+                "bottom": 0,
+                "height": "90%",
+                "left": 0,
+                "margin": "5%",
+                "width": "90%",
+              }
+            }
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiButton-label"
+            >
+              <div
+                style={
+                  Object {
+                    "textTransform": "capitalize",
+                  }
+                }
+              >
+                <span
+                  className="MuiTypography-root MuiTypography-overline"
+                >
+                  1.2.1.1
+                </span>
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
+                >
+                  depth=4
+                </p>
+              </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </li>
+      <li
+        className="MuiGridListTile-root"
+        style={
+          Object {
+            "height": "auto",
+            "padding": 0,
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          className="MuiGridListTile-tile"
+        >
+          <img
+            alt="pillar.svg"
+            height="100%"
+            src="pillar.svg"
+            width={75}
+          />
+        </div>
+      </li>
+    </ul>
+  </div>,
   <div
     className="MuiGrid-root MuiGrid-item"
   >
@@ -1749,12 +1850,12 @@ Array [
                   <span
                     className="MuiTypography-root MuiTypography-overline"
                   >
-                    1.0.0
+                    1.2.1
                   </span>
                   <h6
                     className="MuiTypography-root MuiTypography-h6"
                   >
-                    evenData0
+                    soloData
                   </h6>
                 </div>
               </span>
@@ -1806,63 +1907,7 @@ Array [
       >
         <div
           className="MuiGridListTile-tile"
-        >
-          <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
-          >
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              style={
-                Object {
-                  "marginTop": "50%",
-                }
-              }
-              tabIndex={0}
-              type="button"
-            >
-              <span
-                className="MuiButton-label"
-              >
-                <p
-                  className="MuiTypography-root MuiTypography-body2"
-                >
-                  1.0.1   
-                </p>
-                <svg
-                  aria-hidden="true"
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  role="presentation"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
-                </svg>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
-        </div>
+        />
       </li>
     </ul>
   </div>,
@@ -1874,7 +1919,7 @@ Array [
       style={
         Object {
           "margin": -0,
-          "width": 150,
+          "width": 75,
         }
       }
     >
@@ -1895,7 +1940,7 @@ Array [
             alt="parent.svg"
             height="100%"
             src="parent.svg"
-            width={150}
+            width={75}
           />
         </div>
       </li>
@@ -1915,7 +1960,7 @@ Array [
           <button
             className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
             disabled={false}
-            id="1.0"
+            id="1.2"
             onBlur={[Function]}
             onClick={[Function]}
             onDragLeave={[Function]}
@@ -1953,12 +1998,12 @@ Array [
                 <span
                   className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.0
+                  1.2
                 </span>
                 <p
                   className="MuiTypography-root MuiTypography-body1"
                 >
-                  kid0
+                  kid2
                 </p>
               </div>
             </span>
