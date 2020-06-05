@@ -53,8 +53,7 @@ A rapid word collection tool.
 5. (VS Code Users Only) Enable automatic formatting on save.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
-6. Run `npm run predatabase` to create the local database folder.
-7. Run `npm start` from the project directory to install dependencies and start
+6. Run `npm start` from the project directory to install dependencies and start
    the project
 
 [chocolatey]: https://chocolatey.org/
