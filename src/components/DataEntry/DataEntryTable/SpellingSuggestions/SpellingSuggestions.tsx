@@ -40,8 +40,9 @@ export class SpellingSuggestionsView extends React.Component<
         >
           <Typography variant="body1">{"Suggestions: "}</Typography>
           {this.props.spellingSuggestions.length > 0 ? (
-            this.props.spellingSuggestions.map((suggestion) => (
+            this.props.spellingSuggestions.map((suggestion, index) => (
               <Chip
+                key={index}
                 label={suggestion}
                 style={{ margin: 4 }}
                 onClick={() => this.props.chooseSpellingSuggestion(suggestion)}

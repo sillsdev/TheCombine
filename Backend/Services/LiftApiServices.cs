@@ -291,14 +291,8 @@ namespace BackendFramework.Services
             foreach (var audioFile in wordEntry.Audio)
             {
                 var lexPhonetic = new LexPhonetic();
-
-                var projectPath = Path.Combine(FileUtilities.GenerateFilePath(
-                    FileUtilities.FileType.Dir, true, "", ""), _projectId);
-                projectPath = Path.Combine(projectPath, "Import", "ExtractedLocation");
-                var extractedDir = Directory.GetDirectories(projectPath);
-                projectPath = Path.Combine(projectPath, extractedDir.Single());
-                var src = Path.Combine(FileUtilities.GenerateFilePath(
-                    FileUtilities.FileType.Audio, true), Path.Combine(projectPath, "audio", audioFile));
+                var projectPath = Path.Combine(_projectId, "Import", "ExtractedLocation", "Lift", "audio");
+                var src = FileUtilities.GenerateFilePath(FileUtilities.FileType.Audio, true, audioFile, projectPath);
                 var dest = Path.Combine(path, audioFile);
 
                 if (File.Exists(src))
