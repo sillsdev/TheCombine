@@ -66,7 +66,6 @@ export function filterWords(words: Word[]): Word[] {
   return filteredWords;
 }
 
-
 /**
  * A data entry table containing word entries
  */
@@ -212,7 +211,6 @@ export class DataEntryTable extends React.Component<
       this.setState({ displaySpellingSuggestionsIndex: undefined });
     else this.setState({ displaySpellingSuggestionsIndex: index });
   }
-
 
   render() {
     return (
