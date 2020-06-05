@@ -21,15 +21,31 @@ A rapid word collection tool.
 2. Install:
    - [Node.js 12 (LTS)](https://nodejs.org/en/)
      - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
+     - On Ubuntu 18.04:
+        ```bash
+        $ sudo apt install curl
+        $ curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+        $ sudo apt install nodejs
+        ```
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+     - On Ubuntu 18.04, follow these 
+       [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
    - [MongoDB Server](https://www.mongodb.com/download-center/community) and add
      /bin to PATH Environment Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
+     - On Ubuntu 18.04:
+        ```
+        $ sudo apt install mongodb
+
+        # Disable Mongo from starting system-wide.
+        $ sudo systemctl disable mongodb
+        $ sudo systemctl stop mongodb
+        ```
    - [VS Code](https://code.visualstudio.com/download) and Prettier code
      formatting extension
    - [dotnet-format](https://github.com/dotnet/format):
      `dotnet tool install -g dotnet-format --version 3.3.111304`
-3. Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
+3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
@@ -37,7 +53,8 @@ A rapid word collection tool.
 5. (VS Code Users Only) Enable automatic formatting on save.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
-6. Run `npm start` from the project directory to install dependencies and start
+6. Run `npm run predatabase` to create the local database folder.
+7. Run `npm start` from the project directory to install dependencies and start
    the project
 
 [chocolatey]: https://chocolatey.org/
