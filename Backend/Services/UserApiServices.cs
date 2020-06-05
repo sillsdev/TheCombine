@@ -27,7 +27,7 @@ namespace BackendFramework.Services
             _userRole = userRole;
         }
 
-                /// <summary> Password hashing and validation. </summary>
+        /// <summary> Password hashing and validation. </summary>
         private static class PasswordHash
         {
             private const int SaltLength = 16;
