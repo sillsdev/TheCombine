@@ -120,5 +120,22 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(gotWord.Id);
         }
+
+        /// <summary> Deletes <see cref="Word"/> with specified ID </summary>
+        /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId} </remarks>
+        [HttpDelete("{wordId}/audio/{fileName}")]
+        public async Task<IActionResult> Delete(string projectId, string wordId, string fileName)
+        {
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            {
+                return new ForbidResult();
+            }
+
+            if (await _wordService.Delete(projectId, wordId, fileName))
+            {
+                return new OkResult();
+            }
+            return new NotFoundObjectResult("The project was found, but the word was not deleted");
+        }
     }
 }

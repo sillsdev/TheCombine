@@ -42,6 +42,28 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
+        public async Task<bool> Delete(string projectId, string wordId, string fileName)
+        {
+            var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
+
+            // We only want to add the deleted word if the word started in the frontier
+            if (wordIsInFrontier)
+            {
+                var wordToDelete = _repo.GetWord(projectId, wordId).Result;
+                wordToDelete.Id = "";
+                wordToDelete.History = new List<string>() { wordId };
+
+                foreach (var senseAcc in wordToDelete.Senses)
+                {
+                    senseAcc.Accessibility = (int)State.Deleted;
+                }
+
+                await _repo.Create(wordToDelete);
+            }
+
+            return wordIsInFrontier;
+        }
+
         /// <summary> Makes a new word in the Frontier with changes made </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Update(string projectId, string wordId, Word word)
