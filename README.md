@@ -27,17 +27,9 @@ A rapid word collection tool.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
      - On Ubuntu 18.04, follow these 
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
-   - [MongoDB Server](https://www.mongodb.com/download-center/community) and add
+   - [MongoDB Server](https://docs.mongodb.com/manual/administration/install-community/) and add
      /bin to PATH Environment Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
-     - On Ubuntu 18.04:
-        ```bash
-        $ sudo apt install mongodb
-
-        # Disable Mongo from starting system-wide.
-        $ sudo systemctl disable mongodb
-        $ sudo systemctl stop mongodb
-        ```
    - [VS Code](https://code.visualstudio.com/download) and Prettier code
      formatting extension
    - [dotnet-format](https://github.com/dotnet/format):
