@@ -1,4 +1,11 @@
 import ProjectUsers from "./ProjectUsers";
 import { connect } from "react-redux";
+import { StoreState } from "../../../types";
 
-export default connect(null, null)(ProjectUsers);
+function mapStateToProps(state: StoreState) {
+  return {
+    project: state.currentProject,
+  };
+}
+
+export default connect(mapStateToProps)(ProjectUsers);

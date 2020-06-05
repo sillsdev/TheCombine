@@ -21,7 +21,7 @@ export interface ChooseProjectProps {
   setCurrentProject: (project: Project) => void;
 }
 
-interface ChooseProjectState {
+export interface ChooseProjectState {
   projectList: Project[];
 }
 
