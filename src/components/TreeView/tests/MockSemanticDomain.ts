@@ -47,4 +47,23 @@ PAR.subdomains[2].subdomains.push({
   description: "so lonely...",
 });
 
+
+//Extend the last subtree for a total depth of 5
+
+PAR.subdomains[2].subdomains[0].subdomains.push({
+  name: "depth=4",
+  id: PAR.subdomains[2].subdomains[0].id + ".1",
+  parentDomain: PAR.subdomains[2].subdomains[0],
+  subdomains: [],
+  description: "almost at the bottom...",
+});
+
+PAR.subdomains[2].subdomains[0].subdomains[0].subdomains.push({
+  name: "depth=5",
+  id: PAR.subdomains[2].subdomains[0].subdomains[0].id + ".1",
+  parentDomain: PAR.subdomains[2].subdomains[0].subdomains[0],
+  subdomains: [],
+  description: "ROCK BOTTOM",
+});
+
 export default PAR;

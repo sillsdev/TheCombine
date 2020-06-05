@@ -74,6 +74,33 @@ describe("Tests TreeViewHeader", () => {
     expect(event.target.value).toEqual(TEST);
   });
 
+  it("Search & select domain switches on a length 5 number", () => {
+    const leafnode: SemanticDomainWithSubdomains =
+      MockTree.subdomains[2].subdomains[0].subdomains[0].subdomains[0];
+    treeHandle.setState({
+      input: leafnode.id,
+    });
+    event.target.value = leafnode.id;
+    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(leafnode);
+    expect(treeHandle.state.input).toEqual("");
+    expect(event.target.value).toEqual("");
+  });
+
+  it("Search & select domain does not switch semantic domain on a number of length past a leaf node", () => {
+    const TEST: string =
+      MockTree.subdomains[2].subdomains[0].subdomains[0].subdomains[0].id +
+      ".1";
+    treeHandle.setState({ input: TEST });
+    event.target.value = TEST;
+    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+    expect(treeHandle.state.input).toEqual(TEST);
+    expect(event.target.value).toEqual(TEST);
+  });
+
   it("Search & select domain switches semantic domain if given name found", () => {
     treeHandle.setState({ input: MockDomain.subdomains[2].name });
     event.target.value = "not empty";
