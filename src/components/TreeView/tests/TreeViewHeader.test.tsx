@@ -20,30 +20,9 @@ var treeMaster: ReactTestRenderer;
 var treeHandle: TreeViewHeader;
 const MOCK_ANIMATE = jest.fn();
 
-// Mock out window
-const ADD_LISTENER = window.addEventListener.prototype;
-const REMOVE_LISTENER = window.removeEventListener.prototype;
-
-// TODO: Should this lint be disabled?
-// eslint-disable-next-line no-native-reassign
-window = {
-  ...window,
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-};
-
 beforeEach(() => {
   setTree(MockDomain.subdomains[1]);
   MOCK_ANIMATE.mockClear();
-});
-
-afterAll(() => {
-  // eslint-disable-next-line no-native-reassign
-  window = {
-    ...window,
-    addEventListener: ADD_LISTENER,
-    removeEventListener: REMOVE_LISTENER,
-  };
 });
 
 describe("Tests TreeViewHeader", () => {
@@ -65,6 +44,33 @@ describe("Tests TreeViewHeader", () => {
 
   it("Search & select domain does not switch semantic domain if given number not found", () => {
     const TEST: string = "10";
+    treeHandle.setState({ input: TEST });
+    event.target.value = TEST;
+    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+    expect(treeHandle.state.input).toEqual(TEST);
+    expect(event.target.value).toEqual(TEST);
+  });
+
+  it("Search & select domain switches on a length 5 number", () => {
+    const leafNode: SemanticDomainWithSubdomains =
+      MockDomain.subdomains[2].subdomains[0].subdomains[0].subdomains[0];
+    treeHandle.setState({
+      input: leafNode.id,
+    });
+    event.target.value = leafNode.id;
+    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(leafNode);
+    expect(treeHandle.state.input).toEqual("");
+    expect(event.target.value).toEqual("");
+  });
+
+  it("Search & select domain does not switch semantic domain on a number of length past a leaf node", () => {
+    const TEST: string =
+      MockDomain.subdomains[2].subdomains[0].subdomains[0].subdomains[0].id +
+      ".1";
     treeHandle.setState({ input: TEST });
     event.target.value = TEST;
     treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
