@@ -86,10 +86,14 @@ export class ReviewEntriesComponent extends React.Component<
             icons={tableIcons}
             title={<Translate id={"reviewEntries.title"} />}
             columns={columns}
-            data={this.props.words.map((word) => ({
-              ...word,
-              senses: word.senses.filter((sense) => !sense.deleted),
-            }))}
+            data={this.props.words.map((word) =>
+              word === null
+                ? null
+                : {
+                    ...word,
+                    senses: word.senses.filter((sense) => !sense.deleted),
+                  }
+            )}
             editable={{
               onRowUpdate: (
                 newData: ReviewEntriesWord,
