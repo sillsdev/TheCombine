@@ -87,7 +87,7 @@ namespace BackendFramework.Services
             private static byte[] HashPassword(string password, byte[] salt)
             {
                 // SHA256 is the recommended PBKDF2 hash algorithm.
-                var pbkdf2 = new Rfc2898DeriveBytes(password, salt, HashIterations, HashAlgorithmName.SHA256);
+                using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, HashIterations, HashAlgorithmName.SHA256);
                 return pbkdf2.GetBytes(HashLength);
             }
 
@@ -95,7 +95,8 @@ namespace BackendFramework.Services
             private static byte[] CreateSalt()
             {
                 byte[] salt;
-                new RNGCryptoServiceProvider().GetBytes(salt = new byte[SaltLength]);
+                using var crypto = new RNGCryptoServiceProvider();
+                crypto.GetBytes(salt = new byte[SaltLength]);
                 return salt;
             }
         }
