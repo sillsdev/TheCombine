@@ -31,7 +31,7 @@ A rapid word collection tool.
      /bin to PATH Environment Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
      - On Ubuntu 18.04:
-        ```
+        ```bash
         $ sudo apt install mongodb
 
         # Disable Mongo from starting system-wide.
