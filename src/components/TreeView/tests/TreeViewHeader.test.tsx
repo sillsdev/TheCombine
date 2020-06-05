@@ -75,7 +75,7 @@ describe("Tests TreeViewHeader", () => {
   });
 
   it("Search & select domain switches on a length 5 number", () => {
-    var leafnode: SemanticDomainWithSubdomains =
+    const leafnode: SemanticDomainWithSubdomains =
       MockTree.subdomains[2].subdomains[0].subdomains[0].subdomains[0];
     treeHandle.setState({
       input: leafnode.id,

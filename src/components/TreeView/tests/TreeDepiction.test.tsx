@@ -21,7 +21,7 @@ describe("Tests AddWords", () => {
   );
   testFromNode(
     "Renders correctly: node w/ no subdomains",
-    MockTree.subdomains[2].subdomains[0]
+    MockTree.subdomains[0].subdomains[0]
   );
 });
 
