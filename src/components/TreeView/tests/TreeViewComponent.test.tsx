@@ -2,7 +2,7 @@ import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import TreeViewComponent, { TreeView } from "../TreeViewComponent";
 import SemanticDomainWithSubdomains from "../SemanticDomain";
-import mockTree from "./MockSemanticTree";
+import MockDomain from "./MockSemanticDomain";
 import { store } from "../../../store";
 import { Provider } from "react-redux";
 
@@ -30,7 +30,7 @@ jest.mock("../TreeViewReducer", () => {
   return {
     ...realReducer,
     createDomains: () => {
-      return { currentdomain: mockTree };
+      return { currentDomain: MockDomain };
     },
   };
 });
@@ -51,6 +51,13 @@ describe("Tests AddWords", () => {
     snapTest("default view");
   });
 
+  // This assumes MockDomain was used in createTree() below and MockDomain.name !== ""
+  it("Navigates to .currentDomain in construction", () => {
+    createTree();
+    expect(NAVIGATE_MOCK).toHaveBeenCalledTimes(1);
+    expect(NAVIGATE_MOCK).toHaveBeenCalledWith(MockDomain);
+  });
+
   it("Sets a new domain upon navigation", () => {
     let newDom: SemanticDomainWithSubdomains = {
       name: "test",
@@ -66,7 +73,7 @@ describe("Tests AddWords", () => {
   });
 
   it("Returns control to caller when the same semantic domain is passed in", () => {
-    treeHandle.animate(mockTree);
+    treeHandle.animate(MockDomain);
     jest.runAllTimers();
 
     expect(RETURN_MOCK).toHaveBeenCalledTimes(1);
@@ -78,9 +85,9 @@ function createTree() {
     treeMaster = renderer.create(
       <Provider store={store}>
         <TreeViewComponent
-          currentDomain={mockTree}
+          currentDomain={MockDomain}
           returnControlToCaller={RETURN_MOCK}
-          navigate={NAVIGATE_MOCK}
+          navigateTree={NAVIGATE_MOCK}
         />
       </Provider>
     );
