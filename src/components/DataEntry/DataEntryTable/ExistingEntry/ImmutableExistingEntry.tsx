@@ -20,7 +20,7 @@ export class ImmutableExistingEntry extends React.Component<
           <Grid
             item
             xs={4}
-            key={this.props.vernacular}
+            key={"vernacular_" + this.props.vernacular}
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
@@ -32,7 +32,7 @@ export class ImmutableExistingEntry extends React.Component<
           <Grid
             item
             xs={4}
-            key={this.props.gloss}
+            key={"gloss_" + this.props.gloss}
             style={{
               paddingLeft: theme.spacing(2),
               paddingRight: theme.spacing(2),
