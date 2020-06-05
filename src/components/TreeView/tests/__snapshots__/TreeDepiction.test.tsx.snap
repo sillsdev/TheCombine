@@ -890,20 +890,6 @@ Array [
           </button>
         </div>
       </li>
-      <li
-        className="MuiGridListTile-root"
-        style={
-          Object {
-            "height": "auto",
-            "padding": 0,
-            "width": "100%",
-          }
-        }
-      >
-        <div
-          className="MuiGridListTile-tile"
-        />
-      </li>
     </ul>
   </div>,
   <img
@@ -1687,20 +1673,6 @@ Array [
           </button>
         </div>
       </li>
-      <li
-        className="MuiGridListTile-root"
-        style={
-          Object {
-            "height": "auto",
-            "padding": 0,
-            "width": "100%",
-          }
-        }
-      >
-        <div
-          className="MuiGridListTile-tile"
-        />
-      </li>
     </ul>
   </div>,
   <img
@@ -2052,20 +2024,6 @@ Array [
             />
           </button>
         </div>
-      </li>
-      <li
-        className="MuiGridListTile-root"
-        style={
-          Object {
-            "height": "auto",
-            "padding": 0,
-            "width": "100%",
-          }
-        }
-      >
-        <div
-          className="MuiGridListTile-tile"
-        />
       </li>
     </ul>
   </div>,
@@ -2781,20 +2739,6 @@ Array [
             />
           </button>
         </div>
-      </li>
-      <li
-        className="MuiGridListTile-root"
-        style={
-          Object {
-            "height": "auto",
-            "padding": 0,
-            "width": "100%",
-          }
-        }
-      >
-        <div
-          className="MuiGridListTile-tile"
-        />
       </li>
     </ul>
   </div>,
