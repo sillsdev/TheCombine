@@ -138,4 +138,4 @@ TODO
 - [React-Redux](https://redux.js.org/basics/usage-with-react)
 - [React-Localize-Redux](https://ryandrewjohnson.github.io/react-localize-redux/)
   (Language Localization)
-- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-2.2)
+- [ASP.NET](https://docs.microsoft.com/en-us/aspnet/core/getting-started/?view=aspnetcore-3.1)
