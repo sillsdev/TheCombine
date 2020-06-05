@@ -3,52 +3,78 @@ import { TextField, Grid, Button } from "@material-ui/core";
 
 import { updateProject } from "../../../backend";
 import { Project } from "../../../types/project";
-import { Translate } from "react-localize-redux";
+import {
+  Translate,
+  LocalizeContextProps,
+  withLocalize,
+} from "react-localize-redux";
 
 interface NameProps {
   project: Project;
   setCurrentProject: (project: Project) => void;
 }
 
-function ProjectName(props: NameProps) {
-  const [projectName, setProjectName] = React.useState<string>(
-    props.project.name
-  );
+interface NameState {
+  projectName: string;
+}
 
-  function updateName() {
+class ProjectName extends React.Component<
+  NameProps & LocalizeContextProps,
+  NameState
+> {
+  constructor(props: NameProps & LocalizeContextProps) {
+    super(props);
+    this.state = {
+      projectName: props.project.name,
+    };
+  }
+
+  private updateName(newName: string) {
     // Update backend
     updateProject({
-      ...props.project,
-      name: projectName,
+      ...this.props.project,
+      name: newName,
     });
 
     // Update redux store
-    props.setCurrentProject({
-      ...props.project,
-      name: projectName,
+    this.props.setCurrentProject({
+      ...this.props.project,
+      name: newName,
     });
   }
 
-  return (
-    <Grid container spacing={1}>
-      <Grid item xs={12}>
-        <TextField
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-          onBlur={() => updateName()}
-        />
+  componentDidUpdate(prevProps: NameProps) {
+    if (prevProps.project.id !== this.props.project.id) {
+      this.setState({ projectName: this.props.project.name });
+    }
+  }
+
+  render() {
+    return (
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <TextField
+            value={this.state.projectName}
+            onChange={(e) => this.setState({ projectName: e.target.value })}
+            onBlur={(e) => this.updateName(e.target.value)}
+          />
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            color={
+              this.state.projectName !== this.props.project.name
+                ? "primary"
+                : "default"
+            }
+            onClick={() => this.updateName(this.state.projectName)}
+          >
+            <Translate id="projectSettings.language.save" />
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item>
-        <Button
-          variant="contained"
-          color={projectName !== props.project.name ? "primary" : "default"}
-          onClick={() => updateName()}
-        >
-          <Translate id="projectSettings.language.save" />
-        </Button>
-      </Grid>
-    </Grid>
-  );
+    );
+  }
 }
 
-export default ProjectName;
+export default withLocalize(ProjectName);
