@@ -250,7 +250,6 @@ export default class TreeDepiction extends React.Component<
               <GridListTile>
                 {this.nameTile(this.props.currentDomain.parentDomain)}
               </GridListTile>
-              <GridListTile></GridListTile>
             </GridList>
           )}
         </Grid>
