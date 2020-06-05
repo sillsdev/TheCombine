@@ -19,17 +19,22 @@ A rapid word collection tool.
    ```
 
 2. Install:
-   - [Node.js 12 (LTS)](https://nodejs.org/en/)
+   - [Node.js 12 (LTS)](https://nodejs.org/en/download/)
      - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
+     - On Ubuntu, follow
+       [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
+       using the appropriate Node.js version.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-   - [MongoDB Server](https://www.mongodb.com/download-center/community) and add
+     - On Ubuntu 18.04, follow these 
+       [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
+   - [MongoDB Server](https://docs.mongodb.com/manual/administration/install-community/) and add
      /bin to PATH Environment Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
    - [VS Code](https://code.visualstudio.com/download) and Prettier code
      formatting extension
    - [dotnet-format](https://github.com/dotnet/format):
      `dotnet tool install -g dotnet-format --version 3.3.111304`
-3. Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
+3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
