@@ -27,9 +27,7 @@ export class ProjectSwitch extends React.Component<
       projectList: [],
       currentUser: getCurrentUser(),
     };
-  }
 
-  componentWillMount() {
     if (this.state.currentUser) {
       getAllProjectsByUser(this.state.currentUser).then((projects) => {
         this.setState({ projectList: projects });
