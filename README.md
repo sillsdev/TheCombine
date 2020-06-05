@@ -19,7 +19,7 @@ A rapid word collection tool.
    ```
 
 2. Install:
-   - [Node.js 12 (LTS)](https://nodejs.org/en/)
+   - [Node.js 12 (LTS)](https://nodejs.org/en/download/)
      - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
      - On Ubuntu, follow
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
