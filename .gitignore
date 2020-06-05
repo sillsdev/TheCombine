@@ -42,6 +42,7 @@ BackendFramework.sln.DotSettings.user
 Backend/.vscode/**/*
 Backend/SIL.Lift/**/*
 start_mongo.bat
+Backend/ql-database
 /**/*.xml
 /**/*.lift
 /**/*.orig

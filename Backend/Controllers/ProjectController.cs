@@ -5,6 +5,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
 {
@@ -136,7 +137,7 @@ namespace BackendFramework.Controllers
             currentUser = await _userService.MakeJwt(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
-            var output = new ProjectWithUser(project) { UpdatedUser = currentUser };
+            var output = new ProjectWithUser(project) { __UpdatedUser = currentUser };
 
             return new OkObjectResult(output);
         }
@@ -283,6 +284,13 @@ namespace BackendFramework.Controllers
             if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
             {
                 return new ForbidResult();
+            }
+
+
+            // sanitize user input
+            if (!SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
             }
 
             return new OkObjectResult(_projectService.CanImportLift(projectId));

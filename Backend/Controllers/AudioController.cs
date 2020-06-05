@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -46,6 +46,12 @@ namespace BackendFramework.Controllers
             //    return new ForbidResult();
             //}
 
+            // sanitize user input
+            if ((!SanitizeId(projectId)) || (!SanitizeId(wordId)))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
             var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
             if (filePath == null)
             {
@@ -63,7 +69,7 @@ namespace BackendFramework.Controllers
 
         /// <summary>
         /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves locally to
-        /// ~/.CombineFiles/{ProjectId}/ExtractedLocation/Import/Audio
+        /// ~/.CombineFiles/{ProjectId}/ExtractedLocation/Import/ExtractedLocation/Lift/audio
         /// </summary>
         /// <remarks> POST: v1/projects/{projectId}/words/{wordId}/upload/audio </remarks>
         /// <returns> Path to local audio file </returns>
@@ -75,6 +81,13 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
+
+            // sanitize user input
+            if ((!SanitizeId(projectId)) || (!SanitizeId(wordId)))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
             var file = fileUpload.File;
             var requestedFileName = fileUpload.File?.FileName;
             if (string.IsNullOrEmpty(requestedFileName))
@@ -90,8 +103,7 @@ namespace BackendFramework.Controllers
 
             // Get path to home
             fileUpload.FilePath = GenerateFilePath(
-                FileType.Audio, false, wordId, Path.Combine(
-                    projectId, Path.Combine("Import", "ExtractedLocation", "Lift"), "Audio"));
+                FileType.Audio, false, wordId, Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio"));
 
             // Copy the file data to a new local file
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))

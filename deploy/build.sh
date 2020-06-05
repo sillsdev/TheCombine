@@ -19,9 +19,12 @@
 set -euf -o pipefail
 
 cd ..
-echo "Building app"
+echo "Building frontend"
 npm install
 npm run build
 cd Backend
+echo "Removing previous build results"
+rm -rf bin/Release/*
+echo "Building backend"
 dotnet publish -c Release
 cd ../deploy

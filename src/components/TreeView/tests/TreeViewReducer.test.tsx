@@ -26,7 +26,7 @@ describe("Test the TreeViewReducer", () => {
       },
     ];
     let expected = {
-      currentdomain: {
+      currentDomain: {
         name: "",
         id: "",
         description: "",
@@ -39,13 +39,13 @@ describe("Test the TreeViewReducer", () => {
         ],
       },
     };
-    expected.currentdomain.subdomains[0].subdomains.map((value) => {
+    expected.currentDomain.subdomains[0].subdomains.map((value) => {
       return {
         ...value,
-        parentDomains: expected.currentdomain.subdomains[0],
+        parentDomains: expected.currentDomain.subdomains[0],
       };
     });
-    expected.currentdomain.subdomains[0].parentDomain = expected.currentdomain;
+    expected.currentDomain.subdomains[0].parentDomain = expected.currentDomain;
     expect(createDomains(initialJson)).toEqual(expected);
   });
 
@@ -66,14 +66,14 @@ describe("Test the TreeViewReducer", () => {
   it("Returns state passed in when passed an invalid action", () => {
     expect(
       treeViewReducer(
-        { currentdomain: defaultState.currentdomain.subdomains[0] },
+        { currentDomain: defaultState.currentDomain.subdomains[0] },
         ({ type: "Nothing" } as any) as TreeViewAction
       )
-    ).toEqual({ currentDomain: defaultState.currentdomain.subdomains[0] });
+    ).toEqual({ currentDomain: defaultState.currentDomain.subdomains[0] });
   });
 
   it("Returns state with a new SemanticDomain when requested to change this value", () => {
-    let payload: SemanticDomainWithSubdomains = defaultState.currentdomain
+    let payload: SemanticDomainWithSubdomains = defaultState.currentDomain
       .parentDomain as SemanticDomainWithSubdomains;
     expect(
       treeViewReducer(defaultState, {

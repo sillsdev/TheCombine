@@ -286,7 +286,10 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   /** Move the focus to the vernacular textbox */
   focusVernInput() {
-    if (this.vernInput.current) this.vernInput.current.focus();
+    if (this.vernInput.current) {
+      this.vernInput.current.focus();
+      this.vernInput.current.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
   render() {
@@ -389,34 +392,36 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
           {this.props.autocompleteSetting !== AutoComplete.Off &&
             this.props.displayDuplicates &&
             this.state.isDuplicate &&
-            this.state.duplicates.map((duplicate) => (
-              <Grid
-                item
-                xs={12}
-                key={"duplicateNewVernEntry" + duplicate.id}
-                style={{ background: "whitesmoke" }}
-              >
-                <DuplicateResolutionView
-                  existingEntry={duplicate}
-                  newSense={
-                    this.state.newEntry.senses &&
-                    this.state.newEntry.senses[0] &&
-                    this.state.newEntry.senses[0].glosses &&
-                    this.state.newEntry.senses[0].glosses[0]
-                      ? this.state.newEntry.senses[0].glosses[0].def
-                      : ""
-                  }
-                  addSense={(existingWord: Word, newSense: string) =>
-                    this.addNewSense(existingWord, newSense)
-                  }
-                  addSemanticDomain={(
-                    existingWord: Word,
-                    sense: Sense,
-                    index: number
-                  ) => this.addSemanticDomain(existingWord, sense, index)}
-                />
-              </Grid>
-            ))}
+            this.state.duplicates.map((duplicate) =>
+              duplicate === null ? null : (
+                <Grid
+                  item
+                  xs={12}
+                  key={"duplicateNewVernEntry" + duplicate.id}
+                  style={{ background: "whitesmoke" }}
+                >
+                  <DuplicateResolutionView
+                    existingEntry={duplicate}
+                    newSense={
+                      this.state.newEntry.senses &&
+                      this.state.newEntry.senses[0] &&
+                      this.state.newEntry.senses[0].glosses &&
+                      this.state.newEntry.senses[0].glosses[0]
+                        ? this.state.newEntry.senses[0].glosses[0].def
+                        : ""
+                    }
+                    addSense={(existingWord: Word, newSense: string) =>
+                      this.addNewSense(existingWord, newSense)
+                    }
+                    addSemanticDomain={(
+                      existingWord: Word,
+                      sense: Sense,
+                      index: number
+                    ) => this.addSemanticDomain(existingWord, sense, index)}
+                  />
+                </Grid>
+              )
+            )}
         </Grid>
       </Grid>
     );
