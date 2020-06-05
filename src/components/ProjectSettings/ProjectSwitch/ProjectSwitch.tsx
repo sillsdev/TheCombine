@@ -12,7 +12,7 @@ interface SwitchProps {
 }
 
 interface SwitchState {
-  projectList: Array<Project>;
+  projectList: Project[];
   currentUser: User | null;
 }
 
