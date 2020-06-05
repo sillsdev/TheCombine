@@ -141,7 +141,7 @@ function wordsAreEqual(a: Word, b: Word): boolean {
  * Displays a word a user can still make edits to
  */
 export class ExistingEntry extends React.Component<
-  ExistingEntryProps, 
+  ExistingEntryProps,
   ExistingEntryState
 > {
   readonly maxDuplicates: number = 5;
@@ -408,7 +408,6 @@ export class ExistingEntry extends React.Component<
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
-              
             />
           </Grid>
           <Grid
