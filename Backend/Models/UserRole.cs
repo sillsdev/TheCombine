@@ -91,6 +91,4 @@ namespace BackendFramework.Models
         /// <summary> Can enter words </summary>
         WordEntry = 1
     }
-
-
 }
