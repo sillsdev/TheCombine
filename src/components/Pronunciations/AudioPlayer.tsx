@@ -43,6 +43,7 @@ export default function AudioPlayer(props: PlayerProps) {
   let deleteOrTogglePlay = (event: any) => {
     if (event.shiftKey) {
       Backend.deleteAudio(props.wordId, props.fileName);
+      console.log("Shift click works");
     } else if (!playing) {
       audio.play();
       setPlaying(true);

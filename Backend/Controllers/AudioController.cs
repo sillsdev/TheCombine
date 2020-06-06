@@ -121,8 +121,8 @@ namespace BackendFramework.Controllers
             return new ObjectResult(gotWord.Id);
         }
 
-        /// <summary> Deletes <see cref="Word"/> with specified ID </summary>
-        /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId} </remarks>
+        /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
+        /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId}/audio/{fileName} </remarks>
         [HttpDelete("{wordId}/audio/{fileName}")]
         public async Task<IActionResult> Delete(string projectId, string wordId, string fileName)
         {
