@@ -132,6 +132,19 @@ database objects), create a user normally and then execute:
 > npm run set-admin-user -- <USER_NAME>
 ```
 
+## Docker
+
+### Requirements
+
+Install [Docker](https://docs.docker.com/get-docker/).
+
+### Build and Run
+
+```batch
+> docker-compose build --parallel
+> docker-compose run
+```
+
 ## Features
 
 TODO
