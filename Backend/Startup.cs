@@ -2,6 +2,7 @@
 using System.Text;
 using BackendFramework.Contexts;
 using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -135,7 +136,7 @@ namespace BackendFramework
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -163,6 +164,55 @@ namespace BackendFramework
             {
                 endpoints.MapDefaultControllerRoute();
             });
+
+            // If an admin user has been created via the commandline, treat that as a single action and shut the
+            // server down so the calling script knows it's been completed successfully.
+            if (CreateAdminUser(app.ApplicationServices.GetService<IUserService>()))
+            {
+                _logger.LogInformation("Stopping application");
+
+                // TODO: This doesn't seem to actually be stopping the application.
+                appLifetime.StopApplication();
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="userService"></param>
+        /// <returns> Whether the application should be stopped. </returns>
+        /// <exception cref="EnvironmentNotConfiguredException">
+        /// If required environment variables are not set.
+        /// </exception>
+        private bool CreateAdminUser(IUserService userService)
+        {
+            const string createAdminUsernameArg = "--create-admin-username";
+            const string createAdminPasswordEnv = "ASPNETCORE_ADMIN_PASSWORD";
+
+            var username = Configuration.GetValue<string>(createAdminUsernameArg);
+            if (username == null)
+            {
+                return false;
+            }
+
+            var password = Environment.GetEnvironmentVariable(createAdminPasswordEnv);
+            if (password == null)
+            {
+                _logger.LogError($"Must set {createAdminPasswordEnv} environment variable " +
+                                 $"when using {createAdminUsernameArg} command line option.");
+                throw new EnvironmentNotConfiguredException();
+            }
+
+            _logger.LogInformation($"Creating admin user: {username}");
+
+            var user = new User {Username = username, Password = password, IsAdmin = true};
+            var returnedUser = userService.Create(user).Result;
+            if (returnedUser == null)
+            {
+                _logger.LogError("Failed to create admin user.");
+            }
+
+            return true;
         }
     }
 }
