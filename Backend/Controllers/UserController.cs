@@ -6,6 +6,10 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using MailKit.Net.Smtp;
+using MimeKit;
+using System.Web.Http;
 
 namespace BackendFramework.Controllers
 {
@@ -17,11 +21,41 @@ namespace BackendFramework.Controllers
     {
         private readonly IUserService _userService;
         private readonly IPermissionService _permissionService;
+        private readonly IEmailService _emailService;
 
-        public UserController(IUserService userService, IPermissionService permissionService)
+        public UserController(IUserService userService, IPermissionService permissionService, IEmailService emailService)
         {
             _userService = userService;
             _permissionService = permissionService;
+            _emailService = emailService;
+        }
+
+        /// <summary> Sends a password reset request </summary>
+        /// <remarks> GET: v1/users/forgot </remarks>
+        [AllowAnonymous]
+        [HttpPost("forgot")]
+        public async Task<IActionResult> ResetPassword()
+        {
+            var email = "jamescpruitt@gmail.com";
+            // find user attached to email
+            var user = _userService.GetAllUsers().Result.Where(user => user.Email.Equals(email)).Single();
+
+            // create email
+            var message = new MimeMessage();
+            message.To.Add(new MailboxAddress(user.Name, user.Email));
+            message.Subject = "Combine password reset";
+            message.Body = new TextPart("plain")
+            {
+                Text = string.Format("A password reset has been requested for the user {0}. Follow the link to reset {0}'s password.\n\n If you did not request a password reset please ignore this email", user.Username)
+            };
+            if (await _emailService.SendEmail(message))
+            {
+                return new OkResult();
+            }
+            else
+            {
+                return new InternalServerErrorResult();
+            }
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
@@ -55,7 +89,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/users/authenticate </remarks>
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody]Credentials cred)
+        public async Task<IActionResult> Authenticate([FromBody] Credentials cred)
         {
             try
             {
@@ -97,7 +131,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of created user </returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]User user)
+        public async Task<IActionResult> Post([FromBody] User user)
         {
             var returnUser = await _userService.Create(user);
             if (returnUser == null)

@@ -35,6 +35,10 @@ namespace BackendFramework
         {
             public string ConnectionString { get; set; }
             public string CombineDatabase { get; set; }
+            public string SmtpServer { get; set; }
+            public int SmtpPort { get; set; }
+            public string SmtpUsername { get; set; }
+            public string SmtpPassword { get; set; }
         }
 
         private class EnvironmentNotConfiguredException : Exception
@@ -99,6 +103,10 @@ namespace BackendFramework
             {
                 options.ConnectionString = Configuration["MongoDB:ConnectionString"];
                 options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
+                options.SmtpServer = Configuration["Email:SmtpServer"];
+                options.SmtpPort = Int32.Parse(Configuration["Email:SmtpPort"]);
+                options.SmtpUsername = Configuration["Email:SmtpUsername"];
+                options.SmtpPassword = Configuration["Email:SmtpPassword"];
             });
 
             // Register concrete types for dependency injection
@@ -131,6 +139,10 @@ namespace BackendFramework
 
             // Permission types
             services.AddTransient<IPermissionService, PermissionService>();
+
+            // Email types
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IEmailContext, EmailContext>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
