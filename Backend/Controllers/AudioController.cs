@@ -135,7 +135,7 @@ namespace BackendFramework.Controllers
             {
                 return new OkResult();
             }
-            return new NotFoundObjectResult("The project was found, but the word was not deleted");
+            return new NotFoundObjectResult("The project was found, but the word audio was not deleted");
         }
     }
 }
