@@ -24,9 +24,7 @@ namespace BackendFramework.Helper
             return false;
         }
 
-        // TODO: split this function in two that generate directories or files
-        public static string GenerateFilePath(FileType type, bool isDirectory, string customFileName = "",
-            string customDirPath = "")
+        public static string GeneratePathToHome()
         {
             // Generate path to home on linux
             var pathToHome = Environment.GetEnvironmentVariable("HOME");
@@ -42,6 +40,16 @@ namespace BackendFramework.Helper
             {
                 throw new DesktopNotFoundException();
             }
+
+            return pathToHome;
+        }
+
+        // TODO: split this function in two that generate directories or files
+        public static string GenerateFilePath(FileType type, bool isDirectory, string customFileName = "",
+            string customDirPath = "")
+        {
+            // Generate path to home on Linux or Windows
+            var pathToHome = GeneratePathToHome();
 
             // Path to the base data folder
             var returnFilepath = Path.Combine(pathToHome, ".CombineFiles", customDirPath);

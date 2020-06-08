@@ -65,6 +65,7 @@ export class DataEntryComponent extends React.Component<
           </Paper>
 
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
+            <AppBarComponent />
             <TreeViewComponent
               returnControlToCaller={() =>
                 this.setState({

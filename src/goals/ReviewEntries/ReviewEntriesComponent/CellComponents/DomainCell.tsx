@@ -11,7 +11,7 @@ import { highlight } from "../../../../types/theme";
 
 interface DomainCellProps {
   rowData: ReviewEntriesWord;
-  selectedDomain: SemanticDomain;
+  selectedDomain?: SemanticDomain;
   sortingByDomains: boolean;
   editDomains?: (senseId: string, newDomains: SemanticDomain[]) => void;
 }
@@ -49,7 +49,14 @@ export default class DomainCell extends React.Component<
     this.setState({
       addingDomains: false,
     });
-    if (this.props.editDomains)
+    if (this.props.editDomains) {
+      if (
+        this.props.selectedDomain === undefined ||
+        this.props.selectedDomain === null
+      )
+        throw new Error(
+          "Cannot add domain without the selectedDomain property."
+        );
       this.props.editDomains(this.state.senseToChange.senseId, [
         ...this.state.senseToChange.domains,
         {
@@ -57,6 +64,7 @@ export default class DomainCell extends React.Component<
           id: this.props.selectedDomain.id,
         },
       ]);
+    }
   }
 
   private deleteDomain(toDelete: SemanticDomain, sense: ReviewEntriesSense) {

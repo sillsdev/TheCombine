@@ -95,14 +95,8 @@ namespace BackendFramework.Services
 
         private string GetProjectDir(string projectId)
         {
-            // Generate path to home on linux
-            var pathToHome = Environment.GetEnvironmentVariable("HOME");
-
-            // Generate home on windows
-            if (pathToHome == null)
-            {
-                pathToHome = Environment.GetEnvironmentVariable("UserProfile");
-            }
+            // Generate path to home on Linux or Windows
+            var pathToHome = FileUtilities.GeneratePathToHome();
 
             return Path.Combine(pathToHome, ".CombineFiles", projectId);
         }

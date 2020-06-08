@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
@@ -229,14 +230,8 @@ namespace BackendFramework.Services
 
         public string GetAudioFilePath(string projectId, string wordId, string fileName)
         {
-            // Generate path to home on linux
-            var pathToHome = Environment.GetEnvironmentVariable("HOME");
-
-            // Generate home on windows
-            if (pathToHome == null)
-            {
-                pathToHome = Environment.GetEnvironmentVariable("UserProfile");
-            }
+            // Generate path to home on Linux or Windows
+            var pathToHome = FileUtilities.GeneratePathToHome();
 
             var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId,
                 "Import", "ExtractedLocation", "Lift", "audio", fileName);
