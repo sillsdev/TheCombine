@@ -99,7 +99,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects/{projectId}/words </remarks>
         /// <returns> Id of created word </returns>
         [HttpPost]
-        public async Task<IActionResult> Post(string projectId, [FromBody]Word word)
+        public async Task<IActionResult> Post(string projectId, [FromBody] Word word)
         {
             if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {
@@ -182,6 +182,23 @@ namespace BackendFramework.Controllers
                 return new OkResult();
             }
             return new NotFoundObjectResult("The project was found, but the word was not deleted");
+        }
+
+        /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
+        /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId}/audio/delete/{fileName} </remarks>
+        [HttpDelete("{wordId}/audio/delete/{fileName}")]
+        public async Task<IActionResult> Delete(string projectId, string wordId, string fileName)
+        {
+            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            {
+                return new ForbidResult();
+            }
+
+            if (await _wordService.Delete(projectId, wordId, fileName))
+            {
+                return new OkResult();
+            }
+            return new NotFoundObjectResult("The project was found, but the word audio was not deleted");
         }
 
         /// <summary> Merge children <see cref="Word"/>s with the parent </summary>

@@ -22,7 +22,6 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string wordId)
         {
-            Console.WriteLine("In Delete");
             var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
 
             // We only want to add the deleted word if the word started in the frontier
@@ -43,30 +42,14 @@ namespace BackendFramework.Services
             return wordIsInFrontier;
         }
 
+        /// <summary> Removes audio with specified Id from a word </summary>
+        /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string wordId, string fileName)
         {
-            var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
+            var wordWithAudioToDelete = _repo.GetWord(projectId, wordId).Result;
+            wordWithAudioToDelete.Audio.Remove(fileName);
 
-            // We only want to update words that are in the frontier
-            if (wordIsInFrontier)
-            {
-                var wordWithAudioToDelete = _repo.GetWord(projectId, wordId).Result;
-                wordWithAudioToDelete.Id = "";
-                wordWithAudioToDelete.Audio = new List<string>();
-
-                // Keep track of the old word
-                if (wordWithAudioToDelete.History == null)
-                {
-                    wordWithAudioToDelete.History = new List<string> { wordId };
-                }
-                // If we are updating the history, don't overwrite it, just add to the history
-                else
-                {
-                    wordWithAudioToDelete.History.Add(wordId);
-                }
-
-                await _repo.Create(wordWithAudioToDelete);
-            }
+            var wordIsInFrontier = await Update(projectId, wordId, wordWithAudioToDelete);
 
             return wordIsInFrontier;
         }
