@@ -45,14 +45,32 @@ namespace BackendFramework.Services
 
         /// <summary> Removes audio with specified Id from a word </summary>
         /// <returns> A bool: success of operation </returns>
-        public async Task<bool> Delete(string projectId, string wordId, string fileName)
+        public async Task<Word> Delete(string projectId, string wordId, string fileName)
         {
             var wordWithAudioToDelete = _repo.GetWord(projectId, wordId).Result;
             wordWithAudioToDelete.Audio.Remove(fileName);
 
-            var wordIsInFrontier = await Update(projectId, wordId, wordWithAudioToDelete);
+            var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
 
-            return wordIsInFrontier;
+            // Same logic as Update
+            if (wordIsInFrontier)
+            {
+                wordWithAudioToDelete.Id = "";
+                wordWithAudioToDelete.ProjectId = projectId;
+
+                if (wordWithAudioToDelete.History == null)
+                {
+                    wordWithAudioToDelete.History = new List<string> { wordId };
+                }
+                else
+                {
+                    wordWithAudioToDelete.History.Add(wordId);
+                }
+
+                await _repo.Create(wordWithAudioToDelete);
+            }
+
+            return wordWithAudioToDelete;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>

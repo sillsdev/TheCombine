@@ -16,6 +16,7 @@ export interface PlayerProps {
   pronunciationUrl: string;
   wordId: string;
   fileName: string;
+  refreshWord?: (oldId: string, newId: string) => void;
   isPlaying?: boolean;
 }
 
@@ -40,10 +41,15 @@ export default function AudioPlayer(props: PlayerProps) {
   // const audio = new Audio(props.pronunciationUrl);
   // audio.crossOrigin = "annonymous";
 
-  let deleteOrTogglePlay = (event: any) => {
+  async function deleteOrTogglePlay(event: any) {
     if (event.shiftKey) {
-      Backend.deleteAudio(props.wordId, props.fileName);
-      console.log("Shift click works");
+      await Backend.deleteAudio(props.wordId, props.fileName).then(
+        (newWordId) => {
+          if (props.refreshWord) {
+            props.refreshWord(props.wordId, newWordId);
+          }
+        }
+      );
     } else if (!playing) {
       audio.play();
       setPlaying(true);
@@ -53,7 +59,7 @@ export default function AudioPlayer(props: PlayerProps) {
       setPlaying(false);
       audio.currentTime = 0;
     }
-  };
+  }
 
   return (
     <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
