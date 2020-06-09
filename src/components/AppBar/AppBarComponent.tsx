@@ -7,6 +7,7 @@ import UserMenu from "./UserMenu";
 import Logo from "./Logo";
 import theme from "../../types/theme";
 import NavigationButtons from "./NavigationButtons";
+import NavigationTabs from "./NavigationTabs";
 import { getProjectId } from "../../backend/localStorage";
 
 /** An app bar shown at the top of almost every page of The Combine */
