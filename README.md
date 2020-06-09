@@ -142,7 +142,19 @@ Install [Docker](https://docs.docker.com/get-docker/).
 
 ```batch
 > docker-compose build --parallel
-> docker-compose run
+> docker-compose up --detach
+```
+
+To view logs:
+
+```batch
+> docker-compose logs --follow
+```
+
+To stop and remove any stored data:
+
+```batch
+> docker-compose down --volumes
 ```
 
 ## Features
