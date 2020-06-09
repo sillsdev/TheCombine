@@ -140,6 +140,9 @@ Install [Docker](https://docs.docker.com/get-docker/).
 
 ### Build and Run
 
+For more information see the
+[Docker Compose docs](https://docs.docker.com/compose/).
+
 ```batch
 > docker-compose build --parallel
 > docker-compose up --detach
