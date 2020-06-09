@@ -249,6 +249,7 @@ namespace BackendFramework.Models
         public string Name { get; set; }
         public string Id { get; set; }
         public string Description { get; set; }
+        public List<string> Questions { get; set; }
 
         public SemanticDomain Clone()
         {
@@ -256,7 +257,8 @@ namespace BackendFramework.Models
             {
                 Name = Name.Clone() as string,
                 Id = Id.Clone() as string,
-                Description = Description.Clone() as string
+                Description = Description.Clone() as string,
+                Questions = new List<string>(Questions)
             };
         }
 
@@ -265,6 +267,7 @@ namespace BackendFramework.Models
             Name = "";
             Id = "";
             Description = "";
+            Questions = new List<string>();
         }
 
         public override bool Equals(object obj)
@@ -282,7 +285,7 @@ namespace BackendFramework.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Id, Description);
+            return HashCode.Combine(Name, Id, Description, Questions);
         }
     }
 

@@ -1,7 +1,8 @@
 import React from "react";
 import { Switch, Typography } from "@material-ui/core";
-import { HelpOutline } from "@material-ui/icons";
-import theme from "../../../types/theme";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { Help } from "@material-ui/icons";
+import theme, { buttonSuccess } from "../../../types/theme";
 import {
   Translate,
   withLocalize,
@@ -34,11 +35,10 @@ export class DataEntryHeader extends React.Component<
     let questions;
     if (this.state.questionsVisible) {
       questions = (
-        <Typography>
-          The Questions will go here eventually, it will likely need an
-          iteration
-        </Typography>
-      );
+        <Typography>Questions will go here eventually</Typography>
+      ); /*= this.props.domain.questions.map((q) => (
+        <Typography>{q}</Typography>
+      ));*/
     }
     return (
       <Typography
@@ -54,7 +54,8 @@ export class DataEntryHeader extends React.Component<
           onChange={() => {
             this.setState({ questionsVisible: !this.state.questionsVisible });
           }}
-          icon={<HelpOutline />}
+          icon={<Help />}
+          checkedIcon={<Help />}
         />
         {questions}
       </Typography>
