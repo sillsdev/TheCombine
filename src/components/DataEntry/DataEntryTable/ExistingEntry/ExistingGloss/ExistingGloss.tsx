@@ -20,7 +20,6 @@ interface ExistingGlossEntryProps {
 export class ExistingGloss extends React.Component<
   ExistingGlossEntryProps & LocalizeContextProps
 > {
-  
   render() {
     return (
       <div>

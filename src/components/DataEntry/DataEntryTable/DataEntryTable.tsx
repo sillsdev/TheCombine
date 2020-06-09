@@ -66,7 +66,6 @@ export function filterWords(words: Word[]): Word[] {
   return filteredWords;
 }
 
-
 /**
  * A data entry table containing word entries
  */
@@ -213,7 +212,6 @@ export class DataEntryTable extends React.Component<
     else this.setState({ displaySpellingSuggestionsIndex: index });
   }
 
-
   render() {
     return (
       <form
@@ -273,8 +271,10 @@ export class DataEntryTable extends React.Component<
                   toggleDisplaySpellingSuggestions={() => {
                     this.toggleDisplaySpellingSuggestions(index);
                   }}
-                  focusNewEntry = {()=> 
-                    {if (this.refNewEntry.current) this.refNewEntry.current.focusVernInput();}}
+                  focusNewEntry={() => {
+                    if (this.refNewEntry.current)
+                      this.refNewEntry.current.focusVernInput();
+                  }}
                 />
               </React.Fragment>
             ) : (

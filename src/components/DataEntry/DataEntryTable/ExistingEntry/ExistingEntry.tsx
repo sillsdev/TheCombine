@@ -141,7 +141,7 @@ function wordsAreEqual(a: Word, b: Word): boolean {
  * Displays a word a user can still make edits to
  */
 export class ExistingEntry extends React.Component<
-  ExistingEntryProps, 
+  ExistingEntryProps,
   ExistingEntryState
 > {
   readonly maxDuplicates: number = 5;
@@ -347,7 +347,7 @@ export class ExistingEntry extends React.Component<
   focusOnNewEntry = () => {
     this.props.focusNewEntry();
     //reference NewEntry's focus thing here
-  }
+  };
 
   render() {
     return (
@@ -357,7 +357,10 @@ export class ExistingEntry extends React.Component<
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && this.state.existingEntry.vernacular !== "" ) {
+            if (
+              e.key === "Enter" &&
+              this.state.existingEntry.vernacular !== ""
+            ) {
               this.focusOnNewEntry();
             }
           }}
@@ -408,7 +411,6 @@ export class ExistingEntry extends React.Component<
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
-              
             />
           </Grid>
           <Grid
