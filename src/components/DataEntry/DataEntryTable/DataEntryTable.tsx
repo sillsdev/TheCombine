@@ -73,7 +73,6 @@ export class DataEntryTable extends React.Component<
   DataEntryTableProps & LocalizeContextProps,
   DataEntryTableState
 > {
-  refNewEntry: React.RefObject<NewEntry>;
   constructor(props: DataEntryTableProps & LocalizeContextProps) {
     super(props);
     this.state = {
@@ -86,7 +85,7 @@ export class DataEntryTable extends React.Component<
     this.recorder = new Recorder();
     this.spellChecker = new SpellChecker();
   }
-
+  refNewEntry: React.RefObject<NewEntry>;
   recorder: Recorder;
   spellChecker: SpellChecker;
 
