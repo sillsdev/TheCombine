@@ -6,3 +6,5 @@ services:
       - "5001:5001"
     env_file:
       - ./.env.dev
+  frontend:
+    build: .
