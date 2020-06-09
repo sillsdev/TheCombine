@@ -35,6 +35,7 @@ describe("Tests ExistingEntry", () => {
         displaySpellingSuggestions={true}
         toggleDisplaySpellingSuggestions={() => null}
         recorder={new Recorder()}
+        focusNewEntry={() => null}
       />,
       div
     );
