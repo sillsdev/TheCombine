@@ -7,7 +7,6 @@ import { Translate } from "react-localize-redux";
 export default function NavigationButtons() {
   const colors = ["inherit", "#1976d2"];
   const [index, setIndex] = React.useState(0);
-  const buttonColor = colors[index];
   return (
     <React.Fragment>
       <Button
