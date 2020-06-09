@@ -271,8 +271,10 @@ export class DataEntryTable extends React.Component<
                   toggleDisplaySpellingSuggestions={() => {
                     this.toggleDisplaySpellingSuggestions(index);
                   }}
-                  focusNewEntry = {()=> 
-                    {if (this.refNewEntry.current) this.refNewEntry.current.focusVernInput();}}
+                  focusNewEntry={() => {
+                    if (this.refNewEntry.current)
+                      this.refNewEntry.current.focusVernInput();
+                  }}
                 />
               </React.Fragment>
             ) : (
