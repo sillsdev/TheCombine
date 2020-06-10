@@ -2,7 +2,7 @@ import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import AudioPlayer from "./AudioPlayer";
 import AudioRecorder from "./AudioRecorder";
-import * as Backend from "../../backend";
+import { getAudioUrl } from "../../backend/index";
 import theme from "../../types/theme";
 import { Recorder } from "./Recorder";
 
@@ -47,7 +47,7 @@ export class Pronunciations extends React.Component<
             key={file}
             wordId={this.props.wordId}
             fileName={file}
-            pronunciationUrl={Backend.getAudioUrl(this.props.wordId, file)}
+            pronunciationUrl={getAudioUrl(this.props.wordId, file)}
             refreshWord={this.props.refreshWord}
           />
         );

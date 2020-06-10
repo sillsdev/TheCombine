@@ -50,22 +50,28 @@ namespace BackendFramework.Services
             var wordWithAudioToDelete = _repo.GetWord(projectId, wordId).Result;
             wordWithAudioToDelete.Audio.Remove(fileName);
 
+            // If word is in frontier, remove it.
             var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
 
             // Same logic as Update
             if (wordIsInFrontier)
             {
-                wordWithAudioToDelete.Id = "";
-                wordWithAudioToDelete.ProjectId = projectId;
-
+                // Keep track of the old word
                 if (wordWithAudioToDelete.History == null)
                 {
                     wordWithAudioToDelete.History = new List<string> { wordId };
                 }
+                // If we are updating the history, don't overwrite it, just add to the history
                 else
                 {
                     wordWithAudioToDelete.History.Add(wordId);
                 }
+
+
+                wordWithAudioToDelete.ProjectId = projectId;
+
+                // Remove old Id so new Id can be added
+                wordWithAudioToDelete.Id = "";
 
                 await _repo.Create(wordWithAudioToDelete);
             }

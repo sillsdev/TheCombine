@@ -10,7 +10,7 @@ import PlayArrow from "@material-ui/icons/PlayArrow";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import { Stop } from "@material-ui/icons";
-import * as Backend from "../../backend";
+import { deleteAudio } from "../../backend/index";
 
 export interface PlayerProps {
   pronunciationUrl: string;
@@ -43,8 +43,8 @@ export default function AudioPlayer(props: PlayerProps) {
 
   async function deleteOrTogglePlay(event: any) {
     if (event.shiftKey) {
-      await Backend.deleteAudio(props.wordId, props.fileName).then(
-        (newWordId) => {
+      await deleteAudio(props.wordId, props.fileName).then(
+        (newWordId: string) => {
           if (props.refreshWord) {
             props.refreshWord(props.wordId, newWordId);
           }
