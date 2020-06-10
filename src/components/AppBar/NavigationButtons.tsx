@@ -3,10 +3,18 @@ import { Button } from "@material-ui/core";
 import history from "../../history";
 import { Translate } from "react-localize-redux";
 
+const readHistory = () => {
+  var curPage = history.location.pathname;
+  if (curPage === "/data-entry") return 0;
+  if (curPage === "/goals") return 1;
+  return 3;
+};
+
 /** A button that redirects to the home page */
 export default function NavigationButtons() {
-  const colors = ["inherit", "#1976d2"];
-  const [index, setIndex] = React.useState(0);
+  let blueShade = "#1976d2";
+  const colors = ["inherit", blueShade];
+  const [index, setIndex] = React.useState<number>(readHistory());
   return (
     <React.Fragment>
       <Button
