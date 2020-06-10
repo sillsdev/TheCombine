@@ -2,8 +2,8 @@
 services:
   web:
     build: ./Backend
-    ports:
-      - "5001:5001"
+    expose:
+      - "80"
     env_file:
       - ./.env.dev
   frontend:

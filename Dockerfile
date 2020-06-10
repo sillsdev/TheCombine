@@ -1,6 +1,5 @@
 ﻿# Build environment.
 FROM node:12 AS builder
-
 WORKDIR /app
 
 # Install app dependencies.
