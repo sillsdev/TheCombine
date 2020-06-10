@@ -143,6 +143,10 @@ namespace BackendFramework
             // Email types
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IEmailContext, EmailContext>();
+
+            // Password ResetTypes
+            services.AddTransient<IPasswordResetContext, PasswordResetContext>();
+            services.AddTransient<IPasswordResetService, PasswordResetService>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

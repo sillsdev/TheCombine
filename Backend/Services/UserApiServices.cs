@@ -208,6 +208,14 @@ namespace BackendFramework.Services
             return string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
         }
 
+        /// <summary> Finds <see cref="User"/> with specified userId and changes it's password
+        public async Task ChangePassword(string userid, string password){
+            var hash = PasswordHash.HashPassword(password);
+            var user = await GetUser(userid);
+            user.Password = Convert.ToBase64String(hash);
+            await Update(userid, user);
+        }
+
         /// <summary> Adds a <see cref="User"/> </summary>
         /// <returns> The <see cref="User"/> created, or null if the user could not be created. </returns>
         public async Task<User> Create(User user)
