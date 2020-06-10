@@ -3,7 +3,6 @@ import { Switch, Route } from "react-router-dom";
 import BaseGoalScreen from "../../goals/DefaultGoal/BaseGoalScreen";
 import PageNotFound from "../PageNotFound/component";
 import { PrivateRoute } from "../PrivateRoute";
-import GoalTimelineHorizontal from "../GoalTimeline/GoalTimelineHorizontal";
 import GoalTimelineVertical from "../GoalTimeline/GoalTimelineVertical";
 
 /**
