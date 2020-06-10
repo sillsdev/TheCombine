@@ -51,7 +51,6 @@ Backend.Tests/bin/Audio/*.mp3
 /**/*.~un
 /**/*.swp
 Backend.Tests/bin/Avatars/*
-mongo_database
 
 # Vagrant instances
 .vagrant/

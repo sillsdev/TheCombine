@@ -892,12 +892,6 @@ Array [
       </li>
     </ul>
   </div>,
-  <img
-    alt="Return Symbol"
-    height="auto"
-    src="ReturnSymbol.png"
-    width="40px"
-  />,
 ]
 `;
 
@@ -1675,12 +1669,6 @@ Array [
       </li>
     </ul>
   </div>,
-  <img
-    alt="Return Symbol"
-    height="auto"
-    src="ReturnSymbol.png"
-    width="40px"
-  />,
 ]
 `;
 
@@ -1688,108 +1676,7 @@ exports[`Tests AddWords Renders correctly: node w/ no subdomains 1`] = `
 Array [
   <div
     className="MuiGrid-root MuiGrid-item"
-  >
-    <ul
-      className="MuiGridList-root"
-      style={
-        Object {
-          "margin": -0,
-          "width": 75,
-        }
-      }
-    >
-      <li
-        className="MuiGridListTile-root"
-        style={
-          Object {
-            "height": "auto",
-            "padding": 0,
-            "width": "100%",
-          }
-        }
-      >
-        <div
-          className="MuiGridListTile-tile"
-        >
-          <button
-            className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
-            disabled={false}
-            id="1.2.1.1"
-            onBlur={[Function]}
-            onClick={[Function]}
-            onDragLeave={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            onKeyUp={[Function]}
-            onMouseDown={[Function]}
-            onMouseLeave={[Function]}
-            onMouseUp={[Function]}
-            onTouchEnd={[Function]}
-            onTouchMove={[Function]}
-            onTouchStart={[Function]}
-            style={
-              Object {
-                "bottom": 0,
-                "height": "90%",
-                "left": 0,
-                "margin": "5%",
-                "width": "90%",
-              }
-            }
-            tabIndex={0}
-            type="button"
-          >
-            <span
-              className="MuiButton-label"
-            >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
-                  }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
-                >
-                  1.2.1.1
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  depth=4
-                </p>
-              </div>
-            </span>
-            <span
-              className="MuiTouchRipple-root"
-            />
-          </button>
-        </div>
-      </li>
-      <li
-        className="MuiGridListTile-root"
-        style={
-          Object {
-            "height": "auto",
-            "padding": 0,
-            "width": "100%",
-          }
-        }
-      >
-        <div
-          className="MuiGridListTile-tile"
-        >
-          <img
-            alt="pillar.svg"
-            height="100%"
-            src="pillar.svg"
-            width={75}
-          />
-        </div>
-      </li>
-    </ul>
-  </div>,
+  />,
   <div
     className="MuiGrid-root MuiGrid-item"
   >
@@ -1931,7 +1818,7 @@ Array [
       style={
         Object {
           "margin": -0,
-          "width": 75,
+          "width": 150,
         }
       }
     >
@@ -1952,7 +1839,7 @@ Array [
             alt="parent.svg"
             height="100%"
             src="parent.svg"
-            width={75}
+            width={150}
           />
         </div>
       </li>
@@ -2027,12 +1914,6 @@ Array [
       </li>
     </ul>
   </div>,
-  <img
-    alt="Return Symbol"
-    height="auto"
-    src="ReturnSymbol.png"
-    width="40px"
-  />,
 ]
 `;
 
@@ -2742,11 +2623,5 @@ Array [
       </li>
     </ul>
   </div>,
-  <img
-    alt="Return Symbol"
-    height="auto"
-    src="ReturnSymbol.png"
-    width="40px"
-  />,
 ]
 `;

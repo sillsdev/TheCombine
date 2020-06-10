@@ -91,4 +91,12 @@ namespace BackendFramework.Models
         /// <summary> Can enter words </summary>
         WordEntry = 1
     }
+
+    /// <summary> Return type of Update functions </summary>
+    public enum ResultOfUpdate
+    {
+        Updated,
+        NoChange,
+        NotFound
+    }
 }
