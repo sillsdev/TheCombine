@@ -15,6 +15,7 @@ import { Translate } from "react-localize-redux";
 export interface RecorderProps {
   wordId: string;
   recorder?: Recorder;
+  uploadAudio: (wordId: string, audioFile: File) => Promise<string>;
   recordingFinished?: (oldId: string, newId: string) => void;
 }
 
@@ -69,7 +70,7 @@ export default function AudioRecorder(props: RecorderProps) {
             type: blob.type,
             lastModified: Date.now(),
           });
-          Backend.uploadAudio(props.wordId, file).then((newWordId) => {
+          props.uploadAudio(props.wordId, file).then((newWordId) => {
             recorder.clearData();
             if (props.recordingFinished) {
               props.recordingFinished(props.wordId, newWordId);

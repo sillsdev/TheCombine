@@ -10,7 +10,6 @@ import PlayArrow from "@material-ui/icons/PlayArrow";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import { Stop } from "@material-ui/icons";
-import { deleteAudio } from "../../backend/index";
 
 export interface PlayerProps {
   pronunciationUrl: string;
@@ -18,6 +17,7 @@ export interface PlayerProps {
   fileName: string;
   refreshWord?: (oldId: string, newId: string) => void;
   isPlaying?: boolean;
+  deleteAudio: (wordId: string, fileName: string) => Promise<string>;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,13 +43,13 @@ export default function AudioPlayer(props: PlayerProps) {
 
   async function deleteOrTogglePlay(event: any) {
     if (event.shiftKey) {
-      await deleteAudio(props.wordId, props.fileName).then(
-        (newWordId: string) => {
+      await props
+        .deleteAudio(props.wordId, props.fileName)
+        .then((newWordId: string) => {
           if (props.refreshWord) {
             props.refreshWord(props.wordId, newWordId);
           }
-        }
-      );
+        });
     } else if (!playing) {
       audio.play();
       setPlaying(true);
