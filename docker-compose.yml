@@ -8,3 +8,5 @@ services:
       - ./.env.dev
   frontend:
     build: .
+    ports:
+      - "80:80"
