@@ -4,6 +4,7 @@ import AppBarComponent from "../../AppBar/AppBarComponent";
 import { Goal } from "../../../types/goals";
 import { GridList, GridListTile, Button, Typography } from "@material-ui/core";
 import HorizontalDisplay from "./HorizontalDisplay";
+import VerticalDisplay from "./VerticalDisplay";
 import {
   Translate,
   LocalizeContextProps,
@@ -31,7 +32,7 @@ const timelineStyle = {
   },
 };
 
-export interface GoalTimelineHorizontalProps {
+export interface GoalTimelineVerticalProps {
   chooseGoal: (goal: Goal) => void;
   loadHistory: () => void;
 
@@ -40,7 +41,7 @@ export interface GoalTimelineHorizontalProps {
   suggestions: Goal[];
 }
 
-export interface GoalTimelineHorizontalState {
+export interface GoalTimelineVerticalState {
   portrait: boolean;
 }
 
@@ -49,11 +50,11 @@ export interface GoalTimelineHorizontalState {
  * choices for the next goal, and suggestions for which goals they should choose
  * to work on.
  */
-export class GoalTimelineHorizontal extends React.Component<
-  GoalTimelineHorizontalProps & LocalizeContextProps,
-  GoalTimelineHorizontalState
+export class GoalTimelineVertical extends React.Component<
+  GoalTimelineVerticalProps & LocalizeContextProps,
+  GoalTimelineVerticalState
 > {
-  constructor(props: GoalTimelineHorizontalProps & LocalizeContextProps) {
+  constructor(props: GoalTimelineVerticalProps & LocalizeContextProps) {
     super(props);
     this.state = { portrait: window.innerWidth < window.innerHeight };
     this.handleChange = this.handleChange.bind(this);
@@ -157,7 +158,13 @@ export class GoalTimelineHorizontal extends React.Component<
           <Typography variant="h5">
             <Translate id={"goal.selector.present"} />
           </Typography>
-          <div style={{ ...(timelineStyle.paneStyling as any), width: "80%" }}>
+          <div
+            style={{
+              ...(timelineStyle.paneStyling as any),
+              width: "80%",
+              height: 50,
+            }}
+          >
             {this.goalButton()}
           </div>
         </div>
@@ -172,16 +179,16 @@ export class GoalTimelineHorizontal extends React.Component<
 
         {/* History */}
         <GridList cols={8} cellHeight="auto">
-          <GridListTile cols={3}>
+          <GridListTile cols={2}>
             <div style={timelineStyle.paneStyling as any}>
               <Typography variant="h6">
                 <Translate id={"goal.selector.past"} />
               </Typography>
-              <HorizontalDisplay
-                data={this.props.history}
-                scrollToEnd={true}
+              <VerticalDisplay
+                data={this.props.history.reverse()}
+                scrollToEnd={false}
                 handleChange={this.handleChange}
-                width={35}
+                height={35}
                 numPanes={3}
               />
             </div>
@@ -196,18 +203,18 @@ export class GoalTimelineHorizontal extends React.Component<
           </GridListTile>
 
           {/* Alternatives */}
-          <GridListTile cols={3}>
+          <GridListTile cols={2}>
             <div
               style={{ ...timelineStyle.paneStyling, float: "right" } as any}
             >
               <Typography variant="h6">
                 <Translate id={"goal.selector.other"} />
               </Typography>
-              <HorizontalDisplay
+              <VerticalDisplay
                 data={this.createSuggestionData()}
                 scrollToEnd={false}
                 handleChange={this.handleChange}
-                width={35}
+                height={35}
                 numPanes={3}
               />
             </div>
@@ -222,4 +229,4 @@ export class GoalTimelineHorizontal extends React.Component<
   }
 }
 
-export default withLocalize(GoalTimelineHorizontal);
+export default withLocalize(GoalTimelineVertical);

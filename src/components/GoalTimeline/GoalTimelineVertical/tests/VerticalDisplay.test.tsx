@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import HorizontalDisplay from "../HorizontalDisplay";
+import VerticalDisplay from "../VerticalDisplay";
 import { defaultState } from "../../DefaultState";
 import { Goal } from "../../../../types/goals";
 
@@ -13,9 +13,9 @@ describe("Tests the HorizontalDisplay component", () => {
   it("Renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
-      <HorizontalDisplay
+      <VerticalDisplay
         data={goals.slice(1)}
-        width={100}
+        height={100}
         numPanes={3}
         scrollToEnd={false}
         handleChange={HANDLE_CHANGE}
