@@ -1,9 +1,5 @@
 import { getCurrentUser } from "../../backend/localStorage";
 
-export interface AuthHeader {
-  authorization?: string;
-}
-
 /**
  * Returns authorization header with JWT token.
  *
@@ -12,10 +8,10 @@ export interface AuthHeader {
  *
  * example: `axios.post("localhost:5001", data, { headers: authHeader() })`
  */
-export function authHeader(): AuthHeader {
+export function authHeader() {
   const user = getCurrentUser();
   if (user && user.token) {
-    return { authorization: "Bearer " + user.token };
+    return { Authorization: "Bearer " + user.token };
   } else {
     return {};
   }
