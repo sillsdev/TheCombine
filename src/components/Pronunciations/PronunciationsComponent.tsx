@@ -10,6 +10,8 @@ export interface PronunciationProps {
   wordId: string;
   pronunciationFiles: string[];
   refreshWord?: (oldId: string, newId: string) => void;
+  deleteAudio?: (wordId: string, fileName: string) => void;
+  uploadAudio?: (wordId: string, audioFile: File) => void;
   recorder?: Recorder;
 }
 
@@ -27,7 +29,7 @@ export class Pronunciations extends React.Component<
     this.state = {
       updatePronunciationFiles: false,
     };
-    this.updateAudio = () => this.updateAudio.bind(this);
+    this.updateAudio = this.updateAudio.bind(this);
   }
 
   updateAudio(updatedPronunciationFiles: string[]) {
@@ -48,7 +50,7 @@ export class Pronunciations extends React.Component<
             wordId={this.props.wordId}
             fileName={file}
             pronunciationUrl={Backend.getAudioUrl(this.props.wordId, file)}
-            refreshWord={this.props.refreshWord}
+            deleteAudio={this.props.deleteAudio}
           />
         );
       });
@@ -62,7 +64,7 @@ export class Pronunciations extends React.Component<
           key={this.props.wordId}
           wordId={this.props.wordId}
           recorder={this.props.recorder}
-          recordingFinished={this.props.refreshWord}
+          uploadAudio={this.props.uploadAudio}
         />
         {audioButtons}
       </div>
