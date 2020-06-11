@@ -20,7 +20,8 @@
     "coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true && react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "prettier": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
-    "prettier-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\""
+    "prettier-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\"",
+    "import-sem-dom": "tsc importSemanticDomains.ts && node importSemanticDomains.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.2.1",
