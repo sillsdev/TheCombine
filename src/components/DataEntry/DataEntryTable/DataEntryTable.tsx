@@ -1,22 +1,21 @@
+import { Button, Grid, Typography } from "@material-ui/core";
 import React from "react";
-import { Typography, Grid, Button } from "@material-ui/core";
 import {
-  Translate,
   LocalizeContextProps,
+  Translate,
   withLocalize,
 } from "react-localize-redux";
-
-import theme from "../../../types/theme";
-import { Word, SemanticDomain, State } from "../../../types/word";
 import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
+import { AutoComplete } from "../../../types/AutoComplete";
+import theme from "../../../types/theme";
+import { SemanticDomain, State, Word } from "../../../types/word";
+import { Recorder } from "../../Pronunciations/Recorder";
 import DomainTree from "../../TreeView/SemanticDomain";
 import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
-import { NewEntry } from "./NewEntry/NewEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
-import { Recorder } from "../../Pronunciations/Recorder";
-import { AutoComplete } from "../../../types/AutoComplete";
+import { NewEntry } from "./NewEntry/NewEntry";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -27,6 +26,7 @@ interface DataEntryTableProps {
 interface WordAccess {
   word: Word;
   mutable: boolean;
+  glossIndex?: number;
 }
 
 export interface DataEntryTableState {
@@ -116,7 +116,7 @@ export class DataEntryTable extends React.Component<
   }
 
   /** Update the word in the backend and the frontend */
-  async updateWordForNewEntry(wordToUpdate: Word) {
+  async updateWordForNewEntry(wordToUpdate: Word, glossIndex?: number) {
     let existingWord = this.state.existingWords.find(
       (word) => word.id === wordToUpdate.id
     );
@@ -128,7 +128,11 @@ export class DataEntryTable extends React.Component<
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
 
     let recentlyAddedWords = [...this.state.recentlyAddedWords];
-    let updatedWordAccess: WordAccess = { word: updatedWord, mutable: false };
+    let updatedWordAccess: WordAccess = {
+      word: updatedWord,
+      mutable: false,
+      glossIndex: glossIndex,
+    };
     recentlyAddedWords.push(updatedWordAccess);
     this.setState({ recentlyAddedWords: recentlyAddedWords });
   }
@@ -281,11 +285,9 @@ export class DataEntryTable extends React.Component<
                 key={wordAccess.word.id}
                 vernacular={wordAccess.word.vernacular}
                 gloss={
-                  wordAccess.word.senses[wordAccess.word.senses.length - 1]
-                    .glosses[
-                    wordAccess.word.senses[wordAccess.word.senses.length - 1]
-                      .glosses.length - 1
-                  ].def
+                  wordAccess.word.senses[
+                    wordAccess.glossIndex ? wordAccess.glossIndex : 0
+                  ].glosses[0].def
                 }
               />
             )
@@ -295,9 +297,11 @@ export class DataEntryTable extends React.Component<
             <NewEntry
               ref={this.refNewEntry}
               allWords={this.state.existingWords}
-              updateWord={(wordToUpdate: Word) =>
-                this.updateWordForNewEntry(wordToUpdate)
-              }
+              updateWord={(
+                wordToUpdate: Word,
+                shouldBeMutable?: boolean,
+                glossIndex?: number
+              ) => this.updateWordForNewEntry(wordToUpdate, glossIndex)}
               addNewWord={(word: Word) => this.addNewWord(word)}
               spellChecker={this.spellChecker}
               semanticDomain={this.props.semanticDomain}
