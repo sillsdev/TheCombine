@@ -2,17 +2,17 @@ import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import AudioPlayer from "./AudioPlayer";
 import AudioRecorder from "./AudioRecorder";
-import { getAudioUrl } from "../../backend/index";
+import * as Backend from "../../backend";
 import theme from "../../types/theme";
 import { Recorder } from "./Recorder";
 
 export interface PronunciationProps {
   wordId: string;
   pronunciationFiles: string[];
-  recorder?: Recorder;
-  deleteAudio: (wordId: string, fileName: string) => Promise<string>;
-  uploadAudio: (wordId: string, audioFile: File) => Promise<string>;
   refreshWord?: (oldId: string, newId: string) => void;
+  deleteAudio?: (wordId: string, fileName: string) => void;
+  uploadAudio?: (wordId: string, audioFile: File) => void;
+  recorder?: Recorder;
 }
 
 export interface PronunciationState {
@@ -29,7 +29,7 @@ export class Pronunciations extends React.Component<
     this.state = {
       updatePronunciationFiles: false,
     };
-    this.updateAudio = () => this.updateAudio;
+    this.updateAudio = this.updateAudio.bind(this);
   }
 
   updateAudio(updatedPronunciationFiles: string[]) {
@@ -49,8 +49,7 @@ export class Pronunciations extends React.Component<
             key={file}
             wordId={this.props.wordId}
             fileName={file}
-            pronunciationUrl={getAudioUrl(this.props.wordId, file)}
-            refreshWord={this.props.refreshWord}
+            pronunciationUrl={Backend.getAudioUrl(this.props.wordId, file)}
             deleteAudio={this.props.deleteAudio}
           />
         );
@@ -65,7 +64,6 @@ export class Pronunciations extends React.Component<
           key={this.props.wordId}
           wordId={this.props.wordId}
           recorder={this.props.recorder}
-          recordingFinished={this.props.refreshWord}
           uploadAudio={this.props.uploadAudio}
         />
         {audioButtons}
