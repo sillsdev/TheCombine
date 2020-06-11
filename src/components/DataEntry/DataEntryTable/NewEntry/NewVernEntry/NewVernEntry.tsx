@@ -27,6 +27,7 @@ export class NewVernEntry extends React.Component<
       <div>
         <TextField
           autoFocus
+          id="newvernentry"
           label={<Translate id="addWords.vernacular" />}
           fullWidth
           variant="outlined"
