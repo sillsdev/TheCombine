@@ -4,6 +4,8 @@ export interface AuthHeader {
   authorization?: string;
 }
 
+export type GetComponentWithToken = () => { token: any } | null;
+
 /**
  * Returns authorization header with JWT token.
  *
@@ -12,11 +14,18 @@ export interface AuthHeader {
  *
  * example: `axios.post("localhost:5001", data, { headers: authHeader() })`
  */
-export function authHeader(): AuthHeader {
+
+export function authHeaderWithUserGetter(
+  getCurrentUser: GetComponentWithToken
+): AuthHeader {
   const user = getCurrentUser();
   if (user && user.token) {
     return { authorization: "Bearer " + user.token };
   } else {
     return {};
   }
+}
+
+export function authHeader(): AuthHeader {
+  return authHeaderWithUserGetter(getCurrentUser);
 }
