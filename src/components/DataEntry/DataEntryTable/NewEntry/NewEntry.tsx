@@ -1,19 +1,19 @@
-import React from "react";
 import { Grid, Typography } from "@material-ui/core";
-import { Word, Sense, SemanticDomain } from "../../../../types/word";
-import SpellChecker from "../../spellChecker";
-import NewVernEntry from "./NewVernEntry/NewVernEntry";
-import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
-import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
-import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
-import {
-  addSenseToWord,
-  addSemanticDomainToSense,
-  duplicatesFromFrontier,
-} from "../ExistingEntry/ExistingEntry";
-import theme from "../../../../types/theme";
+import React from "react";
 import { Translate } from "react-localize-redux";
 import { AutoComplete } from "../../../../types/AutoComplete";
+import theme from "../../../../types/theme";
+import { SemanticDomain, Sense, Word } from "../../../../types/word";
+import SpellChecker from "../../spellChecker";
+import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
+import {
+  addSemanticDomainToSense,
+  addSenseToWord,
+  duplicatesFromFrontier,
+} from "../ExistingEntry/ExistingEntry";
+import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
+import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
+import NewVernEntry from "./NewVernEntry/NewVernEntry";
 
 interface NewEntryProps {
   allWords: Word[];
@@ -144,7 +144,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, false);
+    this.props.updateWord(updatedWord, true);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
     this.setState({

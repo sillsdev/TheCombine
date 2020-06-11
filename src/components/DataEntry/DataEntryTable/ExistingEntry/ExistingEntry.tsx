@@ -1,17 +1,22 @@
-import React from "react";
 import { Grid } from "@material-ui/core";
-import { Word, Gloss, Sense, State } from "../../../../types/word";
+import React from "react";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
-import ExistingGloss from "./ExistingGloss/ExistingGloss";
-import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
-import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
-import { SemanticDomain } from "../../../../types/word";
-import DeleteEntry from "./DeleteEntry/DeleteEntry";
-import SpellChecker from "../../spellChecker";
 import theme from "../../../../types/theme";
+import {
+  Gloss,
+  SemanticDomain,
+  Sense,
+  State,
+  Word,
+} from "../../../../types/word";
 import PronunciationsComponent from "../../../Pronunciations/PronunciationsComponent";
 import { Recorder } from "../../../Pronunciations/Recorder";
+import SpellChecker from "../../spellChecker";
+import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
+import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
+import DeleteEntry from "./DeleteEntry/DeleteEntry";
+import ExistingGloss from "./ExistingGloss/ExistingGloss";
+import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
 
 interface ExistingEntryProps {
   wordsBeingAdded: Word[];
@@ -233,6 +238,7 @@ export class ExistingEntry extends React.Component<
   }
 
   addNewSense(existingWord: Word, newSense: string) {
+    console.log("add new sense in existingentry");
     let updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
