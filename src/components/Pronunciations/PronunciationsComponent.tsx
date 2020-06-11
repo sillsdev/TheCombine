@@ -29,7 +29,7 @@ export class Pronunciations extends React.Component<
     this.state = {
       updatePronunciationFiles: false,
     };
-    this.updateAudio = this.updateAudio.bind(this);
+    this.updateAudio = () => this.updateAudio;
   }
 
   updateAudio(updatedPronunciationFiles: string[]) {

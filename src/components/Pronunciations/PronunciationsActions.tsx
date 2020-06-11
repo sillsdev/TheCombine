@@ -1,3 +1,8 @@
+import { refreshWord } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+import { ThunkDispatch } from "redux-thunk";
+import { StoreState } from "../../types";
+import * as backend from "../../backend";
+
 export enum PronunciationsActionTypes {
   DeleteAudio = "DELETE_AUDIO",
   UploadAudio = "UPLOAD_AUDIO",
@@ -6,7 +11,7 @@ export enum PronunciationsActionTypes {
 interface PronunciationsDeleteAudio {
   type: PronunciationsActionTypes.DeleteAudio;
   wordId: string;
-  fileName: string;
+  newWordId: string;
 }
 
 interface PronunciationsUploadAudio {
@@ -21,12 +26,12 @@ export type PronunciationsAction =
 
 export function deleteAudio(
   wordId: string,
-  fileName: string
+  newWordId: string
 ): PronunciationsDeleteAudio {
   return {
     type: PronunciationsActionTypes.DeleteAudio,
     wordId,
-    fileName,
+    newWordId,
   };
 }
 
@@ -38,5 +43,16 @@ export function uploadAudio(
     type: PronunciationsActionTypes.UploadAudio,
     wordId,
     audioFile,
+  };
+}
+
+export function deleteAudioFromWord(wordId: string, fileName: string) {
+  return async (
+    dispatch: ThunkDispatch<StoreState, any, PronunciationsAction>,
+    getState: () => StoreState
+  ) => {
+    const newWordId = await backend.deleteAudio(wordId, fileName);
+
+    dispatch(deleteAudio(wordId, newWordId));
   };
 }
