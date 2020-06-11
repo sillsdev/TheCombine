@@ -9,17 +9,36 @@ import { Recorder } from "./Recorder";
 export interface PronunciationProps {
   wordId: string;
   pronunciationFiles: string[];
-  wordUpdated?: (oldId: string, newId: string) => void;
+  refreshWord?: (oldId: string, newId: string) => void;
   recorder?: Recorder;
+}
+
+export interface PronunciationState {
+  updatePronunciationFiles: boolean;
 }
 
 /** Audio recording/playing component */
 export class Pronunciations extends React.Component<
-  PronunciationProps & LocalizeContextProps
+  PronunciationProps & LocalizeContextProps,
+  PronunciationState
 > {
+  constructor(props: PronunciationProps & LocalizeContextProps) {
+    super(props);
+    this.state = {
+      updatePronunciationFiles: false,
+    };
+    this.updateAudio = () => this.updateAudio.bind(this);
+  }
+
+  updateAudio(updatedPronunciationFiles: string[]) {
+    this.setState({
+      updatePronunciationFiles: !this.state.updatePronunciationFiles,
+    });
+  }
+
   render() {
     let audioButtons;
-    if (this.props.pronunciationFiles === undefined) {
+    if (this.props.pronunciationFiles === null) {
       audioButtons = null;
     } else {
       audioButtons = this.props.pronunciationFiles.map((file) => {
@@ -29,6 +48,7 @@ export class Pronunciations extends React.Component<
             wordId={this.props.wordId}
             fileName={file}
             pronunciationUrl={Backend.getAudioUrl(this.props.wordId, file)}
+            refreshWord={this.props.refreshWord}
           />
         );
       });
@@ -42,7 +62,7 @@ export class Pronunciations extends React.Component<
           key={this.props.wordId}
           wordId={this.props.wordId}
           recorder={this.props.recorder}
-          recordingFinished={this.props.wordUpdated}
+          recordingFinished={this.props.refreshWord}
         />
         {audioButtons}
       </div>

@@ -10,7 +10,7 @@ interface Props {
   wordId: string;
   pronunciationFiles: string[];
   recorder?: Recorder;
-  refreshWord: (oldId: string, newId: string) => void;
+  refreshWord?: (oldId: string, newId: string) => void;
 }
 
 /** Used to connect the pronunciation component to the refreshWord action */
@@ -21,7 +21,7 @@ class PronunciationsCell extends React.Component<Props> {
         wordId={this.props.wordId}
         pronunciationFiles={this.props.pronunciationFiles}
         recorder={this.props.recorder}
-        wordUpdated={this.props.refreshWord}
+        refreshWord={this.props.refreshWord}
       />
     );
   }

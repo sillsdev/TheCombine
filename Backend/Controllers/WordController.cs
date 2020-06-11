@@ -194,9 +194,11 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            if (await _wordService.Delete(projectId, wordId, fileName))
+            var newWord = await _wordService.Delete(projectId, wordId, fileName);
+
+            if (newWord != null)
             {
-                return new OkResult();
+                return new OkObjectResult(newWord.Id);
             }
             return new NotFoundObjectResult("The project was found, but the word audio was not deleted");
         }

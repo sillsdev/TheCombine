@@ -206,8 +206,7 @@ export function refreshWord(oldWordId: string, newWordId: string) {
     getState: () => StoreState
   ) => {
     const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems[0];
-
+    let analysisLang = getState().currentProject.analysisWritingSystems[0];
     dispatch(
       updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang))
     );
