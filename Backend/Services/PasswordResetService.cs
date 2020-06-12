@@ -30,7 +30,7 @@ namespace BackendFramework.Services
             await _passwordResets.PasswordResets.DeleteManyAsync(x => x.Email == email);
         }
 
-        public async Task<bool> ResetPassword(string email, string token, string password)
+        async Task<bool> IPasswordResetService.ResetPassword(string email, string token, string password)
         {
             var request = (await _passwordResets.PasswordResets.FindAsync(r => r.Token == token)).Single();
             if (request.Email == email && DateTime.Now < request.ExpireTime)

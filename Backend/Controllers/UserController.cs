@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using MailKit.Net.Smtp;
 using MimeKit;
 using System.Web.Http;
 
@@ -22,21 +21,25 @@ namespace BackendFramework.Controllers
         private readonly IUserService _userService;
         private readonly IPermissionService _permissionService;
         private readonly IEmailService _emailService;
+        private readonly IPasswordResetService _passwordResetService;
 
-        public UserController(IUserService userService, IPermissionService permissionService, IEmailService emailService)
+        public UserController(IUserService userService, IPermissionService permissionService, IEmailService emailService, IPasswordResetService passwordResetService)
         {
             _userService = userService;
             _permissionService = permissionService;
             _emailService = emailService;
+            _passwordResetService = passwordResetService;
         }
 
         /// <summary> Sends a password reset request </summary>
         /// <remarks> GET: v1/users/forgot </remarks>
         [AllowAnonymous]
         [HttpPost("forgot")]
-        public async Task<IActionResult> ResetPassword()
+        public async Task<IActionResult> ResetPasswordRequest([FromBody] string email)
         {
-            var email = "jamescpruitt@gmail.com";
+            // create password reset
+            var resetRequest = await _passwordResetService.CreatePasswordReset(email);
+
             // find user attached to email
             var user = _userService.GetAllUsers().Result.Where(user => user.Email.Equals(email)).Single();
 
@@ -50,11 +53,28 @@ namespace BackendFramework.Controllers
             };
             if (await _emailService.SendEmail(message))
             {
-                return new OkResult();
+                return new OkObjectResult(resetRequest);
             }
             else
             {
                 return new InternalServerErrorResult();
+            }
+        }
+
+        /// <summary> Resets a password using a token </summary>
+        /// <remarks> POST: v1/users/reset </remarks>
+        [AllowAnonymous]
+        [HttpPost("forgot/reset")]
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetData data)
+        {
+            var result = await _passwordResetService.ResetPassword(data.Email, data.Token, data.NewPassword);
+            if (result)
+            {
+                return new OkResult();
+            }
+            else
+            {
+                return new ForbidResult();
             }
         }
 
@@ -222,5 +242,14 @@ namespace BackendFramework.Controllers
             }
             return new NotFoundResult();
         }
+
+        public class PasswordResetData
+        {
+            public string Email;
+            public string Token;
+            public string NewPassword;
+        }
     }
+
+
 }

@@ -6,10 +6,10 @@ namespace BackendFramework.Contexts
 {
     public class EmailContext : IEmailContext
     {
-        public string SmtpServer {get; }
-        public int SmtpPort {get; }
-        public string SmtpUsername {get; }
-        public string SmtpPassword {get; }
+        public string SmtpServer { get; }
+        public int SmtpPort { get; }
+        public string SmtpUsername { get; }
+        public string SmtpPassword { get; }
 
         public EmailContext(IOptions<Settings> options)
         {

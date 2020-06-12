@@ -5,6 +5,6 @@ namespace BackendFramework.Interfaces
 {
     public interface IPasswordResetContext
     {
-        IMongoCollection<PasswordReset>  PasswordResets { get; }
+        IMongoCollection<PasswordReset> PasswordResets { get; }
     }
 }
