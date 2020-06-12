@@ -12,6 +12,9 @@ RUN dotnet publish -c Release -o build
 
 # Build runtime image.
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+
+ENV ASPNETCORE_IS_IN_CONTAINER=1
+
 WORKDIR /app
 COPY --from=builder /app/build ./
 ENTRYPOINT ["dotnet", "BackendFramework.dll"]
