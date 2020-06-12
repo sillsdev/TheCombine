@@ -9,7 +9,7 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env.dev
+      - ./.env.web
   nginx:
     build:
       context: .
