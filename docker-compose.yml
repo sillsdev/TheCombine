@@ -2,6 +2,8 @@
 services:
   web:
     build: ./Backend
+    volumes:
+    - backend_data:/root/.CombineFiles
     expose:
       - "80"
     depends_on:
@@ -28,3 +30,4 @@ services:
 
 volumes:
   mongo_data:
+  backend_data:
