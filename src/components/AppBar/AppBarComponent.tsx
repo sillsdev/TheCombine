@@ -8,7 +8,6 @@ import Logo from "./Logo";
 import theme from "../../types/theme";
 import NavigationButtons from "./NavigationButtons";
 import { getProjectId } from "../../backend/localStorage";
-import { Project } from "../../types/project";
 
 /** An app bar shown at the top of almost every page of The Combine */
 function AppBarComponent() {
