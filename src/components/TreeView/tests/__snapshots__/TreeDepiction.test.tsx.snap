@@ -892,6 +892,12 @@ Array [
       </li>
     </ul>
   </div>,
+  <img
+    alt="Return Symbol"
+    height="auto"
+    src="ReturnSymbol.png"
+    width="40px"
+  />,
 ]
 `;
 
@@ -1669,6 +1675,12 @@ Array [
       </li>
     </ul>
   </div>,
+  <img
+    alt="Return Symbol"
+    height="auto"
+    src="ReturnSymbol.png"
+    width="40px"
+  />,
 ]
 `;
 
@@ -2015,6 +2027,12 @@ Array [
       </li>
     </ul>
   </div>,
+  <img
+    alt="Return Symbol"
+    height="auto"
+    src="ReturnSymbol.png"
+    width="40px"
+  />,
 ]
 `;
 
@@ -2724,5 +2742,11 @@ Array [
       </li>
     </ul>
   </div>,
+  <img
+    alt="Return Symbol"
+    height="auto"
+    src="ReturnSymbol.png"
+    width="40px"
+  />,
 ]
 `;
