@@ -19,13 +19,6 @@ export interface PronunciationProps {
 export class Pronunciations extends React.Component<
   PronunciationProps & LocalizeContextProps
 > {
-  constructor(props: PronunciationProps & LocalizeContextProps) {
-    super(props);
-    this.state = {
-      updatePronunciationFiles: false,
-    };
-  }
-
   render() {
     let audioButtons;
     if (this.props.pronunciationFiles === null) {
