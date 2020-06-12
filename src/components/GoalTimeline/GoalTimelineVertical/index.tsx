@@ -1,5 +1,5 @@
 import { Goal } from "../../../types/goals";
-import { GoalTimelineHorizontal } from "./GoalTimelineHorizontal";
+import { GoalTimelineVertical } from "./GoalTimelineVertical";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../../types";
@@ -34,4 +34,4 @@ export function mapDispatchToProps(
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(GoalTimelineHorizontal);
+)(GoalTimelineVertical);
