@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: red[900],
     },
     iconRelease: {
-      color: red[600],
+      color: red[500],
     },
   })
 );
