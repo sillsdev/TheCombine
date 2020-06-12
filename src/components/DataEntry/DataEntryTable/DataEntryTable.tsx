@@ -134,7 +134,7 @@ export class DataEntryTable extends React.Component<
     let recentlyAddedWords = [...this.state.recentlyAddedWords];
     let updatedWordAccess: WordAccess = {
       word: updatedWord,
-      mutable: shouldBeMutable,
+      mutable: false,
       glossIndex: glossIndex,
     };
     recentlyAddedWords.push(updatedWordAccess);
@@ -287,11 +287,12 @@ export class DataEntryTable extends React.Component<
             ) : (
               <ImmutableExistingEntry
                 key={wordAccess.word.id}
-                word={wordAccess.word}
                 vernacular={wordAccess.word.vernacular}
                 gloss={
                   wordAccess.word.senses[
-                    wordAccess.glossIndex ? wordAccess.glossIndex : 0
+                    wordAccess.glossIndex
+                      ? wordAccess.glossIndex
+                      : wordAccess.word.senses.length - 1
                   ].glosses[0].def
                 }
                 removeWord={() => this.removeWord(wordAccess.word)}
