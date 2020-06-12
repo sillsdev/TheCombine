@@ -23,8 +23,11 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       margin: theme.spacing(1),
     },
-    icon: {
-      color: red[800],
+    iconPress: {
+      color: red[900],
+    },
+    iconRelease: {
+      color: red[600],
     },
   })
 );
@@ -95,7 +98,9 @@ export default function AudioRecorder(props: RecorderProps) {
         className={classes.button}
         aria-label="record"
       >
-        <FiberManualRecord className={classes.icon} />
+        <FiberManualRecord
+          className={isRecording ? classes.iconPress : classes.iconRelease}
+        />
       </IconButton>
     </Tooltip>
   );
