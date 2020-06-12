@@ -29,4 +29,8 @@ COPY nginx/generate_config.sh ./
 RUN ./generate_config.sh > ${NGINX_HOST_DIR}/config.js \
     && rm generate_config.sh
 
+# Copy default self-signed certificate.
+# Overwrite this with real certificate for authentication in production.
+COPY nginx/certs /ssl
+
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf

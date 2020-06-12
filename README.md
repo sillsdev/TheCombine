@@ -148,6 +148,8 @@ For more information see the
 > docker-compose up --detach
 ```
 
+Browse to https://localhost
+
 To view logs:
 
 ```batch
