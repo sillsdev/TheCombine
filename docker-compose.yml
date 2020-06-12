@@ -7,6 +7,11 @@ services:
     env_file:
       - ./.env.dev
   nginx:
-    build: .
+    build:
+      context: .
+      args:
+        - API_BASE_URL=http://localhost/v1
+        - CAPTCHA_REQUIRED=true
+        - CAPTCHA_SITE=6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3
     ports:
       - "80:80"
