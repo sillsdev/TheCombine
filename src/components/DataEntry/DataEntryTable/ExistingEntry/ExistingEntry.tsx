@@ -27,6 +27,7 @@ interface ExistingEntryProps {
   displaySpellingSuggestions: boolean;
   toggleDisplaySpellingSuggestions: () => void;
   recorder: Recorder;
+  focusNewEntry: () => void;
 }
 
 interface ExistingEntryState {
@@ -343,6 +344,11 @@ export class ExistingEntry extends React.Component<
     }
   }
 
+  focusOnNewEntry = () => {
+    this.props.focusNewEntry();
+    //reference NewEntry's focus thing here
+  };
+
   render() {
     return (
       <Grid item xs={12} key={this.props.entryIndex}>
@@ -350,6 +356,14 @@ export class ExistingEntry extends React.Component<
           container
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
+          onKeyDown={(e) => {
+            if (
+              e.key === "Enter" &&
+              this.state.existingEntry.vernacular !== ""
+            ) {
+              this.focusOnNewEntry();
+            }
+          }}
         >
           <Grid
             item
