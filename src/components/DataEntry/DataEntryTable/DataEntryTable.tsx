@@ -25,7 +25,7 @@ interface DataEntryTableProps {
 
 interface WordAccess {
   word: Word;
-  mutable: boolean;
+  mutable?: boolean;
   glossIndex?: number;
 }
 
@@ -116,7 +116,11 @@ export class DataEntryTable extends React.Component<
   }
 
   /** Update the word in the backend and the frontend */
-  async updateWordForNewEntry(wordToUpdate: Word, glossIndex?: number) {
+  async updateWordForNewEntry(
+    wordToUpdate: Word,
+    shouldBeMutable?: boolean,
+    glossIndex?: number
+  ) {
     let existingWord = this.state.existingWords.find(
       (word) => word.id === wordToUpdate.id
     );
@@ -130,7 +134,7 @@ export class DataEntryTable extends React.Component<
     let recentlyAddedWords = [...this.state.recentlyAddedWords];
     let updatedWordAccess: WordAccess = {
       word: updatedWord,
-      mutable: false,
+      mutable: shouldBeMutable,
       glossIndex: glossIndex,
     };
     recentlyAddedWords.push(updatedWordAccess);
@@ -283,12 +287,14 @@ export class DataEntryTable extends React.Component<
             ) : (
               <ImmutableExistingEntry
                 key={wordAccess.word.id}
+                word={wordAccess.word}
                 vernacular={wordAccess.word.vernacular}
                 gloss={
                   wordAccess.word.senses[
                     wordAccess.glossIndex ? wordAccess.glossIndex : 0
                   ].glosses[0].def
                 }
+                removeWord={() => this.removeWord(wordAccess.word)}
               />
             )
           )}
@@ -301,7 +307,13 @@ export class DataEntryTable extends React.Component<
                 wordToUpdate: Word,
                 shouldBeMutable?: boolean,
                 glossIndex?: number
-              ) => this.updateWordForNewEntry(wordToUpdate, glossIndex)}
+              ) =>
+                this.updateWordForNewEntry(
+                  wordToUpdate,
+                  shouldBeMutable,
+                  glossIndex
+                )
+              }
               addNewWord={(word: Word) => this.addNewWord(word)}
               spellChecker={this.spellChecker}
               semanticDomain={this.props.semanticDomain}

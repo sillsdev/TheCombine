@@ -148,7 +148,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, false);
+    this.props.updateWord(updatedWord, true);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
     this.setState({
