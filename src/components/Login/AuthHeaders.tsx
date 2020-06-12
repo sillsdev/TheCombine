@@ -4,7 +4,7 @@ export interface AuthHeader {
   authorization?: string;
 }
 
-export type GetComponentWithToken = () => { token: any } | null;
+export type ReturnObjectWithToken = () => { token: any } | null;
 
 /**
  * Returns authorization header with JWT token.
@@ -16,7 +16,7 @@ export type GetComponentWithToken = () => { token: any } | null;
  */
 
 export function authHeaderWithUserGetter(
-  getCurrentUser: GetComponentWithToken
+  getCurrentUser: ReturnObjectWithToken
 ): AuthHeader {
   const user = getCurrentUser();
   if (user && user.token) {
