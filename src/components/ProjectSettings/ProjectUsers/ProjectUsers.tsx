@@ -1,23 +1,14 @@
 import React from "react";
 import {
-  Avatar,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
-import Done from "@material-ui/icons/Done";
-
-import { User } from "../../../types/user";
-import {
   addUserRole,
   avatarSrc,
   getAllUsers,
   getAllUsersInCurrentProject,
 } from "../../../backend";
-import theme from "../../../types/theme";
 import { getCurrentUser } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
+import { User } from "../../../types/user";
+import UserList from "./UserList";
 
 interface UserProps {
   project: Project;
@@ -91,7 +82,11 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   render() {
     return (
       <React.Fragment>
-        <List>
+        <UserList
+          allUsers={this.state.allUsers}
+          projUsers={this.state.projUsers}
+        />
+        {/* <List>
           {this.state.projUsers.map((user) => (
             <ListItem button>
               <ListItemIcon>
@@ -110,7 +105,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
               <ListItemText primary={`${user.name} (${user.username})`} />
             </ListItem>
           ))}
-        </List>
+        </List> */}
       </React.Fragment>
     );
   }
