@@ -39,11 +39,11 @@ export class HorizontalDisplay extends React.Component<
     super(props);
 
     this.optionWidth = this.props.width / 3 - 1;
-    this.historyButton = this.historyButton.bind(this);
-    this.noHistoryButton = this.noHistoryButton.bind(this);
+    this.prevCompletionButton = this.prevCompletionButton.bind(this);
+    this.noPrevCompletionButton = this.noPrevCompletionButton.bind(this);
   }
 
-  historyButton(goal: Goal, index: number) {
+  prevCompletionButton(goal: Goal, index: number) {
     return (
       <GridListTile key={index + "tileHorizontal"} cols={1}>
         <Button
@@ -64,7 +64,7 @@ export class HorizontalDisplay extends React.Component<
     );
   }
 
-  noHistoryButton() {
+  noPrevCompletionButton() {
     return (
       <GridListTile key={-1} cols={1}>
         <Button
@@ -94,8 +94,8 @@ export class HorizontalDisplay extends React.Component<
         cols={this.props.numPanes}
       >
         {this.props.data.length > 0
-          ? this.props.data.map(this.historyButton)
-          : this.noHistoryButton()}
+          ? this.props.data.map(this.prevCompletionButton)
+          : this.noPrevCompletionButton()}
         <div
           ref={(element: HTMLDivElement) => {
             if (this.props.scrollToEnd && element) element.scrollIntoView(true);
