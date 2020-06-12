@@ -56,7 +56,7 @@ export class GoalTimelineVertical extends React.Component<
 > {
   constructor(props: GoalTimelineVerticalProps & LocalizeContextProps) {
     super(props);
-    this.state = { portrait: window.innerWidth < window.innerHeight};
+    this.state = { portrait: window.innerWidth < window.innerHeight };
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -173,8 +173,7 @@ export class GoalTimelineVertical extends React.Component<
   }
 
   renderLandscape() {
-
-    const reducedWidth = (window.innerWidth * 7/10) < window.innerHeight;
+    const reducedWidth = (window.innerWidth * 7) / 10 < window.innerHeight;
 
     return (
       <div className="GoalView">
@@ -207,7 +206,7 @@ export class GoalTimelineVertical extends React.Component<
           </GridListTile>
 
           {/* History */}
-        
+
           <GridListTile cols={2}>
             <div style={timelineStyle.paneStyling as any}>
               <Typography variant="h6">
