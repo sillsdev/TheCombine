@@ -56,7 +56,7 @@ export class GoalTimelineVertical extends React.Component<
 > {
   constructor(props: GoalTimelineVerticalProps & LocalizeContextProps) {
     super(props);
-    this.state = { portrait: window.innerWidth < window.innerHeight };
+    this.state = { portrait: window.innerWidth < window.innerHeight};
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -173,19 +173,23 @@ export class GoalTimelineVertical extends React.Component<
   }
 
   renderLandscape() {
+
+    const reducedWidth = (window.innerWidth * 7/10) < window.innerHeight;
+
     return (
       <div className="GoalView">
         <AppBarComponent />
-
-        {/* History */}
-        <GridList cols={8} cellHeight="auto">
+        <GridList cols={reducedWidth ? 6 : 8} cellHeight="auto">
+          {/* Alternatives */}
           <GridListTile cols={2}>
-            <div style={timelineStyle.paneStyling as any}>
+            <div
+              style={{ ...timelineStyle.paneStyling, float: "right" } as any}
+            >
               <Typography variant="h6">
-                <Translate id={"goal.selector.past"} />
+                <Translate id={"goal.selector.other"} />
               </Typography>
               <VerticalDisplay
-                data={this.props.history.reverse()}
+                data={this.createSuggestionData()}
                 scrollToEnd={false}
                 handleChange={this.handleChange}
                 height={35}
@@ -202,16 +206,15 @@ export class GoalTimelineVertical extends React.Component<
             {this.goalButton()}
           </GridListTile>
 
-          {/* Alternatives */}
+          {/* History */}
+        
           <GridListTile cols={2}>
-            <div
-              style={{ ...timelineStyle.paneStyling, float: "right" } as any}
-            >
+            <div style={timelineStyle.paneStyling as any}>
               <Typography variant="h6">
-                <Translate id={"goal.selector.other"} />
+                <Translate id={"goal.selector.past"} />
               </Typography>
               <VerticalDisplay
-                data={this.createSuggestionData()}
+                data={this.props.history}
                 scrollToEnd={false}
                 handleChange={this.handleChange}
                 height={35}

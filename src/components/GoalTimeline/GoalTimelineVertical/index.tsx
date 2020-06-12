@@ -13,7 +13,7 @@ import { ThunkDispatch } from "redux-thunk";
 export function mapStateToProps(state: StoreState) {
   return {
     allPossibleGoals: state.goalsState.allPossibleGoals,
-    history: state.goalsState.historyState.history,
+    history: state.goalsState.historyState.history.reverse(),
     suggestions: state.goalsState.suggestionsState.suggestions,
   };
 }

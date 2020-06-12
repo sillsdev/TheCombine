@@ -5,29 +5,21 @@ import { Translate } from "react-localize-redux";
 
 /** A button that redirects to the home page */
 export default function NavigationButtons() {
-  const colors = ["inherit", "#1976d2"];
-  const [index, setIndex] = React.useState(0);
   return (
     <React.Fragment>
       <Button
         onClick={() => {
           history.push("/data-entry");
-          setIndex(0);
         }}
-        style={{
-          backgroundColor: index === 0 ? colors[1] : colors[0],
-        }}
+        color="inherit"
       >
         <Translate id="appBar.dataEntry" />
       </Button>
       <Button
         onClick={() => {
           history.push("/goals");
-          setIndex(1);
         }}
-        style={{
-          backgroundColor: index === 1 ? colors[1] : colors[0],
-        }}
+        color="inherit"
       >
         <Translate id="appBar.dataCleanup" />
       </Button>
