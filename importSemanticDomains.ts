@@ -1,16 +1,52 @@
 const fs = require("fs"),
-  xml2js = require("xml2js");
+  xml2js = require("xml2js"),
+  path = require("path");
 const args = process.argv.slice(2);
-
 if (args.length > 0) {
-  const fileLocation = args[0];
-  const cwd = process.cwd();
-  console.log(`File Location: "${fileLocation}" CWD: "${cwd}"`);
+  const importFileLocation = args[0];
+  var parser = new xml2js.Parser();
+  const xmlLocataion = path.normalize(importFileLocation);
+  fs.readFile(xmlLocataion, function (err: Error, data: string) {
+    if (err) throw err;
+    parser.parseString(data, function (err: Error, result: any) {
+      if (err) throw err;
+      const foriegnLanguage: string = result.List.Name[0].AUni[1].$.ws;
+      const parsedDomain = result.List.Possibilities[0].CmSemanticDomain;
+      let cleanedEnglishDomain: SemanticDomainWithSubdomains[] = [],
+        cleanedForiegnDomain: SemanticDomainWithSubdomains[] = [];
+
+      generateCleanJSON(
+        parsedDomain,
+        cleanedEnglishDomain,
+        cleanedForiegnDomain
+      );
+
+      fs.writeFile(
+        path.normalize("./src/resources/semantic-domains/en.json"),
+        JSON.stringify(cleanedEnglishDomain, null, "  "),
+        (err: Error) => {
+          if (err) throw err;
+        }
+      );
+
+      fs.writeFile(
+        path.normalize(
+          `./src/resources/semantic-domains/${foriegnLanguage}.json`
+        ),
+        JSON.stringify(cleanedForiegnDomain, null, "  "),
+        (err: Error) => {
+          if (err) throw err;
+        }
+      );
+    });
+  });
+  console.log("Finished import to ./src/resources/semantic-domains/");
 } else {
   console.log(
     "Please specify the relative file location to import, e.g. npm run import-sem-doms -- ../../importfile.xml"
   );
 }
+
 class SemanticDomainWithSubdomains {
   Name: string;
   Id: string;
@@ -18,36 +54,6 @@ class SemanticDomainWithSubdomains {
   Questions: string[];
   Subdomains: SemanticDomainWithSubdomains[];
 }
-var parser = new xml2js.Parser();
-fs.readFile(__dirname + "/SemanticDomains-es.xml", function (
-  err: Error,
-  data: string
-) {
-  parser.parseString(data, function (err: Error, result) {
-    const foriegnLanguage: string = result.List.Name[0].AUni[1].$.ws;
-    const parsedDomain = result.List.Possibilities[0].CmSemanticDomain;
-    let cleanedEnglishDomain: SemanticDomainWithSubdomains[] = [],
-      cleanedForiegnDomain: SemanticDomainWithSubdomains[] = [];
-    generateCleanJSON(parsedDomain, cleanedEnglishDomain, cleanedForiegnDomain);
-
-    // fs.writeFile(
-    //   process.cwd() + "src/resources/semantic-domains/en.json",
-    //   JSON.stringify(cleanedEnglishDomain, null, "  "),
-    //   (err) => console.log(err)
-    // );
-
-    // fs.writeFile(
-    //   process.cwd() +
-    //     "src/resources/semantic-domains/" +
-    //     foriegnLanguage +
-    //     ".json",
-    //   JSON.stringify(cleanedForiegnDomain, null, "  "),
-    //   (err) => console.log(err)
-    // );
-
-    console.log("Done");
-  });
-});
 
 function generateCleanJSON(
   domain: any[],
@@ -65,10 +71,10 @@ function generateCleanJSON(
     newEnglishEntry.Subdomains = [];
 
     newForiegnEntry.Name = subDomain.Name[0].AUni[1]._;
-    newForiegnEntry.Id = subDomain.Abbreviation[0].AUni[1]._;
+    newForiegnEntry.Id = subDomain.Abbreviation[0].AUni[0]._;
     newForiegnEntry.Description = subDomain.Description[0].AStr[1].Run[0]._;
     newForiegnEntry.Questions = [];
-    newEnglishEntry.Subdomains = [];
+    newForiegnEntry.Subdomains = [];
 
     if (subDomain.hasOwnProperty("Questions")) {
       //Iterate through the questions and add them to the new entries
@@ -77,12 +83,24 @@ function generateCleanJSON(
         i < subDomain.Questions[0].CmDomainQ.length;
         i++
       ) {
-        newEnglishEntry.Questions.push(
-          subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[0]._
-        );
-        newForiegnEntry.Questions.push(
-          subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[1]._
-        );
+        if (
+          subDomain.Questions[0].CmDomainQ[
+            i
+          ].Question[0].AUni[0].hasOwnProperty("_")
+        ) {
+          newEnglishEntry.Questions.push(
+            subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[0]._
+          );
+        }
+        if (
+          subDomain.Questions[0].CmDomainQ[
+            i
+          ].Question[0].AUni[1].hasOwnProperty("_")
+        ) {
+          newForiegnEntry.Questions.push(
+            subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[1]._
+          );
+        }
       }
     }
 
