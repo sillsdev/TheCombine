@@ -1,10 +1,8 @@
 import { Grid, TextField } from "@material-ui/core";
 import React from "react";
 import theme from "../../../../types/theme";
-import DeleteEntry from "./DeleteEntry/DeleteEntry";
 
 interface ImmutableExistingEntryProps {
-  removeWord: () => void;
   vernacular: string;
   gloss: string;
 }
@@ -25,10 +23,6 @@ export class ImmutableExistingEntry extends React.Component<
     this.state = {
       hovering: false,
     };
-  }
-
-  removeEntry() {
-    this.props.removeWord();
   }
 
   render() {
@@ -62,30 +56,6 @@ export class ImmutableExistingEntry extends React.Component<
             }}
           >
             <TextField disabled fullWidth value={this.props.gloss} />
-          </Grid>
-
-          <Grid
-            item
-            xs={3}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2),
-              position: "relative",
-            }}
-          ></Grid>
-
-          <Grid
-            item
-            xs={1}
-            style={{
-              paddingLeft: theme.spacing(1),
-              paddingRight: theme.spacing(1),
-              position: "relative",
-            }}
-          >
-            {this.state.hovering && (
-              <DeleteEntry removeEntry={() => this.removeEntry()} />
-            )}
           </Grid>
         </Grid>
       </Grid>
