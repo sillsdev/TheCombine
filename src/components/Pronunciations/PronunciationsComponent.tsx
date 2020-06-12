@@ -15,27 +15,15 @@ export interface PronunciationProps {
   recorder?: Recorder;
 }
 
-export interface PronunciationState {
-  updatePronunciationFiles: boolean;
-}
-
 /** Audio recording/playing component */
 export class Pronunciations extends React.Component<
-  PronunciationProps & LocalizeContextProps,
-  PronunciationState
+  PronunciationProps & LocalizeContextProps
 > {
   constructor(props: PronunciationProps & LocalizeContextProps) {
     super(props);
     this.state = {
       updatePronunciationFiles: false,
     };
-    this.updateAudio = () => this.updateAudio.bind(this);
-  }
-
-  updateAudio(updatedPronunciationFiles: string[]) {
-    this.setState({
-      updatePronunciationFiles: !this.state.updatePronunciationFiles,
-    });
   }
 
   render() {
