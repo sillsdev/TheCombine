@@ -1,7 +1,8 @@
+import { Grid, Typography } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip";
 import React from "react";
-import { Typography, Grid, Chip } from "@material-ui/core";
 import theme from "../../../../types/theme";
-import { Word, Sense } from "../../../../types/word";
+import { Sense, Word } from "../../../../types/word";
 
 interface DuplicateResolutionViewProps {
   existingEntry: Word;
@@ -59,17 +60,25 @@ export class DuplicateResolutionView extends React.Component<
                 />
               ))
           )}
-          <Chip
-            variant="outlined"
-            label={"Add New Sense +"}
-            style={{ margin: 4 }}
-            onClick={() => {
-              this.props.addSense(
-                this.props.existingEntry,
-                this.props.newSense
-              );
-            }}
-          />
+          {this.props.newSense ? (
+            <Chip
+              variant="outlined"
+              label={"Add New Sense +"}
+              style={{ margin: 4 }}
+              onClick={() => {
+                this.props.addSense(
+                  this.props.existingEntry,
+                  this.props.newSense
+                );
+              }}
+            />
+          ) : (
+            <Chip
+              variant="outlined"
+              label={"Add New Sense +"}
+              style={{ margin: 4, color: "grey" }}
+            />
+          )}
         </Grid>
       </Grid>
     );

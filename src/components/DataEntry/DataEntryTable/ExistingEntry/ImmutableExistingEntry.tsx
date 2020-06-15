@@ -28,11 +28,7 @@ export class ImmutableExistingEntry extends React.Component<
   render() {
     return (
       <Grid item xs={12}>
-        <Grid
-          container
-          onMouseEnter={() => this.setState({ hovering: true })}
-          onMouseLeave={() => this.setState({ hovering: false })}
-        >
+        <Grid container>
           <Grid
             item
             xs={4}
