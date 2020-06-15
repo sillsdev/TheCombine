@@ -43,6 +43,7 @@ export interface GoalTimelineVerticalProps {
 
 export interface GoalTimelineVerticalState {
   portrait: boolean;
+  reducedLandScape: boolean;
 }
 
 /**
@@ -56,7 +57,7 @@ export class GoalTimelineVertical extends React.Component<
 > {
   constructor(props: GoalTimelineVerticalProps & LocalizeContextProps) {
     super(props);
-    this.state = { portrait: window.innerWidth < window.innerHeight };
+    this.state = { portrait: window.innerWidth < window.innerHeight, reducedLandScape: (window.innerWidth * 7 / 10) < window.innerHeight };
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -65,7 +66,7 @@ export class GoalTimelineVertical extends React.Component<
   }
 
   handleWindowSizeChange = () => {
-    this.setState({ portrait: window.innerWidth < window.innerHeight });
+    this.setState({ portrait: window.innerWidth < window.innerHeight, reducedLandScape: (window.innerWidth * 7 / 10) < window.innerHeight });
   };
 
   // Load history from database
@@ -173,12 +174,11 @@ export class GoalTimelineVertical extends React.Component<
   }
 
   renderLandscape() {
-    const reducedWidth = (window.innerWidth * 7) / 10 < window.innerHeight;
 
     return (
       <div className="GoalView">
         <AppBarComponent />
-        <GridList cols={reducedWidth ? 6 : 8} cellHeight="auto">
+        <GridList cols={this.state.reducedLandScape ? 6 : 8} cellHeight="auto">
           {/* Alternatives */}
           <GridListTile cols={2}>
             <div
