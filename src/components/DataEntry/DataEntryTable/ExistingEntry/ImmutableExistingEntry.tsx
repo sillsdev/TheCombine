@@ -6,17 +6,11 @@ interface ImmutableExistingEntryProps {
   vernacular: string;
   gloss: string;
 }
-
-interface ImmutableExistingEntryState {
-  hovering: boolean;
-}
-
 /**
  * Displays a word users cannot edit any more
  */
 export class ImmutableExistingEntry extends React.Component<
-  ImmutableExistingEntryProps,
-  ImmutableExistingEntryState
+  ImmutableExistingEntryProps
 > {
   constructor(props: ImmutableExistingEntryProps) {
     super(props);
