@@ -44,7 +44,7 @@ export class VerticalDisplay extends React.Component<
     this.state = { scrollVisible: false };
     this.optionHeight = this.props.height / 3 - 1.25;
     this.prevCompletionButton = this.prevCompletionButton.bind(this);
-    this.noPrevCompletionButton = this.noPrevCompletionButton.bind(this);
+    this.noPrevCompletionButton = () => this.noPrevCompletionButton();
   }
 
   prevCompletionButton(goal: Goal, index: number) {
