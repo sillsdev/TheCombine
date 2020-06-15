@@ -11,7 +11,6 @@ const HANDLE_CHANGE = jest.fn();
 const prevCompletion: Goal[] = [...defaultState.historyState.history];
 const noPrecCompletion: Goal[] = [];
 
-
 describe("Tests the VerticalDisplay component", () => {
   it("Renders without crashing", () => {
     const div = document.createElement("div");
