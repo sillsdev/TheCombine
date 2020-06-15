@@ -4,9 +4,9 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 
-import GoalTimelineHorizontal, {
-  GoalTimelineHorizontal as GTHorizontal,
-} from "../GoalTimelineHorizontal";
+import GoalTimelineVertical, {
+  GoalTimelineVertical as GTVertical,
+} from "../GoalTimelineVertical";
 import { defaultState } from "../../DefaultState";
 import { Goal } from "../../../../types/goals";
 
@@ -35,7 +35,7 @@ const goals: Goal[] = [...defaultState.allPossibleGoals];
 
 // Handles
 var timeMaster: ReactTestRenderer;
-var timeHandle: GTHorizontal;
+var timeHandle: GTVertical;
 
 beforeAll(() => {
   createTimeMaster();
@@ -46,7 +46,7 @@ beforeEach(() => {
   CHOOSE_GOAL.mockClear();
 });
 
-describe("Test GoalTimelineHorizontal", () => {
+describe("Test GoalTimelineVertical", () => {
   // render
   it("Renders without crashing", () => {
     const div = document.createElement("div");
@@ -74,7 +74,7 @@ describe("Test GoalTimelineHorizontal", () => {
     expect(CHOOSE_GOAL).toHaveBeenCalledWith(goals[2]);
   });
 
-  it("Doesn't select a non-existant goal by name", () => {
+  it("Doesn't select a non-existent goal by name", () => {
     timeHandle.handleChange("The goal is a lie");
     expect(CHOOSE_GOAL).toHaveBeenCalledTimes(0);
   });
@@ -106,12 +106,12 @@ function createTimeMaster(history?: Goal[], suggestions?: Goal[]): void {
       </Provider>
     );
   });
-  timeHandle = timeMaster.root.findByType(GTHorizontal).instance;
+  timeHandle = timeMaster.root.findByType(GTVertical).instance;
 }
 
 function createTimeline(history?: Goal[], suggestions?: Goal[]): ReactElement {
   return (
-    <GoalTimelineHorizontal
+    <GoalTimelineVertical
       chooseGoal={CHOOSE_GOAL}
       loadHistory={LOAD_HISTORY}
       allPossibleGoals={goals}
