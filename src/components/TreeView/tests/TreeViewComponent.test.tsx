@@ -64,6 +64,7 @@ describe("Tests AddWords", () => {
       id: "test",
       description: "super testy",
       subdomains: [],
+      questions: [],
     };
 
     treeHandle.animate(newDom);

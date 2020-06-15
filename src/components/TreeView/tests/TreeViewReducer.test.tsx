@@ -14,6 +14,7 @@ describe("Test the TreeViewReducer", () => {
       name: "Foo",
       id: "x",
       description: "foo description",
+      questions: [],
     };
     const subdomains = [
       { name: "Bar", id: "x.1", description: "bar desc", subdomains: [] },
