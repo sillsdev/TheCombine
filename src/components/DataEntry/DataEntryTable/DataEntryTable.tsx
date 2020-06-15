@@ -291,7 +291,9 @@ export class DataEntryTable extends React.Component<
                 vernacular={wordAccess.word.vernacular}
                 gloss={
                   wordAccess.word.senses[
-                    wordAccess.glossIndex ? wordAccess.glossIndex : 0
+                    wordAccess.glossIndex
+                      ? wordAccess.glossIndex
+                      : wordAccess.word.senses.length - 1
                   ].glosses[0].def
                 }
               />
