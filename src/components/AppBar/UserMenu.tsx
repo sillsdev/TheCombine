@@ -40,7 +40,9 @@ export default function UserMenu() {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <Avatar alt="User Avatar" src={avatar || ""} />
+      {avatar?
+      <Avatar alt="User avatar" src={avatar} />
+      : <Person style={{ fontSize: 60 }} />}
       </Button>
       <Menu
         getContentAnchorEl={null}
