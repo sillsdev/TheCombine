@@ -9,7 +9,7 @@ import { createDomains } from "./TreeViewReducer";
 // Domain data
 import en from "../../resources/semantic-domains/en.json";
 import es from "../../resources/semantic-domains/es.json";
-import fr from "../../resources/semantic-domains/fr.json";
+//import fr from "../../resources/semantic-domains/fr.json";
 
 interface TreeViewProps extends TreeProps {
   returnControlToCaller: () => void;
@@ -32,13 +32,13 @@ export class TreeView extends React.Component<
 
     this.animate = this.animate.bind(this);
 
-    var domains = en;
+    let domains: SemanticDomainWithSubdomains[] = en;
     if (props.activeLanguage) {
       // not defined in unit tests
       switch (props.activeLanguage.code) {
-        case "fr":
-          domains = fr;
-          break;
+        // case "fr":
+        //   domains = fr;
+        //   break;
         case "es":
           domains = es;
           break;

@@ -1,15 +1,9 @@
-var fs = require("fs"), xml2js = require("xml2js"), path = require("path"), Magic = require("mmmagic").Magic;
+var fs = require("fs"), xml2js = require("xml2js"), path = require("path");
 var args = process.argv.slice(2);
 if (args.length > 0) {
     var importFileLocation = args[0];
     var parser = new xml2js.Parser();
     var xmlLocataion = path.normalize(importFileLocation);
-    var magic = new Magic();
-    magic.detectFile(xmlLocataion, function (err, result) {
-        if (err)
-            throw err;
-        console.log(result);
-    });
     fs.readFile(xmlLocataion, function (err, data) {
         if (err)
             throw err;
@@ -43,29 +37,29 @@ var SemanticDomainWithSubdomains = /** @class */ (function () {
 function generateCleanJSON(domain, enDom, fnDom) {
     domain.forEach(function (subDomain) {
         var newEnglishEntry = new SemanticDomainWithSubdomains(), newForiegnEntry = new SemanticDomainWithSubdomains();
-        newEnglishEntry.Name = subDomain.Name[0].AUni[0]._;
-        newEnglishEntry.Id = subDomain.Abbreviation[0].AUni[0]._;
-        newEnglishEntry.Description = subDomain.Description[0].AStr[0].Run[0]._;
-        newEnglishEntry.Questions = [];
-        newEnglishEntry.Subdomains = [];
-        newForiegnEntry.Name = subDomain.Name[0].AUni[1]._;
-        newForiegnEntry.Id = subDomain.Abbreviation[0].AUni[0]._;
-        newForiegnEntry.Description = subDomain.Description[0].AStr[1].Run[0]._;
-        newForiegnEntry.Questions = [];
-        newForiegnEntry.Subdomains = [];
+        newEnglishEntry.name = subDomain.Name[0].AUni[0]._;
+        newEnglishEntry.id = subDomain.Abbreviation[0].AUni[0]._;
+        newEnglishEntry.description = subDomain.Description[0].AStr[0].Run[0]._;
+        newEnglishEntry.questions = [];
+        newEnglishEntry.subdomains = [];
+        newForiegnEntry.name = subDomain.Name[0].AUni[1]._;
+        newForiegnEntry.id = subDomain.Abbreviation[0].AUni[0]._;
+        newForiegnEntry.description = subDomain.Description[0].AStr[1].Run[0]._;
+        newForiegnEntry.questions = [];
+        newForiegnEntry.subdomains = [];
         if (subDomain.hasOwnProperty("Questions")) {
             //Iterate through the questions and add them to the new entries
             for (var i = 0; i < subDomain.Questions[0].CmDomainQ.length; i++) {
                 if (subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[0].hasOwnProperty("_")) {
-                    newEnglishEntry.Questions.push(subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[0]._);
+                    newEnglishEntry.questions.push(subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[0]._);
                 }
                 if (subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[1].hasOwnProperty("_")) {
-                    newForiegnEntry.Questions.push(subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[1]._);
+                    newForiegnEntry.questions.push(subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[1]._);
                 }
             }
         }
         if (subDomain.hasOwnProperty("SubPossibilities")) {
-            generateCleanJSON(subDomain.SubPossibilities[0].CmSemanticDomain, newEnglishEntry.Subdomains, newForiegnEntry.Subdomains);
+            generateCleanJSON(subDomain.SubPossibilities[0].CmSemanticDomain, newEnglishEntry.subdomains, newForiegnEntry.subdomains);
         }
         enDom.push(newEnglishEntry);
         fnDom.push(newForiegnEntry);

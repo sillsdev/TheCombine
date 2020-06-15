@@ -48,11 +48,11 @@ if (args.length > 0) {
 }
 
 class SemanticDomainWithSubdomains {
-  Name: string;
-  Id: string;
-  Description: string;
-  Questions: string[];
-  Subdomains: SemanticDomainWithSubdomains[];
+  name: string;
+  id: string;
+  description: string;
+  questions: string[];
+  subdomains: SemanticDomainWithSubdomains[];
 }
 
 function generateCleanJSON(
@@ -64,17 +64,17 @@ function generateCleanJSON(
     let newEnglishEntry: SemanticDomainWithSubdomains = new SemanticDomainWithSubdomains(),
       newForiegnEntry: SemanticDomainWithSubdomains = new SemanticDomainWithSubdomains();
 
-    newEnglishEntry.Name = subDomain.Name[0].AUni[0]._;
-    newEnglishEntry.Id = subDomain.Abbreviation[0].AUni[0]._;
-    newEnglishEntry.Description = subDomain.Description[0].AStr[0].Run[0]._;
-    newEnglishEntry.Questions = [];
-    newEnglishEntry.Subdomains = [];
+    newEnglishEntry.name = subDomain.Name[0].AUni[0]._;
+    newEnglishEntry.id = subDomain.Abbreviation[0].AUni[0]._;
+    newEnglishEntry.description = subDomain.Description[0].AStr[0].Run[0]._;
+    newEnglishEntry.questions = [];
+    newEnglishEntry.subdomains = [];
 
-    newForiegnEntry.Name = subDomain.Name[0].AUni[1]._;
-    newForiegnEntry.Id = subDomain.Abbreviation[0].AUni[0]._;
-    newForiegnEntry.Description = subDomain.Description[0].AStr[1].Run[0]._;
-    newForiegnEntry.Questions = [];
-    newForiegnEntry.Subdomains = [];
+    newForiegnEntry.name = subDomain.Name[0].AUni[1]._;
+    newForiegnEntry.id = subDomain.Abbreviation[0].AUni[0]._;
+    newForiegnEntry.description = subDomain.Description[0].AStr[1].Run[0]._;
+    newForiegnEntry.questions = [];
+    newForiegnEntry.subdomains = [];
 
     if (subDomain.hasOwnProperty("Questions")) {
       //Iterate through the questions and add them to the new entries
@@ -88,7 +88,7 @@ function generateCleanJSON(
             i
           ].Question[0].AUni[0].hasOwnProperty("_")
         ) {
-          newEnglishEntry.Questions.push(
+          newEnglishEntry.questions.push(
             subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[0]._
           );
         }
@@ -97,7 +97,7 @@ function generateCleanJSON(
             i
           ].Question[0].AUni[1].hasOwnProperty("_")
         ) {
-          newForiegnEntry.Questions.push(
+          newForiegnEntry.questions.push(
             subDomain.Questions[0].CmDomainQ[i].Question[0].AUni[1]._
           );
         }
@@ -107,8 +107,8 @@ function generateCleanJSON(
     if (subDomain.hasOwnProperty("SubPossibilities")) {
       generateCleanJSON(
         subDomain.SubPossibilities[0].CmSemanticDomain,
-        newEnglishEntry.Subdomains,
-        newForiegnEntry.Subdomains
+        newEnglishEntry.subdomains,
+        newForiegnEntry.subdomains
       );
     }
 
