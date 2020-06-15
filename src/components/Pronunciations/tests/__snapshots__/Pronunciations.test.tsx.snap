@@ -35,7 +35,7 @@ exports[`adds play audio button 1`] = `
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-2"
+        className="MuiSvgIcon-root makeStyles-iconRelease-3"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -58,7 +58,7 @@ exports[`adds play audio button 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-32"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -82,7 +82,7 @@ exports[`adds play audio button 1`] = `
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-33 MuiSvgIcon-colorPrimary"
+        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -103,7 +103,7 @@ exports[`adds play audio button 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-32"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -127,7 +127,7 @@ exports[`adds play audio button 1`] = `
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-33 MuiSvgIcon-colorPrimary"
+        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -183,7 +183,7 @@ exports[`displays buttons 1`] = `
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-2"
+        className="MuiSvgIcon-root makeStyles-iconRelease-3"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -206,7 +206,7 @@ exports[`displays buttons 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-32"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -230,7 +230,7 @@ exports[`displays buttons 1`] = `
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-33 MuiSvgIcon-colorPrimary"
+        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -251,7 +251,7 @@ exports[`displays buttons 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-32"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -275,7 +275,7 @@ exports[`displays buttons 1`] = `
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-33 MuiSvgIcon-colorPrimary"
+        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -331,7 +331,7 @@ exports[`removes play audio button 1`] = `
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-2"
+        className="MuiSvgIcon-root makeStyles-iconRelease-3"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -354,7 +354,7 @@ exports[`removes play audio button 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-32"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -378,7 +378,7 @@ exports[`removes play audio button 1`] = `
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-33 MuiSvgIcon-colorPrimary"
+        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
