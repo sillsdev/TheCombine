@@ -30,13 +30,7 @@ class UserList extends React.Component<
 
   componentDidMount() {
     this.setState({
-      filtered: this.props.allUsers,
-    });
-  }
-
-  componentWillReceiveProps(nextProps: UserListProps) {
-    this.setState({
-      filtered: nextProps.allUsers,
+      filtered: [],
     });
   }
 
@@ -44,10 +38,9 @@ class UserList extends React.Component<
     // Variable to hold the original version of the list
     let currentList = [];
     // Variable to hold the filtered list before putting into state
-    let newList = [];
+    let newList: User[] = [];
 
-    // If the search bar isn't empty
-    if (event.target.value !== "") {
+    if (event.target.value.length >= 3) {
       // Assign the original list to currentList
       currentList = this.props.allUsers;
 
@@ -68,9 +61,6 @@ class UserList extends React.Component<
           email.includes(filter)
         );
       });
-    } else {
-      // If the search bar is empty, set newList to original task list
-      newList = this.props.allUsers;
     }
     // Set the filtered state based on what our rules added to newList
     this.setState({
