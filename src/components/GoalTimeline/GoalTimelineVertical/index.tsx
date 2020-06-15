@@ -1,5 +1,5 @@
 import { Goal } from "../../../types/goals";
-import { GoalTimelineHorizontal } from "./GoalTimelineHorizontal";
+import { GoalTimelineVertical } from "./GoalTimelineVertical";
 
 import { connect } from "react-redux";
 import { StoreState } from "../../../types";
@@ -13,7 +13,7 @@ import { ThunkDispatch } from "redux-thunk";
 export function mapStateToProps(state: StoreState) {
   return {
     allPossibleGoals: state.goalsState.allPossibleGoals,
-    history: state.goalsState.historyState.history,
+    history: state.goalsState.historyState.history.reverse(),
     suggestions: state.goalsState.suggestionsState.suggestions,
   };
 }
@@ -34,4 +34,4 @@ export function mapDispatchToProps(
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(GoalTimelineHorizontal);
+)(GoalTimelineVertical);
