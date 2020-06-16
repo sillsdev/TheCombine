@@ -7,11 +7,13 @@ import {
 export interface ReviewEntriesState {
   words: ReviewEntriesWord[];
   language: string;
+  isRecording: boolean;
 }
 
 export const defaultState: ReviewEntriesState = {
   words: [],
   language: "en",
+  isRecording: false,
 };
 
 export const reviewEntriesReducer = (
@@ -43,6 +45,13 @@ export const reviewEntriesReducer = (
             };
           } else return word;
         }),
+      };
+
+    case ReviewEntriesActionTypes.UpdateRecordingStatus:
+      // Update recording status
+      return {
+        ...state,
+        isRecording: action.recordingStatus,
       };
 
     default:

@@ -13,6 +13,7 @@ import { StoreState } from "../../../types";
 export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
+  UpdateRecordingStatus = "UPDATE_RECORDING_STATUS",
 }
 
 interface ReviewUpdateWords {
@@ -27,7 +28,15 @@ interface ReviewUpdateWord {
   newWord: ReviewEntriesWord;
 }
 
-export type ReviewEntriesAction = ReviewUpdateWords | ReviewUpdateWord;
+interface ReviewUpdateRecordingStatus {
+  type: ReviewEntriesActionTypes.UpdateRecordingStatus;
+  recordingStatus: boolean;
+}
+
+export type ReviewEntriesAction =
+  | ReviewUpdateWords
+  | ReviewUpdateWord
+  | ReviewUpdateRecordingStatus;
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
