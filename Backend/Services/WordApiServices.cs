@@ -48,13 +48,13 @@ namespace BackendFramework.Services
         public async Task<Word> Delete(string projectId, string wordId, string fileName)
         {
             var wordWithAudioToDelete = _repo.GetWord(projectId, wordId).Result;
-            wordWithAudioToDelete.Audio.Remove(fileName);
 
             var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
 
             // We only want to update words that are in the frontier
             if (wordIsInFrontier)
             {
+                wordWithAudioToDelete.Audio.Remove(fileName);
                 wordWithAudioToDelete.Id = "";
                 wordWithAudioToDelete.ProjectId = projectId;
 
