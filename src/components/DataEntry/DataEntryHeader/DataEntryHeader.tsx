@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Typography } from "@material-ui/core";
-import { createMuiTheme } from "@material-ui/core/styles";
+
 import { Help } from "@material-ui/icons";
 import theme, { buttonSuccess } from "../../../types/theme";
 import {
@@ -12,28 +12,19 @@ import DomainTree from "../../TreeView/SemanticDomain";
 
 interface DataEntryHeaderProps {
   domain: DomainTree;
-}
-
-interface DataEntryHeaderState {
   questionsVisible: boolean;
+  setQuestionVisibility: (visibility: boolean) => void;
 }
 
 /**
  * Displays information about the current data entry view
  */
 export class DataEntryHeader extends React.Component<
-  DataEntryHeaderProps & LocalizeContextProps,
-  DataEntryHeaderState
+  DataEntryHeaderProps & LocalizeContextProps
 > {
-  constructor(props: DataEntryHeaderProps & LocalizeContextProps) {
-    super(props);
-    this.state = {
-      questionsVisible: false,
-    };
-  }
   render() {
     let questions;
-    if (this.state.questionsVisible) {
+    if (this.props.questionsVisible) {
       questions = this.props.domain.questions.map((q) => (
         <Typography>{q}</Typography>
       ));
@@ -49,11 +40,13 @@ export class DataEntryHeader extends React.Component<
         {this.props.domain.name + " (" + this.props.domain.id + ")"}
         <Typography>{this.props.domain.description}</Typography>
         <Switch
-          onChange={() => {
-            this.setState({ questionsVisible: !this.state.questionsVisible });
-          }}
+          onChange={() =>
+            this.props.setQuestionVisibility(!this.props.questionsVisible)
+          }
           icon={<Help />}
           checkedIcon={<Help />}
+          checked={this.props.questionsVisible}
+          color="primary"
         />
         {questions}
       </Typography>

@@ -22,6 +22,7 @@ interface DataEntryTableProps {
   domain: DomainTree;
   semanticDomain: SemanticDomain;
   displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
+  hideQuestions: () => void;
 }
 
 interface WordAccess {
@@ -339,6 +340,7 @@ export class DataEntryTable extends React.Component<
                 let recentlyAddedWords: WordAccess[] = [];
                 this.props.displaySemanticDomainView(true);
                 this.setState({ recentlyAddedWords });
+                this.props.hideQuestions();
               }}
             >
               <Translate id="addWords.done" />

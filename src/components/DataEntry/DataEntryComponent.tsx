@@ -16,6 +16,7 @@ interface DataEntryProps {
 
 interface DataEntryState {
   displaySemanticDomain: boolean;
+  questionsVisible: boolean;
 }
 
 /**
@@ -30,6 +31,7 @@ export class DataEntryComponent extends React.Component<
     super(props);
     this.state = {
       displaySemanticDomain: true,
+      questionsVisible: false,
     };
   }
 
@@ -51,7 +53,13 @@ export class DataEntryComponent extends React.Component<
               marginRight: "auto",
             }}
           >
-            <DataEntryHeader domain={this.props.domain} />
+            <DataEntryHeader
+              domain={this.props.domain}
+              questionsVisible={this.state.questionsVisible}
+              setQuestionVisibility={(visibility: boolean) =>
+                this.setState({ questionsVisible: visibility })
+              }
+            />
             <Divider />
             <DataEntryTable
               domain={this.props.domain}
@@ -60,6 +68,9 @@ export class DataEntryComponent extends React.Component<
                 this.setState({
                   displaySemanticDomain: isGettingSemanticdomain,
                 });
+              }}
+              hideQuestions={() => {
+                this.setState({ questionsVisible: false });
               }}
             />
           </Paper>
