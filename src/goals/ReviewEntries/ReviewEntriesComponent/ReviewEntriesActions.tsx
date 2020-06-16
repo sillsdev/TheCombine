@@ -58,6 +58,13 @@ function updateWord(
   };
 }
 
+export function updateRecordingStatus(recordingStatus: boolean) {
+  return {
+    type: ReviewEntriesActionTypes.UpdateRecordingStatus,
+    recordingStatus,
+  };
+}
+
 // Return the translation code for our error, or undefined if there is no error
 function getError(sense: ReviewEntriesSense): string | undefined {
   if (sense.glosses.length === 0) return "reviewEntries.error.gloss";

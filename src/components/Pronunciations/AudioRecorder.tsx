@@ -7,7 +7,9 @@ import {
 } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
 import FiberManualRecord from "@material-ui/icons/FiberManualRecord";
-import React, { useState } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateRecordingStatus } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import * as Backend from "../../backend";
 import { Recorder } from "./Recorder";
 import { Translate } from "react-localize-redux";
@@ -42,7 +44,10 @@ function getFileNameForWord(wordId: string): string {
 }
 
 export default function AudioRecorder(props: RecorderProps) {
-  const [isRecording, setIsRecording] = useState(false);
+  const isRecording = useSelector(
+    (state: any) => state.reviewEntriesState.isRecording
+  );
+  const dispatch = useDispatch();
   const classes = useStyles();
 
   const recorder =
@@ -51,17 +56,18 @@ export default function AudioRecorder(props: RecorderProps) {
   function safeStartRecording(
     event: Event | React.TouchEvent | React.MouseEvent
   ) {
+    console.log(isRecording);
     if (!isRecording) {
+      dispatch(updateRecordingStatus(true));
       event.preventDefault();
       recorder.startRecording();
-      setIsRecording(true);
     }
   }
 
   function safeStopRecording(
     event: Event | React.TouchEvent | React.MouseEvent
   ) {
-    if (isRecording) {
+    if (/*isRecording*/ true) {
       event.preventDefault();
       recorder
         .stopRecording()
@@ -84,7 +90,7 @@ export default function AudioRecorder(props: RecorderProps) {
           // <Translate id="pronunciations.noMicAccess" />;
           // TODO: Show alert dialog here
         })
-        .finally(() => setIsRecording(false));
+        .finally(() => dispatch(updateRecordingStatus(false)));
     }
   }
 
