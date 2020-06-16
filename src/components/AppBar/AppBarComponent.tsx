@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withLocalize } from "react-localize-redux";
-import { Grid, Color } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import UserMenu from "./UserMenu";
 import Logo from "./Logo";
 import theme from "../../types/theme";
@@ -12,7 +12,6 @@ import ProjectNameButton from "./ProjectNameButton";
 
 /** An app bar shown at the top of almost every page of The Combine */
 function AppBarComponent() {
-  const highlight: string = "#1976d2";
   return (
     <React.Fragment>
       <div
