@@ -3,13 +3,11 @@ import {
   Button,
   Typography,
   TextField,
-  Grid,
   GridList,
   GridListTile,
   Card,
 } from "@material-ui/core";
-import { ChevronLeft, ChevronRight } from "@material-ui/icons";
-
+import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 interface TreeHeaderProps {
@@ -182,30 +180,25 @@ export default class TreeViewHeader extends React.Component<
 
   // Creates the L/R button + select button + search bar
   render() {
-    let domainL: SemanticDomainWithSubdomains
+    let domainL:
+      | SemanticDomainWithSubdomains
       | undefined = this.getBrotherDomain(-1);
-    let domainR: SemanticDomainWithSubdomains
+    let domainR:
+      | SemanticDomainWithSubdomains
       | undefined = this.getBrotherDomain(1);
 
     return (
-      <GridList cols={7} spacing={2} cellHeight={"auto"}>
+      <GridList cols={9} spacing={20} cellHeight={"auto"}>
         <GridListTile cols={2}>
           {domainL ? (
-            <Grid container justify="center">
-              <Button
-                variant={"outlined"}
-                onClick={() => this.navigateDomain(-1)}
-                style={{ float: "right", marginTop: "50%" }}
-              >
-                <ChevronLeft />
-                <Typography variant="body2">
-                  {domainL.id.padStart(8, " ")}
-                </Typography>
-              </Button>
-            </Grid>
+            <DomainTile
+              domain={domainL}
+              onClick={this.props.animate}
+              direction={Direction.Left}
+            />
           ) : null}
         </GridListTile>
-        <GridListTile cols={3}>
+        <GridListTile cols={5}>
           <Card>
             <Button
               fullWidth
@@ -219,7 +212,7 @@ export default class TreeViewHeader extends React.Component<
                 <Typography variant="overline">
                   {this.props.currentDomain.id}
                 </Typography>
-                <Typography variant="h5">
+                <Typography variant="h6">
                   {this.props.currentDomain.name}
                 </Typography>
               </div>
@@ -237,21 +230,11 @@ export default class TreeViewHeader extends React.Component<
         </GridListTile>
         <GridListTile cols={2}>
           {domainR ? (
-            <Grid container justify="center">
-              <Button
-                variant={"outlined"}
-                onClick={() => this.navigateDomain(1)}
-                style={{ marginTop: "50%" }}
-              >
-                <Typography variant="overline">
-                  {domainR.id.padEnd(8, " ")}
-                </Typography>
-                <Typography variant="h6">
-                  {domainR.name.padEnd(8, " ")}
-                </Typography>
-                <ChevronRight />
-              </Button>
-            </Grid>
+            <DomainTile
+              domain={domainR}
+              onClick={this.props.animate}
+              direction={Direction.Right}
+            />
           ) : null}
         </GridListTile>
       </GridList>

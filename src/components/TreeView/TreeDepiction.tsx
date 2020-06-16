@@ -1,12 +1,6 @@
 import React, { ReactNode } from "react";
-import {
-  GridList,
-  GridListTile,
-  Button,
-  Typography,
-  Grid,
-} from "@material-ui/core";
-import DomainTile from "./DomainTile";
+import { GridList, GridListTile, Grid } from "@material-ui/core";
+import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 import TreeViewHeader from "./TreeViewHeader";
 
@@ -22,7 +16,6 @@ import {
   teeUpLeft,
   teeUpRight,
 } from "../../resources/tree";
-import ReturnSymbol from "../../resources/ReturnSymbol.png";
 
 export const MAX_TILE_WIDTH = 150;
 export const MIN_TILE_WIDTH = 75;
@@ -119,7 +112,11 @@ export default class TreeDepiction extends React.Component<
           }}
         >
           <GridListTile>
-            <DomainTile domain={subdomains[0]} onClick={this.props.animate} />
+            <DomainTile
+              domain={subdomains[0]}
+              onClick={this.props.animate}
+              direction={Direction.Up}
+            />
           </GridListTile>
           {this.treeTile(pillar)}
         </GridList>
@@ -176,6 +173,7 @@ export default class TreeDepiction extends React.Component<
             <DomainTile
               domain={this.props.currentDomain.subdomains[domainIndex]}
               onClick={this.props.animate}
+              direction={Direction.Up}
             />
           </GridListTile>
         );
@@ -227,20 +225,12 @@ export default class TreeDepiction extends React.Component<
                 <DomainTile
                   domain={this.props.currentDomain.parentDomain}
                   onClick={this.props.animate}
+                  direction={Direction.Down}
                 />
               </GridListTile>
             </GridList>
           )}
         </Grid>
-        {/* Don't show return symbol on root domain */}
-        {this.props.currentDomain.parentDomain !== undefined && (
-          <img
-            src={ReturnSymbol}
-            alt="Return Symbol"
-            width="40px"
-            height="auto"
-          />
-        )}
       </React.Fragment>
     );
   }

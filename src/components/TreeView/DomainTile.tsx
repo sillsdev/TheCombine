@@ -1,5 +1,11 @@
-import React from "react";
-import { Button, Typography } from "@material-ui/core";
+import React, { ReactNode } from "react";
+import {
+  Button,
+  Grid,
+  GridList,
+  GridListTile,
+  Typography,
+} from "@material-ui/core";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 import {
   ChevronLeft,
@@ -9,37 +15,87 @@ import {
 } from "@material-ui/icons";
 
 export enum Direction {
-  Up,
-  Down,
-  Left,
-  Right,
+  Down = "Down",
+  Left = "Left",
+  Right = "Right",
+  Up = "Up",
 }
 
 interface DomainTileProps {
   domain: SemanticDomainWithSubdomains;
   onClick: (domain: SemanticDomainWithSubdomains) => any;
+  direction?: Direction;
 }
 
+// Creates a semantic domain tile, which can be clicked on to navigate to that semantic domain
 export default class DomainTile extends React.Component<DomainTileProps> {
-  /*private inputField(
-    sense: ReviewEntriesSense,
-    index: number,
-    noGloss: string
-  ): ReactNode {*/
-
   constructor(props: DomainTileProps) {
     super(props);
   }
 
-  // Creates a semantic domain tile, which can be clicked on to navigate to that semantic domain
-  /*export default function DomainTile(
-  domain: SemanticDomainWithSubdomains,
-  onClick: (domain: SemanticDomainWithSubdomains) => any,
-  direction?: Direction
-): ReactNode {*/
+  domainText(domain: SemanticDomainWithSubdomains): ReactNode {
+    return (
+      <div style={{ textTransform: "capitalize" }}>
+        <Typography variant={"overline"}>{domain.id}</Typography>
+        <Typography variant={"body1"}>{domain.name}</Typography>
+      </div>
+    );
+  }
+
+  textWithArrow(
+    domain: SemanticDomainWithSubdomains,
+    direction: Direction | undefined
+  ): ReactNode {
+    switch (direction) {
+      case Direction.Down:
+        return (
+          <div>
+            {this.domainText(domain)}
+            <KeyboardArrowDown />
+          </div>
+        );
+      case Direction.Left:
+        return (
+          <Grid
+            container
+            alignItems="center"
+            justify="space-around"
+            wrap="nowrap"
+          >
+            <Grid item>
+              <ChevronLeft />
+            </Grid>
+            <Grid item>{this.domainText(domain)}</Grid>
+          </Grid>
+        );
+      case Direction.Right:
+        return (
+          <Grid
+            container
+            alignItems="center"
+            justify="space-around"
+            wrap="nowrap"
+          >
+            <Grid item>{this.domainText(domain)}</Grid>
+            <Grid item>
+              <ChevronRight />
+            </Grid>
+          </Grid>
+        );
+      case Direction.Up:
+        return (
+          <div>
+            <KeyboardArrowUp />
+            {this.domainText(domain)}
+          </div>
+        );
+      default:
+        return <div>{this.domainText(domain)}</div>;
+    }
+  }
+
   render() {
     let domain = this.props.domain;
-    let onClick = this.props.onClick;
     return (
       <Button
         id={domain.id}
@@ -48,18 +104,15 @@ export default class DomainTile extends React.Component<DomainTileProps> {
         style={{
           left: 0,
           bottom: 0,
-          width: "90%",
-          height: "90%",
-          margin: "5%",
+          width: "95%",
+          height: "95%",
+          margin: "2.5%",
         }}
         onClick={() => {
-          onClick(domain);
+          this.props.onClick(domain);
         }}
       >
-        <div style={{ textTransform: "capitalize" }}>
-          <Typography variant={"overline"}>{domain.id}</Typography>
-          <Typography variant={"body1"}>{domain.name}</Typography>
-        </div>
+        {this.textWithArrow(domain, this.props.direction)}
       </Button>
     );
   }
