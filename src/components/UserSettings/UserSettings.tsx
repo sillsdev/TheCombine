@@ -60,9 +60,15 @@ function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
 
   return (
     <div style={{ position: "relative" }}>
-    {props.avatar?
-    <Avatar className={classes.avatar} alt="User avatar" src={props.avatar} />
-    : <Face style={{ fontSize: 60 }} />}
+      {props.avatar ? (
+        <Avatar
+          className={classes.avatar}
+          alt="User avatar"
+          src={props.avatar}
+        />
+      ) : (
+        <Face style={{ fontSize: 60 }} />
+      )}
       <Avatar className={classes.avatarOverlay} onClick={props.onClick}>
         <CameraAlt />
       </Avatar>
