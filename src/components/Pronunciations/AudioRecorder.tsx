@@ -57,41 +57,37 @@ export default function AudioRecorder(props: RecorderProps) {
     event: Event | React.TouchEvent | React.MouseEvent
   ) {
     console.log(isRecording);
-    if (!isRecording) {
-      dispatch(updateRecordingStatus(true));
-      event.preventDefault();
-      recorder.startRecording();
-    }
+    dispatch(updateRecordingStatus(true));
+    event.preventDefault();
+    recorder.startRecording();
   }
 
   function safeStopRecording(
     event: Event | React.TouchEvent | React.MouseEvent
   ) {
-    if (/*isRecording*/ true) {
-      event.preventDefault();
-      recorder
-        .stopRecording()
-        .then((audioUrl: string) => {
-          const blob = recorder.getBlob();
-          const fileName = getFileNameForWord(props.wordId);
-          const file = new File([blob], fileName, {
-            type: blob.type,
-            lastModified: Date.now(),
-          });
-          Backend.uploadAudio(props.wordId, file).then((newWordId) => {
-            recorder.clearData();
-            if (props.recordingFinished) {
-              props.recordingFinished(props.wordId, newWordId);
-            }
-          });
-        })
-        .catch(() => {
-          console.log("Error recording, probably no mic access");
-          // <Translate id="pronunciations.noMicAccess" />;
-          // TODO: Show alert dialog here
-        })
-        .finally(() => dispatch(updateRecordingStatus(false)));
-    }
+    event.preventDefault();
+    recorder
+      .stopRecording()
+      .then((audioUrl: string) => {
+        const blob = recorder.getBlob();
+        const fileName = getFileNameForWord(props.wordId);
+        const file = new File([blob], fileName, {
+          type: blob.type,
+          lastModified: Date.now(),
+        });
+        Backend.uploadAudio(props.wordId, file).then((newWordId) => {
+          recorder.clearData();
+          if (props.recordingFinished) {
+            props.recordingFinished(props.wordId, newWordId);
+          }
+        });
+      })
+      .catch(() => {
+        console.log("Error recording, probably no mic access");
+        // <Translate id="pronunciations.noMicAccess" />;
+        // TODO: Show alert dialog here
+      })
+      .finally(() => dispatch(updateRecordingStatus(false)));
   }
 
   return (
