@@ -1,6 +1,5 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-
 import MockDomain from "./MockSemanticDomain";
 import DomainTile, { Direction } from "../DomainTile";
 
@@ -8,7 +7,7 @@ var tileMaster: ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
 
 beforeEach(() => {
-  createTile();
+  createTile(Direction.Right);
 });
 
 describe("Tests DomainTile", () => {
@@ -22,10 +21,14 @@ describe("Tests DomainTile", () => {
 });
 
 // Creates the tile
-function createTile() {
+function createTile(direction?: Direction) {
   renderer.act(() => {
     tileMaster = renderer.create(
-      <DomainTile domain={MockDomain} onClick={MOCK_ANIMATE} />
+      <DomainTile
+        domain={MockDomain}
+        onClick={MOCK_ANIMATE}
+        direction={direction}
+      />
     );
   });
 }

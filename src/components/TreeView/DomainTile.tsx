@@ -18,7 +18,7 @@ export enum Direction {
 interface DomainTileProps {
   domain: SemanticDomainWithSubdomains;
   onClick: (domain: SemanticDomainWithSubdomains) => any;
-  direction?: Direction;
+  direction?: Direction | undefined;
 }
 
 // Creates a semantic domain tile, which can be clicked on to navigate to that semantic domain

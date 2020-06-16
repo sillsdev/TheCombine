@@ -32,24 +32,49 @@ exports[`Tests DomainTile Matches the latest snapshot 1`] = `
   <span
     className="MuiButton-label"
   >
-    <div>
+    <div
+      className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
+    >
       <div
-        style={
-          Object {
-            "textTransform": "capitalize",
-          }
-        }
+        className="MuiGrid-root MuiGrid-item"
       >
-        <span
-          className="MuiTypography-root MuiTypography-overline"
+        <div
+          style={
+            Object {
+              "textTransform": "capitalize",
+            }
+          }
         >
-          1
-        </span>
-        <p
-          className="MuiTypography-root MuiTypography-body1"
+          <span
+            className="MuiTypography-root MuiTypography-overline"
+          >
+            1
+          </span>
+          <p
+            className="MuiTypography-root MuiTypography-body1"
+          >
+            parent
+          </p>
+        </div>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item"
+      >
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
         >
-          parent
-        </p>
+          <path
+            d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+          />
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+        </svg>
       </div>
     </div>
   </span>
