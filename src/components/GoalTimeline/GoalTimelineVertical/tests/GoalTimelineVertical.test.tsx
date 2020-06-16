@@ -74,7 +74,7 @@ describe("Test GoalTimelineVertical", () => {
     expect(CHOOSE_GOAL).toHaveBeenCalledWith(goals[2]);
   });
 
-  it("Doesn't select a non-existant goal by name", () => {
+  it("Doesn't select a non-existent goal by name", () => {
     timeHandle.handleChange("The goal is a lie");
     expect(CHOOSE_GOAL).toHaveBeenCalledTimes(0);
   });

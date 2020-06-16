@@ -14,12 +14,7 @@ export class GoalRoute extends React.Component {
     return (
       <div>
         <Switch>
-          <PrivateRoute
-            exact
-            path="/goals"
-            //component={GoalTimelineHorizontal}
-            component={GoalTimelineVertical}
-          />
+          <PrivateRoute exact path="/goals" component={GoalTimelineVertical} />
           <PrivateRoute path={"/goals/:id"} component={BaseGoalScreen} />
           <Route component={PageNotFound} />
         </Switch>

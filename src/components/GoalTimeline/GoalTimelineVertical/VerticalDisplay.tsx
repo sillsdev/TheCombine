@@ -43,11 +43,11 @@ export class VerticalDisplay extends React.Component<
     super(props);
     this.state = { scrollVisible: false };
     this.optionHeight = this.props.height / 3 - 1.25;
-    this.historyButton = this.historyButton.bind(this);
-    this.noHistoryButton = this.noHistoryButton.bind(this);
+    this.prevCompletionButton = this.prevCompletionButton.bind(this);
+    this.noPrevCompletionButton = this.noPrevCompletionButton.bind(this);
   }
 
-  historyButton(goal: Goal, index: number) {
+  prevCompletionButton(goal: Goal, index: number) {
     return (
       <GridListTile key={index + "tileVertical"} cols={1}>
         <Button
@@ -69,7 +69,7 @@ export class VerticalDisplay extends React.Component<
     );
   }
 
-  noHistoryButton() {
+  noPrevCompletionButton() {
     return (
       <GridListTile key={-1} cols={1}>
         <Button
@@ -98,7 +98,7 @@ export class VerticalDisplay extends React.Component<
           overflowY: this.state.scrollVisible ? "scroll" : "hidden",
           padding: "50px",
         }}
-        cols={1} //this.props.numPanes
+        cols={1}
         onMouseOver={() => {
           this.setState({ scrollVisible: true });
         }}
@@ -107,8 +107,8 @@ export class VerticalDisplay extends React.Component<
         }}
       >
         {this.props.data.length > 0
-          ? this.props.data.map(this.historyButton)
-          : this.noHistoryButton()}
+          ? this.props.data.map(this.prevCompletionButton)
+          : this.noPrevCompletionButton()}
         <div
           ref={(element: HTMLDivElement) => {
             if (this.props.scrollToEnd && element) element.scrollIntoView(true);
