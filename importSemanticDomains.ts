@@ -70,17 +70,16 @@ function generateCleanJSON(
     newEnglishEntry.questions = [];
     newEnglishEntry.subdomains = [];
 
+    //If there is no foriegn entry for name or description, use the English as default
     newForiegnEntry.name = subDomain.Name[0].AUni[1].hasOwnProperty("_")
       ? subDomain.Name[0].AUni[1]._
-      : "";
-    newForiegnEntry.id = subDomain.Abbreviation[0].AUni[0].hasOwnProperty("_")
-      ? subDomain.Abbreviation[0].AUni[0]._
-      : "";
+      : newEnglishEntry.name;
+    newForiegnEntry.id = subDomain.Abbreviation[0].AUni[0]._;
     newForiegnEntry.description = subDomain.Description[0].AStr[1].Run[0].hasOwnProperty(
       "_"
     )
       ? subDomain.Description[0].AStr[1].Run[0]._
-      : "";
+      : newEnglishEntry.description;
     newForiegnEntry.questions = [];
     newForiegnEntry.subdomains = [];
 

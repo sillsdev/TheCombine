@@ -360,7 +360,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Forest, grassland, desert",
                 "id": "1.2.1.6",
                 "description": "Utilice este campo para palabras que tienen que ver con las clases de plantas que crecen en una área.",
                 "questions": [
@@ -387,7 +387,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Substance, matter",
             "id": "1.2.2",
             "description": "Utilice este campo para palabras que tienen que ver con la materia--de lo que está hecho algo, o una clase de sólido, líquido o gas.",
             "questions": [
@@ -451,7 +451,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Jewel",
                 "id": "1.2.2.5",
                 "description": "Utilice este campo para palabras que tienen que ver con las joyas y las piedras preciosas.",
                 "questions": [
@@ -803,7 +803,7 @@
         ],
         "subdomains": [
           {
-            "name": "",
+            "name": "Dead things",
             "id": "1.4.1",
             "description": "Utilice este campo para palabras que se refieren a cosas muertas–cosas que estaban vivas, pero ya no.",
             "questions": [
@@ -1402,7 +1402,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Animal home",
             "id": "1.6.5",
             "description": "Utilice este campo para los hogares de animales. Es necesario pensar con mucha atención sobre las casas de cada tipo animal, especialmente los más importantes.",
             "questions": [
@@ -1817,9 +1817,9 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Cough, sneeze",
             "id": "2.2.2",
-            "description": "",
+            "description": "Use this domain for words related to coughing, sneezing, and other actions of the mouth and nose.",
             "questions": [],
             "subdomains": []
           },
@@ -1835,9 +1835,9 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Mucus",
             "id": "2.2.4",
-            "description": "",
+            "description": "Use this domain for words related to mucus in the nose.",
             "questions": [],
             "subdomains": []
           },
@@ -1936,16 +1936,16 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Watch",
                 "id": "2.3.1.2",
-                "description": "",
+                "description": "Use this domain for words that refer to watching someone or something--to look for some time at something that is happening because you are interested in it and want to know what is happening.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Examine",
                 "id": "2.3.1.3",
-                "description": "",
+                "description": "Use this domain for words referring to examining--to look carefully at something because you want to learn something about it.",
                 "questions": [],
                 "subdomains": []
               },
@@ -1988,7 +1988,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Reflect, mirror",
                 "id": "2.3.1.7",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de reflejar luz.",
                 "questions": [
@@ -2003,7 +2003,7 @@
                 "questions": ["(1) ¿Cómo se le llama a la apariencia de algo?"],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Beautiful",
                     "id": "2.3.1.8.1",
                     "description": "Utilice este campo para las palabras que describen a alguien o a algo que es bello --de apariencia agradable o desagradable--que no agrada su apariencia.",
                     "questions": [
@@ -2016,9 +2016,9 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Ugly",
                     "id": "2.3.1.8.2",
-                    "description": "",
+                    "description": "Use this domain for words describing someone or something that is ugly--not pleasing in appearance.",
                     "questions": [],
                     "subdomains": []
                   }
@@ -2047,9 +2047,9 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Listen",
                 "id": "2.3.2.1",
-                "description": "",
+                "description": "Use this domain for words related to listening--to deliberately hear something.",
                 "questions": [],
                 "subdomains": []
               },
@@ -2088,16 +2088,16 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Loud",
                 "id": "2.3.2.4",
-                "description": "",
+                "description": "Use this domain for words that describe loud sounds.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Quiet",
                 "id": "2.3.2.5",
-                "description": "",
+                "description": "Use this domain for words that describe quiet sounds.",
                 "questions": [],
                 "subdomains": []
               }
@@ -2121,7 +2121,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Smell",
             "id": "2.3.4",
             "description": "Utilice este campo para palabras que tienen que ver con el hecho de oler algo.",
             "questions": [
@@ -2190,9 +2190,9 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Energetic",
             "id": "2.4.3",
-            "description": "",
+            "description": "Use this domain for words related to being energetic.",
             "questions": [],
             "subdomains": []
           },
@@ -2314,7 +2314,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Injure",
             "id": "2.5.3",
             "description": "Utilice este campo para palabras que tienen que ver con el hecho de dañar o herir a alguien.",
             "questions": [
@@ -2325,7 +2325,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Amputate",
                 "id": "2.5.3.1",
                 "description": "Utilice este campo para palabras que tienen que ver con una amputación (la perdida de un miembro).",
                 "questions": [
@@ -2415,14 +2415,14 @@
             ]
           },
           {
-            "name": "",
+            "name": "Cause of disease",
             "id": "2.5.5",
-            "description": "",
+            "description": "Use this domain for words referring to the cause of disease.",
             "questions": [],
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Symptom of disease",
             "id": "2.5.6",
             "description": "Utilice este campo para palabras que tienen que ver con los síntomas de la enfermedad.",
             "questions": [
@@ -2495,7 +2495,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Dazed, confused",
                 "id": "2.5.6.5",
                 "description": "Utilice este campo para palabras que describen el  estado mental cuando la mente de alguien no está funcionando bien o cuando la persona no está pensando muy bien",
                 "questions": [
@@ -2643,7 +2643,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Arrange a marriage",
                 "id": "2.6.1.1",
                 "description": "Utilice este campo para todas las palabras que tienen que ver con el hecho de arreglar un matrimonio. Las culturas pueden variar en sus prácticas ampliamente. En algunas culturas, los padres se encargan del arreglo del matrimonio. En otras culturas, el hombre debe buscar por sí mismo a la esposa. Ciertas culturas permiten cualquiera de estas prácticas o una combinación de ambas. Así que, algunas de las siguientes preguntas pueden ser inapropiadas para su cultura.",
                 "questions": [
@@ -2753,7 +2753,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Sexual immorality",
                 "id": "2.6.2.3",
                 "description": "Utilice este campo para palabras que tienen que ver con las relaciones sexuales ilícitas.",
                 "questions": [
@@ -2971,7 +2971,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Old person",
                 "id": "2.6.4.5",
                 "description": "Utilice este campo para palabras que tienen que ver con la vejez y con personas mayores.",
                 "questions": [
@@ -3129,7 +3129,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Inherit",
                 "id": "2.6.6.7",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de heredar riqueza.",
                 "questions": [
@@ -3139,9 +3139,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Life after death",
                 "id": "2.6.6.8",
-                "description": "",
+                "description": "Use this domain for words related to life after death.",
                 "questions": [],
                 "subdomains": []
               }
@@ -3160,7 +3160,7 @@
     ],
     "subdomains": [
       {
-        "name": "",
+        "name": "Soul, spirit",
         "id": "3.1",
         "description": "Utilice este campo para palabras comunes que tienen que ver con la parte etérea, la parte no física de una persona, contraria al cuerpo.",
         "questions": [
@@ -3172,7 +3172,7 @@
         ],
         "subdomains": [
           {
-            "name": "",
+            "name": "Personality",
             "id": "3.1.1",
             "description": "Utilice este campo para palabras que describen la personalidad de alguien (la forma en que generalmente piensa, habla y actúa con otras personas).",
             "questions": [
@@ -3190,7 +3190,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Alert",
                 "id": "3.1.2.1",
                 "description": "Utilice este campo para palabras que tienen que ver con un estado mental en el que la mente trabaja con ahínco.",
                 "questions": [
@@ -3213,9 +3213,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Attention",
                 "id": "3.1.2.3",
-                "description": "",
+                "description": "Use this domain for words referring to a mental state when the mind is working hard.",
                 "questions": [],
                 "subdomains": []
               },
@@ -3247,7 +3247,7 @@
         ],
         "subdomains": [
           {
-            "name": "",
+            "name": "Mind",
             "id": "3.2.1",
             "description": "Utilice este campo para palabras comunes que tienen que ver con la mente--la parte pensante de una persona.",
             "questions": ["(1) ¿Cómo se le llama a la mente?"],
@@ -3275,7 +3275,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Imagine",
                 "id": "3.2.1.2",
                 "description": "Utilice este campo para cosas imaginarias --pensar en algo que no existe, o pensar que sucede algo que nunca ha pasado.",
                 "questions": [
@@ -3293,9 +3293,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Intelligent",
                 "id": "3.2.1.3",
-                "description": "",
+                "description": "Use this domain for words that describe a person who thinks well.",
                 "questions": [],
                 "subdomains": []
               },
@@ -3466,9 +3466,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Secret",
                 "id": "3.2.3.3",
-                "description": "",
+                "description": "Use this domain for words that describe whether or not something is known.",
                 "questions": [],
                 "subdomains": []
               }
@@ -3505,9 +3505,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Mysterious",
                 "id": "3.2.4.3",
-                "description": "",
+                "description": "Use this domain for words that describe something that is difficult to understand.",
                 "questions": [],
                 "subdomains": []
               }
@@ -3539,9 +3539,9 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Trust",
                     "id": "3.2.5.1.1",
-                    "description": "",
+                    "description": "Use this domain for words referring to trusting someone--believing that someone is honest and will not do something bad to you.",
                     "questions": [],
                     "subdomains": []
                   }
@@ -3570,7 +3570,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Agree with someone",
                 "id": "3.2.5.4",
                 "description": "Utilice este campo para cuando dos personas consienten en algo, piensan de la misma sobre algo, o acceden en una decisión.",
                 "questions": [
@@ -3715,7 +3715,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Memorize",
                 "id": "3.2.6.3",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de memorizar algo--pensar mucho en algo para ya no olvidarlo .",
                 "questions": [
@@ -3724,9 +3724,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Remind",
                 "id": "3.2.6.4",
-                "description": "",
+                "description": "Use this domain for words referring to reminding someone about something--to make someone remember something.",
                 "questions": [],
                 "subdomains": []
               }
@@ -4984,7 +4984,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Say nothing",
                     "id": "3.5.1.1.5",
                     "description": "Utilice este campo para palabras que tienen que ver con el hecho de estar callado--no decir nada por algún tiempo.",
                     "questions": [
@@ -5032,9 +5032,9 @@
                 ]
               },
               {
-                "name": "",
+                "name": "Talk about a subject",
                 "id": "3.5.1.2",
-                "description": "",
+                "description": "Use this domain for words related to talking about a subject.",
                 "questions": [],
                 "subdomains": [
                   {
@@ -5060,16 +5060,16 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Explain",
                     "id": "3.5.1.2.3",
-                    "description": "",
+                    "description": "Use this domain for words related to explaining something--to help someone to understand something.",
                     "questions": [],
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Mention",
                     "id": "3.5.1.2.4",
-                    "description": "",
+                    "description": "Use this domain for words related to mentioning something--to talk about something but without saying much about it.",
                     "questions": [],
                     "subdomains": []
                   },
@@ -5119,7 +5119,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Be about, subject",
                     "id": "3.5.1.2.9",
                     "description": "Utilice este campo para las palabras que expresan la idea de que algo (dicho, escrito, o producido) describe o es acerca de un sujeto; o que algo está relacionado en forma lógica con algún tema.",
                     "questions": [],
@@ -5224,9 +5224,9 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Contact",
                     "id": "3.5.1.4.2",
-                    "description": "",
+                    "description": "Use this domain for words related to contacting someone--to communicate with someone who is far away from you using some communication device such as a telephone.",
                     "questions": [],
                     "subdomains": []
                   },
@@ -5597,9 +5597,9 @@
             ]
           },
           {
-            "name": "",
+            "name": "Story",
             "id": "3.5.4",
-            "description": "",
+            "description": "Use this domain for words referring to a story.",
             "questions": [],
             "subdomains": [
               {
@@ -5749,7 +5749,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Cry, tear",
                 "id": "3.5.6.5",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de llorar.",
                 "questions": [
@@ -5843,9 +5843,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Letter",
                 "id": "3.5.7.7",
-                "description": "",
+                "description": "Use this domain for words referring to letter--a written message that is sent to someone.",
                 "questions": [],
                 "subdomains": []
               }
@@ -6039,9 +6039,9 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Class, lesson",
             "id": "3.6.4",
-            "description": "",
+            "description": "Use this domain for words related to a class--the period of time when a subject is taught.",
             "questions": [],
             "subdomains": []
           },
@@ -6113,7 +6113,7 @@
         ],
         "subdomains": [
           {
-            "name": "",
+            "name": "Friend",
             "id": "4.1.1",
             "description": "Utilice este campo para palabras que tienen que ver con la amistad.",
             "questions": [
@@ -6167,7 +6167,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Know someone",
             "id": "4.1.3",
             "description": "Utilice este campo para palabras que tienen que ver con un conocido--alguien que conoce pero no muy bien.",
             "questions": [],
@@ -6235,7 +6235,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Unfriendly",
                 "id": "4.1.6.1",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de ser antisocial--cuando una persona no desea hablar o ser amiga de otras personas.",
                 "questions": [],
@@ -6311,7 +6311,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Kinship",
             "id": "4.1.9",
             "description": "Utilice este campo para palabras que generalmente tienen que ver con una relación familiar, no para términos específicos.",
             "questions": [
@@ -6698,9 +6698,9 @@
                 ]
               },
               {
-                "name": "",
+                "name": "Social group",
                 "id": "4.2.1.9",
-                "description": "",
+                "description": "Use this domain for words referring to an organization.",
                 "questions": [],
                 "subdomains": []
               }
@@ -6764,7 +6764,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Compose music",
                 "id": "4.2.3.1",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de escribir música.",
                 "questions": [
@@ -6885,14 +6885,14 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Card game",
                     "id": "4.2.6.1.1",
-                    "description": "",
+                    "description": "Use this domain for words related to a particular game. The example words are from the card games. If you do not play card games in your culture, you can rename this domain and use it for one of your games. Add other domains for each of your games.",
                     "questions": [],
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Chess",
                     "id": "4.2.6.1.2",
                     "description": "Utilice este campo para palabras que se utilizan para un juego en particular.  El juego de ajedrez se utiliza como ejemplo. Cambie el nombre de este campo para uno de los juegos que usted juega y conteste las preguntas para ese juego.  Aparte un campo para cada juego importante en su cultura.",
                     "questions": [
@@ -6939,7 +6939,7 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Football, soccer",
                     "id": "4.2.6.2.1",
                     "description": "Utilice este campo para palabras que tienen que ver con un deporte en particular.  Las palabras que se utilizan como ejemplo son del fútbol, pero usted debe utilizar palabras para uno de sus deportes.  Puede que su cultura no juegue este deporte.  Usted puede poner otro nombre en este campo y utilizarlo para uno de sus deportes.  Agregue otros campos para cada uno de sus deportes.",
                     "questions": [
@@ -7514,9 +7514,9 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Spoil",
                     "id": "4.3.4.6.1",
-                    "description": "",
+                    "description": "Use this domain for words referring to spoiling something that is happening, such as an event, work, relationship, or feeling, by doing something that makes it less attractive, less enjoyable, or less effective--to do something bad to something that is happening, so that people can't do what they were doing or don't enjoy it as much.",
                     "questions": [],
                     "subdomains": []
                   }
@@ -7930,7 +7930,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Avoid",
                 "id": "4.4.3.3",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de evadir un problema.",
                 "questions": [
@@ -7985,7 +7985,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Mercy",
                 "id": "4.4.4.1",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de tener misericordia por alguien que ha hecho algo malo.",
                 "questions": [
@@ -8029,7 +8029,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Protect",
                 "id": "4.4.4.5",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de defender a alguien del peligro.",
                 "questions": [
@@ -8525,7 +8525,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Politics",
                 "id": "4.6.6.5",
                 "description": "Utilice este campo para palabras que tienen que ver con un partido político.",
                 "questions": [
@@ -8669,7 +8669,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Trial",
             "id": "4.7.5",
             "description": "Utilice este campo para palabras que tienen que ver con el proceso legal.",
             "questions": ["(1) ¿Cómo se le llama al proceso legal?"],
@@ -8712,9 +8712,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Defend against accusation",
                 "id": "4.7.5.4",
-                "description": "",
+                "description": "Use this domain for words related to defending someone who has been accused of breaking a law.",
                 "questions": [],
                 "subdomains": []
               },
@@ -8877,7 +8877,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Atone, restitution",
                 "id": "4.7.7.7",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de expiar por un pecado del pasado--hacer algo para reparar algo malo que ha hecho.",
                 "questions": [
@@ -8982,28 +8982,28 @@
         ]
       },
       {
-        "name": "",
+        "name": "Conflict",
         "id": "4.8",
         "description": "Utilice este campo para palabras que generalmente tienen que ver con el al hecho de que haya disensión entre la gente.",
         "questions": [],
         "subdomains": [
           {
-            "name": "",
+            "name": "Hostility",
             "id": "4.8.1",
-            "description": "",
+            "description": "The words in this domain describe a situation in which people disagree about something so strongly that they might start fighting. But these words imply that they have not started fighting yet.",
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Oppose",
                 "id": "4.8.1.1",
-                "description": "",
+                "description": "Use this domain for words referring to opposing something that you think is wrong.",
                 "questions": [],
                 "subdomains": []
               }
             ]
           },
           {
-            "name": "",
+            "name": "Fight",
             "id": "4.8.2",
             "description": "Utilice este campo para palabras que tienen que ver con el hecho de pelear con alguien, incluso cuando varias personas pelean, con o sin armas.",
             "questions": [
@@ -9089,7 +9089,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Violent",
                 "id": "4.8.2.8",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de ser violento o ser fiero.",
                 "questions": [
@@ -9182,23 +9182,23 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Army",
                     "id": "4.8.3.6.1",
-                    "description": "",
+                    "description": "Use this domain for words related to the army.",
                     "questions": [],
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Navy",
                     "id": "4.8.3.6.2",
-                    "description": "",
+                    "description": "Use this domain for words related to the navy.",
                     "questions": [],
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Air force",
                     "id": "4.8.3.6.3",
-                    "description": "",
+                    "description": "Use this domain for words related to the air force.",
                     "questions": [],
                     "subdomains": []
                   },
@@ -9465,7 +9465,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Miracle, supernatural power",
             "id": "4.9.4",
             "description": "Utilice este campo para palabras que tienen que ver con los milagros--utilizar el poder sobrenatural para hacer algo que generalmente la gente no puede hacer.",
             "questions": [
@@ -9477,7 +9477,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Sorcery",
                 "id": "4.9.4.1",
                 "description": "Utilice este culto para palabras que tienen que ver con el la hechicería.",
                 "questions": [
@@ -9548,7 +9548,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Omen, divination",
                 "id": "4.9.4.7",
                 "description": "Utilice este campo para palabras que tienen que ver con un presagio o una adivinación.",
                 "questions": [
@@ -9605,7 +9605,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Religious ceremony",
                 "id": "4.9.5.4",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de realizar una ceremonia religiosa.",
                 "questions": [
@@ -9784,9 +9784,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Animism ",
                 "id": "4.9.7.7",
-                "description": "",
+                "description": "Use this domain for words used in Animism--the belief in spirits.",
                 "questions": [],
                 "subdomains": []
               }
@@ -9856,7 +9856,7 @@
     "questions": ["(1) ¿Qué palabras se usa para referir a la vida diaria?"],
     "subdomains": [
       {
-        "name": "",
+        "name": "Household equipment",
         "id": "5.1",
         "description": "Utilice este campo para palabras que tienen que ver con las herramientas caseras.",
         "questions": [
@@ -9922,7 +9922,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Household decoration",
             "id": "5.1.2",
             "description": "Utilice este campo para palabras que tienen que ver con los adornos/decoraciones para el hogar.",
             "questions": ["(1) ¿Qué cosas se utilizan para decorar una casa?"],
@@ -10003,7 +10003,7 @@
                 ]
               },
               {
-                "name": "",
+                "name": "Cooking utensil",
                 "id": "5.2.1.3",
                 "description": "Utilice este campo para palabras que tienen que ver con los utensilios de cocina.",
                 "questions": [
@@ -10062,9 +10062,9 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Bite, chew",
                 "id": "5.2.2.1",
-                "description": "",
+                "description": "Use this domain for words referring to biting and chewing with the teeth.",
                 "questions": [],
                 "subdomains": []
               },
@@ -10276,7 +10276,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Egg dishes",
                     "id": "5.2.3.2.3",
                     "description": "Utilice este campo para palabras que tienen que ver con los huevos.",
                     "questions": [
@@ -10333,7 +10333,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Cooking oil",
                     "id": "5.2.3.3.5",
                     "description": "Utilice este campo para palabras que tienen que ver con el aceite para cocinar.",
                     "questions": [
@@ -10375,7 +10375,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Beverage",
                 "id": "5.2.3.6",
                 "description": "Utilice este campo para palabras que que tienen que ver con las cosas que la gente bebe.",
                 "questions": [
@@ -10385,7 +10385,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Alcoholic beverage",
                 "id": "5.2.3.7",
                 "description": "Utilice este campo para las clases de bebidas que contienen alcohol.",
                 "questions": [
@@ -10407,7 +10407,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Drunk",
                     "id": "5.2.3.7.2",
                     "description": "Utilice este campo para palabras que tienen que ver con el hecho de beber alcohol y el efecto que produce en una persona.",
                     "questions": [
@@ -10454,9 +10454,9 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Stimulant",
             "id": "5.2.6",
-            "description": "",
+            "description": "Use this domain for words related to stimulants--substances that are drunk, eaten, or chewed to make a person more alert or give him more energy.",
             "questions": [],
             "subdomains": []
           }
@@ -10594,7 +10594,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Care for hair",
             "id": "5.4.3",
             "description": "Utilice este campo para las palabras que tienen que ver con el cuidado de su pelo.",
             "questions": [
@@ -10603,7 +10603,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Comb hair",
                 "id": "5.4.3.1",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de peinarse el pelo.",
                 "questions": [
@@ -10612,7 +10612,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Plait hair",
                 "id": "5.4.3.2",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de trenzarse el pelo.",
                 "questions": [
@@ -10624,7 +10624,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Dye hair",
                 "id": "5.4.3.3",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de teñirse el pelo.",
                 "questions": [
@@ -10636,7 +10636,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Hairstyle",
                 "id": "5.4.3.4",
                 "description": "Utilice este campo para palabras que tienen que ver con los estilos de peinado.",
                 "questions": [
@@ -10646,7 +10646,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Cut hair",
                 "id": "5.4.3.5",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de cortarse el pelo.",
                 "questions": [
@@ -10670,7 +10670,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Care for the teeth",
             "id": "5.4.4",
             "description": "Utilice este campo para palabras que tienen que ver con el hecho de cuidarse los dientes.",
             "questions": [
@@ -10680,7 +10680,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Anoint the body",
             "id": "5.4.5",
             "description": "Utilice este campo para palabras que tienen que ver con el hecho de ungir el cuerpo.",
             "questions": [
@@ -10690,7 +10690,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Ritual scar",
             "id": "5.4.6",
             "description": "Utilice este campo para palabras que tienen que ver con el ritual para marcar el cuerpo.",
             "questions": [
@@ -10716,7 +10716,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Care for the fingernails",
             "id": "5.4.7",
             "description": "Utilice este campo para palabras que tienen que ver con el cuidado de las uñas de las manos.",
             "questions": [
@@ -10797,7 +10797,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Burn",
             "id": "5.5.4",
             "description": "Utilice este campo para los verbos que se utilizan para lo referente al fuego: \"El fuego es/está______-\" En algunos idiomas hay verbos para lo que le sucede al objeto que se está quemando:\"La casa se está ____.\"",
             "questions": [
@@ -11084,7 +11084,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Try, attempt",
                 "id": "6.1.2.1",
                 "description": "Utilice este campo para las palabras que señalan que alguien está tratando de hacer algo.",
                 "questions": [
@@ -11309,9 +11309,9 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Prepare something for use",
                     "id": "6.1.2.6.1",
-                    "description": "",
+                    "description": "Use this domain for words related to preparing something so that it can be used for some purpose.",
                     "questions": [],
                     "subdomains": []
                   }
@@ -11382,9 +11382,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Advantage",
                 "id": "6.1.3.4",
-                "description": "",
+                "description": "Use this domain for words related to having an advantage--something that helps you succeed that other people don't have.",
                 "questions": [],
                 "subdomains": []
               }
@@ -11678,7 +11678,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Uproot plants",
                 "id": "6.2.4.2",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de desarraigar las plantas.",
                 "questions": [
@@ -11827,7 +11827,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Farm worker",
             "id": "6.2.7",
             "description": "Utilice este campo para palabras que tienen que ver con los granjeros.",
             "questions": [
@@ -11836,7 +11836,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Agricultural tool",
             "id": "6.2.8",
             "description": "Utilice este campo para palabras que tienen que ver con las herramientas de la agricultura.",
             "questions": [
@@ -12244,9 +12244,9 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "House",
                 "id": "6.5.1.1",
-                "description": "",
+                "description": "Use this domain for general words referring to a house where people live.",
                 "questions": [],
                 "subdomains": []
               },
@@ -12264,7 +12264,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Land, property",
                 "id": "6.5.1.3",
                 "description": "Utilice este campo para palabras que tienen que ver con el terreno que es propiedad de una persona.",
                 "questions": [
@@ -12277,16 +12277,16 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Yard",
                 "id": "6.5.1.4",
                 "description": "Utilice este campo para palabras que tienen que ver con el exterior de una casa, el área que rodea a una casa, la valla que separa a una casa de otra, y la entrada al área que rodea a una casa.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Fence, wall",
                 "id": "6.5.1.5",
-                "description": "",
+                "description": "Use this domain for words referring to a fence, wall, hedge, or other barrier separating one house from another, and a gate or entryway through a fence or wall.",
                 "questions": [],
                 "subdomains": []
               }
@@ -12459,7 +12459,7 @@
         ]
       },
       {
-        "name": "",
+        "name": "Occupation",
         "id": "6.6",
         "description": "Utilice este campo para palabras que tienen que ver con las ocupaciones.",
         "questions": [
@@ -12530,7 +12530,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Weaving cloth",
                 "id": "6.6.1.4",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de tejer tela.",
                 "questions": [
@@ -12751,7 +12751,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Weaving baskets and mats",
                 "id": "6.6.4.2",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de tejer.",
                 "questions": [
@@ -13000,7 +13000,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Fastening tool",
             "id": "6.7.5",
             "description": "Utilice este campo para palabras que tienen que ver con las herramientas para fijar.",
             "questions": [
@@ -13105,7 +13105,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Rich",
                 "id": "6.8.1.2",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de ser acaudalado.",
                 "questions": [],
@@ -13214,9 +13214,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Earn",
                 "id": "6.8.2.7",
-                "description": "",
+                "description": "Use this domain for words related to earning money for work that you do.",
                 "questions": [],
                 "subdomains": []
               }
@@ -13280,7 +13280,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Financial transaction",
             "id": "6.8.4",
             "description": "Utilice este campo para palabras que tienen que ver con las transacciones financieras.",
             "questions": [
@@ -13306,7 +13306,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Price",
                 "id": "6.8.4.3",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de fijar el precio de algo.",
                 "questions": [
@@ -14066,9 +14066,9 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Fall",
                     "id": "7.2.2.5.1",
-                    "description": "",
+                    "description": "Use this domain for words referring to something falling--for something to move down under the influence of gravity.",
                     "questions": [],
                     "subdomains": []
                   }
@@ -14366,9 +14366,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Way, route",
                 "id": "7.2.4.6",
-                "description": "",
+                "description": "Use this domain for words related to the way or route that you take to go somewhere.",
                 "questions": [],
                 "subdomains": []
               },
@@ -14455,14 +14455,14 @@
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Catch, capture",
                 "id": "7.2.6.1",
-                "description": "",
+                "description": "Use this domain for words related to catching someone who is trying to escape.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Prevent from moving",
                 "id": "7.2.6.2",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de evitar que alguien o algo se mueva.",
                 "questions": [
@@ -14810,9 +14810,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Drive along",
                 "id": "7.3.3.5",
-                "description": "",
+                "description": "Use this domain for words related to driving people and animals--to cause someone (or an animal) to move with you.",
                 "questions": [],
                 "subdomains": []
               }
@@ -14997,7 +14997,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Transport",
             "id": "7.3.8",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de mover algo en un vehículo.",
             "questions": [
@@ -15008,9 +15008,9 @@
         ]
       },
       {
-        "name": "",
+        "name": "Have, be with",
         "id": "7.4",
-        "description": "",
+        "description": "Use this domain for words related to having something.",
         "questions": [],
         "subdomains": [
           {
@@ -15084,9 +15084,9 @@
             ]
           },
           {
-            "name": "",
+            "name": "Not have",
             "id": "7.4.6",
-            "description": "",
+            "description": "Use this domain for words related to having something.",
             "questions": [],
             "subdomains": []
           }
@@ -15195,9 +15195,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Add to something",
                 "id": "7.5.2.3",
-                "description": "",
+                "description": "Use this domain for words related to adding something to another thing.",
                 "questions": [],
                 "subdomains": []
               },
@@ -15358,22 +15358,22 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Put",
             "id": "7.5.9",
-            "description": "",
+            "description": "Use this domain for words related to putting something somewhere.",
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Load, pile",
                 "id": "7.5.9.1",
-                "description": "",
+                "description": "Use this domain for words related to putting lots of things on something.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Fill, cover",
                 "id": "7.5.9.2",
-                "description": "",
+                "description": "Use this domain for words related to filling a container or covering an area with something.",
                 "questions": [],
                 "subdomains": []
               }
@@ -15668,16 +15668,16 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "One",
                     "id": "8.1.1.1.1",
-                    "description": "",
+                    "description": "Use this domain for words related to the number one. It appears that every language has a word for 'one' and 'two', but not every language has a word for the numbers higher than two. Many languages have several words that mean 'one'.",
                     "questions": [],
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Two",
                     "id": "8.1.1.1.2",
-                    "description": "",
+                    "description": "Use this domain for words related to the number two.",
                     "questions": [],
                     "subdomains": []
                   }
@@ -15705,7 +15705,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Numbered group",
                 "id": "8.1.1.5",
                 "description": "Utilice este campo para las palabras que tienen que ver con los números colectivos (solo, dúo/pareja, trío, solo/único, en tres)",
                 "questions": [],
@@ -15722,9 +15722,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Number series",
                 "id": "8.1.1.7",
-                "description": "",
+                "description": "Use this domain for other series of numbers that are different from those in the previous domains.",
                 "questions": [],
                 "subdomains": []
               }
@@ -15741,14 +15741,14 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Mathematics",
                 "id": "8.1.2.1",
                 "description": "Utilice este campo para las palabras que señalan una proposición de una suma total.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Add numbers",
                 "id": "8.1.2.2",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de sumar dos números.",
                 "questions": [
@@ -15758,14 +15758,14 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Subtract numbers",
                 "id": "8.1.2.3",
                 "description": "Utilice este campo para las palabras que tienen que ver con la resta de un número de otro.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Multiply numbers",
                 "id": "8.1.2.4",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de multiplicar un número por otro.",
                 "questions": [
@@ -15774,7 +15774,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Divide numbers",
                 "id": "8.1.2.5",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de dividir un número entre otro número.",
                 "questions": [
@@ -15785,7 +15785,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Plural",
             "id": "8.1.3",
             "description": "Utilice este campo para las palabras y afijos que indican que hay más de uno de lo mismo. Algunos idiomas, tal como indoeuropeos, indican el plural con un afijo. Otros idiomas, tal como los austronesianos, utilizan una palabra por separado. Algunos idiomas también tienen palabras o afijos que indican que hay dos de lo mismo.",
             "questions": [
@@ -15794,14 +15794,14 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Many, much",
                 "id": "8.1.3.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con lo mucha o poca cantidad de algo.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Few, little",
                 "id": "8.1.3.2",
                 "description": "Utilice es campo para las palabras que tienen que ver con el hecho de que hay poca cantidad de algo",
                 "questions": [],
@@ -15862,35 +15862,35 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "None, nothing",
                 "id": "8.1.5.2",
-                "description": "",
+                "description": "Use this domain for words that nothing, no one, never, and nowhere.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Both",
                 "id": "8.1.5.3",
                 "description": "Utilice este campo para las palabras que tienen que ver con un número o una cantidad que es casi igual a otro número.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Most, almost all",
                 "id": "8.1.5.4",
-                "description": "",
+                "description": "Use this domain for words related to most--more than half and less than all of something.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Most, least",
                 "id": "8.1.5.5",
-                "description": "",
+                "description": "Use this domain for words related to the most--the largest number or amount; or the least--the smallest number or amount. Most/least may refer to the largest/smallest number possible or needed. If there are several groups being counted, most/least may refer to the largest/smallest group.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Almost",
                 "id": "8.1.5.6",
                 "description": "Utilice este campo para las palabras que tienen que ver con ambas cosas.",
                 "questions": [],
@@ -15904,13 +15904,13 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Exact",
                 "id": "8.1.5.8",
-                "description": "",
+                "description": "Use this domain for words that indicate whether a number or amount is exact--not more and not less.",
                 "questions": [],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Approximate",
                     "id": "8.1.5.8.1",
                     "description": "Utilice este campo para señalar el hecho de si un número o una medida se aproxima o si es exacto. La aproximación puede coincidir con la \"Ubicación Temporal\", la 'Ubicación Espacial', la 'Ubicación Lógica', la 'Medida' o el 'Número'.",
                     "questions": [],
@@ -15928,7 +15928,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Whole, complete",
             "id": "8.1.6",
             "description": "Utilice este campo para las palabras que tienen que ver con el todo de algo.",
             "questions": [],
@@ -15944,29 +15944,29 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Piece",
                 "id": "8.1.6.2",
-                "description": "",
+                "description": "Use this domain for words referring to a part of something that has been broken or cut off.",
                 "questions": [],
                 "subdomains": []
               }
             ]
           },
           {
-            "name": "",
+            "name": "Enough",
             "id": "8.1.7",
             "description": "Utilice este campo para palabras que tienen que ver con el hecho de tener suficiente.",
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Extra",
                 "id": "8.1.7.1",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de tener extra-- tener más de lo que se necesita.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Lack",
                 "id": "8.1.7.2",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de tener escasez-- no tener suficiente.",
                 "questions": [
@@ -15975,14 +15975,14 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Need",
                 "id": "8.1.7.3",
                 "description": "Utilice este campo para las palabras que señalan que alguien tiene los recursos necesarios para hacer algo.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Remain, remainder",
                 "id": "8.1.7.4",
                 "description": "Utilice este campo para las palabras que tienen que ver con el restante de algo--la parte de algo que queda atrás después de quitar las otras partes.",
                 "questions": [],
@@ -16081,13 +16081,13 @@
             ]
           },
           {
-            "name": "",
+            "name": "Thick",
             "id": "8.2.3",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de ser gordo o grueso.",
             "questions": ["(1) ¿Qué palabras describen algo que es grueso?"],
             "subdomains": [
               {
-                "name": "",
+                "name": "Thin thing",
                 "id": "8.2.3.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de ser delgado.",
                 "questions": [
@@ -16096,16 +16096,16 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Fat person",
                 "id": "8.2.3.2",
-                "description": "",
+                "description": "Use this domain for words describing a person or animal who is fat.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Thin person",
                 "id": "8.2.3.3",
-                "description": "",
+                "description": "Use this domain for words describing a person or animal who is thin.",
                 "questions": [],
                 "subdomains": []
               }
@@ -16137,13 +16137,13 @@
             ]
           },
           {
-            "name": "",
+            "name": "Big area",
             "id": "8.2.5",
-            "description": "",
+            "description": "Use this domain for words describing a big area.",
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Big container, volume",
                 "id": "8.2.5.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con el volumen de algo.",
                 "questions": [
@@ -16252,7 +16252,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Tight",
                 "id": "8.2.7.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de estar apretado o flojo--cuando algo es muy grande o muy pequeño.",
                 "questions": [
@@ -16263,9 +16263,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Loose",
                 "id": "8.2.7.2",
-                "description": "",
+                "description": "Use this domain for words referring to being loose--when something is too big.",
                 "questions": [],
                 "subdomains": []
               },
@@ -16296,7 +16296,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Weigh",
             "id": "8.2.9",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de pesar algo.",
             "questions": [
@@ -16505,7 +16505,7 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Concave",
                     "id": "8.3.1.6.1",
                     "description": "Utilice este campo para las palabras que describen algo que es cónvexo--extendiéndose hacia el exterior de la figura en dirección del expectador.",
                     "questions": [
@@ -16518,7 +16518,7 @@
                   {
                     "name": "Convexo",
                     "id": "8.3.1.6.2",
-                    "description": "",
+                    "description": "Use this domain for words describing something that is convex--extending outward in shape toward the viewer.",
                     "questions": [],
                     "subdomains": []
                   },
@@ -16545,9 +16545,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Pattern, design",
                 "id": "8.3.1.8",
-                "description": "",
+                "description": "Use this domain for words that refer to a pattern--a regular arrangement of shapes.",
                 "questions": [],
                 "subdomains": [
                   {
@@ -16764,7 +16764,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Change color",
                     "id": "8.3.3.3.6",
                     "description": "Utilice este campo para las palabras que tienen que ver con el hecho de agregar un color a algo.",
                     "questions": [
@@ -16773,7 +16773,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Multicolored",
                     "id": "8.3.3.3.7",
                     "description": "Utilice este campo para las palabras que describen algo que es multi color--que tiene una variedad de colores.",
                     "questions": [
@@ -16784,16 +16784,16 @@
                 ]
               },
               {
-                "name": "",
+                "name": "Shiny",
                 "id": "8.3.3.4",
-                "description": "",
+                "description": "Use this domain for words that describe something that is shiny--when something gives back light because light is shining on it.",
                 "questions": [],
                 "subdomains": []
               }
             ]
           },
           {
-            "name": "",
+            "name": "Hot",
             "id": "8.3.4",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de cambiar la temperatura de algo.",
             "questions": [
@@ -16875,16 +16875,16 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Various",
                     "id": "8.3.5.2.5",
-                    "description": "",
+                    "description": "Use this domain for words describing a group of things that are all different from each other.",
                     "questions": [],
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Opposite",
                     "id": "8.3.5.2.6",
-                    "description": "",
+                    "description": "Use this domain for words describing two things that are opposite.",
                     "questions": [],
                     "subdomains": []
                   }
@@ -16958,9 +16958,9 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Copy",
                 "id": "8.3.5.6",
-                "description": "",
+                "description": "Use this domain for words related to copying something.",
                 "questions": [],
                 "subdomains": []
               }
@@ -17053,7 +17053,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Better",
                 "id": "8.3.7.2",
                 "description": "Utilice este campo para las palabras que describen algo que es mejor que algo más.",
                 "questions": [
@@ -17061,7 +17061,7 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Worse",
                     "id": "8.3.7.2.1",
                     "description": "Utilice este campo para las palabras que describen a lo que es peor que algo más.",
                     "questions": [
@@ -17183,7 +17183,7 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Rust",
                     "id": "8.3.7.8.1",
                     "description": "Utilice este campo para las palabras que tienen que ver con el hecho de ser carcomido por el óxido o por los insectos.",
                     "questions": [
@@ -17313,7 +17313,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Yesterday, today, tomorrow",
                     "id": "8.4.1.2.2",
                     "description": "Utilice este campo para las palabras que tienen que ver con los días que se relacionan entre sí.",
                     "questions": [
@@ -17507,7 +17507,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Clock, watch",
                 "id": "8.4.4.2",
                 "description": "Utilice este campo para aparatos que indican qué hora es.",
                 "questions": [
@@ -17550,7 +17550,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "First",
                     "id": "8.4.5.1.2",
                     "description": "Utilice este campo para las palabras que tienen que ver con el hecho de que algo ocurra primero.",
                     "questions": [
@@ -17559,7 +17559,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Next",
                     "id": "8.4.5.1.3",
                     "description": "Utilice este campo para las palabras que tienen que ver con el hecho de que algo ocurra después.",
                     "questions": [
@@ -17568,7 +17568,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Last",
                     "id": "8.4.5.1.4",
                     "description": "Utilice este campo para las palabras que tienen que ver con el hecho de que algo ocurra al último.",
                     "questions": [
@@ -17612,7 +17612,7 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "After",
                     "id": "8.4.5.2.1",
                     "description": "Utilice este campo para las palabras que tienen que ver con el hecho de que ocurra un acontecimiento después de otro.",
                     "questions": [
@@ -17626,7 +17626,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "At the same time",
                     "id": "8.4.5.2.2",
                     "description": "Utilice este campo para las palabras que tienen que ver con el hecho de que dos cosas ocurran al mismo tiempo.",
                     "questions": [
@@ -17636,7 +17636,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "During",
                     "id": "8.4.5.2.3",
                     "description": "Utilice este campo para las palabras que indican que ocurrió algo durante cierto período de tiempo, o que ocurrió algo mientras que algo más estaba aconteciendo.",
                     "questions": [
@@ -17701,7 +17701,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Aspectual time",
             "id": "8.4.6",
             "description": "Utilice este campo para las palabras que tienen que ver con un período de tiempo que es parte de un período de tiempo más extenso.",
             "questions": [
@@ -17709,29 +17709,29 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Start something",
                 "id": "8.4.6.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con algo que empieza a ocurrir, o que empieza a hacer algo.",
                 "questions": [],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Beginning",
                     "id": "8.4.6.1.1",
                     "description": "Utilice este campo para las palabras que tienen que ver con el término de una acción o de una situación.",
                     "questions": [],
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Stop something",
                     "id": "8.4.6.1.2",
-                    "description": "",
+                    "description": "Use this domain for words related to the end of an action or situation.",
                     "questions": [],
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "End",
                     "id": "8.4.6.1.3",
-                    "description": "",
+                    "description": "Use this domain for words referring to the end of an action or situation.",
                     "questions": [],
                     "subdomains": []
                   },
@@ -17746,7 +17746,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Since, from",
                     "id": "8.4.6.1.5",
                     "description": "Utilice este campo para las palabras que indican que algo empezará a ocurrir en cierto tiempo y continuará por algún tiempo.",
                     "questions": [
@@ -17767,7 +17767,7 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Recently",
                     "id": "8.4.6.2.1",
                     "description": "Utilice este campo para las palabras que tienen que ver con lo que ocurrió hace un momento.",
                     "questions": [],
@@ -17830,7 +17830,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Immediately",
                     "id": "8.4.6.4.4",
                     "description": "Utilice este campo para las palabras que tienen que ver con lo que ocurre inmediatamente después--sin que pase mucho tiempo antes de que ocurra.",
                     "questions": [
@@ -17854,16 +17854,16 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Young",
                     "id": "8.4.6.5.1",
-                    "description": "",
+                    "description": "Use this domain for words describing something young--a word describing a living thing that has only existed for a short time.",
                     "questions": [],
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Old, not young",
                     "id": "8.4.6.5.2",
-                    "description": "",
+                    "description": "Use this domain for words describing something old--a word describing a living thing that has existed for a long time.",
                     "questions": [],
                     "subdomains": []
                   },
@@ -17889,7 +17889,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Old, not new",
                     "id": "8.4.6.5.4",
                     "description": "Utilice este campo para las palabras que describen algo viejo--una palabra que describa algo que ha existido por un mucho tiempo.",
                     "questions": [
@@ -17911,9 +17911,9 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Modern",
                     "id": "8.4.6.5.5",
-                    "description": "",
+                    "description": "Use this domain for words describing something modern--a word that describes something like a machine, system, or country that uses the most recent equipment, ideas, and methods.",
                     "questions": [],
                     "subdomains": []
                   },
@@ -17964,7 +17964,7 @@
                     "subdomains": []
                   },
                   {
-                    "name": "",
+                    "name": "Often",
                     "id": "8.4.6.6.3",
                     "description": "Utilice este campo para las palabras que tienen que ver con algo que ocurre frecuentemente.",
                     "questions": [],
@@ -18051,7 +18051,7 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "Quick",
                 "id": "8.4.8.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de hacer algo a una velocidad acelerada o que ocurre algo rápidamente.",
                 "questions": [
@@ -18201,7 +18201,7 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Out, outside",
                     "id": "8.5.1.4.1",
                     "description": "Utilice este campo para las palabras que indican que algo está afuera de otra cosa.",
                     "questions": [
@@ -18424,7 +18424,7 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Contain",
             "id": "8.5.6",
             "description": "Utilice este campo para las palabras que expresan la idea de que algo contiene algo.",
             "questions": [
@@ -18454,75 +18454,75 @@
         ],
         "subdomains": [
           {
-            "name": "",
+            "name": "Front",
             "id": "8.6.1",
-            "description": "",
+            "description": "Use this domain for words related to the front part of something.",
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Back",
                 "id": "8.6.1.1",
-                "description": "",
+                "description": "Use this domain for words related to the back part of something.",
                 "questions": [],
                 "subdomains": []
               }
             ]
           },
           {
-            "name": "",
+            "name": "Top",
             "id": "8.6.2",
-            "description": "",
+            "description": "Use this domain for words related to the top part of something.",
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Bottom",
                 "id": "8.6.2.1",
-                "description": "",
+                "description": "Use this domain for words related to the bottom part of something.",
                 "questions": [],
                 "subdomains": []
               }
             ]
           },
           {
-            "name": "",
+            "name": "Side",
             "id": "8.6.3",
-            "description": "",
+            "description": "Use this domain for words related to the side part of something.",
             "questions": [],
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Inner part",
             "id": "8.6.4",
-            "description": "",
+            "description": "Use this domain for words related to the inside part of something.",
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Outer part",
                 "id": "8.6.4.1",
-                "description": "",
+                "description": "Use this domain for words related to the outside or surface part of something.",
                 "questions": [],
                 "subdomains": []
               }
             ]
           },
           {
-            "name": "",
+            "name": "Middle",
             "id": "8.6.5",
             "description": "Utilice este campo para las palabras que indican que algo está al centro de otra cosa.",
             "questions": [],
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Edge",
             "id": "8.6.6",
-            "description": "",
+            "description": "Use this domain for words related to the edge of something--the part of something where two sides come together.",
             "questions": [],
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "End, point",
             "id": "8.6.7",
-            "description": "",
+            "description": "Use this domain for words related to the end of something.",
             "questions": [],
             "subdomains": []
           }
@@ -18644,16 +18644,16 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Design",
                 "id": "9.1.2.4",
-                "description": "",
+                "description": "Use this domain for words referring to designing something--to decide and plan how something new will look and work.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Make",
                 "id": "9.1.2.5",
-                "description": "",
+                "description": "Use this domain for words referring to making something--joining things together to create something to be that did not exist before.",
                 "questions": [],
                 "subdomains": []
               },
@@ -18956,28 +18956,28 @@
             ],
             "subdomains": [
               {
-                "name": "",
+                "name": "To a large degree",
                 "id": "9.3.1.1",
                 "description": "Utilice este campo para las palabras que señalan un 'Evento de la Actividad', un 'Agente', un 'Pasivo' y un 'Receptor del Pasivo'.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "To a small degree",
                 "id": "9.3.1.2",
                 "description": "Utilice este campo para las palabras que señalan un incidente.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "To a larger degree",
                 "id": "9.3.1.3",
                 "description": "Utilice este campo para las palabras que señalan un incidente de percepción.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "To a smaller degree",
                 "id": "9.3.1.4",
                 "description": "Utilice este campo para las palabras que señalan un incidente de reacción",
                 "questions": [],
@@ -18995,9 +18995,9 @@
             "subdomains": []
           },
           {
-            "name": "",
+            "name": "Partly",
             "id": "9.3.3",
-            "description": "",
+            "description": "Use this domain for words referring to a complete degree--when something is done, happens, is thought, is felt, etc completely and in every way.",
             "questions": [],
             "subdomains": []
           },
@@ -19453,7 +19453,7 @@
             ]
           },
           {
-            "name": "",
+            "name": "Subordinating particles",
             "id": "9.4.7",
             "description": "Utilice esta sección para los verbos auxiliares, los afijos, los adverbios y las partículas que indican una cláusula subordinada. Las siguientes definiciones se toman de Bybee, Joan, Revere Perkins, y William Pagliuca. 1994. La evolución de la gramática. Chicago y Londres. Imprenta de la Universidad de Chicago.",
             "questions": [
@@ -19506,35 +19506,35 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Instrument",
                 "id": "9.5.1.2",
                 "description": "Utilice este campo para las palabras que indican el tema o el asunto sobre el que se ha pensando, se ha hablado o se ha escrito. Los verbos del pensar, del saber o del hablar (incluyendo otras clases de expresión) pueden tomar el rol del 'tema'. Podemos pensar sobre un 'tema' como la idea principal. También utilice este campo para la cosa más importante del cuadro.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Means",
                 "id": "9.5.1.3",
                 "description": "Utilice este campo para las palabras que indican un instrumento utilizado para hacer algo.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Way, manner",
                 "id": "9.5.1.4",
                 "description": "Utilice este campo para las palabras que señalan el medio por el que se hace algo.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Attendant circumstances",
                 "id": "9.5.1.5",
                 "description": "Utilice este campo para las palabras que señalan la manera en la que se hace algo.",
                 "questions": [],
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Spatial location of an event",
                 "id": "9.5.1.6",
                 "description": "Utilice este campo para las palabras que señalan la ubicación espacial de un acontecimiento.",
                 "questions": [
@@ -19588,7 +19588,7 @@
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Together",
                 "id": "9.5.2.1",
                 "description": "Utilice este campo para las palabras que señalan colectividad--una situación en la que dos o más personas hace cada una la misma cosa y la hacen juntas o por separado.",
                 "questions": [],
@@ -19643,7 +19643,7 @@
             "questions": [],
             "subdomains": [
               {
-                "name": "",
+                "name": "Beneficiary (of a patient)",
                 "id": "9.5.3.1",
                 "description": "Utilice este campo para las palabras que indican el beneficiario del Pasivo de una actividad. Con frecuencia, el Pasivo se expresa como el objeto de una oración. En la oración \" Juan construyó una casa para sus padres\", la casa es el Pasivo. La casa es la que beneficia a los padres y no la construcción de la casa.",
                 "questions": [
@@ -19653,7 +19653,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Recipient (of a patient)",
                 "id": "9.5.3.2",
                 "description": "Utilice este campo para las palabras que indican al receptor del Pasivo de una actividad. El pasivo se expresa regularmente como el objeto de la oración.",
                 "questions": [
@@ -19749,7 +19749,7 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Except",
                     "id": "9.6.1.5.1",
                     "description": "Utilice este campo para las palabras que indican que algo es una excepción en un grupo, una regla o un patrón--algo que es cierto sobre todas las cosas (o las personas) que están dentro de un grupo, excepto en una sola cosa.",
                     "questions": [
@@ -19848,7 +19848,7 @@
                 "subdomains": []
               },
               {
-                "name": "",
+                "name": "Cause",
                 "id": "9.6.2.5",
                 "description": "Utilice este campo para las palabras que indican que alguien o algo es la causa o la razón de un hecho o un estado, ese hecho único es la razón o la causa de otro hecho u otro estado, o que un hecho o un estado es lógico (teniendo el suficiente motivo).",
                 "questions": [
@@ -19857,9 +19857,9 @@
                 ],
                 "subdomains": [
                   {
-                    "name": "",
+                    "name": "Reason",
                     "id": "9.6.2.5.1",
-                    "description": "",
+                    "description": "Use this domain for words that reason why someone does something.",
                     "questions": [],
                     "subdomains": []
                   },

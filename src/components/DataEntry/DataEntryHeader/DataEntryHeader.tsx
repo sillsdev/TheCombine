@@ -34,11 +34,9 @@ export class DataEntryHeader extends React.Component<
   render() {
     let questions;
     if (this.state.questionsVisible) {
-      questions = (
-        <Typography>Questions will go here eventually</Typography>
-      ); /*= this.props.domain.questions.map((q) => (
+      questions = this.props.domain.questions.map((q) => (
         <Typography>{q}</Typography>
-      ));*/
+      ));
     }
     return (
       <Typography

@@ -39,7 +39,7 @@ export const defaultState: TreeViewState = {
     id: "",
     description: "",
     subdomains: [],
-    //    questions: [],
+    questions: [],
   },
 };
 
