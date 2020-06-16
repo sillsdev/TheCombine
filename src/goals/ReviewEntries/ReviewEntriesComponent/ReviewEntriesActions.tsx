@@ -199,6 +199,7 @@ export function updateFrontierWord(
     );
   };
 }
+
 // Converts the ReviewEntriesWord into a Word to send to the backend
 export function refreshWord(oldWordId: string, newWordId: string) {
   return async (
@@ -213,5 +214,33 @@ export function refreshWord(oldWordId: string, newWordId: string) {
     dispatch(
       updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang))
     );
+  };
+}
+
+// Similar to refreshWord but deletes an audio first
+export function deleteAudio(wordId: string, fileName: string) {
+  return async (
+    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
+    getState: () => StoreState
+  ) => {
+    const newWordId = await backend.deleteAudio(wordId, fileName);
+    const newWord = await backend.getWord(newWordId);
+    const analysisLang = getState().currentProject.analysisWritingSystems[0];
+
+    dispatch(updateWord(wordId, newWordId, parseWord(newWord, analysisLang)));
+  };
+}
+
+// Similar to refreshWord but uploads an audio first
+export function uploadAudio(wordId: string, audioFile: File) {
+  return async (
+    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
+    getState: () => StoreState
+  ) => {
+    const newWordId = await backend.uploadAudio(wordId, audioFile);
+    const newWord = await backend.getWord(newWordId);
+    const analysisLang = getState().currentProject.analysisWritingSystems[0];
+
+    dispatch(updateWord(wordId, newWordId, parseWord(newWord, analysisLang)));
   };
 }

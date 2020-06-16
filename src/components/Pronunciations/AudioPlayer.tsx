@@ -13,6 +13,9 @@ import { Stop } from "@material-ui/icons";
 
 export interface PlayerProps {
   pronunciationUrl: string;
+  wordId: string;
+  fileName: string;
+  deleteAudio?: (wordId: string, fileName: string) => void;
   isPlaying?: boolean;
 }
 
@@ -37,8 +40,12 @@ export default function AudioPlayer(props: PlayerProps) {
   // const audio = new Audio(props.pronunciationUrl);
   // audio.crossOrigin = "annonymous";
 
-  let togglePlay = () => {
-    if (!playing) {
+  function deleteOrTogglePlay(event: any) {
+    if (event.shiftKey) {
+      if (props.deleteAudio) {
+        props.deleteAudio(props.wordId, props.fileName);
+      }
+    } else if (!playing) {
       audio.play();
       setPlaying(true);
       audio.addEventListener("ended", () => setPlaying(false));
@@ -47,12 +54,12 @@ export default function AudioPlayer(props: PlayerProps) {
       setPlaying(false);
       audio.currentTime = 0;
     }
-  };
+  }
 
   return (
     <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
       <IconButton
-        onClick={togglePlay}
+        onClick={deleteOrTogglePlay}
         className={classes.button}
         aria-label="play"
       >
