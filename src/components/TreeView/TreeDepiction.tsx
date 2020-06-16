@@ -119,7 +119,7 @@ export default class TreeDepiction extends React.Component<
           }}
         >
           <GridListTile>
-            {DomainTile(subdomains[0], this.props.animate)}
+            <DomainTile domain={subdomains[0]} onClick={this.props.animate} />
           </GridListTile>
           {this.treeTile(pillar)}
         </GridList>
@@ -172,44 +172,17 @@ export default class TreeDepiction extends React.Component<
     ) {
       if (i % 2 === 0) {
         subDomains.push(
-          <GridListTile key={domainIndex + "NameTile"}>
-            {this.nameTile(this.props.currentDomain.subdomains[domainIndex])}
+          <GridListTile key={domainIndex + "DomainTile"}>
+            <DomainTile
+              domain={this.props.currentDomain.subdomains[domainIndex]}
+              onClick={this.props.animate}
+            />
           </GridListTile>
         );
         domainIndex++;
       } else subDomains.push(<GridListTile key={domainIndex + "DummyTile"} />);
     }
     return subDomains;
-  }
-
-  // Creates a semantic domain tile, which (if navigable) can be clicked on to navigate to that semantic domain
-  nameTile(domain: SemanticDomainWithSubdomains): ReactNode {
-    return (
-      <Button
-        id={domain.id}
-        color={"primary"}
-        variant={"outlined"}
-        disabled={
-          !this.props.currentDomain.parentDomain &&
-          this.props.currentDomain === domain
-        }
-        style={{
-          left: 0,
-          bottom: 0,
-          width: "90%",
-          height: "90%",
-          margin: "5%",
-        }}
-        onClick={() => {
-          this.props.animate(domain);
-        }}
-      >
-        <div style={{ textTransform: "capitalize" }}>
-          <Typography variant={"overline"}>{domain.id}</Typography>
-          <Typography variant={"body1"}>{domain.name}</Typography>
-        </div>
-      </Button>
-    );
   }
 
   // Creates a section of the tree diagram (one of the branches) set to proper dimensions
@@ -251,7 +224,10 @@ export default class TreeDepiction extends React.Component<
             >
               {this.treeTile(parent)}
               <GridListTile>
-                {this.nameTile(this.props.currentDomain.parentDomain)}
+                <DomainTile
+                  domain={this.props.currentDomain.parentDomain}
+                  onClick={this.props.animate}
+                />
               </GridListTile>
             </GridList>
           )}
