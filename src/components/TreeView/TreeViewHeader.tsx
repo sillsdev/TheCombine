@@ -8,8 +8,7 @@ import {
   GridListTile,
   Card,
 } from "@material-ui/core";
-import ChevronLeft from "@material-ui/icons/ChevronLeft";
-import ChevronRight from "@material-ui/icons/ChevronRight";
+import { ChevronLeft, ChevronRight } from "@material-ui/icons";
 
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 
@@ -183,16 +182,14 @@ export default class TreeViewHeader extends React.Component<
 
   // Creates the L/R button + select button + search bar
   render() {
-    let domainL:
-      | SemanticDomainWithSubdomains
+    let domainL: SemanticDomainWithSubdomains
       | undefined = this.getBrotherDomain(-1);
-    let domainR:
-      | SemanticDomainWithSubdomains
+    let domainR: SemanticDomainWithSubdomains
       | undefined = this.getBrotherDomain(1);
 
     return (
-      <GridList cols={5} spacing={2} cellHeight={"auto"}>
-        <GridListTile cols={1}>
+      <GridList cols={7} spacing={2} cellHeight={"auto"}>
+        <GridListTile cols={2}>
           {domainL ? (
             <Grid container justify="center">
               <Button
@@ -222,7 +219,7 @@ export default class TreeViewHeader extends React.Component<
                 <Typography variant="overline">
                   {this.props.currentDomain.id}
                 </Typography>
-                <Typography variant="h6">
+                <Typography variant="h5">
                   {this.props.currentDomain.name}
                 </Typography>
               </div>
@@ -238,7 +235,7 @@ export default class TreeViewHeader extends React.Component<
             />
           </Card>
         </GridListTile>
-        <GridListTile cols={1}>
+        <GridListTile cols={2}>
           {domainR ? (
             <Grid container justify="center">
               <Button
@@ -246,8 +243,11 @@ export default class TreeViewHeader extends React.Component<
                 onClick={() => this.navigateDomain(1)}
                 style={{ marginTop: "50%" }}
               >
-                <Typography variant="body2">
+                <Typography variant="overline">
                   {domainR.id.padEnd(8, " ")}
+                </Typography>
+                <Typography variant="h6">
+                  {domainR.name.padEnd(8, " ")}
                 </Typography>
                 <ChevronRight />
               </Button>
