@@ -1,11 +1,5 @@
 import React, { ReactNode } from "react";
-import {
-  Button,
-  Grid,
-  GridList,
-  GridListTile,
-  Typography,
-} from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 import {
   ChevronLeft,
