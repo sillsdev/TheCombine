@@ -26,7 +26,7 @@ export default function ProjectNameButton() {
         history.push("/project-settings");
         setPage("/project-settings");
       }}
-      color={"inherit"}
+      color="inherit"
       style={{
         background: page === "/project-settings" ? colors[1] : colors[0],
       }}
