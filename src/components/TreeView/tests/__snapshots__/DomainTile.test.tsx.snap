@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tests DomainTile Matches the latest snapshot 1`] = `
+<button
+  className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+  disabled={false}
+  id="1"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onDragLeave={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchMove={[Function]}
+  onTouchStart={[Function]}
+  style={
+    Object {
+      "bottom": 0,
+      "height": "95%",
+      "left": 0,
+      "margin": "2.5%",
+      "width": "95%",
+    }
+  }
+  tabIndex={0}
+  type="button"
+>
+  <span
+    className="MuiButton-label"
+  >
+    <div>
+      <div
+        style={
+          Object {
+            "textTransform": "capitalize",
+          }
+        }
+      >
+        <span
+          className="MuiTypography-root MuiTypography-overline"
+        >
+          1
+        </span>
+        <p
+          className="MuiTypography-root MuiTypography-body1"
+        >
+          parent
+        </p>
+      </div>
+    </div>
+  </span>
+  <span
+    className="MuiTouchRipple-root"
+  />
+</button>
+`;

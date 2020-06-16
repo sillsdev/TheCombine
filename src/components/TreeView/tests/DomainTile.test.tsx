@@ -3,22 +3,21 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import MockDomain from "./MockSemanticDomain";
 import DomainTile, { Direction } from "../DomainTile";
-import SemanticDomainWithSubdomains from "../SemanticDomain";
 
 var tileMaster: ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
 
-beforeEach(() => {});
+beforeEach(() => {
+  createTile();
+});
 
 describe("Tests DomainTile", () => {
-  /*it("Renders correctly", () => {
-    // Default snapshot test
-    snapTest("default view");
-  });*/
-
   it("Renders without crashing", () => {
-    createTile();
     tileMaster.toJSON();
+  });
+
+  it("Matches the latest snapshot", () => {
+    snapTest();
   });
 });
 
@@ -32,6 +31,6 @@ function createTile() {
 }
 
 // Perform a snapshot test
-function snapTest(name: string) {
+function snapTest() {
   expect(tileMaster.toJSON()).toMatchSnapshot();
 }
