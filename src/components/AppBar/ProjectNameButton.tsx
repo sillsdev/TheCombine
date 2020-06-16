@@ -4,7 +4,6 @@ import history from "../../history";
 import { getProjectId } from "../../backend/localStorage";
 import { getProject } from "../../backend/index";
 import { Project } from "../../types/project";
-import theme from "../../types/theme";
 
 /** A button that redirects to the project settings */
 export default function ProjectNameButton() {
@@ -27,9 +26,8 @@ export default function ProjectNameButton() {
         history.push("/project-settings");
         setPage("/project-settings");
       }}
+      color={"inherit"}
       style={{
-        color: theme.palette.text.primary,
-        fontFamily: theme.typography.fontFamily,
         background: page === "/project-settings" ? colors[1] : colors[0],
       }}
     >
