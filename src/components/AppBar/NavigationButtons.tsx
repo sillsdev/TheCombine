@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import history from "../../history";
 import { Translate } from "react-localize-redux";
 
@@ -15,7 +15,7 @@ export default function NavigationButtons() {
           history.push("/data-entry");
           setPage("/data-entry");
         }}
-        color={"inherit"}
+        color="inherit"
         style={{
           background: page === "/data-entry" ? colors[1] : colors[0],
         }}
@@ -27,7 +27,7 @@ export default function NavigationButtons() {
           history.push("/goals");
           setPage("/goals");
         }}
-        color={"inherit"}
+        color="inherit"
         style={{
           background: page === "/goals" ? colors[1] : colors[0],
         }}
