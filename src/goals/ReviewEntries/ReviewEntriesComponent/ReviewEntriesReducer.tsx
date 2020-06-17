@@ -8,12 +8,14 @@ export interface ReviewEntriesState {
   words: ReviewEntriesWord[];
   language: string;
   isRecording: boolean;
+  wordBeingRecorded: string | undefined;
 }
 
 export const defaultState: ReviewEntriesState = {
   words: [],
   language: "en",
   isRecording: false,
+  wordBeingRecorded: undefined,
 };
 
 export const reviewEntriesReducer = (
@@ -52,6 +54,7 @@ export const reviewEntriesReducer = (
       return {
         ...state,
         isRecording: action.recordingStatus,
+        wordBeingRecorded: action.wordId,
       };
 
     default:

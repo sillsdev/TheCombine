@@ -31,6 +31,7 @@ interface ReviewUpdateWord {
 interface ReviewUpdateRecordingStatus {
   type: ReviewEntriesActionTypes.UpdateRecordingStatus;
   recordingStatus: boolean;
+  wordId: string | undefined;
 }
 
 export type ReviewEntriesAction =
@@ -58,10 +59,14 @@ function updateWord(
   };
 }
 
-export function updateRecordingStatus(recordingStatus: boolean) {
+export function updateRecordingStatus(
+  recordingStatus: boolean,
+  wordId: string | undefined
+) {
   return {
     type: ReviewEntriesActionTypes.UpdateRecordingStatus,
     recordingStatus,
+    wordId,
   };
 }
 
