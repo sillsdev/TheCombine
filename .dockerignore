@@ -1,0 +1,9 @@
+﻿# Ignore everything.
+**
+
+# Except the following.
+!nginx
+!public
+!src
+!package*.json
+!tsconfig.json

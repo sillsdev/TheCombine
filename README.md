@@ -132,6 +132,70 @@ database objects), create a user normally and then execute:
 > npm run set-admin-user -- <USER_NAME>
 ```
 
+## Docker
+
+### Requirements
+
+Install [Docker](https://docs.docker.com/get-docker/).
+
+(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately.
+This is included by default in Docker Desktop for Windows and macOS.
+
+### Build and Run
+
+For more information see the
+[Docker Compose docs](https://docs.docker.com/compose/).
+
+```batch
+> docker-compose build --parallel
+> docker-compose up --detach
+```
+
+Browse to https://localhost
+
+To view logs:
+
+```batch
+> docker-compose logs --follow
+```
+
+To stop and remove any stored data:
+
+```batch
+> docker-compose down --volumes
+```
+
+### Configuration
+
+#### SSL Certificates
+
+To update SSL certificates after images have been built, find the 
+NGINX container name. By default this will be formatted as
+`<lowercase_parent_dir>_nginx_1`.
+
+```batch
+> docker-compose
+    Container           Repository       Tag       Image Id       Size
+------------------------------------------------------------------------
+thecombine_db_1      mongo              4.2      66c68b650ad4   387.8 MB
+thecombine_nginx_1   thecombine_nginx   latest   a2057141b19d   30.36 MB
+thecombine_web_1     thecombine_web     latest   9d84ce0474b6   291.3 MB
+```
+
+Copy new certificates from local filesystem into the container:
+
+```batch
+> docker cp new_cert.pem thecombine_nginx_1:/ssl/cert.pem
+> docker cp new_key.pem thecombine_nginx_1:/ssl/key.pem
+```
+
+Restart the Docker Compose project:
+
+```batch
+> docker-compose down
+> docker-compose up --detatch
+```
+
 ## Features
 
 TODO
