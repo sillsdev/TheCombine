@@ -24,6 +24,7 @@ export class DataEntryHeader extends React.Component<
 > {
   render() {
     let questions;
+    const hasQuestions: boolean = this.props.domain.questions.length > 0;
     if (this.props.questionsVisible) {
       questions = this.props.domain.questions.map((q) => (
         <Typography>{q}</Typography>
@@ -48,6 +49,7 @@ export class DataEntryHeader extends React.Component<
           checked={this.props.questionsVisible}
           color="primary"
           style={{ paddingTop: "8px" }}
+          disabled={!hasQuestions}
         />
         {questions}
       </Typography>

@@ -17,8 +17,20 @@ describe("Test the TreeViewReducer", () => {
       questions: [],
     };
     const subdomains = [
-      { name: "Bar", id: "x.1", description: "bar desc", subdomains: [] },
-      { name: "Baz", id: "x.2", description: "baz desc", subdomains: [] },
+      {
+        name: "Bar",
+        id: "x.1",
+        description: "bar desc",
+        subdomains: [],
+        questions: [],
+      },
+      {
+        name: "Baz",
+        id: "x.2",
+        description: "baz desc",
+        subdomains: [],
+        questions: [],
+      },
     ];
     const initialJson = [
       {
