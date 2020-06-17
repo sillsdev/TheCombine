@@ -9,7 +9,9 @@ import { Recorder } from "./Recorder";
 export interface PronunciationProps {
   wordId: string;
   pronunciationFiles: string[];
-  wordUpdated?: (oldId: string, newId: string) => void;
+  refreshWord?: (oldId: string, newId: string) => void;
+  deleteAudio?: (wordId: string, fileName: string) => void;
+  uploadAudio?: (wordId: string, audioFile: File) => void;
   recorder?: Recorder;
 }
 
@@ -19,14 +21,17 @@ export class Pronunciations extends React.Component<
 > {
   render() {
     let audioButtons;
-    if (this.props.pronunciationFiles === undefined) {
+    if (this.props.pronunciationFiles === null) {
       audioButtons = null;
     } else {
       audioButtons = this.props.pronunciationFiles.map((file) => {
         return (
           <AudioPlayer
             key={file}
+            wordId={this.props.wordId}
+            fileName={file}
             pronunciationUrl={Backend.getAudioUrl(this.props.wordId, file)}
+            deleteAudio={this.props.deleteAudio}
           />
         );
       });
@@ -40,7 +45,7 @@ export class Pronunciations extends React.Component<
           key={this.props.wordId}
           wordId={this.props.wordId}
           recorder={this.props.recorder}
-          recordingFinished={this.props.wordUpdated}
+          uploadAudio={this.props.uploadAudio}
         />
         {audioButtons}
       </div>
