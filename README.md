@@ -25,7 +25,7 @@ A rapid word collection tool.
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
        using the appropriate Node.js version.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-     - On Ubuntu 18.04, follow these 
+     - On Ubuntu 18.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
    - [MongoDB Server](https://docs.mongodb.com/manual/administration/install-community/) and add
      /bin to PATH Environment Variable
@@ -114,6 +114,14 @@ See the section about
 [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
 more information.
 
+## `npm run import-sem-doms`
+
+Imports Semantic Domains from the provided xml file.
+
+```bash
+npm run import-sem-doms -- ..\semdoms\SemanticDomains-fr.xml
+```
+
 ## Drop Database
 
 To completely erase the current Mongo database, run:
@@ -169,7 +177,7 @@ To stop and remove any stored data:
 
 #### SSL Certificates
 
-To update SSL certificates after images have been built, find the 
+To update SSL certificates after images have been built, find the
 NGINX container name. By default this will be formatted as
 `<lowercase_parent_dir>_nginx_1`.
 
