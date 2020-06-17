@@ -17,7 +17,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { CameraAlt, Email, Phone } from "@material-ui/icons";
+import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 
 import { User } from "../../types/user";
 import AvatarUpload from "./AvatarUpload";
@@ -60,7 +60,15 @@ function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
 
   return (
     <div style={{ position: "relative" }}>
-      <Avatar className={classes.avatar} alt="Your avatar" src={props.avatar} />
+      {props.avatar ? (
+        <Avatar
+          className={classes.avatar}
+          alt="User avatar"
+          src={props.avatar}
+        />
+      ) : (
+        <Person style={{ fontSize: 60 }} />
+      )}
       <Avatar className={classes.avatarOverlay} onClick={props.onClick}>
         <CameraAlt />
       </Avatar>
