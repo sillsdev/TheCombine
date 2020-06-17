@@ -1,15 +1,21 @@
 import {
   Avatar,
   Button,
+  Grid,
   Input,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "@material-ui/core";
 import { Done } from "@material-ui/icons";
 import * as React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 import theme from "../../../types/theme";
 import { User } from "../../../types/user";
 
@@ -91,12 +97,16 @@ class UserList extends React.Component<
 
   render() {
     return (
-      <div>
+      <Grid item xs={12}>
+        <Typography>
+          <Translate id="projectSettings.invite.searchTitle" />
+        </Typography>
         <Input
           type="text"
           onChange={this.handleChange}
           placeholder="Search..."
         />
+
         <List>
           {this.state.filteredProjUsers.map((user) => (
             <ListItem
@@ -119,7 +129,9 @@ class UserList extends React.Component<
               />
               <ListItemText primary={`${user.name} (${user.username})`} />
               {this.state.hovering && this.state.hoverUserID === user.id && (
-                <Button>Add</Button>
+                <Button>
+                  <Translate id="projectSettings.invite.addButton" />
+                </Button>
               )}
             </ListItem>
           ))}
@@ -137,13 +149,13 @@ class UserList extends React.Component<
               <ListItemText primary={`${user.name} (${user.username})`} />
               {this.state.hovering && this.state.hoverUserID === user.id && (
                 <Button onClick={() => this.props.addToProject(user)}>
-                  Add
+                  <Translate id="projectSettings.invite.addButton" />
                 </Button>
               )}
             </ListItem>
           ))}
         </List>
-      </div>
+      </Grid>
     );
   }
 }

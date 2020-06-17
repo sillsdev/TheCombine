@@ -222,6 +222,18 @@
       "off": ["Off", "Apagar", "Éteint"],
       "request": ["Optional", "Opcional", "En option"],
       "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
+    },
+    "invite": {
+      "inviteByEmailLabel": ["Invite by Email"],
+      "inviteButton": ["Invite"],
+      "or": ["OR"],
+      "searchPlaceholder": ["Search..."],
+      "searchTitle": ["Find Users"],
+      "addButton": ["Add"],
+      "emailLabel": ["Email"],
+      "messageLabel": ["Message"],
+      "toastSuccess": ["Added User!"],
+      "toastFail": ["Failed to add user!"]
     }
   },
   "goal": {

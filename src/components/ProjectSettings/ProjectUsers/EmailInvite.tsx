@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
+import { Translate } from "react-localize-redux";
 import validator from "validator";
 
 interface InviteProps {}
@@ -19,7 +20,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
   constructor(props: InviteProps) {
     super(props);
     this.state = {
-      emailAddress: "example@gmail.com",
+      emailAddress: "",
       isValid: false,
     };
     this.onSubmit = this.onSubmit.bind(this);
@@ -57,11 +58,11 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
             <form onSubmit={(e) => {}}>
               <CardContent>
                 <Typography variant="h5" align="center" gutterBottom>
-                  Invite
+                  <Translate id="projectSettings.invite.inviteByEmailLabel" />
                 </Typography>
                 <TextField
                   required
-                  label="Email"
+                  label={<Translate id="projectSettings.invite.emailLabel" />}
                   onChange={(e) => this.updateField(e)}
                   variant="outlined"
                   style={{ width: "100%" }}
@@ -69,15 +70,12 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
                   autoFocus
                   inputProps={{ maxLength: 100 }}
                 />
-                <CardContent>
-                  <TextField
-                    label="Message"
-                    variant="outlined"
-                    style={{ width: "100%" }}
-                    margin="normal"
-                    value="Put your message here"
-                  ></TextField>
-                </CardContent>
+                <TextField
+                  label="Message"
+                  variant="outlined"
+                  style={{ width: "100%" }}
+                  margin="normal"
+                ></TextField>
                 {/* Register and Login buttons */}
                 <Grid container justify="flex-end" spacing={2}>
                   <Grid item>
@@ -87,7 +85,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
                       onClick={this.onSubmit}
                       disabled={!this.state.isValid}
                     >
-                      Invite
+                      <Translate id="projectSettings.invite.inviteButton" />
                     </Button>
                   </Grid>
 

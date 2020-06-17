@@ -1,5 +1,6 @@
-import { Button, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import React from "react";
+import { Translate } from "react-localize-redux";
 import Modal from "react-modal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -106,12 +107,12 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     if (currentUser && user.id !== currentUser.id) {
       addUserRole([1, 2, 3], user)
         .then(() => {
-          toast("Added User!");
+          toast(<Translate id="projectSettings.invite.toastSuccess" />);
           this.populateUsers();
         })
         .catch((err: string) => {
           console.log(err);
-          toast("Failed to add user!");
+          toast(<Translate id="projectSettings.invite.toastFail" />);
         });
     }
   }
@@ -119,36 +120,49 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   render() {
     return (
       <React.Fragment>
-        <UserList
-          allUsers={this.state.allUsers}
-          projUsers={this.state.projUsers}
-          userAvatar={this.state.userAvatar}
-          addToProject={(user: User) => this.addToProject(user)}
-        />
-        <Typography>OR</Typography>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-        <Button variant="contained" onClick={this.handleOpenModal}>
-          Invite by Email
-        </Button>
+        <Grid container spacing={1}>
+          <UserList
+            allUsers={this.state.allUsers}
+            projUsers={this.state.projUsers}
+            userAvatar={this.state.userAvatar}
+            addToProject={(user: User) => this.addToProject(user)}
+          />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </Grid>
+
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Typography>
+              <Translate id="projectSettings.invite.or" />
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Button variant="contained" onClick={this.handleOpenModal}>
+              <Translate id="projectSettings.invite.inviteByEmailLabel" />
+            </Button>
+          </Grid>
+        </Grid>
+
         <Modal
           isOpen={this.state.showModal}
-          contentLabel="Invite By Email"
           style={customStyles}
           shouldCloseOnOverlayClick={true}
           onRequestClose={this.handleCloseModal}
         >
           <EmailInvite />
         </Modal>
+        {/* </Grid> */}
       </React.Fragment>
     );
   }
