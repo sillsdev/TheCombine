@@ -26,7 +26,7 @@ interface DataEntryTableProps {
 interface WordAccess {
   word: Word;
   mutable?: boolean;
-  glossIndex?: number;
+  glossIndex: number;
 }
 
 export interface DataEntryTableState {
@@ -107,7 +107,7 @@ export class DataEntryTable extends React.Component<
   async addNewWord(wordToAdd: Word) {
     let updatedWord = await Backend.createWord(wordToAdd);
     let updatedNewWords = [...this.state.recentlyAddedWords];
-    updatedNewWords.push({ word: updatedWord, mutable: true });
+    updatedNewWords.push({ word: updatedWord, mutable: true, glossIndex: 0 });
     let words: Word[] = await getWordsFromBackend();
     this.setState({
       existingWords: words,
@@ -118,8 +118,8 @@ export class DataEntryTable extends React.Component<
   /** Update the word in the backend and the frontend */
   async updateWordForNewEntry(
     wordToUpdate: Word,
-    shouldBeMutable?: boolean,
-    glossIndex?: number
+    glossIndex: number,
+    shouldBeMutable?: boolean
   ) {
     let existingWord = this.state.existingWords.find(
       (word) => word.id === wordToUpdate.id
@@ -138,6 +138,7 @@ export class DataEntryTable extends React.Component<
       mutable: false,
       glossIndex: glossIndex,
     };
+
     recentlyAddedWords.push(updatedWordAccess);
     this.setState({ recentlyAddedWords: recentlyAddedWords });
   }
@@ -158,6 +159,7 @@ export class DataEntryTable extends React.Component<
         let updatedWordAccess: WordAccess = {
           word: updatedWord,
           mutable: false,
+          glossIndex: 0,
         };
         this.updateWordInFrontend(index, updatedWordAccess);
         this.deleteWordAndUpdateExistingWords(wordToDelete);
@@ -171,6 +173,7 @@ export class DataEntryTable extends React.Component<
         let updatedWordAccess: WordAccess = {
           word: updatedWord,
           mutable: true,
+          glossIndex: 0,
         };
         this.updateWordInFrontend(index, updatedWordAccess);
       }
@@ -290,11 +293,7 @@ export class DataEntryTable extends React.Component<
                 key={wordAccess.word.id}
                 vernacular={wordAccess.word.vernacular}
                 gloss={
-                  wordAccess.word.senses[
-                    wordAccess.glossIndex
-                      ? wordAccess.glossIndex
-                      : wordAccess.word.senses.length - 1
-                  ].glosses[0].def
+                  wordAccess.word.senses[wordAccess.glossIndex].glosses[0].def
                 }
               />
             )
@@ -306,13 +305,13 @@ export class DataEntryTable extends React.Component<
               allWords={this.state.existingWords}
               updateWord={(
                 wordToUpdate: Word,
-                shouldBeMutable?: boolean,
-                glossIndex?: number
+                glossIndex: number,
+                shouldBeMutable?: boolean
               ) =>
                 this.updateWordForNewEntry(
                   wordToUpdate,
-                  shouldBeMutable,
-                  glossIndex
+                  glossIndex,
+                  shouldBeMutable
                 )
               }
               addNewWord={(word: Word) => this.addNewWord(word)}

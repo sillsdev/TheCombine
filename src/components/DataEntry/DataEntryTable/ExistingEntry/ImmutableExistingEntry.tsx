@@ -7,13 +7,12 @@ interface ImmutableExistingEntryProps {
   gloss: string;
 }
 
+/**
+ * Displays a word users cannot edit any more
+ */
 export class ImmutableExistingEntry extends React.Component<
   ImmutableExistingEntryProps
 > {
-  constructor(props: ImmutableExistingEntryProps) {
-    super(props);
-  }
-
   render() {
     return (
       <Grid item xs={12}>

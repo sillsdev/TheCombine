@@ -19,8 +19,8 @@ interface NewEntryProps {
   allWords: Word[];
   updateWord: (
     updatedWord: Word,
-    shouldBeMutable?: boolean,
-    glossIndex?: number
+    glossIndex: number,
+    shouldBeMutable?: boolean
   ) => void;
   addNewWord: (newWord: Word) => void;
   spellChecker: SpellChecker;
@@ -148,7 +148,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, false);
+    this.props.updateWord(updatedWord, 0, false);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
     this.setState({
@@ -164,7 +164,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       sense,
       index
     );
-    this.props.updateWord(updatedWord, false, index);
+    this.props.updateWord(updatedWord, index, false);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
     this.setState({
