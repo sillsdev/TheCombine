@@ -23,10 +23,6 @@ interface DomainTileProps {
 
 // Creates a semantic domain tile, which can be clicked on to navigate to that semantic domain
 export default class DomainTile extends React.Component<DomainTileProps> {
-  constructor(props: DomainTileProps) {
-    super(props);
-  }
-
   domainText(domain: SemanticDomainWithSubdomains): ReactNode {
     return (
       <div style={{ textTransform: "capitalize" }}>
