@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip";
 import React from "react";
-import theme from "../../../../types/theme";
+import theme, { styleAddendum } from "../../../../types/theme";
 import { Sense, Word } from "../../../../types/word";
 
 interface DuplicateResolutionViewProps {
@@ -76,7 +76,7 @@ export class DuplicateResolutionView extends React.Component<
             <Chip
               variant="outlined"
               label={"Add New Sense +"}
-              style={{ margin: 4, color: "grey" }}
+              style={{ color: styleAddendum.inactive.color, margin: 4 }}
             />
           )}
         </Grid>
