@@ -11,22 +11,6 @@ export interface IconHolderProps {
   safeStopRecording: () => void;
 }
 
-interface StyleProps {
-  classes: (
-    theme: Theme
-  ) => {
-    button: {
-      margin: number;
-    };
-    iconPress: {
-      color: string;
-    };
-    iconRelease: {
-      color: string;
-    };
-  };
-}
-
 export interface IconHolderState {
   isRecording: boolean;
 }
