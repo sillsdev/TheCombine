@@ -139,6 +139,7 @@ database objects), create a user normally and then execute:
 Install [Docker](https://docs.docker.com/get-docker/).
 
 (Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately.
+This is included by default in Docker Desktop for Windows and macOS.
 
 ### Build and Run
 
