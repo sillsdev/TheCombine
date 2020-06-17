@@ -1,15 +1,28 @@
-import { Button, List, ListItem, Typography } from "@material-ui/core";
+import {
+  Avatar,
+  Button,
+  Input,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
+import { Done } from "@material-ui/icons";
 import * as React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import theme from "../../../types/theme";
 import { User } from "../../../types/user";
 
 interface UserListProps {
   allUsers: User[];
   projUsers: User[];
+  userAvatar: { [key: string]: string };
+  addToProject: (user: User) => void;
 }
 
 interface UserListState {
-  filtered: User[];
+  filteredAllProjects: User[];
+  filteredProjUsers: User[];
   hovering: boolean;
   hoverUserID: string;
 }
@@ -21,32 +34,39 @@ class UserList extends React.Component<
   constructor(props: UserListProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      filtered: [],
       hovering: false,
       hoverUserID: "",
+      filteredAllProjects: [],
+      filteredProjUsers: [],
     };
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({
-      filtered: [],
-    });
-  }
-
   handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    // Variable to hold the original version of the list
-    let currentList = [];
     // Variable to hold the filtered list before putting into state
-    let newList: User[] = [];
+    let filteredAllUsers: User[] = [];
+    let filteredProjUsers: User[] = [];
 
     if (event.target.value.length >= 3) {
-      // Assign the original list to currentList
-      currentList = this.props.allUsers;
-
       // Use .filter() to determine which items should be displayed
       // based on the search terms
-      newList = currentList.filter((item) => {
+      filteredAllUsers = this.props.allUsers.filter((item) => {
+        const name = item.name.toLowerCase();
+        const username = item.username.toLowerCase();
+        const email = item.email.toLowerCase();
+        // change search term to lowercase
+        const filter = event.target.value.toLowerCase();
+        // check to see if the current list item includes the search term
+        // If it does, it will be added to newList. Using lowercase eliminates
+        // issues with capitalization in search terms and search content
+        return (
+          name.includes(filter) ||
+          username.includes(filter) ||
+          email.includes(filter)
+        );
+      });
+
+      filteredProjUsers = this.props.projUsers.filter((item) => {
         const name = item.name.toLowerCase();
         const username = item.username.toLowerCase();
         const email = item.email.toLowerCase();
@@ -64,22 +84,21 @@ class UserList extends React.Component<
     }
     // Set the filtered state based on what our rules added to newList
     this.setState({
-      filtered: newList,
+      filteredAllProjects: filteredAllUsers,
+      filteredProjUsers: filteredProjUsers,
     });
   }
 
   render() {
     return (
       <div>
-        <input
+        <Input
           type="text"
-          className="input"
           onChange={this.handleChange}
           placeholder="Search..."
         />
-        {/* List of projects */}
         <List>
-          {this.state.filtered.map((user) => (
+          {this.state.filteredProjUsers.map((user) => (
             <ListItem
               key={user.id}
               button
@@ -90,9 +109,36 @@ class UserList extends React.Component<
                 this.setState({ hovering: false, hoverUserID: "" })
               }
             >
-              <Typography variant="h6">{`${user.name} (${user.username})`}</Typography>
+              <ListItemIcon>
+                <Done />
+              </ListItemIcon>
+              <Avatar
+                alt="User Avatar"
+                src={this.props.userAvatar[user.id]}
+                style={{ marginRight: theme.spacing(1) }}
+              />
+              <ListItemText primary={`${user.name} (${user.username})`} />
               {this.state.hovering && this.state.hoverUserID === user.id && (
                 <Button>Add</Button>
+              )}
+            </ListItem>
+          ))}
+          {this.state.filteredAllProjects.map((user) => (
+            <ListItem
+              key={user.id}
+              button
+              onMouseEnter={() =>
+                this.setState({ hovering: true, hoverUserID: user.id })
+              }
+              onMouseLeave={() =>
+                this.setState({ hovering: false, hoverUserID: "" })
+              }
+            >
+              <ListItemText primary={`${user.name} (${user.username})`} />
+              {this.state.hovering && this.state.hoverUserID === user.id && (
+                <Button onClick={() => this.props.addToProject(user)}>
+                  Add
+                </Button>
               )}
             </ListItem>
           ))}
