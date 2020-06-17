@@ -43,10 +43,11 @@ export class DataEntryHeader extends React.Component<
           onChange={() =>
             this.props.setQuestionVisibility(!this.props.questionsVisible)
           }
-          icon={<Help />}
-          checkedIcon={<Help />}
+          icon={<Help style={{ fontSize: 21 }} />}
+          checkedIcon={<Help style={{ fontSize: 21 }} />}
           checked={this.props.questionsVisible}
           color="primary"
+          style={{ paddingTop: "8px" }}
         />
         {questions}
       </Typography>
