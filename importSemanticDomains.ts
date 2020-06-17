@@ -3,9 +3,8 @@ const fs = require("fs"),
   path = require("path");
 const args = process.argv.slice(2);
 if (args.length > 0) {
-  const importFileLocation = args[0];
-  var parser = new xml2js.Parser();
-  const xmlLocataion = path.normalize(importFileLocation);
+  const parser = new xml2js.Parser();
+  const xmlLocataion = path.normalize(args[0]);
   fs.readFile(xmlLocataion, function (err: Error, data: string) {
     if (err) throw err;
     parser.parseString(data, function (err: Error, result: any) {

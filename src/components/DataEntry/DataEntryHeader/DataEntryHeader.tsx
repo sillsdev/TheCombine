@@ -2,7 +2,7 @@ import React from "react";
 import { Switch, Typography } from "@material-ui/core";
 
 import { Help } from "@material-ui/icons";
-import theme, { buttonSuccess } from "../../../types/theme";
+import theme from "../../../types/theme";
 import {
   Translate,
   withLocalize,
