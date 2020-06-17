@@ -1,6 +1,7 @@
 import React from "react";
 import { Paper, Container, Divider, Dialog } from "@material-ui/core";
 import theme from "../../types/theme";
+import { CurrentTab } from "../../types/currentTab";
 
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import DomainTree from "../TreeView/SemanticDomain";
@@ -41,7 +42,7 @@ export class DataEntryComponent extends React.Component<
 
     return (
       <React.Fragment>
-        <AppBarComponent />
+        <AppBarComponent currentTab={CurrentTab.DataEntry} />
         <Container>
           <Paper
             style={{
@@ -65,7 +66,7 @@ export class DataEntryComponent extends React.Component<
           </Paper>
 
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
-            <AppBarComponent />
+            <AppBarComponent currentTab={CurrentTab.DataEntry} />
             <TreeViewComponent
               returnControlToCaller={() =>
                 this.setState({

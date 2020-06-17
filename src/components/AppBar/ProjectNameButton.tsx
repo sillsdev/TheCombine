@@ -4,12 +4,22 @@ import history from "../../history";
 import { getProjectId } from "../../backend/localStorage";
 import { getProject } from "../../backend/index";
 import { Project } from "../../types/project";
+import { CurrentTab } from "../../types/currentTab";
+import { shade } from "../../types/theme";
+
+function tabColor(currentTab: CurrentTab, tabName: CurrentTab) {
+  const colors = ["inherit", shade];
+  if (currentTab === tabName) {
+    return colors[1];
+  } else return colors[0];
+}
+
+interface ProjectNameButtonProps {
+  currentTab: CurrentTab;
+}
 
 /** A button that redirects to the project settings */
-export default function ProjectNameButton() {
-  const highlight: string = "#1976d2";
-  const colors = ["inherit", highlight];
-  const [page, setPage] = useState(history.location.pathname);
+export default function ProjectNameButton(props: ProjectNameButtonProps) {
   const [projectName, setProjectName] = useState("");
 
   useEffect(() => {
@@ -21,17 +31,18 @@ export default function ProjectNameButton() {
   }, []);
 
   return (
-    <Button
-      onClick={() => {
-        history.push("/project-settings");
-        setPage("/project-settings");
-      }}
-      color="inherit"
-      style={{
-        background: page === "/project-settings" ? colors[1] : colors[0],
-      }}
-    >
-      {projectName}
-    </Button>
+    <React.Fragment>
+      <Button
+        onClick={() => {
+          history.push("/project-settings");
+        }}
+        color="inherit"
+        style={{
+          background: tabColor(props.currentTab, CurrentTab.ProjectSettings),
+        }}
+      >
+        {projectName}
+      </Button>
+    </React.Fragment>
   );
 }
