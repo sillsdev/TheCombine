@@ -13,6 +13,7 @@ const mockDomain: SemanticDomainWithSubdomains = {
   id: "",
   description: "",
   subdomains: [],
+  questions: ["Question 1", "Question 2"],
 };
 
 describe("Tests DataEntryHeader", () => {
@@ -22,11 +23,17 @@ describe("Tests DataEntryHeader", () => {
       <Provider store={mockStore}>
         <LocalizedDataEntryHeader
           domain={mockDomain}
-          displaySemanticDomainView={(isGetting: boolean) => null}
+          questionsVisible={false}
+          setQuestionVisibility={() => 1} //insert mock here
         />
       </Provider>,
       div
     );
     ReactDOM.unmountComponentAtNode(div);
   });
+
+  it("No questions should disable switch and show no questions", () => {});
+  it("Questions Visible should show questions", () => {});
+  it("Questions not visible should hide questions");
+  it("Callback should be called on switch click"); //TODO where to test state?
 });
