@@ -4,15 +4,8 @@ import history from "../../history";
 import { getProjectId } from "../../backend/localStorage";
 import { getProject } from "../../backend/index";
 import { Project } from "../../types/project";
-import { CurrentTab } from "../../types/currentTab";
-import { shade } from "../../types/theme";
-
-function tabColor(currentTab: CurrentTab, tabName: CurrentTab) {
-  const colors = ["inherit", shade];
-  if (currentTab === tabName) {
-    return colors[1];
-  } else return colors[0];
-}
+import { CurrentTab, tabColor } from "../../types/currentTab";
+import { Translate } from "react-localize-redux";
 
 interface ProjectNameButtonProps {
   currentTab: CurrentTab;

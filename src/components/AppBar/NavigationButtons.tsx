@@ -1,16 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@material-ui/core";
 import history from "../../history";
 import { Translate } from "react-localize-redux";
-import { CurrentTab } from "../../types/currentTab";
-import { shade } from "../../types/theme";
-
-function tabColor(currentTab: CurrentTab, tabName: CurrentTab) {
-  const colors = ["inherit", shade];
-  if (currentTab === tabName) {
-    return colors[1];
-  } else return colors[0];
-}
+import { CurrentTab, tabColor } from "../../types/currentTab";
 
 interface NavigationButtonsProps {
   currentTab: CurrentTab;
