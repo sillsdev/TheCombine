@@ -34,9 +34,9 @@ export default class App extends React.Component {
           <PrivateRoute path="/goals" component={GoalRoute} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/forgot/reset/:token" component={PasswordReset}/>
-          <Route path="/forgot/reset/" component={PasswordReset}/>
-          <Route path="/forgot/request" component={ResetRequest}/>
+          <Route path="/forgot/reset/:token" component={PasswordReset} />
+          <Route path="/forgot/reset/" component={PasswordReset} />
+          <Route path="/forgot/request" component={ResetRequest} />
           <Route component={PageNotFound} />
         </Switch>
       </div>

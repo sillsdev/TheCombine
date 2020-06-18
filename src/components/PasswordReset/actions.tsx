@@ -35,14 +35,14 @@ export function resetFail(): ResetAction {
   };
 }
 
-export function asyncResetRequest(email: string){
+export function asyncResetRequest(email: string) {
   return async (
     dispatch: Dispatch<ResetAction | ThunkAction<any, {}, {}, AnyAction>>
   ) => {
     // make call
     await resetPasswordRequest(email);
     history.push("/forgot/reset");
-  }
+  };
 }
 
 export function asyncReset(email: string, token: string, password: string) {
@@ -55,8 +55,8 @@ export function asyncReset(email: string, token: string, password: string) {
     if (success) {
       dispatch(resetSuccess());
       history.push("/login");
-    }else{
-    dispatch(resetFail());
+    } else {
+      dispatch(resetFail());
     }
   };
 }

@@ -58,17 +58,19 @@ export default class PasswordReset extends React.Component<
       <div>
         <Grid container justify="center">
           <Card style={{ padding: 10, width: 450 }}>
-            <form onSubmit={() => {
-                      this.setState({
-                        ...this.state,
-                        sentAttempt: true,
-                      });
-                      this.props.passwordReset(
-                        this.state.email,
-                        this.state.token,
-                        this.state.password
-                      );
-                    }}>
+            <form
+              onSubmit={() => {
+                this.setState({
+                  ...this.state,
+                  sentAttempt: true,
+                });
+                this.props.passwordReset(
+                  this.state.email,
+                  this.state.token,
+                  this.state.password
+                );
+              }}
+            >
               <Typography variant="h5" align="center" gutterBottom>
                 Reset Password
               </Typography>

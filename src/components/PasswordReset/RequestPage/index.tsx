@@ -1,4 +1,4 @@
-import  ResetRequest from "./component";
+import ResetRequest from "./component";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../types";

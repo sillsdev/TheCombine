@@ -26,7 +26,6 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   // Password Reset
   passwordResetState: passwordResetReducer,
 
-
   //general cleanup tools
   goalSelectorState: goalSelectReducer,
   goalsState: goalsReducer,
@@ -42,6 +41,6 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   // View Final goal
   reviewEntriesState: reviewEntriesReducer,
 
-    //temporary
+  //temporary
   tempState: tempReducer,
 });

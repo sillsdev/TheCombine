@@ -32,13 +32,15 @@ export default class ResetRequest extends React.Component<
       <div>
         <Grid container justify="center">
           <Card style={{ padding: 10, width: 450 }}>
-          <Typography variant="h5" align="center">
-            Reset Password Request
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            We will send a one time reset link for your account to your email
-          </Typography>
-            <form onSubmit={() => this.props.passwordResetRequest(this.state.email)}>
+            <Typography variant="h5" align="center">
+              Reset Password Request
+            </Typography>
+            <Typography variant="subtitle1" align="center">
+              We will send a one time reset link for your account to your email
+            </Typography>
+            <form
+              onSubmit={() => this.props.passwordResetRequest(this.state.email)}
+            >
               <Grid item>
                 <TextField
                   variant="outlined"
@@ -52,12 +54,14 @@ export default class ResetRequest extends React.Component<
                 />
               </Grid>
               <Grid item>
-                <Button 
+                <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => this.props.passwordResetRequest(this.state.email)}
+                  onClick={() =>
+                    this.props.passwordResetRequest(this.state.email)
+                  }
                 >
-                Submit
+                  Submit
                 </Button>
               </Grid>
             </form>
