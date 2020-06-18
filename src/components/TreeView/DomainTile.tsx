@@ -1,18 +1,18 @@
 import React, { ReactNode } from "react";
 import { Button, Grid, Typography } from "@material-ui/core";
-import SemanticDomainWithSubdomains from "./SemanticDomain";
 import {
   ChevronLeft,
   ChevronRight,
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@material-ui/icons";
+import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 export enum Direction {
-  Down = "Down",
-  Left = "Left",
-  Right = "Right",
-  Up = "Up",
+  Down,
+  Left,
+  Right,
+  Up,
 }
 
 interface DomainTileProps {

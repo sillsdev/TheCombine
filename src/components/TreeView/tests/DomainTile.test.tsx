@@ -1,22 +1,29 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import MockDomain from "./MockSemanticDomain";
 import DomainTile, { Direction } from "../DomainTile";
+import MockDomain from "./MockSemanticDomain";
 
 var tileMaster: ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
 
-beforeEach(() => {
-  createTile(Direction.Right);
-});
-
 describe("Tests DomainTile", () => {
-  it("Renders without crashing", () => {
-    tileMaster.toJSON();
+  it("Renders directionless (default) tile without crashing", () => {
+    createTile();
   });
 
-  it("Matches the latest snapshot", () => {
+  it("Renders directional tile without crashing", () => {
+    createTile(Direction.Right);
+  });
+
+  it("Tile with direction matches the latest snapshot", () => {
+    createTile(Direction.Right);
     snapTest();
+  });
+
+  it("Click calls function", () => {
+    createTile();
+    tileMaster.root.findByType("button").props.onClick();
+    expect(MOCK_ANIMATE).toHaveBeenCalledTimes(1);
   });
 });
 

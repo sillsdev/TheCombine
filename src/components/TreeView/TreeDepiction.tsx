@@ -67,6 +67,7 @@ export default class TreeDepiction extends React.Component<
           (this.props.currentDomain.subdomains.length * 2 - 1)
       );
     else tileWidth = MAX_TILE_WIDTH;
+
     if (tileWidth < MIN_TILE_WIDTH) tileWidth = MIN_TILE_WIDTH;
     else if (tileWidth > MAX_TILE_WIDTH) tileWidth = MAX_TILE_WIDTH;
 

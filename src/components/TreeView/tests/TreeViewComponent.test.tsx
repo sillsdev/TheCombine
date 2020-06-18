@@ -1,10 +1,10 @@
 import React from "react";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
-import TreeViewComponent, { TreeView } from "../TreeViewComponent";
-import SemanticDomainWithSubdomains from "../SemanticDomain";
-import MockDomain from "./MockSemanticDomain";
-import { store } from "../../../store";
 import { Provider } from "react-redux";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
+import { store } from "../../../store";
+import SemanticDomainWithSubdomains from "../SemanticDomain";
+import TreeViewComponent, { TreeView } from "../TreeViewComponent";
+import MockDomain from "./MockSemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 var treeHandle: TreeView;
@@ -48,7 +48,7 @@ describe("Tests AddWords", () => {
   it("Constructs correctly", () => {
     // Default snapshot test
     createTree();
-    snapTest("default view");
+    snapTest();
   });
 
   // This assumes MockDomain was used in createTree() below and MockDomain.name !== ""
@@ -96,6 +96,6 @@ function createTree() {
 }
 
 // Perform a snapshot test
-function snapTest(name: string) {
+function snapTest() {
   expect(treeMaster.toJSON()).toMatchSnapshot();
 }

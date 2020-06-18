@@ -1,11 +1,11 @@
 import React from "react";
 import {
   Button,
-  Typography,
-  TextField,
+  Card,
   GridList,
   GridListTile,
-  Card,
+  TextField,
+  Typography,
 } from "@material-ui/core";
 import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
