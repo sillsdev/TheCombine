@@ -1,5 +1,4 @@
-import { Grid, Typography } from "@material-ui/core";
-import Chip from "@material-ui/core/Chip";
+import { Chip, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import theme, { styleAddendum } from "../../../../types/theme";
