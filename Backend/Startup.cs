@@ -39,6 +39,7 @@ namespace BackendFramework
             public int SmtpPort { get; set; }
             public string SmtpUsername { get; set; }
             public string SmtpPassword { get; set; }
+            public string FrontendUrl {get; set; }
         }
 
         private class EnvironmentNotConfiguredException : Exception
@@ -107,6 +108,7 @@ namespace BackendFramework
                 options.SmtpPort = Int32.Parse(Configuration["Email:SmtpPort"]);
                 options.SmtpUsername = Configuration["Email:SmtpUsername"];
                 options.SmtpPassword = Configuration["Email:SmtpPassword"];
+                options.FrontendUrl = Configuration["Frontend:Url"];
             });
 
             // Register concrete types for dependency injection
@@ -147,6 +149,8 @@ namespace BackendFramework
             // Password ResetTypes
             services.AddTransient<IPasswordResetContext, PasswordResetContext>();
             services.AddTransient<IPasswordResetService, PasswordResetService>();
+
+            services.AddTransient<IFrontendContext, FrontendContext>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

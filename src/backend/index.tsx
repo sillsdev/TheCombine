@@ -34,6 +34,27 @@ backendServer.interceptors.response.use(
   }
 );
 
+export async function resetPasswordRequest(email: string): Promise<boolean> {
+  let resp = await backendServer.post("users/forgot", {email: email}).then(() => true).catch(() => false);
+  return resp;
+}
+
+export async function resetPassword(
+  email: string,
+  token: string,
+  password: string
+): Promise<boolean> {
+  let resp = await backendServer
+    .post(`users/forgot/reset`, {
+      email: email,
+      token: token,
+      newPassword: password,
+    })
+    .then(() => true)
+    .catch(() => false);
+  return resp;
+}
+
 export async function createWord(word: Word): Promise<Word> {
   let resp = await backendServer.post(
     `projects/${LocalStorage.getProjectId()}/words`,

@@ -9,7 +9,7 @@ namespace BackendFramework.Models
     public class PasswordReset
     {
         private static RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
-        private static int TokenSize = 256;
+        private static int TokenSize = 8;
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

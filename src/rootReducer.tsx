@@ -12,6 +12,7 @@ import { projectReducer } from "./components/Project/ProjectReducer";
 import mergeDuplicateReducer from "./goals/MergeDupGoal/mergeDuplicateReducer";
 import { treeViewReducer } from "./components/TreeView/TreeViewReducer";
 import { reviewEntriesReducer } from "./goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { passwordResetReducer } from "./components/PasswordReset/reducer";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //handles localization through react-localize-redux utilities
@@ -21,6 +22,10 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   loginState: loginReducer,
   createProjectState: createProjectReducer,
   treeViewState: treeViewReducer,
+
+  // Password Reset
+  passwordResetState: passwordResetReducer,
+
 
   //general cleanup tools
   goalSelectorState: goalSelectReducer,
@@ -37,6 +42,6 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   // View Final goal
   reviewEntriesState: reviewEntriesReducer,
 
-  //temporary
+    //temporary
   tempState: tempReducer,
 });
