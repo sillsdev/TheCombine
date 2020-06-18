@@ -23,7 +23,6 @@ beforeAll(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <Pronunciations wordId="2" pronunciationFiles={["a.wav", "b.wav"]} />
-        />
       </Provider>
     );
   });

@@ -1,6 +1,6 @@
 import React from "react";
 import FiberManualRecord from "@material-ui/icons/FiberManualRecord";
-import { makeStyles, Theme, createStyles, IconButton } from "@material-ui/core";
+import { makeStyles, IconButton } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { updateRecordingStatus } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
@@ -64,7 +64,7 @@ export default function IconHolder(props: IconHolderProps) {
     >
       <FiberManualRecord
         className={
-          isRecording && props.wordId == wordBeingRecorded
+          isRecording && props.wordId === wordBeingRecorded
             ? classes.iconPress
             : classes.iconRelease
         }

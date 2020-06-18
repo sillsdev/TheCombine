@@ -56,7 +56,7 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
 }
 
 let currentSort: SortStyle = SortStyle.NONE;
-const columns: Column[] = [
+const columns: Column<any>[] = [
   // Vernacular column
   {
     title: "Vernacular",
