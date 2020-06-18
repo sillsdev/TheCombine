@@ -8,7 +8,6 @@ import {
 } from "react-localize-redux";
 
 interface DeleteEntryProps {
-  entryIndex: number;
   removeEntry: () => void;
 }
 
