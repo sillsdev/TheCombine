@@ -29,7 +29,8 @@ const state = {
   },
 };
 const mockStore = configureMockStore([])(state);
-const mockAxios = axios as jest.Mocked<typeof axios>;
+
+jest.mock("axios");
 
 // Standard dialog mockout
 jest.mock("@material-ui/core", () => {
@@ -65,7 +66,7 @@ const MOCK_UPDATE = jest.fn();
 
 beforeAll(() => {
   // Prep for component creation
-  mockAxios.get.mockImplementationOnce(() => {
+  axios.get = jest.fn().mockImplementationOnce(() => {
     return Promise.resolve({
       data: mockWords.map((word) => createMockWord(word, "en")),
     });
