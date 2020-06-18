@@ -1,17 +1,22 @@
-import React from "react";
 import { Grid } from "@material-ui/core";
-import { Word, Gloss, Sense, State } from "../../../../types/word";
+import React from "react";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
-import ExistingGloss from "./ExistingGloss/ExistingGloss";
-import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
-import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
-import { SemanticDomain } from "../../../../types/word";
-import DeleteEntry from "./DeleteEntry/DeleteEntry";
-import SpellChecker from "../../spellChecker";
 import theme from "../../../../types/theme";
+import {
+  Gloss,
+  SemanticDomain,
+  Sense,
+  State,
+  Word,
+} from "../../../../types/word";
 import PronunciationsComponent from "../../../Pronunciations/PronunciationsComponent";
 import { Recorder } from "../../../Pronunciations/Recorder";
+import SpellChecker from "../../spellChecker";
+import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
+import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
+import DeleteEntry from "./DeleteEntry/DeleteEntry";
+import ExistingGloss from "./ExistingGloss/ExistingGloss";
+import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
 
 interface ExistingEntryProps {
   wordsBeingAdded: Word[];
@@ -27,6 +32,7 @@ interface ExistingEntryProps {
   displaySpellingSuggestions: boolean;
   toggleDisplaySpellingSuggestions: () => void;
   recorder: Recorder;
+  focusNewEntry: () => void;
 }
 
 interface ExistingEntryState {
@@ -343,6 +349,11 @@ export class ExistingEntry extends React.Component<
     }
   }
 
+  focusOnNewEntry = () => {
+    this.props.focusNewEntry();
+    //reference NewEntry's focus thing here
+  };
+
   render() {
     return (
       <Grid item xs={12} key={this.props.entryIndex}>
@@ -350,6 +361,14 @@ export class ExistingEntry extends React.Component<
           container
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
+          onKeyDown={(e) => {
+            if (
+              e.key === "Enter" &&
+              this.state.existingEntry.vernacular !== ""
+            ) {
+              this.focusOnNewEntry();
+            }
+          }}
         >
           <Grid
             item
@@ -425,10 +444,7 @@ export class ExistingEntry extends React.Component<
             }}
           >
             {this.state.hovering && (
-              <DeleteEntry
-                entryIndex={this.props.entryIndex}
-                removeEntry={() => this.removeEntry()}
-              />
+              <DeleteEntry removeEntry={() => this.removeEntry()} />
             )}
           </Grid>
         </Grid>

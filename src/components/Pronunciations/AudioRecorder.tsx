@@ -8,14 +8,13 @@ import {
 import { red } from "@material-ui/core/colors";
 import FiberManualRecord from "@material-ui/icons/FiberManualRecord";
 import React, { useState } from "react";
-import * as Backend from "../../backend";
 import { Recorder } from "./Recorder";
 import { Translate } from "react-localize-redux";
 
 export interface RecorderProps {
   wordId: string;
   recorder?: Recorder;
-  recordingFinished?: (oldId: string, newId: string) => void;
+  uploadAudio?: (wordId: string, audioFile: File) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,8 +22,11 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       margin: theme.spacing(1),
     },
-    icon: {
-      color: red[800],
+    iconPress: {
+      color: red[900],
+    },
+    iconRelease: {
+      color: red[500],
     },
   })
 );
@@ -69,12 +71,9 @@ export default function AudioRecorder(props: RecorderProps) {
             type: blob.type,
             lastModified: Date.now(),
           });
-          Backend.uploadAudio(props.wordId, file).then((newWordId) => {
-            recorder.clearData();
-            if (props.recordingFinished) {
-              props.recordingFinished(props.wordId, newWordId);
-            }
-          });
+          if (props.uploadAudio) {
+            props.uploadAudio(props.wordId, file);
+          }
         })
         .catch(() => {
           console.log("Error recording, probably no mic access");
@@ -95,7 +94,9 @@ export default function AudioRecorder(props: RecorderProps) {
         className={classes.button}
         aria-label="record"
       >
-        <FiberManualRecord className={classes.icon} />
+        <FiberManualRecord
+          className={isRecording ? classes.iconPress : classes.iconRelease}
+        />
       </IconButton>
     </Tooltip>
   );
