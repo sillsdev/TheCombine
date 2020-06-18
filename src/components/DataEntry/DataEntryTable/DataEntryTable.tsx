@@ -116,11 +116,7 @@ export class DataEntryTable extends React.Component<
   }
 
   /** Update the word in the backend and the frontend */
-  async updateWordForNewEntry(
-    wordToUpdate: Word,
-    glossIndex: number,
-    shouldBeMutable?: boolean
-  ) {
+  async updateWordForNewEntry(wordToUpdate: Word, glossIndex: number) {
     let existingWord = this.state.existingWords.find(
       (word) => word.id === wordToUpdate.id
     );
@@ -303,16 +299,8 @@ export class DataEntryTable extends React.Component<
             <NewEntry
               ref={this.refNewEntry}
               allWords={this.state.existingWords}
-              updateWord={(
-                wordToUpdate: Word,
-                glossIndex: number,
-                shouldBeMutable?: boolean
-              ) =>
-                this.updateWordForNewEntry(
-                  wordToUpdate,
-                  glossIndex,
-                  shouldBeMutable
-                )
+              updateWord={(wordToUpdate: Word, glossIndex: number) =>
+                this.updateWordForNewEntry(wordToUpdate, glossIndex)
               }
               addNewWord={(word: Word) => this.addNewWord(word)}
               spellChecker={this.spellChecker}
