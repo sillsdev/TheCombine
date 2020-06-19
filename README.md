@@ -126,6 +126,8 @@ To completely erase the current Mongo database, run:
 
 ### Create a New Admin User
 
+#### Local
+
 To create a new admin user, first set the `ASPNETCORE_ADMIN_PASSWORD`
 environment variable and then run:
 
@@ -135,8 +137,21 @@ environment variable and then run:
 
 The exit code will be set to `0` on success and non-`0` otherwise.
 
+#### Docker
+
 In Docker, add `ASPNETCORE_ADMIN_USERNAME` and `ASPNETCORE_ADMIN_PASSWORD`
 to `.env.web` configuration file.
+
+```batch
+> docker-compose build --parallel
+> docker-compose up --abort-on-container-exit
+```
+
+This will create the user, and exit and report an error code if it fails. 
+
+**Important**": Remove the `ASPNETCORE_*` environment variables from
+`.env.web` or subsequent launches will fail because the backend will try
+to re-create the same user name again.
 
 ### (Development Only) Grant an Existing User Admin Rights 
 

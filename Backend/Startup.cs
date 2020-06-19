@@ -186,7 +186,12 @@ namespace BackendFramework
             {
                 _logger.LogInformation("Stopping application");
 
-                appLifetime.StopApplication();
+                // If running in Docker, there is no benefit in shutting down immediately if the admin user was
+                // created successfully.
+                if (!IsInContainer())
+                {
+                    appLifetime.StopApplication();
+                }
             }
         }
 
