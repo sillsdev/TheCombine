@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tests AppBarComponent Ensures ProjectName Tab is shaded only when itself is called 1`] = `
+<button
+  className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
+  disabled={false}
+  id="project-name"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onDragLeave={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchMove={[Function]}
+  onTouchStart={[Function]}
+  style={
+    Object {
+      "background": "#1976d2",
+    }
+  }
+  tabIndex={0}
+  type="button"
+>
+  <span
+    className="MuiButton-label"
+  >
+    
+  </span>
+</button>
+`;
+
+exports[`Tests AppBarComponent Ensures only one tab is shaded 1`] = `
+Array [
+  <button
+    className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
+    disabled={false}
+    id="data-entry"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    style={
+      Object {
+        "background": "inherit",
+      }
+    }
+    tabIndex={0}
+    type="button"
+  >
+    <span
+      className="MuiButton-label"
+    >
+      Missing translationId: appBar.dataEntry for language: \${ languageCode }
+    </span>
+  </button>,
+  <button
+    className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
+    disabled={false}
+    id="goals"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    style={
+      Object {
+        "background": "#1976d2",
+      }
+    }
+    tabIndex={0}
+    type="button"
+  >
+    <span
+      className="MuiButton-label"
+    >
+      Missing translationId: appBar.dataCleanup for language: \${ languageCode }
+    </span>
+  </button>,
+]
+`;
