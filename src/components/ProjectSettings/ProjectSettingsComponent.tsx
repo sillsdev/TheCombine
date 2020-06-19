@@ -26,6 +26,7 @@ import ExportProjectButton from "./ProjectExport/ExportProjectButton";
 import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
 import ProjectUsers from "./ProjectUsers";
 import ProjectSwitch from "./ProjectSwitch";
+import { CurrentTab } from "../../types/currentTab";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -88,13 +89,13 @@ class ProjectSettingsComponent extends React.Component<
     if (this.state.loading) {
       return (
         <React.Fragment>
-          <AppBarComponent />
+          <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
         </React.Fragment>
       );
     } else {
       return (
         <React.Fragment>
-          <AppBarComponent />
+          <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
           <Grid container justify="center" spacing={6}>
             {/* Project List */}
             <BaseSettingsComponent

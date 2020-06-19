@@ -62,18 +62,6 @@ export default function UserMenu() {
           horizontal: "right",
         }}
       >
-        {/* Don't show project settings in the menu if a project hasn't been selected. */}
-        {getProjectId() !== "" && (
-          <MenuItem
-            onClick={() => {
-              history.push("/project-settings");
-            }}
-          >
-            <Settings style={{ marginRight: theme.spacing(1) }} />
-            <Translate id="userMenu.projectSettings" />
-          </MenuItem>
-        )}
-
         <MenuItem
           onClick={() => {
             history.push("/user-settings");
