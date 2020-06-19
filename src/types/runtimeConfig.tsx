@@ -36,6 +36,12 @@ export class RuntimeConfig {
   }
 
   public baseUrl(): string {
+    // TODO: Remove support for previous configuration solution when
+    //  Docker-based installation is used in production.
+    if (window.runtimeConfig.hasOwnProperty("baseUrl")) {
+      return window.runtimeConfig.baseUrl;
+    }
+
     let baseUrl = "";
     if (window.runtimeConfig.hasOwnProperty("useIdenticalBaseUrl")) {
       baseUrl = `${window.location.protocol}//${window.location.host}`;
