@@ -37,8 +37,8 @@ export class RuntimeConfig {
 
   public baseUrl(): string {
     let baseUrl = "";
-    if (window.runtimeConfig.hasOwnProperty("baseUrl")) {
-      baseUrl = window.runtimeConfig.baseUrl;
+    if (window.runtimeConfig.hasOwnProperty("useIdenticalBaseUrl")) {
+      baseUrl = `${window.location.protocol}//${window.location.host}`
     } else {
       baseUrl = defaultConfig.baseUrl;
     }
