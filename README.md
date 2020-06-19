@@ -141,8 +141,8 @@ database objects), create a user normally and then execute:
 
 Install [Docker](https://docs.docker.com/get-docker/).
 
-(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately.
-This is included by default in Docker Desktop for Windows and macOS.
+(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/)
+separately. This is included by default in Docker Desktop for Windows and macOS.
 
 ### Build and Run
 
@@ -154,7 +154,11 @@ For more information see the
 > docker-compose up --detach
 ```
 
-Browse to https://localhost
+Browse to https://localhost.
+
+> By default self-signed certificates are included, so you will need to accept
+> a warning in the browser. See [SSL Certificates](#ssl-certificates) for
+> production deployment.
 
 To view logs:
 
@@ -199,9 +203,25 @@ Restart the Docker Compose project:
 > docker-compose up --detatch
 ```
 
-## Features
+#### Modifying Build Arguments
 
-TODO
+Create a file `production.yml`, and override build arguments as needed.
+
+```yaml
+version: "3.8"
+services:
+  nginx:
+    build:
+      args:
+        - CAPTCHA_REQUIRED=false
+```
+
+Use this file when building and launching the Docker Compose project.
+
+```batch
+> docker-compose -f docker-compose.yml -f production.yml build --parallel
+> docker-compose -f docker-compose.yml -f production.yml up --detach
+```
 
 ## Learn More
 
