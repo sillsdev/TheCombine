@@ -24,7 +24,8 @@ export class DataEntryHeader extends React.Component<
 > {
   render() {
     let questions;
-    const hasQuestions: boolean = this.props.domain.questions.length > 0;
+    const hasQuestions: boolean =
+      this.props.domain.questions && this.props.domain.questions.length > 0;
     if (this.props.questionsVisible) {
       questions = this.props.domain.questions.map((q) => (
         <Typography>{q}</Typography>
