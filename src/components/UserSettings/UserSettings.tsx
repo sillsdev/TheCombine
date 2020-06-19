@@ -17,7 +17,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { CameraAlt, Email, Face, Phone } from "@material-ui/icons";
+import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 
 import { User } from "../../types/user";
 import AvatarUpload from "./AvatarUpload";
@@ -67,7 +67,11 @@ function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
           src={props.avatar}
         />
       ) : (
+<<<<<<< HEAD
         <Face style={{ fontSize: 60 }} />
+=======
+        <Person style={{ fontSize: 60 }} />
+>>>>>>> 84ce3c8598529c36d7df884a135ce9524e00df3c
       )}
       <Avatar className={classes.avatarOverlay} onClick={props.onClick}>
         <CameraAlt />
