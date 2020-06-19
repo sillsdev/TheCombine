@@ -138,8 +138,8 @@ database objects), create a user normally and then execute:
 
 Install [Docker](https://docs.docker.com/get-docker/).
 
-(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/) separately.
-This is included by default in Docker Desktop for Windows and macOS.
+(Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/)
+separately. This is included by default in Docker Desktop for Windows and macOS.
 
 ### Build and Run
 
@@ -151,7 +151,11 @@ For more information see the
 > docker-compose up --detach
 ```
 
-Browse to https://localhost
+Browse to https://localhost.
+
+> By default self-signed certificates are included, so you will need to accept
+> a warning in the browser. See [SSL Certificates](#ssl-certificates) for
+> production deployment.
 
 To view logs:
 

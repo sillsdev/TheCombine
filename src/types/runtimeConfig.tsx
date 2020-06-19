@@ -11,7 +11,7 @@ declare global {
 }
 
 const defaultConfig: RuntimeConfigItems = {
-  baseUrl: "https://localhost:5001/v1",
+  baseUrl: "https://localhost:5001",
   captchaRequired: true,
   captchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
 };
@@ -36,10 +36,13 @@ export class RuntimeConfig {
   }
 
   public baseUrl(): string {
+    let baseUrl = "";
     if (window.runtimeConfig.hasOwnProperty("baseUrl")) {
-      return window.runtimeConfig.baseUrl;
+      baseUrl = window.runtimeConfig.baseUrl;
+    } else {
+      baseUrl = defaultConfig.baseUrl;
     }
-    return defaultConfig.baseUrl;
+    return `${baseUrl}/v1`;
   }
 
   public captchaSiteKey(): string {
