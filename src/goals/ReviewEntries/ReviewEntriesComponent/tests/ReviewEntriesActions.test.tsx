@@ -17,6 +17,8 @@ import {
   Sense,
 } from "../../../../types/word";
 
+jest.mock("axios");
+
 // Mocks
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockStore = configureMockStore([thunk])();

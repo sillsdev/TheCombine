@@ -29,6 +29,9 @@ const state = {
     },
   },
 };
+
+jest.mock("axios");
+
 const mockStore = configureMockStore([])(state);
 const mockAxios = axios as jest.Mocked<typeof axios>;
 

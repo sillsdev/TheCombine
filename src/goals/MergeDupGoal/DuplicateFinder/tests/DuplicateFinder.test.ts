@@ -4,6 +4,8 @@ import DupFinder, { DefaultParams } from "../DuplicateFinder";
 import { Word, simpleWord } from "../../../../types/word";
 import axios from "axios";
 
+jest.mock("axios");
+
 const mockAxios = axios as jest.Mocked<typeof axios>;
 
 describe("dupFinder Tests", () => {
