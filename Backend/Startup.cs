@@ -48,6 +48,10 @@ namespace BackendFramework
             return Environment.GetEnvironmentVariable("ASPNETCORE_IS_IN_CONTAINER") != null;
         }
 
+        private class AdminUserCreationException : Exception
+        {
+        }
+
         /// <summary> This method gets called by the runtime. Use this method to add services for dependency injection.
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
@@ -182,27 +186,28 @@ namespace BackendFramework
             {
                 _logger.LogInformation("Stopping application");
 
-                // TODO: This doesn't seem to actually be stopping the application.
                 appLifetime.StopApplication();
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
+        /// <summary> Create a new user with administrator privileges. </summary>
         /// <param name="userService"></param>
         /// <returns> Whether the application should be stopped. </returns>
         /// <exception cref="EnvironmentNotConfiguredException">
         /// If required environment variables are not set.
         /// </exception>
+        /// <exception cref="AdminUserCreationException">
+        /// If the requested admin user could not be created.
+        /// </exception>
         private bool CreateAdminUser(IUserService userService)
         {
-            const string createAdminUsernameArg = "--create-admin-username";
+            const string createAdminUsernameArg = "create-admin-username";
             const string createAdminPasswordEnv = "ASPNETCORE_ADMIN_PASSWORD";
 
             var username = Configuration.GetValue<string>(createAdminUsernameArg);
             if (username == null)
             {
+                _logger.LogInformation("No admin user name provided, skipped admin creation");
                 return false;
             }
 
@@ -221,6 +226,7 @@ namespace BackendFramework
             if (returnedUser == null)
             {
                 _logger.LogError("Failed to create admin user.");
+                throw new AdminUserCreationException();
             }
 
             return true;

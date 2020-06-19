@@ -124,12 +124,28 @@ To completely erase the current Mongo database, run:
 
 ## Create Database Admin User
 
-To grant a user database administrator rights (all permissions for all
-database objects), create a user normally and then execute:
+### Create a New Admin User
+
+To create a new admin user, first set the `ASPNETCORE_ADMIN_PASSWORD`
+environment variable and then run:
+
+```batch
+> dotnet run create-admin-username=admin
+```
+
+The exit code will be set to `0` on success and non-`0` otherwise.
+
+In Docker, add `ASPNETCORE_ADMIN_USERNAME` and `ASPNETCORE_ADMIN_PASSWORD`
+to `.env.web` configuration file.
+
+### (Development Only) Grant an Existing User Admin Rights 
+
+To grant an *existing* user database administrator rights (all permissions for
+all database objects), create a user normally and then execute:
 
 ```batch
 # Note the -- before the user name.
-> npm run set-admin-user -- <USER_NAME>
+> npm run set-admin-user -- <USERNAME>
 ```
 
 ## Docker
