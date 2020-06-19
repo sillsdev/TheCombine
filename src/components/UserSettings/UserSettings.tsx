@@ -67,11 +67,7 @@ function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
           src={props.avatar}
         />
       ) : (
-<<<<<<< HEAD
-        <Face style={{ fontSize: 60 }} />
-=======
         <Person style={{ fontSize: 60 }} />
->>>>>>> 84ce3c8598529c36d7df884a135ce9524e00df3c
       )}
       <Avatar className={classes.avatarOverlay} onClick={props.onClick}>
         <CameraAlt />
