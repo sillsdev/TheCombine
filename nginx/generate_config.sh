@@ -6,7 +6,7 @@
 #   frontend and backend are hosted behind the same NGINX proxy.
 cat  << EOF
 window['runtimeConfig'] = {
-    useIdenticalBaseUrl: true,
+    useConnectionBaseUrlForApi: true,
     captchaRequired: $CAPTCHA_REQUIRED,
     captchaSiteKey: "$CAPTCHA_SITE"
 }

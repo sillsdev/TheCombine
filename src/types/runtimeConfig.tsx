@@ -43,7 +43,7 @@ export class RuntimeConfig {
     }
 
     let baseUrl = "";
-    if (window.runtimeConfig.hasOwnProperty("useIdenticalBaseUrl")) {
+    if (window.runtimeConfig.hasOwnProperty("useConnectionBaseUrlForApi")) {
       baseUrl = `${window.location.protocol}//${window.location.host}`;
     } else {
       baseUrl = defaultConfig.baseUrl;
