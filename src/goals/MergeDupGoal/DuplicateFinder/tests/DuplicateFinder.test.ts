@@ -4,7 +4,17 @@ import DupFinder, { DefaultParams } from "../DuplicateFinder";
 import { Word, simpleWord } from "../../../../types/word";
 import axios from "axios";
 
-jest.mock("axios");
+const mockNoop = () => new Promise(() => {});
+
+// Notice how `create` was not being mocked here...
+jest.mock("axios", () => ({
+  default: () => new Promise(() => {}),
+  get: () => new Promise(() => {}),
+  post: () => new Promise(() => {}),
+  put: () => new Promise(() => {}),
+  delete: () => new Promise(() => {}),
+  patch: () => new Promise(() => {}),
+}));
 
 const mockAxios = axios as jest.Mocked<typeof axios>;
 
@@ -21,7 +31,7 @@ describe("dupFinder Tests", () => {
     simpleWord("Yeet", "Please"),
     simpleWord("Yeet", "Mandatory"),
     simpleWord("Yang", "Die"),
-    simpleWord("Yank", "Please god help me"),
+    simpleWord("Yank", "Please God help me"),
     simpleWord("Yuino", "Love"),
     simpleWord("Yuino", "Boba Fett"),
     simpleWord("Yes", "Wumbo"),

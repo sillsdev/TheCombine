@@ -15,6 +15,7 @@ import {
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { defaultState as goalsDefaultState } from "../DefaultState";
 import * as LocalStorage from "../../../backend/localStorage";
+import axios from "axios";
 
 jest.mock(
   ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
@@ -42,6 +43,18 @@ const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
 let mockUser: User = new User("", "", "");
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
+
+jest.mock("axios");
+
+// Mocks
+const mockAxios = axios as jest.Mocked<typeof axios>;
+mockAxios.get.mockImplementationOnce(() =>
+  Promise.resolve({
+    data: "",
+  })
+);
+var mockAxiosPost = jest.fn().mockResolvedValue({ data: "" });
+axios.post = mockAxiosPost;
 
 const createMockStore = configureMockStore([thunk]);
 let mockStore: MockStoreEnhanced<unknown, {}>;
@@ -109,13 +122,19 @@ describe("Test GoalsActions", () => {
   });
 
   it("should create an async action to load user edits", async () => {
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({
+        data: "",
+      })
+    );
+
     await mockStore.dispatch<any>(actions.asyncLoadExistingUserEdits("1", "1"));
 
     let loadUserEdits: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: [],
     };
-
+    var actionsActions = mockStore.getActions();
     expect(mockStore.getActions()).toEqual([loadUserEdits]);
   });
 
@@ -155,6 +174,7 @@ describe("Test GoalsActions", () => {
     const goal: Goal = new CreateCharInv();
     localStorage.setItem("projectId", mockProjectId);
     localStorage.setItem("user", JSON.stringify(mockUser));
+
     await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
 
     let addGoalToHistory: actions.AddGoalToHistoryAction = {

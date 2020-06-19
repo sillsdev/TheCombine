@@ -127,7 +127,7 @@ class MergeStack extends React.Component<
           sense: this.props.senseID,
         })}
         index={this.props.index}
-        type="SENSE"
+        //type="SENSE"
       >
         {(provided, snapshot) => (
           <Card

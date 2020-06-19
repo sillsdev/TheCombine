@@ -23,6 +23,9 @@ jest.mock("axios");
 const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockStore = configureMockStore([thunk])();
 
+var mockAxiosPost = jest.fn().mockResolvedValue({ data: "" });
+axios.post = mockAxiosPost;
+
 // Dummy glosses and domains used in testing
 const gloss0: Gloss = { language: "en", def: "gloss" };
 const gloss1: Gloss = { language: "en", def: "infinite" };
