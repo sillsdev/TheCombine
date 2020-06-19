@@ -45,10 +45,9 @@ class UserList extends React.Component<
       filteredAllProjects: [],
       filteredProjUsers: [],
     };
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Variable to hold the filtered list before putting into state
     let filteredAllUsers: User[] = [];
     let filteredProjUsers: User[] = [];
@@ -93,7 +92,7 @@ class UserList extends React.Component<
       filteredAllProjects: filteredAllUsers,
       filteredProjUsers: filteredProjUsers,
     });
-  }
+  };
 
   render() {
     return (
@@ -128,11 +127,6 @@ class UserList extends React.Component<
                 style={{ marginRight: theme.spacing(1) }}
               />
               <ListItemText primary={`${user.name} (${user.username})`} />
-              {this.state.hovering && this.state.hoverUserID === user.id && (
-                <Button>
-                  <Translate id="projectSettings.invite.addButton" />
-                </Button>
-              )}
             </ListItem>
           ))}
           {this.state.filteredAllProjects.map((user) => (

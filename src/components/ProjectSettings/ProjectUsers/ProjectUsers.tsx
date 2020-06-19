@@ -49,9 +49,6 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
       userAvatar: {},
       showModal: false,
     };
-
-    this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
   componentDidMount() {
@@ -59,13 +56,13 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     this.populateUsers();
   }
 
-  handleOpenModal() {
+  handleOpenModal = () => {
     this.setState({ showModal: true });
-  }
+  };
 
-  handleCloseModal() {
+  handleCloseModal = () => {
     this.setState({ showModal: false });
-  }
+  };
 
   componentDidUpdate(prevProps: UserProps) {
     if (this.props.project.name !== prevProps.project.name) {

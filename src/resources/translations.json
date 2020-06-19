@@ -224,16 +224,32 @@
       "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
     },
     "invite": {
-      "inviteByEmailLabel": ["Invite by Email"],
-      "inviteButton": ["Invite"],
-      "or": ["OR"],
-      "searchPlaceholder": ["Search..."],
-      "searchTitle": ["Find Users"],
-      "addButton": ["Add"],
-      "emailLabel": ["Email"],
-      "messageLabel": ["Message"],
-      "toastSuccess": ["Added User!"],
-      "toastFail": ["Failed to add user!"]
+      "inviteByEmailLabel": [
+        "Invite by Email",
+        "Invitar por correo electrónico",
+        "Inviter par email"
+      ],
+      "inviteButton": ["Invite", "Invitación", "Inviter"],
+      "or": ["OR", "O", "Ou"],
+      "searchPlaceholder": ["Search...", "Buscar...", "Chercher..."],
+      "searchTitle": [
+        "Find Users",
+        "Encontrar Usuarios",
+        "Rechercher des utilisateurs"
+      ],
+      "addButton": ["Add", "Añadir", "Ajouter"],
+      "emailLabel": ["Email", "Correo electrónico", "Email"],
+      "messageLabel": ["Message", "Mensaje", "Message"],
+      "toastSuccess": [
+        "Added User!",
+        "Usuario Agregado!",
+        "Utilisateur Ajouté"
+      ],
+      "toastFail": [
+        "Failed to add user!",
+        "¡Error al agregar usuario!",
+        "Impossible d'ajouter l'utilisateur!"
+      ]
     }
   },
   "goal": {

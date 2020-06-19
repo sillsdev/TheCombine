@@ -23,12 +23,11 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
       emailAddress: "",
       isValid: false,
     };
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onSubmit() {
+  onSubmit = () => {
     console.log("onSubmit");
-  }
+  };
 
   /** Updates the state to match the value in a textbox */
   updateField(
@@ -55,44 +54,39 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
       <React.Fragment>
         <Grid container justify="center">
           <Card style={{ width: 450 }}>
-            <form onSubmit={(e) => {}}>
-              <CardContent>
-                <Typography variant="h5" align="center" gutterBottom>
-                  <Translate id="projectSettings.invite.inviteByEmailLabel" />
-                </Typography>
-                <TextField
-                  required
-                  label={<Translate id="projectSettings.invite.emailLabel" />}
-                  onChange={(e) => this.updateField(e)}
-                  variant="outlined"
-                  style={{ width: "100%" }}
-                  margin="normal"
-                  autoFocus
-                  inputProps={{ maxLength: 100 }}
-                />
-                <TextField
-                  label="Message"
-                  variant="outlined"
-                  style={{ width: "100%" }}
-                  margin="normal"
-                ></TextField>
-                {/* Register and Login buttons */}
-                <Grid container justify="flex-end" spacing={2}>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.onSubmit}
-                      disabled={!this.state.isValid}
-                    >
-                      <Translate id="projectSettings.invite.inviteButton" />
-                    </Button>
-                  </Grid>
-
-                  <br />
+            <CardContent>
+              <Typography variant="h5" align="center" gutterBottom>
+                <Translate id="projectSettings.invite.inviteByEmailLabel" />
+              </Typography>
+              <TextField
+                required
+                label={<Translate id="projectSettings.invite.emailLabel" />}
+                onChange={(e) => this.updateField(e)}
+                variant="outlined"
+                style={{ width: "100%" }}
+                margin="normal"
+                autoFocus
+                inputProps={{ maxLength: 100 }}
+              />
+              <TextField
+                label="Message"
+                variant="outlined"
+                style={{ width: "100%" }}
+                margin="normal"
+              ></TextField>
+              <Grid container justify="flex-end" spacing={2}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.onSubmit}
+                    disabled={!this.state.isValid}
+                  >
+                    <Translate id="projectSettings.invite.inviteButton" />
+                  </Button>
                 </Grid>
-              </CardContent>
-            </form>
+              </Grid>
+            </CardContent>
           </Card>
         </Grid>
       </React.Fragment>
