@@ -226,7 +226,7 @@ namespace BackendFramework
 
             _logger.LogInformation($"Creating admin user: {username}");
 
-            var user = new User {Username = username, Password = password, IsAdmin = true};
+            var user = new User { Username = username, Password = password, IsAdmin = true };
             var returnedUser = userService.Create(user).Result;
             if (returnedUser == null)
             {
