@@ -186,10 +186,11 @@
         "Langue de l'interface"
       ]
     },
-    "name": ["Project Name", "Nombre del Proyecto", "Nom du projet"],
-    "list": ["Projects", "Proyectos", "Projets"],
+    "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
+    "projectList": ["Projects", "Proyectos", "Projets"],
+    "userList": ["Users", "Usarios", "Utilisateurs"],
     "import": {
-      "header": ["Import Data", "Importar Información", "Importer des données"],
+      "header": ["Import Data", "Importar información", "Importer des données"],
       "body": [
         "Imported data will be added to this project. Combine will make no attempt to deduplicate, overwrite, or sync. File must be a zipped archive in <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>.",
         "Los datos importados se agregarán a este proyecto. Combine no intentará deduplicar, sobrescribir ni sincronizar. El archivo debe ser un archivo comprimido en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>.",

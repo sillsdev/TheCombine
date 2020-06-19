@@ -5,7 +5,7 @@ import {
   Translate,
 } from "react-localize-redux";
 import { Grid } from "@material-ui/core";
-import { GetApp } from "@material-ui/icons";
+import { List, People } from "@material-ui/icons";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../ProjectSettings/BaseSettingsComponent/BaseSettingsComponent";
 import ProjectsExport from "./ProjectsExport";
@@ -22,9 +22,18 @@ class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
         <Grid container justify="center" spacing={6}>
           {/* Project List */}
           <BaseSettingsComponent
-            icon={<GetApp />}
-            title={<Translate id="projectSettings.list" />}
+            icon={<List />}
+            title={<Translate id="projectSettings.projectList" />}
             body={<ProjectsExport />}
+          />
+
+          {/* User List */}
+          <BaseSettingsComponent
+            icon={<People />}
+            title={<Translate id="projectSettings.userList" />}
+            body={
+              "TO BE ADDED... (searchable?) list of users with option to delete each, and popup to confirm deletion."
+            }
           />
         </Grid>
       </React.Fragment>
