@@ -147,7 +147,7 @@ to `.env.web` configuration file.
 > docker-compose up --abort-on-container-exit
 ```
 
-This will create the user, and exit and report an error code if it fails. 
+This will create the user or exit and report an error code if it fails. 
 
 **Important**": Remove the `ASPNETCORE_*` environment variables from
 `.env.web` or subsequent launches will fail because the backend will try
