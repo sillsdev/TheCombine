@@ -8,7 +8,7 @@ import {
   withLocalize,
   LocalizeContextProps,
 } from "react-localize-redux";
-import DomainTree from "../../TreeView/SemanticDomain";
+import DomainTree from "../../../types/SemanticDomain";
 
 interface DataEntryHeaderProps {
   domain: DomainTree;
@@ -41,6 +41,7 @@ export class DataEntryHeader extends React.Component<
         {this.props.domain.name + " (" + this.props.domain.id + ")"}
         <Typography>{this.props.domain.description}</Typography>
         <Switch
+          id="questionVisibilitySwitch"
           onChange={() =>
             this.props.setQuestionVisibility(!this.props.questionsVisible)
           }

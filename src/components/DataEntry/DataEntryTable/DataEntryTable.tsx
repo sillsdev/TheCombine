@@ -10,7 +10,7 @@ import theme from "../../../types/theme";
 import { Word, SemanticDomain, State } from "../../../types/word";
 import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
-import DomainTree from "../../TreeView/SemanticDomain";
+import DomainTree from "../../../types/SemanticDomain";
 import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";

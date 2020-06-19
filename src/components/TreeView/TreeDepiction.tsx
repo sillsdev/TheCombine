@@ -6,7 +6,7 @@ import {
   Typography,
   Grid,
 } from "@material-ui/core";
-import SemanticDomainWithSubdomains from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
 
 // Images
 import endcapL from "../../resources/tree/leftEndcap.svg";

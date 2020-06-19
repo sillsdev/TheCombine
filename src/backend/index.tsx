@@ -7,7 +7,7 @@ import { authHeader } from "../components/Login/AuthHeaders";
 import { Goal, GoalType } from "../types/goals";
 import { UserEdit } from "../types/userEdit";
 import history from "../history";
-import SemanticDomainWithSubdomains from "../components/TreeView/SemanticDomain";
+import SemanticDomainWithSubdomains from "../types/SemanticDomain";
 import { UserRole } from "../types/userRole";
 import { RuntimeConfig } from "../types/runtimeConfig";
 import * as LocalStorage from "./localStorage";

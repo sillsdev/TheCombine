@@ -1,4 +1,4 @@
-import SemanticDomainWithSubdomains from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 
 // Parent
 const PAR: SemanticDomainWithSubdomains = {

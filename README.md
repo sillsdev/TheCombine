@@ -119,7 +119,7 @@ more information.
 Imports Semantic Domains from the provided xml file.
 
 ```bash
-npm run import-sem-doms -- ..\semdoms\SemanticDomains-fr.xml
+npm run import-sem-doms -- <XML_FILE_PATH>
 ```
 
 ## Drop Database

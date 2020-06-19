@@ -3,7 +3,7 @@ import { Grid, Zoom } from "@material-ui/core";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import TreeProps from "./TreeProps";
 import TreeDepiction from "./TreeDepiction";
-import SemanticDomainWithSubdomains from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
 import { createDomains } from "./TreeViewReducer";
 
 // Domain data

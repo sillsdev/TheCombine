@@ -9,3 +9,11 @@ export default interface SemanticDomainWithSubdomains {
   parentDomain?: SemanticDomainWithSubdomains;
   subdomains: SemanticDomainWithSubdomains[];
 }
+
+export const baseDomain: SemanticDomainWithSubdomains = {
+  name: "",
+  id: "",
+  description: "",
+  subdomains: [],
+  questions: [],
+};

@@ -5,7 +5,7 @@ import {
   createDomains,
 } from "../TreeViewReducer";
 import { TreeViewAction, TreeActionType } from "../TreeViewActions";
-import SemanticDomainWithSubdomains from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 import { StoreAction, StoreActions } from "../../../rootActions";
 
 describe("Test the TreeViewReducer", () => {

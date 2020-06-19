@@ -1,6 +1,6 @@
 import React from "react";
 import DataEntryTable, { filterWords } from "../DataEntryTable";
-import { mockDomainTree } from "../../tests/MockDomainTree";
+import { baseDomain } from "../../../../types/SemanticDomain";
 import { SemanticDomain, Word, State } from "../../../../types/word";
 import { mockWord } from "../../tests/MockWord";
 import axios from "axios";
@@ -38,7 +38,7 @@ beforeAll(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <DataEntryTable
-          domain={mockDomainTree}
+          domain={baseDomain}
           semanticDomain={mockSemanticDomain}
           displaySemanticDomainView={(isGettingSemanticdomain: boolean) => {}}
         />

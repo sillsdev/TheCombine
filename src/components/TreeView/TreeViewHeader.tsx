@@ -11,7 +11,7 @@ import {
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 
-import SemanticDomainWithSubdomains from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
 
 interface TreeHeaderProps {
   currentDomain: SemanticDomainWithSubdomains;

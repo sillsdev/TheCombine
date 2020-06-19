@@ -1,7 +1,7 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import TreeViewComponent, { TreeView } from "../TreeViewComponent";
-import SemanticDomainWithSubdomains from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 import MockDomain from "./MockSemanticDomain";
 import { store } from "../../../store";
 import { Provider } from "react-redux";

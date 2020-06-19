@@ -3,7 +3,7 @@ import { Paper, Container, Divider, Dialog } from "@material-ui/core";
 import theme from "../../types/theme";
 
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
-import DomainTree from "../TreeView/SemanticDomain";
+import DomainTree from "../../types/SemanticDomain";
 import TreeViewComponent from "../TreeView";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
