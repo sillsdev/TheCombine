@@ -1,23 +1,27 @@
-import React from "react";
 import { Grid, Typography } from "@material-ui/core";
-import { Word, Sense, SemanticDomain } from "../../../../types/word";
-import SpellChecker from "../../spellChecker";
-import NewVernEntry from "./NewVernEntry/NewVernEntry";
-import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
-import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
-import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
-import {
-  addSenseToWord,
-  addSemanticDomainToSense,
-  duplicatesFromFrontier,
-} from "../ExistingEntry/ExistingEntry";
-import theme from "../../../../types/theme";
+import React from "react";
 import { Translate } from "react-localize-redux";
 import { AutoComplete } from "../../../../types/AutoComplete";
+import theme from "../../../../types/theme";
+import { SemanticDomain, Sense, Word } from "../../../../types/word";
+import SpellChecker from "../../spellChecker";
+import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
+import {
+  addSemanticDomainToSense,
+  addSenseToWord,
+  duplicatesFromFrontier,
+} from "../ExistingEntry/ExistingEntry";
+import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
+import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
+import NewVernEntry from "./NewVernEntry/NewVernEntry";
 
 interface NewEntryProps {
   allWords: Word[];
-  updateWord: (updatedWord: Word, shouldBeMutable?: boolean) => void;
+  updateWord: (
+    updatedWord: Word,
+    glossIndex: number,
+    shouldBeMutable?: boolean
+  ) => void;
   addNewWord: (newWord: Word) => void;
   spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
@@ -144,7 +148,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, false);
+    this.props.updateWord(updatedWord, 0, false);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
     this.setState({
@@ -160,7 +164,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       sense,
       index
     );
-    this.props.updateWord(updatedWord, false);
+    this.props.updateWord(updatedWord, index, false);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
     this.setState({
@@ -334,7 +338,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="caption">
-                {<Translate id="newentry.pressEnter" />}
+                {<Translate id="addWords.pressEnter" />}
               </Typography>
             </Grid>
           </Grid>
