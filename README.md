@@ -200,9 +200,25 @@ Restart the Docker Compose project:
 > docker-compose up --detatch
 ```
 
-## Features
+#### Modifying Build Arguments
 
-TODO
+Create a file `production.yml`, and override build arguments as needed.
+
+```yaml
+version: "3.8"
+services:
+  nginx:
+    build:
+      args:
+        - CAPTCHA_REQUIRED=false
+```
+
+Use this file when building and launching the Docker Compose project.
+
+```batch
+> docker-compose -f docker-compose.yml -f production.yml build --parallel
+> docker-compose -f docker-compose.yml -f production.yml up --detach
+```
 
 ## Learn More
 
