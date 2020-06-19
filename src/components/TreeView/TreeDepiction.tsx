@@ -1,25 +1,21 @@
 import React, { ReactNode } from "react";
-import {
-  GridList,
-  GridListTile,
-  Button,
-  Typography,
-  Grid,
-} from "@material-ui/core";
+import { GridList, GridListTile, Grid } from "@material-ui/core";
+import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
+import TreeViewHeader from "./TreeViewHeader";
 
 // Images
-import endcapL from "../../resources/tree/leftEndcap.svg";
-import endcapR from "../../resources/tree/rightEndcap.svg";
-import span from "../../resources/tree/span.svg";
-import pillar from "../../resources/tree/pillar.svg";
-import parent from "../../resources/tree/parent.svg";
-import teeUpLeft from "../../resources/tree/teeUpLeft.svg";
-import teeUpRight from "../../resources/tree/teeUpRight.svg";
-import teeDown from "../../resources/tree/teeDown.svg";
-import intersect from "../../resources/tree/intersect.svg";
-import TreeViewHeader from "./TreeViewHeader";
-import ReturnSymbol from "../../resources/ReturnSymbol.png";
+import {
+  endcapLeft,
+  endcapRight,
+  intersect,
+  parent,
+  pillar,
+  span,
+  teeDown,
+  teeUpLeft,
+  teeUpRight,
+} from "../../resources/tree";
 
 export const MAX_TILE_WIDTH = 150;
 export const MIN_TILE_WIDTH = 75;
@@ -71,6 +67,7 @@ export default class TreeDepiction extends React.Component<
           (this.props.currentDomain.subdomains.length * 2 - 1)
       );
     else tileWidth = MAX_TILE_WIDTH;
+
     if (tileWidth < MIN_TILE_WIDTH) tileWidth = MIN_TILE_WIDTH;
     else if (tileWidth > MAX_TILE_WIDTH) tileWidth = MAX_TILE_WIDTH;
 
@@ -80,31 +77,29 @@ export default class TreeDepiction extends React.Component<
 
   // Renders the subdomains + their connectors to the current domain
   subDomains(): ReactNode {
-    let subDomains: SemanticDomainWithSubdomains[] = this.props.currentDomain
+    let subdomains: SemanticDomainWithSubdomains[] = this.props.currentDomain
       .subdomains;
-    if (this.props.currentDomain.subdomains.length > 1)
+    if (subdomains.length > 1)
       return (
         <GridList
-          cols={this.props.currentDomain.subdomains.length * 2 - 1} // # of cells across the joist is
+          cols={subdomains.length * 2 - 1} // # of cells across the joist is
           cellHeight={"auto"}
           spacing={0}
           style={{
-            width:
-              (this.props.currentDomain.subdomains.length * 2 - 1) *
-              this.state.tileWidth,
+            width: (subdomains.length * 2 - 1) * this.state.tileWidth,
           }}
         >
           {/* Content */}
           {this.domainRow()}
 
           {/* Left endcap */}
-          {this.treeTile(endcapL)}
+          {this.treeTile(endcapLeft)}
 
           {/* Add tree branch */}
           {this.joistRow()}
 
           {/* Right endcap */}
-          {this.treeTile(endcapR)}
+          {this.treeTile(endcapRight)}
         </GridList>
       );
     else
@@ -117,7 +112,13 @@ export default class TreeDepiction extends React.Component<
             width: this.state.tileWidth,
           }}
         >
-          <GridListTile>{this.nameTile(subDomains[0])}</GridListTile>
+          <GridListTile>
+            <DomainTile
+              domain={subdomains[0]}
+              onClick={this.props.animate}
+              direction={Direction.Up}
+            />
+          </GridListTile>
           {this.treeTile(pillar)}
         </GridList>
       );
@@ -169,44 +170,18 @@ export default class TreeDepiction extends React.Component<
     ) {
       if (i % 2 === 0) {
         subDomains.push(
-          <GridListTile key={domainIndex + "NameTile"}>
-            {this.nameTile(this.props.currentDomain.subdomains[domainIndex])}
+          <GridListTile key={domainIndex + "DomainTile"}>
+            <DomainTile
+              domain={this.props.currentDomain.subdomains[domainIndex]}
+              onClick={this.props.animate}
+              direction={Direction.Up}
+            />
           </GridListTile>
         );
         domainIndex++;
       } else subDomains.push(<GridListTile key={domainIndex + "DummyTile"} />);
     }
     return subDomains;
-  }
-
-  // Creates a semantic domain tile, which (if navigable) can be clicked on to navigate to that semantic domain
-  nameTile(domain: SemanticDomainWithSubdomains): ReactNode {
-    return (
-      <Button
-        id={domain.id}
-        color={"primary"}
-        variant={"outlined"}
-        disabled={
-          !this.props.currentDomain.parentDomain &&
-          this.props.currentDomain === domain
-        }
-        style={{
-          left: 0,
-          bottom: 0,
-          width: "90%",
-          height: "90%",
-          margin: "5%",
-        }}
-        onClick={() => {
-          this.props.animate(domain);
-        }}
-      >
-        <div style={{ textTransform: "capitalize" }}>
-          <Typography variant={"overline"}>{domain.id}</Typography>
-          <Typography variant={"body1"}>{domain.name}</Typography>
-        </div>
-      </Button>
-    );
   }
 
   // Creates a section of the tree diagram (one of the branches) set to proper dimensions
@@ -248,20 +223,15 @@ export default class TreeDepiction extends React.Component<
             >
               {this.treeTile(parent)}
               <GridListTile>
-                {this.nameTile(this.props.currentDomain.parentDomain)}
+                <DomainTile
+                  domain={this.props.currentDomain.parentDomain}
+                  onClick={this.props.animate}
+                  direction={Direction.Down}
+                />
               </GridListTile>
             </GridList>
           )}
         </Grid>
-        {/* Don't show return symbol on root domain */}
-        {this.props.currentDomain.parentDomain !== undefined && (
-          <img
-            src={ReturnSymbol}
-            alt="Return Symbol"
-            width="40px"
-            height="auto"
-          />
-        )}
       </React.Fragment>
     );
   }
