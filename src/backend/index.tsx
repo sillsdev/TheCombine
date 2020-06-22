@@ -12,7 +12,7 @@ import { UserRole } from "../types/userRole";
 import { RuntimeConfig } from "../types/runtimeConfig";
 import * as LocalStorage from "./localStorage";
 
-const baseURL = RuntimeConfig.getInstance().baseUrl();
+const baseURL = `${RuntimeConfig.getInstance().baseUrl()}/v1`;
 
 const backendServer = axios.create({
   baseURL,
