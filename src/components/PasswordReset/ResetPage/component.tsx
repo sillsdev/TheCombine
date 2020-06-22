@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize,
 } from "react-localize-redux";
 import { RouteComponentProps } from "react-router";
 import {
@@ -72,13 +71,13 @@ export default class PasswordReset extends React.Component<
               }}
             >
               <Typography variant="h5" align="center" gutterBottom>
-                Reset Password
+                <Translate id="passwordReset.resetTitle"/>
               </Typography>
 
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label="Token"
+                  label={<Translate id="passwordReset.tokenLabel"/>}
                   value={this.state.token}
                   style={{ width: "100%" }}
                   margin="normal"
@@ -90,7 +89,7 @@ export default class PasswordReset extends React.Component<
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label="Email"
+                  label={<Translate id="passwordReset.emailLabel"/>}
                   value={this.state.email}
                   style={{ width: "100%" }}
                   margin="normal"
@@ -102,7 +101,7 @@ export default class PasswordReset extends React.Component<
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label="Password"
+                  label={<Translate id="passwordReset.passwordLabel"/>}
                   type="password"
                   value={this.state.password}
                   style={{ width: "100%" }}
@@ -115,7 +114,7 @@ export default class PasswordReset extends React.Component<
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label="Confirm Password"
+                  label={<Translate id="passwordReset.passwordConfLabel"/>}
                   type="password"
                   value={this.state.passwordConfirm}
                   style={{ width: "100%" }}
@@ -136,7 +135,7 @@ export default class PasswordReset extends React.Component<
                       variant="body2"
                       style={{ display: "inline", margin: 24, color: "red" }}
                     >
-                      Failed to reset password
+                      <Translate id="passwordReset.resetFail"/>
                     </Typography>
                   )}
                   <Button
@@ -154,7 +153,7 @@ export default class PasswordReset extends React.Component<
                       );
                     }}
                   >
-                    Submit
+                    <Translate id="passwordReset.submit"/>
                   </Button>
                 </Grid>
               </Grid>

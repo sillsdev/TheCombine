@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   Translate,
   LocalizeContextProps,
-  withLocalize,
 } from "react-localize-redux";
 import { Typography, Card, Button, Grid, TextField } from "@material-ui/core";
 
@@ -33,10 +32,10 @@ export default class ResetRequest extends React.Component<
         <Grid container justify="center">
           <Card style={{ padding: 10, width: 450 }}>
             <Typography variant="h5" align="center">
-              Reset Password Request
+              <Translate id="passwordReset.resetRequestTitle"/>
             </Typography>
             <Typography variant="subtitle1" align="center">
-              We will send a one time reset link for your account to your email
+              <Translate id="passwordReset.resetRequestInstructions"/>
             </Typography>
             <form
               onSubmit={() => this.props.passwordResetRequest(this.state.email)}
@@ -44,7 +43,7 @@ export default class ResetRequest extends React.Component<
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label="Email address"
+                  label={<Translate id="passwordReset.emailLabel"/>}
                   value={this.state.email}
                   style={{ width: "100%" }}
                   margin="normal"
@@ -61,7 +60,7 @@ export default class ResetRequest extends React.Component<
                     this.props.passwordResetRequest(this.state.email)
                   }
                 >
-                  Submit
+                  <Translate id="passwordReset.submit"/>
                 </Button>
               </Grid>
             </form>

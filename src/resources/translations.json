@@ -115,6 +115,23 @@
       "Veuillez entrer un email valide"
     ]
   },
+  "passwordReset": {
+    "resetRequestTitle": [
+      "Reset Password Request",
+      "Restablecer solicitud de contraseña"
+    ],
+    "resetTitle": ["Reset Password", "Restablecer la contraseña"],
+    "tokenLabel": ["Token", "simbólico"],
+    "passwordLabel": ["Password", "contraseña"],
+    "passwordConfLabel": ["Confirm Password", "Confirmar contraseña"],
+    "resetRequestInstructions": [
+      "We will send a one time reset link for your account to your email",
+      "Le enviaremos un enlace de restablecimiento único para su cuenta a su correo electrónico"
+    ],
+    "emailLabel": ["Email address", "Dirección de correo electrónico"],
+    "submit": ["Submit", "Enviar"],
+    "resetFail": ["Failed to reset password", "Error al restablecer contraseña"]
+  },
   "userMenu": {
     "projectSettings": [
       "Project Settings",
@@ -470,7 +487,7 @@
       "Cet objectif n'a pas encore été mis en œuvre"
     ]
   },
-  "buttons": { "done": ["done", "hecho", "achevé"] },
+  "buttons": {"done": ["done", "hecho", "achevé"]},
   "pronunciations": {
     "recordTooltip": [
       "Press and hold to record.",
