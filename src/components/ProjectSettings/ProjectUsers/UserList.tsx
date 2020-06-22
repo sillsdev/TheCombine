@@ -27,7 +27,8 @@ interface UserListProps {
 }
 
 interface UserListState {
-  filteredAllProjects: User[];
+  filterInput: string;
+  filteredNonProjUsers: User[];
   filteredProjUsers: User[];
   hovering: boolean;
   hoverUserID: string;
@@ -39,31 +40,30 @@ class UserList extends React.Component<
 > {
   constructor(props: UserListProps & LocalizeContextProps) {
     super(props);
+
     this.state = {
+      filterInput: "",
       hovering: false,
       hoverUserID: "",
-      filteredAllProjects: [],
+      filteredNonProjUsers: [],
       filteredProjUsers: [],
     };
   }
+  componentWillReceiveProps() {
+    this.handleChange(this.state.filterInput);
+  }
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Variable to hold the filtered list before putting into state
-    let filteredAllUsers: User[] = [];
+  handleChange(event: string) {
+    let filteredNonProjUsers: User[] = [];
     let filteredProjUsers: User[] = [];
 
-    if (event.target.value.length >= 3) {
-      // Use .filter() to determine which items should be displayed
-      // based on the search terms
-      filteredAllUsers = this.props.allUsers.filter((item) => {
-        const name = item.name.toLowerCase();
-        const username = item.username.toLowerCase();
-        const email = item.email.toLowerCase();
-        // change search term to lowercase
-        const filter = event.target.value.toLowerCase();
-        // check to see if the current list item includes the search term
-        // If it does, it will be added to newList. Using lowercase eliminates
-        // issues with capitalization in search terms and search content
+    if (event.length >= 3) {
+      filteredNonProjUsers = this.props.allUsers.filter((user) => {
+        const name = user.name.toLowerCase();
+        const username = user.username.toLowerCase();
+        const email = user.email.toLowerCase();
+        const filter = event.toLowerCase();
+
         return (
           name.includes(filter) ||
           username.includes(filter) ||
@@ -75,11 +75,7 @@ class UserList extends React.Component<
         const name = item.name.toLowerCase();
         const username = item.username.toLowerCase();
         const email = item.email.toLowerCase();
-        // change search term to lowercase
-        const filter = event.target.value.toLowerCase();
-        // check to see if the current list item includes the search term
-        // If it does, it will be added to newList. Using lowercase eliminates
-        // issues with capitalization in search terms and search content
+        const filter = event.toLowerCase();
         return (
           name.includes(filter) ||
           username.includes(filter) ||
@@ -87,12 +83,12 @@ class UserList extends React.Component<
         );
       });
     }
-    // Set the filtered state based on what our rules added to newList
     this.setState({
-      filteredAllProjects: filteredAllUsers,
+      filterInput: event,
+      filteredNonProjUsers: filteredNonProjUsers,
       filteredProjUsers: filteredProjUsers,
     });
-  };
+  }
 
   render() {
     return (
@@ -102,7 +98,7 @@ class UserList extends React.Component<
         </Typography>
         <Input
           type="text"
-          onChange={this.handleChange}
+          onChange={(e) => this.handleChange(e.target.value)}
           placeholder="Search..."
         />
 
@@ -129,7 +125,7 @@ class UserList extends React.Component<
               <ListItemText primary={`${user.name} (${user.username})`} />
             </ListItem>
           ))}
-          {this.state.filteredAllProjects.map((user) => (
+          {this.state.filteredNonProjUsers.map((user) => (
             <ListItem
               key={user.id}
               button

@@ -3,6 +3,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import Modal from "react-modal";
 import { toast, ToastContainer } from "react-toastify";
+//styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
 import {
   addUserRole,

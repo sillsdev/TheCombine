@@ -26,7 +26,9 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
   }
 
   onSubmit = () => {
-    console.log("onSubmit");
+    console.warn(
+      "Should send the message to the corresponding email and show if it was succesful or not."
+    );
   };
 
   /** Updates the state to match the value in a textbox */
