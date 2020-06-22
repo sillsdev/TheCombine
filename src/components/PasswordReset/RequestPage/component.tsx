@@ -1,8 +1,5 @@
 import * as React from "react";
-import {
-  Translate,
-  LocalizeContextProps,
-} from "react-localize-redux";
+import { Translate, LocalizeContextProps } from "react-localize-redux";
 import { Typography, Card, Button, Grid, TextField } from "@material-ui/core";
 
 export interface ResetRequestProps {}
@@ -29,7 +26,7 @@ export default class ResetRequest extends React.Component<
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
     this.props.passwordResetRequest(this.state.email);
     event.preventDefault();
-  }
+  };
 
   render() {
     return (
@@ -37,18 +34,16 @@ export default class ResetRequest extends React.Component<
         <Grid container justify="center">
           <Card style={{ padding: 10, width: 450 }}>
             <Typography variant="h5" align="center">
-              <Translate id="passwordReset.resetRequestTitle"/>
+              <Translate id="passwordReset.resetRequestTitle" />
             </Typography>
             <Typography variant="subtitle1" align="center">
-              <Translate id="passwordReset.resetRequestInstructions"/>
+              <Translate id="passwordReset.resetRequestInstructions" />
             </Typography>
-            <form
-              onSubmit={this.onSubmit}
-            >
+            <form onSubmit={this.onSubmit}>
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label={<Translate id="passwordReset.emailLabel"/>}
+                  label={<Translate id="passwordReset.emailLabel" />}
                   value={this.state.email}
                   style={{ width: "100%" }}
                   margin="normal"
@@ -63,7 +58,7 @@ export default class ResetRequest extends React.Component<
                   color="primary"
                   onClick={this.onSubmit}
                 >
-                  <Translate id="passwordReset.submit"/>
+                  <Translate id="passwordReset.submit" />
                 </Button>
               </Grid>
             </form>

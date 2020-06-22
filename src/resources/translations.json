@@ -487,7 +487,7 @@
       "Cet objectif n'a pas encore été mis en œuvre"
     ]
   },
-  "buttons": {"done": ["done", "hecho", "achevé"]},
+  "buttons": { "done": ["done", "hecho", "achevé"] },
   "pronunciations": {
     "recordTooltip": [
       "Press and hold to record.",
