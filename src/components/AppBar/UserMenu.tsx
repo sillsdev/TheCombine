@@ -1,12 +1,12 @@
 import React from "react";
 import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
-import { ExitToApp, Person, Settings } from "@material-ui/icons";
+import { ExitToApp, Person } from "@material-ui/icons";
 
 import history from "../../history";
 import theme from "../../types/theme";
 import { avatarSrc } from "../../backend";
-import { getCurrentUser, getProjectId } from "../../backend/localStorage";
+import { getCurrentUser } from "../../backend/localStorage";
 
 /**
  * Avatar in appbar with dropdown (Project settings, user settings, log out)
