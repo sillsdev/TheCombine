@@ -3,9 +3,7 @@
     "name": "Universo, la creación",
     "id": "1",
     "description": "Utilice este campo para palabras comunes que tienen que ver con el universo físico. Es posible que algunos idiomas no tengan ni una palabra para el universo y tienen que utilizar frases como: “lluvia, suelo y cosas celestiales”, o “cielo, tierra y agua”, o frases descriptivas tales como: “todo lo que puedes ver” o “todo lo que existe”.",
-    "questions": [
-      "(1) ¿Cómo se le llama a todo lo que podemos ver?"
-    ],
+    "questions": ["(1) ¿Cómo se le llama a todo lo que podemos ver?"],
     "subdomains": [
       {
         "name": "Cielo, atmósfera, firmamento, esfera celeste, espacio celestial, infinito, inmensidad",
@@ -973,9 +971,7 @@
         "name": "Animal",
         "id": "1.6",
         "description": "Utilice este campo para palabras que generalmente tienen que ver con animales.",
-        "questions": [
-          "(1) ¿Cómo se les llama generalmente a los animales?"
-        ],
+        "questions": ["(1) ¿Cómo se les llama generalmente a los animales?"],
         "subdomains": [
           {
             "name": "Clases de animales",
@@ -995,9 +991,7 @@
                 "name": "Mamífero",
                 "id": "1.6.1.1",
                 "description": "Utilice este campo para palabras que generamente tienen que ver con los mamíferos (filum Chordata, clase Mammalia).",
-                "questions": [
-                  "(1) ¿Cómo se le llama a los mamíferos?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a los mamíferos?"],
                 "subdomains": [
                   {
                     "name": "Primate",
@@ -1151,9 +1145,7 @@
                     "name": "Cocodrilo",
                     "id": "1.6.1.3.4",
                     "description": "Utilice este campo para palabras que tienen que ver con los cocodrilos.",
-                    "questions": [
-                      "(1) ¿Qué especies de cocodrilos hay?"
-                    ],
+                    "questions": ["(1) ¿Qué especies de cocodrilos hay?"],
                     "subdomains": []
                   }
                 ]
@@ -1262,9 +1254,7 @@
                 "name": "Partes de un ave",
                 "id": "1.6.2.1",
                 "description": "Utilice este campo para las partes de un ave, pero no las partes generales que pertenecen a todos los animales.",
-                "questions": [
-                  "(1) ¿Cuáles son las partes de un ave?"
-                ],
+                "questions": ["(1) ¿Cuáles son las partes de un ave?"],
                 "subdomains": []
               },
               {
@@ -1282,18 +1272,14 @@
                 "name": "Partes de un pez",
                 "id": "1.6.2.3",
                 "description": "Utilice este campos para las partes de un pez.",
-                "questions": [
-                  "(1) ¿Cuáles son las partes de un pez?"
-                ],
+                "questions": ["(1) ¿Cuáles son las partes de un pez?"],
                 "subdomains": []
               },
               {
                 "name": "Partes de un insecto",
                 "id": "1.6.2.4",
                 "description": "Utilice este campo para las partes de un insecto",
-                "questions": [
-                  "(1) ¿Cuáles son las partes de un insecto?"
-                ],
+                "questions": ["(1) ¿Cuáles son las partes de un insecto?"],
                 "subdomains": []
               },
               {
@@ -1476,9 +1462,7 @@
             "name": "Natural",
             "id": "1.7.1",
             "description": "Utilice este campo para palabras que describan algo que es natural-- algo en el mundo que nos rodea, contrario a lo que ha sido hecho o cambiado por la gente.",
-            "questions": [
-              "(1) ¿Qué palabras describen algo que es natural?"
-            ],
+            "questions": ["(1) ¿Qué palabras describen algo que es natural?"],
             "subdomains": []
           }
         ]
@@ -1625,9 +1609,7 @@
             "name": "Extremidad",
             "id": "2.1.3",
             "description": "Utilice este campo para palabras que tienen que ver generalmente con los brazos y las piernas.",
-            "questions": [
-              "(1) ¿Qué palabras se refieren a una extremidad?"
-            ],
+            "questions": ["(1) ¿Qué palabras se refieren a una extremidad?"],
             "subdomains": [
               {
                 "name": "Brazo",
@@ -2018,9 +2000,7 @@
                 "name": "Apariencia",
                 "id": "2.3.1.8",
                 "description": "Utilice este campo para las palabras que tienen que ver en cómo surge a la vista algo.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a la apariencia de algo?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a la apariencia de algo?"],
                 "subdomains": [
                   {
                     "name": "Beautiful",
@@ -3006,9 +2986,7 @@
                 "name": "Crecer, hacerse grande",
                 "id": "2.6.4.6",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de que la gente, los animales o las plantas crezcan o se hagan grandes.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al hecho de crecer?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al hecho de crecer?"],
                 "subdomains": []
               },
               {
@@ -3108,9 +3086,7 @@
                 "name": "Funeral",
                 "id": "2.6.6.3",
                 "description": "Utilice este campo para palabras que tienen que ver con el funeral.",
-                "questions": [
-                  "(5) ¿Cuál es el proceso de un funeral?"
-                ],
+                "questions": ["(5) ¿Cuál es el proceso de un funeral?"],
                 "subdomains": []
               },
               {
@@ -3274,9 +3250,7 @@
             "name": "Mind",
             "id": "3.2.1",
             "description": "Utilice este campo para palabras comunes que tienen que ver con la mente--la parte pensante de una persona.",
-            "questions": [
-              "(1) ¿Cómo se le llama a la mente?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a la mente?"],
             "subdomains": [
               {
                 "name": "Pensar en",
@@ -5632,9 +5606,7 @@
                 "name": "Fábula, mito",
                 "id": "3.5.4.1",
                 "description": "Utilice este campo para palabras que tienen que ver con una fábula o un mito--un cuento que la gente dice y que no es cierto.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a las fábulas?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a las fábulas?"],
                 "subdomains": []
               },
               {
@@ -5691,9 +5663,7 @@
                 "name": "Tradición oral",
                 "id": "3.5.4.6",
                 "description": "Utilice este campo para palabras que tienen que ver con la tradición oral--algo que los antepasados de uno han dicho de generación en generación.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a una tradición oral?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a una tradición oral?"],
                 "subdomains": []
               }
             ]
@@ -6065,9 +6035,7 @@
             "name": "Materia de enseñanza",
             "id": "3.6.3",
             "description": "Utilice este campo para palabras que tienen que ver con la enseñanza de una materia.",
-            "questions": [
-              "(1) ¿Cómo se le llama a la materia que se enseña?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a la materia que se enseña?"],
             "subdomains": []
           },
           {
@@ -6320,9 +6288,7 @@
             "name": "Inicio de una relación",
             "id": "4.1.7",
             "description": "Utilice este campo para palabras que tienen que ver con el inicio de una relación.",
-            "questions": [
-              "(1) ¿Cómo se le llama al inicio de una relación?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al inicio de una relación?"],
             "subdomains": [
               {
                 "name": "Fin de una relación",
@@ -6663,9 +6629,7 @@
                 "name": "Reunión, asamblea",
                 "id": "4.2.1.5",
                 "description": "Utilice este campo para las palabras que tienen que ver con una reunión.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a una reunión?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a una reunión?"],
                 "subdomains": []
               },
               {
@@ -7076,9 +7040,7 @@
                 "name": "Serio",
                 "id": "4.2.8.1",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de ser serio--no es risueño ni bromista.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al hecho de ser serio?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al hecho de ser serio?"],
                 "subdomains": []
               }
             ]
@@ -7806,17 +7768,13 @@
             "name": "Cultura",
             "id": "4.3.9",
             "description": "Utilice este campo para palabras que generalmente tienen que ver con la cultura--la forma en que un grupo de personas se comportan (tal como una tribu) y que es distinto a otros grupos.",
-            "questions": [
-              "(1) ¿Cómo se le llama generalmente a la cultura?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama generalmente a la cultura?"],
             "subdomains": [
               {
                 "name": "Costumbres",
                 "id": "4.3.9.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con las costumbres--una práctica muy particular de un grupo cultural",
-                "questions": [
-                  "(1) ¿Cómo se le llama a una costumbre?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a una costumbre?"],
                 "subdomains": []
               },
               {
@@ -7911,9 +7869,7 @@
                 "name": "Separado, solo",
                 "id": "4.4.2.5",
                 "description": "Utilice este campo para palabras que que tienen que ver con el hecho de que una persona esté separada o esté sola.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al hecho de estar solo?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al hecho de estar solo?"],
                 "subdomains": []
               },
               {
@@ -8014,9 +7970,7 @@
                 "name": "Sobrevivir",
                 "id": "4.4.3.7",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de sobrevivir--salir delante de una situación de peligro.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al hecho de sobrevivir?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al hecho de sobrevivir?"],
                 "subdomains": []
               }
             ]
@@ -8163,9 +8117,7 @@
         "name": "Autoridad",
         "id": "4.5",
         "description": "Utilice este campo para palabras que tienen que ver con la autoridad.",
-        "questions": [
-          "(1) ¿Cómo se le llama a la autoridad?"
-        ],
+        "questions": ["(1) ¿Cómo se le llama a la autoridad?"],
         "subdomains": [
           {
             "name": "Persona con autoridad",
@@ -8180,9 +8132,7 @@
             "name": "Tener autoridad",
             "id": "4.5.2",
             "description": "Utilice este campo para palabras que tienen que ver con el hecho de tener autoridad.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de tener autoridad?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de tener autoridad?"],
             "subdomains": []
           },
           {
@@ -8489,9 +8439,7 @@
             "name": "Gobernar",
             "id": "4.6.4",
             "description": "Utilice este campo para palabras que tienen que ver con el hecho de gobernar.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de gobernar?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de gobernar?"],
             "subdomains": []
           },
           {
@@ -8636,9 +8584,7 @@
                 "name": "Comunidad",
                 "id": "4.6.7.4",
                 "description": "Utilice este campo para palabras que tienen que ver con una comunidad.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a una comunidad?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a una comunidad?"],
                 "subdomains": []
               }
             ]
@@ -8726,9 +8672,7 @@
             "name": "Trial",
             "id": "4.7.5",
             "description": "Utilice este campo para palabras que tienen que ver con el proceso legal.",
-            "questions": [
-              "(1) ¿Cómo se le llama al proceso legal?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al proceso legal?"],
             "subdomains": [
               {
                 "name": "Investigar un delito",
@@ -8947,17 +8891,13 @@
             "name": "Contrato legal",
             "id": "4.7.8",
             "description": "Utilice este campo para palabras que tienen que ver con un contrato legal.",
-            "questions": [
-              "(1) ¿Cómo se le llama a un contrato legal?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a un contrato legal?"],
             "subdomains": [
               {
                 "name": "Convenio",
                 "id": "4.7.8.1",
                 "description": "Utilice este campo para palabras que tienen que ver con un convenio entre dos personas o un grupo de personas.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a un convenio?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a un convenio?"],
                 "subdomains": []
               },
               {
@@ -8975,9 +8915,7 @@
             "name": "Justicia",
             "id": "4.7.9",
             "description": "Utilice este campo para palabras que tienen que ver con la justicia",
-            "questions": [
-              "(1) ¿Cómo se le llama a la justicia?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a la justicia?"],
             "subdomains": [
               {
                 "name": "Imparcial",
@@ -9137,9 +9075,7 @@
                 "name": "Disturbio",
                 "id": "4.8.2.6",
                 "description": "Utilice este campo para palabras que tienen que ver con un disturbio--cuando mucha gente esta peleando.",
-                "questions": [
-                  "(2) ¿Cómo se le llama a un disturbio?"
-                ],
+                "questions": ["(2) ¿Cómo se le llama a un disturbio?"],
                 "subdomains": []
               },
               {
@@ -9295,9 +9231,7 @@
                     "name": "Fuerte",
                     "id": "4.8.3.6.6",
                     "description": "Utilice este campo para palabras que tienen que ver con un fuerte",
-                    "questions": [
-                      "(1) ¿Cómo se le llama a un fuerte?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama a un fuerte?"],
                     "subdomains": []
                   }
                 ]
@@ -9919,9 +9853,7 @@
     "name": "Vida diaria",
     "id": "5",
     "description": "Utilice este campo para palabras generalmente tienen que ver con la casa en donde viven las personas.",
-    "questions": [
-      "(1) ¿Qué palabras se usa para referir a la vida diaria?"
-    ],
+    "questions": ["(1) ¿Qué palabras se usa para referir a la vida diaria?"],
     "subdomains": [
       {
         "name": "Household equipment",
@@ -9993,9 +9925,7 @@
             "name": "Household decoration",
             "id": "5.1.2",
             "description": "Utilice este campo para palabras que tienen que ver con los adornos/decoraciones para el hogar.",
-            "questions": [
-              "(1) ¿Qué cosas se utilizan para decorar una casa?"
-            ],
+            "questions": ["(1) ¿Qué cosas se utilizan para decorar una casa?"],
             "subdomains": []
           }
         ]
@@ -10004,9 +9934,7 @@
         "name": "Comida",
         "id": "5.2",
         "description": "Utilice este campo para palabras generalmente tienen que ver con la comida.",
-        "questions": [
-          "(1) ¿Cómo se le llama a la comida?"
-        ],
+        "questions": ["(1) ¿Cómo se le llama a la comida?"],
         "subdomains": [
           {
             "name": "Preparación de comida/alimentos",
@@ -10278,9 +10206,7 @@
                     "name": "Alimentos procedentes de frutas",
                     "id": "5.2.3.1.2",
                     "description": "Utilice este campo para palabras que tienen que ver con el con los alimentos procedentes de frutas.",
-                    "questions": [
-                      "(1) ¿Qué clases de frutas son comestibles?"
-                    ],
+                    "questions": ["(1) ¿Qué clases de frutas son comestibles?"],
                     "subdomains": []
                   },
                   {
@@ -10307,9 +10233,7 @@
                     "name": "Alimento procedentes de raíces",
                     "id": "5.2.3.1.5",
                     "description": "Utilice este campo para palabras que tienen que ver con el alimento proveniente de raíces.",
-                    "questions": [
-                      "(1) ¿Qué clases de raíces son comestibles?"
-                    ],
+                    "questions": ["(1) ¿Qué clases de raíces son comestibles?"],
                     "subdomains": []
                   }
                 ]
@@ -10375,18 +10299,14 @@
                     "name": "Azúcar",
                     "id": "5.2.3.3.1",
                     "description": "Utilice este campo para palabras que tienen que ver con el azúcar",
-                    "questions": [
-                      "(1) ¿Cómo se le llama al azúcar?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama al azúcar?"],
                     "subdomains": []
                   },
                   {
                     "name": "Sal",
                     "id": "5.2.3.3.2",
                     "description": "Utilice este campo para palabras que tienen que ver con la sal.",
-                    "questions": [
-                      "(1) ¿Cómo se le llama a la sal?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama a la sal?"],
                     "subdomains": []
                   },
                   {
@@ -10642,9 +10562,7 @@
             "name": "Estilo de ropa",
             "id": "5.3.9",
             "description": "Utilice este campo para palabras que tienen que ver con los estilos de ropa.",
-            "questions": [
-              "(1) ¿Qué palabras describen el estilo de su ropa?"
-            ],
+            "questions": ["(1) ¿Qué palabras describen el estilo de su ropa?"],
             "subdomains": []
           }
         ]
@@ -11120,17 +11038,13 @@
     "name": "Trabajar y Ocupación",
     "id": "6",
     "description": "Utilice este campo para palabras que tienen que ver con el hecho de trabajar.",
-    "questions": [
-      "(1) ¿Cómo se le llama al hecho de trabajar?"
-    ],
+    "questions": ["(1) ¿Cómo se le llama al hecho de trabajar?"],
     "subdomains": [
       {
         "name": "Trabajo",
         "id": "6.1",
         "description": "Utilice este campo para palabras que tienen que ver con el hecho de trabajar.",
-        "questions": [
-          "(1) ¿Cómo se le llama al hecho de trabajar?"
-        ],
+        "questions": ["(1) ¿Cómo se le llama al hecho de trabajar?"],
         "subdomains": [
           {
             "name": "Trabajador",
@@ -11499,9 +11413,7 @@
             "name": "Hecho a mano",
             "id": "6.1.6",
             "description": "Utilice este campo para palabras que describan a lo que es hecho a mano en lugar de una maquinaria.",
-            "questions": [
-              "(1) ¿Qué palabras describen algo hecho a mano?"
-            ],
+            "questions": ["(1) ¿Qué palabras describen algo hecho a mano?"],
             "subdomains": []
           },
           {
@@ -11547,43 +11459,33 @@
             "name": "Cultivo de cosechas",
             "id": "6.2.1",
             "description": "Utilice este campo para palabras que tienen que ver con cultivo de cosechas. Si una cosecha se cultiva extensivamente y hay varias palabras que tienen que ver con ésta, establezca otro campo por separado para ella.",
-            "questions": [
-              "(1) ¿Cómo se le llama al cultivo de cosechas?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al cultivo de cosechas?"],
             "subdomains": [
               {
                 "name": "Cultivo de granos",
                 "id": "6.2.1.1",
                 "description": "Utilice este campo para palabras que tienen que ver con el cultivo de granos; tal como la cebada, el maíz, el mijo, la avena, el arroz, el centeno, el ajonjolí, el sorgo, el trigo, etcétera. Si se cultiva una cosecha extensivamente y hay muchas palabras que tienen que ver con ésta, establezca otro campo por separado para ella. Esto ya se ha hecho para el arroz, el trigo y el maíz, por ser tan conocidos en todo el mundo.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al cultivo granos?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al cultivo granos?"],
                 "subdomains": [
                   {
                     "name": "Cultivo de arroz",
                     "id": "6.2.1.1.1",
                     "description": "Utilice este campo para palabras que tienen que ver con el cultivo de arroz.",
-                    "questions": [
-                      "(1) ¿Cómo se le llama al cultivo de arroz?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama al cultivo de arroz?"],
                     "subdomains": []
                   },
                   {
                     "name": "Cultivo de trigo",
                     "id": "6.2.1.1.2",
                     "description": "Utilice este campo para palabras que tienen que ver con el cultivo del trigo.",
-                    "questions": [
-                      "(1) ¿Cómo se le llama al cultivo de trigo?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama al cultivo de trigo?"],
                     "subdomains": []
                   },
                   {
                     "name": "Cultivo maíz",
                     "id": "6.2.1.1.3",
                     "description": "Utilice este campo para palabras que tienen que ver con el cultivo del maíz",
-                    "questions": [
-                      "(1) ¿Cómo se le llama al cultivo de maíz?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama al cultivo de maíz?"],
                     "subdomains": []
                   }
                 ]
@@ -11592,9 +11494,7 @@
                 "name": "Cultivo de raíces",
                 "id": "6.2.1.2",
                 "description": "Utilice este campo para palabras que tienen que ver con el cultivo de raíces; tal como las remolachas, las zanahorias, la yuca, el ajo, el jengibre, el puerro, mandioca, la cebolla, el maní, las papas, los rábanos, el colinabo, el taro, los nabos y los camotes. Si un cultivo es extensivo y hay muchas palabras que tienen que ver con él, establezca un campo por separado para éste. Esto ya se ha realizado con las papas y la yuca, por ser tan conocidas en todo el mundo.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al cultivo de raíces?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al cultivo de raíces?"],
                 "subdomains": [
                   {
                     "name": "Cultivo de papas",
@@ -11620,26 +11520,20 @@
                 "name": "Cultivo de vegetales",
                 "id": "6.2.1.3",
                 "description": "Utilice este campo para palabras que tienen que ver con el cultivo de vegetales, tal como los espárragos, los frijoles, el brócoli, el repollo, el apio, la acelga, el pepino, las alcachofas, los melones, las alverjas, los pimientos, las calabazas, la espinaca, el cidra cayote, los tomates y las sandías. Si algún tipo de vegetal se cultiva extensivamente y hay varias palabras que tienen con éste, establezca un campo por separado para él.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al cultivo de vegetales?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al cultivo de vegetales?"],
                 "subdomains": []
               },
               {
                 "name": "Cultivo de frutas",
                 "id": "6.2.1.4",
                 "description": "Utilice este campo para palabras que tienen que ver con el cultivo de frutas, tal como las moras, los arándanos, las uvas, las zarzamoras y las fresas. Si alguna fruta se cultiva extensivamente y hay varias palabras que tienen que ver con ella, establezca un campo por separado para ésta. Esto se ha hecho ya con las uvas y los plátanos, por ser tan conocidos en todo el mundo.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al cultivo de frutas?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al cultivo de frutas?"],
                 "subdomains": [
                   {
                     "name": "Cultivo de uvas",
                     "id": "6.2.1.4.1",
                     "description": "Utilice este campo para palabras que tienen que ver con el cultivo de uvas.",
-                    "questions": [
-                      "(1) ¿Cómo se le llama al cultivo de uvas?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama al cultivo de uvas?"],
                     "subdomains": []
                   },
                   {
@@ -11657,9 +11551,7 @@
                 "name": "Cultivo de herbaje",
                 "id": "6.2.1.5",
                 "description": "Utilice este campo para palabras que tienen que ver con el cultivo de herbajes, tal como el césped/pasto/zacate/hierba, el heno, la alfalfa, el bambú, el papiro, la caña de azúcar y tabaco. Si algún tipo de graminácea se cultiva extensivamente y existen varias palabras que tienen que ver con ésta, establezca un campo por separado para ella. Esto se ha hecho ya con la caña de azúcar y el tabaco, por ser tan conocidos en el mundo.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al cultivo de herbaje?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al cultivo de herbaje?"],
                 "subdomains": [
                   {
                     "name": "Cultivo de la caña de azúcar",
@@ -11694,9 +11586,7 @@
                 "name": "Cultivo de árboles",
                 "id": "6.2.1.7",
                 "description": "Utilice este campo para palabras que tienen que ver con el cultivo de árboles. Si alguna clase de árbol se cultiva extensivamente, y existen varias palabras que tienen que ver con éste, defina un campo por separado para él. Esto ya se ha realizado con el cocotero y el cafeto, por ser tan conocidos en el mundo.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al cultivo de árboles?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al cultivo de árboles?"],
                 "subdomains": [
                   {
                     "name": "Cultivo de cocoteros",
@@ -11963,9 +11853,7 @@
             "name": "Granja",
             "id": "6.2.9",
             "description": "Utilice este campo para palabras que tienen que ver con las granjas.",
-            "questions": [
-              "(1) ¿Cómo se le llama a las granjas?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a las granjas?"],
             "subdomains": []
           }
         ]
@@ -12174,9 +12062,7 @@
             "name": "Productos procedentes de animales",
             "id": "6.3.7",
             "description": "Utilice este campo para palabras que tienen que ver con los productos procedentes de animales.",
-            "questions": [
-              "(1) ¿Qué productos se obtienen de los animales?"
-            ],
+            "questions": ["(1) ¿Qué productos se obtienen de los animales?"],
             "subdomains": []
           },
           {
@@ -12259,9 +12145,7 @@
             "name": "Cazar aves",
             "id": "6.4.3",
             "description": "Utilice este campo para palabras que tienen que ver con el hecho de cazar aves.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de cazar aves?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de cazar aves?"],
             "subdomains": []
           },
           {
@@ -12307,9 +12191,7 @@
                 "name": "Equipo de pesca",
                 "id": "6.4.5.3",
                 "description": "Utilice este campo para palabras que tienen que ver con el equipo de pesca.",
-                "questions": [
-                  "(1) ¿Qué equipo se utiliza para atrapar peces?"
-                ],
+                "questions": ["(1) ¿Qué equipo se utiliza para atrapar peces?"],
                 "subdomains": []
               }
             ]
@@ -13017,9 +12899,7 @@
                 "name": "Trabajar en el mar",
                 "id": "6.6.7.4",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de con trabajar en el mar.",
-                "questions": [
-                  "(1) ¿Qué otro trabajo se hace en el mar?"
-                ],
+                "questions": ["(1) ¿Qué otro trabajo se hace en el mar?"],
                 "subdomains": []
               }
             ]
@@ -13065,9 +12945,7 @@
             "name": "Instrumento para cortar",
             "id": "6.7.1",
             "description": "Utilice este campo para palabras que tienen que ver con las herramientas para cortar.",
-            "questions": [
-              "(1) ¿Qué tipos de instrumentos hay para cortar?"
-            ],
+            "questions": ["(1) ¿Qué tipos de instrumentos hay para cortar?"],
             "subdomains": [
               {
                 "name": "Herramientas para perforar",
@@ -13204,9 +13082,7 @@
         "name": "Finanzas",
         "id": "6.8",
         "description": "Utilice este campo para palabras que tienen que ver con finanzas.",
-        "questions": [
-          "(1) ¿Cómo se les llama a las finanzas?"
-        ],
+        "questions": ["(1) ¿Cómo se les llama a las finanzas?"],
         "subdomains": [
           {
             "name": "Tener riqueza",
@@ -13426,9 +13302,7 @@
                 "name": "Vender",
                 "id": "6.8.4.2",
                 "description": "Utilice este campo para palabras que tienen que ver con el hecho de vender algo.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al hehco de vender algo?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al hehco de vender algo?"],
                 "subdomains": []
               },
               {
@@ -13586,9 +13460,7 @@
                 "name": "Crédito",
                 "id": "6.8.5.5",
                 "description": "Utilice este campo para palabras que tienen que ver con el crédito-- cuando una institución de préstamos, como un banco, tiene dinero suyo, de modo que le deben dinero.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al crédito?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al crédito?"],
                 "subdomains": []
               }
             ]
@@ -13597,17 +13469,13 @@
             "name": "Dinero",
             "id": "6.8.6",
             "description": "Utilice este campo para palabras que tienen que ver con el dinero.",
-            "questions": [
-              "(1) ¿Cómo se le llama al dinero?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al dinero?"],
             "subdomains": [
               {
                 "name": "Unidades monetarias",
                 "id": "6.8.6.1",
                 "description": "Utilice este campo para palabras que tienen que ver con las unidades monetarias.",
-                "questions": [
-                  "(1) ¿Cuáles son las unidades de moneda?"
-                ],
+                "questions": ["(1) ¿Cuáles son las unidades de moneda?"],
                 "subdomains": []
               }
             ]
@@ -13616,9 +13484,7 @@
             "name": "Contabilidad",
             "id": "6.8.7",
             "description": "Utilice este campo para palabras que tienen que ver con la contabilidad-- mantener registro del dinero.",
-            "questions": [
-              "(1) ¿Cómo se le llama a la contabilidad?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a la contabilidad?"],
             "subdomains": []
           },
           {
@@ -13798,9 +13664,7 @@
             "name": "Aseguranza",
             "id": "6.9.6",
             "description": "Utilice este campo para palabras que tienen que ver con la aseguranza.",
-            "questions": [
-              "(1) ¿Cómo se le llama a la aseguranza?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a la aseguranza?"],
             "subdomains": []
           }
         ]
@@ -13811,9 +13675,7 @@
     "name": "Actividades Físicas",
     "id": "7",
     "description": "Utilice este campo para palabras que generalmente tienen que ver con las actividades físicas--moverse uno mismo, mover objetos y cambiar objetos",
-    "questions": [
-      "(1) ¿Cómo se les llama a las actividades físicas?"
-    ],
+    "questions": ["(1) ¿Cómo se les llama a las actividades físicas?"],
     "subdomains": [
       {
         "name": "Postura",
@@ -14020,9 +13882,7 @@
                     "name": "Arrastrarse",
                     "id": "7.2.1.1.2",
                     "description": "Utilice este campo para las palabras que tienen que ver con el hecho de gatear--moverse sobre sus manos y rodillas o sobre el abdomen.",
-                    "questions": [
-                      "(1) ¿Cómo se le llama al hecho de gatear?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama al hecho de gatear?"],
                     "subdomains": []
                   },
                   {
@@ -14163,9 +14023,7 @@
                 "name": "Avanzar",
                 "id": "7.2.2.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de avanzar--en la misma dirección que está frente a la persona.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al hecho de avanzar?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al hecho de avanzar?"],
                 "subdomains": []
               },
               {
@@ -14451,9 +14309,7 @@
                     "name": "Nadar",
                     "id": "7.2.4.2.2",
                     "description": "Utilice este campo para las palabras que tienen que ver con el hecho de nadar.",
-                    "questions": [
-                      "(1) ¿Cómo se le llama al hecho de nadar?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama al hecho de nadar?"],
                     "subdomains": []
                   },
                   {
@@ -14520,9 +14376,7 @@
                 "name": "Perderse",
                 "id": "7.2.4.7",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de perderse.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al hecho de perderse?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al hecho de perderse?"],
                 "subdomains": []
               },
               {
@@ -14722,9 +14576,7 @@
                 "name": "Lanzar",
                 "id": "7.3.1.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de lanzar algo.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al hecho de lanzar algo?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al hecho de lanzar algo?"],
                 "subdomains": []
               },
               {
@@ -14945,9 +14797,7 @@
                 "name": "Enviar",
                 "id": "7.3.3.3",
                 "description": "Utilice este campo para las palabras que tienen que ver con el hecho de enviar algo--provocar que alguien lleve algo a cierto lugar.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al hecho de enviar algo?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al hecho de enviar algo?"],
                 "subdomains": []
               },
               {
@@ -15427,9 +15277,7 @@
                 "name": "Lazo, cuerda",
                 "id": "7.5.4.1",
                 "description": "Utilice este campo para las palabras que tienen que ver con un lazo, una cuerda u otra cosa que se utiliza para atar cosas.",
-                "questions": [
-                  "(1) ¿Qué tipo de lazos y cuerdas hay?"
-                ],
+                "questions": ["(1) ¿Qué tipo de lazos y cuerdas hay?"],
                 "subdomains": []
               },
               {
@@ -15566,9 +15414,7 @@
             "name": "Perder, extraviar",
             "id": "7.6.3",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de poner algo en un lugar y no poder encontrarlo nuevamente, o que alguien más mueva algo sin que usted se entere para que no pueda encontrarlo.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de perder algo?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de perder algo?"],
             "subdomains": []
           }
         ]
@@ -15620,18 +15466,14 @@
             "name": "Patear",
             "id": "7.7.3",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de patear--pegarle a algo con el pie. Las palabras de este campo se pueden destacar por la forma en que se mueva el pie, ya sea que se columpia el pie o que primero se dobla la pierna y se endereza inmediatamente después. Pueden destacarse también por el hecho de que el pie se mueva en forma horizontal o vertical, ya sea para mover algo o para dañarlo o qué tan fuerte patea la persona.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de patear algo?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de patear algo?"],
             "subdomains": []
           },
           {
             "name": "Presionar",
             "id": "7.7.4",
             "description": "Utilice este campo para las palabras que sobrevienen que ver con el hecho de presionar algo.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de presionar algo?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de presionar algo?"],
             "subdomains": []
           },
           {
@@ -15650,9 +15492,7 @@
             "name": "Moler",
             "id": "7.7.6",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de moler--frotar algo áspero contra algo más, aplicándole fuerza para quebrarlo o para removerle la superficie.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de moler algo?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de moler algo?"],
             "subdomains": []
           },
           {
@@ -15696,9 +15536,7 @@
             "name": "Agrietar",
             "id": "7.8.2",
             "description": "Utilice este campo para las palabras que tienen que ver con una grieta--una quebradura parcial en algo y que no lo divide completamente en partes.",
-            "questions": [
-              "(1) ¿Cómo se le llama a una grieta?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a una grieta?"],
             "subdomains": []
           },
           {
@@ -15720,9 +15558,7 @@
             "name": "Rasgar, desgarrar",
             "id": "7.8.4",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de rasgar o desgarrar algo.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de rasgar algo?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de rasgar algo?"],
             "subdomains": []
           },
           {
@@ -15766,36 +15602,28 @@
             "name": "Dañar",
             "id": "7.9.1",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de dañar algo--hacerle algo malo a algo, sin arruinarlo completamente, por lo que no se puede volver a utilizar.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de dañar algo?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de dañar algo?"],
             "subdomains": []
           },
           {
             "name": "Derrumbar",
             "id": "7.9.2",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de derrumbar edificios y otras estructuras.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de derrumbar algo?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de derrumbar algo?"],
             "subdomains": []
           },
           {
             "name": "Destruir",
             "id": "7.9.3",
             "description": "Utilice este campo para las palabras que describen algo que está echado a perder.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de destruir algo?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de destruir algo?"],
             "subdomains": []
           },
           {
             "name": "Reparar",
             "id": "7.9.4",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de reparar algo.",
-            "questions": [
-              "(1) ¿Cómo se le llama al hecho de reparar algo?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al hecho de reparar algo?"],
             "subdomains": []
           }
         ]
@@ -16094,9 +15922,7 @@
                 "name": "Promedio",
                 "id": "8.1.5.9",
                 "description": "Utilice este campo para las palabras que tienen que ver con un número promedio.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a un número promedio?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a un número promedio?"],
                 "subdomains": []
               }
             ]
@@ -16198,9 +16024,7 @@
             "name": "Pequeño",
             "id": "8.2.1",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de hacerse pequeño--disminuir en tamaño.",
-            "questions": [
-              "(1) ¿Qué palabras describen a lo que es pequeño?"
-            ],
+            "questions": ["(1) ¿Qué palabras describen a lo que es pequeño?"],
             "subdomains": []
           },
           {
@@ -16260,9 +16084,7 @@
             "name": "Thick",
             "id": "8.2.3",
             "description": "Utilice este campo para las palabras que tienen que ver con el hecho de ser gordo o grueso.",
-            "questions": [
-              "(1) ¿Qué palabras describen algo que es grueso?"
-            ],
+            "questions": ["(1) ¿Qué palabras describen algo que es grueso?"],
             "subdomains": [
               {
                 "name": "Thin thing",
@@ -16396,9 +16218,7 @@
                 "name": "Bajo",
                 "id": "8.2.6.4",
                 "description": "Utilice este campo para las palabras que indican que algo es bajo.",
-                "questions": [
-                  "(3) ¿Qué palabras indican que algo es bajo?"
-                ],
+                "questions": ["(3) ¿Qué palabras indican que algo es bajo?"],
                 "subdomains": []
               },
               {
@@ -16540,9 +16360,7 @@
                 "name": "Punto",
                 "id": "8.3.1.1",
                 "description": "Utilice este campor para las palabras que tienen que ver con un punto --una pequeña marca, la cual se puede hacer con un objeto picudo.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a un punto?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a un punto?"],
                 "subdomains": []
               },
               {
@@ -16891,9 +16709,7 @@
                 "name": "Color",
                 "id": "8.3.3.3",
                 "description": "Utilice este campo para las palabras que describen algo descolorido.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al color?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al color?"],
                 "subdomains": [
                   {
                     "name": "Blanco",
@@ -17055,9 +16871,7 @@
                     "name": "Otro, otros",
                     "id": "8.3.5.2.4",
                     "description": "Utilice este campo para las palabras que tienen que ver con el otro, como en 'la otra persona', 'otra cosa'",
-                    "questions": [
-                      "(1) ¿Cómo se le llama a otra cosa?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama a otra cosa?"],
                     "subdomains": []
                   },
                   {
@@ -17080,9 +16894,7 @@
                 "name": "Común",
                 "id": "8.3.5.3",
                 "description": "Utilice este campo para las palabras que describen algo que es común.",
-                "questions": [
-                  "(1) ¿Qué palabras describen algo que es común?"
-                ],
+                "questions": ["(1) ¿Qué palabras describen algo que es común?"],
                 "subdomains": [
                   {
                     "name": "Usual",
@@ -17430,9 +17242,7 @@
             "name": "Decorado",
             "id": "8.3.8",
             "description": "Utilice este campo para las palabras que describen algo que está decorado.",
-            "questions": [
-              "(2) ¿Cómo se le llama al hecho de decorar algo?"
-            ],
+            "questions": ["(2) ¿Cómo se le llama al hecho de decorar algo?"],
             "subdomains": [
               {
                 "name": "Simple, sencillo",
@@ -17499,9 +17309,7 @@
                     "name": "Noche",
                     "id": "8.4.1.2.1",
                     "description": "Utilice este campo para las palabras que tienen que ver con una hora tardía de la noche.",
-                    "questions": [
-                      "(1) ¿Cómo se le llama a la noche?"
-                    ],
+                    "questions": ["(1) ¿Cómo se le llama a la noche?"],
                     "subdomains": []
                   },
                   {
@@ -17600,9 +17408,7 @@
                 "name": "Era",
                 "id": "8.4.1.7",
                 "description": "Utilice este campo para las palabras que tienen que ve con una era--un período de tiempo bastante extenso.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a una era?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a una era?"],
                 "subdomains": []
               },
               {
@@ -17675,9 +17481,7 @@
             "name": "Tiempo no definido",
             "id": "8.4.3",
             "description": "Utilice este campo para las palabras que tienen que ver con un tiempo indefinido.",
-            "questions": [
-              "(1) ¿Cómo se le llama a un tiempo indefinido?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a un tiempo indefinido?"],
             "subdomains": []
           },
           {
@@ -17975,9 +17779,7 @@
                 "name": "Presente",
                 "id": "8.4.6.3",
                 "description": "Utilice este campo para las palabras que tienen que ver con el tiempo presente.",
-                "questions": [
-                  "(1) ¿Cómo se le llama al presente?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama al presente?"],
                 "subdomains": [
                   {
                     "name": "Ahora",
@@ -18447,9 +18249,7 @@
                 "name": "Punto indefinido",
                 "id": "8.5.1.7",
                 "description": "Utilice este campo para las palabras que indican que algo está en un punto indefinido.",
-                "questions": [
-                  "(1) ¿Cómo se le llama a un punto indefinido?"
-                ],
+                "questions": ["(1) ¿Cómo se le llama a un punto indefinido?"],
                 "subdomains": []
               }
             ]
@@ -18574,9 +18374,7 @@
             "name": "Area",
             "id": "8.5.4",
             "description": "Utilice este campo para las palabras que tienen que ver con un área.",
-            "questions": [
-              "(1) ¿Cómo se le llama a un área?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama a un área?"],
             "subdomains": [
               {
                 "name": "Vecindad",
@@ -19014,9 +18812,7 @@
                 "name": "Palabras interrogantes",
                 "id": "9.2.3.4",
                 "description": "Utilice este campo para los pronombres que se utilizan en preguntas.",
-                "questions": [
-                  "(1) ¿Qué pronombres se utilizan en preguntas?"
-                ],
+                "questions": ["(1) ¿Qué pronombres se utilizan en preguntas?"],
                 "subdomains": []
               },
               {
@@ -19044,9 +18840,7 @@
             "name": "Preposiciones, postposiciones",
             "id": "9.2.4",
             "description": "Utilice este campo para hacer una lista de todas las preposiciones y postposiciones",
-            "questions": [
-              "(1) ¿Qué preposiciones hay en su idioma?"
-            ],
+            "questions": ["(1) ¿Qué preposiciones hay en su idioma?"],
             "subdomains": []
           },
           {
@@ -19068,18 +18862,14 @@
                 "name": "Conjunciones de cláusulas",
                 "id": "9.2.5.2",
                 "description": "Utilice este campo para hacer una lista de todas las conjunciones a nivel de cláusulas--conjunciones que unen dos cláusulas.",
-                "questions": [
-                  "(1) ¿Qué conjunciones unen dos cláusulas?"
-                ],
+                "questions": ["(1) ¿Qué conjunciones unen dos cláusulas?"],
                 "subdomains": []
               },
               {
                 "name": "Conjunciones de oraciones",
                 "id": "9.2.5.3",
                 "description": "Utilice este campo para hacer una lista de todas las conjunciones a nivel de oraciones--conjunciones que unen dos oraciones.",
-                "questions": [
-                  "(1) ¿Qué conjunciones unen dos frases?"
-                ],
+                "questions": ["(1) ¿Qué conjunciones unen dos frases?"],
                 "subdomains": []
               }
             ]
@@ -19224,9 +19014,7 @@
             "name": "Designación de un atributo",
             "id": "9.3.5",
             "description": "Utilice este campo para las palabras que modifican un atributo.",
-            "questions": [
-              "(1) ¿Qué palabras modifican un atributo?"
-            ],
+            "questions": ["(1) ¿Qué palabras modifican un atributo?"],
             "subdomains": []
           }
         ]
@@ -19490,9 +19278,7 @@
                 "name": "Posible",
                 "id": "9.4.4.4",
                 "description": "Utilice este campo para las palabras que utiliza un hablante para indicar que piensa que algo es posible. Tal vez implica que el hablante no sabe algo.",
-                "questions": [
-                  "(1) ¿Qué palabras indican que algo es posible?"
-                ],
+                "questions": ["(1) ¿Qué palabras indican que algo es posible?"],
                 "subdomains": []
               },
               {
@@ -19702,9 +19488,7 @@
         "name": "Caso",
         "id": "9.5",
         "description": "Utilice esta sección para los casos terciarios",
-        "questions": [
-          "(1) ¿Qué palabras se utilizan para referirse al caso?"
-        ],
+        "questions": ["(1) ¿Qué palabras se utilizan para referirse al caso?"],
         "subdomains": [
           {
             "name": "Casos primarios",
@@ -19937,9 +19721,7 @@
                 "name": "Sociedad",
                 "id": "9.6.1.3",
                 "description": "Utilice este campo para las palabras que indican una conexión entre dos cosas.",
-                "questions": [
-                  "(1) ¿Qué palabras indican una sociedad?"
-                ],
+                "questions": ["(1) ¿Qué palabras indican una sociedad?"],
                 "subdomains": []
               },
               {
@@ -19992,27 +19774,21 @@
                 "name": "Disociación",
                 "id": "9.6.1.6",
                 "description": "Utilice este campo para las palabras que indican una relación disociativa entre dos cosas o proposiciones.",
-                "questions": [
-                  "(1) ¿Qué palabras indican una disociación?"
-                ],
+                "questions": ["(1) ¿Qué palabras indican una disociación?"],
                 "subdomains": []
               },
               {
                 "name": "Distribución",
                 "id": "9.6.1.7",
                 "description": "Utilice este campo para las palabras que indican que un acontecimiento se distribuye en todo un grupo, un área, o un lapso de tiempo.",
-                "questions": [
-                  "(1) ¿Qué palabras indican una distribución?"
-                ],
+                "questions": ["(1) ¿Qué palabras indican una distribución?"],
                 "subdomains": []
               },
               {
                 "name": "Equivalencia",
                 "id": "9.6.1.8",
                 "description": "Utilice este campo para las palabras que indican una equivalencia entre dos cosas o proposiciones.",
-                "questions": [
-                  "(1) ¿Qué palabras indican una equivalencia?"
-                ],
+                "questions": ["(1) ¿Qué palabras indican una equivalencia?"],
                 "subdomains": []
               }
             ]
@@ -20304,9 +20080,7 @@
                 "name": "Nombres del clan",
                 "id": "9.7.1.3",
                 "description": "Utilice este campo para los nombres propios de los clanes que existen dentro de la comunidad del idioma. La diferencia entre familia, clan, tribu y nación está basada en ideologías políticas y en sentimientos. Nuestro propósito aquí no es hacer proclamaciones políticas, sino solamente hacer una lista de los nombres. No debe haber diferencia entre familia y clan, en todo caso ignore este campo y utilice el campo de 'Nombres de familia'.",
-                "questions": [
-                  "(1) ¿Cuáles son los nombres de los clanes?"
-                ],
+                "questions": ["(1) ¿Cuáles son los nombres de los clanes?"],
                 "subdomains": []
               },
               {
@@ -20341,9 +20115,7 @@
                 "name": "Términos cariñosos",
                 "id": "9.7.1.7",
                 "description": "Utilice este campo para los términos cariñosos--el nombre que utilizan los amantes o los esposos para expresar amor o intimidad. Es posible que algunos idiomas tengan términos especiales que utilizan los amigos íntimos.",
-                "questions": [
-                  "(1) ¿Cuáles son los términos cariñosos?"
-                ],
+                "questions": ["(1) ¿Cuáles son los términos cariñosos?"],
                 "subdomains": []
               }
             ]
@@ -20352,9 +20124,7 @@
             "name": "Nombre de un lugar",
             "id": "9.7.2",
             "description": "Utilice este campo para las palabras que tienen que ver con el nombre de un lugar.",
-            "questions": [
-              "(1) ¿Cómo se le llama al nombre de un lugar?"
-            ],
+            "questions": ["(1) ¿Cómo se le llama al nombre de un lugar?"],
             "subdomains": [
               {
                 "name": "Nombres de países",

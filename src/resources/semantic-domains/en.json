@@ -3,9 +3,7 @@
     "name": "Universe, creation",
     "id": "1",
     "description": "Use this domain for general words referring to the physical universe. Some languages may not have a single word for the universe and may have to use a phrase such as 'rain, soil, and things of the sky' or 'sky, land, and water' or a descriptive phrase such as 'everything you can see' or 'everything that exists'.",
-    "questions": [
-      "(1) What words refer to everything we can see?"
-    ],
+    "questions": ["(1) What words refer to everything we can see?"],
     "subdomains": [
       {
         "name": "Sky",
@@ -1003,9 +1001,7 @@
         "name": "Animal",
         "id": "1.6",
         "description": "Use this domain for general words referring to animals.",
-        "questions": [
-          "(1) What general words refer to all animals?"
-        ],
+        "questions": ["(1) What general words refer to all animals?"],
         "subdomains": [
           {
             "name": "Types of animals",
@@ -1025,9 +1021,7 @@
                 "name": "Mammal",
                 "id": "1.6.1.1",
                 "description": "Use this domain for general words referring to mammals (phylum Chordata, class Mammalia).",
-                "questions": [
-                  "(1) What general words refer to mammals?"
-                ],
+                "questions": ["(1) What general words refer to mammals?"],
                 "subdomains": [
                   {
                     "name": "Primate",
@@ -1142,9 +1136,7 @@
                 "name": "Reptile",
                 "id": "1.6.1.3",
                 "description": "Use this domain for general words referring to reptiles (phylum Chordata, class Reptilia).",
-                "questions": [
-                  "(1) What general words refer to reptiles?"
-                ],
+                "questions": ["(1) What general words refer to reptiles?"],
                 "subdomains": [
                   {
                     "name": "Snake",
@@ -1181,9 +1173,7 @@
                     "name": "Crocodile",
                     "id": "1.6.1.3.4",
                     "description": "Use this domain for words referring to crocodiles.",
-                    "questions": [
-                      "(1) What species of crocodiles are there?"
-                    ],
+                    "questions": ["(1) What species of crocodiles are there?"],
                     "subdomains": []
                   }
                 ]
@@ -1292,9 +1282,7 @@
                 "name": "Parts of a bird",
                 "id": "1.6.2.1",
                 "description": "Use this domain for the parts of a bird, but not general parts that belong to all animals.",
-                "questions": [
-                  "(1) What are the parts of a bird?"
-                ],
+                "questions": ["(1) What are the parts of a bird?"],
                 "subdomains": []
               },
               {
@@ -1312,18 +1300,14 @@
                 "name": "Parts of a fish",
                 "id": "1.6.2.3",
                 "description": "Use this domain for the parts of a fish.",
-                "questions": [
-                  "(1) What are the parts of fish?"
-                ],
+                "questions": ["(1) What are the parts of fish?"],
                 "subdomains": []
               },
               {
                 "name": "Parts of an insect",
                 "id": "1.6.2.4",
                 "description": "Use this domain for the parts of an insect.",
-                "questions": [
-                  "(1) What are the parts of insects?"
-                ],
+                "questions": ["(1) What are the parts of insects?"],
                 "subdomains": []
               },
               {
@@ -1485,9 +1469,7 @@
             "name": "Male and female animals",
             "id": "1.6.7",
             "description": "Use this domain for words referring to male and female animals. Most languages have special words for the male and female of a species only for domesticated animals. Sometimes there will be a word for the male and not the female, and vice versa (male dog, bitch). Sometimes the word for one is also used generically (cow for both female and generic).",
-            "questions": [
-              "(1) What words refer to a male or female animal?"
-            ],
+            "questions": ["(1) What words refer to a male or female animal?"],
             "subdomains": []
           }
         ]
@@ -1508,9 +1490,7 @@
             "name": "Natural",
             "id": "1.7.1",
             "description": "Use this domain for words describing something that is natural--something in the world around us, as opposed to something that has been made or changed by people.",
-            "questions": [
-              "(1) What words describe something that is natural?"
-            ],
+            "questions": ["(1) What words describe something that is natural?"],
             "subdomains": []
           }
         ]
@@ -1657,9 +1637,7 @@
             "name": "Limb",
             "id": "2.1.3",
             "description": "Use this domain for words referring to a limb--either an arm or a leg.",
-            "questions": [
-              "(1) What words refer to a limb?"
-            ],
+            "questions": ["(1) What words refer to a limb?"],
             "subdomains": [
               {
                 "name": "Arm",
@@ -3810,9 +3788,7 @@
             "name": "Mind",
             "id": "3.2.1",
             "description": "Use this domain for general words referring to the mind--the part of a person that thinks.",
-            "questions": [
-              "(1) What words refer to the mind?"
-            ],
+            "questions": ["(1) What words refer to the mind?"],
             "subdomains": [
               {
                 "name": "Think about",
@@ -3974,18 +3950,14 @@
                 "name": "Solve",
                 "id": "3.2.2.5",
                 "description": "Use this domain for words related to solving something--finding the answer to something that is difficult to understand.",
-                "questions": [
-                  "(1) What words refer to solving something?"
-                ],
+                "questions": ["(1) What words refer to solving something?"],
                 "subdomains": []
               },
               {
                 "name": "Realize",
                 "id": "3.2.2.6",
                 "description": "Use this domain for words related to realizing something.",
-                "questions": [
-                  "(1) What words refer to realizing something?"
-                ],
+                "questions": ["(1) What words refer to realizing something?"],
                 "subdomains": []
               },
               {
@@ -4037,9 +4009,7 @@
                 "name": "Area of knowledge",
                 "id": "3.2.3.2",
                 "description": "Use this domain for words referring to an area of knowledge.",
-                "questions": [
-                  "(1) What words refer to an area of knowledge?"
-                ],
+                "questions": ["(1) What words refer to an area of knowledge?"],
                 "subdomains": []
               },
               {
@@ -4319,9 +4289,7 @@
                 "name": "Memorize",
                 "id": "3.2.6.3",
                 "description": "Use this domain for words referring to memorizing something--to think hard about something so that you will not forget it.",
-                "questions": [
-                  "(1) What words refer to memorizing something?"
-                ],
+                "questions": ["(1) What words refer to memorizing something?"],
                 "subdomains": []
               },
               {
@@ -4361,9 +4329,7 @@
                 "name": "Hopeless",
                 "id": "3.2.7.2",
                 "description": "Use this domain for words related to feeling hopeless--to thinking that nothing good will happen in the future.",
-                "questions": [
-                  "(1) What words refer to feeling hopeless?"
-                ],
+                "questions": ["(1) What words refer to feeling hopeless?"],
                 "subdomains": []
               },
               {
@@ -4505,9 +4471,7 @@
                 "name": "Lust",
                 "id": "3.3.1.8",
                 "description": "Use this domain for words related to lusting for something--to want something bad or forbidden.",
-                "questions": [
-                  "(1) What words refer to lusting for something?"
-                ],
+                "questions": ["(1) What words refer to lusting for something?"],
                 "subdomains": []
               }
             ]
@@ -5548,9 +5512,7 @@
         "name": "Communication",
         "id": "3.5",
         "description": "Use this domain for general words referring to communication of all kinds.",
-        "questions": [
-          "(1) What general words refer to communicating?"
-        ],
+        "questions": ["(1) What general words refer to communicating?"],
         "subdomains": [
           {
             "name": "Say",
@@ -5578,9 +5540,7 @@
                     "name": "Shout",
                     "id": "3.5.1.1.1",
                     "description": "Use this domain for words related to shouting--to speak loudly.",
-                    "questions": [
-                      "(1) What words refer to speaking loudly?"
-                    ],
+                    "questions": ["(1) What words refer to speaking loudly?"],
                     "subdomains": []
                   },
                   {
@@ -5639,9 +5599,7 @@
                     "name": "Speak well",
                     "id": "3.5.1.1.7",
                     "description": "Use this domain for words related to speaking well.",
-                    "questions": [
-                      "(1) What words refer to speaking well?"
-                    ],
+                    "questions": ["(1) What words refer to speaking well?"],
                     "subdomains": []
                   },
                   {
@@ -6096,9 +6054,7 @@
                     "name": "Insult",
                     "id": "3.5.1.8.2",
                     "description": "Use this domain for words related to insulting someone--to say that someone is bad.",
-                    "questions": [
-                      "(1) What words refer to insulting someone?"
-                    ],
+                    "questions": ["(1) What words refer to insulting someone?"],
                     "subdomains": []
                   },
                   {
@@ -6279,9 +6235,7 @@
                 "name": "Fable, myth",
                 "id": "3.5.4.1",
                 "description": "Use this domain for words referring to a fable or myth--a story that people tell that is not true.",
-                "questions": [
-                  "(1) What words refer to fables?"
-                ],
+                "questions": ["(1) What words refer to fables?"],
                 "subdomains": []
               },
               {
@@ -6338,9 +6292,7 @@
                 "name": "Verbal tradition",
                 "id": "3.5.4.6",
                 "description": "Use this domain for words referring to verbal tradition--something that your ancestors told to each successive generation.",
-                "questions": [
-                  "(1) What words refer to verbal tradition?"
-                ],
+                "questions": ["(1) What words refer to verbal tradition?"],
                 "subdomains": []
               }
             ]
@@ -6392,9 +6344,7 @@
                 "name": "Point at",
                 "id": "3.5.6.2",
                 "description": "Use this domain for words related to pointing at something--to move a part of your body toward something so that people will look at it.",
-                "questions": [
-                  "(1) What words refer to indicating something?"
-                ],
+                "questions": ["(1) What words refer to indicating something?"],
                 "subdomains": []
               },
               {
@@ -6559,9 +6509,7 @@
             "name": "Interpreting messages",
             "id": "3.5.8",
             "description": "Use this domain for words referring to interpreting something someone says--to try to understand the meaning of something someone says and express it in other words.",
-            "questions": [
-              "(1) What words refer to interpreting something?"
-            ],
+            "questions": ["(1) What words refer to interpreting something?"],
             "subdomains": [
               {
                 "name": "Meaning",
@@ -6755,18 +6703,14 @@
             "name": "Class, lesson",
             "id": "3.6.4",
             "description": "Use this domain for words related to a class--the period of time when a subject is taught.",
-            "questions": [
-              "(1) What words refer to a class?"
-            ],
+            "questions": ["(1) What words refer to a class?"],
             "subdomains": []
           },
           {
             "name": "Correct",
             "id": "3.6.5",
             "description": "Use this domain for words related to correcting a mistake.",
-            "questions": [
-              "(1) What words refer to correcting a mistake?"
-            ],
+            "questions": ["(1) What words refer to correcting a mistake?"],
             "subdomains": []
           },
           {
@@ -7020,9 +6964,7 @@
             "name": "Begin a relationship",
             "id": "4.1.7",
             "description": "Use this domain for words related to beginning a relationship.",
-            "questions": [
-              "(1) What words refer to beginning a relationship?"
-            ],
+            "questions": ["(1) What words refer to beginning a relationship?"],
             "subdomains": [
               {
                 "name": "End a relationship",
@@ -7299,9 +7241,7 @@
         "name": "Social activity",
         "id": "4.2",
         "description": "Use this domain for general words referring to social activities.",
-        "questions": [
-          "(1) What general words refer to social activities?"
-        ],
+        "questions": ["(1) What general words refer to social activities?"],
         "subdomains": [
           {
             "name": "Come together, form a group",
@@ -7427,9 +7367,7 @@
                     "name": "Join an organization",
                     "id": "4.2.1.8.1",
                     "description": "Use this domain for words related to joining an organization.",
-                    "questions": [
-                      "(1) What words refer to joining a group?"
-                    ],
+                    "questions": ["(1) What words refer to joining a group?"],
                     "subdomains": []
                   },
                   {
@@ -7472,9 +7410,7 @@
             "name": "Social event",
             "id": "4.2.2",
             "description": "Use this domain for words referring to a social event.",
-            "questions": [
-              "(1) What general words refer to a social event?"
-            ],
+            "questions": ["(1) What general words refer to a social event?"],
             "subdomains": [
               {
                 "name": "Ceremony",
@@ -7822,9 +7758,7 @@
                 "name": "Serious",
                 "id": "4.2.8.1",
                 "description": "Use this domain for words related to being serious--not laughing or joking.",
-                "questions": [
-                  "(1) What words refer to being serious?"
-                ],
+                "questions": ["(1) What words refer to being serious?"],
                 "subdomains": []
               }
             ]
@@ -8191,9 +8125,7 @@
                     "name": "Hinder",
                     "id": "4.3.4.2.1",
                     "description": "Use this domain for words related to hindering someone.",
-                    "questions": [
-                      "(1) What words refer to opposing someone?"
-                    ],
+                    "questions": ["(1) What words refer to opposing someone?"],
                     "subdomains": []
                   }
                 ]
@@ -8243,9 +8175,7 @@
                     "name": "Use a person",
                     "id": "4.3.4.4.2",
                     "description": "Use this domain for words related to using someone for your own purpose or gain without helping them.",
-                    "questions": [
-                      "(1) What words refer to using a person?"
-                    ],
+                    "questions": ["(1) What words refer to using a person?"],
                     "subdomains": []
                   }
                 ]
@@ -8568,17 +8498,13 @@
             "name": "Culture",
             "id": "4.3.9",
             "description": "Use this domain for general words referring to culture--the way a group of people (such as a tribe) behaves that is different from other groups.",
-            "questions": [
-              "(1) What general words refer to culture?"
-            ],
+            "questions": ["(1) What general words refer to culture?"],
             "subdomains": [
               {
                 "name": "Custom",
                 "id": "4.3.9.1",
                 "description": "Use this domain for words referring to customs--a particular practice of a cultural group.",
-                "questions": [
-                  "(1) What words refer to a custom?"
-                ],
+                "questions": ["(1) What words refer to a custom?"],
                 "subdomains": []
               },
               {
@@ -8674,9 +8600,7 @@
                 "name": "Separate, alone",
                 "id": "4.4.2.5",
                 "description": "Use this domain for words referring to a person being separate or alone.",
-                "questions": [
-                  "(1) What words refer to being alone?"
-                ],
+                "questions": ["(1) What words refer to being alone?"],
                 "subdomains": []
               },
               {
@@ -8703,9 +8627,7 @@
             "name": "Respond to trouble",
             "id": "4.4.3",
             "description": "Use this domain for words related to responding to trouble.",
-            "questions": [
-              "(1) What does a person do when he is in trouble?"
-            ],
+            "questions": ["(1) What does a person do when he is in trouble?"],
             "subdomains": [
               {
                 "name": "Brave",
@@ -8740,9 +8662,7 @@
                 "name": "Avoid",
                 "id": "4.4.3.3",
                 "description": "Use this domain for words related to avoiding something bad, such as trouble or someone you don't want to meet.",
-                "questions": [
-                  "(1) What words refer to avoiding trouble?"
-                ],
+                "questions": ["(1) What words refer to avoiding trouble?"],
                 "subdomains": []
               },
               {
@@ -8759,27 +8679,21 @@
                 "name": "Solve a problem",
                 "id": "4.4.3.5",
                 "description": "Use this domain for words related to solving a problem.",
-                "questions": [
-                  "(1) What words refer to solving a problem?"
-                ],
+                "questions": ["(1) What words refer to solving a problem?"],
                 "subdomains": []
               },
               {
                 "name": "Endure",
                 "id": "4.4.3.6",
                 "description": "Use this domain for words related to enduring a problem.",
-                "questions": [
-                  "(1) What words refer to enduring a problem?"
-                ],
+                "questions": ["(1) What words refer to enduring a problem?"],
                 "subdomains": []
               },
               {
                 "name": "Survive",
                 "id": "4.4.3.7",
                 "description": "Use this domain for words referring to surviving--to live through a time of danger.",
-                "questions": [
-                  "(1) What words refer to surviving?"
-                ],
+                "questions": ["(1) What words refer to surviving?"],
                 "subdomains": []
               }
             ]
@@ -8873,9 +8787,7 @@
                 "name": "Risk",
                 "id": "4.4.4.8",
                 "description": "Use this domain for words referring to risk--exposing oneself or something to danger.",
-                "questions": [
-                  "(1) What words refer to risking something?"
-                ],
+                "questions": ["(1) What words refer to risking something?"],
                 "subdomains": []
               }
             ]
@@ -8928,35 +8840,27 @@
         "name": "Authority",
         "id": "4.5",
         "description": "Use this domain for words related to authority.",
-        "questions": [
-          "(1) What words refer to authority?"
-        ],
+        "questions": ["(1) What words refer to authority?"],
         "subdomains": [
           {
             "name": "Person in authority",
             "id": "4.5.1",
             "description": "Use this domain for words related to a person in authority.",
-            "questions": [
-              "(1) What words refer to a person in authority?"
-            ],
+            "questions": ["(1) What words refer to a person in authority?"],
             "subdomains": []
           },
           {
             "name": "Have authority",
             "id": "4.5.2",
             "description": "Use this domain for words related to having authority.",
-            "questions": [
-              "(1) What words refer to having authority?"
-            ],
+            "questions": ["(1) What words refer to having authority?"],
             "subdomains": []
           },
           {
             "name": "Exercise authority",
             "id": "4.5.3",
             "description": "Use this domain for words related to exercising authority.",
-            "questions": [
-              "(1) What words refer to exercising authority?"
-            ],
+            "questions": ["(1) What words refer to exercising authority?"],
             "subdomains": [
               {
                 "name": "Lead",
@@ -8982,9 +8886,7 @@
                 "name": "Discipline, train",
                 "id": "4.5.3.3",
                 "description": "Use this domain for words related to disciplining someone.",
-                "questions": [
-                  "(1) What words refer to disciplining someone?"
-                ],
+                "questions": ["(1) What words refer to disciplining someone?"],
                 "subdomains": []
               },
               {
@@ -9003,9 +8905,7 @@
             "name": "Submit to authority",
             "id": "4.5.4",
             "description": "Use this domain for words related to submitting to authority.",
-            "questions": [
-              "(1) What words refer to submitting to authority?"
-            ],
+            "questions": ["(1) What words refer to submitting to authority?"],
             "subdomains": [
               {
                 "name": "Obey",
@@ -9112,9 +9012,7 @@
                 "name": "Lack respect",
                 "id": "4.5.5.2",
                 "description": "Use this domain for words related to lacking respect.",
-                "questions": [
-                  "(1) What words refer to a lack of respect?"
-                ],
+                "questions": ["(1) What words refer to a lack of respect?"],
                 "subdomains": []
               }
             ]
@@ -9248,9 +9146,7 @@
                 "name": "Governing body",
                 "id": "4.6.3.1",
                 "description": "Use this domain for words related to a governing body--an organization within the government.",
-                "questions": [
-                  "(1) What words refer to a governing body?"
-                ],
+                "questions": ["(1) What words refer to a governing body?"],
                 "subdomains": []
               }
             ]
@@ -9259,18 +9155,14 @@
             "name": "Rule",
             "id": "4.6.4",
             "description": "Use this domain for words related to ruling.",
-            "questions": [
-              "(1) What words refer to ruling?"
-            ],
+            "questions": ["(1) What words refer to ruling?"],
             "subdomains": []
           },
           {
             "name": "Subjugate",
             "id": "4.6.5",
             "description": "Use this domain for words related to a person subjugating someone to their authority.",
-            "questions": [
-              "(1) What words refer to subjugating someone?"
-            ],
+            "questions": ["(1) What words refer to subjugating someone?"],
             "subdomains": []
           },
           {
@@ -9409,9 +9301,7 @@
                 "name": "Community",
                 "id": "4.6.7.4",
                 "description": "Use this domain for words related to a community.",
-                "questions": [
-                  "(1) What words refer to a community?"
-                ],
+                "questions": ["(1) What words refer to a community?"],
                 "subdomains": []
               }
             ]
@@ -9545,9 +9435,7 @@
                 "name": "Defend against accusation",
                 "id": "4.7.5.4",
                 "description": "Use this domain for words related to defending someone who has been accused of breaking a law.",
-                "questions": [
-                  "(1) What words refer to defending someone?"
-                ],
+                "questions": ["(1) What words refer to defending someone?"],
                 "subdomains": []
               },
               {
@@ -9574,18 +9462,14 @@
                 "name": "Take oath",
                 "id": "4.7.5.7",
                 "description": "Use this domain for words related to taking an oath.",
-                "questions": [
-                  "(1) What words refer to taking an oath?"
-                ],
+                "questions": ["(1) What words refer to taking an oath?"],
                 "subdomains": []
               },
               {
                 "name": "Vindicate",
                 "id": "4.7.5.8",
                 "description": "Use this domain for words referring to vindicating someone--to prove that someone is innocent of an accusation made against them.",
-                "questions": [
-                  "(1) What words refer to vindicating someone?"
-                ],
+                "questions": ["(1) What words refer to vindicating someone?"],
                 "subdomains": []
               }
             ]
@@ -9652,18 +9536,14 @@
                 "name": "Reward",
                 "id": "4.7.7.1",
                 "description": "Use this domain for words related to rewarding someone.",
-                "questions": [
-                  "(1) What words refer to rewarding someone?"
-                ],
+                "questions": ["(1) What words refer to rewarding someone?"],
                 "subdomains": []
               },
               {
                 "name": "Fine",
                 "id": "4.7.7.2",
                 "description": "Use this domain for words referring to a fine--a payment (usually of money) made to a victim or the government for a crime committed against them.",
-                "questions": [
-                  "(1) What words refer to fining someone?"
-                ],
+                "questions": ["(1) What words refer to fining someone?"],
                 "subdomains": []
               },
               {
@@ -9733,26 +9613,20 @@
             "name": "Legal contract",
             "id": "4.7.8",
             "description": "Use this domain for words related to a legal contract.",
-            "questions": [
-              "(1) What words refer to a legal contract?"
-            ],
+            "questions": ["(1) What words refer to a legal contract?"],
             "subdomains": [
               {
                 "name": "Covenant",
                 "id": "4.7.8.1",
                 "description": "Use this domain for words related to a covenant between two people or groups of people.",
-                "questions": [
-                  "(1) What words refer to a covenant?"
-                ],
+                "questions": ["(1) What words refer to a covenant?"],
                 "subdomains": []
               },
               {
                 "name": "Break a contract",
                 "id": "4.7.8.2",
                 "description": "Use this domain for words related to breaking a contract.",
-                "questions": [
-                  "(1) What words refer to breaking a contract?"
-                ],
+                "questions": ["(1) What words refer to breaking a contract?"],
                 "subdomains": []
               }
             ]
@@ -9761,9 +9635,7 @@
             "name": "Justice",
             "id": "4.7.9",
             "description": "Use this domain for words related to justice.",
-            "questions": [
-              "(1) What words refer to justice?"
-            ],
+            "questions": ["(1) What words refer to justice?"],
             "subdomains": [
               {
                 "name": "Impartial",
@@ -9810,9 +9682,7 @@
                 "name": "Act harshly",
                 "id": "4.7.9.5",
                 "description": "Use this domain for words related to acting harshly.",
-                "questions": [
-                  "(1) What words refer to acting harshly?"
-                ],
+                "questions": ["(1) What words refer to acting harshly?"],
                 "subdomains": []
               },
               {
@@ -10291,9 +10161,7 @@
                 "name": "Renounce claim, concede",
                 "id": "4.8.4.5",
                 "description": "Use this domain for words related to renouncing a claim.",
-                "questions": [
-                  "(1) What words refer to renouncing a claim?"
-                ],
+                "questions": ["(1) What words refer to renouncing a claim?"],
                 "subdomains": []
               },
               {
@@ -10325,9 +10193,7 @@
                 "name": "Forgive",
                 "id": "4.8.4.7",
                 "description": "Use this domain for words related to forgiving someone.",
-                "questions": [
-                  "(1) What words refer to forgiving someone?"
-                ],
+                "questions": ["(1) What words refer to forgiving someone?"],
                 "subdomains": []
               },
               {
@@ -10539,9 +10405,7 @@
             "name": "Practice religion",
             "id": "4.9.5",
             "description": "Use this domain for words related to practicing religion.",
-            "questions": [
-              "(1) What words refer to practicing religion?"
-            ],
+            "questions": ["(1) What words refer to practicing religion?"],
             "subdomains": [
               {
                 "name": "Devout",
@@ -10728,9 +10592,7 @@
                 "name": "Islam",
                 "id": "4.9.7.3",
                 "description": "Use this domain for words used in Islam.",
-                "questions": [
-                  "(1) What words are used to talk about Islam?"
-                ],
+                "questions": ["(1) What words are used to talk about Islam?"],
                 "subdomains": []
               },
               {
@@ -10755,9 +10617,7 @@
                 "name": "Judaism",
                 "id": "4.9.7.6",
                 "description": "Use this domain for words used in Judaism.",
-                "questions": [
-                  "(1) What words are used to talk about Judaism?"
-                ],
+                "questions": ["(1) What words are used to talk about Judaism?"],
                 "subdomains": []
               },
               {
@@ -10835,9 +10695,7 @@
     "name": "Daily life",
     "id": "5",
     "description": "Use this domain for words related to daily life at home.",
-    "questions": [
-      "(1) What words refer to daily life?"
-    ],
+    "questions": ["(1) What words refer to daily life?"],
     "subdomains": [
       {
         "name": "Household equipment",
@@ -10910,9 +10768,7 @@
             "name": "Household decoration",
             "id": "5.1.2",
             "description": "Use this domain for words related to household decorations.",
-            "questions": [
-              "(1) What things are used to decorate a house?"
-            ],
+            "questions": ["(1) What things are used to decorate a house?"],
             "subdomains": []
           }
         ]
@@ -10921,9 +10777,7 @@
         "name": "Food",
         "id": "5.2",
         "description": "Use this domain for general words referring to food.",
-        "questions": [
-          "(1) What general words refer to food?"
-        ],
+        "questions": ["(1) What general words refer to food?"],
         "subdomains": [
           {
             "name": "Food preparation",
@@ -11212,9 +11066,7 @@
                     "name": "Food from fruit",
                     "id": "5.2.3.1.2",
                     "description": "Use this domain for words related to food from fruit.",
-                    "questions": [
-                      "(1) What types of fruit are eaten?"
-                    ],
+                    "questions": ["(1) What types of fruit are eaten?"],
                     "subdomains": []
                   },
                   {
@@ -11241,9 +11093,7 @@
                     "name": "Food from roots",
                     "id": "5.2.3.1.5",
                     "description": "Use this domain for words referring to food from roots.",
-                    "questions": [
-                      "(1) What types of roots are eaten?"
-                    ],
+                    "questions": ["(1) What types of roots are eaten?"],
                     "subdomains": []
                   }
                 ]
@@ -11280,18 +11130,14 @@
                     "name": "Milk products",
                     "id": "5.2.3.2.2",
                     "description": "Use this domain for words related to milk products.",
-                    "questions": [
-                      "(1) What types of milk products are eaten?"
-                    ],
+                    "questions": ["(1) What types of milk products are eaten?"],
                     "subdomains": []
                   },
                   {
                     "name": "Egg dishes",
                     "id": "5.2.3.2.3",
                     "description": "Use this domain for words related to food made from eggs.",
-                    "questions": [
-                      "(1) What words refer to egg dishes?"
-                    ],
+                    "questions": ["(1) What words refer to egg dishes?"],
                     "subdomains": []
                   }
                 ]
@@ -11500,9 +11346,7 @@
             "name": "Men's clothing",
             "id": "5.3.1",
             "description": "Use this domain for words related to men's clothing.",
-            "questions": [
-              "(1) What words refer to pieces of men's clothing?"
-            ],
+            "questions": ["(1) What words refer to pieces of men's clothing?"],
             "subdomains": []
           },
           {
@@ -11645,9 +11489,7 @@
                 "name": "Comb hair",
                 "id": "5.4.3.1",
                 "description": "Use this domain for words related to combing your hair.",
-                "questions": [
-                  "(1) What words refer to combing the hair?"
-                ],
+                "questions": ["(1) What words refer to combing the hair?"],
                 "subdomains": []
               },
               {
@@ -12085,17 +11927,13 @@
     "name": "Work and occupation",
     "id": "6",
     "description": "Use this domain for general words related to working.",
-    "questions": [
-      "(1) What general words refer to work?"
-    ],
+    "questions": ["(1) What general words refer to work?"],
     "subdomains": [
       {
         "name": "Work",
         "id": "6.1",
         "description": "Use this domain for words related to working.",
-        "questions": [
-          "(1) What general words refer to working?"
-        ],
+        "questions": ["(1) What general words refer to working?"],
         "subdomains": [
           {
             "name": "Worker",
@@ -12217,9 +12055,7 @@
                     "name": "Waste",
                     "id": "6.1.2.2.6",
                     "description": "Use this domain for words related to wasting something.",
-                    "questions": [
-                      "(1) What words refer to wasting something?"
-                    ],
+                    "questions": ["(1) What words refer to wasting something?"],
                     "subdomains": []
                   }
                 ]
@@ -12296,9 +12132,7 @@
                 "name": "Work poorly",
                 "id": "6.1.2.4",
                 "description": "Use this domain for words related to working poorly.",
-                "questions": [
-                  "(1) What words refer to working poorly?"
-                ],
+                "questions": ["(1) What words refer to working poorly?"],
                 "subdomains": [
                   {
                     "name": "Careless, irresponsible",
@@ -12323,9 +12157,7 @@
                     "name": "Give up",
                     "id": "6.1.2.4.3",
                     "description": "Use this domain for words related to giving up.",
-                    "questions": [
-                      "(1) What words refer to stopping work?"
-                    ],
+                    "questions": ["(1) What words refer to stopping work?"],
                     "subdomains": []
                   }
                 ]
@@ -12481,18 +12313,14 @@
             "name": "Unemployed, not working",
             "id": "6.1.5",
             "description": "Use this domain for words related to being unemployed.",
-            "questions": [
-              "(1) What words refer to not having a job?"
-            ],
+            "questions": ["(1) What words refer to not having a job?"],
             "subdomains": []
           },
           {
             "name": "Made by hand",
             "id": "6.1.6",
             "description": "Use this domain for words describing something made by hand instead of by a machine.",
-            "questions": [
-              "(1) What words describe something made by hand?"
-            ],
+            "questions": ["(1) What words describe something made by hand?"],
             "subdomains": []
           },
           {
@@ -12509,9 +12337,7 @@
             "name": "Experienced",
             "id": "6.1.8",
             "description": "Use this domain for words related to being experienced at doing something.",
-            "questions": [
-              "(1) What words refer to being experienced?"
-            ],
+            "questions": ["(1) What words refer to being experienced?"],
             "subdomains": [
               {
                 "name": "Accustomed to",
@@ -12530,9 +12356,7 @@
         "name": "Agriculture",
         "id": "6.2",
         "description": "Use this domain for words related to agriculture--working with plants.",
-        "questions": [
-          "(1) What general words refer to working with plants?"
-        ],
+        "questions": ["(1) What general words refer to working with plants?"],
         "subdomains": [
           {
             "name": "Growing crops",
@@ -12547,35 +12371,27 @@
                 "name": "Growing grain",
                 "id": "6.2.1.1",
                 "description": "Use this domain for general words related to growing grain crops such as barley, maize (corn), millet, oats, rice, rye, sesame, sorghum, and wheat. If one crop is cultivated extensively and there are many words related to it, set up a separate domain for it. This has already been done for rice, wheat, and maize, since they are so common around the world.",
-                "questions": [
-                  "(1) What words refer to growing grain?"
-                ],
+                "questions": ["(1) What words refer to growing grain?"],
                 "subdomains": [
                   {
                     "name": "Growing rice",
                     "id": "6.2.1.1.1",
                     "description": "Use this domain for words related to growing rice.",
-                    "questions": [
-                      "(1) What words refer to growing rice?"
-                    ],
+                    "questions": ["(1) What words refer to growing rice?"],
                     "subdomains": []
                   },
                   {
                     "name": "Growing wheat",
                     "id": "6.2.1.1.2",
                     "description": "Use this domain for words related to growing wheat.",
-                    "questions": [
-                      "(1) What words refer to growing wheat?"
-                    ],
+                    "questions": ["(1) What words refer to growing wheat?"],
                     "subdomains": []
                   },
                   {
                     "name": "Growing maize",
                     "id": "6.2.1.1.3",
                     "description": "Use this domain for words related to growing maize.",
-                    "questions": [
-                      "(1) What words refer to growing maize?"
-                    ],
+                    "questions": ["(1) What words refer to growing maize?"],
                     "subdomains": []
                   }
                 ]
@@ -12584,26 +12400,20 @@
                 "name": "Growing roots",
                 "id": "6.2.1.2",
                 "description": "Use this domain for words related to growing root crops such as beets, carrots, cassava, garlic, ginger, leeks, manioc, onions, peanuts, potatoes, radishes, rutabagas, taro, turnips, and yams. If one crop is cultivated extensively and there are many words related to it, set up a separate domain for it. This has already been done for potatoes and cassava, since they are so common around the world.",
-                "questions": [
-                  "(1) What words refer to growing roots?"
-                ],
+                "questions": ["(1) What words refer to growing roots?"],
                 "subdomains": [
                   {
                     "name": "Growing potatoes",
                     "id": "6.2.1.2.1",
                     "description": "Use this domain for words related to growing potatoes.",
-                    "questions": [
-                      "(1) What words refer to growing potatoes?"
-                    ],
+                    "questions": ["(1) What words refer to growing potatoes?"],
                     "subdomains": []
                   },
                   {
                     "name": "Growing cassava",
                     "id": "6.2.1.2.2",
                     "description": "Use this domain for words related to growing cassava.",
-                    "questions": [
-                      "(1) What words refer to growing cassava?"
-                    ],
+                    "questions": ["(1) What words refer to growing cassava?"],
                     "subdomains": []
                   }
                 ]
@@ -12612,35 +12422,27 @@
                 "name": "Growing vegetables",
                 "id": "6.2.1.3",
                 "description": "Use this domain for words related to growing vegetables, such as asparagus, beans, broccoli, cabbage, celery, chard, cucumbers, eggplant, melons, peas, peppers, pumpkins, spinach, squash, tomatoes, and watermelons. If one type of vegetable is cultivated extensively and there are many words related to it, set up a separate domain for it.",
-                "questions": [
-                  "(1) What words refer to growing vegetables?"
-                ],
+                "questions": ["(1) What words refer to growing vegetables?"],
                 "subdomains": []
               },
               {
                 "name": "Growing fruit",
                 "id": "6.2.1.4",
                 "description": "Use this domain for words related to growing fruit, such as berries, cranberries, grapes, raspberries, and strawberries. If one type of fruit is cultivated extensively and there are many words related to it, set up a separate domain for it. This has already been done for grapes and bananas, since they are so common around the world.",
-                "questions": [
-                  "(1) What words refer to growing fruit?"
-                ],
+                "questions": ["(1) What words refer to growing fruit?"],
                 "subdomains": [
                   {
                     "name": "Growing grapes",
                     "id": "6.2.1.4.1",
                     "description": "Use this domain for words related to growing grapes.",
-                    "questions": [
-                      "(1) What words refer to growing grapes?"
-                    ],
+                    "questions": ["(1) What words refer to growing grapes?"],
                     "subdomains": []
                   },
                   {
                     "name": "Growing bananas",
                     "id": "6.2.1.4.2",
                     "description": "Use this domain for words related to growing bananas.",
-                    "questions": [
-                      "(1) What words refer to growing bananas?"
-                    ],
+                    "questions": ["(1) What words refer to growing bananas?"],
                     "subdomains": []
                   }
                 ]
@@ -12649,26 +12451,20 @@
                 "name": "Growing grass",
                 "id": "6.2.1.5",
                 "description": "Use this domain for words related to growing grass, such as sod, hay, alfalfa, bamboo, papyrus, sugarcane, and tobacco. If one type of grass is cultivated extensively and there are many words related to it, set up a separate domain for it. This has already been done for sugarcane and tobacco, since they are so common around the world.",
-                "questions": [
-                  "(1) What words refer to growing grass?"
-                ],
+                "questions": ["(1) What words refer to growing grass?"],
                 "subdomains": [
                   {
                     "name": "Growing sugarcane",
                     "id": "6.2.1.5.1",
                     "description": "Use this domain for words related to growing sugarcane.",
-                    "questions": [
-                      "(1) What words refer to growing sugarcane?"
-                    ],
+                    "questions": ["(1) What words refer to growing sugarcane?"],
                     "subdomains": []
                   },
                   {
                     "name": "Growing tobacco",
                     "id": "6.2.1.5.2",
                     "description": "Use this domain for words related to growing tobacco.",
-                    "questions": [
-                      "(1) What words refer to growing tobacco?"
-                    ],
+                    "questions": ["(1) What words refer to growing tobacco?"],
                     "subdomains": []
                   }
                 ]
@@ -12677,35 +12473,27 @@
                 "name": "Growing flowers",
                 "id": "6.2.1.6",
                 "description": "Use this domain for words related to growing flowers. If one type of flower is cultivated extensively and there are many words related to it, set up a separate domain for it.",
-                "questions": [
-                  "(1) What words refer to growing flowers?"
-                ],
+                "questions": ["(1) What words refer to growing flowers?"],
                 "subdomains": []
               },
               {
                 "name": "Growing trees",
                 "id": "6.2.1.7",
                 "description": "Use this domain for words related to growing trees. If one crop is cultivated extensively and there are many words related to it, set up a separate domain for it. This has already been done for coconuts and coffee, since they are so common around the world.",
-                "questions": [
-                  "(1) What words refer to growing trees?"
-                ],
+                "questions": ["(1) What words refer to growing trees?"],
                 "subdomains": [
                   {
                     "name": "Growing coconuts",
                     "id": "6.2.1.7.1",
                     "description": "Use this domain for words related to growing coconuts.",
-                    "questions": [
-                      "(1) What words refer to growing coconuts?"
-                    ],
+                    "questions": ["(1) What words refer to growing coconuts?"],
                     "subdomains": []
                   },
                   {
                     "name": "Growing coffee",
                     "id": "6.2.1.7.2",
                     "description": "Use this domain for words related to growing coffee.",
-                    "questions": [
-                      "(1) What words refer to growing coffee?"
-                    ],
+                    "questions": ["(1) What words refer to growing coffee?"],
                     "subdomains": []
                   }
                 ]
@@ -12725,27 +12513,21 @@
                 "name": "Clear a field",
                 "id": "6.2.2.1",
                 "description": "Use this domain for words related to clearing a field.",
-                "questions": [
-                  "(1) What words refer to clearing a field?"
-                ],
+                "questions": ["(1) What words refer to clearing a field?"],
                 "subdomains": []
               },
               {
                 "name": "Plow a field",
                 "id": "6.2.2.2",
                 "description": "Use this domain for words related to plowing a field.",
-                "questions": [
-                  "(1) What words refer to plowing a field?"
-                ],
+                "questions": ["(1) What words refer to plowing a field?"],
                 "subdomains": []
               },
               {
                 "name": "Fertilize a field",
                 "id": "6.2.2.3",
                 "description": "Use this domain for words related to fertilizing a field.",
-                "questions": [
-                  "(1) What words refer to fertilizing a field?"
-                ],
+                "questions": ["(1) What words refer to fertilizing a field?"],
                 "subdomains": []
               }
             ]
@@ -12814,9 +12596,7 @@
                 "name": "Neglect plants",
                 "id": "6.2.4.5",
                 "description": "Use this domain for words related to neglecting plants.",
-                "questions": [
-                  "(1) What words refer to neglecting plants?"
-                ],
+                "questions": ["(1) What words refer to neglecting plants?"],
                 "subdomains": []
               }
             ]
@@ -12859,9 +12639,7 @@
                 "name": "Gather wild plants",
                 "id": "6.2.5.3",
                 "description": "Use this domain for words related to gathering wild plants. In a hunter-gatherer culture this domain might need to be extensively developed.",
-                "questions": [
-                  "(1) What words refer to gathering wild plants?"
-                ],
+                "questions": ["(1) What words refer to gathering wild plants?"],
                 "subdomains": []
               },
               {
@@ -12883,17 +12661,13 @@
             "name": "Process harvest",
             "id": "6.2.6",
             "description": "Use this domain for words related to processing the harvest.",
-            "questions": [
-              "(1) What words refer to processing the harvest?"
-            ],
+            "questions": ["(1) What words refer to processing the harvest?"],
             "subdomains": [
               {
                 "name": "Winnow grain",
                 "id": "6.2.6.1",
                 "description": "Use this domain for words related to winnowing grain--to separate the chaff from the grain.",
-                "questions": [
-                  "(1) What words refer to winnowing grain?"
-                ],
+                "questions": ["(1) What words refer to winnowing grain?"],
                 "subdomains": []
               },
               {
@@ -12957,9 +12731,7 @@
             "name": "Farmland",
             "id": "6.2.9",
             "description": "Use this domain for words related to farmland.",
-            "questions": [
-              "(1) What words refer to farmland?"
-            ],
+            "questions": ["(1) What words refer to farmland?"],
             "subdomains": []
           }
         ]
@@ -13116,9 +12888,7 @@
             "name": "Milk",
             "id": "6.3.3",
             "description": "Use this domain for words related to milking an animal.",
-            "questions": [
-              "(1) What words refer to milking an animal?"
-            ],
+            "questions": ["(1) What words refer to milking an animal?"],
             "subdomains": []
           },
           {
@@ -13171,26 +12941,20 @@
             "name": "Animal products",
             "id": "6.3.7",
             "description": "Use this domain for words related to animal products.",
-            "questions": [
-              "(1) What useful things are produced by animals?"
-            ],
+            "questions": ["(1) What useful things are produced by animals?"],
             "subdomains": []
           },
           {
             "name": "Veterinary science",
             "id": "6.3.8",
             "description": "Use this domain for words related to treating animal diseases.",
-            "questions": [
-              "(1) What words refer to treating animal diseases?"
-            ],
+            "questions": ["(1) What words refer to treating animal diseases?"],
             "subdomains": [
               {
                 "name": "Animal diseases",
                 "id": "6.3.8.1",
                 "description": "Use this domain for words related to animal diseases.",
-                "questions": [
-                  "(1) What types of animal diseases are there?"
-                ],
+                "questions": ["(1) What types of animal diseases are there?"],
                 "subdomains": []
               },
               {
@@ -13211,9 +12975,7 @@
         "name": "Hunt and fish",
         "id": "6.4",
         "description": "Use this domain for words related to hunting and fishing--catching and killing wild animals.",
-        "questions": [
-          "(1) What general words refer to hunting wild animals?"
-        ],
+        "questions": ["(1) What general words refer to hunting wild animals?"],
         "subdomains": [
           {
             "name": "Hunt",
@@ -13256,9 +13018,7 @@
             "name": "Hunting birds",
             "id": "6.4.3",
             "description": "Use this domain for words related to hunting birds.",
-            "questions": [
-              "(1) What words refer to hunting birds?"
-            ],
+            "questions": ["(1) What words refer to hunting birds?"],
             "subdomains": []
           },
           {
@@ -13305,9 +13065,7 @@
                 "name": "Fishing equipment",
                 "id": "6.4.5.3",
                 "description": "Use this domain for words related to fishing equipment.",
-                "questions": [
-                  "(1) What equipment is used to catch fish?"
-                ],
+                "questions": ["(1) What equipment is used to catch fish?"],
                 "subdomains": []
               }
             ]
@@ -13708,9 +13466,7 @@
             "name": "Working with minerals",
             "id": "6.6.2",
             "description": "Use this domain for words related to working with minerals.",
-            "questions": [
-              "(1) What words refer to working with minerals?"
-            ],
+            "questions": ["(1) What words refer to working with minerals?"],
             "subdomains": [
               {
                 "name": "Mining",
@@ -14068,9 +13824,7 @@
                 "name": "Working in the sea",
                 "id": "6.6.7.4",
                 "description": "Use this domain for words related to working in the sea.",
-                "questions": [
-                  "(1) What other work is done in the sea?"
-                ],
+                "questions": ["(1) What other work is done in the sea?"],
                 "subdomains": []
               }
             ]
@@ -14117,9 +13871,7 @@
             "name": "Cutting tool",
             "id": "6.7.1",
             "description": "Use this domain for words related to cutting tools.",
-            "questions": [
-              "(1) What types of cutting tools are there?"
-            ],
+            "questions": ["(1) What types of cutting tools are there?"],
             "subdomains": [
               {
                 "name": "Poking tool",
@@ -14187,9 +13939,7 @@
             "name": "Holding tool",
             "id": "6.7.6",
             "description": "Use this domain for words related to holding tools--tools used to grip and hold things so that they don't move, and tools used to hold things that you can't hold with your hand, such as very hot things.",
-            "questions": [
-              "(1) What tools are used for holding things?"
-            ],
+            "questions": ["(1) What tools are used for holding things?"],
             "subdomains": []
           },
           {
@@ -14258,9 +14008,7 @@
         "name": "Finance",
         "id": "6.8",
         "description": "Use this domain for words related to finance.",
-        "questions": [
-          "(1) What words refer to finance?"
-        ],
+        "questions": ["(1) What words refer to finance?"],
         "subdomains": [
           {
             "name": "Have wealth",
@@ -14337,17 +14085,13 @@
             "name": "Accumulate wealth",
             "id": "6.8.2",
             "description": "Use this domain for words related to accumulating wealth.",
-            "questions": [
-              "(1) What words refer to accumulating wealth?"
-            ],
+            "questions": ["(1) What words refer to accumulating wealth?"],
             "subdomains": [
               {
                 "name": "Produce wealth",
                 "id": "6.8.2.1",
                 "description": "Use this domain for words related to producing wealth.",
-                "questions": [
-                  "(1) What words refer to producing wealth?"
-                ],
+                "questions": ["(1) What words refer to producing wealth?"],
                 "subdomains": []
               },
               {
@@ -14364,9 +14108,7 @@
                 "name": "Lose wealth",
                 "id": "6.8.2.3",
                 "description": "Use this domain for words related to losing wealth.",
-                "questions": [
-                  "(1) What words refer to losing wealth?"
-                ],
+                "questions": ["(1) What words refer to losing wealth?"],
                 "subdomains": []
               },
               {
@@ -14383,9 +14125,7 @@
                 "name": "Greedy",
                 "id": "6.8.2.5",
                 "description": "Use this domain for words related to being greedy.",
-                "questions": [
-                  "(1) What words refer to wanting more money?"
-                ],
+                "questions": ["(1) What words refer to wanting more money?"],
                 "subdomains": []
               },
               {
@@ -14442,9 +14182,7 @@
                 "name": "Generous",
                 "id": "6.8.3.2",
                 "description": "Use this domain for words related to being generous.",
-                "questions": [
-                  "(1) What words refer to being generous?"
-                ],
+                "questions": ["(1) What words refer to being generous?"],
                 "subdomains": []
               },
               {
@@ -14495,9 +14233,7 @@
                 "name": "Sell",
                 "id": "6.8.4.2",
                 "description": "Use this domain for words related to selling something.",
-                "questions": [
-                  "(1) What words refer to selling something?"
-                ],
+                "questions": ["(1) What words refer to selling something?"],
                 "subdomains": []
               },
               {
@@ -14621,9 +14357,7 @@
                 "name": "Lend",
                 "id": "6.8.5.1",
                 "description": "Use this domain for words related to lending something.",
-                "questions": [
-                  "(1) What words refer to lending something?"
-                ],
+                "questions": ["(1) What words refer to lending something?"],
                 "subdomains": []
               },
               {
@@ -14649,18 +14383,14 @@
                 "name": "Repay debt",
                 "id": "6.8.5.4",
                 "description": "Use this domain for words related to repaying a debt.",
-                "questions": [
-                  "(1) What words refer to repaying a debt?"
-                ],
+                "questions": ["(1) What words refer to repaying a debt?"],
                 "subdomains": []
               },
               {
                 "name": "Credit",
                 "id": "6.8.5.5",
                 "description": "Use this domain for words referring to credit--when a lending institution, such as a bank, has some of your money, so they owe you something.",
-                "questions": [
-                  "(1) What words refer to credit?"
-                ],
+                "questions": ["(1) What words refer to credit?"],
                 "subdomains": []
               }
             ]
@@ -14669,17 +14399,13 @@
             "name": "Money",
             "id": "6.8.6",
             "description": "Use this domain for words related to money.",
-            "questions": [
-              "(1) What words refer to money?"
-            ],
+            "questions": ["(1) What words refer to money?"],
             "subdomains": [
               {
                 "name": "Monetary units",
                 "id": "6.8.6.1",
                 "description": "Use this domain for words related to monetary units.",
-                "questions": [
-                  "(1) What are the units of currency?"
-                ],
+                "questions": ["(1) What are the units of currency?"],
                 "subdomains": []
               }
             ]
@@ -14688,9 +14414,7 @@
             "name": "Accounting",
             "id": "6.8.7",
             "description": "Use this domain for words related to accounting--to keep records of money.",
-            "questions": [
-              "(1) What words refer to accounting?"
-            ],
+            "questions": ["(1) What words refer to accounting?"],
             "subdomains": []
           },
           {
@@ -14743,18 +14467,14 @@
                 "name": "Cheat",
                 "id": "6.8.9.2",
                 "description": "Use this domain for words related to cheating someone.",
-                "questions": [
-                  "(1) What words refer to cheating someone?"
-                ],
+                "questions": ["(1) What words refer to cheating someone?"],
                 "subdomains": []
               },
               {
                 "name": "Extort money",
                 "id": "6.8.9.3",
                 "description": "Use this domain for words related to extorting money--forcing someone to give you money on a regular basis by threatening them with some harm.",
-                "questions": [
-                  "(1) What words refer to extorting money?"
-                ],
+                "questions": ["(1) What words refer to extorting money?"],
                 "subdomains": []
               },
               {
@@ -14806,9 +14526,7 @@
             "name": "Management",
             "id": "6.9.1",
             "description": "Use this domain for words related to managing something.",
-            "questions": [
-              "(1) What words refer to managing something?"
-            ],
+            "questions": ["(1) What words refer to managing something?"],
             "subdomains": []
           },
           {
@@ -14871,9 +14589,7 @@
             "name": "Insurance",
             "id": "6.9.6",
             "description": "Use this domain for words related to insurance.",
-            "questions": [
-              "(1) What words refer to insurance?"
-            ],
+            "questions": ["(1) What words refer to insurance?"],
             "subdomains": []
           }
         ]
@@ -14884,9 +14600,7 @@
     "name": "Physical actions",
     "id": "7",
     "description": "Use this domain for general words for physical actions--moving yourself, moving things, and changing things.",
-    "questions": [
-      "(1) What general words refer to physical actions?"
-    ],
+    "questions": ["(1) What general words refer to physical actions?"],
     "subdomains": [
       {
         "name": "Posture",
@@ -15095,9 +14809,7 @@
                     "name": "Crawl",
                     "id": "7.2.1.1.2",
                     "description": "Use this domain for words referring to crawling--moving on your hands and knees or on your stomach.",
-                    "questions": [
-                      "(1) What words refer to crawling?"
-                    ],
+                    "questions": ["(1) What words refer to crawling?"],
                     "subdomains": []
                   },
                   {
@@ -15252,9 +14964,7 @@
                 "name": "Move forward",
                 "id": "7.2.2.1",
                 "description": "Use this domain for words referring to moving in a forward direction--in the same direction the person is facing.",
-                "questions": [
-                  "(1) What words refer to moving forward?"
-                ],
+                "questions": ["(1) What words refer to moving forward?"],
                 "subdomains": []
               },
               {
@@ -15270,9 +14980,7 @@
                 "name": "Move sideways",
                 "id": "7.2.2.3",
                 "description": "Use this domain for words referring to moving in a sideways direction--the person is facing one direction, but moving toward their side.",
-                "questions": [
-                  "(1) What words refer to moving sideways?"
-                ],
+                "questions": ["(1) What words refer to moving sideways?"],
                 "subdomains": []
               },
               {
@@ -15367,9 +15075,7 @@
                 "name": "Move straight without turning",
                 "id": "7.2.2.9",
                 "description": "Use this domain for words referring to moving straight without changing direction.",
-                "questions": [
-                  "(1) What words refer to moving straight?"
-                ],
+                "questions": ["(1) What words refer to moving straight?"],
                 "subdomains": []
               }
             ]
@@ -15419,9 +15125,7 @@
                 "name": "Leave",
                 "id": "7.2.3.3",
                 "description": "Use this domain for words referring to moving away from a place.",
-                "questions": [
-                  "(1) What words refer to leaving a place?"
-                ],
+                "questions": ["(1) What words refer to leaving a place?"],
                 "subdomains": [
                   {
                     "name": "Arrive",
@@ -15473,9 +15177,7 @@
                 "name": "Return",
                 "id": "7.2.3.6",
                 "description": "Use this domain for words referring to returning to a place--to go back to a place you earlier left.",
-                "questions": [
-                  "(1) What words refer to returning to a place?"
-                ],
+                "questions": ["(1) What words refer to returning to a place?"],
                 "subdomains": []
               }
             ]
@@ -15568,9 +15270,7 @@
                     "name": "Swim",
                     "id": "7.2.4.2.2",
                     "description": "Use this domain for words related to swimming.",
-                    "questions": [
-                      "(1) What words refer to swimming?"
-                    ],
+                    "questions": ["(1) What words refer to swimming?"],
                     "subdomains": []
                   },
                   {
@@ -15644,9 +15344,7 @@
                 "name": "Lose your way",
                 "id": "7.2.4.7",
                 "description": "Use this domain for words related to losing your way.",
-                "questions": [
-                  "(1) What words refer to losing your way?"
-                ],
+                "questions": ["(1) What words refer to losing your way?"],
                 "subdomains": []
               },
               {
@@ -15814,9 +15512,7 @@
                 "name": "Stop moving",
                 "id": "7.2.7.1",
                 "description": "Use this domain for words referring to stopping moving.",
-                "questions": [
-                  "(1) What words refer to stopping moving?"
-                ],
+                "questions": ["(1) What words refer to stopping moving?"],
                 "subdomains": []
               },
               {
@@ -15908,18 +15604,14 @@
                 "name": "Catch",
                 "id": "7.3.1.2",
                 "description": "Use this domain for verbs for catching something that is thrown or dropped",
-                "questions": [
-                  "(1) What words refer to catching something?"
-                ],
+                "questions": ["(1) What words refer to catching something?"],
                 "subdomains": []
               },
               {
                 "name": "Shake",
                 "id": "7.3.1.3",
                 "description": "Use this domain for words referring to moving something back and forth.",
-                "questions": [
-                  "(1) What words refer to shaking something?"
-                ],
+                "questions": ["(1) What words refer to shaking something?"],
                 "subdomains": []
               },
               {
@@ -16124,9 +15816,7 @@
                 "name": "Send",
                 "id": "7.3.3.3",
                 "description": "Use this domain for words related to sending something--to cause someone to take something somewhere.",
-                "questions": [
-                  "(1) What words refer to sending something?"
-                ],
+                "questions": ["(1) What words refer to sending something?"],
                 "subdomains": []
               },
               {
@@ -16161,18 +15851,14 @@
                 "name": "Touch",
                 "id": "7.3.4.1",
                 "description": "Use this domain for words referring to touching something with your hand without moving the thing.",
-                "questions": [
-                  "(1) What words refer to touching something?"
-                ],
+                "questions": ["(1) What words refer to touching something?"],
                 "subdomains": []
               },
               {
                 "name": "Pick up",
                 "id": "7.3.4.2",
                 "description": "Use this domain for words related to picking something up.",
-                "questions": [
-                  "(1) What words refer to picking something up?"
-                ],
+                "questions": ["(1) What words refer to picking something up?"],
                 "subdomains": []
               },
               {
@@ -16226,9 +15912,7 @@
                 "name": "Extend",
                 "id": "7.3.4.7",
                 "description": "Use this domain for words related to extending something--to move something so that it covers a greater distance or area.",
-                "questions": [
-                  "(1) What words refer to extending something?"
-                ],
+                "questions": ["(1) What words refer to extending something?"],
                 "subdomains": []
               }
             ]
@@ -16305,9 +15989,7 @@
                 "name": "Uncover",
                 "id": "7.3.7.1",
                 "description": "Use this domain for words related to uncovering something.",
-                "questions": [
-                  "(1) What words refer to uncovering something?"
-                ],
+                "questions": ["(1) What words refer to uncovering something?"],
                 "subdomains": []
               },
               {
@@ -16347,9 +16029,7 @@
         "name": "Have, be with",
         "id": "7.4",
         "description": "Use this domain for words related to having something.",
-        "questions": [
-          "(1) What words refer to having something?"
-        ],
+        "questions": ["(1) What words refer to having something?"],
         "subdomains": [
           {
             "name": "Give, hand to",
@@ -16394,9 +16074,7 @@
             "name": "Keep something",
             "id": "7.4.5",
             "description": "Use this domain for words related to keeping something.",
-            "questions": [
-              "(1) What words refer to keeping something?"
-            ],
+            "questions": ["(1) What words refer to keeping something?"],
             "subdomains": [
               {
                 "name": "Leave something",
@@ -16425,9 +16103,7 @@
             "name": "Not have",
             "id": "7.4.6",
             "description": "Use this domain for words related to having something.",
-            "questions": [
-              "(1) What words refer to not having something?"
-            ],
+            "questions": ["(1) What words refer to not having something?"],
             "subdomains": []
           }
         ]
@@ -16625,9 +16301,7 @@
                 "name": "Rope, string",
                 "id": "7.5.4.1",
                 "description": "Use this domain for words referring to rope, string, and other things used to tie things together.",
-                "questions": [
-                  "(1) What types of rope and string are there?"
-                ],
+                "questions": ["(1) What types of rope and string are there?"],
                 "subdomains": []
               },
               {
@@ -16778,9 +16452,7 @@
             "name": "Lose, misplace",
             "id": "7.6.3",
             "description": "Use this domain for words referring to putting something in a place and not being able to find it again, or for when someone else moves something without your knowledge so that you cannot find it.",
-            "questions": [
-              "(1) What words refer to losing something?"
-            ],
+            "questions": ["(1) What words refer to losing something?"],
             "subdomains": []
           }
         ]
@@ -16834,18 +16506,14 @@
             "name": "Kick",
             "id": "7.7.3",
             "description": "Use this domain for words referring to kicking--to hit something with your foot. The words in this domain may be distinguished by the way in which the foot moves, either in a swinging motion, or by first bending the leg and then quickly straightening it. They may also be distinguished by whether the foot moves horizontally or vertically, whether the effect is to move something or damage it, or how hard the person kicks.",
-            "questions": [
-              "(1) What words refer to kicking something?"
-            ],
+            "questions": ["(1) What words refer to kicking something?"],
             "subdomains": []
           },
           {
             "name": "Press",
             "id": "7.7.4",
             "description": "Use this domain for words referring to pressing something.",
-            "questions": [
-              "(1) What words refer to pressing something?"
-            ],
+            "questions": ["(1) What words refer to pressing something?"],
             "subdomains": []
           },
           {
@@ -16864,9 +16532,7 @@
             "name": "Grind",
             "id": "7.7.6",
             "description": "Use this domain for words referring to grinding--to rub something rough against something else, while applying force, in order to break it or remove its surface.",
-            "questions": [
-              "(1) What words refer to grinding something?"
-            ],
+            "questions": ["(1) What words refer to grinding something?"],
             "subdomains": []
           },
           {
@@ -16910,9 +16576,7 @@
             "name": "Crack",
             "id": "7.8.2",
             "description": "Use this domain for words referring to a crack--a partial break in something that does not entirely divide it in pieces.",
-            "questions": [
-              "(1) What words refer to a crack?"
-            ],
+            "questions": ["(1) What words refer to a crack?"],
             "subdomains": []
           },
           {
@@ -16934,9 +16598,7 @@
             "name": "Tear, rip",
             "id": "7.8.4",
             "description": "Use this domain for words related to tearing or ripping something.",
-            "questions": [
-              "(1) What words refer to tearing something?"
-            ],
+            "questions": ["(1) What words refer to tearing something?"],
             "subdomains": []
           },
           {
@@ -17000,9 +16662,7 @@
             "name": "Tear down",
             "id": "7.9.2",
             "description": "Use this domain for words referring to tearing down buildings and other structures.",
-            "questions": [
-              "(1) What words refer to tearing something down?"
-            ],
+            "questions": ["(1) What words refer to tearing something down?"],
             "subdomains": []
           },
           {
@@ -17024,9 +16684,7 @@
             "name": "Repair",
             "id": "7.9.4",
             "description": "Use this domain for words related to repairing something.",
-            "questions": [
-              "(1) What words refer to repairing something?"
-            ],
+            "questions": ["(1) What words refer to repairing something?"],
             "subdomains": []
           }
         ]
@@ -17119,9 +16777,7 @@
                 "name": "Ordinal numbers",
                 "id": "8.1.1.2",
                 "description": "Use this domain for words related to the ordinal numbers (first, second, third)--the numbers used to indicate the order of something in a series, such as \"the first child\".",
-                "questions": [
-                  "(1) What are the ordinal numbers?"
-                ],
+                "questions": ["(1) What are the ordinal numbers?"],
                 "subdomains": []
               },
               {
@@ -17442,9 +17098,7 @@
                 "name": "Both",
                 "id": "8.1.5.3",
                 "description": "Use this domain for words referring to both of two things.",
-                "questions": [
-                  "(1) What words refer to both of two things?"
-                ],
+                "questions": ["(1) What words refer to both of two things?"],
                 "subdomains": []
               },
               {
@@ -18240,9 +17894,7 @@
                 "name": "Point, dot",
                 "id": "8.3.1.1",
                 "description": "Use this domain for words referring to a point--a small mark such as might be made by a pointed object.",
-                "questions": [
-                  "(1) What words refer to a point?"
-                ],
+                "questions": ["(1) What words refer to a point?"],
                 "subdomains": []
               },
               {
@@ -18438,9 +18090,7 @@
                 "name": "Pattern, design",
                 "id": "8.3.1.8",
                 "description": "Use this domain for words that refer to a pattern--a regular arrangement of shapes.",
-                "questions": [
-                  "(1) What words refer to a pattern?"
-                ],
+                "questions": ["(1) What words refer to a pattern?"],
                 "subdomains": [
                   {
                     "name": "Symmetrical",
@@ -18881,9 +18531,7 @@
                     "name": "Other",
                     "id": "8.3.5.2.4",
                     "description": "Use this domain for words related to other, as in 'the other person', 'another thing'--a thing that is not the same as something that has been mentioned.",
-                    "questions": [
-                      "(1) What words refer to another thing?"
-                    ],
+                    "questions": ["(1) What words refer to another thing?"],
                     "subdomains": []
                   },
                   {
@@ -19476,9 +19124,7 @@
                 "name": "Era",
                 "id": "8.4.1.7",
                 "description": "Use this domain for words referring to an era--a very long period of time.",
-                "questions": [
-                  "(1) What words refer to an era?"
-                ],
+                "questions": ["(1) What words refer to an era?"],
                 "subdomains": []
               },
               {
@@ -19498,9 +19144,7 @@
             "name": "Take time",
             "id": "8.4.2",
             "description": "Use this domain for words referring to taking time to do something.",
-            "questions": [
-              "(1) What words refer to how people relate to time?"
-            ],
+            "questions": ["(1) What words refer to how people relate to time?"],
             "subdomains": [
               {
                 "name": "A short time",
@@ -19551,9 +19195,7 @@
             "name": "Indefinite time",
             "id": "8.4.3",
             "description": "Use this domain for words referring to an indefinite time.",
-            "questions": [
-              "(1) What words refer to an indefinite time?"
-            ],
+            "questions": ["(1) What words refer to an indefinite time?"],
             "subdomains": []
           },
           {
@@ -19960,9 +19602,7 @@
                 "name": "Present",
                 "id": "8.4.6.3",
                 "description": "Use this domain for words referring to the present time.",
-                "questions": [
-                  "(1) What words refer to the present?"
-                ],
+                "questions": ["(1) What words refer to the present?"],
                 "subdomains": [
                   {
                     "name": "Now",
@@ -20500,9 +20140,7 @@
                 "name": "Forward",
                 "id": "8.5.2.1",
                 "description": "Use this domain for words indicating a forward direction.",
-                "questions": [
-                  "(1) What words indicate the direction forward?"
-                ],
+                "questions": ["(1) What words indicate the direction forward?"],
                 "subdomains": []
               },
               {
@@ -20541,9 +20179,7 @@
                 "name": "Down",
                 "id": "8.5.2.5",
                 "description": "Use this domain for words referring to the direction down.",
-                "questions": [
-                  "(1) What words refer to the direction down?"
-                ],
+                "questions": ["(1) What words refer to the direction down?"],
                 "subdomains": []
               },
               {
@@ -20607,9 +20243,7 @@
             "name": "Area",
             "id": "8.5.4",
             "description": "Use this domain for words referring to an area.",
-            "questions": [
-              "(1) What words refer to an area?"
-            ],
+            "questions": ["(1) What words refer to an area?"],
             "subdomains": [
               {
                 "name": "Vicinity",
@@ -20624,9 +20258,7 @@
                 "name": "Occupy an area",
                 "id": "8.5.4.2",
                 "description": "Use this domain for words related to occupying an area.",
-                "questions": [
-                  "(1) What words refer to occupying an area?"
-                ],
+                "questions": ["(1) What words refer to occupying an area?"],
                 "subdomains": []
               },
               {
@@ -20828,9 +20460,7 @@
         "name": "General words",
         "id": "9.1",
         "description": "Use the following section for words that don't belong in any other domain because they are so general in meaning that you can use them to talk about any topic. Use this domain for general and indefinite words that can be used in the place of any word. Some languages have a general word that can replace a noun or a verb. For instance some Philippine languages use the word 'kwan' in this way. Colloquial German can use the word 'dings' as a noun or verb. Often these words are used when you can't remember the particular word you are trying to think of. In English we use the word 'blank' when we don't want to say a word, for instance when we are testing someone and want them to say the word.",
-        "questions": [
-          "(1) What words can be used in the place of any word?"
-        ],
+        "questions": ["(1) What words can be used in the place of any word?"],
         "subdomains": [
           {
             "name": "Be",
@@ -20870,9 +20500,7 @@
                 "name": "Have, of",
                 "id": "9.1.1.3",
                 "description": "Many languages have several general words that are used to indicate a variety of relationships between two things. There are three such words in English: \"have,\" \"of,\" and the possessive suffix \"-'s.\" The basic meaning of these words in English is 'to own', but they can mean many other things too. For instance they can mean that I am related to someone (I have a brother), something has a part (birds have wings), and many other ideas. There is also a set of pronouns in English that are like nouns ending in -'s (my/mine, your/yours, his, her/hers, its, our/ours, their/theirs, whose). Use this domain for these general words.",
-                "questions": [
-                  "(1) What general words relate two nouns?"
-                ],
+                "questions": ["(1) What general words relate two nouns?"],
                 "subdomains": []
               },
               {
@@ -20979,9 +20607,7 @@
                 "name": "Event propositions",
                 "id": "9.1.2.7",
                 "description": "Use this domain for words that indicate event propositions. Event propositions are similar in that they are normally expressed by a subject and a verb, possibly including an object, indirect object, or complement clause. However there are multiple ways in which a language can express an event, such as a passive construction, noun phrase, or subordinate clause. In addition each event type is different in its primary cases, and in the ways those cases are marked. Each event type has subtypes, such as intransitive, transitive, and bitransitive verbs. A great deal of research is needed in order to identify all the variations. Ultimately every verb must be investigated to determine how it behaves in each syntactic construction and how its case relations are marked. No two verbs are entirely alike.",
-                "questions": [
-                  "(1) What words indicate an event?"
-                ],
+                "questions": ["(1) What words indicate an event?"],
                 "subdomains": []
               }
             ]
@@ -21040,9 +20666,7 @@
             "name": "General adverbs",
             "id": "9.1.5",
             "description": "Use this domain for general adverbs that can replace or stand for other adverbs.",
-            "questions": [
-              "(1) What general words can replace an adverb?"
-            ],
+            "questions": ["(1) What general words can replace an adverb?"],
             "subdomains": []
           }
         ]
@@ -21057,18 +20681,14 @@
             "name": "Adjectives",
             "id": "9.2.1",
             "description": "Use this domain to list all adjectives. If there are many adjectives in your language, you should not try to list them all here. If you want to find all the adjectives, most dictionary programs can sort your dictionary by part of speech. However if your language only has a few adjectives, you can list them all in this domain. In the book, \"Where Have All the Adjectives Gone?\" R. M. W. Dixon [Dixon, R. M. W. 1982. Where have all the adjectives gone? Berlin: Mouton.] identifies seven universal semantic types that are often expressed by adjectives. They are: Age (new, young, old), Dimension (big, little, long, short, wide, narrow, thick, fat, thin), Value (good, bad, proper, perfect, excellent, fine, delicious, atrocious, poor), Color (black, white, red), Human propensity (jealous, happy, kind, clever, generous, cruel, rude, proud, wicked), Physical property (hard, soft, heavy, light, rough, smooth, hot, cold, sweet, sour), Speed (fast, slow). Words in the Human propensity class may be nouns. Words in the Physical property and Speed classes may be verbs.",
-            "questions": [
-              "(1) What are the adjectives in your language?"
-            ],
+            "questions": ["(1) What are the adjectives in your language?"],
             "subdomains": []
           },
           {
             "name": "Adverbs",
             "id": "9.2.2",
             "description": "Use this domain to list all adverbs. If there are many adverbs in your language, it is probably not worth the trouble to list them here. The Shoebox program (and other dictionary programs) can sort your dictionary by part of speech.",
-            "questions": [
-              "(1) What adverbs are in your language?"
-            ],
+            "questions": ["(1) What adverbs are in your language?"],
             "subdomains": []
           },
           {
@@ -21126,9 +20746,7 @@
                 "name": "Question words",
                 "id": "9.2.3.4",
                 "description": "Use this domain for pronouns used in questions.",
-                "questions": [
-                  "(1) What pronouns are used in questions?"
-                ],
+                "questions": ["(1) What pronouns are used in questions?"],
                 "subdomains": []
               },
               {
@@ -21156,18 +20774,14 @@
             "name": "Prepositions, postpositions",
             "id": "9.2.4",
             "description": "Use this domain to list all prepositions and postpositions.",
-            "questions": [
-              "(1) What prepositions are in your language?"
-            ],
+            "questions": ["(1) What prepositions are in your language?"],
             "subdomains": []
           },
           {
             "name": "Conjunctions",
             "id": "9.2.5",
             "description": "Use this domain to list all conjunctions.",
-            "questions": [
-              "(1) What conjunctions are in your language?"
-            ],
+            "questions": ["(1) What conjunctions are in your language?"],
             "subdomains": [
               {
                 "name": "Phrase conjunctions",
@@ -21182,18 +20796,14 @@
                 "name": "Clause conjunctions",
                 "id": "9.2.5.2",
                 "description": "Use this domain to list all clause level conjunctions--conjunctions that join two clauses.",
-                "questions": [
-                  "(1) What conjunctions join two clauses?"
-                ],
+                "questions": ["(1) What conjunctions join two clauses?"],
                 "subdomains": []
               },
               {
                 "name": "Sentence conjunctions",
                 "id": "9.2.5.3",
                 "description": "Use this domain to list all sentence level conjunctions--conjunctions that join two sentences.",
-                "questions": [
-                  "(1) What conjunctions join two sentences?"
-                ],
+                "questions": ["(1) What conjunctions join two sentences?"],
                 "subdomains": []
               }
             ]
@@ -21202,9 +20812,7 @@
             "name": "Particles",
             "id": "9.2.6",
             "description": "Use this domain to list all particles.",
-            "questions": [
-              "(1) What particles are in your language?"
-            ],
+            "questions": ["(1) What particles are in your language?"],
             "subdomains": [
               {
                 "name": "Classifiers",
@@ -21221,53 +20829,41 @@
             "name": "Interjections",
             "id": "9.2.7",
             "description": "Use this domain to list all interjections.",
-            "questions": [
-              "(1) What interjections are in your language?"
-            ],
+            "questions": ["(1) What interjections are in your language?"],
             "subdomains": []
           },
           {
             "name": "Idiophones",
             "id": "9.2.8",
             "description": "Use this domain to list all idiophones. If there are many idiophones in your language, it is probably not worth the trouble to list them here. The Shoebox program (and other dictionary programs) can sort your dictionary by part of speech.",
-            "questions": [
-              "(1) What idiophones are in your language?"
-            ],
+            "questions": ["(1) What idiophones are in your language?"],
             "subdomains": []
           },
           {
             "name": "Affixes",
             "id": "9.2.9",
             "description": "Use this domain to list all affixes that do not fit in any of the subdomains under it. This section should be filled out by a linguist.",
-            "questions": [
-              "(1) What affixes are in your language?"
-            ],
+            "questions": ["(1) What affixes are in your language?"],
             "subdomains": [
               {
                 "name": "Verb affixes",
                 "id": "9.2.9.1",
                 "description": "Use this domain to list all verb affixes.",
-                "questions": [
-                  "(1) What affixes can be joined to verbs?"
-                ],
+                "questions": ["(1) What affixes can be joined to verbs?"],
                 "subdomains": []
               },
               {
                 "name": "Noun affixes",
                 "id": "9.2.9.2",
                 "description": "Use this domain to list all noun affixes.",
-                "questions": [
-                  "(1) What affixes can be joined to nouns?"
-                ],
+                "questions": ["(1) What affixes can be joined to nouns?"],
                 "subdomains": []
               },
               {
                 "name": "Derivational affixes",
                 "id": "9.2.9.3",
                 "description": "Use this domain to list all derivational affixes. A derivational affix is joined to a root and changes it into a different word. Derivational affixes often change the root into a different part of speech. Adding a derivational affix usually changes the meaning of the root in a significant way.",
-                "questions": [
-                  "(1) What derivational affixes are there?"
-                ],
+                "questions": ["(1) What derivational affixes are there?"],
                 "subdomains": []
               }
             ]
@@ -21311,9 +20907,7 @@
                 "name": "To a small degree",
                 "id": "9.3.1.2",
                 "description": "Use this domain for words referring to a small degree.",
-                "questions": [
-                  "(1) What words indicate a small degree?"
-                ],
+                "questions": ["(1) What words indicate a small degree?"],
                 "subdomains": []
               },
               {
@@ -21376,9 +20970,7 @@
             "name": "Attribution of an attribute",
             "id": "9.3.5",
             "description": "Use this domain for words that modify an attribute.",
-            "questions": [
-              "(1) What words modify an attribute?"
-            ],
+            "questions": ["(1) What words modify an attribute?"],
             "subdomains": []
           }
         ]
@@ -21863,9 +21455,7 @@
         "name": "Case",
         "id": "9.5",
         "description": "Each verb has a set of semantic case relations. For instance in the sentence 'I gave flowers to my wife' the verb give has three case relations. 'I' is the Agent, 'flowers' is the Patient, and 'my wife is the 'Recipient'. In this sentence the only word that marks a case relation is 'to'. English often marks case relations by their position in the sentence. Some languages mark case relations by affixes, prepositions, postpositions, and sometimes special verbs. To completely describe a language, each verb must be investigated, all its case relations must be identified, and all the ways in which these relations are marked must be described. Since verbs are often unique and unpredictable in their case relations, this information should go into the dictionary. This section should be used to classify the words and affixes that are used to mark case relations. This domain should be used for technical terms that refer to case.",
-        "questions": [
-          "(1) What words are used to refer to case?"
-        ],
+        "questions": ["(1) What words are used to refer to case?"],
         "subdomains": [
           {
             "name": "Primary cases",
@@ -22108,27 +21698,21 @@
                 "name": "Or, either",
                 "id": "9.6.1.2",
                 "description": "Use this domain for words indicating an alternative relation between two things or propositions.",
-                "questions": [
-                  "(1) What words indicate alternative relation?"
-                ],
+                "questions": ["(1) What words indicate alternative relation?"],
                 "subdomains": []
               },
               {
                 "name": "Association",
                 "id": "9.6.1.3",
                 "description": "Use this domain for words indicating an association between two things.",
-                "questions": [
-                  "(1) What words indicate association?"
-                ],
+                "questions": ["(1) What words indicate association?"],
                 "subdomains": []
               },
               {
                 "name": "Combinative relation",
                 "id": "9.6.1.4",
                 "description": "Use this domain for words indicating a combinative relation between two things.",
-                "questions": [
-                  "(1) What words indicate combinative relation?"
-                ],
+                "questions": ["(1) What words indicate combinative relation?"],
                 "subdomains": []
               },
               {
@@ -22172,27 +21756,21 @@
                 "name": "Dissociation",
                 "id": "9.6.1.6",
                 "description": "Use this domain for words indicating a dissociation relation between two things or propositions.",
-                "questions": [
-                  "(1) What words indicate dissociation?"
-                ],
+                "questions": ["(1) What words indicate dissociation?"],
                 "subdomains": []
               },
               {
                 "name": "Distribution",
                 "id": "9.6.1.7",
                 "description": "Use this domain for words indicating that an event is distributed throughout a group, area, or time span.",
-                "questions": [
-                  "(1) What words indicate distribution?"
-                ],
+                "questions": ["(1) What words indicate distribution?"],
                 "subdomains": []
               },
               {
                 "name": "Equivalence",
                 "id": "9.6.1.8",
                 "description": "Use this domain for words indicating equivalence between two things or propositions.",
-                "questions": [
-                  "(1) What words indicate equivalence?"
-                ],
+                "questions": ["(1) What words indicate equivalence?"],
                 "subdomains": []
               }
             ]
@@ -22359,9 +21937,7 @@
             "name": "Discourse markers",
             "id": "9.6.3",
             "description": "Use this domain for conjunctions and particles that function on the discourse level, and whose meaning and function is uncertain.",
-            "questions": [
-              "(1) What discourse markers are in your language?"
-            ],
+            "questions": ["(1) What discourse markers are in your language?"],
             "subdomains": [
               {
                 "name": "Markers of transition",
@@ -22501,9 +22077,7 @@
                 "name": "Clan names",
                 "id": "9.7.1.3",
                 "description": "Use this domain for the proper names of the clans that exist within the language community. The distinction between family, clan, tribe, and nation is based on politics and emotion. Our purpose here is not to make political statements, but merely to list the names. There may be no distinction between family and clan, in which case ignore this domain and use the domain 'Family names'.",
-                "questions": [
-                  "(1) What are the proper names of the clans?"
-                ],
+                "questions": ["(1) What are the proper names of the clans?"],
                 "subdomains": []
               },
               {
@@ -22538,9 +22112,7 @@
                 "name": "Terms of endearment",
                 "id": "9.7.1.7",
                 "description": "Use this domain for terms of endearment--a name used by lovers or spouses to express love or intimacy. Some languages may have special names used by close friends.",
-                "questions": [
-                  "(1) What are the terms of endearment?"
-                ],
+                "questions": ["(1) What are the terms of endearment?"],
                 "subdomains": []
               }
             ]
@@ -22549,9 +22121,7 @@
             "name": "Name of a place",
             "id": "9.7.2",
             "description": "Use this domain for words referring to the name of a place.",
-            "questions": [
-              "(1) What words refer to the name of a place?"
-            ],
+            "questions": ["(1) What words refer to the name of a place?"],
             "subdomains": [
               {
                 "name": "Names of countries",
@@ -22608,9 +22178,7 @@
                 "name": "Names of continents",
                 "id": "9.7.2.6",
                 "description": "Use this domain for the proper names of the continents. Only include the names of continents if your language has borrowed or adapted the name and you talk about them in your language.",
-                "questions": [
-                  "(1) What are the names of the continents?"
-                ],
+                "questions": ["(1) What are the names of the continents?"],
                 "subdomains": []
               },
               {

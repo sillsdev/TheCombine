@@ -10910,9 +10910,7 @@
             "name": "Décoration d’une maison",
             "id": "5.1.2",
             "description": "Classer dans ce champ lexical le vocabulaire associé à la décoration d’une maison.",
-            "questions": [
-              "(1) Avec quoi décore-t-on une maison ?"
-            ],
+            "questions": ["(1) Avec quoi décore-t-on une maison ?"],
             "subdomains": []
           }
         ]
@@ -11212,9 +11210,7 @@
                     "name": "Nourriture provenant de fruits",
                     "id": "5.2.3.1.2",
                     "description": "Classer dans ce champ lexical le vocabulaire associé à la nourriture provenant de fruits.",
-                    "questions": [
-                      "(1) Quelles espèces de fruits mange-t-on ?"
-                    ],
+                    "questions": ["(1) Quelles espèces de fruits mange-t-on ?"],
                     "subdomains": []
                   },
                   {
@@ -11241,9 +11237,7 @@
                     "name": "Nourriture provenant de racines",
                     "id": "5.2.3.1.5",
                     "description": "Classer dans ce champ lexical le vocabulaire associé à la nourriture provenant de racines.",
-                    "questions": [
-                      "(1) Quelles sortes de racines mange-t-on ?"
-                    ],
+                    "questions": ["(1) Quelles sortes de racines mange-t-on ?"],
                     "subdomains": []
                   }
                 ]
@@ -13303,9 +13297,7 @@
                 "name": "Matériel de pêche",
                 "id": "6.4.5.3",
                 "description": "Classer dans ce champ lexical les termes associés au matériel de pêche.",
-                "questions": [
-                  "(1) Qu’utilise-t-on pour attraper le poisson ?"
-                ],
+                "questions": ["(1) Qu’utilise-t-on pour attraper le poisson ?"],
                 "subdomains": []
               }
             ]
@@ -14115,9 +14107,7 @@
             "name": "Outil coupant",
             "id": "6.7.1",
             "description": "Classer dans ce champ lexical le vocabulaire associé aux outils coupants.",
-            "questions": [
-              "(1) Quels sont les outils coupants ?"
-            ],
+            "questions": ["(1) Quels sont les outils coupants ?"],
             "subdomains": [
               {
                 "name": "Outil pour faire des trous",
@@ -14674,9 +14664,7 @@
                 "name": "Unité monétaire",
                 "id": "6.8.6.1",
                 "description": "Classer dans ce champ lexical le vocabulaire associé aux unités monétaires.",
-                "questions": [
-                  "(1) Quelles sont les unités monétaires ?"
-                ],
+                "questions": ["(1) Quelles sont les unités monétaires ?"],
                 "subdomains": []
               }
             ]
@@ -16622,9 +16610,7 @@
                 "name": "Corde, ficelle",
                 "id": "7.5.4.1",
                 "description": "Classer dans ce champ lexical le vocabulaire faisant référence à une corde, une ficelle, et à d’autres moyens utilisés pour attacher des choses ensemble.",
-                "questions": [
-                  "(1) Quelles sortes de liens existe-t-il ?"
-                ],
+                "questions": ["(1) Quelles sortes de liens existe-t-il ?"],
                 "subdomains": []
               },
               {
@@ -17116,9 +17102,7 @@
                 "name": "Nombres ordinaux",
                 "id": "8.1.1.2",
                 "description": "Classer dans ce champ lexical les mots ou expressions en rapport avec les nombres ordinaux (premier, second, troisième), les nombres utilisés pour indiquer l’ordre de quelque chose dans une série, tel que « le premier enfant ».",
-                "questions": [
-                  "(1) Quels sont les nombres ordinaux ?"
-                ],
+                "questions": ["(1) Quels sont les nombres ordinaux ?"],
                 "subdomains": []
               },
               {
@@ -21225,18 +21209,14 @@
             "name": "Idéophones",
             "id": "9.2.8",
             "description": "Classer dans ce champ lexical tous les idéophones. S’il existe un grand nombre d’idéophones dans votre langue, il ne vaut peut-être pas la peine de les énumérer ici : le logiciel Shoebox peut trier votre dictionnaire par parties du discours.",
-            "questions": [
-              "(1) Quels sont les idéophones de votre langue ?"
-            ],
+            "questions": ["(1) Quels sont les idéophones de votre langue ?"],
             "subdomains": []
           },
           {
             "name": "Affixes",
             "id": "9.2.9",
             "description": "Classer dans ce champ lexical les affixes qui n’entrent dans aucun des champs spécifiques détaillés ci-après. Cette section doit être remplie par un linguiste.",
-            "questions": [
-              "(1) Quels sont les affixes de votre langue ?"
-            ],
+            "questions": ["(1) Quels sont les affixes de votre langue ?"],
             "subdomains": [
               {
                 "name": "Affixes verbaux",
@@ -21260,9 +21240,7 @@
                 "name": "Affixes de dérivation",
                 "id": "9.2.9.3",
                 "description": "Classer dans ce champ lexical tous les affixes de dérivation, c’est-à-dire ceux qui, ajoutés au radical, le transforment en un autre mot, appartenant souvent à une autre partie du discours. Les affixes de dérivation modifient en général le sens du radical de façon importante.",
-                "questions": [
-                  "(1) Quels sont les affixes de dérivation ?"
-                ],
+                "questions": ["(1) Quels sont les affixes de dérivation ?"],
                 "subdomains": []
               }
             ]
@@ -22496,18 +22474,14 @@
                 "name": "Nom de clan",
                 "id": "9.7.1.3",
                 "description": "Classer dans ce champ lexical des noms de clans qui existent dans votre groupe linguistique. Cette distinction entre famille, clan, tribu, et nation peut se fonder sur des considérations politiques ou affectives. Notre but ici n’est pas d’énoncer des principes politiques, mais uniquement d’inventorier des noms. Il se peut qu’on ne fasse aucune distinction entre les noms de famille et les noms de clans. Dans ce cas, vous ignorerez le champ lexical du clan et vous vous servirez de celui des noms de famille.",
-                "questions": [
-                  "(1) Citer des noms de clans. ?"
-                ],
+                "questions": ["(1) Citer des noms de clans. ?"],
                 "subdomains": []
               },
               {
                 "name": "Nom de tribu",
                 "id": "9.7.1.4",
                 "description": "Classer dans ce champ lexical les noms qui désignent les tribus dans votre région, sans oublier le nom de votre tribu. Les noms de tribus peuvent correspondre ou non au nom des pays.",
-                "questions": [
-                  "(1) Quels sont les noms des tribus voisines ?"
-                ],
+                "questions": ["(1) Quels sont les noms des tribus voisines ?"],
                 "subdomains": []
               },
               {
@@ -22603,9 +22577,7 @@
                 "name": "Nom de continents",
                 "id": "9.7.2.6",
                 "description": "Classer dans ce champ lexical les noms des continents. Ne mettre les continents que s’ils ont un nom emprunté ou adapté dans votre langue et qu’il vous arrive d’en parler dans votre langue.",
-                "questions": [
-                  "(1) Quels sont les noms des continents ?"
-                ],
+                "questions": ["(1) Quels sont les noms des continents ?"],
                 "subdomains": []
               },
               {
@@ -22666,9 +22638,7 @@
                 "name": "Nom propre d’édifice",
                 "id": "9.7.3.2",
                 "description": "Classer dans ce champ lexical le vocabulaire qui se rapporte au nom propre d’un édifice.",
-                "questions": [
-                  "(1) Quels sont les noms propres d’édifice ?"
-                ],
+                "questions": ["(1) Quels sont les noms propres d’édifice ?"],
                 "subdomains": []
               }
             ]
