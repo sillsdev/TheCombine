@@ -94,5 +94,10 @@ namespace Backend.Tests
             user.Password = "";
             return Task.FromResult(user);
         }
+
+        public Task<ResultOfUpdate> ChangePassword(string userId, string password)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

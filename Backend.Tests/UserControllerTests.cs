@@ -18,7 +18,7 @@ namespace Backend.Tests
         {
             _permissionService = new PermissionServiceMock();
             _userService = new UserServiceMock();
-            _controller = new UserController(_userService, _permissionService);
+            _controller = new UserController(_userService, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock(), new FrontendContextMock());
         }
 
         private static User RandomUser()

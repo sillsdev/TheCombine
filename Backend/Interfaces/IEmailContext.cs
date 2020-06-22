@@ -6,6 +6,6 @@ namespace BackendFramework.Interfaces
         int SmtpPort { get; }
         string SmtpUsername { get; }
         string SmtpPassword { get; }
-        string SmtpAddress {get; }
+        string SmtpAddress { get; }
     }
 }

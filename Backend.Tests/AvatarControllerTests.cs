@@ -22,7 +22,7 @@ namespace Backend.Tests
         {
             _permissionService = new PermissionServiceMock();
             _userService = new UserServiceMock();
-            _userController = new UserController(_userService, _permissionService);
+            _userController = new UserController(_userService, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock(), new FrontendContextMock());
             _avatarController = new AvatarController(_userService, _permissionService)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
