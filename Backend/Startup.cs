@@ -39,6 +39,7 @@ namespace BackendFramework
             public int SmtpPort { get; set; }
             public string SmtpUsername { get; set; }
             public string SmtpPassword { get; set; }
+            public string SmtpAddress {get; set; }
             public string FrontendUrl { get; set; }
         }
 
@@ -115,6 +116,7 @@ namespace BackendFramework
                 options.SmtpPort = Int32.Parse(Configuration["Email:SmtpPort"]);
                 options.SmtpUsername = Configuration["Email:SmtpUsername"];
                 options.SmtpPassword = Configuration["Email:SmtpPassword"];
+                options.SmtpAddress = Configuration["Email:SmtpAddress"];
                 options.FrontendUrl = Configuration["Frontend:Url"];
             });
 

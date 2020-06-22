@@ -25,7 +25,7 @@ namespace BackendFramework.Services
 
                 // set from field
                 message.From.Clear();
-                message.From.Add(new MailboxAddress("The Combine", _emailContext.SmtpUsername));
+                message.From.Add(new MailboxAddress("The Combine", _emailContext.SmtpAddress));
 
                 await client.SendAsync(message);
 
