@@ -26,6 +26,11 @@ export default class ResetRequest extends React.Component<
     this.state = { email: "" };
   }
 
+  onSubmit = (event: React.FormEvent<HTMLElement>) => {
+    this.props.passwordResetRequest(this.state.email);
+    event.preventDefault();
+  }
+
   render() {
     return (
       <div>
@@ -38,7 +43,7 @@ export default class ResetRequest extends React.Component<
               <Translate id="passwordReset.resetRequestInstructions"/>
             </Typography>
             <form
-              onSubmit={() => this.props.passwordResetRequest(this.state.email)}
+              onSubmit={this.onSubmit}
             >
               <Grid item>
                 <TextField
@@ -56,9 +61,7 @@ export default class ResetRequest extends React.Component<
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() =>
-                    this.props.passwordResetRequest(this.state.email)
-                  }
+                  onClick={this.onSubmit}
                 >
                   <Translate id="passwordReset.submit"/>
                 </Button>

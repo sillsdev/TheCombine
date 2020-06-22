@@ -1,17 +1,7 @@
 import * as React from "react";
-import {
-  Translate,
-  LocalizeContextProps,
-} from "react-localize-redux";
+import { Translate, LocalizeContextProps } from "react-localize-redux";
 import { RouteComponentProps } from "react-router";
-import {
-  CircularProgress,
-  Typography,
-  Card,
-  Button,
-  Grid,
-  TextField,
-} from "@material-ui/core";
+import { Typography, Card, Button, Grid, TextField } from "@material-ui/core";
 
 export interface MatchParams {
   token: string;
@@ -52,32 +42,33 @@ export default class PasswordReset extends React.Component<
     };
   }
 
+  onSubmit = (event: React.FormEvent<HTMLElement>) => {
+    this.setState({
+      ...this.state,
+      sentAttempt: true,
+    });
+    this.props.passwordReset(
+      this.state.email,
+      this.state.token,
+      this.state.password
+    );
+    event.preventDefault();
+  };
+
   render() {
     return (
       <div>
         <Grid container justify="center">
           <Card style={{ padding: 10, width: 450 }}>
-            <form
-              onSubmit={() => {
-                this.setState({
-                  ...this.state,
-                  sentAttempt: true,
-                });
-                this.props.passwordReset(
-                  this.state.email,
-                  this.state.token,
-                  this.state.password
-                );
-              }}
-            >
+            <form onSubmit={this.onSubmit}>
               <Typography variant="h5" align="center" gutterBottom>
-                <Translate id="passwordReset.resetTitle"/>
+                <Translate id="passwordReset.resetTitle" />
               </Typography>
 
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label={<Translate id="passwordReset.tokenLabel"/>}
+                  label={<Translate id="passwordReset.tokenLabel" />}
                   value={this.state.token}
                   style={{ width: "100%" }}
                   margin="normal"
@@ -89,7 +80,7 @@ export default class PasswordReset extends React.Component<
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label={<Translate id="passwordReset.emailLabel"/>}
+                  label={<Translate id="passwordReset.emailLabel" />}
                   value={this.state.email}
                   style={{ width: "100%" }}
                   margin="normal"
@@ -101,7 +92,7 @@ export default class PasswordReset extends React.Component<
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label={<Translate id="passwordReset.passwordLabel"/>}
+                  label={<Translate id="passwordReset.passwordLabel" />}
                   type="password"
                   value={this.state.password}
                   style={{ width: "100%" }}
@@ -114,7 +105,7 @@ export default class PasswordReset extends React.Component<
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label={<Translate id="passwordReset.passwordConfLabel"/>}
+                  label={<Translate id="passwordReset.passwordConfLabel" />}
                   type="password"
                   value={this.state.passwordConfirm}
                   style={{ width: "100%" }}
@@ -135,25 +126,15 @@ export default class PasswordReset extends React.Component<
                       variant="body2"
                       style={{ display: "inline", margin: 24, color: "red" }}
                     >
-                      <Translate id="passwordReset.resetFail"/>
+                      <Translate id="passwordReset.resetFail" />
                     </Typography>
                   )}
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => {
-                      this.setState({
-                        ...this.state,
-                        sentAttempt: true,
-                      });
-                      this.props.passwordReset(
-                        this.state.email,
-                        this.state.token,
-                        this.state.password
-                      );
-                    }}
+                    onClick={this.onSubmit}
                   >
-                    <Translate id="passwordReset.submit"/>
+                    <Translate id="passwordReset.submit" />
                   </Button>
                 </Grid>
               </Grid>
