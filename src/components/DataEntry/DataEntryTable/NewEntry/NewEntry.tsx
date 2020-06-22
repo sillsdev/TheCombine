@@ -191,6 +191,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   updateVernField(newValue: string) {
+    this.focusVernInput();
     let autoCompleteWords: Word[] = this.autoCompleteCandidates(
       this.props.allWords,
       newValue
@@ -292,7 +293,9 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   focusVernInput() {
     if (this.vernInput.current) {
       this.vernInput.current.focus();
-      this.vernInput.current.scrollIntoView({ behavior: "smooth" });
+      this.vernInput.current.scrollIntoView({
+        block: "center",
+      });
     }
   }
 
