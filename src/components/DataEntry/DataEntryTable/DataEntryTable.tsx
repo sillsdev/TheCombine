@@ -38,11 +38,12 @@ export interface DataEntryTableState {
   autoComplete: AutoComplete;
 }
 
-async function getWordsFromBackend(): Promise<Word[]> {
+export async function getWordsFromBackend(): Promise<Word[]> {
   let words = await Backend.getFrontierWords();
   words = filterWords(words);
   return words;
 }
+
 async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
   let proj = await Backend.getProject(LocalStorage.getProjectId());
   return proj.autocompleteSetting;
