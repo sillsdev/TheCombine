@@ -15,6 +15,7 @@ import {
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { defaultState as goalsDefaultState } from "../DefaultState";
 import * as LocalStorage from "../../../backend/localStorage";
+import { getUserEditById } from "../../../backend";
 
 jest.mock(
   ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
@@ -33,20 +34,23 @@ jest.mock(
 
 jest.mock("../../../backend", () => {
   return {
-    getUserEditById: jest.fn(() => {
-      return Promise.resolve({ data: "" });
-    }),
+    getUserEditById: jest.fn(),
     createUserEdit: jest.fn(() => {
-      return Promise.resolve({ data: "" });
+      return Promise.resolve("");
     }),
     updateUser: jest.fn(() => {
-      return Promise.resolve({ data: "" });
+      return Promise.resolve("");
     }),
     addGoalToUserEdit: jest.fn(() => {
-      return Promise.resolve({ data: "" });
+      return Promise.resolve("");
     }),
   };
 });
+
+const mockGetuserEditById = (getUserEditById as unknown) as jest.Mock<any>;
+mockGetuserEditById.mockImplementation(() =>
+  Promise.resolve({ id: "1", edits: [] })
+);
 
 // At compile time, jest.mock calls will be hoisted to the top of the file,
 // so calls to imported variables fail. Fixed by initializing these variables
@@ -126,7 +130,9 @@ describe("Test GoalsActions", () => {
   });
 
   it("should create an async action to load user edits", async () => {
-    await mockStore.dispatch<any>(actions.asyncLoadExistingUserEdits("1", "1"));
+    var action = await mockStore.dispatch<any>(
+      actions.asyncLoadExistingUserEdits("1", "1")
+    );
 
     let loadUserEdits: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,

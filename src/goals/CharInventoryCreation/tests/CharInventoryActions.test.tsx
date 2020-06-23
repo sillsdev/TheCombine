@@ -12,6 +12,7 @@ import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 import { User } from "../../../types/user";
 import { CharacterSetEntry } from "../CharacterInventoryReducer";
+import { updateProject, addStepToGoal } from "../../../backend";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
@@ -66,6 +67,17 @@ const mockUserEditId: string = "23456";
 let mockUser: User = new User("", "", "");
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
+jest.mock("../../../backend", () => ({
+  updateProject: jest.fn(),
+  addStepToGoal: jest.fn(),
+}));
+
+const mockUpdateProject = (updateProject as unknown) as jest.Mock<any>;
+const mockAddStepToGoal = (addStepToGoal as unknown) as jest.Mock<any>;
+
+mockUpdateProject.mockImplementation(() => Promise.resolve(""));
+mockAddStepToGoal.mockImplementation(() => Promise.resolve(""));
+
 const createMockStore = configureMockStore([thunk]);
 const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(MOCK_STATE);
 
@@ -110,7 +122,8 @@ describe("Testing CharacterInventoryActions", () => {
     updatedGoal.data = {
       inventory: [[...MOCK_STATE.characterInventoryState.validCharacters]],
     };
-    expect(axios.put).toHaveBeenCalledTimes(2);
+    expect(mockUpdateProject).toHaveBeenCalledTimes(1);
+    expect(mockAddStepToGoal).toHaveBeenCalledTimes(1);
     expect(mockStore.getActions()).toEqual([
       {
         type: GoalsActions.UPDATE_GOAL,

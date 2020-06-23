@@ -113,29 +113,3 @@ describe("Tests ReviewEntriesComponent", () => {
     );
   });
 });
-
-function createMockWord(word: ReviewEntriesWord, language: string): Word {
-  return {
-    id: word.id,
-    vernacular: word.vernacular,
-    senses: word.senses.map((sense) => createMockSense(sense, language)),
-    audio: [],
-    created: "",
-    modified: "",
-    history: [],
-    partOfSpeech: "",
-    editedBy: [],
-    otherField: "",
-    plural: "",
-  };
-}
-
-function createMockSense(sense: ReviewEntriesSense, language: string): Sense {
-  return {
-    glosses: sense.glosses
-      .split(SEP_CHAR)
-      .map((value) => ({ def: value.trim(), language })),
-    semanticDomains: sense.domains,
-    accessibility: State.active,
-  };
-}
