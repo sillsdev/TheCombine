@@ -13,7 +13,6 @@ import { StoreState } from "../../../types";
 export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
-  UpdateRecordingStatus = "UPDATE_RECORDING_STATUS",
 }
 
 interface ReviewUpdateWords {
@@ -28,16 +27,7 @@ interface ReviewUpdateWord {
   newWord: ReviewEntriesWord;
 }
 
-interface ReviewUpdateRecordingStatus {
-  type: ReviewEntriesActionTypes.UpdateRecordingStatus;
-  recordingStatus: boolean;
-  wordId: string | undefined;
-}
-
-export type ReviewEntriesAction =
-  | ReviewUpdateWords
-  | ReviewUpdateWord
-  | ReviewUpdateRecordingStatus;
+export type ReviewEntriesAction = ReviewUpdateWords | ReviewUpdateWord;
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -56,17 +46,6 @@ function updateWord(
     id,
     newId,
     newWord,
-  };
-}
-
-export function updateRecordingStatus(
-  recordingStatus: boolean,
-  wordId: string | undefined
-) {
-  return {
-    type: ReviewEntriesActionTypes.UpdateRecordingStatus,
-    recordingStatus,
-    wordId,
   };
 }
 
@@ -217,22 +196,6 @@ export function updateFrontierWord(
         (await backend.updateWord(editWord)).id,
         editSource
       )
-    );
-  };
-}
-// Converts the ReviewEntriesWord into a Word to send to the backend
-export function refreshWord(oldWordId: string, newWordId: string) {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
-    getState: () => StoreState
-  ) => {
-    const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems[0]
-      ? getState().currentProject.analysisWritingSystems[0]
-      : "en";
-
-    dispatch(
-      updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang))
     );
   };
 }
