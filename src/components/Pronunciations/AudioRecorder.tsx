@@ -8,13 +8,14 @@ import {
 import { red } from "@material-ui/core/colors";
 import FiberManualRecord from "@material-ui/icons/FiberManualRecord";
 import React, { useState } from "react";
+import * as Backend from "../../backend";
 import { Recorder } from "./Recorder";
 import { Translate } from "react-localize-redux";
 
 export interface RecorderProps {
   wordId: string;
   recorder?: Recorder;
-  uploadAudio?: (wordId: string, audioFile: File) => void;
+  recordingFinished?: (oldId: string, newId: string) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -71,9 +72,12 @@ export default function AudioRecorder(props: RecorderProps) {
             type: blob.type,
             lastModified: Date.now(),
           });
-          if (props.uploadAudio) {
-            props.uploadAudio(props.wordId, file);
-          }
+          Backend.uploadAudio(props.wordId, file).then((newWordId) => {
+            recorder.clearData();
+            if (props.recordingFinished) {
+              props.recordingFinished(props.wordId, newWordId);
+            }
+          });
         })
         .catch(() => {
           console.log("Error recording, probably no mic access");

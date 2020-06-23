@@ -138,7 +138,6 @@ describe("Test GoalsActions", () => {
       type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: [],
     };
-    var actionsActions = mockStore.getActions();
     expect(mockStore.getActions()).toEqual([loadUserEdits]);
   });
 
