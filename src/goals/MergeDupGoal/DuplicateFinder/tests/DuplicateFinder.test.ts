@@ -2,47 +2,20 @@
 
 import DupFinder, { DefaultParams } from "../DuplicateFinder";
 import { Word, simpleWord } from "../../../../types/word";
-import axios from "axios";
+import { testWordList as mockTestWordList } from "../../../../types/word";
 
-const mockNoop = () => new Promise(() => {});
-
-// Notice how `create` was not being mocked here...
-jest.mock("axios", () => ({
-  default: () => new Promise(() => {}),
-  get: () => new Promise(() => {}),
-  post: () => new Promise(() => {}),
-  put: () => new Promise(() => {}),
-  delete: () => new Promise(() => {}),
-  patch: () => new Promise(() => {}),
-}));
-
-const mockAxios = axios as jest.Mocked<typeof axios>;
+jest.mock("../../../../backend", () => {
+  return {
+    getFrontierWords: jest.fn(() => {
+      return Promise.resolve(mockTestWordList());
+    }),
+  };
+});
 
 describe("dupFinder Tests", () => {
   //TEST UTILITIES
 
-  //put here instead of importing because testWordList will eventually be removed from types/word.
-  let testWordList: Word[] = [
-    simpleWord("Yoink", "Hello"),
-    simpleWord("Yode", "Goodbye"),
-    simpleWord("Yoff", "Yes"),
-    simpleWord("Yank", "No"),
-    simpleWord("Ya", "Help"),
-    simpleWord("Yeet", "Please"),
-    simpleWord("Yeet", "Mandatory"),
-    simpleWord("Yang", "Die"),
-    simpleWord("Yank", "Please God help me"),
-    simpleWord("Yuino", "Love"),
-    simpleWord("Yuino", "Boba Fett"),
-    simpleWord("Yes", "Wumbo"),
-    simpleWord("Yes", "Mayonnaise"),
-  ];
-
   test("getNextDups returns correct number of word collections", async () => {
-    mockAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({ data: testWordList })
-    );
-
     let finder = new DupFinder();
 
     await finder.getNextDups().then((wordCollections) => {
@@ -51,25 +24,17 @@ describe("dupFinder Tests", () => {
   });
 
   test("finder can get words from frontier", async () => {
-    mockAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({ data: testWordList })
-    );
-
     let finder = new DupFinder();
 
     expect(finder.maskedWords.length).toBe(0);
 
     await finder.fetchWordsFromDB().then((gotWords) => {
       expect(gotWords).toBe(true);
-      expect(finder.maskedWords.length).toBe(testWordList.length);
+      expect(finder.maskedWords.length).toBe(mockTestWordList().length);
     });
   });
 
   test("the finder can search for duplicates with one parent", async () => {
-    mockAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({ data: testWordList })
-    );
-
     let finder = new DupFinder();
 
     let parent = simpleWord("Yank", "Mayonnaise");

@@ -17,7 +17,16 @@ import {
   Sense,
 } from "../../../../types/word";
 
-jest.mock("axios");
+jest.mock("../../../../backend", () => {
+  return {
+    getWord: jest.fn(() => {
+      return Promise.resolve();
+    }),
+    updateWord: jest.fn(() => {
+      return Promise.resolve("");
+    }),
+  };
+});
 
 // Mocks
 const mockAxios = axios as jest.Mocked<typeof axios>;

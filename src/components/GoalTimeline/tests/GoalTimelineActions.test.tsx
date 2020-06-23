@@ -15,7 +15,6 @@ import {
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { defaultState as goalsDefaultState } from "../DefaultState";
 import * as LocalStorage from "../../../backend/localStorage";
-import axios from "axios";
 
 jest.mock(
   ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
@@ -32,6 +31,23 @@ jest.mock(
   }
 );
 
+jest.mock("../../../backend", () => {
+  return {
+    getUserEditById: jest.fn(() => {
+      return Promise.resolve({ data: "" });
+    }),
+    createUserEdit: jest.fn(() => {
+      return Promise.resolve({ data: "" });
+    }),
+    updateUser: jest.fn(() => {
+      return Promise.resolve({ data: "" });
+    }),
+    addGoalToUserEdit: jest.fn(() => {
+      return Promise.resolve({ data: "" });
+    }),
+  };
+});
+
 // At compile time, jest.mock calls will be hoisted to the top of the file,
 // so calls to imported variables fail. Fixed by initializing these variables
 // inside of beforeAll()
@@ -43,18 +59,6 @@ const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
 let mockUser: User = new User("", "", "");
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
-
-jest.mock("axios");
-
-// Mocks
-const mockAxios = axios as jest.Mocked<typeof axios>;
-mockAxios.get.mockImplementationOnce(() =>
-  Promise.resolve({
-    data: "",
-  })
-);
-var mockAxiosPost = jest.fn().mockResolvedValue({ data: "" });
-axios.post = mockAxiosPost;
 
 const createMockStore = configureMockStore([thunk]);
 let mockStore: MockStoreEnhanced<unknown, {}>;
@@ -122,12 +126,6 @@ describe("Test GoalsActions", () => {
   });
 
   it("should create an async action to load user edits", async () => {
-    mockAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({
-        data: "",
-      })
-    );
-
     await mockStore.dispatch<any>(actions.asyncLoadExistingUserEdits("1", "1"));
 
     let loadUserEdits: actions.LoadUserEditsAction = {

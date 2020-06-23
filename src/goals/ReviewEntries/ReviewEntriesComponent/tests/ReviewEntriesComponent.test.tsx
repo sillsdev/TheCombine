@@ -5,6 +5,7 @@ import axios from "axios";
 import ReviewEntriesConnected from "../ReviewEntriesComponent";
 import * as utilities from "../../../../utilities";
 import mockWords from "./MockWords";
+import { mockCreateWord } from "./MockWords";
 import { Provider } from "react-redux";
 import { Sense, State, Word } from "../../../../types/word";
 import ReactDOM from "react-dom";
@@ -14,6 +15,16 @@ import {
   ReviewEntriesWord,
   SEP_CHAR,
 } from "../ReviewEntriesTypes";
+
+jest.mock("../../../../backend", () => {
+  return {
+    getFrontierWords: jest.fn(() => {
+      return Promise.resolve(
+        mockWords.map((word) => mockCreateWord(word, "en"))
+      );
+    }),
+  };
+});
 
 // Mock store + axios
 const state = {
@@ -30,10 +41,7 @@ const state = {
   },
 };
 
-jest.mock("axios");
-
 const mockStore = configureMockStore([])(state);
-const mockAxios = axios as jest.Mocked<typeof axios>;
 
 // Standard dialog mockout
 jest.mock("@material-ui/core", () => {
@@ -69,11 +77,6 @@ const MOCK_UPDATE = jest.fn();
 
 beforeAll(() => {
   // Prep for component creation
-  mockAxios.get.mockImplementationOnce(() => {
-    return Promise.resolve({
-      data: mockWords.map((word) => createMockWord(word, "en")),
-    });
-  });
   for (let word of mockWords) {
     for (let sense of word.senses)
       MOCK_UUID.mockImplementationOnce(() => sense.senseId);
