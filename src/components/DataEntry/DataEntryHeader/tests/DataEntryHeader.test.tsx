@@ -7,7 +7,7 @@ import renderer, {
   ReactTestInstance,
 } from "react-test-renderer";
 import { baseDomain } from "../../../../types/SemanticDomain";
-
+import { Switch } from "@material-ui/core";
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 
@@ -28,26 +28,74 @@ beforeEach(() => {
 });
 
 describe("Tests DataEntryHeader", () => {
-  it("No questions should disable switch and show no questions", () => {});
+  it("No questions should disable switch and show no questions", () => {
+    const mockCallback = jest.fn();
 
-  it("Questions Visible should show questions", () => {});
+    const instance = renderer.create(
+      <Provider store={mockStore}>
+        <DataEntryHeader
+          domain={baseDomain}
+          questionsVisible={true}
+          setQuestionVisibility={mockCallback}
+        />
+      </Provider>
+    ).root;
 
-  it("Questions not visible should hide questions", () => {});
+    //assert disabled switch and no questions shown
+  });
 
-  fit("Callback should be called on switch click", () => {
-    let dataEntryHeaders = testRenderer.root.findAllByType(DataEntryHeader);
-    expect(dataEntryHeaders.length).toBe(1);
-    var dataEntryHeaderHandle: ReactTestInstance = dataEntryHeaders[0];
-    const mockCallback = jest.fn((vis) => !vis);
-    dataEntryHeaderHandle.instance.props = {
-      setQuestionVisibility: mockCallback,
-      questions: ["Question 1"],
-    };
+  it("Questions Visible should show questions", () => {
+    const newDomain = { ...baseDomain, questions: ["Q1"] };
+    const mockCallback = jest.fn();
 
-    var sw = testRenderer.root.findByProps({
+    const instance = renderer.create(
+      <Provider store={mockStore}>
+        <DataEntryHeader
+          domain={newDomain}
+          questionsVisible={true}
+          setQuestionVisibility={mockCallback}
+        />
+      </Provider>
+    ).root;
+
+    //assert questions are visible
+  });
+
+  it("Questions not visible should hide questions", () => {
+    const newDomain = { ...baseDomain, questions: ["Q1", "Q2"] };
+    const mockCallback = jest.fn();
+
+    const instance = renderer.create(
+      <Provider store={mockStore}>
+        <DataEntryHeader
+          domain={newDomain}
+          questionsVisible={false}
+          setQuestionVisibility={mockCallback}
+        />
+      </Provider>
+    ).root;
+
+    //assert questions are hidden
+  });
+
+  it("Callback should be called on switch click", () => {
+    const newDomain = { ...baseDomain, questions: ["Q1", "Q2"] };
+    const mockCallback = jest.fn();
+
+    const instance = renderer.create(
+      <Provider store={mockStore}>
+        <DataEntryHeader
+          domain={newDomain}
+          questionsVisible={false}
+          setQuestionVisibility={mockCallback}
+        />
+      </Provider>
+    ).root;
+
+    const swInMethod = instance.findByProps({
       id: "questionVisibilitySwitch",
     });
-    sw.props.onChange();
+    swInMethod.props.onChange();
     expect(mockCallback).toHaveBeenCalledTimes(1);
   });
 });

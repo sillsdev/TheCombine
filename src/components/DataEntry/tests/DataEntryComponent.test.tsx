@@ -13,4 +13,7 @@ describe("Tests DataEntryComponent", () => {
     ReactDOM.render(<DataEntryComponent domain={baseDomain} />, div);
     ReactDOM.unmountComponentAtNode(div);
   });
+
+  it("Callback called on complete clicked in DataEntryTable", () => {});
+  it("Callback called on switch clicked in DataEntryHeader", () => {});
 });

@@ -359,6 +359,8 @@ export class DataEntryTable extends React.Component<
                 let recentlyAddedWords: WordAccess[] = [];
                 this.props.displaySemanticDomainView(true);
                 this.setState({ recentlyAddedWords });
+
+                //Since DataEntryComponent isn't rerendered, just hidden, this will enforce questions being hidden as a default
                 this.props.hideQuestions();
               }}
             >
