@@ -40,7 +40,7 @@ export class AppBarComponent extends React.Component<
                     <NavigationButtons currentTab={this.props.currentTab} />
                   )}
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs>
                   {getProjectId() !== "" && (
                     <ProjectNameButton currentTab={this.props.currentTab} />
                   )}

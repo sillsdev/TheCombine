@@ -33,9 +33,18 @@ describe("Tests AppBarComponent", () => {
       )
       .toJSON();
     expect(NavigationButtonRender).toMatchSnapshot();
+
+    const ProjectButtonRender = renderer
+      .create(
+        <Provider store={mockStore}>
+          <ProjectNameButton currentTab={CurrentTab.DataCleanup} />
+        </Provider>
+      )
+      .toJSON();
+    expect(ProjectButtonRender).toMatchSnapshot();
   });
 
-  it("Ensures ProjectName Tab is shaded only when itself is called", () => {
+  it("Ensures ProjectName Tab is shaded when itself is called", () => {
     const ProjectButtonRender = renderer
       .create(
         <Provider store={mockStore}>
