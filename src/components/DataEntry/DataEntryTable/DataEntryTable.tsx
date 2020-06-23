@@ -16,6 +16,7 @@ import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
+import { ExistingDataTable } from "../ExistingDataTable/ExistingDataTable";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -330,6 +331,9 @@ export class DataEntryTable extends React.Component<
                 this.setState({ isReady: isReady })
               }
             />
+            <div> 
+            <ExistingDataTable domain={this.props.semanticDomain}/>
+            </div>
           </Grid>
         </Grid>
 

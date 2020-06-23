@@ -1,5 +1,5 @@
 import React from "react";
-import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
+import { Paper, Divider, Dialog, Grid, Drawer, Hidden } from "@material-ui/core";
 import theme from "../../types/theme";
 
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
@@ -10,6 +10,7 @@ import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { ExistingDataTable } from "./ExistingDataTable/ExistingDataTable";
+import { updateAllWords } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 
 interface DataEntryProps {
   domain: DomainTree;
@@ -26,6 +27,8 @@ const paperStyle = {
   marginLeft: "auto",
   marginRight: "auto",
 };
+
+
 
 /**
  * Allows users to add words to a project, add senses to an existing word,
@@ -58,15 +61,11 @@ export class DataEntryComponent extends React.Component<
   }
 
   renderExistingDataTable() {
-    if (!this.state.reducedSize) {
-      return (
-        <React.Fragment>
-          <Grid item>
-            <ExistingDataTable domain={this.props.domain} />
-          </Grid>
-        </React.Fragment>
-      );
-    } else return null;
+    return (
+      <React.Fragment >
+        <ExistingDataTable domain={this.props.domain} />
+      </React.Fragment>
+    );
   }
 
   render() {
@@ -79,7 +78,7 @@ export class DataEntryComponent extends React.Component<
       <React.Fragment>
         <AppBarComponent />
 
-        <Grid container justify="center" spacing={3}>
+        <Grid container justify="center" spacing={3} direction={"row"}>
           <Grid item>
             <Paper style={paperStyle}>
               <DataEntryHeader domain={this.props.domain} />
@@ -97,7 +96,9 @@ export class DataEntryComponent extends React.Component<
               />
             </Paper>
           </Grid>
+          <Hidden >
           {this.renderExistingDataTable()}
+          </Hidden >
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
             <AppBarComponent />
             <TreeViewComponent
