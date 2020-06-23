@@ -106,7 +106,6 @@ class UserList extends React.Component<
           {this.state.filteredProjUsers.map((user) => (
             <ListItem
               key={user.id}
-              button
               onMouseEnter={() =>
                 this.setState({ hovering: true, hoverUserID: user.id })
               }
@@ -128,7 +127,6 @@ class UserList extends React.Component<
           {this.state.filteredNonProjUsers.map((user) => (
             <ListItem
               key={user.id}
-              button
               onMouseEnter={() =>
                 this.setState({ hovering: true, hoverUserID: user.id })
               }
