@@ -60,18 +60,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -160,18 +155,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -260,18 +250,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -606,18 +591,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -727,18 +707,22 @@ Array [
               <div
                 className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
               >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  <path
-                    d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
-                  />
-                </svg>
-                <p
-                  className="MuiTypography-root MuiTypography-body2"
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+                    />
+                  </svg>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
                   <div
                     style={
@@ -975,18 +959,13 @@ Array [
                   </p>
                 </div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                  />
-                  <path
-                    d="M0 0h24v24H0V0z"
-                    fill="none"
                   />
                 </svg>
               </div>
@@ -1062,18 +1041,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -1162,18 +1136,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -1262,18 +1231,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -1362,18 +1326,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -1721,24 +1680,45 @@ Array [
                 <div
                   className="MuiGrid-root MuiGrid-item"
                 >
-                  1.1     
-                </p>
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
+                    }
+                  >
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.1
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid1
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  <path
-                    d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-                  />
-                </svg>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
     </ul>
@@ -1840,18 +1820,13 @@ Array [
                   </p>
                 </div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                  />
-                  <path
-                    d="M0 0h24v24H0V0z"
-                    fill="none"
                   />
                 </svg>
               </div>
@@ -1927,18 +1902,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -2223,18 +2193,13 @@ Array [
                   </p>
                 </div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                  />
-                  <path
-                    d="M0 0h24v24H0V0z"
-                    fill="none"
                   />
                 </svg>
               </div>
@@ -2310,18 +2275,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -2410,18 +2370,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -2510,18 +2465,13 @@ Array [
             >
               <div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
                   />
                 </svg>
                 <div
@@ -2715,18 +2665,22 @@ Array [
               <div
                 className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
               >
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  <path
-                    d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
-                  />
-                </svg>
-                <p
-                  className="MuiTypography-root MuiTypography-body2"
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+                    />
+                  </svg>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
                   <div
                     style={
@@ -2900,24 +2854,45 @@ Array [
                 <div
                   className="MuiGrid-root MuiGrid-item"
                 >
-                  1.2     
-                </p>
-                <svg
-                  aria-hidden={true}
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
+                    }
+                  >
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.2
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid2
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  <path
-                    d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-                  />
-                </svg>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
     </ul>
@@ -3019,18 +2994,13 @@ Array [
                   </p>
                 </div>
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   viewBox="0 0 24 24"
                 >
                   <path
                     d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                  />
-                  <path
-                    d="M0 0h24v24H0V0z"
-                    fill="none"
                   />
                 </svg>
               </div>
