@@ -1,23 +1,31 @@
+import { Button, Grid, Typography } from "@material-ui/core";
 import React from "react";
-import {
-  Avatar,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
-import Done from "@material-ui/icons/Done";
-
-import { User } from "../../../types/user";
+import { Translate } from "react-localize-redux";
+import Modal from "react-modal";
+import { toast, ToastContainer } from "react-toastify";
+//styles the ToastContainer so that it appears on the upper right corner with the message.
+import "react-toastify/dist/ReactToastify.min.css";
 import {
   addUserRole,
   avatarSrc,
   getAllUsers,
   getAllUsersInCurrentProject,
 } from "../../../backend";
-import theme from "../../../types/theme";
 import { getCurrentUser } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
+import { User } from "../../../types/user";
+import EmailInvite from "./EmailInvite";
+import UserList from "./UserList";
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
 
 interface UserProps {
   project: Project;
@@ -29,6 +37,7 @@ interface UserState {
   modalOpen: boolean;
   openUser?: User;
   userAvatar: { [key: string]: string };
+  showModal: boolean;
 }
 
 class ProjectUsers extends React.Component<UserProps, UserState> {
@@ -39,12 +48,22 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
       projUsers: [],
       modalOpen: false,
       userAvatar: {},
+      showModal: false,
     };
   }
 
   componentDidMount() {
+    Modal.setAppElement("body");
     this.populateUsers();
   }
+
+  handleOpenModal = () => {
+    this.setState({ showModal: true });
+  };
+
+  handleCloseModal = () => {
+    this.setState({ showModal: false });
+  };
 
   componentDidUpdate(prevProps: UserProps) {
     if (this.props.project.name !== prevProps.project.name) {
@@ -84,33 +103,64 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   addToProject(user: User) {
     const currentUser = getCurrentUser();
     if (currentUser && user.id !== currentUser.id) {
-      addUserRole([1, 2, 3], user).then(() => this.populateUsers());
+      addUserRole([1, 2, 3], user)
+        .then(() => {
+          toast(<Translate id="projectSettings.invite.toastSuccess" />);
+          this.populateUsers();
+        })
+        .catch((err: string) => {
+          console.log(err);
+          toast(<Translate id="projectSettings.invite.toastFail" />);
+        });
     }
   }
 
   render() {
     return (
       <React.Fragment>
-        <List>
-          {this.state.projUsers.map((user) => (
-            <ListItem button>
-              <ListItemIcon>
-                <Done />
-              </ListItemIcon>
-              <Avatar
-                alt="User Avatar"
-                src={this.state.userAvatar[user.id]}
-                style={{ marginRight: theme.spacing(1) }}
-              />
-              <ListItemText primary={`${user.name} (${user.username})`} />
-            </ListItem>
-          ))}
-          {this.state.allUsers.map((user) => (
-            <ListItem button onClick={() => this.addToProject(user)}>
-              <ListItemText primary={`${user.name} (${user.username})`} />
-            </ListItem>
-          ))}
-        </List>
+        <Grid container spacing={1}>
+          <UserList
+            allUsers={this.state.allUsers}
+            projUsers={this.state.projUsers}
+            userAvatar={this.state.userAvatar}
+            addToProject={(user: User) => this.addToProject(user)}
+          />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </Grid>
+
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Typography>
+              <Translate id="projectSettings.invite.or" />
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Button variant="contained" onClick={this.handleOpenModal}>
+              <Translate id="projectSettings.invite.inviteByEmailLabel" />
+            </Button>
+          </Grid>
+        </Grid>
+
+        <Modal
+          isOpen={this.state.showModal}
+          style={customStyles}
+          shouldCloseOnOverlayClick={true}
+          onRequestClose={this.handleCloseModal}
+        >
+          <EmailInvite />
+        </Modal>
+        {/* </Grid> */}
       </React.Fragment>
     );
   }
