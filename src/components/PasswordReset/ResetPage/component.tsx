@@ -35,7 +35,7 @@ export default class PasswordReset extends React.Component<
   ) {
     super(props);
     this.state = {
-      token: this.props.match.params.token,
+      token: this.props.match && this.props.match.params.token,
       password: "",
       passwordConfirm: "",
       sentAttempt: false,
@@ -148,6 +148,7 @@ export default class PasswordReset extends React.Component<
                     </Typography>
                   )}
                   <Button
+                    id="submit_button"
                     variant="contained"
                     color="primary"
                     disabled={

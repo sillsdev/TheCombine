@@ -2,6 +2,7 @@ import { simpleWord, Word } from "../../types/word";
 import { defaultState as goalTimelineState } from "../GoalTimeline/DefaultState";
 import { defaultState as createProjectState } from "../ProjectScreen/CreateProject/CreateProjectReducer";
 import { defaultState as goalSelectorState } from "../GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
+import { defaultState as passwordResetState } from "../PasswordReset/reducer";
 
 export const defaultState = {
   draggedWordState: {
@@ -34,5 +35,8 @@ export const defaultState = {
   },
   goalSelectorState: {
     ...goalSelectorState,
+  },
+  passwordResetState: {
+    ...passwordResetState,
   },
 };
