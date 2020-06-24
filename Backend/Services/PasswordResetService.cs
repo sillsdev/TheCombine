@@ -21,18 +21,18 @@ namespace BackendFramework.Services
         public async Task<PasswordReset> CreatePasswordReset(string email)
         {
             var resetRequest = new PasswordReset(email);
-            await _passwordResets.PasswordResets.InsertOneAsync(resetRequest);
+            await _passwordResets.Insert(resetRequest);
             return resetRequest;
         }
 
         public async Task ExpirePasswordReset(string email)
         {
-            await _passwordResets.PasswordResets.DeleteManyAsync(x => x.Email == email);
+            await _passwordResets.ClearAll(email);
         }
 
         async Task<bool> IPasswordResetService.ResetPassword(string email, string token, string password)
         {
-            var request = (await _passwordResets.PasswordResets.FindAsync(r => r.Token == token)).Single();
+            var request = await _passwordResets.FindByToken(token);
             if (request.Email == email && DateTime.Now < request.ExpireTime)
             {
                 var user = (await _userService.GetAllUsers()).Where(u => u.Email == email).Single();

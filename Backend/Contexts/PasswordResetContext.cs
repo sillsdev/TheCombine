@@ -3,6 +3,7 @@ using BackendFramework.Models;
 using MongoDB.Driver;
 using static BackendFramework.Startup;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace BackendFramework.Contexts
 {
@@ -16,6 +17,22 @@ namespace BackendFramework.Contexts
             _db = client.GetDatabase(options.Value.CombineDatabase);
         }
 
-        public IMongoCollection<PasswordReset> PasswordResets => _db.GetCollection<PasswordReset>("PasswordResetCollection");
+        private IMongoCollection<PasswordReset> PasswordResets => _db.GetCollection<PasswordReset>("PasswordResetCollection");
+
+        public Task ClearAll(string email)
+        {
+            return PasswordResets.DeleteManyAsync(x => x.Email == email);
+        }
+
+        public async Task<PasswordReset> FindByToken(string token)
+        {
+            return (await PasswordResets.FindAsync(r => r.Token == token)).Single();
+        }
+
+        public Task Insert(PasswordReset reset)
+        {
+            return PasswordResets.InsertOneAsync(reset);
+        }
     }
 }
+

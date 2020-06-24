@@ -97,7 +97,7 @@ namespace Backend.Tests
 
         public Task<ResultOfUpdate> ChangePassword(string userId, string password)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(ResultOfUpdate.Updated); //TODO: more sophisticated mock
         }
     }
 }
