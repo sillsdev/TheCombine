@@ -43,7 +43,7 @@ export default function UserMenu() {
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} />
         ) : (
-          <Person style={{ fontSize: 60 }} />
+          <Person style={{ fontSize: 40 }} />
         )}
       </Button>
       <Menu

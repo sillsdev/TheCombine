@@ -14,7 +14,6 @@ services:
     build:
       context: .
       args:
-        - API_BASE_URL=https://localhost/v1
         - CAPTCHA_REQUIRED=true
         - CAPTCHA_SITE=6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3
     volumes:
