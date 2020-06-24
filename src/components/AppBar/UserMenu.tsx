@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
-import { ExitToApp, Person } from "@material-ui/icons";
+import { ExitToApp, Person, SettingsApplications  } from "@material-ui/icons";
 
 import history from "../../history";
 import theme from "../../types/theme";
@@ -33,6 +33,11 @@ export default function UserMenu() {
 
   getAvatar();
 
+  // Determine if the user is an Admin user.
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+  const isAdmin: boolean = user && user.isAdmin;
+
   return (
     <div>
       <Button
@@ -61,7 +66,19 @@ export default function UserMenu() {
           vertical: "top",
           horizontal: "right",
         }}
-      >
+      > 
+        {/* Only show Site Settings link to Admin users. */}
+        {isAdmin && (
+          <MenuItem
+            onClick={() => {
+              history.push("/site-settings");
+            }}
+          >
+            <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
+            <Translate id="userMenu.siteSettings" />
+          </MenuItem>
+        )}
+
         <MenuItem
           onClick={() => {
             history.push("/user-settings");
