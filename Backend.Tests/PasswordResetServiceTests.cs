@@ -40,7 +40,7 @@ namespace Backend.Tests
             _userService.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
-            Assert.IsTrue(_passwordResetService.ResetPassword("user@domain.com", request.Token, "newPassword").Result);
+            Assert.IsTrue(_passwordResetService.ResetPassword(request.Token, "newPassword").Result);
             Assert.IsEmpty(_passwordResets.GetResets());
         }
 
@@ -54,7 +54,7 @@ namespace Backend.Tests
             var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
             request.ExpireTime = DateTime.Now.AddMinutes(-1);
 
-            Assert.IsFalse(_passwordResetService.ResetPassword("user@domain.com", request.Token, "newPassword").Result);
+            Assert.IsFalse(_passwordResetService.ResetPassword(request.Token, "newPassword").Result);
         }
 
         [Test]
