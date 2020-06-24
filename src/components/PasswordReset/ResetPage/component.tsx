@@ -45,22 +45,22 @@ export default class PasswordReset extends React.Component<
   }
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
-    this.setState({
+    this.setState((prevState) => ({
       ...this.state,
       sentAttempt: true,
-    });
+    }));
     this.props.passwordReset(this.state.token, this.state.password);
     event.preventDefault();
   };
 
   onChangePassword = (password: string, confirmPassword: string) => {
-    this.setState({
+    this.setState((prevState) => ({
       ...this.state,
       passwordLength: password.length < 8,
       passwordSame: password !== confirmPassword,
       password: password,
       passwordConfirm: confirmPassword,
-    });
+    }));
   };
 
   render() {
@@ -81,7 +81,7 @@ export default class PasswordReset extends React.Component<
                   style={{ width: "100%" }}
                   margin="normal"
                   onChange={(e) =>
-                    this.setState({ ...this.state, token: e.target.value })
+                    this.setState((prevState) => ({ ...this.state, token: e.target.value }))
                   }
                 />
               </Grid>
