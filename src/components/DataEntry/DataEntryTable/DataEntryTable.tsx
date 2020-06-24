@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Typography, useMediaQuery } from "@material-ui/core";
 import React from "react";
 import {
   LocalizeContextProps,
@@ -331,14 +331,15 @@ export class DataEntryTable extends React.Component<
                 this.setState({ isReady: isReady })
               }
             />
-            <div> 
-            <ExistingDataTable domain={this.props.semanticDomain}/>
-            </div>
           </Grid>
         </Grid>
 
-        <Grid container justify="flex-end" spacing={2}>
-          <Grid item>
+
+        <Grid container justify="space-between" spacing={3}>
+          <Grid item justify="flex-start">
+            <ExistingDataTable domain={this.props.semanticDomain} typeDrawer={true}/>
+          </Grid>
+          <Grid item justify="flex-end">
             <Button
               id="complete"
               type="submit"
