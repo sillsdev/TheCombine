@@ -43,13 +43,11 @@ export async function resetPasswordRequest(email: string): Promise<boolean> {
 }
 
 export async function resetPassword(
-  email: string,
   token: string,
   password: string
 ): Promise<boolean> {
   let resp = await backendServer
     .post(`users/forgot/reset`, {
-      email: email,
       token: token,
       newPassword: password,
     })

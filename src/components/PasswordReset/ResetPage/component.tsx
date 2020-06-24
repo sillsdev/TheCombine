@@ -8,7 +8,7 @@ export interface MatchParams {
 }
 
 export interface ResetDispatchProps {
-  passwordReset: (email: string, token: string, password: string) => void;
+  passwordReset: (token: string, password: string) => void;
 }
 
 export interface PasswordResetProps extends RouteComponentProps<MatchParams> {
@@ -19,7 +19,6 @@ export interface PasswordResetProps extends RouteComponentProps<MatchParams> {
 
 export interface PasswordResetState {
   token: string;
-  email: string;
   password: string;
   passwordConfirm: string;
   sentAttempt: boolean;
@@ -35,7 +34,6 @@ export default class PasswordReset extends React.Component<
     super(props);
     this.state = {
       token: this.props.match.params.token,
-      email: "",
       password: "",
       passwordConfirm: "",
       sentAttempt: false,
@@ -48,7 +46,6 @@ export default class PasswordReset extends React.Component<
       sentAttempt: true,
     });
     this.props.passwordReset(
-      this.state.email,
       this.state.token,
       this.state.password
     );
@@ -74,18 +71,6 @@ export default class PasswordReset extends React.Component<
                   margin="normal"
                   onChange={(e) =>
                     this.setState({ ...this.state, token: e.target.value })
-                  }
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  variant="outlined"
-                  label={<Translate id="passwordReset.emailLabel" />}
-                  value={this.state.email}
-                  style={{ width: "100%" }}
-                  margin="normal"
-                  onChange={(e) =>
-                    this.setState({ ...this.state, email: e.target.value })
                   }
                 />
               </Grid>

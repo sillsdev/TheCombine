@@ -30,14 +30,14 @@ namespace BackendFramework.Services
             await _passwordResets.ClearAll(email);
         }
 
-        async Task<bool> IPasswordResetService.ResetPassword(string email, string token, string password)
+        async Task<bool> IPasswordResetService.ResetPassword(string token, string password)
         {
             var request = await _passwordResets.FindByToken(token);
-            if (request.Email == email && DateTime.Now < request.ExpireTime)
+            if (DateTime.Now < request.ExpireTime)
             {
-                var user = (await _userService.GetAllUsers()).Where(u => u.Email == email).Single();
+                var user = (await _userService.GetAllUsers()).Where(u => u.Email == request.Email).Single();
                 await _userService.ChangePassword(user.Id, password);
-                await ExpirePasswordReset(email);
+                await ExpirePasswordReset(request.Email);
                 return true;
             }
             else

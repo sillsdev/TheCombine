@@ -45,13 +45,13 @@ export function asyncResetRequest(email: string) {
   };
 }
 
-export function asyncReset(email: string, token: string, password: string) {
+export function asyncReset(token: string, password: string) {
   return async (
     dispatch: Dispatch<ResetAction | ThunkAction<any, {}, {}, AnyAction>>
   ) => {
     dispatch(resetAttempt());
     // call reset
-    let success = await resetPassword(email, token, password);
+    let success = await resetPassword(token, password);
     if (success) {
       dispatch(resetSuccess());
       history.push("/login");

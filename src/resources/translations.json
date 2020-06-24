@@ -128,7 +128,6 @@
       "We will send a one time reset link for your account to your email",
       "Le enviaremos un enlace de restablecimiento único para su cuenta a su correo electrónico"
     ],
-    "emailLabel": ["Email address", "Dirección de correo electrónico"],
     "submit": ["Submit", "Enviar"],
     "resetFail": ["Failed to reset password", "Error al restablecer contraseña"]
   },

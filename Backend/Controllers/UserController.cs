@@ -70,7 +70,7 @@ namespace BackendFramework.Controllers
         [HttpPost("forgot/reset")]
         public async Task<IActionResult> ResetPassword([FromBody] PasswordResetData data)
         {
-            var result = await _passwordResetService.ResetPassword(data.Email, data.Token, data.NewPassword);
+            var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
             if (result)
             {
                 return new OkResult();

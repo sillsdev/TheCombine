@@ -16,7 +16,7 @@ namespace Backend.Tests
             return Task.CompletedTask;
         }
 
-        public Task<bool> ResetPassword(string email, string token, string password)
+        public Task<bool> ResetPassword(string token, string password)
         {
             // todo: More sophisticated mock
             return Task.FromResult(true);
