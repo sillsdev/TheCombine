@@ -1,101 +1,80 @@
 import React from "react";
 import { Provider } from "react-redux";
-import DataEntryHeader from "../DataEntryHeader";
+import { DataEntryHeader, getQuestions } from "../DataEntryHeader";
 import configureMockStore from "redux-mock-store";
-import renderer, {
-  ReactTestRenderer,
-  ReactTestInstance,
-} from "react-test-renderer";
-import { baseDomain } from "../../../../types/SemanticDomain";
-import { Switch } from "@material-ui/core";
+import renderer, { ReactTestInstance } from "react-test-renderer";
+import SemanticDomainWithSubdomains, {
+  baseDomain,
+} from "../../../../types/SemanticDomain";
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
-
-let testRenderer: ReactTestRenderer;
-
-beforeEach(() => {
-  renderer.act(() => {
-    testRenderer = renderer.create(
-      <Provider store={mockStore}>
-        <DataEntryHeader
-          domain={baseDomain}
-          questionsVisible={false}
-          setQuestionVisibility={() => {}}
-        />
-      </Provider>
-    );
-  });
-});
 
 describe("Tests DataEntryHeader", () => {
   it("No questions should disable switch and show no questions", () => {
     const mockCallback = jest.fn();
-
-    const instance = renderer.create(
-      <Provider store={mockStore}>
-        <DataEntryHeader
-          domain={baseDomain}
-          questionsVisible={true}
-          setQuestionVisibility={mockCallback}
-        />
-      </Provider>
-    ).root;
-
-    //assert disabled switch and no questions shown
+    const instance = createDataEntryHeaderInstance(
+      baseDomain,
+      true,
+      mockCallback
+    );
+    const questionSwitch = instance.findByProps({
+      id: "questionVisibilitySwitch",
+    });
+    expect(questionSwitch.props.disabled).toBeTruthy();
+    expect(getQuestions(true, [])).toEqual([]);
   });
 
   it("Questions Visible should show questions", () => {
-    const newDomain = { ...baseDomain, questions: ["Q1"] };
+    const newDomain = { ...baseDomain, questions: ["Q1", "Q2", "Q3"] };
     const mockCallback = jest.fn();
 
-    const instance = renderer.create(
-      <Provider store={mockStore}>
-        <DataEntryHeader
-          domain={newDomain}
-          questionsVisible={true}
-          setQuestionVisibility={mockCallback}
-        />
-      </Provider>
-    ).root;
-
-    //assert questions are visible
+    const instance = createDataEntryHeaderInstance(
+      newDomain,
+      true,
+      mockCallback
+    );
+    newDomain.questions.forEach((questionString, index) => {
+      let question: ReactTestInstance = instance.findByProps({
+        id: `q${index}`,
+      });
+      expect(question.props.children).toEqual(questionString);
+    });
   });
 
   it("Questions not visible should hide questions", () => {
-    const newDomain = { ...baseDomain, questions: ["Q1", "Q2"] };
-    const mockCallback = jest.fn();
-
-    const instance = renderer.create(
-      <Provider store={mockStore}>
-        <DataEntryHeader
-          domain={newDomain}
-          questionsVisible={false}
-          setQuestionVisibility={mockCallback}
-        />
-      </Provider>
-    ).root;
-
-    //assert questions are hidden
+    expect(getQuestions(false, ["Q1", "Q2"])).toBeUndefined();
   });
 
   it("Callback should be called on switch click", () => {
     const newDomain = { ...baseDomain, questions: ["Q1", "Q2"] };
     const mockCallback = jest.fn();
 
-    const instance = renderer.create(
-      <Provider store={mockStore}>
-        <DataEntryHeader
-          domain={newDomain}
-          questionsVisible={false}
-          setQuestionVisibility={mockCallback}
-        />
-      </Provider>
-    ).root;
+    const instance: ReactTestInstance = createDataEntryHeaderInstance(
+      newDomain,
+      false,
+      mockCallback
+    );
 
-    const swInMethod = instance.findByProps({
+    const questionSwitch: ReactTestInstance = instance.findByProps({
       id: "questionVisibilitySwitch",
     });
-    swInMethod.props.onChange();
+    questionSwitch.props.onChange();
     expect(mockCallback).toHaveBeenCalledTimes(1);
   });
 });
+
+function createDataEntryHeaderInstance(
+  dom: SemanticDomainWithSubdomains,
+  qV: boolean,
+  mCb: jest.Mock
+): ReactTestInstance {
+  return renderer.create(
+    <Provider store={mockStore}>
+      <DataEntryHeader
+        domain={dom}
+        questionsVisible={qV}
+        setQuestionVisibility={mCb}
+      />
+    </Provider>
+  ).root;
+}

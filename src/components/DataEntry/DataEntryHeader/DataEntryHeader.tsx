@@ -23,14 +23,8 @@ export class DataEntryHeader extends React.Component<
   DataEntryHeaderProps & LocalizeContextProps
 > {
   render() {
-    let questions;
     const hasQuestions: boolean =
       this.props.domain.questions && this.props.domain.questions.length > 0;
-    if (this.props.questionsVisible) {
-      questions = this.props.domain.questions.map((q) => (
-        <Typography>{q}</Typography>
-      ));
-    }
     return (
       <Typography
         variant="h4"
@@ -53,10 +47,18 @@ export class DataEntryHeader extends React.Component<
           style={{ paddingTop: "8px" }}
           disabled={!hasQuestions}
         />
-        {questions}
+        {getQuestions(this.props.questionsVisible, this.props.domain.questions)}
       </Typography>
     );
   }
 }
-
+export function getQuestions(qV: boolean, questions: string[]) {
+  if (qV) {
+    return questions.map((q, index) => (
+      <Typography id={"q" + index} key={index}>
+        {q}
+      </Typography>
+    ));
+  }
+}
 export default withLocalize(DataEntryHeader);
