@@ -1,16 +1,24 @@
 import React from "react";
 import {
   LocalizeContextProps,
-  withLocalize,
   Translate,
+  withLocalize,
 } from "react-localize-redux";
 import {
-  Grid,
-  Typography,
   FormControl,
+  Grid,
   MenuItem,
   Select,
+  Typography,
 } from "@material-ui/core";
+import {
+  CloudUpload,
+  Edit,
+  GetApp,
+  List,
+  People,
+  Sms,
+} from "@material-ui/icons";
 
 import { Project } from "../../types/project";
 import { AutoComplete } from "../../types/AutoComplete";
@@ -21,7 +29,6 @@ import { UserRole } from "../../types/userRole";
 import { LanguageProps } from "./Language/LanguageSettings";
 import ProjectImport from "./ProjectImport";
 import ProjectName from "./ProjectName";
-import { Edit, CloudUpload, GetApp, People, List } from "@material-ui/icons";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
 import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
 import ProjectUsers from "./ProjectUsers";
@@ -99,7 +106,7 @@ class ProjectSettingsComponent extends React.Component<
             {/* Project List */}
             <BaseSettingsComponent
               icon={<List />}
-              title={<Translate id="projectSettings.list" />}
+              title={<Translate id="projectSettings.projectList" />}
               body={<ProjectSwitch />}
             />
 
@@ -135,7 +142,7 @@ class ProjectSettingsComponent extends React.Component<
             />
 
             <BaseSettingsComponent
-              icon={<GetApp />}
+              icon={<Sms />}
               title={<Translate id="projectSettings.autocomplete.label" />}
               body={
                 <FormControl>

@@ -43,6 +43,7 @@ async function getWordsFromBackend(): Promise<Word[]> {
   words = filterWords(words);
   return words;
 }
+
 async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
   let proj = await Backend.getProject(LocalStorage.getProjectId());
   return proj.autocompleteSetting;
@@ -116,11 +117,7 @@ export class DataEntryTable extends React.Component<
   }
 
   /** Update the word in the backend and the frontend */
-  async updateWordForNewEntry(
-    wordToUpdate: Word,
-    glossIndex: number,
-    shouldBeMutable?: boolean
-  ) {
+  async updateWordForNewEntry(wordToUpdate: Word, glossIndex: number) {
     let existingWord = this.state.existingWords.find(
       (word) => word.id === wordToUpdate.id
     );
@@ -303,16 +300,8 @@ export class DataEntryTable extends React.Component<
             <NewEntry
               ref={this.refNewEntry}
               allWords={this.state.existingWords}
-              updateWord={(
-                wordToUpdate: Word,
-                glossIndex: number,
-                shouldBeMutable?: boolean
-              ) =>
-                this.updateWordForNewEntry(
-                  wordToUpdate,
-                  glossIndex,
-                  shouldBeMutable
-                )
+              updateWord={(wordToUpdate: Word, glossIndex: number) =>
+                this.updateWordForNewEntry(wordToUpdate, glossIndex)
               }
               addNewWord={(word: Word) => this.addNewWord(word)}
               spellChecker={this.spellChecker}
@@ -347,11 +336,29 @@ export class DataEntryTable extends React.Component<
         <Grid container justify="flex-end" spacing={2}>
           <Grid item>
             <Button
+              id="complete"
               type="submit"
               variant="contained"
               color={this.state.isReady ? "primary" : "secondary"}
               style={{ marginTop: theme.spacing(2) }}
               onClick={() => {
+                if (this.refNewEntry.current) {
+                  let newEntry = this.refNewEntry.current.state.newEntry;
+                  if (
+                    newEntry &&
+                    newEntry.vernacular &&
+                    newEntry.vernacular !== ""
+                  ) {
+                    this.addNewWord(newEntry).then(() => {
+                      // When the server responds clear out recently added words so
+                      // this word doesn't appear in the next domain
+                      let recentlyAddedWords: WordAccess[] = [];
+                      this.setState({ recentlyAddedWords });
+                    });
+                    // clear the data from the NewEntry fields
+                    this.refNewEntry.current.resetState();
+                  }
+                }
                 let recentlyAddedWords: WordAccess[] = [];
                 this.props.displaySemanticDomainView(true);
                 this.setState({ recentlyAddedWords });
