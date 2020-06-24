@@ -2,7 +2,8 @@ import React from "react";
 import { Word, SemanticDomain, Gloss } from "../../../types/word";
 import { getWordsFromBackend } from "../DataEntryTable/DataEntryTable";
 import { ImmutableExistingData } from "./ImmutableExistingData/ImmutableExistingData";
-import { Button, Drawer, Grid, List, makeStyles, Theme, createStyles, Hidden, } from "@material-ui/core";
+import { Button, Drawer, Grid, List, makeStyles, Theme, createStyles, Hidden, useMediaQuery, } from "@material-ui/core";
+import ListIcon from '@material-ui/icons/List';
 import theme from "../../../types/theme";
 
 interface DomainWord {
@@ -12,14 +13,16 @@ interface DomainWord {
 
 interface ExistingDataTableProps {
   domain: SemanticDomain;
+  typeDrawer: boolean;
 }
 
 interface ExistingDataTableStates {
   existingWords: Word[];
   domainWords: DomainWord[];
-  reducedSize: string;
   open: boolean;
+  isSmallScreen: boolean;
 }
+
 
 function filterWordsByDomain(
   words: Word[],
@@ -60,6 +63,7 @@ function sortDomainWordByVern(existingData: ExistingDataTable): DomainWord[] {
   );
   return domainWords;
 }
+
 /*Displays previously entered data in a panel to the right of the DataEntryTable */
 export class ExistingDataTable extends React.Component<
   ExistingDataTableProps,
@@ -70,11 +74,13 @@ export class ExistingDataTable extends React.Component<
     this.state = {
       existingWords: [],
       domainWords: [],
-      reducedSize: theme.breakpoints.down("md"),
       open: false,
+      isSmallScreen: false,
     };
   }
   
+  
+
   toggleDrawer = (openClose: boolean) => (
     event: React.KeyboardEvent | React.MouseEvent,
   ) => {
@@ -91,10 +97,23 @@ export class ExistingDataTable extends React.Component<
   };
 
   async componentDidMount() {
+    window.addEventListener("resize", this.handleWindowSizeChange);
+
     let allWords = await getWordsFromBackend();
     this.setState({
       existingWords: allWords,
       domainWords: sortDomainWordByVern(this),
+    });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleWindowSizeChange);
+  }
+
+  handleWindowSizeChange = () => {
+    let smallScreen: boolean = window.matchMedia("(max-width: 960px)").matches;
+    this.setState({
+      isSmallScreen: smallScreen,
     });
   }
 
@@ -123,34 +142,53 @@ export class ExistingDataTable extends React.Component<
     );
   }
   
+  renderDrawer() {
+    if (this.state.domainWords !== [] && this.props.typeDrawer){
+      return (
+        <React.Fragment >
+            <Button 
+            style={{ marginTop: theme.spacing(2) }}
+            onClick={this.toggleDrawer(true)}>
+              <ListIcon fontSize={"default"} color={"inherit"} />
+              </Button>
+            <Drawer 
+              role="presentation" 
+              anchor={'left'} 
+              open={this.state.open} 
+              onClose={this.toggleDrawer(false)}
+            >
+              {this.list()}
+            </Drawer>
+        </React.Fragment>
+      );
+    }
+    return null;
+  }
   
-  
+  renderSidePanel() {
+    if (!this.props.typeDrawer){
+      return(
+          <React.Fragment >
+            <Grid item >
+              {this.list()}
+            </Grid>
+          </React.Fragment>
+      );
+    }
+    return null;
+  }
   /*Make an interface that has the Word and an array of numbers to reference the senses desired to be displayed*/
   render() {
     this.updateTable();
     let domainWords: DomainWord[] = this.state.domainWords;
     if (domainWords !== []) {
       return (
-          <React.Fragment >
-            <Hidden  lgUp>
-              <Button onClick={this.toggleDrawer(true)}>{">"}</Button>
-              <Drawer 
-                role="presentation" 
-                anchor={'right'} 
-                open={this.state.open} 
-                onClose={this.toggleDrawer(false)}
-              >
-                {this.list()}
-              </Drawer>
-            </Hidden>
-            <Hidden mdDown >
-              <Grid item >
-                {this.list()}
-              </Grid>
-            </Hidden>
-          </React.Fragment>
+      <React.Fragment>
+      { this.state.isSmallScreen ? this.renderDrawer() : this.renderSidePanel()}
+      </React.Fragment>
       );
     }
     return "empty";
   }
+
 }

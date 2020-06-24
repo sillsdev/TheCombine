@@ -4,6 +4,7 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { blue, grey, red, green, yellow } from "@material-ui/core/colors";
 import { responsiveFontSizes } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
+import createBreakpoints from "@material-ui/core/styles/createBreakpoints";
 
 // Constants which define colors later:
 const primary: string = blue[600];

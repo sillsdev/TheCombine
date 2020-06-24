@@ -1,5 +1,5 @@
 import React from "react";
-import { Paper, Divider, Dialog, Grid, Drawer, Hidden } from "@material-ui/core";
+import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
 import theme from "../../types/theme";
 
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
@@ -10,7 +10,6 @@ import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { ExistingDataTable } from "./ExistingDataTable/ExistingDataTable";
-import { updateAllWords } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 
 interface DataEntryProps {
   domain: DomainTree;
@@ -18,7 +17,6 @@ interface DataEntryProps {
 
 interface DataEntryState {
   displaySemanticDomain: boolean;
-  reducedSize: boolean;
 }
 
 const paperStyle = {
@@ -27,8 +25,6 @@ const paperStyle = {
   marginLeft: "auto",
   marginRight: "auto",
 };
-
-
 
 /**
  * Allows users to add words to a project, add senses to an existing word,
@@ -42,28 +38,15 @@ export class DataEntryComponent extends React.Component<
     super(props);
     this.state = {
       displaySemanticDomain: true,
-      reducedSize: (window.innerWidth * 7) / 10 < window.innerHeight,
     };
-  }
-
-  handleWindowSizeChange = () => {
-    this.setState({
-      reducedSize: (window.innerWidth * 7) / 10 < window.innerHeight,
-    });
-  };
-
-  componentDidMount() {
-    window.addEventListener("resize", this.handleWindowSizeChange);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.handleWindowSizeChange);
   }
 
   renderExistingDataTable() {
     return (
       <React.Fragment >
-        <ExistingDataTable domain={this.props.domain} />
+        <ExistingDataTable 
+        domain={this.props.domain} 
+        typeDrawer={false} />
       </React.Fragment>
     );
   }
@@ -78,7 +61,7 @@ export class DataEntryComponent extends React.Component<
       <React.Fragment>
         <AppBarComponent />
 
-        <Grid container justify="center" spacing={3} direction={"row"}>
+        <Grid container justify="center" spacing={3} wrap={"nowrap"}>
           <Grid item>
             <Paper style={paperStyle}>
               <DataEntryHeader domain={this.props.domain} />
@@ -96,9 +79,7 @@ export class DataEntryComponent extends React.Component<
               />
             </Paper>
           </Grid>
-          <Hidden >
           {this.renderExistingDataTable()}
-          </Hidden >
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
             <AppBarComponent />
             <TreeViewComponent
