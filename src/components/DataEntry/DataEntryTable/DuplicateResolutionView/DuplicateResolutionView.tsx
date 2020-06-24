@@ -9,6 +9,7 @@ interface DuplicateResolutionViewProps {
   newSense: string;
   addSense: (existingWord: Word, newSense: string) => void;
   addSemanticDomain: (existingWord: Word, sense: Sense, index: number) => void;
+  duplicateInput: React.RefObject<HTMLDivElement>;
 }
 
 /**
@@ -28,6 +29,7 @@ export class DuplicateResolutionView extends React.Component<
             paddingLeft: theme.spacing(2),
             paddingRight: theme.spacing(2),
           }}
+          ref={this.props.duplicateInput}
         >
           <Typography variant="body1">
             {"Similar word: " + this.props.existingEntry.vernacular}
