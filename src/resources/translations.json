@@ -233,6 +233,30 @@
       "off": ["Off", "Apagar", "Éteint"],
       "request": ["Optional", "Opcional", "En option"],
       "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
+    },
+    "invite": {
+      "inviteByEmailLabel": [
+        "Invite by Email",
+        "Invitar por correo electrónico",
+        "Inviter par email"
+      ],
+      "inviteButton": ["Invite", "Invitar", "Inviter"],
+      "or": ["OR", "O", "OU"],
+      "searchPlaceholder": ["Search...", "Buscar...", "Chercher..."],
+      "searchTitle": [
+        "Find Users",
+        "Encontrar usarios",
+        "Rechercher utilisateurs"
+      ],
+      "addButton": ["Add", "Añadir", "Ajouter"],
+      "emailLabel": ["Email", "Correo electrónico", "Email"],
+      "messageLabel": ["Message", "Mensaje", "Message"],
+      "toastSuccess": ["Added User!", "¡Usario añadido!", "Utilisateur Ajouté"],
+      "toastFail": [
+        "Failed to add user!",
+        "¡Error al añadir usuario!",
+        "Échec de l'ajout de l'utilisateur!"
+      ]
     }
   },
   "goal": {
