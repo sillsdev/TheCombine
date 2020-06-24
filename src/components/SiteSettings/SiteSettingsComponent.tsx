@@ -19,7 +19,7 @@ class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
   render() {
     return (
       <React.Fragment>
-        <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
+        <AppBarComponent currentTab={CurrentTab.SiteSettings} />
         <Grid container justify="center" spacing={6}>
           {/* Project List */}
           <BaseSettingsComponent

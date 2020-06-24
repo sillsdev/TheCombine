@@ -6,6 +6,7 @@ export enum CurrentTab {
   PageNotFound,
   ProjectSettings,
   ProjectScreen,
+  SiteSettings,
   UserSettings,
 }
 
