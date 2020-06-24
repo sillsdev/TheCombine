@@ -106,7 +106,7 @@ export default class PasswordReset extends React.Component<
                     variant="body2"
                     style={{ display: "inline", margin: 24, color: "red" }}
                   >
-                    <Translate id="login.passwordRequirements"/>
+                    <Translate id="login.passwordRequirements" />
                   </Typography>
                 )}
               </Grid>
@@ -118,19 +118,23 @@ export default class PasswordReset extends React.Component<
                   value={this.state.passwordConfirm}
                   style={{ width: "100%" }}
                   margin="normal"
-                  error={this.state.passwordSame && this.state.passwordConfirm.length > 0}
+                  error={
+                    this.state.passwordSame &&
+                    this.state.passwordConfirm.length > 0
+                  }
                   onChange={(e) =>
                     this.onChangePassword(this.state.password, e.target.value)
                   }
                 />
-                {this.state.passwordSame && this.state.passwordConfirm.length > 0 &&
-                  <Typography
-                    variant="body2"
-                    style={{display: "inline", margin: 24, color: "red"}}
-                  >
-                  <Translate id="login.confirmPasswordError"/>
-                  </Typography>
-                }
+                {this.state.passwordSame &&
+                  this.state.passwordConfirm.length > 0 && (
+                    <Typography
+                      variant="body2"
+                      style={{ display: "inline", margin: 24, color: "red" }}
+                    >
+                      <Translate id="login.confirmPasswordError" />
+                    </Typography>
+                  )}
               </Grid>
 
               <Grid container justify="flex-end" spacing={2}>
@@ -146,7 +150,9 @@ export default class PasswordReset extends React.Component<
                   <Button
                     variant="contained"
                     color="primary"
-                    disabled={this.state.passwordLength || this.state.passwordSame}
+                    disabled={
+                      this.state.passwordLength || this.state.passwordSame
+                    }
                     onClick={this.onSubmit}
                   >
                     <Translate id="passwordReset.submit" />

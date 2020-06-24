@@ -4,21 +4,25 @@ using BackendFramework.Services;
 using NUnit.Framework;
 using System;
 
-namespace Backend.Tests {
-    public class PasswordResetServiceTests {
+namespace Backend.Tests
+{
+    public class PasswordResetServiceTests
+    {
         private IUserService _userService;
         private PasswordResetContextMock _passwordResets;
         private IPasswordResetService _passwordResetService;
 
         [SetUp]
-        public void Setup(){
+        public void Setup()
+        {
             _userService = new UserServiceMock();
             _passwordResets = new PasswordResetContextMock();
             _passwordResetService = new PasswordResetService(_passwordResets, _userService);
         }
 
         [Test]
-        public void CreateRequest(){
+        public void CreateRequest()
+        {
             // test we can successfully create a request
             var user = new User();
             user.Email = "user@domain.com";
@@ -29,7 +33,8 @@ namespace Backend.Tests {
         }
 
         [Test]
-        public void ResetSuccess(){
+        public void ResetSuccess()
+        {
             var user = new User();
             user.Email = "user@domain.com";
             _userService.Create(user);
@@ -40,7 +45,8 @@ namespace Backend.Tests {
         }
 
         [Test]
-        public void ResetExpired(){
+        public void ResetExpired()
+        {
             var user = new User();
             user.Email = "user@domain.com";
             _userService.Create(user);
@@ -52,7 +58,8 @@ namespace Backend.Tests {
         }
 
         [Test]
-        public void ResetBadToken(){
+        public void ResetBadToken()
+        {
             return;
         }
     }

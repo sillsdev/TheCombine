@@ -4,11 +4,14 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using System.Linq;
 
-namespace Backend.Tests {
-    public class PasswordResetContextMock : IPasswordResetContext {
+namespace Backend.Tests
+{
+    public class PasswordResetContextMock : IPasswordResetContext
+    {
         protected List<PasswordReset> Resets;
 
-        public PasswordResetContextMock(){
+        public PasswordResetContextMock()
+        {
             Resets = new List<PasswordReset>();
         }
 
@@ -23,11 +26,13 @@ namespace Backend.Tests {
             return Task.FromResult(Resets.FindAll(x => x.Token == token).Single());
         }
 
-        public List<PasswordReset> GetResets(){
+        public List<PasswordReset> GetResets()
+        {
             return Resets;
         }
 
-        public void SetResets(List<PasswordReset> resets){
+        public void SetResets(List<PasswordReset> resets)
+        {
             Resets = resets;
         }
 
