@@ -5,7 +5,7 @@ import { defaultState } from "../../App/DefaultState";
 import { Provider } from "react-redux";
 import Pronunciations from "../PronunciationsComponent";
 import AudioPlayer from "../AudioPlayer";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import renderer, { ReactTestRenderer, act } from "react-test-renderer";
 import AudioRecorder from "../AudioRecorder";
 
 const createMockStore = configureMockStore([]);
@@ -31,6 +31,31 @@ beforeAll(() => {
 it("renders one record button and one play button for each pronunciation file", () => {
   expect(testRenderer.root.findAllByType(AudioRecorder).length).toBe(1);
   expect(testRenderer.root.findAllByType(AudioPlayer).length).toBe(2);
+});
+
+// Snapshot
+it("displays buttons", () => {
+  expect(testRenderer.toJSON()).toMatchSnapshot();
+});
+
+// Snapshot
+it("removes play audio button", () => {
+  renderer.act(() => {
+    testRenderer.update(
+      <Pronunciations wordId="2" pronunciationFiles={["a.wav"]} />
+    );
+  });
+  expect(testRenderer.toJSON()).toMatchSnapshot();
+});
+
+// Snapshot
+it("adds play audio button", () => {
+  renderer.act(() => {
+    testRenderer.update(
+      <Pronunciations wordId="2" pronunciationFiles={["a.wav", "c.wav"]} />
+    );
+  });
+  expect(testRenderer.toJSON()).toMatchSnapshot();
 });
 
 it("renders without crashing", () => {

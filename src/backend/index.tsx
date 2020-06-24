@@ -12,7 +12,7 @@ import { UserRole } from "../types/userRole";
 import { RuntimeConfig } from "../types/runtimeConfig";
 import * as LocalStorage from "./localStorage";
 
-const baseURL = RuntimeConfig.getInstance().baseUrl();
+const baseURL = `${RuntimeConfig.getInstance().baseUrl()}/v1`;
 
 const backendServer = axios.create({
   baseURL,
@@ -259,6 +259,17 @@ export async function uploadAudio(
     {
       headers: { ...authHeader(), "content-type": "application/json" },
     }
+  );
+  return resp.data;
+}
+
+export async function deleteAudio(
+  wordId: string,
+  fileName: string
+): Promise<string> {
+  let resp = await backendServer.delete(
+    `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
+    { headers: authHeader() }
   );
   return resp.data;
 }

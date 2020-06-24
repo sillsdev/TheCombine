@@ -5,7 +5,7 @@ exports[`Tests TreeViewHeader Renders correctly 1`] = `
   className="MuiGridList-root"
   style={
     Object {
-      "margin": -1,
+      "margin": -10,
     }
   }
 >
@@ -14,43 +14,47 @@ exports[`Tests TreeViewHeader Renders correctly 1`] = `
     style={
       Object {
         "height": "auto",
-        "padding": 1,
-        "width": "20%",
+        "padding": 10,
+        "width": "22.22222222222222%",
       }
     }
   >
     <div
       className="MuiGridListTile-tile"
     >
-      <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
-      >
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
-          disabled={false}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          style={
-            Object {
-              "float": "right",
-              "marginTop": "50%",
-            }
+      <button
+        className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+        disabled={false}
+        id="1.0"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "bottom": 0,
+            "height": "95%",
+            "left": 0,
+            "margin": "2.5%",
+            "width": "95%",
           }
-          tabIndex={0}
-          type="button"
+        }
+        tabIndex={0}
+        type="button"
+      >
+        <span
+          className="MuiButton-label"
         >
-          <span
-            className="MuiButton-label"
+          <div
+            className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
           >
             <svg
               aria-hidden={true}
@@ -65,14 +69,31 @@ exports[`Tests TreeViewHeader Renders correctly 1`] = `
             <p
               className="MuiTypography-root MuiTypography-body2"
             >
-                   1.0
-            </p>
-          </span>
-          <span
-            className="MuiTouchRipple-root"
-          />
-        </button>
-      </div>
+              <div
+                style={
+                  Object {
+                    "textTransform": "capitalize",
+                  }
+                }
+              >
+                <span
+                  className="MuiTypography-root MuiTypography-overline"
+                >
+                  1.0
+                </span>
+                <p
+                  className="MuiTypography-root MuiTypography-body1"
+                >
+                  kid0
+                </p>
+              </div>
+            </div>
+          </div>
+        </span>
+        <span
+          className="MuiTouchRipple-root"
+        />
+      </button>
     </div>
   </li>
   <li
@@ -80,8 +101,8 @@ exports[`Tests TreeViewHeader Renders correctly 1`] = `
     style={
       Object {
         "height": "auto",
-        "padding": 1,
-        "width": "60%",
+        "padding": 10,
+        "width": "55.55555555555556%",
       }
     }
   >
@@ -175,45 +196,50 @@ exports[`Tests TreeViewHeader Renders correctly 1`] = `
     style={
       Object {
         "height": "auto",
-        "padding": 1,
-        "width": "20%",
+        "padding": 10,
+        "width": "22.22222222222222%",
       }
     }
   >
     <div
       className="MuiGridListTile-tile"
     >
-      <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
-      >
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
-          disabled={false}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          style={
-            Object {
-              "marginTop": "50%",
-            }
+      <button
+        className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+        disabled={false}
+        id="1.2"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "bottom": 0,
+            "height": "95%",
+            "left": 0,
+            "margin": "2.5%",
+            "width": "95%",
           }
-          tabIndex={0}
-          type="button"
+        }
+        tabIndex={0}
+        type="button"
+      >
+        <span
+          className="MuiButton-label"
         >
-          <span
-            className="MuiButton-label"
+          <div
+            className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
           >
-            <p
-              className="MuiTypography-root MuiTypography-body2"
+            <div
+              className="MuiGrid-root MuiGrid-item"
             >
               1.2     
             </p>
