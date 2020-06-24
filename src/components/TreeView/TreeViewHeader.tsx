@@ -1,12 +1,13 @@
-import React from "react";
 import {
   Button,
   Card,
   GridList,
   GridListTile,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core";
+import React from "react";
 import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 
@@ -200,23 +201,25 @@ export default class TreeViewHeader extends React.Component<
         </GridListTile>
         <GridListTile cols={5}>
           <Card>
-            <Button
-              fullWidth
-              size="large"
-              color="primary"
-              variant="contained"
-              disabled={!this.props.currentDomain.parentDomain}
-              onClick={() => this.props.animate(this.props.currentDomain)}
-            >
-              <div style={{ textTransform: "capitalize" }}>
-                <Typography variant="overline">
-                  {this.props.currentDomain.id}
-                </Typography>
-                <Typography variant="h6">
-                  {this.props.currentDomain.name}
-                </Typography>
-              </div>
-            </Button>
+            <Tooltip title="Click to enter words for this domain">
+              <Button
+                fullWidth
+                size="large"
+                color="primary"
+                variant="contained"
+                disabled={!this.props.currentDomain.parentDomain}
+                onClick={() => this.props.animate(this.props.currentDomain)}
+              >
+                <div style={{ textTransform: "capitalize" }}>
+                  <Typography variant="overline">
+                    {this.props.currentDomain.id}
+                  </Typography>
+                  <Typography variant="h6">
+                    {this.props.currentDomain.name}
+                  </Typography>
+                </div>
+              </Button>
+            </Tooltip>
             <TextField
               fullWidth
               id="name"
