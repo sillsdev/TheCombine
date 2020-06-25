@@ -302,6 +302,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   focusAutoScroll = () => {
     if (this.duplicateInput.current) {
       this.duplicateInput.current.scrollIntoView({
+        behavior: "smooth",
         block: "nearest",
       });
     }
