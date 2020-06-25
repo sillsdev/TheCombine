@@ -350,7 +350,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="caption">
-                {<Translate id="newentry.pressEnter" />}
+                {<Translate id="addWords.pressEnter" />}
               </Typography>
             </Grid>
           </Grid>

@@ -1,6 +1,5 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-
 import SemanticDomainWithSubdomains from "../SemanticDomain";
 import TreeViewHeader from "../TreeViewHeader";
 import MockDomain from "./MockSemanticDomain";

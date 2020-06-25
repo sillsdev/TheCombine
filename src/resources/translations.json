@@ -1,19 +1,30 @@
 {
   "addWords": {
-    "domain": ["Domain", "Dominio", "Domaine"],
-    "vernacular": ["Vernacular", "Vernáculo", "Vernaculaire"],
-    "glosses": ["Glosses", "Traducciones", "Gloses"],
-    "done": ["Complete", "Completar", "Complète"],
-    "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
-    "wordInDatabase": [
-      "This word is already in the database",
-      "Esta palabra ya está en la base de datos",
-      "Ce mot est déjà dans la base de données"
+    "addNewSense": [
+      "Add New Sense +",
+      "Añadir sentido nuevo +",
+      "Ajouter nouvel sens +"
     ],
+    "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
+    "domain": ["Domain", "Dominio", "Domaine"],
+    "done": ["Complete", "Completar", "Complète"],
+    "glosses": ["Glosses", "Traducciones", "Gloses"],
     "mispelledWord": [
       "This word is mispelled",
       "Esta palabra está mal escrita",
       "Ce mot est mal orthographié"
+    ],
+    "pressEnter": [
+      "Press enter to save word",
+      "Presione enter para guardar la palabra",
+      "Appuyez sur Entrée pour enregistrer le mot"
+    ],
+    "similarWord": ["Similar word", "Palabra similar", "Mot similaire"],
+    "vernacular": ["Vernacular", "Vernáculo", "Vernaculaire"],
+    "wordInDatabase": [
+      "This word is already in the database",
+      "Esta palabra ya está en la base de datos",
+      "Ce mot est déjà dans la base de données"
     ]
   },
   "appBar": {
@@ -222,6 +233,30 @@
       "off": ["Off", "Apagar", "Éteint"],
       "request": ["Optional", "Opcional", "En option"],
       "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
+    },
+    "invite": {
+      "inviteByEmailLabel": [
+        "Invite by Email",
+        "Invitar por correo electrónico",
+        "Inviter par email"
+      ],
+      "inviteButton": ["Invite", "Invitar", "Inviter"],
+      "or": ["OR", "O", "OU"],
+      "searchPlaceholder": ["Search...", "Buscar...", "Chercher..."],
+      "searchTitle": [
+        "Find Users",
+        "Encontrar usarios",
+        "Rechercher utilisateurs"
+      ],
+      "addButton": ["Add", "Añadir", "Ajouter"],
+      "emailLabel": ["Email", "Correo electrónico", "Email"],
+      "messageLabel": ["Message", "Mensaje", "Message"],
+      "toastSuccess": ["Added User!", "¡Usario añadido!", "Utilisateur Ajouté"],
+      "toastFail": [
+        "Failed to add user!",
+        "¡Error al añadir usuario!",
+        "Échec de l'ajout de l'utilisateur!"
+      ]
     }
   },
   "goal": {
@@ -486,13 +521,6 @@
       "Recording error: Could not access a microphone",
       "Error de grabación: no se pudo acceder a un micrófono",
       "Erreur d'enregistrement : Impossible d'accéder à un microphone"
-    ]
-  },
-  "newentry": {
-    "pressEnter": [
-      "Press enter to save word",
-      "Presione enter para guardar la palabra",
-      "Appuyez sur Entrée pour enregistrer le mot"
     ]
   }
 }
