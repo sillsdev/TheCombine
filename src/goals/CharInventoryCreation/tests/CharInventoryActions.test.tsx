@@ -6,13 +6,14 @@ import {
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 import { StoreState } from "../../../types";
-import axios from "axios";
 import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
 import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
 import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 import { User } from "../../../types/user";
 import { CharacterSetEntry } from "../CharacterInventoryReducer";
-import { updateProject, addStepToGoal } from "../../../backend";
+import * as backend from "../../../backend";
+import { Project } from "../../../types/project";
+import { Goal } from "../../../types/goals";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
@@ -68,15 +69,17 @@ let mockUser: User = new User("", "", "");
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 jest.mock("../../../backend", () => ({
-  updateProject: jest.fn(),
-  addStepToGoal: jest.fn(),
+  updateProject: jest.fn((_project: Project) => {
+    return Promise.resolve("projectId");
+  }),
+  addStepToGoal: jest.fn(
+    (_userEditId: string, _indexInHistory: number, _goal: Goal) => {
+      return Promise.resolve(mockGoal);
+    }
+  ),
 }));
 
-const mockUpdateProject = (updateProject as unknown) as jest.Mock<any>;
-const mockAddStepToGoal = (addStepToGoal as unknown) as jest.Mock<any>;
-
-mockUpdateProject.mockImplementation(() => Promise.resolve(""));
-mockAddStepToGoal.mockImplementation(() => Promise.resolve(""));
+const mockGoal: Goal = new CreateCharInv();
 
 const createMockStore = configureMockStore([thunk]);
 const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(MOCK_STATE);
@@ -122,8 +125,8 @@ describe("Testing CharacterInventoryActions", () => {
     updatedGoal.data = {
       inventory: [[...MOCK_STATE.characterInventoryState.validCharacters]],
     };
-    expect(mockUpdateProject).toHaveBeenCalledTimes(1);
-    expect(mockAddStepToGoal).toHaveBeenCalledTimes(1);
+    expect(backend.updateProject).toHaveBeenCalledTimes(1);
+    expect(backend.addStepToGoal).toHaveBeenCalledTimes(1);
     expect(mockStore.getActions()).toEqual([
       {
         type: GoalsActions.UPDATE_GOAL,
