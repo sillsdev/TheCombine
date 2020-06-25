@@ -16,6 +16,8 @@ import {
 import { defaultState as goalsDefaultState } from "../DefaultState";
 import * as LocalStorage from "../../../backend/localStorage";
 import { getUserEditById } from "../../../backend";
+import { UserEdit, Edit } from "../../../types/userEdit";
+import { stringify } from "querystring";
 
 jest.mock(
   ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
@@ -34,15 +36,17 @@ jest.mock(
 
 jest.mock("../../../backend", () => {
   return {
-    getUserEditById: jest.fn(),
+    getUserEditById: jest.fn((_projId: string, _index: string) => {
+      return Promise.resolve(mockUserEdit);
+    }),
     createUserEdit: jest.fn(() => {
       return Promise.resolve("");
     }),
-    updateUser: jest.fn(() => {
-      return Promise.resolve("");
+    updateUser: jest.fn((_user: User) => {
+      return Promise.resolve(mockUser);
     }),
-    addGoalToUserEdit: jest.fn(() => {
-      return Promise.resolve("");
+    addGoalToUserEdit: jest.fn((_userEditId: string, _goal: Goal) => {
+      return Promise.resolve(mockGoal);
     }),
   };
 });
@@ -63,6 +67,8 @@ const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
 let mockUser: User = new User("", "", "");
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
+const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [] };
+const mockGoal: Goal = new CreateCharInv();
 
 const createMockStore = configureMockStore([thunk]);
 let mockStore: MockStoreEnhanced<unknown, {}>;
