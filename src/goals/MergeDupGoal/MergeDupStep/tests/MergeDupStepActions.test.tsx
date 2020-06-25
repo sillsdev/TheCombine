@@ -7,6 +7,7 @@ import { MergeData, MergeTree, Hash } from "../MergeDupsTree";
 import { MergeDups } from "../../MergeDups";
 import { goalDataMock } from "./MockMergeDupData";
 
+type mockWordListIndices = "WA" | "WB" | "WA2" | "WB2";
 const mockWordList = {
   WA: { ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
   WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
@@ -50,7 +51,7 @@ jest.mock("../../../../backend", () => {
 
       return Promise.resolve(mergeList[args]);
     }),
-    getWord: jest.fn((id: string) => {
+    getWord: jest.fn((id: mockWordListIndices) => {
       return Promise.resolve(mockWordList[id]);
     }),
   };

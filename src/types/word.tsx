@@ -104,7 +104,7 @@ export function testWordList(): Word[] {
     simpleWord("Yode", "Goodbye"),
     simpleWord("Yoff", "Yes"),
     simpleWord("Yank", "No"),
-    simpleWord("Yank", "Please god help me"),
+    simpleWord("Yank", "Please help me"),
     simpleWord("Ya", "Help"),
     simpleWord("Yeet", "Please"),
     simpleWord("Yeet", "Mandatory"),
