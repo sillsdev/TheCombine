@@ -1,28 +1,27 @@
 import React from "react";
-import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-import { act } from "react-dom/test-utils";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
 } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
 
-import GoalSelectorScroll from "../";
-import { Goal, GoalSelectorState, GoalType } from "../../../../../types/goals";
 import { BaseGoal } from "../../../../../types/baseGoal";
+import { Goal, GoalSelectorState, GoalType } from "../../../../../types/goals";
 import { User } from "../../../../../types/user";
+import GoalSelectorScroll from "../";
+import {
+  GoalScrollAction,
+  MOUSE_ACTION,
+  SELECT_ACTION,
+} from "../GoalSelectorAction";
 import {
   GoalSelectorScroll as GSScroll,
   percentToPixels,
   WIDTH,
   WRAP_AROUND_THRESHHOLD,
 } from "../GoalSelectorScroll";
-import {
-  GoalScrollAction,
-  MOUSE_ACTION,
-  SELECT_ACTION,
-} from "../GoalSelectorAction";
 
 const labels: string[] = ["handleDuplicates", "handleFlags", "grammarCheck"];
 
@@ -74,14 +73,12 @@ const mouse: GoalScrollAction = {
 beforeEach(() => {
   // Here, use the act block to be able to render our GoalState into the DOM
   // Re-created each time to prevent actions from previous runs from affecting future runs
-  act(() => {
-    scrollMaster = renderer.create(
-      <Provider store={store}>
-        <GoalSelectorScroll handleChange={jest.fn()} />
-      </Provider>
-    );
-    scrollHandle = scrollMaster.root.findByType(GSScroll);
-  });
+  scrollMaster = renderer.create(
+    <Provider store={store}>
+      <GoalSelectorScroll handleChange={jest.fn()} />
+    </Provider>
+  );
+  scrollHandle = scrollMaster.root.findByType(GSScroll);
   scroller.scrollLeft = percentToPixels(WRAP_AROUND_THRESHHOLD);
 
   // Reset store actions
