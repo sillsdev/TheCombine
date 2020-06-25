@@ -1,3 +1,5 @@
+import { randomIntString } from "../utilities";
+
 export enum State {
   active,
   deleted,
@@ -60,10 +62,6 @@ export function hasSenses(word: Word): boolean {
     word.senses[0].glosses &&
     word.senses[0].glosses.length > 0;
   return returnval;
-}
-
-export function randomIntString(): string {
-  return Math.floor(Math.random() * 9999999).toString();
 }
 
 export function simpleWord(vern: string, gloss: string): Word {
