@@ -105,8 +105,8 @@ export function testWordList(): Word[] {
     simpleWord("Yeet", "Please"),
     simpleWord("Yeet", "Mandatory"),
     simpleWord("Yang", "Die"),
-    simpleWord("Yuino", "Love"),
-    simpleWord("Yuino", "Boba Fett"),
+    multiGlossWord("Yuino", ["Love", "Boba Fett", "Life"]),
+    multiGlossWord("Yuilo", ["Sadness", "Tree bark"]),
     simpleWord("Yes", "Wumbo"),
     simpleWord("Yes", "Mayonnaise"),
   ];
