@@ -1,8 +1,8 @@
 import React from "react";
 import { Word, SemanticDomain, Gloss } from "../../../types/word";
-import { getWordsFromBackend } from "../DataEntryTable/DataEntryTable";
+import  { getWordsFromBackend } from "../DataEntryTable/DataEntryTable";
 import { ImmutableExistingData } from "./ImmutableExistingData/ImmutableExistingData";
-import { Button, Drawer, Grid, List, makeStyles, Theme, createStyles, Hidden, useMediaQuery, } from "@material-ui/core";
+import { Button, Drawer, Grid, List } from "@material-ui/core";
 import ListIcon from '@material-ui/icons/List';
 import theme from "../../../types/theme";
 
@@ -23,8 +23,7 @@ interface ExistingDataTableStates {
   isSmallScreen: boolean;
 }
 
-
-function filterWordsByDomain(
+export function filterWordsByDomain(
   words: Word[],
   domain: SemanticDomain
 ): DomainWord[] {
@@ -53,16 +52,7 @@ function filterWordsByDomain(
   return domainWords;
 }
 
-function sortDomainWordByVern(existingData: ExistingDataTable): DomainWord[] {
-  let domainWords: DomainWord[] = filterWordsByDomain(
-    existingData.state.existingWords,
-    existingData.props.domain
-  );
-  domainWords.sort((a, b) =>
-    a.word.vernacular.length < 1 ? -1 : a.word.vernacular < b.word.vernacular ? -1 : 1
-  );
-  return domainWords;
-}
+
 
 /*Displays previously entered data in a panel to the right of the DataEntryTable */
 export class ExistingDataTable extends React.Component<
@@ -78,8 +68,17 @@ export class ExistingDataTable extends React.Component<
       isSmallScreen: false,
     };
   }
-  
-  
+
+  sortDomainWordByVern(): DomainWord[] {
+    let domainWords: DomainWord[] = filterWordsByDomain(
+      this.state.existingWords,
+      this.props.domain
+    );
+    domainWords.sort((a, b) =>
+      a.word.vernacular.length < 1 ? -1 : a.word.vernacular < b.word.vernacular ? -1 : 1
+    );
+    return domainWords;
+  }
 
   toggleDrawer = (openClose: boolean) => (
     event: React.KeyboardEvent | React.MouseEvent,
@@ -102,7 +101,7 @@ export class ExistingDataTable extends React.Component<
     let allWords = await getWordsFromBackend();
     this.setState({
       existingWords: allWords,
-      domainWords: sortDomainWordByVern(this),
+      domainWords: this.sortDomainWordByVern(),
     });
   }
 
@@ -121,7 +120,7 @@ export class ExistingDataTable extends React.Component<
     let allWords = await getWordsFromBackend();
     this.setState({
       existingWords: allWords,
-      domainWords: sortDomainWordByVern(this),
+      domainWords: this.sortDomainWordByVern(),
     });
   }
   
@@ -143,7 +142,7 @@ export class ExistingDataTable extends React.Component<
   }
   
   renderDrawer() {
-    if (this.state.domainWords !== [] && this.props.typeDrawer){
+    if ( this.props.typeDrawer){
       return (
         <React.Fragment >
             <Button 
@@ -181,7 +180,7 @@ export class ExistingDataTable extends React.Component<
   render() {
     this.updateTable();
     let domainWords: DomainWord[] = this.state.domainWords;
-    if (domainWords !== []) {
+    if (this.state.domainWords.length > 0) {
       return (
       <React.Fragment>
       { this.state.isSmallScreen ? this.renderDrawer() : this.renderSidePanel()}
