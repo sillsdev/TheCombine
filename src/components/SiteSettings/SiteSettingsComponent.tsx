@@ -12,10 +12,6 @@ import BaseSettingsComponent from "../ProjectSettings/BaseSettingsComponent/Base
 import ProjectsExport from "./ProjectsExport";
 
 class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
-  constructor(props: LocalizeContextProps) {
-    super(props);
-  }
-
   render() {
     return (
       <React.Fragment>
