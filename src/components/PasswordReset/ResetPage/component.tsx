@@ -81,7 +81,10 @@ export default class PasswordReset extends React.Component<
                   style={{ width: "100%" }}
                   margin="normal"
                   onChange={(e) =>
-                    this.setState((prevState) => ({ ...this.state, token: e.target.value }))
+                    this.setState((prevState) => ({
+                      ...this.state,
+                      token: e.target.value,
+                    }))
                   }
                 />
               </Grid>

@@ -48,7 +48,10 @@ export default class ResetRequest extends React.Component<
                   style={{ width: "100%" }}
                   margin="normal"
                   onChange={(e) =>
-                    this.setState((prevState) => ({ ...this.state, email: e.target.value }))
+                    this.setState((prevState) => ({
+                      ...this.state,
+                      email: e.target.value,
+                    }))
                   }
                 />
               </Grid>
