@@ -1,10 +1,10 @@
-import { multiGlossWord, State, Word, MergeWord } from "../../../../types/word";
-import thunk from "redux-thunk";
-import { mergeAll } from "../MergeDupStepActions";
-import * as backend from "../../../../backend";
 import configureMockStore from "redux-mock-store";
-import { MergeData, MergeTree, Hash } from "../MergeDupsTree";
+import thunk from "redux-thunk";
+import * as backend from "../../../../backend";
+import { multiGlossWord, State, Word, MergeWord } from "../../../../types/word";
 import { MergeDups } from "../../MergeDups";
+import { mergeAll } from "../MergeDupStepActions";
+import { MergeData, MergeTree, Hash } from "../MergeDupsTree";
 import { goalDataMock } from "./MockMergeDupData";
 
 type mockWordListIndices = "WA" | "WB" | "WA2" | "WB2";
@@ -24,8 +24,9 @@ const mockWordList = {
 };
 
 jest.mock("../../../../backend", () => {
+  const realBackend = jest.requireActual("../../../../backend");
   return {
-    ...jest.requireActual("../../../../backend"),
+    ...realBackend,
     mergeWords: jest.fn((parent: Word, children: MergeWord[]) => {
       const { State } = jest.requireActual("../../../../types/word");
       // Setup data needed to mock
