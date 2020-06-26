@@ -1,7 +1,5 @@
-import { Button, Drawer, Grid, List } from "@material-ui/core";
-import { List as ListIcon } from "@material-ui/icons";
+import { Drawer, Grid, List } from "@material-ui/core";
 import React from "react";
-import theme from "../../../types/theme";
 import { SemanticDomain, DomainWord } from "../../../types/word";
 import { ImmutableExistingData } from "./ImmutableExistingData/ImmutableExistingData";
 
@@ -9,6 +7,8 @@ interface ExistingDataTableProps {
   domain: SemanticDomain;
   typeDrawer: boolean;
   domainWords: DomainWord[];
+  drawerOpen: boolean;
+  toggleDrawer: (openClosed: boolean) => void;
 }
 
 interface ExistingDataTableStates {
@@ -37,9 +37,7 @@ export class ExistingDataTable extends React.Component<
     ) {
       return;
     }
-    this.setState({
-      open: openClose,
-    });
+    this.props.toggleDrawer(openClose);
   };
 
   list() {
@@ -65,16 +63,10 @@ export class ExistingDataTable extends React.Component<
   renderDrawer() {
     return (
       <React.Fragment>
-        <Button
-          style={{ marginTop: theme.spacing(2) }}
-          onClick={this.toggleDrawer(true)}
-        >
-          <ListIcon fontSize={"default"} color={"inherit"} />
-        </Button>
         <Drawer
           role="presentation"
           anchor={"left"}
-          open={this.state.open}
+          open={this.props.drawerOpen}
           onClose={this.toggleDrawer(false)}
         >
           {this.list()}

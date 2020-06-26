@@ -1,4 +1,5 @@
 import { Button, Grid, Typography } from "@material-ui/core";
+import { List as ListIcon } from "@material-ui/icons";
 import React from "react";
 import {
   LocalizeContextProps,
@@ -9,10 +10,9 @@ import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
 import { AutoComplete } from "../../../types/AutoComplete";
 import theme from "../../../types/theme";
-import { SemanticDomain, Word, DomainWord } from "../../../types/word";
+import { SemanticDomain, Word } from "../../../types/word";
 import { Recorder } from "../../Pronunciations/Recorder";
 import DomainTree from "../../TreeView/SemanticDomain";
-import { ExistingDataTable } from "../ExistingDataTable/ExistingDataTable";
 import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
@@ -23,7 +23,7 @@ interface DataEntryTableProps {
   semanticDomain: SemanticDomain;
   displaySemanticDomainView: (isGettingSemanticDomain: boolean) => void;
   getWordsFromBackend: () => Promise<Word[]>;
-  domainWords: DomainWord[];
+  showExistingData: () => void;
   isSmallScreen: boolean;
 }
 
@@ -316,11 +316,12 @@ export class DataEntryTable extends React.Component<
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
             {this.props.isSmallScreen ? (
-              <ExistingDataTable
-                domain={this.props.semanticDomain}
-                typeDrawer={true}
-                domainWords={this.props.domainWords}
-              />
+              <Button
+                style={{ marginTop: theme.spacing(2) }}
+                onClick={this.props.showExistingData}
+              >
+                <ListIcon fontSize={"default"} color={"inherit"} />
+              </Button>
             ) : null}
           </Grid>
           <Grid item>

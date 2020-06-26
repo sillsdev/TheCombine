@@ -21,6 +21,7 @@ interface DataEntryState {
   existingWords: Word[];
   domainWords: DomainWord[];
   isSmallScreen: boolean;
+  drawerOpen: boolean;
 }
 
 const paperStyle = {
@@ -92,6 +93,7 @@ export class DataEntryComponent extends React.Component<
       existingWords: [],
       domainWords: [],
       isSmallScreen: false,
+      drawerOpen: false,
     };
   }
 
@@ -109,6 +111,11 @@ export class DataEntryComponent extends React.Component<
       isSmallScreen: smallScreen,
     });
   };
+
+  toggleDrawer = (openClose: boolean) =>
+    this.setState({
+      drawerOpen: openClose,
+    });
 
   sortDomainWordByVern(): DomainWord[] {
     let domainWords: DomainWord[] = filterWordsByDomain(
@@ -161,18 +168,18 @@ export class DataEntryComponent extends React.Component<
                   });
                 }}
                 getWordsFromBackend={() => this.getWordsFromBackend()}
-                domainWords={this.sortDomainWordByVern()}
+                showExistingData={() => this.toggleDrawer(true)}
                 isSmallScreen={this.state.isSmallScreen}
               />
             </Paper>
           </Grid>
-          {this.state.isSmallScreen ? null : (
-            <ExistingDataTable
-              domain={this.props.domain}
-              typeDrawer={false}
-              domainWords={this.state.domainWords}
-            />
-          )}
+          <ExistingDataTable
+            domain={this.props.domain}
+            typeDrawer={this.state.isSmallScreen}
+            domainWords={this.state.domainWords}
+            drawerOpen={this.state.drawerOpen}
+            toggleDrawer={this.toggleDrawer}
+          />
 
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
             <AppBarComponent currentTab={CurrentTab.DataEntry} />
