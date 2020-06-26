@@ -15,11 +15,11 @@ export class ImmutableExistingData extends React.Component<
 > {
   render() {
     return (
-      <Grid item xs={12}>
-        <Grid container>
+      <Grid item wrap={"nowrap"}>
+        <Grid container >
           <Grid
             item
-            xs={4}
+            xs
             key={"vernacular_" + this.props.vernacular}
             style={{
               paddingLeft: theme.spacing(2),
@@ -31,7 +31,7 @@ export class ImmutableExistingData extends React.Component<
           </Grid>
           <Grid
             item
-            xs={4}
+            xs
             key={"gloss_" + this.props.gloss}
             style={{
               paddingLeft: theme.spacing(2),
