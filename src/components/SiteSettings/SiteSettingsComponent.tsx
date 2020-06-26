@@ -6,19 +6,16 @@ import {
 } from "react-localize-redux";
 import { Grid } from "@material-ui/core";
 import { List, People } from "@material-ui/icons";
+import { CurrentTab } from "../../types/currentTab";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../ProjectSettings/BaseSettingsComponent/BaseSettingsComponent";
 import ProjectsExport from "./ProjectsExport";
 
 class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
-  constructor(props: LocalizeContextProps) {
-    super(props);
-  }
-
   render() {
     return (
       <React.Fragment>
-        <AppBarComponent />
+        <AppBarComponent currentTab={CurrentTab.SiteSettings} />
         <Grid container justify="center" spacing={6}>
           {/* Project List */}
           <BaseSettingsComponent
