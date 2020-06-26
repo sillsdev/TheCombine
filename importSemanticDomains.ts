@@ -54,7 +54,7 @@ class SemanticDomainWithSubdomains {
   subdomains: SemanticDomainWithSubdomains[];
 }
 
-function generateCleanJSON(
+export function generateCleanJSON(
   domain: any[],
   enDom: SemanticDomainWithSubdomains[],
   fnDom: SemanticDomainWithSubdomains[]
