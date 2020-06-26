@@ -54,7 +54,7 @@ namespace Backend.Tests
             return Task.FromResult(success);
         }
 
-        public Task<ResultOfUpdate> Update(string id, User user)
+        public Task<ResultOfUpdate> Update(string id, User user, bool updateIsAdmin = false)
         {
             var foundUser = _users.Single(u => u.Id == id);
             var success = _users.Remove(foundUser);
@@ -93,6 +93,11 @@ namespace Backend.Tests
             Update(user.Id, user);
             user.Password = "";
             return Task.FromResult(user);
+        }
+
+        public Task<ResultOfUpdate> ChangePassword(string userId, string password)
+        {
+            return Task.FromResult(ResultOfUpdate.Updated); //TODO: more sophisticated mock
         }
     }
 }
