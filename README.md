@@ -135,6 +135,7 @@ To create a new admin user, first set the `ASPNETCORE_ADMIN_PASSWORD`
 environment variable and then run:
 
 ```batch
+> cd Backend
 > dotnet run create-admin-username=admin
 ```
 
@@ -143,7 +144,7 @@ The exit code will be set to `0` on success and non-`0` otherwise.
 #### Docker
 
 In Docker, add `ASPNETCORE_ADMIN_USERNAME` and `ASPNETCORE_ADMIN_PASSWORD`
-to `.env.web` configuration file.
+to `.env.web.auth` configuration file.
 
 ```batch
 > docker-compose build --parallel
@@ -152,9 +153,8 @@ to `.env.web` configuration file.
 
 This will create the user or exit and report an error code if it fails. 
 
-**Important**": Remove the `ASPNETCORE_*` environment variables from
-`.env.web` or subsequent launches will fail because the backend will try
-to re-create the same user name again.
+**Important**: Remove the `ASPNETCORE_*` environment variables from
+`.env.web.auth` so that subsequent launches will bring up the backend.
 
 ### (Development Only) Grant an Existing User Admin Rights 
 

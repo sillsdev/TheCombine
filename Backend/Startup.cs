@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using BackendFramework.Contexts;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
@@ -60,9 +61,9 @@ namespace BackendFramework
             {
                 options.AddPolicy(AllowedOrigins,
                     builder => builder
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowAnyOrigin());
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin());
             });
 
             // Configure JWT Authentication
@@ -80,22 +81,22 @@ namespace BackendFramework
 
             var key = Encoding.ASCII.GetBytes(secretKey);
             services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
@@ -106,12 +107,12 @@ namespace BackendFramework
                 //    no longer automatically tries to coerce these values.
                 .AddNewtonsoftJson();
             services.Configure<Settings>(
-            options =>
-            {
-                var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
-                options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
-                options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
-            });
+                options =>
+                {
+                    var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
+                    options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
+                    options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
+                });
 
             // Register concrete types for dependency injection
             // Word Types
@@ -165,6 +166,7 @@ namespace BackendFramework
             {
                 app.UseHttpsRedirection();
             }
+
             app.UseRouting();
             app.UseCors(AllowedOrigins);
 
@@ -175,23 +177,14 @@ namespace BackendFramework
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
 
             // If an admin user has been created via the commandline, treat that as a single action and shut the
-            // server down so the calling script knows it's been completed successfully.
+            // server down so the calling script knows it's been completed successfully or unsuccessfully.
             if (CreateAdminUser(app.ApplicationServices.GetService<IUserService>()))
             {
                 _logger.LogInformation("Stopping application");
-
-                // If running in Docker, there is no benefit in shutting down immediately if the admin user was
-                // created successfully.
-                if (!IsInContainer())
-                {
-                    appLifetime.StopApplication();
-                }
+                appLifetime.StopApplication();
             }
         }
 
@@ -224,8 +217,28 @@ namespace BackendFramework
                 throw new EnvironmentNotConfiguredException();
             }
 
-            _logger.LogInformation($"Creating admin user: {username}");
+            var existingUser = userService.GetAllUsers().Result.Find(x => x.Username == username);
+            if (existingUser != null)
+            {
+                _logger.LogInformation($"User {username} already exists. Updating password and granting " +
+                                       $"admin permissions.");
+                if (userService.ChangePassword(existingUser.Id, password).Result == ResultOfUpdate.NotFound)
+                {
+                    _logger.LogError($"Failed to find user {username}.");
+                    throw new AdminUserCreationException();
+                }
 
+                existingUser.IsAdmin = true;
+                if (userService.Update(existingUser.Id, existingUser, true).Result == ResultOfUpdate.NotFound)
+                {
+                    _logger.LogError($"Failed to find user {username}.");
+                    throw new AdminUserCreationException();
+                }
+
+                return true;
+            }
+
+            _logger.LogInformation($"Creating admin user: {username}");
             var user = new User { Username = username, Password = password, IsAdmin = true };
             var returnedUser = userService.Create(user).Result;
             if (returnedUser == null)
