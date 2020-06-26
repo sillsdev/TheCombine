@@ -161,7 +161,7 @@ export class DataEntryComponent extends React.Component<
                   });
                 }}
                 getWordsFromBackend={() => this.getWordsFromBackend()}
-                domainWords={this.sortDomainWordByVern()}
+                domainWords={this.state.domainWords}
                 isSmallScreen={this.state.isSmallScreen}
               />
             </Paper>
