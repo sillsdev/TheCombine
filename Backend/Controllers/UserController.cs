@@ -44,7 +44,7 @@ namespace BackendFramework.Controllers
             var resetRequest = await _passwordResetService.CreatePasswordReset(email);
 
             // find user attached to email
-            var user = _userService.GetAllUsers().Result.Where(user => user.Email.Equals(email)).Single();
+            var user = _userService.GetAllUsers().Result.Single(user => user.Email.Equals(email));
 
             // create email
             var message = new MimeMessage();
@@ -52,7 +52,9 @@ namespace BackendFramework.Controllers
             message.Subject = "Combine password reset";
             message.Body = new TextPart("plain")
             {
-                Text = string.Format("A password reset has been requested for the user {0}. Follow the link to reset {0}'s password. {1}/forgot/reset/{2} \n\n If you did not request a password reset please ignore this email", user.Username, _frontendContext.FrontendUrl, resetRequest.Token)
+                Text = string.Format("A password reset has been requested for the user {0}. Follow the link to reset "
+                        + "{0}'s password. {1}/forgot/reset/{2} \n\n If you did not request a password reset please "
+                        + "ignore this email", user.Username, _frontendContext.FrontendUrl, resetRequest.Token)
             };
             if (await _emailService.SendEmail(message))
             {

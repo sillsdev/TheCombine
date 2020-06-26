@@ -3,6 +3,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>8.0</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <!-- Project ID for User secrets manager -->
     <UserSecretsId>4c95b050-1b1d-4469-9b14-22ac898328fd</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>

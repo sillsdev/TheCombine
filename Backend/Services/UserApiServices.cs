@@ -208,7 +208,7 @@ namespace BackendFramework.Services
             return string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
         }
 
-        /// <summary> Finds <see cref="User"/> with specified userId and changes it's password
+        /// <summary> Finds <see cref="User"/> with specified userId and changes it's password </summary>
         public async Task<ResultOfUpdate> ChangePassword(string userid, string password)
         {
             var hash = PasswordHash.HashPassword(password);

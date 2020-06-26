@@ -15,22 +15,20 @@ namespace BackendFramework.Services
 
         public async Task<bool> SendEmail(MimeMessage message)
         {
-            using (var client = new MailKit.Net.Smtp.SmtpClient())
-            {
+            using var client = new MailKit.Net.Smtp.SmtpClient();
 
-                client.Connect(_emailContext.SmtpServer, _emailContext.SmtpPort);
+            await client.ConnectAsync(_emailContext.SmtpServer, _emailContext.SmtpPort);
 
-                //SMTP server authentication if needed
-                client.Authenticate(_emailContext.SmtpUsername, _emailContext.SmtpPassword);
+            //SMTP server authentication if needed
+            await client.AuthenticateAsync(_emailContext.SmtpUsername, _emailContext.SmtpPassword);
 
-                // set from field
-                message.From.Clear();
-                message.From.Add(new MailboxAddress("The Combine", _emailContext.SmtpAddress));
+            // set from field
+            message.From.Clear();
+            message.From.Add(new MailboxAddress("The Combine", _emailContext.SmtpAddress));
 
-                await client.SendAsync(message);
+            await client.SendAsync(message);
 
-                client.Disconnect(true);
-            }
+            await client.DisconnectAsync(true);
             return true;
         }
     }
