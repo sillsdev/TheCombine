@@ -11,22 +11,8 @@ interface ExistingDataTableProps {
   toggleDrawer: (openClosed: boolean) => void;
 }
 
-interface ExistingDataTableStates {
-  open: boolean;
-}
-
 /*Displays previously entered data in a panel to the right of the DataEntryTable */
-export class ExistingDataTable extends React.Component<
-  ExistingDataTableProps,
-  ExistingDataTableStates
-> {
-  constructor(props: ExistingDataTableProps) {
-    super(props);
-    this.state = {
-      open: false,
-    };
-  }
-
+export class ExistingDataTable extends React.Component<ExistingDataTableProps> {
   closeDrawer = () => {
     this.props.toggleDrawer(false);
   };
