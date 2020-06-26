@@ -3,13 +3,14 @@ import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
 import theme from "../../types/theme";
 
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
-import { SemanticDomain } from "../../types/word";
+import { SemanticDomain, Word, State, DomainWord } from "../../types/word";
 import DomainTree from "../TreeView/SemanticDomain";
 import TreeViewComponent from "../TreeView";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { ExistingDataTable } from "./ExistingDataTable/ExistingDataTable";
+import * as Backend from "../../backend";
 
 interface DataEntryProps {
   domain: DomainTree;
@@ -17,6 +18,9 @@ interface DataEntryProps {
 
 interface DataEntryState {
   displaySemanticDomain: boolean;
+  existingWords: Word[];
+  domainWords: DomainWord[];
+  isSmallScreen: boolean;
 }
 
 const paperStyle = {
@@ -25,6 +29,24 @@ const paperStyle = {
   marginLeft: "auto",
   marginRight: "auto",
 };
+
+/** Filter out words that do not have correct accessibility */
+export function filterWords(words: Word[]): Word[] {
+  let filteredWords: Word[] = [];
+  for (let word of words) {
+    let shouldInclude = true;
+    for (let sense of word.senses) {
+      if (sense.accessibility !== State.active) {
+        shouldInclude = false;
+        break;
+      }
+    }
+    if (shouldInclude) {
+      filteredWords.push(word);
+    }
+  }
+  return filteredWords;
+}
 
 /**
  * Allows users to add words to a project, add senses to an existing word,
@@ -38,17 +60,76 @@ export class DataEntryComponent extends React.Component<
     super(props);
     this.state = {
       displaySemanticDomain: true,
+      existingWords: [],
+      domainWords: [],
+      isSmallScreen: false,
     };
   }
 
-  renderExistingDataTable() {
-    return (
-      <React.Fragment >
-        <ExistingDataTable 
-        domain={this.props.domain} 
-        typeDrawer={false} />
-      </React.Fragment>
+  async componentDidMount() {
+    window.addEventListener("resize", this.handleWindowSizeChange);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.handleWindowSizeChange);
+  }
+
+  handleWindowSizeChange = () => {
+    let smallScreen: boolean = window.matchMedia("(max-width: 960px)").matches;
+    this.setState({
+      isSmallScreen: smallScreen,
+    });
+  };
+
+  filterWordsByDomain(words: Word[], domain: SemanticDomain): DomainWord[] {
+    let domainWords: DomainWord[] = [];
+    let domainName: String = domain.name;
+    let domainMatched: Boolean = false;
+
+    for (let currentWord of words) {
+      for (let currentSense of currentWord.senses) {
+        domainMatched = false;
+        for (let currentDomain of currentSense.semanticDomains) {
+          if (currentDomain.name === domainName) {
+            domainMatched = true;
+          }
+        }
+        if (domainMatched) {
+          let newDomainWord: DomainWord = {
+            word: currentWord,
+            gloss: currentSense.glosses[0],
+          };
+          domainWords.push(newDomainWord);
+        }
+      }
+    }
+
+    return domainWords;
+  }
+
+  sortDomainWordByVern(): DomainWord[] {
+    let domainWords: DomainWord[] = this.filterWordsByDomain(
+      this.state.existingWords,
+      this.props.domain
     );
+    domainWords.sort((a, b) =>
+      a.word.vernacular.length < 1
+        ? -1
+        : a.word.vernacular < b.word.vernacular
+        ? -1
+        : 1
+    );
+    return domainWords;
+  }
+
+  async getWordsFromBackend(): Promise<Word[]> {
+    let words = await Backend.getFrontierWords();
+    this.setState({
+      existingWords: words,
+    });
+    words = filterWords(words);
+
+    return words;
   }
 
   render() {
@@ -76,18 +157,30 @@ export class DataEntryComponent extends React.Component<
                     displaySemanticDomain: isGettingSemanticdomain,
                   });
                 }}
+                getWordsFromBackend={() => this.getWordsFromBackend()}
+                domainWords={this.sortDomainWordByVern()}
+                isSmallScreen={this.state.isSmallScreen}
               />
             </Paper>
           </Grid>
-          {this.renderExistingDataTable()}
+
+          <ExistingDataTable
+            domain={this.props.domain}
+            typeDrawer={false}
+            domainWords={this.sortDomainWordByVern()}
+            display={!this.state.isSmallScreen}
+          />
+
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
             <AppBarComponent />
             <TreeViewComponent
-              returnControlToCaller={() =>
+              returnControlToCaller={() => {
+                this.getWordsFromBackend();
                 this.setState({
+                  domainWords: this.sortDomainWordByVern(),
                   displaySemanticDomain: false,
-                })
-              }
+                });
+              }}
             />
           </Dialog>
         </Grid>
