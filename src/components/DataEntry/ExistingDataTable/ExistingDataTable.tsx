@@ -27,50 +27,38 @@ export class ExistingDataTable extends React.Component<
     };
   }
 
-  toggleDrawer = (openClose: boolean) => (
-    event: React.KeyboardEvent | React.MouseEvent
-  ) => {
-    if (
-      event.type === "keydown" &&
-      ((event as React.KeyboardEvent).key === "Tab" ||
-        (event as React.KeyboardEvent).key === "Shift")
-    ) {
-      return;
-    }
-    this.props.toggleDrawer(openClose);
+  closeDrawer = () => {
+    this.props.toggleDrawer(false);
   };
 
   list() {
     let domainWords: DomainWord[] = this.props.domainWords;
     return (
-      <div
-        onClick={this.toggleDrawer(false)}
-        onKeyDown={this.toggleDrawer(false)}
-      >
-        <List>
-          {domainWords.map((domainWord) => (
-            <ImmutableExistingData
-              key={domainWord.word.id}
-              vernacular={domainWord.word.vernacular}
-              gloss={domainWord.gloss.def}
-            />
-          ))}
-        </List>
-      </div>
+      <List>
+        {domainWords.map((domainWord) => (
+          <ImmutableExistingData
+            key={domainWord.word.id}
+            vernacular={domainWord.word.vernacular}
+            gloss={domainWord.gloss.def}
+          />
+        ))}
+      </List>
     );
   }
 
   renderDrawer() {
     return (
       <React.Fragment>
-        <Drawer
-          role="presentation"
-          anchor={"left"}
-          open={this.props.drawerOpen}
-          onClose={this.toggleDrawer(false)}
-        >
-          {this.list()}
-        </Drawer>
+        <div onClick={this.closeDrawer} onKeyDown={this.closeDrawer}>
+          <Drawer
+            role="presentation"
+            anchor={"left"}
+            open={this.props.drawerOpen}
+            onClose={this.closeDrawer}
+          >
+            {this.list()}
+          </Drawer>
+        </div>
       </React.Fragment>
     );
   }
