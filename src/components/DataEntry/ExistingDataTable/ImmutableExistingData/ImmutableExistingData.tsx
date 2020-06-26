@@ -15,32 +15,30 @@ export class ImmutableExistingData extends React.Component<
 > {
   render() {
     return (
-      <Grid item wrap={"nowrap"}>
-        <Grid container >
-          <Grid
-            item
-            xs
-            key={"vernacular_" + this.props.vernacular}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2),
-              position: "relative",
-            }}
-          >
-            <TextField disabled fullWidth value={this.props.vernacular} />
-          </Grid>
-          <Grid
-            item
-            xs
-            key={"gloss_" + this.props.gloss}
-            style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2),
-              position: "relative",
-            }}
-          >
-            <TextField disabled fullWidth value={this.props.gloss} />
-          </Grid>
+      <Grid container wrap={"nowrap"}>
+        <Grid
+          item
+          xs
+          key={"vernacular_" + this.props.vernacular}
+          style={{
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+            position: "relative",
+          }}
+        >
+          <TextField disabled fullWidth value={this.props.vernacular} />
+        </Grid>
+        <Grid
+          item
+          xs
+          key={"gloss_" + this.props.gloss}
+          style={{
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+            position: "relative",
+          }}
+        >
+          <TextField disabled fullWidth value={this.props.gloss} />
         </Grid>
       </Grid>
     );

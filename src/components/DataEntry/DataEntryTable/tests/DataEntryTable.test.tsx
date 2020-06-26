@@ -1,17 +1,18 @@
 import React from "react";
-import DataEntryTable, { filterWords } from "../DataEntryTable";
-import { mockDomainTree } from "../../tests/MockDomainTree";
-import { SemanticDomain, Word, State } from "../../../../types/word";
-import { mockWord } from "../../tests/MockWord";
-import { defaultProject as mockProject } from "../../../../types/project";
-import * as backend from "../../../../backend";
-import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../../App/DefaultState";
 import { Provider } from "react-redux";
 import renderer, {
   ReactTestRenderer,
   ReactTestInstance,
 } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+import * as backend from "../../../../backend";
+import { SemanticDomain, Word, State } from "../../../../types/word";
+import { defaultProject as mockProject } from "../../../../types/project";
+import { defaultState } from "../../../App/DefaultState";
+import { filterWords } from "../../DataEntryComponent";
+import { mockDomainTree } from "../../tests/MockDomainTree";
+import { mockWord } from "../../tests/MockWord";
+import DataEntryTable from "../DataEntryTable";
 import { NewEntry } from "../NewEntry/NewEntry";
 
 export const mockSemanticDomain: SemanticDomain = {
@@ -47,6 +48,8 @@ beforeEach(() => {
           domain={mockDomainTree}
           semanticDomain={mockSemanticDomain}
           displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
+          domainWords={[]}
+          isSmallScreen={false}
         />
       </Provider>
     );

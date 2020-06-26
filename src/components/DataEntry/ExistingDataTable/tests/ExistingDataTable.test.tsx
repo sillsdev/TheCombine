@@ -1,18 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { ExistingDataTable, filterWordsByDomain } from "../ExistingDataTable";
-import { mockDomainTree } from "../../tests/MockDomainTree";
-import { mockWord } from "../../tests/MockWord";
-import { Word } from "../../../../types/word";
+import { Provider } from "react-redux";
 import renderer, {
   ReactTestRenderer,
   ReactTestInstance,
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../../../App/DefaultState";
-import { Provider } from "react-redux";
-import DataEntryTable from "../../DataEntryTable/DataEntryTable";
-import { mockSemanticDomain } from "../../DataEntryTable/tests/DataEntryTable.test";
+import { filterWordsByDomain } from "../../DataEntryComponent";
+import { mockDomainTree } from "../../tests/MockDomainTree";
+import { mockWord } from "../../tests/MockWord";
+import { ExistingDataTable } from "../ExistingDataTable";
+
 jest.mock("../ImmutableExistingData/ImmutableExistingData");
 
 var testRenderer: ReactTestRenderer;
@@ -23,7 +21,11 @@ beforeEach(() => {
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <ExistingDataTable domain={mockDomainTree} typeDrawer={false} />
+        <ExistingDataTable
+          domain={mockDomainTree}
+          typeDrawer={false}
+          domainWords={[]}
+        />
       </Provider>
     );
   });

@@ -1,4 +1,4 @@
-import { Button, Grid, Typography, useMediaQuery } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import {
   LocalizeContextProps,
@@ -12,11 +12,11 @@ import theme from "../../../types/theme";
 import { SemanticDomain, Word, DomainWord } from "../../../types/word";
 import { Recorder } from "../../Pronunciations/Recorder";
 import DomainTree from "../../TreeView/SemanticDomain";
+import { ExistingDataTable } from "../ExistingDataTable/ExistingDataTable";
 import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
-import { ExistingDataTable } from "../ExistingDataTable/ExistingDataTable";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -314,15 +314,16 @@ export class DataEntryTable extends React.Component<
         </Grid>
 
         <Grid container justify="space-between" spacing={3}>
-          <Grid item justify="flex-start">
-            <ExistingDataTable
-              domain={this.props.semanticDomain}
-              typeDrawer={true}
-              domainWords={this.props.domainWords}
-              display={this.props.isSmallScreen}
-            />
+          <Grid item>
+            {this.props.isSmallScreen ? (
+              <ExistingDataTable
+                domain={this.props.semanticDomain}
+                typeDrawer={true}
+                domainWords={this.props.domainWords}
+              />
+            ) : null}
           </Grid>
-          <Grid item justify="flex-end">
+          <Grid item>
             <Button
               id="complete"
               type="submit"

@@ -1,20 +1,18 @@
+import { Button, Drawer, Grid, List } from "@material-ui/core";
+import { List as ListIcon } from "@material-ui/icons";
 import React from "react";
+import theme from "../../../types/theme";
 import { SemanticDomain, DomainWord } from "../../../types/word";
 import { ImmutableExistingData } from "./ImmutableExistingData/ImmutableExistingData";
-import { Button, Drawer, Grid, List } from "@material-ui/core";
-import ListIcon from "@material-ui/icons/List";
-import theme from "../../../types/theme";
 
 interface ExistingDataTableProps {
   domain: SemanticDomain;
   typeDrawer: boolean;
   domainWords: DomainWord[];
-  display: boolean;
 }
 
 interface ExistingDataTableStates {
   open: boolean;
-  isSmallScreen: boolean;
 }
 
 /*Displays previously entered data in a panel to the right of the DataEntryTable */
@@ -26,7 +24,6 @@ export class ExistingDataTable extends React.Component<
     super(props);
     this.state = {
       open: false,
-      isSmallScreen: false,
     };
   }
 
@@ -66,42 +63,37 @@ export class ExistingDataTable extends React.Component<
   }
 
   renderDrawer() {
-    if (this.props.typeDrawer) {
-      return (
-        <React.Fragment>
-          <Button
-            style={{ marginTop: theme.spacing(2) }}
-            onClick={this.toggleDrawer(true)}
-          >
-            <ListIcon fontSize={"default"} color={"inherit"} />
-          </Button>
-          <Drawer
-            role="presentation"
-            anchor={"left"}
-            open={this.state.open}
-            onClose={this.toggleDrawer(false)}
-          >
-            {this.list()}
-          </Drawer>
-        </React.Fragment>
-      );
-    }
-    return null;
+    return (
+      <React.Fragment>
+        <Button
+          style={{ marginTop: theme.spacing(2) }}
+          onClick={this.toggleDrawer(true)}
+        >
+          <ListIcon fontSize={"default"} color={"inherit"} />
+        </Button>
+        <Drawer
+          role="presentation"
+          anchor={"left"}
+          open={this.state.open}
+          onClose={this.toggleDrawer(false)}
+        >
+          {this.list()}
+        </Drawer>
+      </React.Fragment>
+    );
   }
 
   renderSidePanel() {
-    if (!this.props.typeDrawer) {
-      return (
-        <React.Fragment>
-          <Grid item>{this.list()}</Grid>
-        </React.Fragment>
-      );
-    }
-    return null;
+    return (
+      <React.Fragment>
+        <Grid item>{this.list()}</Grid>
+      </React.Fragment>
+    );
   }
+
   /*Make an interface that has the Word and an array of numbers to reference the senses desired to be displayed*/
   render() {
-    if (this.props.domainWords.length > 0 && this.props.display) {
+    if (this.props.domainWords.length > 0) {
       return (
         <React.Fragment>
           {this.props.typeDrawer ? this.renderDrawer() : this.renderSidePanel()}
