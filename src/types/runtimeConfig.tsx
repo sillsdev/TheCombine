@@ -48,7 +48,7 @@ export class RuntimeConfig {
     } else {
       baseUrl = defaultConfig.baseUrl;
     }
-    return `${baseUrl}/v1`;
+    return baseUrl;
   }
 
   public captchaSiteKey(): string {
