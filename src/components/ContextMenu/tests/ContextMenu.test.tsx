@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
+  act,
 } from "react-test-renderer";
 import ContextMenu, {
   ContextMenu as ContextMenuClass,
@@ -68,12 +69,14 @@ beforeAll(() => {
       }}
     />
   );
-  contextMaster = renderer.create(
-    <div>
-      {documentHandle}
-      <ContextMenu anchorName={CLASS_WITH_DROPDOWN} options={TEST_OPTIONS} />
-    </div>
-  );
+  act(() => {
+    contextMaster = renderer.create(
+      <div>
+        {documentHandle}
+        <ContextMenu anchorName={CLASS_WITH_DROPDOWN} options={TEST_OPTIONS} />
+      </div>
+    );
+  });
   contextHandle = contextMaster.root.findByType(ContextMenuClass);
 });
 afterAll(() => {
