@@ -133,7 +133,7 @@ describe("Tests DataEntryTable", () => {
       () => {
         // Get button for complete and push it
         testRenderer.root.findByProps({ id: "complete" }).props.onClick();
-        // Assert that the axios function for adding the word was called
+        // Assert that the backend function for adding the word was called
         expect(backend.createWord).toBeCalled();
         done();
       }
@@ -145,6 +145,7 @@ describe("Tests DataEntryTable", () => {
     // Verify that NewEntry is present
     let newEntryItems = testRenderer.root.findAllByType(NewEntry);
     expect(newEntryItems.length).toBe(1);
+    // set the new entry to have no useful content
     var newEntryWord: Word = {
       id: "",
       vernacular: "",
@@ -176,7 +177,7 @@ describe("Tests DataEntryTable", () => {
       () => {
         // Get button for complete and push it
         testRenderer.root.findByProps({ id: "complete" }).props.onClick();
-        // Assert that the axios function for adding the word was called
+        // Assert that the backend function for adding the word was NOT called
         expect(backend.createWord).not.toBeCalled();
         done();
       }

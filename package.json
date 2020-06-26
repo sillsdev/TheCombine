@@ -27,6 +27,8 @@
     "@material-ui/icons": "^4.1.0",
     "@material-ui/styles": "^4.0.2",
     "@matt-block/react-recaptcha-v2": "^1.0.5",
+    "@types/react-modal": "^3.10.5",
+    "@types/validator": "^13.0.0",
     "axios": "^0.19.0",
     "dictionary-en-us": "^2.1.1",
     "make-dir": "^3.0.0",
@@ -36,14 +38,17 @@
     "react-beautiful-dnd": "^11.0.4",
     "react-dom": "^16.8.6",
     "react-localize-redux": "^3.5.3",
+    "react-modal": "^3.11.2",
     "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
+    "react-toastify": "^6.0.5",
     "recordrtc": "^5.5.8",
     "redux": "^4.0.0-rc.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^5.10.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "validator": "^13.1.1"
   },
   "eslintConfig": {
     "extends": "react-app",

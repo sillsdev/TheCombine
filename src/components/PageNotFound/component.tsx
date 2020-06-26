@@ -2,6 +2,7 @@ import React from "react";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { Typography } from "@material-ui/core";
 import tractor from "../../resources/tractor.png";
+import { CurrentTab } from "../../types/currentTab";
 
 /**
  * A custom 404 page that should be displayed anytime the user tries to navigate
@@ -11,7 +12,7 @@ export default class PageNotFound extends React.Component {
   render() {
     return (
       <div>
-        <AppBarComponent />
+        <AppBarComponent currentTab={CurrentTab.PageNotFound} />
         <Typography variant="h4" style={{ textAlign: "center" }}>
           404: Page not found
         </Typography>

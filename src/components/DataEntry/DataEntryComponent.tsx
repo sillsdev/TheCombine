@@ -1,6 +1,7 @@
 import React from "react";
 import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
 import theme from "../../types/theme";
+import { CurrentTab } from "../../types/currentTab";
 
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import { SemanticDomain, Word, State, DomainWord } from "../../types/word";
@@ -140,7 +141,7 @@ export class DataEntryComponent extends React.Component<
 
     return (
       <React.Fragment>
-        <AppBarComponent />
+        <AppBarComponent currentTab={CurrentTab.DataEntry} />
 
         <Grid container justify="center" spacing={3} wrap={"nowrap"}>
           <Grid item>
@@ -172,7 +173,7 @@ export class DataEntryComponent extends React.Component<
           />
 
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
-            <AppBarComponent />
+            <AppBarComponent currentTab={CurrentTab.DataEntry} />
             <TreeViewComponent
               returnControlToCaller={() => {
                 this.getWordsFromBackend();

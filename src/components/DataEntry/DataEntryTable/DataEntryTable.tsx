@@ -42,6 +42,7 @@ export interface DataEntryTableState {
   autoComplete: AutoComplete;
 }
 
+
 async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
   let proj = await Backend.getProject(LocalStorage.getProjectId());
   return proj.autocompleteSetting;
