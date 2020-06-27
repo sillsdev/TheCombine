@@ -25,6 +25,7 @@ import AppBarComponent from "../AppBar/AppBarComponent";
 import { avatarSrc, getUser, updateUser } from "../../backend";
 import theme from "../../types/theme";
 import { getCurrentUser } from "../../backend/localStorage";
+import { CurrentTab } from "../../types/currentTab";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   return (
@@ -137,7 +138,7 @@ class UserSettings extends React.Component<
   render() {
     return (
       <React.Fragment>
-        <AppBarComponent />
+        <AppBarComponent currentTab={CurrentTab.UserSettings} />
         <Grid container justify="center">
           <Card style={{ width: 450 }}>
             <form onSubmit={(e) => this.onSubmit(e)}>

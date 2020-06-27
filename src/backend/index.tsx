@@ -237,9 +237,10 @@ export async function uploadLift(
   return parseInt(resp.toString());
 }
 
-export async function exportLift() {
+export async function exportLift(projectId?: string) {
+  let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
   let resp = await backendServer.get(
-    `projects/${LocalStorage.getProjectId()}/words/download`,
+    `projects/${projectIdToExport}/words/download`,
     {
       headers: { ...authHeader(), Accept: "application/zip" },
     }

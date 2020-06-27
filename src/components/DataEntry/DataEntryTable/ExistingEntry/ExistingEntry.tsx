@@ -177,7 +177,10 @@ export class ExistingEntry extends React.Component<
       duplicateIds: possibleDups,
       hovering: false,
     };
+    this.duplicateInput = React.createRef<HTMLDivElement>();
   }
+
+  duplicateInput: React.RefObject<HTMLDivElement>;
 
   componentDidMount() {
     let possibleDups = duplicatesFromFrontier(
@@ -493,6 +496,7 @@ export class ExistingEntry extends React.Component<
                 sense: Sense,
                 index: number
               ) => this.addSemanticDomain(existingWord, sense, index)}
+              duplicateInput={this.duplicateInput}
             />
           ))}
       </Grid>
