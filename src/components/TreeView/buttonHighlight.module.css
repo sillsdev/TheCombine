@@ -8,9 +8,6 @@
   width: 200%;
   height: 200%;
   opacity: 0;
-  /* transform: rotate(30deg); */
-
-  /* background: rgba(255, 255, 255, 0.13); */
   background: linear-gradient(
     to right,
     rgba(255, 255, 255, 0.13) 0%,
@@ -24,6 +21,7 @@
   animation: none;
   background: none;
 }
+
 @keyframes highlight {
   70% {
     opacity: 1;
