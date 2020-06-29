@@ -130,10 +130,8 @@ export function asyncRegister(
       .addUser(newUser)
       .then((res) => {
         dispatch(registerSuccess(user));
-        setTimeout(() => {
-          dispatch(registerReset());
-          history.push("/login");
-        }, 1000);
+        dispatch(registerReset());
+        history.push("/login");
       })
       .catch((err) => {
         dispatch(
