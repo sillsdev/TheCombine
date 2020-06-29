@@ -161,7 +161,7 @@ export class DataEntryComponent extends React.Component<
                   });
                 }}
                 getWordsFromBackend={() => this.getWordsFromBackend()}
-                domainWords={this.sortDomainWordByVern()}
+                domainWords={this.state.domainWords}
                 isSmallScreen={this.state.isSmallScreen}
               />
             </Paper>
@@ -178,11 +178,12 @@ export class DataEntryComponent extends React.Component<
             <AppBarComponent currentTab={CurrentTab.DataEntry} />
             <TreeViewComponent
               returnControlToCaller={() => {
-                this.getWordsFromBackend();
-                this.setState({
-                  domainWords: this.sortDomainWordByVern(),
-                  displaySemanticDomain: false,
-                });
+                this.getWordsFromBackend().then(() => 
+                  this.setState({
+                    domainWords: this.sortDomainWordByVern(),
+                    displaySemanticDomain: false,
+                  })
+                );
               }}
             />
           </Dialog>
