@@ -10,6 +10,7 @@ import {
   LocalizeContextProps,
   withLocalize,
 } from "react-localize-redux";
+import { CurrentTab } from "../../../types/currentTab";
 
 const timelineStyle = {
   centerDisplays: {
@@ -148,7 +149,7 @@ export class GoalTimelineVertical extends React.Component<
   renderPortrait() {
     return (
       <div className="GoalView">
-        <AppBarComponent />
+        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
         {/* Alternatives */}
         <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
           <HorizontalDisplay
@@ -182,7 +183,7 @@ export class GoalTimelineVertical extends React.Component<
   renderLandscape() {
     return (
       <div className="GoalView">
-        <AppBarComponent />
+        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
         <GridList cols={this.state.reducedLandScape ? 6 : 8} cellHeight="auto">
           {/* Alternatives */}
           <GridListTile cols={2}>

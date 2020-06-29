@@ -41,6 +41,12 @@ namespace BackendFramework
         {
         }
 
+        /// <summary> Determine if executing within a container (e.g. Docker). </summary>
+        private static bool IsInContainer()
+        {
+            return Environment.GetEnvironmentVariable("ASPNETCORE_IS_IN_CONTAINER") != null;
+        }
+
         /// <summary> This method gets called by the runtime. Use this method to add services for dependency injection.
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
@@ -97,7 +103,8 @@ namespace BackendFramework
             services.Configure<Settings>(
             options =>
             {
-                options.ConnectionString = Configuration["MongoDB:ConnectionString"];
+                var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
+                options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
                 options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
             });
 
@@ -148,7 +155,11 @@ namespace BackendFramework
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // In container deployment, NGINX acts as reverse proxy and handles HTTPS connections.
+            if (!IsInContainer())
+            {
+                app.UseHttpsRedirection();
+            }
             app.UseRouting();
             app.UseCors(AllowedOrigins);
 

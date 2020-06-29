@@ -5,6 +5,7 @@ import AppBarComponent from "../AppBar/AppBarComponent";
 import ChooseProjectComponent from "./ChooseProject";
 import CreateProjectComponent from "./CreateProject";
 import { setProjectId } from "../../backend/localStorage";
+import { CurrentTab } from "../../types/currentTab";
 
 /** Where users create a project or choose an existing one */
 export default class ProjectScreen extends React.Component {
@@ -13,7 +14,7 @@ export default class ProjectScreen extends React.Component {
     setProjectId("");
     return (
       <div className="CreateProject">
-        <AppBarComponent />
+        <AppBarComponent currentTab={CurrentTab.ProjectScreen} />
         <Grid container justify="center" spacing={2}>
           <Grid item xs={12} sm={6}>
             <Grid container justify="flex-end">

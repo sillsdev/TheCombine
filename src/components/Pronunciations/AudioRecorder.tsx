@@ -8,7 +8,7 @@ import IconHolder from "./IconHolder";
 export interface RecorderProps {
   wordId: string;
   recorder?: Recorder;
-  recordingFinished?: (oldId: string, newId: string) => void;
+  uploadAudio?: (wordId: string, audioFile: File) => void;
 }
 
 function getFileNameForWord(wordId: string): string {

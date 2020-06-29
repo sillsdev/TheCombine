@@ -11,6 +11,7 @@
 
 # Production
 /build
+production.yml
 
 # Misc
 .DS_Store
@@ -34,6 +35,7 @@ yarn-error.log*
 Backend/.vs/**/*
 Backend/bin
 Backend/obj
+Backend/build
 /**/obj/**/*
 Backend.Tests/bin
 Backend.Tests/obj

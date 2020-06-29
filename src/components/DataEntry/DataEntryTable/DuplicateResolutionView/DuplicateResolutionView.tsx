@@ -1,13 +1,15 @@
+import { Chip, Grid, Typography } from "@material-ui/core";
 import React from "react";
-import { Typography, Grid, Chip } from "@material-ui/core";
-import theme from "../../../../types/theme";
-import { Word, Sense } from "../../../../types/word";
+import { Translate } from "react-localize-redux";
+import theme, { styleAddendum } from "../../../../types/theme";
+import { Sense, Word } from "../../../../types/word";
 
 interface DuplicateResolutionViewProps {
   existingEntry: Word;
   newSense: string;
   addSense: (existingWord: Word, newSense: string) => void;
   addSemanticDomain: (existingWord: Word, sense: Sense, index: number) => void;
+  duplicateInput: React.RefObject<HTMLDivElement>;
 }
 
 /**
@@ -27,9 +29,12 @@ export class DuplicateResolutionView extends React.Component<
             paddingLeft: theme.spacing(2),
             paddingRight: theme.spacing(2),
           }}
+          ref={this.props.duplicateInput}
         >
           <Typography variant="body1">
-            {"Similar word: " + this.props.existingEntry.vernacular}
+            <Translate id="addWords.similarWord" />
+            {": "}
+            {this.props.existingEntry.vernacular}
           </Typography>
         </Grid>
         <Grid
@@ -40,7 +45,10 @@ export class DuplicateResolutionView extends React.Component<
             paddingRight: theme.spacing(2),
           }}
         >
-          <Typography variant="body1">{"Glosses: "}</Typography>
+          <Typography variant="body1">
+            <Translate id="addWords.glosses" />
+            {": "}
+          </Typography>
           {this.props.existingEntry.senses.map((sense: Sense, index) =>
             sense.glosses
               .filter((gloss) => gloss.language === "en")
@@ -59,17 +67,25 @@ export class DuplicateResolutionView extends React.Component<
                 />
               ))
           )}
-          <Chip
-            variant="outlined"
-            label={"Add New Sense +"}
-            style={{ margin: 4 }}
-            onClick={() => {
-              this.props.addSense(
-                this.props.existingEntry,
-                this.props.newSense
-              );
-            }}
-          />
+          {this.props.newSense ? (
+            <Chip
+              variant="outlined"
+              label={<Translate id="addWords.addNewSense" />}
+              style={{ margin: 4 }}
+              onClick={() => {
+                this.props.addSense(
+                  this.props.existingEntry,
+                  this.props.newSense
+                );
+              }}
+            />
+          ) : (
+            <Chip
+              variant="outlined"
+              label={<Translate id="addWords.addNewSense" />}
+              style={{ color: styleAddendum.inactive.color, margin: 4 }}
+            />
+          )}
         </Grid>
       </Grid>
     );

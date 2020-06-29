@@ -1,4 +1,6 @@
+import axios from "axios";
 import React from "react";
+import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
 import axios from "axios";
 
@@ -8,13 +10,15 @@ import mockWords from "./MockWords";
 import { mockCreateWord } from "./MockWords";
 import { Provider } from "react-redux";
 import { Sense, State, Word } from "../../../../types/word";
-import ReactDOM from "react-dom";
+import * as utilities from "../../../../utilities";
+import ReviewEntriesConnected from "../ReviewEntriesComponent";
 import {
   OLD_SENSE,
   ReviewEntriesSense,
   ReviewEntriesWord,
   SEP_CHAR,
 } from "../ReviewEntriesTypes";
+import mockWords from "./MockWords";
 
 jest.mock("../../../../backend", () => {
   return {
