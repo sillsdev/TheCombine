@@ -87,8 +87,6 @@ const oldWord: ReviewEntriesWord = {
 };
 
 beforeEach(() => {
-  mockUpdateWord.mockClear();
-  mockGetWord.mockClear();
   mockBackendReturn(oldFrontierWord);
 
   mockStore.clearActions();
