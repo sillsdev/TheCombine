@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import {
   ExistingEntry,
   addSenseToWord,
@@ -7,6 +8,8 @@ import {
   duplicatesFromFrontier,
 } from "../ExistingEntry";
 import { Word, SemanticDomain, State, Sense } from "../../../../../types/word";
+import configureMockStore from "redux-mock-store";
+import { defaultState } from "../../../../App/DefaultState";
 import { mockWord } from "../../../tests/MockWord";
 import SpellChecker from "../../../spellChecker";
 import { mockSemanticDomain } from "../../tests/DataEntryTable.test";
@@ -17,26 +20,32 @@ jest.mock("../ExistingGloss/ExistingGloss");
 jest.mock("../DeleteEntry/DeleteEntry");
 jest.mock("../../../../Pronunciations/Recorder");
 
+const createMockStore = configureMockStore([]);
+const mockStore = createMockStore(defaultState);
+
 describe("Tests ExistingEntry", () => {
   it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
-      <ExistingEntry
-        wordsBeingAdded={[]}
-        existingWords={[]}
-        entryIndex={0}
-        entry={mockWord}
-        updateWord={(word: Word) => null}
-        removeWord={(word: Word) => null}
-        spellChecker={new SpellChecker()}
-        semanticDomain={{ name: "", id: "" }}
-        displayDuplicates={true}
-        toggleDisplayDuplicates={() => null}
-        displaySpellingSuggestions={true}
-        toggleDisplaySpellingSuggestions={() => null}
-        recorder={new Recorder()}
-        focusNewEntry={() => null}
-      />,
+      <Provider store={mockStore}>
+        <ExistingEntry
+          wordsBeingAdded={[]}
+          existingWords={[]}
+          entryIndex={0}
+          entry={mockWord}
+          updateWord={(word: Word) => null}
+          removeWord={(word: Word) => null}
+          spellChecker={new SpellChecker()}
+          semanticDomain={{ name: "", id: "" }}
+          displayDuplicates={true}
+          toggleDisplayDuplicates={() => null}
+          displaySpellingSuggestions={true}
+          toggleDisplaySpellingSuggestions={() => null}
+          recorder={new Recorder()}
+          focusNewEntry={() => null}
+        />
+      </Provider>,
+
       div
     );
     ReactDOM.unmountComponentAtNode(div);

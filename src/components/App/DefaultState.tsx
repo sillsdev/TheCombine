@@ -35,4 +35,9 @@ export const defaultState = {
   goalSelectorState: {
     ...goalSelectorState,
   },
+  reviewEntriesState: {
+    language: "en",
+    isRecording: false,
+    wordBeingRecorded: undefined,
+  },
 };
