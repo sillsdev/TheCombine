@@ -6,20 +6,15 @@ import { Project } from "../../../types/project";
 import theme from "../../../types/theme";
 import ExportProjectButton from "../../ProjectSettings/ProjectExport/ExportProjectButton";
 
-interface ExportsProps {
-  project: Project;
-  setCurrentProject: (project: Project) => void;
-}
-
 interface ExportsState {
   projectList: Project[];
 }
 
 export class ProjectsExport extends React.Component<
-  ExportsProps & LocalizeContextProps,
+  LocalizeContextProps,
   ExportsState
 > {
-  constructor(props: ExportsProps & LocalizeContextProps) {
+  constructor(props: LocalizeContextProps) {
     super(props);
 
     this.state = {
@@ -31,37 +26,20 @@ export class ProjectsExport extends React.Component<
     });
   }
 
-  componentDidUpdate(prevProps: ExportsProps) {
-    if (prevProps.project.name !== this.props.project.name) {
-      getAllProjects().then((projects) => {
-        this.setState({ projectList: projects });
-      });
-    }
-  }
-
-  private selectProject(project: Project) {
-    this.props.setCurrentProject(project);
-  }
-
   getListItems() {
     return this.state.projectList.map((project) => {
-      const isCurrentProject: boolean = project.id === this.props.project.id;
       return (
-        <ListItem
-          key={project.id}
-          button
-          onClick={() => this.selectProject(project)}
-        >
+        <ListItem key={project.id}>
           <Typography
             variant="h6"
-            color={isCurrentProject ? "inherit" : "textSecondary"}
+            color={"textSecondary"}
             style={{ marginRight: theme.spacing(1) }}
           >
             {project.name}
           </Typography>
 
           {/* Export Lift file */}
-          {isCurrentProject ? <ExportProjectButton /> : null}
+          <ExportProjectButton projectId={project.id} />
         </ListItem>
       );
     });
