@@ -5,12 +5,13 @@ import { getAllProjects } from "../../../backend";
 import { Project } from "../../../types/project";
 import theme from "../../../types/theme";
 import ExportProjectButton from "../../ProjectSettings/ProjectExport/ExportProjectButton";
+import DeleteProjectButton from "./DeleteProjectButton";
 
 interface ExportsState {
   projectList: Project[];
 }
 
-export class ProjectsExport extends React.Component<
+export class ProjectManagement extends React.Component<
   LocalizeContextProps,
   ExportsState
 > {
@@ -30,16 +31,17 @@ export class ProjectsExport extends React.Component<
     return this.state.projectList.map((project) => {
       return (
         <ListItem key={project.id}>
-          <Typography
-            variant="h6"
-            color={"textSecondary"}
-            style={{ marginRight: theme.spacing(1) }}
-          >
+          <Typography variant="h6" style={{ marginRight: theme.spacing(1) }}>
             {project.name}
           </Typography>
 
           {/* Export Lift file */}
-          <ExportProjectButton projectId={project.id} />
+          <ExportProjectButton
+            projectId={project.id}
+            style={{ marginRight: theme.spacing(1) }}
+          />
+          {/* Permanently delete project */}
+          <DeleteProjectButton projectId={project.id} />
         </ListItem>
       );
     });
@@ -50,4 +52,4 @@ export class ProjectsExport extends React.Component<
   }
 }
 
-export default withLocalize(ProjectsExport);
+export default withLocalize(ProjectManagement);

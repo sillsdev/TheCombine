@@ -248,6 +248,13 @@ export async function exportLift(projectId?: string) {
   return `data:application/zip;base64,${resp.data}`;
 }
 
+export async function deleteProject(projectId: string): Promise<string> {
+  let resp = await backendServer.delete(`${baseURL}/projects/${projectId}`, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
 export async function uploadAudio(
   wordId: string,
   audioFile: File

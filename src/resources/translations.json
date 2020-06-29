@@ -173,6 +173,31 @@
       "Sélectionner un projet"
     ]
   },
+  "siteSettings": {
+    "deleteProject": {
+      "button": ["Delete Project", "Eliminar proyecto", "Supprimer projet"],
+      "warnTitle": [
+        "Proceed with Caution!",
+        "¡Proceder con precaución!",
+        "Procéder avec prudence !"
+      ],
+      "warnText": [
+        "Deleting a project is permanent and cannot be undone!",
+        "Eliminar un proyecto es permanente. ¡No puede deshacerlo!",
+        "Supprimer un projet est permanent. Ne peut pas le défaire !"
+      ],
+      "cancel": [
+        "Cancel and keep project",
+        "Cancelar y mantener proyecto",
+        "Annuler et conserver projet"
+      ],
+      "confirm": [
+        "Delete project forever",
+        "Eliminar proyeto para siempre",
+        "Supprimer projet pour toujours"
+      ]
+    }
+  },
   "projectSettings": {
     "language": {
       "header": ["Language", "Lenguaje", "Langue"],
