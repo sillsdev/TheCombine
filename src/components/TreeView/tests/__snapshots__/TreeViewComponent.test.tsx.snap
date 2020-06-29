@@ -455,7 +455,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
               className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
             >
               <button
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
+                className="MuiButtonBase-root MuiButton-root buttonHighlight MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}

@@ -449,7 +449,7 @@ Array [
             className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
+              className="MuiButtonBase-root MuiButton-root buttonHighlight MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
               disabled={true}
               onBlur={[Function]}
               onClick={[Function]}
@@ -790,7 +790,7 @@ Array [
             className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
+              className="MuiButtonBase-root MuiButton-root buttonHighlight MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
@@ -1596,7 +1596,7 @@ Array [
             className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
+              className="MuiButtonBase-root MuiButton-root buttonHighlight MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
@@ -2058,7 +2058,7 @@ Array [
             className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
+              className="MuiButtonBase-root MuiButton-root buttonHighlight MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
@@ -2804,7 +2804,7 @@ Array [
             className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
+              className="MuiButtonBase-root MuiButton-root buttonHighlight MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
