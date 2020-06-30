@@ -2,7 +2,6 @@ import React, { ReactElement } from "react";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
-  act,
 } from "react-test-renderer";
 import ContextMenu, {
   ContextMenu as ContextMenuClass,
@@ -69,7 +68,7 @@ beforeAll(() => {
       }}
     />
   );
-  act(() => {
+  renderer.act(() => {
     contextMaster = renderer.create(
       <div>
         {documentHandle}
