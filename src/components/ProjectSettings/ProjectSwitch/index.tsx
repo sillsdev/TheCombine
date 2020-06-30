@@ -1,9 +1,8 @@
-import { StoreState } from "../../../types";
 import { connect } from "react-redux";
-
 import { Dispatch } from "redux";
-import { ProjectAction, setCurrentProject } from "../../Project/ProjectActions";
+import { StoreState } from "../../../types";
 import { Project } from "../../../types/project";
+import { ProjectAction, setCurrentProject } from "../../Project/ProjectActions";
 import ProjectSwitch from "./ProjectSwitch";
 
 function mapStateToProps(state: StoreState) {

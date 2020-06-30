@@ -1,3 +1,5 @@
+import { randomIntString } from "../utilities";
+
 export enum State {
   active,
   deleted,
@@ -70,7 +72,7 @@ export function hasSenses(word: Word): boolean {
 
 export function simpleWord(vern: string, gloss: string): Word {
   return {
-    id: Math.floor(Math.random() * 9999999).toString(),
+    id: randomIntString(),
     vernacular: vern,
     senses: [makeSense(gloss)],
     audio: [],
@@ -86,7 +88,7 @@ export function simpleWord(vern: string, gloss: string): Word {
 
 export function multiGlossWord(vern: string, glosses: string[]) {
   return {
-    id: Math.floor(Math.random() * 9999999).toString(),
+    id: randomIntString(),
     vernacular: vern,
     senses: glosses.map((gloss) => makeSense(gloss)),
     audio: [],
@@ -106,7 +108,7 @@ export function testWordList(): Word[] {
     simpleWord("Yode", "Goodbye"),
     simpleWord("Yoff", "Yes"),
     simpleWord("Yank", "No"),
-    simpleWord("Yank", "Please god help me"),
+    simpleWord("Yank", "Please help me"),
     simpleWord("Ya", "Help"),
     simpleWord("Yeet", "Please"),
     simpleWord("Yeet", "Mandatory"),
