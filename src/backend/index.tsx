@@ -248,8 +248,8 @@ export async function exportLift(projectId?: string) {
   return `data:application/zip;base64,${resp.data}`;
 }
 
-export async function deleteProject(projectId: string): Promise<string> {
-  let resp = await backendServer.delete(`${baseURL}/projects/${projectId}`, {
+export async function deleteProject(projectId: string) {
+  let resp = await backendServer.delete(`projects/${projectId}`, {
     headers: authHeader(),
   });
   return resp.data;
@@ -276,14 +276,14 @@ export async function deleteAudio(
   fileName: string
 ): Promise<string> {
   let resp = await backendServer.delete(
-    `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
+    `projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
     { headers: authHeader() }
   );
   return resp.data;
 }
 
 export function getAudioUrl(wordId: string, fileName: string): string {
-  return `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/download/audio/${fileName}`;
+  return `projects/${LocalStorage.getProjectId()}/words/${wordId}/download/audio/${fileName}`;
 }
 
 export async function uploadAvatar(user: User, img: File): Promise<string> {
