@@ -197,6 +197,12 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
+            var allUsers = await _userService.GetAllUsers();
+            foreach (User user in allUsers)
+            {
+                await _userService.RemoveUserFromProject(user.Id, projectId);
+            }
+
             if (await _userRoleService.DeleteAllUserRoles(projectId) && await _projectService.Delete(projectId))
             {
                 return new OkResult();

@@ -66,6 +66,19 @@ namespace Backend.Tests
             return Task.FromResult(ResultOfUpdate.NotFound);
         }
 
+        public Task<ResultOfUpdate> RemoveUserFromProject(string userId, string projectId)
+        {
+            var foundUser = _users.Single(u => u.Id == userId);
+            var success = foundUser.ProjectRoles.ContainsKey(projectId) && _users.Remove(foundUser);
+            if (success)
+            {
+                foundUser.ProjectRoles.Remove(projectId);
+                _users.Add(foundUser.Clone());
+                return Task.FromResult(ResultOfUpdate.Updated);
+            }
+            return Task.FromResult(ResultOfUpdate.NotFound);
+        }
+
         public Task<User> Authenticate(string username, string password)
         {
             try

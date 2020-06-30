@@ -9,6 +9,7 @@ namespace BackendFramework.Interfaces
     {
         Task<List<User>> GetAllUsers();
         Task<User> GetUser(string userId);
+        Task<ResultOfUpdate> RemoveUserFromProject(string userId, string projectId);
         Task<string> GetUserAvatar(string userId);
         Task<User> Create(User user);
         Task<ResultOfUpdate> Update(string userId, User user);

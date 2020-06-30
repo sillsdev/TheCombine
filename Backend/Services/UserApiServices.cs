@@ -197,6 +197,19 @@ namespace BackendFramework.Services
             return user;
         }
 
+        /// <summary> Removes from <see cref="User"/> with specified userId any role for <see cref="Project"/> with projectId </summary>
+        /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
+        public async Task<ResultOfUpdate> RemoveUserFromProject(string userId, string projectId)
+        {
+            var user = await GetUser(userId);
+            if (user.ProjectRoles.ContainsKey(projectId))
+            {
+                user.ProjectRoles.Remove(projectId);
+                return await Update(user.Id, user);
+            }
+            return ResultOfUpdate.NoChange;
+        }
+
         /// <summary> Finds <see cref="User"/> with specified userId and returns avatar filepath </summary>
         public async Task<string> GetUserAvatar(string userId)
         {
