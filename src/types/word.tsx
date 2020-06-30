@@ -55,6 +55,12 @@ export interface Merge {
   time: string;
 }
 
+//used in ExistingDataTable
+export interface DomainWord {
+  word: Word;
+  gloss: Gloss;
+}
+
 export function hasSenses(word: Word): boolean {
   let returnval =
     word.senses &&
