@@ -25,8 +25,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
-        /// <remarks> GET: v1/users/projects/{projectId}/allusers </remarks>
-        [HttpGet("projects/{projectId}/allusers")]
+        /// <remarks> GET: v1/users/allusers </remarks>
+        [HttpGet("allusers")]
         public async Task<IActionResult> GetAllUsers()
         {
             if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
@@ -55,7 +55,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/users/authenticate </remarks>
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody]Credentials cred)
+        public async Task<IActionResult> Authenticate([FromBody] Credentials cred)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of created user </returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]User user)
+        public async Task<IActionResult> Post([FromBody] User user)
         {
             var returnUser = await _userService.Create(user);
             if (returnUser == null)
