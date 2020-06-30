@@ -3,7 +3,6 @@ import { Provider } from "react-redux";
 import renderer, {
   ReactTestInstance,
   ReactTestRenderer,
-  act,
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -74,7 +73,7 @@ const mouse: GoalScrollAction = {
 beforeEach(() => {
   // Here, use the act block to be able to render our GoalState into the DOM
   // Re-created each time to prevent actions from previous runs from affecting future runs
-  act(() => {
+  renderer.act(() => {
     scrollMaster = renderer.create(
       <Provider store={store}>
         <GoalSelectorScroll handleChange={jest.fn()} />

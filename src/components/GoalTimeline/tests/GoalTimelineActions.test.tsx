@@ -1,22 +1,21 @@
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as actions from "../GoalsActions";
-import { Goal } from "../../../types/goals";
+import * as LocalStorage from "../../../backend/localStorage";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
-import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
-import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
-import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
-import { User } from "../../../types/user";
+import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
 import {
   MergeTreeActions,
   MergeTreeAction,
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
+import { Goal } from "../../../types/goals";
+import { User } from "../../../types/user";
+import { UserEdit } from "../../../types/userEdit";
 import { defaultState as goalsDefaultState } from "../DefaultState";
-import * as LocalStorage from "../../../backend/localStorage";
-import { getUserEditById } from "../../../backend";
-import { UserEdit, Edit } from "../../../types/userEdit";
+import * as actions from "../GoalsActions";
 
 jest.mock(
   ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",

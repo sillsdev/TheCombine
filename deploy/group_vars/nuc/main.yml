@@ -5,7 +5,7 @@
 # Group: nuc
 #################################################
 
-config_base_url: "https://thecombine.languagetechnology.org/v1"
+config_base_url: "https://thecombine.languagetechnology.org"
 config_captcha_required: "false"
 config_captcha_sitekey: ""
 
