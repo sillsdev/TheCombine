@@ -50,6 +50,7 @@ beforeEach(() => {
           displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
           domainWords={[]}
           isSmallScreen={false}
+          getWordsFromBackend={jest.fn()}
         />
       </Provider>
     );
@@ -57,49 +58,6 @@ beforeEach(() => {
 });
 
 describe("Tests DataEntryTable", () => {
-  it("should filter out words that are not accessible", () => {
-    let words: Word[] = [];
-    let expectedWords: Word[] = [];
-    expect(filterWords(words)).toEqual(expectedWords);
-  });
-
-  it("should filter out words that are inaccessible", () => {
-    let word = { ...mockWord };
-    word.senses[0].accessibility = State.active;
-    let words: Word[] = [
-      {
-        ...mockWord,
-        senses: [
-          {
-            glosses: [],
-            semanticDomains: [],
-          },
-        ],
-      },
-    ];
-    let expectedWords: Word[] = [];
-    expect(filterWords(words)).toEqual(expectedWords);
-  });
-
-  it("should filter out words that are inaccessible", () => {
-    let word = { ...mockWord };
-    word.senses[0].accessibility = State.active;
-    let words: Word[] = [
-      {
-        ...mockWord,
-        senses: [
-          {
-            glosses: [],
-            semanticDomains: [],
-            accessibility: State.active,
-          },
-        ],
-      },
-    ];
-    let expectedWords: Word[] = [...words];
-    expect(filterWords(words)).toEqual(expectedWords);
-  });
-
   it("should call add word on backend when new entry has data and complete is clicked", (done) => {
     jest.clearAllMocks();
     // Verify that NewEntry is present

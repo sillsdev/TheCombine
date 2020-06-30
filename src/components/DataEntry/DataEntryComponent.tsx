@@ -4,7 +4,13 @@ import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import { getFrontierWords } from "../../backend";
 import { CurrentTab } from "../../types/currentTab";
 import theme from "../../types/theme";
-import { SemanticDomain, Word, State, DomainWord } from "../../types/word";
+import {
+  SemanticDomain,
+  Word,
+  State,
+  DomainWord,
+  Sense,
+} from "../../types/word";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import TreeViewComponent from "../TreeView";
 import DomainTree from "../TreeView/SemanticDomain";
@@ -53,27 +59,46 @@ export function filterWordsByDomain(
   domain: SemanticDomain
 ): DomainWord[] {
   let domainWords: DomainWord[] = [];
-  let domainName: String = domain.name;
   let domainMatched: Boolean = false;
+  let currentWordSense: Sense = {
+    glosses: [],
+    semanticDomains: [],
+  };
 
   for (let currentWord of words) {
     for (let currentSense of currentWord.senses) {
       domainMatched = false;
       for (let currentDomain of currentSense.semanticDomains) {
-        if (currentDomain.name === domainName) {
+        if (currentDomain.id === domain.id) {
           domainMatched = true;
+          currentWordSense = currentSense;
         }
       }
-      if (domainMatched) {
-        let newDomainWord: DomainWord = {
-          word: currentWord,
-          gloss: currentSense.glosses[0],
-        };
-        domainWords.push(newDomainWord);
-      }
+    }
+    if (domainMatched) {
+      let newDomainWord: DomainWord = {
+        word: currentWord,
+        gloss: currentWordSense.glosses[0],
+      };
+      domainWords.push(newDomainWord);
     }
   }
 
+  return domainWords;
+}
+
+export function sortDomainWordByVern(
+  existingWords: Word[],
+  domain: SemanticDomain
+): DomainWord[] {
+  let domainWords: DomainWord[] = filterWordsByDomain(existingWords, domain);
+  domainWords.sort((a, b) =>
+    a.word.vernacular.length < 1
+      ? -1
+      : a.word.vernacular < b.word.vernacular
+      ? -1
+      : 1
+  );
   return domainWords;
 }
 
@@ -109,21 +134,6 @@ export class DataEntryComponent extends React.Component<
       isSmallScreen: smallScreen,
     });
   };
-
-  sortDomainWordByVern(): DomainWord[] {
-    let domainWords: DomainWord[] = filterWordsByDomain(
-      this.state.existingWords,
-      this.props.domain
-    );
-    domainWords.sort((a, b) =>
-      a.word.vernacular.length < 1
-        ? -1
-        : a.word.vernacular < b.word.vernacular
-        ? -1
-        : 1
-    );
-    return domainWords;
-  }
 
   async getWordsFromBackend(): Promise<Word[]> {
     let words = await getFrontierWords();
@@ -178,9 +188,12 @@ export class DataEntryComponent extends React.Component<
             <AppBarComponent currentTab={CurrentTab.DataEntry} />
             <TreeViewComponent
               returnControlToCaller={() => {
-                this.getWordsFromBackend().then(() => 
+                this.getWordsFromBackend().then(() =>
                   this.setState({
-                    domainWords: this.sortDomainWordByVern(),
+                    domainWords: sortDomainWordByVern(
+                      this.state.existingWords,
+                      this.props.domain
+                    ),
                     displaySemanticDomain: false,
                   })
                 );
