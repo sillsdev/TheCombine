@@ -12,7 +12,7 @@ import ProjectNameButton from "./ProjectNameButton";
 import { CurrentTab } from "../../types/currentTab";
 
 export interface AppBarComponentProps {
-  currentTab: CurrentTab;
+  currenttab: CurrentTab;
 }
 
 export class AppBarComponent extends React.Component<
@@ -37,12 +37,12 @@ export class AppBarComponent extends React.Component<
                 <Grid item xs>
                   <Logo />
                   {getProjectId() !== "" && (
-                    <NavigationButtons currentTab={this.props.currentTab} />
+                    <NavigationButtons currentTab={this.props.currenttab} />
                   )}
                 </Grid>
                 <Grid item xs>
                   {getProjectId() !== "" && (
-                    <ProjectNameButton currentTab={this.props.currentTab} />
+                    <ProjectNameButton currentTab={this.props.currenttab} />
                   )}
                 </Grid>
                 <Grid item>
