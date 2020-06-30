@@ -172,7 +172,7 @@ namespace BackendFramework.Controllers
         /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
         /// <remarks> PUT: v1/projects/{projectId} </remarks>
         [HttpPut("{projectId}/characters")]
-        public async Task<IActionResult> PutChars(string projectId, [FromBody]Project project)
+        public async Task<IActionResult> PutChars(string projectId, [FromBody] Project project)
         {
             if (!_permissionService.HasProjectPermission(Permission.MergeAndCharSet, HttpContext))
             {
@@ -187,7 +187,7 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(currentProj);
         }
 
-        /// <summary> Deletes <see cref="Project"/> with specified id </summary>
+        /// <summary> Deletes <see cref="Project"/> with specified id and all its user roles </summary>
         /// <remarks> DELETE: v1/projects/{projectId} </remarks>
         [HttpDelete("{projectId}")]
         public async Task<IActionResult> Delete(string projectId)
@@ -197,7 +197,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            if (await _projectService.Delete(projectId))
+            if (await _userRoleService.DeleteAllUserRoles(projectId) && await _projectService.Delete(projectId))
             {
                 return new OkResult();
             }
@@ -225,7 +225,7 @@ namespace BackendFramework.Controllers
 
         // Change user role using project Id
         [HttpPut("{projectId}/users/{userId}")]
-        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]int[] permissions)
+        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody] int[] permissions)
         {
             if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
