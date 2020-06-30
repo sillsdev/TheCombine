@@ -82,7 +82,7 @@ export class ReviewEntriesComponent extends React.Component<
     return (
       <Translate>
         {({ translate }) => (
-          <MaterialTable
+          <MaterialTable<any>
             icons={tableIcons}
             title={<Translate id={"reviewEntries.title"} />}
             columns={columns}

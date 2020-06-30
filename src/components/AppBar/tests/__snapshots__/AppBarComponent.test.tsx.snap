@@ -128,5 +128,8 @@ exports[`Tests AppBarComponent Ensures only one tab is shaded 2`] = `
   >
     
   </span>
+  <span
+    className="MuiTouchRipple-root"
+  />
 </button>
 `;

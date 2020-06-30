@@ -36,7 +36,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
              
             <svg
               aria-describedby={null}
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
               onBlur={[Function]}
@@ -45,14 +45,9 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
               onMouseOver={[Function]}
               onTouchEnd={[Function]}
               onTouchStart={[Function]}
-              role="presentation"
               title={null}
               viewBox="0 0 24 24"
             >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
               <path
                 d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"
               />
@@ -96,10 +91,9 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                 Missing translationId: charInventory.characterSet.advanced for language: \${ languageCode }
                  
                 <svg
-                  aria-hidden="true"
+                  aria-hidden={true}
                   className="MuiSvgIcon-root"
                   focusable="false"
-                  role="presentation"
                   style={
                     Object {
                       "transform": "rotate(0deg)",
@@ -110,10 +104,6 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                 >
                   <path
                     d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-                  />
-                  <path
-                    d="M0 0h24v24H0V0z"
-                    fill="none"
                   />
                 </svg>
               </span>
@@ -152,6 +142,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                         className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined"
                         data-shrink={false}
                         htmlFor="valid-characters-input"
+                        id="valid-characters-input-label"
                       >
                         Missing translationId: charInventory.characterSet.acceptedCharacters for language: \${ languageCode }
                       </label>
@@ -159,39 +150,15 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                         className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
                         onClick={[Function]}
                       >
-                        <fieldset
-                          aria-hidden={true}
-                          className="PrivateNotchedOutline-root-232 MuiOutlinedInput-notchedOutline"
-                          style={
-                            Object {
-                              "paddingLeft": 8,
-                            }
-                          }
-                        >
-                          <legend
-                            className="PrivateNotchedOutline-legend-233"
-                            style={
-                              Object {
-                                "width": 0.01,
-                              }
-                            }
-                          >
-                            <span
-                              dangerouslySetInnerHTML={
-                                Object {
-                                  "__html": "&#8203;",
-                                }
-                              }
-                            />
-                          </legend>
-                        </fieldset>
                         <input
                           aria-invalid={false}
                           autoComplete="off"
+                          autoFocus={false}
                           className="MuiInputBase-input MuiOutlinedInput-input"
                           disabled={false}
                           id="valid-characters-input"
                           name="characters"
+                          onAnimationStart={[Function]}
                           onBlur={[Function]}
                           onChange={[Function]}
                           onFocus={[Function]}
@@ -205,6 +172,18 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                           type="text"
                           value=""
                         />
+                        <fieldset
+                          aria-hidden={true}
+                          className="PrivateNotchedOutline-root-1 MuiOutlinedInput-notchedOutline"
+                        >
+                          <legend
+                            className="PrivateNotchedOutline-legendLabelled-3"
+                          >
+                            <span>
+                              Missing translationId: charInventory.characterSet.acceptedCharacters for language: \${ languageCode }
+                            </span>
+                          </legend>
+                        </fieldset>
                       </div>
                     </div>
                   </div>
@@ -224,6 +203,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                         className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined"
                         data-shrink={false}
                         htmlFor="rejected-characters-input"
+                        id="rejected-characters-input-label"
                       >
                         Missing translationId: charInventory.characterSet.rejectedCharacters for language: \${ languageCode }
                       </label>
@@ -231,39 +211,15 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                         className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl"
                         onClick={[Function]}
                       >
-                        <fieldset
-                          aria-hidden={true}
-                          className="PrivateNotchedOutline-root-232 MuiOutlinedInput-notchedOutline"
-                          style={
-                            Object {
-                              "paddingLeft": 8,
-                            }
-                          }
-                        >
-                          <legend
-                            className="PrivateNotchedOutline-legend-233"
-                            style={
-                              Object {
-                                "width": 0.01,
-                              }
-                            }
-                          >
-                            <span
-                              dangerouslySetInnerHTML={
-                                Object {
-                                  "__html": "&#8203;",
-                                }
-                              }
-                            />
-                          </legend>
-                        </fieldset>
                         <input
                           aria-invalid={false}
                           autoComplete="off"
+                          autoFocus={false}
                           className="MuiInputBase-input MuiOutlinedInput-input"
                           disabled={false}
                           id="rejected-characters-input"
                           name="characters"
+                          onAnimationStart={[Function]}
                           onBlur={[Function]}
                           onChange={[Function]}
                           onFocus={[Function]}
@@ -277,6 +233,18 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                           type="text"
                           value=""
                         />
+                        <fieldset
+                          aria-hidden={true}
+                          className="PrivateNotchedOutline-root-1 MuiOutlinedInput-notchedOutline"
+                        >
+                          <legend
+                            className="PrivateNotchedOutline-legendLabelled-3"
+                          >
+                            <span>
+                              Missing translationId: charInventory.characterSet.rejectedCharacters for language: \${ languageCode }
+                            </span>
+                          </legend>
+                        </fieldset>
                       </div>
                     </div>
                   </div>
@@ -303,13 +271,12 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
               onClick={[Function]}
             >
               <div
-                aria-haspopup="true"
-                aria-pressed="false"
-                className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
+                aria-haspopup="listbox"
+                className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
                 onBlur={[Function]}
-                onClick={[Function]}
                 onFocus={[Function]}
                 onKeyDown={[Function]}
+                onMouseDown={[Function]}
                 role="button"
                 tabIndex={0}
               >
@@ -317,15 +284,19 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
                  🡡
               </div>
               <input
+                aria-hidden={true}
+                className="MuiSelect-nativeInput"
                 id="sort-order"
-                type="hidden"
+                onAnimationStart={[Function]}
+                onChange={[Function]}
+                required={false}
+                tabIndex={-1}
                 value={0}
               />
               <svg
-                aria-hidden="true"
+                aria-hidden={true}
                 className="MuiSvgIcon-root MuiSelect-icon"
                 focusable="false"
-                role="presentation"
                 viewBox="0 0 24 24"
               >
                 <path
@@ -379,16 +350,11 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
             className="MuiButton-label"
           >
             <svg
-              aria-hidden="true"
+              aria-hidden={true}
               className="MuiSvgIcon-root"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
               <path
                 d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
               />

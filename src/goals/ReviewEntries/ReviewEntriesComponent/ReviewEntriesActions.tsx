@@ -199,7 +199,6 @@ export function updateFrontierWord(
     );
   };
 }
-
 // Converts the ReviewEntriesWord into a Word to send to the backend
 export function refreshWord(oldWordId: string, newWordId: string) {
   return async (

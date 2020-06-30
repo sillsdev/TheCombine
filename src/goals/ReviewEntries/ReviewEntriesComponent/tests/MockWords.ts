@@ -1,6 +1,11 @@
-import { ReviewEntriesWord } from "../ReviewEntriesTypes";
+import { Sense, State, Word } from "../../../../types/word";
+import {
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+  SEP_CHAR,
+} from "../ReviewEntriesTypes";
 
-const mockWords: ReviewEntriesWord[] = [
+export const mockWords: ReviewEntriesWord[] = [
   {
     id: "0",
     vernacular: "toad",
@@ -28,5 +33,37 @@ const mockWords: ReviewEntriesWord[] = [
     ],
   },
 ];
+
+export function mockCreateWord(
+  word: ReviewEntriesWord,
+  language: string
+): Word {
+  return {
+    id: word.id,
+    vernacular: word.vernacular,
+    senses: word.senses.map((sense) => createMockSense(sense, language)),
+    audio: [],
+    created: "",
+    modified: "",
+    history: [],
+    partOfSpeech: "",
+    editedBy: [],
+    otherField: "",
+    plural: "",
+  };
+}
+
+export function createMockSense(
+  sense: ReviewEntriesSense,
+  language: string
+): Sense {
+  return {
+    glosses: sense.glosses
+      .split(SEP_CHAR)
+      .map((value: any) => ({ def: value.trim(), language })),
+    semanticDomains: sense.domains,
+    accessibility: State.active,
+  };
+}
 
 export default mockWords;
