@@ -1,6 +1,6 @@
 import React from "react";
 import { Tooltip } from "@material-ui/core";
-import IconHolder from "./IconHolder";
+import RecorderIconHolder from "./RecorderIconHolder";
 import { Recorder } from "./Recorder";
 import { Translate } from "react-localize-redux";
 
@@ -50,7 +50,7 @@ export default function AudioRecorder(props: RecorderProps) {
 
   return (
     <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
-      <IconHolder
+      <RecorderIconHolder
         wordId={props.wordId}
         safeStartRecording={safeStartRecording}
         safeStopRecording={safeStopRecording}
