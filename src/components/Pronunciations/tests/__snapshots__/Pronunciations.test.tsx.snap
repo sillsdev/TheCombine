@@ -10,9 +10,8 @@ exports[`adds play audio button 1`] = `
   }
 >
   <button
-    aria-describedby={null}
     aria-label="record"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-1"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-12"
     disabled={false}
     onBlur={[Function]}
     onDragLeave={[Function]}
@@ -21,13 +20,11 @@ exports[`adds play audio button 1`] = `
     onKeyUp={[Function]}
     onMouseDown={[Function]}
     onMouseLeave={[Function]}
-    onMouseOver={[Function]}
     onMouseUp={[Function]}
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={0}
-    title={null}
     type="button"
   >
     <span
@@ -35,7 +32,7 @@ exports[`adds play audio button 1`] = `
     >
       <svg
         aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-iconRelease-3"
+        className="MuiSvgIcon-root makeStyles-iconRelease-14"
         focusable="false"
         viewBox="0 0 24 24"
       >
@@ -143,9 +140,8 @@ exports[`displays buttons 1`] = `
   }
 >
   <button
-    aria-describedby={null}
     aria-label="record"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-1"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-6"
     disabled={false}
     onBlur={[Function]}
     onDragLeave={[Function]}
@@ -154,13 +150,11 @@ exports[`displays buttons 1`] = `
     onKeyUp={[Function]}
     onMouseDown={[Function]}
     onMouseLeave={[Function]}
-    onMouseOver={[Function]}
     onMouseUp={[Function]}
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={0}
-    title={null}
     type="button"
   >
     <span
@@ -168,7 +162,7 @@ exports[`displays buttons 1`] = `
     >
       <svg
         aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-iconRelease-3"
+        className="MuiSvgIcon-root makeStyles-iconRelease-8"
         focusable="false"
         viewBox="0 0 24 24"
       >
@@ -276,9 +270,8 @@ exports[`removes play audio button 1`] = `
   }
 >
   <button
-    aria-describedby={null}
     aria-label="record"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-1"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-9"
     disabled={false}
     onBlur={[Function]}
     onDragLeave={[Function]}
@@ -287,13 +280,11 @@ exports[`removes play audio button 1`] = `
     onKeyUp={[Function]}
     onMouseDown={[Function]}
     onMouseLeave={[Function]}
-    onMouseOver={[Function]}
     onMouseUp={[Function]}
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={0}
-    title={null}
     type="button"
   >
     <span
@@ -301,7 +292,7 @@ exports[`removes play audio button 1`] = `
     >
       <svg
         aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-iconRelease-3"
+        className="MuiSvgIcon-root makeStyles-iconRelease-11"
         focusable="false"
         viewBox="0 0 24 24"
       >

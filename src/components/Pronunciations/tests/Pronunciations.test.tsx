@@ -42,7 +42,9 @@ it("displays buttons", () => {
 it("removes play audio button", () => {
   renderer.act(() => {
     testRenderer.update(
-      <Pronunciations wordId="2" pronunciationFiles={["a.wav"]} />
+      <Provider store={mockStore}>
+        <Pronunciations wordId="2" pronunciationFiles={["a.wav"]} />
+      </Provider>
     );
   });
   expect(testRenderer.toJSON()).toMatchSnapshot();
@@ -52,7 +54,9 @@ it("removes play audio button", () => {
 it("adds play audio button", () => {
   renderer.act(() => {
     testRenderer.update(
-      <Pronunciations wordId="2" pronunciationFiles={["a.wav", "c.wav"]} />
+      <Provider store={mockStore}>
+        <Pronunciations wordId="2" pronunciationFiles={["a.wav", "c.wav"]} />
+      </Provider>
     );
   });
   expect(testRenderer.toJSON()).toMatchSnapshot();
