@@ -30,7 +30,7 @@ export default function AudioRecorder(props: RecorderProps) {
   function safeStopRecording() {
     recorder
       .stopRecording()
-      .then((audioUrl: string) => {
+      .then(() => {
         const blob = recorder.getBlob();
         const fileName = getFileNameForWord(props.wordId);
         const file = new File([blob], fileName, {

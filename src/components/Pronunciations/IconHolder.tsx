@@ -3,7 +3,7 @@ import FiberManualRecord from "@material-ui/icons/FiberManualRecord";
 import { makeStyles, IconButton } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { updateRecordingStatus } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
-import { recorderIdle, recorderActive } from "../../types/theme";
+import { recorderStatus } from "../../types/theme";
 
 export interface IconHolderProps {
   wordId: string;
@@ -29,10 +29,10 @@ export default function IconHolder(props: IconHolderProps) {
       margin: theme.spacing(1),
     },
     iconPress: {
-      color: recorderActive,
+      color: recorderStatus.active.color,
     },
     iconRelease: {
-      color: recorderIdle,
+      color: recorderStatus.idle.color,
     },
   }));
 

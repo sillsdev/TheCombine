@@ -20,8 +20,8 @@ export const shade = blue[700]; //Buttons on AppBar Component
 export const accepted = green[600];
 export const rejected = red[600];
 
-export const recorderIdle = red[500];
-export const recorderActive = red[900];
+export const recorderIdle = red[500]; // Pronunciations/IconHolder
+export const recorderActive = red[900]; // Pronunciations/IconHolder
 
 // Constants used in multiple themes
 const palette = {
@@ -101,6 +101,15 @@ export const styleAddendum = {
   inactive: {
     color: grey[600],
     backgroundColor: grey[400],
+  },
+};
+
+export const recorderStatus = {
+  idle: {
+    color: red[500],
+  },
+  active: {
+    color: red[900],
   },
 };
 
