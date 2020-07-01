@@ -34,16 +34,11 @@ exports[`adds play audio button 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
+        aria-hidden={true}
         className="MuiSvgIcon-root makeStyles-iconRelease-3"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
-        <path
-          d="M24 24H0V0h24v24z"
-          fill="none"
-        />
         <circle
           cx="12"
           cy="12"
@@ -58,7 +53,7 @@ exports[`adds play audio button 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -81,18 +76,13 @@ exports[`adds play audio button 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
+        aria-hidden={true}
+        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path
           d="M8 5v14l11-7z"
-        />
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
         />
       </svg>
     </span>
@@ -103,7 +93,7 @@ exports[`adds play audio button 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -126,18 +116,13 @@ exports[`adds play audio button 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
+        aria-hidden={true}
+        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path
           d="M8 5v14l11-7z"
-        />
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
         />
       </svg>
     </span>
@@ -182,16 +167,11 @@ exports[`displays buttons 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
+        aria-hidden={true}
         className="MuiSvgIcon-root makeStyles-iconRelease-3"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
-        <path
-          d="M24 24H0V0h24v24z"
-          fill="none"
-        />
         <circle
           cx="12"
           cy="12"
@@ -206,7 +186,7 @@ exports[`displays buttons 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -229,18 +209,13 @@ exports[`displays buttons 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
+        aria-hidden={true}
+        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path
           d="M8 5v14l11-7z"
-        />
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
         />
       </svg>
     </span>
@@ -251,7 +226,7 @@ exports[`displays buttons 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -274,18 +249,13 @@ exports[`displays buttons 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
+        aria-hidden={true}
+        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path
           d="M8 5v14l11-7z"
-        />
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
         />
       </svg>
     </span>
@@ -330,16 +300,11 @@ exports[`removes play audio button 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
+        aria-hidden={true}
         className="MuiSvgIcon-root makeStyles-iconRelease-3"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
-        <path
-          d="M24 24H0V0h24v24z"
-          fill="none"
-        />
         <circle
           cx="12"
           cy="12"
@@ -354,7 +319,7 @@ exports[`removes play audio button 1`] = `
   <button
     aria-describedby={null}
     aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-33"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
     disabled={false}
     onBlur={[Function]}
     onClick={[Function]}
@@ -377,18 +342,13 @@ exports[`removes play audio button 1`] = `
       className="MuiIconButton-label"
     >
       <svg
-        aria-hidden="true"
-        className="MuiSvgIcon-root makeStyles-icon-34 MuiSvgIcon-colorPrimary"
+        aria-hidden={true}
+        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
         focusable="false"
-        role="presentation"
         viewBox="0 0 24 24"
       >
         <path
           d="M8 5v14l11-7z"
-        />
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
         />
       </svg>
     </span>

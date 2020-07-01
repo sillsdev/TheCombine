@@ -1,10 +1,10 @@
 import { List, ListItem, Typography } from "@material-ui/core";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { getAllProjectsByUser } from "../../../backend";
 import { getCurrentUser } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import { User } from "../../../types/user";
+import { randomIntString } from "../../../utilities";
 
 interface SwitchProps {
   project: Project;
@@ -16,11 +16,8 @@ interface SwitchState {
   currentUser: User | null;
 }
 
-export class ProjectSwitch extends React.Component<
-  SwitchProps & LocalizeContextProps,
-  SwitchState
-> {
-  constructor(props: SwitchProps & LocalizeContextProps) {
+export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
+  constructor(props: SwitchProps) {
     super(props);
 
     this.state = {
@@ -54,7 +51,7 @@ export class ProjectSwitch extends React.Component<
     return this.state.projectList.map((project) => {
       return (
         <ListItem
-          key={project.id}
+          key={project.id + randomIntString()}
           button
           onClick={() => this.selectProject(project)}
         >
@@ -76,4 +73,4 @@ export class ProjectSwitch extends React.Component<
   }
 }
 
-export default withLocalize(ProjectSwitch);
+export default ProjectSwitch;

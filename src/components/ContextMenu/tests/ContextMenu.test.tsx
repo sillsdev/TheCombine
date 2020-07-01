@@ -1,10 +1,11 @@
 import React, { ReactElement } from "react";
-import { ReactTestInstance, ReactTestRenderer } from "react-test-renderer";
-import { act } from "react-dom/test-utils";
-import renderer from "react-test-renderer";
+import renderer, {
+  ReactTestInstance,
+  ReactTestRenderer,
+} from "react-test-renderer";
 import ContextMenu, {
-  MenuType,
   ContextMenu as ContextMenuClass,
+  MenuType,
 } from "../ContextMenu";
 
 // Mock DOM
@@ -59,23 +60,23 @@ var contextMaster: ReactTestRenderer;
 var contextHandle: ReactTestInstance;
 
 beforeAll(() => {
-  act(() => {
-    documentHandle = (
-      <div
-        className={CLASS_WITH_DROPDOWN}
-        onContextMenu={(e) => {
-          documentRightClick(e);
-        }}
-      />
-    );
+  documentHandle = (
+    <div
+      className={CLASS_WITH_DROPDOWN}
+      onContextMenu={(e) => {
+        documentRightClick(e);
+      }}
+    />
+  );
+  renderer.act(() => {
     contextMaster = renderer.create(
       <div>
         {documentHandle}
         <ContextMenu anchorName={CLASS_WITH_DROPDOWN} options={TEST_OPTIONS} />
       </div>
     );
-    contextHandle = contextMaster.root.findByType(ContextMenuClass);
   });
+  contextHandle = contextMaster.root.findByType(ContextMenuClass);
 });
 afterAll(() => {
   // Clear calls to mock set

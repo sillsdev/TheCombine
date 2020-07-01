@@ -15,7 +15,7 @@ import globalTranslations from "./resources/translations.json";
 import { Router } from "react-router-dom";
 import history from "./history";
 import { PersistGate } from "redux-persist/integration/react";
-import ThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import theme from "./types/theme";
 
 const localizedLanguages = [

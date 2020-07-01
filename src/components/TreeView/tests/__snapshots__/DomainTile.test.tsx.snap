@@ -61,18 +61,13 @@ exports[`Tests DomainTile Tile with direction matches the latest snapshot 1`] = 
         className="MuiGrid-root MuiGrid-item"
       >
         <svg
-          aria-hidden="true"
+          aria-hidden={true}
           className="MuiSvgIcon-root"
           focusable="false"
-          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
             d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-          />
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
           />
         </svg>
       </div>

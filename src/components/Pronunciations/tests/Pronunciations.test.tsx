@@ -5,7 +5,7 @@ import { defaultState } from "../../App/DefaultState";
 import { Provider } from "react-redux";
 import Pronunciations from "../PronunciationsComponent";
 import AudioPlayer from "../AudioPlayer";
-import renderer, { ReactTestRenderer, act } from "react-test-renderer";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
 import AudioRecorder from "../AudioRecorder";
 
 const createMockStore = configureMockStore([]);
