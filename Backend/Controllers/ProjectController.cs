@@ -21,15 +21,18 @@ namespace BackendFramework.Controllers
         private readonly IUserRoleService _userRoleService;
         private readonly IUserService _userService;
         private readonly IPermissionService _permissionService;
+        private readonly IWordRepository _wordRepository;
 
         public ProjectController(IProjectService projectService, ISemDomParser semDomParser,
-            IUserRoleService userRoleService, IUserService userService, IPermissionService permissionService)
+            IUserRoleService userRoleService, IUserService userService, IPermissionService permissionService,
+            IWordRepository wordRepository)
         {
             _projectService = projectService;
             _semDomParser = semDomParser;
             _userRoleService = userRoleService;
             _userService = userService;
             _permissionService = permissionService;
+            _wordRepository = wordRepository;
         }
 
         /// <summary> Returns all <see cref="Project"/>s </summary>
@@ -197,13 +200,17 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
+            // Delete everything associated with the project.
             var allUsers = await _userService.GetAllUsers();
             foreach (User user in allUsers)
             {
                 await _userService.RemoveUserFromProject(user.Id, projectId);
             }
+            await _wordRepository.DeleteAllWords(projectId);
+            await _userRoleService.DeleteAllUserRoles(projectId);
 
-            if (await _userRoleService.DeleteAllUserRoles(projectId) && await _projectService.Delete(projectId))
+            // Delete the project itself.
+            if (await _projectService.Delete(projectId))
             {
                 return new OkResult();
             }

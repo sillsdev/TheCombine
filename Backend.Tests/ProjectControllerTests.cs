@@ -18,6 +18,7 @@ namespace Backend.Tests
         private IUserService _userService;
         private IPermissionService _permissionService;
         private User _jwtAuthenticatedUser;
+        private IWordRepository _wordRepository;
 
         [SetUp]
         public void Setup()
@@ -27,8 +28,9 @@ namespace Backend.Tests
             _semDomParser = new SemDomParser(_projectService);
             _userRoleService = new UserRoleServiceMock();
             _userService = new UserServiceMock();
+            _wordRepository = new WordRepositoryMock();
             _controller = new ProjectController(_projectService, _semDomParser, _userRoleService, _userService,
-                _permissionService)
+                _permissionService, _wordRepository)
             {
                 // Mock the Http Context because this isn't an actual call avatar controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
