@@ -1,13 +1,6 @@
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  IconButton,
-  Tooltip,
-} from "@material-ui/core";
-import { red } from "@material-ui/core/colors";
-import FiberManualRecord from "@material-ui/icons/FiberManualRecord";
-import React, { useState } from "react";
+import React from "react";
+import { Tooltip } from "@material-ui/core";
+import IconHolder from "./IconHolder";
 import { Recorder } from "./Recorder";
 import { Translate } from "react-localize-redux";
 
@@ -16,20 +9,6 @@ export interface RecorderProps {
   recorder?: Recorder;
   uploadAudio?: (wordId: string, audioFile: File) => void;
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: {
-      margin: theme.spacing(1),
-    },
-    iconPress: {
-      color: red[900],
-    },
-    iconRelease: {
-      color: red[500],
-    },
-  })
-);
 
 function getFileNameForWord(wordId: string): string {
   var fourCharParts = wordId.match(/.{1,6}/g);
@@ -41,63 +20,41 @@ function getFileNameForWord(wordId: string): string {
 }
 
 export default function AudioRecorder(props: RecorderProps) {
-  const [isRecording, setIsRecording] = useState(false);
-  const classes = useStyles();
-
   const recorder =
     props.recorder !== undefined ? props.recorder : new Recorder();
 
-  function safeStartRecording(
-    event: Event | React.TouchEvent | React.MouseEvent
-  ) {
-    if (!isRecording) {
-      event.preventDefault();
-      recorder.startRecording();
-      setIsRecording(true);
-    }
+  function safeStartRecording() {
+    recorder.startRecording();
   }
 
-  function safeStopRecording(
-    event: Event | React.TouchEvent | React.MouseEvent
-  ) {
-    if (isRecording) {
-      event.preventDefault();
-      recorder
-        .stopRecording()
-        .then((audioUrl: string) => {
-          const blob = recorder.getBlob();
-          const fileName = getFileNameForWord(props.wordId);
-          const file = new File([blob], fileName, {
-            type: blob.type,
-            lastModified: Date.now(),
-          });
-          if (props.uploadAudio) {
-            props.uploadAudio(props.wordId, file);
-          }
-        })
-        .catch(() => {
-          console.log("Error recording, probably no mic access");
-          // <Translate id="pronunciations.noMicAccess" />;
-          // TODO: Show alert dialog here
-        })
-        .finally(() => setIsRecording(false));
-    }
+  function safeStopRecording() {
+    recorder
+      .stopRecording()
+      .then((audioUrl: string) => {
+        const blob = recorder.getBlob();
+        const fileName = getFileNameForWord(props.wordId);
+        const file = new File([blob], fileName, {
+          type: blob.type,
+          lastModified: Date.now(),
+        });
+        if (props.uploadAudio) {
+          props.uploadAudio(props.wordId, file);
+        }
+      })
+      .catch(() => {
+        console.log("Error recording, probably no mic access");
+        // <Translate id="pronunciations.noMicAccess" />;
+        // TODO: Show alert dialog here
+      });
   }
 
   return (
     <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
-      <IconButton
-        onMouseDown={safeStartRecording}
-        onTouchStart={safeStartRecording}
-        onMouseUp={safeStopRecording}
-        onTouchEnd={safeStopRecording}
-        className={classes.button}
-        aria-label="record"
-      >
-        <FiberManualRecord
-          className={isRecording ? classes.iconPress : classes.iconRelease}
-        />
-      </IconButton>
+      <IconHolder
+        wordId={props.wordId}
+        safeStartRecording={safeStartRecording}
+        safeStopRecording={safeStopRecording}
+      />
     </Tooltip>
   );
 }
