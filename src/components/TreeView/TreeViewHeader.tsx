@@ -7,9 +7,51 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
-import animation from "./buttonHighlight.module.css";
+import styled, { keyframes } from "styled-components";
 import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
+
+const highlight = keyframes`
+70% {
+  opacity: 1;
+  top: -30%;
+  left: -30%;
+  transition-property: left, top, opacity;
+  transition-duration: 0.5s, 0.5s;
+  transition-timing-function: ease;
+}
+100% {
+  opacity: 0;
+  top: -50%;
+  left: -50%;
+  transition-property: left, top, opacity;
+}
+`;
+
+const StyledButton = styled(Button)`
+  &:after {
+    animation: ${highlight} 3s ease-in-out infinite;
+    animation-fill-mode: forwards;
+    content: "";
+    position: absolute;
+    top: -110%;
+    left: -210%;
+    width: 200%;
+    height: 200%;
+    opacity: 0;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.13) 77%,
+      rgba(255, 255, 255, 0.5) 92%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+  &:disabled::after {
+    animation: none;
+    background: none;
+  }
+`;
 
 interface TreeHeaderProps {
   currentDomain: SemanticDomainWithSubdomains;
@@ -201,14 +243,15 @@ export default class TreeViewHeader extends React.Component<
         </GridListTile>
         <GridListTile cols={5}>
           <Card>
-            <Button
-              className={animation.buttonHighlight}
+            <StyledButton
               fullWidth
               size="large"
               color="primary"
               variant="contained"
               disabled={!this.props.currentDomain.parentDomain}
-              onClick={() => this.props.animate(this.props.currentDomain)}
+              onClick={() => {
+                this.props.animate(this.props.currentDomain);
+              }}
             >
               <div style={{ textTransform: "capitalize" }}>
                 <Typography variant="overline">
@@ -218,7 +261,7 @@ export default class TreeViewHeader extends React.Component<
                   {this.props.currentDomain.name}
                 </Typography>
               </div>
-            </Button>
+            </StyledButton>
             <TextField
               fullWidth
               id="name"
@@ -234,8 +277,8 @@ export default class TreeViewHeader extends React.Component<
           {domainR ? (
             <DomainTile
               domain={domainR}
-              onClick={this.props.animate}
               direction={Direction.Right}
+              onClick={this.props.animate}
             />
           ) : null}
         </GridListTile>
