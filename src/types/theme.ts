@@ -20,6 +20,9 @@ export const shade = blue[700]; //Buttons on AppBar Component
 export const accepted = green[600];
 export const rejected = red[600];
 
+export const recorderIdle = red[500];
+export const recorderActive = red[900];
+
 // Constants used in multiple themes
 const palette = {
   type: "light",

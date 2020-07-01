@@ -1,9 +1,9 @@
 import React from "react";
 import FiberManualRecord from "@material-ui/icons/FiberManualRecord";
 import { makeStyles, IconButton } from "@material-ui/core";
-import { red } from "@material-ui/core/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { updateRecordingStatus } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
+import { recorderIdle, recorderActive } from "../../types/theme";
 
 export interface IconHolderProps {
   wordId: string;
@@ -29,10 +29,10 @@ export default function IconHolder(props: IconHolderProps) {
       margin: theme.spacing(1),
     },
     iconPress: {
-      color: red[900],
+      color: recorderActive,
     },
     iconRelease: {
-      color: red[500],
+      color: recorderIdle,
     },
   }));
 
