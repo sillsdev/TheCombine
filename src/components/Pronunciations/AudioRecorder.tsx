@@ -20,14 +20,13 @@ function getFileNameForWord(wordId: string): string {
 }
 
 export default function AudioRecorder(props: RecorderProps) {
-  const recorder =
-    props.recorder !== undefined ? props.recorder : new Recorder();
+  const recorder = props.recorder ? props.recorder : new Recorder();
 
-  function safeStartRecording() {
+  function startRecording() {
     recorder.startRecording();
   }
 
-  function safeStopRecording() {
+  function stopRecording() {
     recorder
       .stopRecording()
       .then(() => {
@@ -52,8 +51,8 @@ export default function AudioRecorder(props: RecorderProps) {
     <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
       <RecorderIconHolder
         wordId={props.wordId}
-        safeStartRecording={safeStartRecording}
-        safeStopRecording={safeStopRecording}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
       />
     </Tooltip>
   );

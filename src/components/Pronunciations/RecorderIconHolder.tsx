@@ -7,8 +7,8 @@ import { recorderStatus } from "../../types/theme";
 
 export interface RecorderIconHolderProps {
   wordId: string;
-  safeStartRecording: () => void;
-  safeStopRecording: () => void;
+  startRecording: () => void;
+  stopRecording: () => void;
 }
 
 export interface RecorderIconHolderState {
@@ -43,13 +43,13 @@ export default function RecorderIconHolder(props: RecorderIconHolderProps) {
   ) {
     event.preventDefault();
     dispatch(updateRecordingStatus(true, props.wordId));
-    props.safeStartRecording();
+    props.startRecording();
   }
   function toggleIsRecordingToFalse(
     event: Event | React.TouchEvent | React.MouseEvent
   ) {
     event.preventDefault();
-    props.safeStopRecording();
+    props.stopRecording();
     dispatch(updateRecordingStatus(false, undefined));
   }
 
