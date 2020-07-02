@@ -26,9 +26,10 @@ namespace BackendFramework.Models
 
         public PasswordReset()
         {
+            var expireTimeDifference = int.Parse(Environment.GetEnvironmentVariable("ASPNETCORE_PASSWORD_RESET_EXPIRE_TIME"));
             Id = "";
             Email = "";
-            ExpireTime = DateTime.Now.AddMinutes(15);
+            ExpireTime = DateTime.Now.AddMinutes(expireTimeDifference);
 
             var byteToken = new byte[TokenSize];
             Rng.GetBytes(byteToken);
