@@ -112,11 +112,11 @@ namespace BackendFramework
                 var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
                 options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
                 options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
-                options.SmtpServer = Configuration["Email:SmtpServer"];
-                options.SmtpPort = int.Parse(Configuration["Email:SmtpPort"]);
-                options.SmtpUsername = Configuration["Email:SmtpUsername"];
-                options.SmtpPassword = Configuration["Email:SmtpPassword"];
-                options.SmtpAddress = Configuration["Email:SmtpAddress"];
+                options.SmtpServer = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_SERVER");
+                options.SmtpPort = int.Parse(Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_PORT"));
+                options.SmtpUsername = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_USERNAME");
+                options.SmtpPassword = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_PASSWORD");
+                options.SmtpAddress = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_ADDRESS");
                 options.FrontendUrl = Configuration["Frontend:Url"];
             });
 
