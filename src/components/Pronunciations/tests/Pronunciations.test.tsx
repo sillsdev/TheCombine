@@ -7,6 +7,7 @@ import Pronunciations from "../PronunciationsComponent";
 import AudioPlayer from "../AudioPlayer";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import AudioRecorder from "../AudioRecorder";
+import { IconButton } from "@material-ui/core";
 
 const createMockStore = configureMockStore([]);
 
@@ -41,6 +42,7 @@ it("displays buttons", () => {
 // Snapshot
 it("removes play audio button", () => {
   renderer.act(() => {
+    testRenderer.unmount();
     testRenderer.update(
       <Provider store={mockStore}>
         <Pronunciations wordId="2" pronunciationFiles={["a.wav"]} />
@@ -60,6 +62,10 @@ it("adds play audio button", () => {
     );
   });
   expect(testRenderer.toJSON()).toMatchSnapshot();
+});
+
+it("mouseDown and mouseUp", () => {
+  console.log(testRenderer.root.children.length);
 });
 
 it("renders without crashing", () => {
