@@ -22,15 +22,13 @@ namespace BackendFramework.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IEmailService _emailService;
         private readonly IPasswordResetService _passwordResetService;
-        private readonly IFrontendContext _frontendContext;
 
-        public UserController(IUserService userService, IPermissionService permissionService, IEmailService emailService, IPasswordResetService passwordResetService, IFrontendContext frontendContext)
+        public UserController(IUserService userService, IPermissionService permissionService, IEmailService emailService, IPasswordResetService passwordResetService)
         {
             _userService = userService;
             _permissionService = permissionService;
             _emailService = emailService;
             _passwordResetService = passwordResetService;
-            _frontendContext = frontendContext;
         }
 
         /// <summary> Sends a password reset request </summary>
@@ -54,7 +52,7 @@ namespace BackendFramework.Controllers
             {
                 Text = string.Format("A password reset has been requested for the user {0}. Follow the link to reset "
                         + "{0}'s password. {1}/forgot/reset/{2} \n\n If you did not request a password reset please "
-                        + "ignore this email", user.Username, _frontendContext.FrontendUrl, resetRequest.Token)
+                        + "ignore this email", user.Username, data.Domain, resetRequest.Token)
             };
             if (await _emailService.SendEmail(message))
             {
@@ -253,6 +251,7 @@ namespace BackendFramework.Controllers
             public string Email;
             public string Token;
             public string NewPassword;
+            public string Domain;
         }
     }
 

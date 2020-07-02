@@ -36,7 +36,7 @@ backendServer.interceptors.response.use(
 
 export async function resetPasswordRequest(email: string): Promise<boolean> {
   return await backendServer
-    .post("users/forgot", { email: email })
+    .post("users/forgot", { domain: window.location.origin, email: email })
     .then(() => true)
     .catch(() => false);
 }
