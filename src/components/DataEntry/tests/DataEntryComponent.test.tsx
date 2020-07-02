@@ -22,6 +22,7 @@ import {
 } from "../DataEntryComponent";
 import { Done, Language } from "@material-ui/icons";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import DomainTree from "../../TreeView/SemanticDomain";
 
 var testRenderer: ReactTestRenderer;
 const createMockStore = configureMockStore([]);
@@ -92,13 +93,27 @@ describe("Tests DataEntryComponent", () => {
 
   it("filters out words that do not match desired domain", () => {
     jest.clearAllMocks();
-    let mockDomains = [mockDomainTree, mockDomainTree];
+    var mockDomains: DomainTree[] = [{...mockDomainTree}, {...mockDomainTree}];
+    /*let mockDomains = [
+      {
+        name: "",
+        id: "",
+        description: "",
+        subdomains: [],
+      },
+      {
+        name: "",
+        id: "",
+        description: "",
+        subdomains: [],
+      },
+    ];*/
     mockDomains[0].name = "daily";
     mockDomains[0].id = "123";
     mockDomains[1].name = "weather";
     mockDomains[1].id = "321";
 
-    let unfilteredWords: Word[] = [mockWord, mockWord, mockWord, mockWord];
+    let unfilteredWords: Word[] = [{...mockWord}, {...mockWord}, {...mockWord}, {...mockWord}];
     unfilteredWords[0].senses[0].semanticDomains[0] = mockDomains[1];
     unfilteredWords[0].vernacular = "one";
     unfilteredWords[1].senses[0].semanticDomains[0] = mockDomains[1];
@@ -109,7 +124,7 @@ describe("Tests DataEntryComponent", () => {
     unfilteredWords[3].vernacular = "four";
 
     let expectedValue: Word[] = [];
-    expect(filterWordsByDomain(unfilteredWords, mockDomains[0])).toBe(
+    expect(filterWordsByDomain(unfilteredWords, mockDomains[0])).toStrictEqual(
       expectedValue
     );
   });
