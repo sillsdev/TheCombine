@@ -11,6 +11,7 @@ namespace BackendFramework.Contexts
         public string SmtpUsername { get; }
         public string SmtpPassword { get; }
         public string SmtpAddress { get; }
+        public string SmtpFrom { get; }
 
         public EmailContext(IOptions<Settings> options)
         {
@@ -19,6 +20,7 @@ namespace BackendFramework.Contexts
             this.SmtpUsername = options.Value.SmtpUsername;
             this.SmtpPassword = options.Value.SmtpPassword;
             this.SmtpAddress = options.Value.SmtpAddress;
+            this.SmtpFrom = options.Value.SmtpFrom;
         }
     }
 }

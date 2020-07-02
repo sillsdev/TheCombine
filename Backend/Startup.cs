@@ -40,6 +40,7 @@ namespace BackendFramework
             public string SmtpUsername { get; set; }
             public string SmtpPassword { get; set; }
             public string SmtpAddress { get; set; }
+            public string SmtpFrom {get; set; }
         }
 
         private class EnvironmentNotConfiguredException : Exception
@@ -116,6 +117,7 @@ namespace BackendFramework
                 options.SmtpUsername = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_USERNAME");
                 options.SmtpPassword = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_PASSWORD");
                 options.SmtpAddress = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_ADDRESS");
+                options.SmtpFrom = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_FROM");
             });
 
             // Register concrete types for dependency injection

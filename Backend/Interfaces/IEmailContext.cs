@@ -7,5 +7,6 @@ namespace BackendFramework.Interfaces
         string SmtpUsername { get; }
         string SmtpPassword { get; }
         string SmtpAddress { get; }
+        string SmtpFrom { get; }
     }
 }
