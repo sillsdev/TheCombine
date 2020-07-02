@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   Card,
@@ -7,6 +6,8 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import React from "react";
+import Bounce from "react-reveal/Bounce";
 import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 
@@ -178,6 +179,10 @@ export default class TreeViewHeader extends React.Component<
     this.setState({ input: this.props.currentDomain.id });
   }
 
+  getRandomKey = () => {
+    return Math.random();
+  };
+
   // Creates the L/R button + select button + search bar
   render() {
     let domainL:
@@ -186,7 +191,6 @@ export default class TreeViewHeader extends React.Component<
     let domainR:
       | SemanticDomainWithSubdomains
       | undefined = this.getBrotherDomain(1);
-
     return (
       <GridList cols={9} spacing={20} cellHeight={"auto"}>
         <GridListTile cols={2}>
@@ -200,23 +204,25 @@ export default class TreeViewHeader extends React.Component<
         </GridListTile>
         <GridListTile cols={5}>
           <Card>
-            <Button
-              fullWidth
-              size="large"
-              color="primary"
-              variant="contained"
-              disabled={!this.props.currentDomain.parentDomain}
-              onClick={() => this.props.animate(this.props.currentDomain)}
-            >
-              <div style={{ textTransform: "capitalize" }}>
-                <Typography variant="overline">
-                  {this.props.currentDomain.id}
-                </Typography>
-                <Typography variant="h6">
-                  {this.props.currentDomain.name}
-                </Typography>
-              </div>
-            </Button>
+            <Bounce key={this.getRandomKey()}>
+              <Button
+                fullWidth
+                size="large"
+                color="primary"
+                variant="contained"
+                disabled={!this.props.currentDomain.parentDomain}
+                onClick={() => this.props.animate(this.props.currentDomain)}
+              >
+                <div style={{ textTransform: "capitalize" }}>
+                  <Typography variant="overline">
+                    {this.props.currentDomain.id}
+                  </Typography>
+                  <Typography variant="h6">
+                    {this.props.currentDomain.name}
+                  </Typography>
+                </div>
+              </Button>
+            </Bounce>
             <TextField
               fullWidth
               id="name"
