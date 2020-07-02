@@ -7,6 +7,7 @@ import renderer, {
 import { defaultState } from "../../App/DefaultState";
 import PasswordReset from "../ResetPage/component";
 import * as ResetActions from "../actions";
+import { RequestState } from "../reducer";
 
 var testRenderer: ReactTestRenderer;
 const createMockStore = configureMockStore([]);
@@ -38,9 +39,8 @@ describe("Test ResetPage", () => {
         password: "password",
         passwordConfirm: "password",
         sentAttempt: false,
-        passwordLength: false,
-        passwordSame: false,
-        resetFailure: false,
+        passwordFitsRequirements: true,
+        isPasswordConfirmed: true,
       },
       () => {
         // check no errors showup
@@ -81,8 +81,8 @@ describe("Test ResetPage", () => {
         password: "pass",
         passwordConfirm: "pass",
         sentAttempt: false,
-        passwordLength: true,
-        passwordSame: false,
+        passwordFitsRequirements: false,
+        isPasswordConfirmed: true,
       },
       () => {
         // check errors showup
@@ -119,8 +119,8 @@ describe("Test ResetPage", () => {
         password: "password",
         passwordConfirm: "passward",
         sentAttempt: false,
-        passwordLength: false,
-        passwordSame: true,
+        passwordFitsRequirements: true,
+        isPasswordConfirmed: false,
       },
       () => {
         // check errors showup
@@ -148,7 +148,7 @@ describe("Test ResetPage", () => {
     renderer.act(() => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
-          <PasswordReset resetFailure={true} />
+          <PasswordReset resetState={RequestState.Fail} />
         </Provider>
       );
     });
@@ -168,12 +168,11 @@ describe("Test ResetPage", () => {
         password: "password",
         passwordConfirm: "password",
         sentAttempt: true,
-        passwordLength: false,
-        passwordSame: false,
+        passwordFitsRequirements: true,
+        isPasswordConfirmed: true,
       },
       () => {
         var resetPage = testRenderer.root.findAllByType(PasswordReset)[0];
-        console.log(resetPage.props);
         // check errors showup
         var resetFailErrors = testRenderer.root.findAllByProps({
           id: "passwordReset.resetFail",
