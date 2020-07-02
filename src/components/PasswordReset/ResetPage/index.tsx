@@ -7,9 +7,7 @@ import { ResetDispatchProps } from "./component";
 
 export function mapStateToProps(state: StoreState) {
   return {
-    resetAttempt: state.passwordResetState.resetAttempt,
-    resetSuccess: state.passwordResetState.resetSuccess,
-    resetFailure: state.passwordResetState.resetFailure,
+    resetState: state.passwordResetState.resetState,
   };
 }
 

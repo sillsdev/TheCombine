@@ -28,6 +28,13 @@ export default class ResetRequest extends React.Component<
     event.preventDefault();
   };
 
+  setEmail = (email: string) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      email: email,
+    }));
+  }
+
   render() {
     return (
       <div>
@@ -43,16 +50,11 @@ export default class ResetRequest extends React.Component<
               <Grid item>
                 <TextField
                   variant="outlined"
-                  label={<Translate id="passwordReset.emailLabel" />}
+                  label={<Translate id="login.email" />}
                   value={this.state.email}
                   style={{ width: "100%" }}
                   margin="normal"
-                  onChange={(e) =>
-                    this.setState((prevState) => ({
-                      ...this.state,
-                      email: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => this.setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item>

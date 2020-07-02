@@ -6,16 +6,20 @@ import {
 } from "./actions";
 import { StoreAction } from "../../rootActions";
 
+export enum RequestState {
+  None,
+  Attempt,
+  Fail,
+  Success
+}
+
+
 export interface PasswordResetState {
-  resetAttempt: boolean;
-  resetFailure: boolean;
-  resetSuccess: boolean;
+  resetState: RequestState
 }
 
 export const defaultState: PasswordResetState = {
-  resetAttempt: false,
-  resetFailure: false,
-  resetSuccess: false,
+  resetState: RequestState.None
 };
 
 export const passwordResetReducer = (
@@ -25,21 +29,15 @@ export const passwordResetReducer = (
   switch (action.type) {
     case RESET_PASSWORD_ATTEMPT:
       return {
-        resetAttempt: true,
-        resetFailure: false,
-        resetSuccess: false,
+        resetState: RequestState.Attempt
       };
     case RESET_PASSWORD_FAIL:
       return {
-        resetAttempt: false,
-        resetFailure: true,
-        resetSuccess: false,
+        resetState: RequestState.Fail
       };
     case RESET_PASSWORD_SUCCESS:
       return {
-        resetAttempt: false,
-        resetFailure: false,
-        resetSuccess: true,
+        resetState: RequestState.Success
       };
     default:
       return state;

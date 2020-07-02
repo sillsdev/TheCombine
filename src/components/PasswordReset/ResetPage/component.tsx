@@ -2,6 +2,7 @@ import * as React from "react";
 import { Translate, LocalizeContextProps } from "react-localize-redux";
 import { RouteComponentProps } from "react-router";
 import { Typography, Card, Button, Grid, TextField } from "@material-ui/core";
+import { RequestState } from "../reducer";
 
 export interface MatchParams {
   token: string;
@@ -12,9 +13,7 @@ export interface ResetDispatchProps {
 }
 
 export interface PasswordResetProps extends RouteComponentProps<MatchParams> {
-  resetAttempt: boolean;
-  resetFailure: boolean;
-  resetSuccess: boolean;
+  resetState: RequestState;
 }
 
 export interface PasswordResetState {
@@ -46,7 +45,7 @@ export default class PasswordReset extends React.Component<
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
     this.setState((prevState) => ({
-      ...this.state,
+      ...prevState,
       sentAttempt: true,
     }));
     this.props.passwordReset(this.state.token, this.state.password);
@@ -55,11 +54,18 @@ export default class PasswordReset extends React.Component<
 
   onChangePassword = (password: string, confirmPassword: string) => {
     this.setState((prevState) => ({
-      ...this.state,
+      ...prevState,
       passwordLength: password.length < 8,
       passwordSame: password !== confirmPassword,
       password: password,
       passwordConfirm: confirmPassword,
+    }));
+  };
+
+  onChangeToken = (token: string) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      token: token,
     }));
   };
 
@@ -80,12 +86,7 @@ export default class PasswordReset extends React.Component<
                   value={this.state.token}
                   style={{ width: "100%" }}
                   margin="normal"
-                  onChange={(e) =>
-                    this.setState((prevState) => ({
-                      ...this.state,
-                      token: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => this.onChangeToken(e.target.value)}
                 />
               </Grid>
               <Grid item>
@@ -142,14 +143,15 @@ export default class PasswordReset extends React.Component<
 
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item>
-                  {this.props.resetFailure && this.state.sentAttempt && (
-                    <Typography
-                      variant="body2"
-                      style={{ display: "inline", margin: 24, color: "red" }}
-                    >
-                      <Translate id="passwordReset.resetFail" />
-                    </Typography>
-                  )}
+                  {this.props.resetState === RequestState.Fail &&
+                    this.state.sentAttempt && (
+                      <Typography
+                        variant="body2"
+                        style={{ display: "inline", margin: 24, color: "red" }}
+                      >
+                        <Translate id="passwordReset.resetFail" />
+                      </Typography>
+                    )}
                   <Button
                     id="submit_button"
                     variant="contained"
