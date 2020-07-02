@@ -113,7 +113,7 @@ namespace BackendFramework
                 options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
                 options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
                 options.SmtpServer = Configuration["Email:SmtpServer"];
-                options.SmtpPort = Int32.Parse(Configuration["Email:SmtpPort"]);
+                options.SmtpPort = int.Parse(Configuration["Email:SmtpPort"]);
                 options.SmtpUsername = Configuration["Email:SmtpUsername"];
                 options.SmtpPassword = Configuration["Email:SmtpPassword"];
                 options.SmtpAddress = Configuration["Email:SmtpAddress"];

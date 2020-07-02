@@ -35,25 +35,23 @@ backendServer.interceptors.response.use(
 );
 
 export async function resetPasswordRequest(email: string): Promise<boolean> {
-  let resp = await backendServer
+  return await backendServer
     .post("users/forgot", { email: email })
     .then(() => true)
     .catch(() => false);
-  return resp;
 }
 
 export async function resetPassword(
   token: string,
   password: string
 ): Promise<boolean> {
-  let resp = await backendServer
+  return await backendServer
     .post(`users/forgot/reset`, {
       token: token,
       newPassword: password,
     })
     .then(() => true)
     .catch(() => false);
-  return resp;
 }
 
 export async function createWord(word: Word): Promise<Word> {
