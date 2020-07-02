@@ -1,37 +1,14 @@
-import React from "react";
-import { Provider } from "react-redux";
-import renderer, {
-  ReactTestRenderer,
-  ReactTestInstance,
-  create,
-} from "react-test-renderer";
-import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../App/DefaultState";
-import * as backend from "../../../backend";
 import { mockDomainTree } from "./MockDomainTree";
 import { mockWord } from "./MockWord";
 import { mockDomainWord } from "./MockDomainWord";
-import { ExistingDataTable } from "../ExistingDataTable/ExistingDataTable";
 import { defaultProject as mockProject } from "../../../types/project";
-import { SemanticDomain, Word, State, DomainWord } from "../../../types/word";
+import { Word, State, DomainWord } from "../../../types/word";
 import {
-  DataEntryComponent,
   filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "../DataEntryComponent";
-import { Done, Language } from "@material-ui/icons";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import DomainTree from "../../TreeView/SemanticDomain";
-
-var testRenderer: ReactTestRenderer;
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);
-
-const mockLanguage = Language;
-mockLanguage.active = false;
-mockLanguage.code = "";
-mockLanguage.name = "mock";
 
 jest.mock("../../../backend", () => {
   return {
@@ -94,20 +71,7 @@ describe("Tests DataEntryComponent", () => {
   it("filters out words that do not match desired domain", () => {
     jest.clearAllMocks();
     var mockDomains: DomainTree[] = [{...mockDomainTree}, {...mockDomainTree}];
-    /*let mockDomains = [
-      {
-        name: "",
-        id: "",
-        description: "",
-        subdomains: [],
-      },
-      {
-        name: "",
-        id: "",
-        description: "",
-        subdomains: [],
-      },
-    ];*/
+
     mockDomains[0].name = "daily";
     mockDomains[0].id = "123";
     mockDomains[1].name = "weather";
@@ -132,11 +96,11 @@ describe("Tests DataEntryComponent", () => {
   it("sorts words alphabetically", () => {
     let mockDomain = mockDomainTree;
     mockDomain.name = "daily";
-    let unfilteredWords: Word[] = [mockWord, mockWord, mockWord];
+    let unfilteredWords: Word[] = [{...mockWord}, {...mockWord}, {...mockWord}];
     let filteredDomainWords: DomainWord[] = [
-      mockDomainWord,
-      mockDomainWord,
-      mockDomainWord,
+      {...mockDomainWord},
+      {...mockDomainWord},
+      {...mockDomainWord},
     ];
 
     for (let currentWord of unfilteredWords) {
