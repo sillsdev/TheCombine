@@ -16,6 +16,8 @@ namespace Backend.Tests
         private string _projId;
         private IPermissionService _permissionService;
 
+        private const string InvalidProjectId = "INVALID_PROJECT_ID";
+
         [SetUp]
         public void Setup()
         {
@@ -60,7 +62,7 @@ namespace Backend.Tests
         [Test]
         public void TestGetAllUserRolesMissingProject()
         {
-            var result = _userRoleController.Get("INVALID_PROJECT_ID").Result;
+            var result = _userRoleController.Get(InvalidProjectId).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
@@ -78,6 +80,13 @@ namespace Backend.Tests
 
             var foundUserRole = (action as ObjectResult).Value as UserRole;
             Assert.AreEqual(userRole, foundUserRole);
+        }
+
+        [Test]
+        public void TestGetUserRolesMissingProject()
+        {
+            var result = _userRoleController.Get(InvalidProjectId).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
         [Test]
@@ -119,7 +128,7 @@ namespace Backend.Tests
         [Test]
         public void TestDeleteUserRolesMissingProject()
         {
-            var result = _userRoleController.Delete("INVALID_PROJECT_ID").Result;
+            var result = _userRoleController.Delete(InvalidProjectId).Result;
             Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
