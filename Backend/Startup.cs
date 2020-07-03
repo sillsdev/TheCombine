@@ -188,14 +188,17 @@ namespace BackendFramework
             }
         }
 
-        /// <summary> Create a new user with administrator privileges. </summary>
+        /// <summary>
+        /// Create a new user with administrator privileges or change the password of an existing user and grant
+        /// administrator privileges.
+        /// </summary>
         /// <param name="userService"></param>
         /// <returns> Whether the application should be stopped. </returns>
         /// <exception cref="EnvironmentNotConfiguredException">
         /// If required environment variables are not set.
         /// </exception>
         /// <exception cref="AdminUserCreationException">
-        /// If the requested admin user could not be created.
+        /// If the requested admin user could not be created or updated.
         /// </exception>
         private bool CreateAdminUser(IUserService userService)
         {

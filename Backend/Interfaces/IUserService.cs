@@ -12,10 +12,10 @@ namespace BackendFramework.Interfaces
         Task<string> GetUserAvatar(string userId);
         Task<User> Create(User user);
         Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false);
-        Task<ResultOfUpdate> ChangePassword(string userid, string password);
         Task<bool> Delete(string userId);
         Task<bool> DeleteAllUsers();
         Task<User> Authenticate(string username, string password);
         Task<User> MakeJwt(User user);
+        Task<ResultOfUpdate> ChangePassword(string userid, string password);
     }
 }

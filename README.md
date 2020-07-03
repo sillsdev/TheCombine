@@ -143,18 +143,19 @@ The exit code will be set to `0` on success and non-`0` otherwise.
 
 #### Docker
 
-In Docker, add `ASPNETCORE_ADMIN_USERNAME` and `ASPNETCORE_ADMIN_PASSWORD`
-to `.env.web.auth` configuration file.
+Copy `.env.web.auth.template` to `.env.web.auth` add fill in the username and
+password environment variables.
 
 ```batch
 > docker-compose build --parallel
 > docker-compose up --abort-on-container-exit
 ```
 
-This will create the user or exit and report an error code if it fails. 
+This will create the user and exit. If successful, the exit code will be `0`,
+otherwise an error will be logged and the exit code will be non-`0`. 
 
 **Important**: Remove the `ASPNETCORE_*` environment variables from
-`.env.web.auth` so that subsequent launches will bring up the backend.
+`.env.web.auth` so that subsequent launches will start up the backend.
 
 ### (Development Only) Grant an Existing User Admin Rights 
 
