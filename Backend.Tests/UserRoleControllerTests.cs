@@ -117,6 +117,13 @@ namespace Backend.Tests
         }
 
         [Test]
+        public void TestDeleteUserRolesMissingProject()
+        {
+            var result = _userRoleController.Delete("INVALID_PROJECT_ID").Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+        }
+
+        [Test]
         public void TestDeleteAllUserRoles()
         {
             _userRoleService.Create(RandomUserRole());
