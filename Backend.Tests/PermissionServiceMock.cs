@@ -11,7 +11,7 @@ namespace Backend.Tests
             return true;
         }
 
-        public bool HasProjectPermission(Permission permission, HttpContext request)
+        public bool HasProjectPermission(HttpContext request, Permission permission)
         {
             return true;
         }

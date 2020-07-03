@@ -41,7 +41,7 @@ namespace BackendFramework.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
@@ -178,7 +178,7 @@ namespace BackendFramework.Controllers
         [HttpGet("download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }

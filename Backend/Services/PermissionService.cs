@@ -50,7 +50,7 @@ namespace BackendFramework.Services
             return permissionsObj;
         }
 
-        public bool HasProjectPermission(Permission permission, HttpContext request)
+        public bool HasProjectPermission(HttpContext request, Permission permission)
         {
             var userId = GetUserId(request);
             var user = _userService.GetUser(userId).Result;

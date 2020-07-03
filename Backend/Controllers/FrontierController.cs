@@ -29,7 +29,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFrontier(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
@@ -54,7 +54,7 @@ namespace BackendFramework.Controllers
 #pragma warning restore 1998
         {
 #if DEBUG
-            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
@@ -83,7 +83,7 @@ namespace BackendFramework.Controllers
 #pragma warning restore 1998
         {
 #if DEBUG
-            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }

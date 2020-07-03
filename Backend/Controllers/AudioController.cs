@@ -77,7 +77,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
             [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
