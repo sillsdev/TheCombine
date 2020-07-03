@@ -60,11 +60,6 @@ describe("pronunciation tests", () => {
     expect(mockStartRecording).toBeCalled();
     testRenderer.root.findByProps({ id: "recordingButton" }).props.onMouseUp();
     expect(mockStopRecording).toBeCalled();
-    console.log(
-      testRenderer.root
-        .findByProps({ id: "icon" })
-        .props.className.includes("iconRelease")
-    );
   });
 
   it("default style is iconRelease", () => {
@@ -75,11 +70,10 @@ describe("pronunciation tests", () => {
         </Provider>
       );
     });
-    expect(
-      testRenderer.root
-        .findByProps({ id: "icon" })
-        .props.className.includes("iconRelease")
-    ).toBeTruthy;
+    const iconRelease = testRenderer.root
+      .findByProps({ id: "icon" })
+      .props.className.includes("iconRelease");
+    expect(iconRelease).toBeTruthy;
   });
 
   it("style depends on isRecording state", () => {
@@ -91,11 +85,10 @@ describe("pronunciation tests", () => {
         </Provider>
       );
     });
-    expect(
-      testRenderer.root
-        .findByProps({ id: "icon" })
-        .props.className.includes("iconPress")
-    ).toBeTruthy;
+    const iconPress = testRenderer.root
+      .findByProps({ id: "icon" })
+      .props.className.includes("iconPress");
+    expect(iconPress).toBeTruthy;
   });
 
   it("renders without crashing", () => {
