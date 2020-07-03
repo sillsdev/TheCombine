@@ -59,7 +59,7 @@ export default function RecorderIconHolder(props: RecorderIconHolderProps) {
       onTouchEnd={toggleIsRecordingToFalse}
       className={classes.button}
       aria-label="record"
-      id="recording button"
+      id="recordingButton"
     >
       <FiberManualRecord
         className={

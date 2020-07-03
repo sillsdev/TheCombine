@@ -55,10 +55,10 @@ describe("pronunciation tests", () => {
       );
     });
     testRenderer.root
-      .findByProps({ id: "recording button" })
+      .findByProps({ id: "recordingButton" })
       .props.onMouseDown();
     expect(mockStartRecording).toBeCalled();
-    testRenderer.root.findByProps({ id: "recording button" }).props.onMouseUp();
+    testRenderer.root.findByProps({ id: "recordingButton" }).props.onMouseUp();
     expect(mockStopRecording).toBeCalled();
     console.log(
       testRenderer.root
