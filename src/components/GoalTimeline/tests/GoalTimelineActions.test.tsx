@@ -1,20 +1,21 @@
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as actions from "../GoalsActions";
-import { Goal } from "../../../types/goals";
+import * as LocalStorage from "../../../backend/localStorage";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
-import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
-import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
-import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
-import { User } from "../../../types/user";
+import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
 import {
   MergeTreeActions,
   MergeTreeAction,
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
+import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
+import { Goal } from "../../../types/goals";
+import { User } from "../../../types/user";
+import { UserEdit } from "../../../types/userEdit";
 import { defaultState as goalsDefaultState } from "../DefaultState";
-import * as LocalStorage from "../../../backend/localStorage";
+import * as actions from "../GoalsActions";
 
 jest.mock(
   ".././../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder",
@@ -31,6 +32,23 @@ jest.mock(
   }
 );
 
+jest.mock("../../../backend", () => {
+  return {
+    getUserEditById: jest.fn((_projId: string, _index: string) => {
+      return Promise.resolve(mockUserEdit);
+    }),
+    createUserEdit: jest.fn(() => {
+      return Promise.resolve("");
+    }),
+    updateUser: jest.fn((_user: User) => {
+      return Promise.resolve(mockUser);
+    }),
+    addGoalToUserEdit: jest.fn((_userEditId: string, _goal: Goal) => {
+      return Promise.resolve(mockGoal);
+    }),
+  };
+});
+
 // At compile time, jest.mock calls will be hoisted to the top of the file,
 // so calls to imported variables fail. Fixed by initializing these variables
 // inside of beforeAll()
@@ -42,6 +60,8 @@ const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
 let mockUser: User = new User("", "", "");
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
+const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [] };
+const mockGoal: Goal = new CreateCharInv();
 
 const createMockStore = configureMockStore([thunk]);
 let mockStore: MockStoreEnhanced<unknown, {}>;
@@ -115,7 +135,6 @@ describe("Test GoalsActions", () => {
       type: actions.GoalsActions.LOAD_USER_EDITS,
       payload: [],
     };
-
     expect(mockStore.getActions()).toEqual([loadUserEdits]);
   });
 
@@ -155,6 +174,7 @@ describe("Test GoalsActions", () => {
     const goal: Goal = new CreateCharInv();
     localStorage.setItem("projectId", mockProjectId);
     localStorage.setItem("user", JSON.stringify(mockUser));
+
     await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
 
     let addGoalToHistory: actions.AddGoalToHistoryAction = {
