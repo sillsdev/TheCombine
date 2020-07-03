@@ -11,7 +11,7 @@ declare global {
 }
 
 const defaultConfig: RuntimeConfigItems = {
-  baseUrl: "https://localhost:5001/v1",
+  baseUrl: "https://localhost:5001",
   captchaRequired: true,
   captchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
 };
@@ -36,10 +36,19 @@ export class RuntimeConfig {
   }
 
   public baseUrl(): string {
+    // TODO: Remove support for previous configuration solution when
+    //  Docker-based installation is used in production.
     if (window.runtimeConfig.hasOwnProperty("baseUrl")) {
       return window.runtimeConfig.baseUrl;
     }
-    return defaultConfig.baseUrl;
+
+    let baseUrl = "";
+    if (window.runtimeConfig.hasOwnProperty("useConnectionBaseUrlForApi")) {
+      baseUrl = `${window.location.protocol}//${window.location.host}`;
+    } else {
+      baseUrl = defaultConfig.baseUrl;
+    }
+    return baseUrl;
   }
 
   public captchaSiteKey(): string {

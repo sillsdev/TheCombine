@@ -1,16 +1,24 @@
 import React from "react";
 import {
   LocalizeContextProps,
-  withLocalize,
   Translate,
+  withLocalize,
 } from "react-localize-redux";
 import {
-  Grid,
-  Typography,
   FormControl,
+  Grid,
   MenuItem,
   Select,
+  Typography,
 } from "@material-ui/core";
+import {
+  CloudUpload,
+  Edit,
+  GetApp,
+  List,
+  People,
+  Sms,
+} from "@material-ui/icons";
 
 import { Project } from "../../types/project";
 import { AutoComplete } from "../../types/AutoComplete";
@@ -21,11 +29,11 @@ import { UserRole } from "../../types/userRole";
 import { LanguageProps } from "./Language/LanguageSettings";
 import ProjectImport from "./ProjectImport";
 import ProjectName from "./ProjectName";
-import { Edit, CloudUpload, GetApp, People, List } from "@material-ui/icons";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
 import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
 import ProjectUsers from "./ProjectUsers";
 import ProjectSwitch from "./ProjectSwitch";
+import { CurrentTab } from "../../types/currentTab";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -88,18 +96,18 @@ class ProjectSettingsComponent extends React.Component<
     if (this.state.loading) {
       return (
         <React.Fragment>
-          <AppBarComponent />
+          <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
         </React.Fragment>
       );
     } else {
       return (
         <React.Fragment>
-          <AppBarComponent />
+          <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
           <Grid container justify="center" spacing={6}>
             {/* Project List */}
             <BaseSettingsComponent
               icon={<List />}
-              title={<Translate id="projectSettings.list" />}
+              title={<Translate id="projectSettings.projectList" />}
               body={<ProjectSwitch />}
             />
 
@@ -135,7 +143,7 @@ class ProjectSettingsComponent extends React.Component<
             />
 
             <BaseSettingsComponent
-              icon={<GetApp />}
+              icon={<Sms />}
               title={<Translate id="projectSettings.autocomplete.label" />}
               body={
                 <FormControl>

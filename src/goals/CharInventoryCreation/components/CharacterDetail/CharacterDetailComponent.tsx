@@ -36,10 +36,10 @@ export default function CharacterDetail(props: CharacterDetailProps) {
         </IconButton>
       </Grid>
       <Grid item xs={12}>
-        <CharacterInfo character={props.character} />
+        <CharacterInfo character={props.character} allWords={[]} />
       </Grid>
       <Grid item xs={12}>
-        <CharacterWords character={props.character} />
+        <CharacterWords character={props.character} allWords={[]} />
       </Grid>
       <Grid item xs={12}>
         <FindAndReplace initialFindValue={props.character} />

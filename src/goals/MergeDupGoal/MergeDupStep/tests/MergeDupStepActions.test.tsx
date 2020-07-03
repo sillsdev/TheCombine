@@ -1,36 +1,37 @@
-import { multiGlossWord, State, Word, MergeWord } from "../../../../types/word";
-import thunk from "redux-thunk";
-import { mergeAll } from "../MergeDupStepActions";
-import * as backend from "../../../../backend";
 import configureMockStore from "redux-mock-store";
-import { MergeData, MergeTree, Hash } from "../MergeDupsTree";
+import thunk from "redux-thunk";
+import * as backend from "../../../../backend";
+import { multiGlossWord, State, Word, MergeWord } from "../../../../types/word";
 import { MergeDups } from "../../MergeDups";
+import { mergeAll } from "../MergeDupStepActions";
+import { MergeData, MergeTree, Hash } from "../MergeDupsTree";
 import { goalDataMock } from "./MockMergeDupData";
 
+type mockWordListIndices = "WA" | "WB" | "WA2" | "WB2";
+const mockWordList = {
+  WA: { ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
+  WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
+  WA2: {
+    ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]),
+    id: "WA2",
+    history: ["WA", "WB"],
+  },
+  WB2: {
+    ...multiGlossWord("BBB", ["Sense 4"]),
+    id: "WB2",
+    history: ["WB"],
+  },
+};
+
 jest.mock("../../../../backend", () => {
+  const realBackend = jest.requireActual("../../../../backend");
   return {
-    ...jest.requireActual("../../../../backend"),
+    ...realBackend,
     mergeWords: jest.fn((parent: Word, children: MergeWord[]) => {
-      const { multiGlossWord, State } = jest.requireActual(
-        "../../../../types/word"
-      );
+      const { State } = jest.requireActual("../../../../types/word");
       // Setup data needed to mock
-      const wordList = {
-        WA: { ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
-        WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
-        WA2: {
-          ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]),
-          id: "WA2",
-          history: ["WA", "WB"],
-        },
-        WB2: {
-          ...multiGlossWord("BBB", ["Sense 4"]),
-          id: "WB2",
-          history: ["WB"],
-        },
-      };
       const M0: { parent: Word; children: MergeWord[] } = {
-        parent: { ...wordList["WA2"], id: "WA", history: [] },
+        parent: { ...mockWordList["WA2"], id: "WA", history: [] },
         children: [
           { wordID: "WA", senses: [State.sense, State.sense] },
           { wordID: "WB", senses: [State.duplicate, State.separate] },
@@ -38,7 +39,7 @@ jest.mock("../../../../backend", () => {
       };
 
       const M1: { parent: Word; children: MergeWord[] } = {
-        parent: { ...wordList["WB2"], history: [], id: "WB" },
+        parent: { ...mockWordList["WB2"], history: [], id: "WB" },
         children: [{ wordID: "WB2", senses: [State.sense] }],
       };
 
@@ -51,24 +52,8 @@ jest.mock("../../../../backend", () => {
 
       return Promise.resolve(mergeList[args]);
     }),
-    getWord: jest.fn((id: string) => {
-      const { multiGlossWord } = jest.requireActual("../../../../types/word");
-      const wordList = {
-        WA: { ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
-        WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
-        WA2: {
-          ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]),
-          id: "WA2",
-          history: ["WA", "WB"],
-        },
-        WB2: {
-          ...multiGlossWord("BBB", ["Sense 4"]),
-          id: "WB2",
-          history: ["WB"],
-        },
-      };
-
-      return Promise.resolve(wordList[id]);
+    getWord: jest.fn((id: mockWordListIndices) => {
+      return Promise.resolve(mockWordList[id]);
     }),
   };
 });
