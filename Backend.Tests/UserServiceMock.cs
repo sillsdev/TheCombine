@@ -57,6 +57,12 @@ namespace Backend.Tests
         public Task<ResultOfUpdate> Update(string id, User user, bool updateIsAdmin = false)
         {
             var foundUser = _users.Single(u => u.Id == id);
+
+            if (!updateIsAdmin)
+            {
+                user.IsAdmin = foundUser.IsAdmin;
+            }
+
             var success = _users.Remove(foundUser);
             if (success)
             {
