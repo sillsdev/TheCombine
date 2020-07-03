@@ -150,6 +150,14 @@ namespace Backend.Tests
         }
 
         [Test]
+        public void TestDeleteUserRolesNoPermission()
+        {
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userRoleController.Delete(_projId).Result;
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
         public void TestDeleteAllUserRoles()
         {
             _userRoleService.Create(RandomUserRole());
