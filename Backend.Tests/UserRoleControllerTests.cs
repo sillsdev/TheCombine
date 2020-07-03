@@ -100,6 +100,14 @@ namespace Backend.Tests
         }
 
         [Test]
+        public void TestCreateUserRolesMissingProject()
+        {
+            var userRole = RandomUserRole();
+            var result = _userRoleController.Post(InvalidProjectId, userRole).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+        }
+
+        [Test]
         public void TestUpdateUserRole()
         {
             var userRole = RandomUserRole();
