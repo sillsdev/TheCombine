@@ -7,7 +7,8 @@ import Pronunciations from "../PronunciationsComponent";
 import AudioPlayer from "../AudioPlayer";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import AudioRecorder from "../AudioRecorder";
-import { IconButton } from "@material-ui/core";
+import { mockWord } from "../../../components/DataEntry/tests/MockWord";
+import RecorderIconHolder from "../RecorderIconHolder";
 
 const createMockStore = configureMockStore([]);
 
@@ -28,54 +29,85 @@ beforeAll(() => {
     );
   });
 });
+describe("pronunciation tests", () => {
+  it("renders one record button and one play button for each pronunciation file", () => {
+    expect(testRenderer.root.findAllByType(AudioRecorder).length).toBe(1);
+    expect(testRenderer.root.findAllByType(AudioPlayer).length).toBe(2);
+  });
 
-it("renders one record button and one play button for each pronunciation file", () => {
-  expect(testRenderer.root.findAllByType(AudioRecorder).length).toBe(1);
-  expect(testRenderer.root.findAllByType(AudioPlayer).length).toBe(2);
-});
+  // Snapshot
+  it("displays buttons", () => {
+    expect(testRenderer.toJSON()).toMatchSnapshot();
+  });
 
-// Snapshot
-it("displays buttons", () => {
-  expect(testRenderer.toJSON()).toMatchSnapshot();
-});
+  it("mouseDown and mouseUp", () => {
+    const mockStartRecording = jest.fn();
+    const mockStopRecording = jest.fn();
+    renderer.act(() => {
+      testRenderer.update(
+        <Provider store={mockStore}>
+          <RecorderIconHolder
+            startRecording={mockStartRecording}
+            stopRecording={mockStopRecording}
+            wordId={mockWord.id}
+          />
+        </Provider>
+      );
+    });
+    testRenderer.root
+      .findByProps({ id: "recording button" })
+      .props.onMouseDown();
+    expect(mockStartRecording).toBeCalled();
+    testRenderer.root.findByProps({ id: "recording button" }).props.onMouseUp();
+    expect(mockStopRecording).toBeCalled();
+    console.log(
+      testRenderer.root
+        .findByProps({ id: "icon" })
+        .props.className.includes("iconRelease")
+    );
+  });
 
-// Snapshot
-it("removes play audio button", () => {
-  renderer.act(() => {
+  it("default style is iconRelease", () => {
+    renderer.act(() => {
+      testRenderer.update(
+        <Provider store={mockStore}>
+          <Pronunciations wordId="1" pronunciationFiles={["a.wav"]} />
+        </Provider>
+      );
+    });
+    expect(
+      testRenderer.root
+        .findByProps({ id: "icon" })
+        .props.className.includes("iconRelease")
+    ).toBeTruthy;
+  });
+
+  it("style depends on isRecording state", () => {
+    const mockStore2 = createMockStore({ ...defaultState, isRecording: true });
+    renderer.act(() => {
+      testRenderer.update(
+        <Provider store={mockStore2}>
+          <Pronunciations wordId="1" pronunciationFiles={["a.wav"]} />
+        </Provider>
+      );
+    });
+    expect(
+      testRenderer.root
+        .findByProps({ id: "icon" })
+        .props.className.includes("iconPress")
+    ).toBeTruthy;
+  });
+
+  it("renders without crashing", () => {
+    const mockStore = createMockStore(defaultState);
+    const div = document.createElement("div");
+    ReactDOM.render(
+      <Provider store={mockStore}>
+        <Pronunciations wordId="1" pronunciationFiles={[]} />
+      </Provider>,
+      div
+    );
+    ReactDOM.unmountComponentAtNode(div);
     testRenderer.unmount();
-    testRenderer.update(
-      <Provider store={mockStore}>
-        <Pronunciations wordId="2" pronunciationFiles={["a.wav"]} />
-      </Provider>
-    );
   });
-  expect(testRenderer.toJSON()).toMatchSnapshot();
-});
-
-// Snapshot
-it("adds play audio button", () => {
-  renderer.act(() => {
-    testRenderer.update(
-      <Provider store={mockStore}>
-        <Pronunciations wordId="2" pronunciationFiles={["a.wav", "c.wav"]} />
-      </Provider>
-    );
-  });
-  expect(testRenderer.toJSON()).toMatchSnapshot();
-});
-
-it("mouseDown and mouseUp", () => {
-  console.log(testRenderer.root.children.length);
-});
-
-it("renders without crashing", () => {
-  const mockStore = createMockStore(defaultState);
-  const div = document.createElement("div");
-  ReactDOM.render(
-    <Provider store={mockStore}>
-      <Pronunciations wordId="1" pronunciationFiles={[]} />
-    </Provider>,
-    div
-  );
-  ReactDOM.unmountComponentAtNode(div);
 });

@@ -1,135 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`adds play audio button 1`] = `
-<div
-  className="pronunciationAudio"
-  style={
-    Object {
-      "paddingRight": 8,
-    }
-  }
->
-  <button
-    aria-label="record"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-12"
-    disabled={false}
-    onBlur={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    tabIndex={0}
-    type="button"
-  >
-    <span
-      className="MuiIconButton-label"
-    >
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-iconRelease-14"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          cx="12"
-          cy="12"
-          r="8"
-        />
-      </svg>
-    </span>
-    <span
-      className="MuiTouchRipple-root"
-    />
-  </button>
-  <button
-    aria-describedby={null}
-    aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
-    disabled={false}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseOver={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    tabIndex={0}
-    title={null}
-    type="button"
-  >
-    <span
-      className="MuiIconButton-label"
-    >
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M8 5v14l11-7z"
-        />
-      </svg>
-    </span>
-    <span
-      className="MuiTouchRipple-root"
-    />
-  </button>
-  <button
-    aria-describedby={null}
-    aria-label="play"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
-    disabled={false}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseOver={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    tabIndex={0}
-    title={null}
-    type="button"
-  >
-    <span
-      className="MuiIconButton-label"
-    >
-      <svg
-        aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M8 5v14l11-7z"
-        />
-      </svg>
-    </span>
-    <span
-      className="MuiTouchRipple-root"
-    />
-  </button>
-</div>
-`;
-
 exports[`displays buttons 1`] = `
 <div
   className="pronunciationAudio"
@@ -143,6 +13,7 @@ exports[`displays buttons 1`] = `
     aria-label="record"
     className="MuiButtonBase-root MuiIconButton-root makeStyles-button-6"
     disabled={false}
+    id="recording button"
     onBlur={[Function]}
     onDragLeave={[Function]}
     onFocus={[Function]}
@@ -164,6 +35,7 @@ exports[`displays buttons 1`] = `
         aria-hidden={true}
         className="MuiSvgIcon-root makeStyles-iconRelease-8"
         focusable="false"
+        id="icon"
         viewBox="0 0 24 24"
       >
         <circle
@@ -260,7 +132,7 @@ exports[`displays buttons 1`] = `
 </div>
 `;
 
-exports[`removes play audio button 1`] = `
+exports[`pronunciation tests displays buttons 1`] = `
 <div
   className="pronunciationAudio"
   style={
@@ -271,8 +143,9 @@ exports[`removes play audio button 1`] = `
 >
   <button
     aria-label="record"
-    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-9"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-6"
     disabled={false}
+    id="recording button"
     onBlur={[Function]}
     onDragLeave={[Function]}
     onFocus={[Function]}
@@ -292,14 +165,55 @@ exports[`removes play audio button 1`] = `
     >
       <svg
         aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-iconRelease-11"
+        className="MuiSvgIcon-root makeStyles-iconRelease-8"
         focusable="false"
+        id="icon"
         viewBox="0 0 24 24"
       >
         <circle
           cx="12"
           cy="12"
           r="8"
+        />
+      </svg>
+    </span>
+    <span
+      className="MuiTouchRipple-root"
+    />
+  </button>
+  <button
+    aria-describedby={null}
+    aria-label="play"
+    className="MuiButtonBase-root MuiIconButton-root makeStyles-button-4"
+    disabled={false}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseOver={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={0}
+    title={null}
+    type="button"
+  >
+    <span
+      className="MuiIconButton-label"
+    >
+      <svg
+        aria-hidden={true}
+        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M8 5v14l11-7z"
         />
       </svg>
     </span>

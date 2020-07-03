@@ -41,14 +41,12 @@ export default function RecorderIconHolder(props: RecorderIconHolderProps) {
   function toggleIsRecordingToTrue(
     event: Event | React.TouchEvent | React.MouseEvent
   ) {
-    event.preventDefault();
     dispatch(updateRecordingStatus(true, props.wordId));
     props.startRecording();
   }
   function toggleIsRecordingToFalse(
     event: Event | React.TouchEvent | React.MouseEvent
   ) {
-    event.preventDefault();
     props.stopRecording();
     dispatch(updateRecordingStatus(false, undefined));
   }
@@ -61,6 +59,7 @@ export default function RecorderIconHolder(props: RecorderIconHolderProps) {
       onTouchEnd={toggleIsRecordingToFalse}
       className={classes.button}
       aria-label="record"
+      id="recording button"
     >
       <FiberManualRecord
         className={
@@ -68,6 +67,7 @@ export default function RecorderIconHolder(props: RecorderIconHolderProps) {
             ? classes.iconPress
             : classes.iconRelease
         }
+        id="icon"
       />
     </IconButton>
   );
