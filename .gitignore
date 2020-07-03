@@ -6,8 +6,8 @@
 .pnp.js
 
 # Testing
-/coverage
-/Backend.Tests/coverage.json
+/coverage*
+/Backend.Tests/coverage*
 
 # Production
 /build
