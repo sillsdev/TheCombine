@@ -24,8 +24,16 @@ namespace Backend.Tests
 
         public Task<Project> GetProject(string id)
         {
-            var foundProjects = _projects.Where(project => project.Id == id).Single();
-            return Task.FromResult(foundProjects.Clone());
+            try
+            {
+                var foundProjects = _projects.Single(project => project.Id == id);
+                return Task.FromResult(foundProjects.Clone());
+            }
+            catch (InvalidOperationException)
+            {
+                // When a Project is missing, the real ProjectController returns null.
+                return null;
+            }
         }
 
         public Task<Project> Create(Project project)

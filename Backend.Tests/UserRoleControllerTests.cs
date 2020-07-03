@@ -54,7 +54,14 @@ namespace Backend.Tests
 
             var roles = (getResult as ObjectResult).Value as List<UserRole>;
             Assert.That(roles, Has.Count.EqualTo(3));
-            _userRoleService.GetAllUserRoles(_projId).Result.ForEach(Role => Assert.Contains(Role, roles));
+            _userRoleService.GetAllUserRoles(_projId).Result.ForEach(role => Assert.Contains(role, roles));
+        }
+
+        [Test]
+        public void TestGetAllUserRolesMissingProject()
+        {
+            var result = _userRoleController.Get("INVALID_PROJECT_ID").Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
         [Test]
