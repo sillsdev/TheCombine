@@ -201,7 +201,7 @@ export async function getAllProjectsByUser(user: User): Promise<Project[]> {
   let projects: Project[] = [];
   for (let projectId of projectIds) {
     await getProject(projectId).then((project) => {
-      projects.push(project);
+      project && !project.deleted && projects.push(project);
     });
   }
   return projects;
@@ -216,6 +216,28 @@ export async function getProject(id: string): Promise<Project> {
 
 export async function updateProject(project: Project) {
   let resp = await backendServer.put(`projects/${project.id}`, project, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
+export async function deleteProject(id: string) {
+  let project = await backendServer.get(`projects/${id}`, {
+    headers: authHeader(),
+  });
+  project.data.deleted = true;
+  let resp = await backendServer.put(`projects/${id}`, project, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
+export async function restoreProject(id: string) {
+  let project = await backendServer.get(`projects/${id}`, {
+    headers: authHeader(),
+  });
+  project.data.deleted = false;
+  let resp = await backendServer.put(`projects/${id}`, project, {
     headers: authHeader(),
   });
   return resp.data;

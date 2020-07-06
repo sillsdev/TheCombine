@@ -9,7 +9,7 @@ import { List, People } from "@material-ui/icons";
 import { CurrentTab } from "../../types/currentTab";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../ProjectSettings/BaseSettingsComponent/BaseSettingsComponent";
-import ProjectsExport from "./ProjectsExport";
+import ProjectManagement from "./ProjectManagement";
 
 class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
   render() {
@@ -21,7 +21,7 @@ class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
           <BaseSettingsComponent
             icon={<List />}
             title={<Translate id="projectSettings.projectList" />}
-            body={<ProjectsExport />}
+            body={<ProjectManagement />}
           />
 
           {/* User List */}

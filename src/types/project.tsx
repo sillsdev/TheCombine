@@ -9,6 +9,7 @@ export interface CustomField {
 export interface Project {
   id: string;
   name: string;
+  deleted: boolean;
   semanticDomains: SemanticDomain[];
   userRoles: string;
   vernacularWritingSystem: string;
@@ -25,6 +26,7 @@ export interface Project {
 export const defaultProject = {
   id: "",
   name: "",
+  deleted: false,
   semanticDomains: [],
   userRoles: "",
   vernacularWritingSystem: "",

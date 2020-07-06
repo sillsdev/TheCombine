@@ -173,6 +173,50 @@
       "Sélectionner un projet"
     ]
   },
+  "siteSettings": {
+    "deleteProject": {
+      "button": ["Delete Project", "Eliminar proyecto", "Supprimer projet"],
+      "warnTitle": [
+        "Proceed with Caution!",
+        "¡Proceder con precaución!",
+        "Procéder avec prudence !"
+      ],
+      "warnText": [
+        "This project will not be accessible to any users.",
+        "Este proyecto no será accesible para ningún usuario.",
+        "Ce projet ne sera accessible à aucun utilisateur."
+      ],
+      "cancel": [
+        "Cancel and keep project",
+        "Cancelar y mantener proyecto",
+        "Annuler et conserver projet"
+      ],
+      "confirm": [
+        "Delete project for all users",
+        "Eliminar proyeto para todos usarios",
+        "Supprimer projet pour tous utilisateurs"
+      ]
+    },
+    "restoreProject": {
+      "button": ["Restore Project", "Restaurar proyecto", "Restaurer projet"],
+      "warnTitle": [
+        "Proceed with Caution!",
+        "¡Proceder con precaución!",
+        "Procéder avec prudence !"
+      ],
+      "warnText": [
+        "Somebody probably had a good reason to delete this project. Are you sure you want to restore it?",
+        "Alguien probablemente tuvo una buena razón para eliminar este proyecto. ¿Seguro que quieres restaurarlo?",
+        "Quelqu'un avait probablement une bonne raison de supprimer ce projet. Voulez-vous vraiment le restaurer ?"
+      ],
+      "cancel": [
+        "Cancel and leave project deleted",
+        "Cancelar y dejar proyecto como eliminado",
+        "Annuler et laisser le projet supprimé"
+      ],
+      "confirm": ["Restore project", "Restaurat proyeto", "Restaurer projet"]
+    }
+  },
   "projectSettings": {
     "language": {
       "header": ["Language", "Lenguaje", "Langue"],

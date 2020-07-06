@@ -17,6 +17,9 @@ namespace BackendFramework.Models
         [BsonElement("name")]
         public string Name { get; set; }
 
+        [BsonElement("deleted")]
+        public bool Deleted { get; set; }
+
         [BsonElement("semanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
@@ -51,6 +54,7 @@ namespace BackendFramework.Models
         {
             Id = "";
             Name = "";
+            Deleted = false;
             VernacularWritingSystem = "";
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<string>();
@@ -67,6 +71,7 @@ namespace BackendFramework.Models
             {
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
+                Deleted = Deleted,
                 VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
                 SemanticDomains = new List<SemanticDomain>(),
                 AnalysisWritingSystems = new List<string>(),
@@ -113,6 +118,7 @@ namespace BackendFramework.Models
         {
             return
                 other.Name.Equals(Name) &&
+                other.Deleted.Equals(Deleted) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
                 other.SemanticDomains.Count == SemanticDomains.Count &&
@@ -155,6 +161,7 @@ namespace BackendFramework.Models
             var hash = new HashCode();
             hash.Add(Id);
             hash.Add(Name);
+            hash.Add(Deleted);
             hash.Add(SemanticDomains);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
@@ -208,6 +215,7 @@ namespace BackendFramework.Models
         {
             Id = baseObj.Id;
             Name = baseObj.Name;
+            Deleted = baseObj.Deleted;
             PartsOfSpeech = baseObj.PartsOfSpeech;
             RejectedCharacters = baseObj.RejectedCharacters;
             SemanticDomains = baseObj.SemanticDomains;
