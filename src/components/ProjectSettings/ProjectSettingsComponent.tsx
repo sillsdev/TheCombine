@@ -20,20 +20,19 @@ import {
   Sms,
 } from "@material-ui/icons";
 
-import { Project } from "../../types/project";
-import { AutoComplete } from "../../types/AutoComplete";
 import * as backend from "../../backend";
-import AppBarComponent from "../AppBar/AppBarComponent";
+import { AutoComplete } from "../../types/AutoComplete";
+import { CurrentTab } from "../../types/currentTab";
+import { Project } from "../../types/project";
 import { UserRole } from "../../types/userRole";
-
+import AppBarComponent from "../AppBar/AppBarComponent";
+import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
 import { LanguageProps } from "./Language/LanguageSettings";
 import ProjectImport from "./ProjectImport";
 import ProjectName from "./ProjectName";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
-import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
 import ProjectUsers from "./ProjectUsers";
 import ProjectSwitch from "./ProjectSwitch";
-import { CurrentTab } from "../../types/currentTab";
 
 interface ProjectSettingsProps {
   project: Project;

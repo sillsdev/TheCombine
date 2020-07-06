@@ -1,11 +1,12 @@
 //external modules
 import * as React from "react";
 import { Grid } from "@material-ui/core";
+
+import { setProjectId } from "../../backend/localStorage";
+import { CurrentTab } from "../../types/currentTab";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import ChooseProjectComponent from "./ChooseProject";
 import CreateProjectComponent from "./CreateProject";
-import { setProjectId } from "../../backend/localStorage";
-import { CurrentTab } from "../../types/currentTab";
 
 /** Where users create a project or choose an existing one */
 export default class ProjectScreen extends React.Component {
