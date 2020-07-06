@@ -179,6 +179,10 @@ export default class TreeViewHeader extends React.Component<
     this.setState({ input: this.props.currentDomain.id });
   }
 
+  getRandomKey = () => {
+    return Math.random();
+  };
+
   // Creates the L/R button + select button + search bar
   render() {
     let domainL:
@@ -200,7 +204,7 @@ export default class TreeViewHeader extends React.Component<
         </GridListTile>
         <GridListTile cols={5}>
           <Card>
-            <Bounce key={Math.random()}>
+            <Bounce key={this.getRandomKey()}>
               <Button
                 fullWidth
                 size="large"
