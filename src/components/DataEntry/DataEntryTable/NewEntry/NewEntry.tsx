@@ -144,13 +144,13 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.props.toggleDisplaySpellingSuggestions();
   }
 
-  addNewSense(existingWord: Word, newSense: string) {
+  addNewSense(existingWord: Word, newSense: string, index: number) {
     let updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, 0, false);
+    this.props.updateWord(updatedWord, index, false);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
     this.setState({
@@ -426,9 +426,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                         ? this.state.newEntry.senses[0].glosses[0].def
                         : ""
                     }
-                    addSense={(existingWord: Word, newSense: string) =>
-                      this.addNewSense(existingWord, newSense)
-                    }
+                    addSense={(
+                      existingWord: Word,
+                      newSense: string,
+                      index: number
+                    ) => this.addNewSense(existingWord, newSense, index)}
                     addSemanticDomain={(
                       existingWord: Word,
                       sense: Sense,
