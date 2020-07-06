@@ -30,7 +30,7 @@ import { LanguageProps } from "./Language/LanguageSettings";
 import ProjectImport from "./ProjectImport";
 import ProjectName from "./ProjectName";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
-import BaseSettingsComponent from "./BaseSettingsComponent/BaseSettingsComponent";
+import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
 import ProjectUsers from "./ProjectUsers";
 import ProjectSwitch from "./ProjectSwitch";
 import { CurrentTab } from "../../types/currentTab";

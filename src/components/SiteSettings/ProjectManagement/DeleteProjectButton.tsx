@@ -14,6 +14,7 @@ import LoadingButton from "../../Buttons/LoadingButton";
 
 interface DeleteProjectButtonProps {
   projectId: string;
+  updateParent: () => void;
 }
 
 /**
@@ -28,6 +29,7 @@ export default function ExportProjectButton(
     setLoading(true);
     await deleteProject(props.projectId);
     setLoading(false);
+    props.updateParent();
     handleClose();
   }
 

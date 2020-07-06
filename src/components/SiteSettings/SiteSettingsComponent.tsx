@@ -8,7 +8,7 @@ import { Grid } from "@material-ui/core";
 import { List, People } from "@material-ui/icons";
 import { CurrentTab } from "../../types/currentTab";
 import AppBarComponent from "../AppBar/AppBarComponent";
-import BaseSettingsComponent from "../ProjectSettings/BaseSettingsComponent/BaseSettingsComponent";
+import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
 import ProjectManagement from "./ProjectManagement";
 
 class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
