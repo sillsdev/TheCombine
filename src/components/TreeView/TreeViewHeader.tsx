@@ -1,17 +1,14 @@
 import React from "react";
 import {
   Button,
-  Typography,
-  TextField,
-  Grid,
+  Card,
   GridList,
   GridListTile,
-  Card,
+  TextField,
+  Typography,
 } from "@material-ui/core";
-import ChevronLeft from "@material-ui/icons/ChevronLeft";
-import ChevronRight from "@material-ui/icons/ChevronRight";
-
-import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
+import DomainTile, { Direction } from "./DomainTile";
+import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 interface TreeHeaderProps {
   currentDomain: SemanticDomainWithSubdomains;
@@ -191,24 +188,17 @@ export default class TreeViewHeader extends React.Component<
       | undefined = this.getBrotherDomain(1);
 
     return (
-      <GridList cols={5} spacing={2} cellHeight={"auto"}>
-        <GridListTile cols={1}>
+      <GridList cols={9} spacing={20} cellHeight={"auto"}>
+        <GridListTile cols={2}>
           {domainL ? (
-            <Grid container justify="center">
-              <Button
-                variant={"outlined"}
-                onClick={() => this.navigateDomain(-1)}
-                style={{ float: "right", marginTop: "50%" }}
-              >
-                <ChevronLeft />
-                <Typography variant="body2">
-                  {domainL.id.padStart(8, " ")}
-                </Typography>
-              </Button>
-            </Grid>
+            <DomainTile
+              domain={domainL}
+              onClick={this.props.animate}
+              direction={Direction.Left}
+            />
           ) : null}
         </GridListTile>
-        <GridListTile cols={3}>
+        <GridListTile cols={5}>
           <Card>
             <Button
               fullWidth
@@ -238,20 +228,13 @@ export default class TreeViewHeader extends React.Component<
             />
           </Card>
         </GridListTile>
-        <GridListTile cols={1}>
+        <GridListTile cols={2}>
           {domainR ? (
-            <Grid container justify="center">
-              <Button
-                variant={"outlined"}
-                onClick={() => this.navigateDomain(1)}
-                style={{ marginTop: "50%" }}
-              >
-                <Typography variant="body2">
-                  {domainR.id.padEnd(8, " ")}
-                </Typography>
-                <ChevronRight />
-              </Button>
-            </Grid>
+            <DomainTile
+              domain={domainR}
+              onClick={this.props.animate}
+              direction={Direction.Right}
+            />
           ) : null}
         </GridListTile>
       </GridList>

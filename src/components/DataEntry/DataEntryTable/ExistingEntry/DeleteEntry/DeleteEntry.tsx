@@ -1,14 +1,13 @@
-import React from "react";
 import { IconButton, Tooltip } from "@material-ui/core";
+import { Delete } from "@material-ui/icons";
+import React from "react";
 import {
-  Translate,
   LocalizeContextProps,
+  Translate,
   withLocalize,
 } from "react-localize-redux";
-import { Delete } from "@material-ui/icons";
 
 interface DeleteEntryProps {
-  entryIndex: number;
   removeEntry: () => void;
 }
 

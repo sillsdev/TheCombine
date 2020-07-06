@@ -5,7 +5,7 @@
 # Group: server
 #################################################
 
-config_base_url: "https://thecombine.languagetechnology.org/v1"
+config_base_url: "https://thecombine.languagetechnology.org"
 config_captcha_required: "true"
 config_captcha_sitekey: "6LemQNgUAAAAAAwJ6dps-Uncg5xsNuDdMxehfW8d"
 

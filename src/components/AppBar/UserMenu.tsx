@@ -1,12 +1,12 @@
 import React from "react";
 import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
-import { ExitToApp, Person, Settings } from "@material-ui/icons";
+import { ExitToApp, Person, SettingsApplications } from "@material-ui/icons";
 
 import history from "../../history";
 import theme from "../../types/theme";
 import { avatarSrc } from "../../backend";
-import { getCurrentUser, getProjectId } from "../../backend/localStorage";
+import { getCurrentUser } from "../../backend/localStorage";
 
 /**
  * Avatar in appbar with dropdown (Project settings, user settings, log out)
@@ -33,6 +33,11 @@ export default function UserMenu() {
 
   getAvatar();
 
+  // Determine if the user is an Admin user.
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+  const isAdmin: boolean = user && user.isAdmin;
+
   return (
     <div>
       <Button
@@ -43,7 +48,7 @@ export default function UserMenu() {
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} />
         ) : (
-          <Person style={{ fontSize: 60 }} />
+          <Person style={{ fontSize: 40 }} />
         )}
       </Button>
       <Menu
@@ -62,15 +67,15 @@ export default function UserMenu() {
           horizontal: "right",
         }}
       >
-        {/* Don't show project settings in the menu if a project hasn't been selected. */}
-        {getProjectId() !== "" && (
+        {/* Only show Site Settings link to Admin users. */}
+        {isAdmin && (
           <MenuItem
             onClick={() => {
-              history.push("/project-settings");
+              history.push("/site-settings");
             }}
           >
-            <Settings style={{ marginRight: theme.spacing(1) }} />
-            <Translate id="userMenu.projectSettings" />
+            <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
+            <Translate id="userMenu.siteSettings" />
           </MenuItem>
         )}
 

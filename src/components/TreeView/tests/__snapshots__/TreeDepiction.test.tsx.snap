@@ -46,10 +46,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -58,23 +58,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.0
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  kid0
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.0
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    kid0
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -129,10 +141,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -141,23 +153,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.1
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  kid1
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.1
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    kid1
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -212,10 +236,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -224,23 +248,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.2
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  kid2
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.2
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    kid2
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -363,7 +399,7 @@ Array [
       className="MuiGridList-root"
       style={
         Object {
-          "margin": -1,
+          "margin": -10,
         }
       }
     >
@@ -372,8 +408,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
@@ -386,8 +422,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "60%",
+            "padding": 10,
+            "width": "55.55555555555556%",
           }
         }
       >
@@ -395,10 +431,10 @@ Array [
           className="MuiGridListTile-tile"
         >
           <div
-            className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
               disabled={true}
               onBlur={[Function]}
               onClick={[Function]}
@@ -446,6 +482,7 @@ Array [
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
                 data-shrink={false}
                 htmlFor="name"
+                id="name-label"
               >
                 Find a domain
               </label>
@@ -456,9 +493,11 @@ Array [
                 <input
                   aria-invalid={false}
                   autoComplete="off"
+                  autoFocus={false}
                   className="MuiInputBase-input MuiInput-input"
                   disabled={false}
                   id="name"
+                  onAnimationStart={[Function]}
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -475,8 +514,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
@@ -538,10 +577,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -550,23 +589,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.2.1
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  soloData
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.2.1
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    soloData
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -605,7 +656,7 @@ Array [
       className="MuiGridList-root"
       style={
         Object {
-          "margin": -1,
+          "margin": -10,
         }
       }
     >
@@ -614,70 +665,90 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
         <div
           className="MuiGridListTile-tile"
         >
-          <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
-          >
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              style={
-                Object {
-                  "float": "right",
-                  "marginTop": "50%",
-                }
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+            disabled={false}
+            id="1.1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            style={
+              Object {
+                "bottom": 0,
+                "height": "95%",
+                "left": 0,
+                "margin": "2.5%",
+                "width": "95%",
               }
-              tabIndex={0}
-              type="button"
+            }
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiButton-label"
             >
-              <span
-                className="MuiButton-label"
+              <div
+                className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
               >
-                <svg
-                  aria-hidden="true"
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  role="presentation"
-                  viewBox="0 0 24 24"
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  <path
-                    d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
-                </svg>
-                <p
-                  className="MuiTypography-root MuiTypography-body2"
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+                    />
+                  </svg>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                       1.1
-                </p>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
+                    }
+                  >
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.1
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid1
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
       <li
@@ -685,8 +756,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "60%",
+            "padding": 10,
+            "width": "55.55555555555556%",
           }
         }
       >
@@ -694,10 +765,10 @@ Array [
           className="MuiGridListTile-tile"
         >
           <div
-            className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
@@ -748,6 +819,7 @@ Array [
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
                 data-shrink={false}
                 htmlFor="name"
+                id="name-label"
               >
                 Find a domain
               </label>
@@ -758,9 +830,11 @@ Array [
                 <input
                   aria-invalid={false}
                   autoComplete="off"
+                  autoFocus={false}
                   className="MuiInputBase-input MuiInput-input"
                   disabled={false}
                   id="name"
+                  onAnimationStart={[Function]}
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -777,8 +851,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
@@ -853,10 +927,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -865,23 +939,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    parent
+                  </p>
+                </div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
-                  parent
-                </p>
+                  <path
+                    d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                  />
+                </svg>
               </div>
             </span>
             <span
@@ -892,12 +978,6 @@ Array [
       </li>
     </ul>
   </div>,
-  <img
-    alt="Return Symbol"
-    height="auto"
-    src="ReturnSymbol.png"
-    width="40px"
-  />,
 ]
 `;
 
@@ -947,10 +1027,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -959,23 +1039,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.0.0
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  evenData0
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.0.0
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    evenData0
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -1030,10 +1122,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -1042,23 +1134,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.0.1
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  evenData1
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.0.1
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    evenData1
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -1113,10 +1217,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -1125,23 +1229,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.0.2
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  evenData2
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.0.2
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    evenData2
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -1196,10 +1312,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -1208,23 +1324,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.0.3
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  evenData3
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.0.3
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    evenData3
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -1389,7 +1517,7 @@ Array [
       className="MuiGridList-root"
       style={
         Object {
-          "margin": -1,
+          "margin": -10,
         }
       }
     >
@@ -1398,8 +1526,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
@@ -1412,8 +1540,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "60%",
+            "padding": 10,
+            "width": "55.55555555555556%",
           }
         }
       >
@@ -1421,10 +1549,10 @@ Array [
           className="MuiGridListTile-tile"
         >
           <div
-            className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
@@ -1475,6 +1603,7 @@ Array [
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
                 data-shrink={false}
                 htmlFor="name"
+                id="name-label"
               >
                 Find a domain
               </label>
@@ -1485,9 +1614,11 @@ Array [
                 <input
                   aria-invalid={false}
                   autoComplete="off"
+                  autoFocus={false}
                   className="MuiInputBase-input MuiInput-input"
                   disabled={false}
                   id="name"
+                  onAnimationStart={[Function]}
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -1504,69 +1635,90 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
         <div
           className="MuiGridListTile-tile"
         >
-          <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
-          >
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              style={
-                Object {
-                  "marginTop": "50%",
-                }
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+            disabled={false}
+            id="1.1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            style={
+              Object {
+                "bottom": 0,
+                "height": "95%",
+                "left": 0,
+                "margin": "2.5%",
+                "width": "95%",
               }
-              tabIndex={0}
-              type="button"
+            }
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiButton-label"
             >
-              <span
-                className="MuiButton-label"
+              <div
+                className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
               >
-                <p
-                  className="MuiTypography-root MuiTypography-body2"
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  1.1     
-                </p>
-                <svg
-                  aria-hidden="true"
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  role="presentation"
-                  viewBox="0 0 24 24"
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
+                    }
+                  >
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.1
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid1
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  <path
-                    d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
-                </svg>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
     </ul>
@@ -1636,10 +1788,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -1648,23 +1800,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    parent
+                  </p>
+                </div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
-                  parent
-                </p>
+                  <path
+                    d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                  />
+                </svg>
               </div>
             </span>
             <span
@@ -1675,12 +1839,6 @@ Array [
       </li>
     </ul>
   </div>,
-  <img
-    alt="Return Symbol"
-    height="auto"
-    src="ReturnSymbol.png"
-    width="40px"
-  />,
 ]
 `;
 
@@ -1730,10 +1888,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -1742,23 +1900,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.2.1.1
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  depth=4
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.2.1.1
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    depth=4
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -1797,7 +1967,7 @@ Array [
       className="MuiGridList-root"
       style={
         Object {
-          "margin": -1,
+          "margin": -10,
         }
       }
     >
@@ -1806,8 +1976,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
@@ -1820,8 +1990,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "60%",
+            "padding": 10,
+            "width": "55.55555555555556%",
           }
         }
       >
@@ -1829,10 +1999,10 @@ Array [
           className="MuiGridListTile-tile"
         >
           <div
-            className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
@@ -1883,6 +2053,7 @@ Array [
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
                 data-shrink={false}
                 htmlFor="name"
+                id="name-label"
               >
                 Find a domain
               </label>
@@ -1893,9 +2064,11 @@ Array [
                 <input
                   aria-invalid={false}
                   autoComplete="off"
+                  autoFocus={false}
                   className="MuiInputBase-input MuiInput-input"
                   disabled={false}
                   id="name"
+                  onAnimationStart={[Function]}
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -1912,8 +2085,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
@@ -1988,10 +2161,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -2000,23 +2173,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.2
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.2
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    kid2
+                  </p>
+                </div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
-                  kid2
-                </p>
+                  <path
+                    d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                  />
+                </svg>
               </div>
             </span>
             <span
@@ -2027,12 +2212,6 @@ Array [
       </li>
     </ul>
   </div>,
-  <img
-    alt="Return Symbol"
-    height="auto"
-    src="ReturnSymbol.png"
-    width="40px"
-  />,
 ]
 `;
 
@@ -2082,10 +2261,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -2094,23 +2273,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.1.0
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  oddData0
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.1.0
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    oddData0
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -2165,10 +2356,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -2177,23 +2368,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.1.1
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  oddData1
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.1.1
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    oddData1
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -2248,10 +2451,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -2260,23 +2463,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                  />
+                </svg>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1.1.2
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
-                >
-                  oddData2
-                </p>
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1.1.2
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    oddData2
+                  </p>
+                </div>
               </div>
             </span>
             <span
@@ -2399,7 +2614,7 @@ Array [
       className="MuiGridList-root"
       style={
         Object {
-          "margin": -1,
+          "margin": -10,
         }
       }
     >
@@ -2408,70 +2623,90 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
         <div
           className="MuiGridListTile-tile"
         >
-          <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
-          >
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              style={
-                Object {
-                  "float": "right",
-                  "marginTop": "50%",
-                }
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+            disabled={false}
+            id="1.0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            style={
+              Object {
+                "bottom": 0,
+                "height": "95%",
+                "left": 0,
+                "margin": "2.5%",
+                "width": "95%",
               }
-              tabIndex={0}
-              type="button"
+            }
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiButton-label"
             >
-              <span
-                className="MuiButton-label"
+              <div
+                className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
               >
-                <svg
-                  aria-hidden="true"
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  role="presentation"
-                  viewBox="0 0 24 24"
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  <path
-                    d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
-                </svg>
-                <p
-                  className="MuiTypography-root MuiTypography-body2"
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+                    />
+                  </svg>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                       1.0
-                </p>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
+                    }
+                  >
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.0
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid0
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
       <li
@@ -2479,8 +2714,8 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "60%",
+            "padding": 10,
+            "width": "55.55555555555556%",
           }
         }
       >
@@ -2488,10 +2723,10 @@ Array [
           className="MuiGridListTile-tile"
         >
           <div
-            className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+            className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
           >
             <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-fullWidth"
+              className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge MuiButton-fullWidth"
               disabled={false}
               onBlur={[Function]}
               onClick={[Function]}
@@ -2542,6 +2777,7 @@ Array [
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
                 data-shrink={false}
                 htmlFor="name"
+                id="name-label"
               >
                 Find a domain
               </label>
@@ -2552,9 +2788,11 @@ Array [
                 <input
                   aria-invalid={false}
                   autoComplete="off"
+                  autoFocus={false}
                   className="MuiInputBase-input MuiInput-input"
                   disabled={false}
                   id="name"
+                  onAnimationStart={[Function]}
                   onBlur={[Function]}
                   onChange={[Function]}
                   onFocus={[Function]}
@@ -2571,69 +2809,90 @@ Array [
         style={
           Object {
             "height": "auto",
-            "padding": 1,
-            "width": "20%",
+            "padding": 10,
+            "width": "22.22222222222222%",
           }
         }
       >
         <div
           className="MuiGridListTile-tile"
         >
-          <div
-            className="MuiGrid-root MuiGrid-container MuiGrid-justify-xs-center"
-          >
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-outlined"
-              disabled={false}
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              style={
-                Object {
-                  "marginTop": "50%",
-                }
+          <button
+            className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+            disabled={false}
+            id="1.2"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            style={
+              Object {
+                "bottom": 0,
+                "height": "95%",
+                "left": 0,
+                "margin": "2.5%",
+                "width": "95%",
               }
-              tabIndex={0}
-              type="button"
+            }
+            tabIndex={0}
+            type="button"
+          >
+            <span
+              className="MuiButton-label"
             >
-              <span
-                className="MuiButton-label"
+              <div
+                className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
               >
-                <p
-                  className="MuiTypography-root MuiTypography-body2"
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  1.2     
-                </p>
-                <svg
-                  aria-hidden="true"
-                  className="MuiSvgIcon-root"
-                  focusable="false"
-                  role="presentation"
-                  viewBox="0 0 24 24"
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
+                    }
+                  >
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.2
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid2
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="MuiGrid-root MuiGrid-item"
                 >
-                  <path
-                    d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
-                  />
-                  <path
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
-                </svg>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </span>
+            <span
+              className="MuiTouchRipple-root"
+            />
+          </button>
         </div>
       </li>
     </ul>
@@ -2703,10 +2962,10 @@ Array [
             style={
               Object {
                 "bottom": 0,
-                "height": "90%",
+                "height": "95%",
                 "left": 0,
-                "margin": "5%",
-                "width": "90%",
+                "margin": "2.5%",
+                "width": "95%",
               }
             }
             tabIndex={0}
@@ -2715,23 +2974,35 @@ Array [
             <span
               className="MuiButton-label"
             >
-              <div
-                style={
-                  Object {
-                    "textTransform": "capitalize",
+              <div>
+                <div
+                  style={
+                    Object {
+                      "textTransform": "capitalize",
+                    }
                   }
-                }
-              >
-                <span
-                  className="MuiTypography-root MuiTypography-overline"
                 >
-                  1
-                </span>
-                <p
-                  className="MuiTypography-root MuiTypography-body1"
+                  <span
+                    className="MuiTypography-root MuiTypography-overline"
+                  >
+                    1
+                  </span>
+                  <p
+                    className="MuiTypography-root MuiTypography-body1"
+                  >
+                    parent
+                  </p>
+                </div>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
                 >
-                  parent
-                </p>
+                  <path
+                    d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                  />
+                </svg>
               </div>
             </span>
             <span
@@ -2742,11 +3013,5 @@ Array [
       </li>
     </ul>
   </div>,
-  <img
-    alt="Return Symbol"
-    height="auto"
-    src="ReturnSymbol.png"
-    width="40px"
-  />,
 ]
 `;

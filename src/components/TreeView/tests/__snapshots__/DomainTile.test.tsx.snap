@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tests DomainTile Tile with direction matches the latest snapshot 1`] = `
+<button
+  className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+  disabled={false}
+  id="1"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onDragLeave={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchMove={[Function]}
+  onTouchStart={[Function]}
+  style={
+    Object {
+      "bottom": 0,
+      "height": "95%",
+      "left": 0,
+      "margin": "2.5%",
+      "width": "95%",
+    }
+  }
+  tabIndex={0}
+  type="button"
+>
+  <span
+    className="MuiButton-label"
+  >
+    <div
+      className="MuiGrid-root MuiGrid-container MuiGrid-wrap-xs-nowrap MuiGrid-align-items-xs-center MuiGrid-justify-xs-space-around"
+    >
+      <div
+        className="MuiGrid-root MuiGrid-item"
+      >
+        <div
+          style={
+            Object {
+              "textTransform": "capitalize",
+            }
+          }
+        >
+          <span
+            className="MuiTypography-root MuiTypography-overline"
+          >
+            1
+          </span>
+          <p
+            className="MuiTypography-root MuiTypography-body1"
+          >
+            parent
+          </p>
+        </div>
+      </div>
+      <div
+        className="MuiGrid-root MuiGrid-item"
+      >
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+          />
+        </svg>
+      </div>
+    </div>
+  </span>
+  <span
+    className="MuiTouchRipple-root"
+  />
+</button>
+`;

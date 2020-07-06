@@ -52,10 +52,10 @@ exports[`Tests AddWords Constructs correctly 1`] = `
               style={
                 Object {
                   "bottom": 0,
-                  "height": "90%",
+                  "height": "95%",
                   "left": 0,
-                  "margin": "5%",
-                  "width": "90%",
+                  "margin": "2.5%",
+                  "width": "95%",
                 }
               }
               tabIndex={0}
@@ -64,23 +64,35 @@ exports[`Tests AddWords Constructs correctly 1`] = `
               <span
                 className="MuiButton-label"
               >
-                <div
-                  style={
-                    Object {
-                      "textTransform": "capitalize",
+                <div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                    />
+                  </svg>
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
                     }
-                  }
-                >
-                  <span
-                    className="MuiTypography-root MuiTypography-overline"
                   >
-                    1.0
-                  </span>
-                  <p
-                    className="MuiTypography-root MuiTypography-body1"
-                  >
-                    kid0
-                  </p>
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.0
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid0
+                    </p>
+                  </div>
                 </div>
               </span>
               <span
@@ -135,10 +147,10 @@ exports[`Tests AddWords Constructs correctly 1`] = `
               style={
                 Object {
                   "bottom": 0,
-                  "height": "90%",
+                  "height": "95%",
                   "left": 0,
-                  "margin": "5%",
-                  "width": "90%",
+                  "margin": "2.5%",
+                  "width": "95%",
                 }
               }
               tabIndex={0}
@@ -147,23 +159,35 @@ exports[`Tests AddWords Constructs correctly 1`] = `
               <span
                 className="MuiButton-label"
               >
-                <div
-                  style={
-                    Object {
-                      "textTransform": "capitalize",
+                <div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                    />
+                  </svg>
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
                     }
-                  }
-                >
-                  <span
-                    className="MuiTypography-root MuiTypography-overline"
                   >
-                    1.1
-                  </span>
-                  <p
-                    className="MuiTypography-root MuiTypography-body1"
-                  >
-                    kid1
-                  </p>
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.1
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid1
+                    </p>
+                  </div>
                 </div>
               </span>
               <span
@@ -218,10 +242,10 @@ exports[`Tests AddWords Constructs correctly 1`] = `
               style={
                 Object {
                   "bottom": 0,
-                  "height": "90%",
+                  "height": "95%",
                   "left": 0,
-                  "margin": "5%",
-                  "width": "90%",
+                  "margin": "2.5%",
+                  "width": "95%",
                 }
               }
               tabIndex={0}
@@ -230,23 +254,35 @@ exports[`Tests AddWords Constructs correctly 1`] = `
               <span
                 className="MuiButton-label"
               >
-                <div
-                  style={
-                    Object {
-                      "textTransform": "capitalize",
+                <div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+                    />
+                  </svg>
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
                     }
-                  }
-                >
-                  <span
-                    className="MuiTypography-root MuiTypography-overline"
                   >
-                    1.2
-                  </span>
-                  <p
-                    className="MuiTypography-root MuiTypography-body1"
-                  >
-                    kid2
-                  </p>
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.2
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid2
+                    </p>
+                  </div>
                 </div>
               </span>
               <span
@@ -369,7 +405,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
         className="MuiGridList-root"
         style={
           Object {
-            "margin": -1,
+            "margin": -10,
           }
         }
       >
@@ -378,8 +414,8 @@ exports[`Tests AddWords Constructs correctly 1`] = `
           style={
             Object {
               "height": "auto",
-              "padding": 1,
-              "width": "20%",
+              "padding": 10,
+              "width": "22.22222222222222%",
             }
           }
         >
@@ -392,8 +428,8 @@ exports[`Tests AddWords Constructs correctly 1`] = `
           style={
             Object {
               "height": "auto",
-              "padding": 1,
-              "width": "60%",
+              "padding": 10,
+              "width": "55.55555555555556%",
             }
           }
         >
@@ -401,10 +437,10 @@ exports[`Tests AddWords Constructs correctly 1`] = `
             className="MuiGridListTile-tile"
           >
             <div
-              className="MuiPaper-root MuiPaper-elevation1 MuiCard-root MuiPaper-rounded"
+              className="MuiPaper-root MuiCard-root MuiPaper-elevation1 MuiPaper-rounded"
             >
               <button
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
+                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled MuiButton-fullWidth Mui-disabled"
                 disabled={true}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -452,6 +488,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                   className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
                   data-shrink={false}
                   htmlFor="name"
+                  id="name-label"
                 >
                   Find a domain
                 </label>
@@ -462,9 +499,11 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                   <input
                     aria-invalid={false}
                     autoComplete="off"
+                    autoFocus={false}
                     className="MuiInputBase-input MuiInput-input"
                     disabled={false}
                     id="name"
+                    onAnimationStart={[Function]}
                     onBlur={[Function]}
                     onChange={[Function]}
                     onFocus={[Function]}
@@ -481,8 +520,8 @@ exports[`Tests AddWords Constructs correctly 1`] = `
           style={
             Object {
               "height": "auto",
-              "padding": 1,
-              "width": "20%",
+              "padding": 10,
+              "width": "22.22222222222222%",
             }
           }
         >

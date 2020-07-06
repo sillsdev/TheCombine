@@ -11,6 +11,7 @@
 
 # Production
 /build
+production.yml
 
 # Misc
 .DS_Store
