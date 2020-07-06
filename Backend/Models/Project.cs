@@ -17,8 +17,8 @@ namespace BackendFramework.Models
         [BsonElement("name")]
         public string Name { get; set; }
 
-        [BsonElement("deleted")]
-        public bool Deleted { get; set; }
+        [BsonElement("active")]
+        public bool Active { get; set; }
 
         [BsonElement("semanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
@@ -54,7 +54,7 @@ namespace BackendFramework.Models
         {
             Id = "";
             Name = "";
-            Deleted = false;
+            Active = true;
             VernacularWritingSystem = "";
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<string>();
@@ -71,7 +71,7 @@ namespace BackendFramework.Models
             {
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
-                Deleted = Deleted,
+                Active = Active,
                 VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
                 SemanticDomains = new List<SemanticDomain>(),
                 AnalysisWritingSystems = new List<string>(),
@@ -118,7 +118,7 @@ namespace BackendFramework.Models
         {
             return
                 other.Name.Equals(Name) &&
-                other.Deleted.Equals(Deleted) &&
+                other.Active.Equals(Active) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
                 other.SemanticDomains.Count == SemanticDomains.Count &&
@@ -161,7 +161,7 @@ namespace BackendFramework.Models
             var hash = new HashCode();
             hash.Add(Id);
             hash.Add(Name);
-            hash.Add(Deleted);
+            hash.Add(Active);
             hash.Add(SemanticDomains);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
@@ -215,7 +215,7 @@ namespace BackendFramework.Models
         {
             Id = baseObj.Id;
             Name = baseObj.Name;
-            Deleted = baseObj.Deleted;
+            Active = baseObj.Active;
             PartsOfSpeech = baseObj.PartsOfSpeech;
             RejectedCharacters = baseObj.RejectedCharacters;
             SemanticDomains = baseObj.SemanticDomains;

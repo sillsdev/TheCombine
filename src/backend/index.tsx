@@ -200,9 +200,13 @@ export async function getAllProjectsByUser(user: User): Promise<Project[]> {
   let projectIds: string[] = Object.keys(user.projectRoles);
   let projects: Project[] = [];
   for (let projectId of projectIds) {
-    await getProject(projectId).then((project) => {
-      project && !project.deleted && projects.push(project);
-    });
+    try {
+      await getProject(projectId).then((project) => {
+        project.active && projects.push(project);
+      });
+    } catch (err) {
+      /*If there was an error, the project probably was manually deleted from the database.*/
+    }
   }
   return projects;
 }
@@ -225,8 +229,8 @@ export async function deleteProject(id: string) {
   let project = await backendServer.get(`projects/${id}`, {
     headers: authHeader(),
   });
-  project.data.deleted = true;
-  let resp = await backendServer.put(`projects/${id}`, project, {
+  project.data.active = false;
+  let resp = await backendServer.put(`projects/${id}`, project.data, {
     headers: authHeader(),
   });
   return resp.data;
@@ -236,8 +240,8 @@ export async function restoreProject(id: string) {
   let project = await backendServer.get(`projects/${id}`, {
     headers: authHeader(),
   });
-  project.data.deleted = false;
-  let resp = await backendServer.put(`projects/${id}`, project, {
+  project.data.active = true;
+  let resp = await backendServer.put(`projects/${id}`, project.data, {
     headers: authHeader(),
   });
   return resp.data;

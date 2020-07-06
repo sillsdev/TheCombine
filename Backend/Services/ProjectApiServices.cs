@@ -68,6 +68,7 @@ namespace BackendFramework.Services
             // Note: Nulls out values not in update body
             var updateDef = Builders<Project>.Update
                 .Set(x => x.Name, project.Name)
+                .Set(x => x.Active, project.Active)
                 .Set(x => x.SemanticDomains, project.SemanticDomains)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
                 .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)

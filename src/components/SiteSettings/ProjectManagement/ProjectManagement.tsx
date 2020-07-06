@@ -40,10 +40,12 @@ export class ProjectManagement extends React.Component<
             projectId={project.id}
             style={{ marginRight: theme.spacing(1) }}
           />
-          {/* Restore deleted project or delete undeleted project */}
-          project.deleted?
-          <RestoreProjectButton projectId={project.id} /> :
-          <DeleteProjectButton projectId={project.id} />
+          {/* Delete active project or restore deleted project. */}
+          {project.active ? (
+            <DeleteProjectButton projectId={project.id} />
+          ) : (
+            <RestoreProjectButton projectId={project.id} />
+          )}
         </ListItem>
       );
     });
