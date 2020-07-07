@@ -20,7 +20,7 @@ interface DeleteProjectButtonProps {
 /**
  * Button for deleting project from backend
  */
-export default function ExportProjectButton(
+export default function DeleteProjectButton(
   props: ButtonProps & DeleteProjectButtonProps
 ) {
   const [loading, setLoading] = React.useState<boolean>(false);

@@ -43,11 +43,11 @@ export const defaultProject = {
 
 // Randomize properties as needed for tests.
 export function randomProject(): Project {
-  let project = defaultProject;
+  let project = { ...defaultProject };
   project.id = randomIntString();
   project.name = randomIntString();
   project.active = Math.random() < 0.5;
   project.autocompleteSetting = randomAutoComplete();
-  project.words = testWordList;
+  project.words = testWordList();
   return project;
 }
