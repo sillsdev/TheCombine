@@ -10,7 +10,7 @@ import DupFinder, { DefaultParams } from "../DuplicateFinder";
 jest.mock("../../../../backend", () => {
   return {
     getFrontierWords: jest.fn(() => {
-      return Promise.resolve(mockTestWordList);
+      return Promise.resolve(mockTestWordList());
     }),
   };
 });
@@ -33,7 +33,7 @@ describe("dupFinder Tests", () => {
 
     await finder.fetchWordsFromDB().then((gotWords) => {
       expect(gotWords).toBe(true);
-      expect(finder.maskedWords.length).toBe(mockTestWordList.length);
+      expect(finder.maskedWords.length).toBe(mockTestWordList().length);
     });
   });
 
@@ -43,7 +43,7 @@ describe("dupFinder Tests", () => {
     let parent = simpleWord("Yank", "Mayonnaise");
 
     let duplicates: [Word[], number] = [[], Number.MIN_SAFE_INTEGER];
-    await finder.fetchWordsFromDB().then((gotWords) => {
+    await finder.fetchWordsFromDB().then(() => {
       duplicates = finder.getDuplicatesOfWord(parent);
 
       duplicates[0].forEach((duplicate) => {

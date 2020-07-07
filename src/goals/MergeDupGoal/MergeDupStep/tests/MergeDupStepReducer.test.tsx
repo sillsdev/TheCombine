@@ -21,7 +21,7 @@ import {
 
 describe("MergeDupStep reducer tests", () => {
   // state with data
-  let fullState = mergeDupStepReducer(undefined, setWordData(testWordList));
+  let fullState = mergeDupStepReducer(undefined, setWordData(testWordList()));
 
   // helper functions for working with a tree
   let getRefByID = (
@@ -77,7 +77,7 @@ describe("MergeDupStep reducer tests", () => {
   });
 
   test("set data", () => {
-    const wordList = testWordList;
+    const wordList = testWordList();
     let data = mergeDupStepReducer(undefined, setWordData(wordList));
     // check if data has all words present
     for (let word of wordList) {
