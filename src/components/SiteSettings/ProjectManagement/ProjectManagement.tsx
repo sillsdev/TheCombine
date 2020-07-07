@@ -9,14 +9,14 @@ import ExportProjectButton from "../../ProjectSettings/ProjectExport/ExportProje
 import DeleteProjectButton from "./DeleteProjectButton";
 import RestoreProjectButton from "./RestoreProjectButton";
 
-interface ExportsState {
+interface ProjectManagementState {
   activeProjects: Project[];
   deletedProjects: Project[];
 }
 
 export class ProjectManagement extends React.Component<
   LocalizeContextProps,
-  ExportsState
+  ProjectManagementState
 > {
   constructor(props: LocalizeContextProps) {
     super(props);
