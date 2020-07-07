@@ -7,7 +7,7 @@ import { Sense, Word } from "../../../../types/word";
 interface DuplicateResolutionViewProps {
   existingEntry: Word;
   newSense: string;
-  addSense: (existingWord: Word, newSense: string) => void;
+  addSense: (existingWord: Word, newSense: string, index: number) => void;
   addSemanticDomain: (existingWord: Word, sense: Sense, index: number) => void;
   duplicateInput: React.RefObject<HTMLDivElement>;
 }
@@ -75,7 +75,8 @@ export class DuplicateResolutionView extends React.Component<
               onClick={() => {
                 this.props.addSense(
                   this.props.existingEntry,
-                  this.props.newSense
+                  this.props.newSense,
+                  this.props.existingEntry.senses.length
                 );
               }}
             />
