@@ -1,4 +1,3 @@
-import { ButtonProps } from "@material-ui/core/Button";
 import {
   Button,
   Dialog,
@@ -7,8 +6,10 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
+import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 import { Translate } from "react-localize-redux";
+
 import { deleteProject } from "../../../backend";
 import LoadingButton from "../../Buttons/LoadingButton";
 
@@ -18,7 +19,7 @@ interface DeleteProjectButtonProps {
 }
 
 /**
- * Button for deleting project from backend
+ * Button for deleting a project (setting active=false)
  */
 export default function DeleteProjectButton(
   props: ButtonProps & DeleteProjectButtonProps
