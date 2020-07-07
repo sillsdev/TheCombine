@@ -34,15 +34,11 @@ export default function RecorderIconHolder(props: RecorderIconHolderProps) {
 
   const classes = useStyles();
 
-  function toggleIsRecordingToTrue(
-    event: Event | React.TouchEvent | React.MouseEvent
-  ) {
+  function toggleIsRecordingToTrue() {
     dispatch(updateRecordingStatus(true, props.wordId));
     props.startRecording();
   }
-  function toggleIsRecordingToFalse(
-    event: Event | React.TouchEvent | React.MouseEvent
-  ) {
+  function toggleIsRecordingToFalse() {
     props.stopRecording();
     dispatch(updateRecordingStatus(false, undefined));
   }

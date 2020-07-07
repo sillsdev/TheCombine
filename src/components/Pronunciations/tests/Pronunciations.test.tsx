@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../../App/DefaultState";
-import { defaultState as defaultStateRE } from "../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { defaultState as reviewEntriesState } from "../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
 import { Provider } from "react-redux";
 import Pronunciations from "../PronunciationsComponent";
 import AudioPlayer from "../AudioPlayer";
@@ -22,7 +22,7 @@ var testRenderer: ReactTestRenderer;
 const mockStore = createMockStore({
   ...defaultState,
   reviewEntriesState: {
-    ...defaultStateRE,
+    ...reviewEntriesState,
     wordBeingRecorded: "1",
   },
 });
@@ -87,7 +87,7 @@ describe("pronunciation tests", () => {
     const mockStore2 = createMockStore({
       ...defaultState,
       reviewEntriesState: {
-        ...defaultStateRE,
+        ...reviewEntriesState,
         wordBeingRecorded: "1",
         isRecording: true,
       },
@@ -103,18 +103,5 @@ describe("pronunciation tests", () => {
       .findByProps({ id: "icon" })
       .props.className.includes("iconPress");
     expect(iconPress).toBeTruthy();
-  });
-
-  it("renders without crashing", () => {
-    const mockStore = createMockStore(defaultState);
-    const div = document.createElement("div");
-    ReactDOM.render(
-      <Provider store={mockStore}>
-        <Pronunciations wordId="1" pronunciationFiles={[]} />
-      </Provider>,
-      div
-    );
-    ReactDOM.unmountComponentAtNode(div);
-    testRenderer.unmount();
   });
 });
