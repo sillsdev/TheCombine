@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../../App/DefaultState";
+import { defaultState as defaultStateRE } from "../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
 import { Provider } from "react-redux";
 import Pronunciations from "../PronunciationsComponent";
 import AudioPlayer from "../AudioPlayer";
@@ -18,7 +19,13 @@ jest.mock("../Recorder");
 // Variables
 var testRenderer: ReactTestRenderer;
 
-const mockStore = createMockStore(defaultState);
+const mockStore = createMockStore({
+  ...defaultState,
+  reviewEntriesState: {
+    ...defaultStateRE,
+    wordBeingRecorded: "1",
+  },
+});
 
 beforeAll(() => {
   renderer.act(() => {
@@ -73,11 +80,18 @@ describe("pronunciation tests", () => {
     const iconRelease = testRenderer.root
       .findByProps({ id: "icon" })
       .props.className.includes("iconRelease");
-    expect(iconRelease).toBeTruthy;
+    expect(iconRelease).toBeTruthy();
   });
 
   it("style depends on isRecording state", () => {
-    const mockStore2 = createMockStore({ ...defaultState, isRecording: true });
+    const mockStore2 = createMockStore({
+      ...defaultState,
+      reviewEntriesState: {
+        ...defaultStateRE,
+        wordBeingRecorded: "1",
+        isRecording: true,
+      },
+    });
     renderer.act(() => {
       testRenderer.update(
         <Provider store={mockStore2}>
@@ -88,7 +102,7 @@ describe("pronunciation tests", () => {
     const iconPress = testRenderer.root
       .findByProps({ id: "icon" })
       .props.className.includes("iconPress");
-    expect(iconPress).toBeTruthy;
+    expect(iconPress).toBeTruthy();
   });
 
   it("renders without crashing", () => {

@@ -11,10 +11,6 @@ export interface RecorderIconHolderProps {
   stopRecording: () => void;
 }
 
-export interface RecorderIconHolderState {
-  isRecording: boolean;
-}
-
 export default function RecorderIconHolder(props: RecorderIconHolderProps) {
   const isRecording = useSelector(
     (state: any) => state.reviewEntriesState.isRecording
