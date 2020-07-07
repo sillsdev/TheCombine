@@ -14,6 +14,8 @@ import SemanticDomainWithSubdomains from "./SemanticDomain";
 interface TreeHeaderProps {
   currentDomain: SemanticDomainWithSubdomains;
   animate: (domain: SemanticDomainWithSubdomains) => Promise<void>;
+  bounceState: number;
+  bounce: () => void;
 }
 
 interface TreeHeaderState {
@@ -179,10 +181,6 @@ export default class TreeViewHeader extends React.Component<
     this.setState({ input: this.props.currentDomain.id });
   }
 
-  getRandomKey = () => {
-    return Math.random();
-  };
-
   // Creates the L/R button + select button + search bar
   render() {
     let domainL:
@@ -197,14 +195,17 @@ export default class TreeViewHeader extends React.Component<
           {domainL ? (
             <DomainTile
               domain={domainL}
-              onClick={this.props.animate}
+              onClick={(e) => {
+                this.props.animate(e);
+                this.props.bounce();
+              }}
               direction={Direction.Left}
             />
           ) : null}
         </GridListTile>
         <GridListTile cols={5}>
           <Card>
-            <Bounce key={this.getRandomKey()}>
+            <Bounce spy={this.props.bounceState} duration={2000}>
               <Button
                 fullWidth
                 size="large"
@@ -238,7 +239,10 @@ export default class TreeViewHeader extends React.Component<
           {domainR ? (
             <DomainTile
               domain={domainR}
-              onClick={this.props.animate}
+              onClick={(e) => {
+                this.props.animate(e);
+                this.props.bounce();
+              }}
               direction={Direction.Right}
             />
           ) : null}
