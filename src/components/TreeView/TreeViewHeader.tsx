@@ -76,6 +76,7 @@ export default class TreeViewHeader extends React.Component<
           );
           if (parent && parent.id === this.state.input) {
             this.props.animate(parent);
+            this.props.bounce();
             this.setState({ input: "" });
             (event.target as any).value = "";
             break;
@@ -88,6 +89,7 @@ export default class TreeViewHeader extends React.Component<
         parent = this.searchDomainByName(parent, this.state.input);
         if (parent) {
           this.props.animate(parent);
+          this.props.bounce();
           this.setState({ input: "" });
           (event.target as any).value = "";
         }
