@@ -204,10 +204,6 @@ export default class TreeDepiction extends React.Component<
     );
   }
 
-  getRandomKey = () => {
-    this.setState({ bounce: Math.random() });
-  };
-
   render() {
     return (
       <React.Fragment>
@@ -222,7 +218,7 @@ export default class TreeDepiction extends React.Component<
             animate={this.props.animate}
             bounceState={this.state.bounce}
             bounce={() => {
-              this.getRandomKey();
+              this.setState({ bounce: Math.random() });
             }}
           />
         </Grid>
