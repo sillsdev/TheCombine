@@ -1,17 +1,17 @@
 import { StoreAction, StoreActions } from "../../../../rootActions";
 import { testWordList } from "../../../../types/word";
 import { randElement, uuid } from "../../../../utilities";
-import { setWordData, moveSense, clearTree } from "../MergeDupStepActions";
+import { clearTree, moveSense, setWordData } from "../MergeDupStepActions";
 import mergeDupStepReducer, {
-  MergeTreeState,
   defaultState,
+  MergeTreeState,
 } from "../MergeDupStepReducer";
 import {
-  Hash,
-  MergeTreeWord,
-  MergeTreeReference,
   defaultData,
   defaultTree,
+  Hash,
+  MergeTreeReference,
+  MergeTreeWord,
 } from "../MergeDupsTree";
 
 // Actions to test

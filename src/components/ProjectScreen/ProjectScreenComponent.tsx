@@ -1,6 +1,5 @@
-//external modules
-import * as React from "react";
 import { Grid } from "@material-ui/core";
+import * as React from "react";
 
 import { setProjectId } from "../../backend/localStorage";
 import { CurrentTab } from "../../types/currentTab";

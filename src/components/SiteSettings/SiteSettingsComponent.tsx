@@ -1,11 +1,12 @@
+import { Grid } from "@material-ui/core";
+import { List, People } from "@material-ui/icons";
 import React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
   Translate,
 } from "react-localize-redux";
-import { Grid } from "@material-ui/core";
-import { List, People } from "@material-ui/icons";
+
 import { CurrentTab } from "../../types/currentTab";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";

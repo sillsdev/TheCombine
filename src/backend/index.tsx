@@ -1,15 +1,15 @@
 import axios from "axios";
 
-import { Word, MergeWord } from "../types/word";
-import { User } from "../types/user";
-import { Project } from "../types/project";
 import { authHeader } from "../components/Login/AuthHeaders";
-import { Goal, GoalType } from "../types/goals";
-import { UserEdit } from "../types/userEdit";
-import history from "../history";
 import SemanticDomainWithSubdomains from "../components/TreeView/SemanticDomain";
-import { UserRole } from "../types/userRole";
+import history from "../history";
+import { Goal, GoalType } from "../types/goals";
+import { Project } from "../types/project";
 import { RuntimeConfig } from "../types/runtimeConfig";
+import { User } from "../types/user";
+import { UserEdit } from "../types/userEdit";
+import { UserRole } from "../types/userRole";
+import { MergeWord, Word } from "../types/word";
 import * as LocalStorage from "./localStorage";
 
 const baseURL = `${RuntimeConfig.getInstance().baseUrl()}/v1`;

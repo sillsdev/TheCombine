@@ -1,5 +1,6 @@
 import { List, ListItem, Typography } from "@material-ui/core";
 import React from "react";
+
 import { getAllActiveProjectsByUser } from "../../../backend";
 import { getCurrentUser } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";

@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
+
 import { StoreState } from "../../../types";
 import { Project } from "../../../types/project";
 import { ProjectAction, setCurrentProject } from "../../Project/ProjectActions";
