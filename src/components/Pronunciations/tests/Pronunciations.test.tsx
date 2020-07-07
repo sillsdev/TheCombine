@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../../App/DefaultState";
 import { defaultState as reviewEntriesState } from "../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
