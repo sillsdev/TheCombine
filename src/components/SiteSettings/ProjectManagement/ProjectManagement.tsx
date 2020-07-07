@@ -10,7 +10,8 @@ import DeleteProjectButton from "./DeleteProjectButton";
 import RestoreProjectButton from "./RestoreProjectButton";
 
 interface ExportsState {
-  projectList: Project[];
+  activeProjects: Project[];
+  deletedProjects: Project[];
 }
 
 export class ProjectManagement extends React.Component<
@@ -21,7 +22,8 @@ export class ProjectManagement extends React.Component<
     super(props);
 
     this.state = {
-      projectList: [],
+      activeProjects: [],
+      deletedProjects: [],
     };
 
     setProjectId("");
@@ -30,12 +32,15 @@ export class ProjectManagement extends React.Component<
 
   updateProjectList = () => {
     getAllProjects().then((projects) => {
-      this.setState({ projectList: projects });
+      this.setState({
+        activeProjects: projects.filter((project) => project.active),
+        deletedProjects: projects.filter((project) => !project.active),
+      });
     });
   };
 
-  getListItems() {
-    return this.state.projectList.map((project) => {
+  getListItems(projects: Project[]) {
+    return projects.map((project) => {
       return (
         <ListItem key={project.id}>
           <Typography
@@ -68,7 +73,12 @@ export class ProjectManagement extends React.Component<
   }
 
   render() {
-    return <List>{this.getListItems()}</List>;
+    return (
+      <List>
+        {this.getListItems(this.state.activeProjects)}
+        {this.getListItems(this.state.deletedProjects)}
+      </List>
+    );
   }
 }
 
