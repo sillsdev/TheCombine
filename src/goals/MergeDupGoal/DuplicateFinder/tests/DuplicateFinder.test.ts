@@ -1,13 +1,16 @@
 //Sam Delaney, 6/12/19
 
+import {
+  simpleWord,
+  testWordList as mockTestWordList,
+  Word,
+} from "../../../../types/word";
 import DupFinder, { DefaultParams } from "../DuplicateFinder";
-import { Word, simpleWord } from "../../../../types/word";
-import { testWordList as mockTestWordList } from "../../../../types/word";
 
 jest.mock("../../../../backend", () => {
   return {
     getFrontierWords: jest.fn(() => {
-      return Promise.resolve(mockTestWordList());
+      return Promise.resolve(mockTestWordList);
     }),
   };
 });
@@ -30,7 +33,7 @@ describe("dupFinder Tests", () => {
 
     await finder.fetchWordsFromDB().then((gotWords) => {
       expect(gotWords).toBe(true);
-      expect(finder.maskedWords.length).toBe(mockTestWordList().length);
+      expect(finder.maskedWords.length).toBe(mockTestWordList.length);
     });
   });
 

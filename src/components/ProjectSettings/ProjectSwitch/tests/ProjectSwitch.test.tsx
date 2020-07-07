@@ -3,11 +3,11 @@ import TestRenderer from "react-test-renderer";
 import { ProjectSwitch } from "../ProjectSwitch";
 import React from "react";
 import { ListItem } from "@material-ui/core";
-import { defaultProject } from "../../../../types/project";
+import { defaultProject, randomProject } from "../../../../types/project";
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 
-const projects = [defaultProject, defaultProject, defaultProject];
+const projects = [randomProject(), randomProject(), randomProject()];
 var switchMaster: ReactTestRenderer;
 var switchHandle: ProjectSwitch;
 

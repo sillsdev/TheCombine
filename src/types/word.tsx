@@ -86,7 +86,7 @@ export function simpleWord(vern: string, gloss: string): Word {
   };
 }
 
-export function multiGlossWord(vern: string, glosses: string[]) {
+export function multiGlossWord(vern: string, glosses: string[]): Word {
   return {
     id: randomIntString(),
     vernacular: vern,
@@ -102,20 +102,18 @@ export function multiGlossWord(vern: string, glosses: string[]) {
   };
 }
 
-export function testWordList(): Word[] {
-  return [
-    simpleWord("Yoink", "Hello"),
-    simpleWord("Yode", "Goodbye"),
-    simpleWord("Yoff", "Yes"),
-    simpleWord("Yank", "No"),
-    simpleWord("Yank", "Please help me"),
-    simpleWord("Ya", "Help"),
-    simpleWord("Yeet", "Please"),
-    simpleWord("Yeet", "Mandatory"),
-    simpleWord("Yang", "Die"),
-    multiGlossWord("Yuino", ["Love", "Boba Fett", "Life"]),
-    multiGlossWord("Yuilo", ["Sadness", "Tree bark"]),
-    simpleWord("Yes", "Wumbo"),
-    simpleWord("Yes", "Mayonnaise"),
-  ];
-}
+export const testWordList = [
+  simpleWord("Yoink", "Hello"),
+  simpleWord("Yode", "Goodbye"),
+  simpleWord("Yoff", "Yes"),
+  simpleWord("Yank", "No"),
+  simpleWord("Yank", "Please help me"),
+  simpleWord("Ya", "Help"),
+  simpleWord("Yeet", "Please"),
+  simpleWord("Yeet", "Mandatory"),
+  simpleWord("Yang", "Die"),
+  multiGlossWord("Yuino", ["Love", "Boba Fett", "Life"]),
+  multiGlossWord("Yuilo", ["Sadness", "Tree bark"]),
+  simpleWord("Yes", "Wumbo"),
+  simpleWord("Yes", "Mayonnaise"),
+] as Word[];
