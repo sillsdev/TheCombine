@@ -42,7 +42,7 @@ if (args.length > 0) {
   console.log("Finished import to ./src/resources/semantic-domains/");
 } else {
   console.log(
-    "Please specify the relative file location to import, e.g. npm run import-sem-doms -- ../../importfile.xml"
+    "Please specify the relative file location to import, e.g. npm run import-sem-doms -- <XML_FILE_PATH>"
   );
 }
 

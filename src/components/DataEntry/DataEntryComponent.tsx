@@ -93,7 +93,7 @@ export class DataEntryComponent extends React.Component<
       displaySemanticDomain: true,
       existingWords: [],
       domainWords: [],
-      isSmallScreen: window.matchMedia("(max-width: 960px)").matches,
+      isSmallScreen: false, //window.matchMedia("(max-width: 960px)").matches,
       drawerOpen: false,
       questionsVisible: false,
     };
@@ -157,13 +157,13 @@ export class DataEntryComponent extends React.Component<
         <Grid container justify="center" spacing={3} wrap={"nowrap"}>
           <Grid item>
             <Paper style={paperStyle}>
-            <DataEntryHeader
-              domain={this.props.domain}
-              questionsVisible={this.state.questionsVisible}
-              setQuestionVisibility={(visibility: boolean) =>
-                this.setState({ questionsVisible: visibility })
-              }
-            />
+              <DataEntryHeader
+                domain={this.props.domain}
+                questionsVisible={this.state.questionsVisible}
+                setQuestionVisibility={(visibility: boolean) =>
+                  this.setState({ questionsVisible: visibility })
+                }
+              />
               <Divider />
               <DataEntryTable
                 domain={this.props.domain}
