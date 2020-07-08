@@ -6,12 +6,13 @@ import {
   Translate,
   withLocalize,
 } from "react-localize-redux";
+
 import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
 import { AutoComplete } from "../../../types/AutoComplete";
 import theme from "../../../types/theme";
 import { SemanticDomain, Word } from "../../../types/word";
-import { Recorder } from "../../Pronunciations/Recorder";
+import Recorder from "../../Pronunciations/Recorder";
 import DomainTree from "../../TreeView/SemanticDomain";
 import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
