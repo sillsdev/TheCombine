@@ -6,6 +6,7 @@ import {
   Translate,
   withLocalize,
 } from "react-localize-redux";
+
 import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
 import { AutoComplete } from "../../../types/AutoComplete";
