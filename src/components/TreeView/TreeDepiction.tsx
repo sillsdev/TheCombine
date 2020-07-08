@@ -117,7 +117,7 @@ export default class TreeDepiction extends React.Component<
               domain={subdomains[0]}
               onClick={(e) => {
                 this.props.animate(e);
-                this.getRandomKey();
+                this.setState({ bounce: Math.random() });
               }}
               direction={Direction.Up}
             />
@@ -178,7 +178,7 @@ export default class TreeDepiction extends React.Component<
               domain={this.props.currentDomain.subdomains[domainIndex]}
               onClick={(e) => {
                 this.props.animate(e);
-                this.getRandomKey();
+                this.setState({ bounce: Math.random() });
               }}
               direction={Direction.Up}
             />
@@ -237,7 +237,7 @@ export default class TreeDepiction extends React.Component<
                   domain={this.props.currentDomain.parentDomain}
                   onClick={(e) => {
                     this.props.animate(e);
-                    this.getRandomKey();
+                    this.setState({ bounce: Math.random() });
                   }}
                   direction={Direction.Down}
                 />
