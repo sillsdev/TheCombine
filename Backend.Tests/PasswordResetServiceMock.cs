@@ -8,7 +8,7 @@ namespace Backend.Tests
     {
         public Task<PasswordReset> CreatePasswordReset(string email)
         {
-            return Task.FromResult(new PasswordReset(email));
+            return Task.FromResult(new PasswordReset(15, email));
         }
 
         public Task ExpirePasswordReset(string email)
