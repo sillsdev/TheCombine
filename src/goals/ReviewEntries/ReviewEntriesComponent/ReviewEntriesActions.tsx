@@ -13,6 +13,7 @@ import { StoreState } from "../../../types";
 export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
+  UpdateRecordingStatus = "UPDATE_RECORDING_STATUS",
 }
 
 interface ReviewUpdateWords {
@@ -27,7 +28,16 @@ interface ReviewUpdateWord {
   newWord: ReviewEntriesWord;
 }
 
-export type ReviewEntriesAction = ReviewUpdateWords | ReviewUpdateWord;
+interface ReviewUpdateRecordingStatus {
+  type: ReviewEntriesActionTypes.UpdateRecordingStatus;
+  recordingStatus: boolean;
+  wordId: string | undefined;
+}
+
+export type ReviewEntriesAction =
+  | ReviewUpdateWords
+  | ReviewUpdateWord
+  | ReviewUpdateRecordingStatus;
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -46,6 +56,17 @@ function updateWord(
     id,
     newId,
     newWord,
+  };
+}
+
+export function updateRecordingStatus(
+  recordingStatus: boolean,
+  wordId: string | undefined
+) {
+  return {
+    type: ReviewEntriesActionTypes.UpdateRecordingStatus,
+    recordingStatus,
+    wordId,
   };
 }
 
@@ -225,7 +246,9 @@ export function deleteAudio(wordId: string, fileName: string) {
   ) => {
     const newWordId = await backend.deleteAudio(wordId, fileName);
     const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems[0];
+    const analysisLang = getState().currentProject.analysisWritingSystems[0]
+      ? getState().currentProject.analysisWritingSystems[0]
+      : "en";
 
     dispatch(updateWord(wordId, newWordId, parseWord(newWord, analysisLang)));
   };
@@ -239,7 +262,9 @@ export function uploadAudio(wordId: string, audioFile: File) {
   ) => {
     const newWordId = await backend.uploadAudio(wordId, audioFile);
     const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems[0];
+    const analysisLang = getState().currentProject.analysisWritingSystems[0]
+      ? getState().currentProject.analysisWritingSystems[0]
+      : "en";
 
     dispatch(updateWord(wordId, newWordId, parseWord(newWord, analysisLang)));
   };

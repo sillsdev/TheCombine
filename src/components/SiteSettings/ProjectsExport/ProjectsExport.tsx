@@ -45,7 +45,7 @@ export class ProjectsExport extends React.Component<
 
   getListItems() {
     return this.state.projectList.map((project) => {
-      const isCurrentProject: boolean = project.id == this.props.project.id;
+      const isCurrentProject: boolean = project.id === this.props.project.id;
       return (
         <ListItem
           key={project.id}

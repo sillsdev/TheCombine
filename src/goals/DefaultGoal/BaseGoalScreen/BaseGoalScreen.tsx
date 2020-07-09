@@ -8,6 +8,7 @@ import EmptyGoalComponent from "../../../components/EmptyGoal/EmptyGoalComponent
 import MergeDupStep from "../../MergeDupGoal/MergeDupStep";
 import CharInventoryCreation from "../../CharInventoryCreation";
 import ReviewEntriesComponent from "../../ReviewEntries/ReviewEntriesComponent";
+import { CurrentTab } from "../../../types/currentTab";
 
 interface componentSteps {
   goal: GoalType;
@@ -57,7 +58,7 @@ class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
   renderGoal(goal: Goal): ReactNode {
     return (
       <div className="GoalDisplay content">
-        <AppBarComponent />
+        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
         <DisplayProg />
         {this.displayComponent(goal)}
       </div>

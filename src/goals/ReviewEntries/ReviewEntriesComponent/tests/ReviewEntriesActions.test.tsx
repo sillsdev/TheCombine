@@ -1,6 +1,5 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import axios from "axios";
 
 import { updateFrontierWord } from "../ReviewEntriesActions";
 import {
@@ -16,9 +15,20 @@ import {
   Gloss,
   Sense,
 } from "../../../../types/word";
+import { updateWord, getWord } from "../../../../backend";
+
+jest.mock("../../../../backend", () => ({
+  updateWord: jest.fn(),
+  getWord: jest.fn(),
+}));
+
+const mockUpdateWord = (updateWord as unknown) as jest.Mock<any>;
+const mockGetWord = (getWord as unknown) as jest.Mock<any>;
+
+mockUpdateWord.mockImplementation((oldFrontierWord) => Promise.resolve(""));
+mockGetWord.mockImplementation(() => Promise.resolve(oldFrontierWord));
 
 // Mocks
-const mockAxios = axios as jest.Mocked<typeof axios>;
 const mockStore = configureMockStore([thunk])();
 
 // Dummy glosses and domains used in testing
@@ -77,9 +87,7 @@ const oldWord: ReviewEntriesWord = {
 };
 
 beforeEach(() => {
-  mockAxios.put.mockClear();
   mockBackendReturn(oldFrontierWord);
-
   mockStore.clearActions();
 });
 
@@ -317,11 +325,10 @@ describe("Test ReviewEntriesActions", () => {
 });
 
 function mockBackendReturn(data: Word) {
-  mockAxios.get.mockClear();
-  mockAxios.get.mockImplementationOnce(() =>
-    Promise.resolve({
-      data: JSON.parse(JSON.stringify(data)),
-    })
+  mockUpdateWord.mockClear();
+  mockGetWord.mockClear();
+  mockGetWord.mockImplementation(() =>
+    Promise.resolve(JSON.parse(JSON.stringify(data)))
   );
 }
 
@@ -336,5 +343,5 @@ function makeDispatch(
 }
 
 function checkResultantData(newFrontierWord: Word) {
-  expect(mockAxios.put.mock.calls[0][1]).toEqual(newFrontierWord);
+  expect(mockUpdateWord.mock.calls[0][0]).toEqual(newFrontierWord);
 }

@@ -15,6 +15,8 @@ const hover: string = blue[100];
 export const buttonSuccess = green[500]; // createProjectComponent and RegisterComponent
 export const highlight = yellow[100]; // goals/CharInventoryCreation/components/SampleWords/WordTileComponent.tsx
 
+export const shade = blue[700]; //Buttons on AppBar Component
+
 export const accepted = green[600];
 export const rejected = red[600];
 
@@ -96,6 +98,16 @@ export const styleAddendum = {
   inactive: {
     color: grey[600],
     backgroundColor: grey[400],
+  },
+};
+
+// Used in IconHolder
+export const recorderStatus = {
+  idle: {
+    color: red[500],
+  },
+  active: {
+    color: red[900],
   },
 };
 

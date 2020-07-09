@@ -7,7 +7,6 @@
  * leading 1 before the information we are interested in. Instead of 0042 we are
  * generating 10042 and then taking the substring 1[0042].
  */
-
 export function uuid(): string {
   let bytes = (count: number) =>
     Math.floor((1 + Math.random()) * 2 ** (count * 8 + 4))
@@ -24,6 +23,10 @@ export function passwordRequirements(password: string): boolean {
 
 export function randElement<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function randomIntString(): string {
+  return Math.floor(Math.random() * 9999999).toString();
 }
 
 //quicksort implmentation O(n log n)

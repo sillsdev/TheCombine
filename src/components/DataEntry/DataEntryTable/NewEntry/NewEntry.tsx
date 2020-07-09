@@ -77,6 +77,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
+    this.duplicateInput = React.createRef<HTMLDivElement>();
   }
 
   readonly maxStartsWith: number = 4;
@@ -84,6 +85,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
+  duplicateInput: React.RefObject<HTMLDivElement>;
 
   toggleSpellingSuggestionsView() {
     this.props.toggleDisplaySpellingSuggestions();
@@ -142,13 +144,13 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.props.toggleDisplaySpellingSuggestions();
   }
 
-  addNewSense(existingWord: Word, newSense: string) {
+  addNewSense(existingWord: Word, newSense: string, index: number) {
     let updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, 0, false);
+    this.props.updateWord(updatedWord, index, false);
     this.props.toggleDisplayDuplicates();
     this.resetEntry();
     this.setState({
@@ -191,6 +193,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   updateVernField(newValue: string) {
+    this.focusAutoScroll();
     let autoCompleteWords: Word[] = this.autoCompleteCandidates(
       this.props.allWords,
       newValue
@@ -295,6 +298,15 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       this.vernInput.current.scrollIntoView({ behavior: "smooth" });
     }
   }
+
+  focusAutoScroll = () => {
+    if (this.duplicateInput.current) {
+      this.duplicateInput.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  };
 
   render() {
     return (
@@ -414,14 +426,17 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                         ? this.state.newEntry.senses[0].glosses[0].def
                         : ""
                     }
-                    addSense={(existingWord: Word, newSense: string) =>
-                      this.addNewSense(existingWord, newSense)
-                    }
+                    addSense={(
+                      existingWord: Word,
+                      newSense: string,
+                      index: number
+                    ) => this.addNewSense(existingWord, newSense, index)}
                     addSemanticDomain={(
                       existingWord: Word,
                       sense: Sense,
                       index: number
                     ) => this.addSemanticDomain(existingWord, sense, index)}
+                    duplicateInput={this.duplicateInput}
                   />
                 </Grid>
               )
