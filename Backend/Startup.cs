@@ -41,10 +41,21 @@ namespace BackendFramework
             public string SmtpPassword { get; set; }
             public string SmtpAddress { get; set; }
             public string SmtpFrom {get; set; }
+            public int PassResetExpireTime {get; set;}
         }
 
         private class EnvironmentNotConfiguredException : Exception
         {
+        }
+
+        private string CheckedEnvironmentVariable(string name, string def, string error = ""){
+            var contents = Environment.GetEnvironmentVariable(name);
+            if (contents != null) {
+                return contents;
+            }else {
+                _logger.LogError(String.Format("Environment variable: `{0}` is not defined. {1}", name, error));
+                return def;
+            }
         }
 
         /// <summary> Determine if executing within a container (e.g. Docker). </summary>
@@ -106,18 +117,20 @@ namespace BackendFramework
                 //    is malformed data, such as an integer sent as a string ("10"). .NET Core 3.0's JSON parser
                 //    no longer automatically tries to coerce these values.
                 .AddNewtonsoftJson();
+
             services.Configure<Settings>(
             options =>
             {
                 var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
                 options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
                 options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
-                options.SmtpServer = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_SERVER");
-                options.SmtpPort = int.Parse(Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_PORT"));
-                options.SmtpUsername = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_USERNAME");
-                options.SmtpPassword = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_PASSWORD");
-                options.SmtpAddress = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_ADDRESS");
-                options.SmtpFrom = Environment.GetEnvironmentVariable("ASPNETCORE_SMTP_FROM");
+                options.SmtpServer = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_SERVER", null, "Email services will not work");
+                options.SmtpPort = int.Parse(this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_PORT", null, "Email services will not work"));
+                options.SmtpUsername = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_USERNAME", null, "Email services will not work");
+                options.SmtpPassword = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_PASSWORD", null, "Email services will not work");
+                options.SmtpAddress = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_ADDRESS", null, "Email services will not work");
+                options.SmtpFrom = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_FROM", null, "Email services will not work");
+                options.PassResetExpireTime = int.Parse(this.CheckedEnvironmentVariable("ASPNETCORE_PASSWORD_RESET_EXPIRE_TIME", "15"));
             });
 
             // Register concrete types for dependency injection

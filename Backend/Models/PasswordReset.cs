@@ -24,9 +24,9 @@ namespace BackendFramework.Models
         [BsonElement("expire_time")]
         public DateTime ExpireTime { get; set; }
 
-        public PasswordReset()
+        public PasswordReset(int expireTime)
         {
-            var expireTimeDifference = int.Parse(Environment.GetEnvironmentVariable("ASPNETCORE_PASSWORD_RESET_EXPIRE_TIME"));
+            var expireTimeDifference = expireTime;
             Id = "";
             Email = "";
             ExpireTime = DateTime.Now.AddMinutes(expireTimeDifference);
@@ -36,7 +36,7 @@ namespace BackendFramework.Models
             Token = WebEncoders.Base64UrlEncode(byteToken);
         }
 
-        public PasswordReset(string email) : this()
+        public PasswordReset(int expiretime, string email) : this(expiretime)
         {
             Email = email;
         }

@@ -254,6 +254,4 @@ namespace BackendFramework.Controllers
             public string Domain;
         }
     }
-
-
 }

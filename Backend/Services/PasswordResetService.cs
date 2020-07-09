@@ -19,7 +19,7 @@ namespace BackendFramework.Services
 
         public async Task<PasswordReset> CreatePasswordReset(string email)
         {
-            var resetRequest = new PasswordReset(email);
+            var resetRequest = new PasswordReset(_passwordResets.ExpireTime, email);
             await _passwordResets.Insert(resetRequest);
             return resetRequest;
         }

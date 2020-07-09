@@ -19,7 +19,7 @@ export function uuid(): string {
 }
 
 export function passwordRequirements(password: string): boolean {
-  return password.length > 8;
+  return password.length >= 8;
 }
 
 export function randElement<T>(arr: T[]): T {
