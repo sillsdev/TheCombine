@@ -1,9 +1,7 @@
 import React from "react";
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
-import renderer, {
-  ReactTestRenderer,
-} from "react-test-renderer";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
 import { defaultState } from "../../App/DefaultState";
 import PasswordReset from "../ResetPage/component";
 import * as ResetActions from "../actions";

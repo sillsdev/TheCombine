@@ -10,16 +10,15 @@ export enum RequestState {
   None,
   Attempt,
   Fail,
-  Success
+  Success,
 }
 
-
 export interface PasswordResetState {
-  resetState: RequestState
+  resetState: RequestState;
 }
 
 export const defaultState: PasswordResetState = {
-  resetState: RequestState.None
+  resetState: RequestState.None,
 };
 
 export const passwordResetReducer = (
@@ -29,15 +28,15 @@ export const passwordResetReducer = (
   switch (action.type) {
     case RESET_PASSWORD_ATTEMPT:
       return {
-        resetState: RequestState.Attempt
+        resetState: RequestState.Attempt,
       };
     case RESET_PASSWORD_FAIL:
       return {
-        resetState: RequestState.Fail
+        resetState: RequestState.Fail,
       };
     case RESET_PASSWORD_SUCCESS:
       return {
-        resetState: RequestState.Success
+        resetState: RequestState.Success,
       };
     default:
       return state;

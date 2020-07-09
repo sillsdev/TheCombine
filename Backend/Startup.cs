@@ -40,19 +40,23 @@ namespace BackendFramework
             public string SmtpUsername { get; set; }
             public string SmtpPassword { get; set; }
             public string SmtpAddress { get; set; }
-            public string SmtpFrom {get; set; }
-            public int PassResetExpireTime {get; set;}
+            public string SmtpFrom { get; set; }
+            public int PassResetExpireTime { get; set; }
         }
 
         private class EnvironmentNotConfiguredException : Exception
         {
         }
 
-        private string CheckedEnvironmentVariable(string name, string def, string error = ""){
+        private string CheckedEnvironmentVariable(string name, string def, string error = "")
+        {
             var contents = Environment.GetEnvironmentVariable(name);
-            if (contents != null) {
+            if (contents != null)
+            {
                 return contents;
-            }else {
+            }
+            else
+            {
                 _logger.LogError(String.Format("Environment variable: `{0}` is not defined. {1}", name, error));
                 return def;
             }

@@ -106,7 +106,7 @@ export default class PasswordReset extends React.Component<
                     )
                   }
                 />
-                {(!this.state.passwordFitsRequirements) && (
+                {!this.state.passwordFitsRequirements && (
                   <Typography
                     variant="body2"
                     style={{ display: "inline", margin: 24, color: "red" }}
@@ -124,14 +124,14 @@ export default class PasswordReset extends React.Component<
                   style={{ width: "100%" }}
                   margin="normal"
                   error={
-                    (!this.state.isPasswordConfirmed) &&
+                    !this.state.isPasswordConfirmed &&
                     this.state.passwordConfirm.length > 0
                   }
                   onChange={(e) =>
                     this.onChangePassword(this.state.password, e.target.value)
                   }
                 />
-                {(!this.state.isPasswordConfirmed) &&
+                {!this.state.isPasswordConfirmed &&
                   this.state.passwordConfirm.length > 0 && (
                     <Typography
                       variant="body2"
@@ -158,7 +158,10 @@ export default class PasswordReset extends React.Component<
                     variant="contained"
                     color="primary"
                     disabled={
-                      !(this.state.passwordFitsRequirements && this.state.isPasswordConfirmed)
+                      !(
+                        this.state.passwordFitsRequirements &&
+                        this.state.isPasswordConfirmed
+                      )
                     }
                     onClick={this.onSubmit}
                   >

@@ -33,7 +33,7 @@ export default class ResetRequest extends React.Component<
       ...prevState,
       email: email,
     }));
-  }
+  };
 
   render() {
     return (
