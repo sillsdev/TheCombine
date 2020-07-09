@@ -10,6 +10,8 @@ namespace Backend.Tests
     {
         protected List<PasswordReset> Resets;
 
+        public int ExpireTime => 15;
+
         public PasswordResetContextMock()
         {
             Resets = new List<PasswordReset>();
