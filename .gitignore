@@ -23,6 +23,7 @@ Session.vim
 setupMongo.js
 dropDB.js
 setAdminUser.js
+genBackendCoverageReport.js
 
 npm-debug.log*
 yarn-debug.log*

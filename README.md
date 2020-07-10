@@ -33,7 +33,9 @@ A rapid word collection tool.
    - [VS Code](https://code.visualstudio.com/download) and Prettier code
      formatting extension
    - [dotnet-format](https://github.com/dotnet/format):
-     `dotnet tool install -g dotnet-format --version 3.3.111304`
+     `dotnet tool install --global dotnet-format --version 3.3.111304`
+   - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+     `dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.6.1`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
@@ -97,13 +99,16 @@ in a browser.
 
 ##### Backend Code Coverage Report
 
-Install
-[`dotnet-reportgenerator-globaltool`](https://www.nuget.org/packages/dotnet-reportgenerator-globaltool)
-and use it to generate an HTML code coverage report.
+First run the `coverage` job to generate the coverage info: 
 
 ```batch
-> dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.6.1
-> reportgenerator -reports:.\Backend.Tests\coverage.info -targetdir:.\coverage-backend
+> npm run coverage
+```
+
+Then generate the HTML coverage report:
+
+```batch
+> npm run gen-backend-coverage-report
 ```
 
 Open `coverage-backend/index.html` in a browser.
