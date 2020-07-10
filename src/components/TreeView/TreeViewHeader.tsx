@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   Card,
@@ -7,12 +6,16 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import React from "react";
+import Bounce from "react-reveal/Bounce";
 import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "./SemanticDomain";
 
 interface TreeHeaderProps {
   currentDomain: SemanticDomainWithSubdomains;
   animate: (domain: SemanticDomainWithSubdomains) => Promise<void>;
+  bounceState: number;
+  bounce: () => void;
 }
 
 interface TreeHeaderState {
@@ -73,6 +76,7 @@ export default class TreeViewHeader extends React.Component<
           );
           if (parent && parent.id === this.state.input) {
             this.props.animate(parent);
+            this.props.bounce();
             this.setState({ input: "" });
             (event.target as any).value = "";
             break;
@@ -85,6 +89,7 @@ export default class TreeViewHeader extends React.Component<
         parent = this.searchDomainByName(parent, this.state.input);
         if (parent) {
           this.props.animate(parent);
+          this.props.bounce();
           this.setState({ input: "" });
           (event.target as any).value = "";
         }
@@ -186,37 +191,41 @@ export default class TreeViewHeader extends React.Component<
     let domainR:
       | SemanticDomainWithSubdomains
       | undefined = this.getBrotherDomain(1);
-
     return (
       <GridList cols={9} spacing={20} cellHeight={"auto"}>
         <GridListTile cols={2}>
           {domainL ? (
             <DomainTile
               domain={domainL}
-              onClick={this.props.animate}
+              onClick={(e) => {
+                this.props.animate(e);
+                this.props.bounce();
+              }}
               direction={Direction.Left}
             />
           ) : null}
         </GridListTile>
         <GridListTile cols={5}>
           <Card>
-            <Button
-              fullWidth
-              size="large"
-              color="primary"
-              variant="contained"
-              disabled={!this.props.currentDomain.parentDomain}
-              onClick={() => this.props.animate(this.props.currentDomain)}
-            >
-              <div style={{ textTransform: "capitalize" }}>
-                <Typography variant="overline">
-                  {this.props.currentDomain.id}
-                </Typography>
-                <Typography variant="h6">
-                  {this.props.currentDomain.name}
-                </Typography>
-              </div>
-            </Button>
+            <Bounce spy={this.props.bounceState} duration={2000}>
+              <Button
+                fullWidth
+                size="large"
+                color="primary"
+                variant="contained"
+                disabled={!this.props.currentDomain.parentDomain}
+                onClick={() => this.props.animate(this.props.currentDomain)}
+              >
+                <div style={{ textTransform: "capitalize" }}>
+                  <Typography variant="overline">
+                    {this.props.currentDomain.id}
+                  </Typography>
+                  <Typography variant="h6">
+                    {this.props.currentDomain.name}
+                  </Typography>
+                </div>
+              </Button>
+            </Bounce>
             <TextField
               fullWidth
               id="name"
@@ -232,7 +241,10 @@ export default class TreeViewHeader extends React.Component<
           {domainR ? (
             <DomainTile
               domain={domainR}
-              onClick={this.props.animate}
+              onClick={(e) => {
+                this.props.animate(e);
+                this.props.bounce();
+              }}
               direction={Direction.Right}
             />
           ) : null}
