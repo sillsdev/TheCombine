@@ -67,9 +67,22 @@ namespace Backend.Tests
         public void TestUpdateUser()
         {
             var origUser = _userService.Create(RandomUser()).Result;
-
             var modUser = origUser.Clone();
             modUser.Username = "Mark";
+
+            _ = _controller.Put(modUser.Id, modUser);
+
+            var users = _userService.GetAllUsers().Result;
+            Assert.That(users, Has.Count.EqualTo(1));
+            Assert.Contains(modUser, users);
+        }
+
+        [Test]
+        public void TestUpdateUserCantUpdateIsAdmin()
+        {
+            var origUser = _userService.Create(RandomUser()).Result;
+            var modUser = origUser.Clone();
+            modUser.IsAdmin = true;
 
             _ = _controller.Put(modUser.Id, modUser);
 

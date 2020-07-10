@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Text;
 using BackendFramework.Contexts;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -68,6 +70,10 @@ namespace BackendFramework
             return Environment.GetEnvironmentVariable("ASPNETCORE_IS_IN_CONTAINER") != null;
         }
 
+        private class AdminUserCreationException : Exception
+        {
+        }
+
         /// <summary> This method gets called by the runtime. Use this method to add services for dependency injection.
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
@@ -76,9 +82,9 @@ namespace BackendFramework
             {
                 options.AddPolicy(AllowedOrigins,
                     builder => builder
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowAnyOrigin());
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin());
             });
 
             // Configure JWT Authentication
@@ -96,22 +102,22 @@ namespace BackendFramework
 
             var key = Encoding.ASCII.GetBytes(secretKey);
             services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
@@ -123,11 +129,11 @@ namespace BackendFramework
                 .AddNewtonsoftJson();
 
             services.Configure<Settings>(
-            options =>
-            {
-                var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
-                options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
-                options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
+                options =>
+                {
+                    var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
+                    options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
+                    options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
                 options.SmtpServer = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_SERVER", null, "Email services will not work");
                 options.SmtpPort = int.Parse(this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_PORT", null, "Email services will not work"));
                 options.SmtpUsername = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_USERNAME", null, "Email services will not work");
@@ -135,7 +141,7 @@ namespace BackendFramework
                 options.SmtpAddress = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_ADDRESS", null, "Email services will not work");
                 options.SmtpFrom = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_FROM", null, "Email services will not work");
                 options.PassResetExpireTime = int.Parse(this.CheckedEnvironmentVariable("ASPNETCORE_PASSWORD_RESET_EXPIRE_TIME", "15"));
-            });
+                });
 
             // Register concrete types for dependency injection
             // Word Types
@@ -179,7 +185,7 @@ namespace BackendFramework
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime appLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -197,6 +203,7 @@ namespace BackendFramework
             {
                 app.UseHttpsRedirection();
             }
+
             app.UseRouting();
             app.UseCors(AllowedOrigins);
 
@@ -207,10 +214,80 @@ namespace BackendFramework
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
+            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
+
+            // If an admin user has been created via the commandline, treat that as a single action and shut the
+            // server down so the calling script knows it's been completed successfully or unsuccessfully.
+            if (CreateAdminUser(app.ApplicationServices.GetService<IUserService>()))
             {
-                endpoints.MapDefaultControllerRoute();
-            });
+                _logger.LogInformation("Stopping application");
+                appLifetime.StopApplication();
+            }
+        }
+
+        /// <summary>
+        /// Create a new user with administrator privileges or change the password of an existing user and grant
+        /// administrator privileges.
+        /// </summary>
+        /// <param name="userService"></param>
+        /// <returns> Whether the application should be stopped. </returns>
+        /// <exception cref="EnvironmentNotConfiguredException">
+        /// If required environment variables are not set.
+        /// </exception>
+        /// <exception cref="AdminUserCreationException">
+        /// If the requested admin user could not be created or updated.
+        /// </exception>
+        private bool CreateAdminUser(IUserService userService)
+        {
+            const string createAdminUsernameArg = "create-admin-username";
+            const string createAdminPasswordEnv = "ASPNETCORE_ADMIN_PASSWORD";
+
+            var username = Configuration.GetValue<string>(createAdminUsernameArg);
+            if (username == null)
+            {
+                _logger.LogInformation("No admin user name provided, skipped admin creation");
+                return false;
+            }
+
+            var password = Environment.GetEnvironmentVariable(createAdminPasswordEnv);
+            if (password == null)
+            {
+                _logger.LogError($"Must set {createAdminPasswordEnv} environment variable " +
+                                 $"when using {createAdminUsernameArg} command line option.");
+                throw new EnvironmentNotConfiguredException();
+            }
+
+            var existingUser = userService.GetAllUsers().Result.Find(x => x.Username == username);
+            if (existingUser != null)
+            {
+                _logger.LogInformation($"User {username} already exists. Updating password and granting " +
+                                       $"admin permissions.");
+                if (userService.ChangePassword(existingUser.Id, password).Result == ResultOfUpdate.NotFound)
+                {
+                    _logger.LogError($"Failed to find user {username}.");
+                    throw new AdminUserCreationException();
+                }
+
+                existingUser.IsAdmin = true;
+                if (userService.Update(existingUser.Id, existingUser, true).Result == ResultOfUpdate.NotFound)
+                {
+                    _logger.LogError($"Failed to find user {username}.");
+                    throw new AdminUserCreationException();
+                }
+
+                return true;
+            }
+
+            _logger.LogInformation($"Creating admin user: {username}");
+            var user = new User { Username = username, Password = password, IsAdmin = true };
+            var returnedUser = userService.Create(user).Result;
+            if (returnedUser == null)
+            {
+                _logger.LogError("Failed to create admin user.");
+                throw new AdminUserCreationException();
+            }
+
+            return true;
         }
     }
 }

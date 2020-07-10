@@ -17,7 +17,8 @@
     "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "lint": "eslint --ext js,ts,tsx,jsx src",
     "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
-    "coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true && react-scripts test --coverage --watchAll=false",
+    "coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov && react-scripts test --coverage --watchAll=false",
+    "gen-backend-coverage-report": "tsc genBackendCoverageReport.ts && node genBackendCoverageReport.js",
     "eject": "react-scripts eject",
     "prettier": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
     "prettier-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\""
@@ -38,6 +39,7 @@
     "react-localize-redux": "^3.5.3",
     "react-modal": "^3.11.2",
     "react-redux": "^7.2.0",
+    "react-reveal": "^1.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-toastify": "^6.0.5",
