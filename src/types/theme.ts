@@ -101,5 +101,15 @@ export const styleAddendum = {
   },
 };
 
+// Used in IconHolder
+export const recorderStatus = {
+  idle: {
+    color: red[500],
+  },
+  active: {
+    color: red[900],
+  },
+};
+
 // Can have a number of additional options passed in; here, sticks with defaults
 export default responsiveFontSizes(baseTheme, dynamicFontParams);
