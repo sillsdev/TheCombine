@@ -19,7 +19,7 @@ interface RestoreProjectButtonProps {
 }
 
 /**
- * Button for restoring a deleted project (setting isActive=true)
+ * Button for restoring an archived project (setting isActive=true)
  */
 export default function RestoreProjectButton(
   props: ButtonProps & RestoreProjectButtonProps

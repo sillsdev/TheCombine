@@ -7,12 +7,12 @@ import { setProjectId } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import theme from "../../../types/theme";
 import ExportProjectButton from "../../ProjectSettings/ProjectExport/ExportProjectButton";
-import DeleteProjectButton from "./DeleteProjectButton";
+import ArchiveProjectButton from "./ArchiveProjectButton";
 import RestoreProjectButton from "./RestoreProjectButton";
 
 interface ProjectManagementState {
   activeProjects: Project[];
-  deletedProjects: Project[];
+  archivedProjects: Project[];
 }
 
 export class ProjectManagement extends React.Component<
@@ -24,7 +24,7 @@ export class ProjectManagement extends React.Component<
 
     this.state = {
       activeProjects: [],
-      deletedProjects: [],
+      archivedProjects: [],
     };
 
     setProjectId("");
@@ -35,7 +35,7 @@ export class ProjectManagement extends React.Component<
     getAllProjects().then((projects) => {
       this.setState({
         activeProjects: projects.filter((project) => project.isActive),
-        deletedProjects: projects.filter((project) => !project.isActive),
+        archivedProjects: projects.filter((project) => !project.isActive),
       });
     });
   };
@@ -56,9 +56,9 @@ export class ProjectManagement extends React.Component<
             projectId={project.id}
             style={{ marginRight: theme.spacing(1) }}
           />
-          {/* Delete active project or restore deleted project. */}
+          {/* Archive active project or restore archived project. */}
           {project.isActive ? (
-            <DeleteProjectButton
+            <ArchiveProjectButton
               projectId={project.id}
               updateParent={this.updateProjectList}
             />
@@ -77,7 +77,7 @@ export class ProjectManagement extends React.Component<
     return (
       <List>
         {this.getListItems(this.state.activeProjects)}
-        {this.getListItems(this.state.deletedProjects)}
+        {this.getListItems(this.state.archivedProjects)}
       </List>
     );
   }

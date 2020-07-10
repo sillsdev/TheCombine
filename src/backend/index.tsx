@@ -207,7 +207,8 @@ export async function getAllActiveProjectsByUser(
         project.isActive && projects.push(project);
       });
     } catch (err) {
-      /*If there was an error, the project probably was manually deleted from the database.*/
+      /** If there was an error, the project probably was manually deleted
+       from the database or is ill-formatted. */
     }
   }
   return projects;
@@ -227,7 +228,7 @@ export async function updateProject(project: Project) {
   return resp.data;
 }
 
-export async function deleteProject(id: string) {
+export async function archiveProject(id: string) {
   let project = await backendServer.get(`projects/${id}`, {
     headers: authHeader(),
   });

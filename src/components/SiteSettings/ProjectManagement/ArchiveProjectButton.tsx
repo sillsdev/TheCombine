@@ -10,25 +10,25 @@ import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { deleteProject } from "../../../backend";
+import { archiveProject } from "../../../backend";
 import LoadingButton from "../../Buttons/LoadingButton";
 
-interface DeleteProjectButtonProps {
+interface ArchiveProjectButtonProps {
   projectId: string;
   updateParent: () => void;
 }
 
 /**
- * Button for deleting a project (setting isActive=false)
+ * Button for archiving a project (setting isActive=false)
  */
-export default function DeleteProjectButton(
-  props: ButtonProps & DeleteProjectButtonProps
+export default function ArchiveProjectButton(
+  props: ButtonProps & ArchiveProjectButtonProps
 ) {
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  async function deleteProj() {
+  async function archiveProj() {
     setLoading(true);
-    await deleteProject(props.projectId);
+    await archiveProject(props.projectId);
     setLoading(false);
     props.updateParent();
     handleClose();
@@ -47,7 +47,7 @@ export default function DeleteProjectButton(
   return (
     <React.Fragment>
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        <Translate id="siteSettings.deleteProject.button" />
+        <Translate id="siteSettings.archiveProject.button" />
       </Button>
       <Dialog
         open={open}
@@ -56,25 +56,25 @@ export default function DeleteProjectButton(
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          <Translate id="siteSettings.deleteProject.warnTitle" />
+          <Translate id="siteSettings.archiveProject.warnTitle" />
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Translate id="siteSettings.deleteProject.warnText" />
+            <Translate id="siteSettings.archiveProject.warnText" />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="primary">
-            <Translate id="siteSettings.deleteProject.cancel" />
+            <Translate id="siteSettings.archiveProject.cancel" />
           </Button>
           <LoadingButton
-            onClick={deleteProj}
+            onClick={archiveProj}
             color="primary"
             variant="contained"
             loading={loading}
             {...props}
           >
-            <Translate id="siteSettings.deleteProject.confirm" />
+            <Translate id="siteSettings.archiveProject.confirm" />
           </LoadingButton>
         </DialogActions>
       </Dialog>

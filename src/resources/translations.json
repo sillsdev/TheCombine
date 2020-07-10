@@ -174,8 +174,8 @@
     ]
   },
   "siteSettings": {
-    "deleteProject": {
-      "button": ["Delete Project", "Eliminar proyecto", "Supprimer projet"],
+    "archiveProject": {
+      "button": ["Archive Project", "Archivar proyecto", "Archiver projet"],
       "warnTitle": [
         "Proceed with Caution!",
         "¡Proceder con precaución!",
@@ -192,9 +192,9 @@
         "Annuler et conserver projet"
       ],
       "confirm": [
-        "Delete project for all users",
-        "Eliminar proyeto para todos usarios",
-        "Supprimer projet pour tous utilisateurs"
+        "Archive project for all users",
+        "Archivar proyeto para todos usarios",
+        "Archiver projet pour tous utilisateurs"
       ]
     },
     "restoreProject": {
@@ -205,14 +205,14 @@
         "Procéder avec prudence !"
       ],
       "warnText": [
-        "Somebody probably had a good reason to delete this project. Are you sure you want to restore it?",
-        "Alguien probablemente tuvo una buena razón para eliminar este proyecto. ¿Seguro que quieres restaurarlo?",
-        "Quelqu'un avait probablement une bonne raison de supprimer ce projet. Voulez-vous vraiment le restaurer ?"
+        "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
+        "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
+        "Quelqu'un avait probablement une bonne raison de archiver ce projet. Voulez-vous vraiment le restaurer ?"
       ],
       "cancel": [
-        "Cancel and leave project deleted",
-        "Cancelar y dejar proyecto como eliminado",
-        "Annuler et laisser le projet supprimé"
+        "Cancel and leave project archived",
+        "Cancelar y dejar proyecto como archivado",
+        "Annuler et laisser projet tel qu'archivé"
       ],
       "confirm": ["Restore project", "Restaurat proyeto", "Restaurer projet"]
     }
