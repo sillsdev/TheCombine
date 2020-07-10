@@ -125,6 +125,15 @@ namespace Backend.Tests
         }
 
         [Test]
+        public void TestCreateUserRolesNoPermission()
+        {
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var userRole = _userRoleService.Create(RandomUserRole()).Result;
+            var result = _userRoleController.Post(_projId, userRole).Result;
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
         public void TestUpdateUserRole()
         {
             var userRole = RandomUserRole();
