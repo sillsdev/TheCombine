@@ -41,6 +41,13 @@ A rapid word collection tool.
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
    it in your `.profile` (Linux) or the _System_ app (Windows).
+6. If you want the email services to work you will need to set the following environment variables:
+   - `ASPNETCORE_SMTP_SERVER`
+   - `ASPNETCORE_SMTP_PORT`
+   - `ASPNETCORE_SMTP_USERNAME`
+   - `ASPNETCORE_SMTP_PASSWORD`
+   - `ASPNETCORE_SMTP_ADDRESS`
+   - `ASPNETCORE_SMTP_FROM`
 5. (VS Code Users Only) Enable automatic formatting on save.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
