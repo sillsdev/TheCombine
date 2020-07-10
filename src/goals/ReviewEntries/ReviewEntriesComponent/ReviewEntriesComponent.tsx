@@ -1,17 +1,18 @@
-import React from "react";
+import { Typography } from "@material-ui/core";
 import MaterialTable from "material-table";
+import React from "react";
 import {
-  Translate,
   LocalizeContextProps,
+  Translate,
   withLocalize,
 } from "react-localize-redux";
-
-import { Word } from "../../../types/word";
-import tableIcons from "./icons";
 import * as backend from "../../../backend";
-import columns from "./CellComponents/CellColumns";
-import { ReviewEntriesWord, parseWord } from "./ReviewEntriesTypes";
 import { Recorder } from "../../../components/Pronunciations/Recorder";
+import theme from "../../../types/theme";
+import { Word } from "../../../types/word";
+import columns from "./CellComponents/CellColumns";
+import tableIcons from "./icons";
+import { parseWord, ReviewEntriesWord } from "./ReviewEntriesTypes";
 
 // Component state/props
 interface ReviewEntriesProps {
@@ -82,52 +83,58 @@ export class ReviewEntriesComponent extends React.Component<
     return (
       <Translate>
         {({ translate }) => (
-          <MaterialTable<any>
-            icons={tableIcons}
-            title={<Translate id={"reviewEntries.title"} />}
-            columns={columns}
-            data={this.props.words.map((word) =>
-              word === null
-                ? null
-                : {
-                    ...word,
-                    senses: word.senses.filter((sense) => !sense.deleted),
-                  }
-            )}
-            editable={{
-              onRowUpdate: (
-                newData: ReviewEntriesWord,
-                oldData: ReviewEntriesWord
-              ) =>
-                new Promise(async (resolve, reject) => {
-                  // Update database + update word ID. Awaited so that the user can't edit + submit a word with a bad ID before the ID is updated
-                  this.props
-                    .updateFrontierWord(newData, oldData, this.props.language)
-                    .then(() => {
-                      setTimeout(() => {
-                        resolve();
-                      }, 500);
-                    })
-                    .catch((reason) => {
-                      // May wish to change this alert method
-                      alert(translate(reason));
-                      reject();
-                    });
-                }),
-            }}
-            options={{
-              filtering: true,
-              pageSize:
-                this.props.words.length > 0
-                  ? Math.min(this.props.words.length, ROWS_PER_PAGE[0])
-                  : ROWS_PER_PAGE[0],
-              pageSizeOptions: this.removeDuplicates([
-                Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
-                Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
-                Math.min(this.props.words.length, ROWS_PER_PAGE[2]),
-              ]),
-            }}
-          />
+          <Typography
+            component="h1"
+            variant="h4"
+            style={{ marginTop: theme.spacing(1) }}
+          >
+            <MaterialTable<any>
+              icons={tableIcons}
+              title={<Translate id={"reviewEntries.title"} />}
+              columns={columns}
+              data={this.props.words.map((word) =>
+                word === null
+                  ? null
+                  : {
+                      ...word,
+                      senses: word.senses.filter((sense) => !sense.deleted),
+                    }
+              )}
+              editable={{
+                onRowUpdate: (
+                  newData: ReviewEntriesWord,
+                  oldData: ReviewEntriesWord
+                ) =>
+                  new Promise(async (resolve, reject) => {
+                    // Update database + update word ID. Awaited so that the user can't edit + submit a word with a bad ID before the ID is updated
+                    this.props
+                      .updateFrontierWord(newData, oldData, this.props.language)
+                      .then(() => {
+                        setTimeout(() => {
+                          resolve();
+                        }, 500);
+                      })
+                      .catch((reason) => {
+                        // May wish to change this alert method
+                        alert(translate(reason));
+                        reject();
+                      });
+                  }),
+              }}
+              options={{
+                filtering: true,
+                pageSize:
+                  this.props.words.length > 0
+                    ? Math.min(this.props.words.length, ROWS_PER_PAGE[0])
+                    : ROWS_PER_PAGE[0],
+                pageSizeOptions: this.removeDuplicates([
+                  Math.min(this.props.words.length, ROWS_PER_PAGE[0]),
+                  Math.min(this.props.words.length, ROWS_PER_PAGE[1]),
+                  Math.min(this.props.words.length, ROWS_PER_PAGE[2]),
+                ]),
+              }}
+            />
+          </Typography>
         )}
       </Translate>
     );
