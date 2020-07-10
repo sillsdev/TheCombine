@@ -33,7 +33,9 @@ A rapid word collection tool.
    - [VS Code](https://code.visualstudio.com/download) and Prettier code
      formatting extension
    - [dotnet-format](https://github.com/dotnet/format):
-     `dotnet tool install -g dotnet-format --version 3.3.111304`
+     `dotnet tool install --global dotnet-format --version 3.3.111304`
+   - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+     `dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.6.1`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
@@ -51,7 +53,7 @@ A rapid word collection tool.
 
 In the project directory, you can run:
 
-## `npm start`
+### `npm start`
 
 > Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set 
  [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable. 
@@ -78,7 +80,7 @@ Runs only the API
 
 Runs only the mongo database
 
-## `npm test`
+### `npm test`
 
 Launches the test runners in the interactive watch mode.<br>
 See the section about
@@ -90,19 +92,34 @@ for more information.
 Launches the test runners to calculate the test coverage of the front and
 back ends of the app.
 
-## `npm run dotnet-format`
+##### Frontend Code Coverage Report
+
+To view the frontend code coverage open `coverage/lcov-report/index.html`
+in a browser.
+
+##### Backend Code Coverage Report
+
+After `npm run coverage` has run, generate the HTML coverage report:
+
+```batch
+> npm run gen-backend-coverage-report
+```
+
+Open `coverage-backend/index.html` in a browser.
+
+### `npm run dotnet-format`
 
 Automatically format the C# source files in the backend.
 
-## `npm run lint`
+### `npm run lint`
 
 Runs ESLint on the codebase to detect code problems that should be fixed.
 
-## `npm run prettier`
+### `npm run prettier`
 
 Auto-format frontend code in the `src` folder.
 
-## `npm run build`
+### `npm run build`
 
 Builds the app for production to the `build` folder.
 
@@ -117,7 +134,7 @@ See the section about
 [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
 more information.
 
-## Drop Database
+### Drop Database
 
 To completely erase the current Mongo database, run:
 
@@ -125,7 +142,7 @@ To completely erase the current Mongo database, run:
 > npm run drop-database
 ```
 
-## Create Database Admin User
+### Create Database Admin User
 
 ### Create a New Admin User
 
