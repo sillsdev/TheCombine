@@ -57,7 +57,7 @@ export default class PasswordReset extends React.Component<
     this.setState((prevState) => ({
       ...prevState,
       passwordFitsRequirements: passwordRequirements(password),
-      isPasswordConfirmed: password !== confirmPassword,
+      isPasswordConfirmed: password === confirmPassword,
       password: password,
       passwordConfirm: confirmPassword,
     }));
