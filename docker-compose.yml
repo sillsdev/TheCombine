@@ -10,6 +10,7 @@ services:
       - db
     env_file:
       - ./.env.web
+      - ./.env.web.auth
   nginx:
     build:
       context: .
