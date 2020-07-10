@@ -22,8 +22,17 @@ if (fs.existsSync(coverageInfoFile)) {
     `-reports:${coverageInfoFile}`,
     `-targetdir:${coverageTargetDir}`,
   ]);
-  console.log(`stderr: ${cmd.stderr.toString()}`);
-  console.log(`stdout: ${cmd.stdout.toString()}`);
+
+  if (cmd.stdout != null) {
+    console.log(`stderr: ${cmd.stderr.toString()}`);
+    console.log(`stdout: ${cmd.stdout.toString()}`);
+  } else {
+    console.log(
+      "Unable to run reportgenerator executable.\n" +
+        "Please follow the Backend Code Coverage Report README instructions " +
+        "to install this."
+    );
+  }
 } else {
   console.log(
     `${coverageInfoFile} does not exist. First run: npm run coverage.`
