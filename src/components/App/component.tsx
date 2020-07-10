@@ -7,6 +7,8 @@ import DataEntry from "../DataEntry";
 import { GoalRoute } from "../GoalRoute/component";
 import Login from "../Login/LoginPage";
 import Register from "../Login/RegisterPage";
+import PasswordReset from "../PasswordReset/ResetPage";
+import ResetRequest from "../PasswordReset/RequestPage";
 import PageNotFound from "../PageNotFound/component";
 import { PrivateRoute } from "../PrivateRoute";
 import ProjectSettings from "../ProjectSettings";
@@ -34,6 +36,9 @@ export default class App extends React.Component {
           <PrivateRoute path="/goals" component={GoalRoute} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/forgot/reset/:token" component={PasswordReset} />
+          <Route path="/forgot/reset/" component={PasswordReset} />
+          <Route path="/forgot/request" component={ResetRequest} />
           <Route component={PageNotFound} />
         </Switch>
       </div>

@@ -126,6 +126,21 @@
       "Veuillez entrer un email valide"
     ]
   },
+  "passwordReset": {
+    "resetRequestTitle": [
+      "Reset Password Request",
+      "Restablecer solicitud de contraseña"
+    ],
+    "resetTitle": ["Reset Password", "Restablecer la contraseña"],
+    "tokenLabel": ["Token", "simbólico"],
+    "resetRequestInstructions": [
+      "We will send a one time reset link for your account to your email",
+      "Le enviaremos un enlace de restablecimiento único para su cuenta a su correo electrónico"
+    ],
+    "submit": ["Submit", "Enviar"],
+    "resetFail": ["Password reset expired", "Error al restablecer contraseña"],
+    "emailError": ["Email doesn't exist"]
+  },
   "userMenu": {
     "siteSettings": [
       "Site Settings",
