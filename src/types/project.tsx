@@ -1,5 +1,5 @@
 import { randomIntString } from "../utilities";
-import { AutoComplete, randomAutoComplete } from "./AutoComplete";
+import { AutoComplete } from "./AutoComplete";
 import { SemanticDomain, testWordList, Word } from "./word";
 
 export interface CustomField {
@@ -47,7 +47,6 @@ export function randomProject(): Project {
   project.id = randomIntString();
   project.name = randomIntString();
   project.isActive = Math.random() < 0.5;
-  project.autocompleteSetting = randomAutoComplete();
   project.words = testWordList();
   return project;
 }
