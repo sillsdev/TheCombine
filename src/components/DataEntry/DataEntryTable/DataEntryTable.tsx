@@ -6,6 +6,7 @@ import {
   Translate,
   withLocalize,
 } from "react-localize-redux";
+
 import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
 import { AutoComplete } from "../../../types/AutoComplete";
@@ -209,12 +210,15 @@ export class DataEntryTable extends React.Component<
       >
         <input type="submit" style={{ display: "none" }} />
 
-        <Grid container spacing={3}>
+        <Grid container>
           <Grid item xs={4}>
             <Typography
               variant="h5"
               align="center"
-              style={{ marginTop: theme.spacing(2) }}
+              style={{
+                marginTop: theme.spacing(2),
+                marginBottom: theme.spacing(2),
+              }}
             >
               <Translate id="addWords.vernacular" />
             </Typography>
@@ -223,7 +227,10 @@ export class DataEntryTable extends React.Component<
             <Typography
               variant="h5"
               align="center"
-              style={{ marginTop: theme.spacing(2) }}
+              style={{
+                marginTop: theme.spacing(2),
+                marginBottom: theme.spacing(2),
+              }}
             >
               <Translate id="addWords.glosses" />
             </Typography>
