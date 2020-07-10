@@ -37,7 +37,7 @@ namespace BackendFramework.Services
         async Task<bool> IPasswordResetService.ResetPassword(string token, string password)
         {
             var request = await _passwordResets.FindByToken(token);
-            if (DateTime.Now < request.ExpireTime)
+            if (request != null && DateTime.Now < request.ExpireTime)
             {
                 var user = (await _userService.GetAllUsers()).Single(u => u.Email == request.Email);
                 await _userService.ChangePassword(user.Id, password);

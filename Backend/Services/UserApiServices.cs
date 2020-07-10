@@ -209,11 +209,11 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="User"/> with specified userId and changes it's password </summary>
-        public async Task<ResultOfUpdate> ChangePassword(string userid, string password)
+        public async Task<ResultOfUpdate> ChangePassword(string userId, string password)
         {
             var hash = PasswordHash.HashPassword(password);
 
-            var filter = Builders<User>.Filter.Eq(x => x.Id, userid);
+            var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
             var updateDef = Builders<User>.Update
                 .Set(x => x.Password, Convert.ToBase64String(hash));
 

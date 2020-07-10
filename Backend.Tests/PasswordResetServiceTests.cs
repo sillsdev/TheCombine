@@ -24,8 +24,7 @@ namespace Backend.Tests
         public void CreateRequest()
         {
             // test we can successfully create a request
-            var user = new User();
-            user.Email = "user@domain.com";
+            var user = new User() { Email = "user@domain.com" };
             _userService.Create(user);
 
             var res = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
@@ -35,8 +34,7 @@ namespace Backend.Tests
         [Test]
         public void ResetSuccess()
         {
-            var user = new User();
-            user.Email = "user@domain.com";
+            var user = new User() { Email = "user@domain.com" };
             _userService.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
@@ -47,8 +45,7 @@ namespace Backend.Tests
         [Test]
         public void ResetExpired()
         {
-            var user = new User();
-            user.Email = "user@domain.com";
+            var user = new User() { Email = "user@domain.com" };
             _userService.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
@@ -60,7 +57,11 @@ namespace Backend.Tests
         [Test]
         public void ResetBadToken()
         {
-            return;
+            var user = new User() { Email = "user@domain.com" };
+            _userService.Create(user);
+
+            var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
+            Assert.IsFalse(_passwordResetService.ResetPassword("NotARealToken", "newPassword").Result);
         }
     }
 }

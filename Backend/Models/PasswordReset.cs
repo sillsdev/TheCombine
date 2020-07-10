@@ -36,7 +36,7 @@ namespace BackendFramework.Models
             Token = WebEncoders.Base64UrlEncode(byteToken);
         }
 
-        public PasswordReset(int expiretime, string email) : this(expiretime)
+        public PasswordReset(int expireTime, string email) : this(expireTime)
         {
             Email = email;
         }

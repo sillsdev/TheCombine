@@ -8,7 +8,7 @@ namespace Backend.Tests
 {
     public class PasswordResetContextMock : IPasswordResetContext
     {
-        protected List<PasswordReset> Resets;
+        private List<PasswordReset> Resets;
 
         public int ExpireTime => 15;
 
@@ -25,7 +25,7 @@ namespace Backend.Tests
 
         public Task<PasswordReset> FindByToken(string token)
         {
-            return Task.FromResult(Resets.FindAll(x => x.Token == token).Single());
+            return Task.FromResult(Resets.FindAll(x => x.Token == token).SingleOrDefault());
         }
 
         public List<PasswordReset> GetResets()
