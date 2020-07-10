@@ -16,6 +16,8 @@ namespace Backend.Tests
         private string _projId;
         private IPermissionService _permissionService;
 
+        private const string InvalidProjectId = "INVALID_PROJECT_ID";
+
         [SetUp]
         public void Setup()
         {
@@ -54,7 +56,14 @@ namespace Backend.Tests
 
             var roles = (getResult as ObjectResult).Value as List<UserRole>;
             Assert.That(roles, Has.Count.EqualTo(3));
-            _userRoleService.GetAllUserRoles(_projId).Result.ForEach(Role => Assert.Contains(Role, roles));
+            _userRoleService.GetAllUserRoles(_projId).Result.ForEach(role => Assert.Contains(role, roles));
+        }
+
+        [Test]
+        public void TestGetAllUserRolesMissingProject()
+        {
+            var result = _userRoleController.Get(InvalidProjectId).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
         [Test]
@@ -74,12 +83,28 @@ namespace Backend.Tests
         }
 
         [Test]
+        public void TestGetUserRolesMissingProject()
+        {
+            var userRole = _userRoleService.Create(RandomUserRole()).Result;
+            var result = _userRoleController.Get(InvalidProjectId, userRole.Id).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+        }
+
+        [Test]
         public void TestCreateUserRole()
         {
             var userRole = RandomUserRole();
             var id = (_userRoleController.Post(_projId, userRole).Result as ObjectResult).Value as string;
             userRole.Id = id;
             Assert.Contains(userRole, _userRoleService.GetAllUserRoles(_projId).Result);
+        }
+
+        [Test]
+        public void TestCreateUserRolesMissingProject()
+        {
+            var userRole = RandomUserRole();
+            var result = _userRoleController.Post(InvalidProjectId, userRole).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
         [Test]
@@ -98,6 +123,14 @@ namespace Backend.Tests
         }
 
         [Test]
+        public void TestUpdateUserRolesMissingProject()
+        {
+            var userRole = RandomUserRole();
+            var result = _userRoleController.Put(InvalidProjectId, userRole.Id, userRole).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
+        }
+
+        [Test]
         public void TestDeleteUserRole()
         {
             var origUserRole = _userRoleService.Create(RandomUserRole()).Result;
@@ -107,6 +140,13 @@ namespace Backend.Tests
             _ = _userRoleController.Delete(_projId, origUserRole.Id).Result;
 
             Assert.That(_userRoleService.GetAllUserRoles(_projId).Result, Has.Count.EqualTo(0));
+        }
+
+        [Test]
+        public void TestDeleteUserRolesMissingProject()
+        {
+            var result = _userRoleController.Delete(InvalidProjectId).Result;
+            Assert.IsInstanceOf<NotFoundObjectResult>(result);
         }
 
         [Test]

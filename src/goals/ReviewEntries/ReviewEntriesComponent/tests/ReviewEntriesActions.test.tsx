@@ -88,7 +88,6 @@ const oldWord: ReviewEntriesWord = {
 
 beforeEach(() => {
   mockBackendReturn(oldFrontierWord);
-
   mockStore.clearActions();
 });
 
