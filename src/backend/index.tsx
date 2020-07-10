@@ -455,7 +455,7 @@ export async function createLinkWithToken(
   emailAddress: string
 ): Promise<string> {
   let resp = await backendServer.put(
-    `projects/${projectId}/invite/${emailAddress}`,
+    `projects/invite/${projectId}/${emailAddress}`,
     {
       headers: authHeader(),
     }
@@ -469,7 +469,7 @@ export async function validateLink(
   token: string
 ): Promise<boolean> {
   let resp = await backendServer.put(
-    `projects/${projectId}/invite/validate/${userId}/${token}`,
+    `projects/invite/${projectId}/validate/${userId}/${token}`,
     {
       headers: authHeader(),
     }

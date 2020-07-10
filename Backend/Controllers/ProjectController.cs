@@ -172,7 +172,7 @@ namespace BackendFramework.Controllers
         /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
         /// <remarks> PUT: v1/projects/{projectId} </remarks>
         [HttpPut("{projectId}/characters")]
-        public async Task<IActionResult> PutChars(string projectId, [FromBody]Project project)
+        public async Task<IActionResult> PutChars(string projectId, [FromBody] Project project)
         {
             if (!_permissionService.HasProjectPermission(Permission.MergeAndCharSet, HttpContext))
             {
@@ -225,7 +225,7 @@ namespace BackendFramework.Controllers
 
         // Change user role using project Id
         [HttpPut("{projectId}/users/{userId}")]
-        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]int[] permissions)
+        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody] int[] permissions)
         {
             if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
             {
@@ -295,6 +295,32 @@ namespace BackendFramework.Controllers
             }
 
             return new OkObjectResult(_projectService.CanImportLift(projectId));
+        }
+
+        /// <summary> Generates invite link </summary>
+        /// <remarks> PUT: v1/projects/{projectId}/invite/{emailAddress} </remarks>
+        [HttpPut("invite/{projectId}/{emailAddress}")]
+        public async Task<IActionResult> CreateLinkWithToken(string projectId, string emailAddress)
+        {
+            var linkWithIdentifier = await _projectService.CreateLinkWithToken(projectId, emailAddress);
+
+            return new OkObjectResult(linkWithIdentifier);
+        }
+
+        /// <summary>  <see cref="User"/>s </summary>
+        /// <remarks> PUT: v1/projects/{projectId}/invite/validate/{userId}/{token} </remarks>
+        [HttpPut("invite/{projectId}/validate/{userId}/{token}")]
+        public async Task<IActionResult> ValidateToken(string projectId, string userId, string token)
+        {
+            var project = await _projectService.GetProject(projectId);
+            if (project.InviteTokens.Contains(token) && await _projectService.RemoveTokenAndCreateUserRole(project, userId, token))
+            {
+                return new OkObjectResult(true);
+            }
+            else
+            {
+                return new ForbidResult();
+            }
         }
     }
 }

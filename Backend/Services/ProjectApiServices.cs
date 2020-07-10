@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,10 +13,14 @@ namespace BackendFramework.Services
     public class ProjectService : IProjectService
     {
         private readonly IProjectContext _projectDatabase;
+        private readonly IUserService _userService;
+        private readonly IUserRoleService _userRoleService;
 
-        public ProjectService(IProjectContext collectionSettings)
+        public ProjectService(IProjectContext collectionSettings, IUserService userService, IUserRoleService userRoleService)
         {
             _projectDatabase = collectionSettings;
+            _userService = userService;
+            _userRoleService = userRoleService;
         }
 
         /// <summary> Finds all <see cref="Project"/>s </summary>
@@ -91,6 +96,54 @@ namespace BackendFramework.Services
             else
             {
                 return ResultOfUpdate.NoChange;
+            }
+        }
+
+        public async Task<string> CreateLinkWithToken(string projectId, string emailAddress)
+        {
+            var project = await GetProject(projectId);
+            var token = project.CreateToken();
+
+            string linkWithIdentifier = "v1/projects/" + projectId + "/" + token;
+            return linkWithIdentifier;
+        }
+        public async Task<bool> RemoveTokenAndCreateUserRole(Project project, string userId, string token)
+        {
+            try
+            {
+                project.InviteTokens.Remove(token);
+
+                var user = await _userService.GetUser(userId);
+                var userRole = new UserRole
+                {
+                    Permissions = new List<int>
+                {
+                    (int) Permission.MergeAndCharSet,
+                    (int) Permission.Unused,
+                    (int) Permission.WordEntry
+                },
+                    ProjectId = project.Id
+                };
+                userRole = await _userRoleService.Create(userRole);
+
+                // Update user with userRole
+                if (user.ProjectRoles.Equals(null))
+                {
+                    user.ProjectRoles = new Dictionary<string, string>();
+                }
+
+                // Generate the userRoles and update the user
+                user.ProjectRoles.Add(project.Id, userRole.Id);
+                await _userService.Update(userId, user);
+                // Generate the JWT based on those new userRoles
+                user = await _userService.MakeJwt(user);
+                await _userService.Update(userId, user);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 

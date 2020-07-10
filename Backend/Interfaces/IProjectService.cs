@@ -13,6 +13,8 @@ namespace BackendFramework.Interfaces
         Task<ResultOfUpdate> Update(string projectId, Project project);
         Task<bool> Delete(string projectId);
         Task<bool> DeleteAllProjects();
+        Task<string> CreateLinkWithToken(string projectId, string emailAddress);
+        Task<bool> RemoveTokenAndCreateUserRole(Project project, string userId, string token);
         bool CanImportLift(string projectId);
     }
 }
