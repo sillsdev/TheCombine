@@ -19,7 +19,7 @@ interface DeleteProjectButtonProps {
 }
 
 /**
- * Button for deleting a project (setting active=false)
+ * Button for deleting a project (setting isActive=false)
  */
 export default function DeleteProjectButton(
   props: ButtonProps & DeleteProjectButtonProps

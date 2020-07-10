@@ -204,7 +204,7 @@ export async function getAllActiveProjectsByUser(
   for (let projectId of projectIds) {
     try {
       await getProject(projectId).then((project) => {
-        project.active && projects.push(project);
+        project.isActive && projects.push(project);
       });
     } catch (err) {
       /*If there was an error, the project probably was manually deleted from the database.*/
@@ -231,7 +231,7 @@ export async function deleteProject(id: string) {
   let project = await backendServer.get(`projects/${id}`, {
     headers: authHeader(),
   });
-  project.data.active = false;
+  project.data.isActive = false;
   let resp = await backendServer.put(`projects/${id}`, project.data, {
     headers: authHeader(),
   });
@@ -242,7 +242,7 @@ export async function restoreProject(id: string) {
   let project = await backendServer.get(`projects/${id}`, {
     headers: authHeader(),
   });
-  project.data.active = true;
+  project.data.isActive = true;
   let resp = await backendServer.put(`projects/${id}`, project.data, {
     headers: authHeader(),
   });

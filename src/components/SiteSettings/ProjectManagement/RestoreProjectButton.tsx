@@ -19,9 +19,9 @@ interface RestoreProjectButtonProps {
 }
 
 /**
- * Button for restoring a deleted project (setting active=true)
+ * Button for restoring a deleted project (setting isActive=true)
  */
-export default function ExportProjectButton(
+export default function RestoreProjectButton(
   props: ButtonProps & RestoreProjectButtonProps
 ) {
   const [loading, setLoading] = React.useState<boolean>(false);

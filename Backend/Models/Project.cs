@@ -17,8 +17,8 @@ namespace BackendFramework.Models
         [BsonElement("name")]
         public string Name { get; set; }
 
-        [BsonElement("active")]
-        public bool Active { get; set; }
+        [BsonElement("isActive")]
+        public bool IsActive { get; set; }
 
         [BsonElement("semanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
@@ -54,7 +54,7 @@ namespace BackendFramework.Models
         {
             Id = "";
             Name = "";
-            Active = true;
+            IsActive = true;
             VernacularWritingSystem = "";
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<string>();
@@ -71,7 +71,7 @@ namespace BackendFramework.Models
             {
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
-                Active = Active,
+                IsActive = IsActive,
                 VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
                 SemanticDomains = new List<SemanticDomain>(),
                 AnalysisWritingSystems = new List<string>(),
@@ -118,7 +118,7 @@ namespace BackendFramework.Models
         {
             return
                 other.Name.Equals(Name) &&
-                other.Active.Equals(Active) &&
+                other.IsActive.Equals(IsActive) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
                 other.SemanticDomains.Count == SemanticDomains.Count &&
@@ -161,7 +161,7 @@ namespace BackendFramework.Models
             var hash = new HashCode();
             hash.Add(Id);
             hash.Add(Name);
-            hash.Add(Active);
+            hash.Add(IsActive);
             hash.Add(SemanticDomains);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
@@ -215,7 +215,7 @@ namespace BackendFramework.Models
         {
             Id = baseObj.Id;
             Name = baseObj.Name;
-            Active = baseObj.Active;
+            IsActive = baseObj.IsActive;
             PartsOfSpeech = baseObj.PartsOfSpeech;
             RejectedCharacters = baseObj.RejectedCharacters;
             SemanticDomains = baseObj.SemanticDomains;

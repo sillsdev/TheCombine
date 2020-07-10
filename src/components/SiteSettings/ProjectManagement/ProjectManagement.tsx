@@ -34,8 +34,8 @@ export class ProjectManagement extends React.Component<
   updateProjectList = () => {
     getAllProjects().then((projects) => {
       this.setState({
-        activeProjects: projects.filter((project) => project.active),
-        deletedProjects: projects.filter((project) => !project.active),
+        activeProjects: projects.filter((project) => project.isActive),
+        deletedProjects: projects.filter((project) => !project.isActive),
       });
     });
   };
@@ -46,7 +46,7 @@ export class ProjectManagement extends React.Component<
         <ListItem key={project.id}>
           <Typography
             variant="h6"
-            color={project.active ? "inherit" : "textSecondary"}
+            color={project.isActive ? "inherit" : "textSecondary"}
             style={{ marginRight: theme.spacing(1) }}
           >
             {project.name}
@@ -57,7 +57,7 @@ export class ProjectManagement extends React.Component<
             style={{ marginRight: theme.spacing(1) }}
           />
           {/* Delete active project or restore deleted project. */}
-          {project.active ? (
+          {project.isActive ? (
             <DeleteProjectButton
               projectId={project.id}
               updateParent={this.updateProjectList}
