@@ -99,13 +99,7 @@ in a browser.
 
 ##### Backend Code Coverage Report
 
-First run the `coverage` job to generate the coverage info: 
-
-```batch
-> npm run coverage
-```
-
-Then generate the HTML coverage report:
+After `npm run coverage` has run, generate the HTML coverage report:
 
 ```batch
 > npm run gen-backend-coverage-report
