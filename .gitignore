@@ -19,6 +19,7 @@ production.yml
 .env.development.local
 .env.test.local
 .env.production.local
+.env.web.auth
 Session.vim
 setupMongo.js
 dropDB.js
