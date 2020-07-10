@@ -25,7 +25,7 @@ A rapid word collection tool.
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
        using the appropriate Node.js version.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-     - On Ubuntu 18.04, follow these 
+     - On Ubuntu 18.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
    - [MongoDB Server](https://docs.mongodb.com/manual/administration/install-community/) and add
      /bin to PATH Environment Variable
@@ -55,8 +55,8 @@ In the project directory, you can run:
 
 ### `npm start`
 
-> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set 
- [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable. 
+> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set
+> [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable.
 
 Installs the necessary packages and runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -142,6 +142,15 @@ To completely erase the current Mongo database, run:
 > npm run drop-database
 ```
 
+### Add property `isActive: true` to every project in the database
+
+If any projects were created before #489 was merged, it won't have the necessary `isActive` property.
+To ensure every project in the database has that property, run:
+
+```batch
+> npm run add-isactive-property-to-all-projects
+```
+
 ### Create Database Admin User
 
 ### Create a New Admin User
@@ -169,14 +178,14 @@ password environment variables.
 ```
 
 This will create the user and exit. If successful, the exit code will be `0`,
-otherwise an error will be logged and the exit code will be non-`0`. 
+otherwise an error will be logged and the exit code will be non-`0`.
 
 **Important**: Remove the `ASPNETCORE_*` environment variables from
 `.env.web.auth` so that subsequent launches will start up the backend.
 
-### (Development Only) Grant an Existing User Admin Rights 
+### (Development Only) Grant an Existing User Admin Rights
 
-To grant an *existing* user database administrator rights (all permissions for
+To grant an _existing_ user database administrator rights (all permissions for
 all database objects), create a user normally and then execute:
 
 ```batch
@@ -225,7 +234,7 @@ To stop and remove any stored data:
 
 #### SSL Certificates
 
-To update SSL certificates after images have been built, find the 
+To update SSL certificates after images have been built, find the
 NGINX container name. By default this will be formatted as
 `<lowercase_parent_dir>_nginx_1`.
 
