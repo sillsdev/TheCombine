@@ -138,7 +138,8 @@
       "Le enviaremos un enlace de restablecimiento único para su cuenta a su correo electrónico"
     ],
     "submit": ["Submit", "Enviar"],
-    "resetFail": ["Password reset expired", "Error al restablecer contraseña"]
+    "resetFail": ["Password reset expired", "Error al restablecer contraseña"],
+    "emailError": ["Email doesn't exist"]
   },
   "userMenu": {
     "siteSettings": [

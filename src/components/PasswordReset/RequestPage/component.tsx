@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Translate, LocalizeContextProps } from "react-localize-redux";
 import { Typography, Card, Button, Grid, TextField } from "@material-ui/core";
+import { isEmailTaken } from "../../../backend";
 
 export interface ResetRequestProps {}
 
@@ -10,6 +11,7 @@ export interface ResetRequestDispatchProps {
 
 export interface ResetRequestState {
   email: string;
+  emailExists: boolean;
 }
 
 export default class ResetRequest extends React.Component<
@@ -20,7 +22,7 @@ export default class ResetRequest extends React.Component<
     props: ResetRequestProps & ResetRequestDispatchProps & LocalizeContextProps
   ) {
     super(props);
-    this.state = { email: "" };
+    this.state = { emailExists: false, email: "" };
   }
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
@@ -28,12 +30,14 @@ export default class ResetRequest extends React.Component<
     event.preventDefault();
   };
 
-  setEmail = (email: string) => {
+  async setEmail(email: string) {
+    let emailTaken: boolean = await isEmailTaken(email);
     this.setState((prevState) => ({
       ...prevState,
       email: email,
+      emailExists: emailTaken,
     }));
-  };
+  }
 
   render() {
     return (
@@ -53,6 +57,13 @@ export default class ResetRequest extends React.Component<
                   label={<Translate id="login.email" />}
                   value={this.state.email}
                   style={{ width: "100%" }}
+                  error={!this.state.emailExists && this.state.email.length > 1}
+                  helperText={
+                    !this.state.emailExists &&
+                    this.state.email.length > 1 && (
+                      <Translate id="passwordReset.emailError" />
+                    )
+                  }
                   margin="normal"
                   onChange={(e) => this.setEmail(e.target.value)}
                 />
@@ -61,6 +72,7 @@ export default class ResetRequest extends React.Component<
                 <Button
                   variant="contained"
                   color="primary"
+                  disabled={!this.state.emailExists}
                   onClick={this.onSubmit}
                 >
                   <Translate id="passwordReset.submit" />
