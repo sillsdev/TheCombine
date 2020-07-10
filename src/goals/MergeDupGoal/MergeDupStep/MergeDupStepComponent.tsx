@@ -33,6 +33,7 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import { ArrowForwardIos } from "@material-ui/icons";
+import * as backend from "../../../backend";
 
 export interface SideBar {
   senses: { id: string; data: TreeDataSense }[];
@@ -273,7 +274,7 @@ class MergeDupStep extends React.Component<
           >
             <DragDropContext onDragEnd={(res) => this.handleDrop(res)}>
               {Object.keys(this.props.words).map((key) => (
-                <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
+                <GridListTile key={key} style={{ height: "50vh", margin: 8 }}>
                   <MergeRow
                     sideBar={this.state.sideBar}
                     setSidebar={(el) =>
@@ -313,7 +314,9 @@ class MergeDupStep extends React.Component<
               float: "right",
               marginRight: 30,
             }}
-            onClick={(_) => this.saveContinue()}
+            onClick={(_) =>
+              backend.validateLink("5f073db57c087c338ca0f413", "jgaynier", "hi")
+            }
             title={this.props.translate("mergeDups.helpText.next") as string}
           >
             <Translate id="goal.mergeDups.done" />

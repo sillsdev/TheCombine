@@ -5,6 +5,8 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace BackendFramework.Models
 {
@@ -47,6 +49,9 @@ namespace BackendFramework.Models
         [BsonElement("partsOfSpeech")]
         public List<string> PartsOfSpeech { get; set; }
 
+        [BsonElement("inviteToken")]
+        public List<string> InviteTokens { get; set; }
+
         public Project()
         {
             Id = "";
@@ -59,6 +64,7 @@ namespace BackendFramework.Models
             CustomFields = new List<CustomField>();
             WordFields = new List<string>();
             PartsOfSpeech = new List<string>();
+            InviteTokens = new List<string>();
         }
 
         public Project Clone()
@@ -74,7 +80,8 @@ namespace BackendFramework.Models
                 RejectedCharacters = new List<string>(),
                 CustomFields = new List<CustomField>(),
                 WordFields = new List<string>(),
-                PartsOfSpeech = new List<string>()
+                PartsOfSpeech = new List<string>(),
+                InviteTokens = new List<string>()
             };
 
             foreach (var sd in SemanticDomains)
@@ -105,6 +112,10 @@ namespace BackendFramework.Models
             {
                 clone.PartsOfSpeech.Add(pos.Clone() as string);
             }
+            foreach (var it in InviteTokens)
+            {
+                clone.InviteTokens.Add(it.Clone() as string);
+            }
 
             return clone;
         }
@@ -134,7 +145,22 @@ namespace BackendFramework.Models
                 other.WordFields.All(WordFields.Contains) &&
 
                 other.PartsOfSpeech.Count == PartsOfSpeech.Count &&
-                other.PartsOfSpeech.All(PartsOfSpeech.Contains);
+                other.PartsOfSpeech.All(PartsOfSpeech.Contains) &&
+
+                other.InviteTokens.Count == InviteTokens.Count &&
+                other.InviteTokens.All(InviteTokens.Contains);
+        }
+
+        private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
+        private const int TokenSize = 8;
+
+        public string CreateToken()
+        {
+            var byteToken = new byte[TokenSize];
+            Rng.GetBytes(byteToken);
+            var token = WebEncoders.Base64UrlEncode(byteToken);
+            InviteTokens.Add(token);
+            return token;
         }
 
         public override bool Equals(object obj)
@@ -163,6 +189,7 @@ namespace BackendFramework.Models
             hash.Add(CustomFields);
             hash.Add(WordFields);
             hash.Add(PartsOfSpeech);
+            hash.Add(InviteTokens);
             return hash.ToHashCode();
         }
     }
@@ -208,14 +235,15 @@ namespace BackendFramework.Models
         {
             Id = baseObj.Id;
             Name = baseObj.Name;
-            PartsOfSpeech = baseObj.PartsOfSpeech;
-            RejectedCharacters = baseObj.RejectedCharacters;
             SemanticDomains = baseObj.SemanticDomains;
             VernacularWritingSystem = baseObj.VernacularWritingSystem;
-            WordFields = baseObj.WordFields;
             AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
-            CustomFields = baseObj.CustomFields;
             ValidCharacters = baseObj.ValidCharacters;
+            RejectedCharacters = baseObj.RejectedCharacters;
+            CustomFields = baseObj.CustomFields;
+            WordFields = baseObj.WordFields;
+            PartsOfSpeech = baseObj.PartsOfSpeech;
+            InviteTokens = baseObj.InviteTokens;
             AutocompleteSetting = baseObj.AutocompleteSetting;
         }
     }
