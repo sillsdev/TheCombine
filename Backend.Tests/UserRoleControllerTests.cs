@@ -67,6 +67,14 @@ namespace Backend.Tests
         }
 
         [Test]
+        public void TestGetAllUserRolesNoPermission()
+        {
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _userRoleController.Get(_projId).Result;
+            Assert.IsInstanceOf<ForbidResult>(result);
+        }
+
+        [Test]
         public void TestGetUserRole()
         {
             var userRole = _userRoleService.Create(RandomUserRole()).Result;
@@ -94,7 +102,8 @@ namespace Backend.Tests
         public void TestGetUserRolesNoPermission()
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _userRoleController.Get(_projId).Result;
+            var userRole = _userRoleService.Create(RandomUserRole()).Result;
+            var result = _userRoleController.Get(_projId, userRole.Id).Result;
             Assert.IsInstanceOf<ForbidResult>(result);
         }
 
