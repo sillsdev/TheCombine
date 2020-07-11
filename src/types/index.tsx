@@ -8,6 +8,7 @@ import { Project } from "./project";
 import { MergeDuplicateState } from "../goals/MergeDupGoal/mergeDuplicateReducer";
 import { TreeViewState } from "../components/TreeView/TreeViewReducer";
 import { ReviewEntriesState } from "../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { PasswordResetState } from "../components/PasswordReset/reducer";
 
 //root store structure
 export interface StoreState {
@@ -33,6 +34,9 @@ export interface StoreState {
 
   // View Final goal
   reviewEntriesState: ReviewEntriesState;
+
+  // Password Reset
+  passwordResetState: PasswordResetState;
 
   //temporary
   tempState: TempState;
