@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using BackendFramework.Contexts;
 using BackendFramework.Helper;
@@ -37,10 +37,31 @@ namespace BackendFramework
         {
             public string ConnectionString { get; set; }
             public string CombineDatabase { get; set; }
+            public string SmtpServer { get; set; }
+            public int SmtpPort { get; set; }
+            public string SmtpUsername { get; set; }
+            public string SmtpPassword { get; set; }
+            public string SmtpAddress { get; set; }
+            public string SmtpFrom { get; set; }
+            public int PassResetExpireTime { get; set; }
         }
 
         private class EnvironmentNotConfiguredException : Exception
         {
+        }
+
+        private string CheckedEnvironmentVariable(string name, string def, string error = "")
+        {
+            var contents = Environment.GetEnvironmentVariable(name);
+            if (contents != null)
+            {
+                return contents;
+            }
+            else
+            {
+                _logger.LogError(String.Format("Environment variable: `{0}` is not defined. {1}", name, error));
+                return def;
+            }
         }
 
         /// <summary> Determine if executing within a container (e.g. Docker). </summary>
@@ -106,12 +127,20 @@ namespace BackendFramework
                 //    is malformed data, such as an integer sent as a string ("10"). .NET Core 3.0's JSON parser
                 //    no longer automatically tries to coerce these values.
                 .AddNewtonsoftJson();
+
             services.Configure<Settings>(
                 options =>
                 {
                     var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
                     options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
                     options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
+                options.SmtpServer = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_SERVER", null, "Email services will not work");
+                options.SmtpPort = int.Parse(this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_PORT", null, "Email services will not work"));
+                options.SmtpUsername = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_USERNAME", null, "Email services will not work");
+                options.SmtpPassword = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_PASSWORD", null, "Email services will not work");
+                options.SmtpAddress = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_ADDRESS", null, "Email services will not work");
+                options.SmtpFrom = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_FROM", null, "Email services will not work");
+                options.PassResetExpireTime = int.Parse(this.CheckedEnvironmentVariable("ASPNETCORE_PASSWORD_RESET_EXPIRE_TIME", "15"));
                 });
 
             // Register concrete types for dependency injection
@@ -144,6 +173,14 @@ namespace BackendFramework
 
             // Permission types
             services.AddTransient<IPermissionService, PermissionService>();
+
+            // Email types
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IEmailContext, EmailContext>();
+
+            // Password ResetTypes
+            services.AddTransient<IPasswordResetContext, PasswordResetContext>();
+            services.AddTransient<IPasswordResetService, PasswordResetService>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

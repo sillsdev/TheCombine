@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Models;
@@ -16,6 +16,6 @@ namespace BackendFramework.Interfaces
         Task<bool> DeleteAllUsers();
         Task<User> Authenticate(string username, string password);
         Task<User> MakeJwt(User user);
-        Task<ResultOfUpdate> ChangePassword(string userid, string password);
+        Task<ResultOfUpdate> ChangePassword(string userId, string password);
     }
 }
