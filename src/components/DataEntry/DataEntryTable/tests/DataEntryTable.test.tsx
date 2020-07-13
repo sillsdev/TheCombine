@@ -48,7 +48,7 @@ beforeEach(() => {
           domain={mockDomainTree}
           semanticDomain={mockSemanticDomain}
           displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
-          domainWords={[]}
+          showExistingData={jest.fn()}
           isSmallScreen={false}
           getWordsFromBackend={jest.fn()}
         />
