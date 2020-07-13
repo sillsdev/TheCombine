@@ -50,6 +50,7 @@ describe("Test the TreeViewReducer", () => {
             subdomains: [...subdomains],
           },
         ],
+        questions: [],
       },
     };
     expected.currentDomain.subdomains[0].subdomains.map((value) => {
