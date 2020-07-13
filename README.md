@@ -41,17 +41,17 @@ A rapid word collection tool.
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
    it in your `.profile` (Linux) or the _System_ app (Windows).
-6. If you want the email services to work you will need to set the following environment variables:
+5. If you want the email services to work you will need to set the following environment variables:
    - `ASPNETCORE_SMTP_SERVER`
    - `ASPNETCORE_SMTP_PORT`
    - `ASPNETCORE_SMTP_USERNAME`
    - `ASPNETCORE_SMTP_PASSWORD`
    - `ASPNETCORE_SMTP_ADDRESS`
    - `ASPNETCORE_SMTP_FROM`
-5. (VS Code Users Only) Enable automatic formatting on save.
+6. (VS Code Users Only) Enable automatic formatting on save.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
-6. Run `npm start` from the project directory to install dependencies and start
+7. Run `npm start` from the project directory to install dependencies and start
    the project
 
 [chocolatey]: https://chocolatey.org/
@@ -147,15 +147,6 @@ To completely erase the current Mongo database, run:
 
 ```batch
 > npm run drop-database
-```
-
-### Add property `isActive: true` to every project in the database
-
-If any projects were created before #489 was merged, it won't have the necessary `isActive` property.
-To ensure every project in the database has that property, run:
-
-```batch
-> npm run add-isactive-property-to-all-projects
 ```
 
 ### Create Database Admin User

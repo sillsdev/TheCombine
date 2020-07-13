@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "add-isactive-property-to-all-projects": "tsc addIsActivePropToAllProjects.ts && node addIsActivePropToAllProjects.js",
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
     "coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov && react-scripts test --coverage --watchAll=false",
