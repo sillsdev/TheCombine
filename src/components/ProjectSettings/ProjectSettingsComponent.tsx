@@ -137,7 +137,7 @@ class ProjectSettingsComponent extends React.Component<
             {/* Export Lift file */}
             <BaseSettingsComponent
               icon={<GetApp />}
-              title={<Translate id="projectSettings.export" />}
+              title={<Translate id="projectSettings.exportProject.label" />}
               body={<ExportProjectButton />}
             />
 

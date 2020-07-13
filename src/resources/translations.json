@@ -190,7 +190,7 @@
   },
   "siteSettings": {
     "archiveProject": {
-      "button": ["Archive Project", "Archivar proyecto", "Archiver projet"],
+      "button": ["Archive", "Archivar", "Archiver"],
       "warnTitle": [
         "Proceed with Caution!",
         "¡Proceder con precaución!",
@@ -213,7 +213,7 @@
       ]
     },
     "restoreProject": {
-      "button": ["Restore Project", "Restaurar proyecto", "Restaurer projet"],
+      "button": ["Restore", "Restaurar", "Restaurer"],
       "warnTitle": [
         "Proceed with Caution!",
         "¡Proceder con precaución!",
@@ -288,11 +288,14 @@
         "admin": ["Admin", "Administración", "Admin"]
       }
     },
-    "export": [
-      "Export Project",
-      "Proyecto de exportación",
-      "Exporter le projet"
-    ],
+    "exportProject": {
+      "label": [
+        "Export Project",
+        "Proyecto de exportación",
+        "Exporter le projet"
+      ],
+      "button": ["Export", "Exportar", "Exporter"]
+    },
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
       "off": ["Off", "Apagar", "Éteint"],
