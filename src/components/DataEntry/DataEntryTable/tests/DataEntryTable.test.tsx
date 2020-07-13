@@ -10,7 +10,7 @@ import { SemanticDomain, Word, State } from "../../../../types/word";
 import { defaultProject as mockProject } from "../../../../types/project";
 import { defaultState } from "../../../App/DefaultState";
 import { filterWords } from "../../DataEntryComponent";
-import { mockDomainTree } from "../../tests/MockDomainTree";
+import { baseDomain } from "../../../../types/SemanticDomain";
 import { mockWord } from "../../tests/MockWord";
 import DataEntryTable from "../DataEntryTable";
 import { NewEntry } from "../NewEntry/NewEntry";
@@ -39,17 +39,20 @@ jest.mock("../../../../backend", () => {
 var testRenderer: ReactTestRenderer;
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
+const hideQuestionsMock = jest.fn();
 
 beforeEach(() => {
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <DataEntryTable
-          domain={mockDomainTree}
+          domain={baseDomain}
           semanticDomain={mockSemanticDomain}
           displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
-          domainWords={[]}
           isSmallScreen={false}
+          hideQuestions={hideQuestionsMock}
+          getWordsFromBackend={jest.fn()}
+          showExistingData={jest.fn()}
         />
       </Provider>
     );
@@ -185,5 +188,11 @@ describe("Tests DataEntryTable", () => {
         done();
       }
     );
+  });
+
+  it("calls hideQuestions when complete is clicked", () => {
+    jest.clearAllMocks();
+    testRenderer.root.findByProps({ id: "complete" }).props.onClick();
+    expect(hideQuestionsMock).toBeCalledTimes(1);
   });
 });
