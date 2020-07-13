@@ -51,8 +51,10 @@ beforeEach(() => {
           displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
           isSmallScreen={false}
           hideQuestions={hideQuestionsMock}
-          getWordsFromBackend={jest.fn()}
-          showExistingData={jest.fn()}
+          getWordsFromBackend={() => {
+            return new Promise(() => []);
+          }}
+          showExistingData={() => {}}
         />
       </Provider>
     );
