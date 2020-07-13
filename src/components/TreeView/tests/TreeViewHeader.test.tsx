@@ -19,6 +19,7 @@ var event = {
 var treeMaster: ReactTestRenderer;
 var treeHandle: TreeViewHeader;
 const MOCK_ANIMATE = jest.fn();
+const MOCK_BOUNCE = jest.fn();
 
 beforeEach(() => {
   setTree(MockDomain.subdomains[1]);
@@ -38,6 +39,7 @@ describe("Tests TreeViewHeader", () => {
     treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
 
     expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
+    expect(MOCK_BOUNCE).toHaveBeenCalled();
     expect(treeHandle.state.input).toEqual("");
     expect(event.target.value).toEqual("");
   });
@@ -140,7 +142,12 @@ describe("Tests TreeViewHeader", () => {
 function setTree(domain: SemanticDomainWithSubdomains) {
   renderer.act(() => {
     treeMaster = renderer.create(
-      <TreeViewHeader currentDomain={domain} animate={MOCK_ANIMATE} />
+      <TreeViewHeader
+        currentDomain={domain}
+        animate={MOCK_ANIMATE}
+        bounceState={Math.random()}
+        bounce={MOCK_BOUNCE}
+      />
     );
   });
   treeHandle = treeMaster.root.findByType(TreeViewHeader).instance;

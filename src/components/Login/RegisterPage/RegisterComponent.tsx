@@ -18,6 +18,7 @@ import { Check } from "@material-ui/icons";
 import history from "../../../history";
 import { buttonSuccess } from "../../../types/theme";
 import { isUsernameTaken, isEmailTaken } from "../../../backend";
+import { passwordRequirements } from "../../../utilities";
 
 export interface RegisterDispatchProps {
   register?: (
@@ -118,7 +119,7 @@ class Register extends React.Component<
     // error checking
     let error = { ...this.state.error };
     error.name = name === "";
-    error.password = pass.length < 8;
+    error.password = !passwordRequirements(pass);
     error.user = user === "";
     error.confirmPassword = pass !== confPass;
     error.email = email === "";

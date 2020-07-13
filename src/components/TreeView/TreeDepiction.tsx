@@ -1,9 +1,5 @@
+import { Grid, GridList, GridListTile } from "@material-ui/core";
 import React, { ReactNode } from "react";
-import { GridList, GridListTile, Grid } from "@material-ui/core";
-import DomainTile, { Direction } from "./DomainTile";
-import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
-import TreeViewHeader from "./TreeViewHeader";
-
 // Images
 import {
   endcapLeft,
@@ -16,6 +12,9 @@ import {
   teeUpLeft,
   teeUpRight,
 } from "../../resources/tree";
+import DomainTile, { Direction } from "./DomainTile";
+import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
+import TreeViewHeader from "./TreeViewHeader";
 
 export const MAX_TILE_WIDTH = 150;
 export const MIN_TILE_WIDTH = 75;
@@ -27,6 +26,7 @@ interface TreeDepictionProps {
 
 interface TreeDepictionState {
   tileWidth: number;
+  bounce: number;
 }
 
 export default class TreeDepiction extends React.Component<
@@ -35,7 +35,7 @@ export default class TreeDepiction extends React.Component<
 > {
   constructor(props: TreeDepictionProps) {
     super(props);
-    this.state = { tileWidth: 0 };
+    this.state = { tileWidth: 0, bounce: 0 };
 
     // Bind functions
     this.updateTileWidth = this.updateTileWidth.bind(this);
@@ -115,7 +115,10 @@ export default class TreeDepiction extends React.Component<
           <GridListTile>
             <DomainTile
               domain={subdomains[0]}
-              onClick={this.props.animate}
+              onClick={(e) => {
+                this.props.animate(e);
+                this.setState({ bounce: Math.random() });
+              }}
               direction={Direction.Up}
             />
           </GridListTile>
@@ -173,7 +176,10 @@ export default class TreeDepiction extends React.Component<
           <GridListTile key={domainIndex + "DomainTile"}>
             <DomainTile
               domain={this.props.currentDomain.subdomains[domainIndex]}
-              onClick={this.props.animate}
+              onClick={(e) => {
+                this.props.animate(e);
+                this.setState({ bounce: Math.random() });
+              }}
               direction={Direction.Up}
             />
           </GridListTile>
@@ -210,6 +216,10 @@ export default class TreeDepiction extends React.Component<
           <TreeViewHeader
             currentDomain={this.props.currentDomain}
             animate={this.props.animate}
+            bounceState={this.state.bounce}
+            bounce={() => {
+              this.setState({ bounce: Math.random() });
+            }}
           />
         </Grid>
         {/* Optionally create the header for the parent domain */}
@@ -225,7 +235,10 @@ export default class TreeDepiction extends React.Component<
               <GridListTile>
                 <DomainTile
                   domain={this.props.currentDomain.parentDomain}
-                  onClick={this.props.animate}
+                  onClick={(e) => {
+                    this.props.animate(e);
+                    this.setState({ bounce: Math.random() });
+                  }}
                   direction={Direction.Down}
                 />
               </GridListTile>
