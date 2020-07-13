@@ -16,7 +16,7 @@ production.yml
 # Misc
 .DS_Store
 .env*.local
-.env.web.auth
+.env*.auth
 Session.vim
 /*.js
 
