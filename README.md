@@ -41,6 +41,13 @@ A rapid word collection tool.
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
    it in your `.profile` (Linux) or the _System_ app (Windows).
+6. If you want the email services to work you will need to set the following environment variables:
+   - `ASPNETCORE_SMTP_SERVER`
+   - `ASPNETCORE_SMTP_PORT`
+   - `ASPNETCORE_SMTP_USERNAME`
+   - `ASPNETCORE_SMTP_PASSWORD`
+   - `ASPNETCORE_SMTP_ADDRESS`
+   - `ASPNETCORE_SMTP_FROM`
 5. (VS Code Users Only) Enable automatic formatting on save.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
@@ -160,7 +167,7 @@ The exit code will be set to `0` on success and non-`0` otherwise.
 
 #### Docker
 
-Copy `.env.web.auth.template` to `.env.web.auth` add fill in the username and
+Copy `.env.backend.auth.template` to `.env.backend.auth` add fill in the username and
 password environment variables.
 
 ```batch
@@ -172,7 +179,7 @@ This will create the user and exit. If successful, the exit code will be `0`,
 otherwise an error will be logged and the exit code will be non-`0`. 
 
 **Important**: Remove the `ASPNETCORE_*` environment variables from
-`.env.web.auth` so that subsequent launches will start up the backend.
+`.env.backend.auth` so that subsequent launches will start up the backend.
 
 ### (Development Only) Grant an Existing User Admin Rights 
 
@@ -225,24 +232,24 @@ To stop and remove any stored data:
 
 #### SSL Certificates
 
-To update SSL certificates after images have been built, find the 
-NGINX container name. By default this will be formatted as
-`<lowercase_parent_dir>_nginx_1`.
+To update SSL certificates after images have been built and are running, 
+find the `frontend` container name. By default this will be formatted as
+`<lowercase_parent_dir>_frontend_1`.
 
 ```batch
-> docker-compose
-    Container           Repository       Tag       Image Id       Size
-------------------------------------------------------------------------
-thecombine_db_1      mongo              4.2      66c68b650ad4   387.8 MB
-thecombine_nginx_1   thecombine_nginx   latest   a2057141b19d   30.36 MB
-thecombine_web_1     thecombine_web     latest   9d84ce0474b6   291.3 MB
+> docker-compose images
+      Container             Repository         Tag       Image Id       Size
+------------------------------------------------------------------------------
+thecombine_backend_1    thecombine_backend    latest   73cf7b867c22   292.2 MB
+thecombine_database_1   mongo                 4.2      2b2cc1f48aed   387.8 MB
+thecombine_frontend_1   thecombine_frontend   latest   7cca1c1f1a5f   32.55 MB
 ```
 
 Copy new certificates from local filesystem into the container:
 
 ```batch
-> docker cp new_cert.pem thecombine_nginx_1:/ssl/cert.pem
-> docker cp new_key.pem thecombine_nginx_1:/ssl/key.pem
+> docker cp new_cert.pem thecombine_frontend_1:/ssl/cert.pem
+> docker cp new_key.pem thecombine_frontend_1:/ssl/key.pem
 ```
 
 Restart the Docker Compose project:
@@ -259,7 +266,7 @@ Create a file `production.yml`, and override build arguments as needed.
 ```yaml
 version: "3.8"
 services:
-  nginx:
+  frontend:
     build:
       args:
         - CAPTCHA_REQUIRED=false
