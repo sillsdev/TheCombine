@@ -3,7 +3,6 @@ import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { getAllProjects } from "../../../backend";
-import { setProjectId } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import theme from "../../../types/theme";
 import ExportProjectButton from "../../ProjectSettings/ProjectExport/ExportProjectButton";
@@ -26,8 +25,6 @@ export class ProjectManagement extends React.Component<
       activeProjects: [],
       archivedProjects: [],
     };
-
-    setProjectId("");
     this.updateProjectList();
   }
 
