@@ -93,7 +93,7 @@ export class DataEntryComponent extends React.Component<
       displaySemanticDomain: true,
       existingWords: [],
       domainWords: [],
-      isSmallScreen: false, //window.matchMedia("(max-width: 960px)").matches,
+      isSmallScreen: window.matchMedia("(max-width: 960px)").matches,
       drawerOpen: false,
       questionsVisible: false,
     };
