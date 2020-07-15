@@ -208,6 +208,30 @@ namespace BackendFramework.Services
             return string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
         }
 
+        /// <summary> Finds <see cref="User"/> with specified userId and changes it's password </summary>
+        public async Task<ResultOfUpdate> ChangePassword(string userId, string password)
+        {
+            var hash = PasswordHash.HashPassword(password);
+
+            var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
+            var updateDef = Builders<User>.Update
+                .Set(x => x.Password, Convert.ToBase64String(hash));
+
+            var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
+            if (!updateResult.IsAcknowledged)
+            {
+                return ResultOfUpdate.NotFound;
+            }
+            else if (updateResult.ModifiedCount > 0)
+            {
+                return ResultOfUpdate.Updated;
+            }
+            else
+            {
+                return ResultOfUpdate.NoChange;
+            }
+        }
+
         /// <summary> Adds a <see cref="User"/> </summary>
         /// <returns> The <see cref="User"/> created, or null if the user could not be created. </returns>
         public async Task<User> Create(User user)
@@ -245,7 +269,7 @@ namespace BackendFramework.Services
 
         /// <summary> Updates <see cref="User"/> with specified userId </summary>
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation </returns>
-        public async Task<ResultOfUpdate> Update(string userId, User user)
+        public async Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
             var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
 
@@ -271,7 +295,14 @@ namespace BackendFramework.Services
                 updateDef = updateDef.Set(x => x.Token, user.Token);
             }
 
-            // Do not update admin privileges
+            // Do not allow updating admin privileges unless explicitly allowed
+            //     (e.g. admin creation CLI).
+            // This prevents a user from modifying this field and privilege escalating.
+            if (updateIsAdmin)
+            {
+                updateDef = updateDef.Set(x => x.IsAdmin, user.IsAdmin);
+            }
+
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
             if (!updateResult.IsAcknowledged)
             {
@@ -287,6 +318,7 @@ namespace BackendFramework.Services
             }
         }
     }
+
     public class ProjectPermissions
     {
         public ProjectPermissions(string projectId, List<int> permissions)

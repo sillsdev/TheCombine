@@ -6,8 +6,8 @@
 .pnp.js
 
 # Testing
-/coverage
-/Backend.Tests/coverage.json
+/coverage*
+/Backend.Tests/coverage*
 
 # Production
 /build
@@ -19,10 +19,12 @@ production.yml
 .env.development.local
 .env.test.local
 .env.production.local
+.env.backend.auth
 Session.vim
 setupMongo.js
 dropDB.js
 setAdminUser.js
+genBackendCoverageReport.js
 
 npm-debug.log*
 yarn-debug.log*
