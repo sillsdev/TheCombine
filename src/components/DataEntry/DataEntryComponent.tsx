@@ -78,6 +78,21 @@ export function filterWordsByDomain(
   return domainWords;
 }
 
+export function sortDomainWordByVern(
+  existingWords: Word[],
+  domain: SemanticDomain
+): DomainWord[] {
+  let domainWords: DomainWord[] = filterWordsByDomain(existingWords, domain);
+  domainWords.sort((a, b) =>
+    a.word.vernacular.length < 1
+      ? -1
+      : a.word.vernacular < b.word.vernacular
+      ? -1
+      : 1
+  );
+  return domainWords;
+}
+
 /**
  * Allows users to add words to a project, add senses to an existing word,
  * and add the current semantic domain to a sense
@@ -116,21 +131,6 @@ export class DataEntryComponent extends React.Component<
     this.setState({
       drawerOpen: openClose,
     });
-
-  sortDomainWordByVern(): DomainWord[] {
-    let domainWords: DomainWord[] = filterWordsByDomain(
-      this.state.existingWords,
-      this.props.domain
-    );
-    domainWords.sort((a, b) =>
-      a.word.vernacular.length < 1
-        ? -1
-        : a.word.vernacular < b.word.vernacular
-        ? -1
-        : 1
-    );
-    return domainWords;
-  }
 
   async getWordsFromBackend(): Promise<Word[]> {
     let words = await getFrontierWords();
@@ -177,8 +177,6 @@ export class DataEntryComponent extends React.Component<
             domain={this.props.domain}
             typeDrawer={this.state.isSmallScreen}
             domainWords={this.state.domainWords}
-            drawerOpen={this.state.drawerOpen}
-            toggleDrawer={this.toggleDrawer}
           />
 
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
@@ -187,7 +185,10 @@ export class DataEntryComponent extends React.Component<
               returnControlToCaller={() => {
                 this.getWordsFromBackend().then(() => {
                   this.setState({
-                    domainWords: this.sortDomainWordByVern(),
+                    domainWords: sortDomainWordByVern(
+                      this.state.existingWords,
+                      this.props.domain
+                    ),
                     displaySemanticDomain: false,
                   });
                 });
