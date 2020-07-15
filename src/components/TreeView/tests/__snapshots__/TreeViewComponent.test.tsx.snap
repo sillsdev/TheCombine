@@ -10,394 +10,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
   >
     <div
       className="MuiGrid-root MuiGrid-item"
-    >
-      <ul
-        className="MuiGridList-root"
-        style={
-          Object {
-            "margin": -0,
-            "width": 375,
-          }
-        }
-      >
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          >
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
-              disabled={false}
-              id="1.0"
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              style={
-                Object {
-                  "bottom": 0,
-                  "height": "95%",
-                  "left": 0,
-                  "margin": "2.5%",
-                  "width": "95%",
-                }
-              }
-              tabIndex={0}
-              type="button"
-            >
-              <span
-                className="MuiButton-label"
-              >
-                <div>
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                    />
-                  </svg>
-                  <div
-                    style={
-                      Object {
-                        "textTransform": "capitalize",
-                      }
-                    }
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-overline"
-                    >
-                      1.0
-                    </span>
-                    <p
-                      className="MuiTypography-root MuiTypography-body1"
-                    >
-                      kid0
-                    </p>
-                  </div>
-                </div>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
-        </li>
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          />
-        </li>
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          >
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
-              disabled={false}
-              id="1.1"
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              style={
-                Object {
-                  "bottom": 0,
-                  "height": "95%",
-                  "left": 0,
-                  "margin": "2.5%",
-                  "width": "95%",
-                }
-              }
-              tabIndex={0}
-              type="button"
-            >
-              <span
-                className="MuiButton-label"
-              >
-                <div>
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                    />
-                  </svg>
-                  <div
-                    style={
-                      Object {
-                        "textTransform": "capitalize",
-                      }
-                    }
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-overline"
-                    >
-                      1.1
-                    </span>
-                    <p
-                      className="MuiTypography-root MuiTypography-body1"
-                    >
-                      kid1
-                    </p>
-                  </div>
-                </div>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
-        </li>
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          />
-        </li>
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          >
-            <button
-              className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
-              disabled={false}
-              id="1.2"
-              onBlur={[Function]}
-              onClick={[Function]}
-              onDragLeave={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-              onTouchEnd={[Function]}
-              onTouchMove={[Function]}
-              onTouchStart={[Function]}
-              style={
-                Object {
-                  "bottom": 0,
-                  "height": "95%",
-                  "left": 0,
-                  "margin": "2.5%",
-                  "width": "95%",
-                }
-              }
-              tabIndex={0}
-              type="button"
-            >
-              <span
-                className="MuiButton-label"
-              >
-                <div>
-                  <svg
-                    aria-hidden={true}
-                    className="MuiSvgIcon-root"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-                    />
-                  </svg>
-                  <div
-                    style={
-                      Object {
-                        "textTransform": "capitalize",
-                      }
-                    }
-                  >
-                    <span
-                      className="MuiTypography-root MuiTypography-overline"
-                    >
-                      1.2
-                    </span>
-                    <p
-                      className="MuiTypography-root MuiTypography-body1"
-                    >
-                      kid2
-                    </p>
-                  </div>
-                </div>
-              </span>
-              <span
-                className="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
-        </li>
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          >
-            <img
-              alt="leftEndcap.svg"
-              height="100%"
-              src="leftEndcap.svg"
-              width={75}
-            />
-          </div>
-        </li>
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          >
-            <img
-              alt="span.svg"
-              height="100%"
-              src="span.svg"
-              width={75}
-            />
-          </div>
-        </li>
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          >
-            <img
-              alt="intersect.svg"
-              height="100%"
-              src="intersect.svg"
-              width={75}
-            />
-          </div>
-        </li>
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          >
-            <img
-              alt="span.svg"
-              height="100%"
-              src="span.svg"
-              width={75}
-            />
-          </div>
-        </li>
-        <li
-          className="MuiGridListTile-root"
-          style={
-            Object {
-              "height": "auto",
-              "padding": 0,
-              "width": "20%",
-            }
-          }
-        >
-          <div
-            className="MuiGridListTile-tile"
-          >
-            <img
-              alt="rightEndcap.svg"
-              height="100%"
-              src="rightEndcap.svg"
-              width={75}
-            />
-          </div>
-        </li>
-      </ul>
-    </div>
+    />
     <div
       className="MuiGrid-root MuiGrid-item"
     >
@@ -542,7 +155,399 @@ exports[`Tests AddWords Constructs correctly 1`] = `
     </div>
     <div
       className="MuiGrid-root MuiGrid-item"
-    />
+    >
+      <ul
+        className="MuiGridList-root"
+        style={
+          Object {
+            "margin": -0,
+            "width": 375,
+          }
+        }
+      >
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "transform": "scaleY(-1)",
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          >
+            <img
+              alt="leftEndcap.svg"
+              height="100%"
+              src="leftEndcap.svg"
+              width={75}
+            />
+          </div>
+        </li>
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "transform": "scaleY(-1)",
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          >
+            <img
+              alt="span.svg"
+              height="100%"
+              src="span.svg"
+              width={75}
+            />
+          </div>
+        </li>
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "transform": "scaleY(-1)",
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          >
+            <img
+              alt="intersect.svg"
+              height="100%"
+              src="intersect.svg"
+              width={75}
+            />
+          </div>
+        </li>
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "transform": "scaleY(-1)",
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          >
+            <img
+              alt="span.svg"
+              height="100%"
+              src="span.svg"
+              width={75}
+            />
+          </div>
+        </li>
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "transform": "scaleY(-1)",
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          >
+            <img
+              alt="rightEndcap.svg"
+              height="100%"
+              src="rightEndcap.svg"
+              width={75}
+            />
+          </div>
+        </li>
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          >
+            <button
+              className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+              disabled={false}
+              id="1.0"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              style={
+                Object {
+                  "bottom": 0,
+                  "height": "95%",
+                  "left": 0,
+                  "margin": "2.5%",
+                  "width": "95%",
+                }
+              }
+              tabIndex={0}
+              type="button"
+            >
+              <span
+                className="MuiButton-label"
+              >
+                <div>
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
+                    }
+                  >
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.0
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid0
+                    </p>
+                  </div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                    />
+                  </svg>
+                </div>
+              </span>
+              <span
+                className="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
+        </li>
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          />
+        </li>
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          >
+            <button
+              className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+              disabled={false}
+              id="1.1"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              style={
+                Object {
+                  "bottom": 0,
+                  "height": "95%",
+                  "left": 0,
+                  "margin": "2.5%",
+                  "width": "95%",
+                }
+              }
+              tabIndex={0}
+              type="button"
+            >
+              <span
+                className="MuiButton-label"
+              >
+                <div>
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
+                    }
+                  >
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.1
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid1
+                    </p>
+                  </div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                    />
+                  </svg>
+                </div>
+              </span>
+              <span
+                className="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
+        </li>
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          />
+        </li>
+        <li
+          className="MuiGridListTile-root"
+          style={
+            Object {
+              "height": "auto",
+              "padding": 0,
+              "width": "20%",
+            }
+          }
+        >
+          <div
+            className="MuiGridListTile-tile"
+          >
+            <button
+              className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary"
+              disabled={false}
+              id="1.2"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              style={
+                Object {
+                  "bottom": 0,
+                  "height": "95%",
+                  "left": 0,
+                  "margin": "2.5%",
+                  "width": "95%",
+                }
+              }
+              tabIndex={0}
+              type="button"
+            >
+              <span
+                className="MuiButton-label"
+              >
+                <div>
+                  <div
+                    style={
+                      Object {
+                        "textTransform": "capitalize",
+                      }
+                    }
+                  >
+                    <span
+                      className="MuiTypography-root MuiTypography-overline"
+                    >
+                      1.2
+                    </span>
+                    <p
+                      className="MuiTypography-root MuiTypography-body1"
+                    >
+                      kid2
+                    </p>
+                  </div>
+                  <svg
+                    aria-hidden={true}
+                    className="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                    />
+                  </svg>
+                </div>
+              </span>
+              <span
+                className="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 `;
