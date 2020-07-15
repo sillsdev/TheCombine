@@ -47,29 +47,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   constructor(props: NewEntryProps) {
     super(props);
     this.state = {
-      newEntry: {
-        id: "",
-        vernacular: "",
-        senses: [
-          {
-            glosses: [
-              {
-                language: "en",
-                def: "",
-              },
-            ],
-            semanticDomains: [this.props.semanticDomain],
-          },
-        ],
-        audio: [],
-        created: "",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        otherField: "",
-        plural: "",
-      },
+      newEntry: { ...this.defaultNewEntry },
       isSpelledCorrectly: true,
       isDuplicate: false,
       duplicates: [],
@@ -82,6 +60,30 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   readonly maxStartsWith: number = 4;
   readonly maxDuplicates: number = 2;
+
+  defaultNewEntry = {
+    id: "",
+    vernacular: "",
+    senses: [
+      {
+        glosses: [
+          {
+            language: "en",
+            def: "",
+          },
+        ],
+        semanticDomains: [this.props.semanticDomain],
+      },
+    ],
+    audio: [],
+    created: "",
+    modified: "",
+    history: [],
+    partOfSpeech: "",
+    editedBy: [],
+    otherField: "",
+    plural: "",
+  };
 
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
@@ -97,29 +99,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   resetEntry() {
     this.setState({
-      newEntry: {
-        id: "",
-        vernacular: "",
-        senses: [
-          {
-            glosses: [
-              {
-                language: "en",
-                def: "",
-              },
-            ],
-            semanticDomains: [this.props.semanticDomain],
-          },
-        ],
-        audio: [],
-        created: "",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        otherField: "",
-        plural: "",
-      },
+      newEntry: { ...this.defaultNewEntry },
     });
   }
 
@@ -229,29 +209,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   resetState() {
     this.setState({
-      newEntry: {
-        id: "",
-        vernacular: "",
-        senses: [
-          {
-            glosses: [
-              {
-                language: "en",
-                def: "",
-              },
-            ],
-            semanticDomains: [this.props.semanticDomain],
-          },
-        ],
-        audio: [],
-        created: "",
-        modified: "",
-        history: [],
-        partOfSpeech: "",
-        editedBy: [],
-        otherField: "",
-        plural: "",
-      },
+      newEntry: { ...this.defaultNewEntry },
       isSpelledCorrectly: true,
       isDuplicate: false,
     });
