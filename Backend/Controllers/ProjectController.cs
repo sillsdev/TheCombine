@@ -300,10 +300,12 @@ namespace BackendFramework.Controllers
         /// <summary> Generates invite link </summary>
         /// <remarks> PUT: v1/projects/invite/{projectId}/{emailAddress} </remarks>
         [HttpPut("invite/{projectId}/{emailAddress}")]
-        public async Task<IActionResult> CreateLinkWithToken(string projectId, string emailAddress)
+        public async Task<IActionResult> CreateLinkWithToken(string projectId, string emailAddress, [FromBody] string domain)
         {
             var project = await _projectService.GetProject(projectId);
             var linkWithIdentifier = await _projectService.CreateLinkWithToken(project, emailAddress);
+
+            await _projectService.EmailLink(emailAddress, domain, linkWithIdentifier, project);
 
             return new OkObjectResult(linkWithIdentifier);
         }

@@ -476,7 +476,7 @@ export async function createLinkWithToken(
 ): Promise<string> {
   let resp = await backendServer.put(
     `projects/invite/${projectId}/${emailAddress}`,
-    "",
+    { domain: window.location.origin },
     {
       headers: authHeader(),
     }

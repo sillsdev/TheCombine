@@ -14,6 +14,7 @@ namespace BackendFramework.Interfaces
         Task<bool> Delete(string projectId);
         Task<bool> DeleteAllProjects();
         Task<string> CreateLinkWithToken(Project project, string emailAddress);
+        Task<bool> EmailLink(string emailAddress, string domain, string link, Project project);
         Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, string token);
         bool CanImportLift(string projectId);
     }

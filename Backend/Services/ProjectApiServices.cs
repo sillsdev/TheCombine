@@ -6,6 +6,8 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
+using MimeKit;
+using System.Web.Http;
 
 namespace BackendFramework.Services
 {
@@ -15,12 +17,14 @@ namespace BackendFramework.Services
         private readonly IProjectContext _projectDatabase;
         private readonly IUserService _userService;
         private readonly IUserRoleService _userRoleService;
+        private readonly IEmailService _emailService;
 
-        public ProjectService(IProjectContext collectionSettings, IUserService userService, IUserRoleService userRoleService)
+        public ProjectService(IProjectContext collectionSettings, IUserService userService, IUserRoleService userRoleService, IEmailService emailService)
         {
             _projectDatabase = collectionSettings;
             _userService = userService;
             _userRoleService = userRoleService;
+            _emailService = emailService;
         }
 
         /// <summary> Finds all <see cref="Project"/>s </summary>
@@ -102,14 +106,37 @@ namespace BackendFramework.Services
 
         public async Task<string> CreateLinkWithToken(Project project, string emailAddress)
         {
-
             var token = project.CreateToken();
             project.InviteTokens.Add(token);
             await Update(project.Id, project);
 
-            string linkWithIdentifier = "v1/projects/" + project.Id + "/" + token;
+            string linkWithIdentifier = project.Id + "/" + token;
             return linkWithIdentifier;
         }
+
+        public async Task<bool> EmailLink(string emailAddress, string domain, string link, Project project)
+        {
+            // create email
+            var message = new MimeMessage();
+            message.To.Add(new MailboxAddress("FutureCombineUser", emailAddress));
+            message.Subject = "Combine Project Invite";
+            message.Body = new TextPart("plain")
+            {
+                Text = string.Format("You have been invited to a TheCombine project called {0}."
+                        + "Select this link to become a member of the project: {1}{2} \n\n"
+                        + "If you did not expect an invite please ignore this email",
+                         project.Name, domain, link)
+            };
+            if (await _emailService.SendEmail(message))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, string token)
         {
             try

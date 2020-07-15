@@ -9,6 +9,8 @@ import {
 import React from "react";
 import { Translate } from "react-localize-redux";
 import validator from "validator";
+import * as Backend from "../../../backend";
+import * as LocalStorage from "../../../backend/localStorage";
 
 interface InviteProps {}
 
@@ -25,11 +27,10 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     };
   }
 
-  onSubmit = () => {
-    console.warn(
-      "Should send the message to the corresponding email and show if it was succesful or not."
-    );
-  };
+  async onSubmit() {
+    var project = LocalStorage.getProjectId();
+    await Backend.createLinkWithToken(project, this.state.emailAddress);
+  }
 
   /** Updates the state to match the value in a textbox */
   updateField(
@@ -81,7 +82,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={this.onSubmit}
+                    onClick={() => this.onSubmit()}
                     disabled={!this.state.isValid}
                   >
                     <Translate id="projectSettings.invite.inviteButton" />
