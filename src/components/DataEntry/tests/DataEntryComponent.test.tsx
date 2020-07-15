@@ -1,6 +1,5 @@
 import { mockDomainTree } from "./MockDomainTree";
-import { mockWord } from "./MockWord";
-import { mockDomainWord } from "./MockDomainWord";
+import { mockWord, mockDomainWord } from "./MockWord";
 import { defaultProject as mockProject } from "../../../types/project";
 import { Word, State, DomainWord } from "../../../types/word";
 import {
