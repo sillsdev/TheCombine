@@ -1,7 +1,5 @@
-import { Button, Drawer, Grid, List } from "@material-ui/core";
-import { List as ListIcon } from "@material-ui/icons";
+import { Drawer, Grid, List } from "@material-ui/core";
 import React from "react";
-import theme from "../../../types/theme";
 import { SemanticDomain, DomainWord } from "../../../types/word";
 import { ImmutableExistingData } from "./ImmutableExistingData/ImmutableExistingData";
 
@@ -9,76 +7,44 @@ interface ExistingDataTableProps {
   domain: SemanticDomain;
   typeDrawer: boolean;
   domainWords: DomainWord[];
-}
-
-interface ExistingDataTableStates {
-  open: boolean;
+  drawerOpen: boolean;
+  toggleDrawer: (openClosed: boolean) => void;
 }
 
 /*Displays previously entered data in a panel to the right of the DataEntryTable */
-export class ExistingDataTable extends React.Component<
-  ExistingDataTableProps,
-  ExistingDataTableStates
-> {
-  constructor(props: ExistingDataTableProps) {
-    super(props);
-    this.state = {
-      open: false,
-    };
-  }
-
-  toggleDrawer = (openClose: boolean) => (
-    event: React.KeyboardEvent | React.MouseEvent
-  ) => {
-    if (
-      event.type === "keydown" &&
-      ((event as React.KeyboardEvent).key === "Tab" ||
-        (event as React.KeyboardEvent).key === "Shift")
-    ) {
-      return;
-    }
-    this.setState({
-      open: openClose,
-    });
+export class ExistingDataTable extends React.Component<ExistingDataTableProps> {
+  closeDrawer = () => {
+    this.props.toggleDrawer(false);
   };
 
   list() {
     let domainWords: DomainWord[] = this.props.domainWords;
     return (
-      <div
-        onClick={this.toggleDrawer(false)}
-        onKeyDown={this.toggleDrawer(false)}
-      >
-        <List>
-          {domainWords.map((domainWord) => (
-            <ImmutableExistingData
-              key={domainWord.word.id}
-              vernacular={domainWord.word.vernacular}
-              gloss={domainWord.gloss.def}
-            />
-          ))}
-        </List>
-      </div>
+      <List>
+        {domainWords.map((domainWord) => (
+          <ImmutableExistingData
+            key={domainWord.word.id}
+            vernacular={domainWord.word.vernacular}
+            gloss={domainWord.gloss.def}
+          />
+        ))}
+      </List>
     );
   }
 
   renderDrawer() {
     return (
       <React.Fragment>
-        <Button
-          style={{ marginTop: theme.spacing(2) }}
-          onClick={this.toggleDrawer(true)}
-        >
-          <ListIcon fontSize={"default"} color={"inherit"} />
-        </Button>
-        <Drawer
-          role="presentation"
-          anchor={"left"}
-          open={this.state.open}
-          onClose={this.toggleDrawer(false)}
-        >
-          {this.list()}
-        </Drawer>
+        <div onClick={this.closeDrawer} onKeyDown={this.closeDrawer}>
+          <Drawer
+            role="presentation"
+            anchor={"left"}
+            open={this.props.drawerOpen}
+            onClose={this.closeDrawer}
+          >
+            {this.list()}
+          </Drawer>
+        </div>
       </React.Fragment>
     );
   }
