@@ -1,4 +1,4 @@
-import { Word } from "../../../types/word";
+import { Word, DomainWord } from "../../../types/word";
 
 export const mockWord: Word = {
   id: "",
@@ -22,4 +22,9 @@ export const mockWord: Word = {
   editedBy: [],
   otherField: "",
   plural: "",
+};
+
+export const mockDomainWord: DomainWord = {
+  word: mockWord,
+  gloss: mockWord.senses[0].glosses[0],
 };

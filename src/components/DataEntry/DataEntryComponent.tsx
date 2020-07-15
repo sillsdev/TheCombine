@@ -188,6 +188,8 @@ export class DataEntryComponent extends React.Component<
             domain={this.props.domain}
             typeDrawer={this.state.isSmallScreen}
             domainWords={this.state.domainWords}
+            drawerOpen={this.state.drawerOpen}
+            toggleDrawer={this.toggleDrawer}
           />
 
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
