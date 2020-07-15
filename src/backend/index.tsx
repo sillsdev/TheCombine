@@ -315,7 +315,7 @@ export async function addGoalToUserEdit(
     `projects/${projectId}/useredits/${userEditId}`,
     userEditTuple,
     {
-      headers: { ...authHeader() },
+      headers: authHeader(),
     }
   );
   return resp.data;
@@ -456,6 +456,7 @@ export async function createLinkWithToken(
 ): Promise<string> {
   let resp = await backendServer.put(
     `projects/invite/${projectId}/${emailAddress}`,
+    "",
     {
       headers: authHeader(),
     }
@@ -470,6 +471,7 @@ export async function validateLink(
 ): Promise<boolean> {
   let resp = await backendServer.put(
     `projects/invite/${projectId}/validate/${userId}/${token}`,
+    "",
     {
       headers: authHeader(),
     }

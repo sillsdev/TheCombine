@@ -122,7 +122,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects/{projectId}/useredits/{userEditId} </remarks>
         /// <returns> Index of newest edit </returns>
         [HttpPost("{userEditId}")]
-        public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody]Edit newEdit)
+        public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody] Edit newEdit)
         {
             if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
             {

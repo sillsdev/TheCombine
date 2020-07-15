@@ -315,7 +315,15 @@ class MergeDupStep extends React.Component<
               marginRight: 30,
             }}
             onClick={(_) =>
-              backend.validateLink("5f073db57c087c338ca0f413", "jgaynier", "hi")
+              /*backend.validateLink(
+                "5f0f57dc9d671345f0dabdb2",
+                "5f0f58999d671345f0dabe39",
+                "11111111"
+              )*/
+              backend.createLinkWithToken(
+                "5f0f57dc9d671345f0dabdb2",
+                "jgaynier@uncc.edu"
+              )
             }
             title={this.props.translate("mergeDups.helpText.next") as string}
           >

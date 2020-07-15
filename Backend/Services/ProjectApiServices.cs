@@ -81,7 +81,8 @@ namespace BackendFramework.Services
                 .Set(x => x.CustomFields, project.CustomFields)
                 .Set(x => x.WordFields, project.WordFields)
                 .Set(x => x.PartsOfSpeech, project.PartsOfSpeech)
-                .Set(x => x.AutocompleteSetting, project.AutocompleteSetting);
+                .Set(x => x.AutocompleteSetting, project.AutocompleteSetting)
+                .Set(x => x.InviteTokens, project.InviteTokens);
 
             var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 
@@ -99,21 +100,20 @@ namespace BackendFramework.Services
             }
         }
 
-        public async Task<string> CreateLinkWithToken(string projectId, string emailAddress)
+        public async Task<string> CreateLinkWithToken(Project project, string emailAddress)
         {
-            var project = await GetProject(projectId);
-            var token = project.CreateToken();
 
-            string linkWithIdentifier = "v1/projects/" + projectId + "/" + token;
+            var token = project.CreateToken();
+            project.InviteTokens.Add(token);
+            await Update(project.Id, project);
+
+            string linkWithIdentifier = "v1/projects/" + project.Id + "/" + token;
             return linkWithIdentifier;
         }
-        public async Task<bool> RemoveTokenAndCreateUserRole(Project project, string userId, string token)
+        public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, string token)
         {
             try
             {
-                project.InviteTokens.Remove(token);
-
-                var user = await _userService.GetUser(userId);
                 var userRole = new UserRole
                 {
                     Permissions = new List<int>
@@ -134,10 +134,14 @@ namespace BackendFramework.Services
 
                 // Generate the userRoles and update the user
                 user.ProjectRoles.Add(project.Id, userRole.Id);
-                await _userService.Update(userId, user);
+                await _userService.Update(user.Id, user);
                 // Generate the JWT based on those new userRoles
                 user = await _userService.MakeJwt(user);
-                await _userService.Update(userId, user);
+                await _userService.Update(user.Id, user);
+
+                // Removes token and update user
+                project.InviteTokens.Remove(token);
+                await Update(project.Id, project);
 
                 return true;
             }

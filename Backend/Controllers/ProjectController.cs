@@ -298,28 +298,33 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Generates invite link </summary>
-        /// <remarks> PUT: v1/projects/{projectId}/invite/{emailAddress} </remarks>
+        /// <remarks> PUT: v1/projects/invite/{projectId}/{emailAddress} </remarks>
         [HttpPut("invite/{projectId}/{emailAddress}")]
         public async Task<IActionResult> CreateLinkWithToken(string projectId, string emailAddress)
         {
-            var linkWithIdentifier = await _projectService.CreateLinkWithToken(projectId, emailAddress);
+            var project = await _projectService.GetProject(projectId);
+            var linkWithIdentifier = await _projectService.CreateLinkWithToken(project, emailAddress);
 
             return new OkObjectResult(linkWithIdentifier);
         }
 
-        /// <summary>  <see cref="User"/>s </summary>
-        /// <remarks> PUT: v1/projects/{projectId}/invite/validate/{userId}/{token} </remarks>
+        /// <summary> Validates token in url and adds user to project </summary>
+        /// <remarks> PUT: v1/projects/invite/{projectId}/validate/{userId}/{token} </remarks>
         [HttpPut("invite/{projectId}/validate/{userId}/{token}")]
         public async Task<IActionResult> ValidateToken(string projectId, string userId, string token)
         {
             var project = await _projectService.GetProject(projectId);
-            if (project.InviteTokens.Contains(token) && await _projectService.RemoveTokenAndCreateUserRole(project, userId, token))
+            var user = await _userService.GetUser(userId);
+
+            if (project.InviteTokens.Contains(token)
+                && !user.ProjectRoles.ContainsKey(projectId)
+                && await _projectService.RemoveTokenAndCreateUserRole(project, user, token))
             {
                 return new OkObjectResult(true);
             }
             else
             {
-                return new ForbidResult();
+                return new OkObjectResult(false);
             }
         }
     }

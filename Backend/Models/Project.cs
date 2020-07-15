@@ -159,7 +159,6 @@ namespace BackendFramework.Models
             var byteToken = new byte[TokenSize];
             Rng.GetBytes(byteToken);
             var token = WebEncoders.Base64UrlEncode(byteToken);
-            InviteTokens.Add(token);
             return token;
         }
 
