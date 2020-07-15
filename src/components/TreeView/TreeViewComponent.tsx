@@ -32,7 +32,7 @@ export class TreeView extends React.Component<
 
     this.animate = this.animate.bind(this);
 
-    let domains: SemanticDomainWithSubdomains[] = en;
+    let domains: SemanticDomainWithSubdomains[];
     if (props.activeLanguage) {
       // not defined in unit tests
       switch (props.activeLanguage.code) {
@@ -42,7 +42,12 @@ export class TreeView extends React.Component<
         case "es":
           domains = es;
           break;
+        default:
+          domains = en;
+          break;
       }
+    } else {
+      domains = en;
     }
     // If the state has the current domain defined then use that in the navigateTree call
     if (this.props.currentDomain.name !== "") {
