@@ -19,6 +19,7 @@ jest.mock("../../Pronunciations/Recorder");
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 
+//Needed to mock window until refactored
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
