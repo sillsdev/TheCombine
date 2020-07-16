@@ -470,13 +470,17 @@ export async function addUserRole(
   );
 }
 
-export async function createLinkWithToken(
+export async function emailInviteToProject(
   projectId: string,
   emailAddress: string
 ): Promise<string> {
   let resp = await backendServer.put(
-    `projects/invite/${projectId}/${emailAddress}`,
-    { domain: window.location.origin },
+    `projects/invite`,
+    {
+      EmailAddress: emailAddress,
+      ProjectId: projectId,
+      Domain: window.location.origin,
+    },
     {
       headers: authHeader(),
     }
@@ -486,11 +490,11 @@ export async function createLinkWithToken(
 
 export async function validateLink(
   projectId: string,
-  userId: string,
+  emailAddress: string,
   token: string
 ): Promise<boolean> {
   let resp = await backendServer.put(
-    `projects/invite/${projectId}/validate/${userId}/${token}`,
+    `projects/invite/${projectId}/validate/${token}/${emailAddress}`,
     "",
     {
       headers: authHeader(),

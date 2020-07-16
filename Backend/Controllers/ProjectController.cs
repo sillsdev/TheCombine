@@ -6,6 +6,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
@@ -297,26 +298,27 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(_projectService.CanImportLift(projectId));
         }
 
-        /// <summary> Generates invite link </summary>
+        /// <summary> Generates invite link and sends email containing link </summary>
         /// <remarks> PUT: v1/projects/invite/{projectId}/{emailAddress} </remarks>
-        [HttpPut("invite/{projectId}/{emailAddress}")]
-        public async Task<IActionResult> CreateLinkWithToken(string projectId, string emailAddress, [FromBody] string domain)
+        [HttpPut("invite")]
+        public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
         {
-            var project = await _projectService.GetProject(projectId);
-            var linkWithIdentifier = await _projectService.CreateLinkWithToken(project, emailAddress);
+            var project = await _projectService.GetProject(data.ProjectId);
+            var linkWithIdentifier = await _projectService.CreateLinkWithToken(project, data.EmailAddress);
 
-            await _projectService.EmailLink(emailAddress, domain, linkWithIdentifier, project);
+            await _projectService.EmailLink(data.EmailAddress, linkWithIdentifier, data.Domain, project);
 
             return new OkObjectResult(linkWithIdentifier);
         }
 
         /// <summary> Validates token in url and adds user to project </summary>
-        /// <remarks> PUT: v1/projects/invite/{projectId}/validate/{userId}/{token} </remarks>
-        [HttpPut("invite/{projectId}/validate/{userId}/{token}")]
-        public async Task<IActionResult> ValidateToken(string projectId, string userId, string token)
+        /// <remarks> PUT: v1/projects/invite/{projectId}/validate/{emailAddress}/{token} </remarks>
+        [HttpPut("invite/{projectId}/validate/{token}/{emailAddress}")]
+        public async Task<IActionResult> ValidateToken(string projectId, string token, string emailAddress)
         {
             var project = await _projectService.GetProject(projectId);
-            var user = await _userService.GetUser(userId);
+
+            var user = _userService.GetAllUsers().Result.Single(user => user.Email.Equals(emailAddress));
 
             if (project.InviteTokens.Contains(token)
                 && !user.ProjectRoles.ContainsKey(projectId)
@@ -328,6 +330,13 @@ namespace BackendFramework.Controllers
             {
                 return new OkObjectResult(false);
             }
+        }
+
+        public class EmailInviteData
+        {
+            public string EmailAddress;
+            public string ProjectId;
+            public string Domain;
         }
     }
 }

@@ -158,7 +158,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
           shouldCloseOnOverlayClick={true}
           onRequestClose={this.handleCloseModal}
         >
-          <EmailInvite />
+          <EmailInvite close={this.handleCloseModal} />
         </Modal>
         {/* </Grid> */}
       </React.Fragment>

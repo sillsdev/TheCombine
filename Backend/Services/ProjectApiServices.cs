@@ -7,7 +7,6 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
 using MimeKit;
-using System.Web.Http;
 
 namespace BackendFramework.Services
 {
@@ -110,31 +109,30 @@ namespace BackendFramework.Services
             project.InviteTokens.Add(token);
             await Update(project.Id, project);
 
-            string linkWithIdentifier = project.Id + "/" + token;
+            string linkWithIdentifier = "/invite/" + project.Id + "/" + token + "/" + emailAddress;
             return linkWithIdentifier;
         }
 
-        public async Task<bool> EmailLink(string emailAddress, string domain, string link, Project project)
+        public async Task<bool> EmailLink(string emailAddress, string link, string domain, Project project)
         {
             // create email
             var message = new MimeMessage();
             message.To.Add(new MailboxAddress("FutureCombineUser", emailAddress));
-            message.Subject = "Combine Project Invite";
+            message.Subject = "TheCombine Project Invite";
             message.Body = new TextPart("plain")
             {
-                Text = string.Format("You have been invited to a TheCombine project called {0}."
-                        + "Select this link to become a member of the project: {1}{2} \n\n"
-                        + "If you did not expect an invite please ignore this email",
+                Text = string.Format("You have been invited to a TheCombine project called {0}. \n"
+                        + "To become a member of the project, first go to {1}/login and login or register. \n"
+                        + "Then go to {1}{2} to add yourself to the project. \n"
+                        + "If you used a different email with your account, replace it in the URL. \n\n"
+                        + "If you did not expect an invite please ignore this email.",
                          project.Name, domain, link)
             };
             if (await _emailService.SendEmail(message))
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, string token)

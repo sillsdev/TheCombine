@@ -33,7 +33,6 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 import { ArrowForwardIos } from "@material-ui/icons";
-import * as backend from "../../../backend";
 
 export interface SideBar {
   senses: { id: string; data: TreeDataSense }[];
@@ -314,17 +313,7 @@ class MergeDupStep extends React.Component<
               float: "right",
               marginRight: 30,
             }}
-            onClick={(_) =>
-              /*backend.validateLink(
-                "5f0f57dc9d671345f0dabdb2",
-                "5f0f58999d671345f0dabe39",
-                "11111111"
-              )*/
-              backend.createLinkWithToken(
-                "5f0f57dc9d671345f0dabdb2",
-                "jgaynier@uncc.edu"
-              )
-            }
+            onClick={(_) => {}}
             title={this.props.translate("mergeDups.helpText.next") as string}
           >
             <Translate id="goal.mergeDups.done" />
