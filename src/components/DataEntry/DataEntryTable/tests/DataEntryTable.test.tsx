@@ -7,10 +7,18 @@ import renderer, {
 import configureMockStore from "redux-mock-store";
 
 import * as backend from "../../../../backend";
+<<<<<<< HEAD
+=======
+import { SemanticDomain, Word } from "../../../../types/word";
+>>>>>>> adf204f... cleanup imports and test naming
 import { defaultProject as mockProject } from "../../../../types/project";
 import { SemanticDomain, Word } from "../../../../types/word";
 import { defaultState } from "../../../App/DefaultState";
+<<<<<<< HEAD
 import { baseDomain } from "../../../../types/SemanticDomain";
+=======
+import { mockDomainTree } from "../../tests/MockDomainTree";
+>>>>>>> adf204f... cleanup imports and test naming
 import { mockWord } from "../../tests/MockWord";
 import DataEntryTable from "../DataEntryTable";
 import { NewEntry } from "../NewEntry/NewEntry";

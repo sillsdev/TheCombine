@@ -30,6 +30,8 @@ describe("Tests ExistingData", () => {
             domain={mockDomainTree}
             typeDrawer={false}
             domainWords={[]}
+            drawerOpen={false}
+            toggleDrawer={jest.fn()}
           />
         </Provider>
       );
@@ -43,6 +45,8 @@ describe("Tests ExistingData", () => {
             domain={mockDomainTree}
             typeDrawer={true}
             domainWords={[]}
+            drawerOpen={true}
+            toggleDrawer={jest.fn()}
           />
         </Provider>
       );
