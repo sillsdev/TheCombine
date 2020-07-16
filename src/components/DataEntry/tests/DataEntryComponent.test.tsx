@@ -18,6 +18,7 @@ import {
   sortDomainWordByVern,
 } from "../DataEntryComponent";
 import DomainTree from "../../TreeView/SemanticDomain";
+import _ from "lodash";
 
 jest.mock("../../../backend", () => {
   return {
@@ -144,16 +145,17 @@ describe("Tests DataEntryComponent", () => {
     ];
 
     mockDomains[0].name = "daily";
-    mockDomains[0].id = "123";
+    mockDomains[0].id = "ID_one";
     mockDomains[1].name = "weather";
-    mockDomains[1].id = "321";
+    mockDomains[1].id = "ID_two";
 
-    let unfilteredWords: Word[] = [
-      { ...mockWord },
-      { ...mockWord },
-      { ...mockWord },
-      { ...mockWord },
+    var unfilteredWords: Word[] = [
+      _.cloneDeep(mockWord),
+      _.cloneDeep(mockWord),
+      _.cloneDeep(mockWord),
+      _.cloneDeep(mockWord),
     ];
+
     unfilteredWords[0].senses[0].semanticDomains[0] = mockDomains[1];
     unfilteredWords[0].vernacular = "one";
     unfilteredWords[1].senses[0].semanticDomains[0] = mockDomains[1];
@@ -163,9 +165,14 @@ describe("Tests DataEntryComponent", () => {
     unfilteredWords[3].senses[0].semanticDomains[0] = mockDomains[0];
     unfilteredWords[3].vernacular = "four";
 
-    let expectedValue: Word[] = [unfilteredWords[3]];
+    let domainWords: DomainWord[] = [];
+    let curDomainWord: DomainWord = {
+      word: unfilteredWords[3],
+      gloss: unfilteredWords[3].senses[0].glosses[0],
+    };
+    domainWords.push(curDomainWord);
     expect(filterWordsByDomain(unfilteredWords, mockDomains[0])).toStrictEqual(
-      expectedValue
+      domainWords
     );
   });
 
