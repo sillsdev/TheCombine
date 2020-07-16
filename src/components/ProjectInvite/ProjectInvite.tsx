@@ -1,7 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import * as Backend from "../../backend";
-import AppBarComponent from "../AppBar/AppBarComponent";
 
 function getLastURLParam(pathname: string): string {
   var index = pathname.lastIndexOf("/");
