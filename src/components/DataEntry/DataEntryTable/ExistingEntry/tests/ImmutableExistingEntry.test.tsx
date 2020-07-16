@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import { ImmutableExistingEntry } from "../ImmutableExistingEntry";
 
 jest.mock("../ExistingVernacular/ExistingVernacular");
-jest.mock("../ExistingGloss/ExistingGloss");
 jest.mock("../DeleteEntry/DeleteEntry");
 
 describe("Tests ExistingEntry", () => {

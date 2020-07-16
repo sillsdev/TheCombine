@@ -5,6 +5,7 @@ import renderer, {
   ReactTestInstance,
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
+
 import * as backend from "../../../../backend";
 import { SemanticDomain, Word, State } from "../../../../types/word";
 import { defaultProject as mockProject } from "../../../../types/project";
@@ -48,7 +49,8 @@ beforeEach(() => {
           domain={mockDomainTree}
           semanticDomain={mockSemanticDomain}
           displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
-          domainWords={[]}
+          getWordsFromBackend={() => new Promise(() => [])}
+          showExistingData={() => null}
           isSmallScreen={false}
         />
       </Provider>

@@ -11,11 +11,10 @@ import { Word, SemanticDomain, State, Sense } from "../../../../../types/word";
 import configureMockStore from "redux-mock-store";
 import { defaultState } from "../../../../App/DefaultState";
 import { mockWord } from "../../../tests/MockWord";
-import SpellChecker from "../../../spellChecker";
 import { mockSemanticDomain } from "../../tests/DataEntryTable.test";
 import { Recorder } from "../../../../Pronunciations/Recorder";
 jest.mock("../ExistingVernacular/ExistingVernacular");
-jest.mock("../ExistingGloss/ExistingGloss");
+jest.mock("../../GlossEntry/GlossEntry");
 jest.mock("../DeleteEntry/DeleteEntry");
 jest.mock("../../../../Pronunciations/Recorder");
 const createMockStore = configureMockStore([]);
@@ -32,12 +31,9 @@ describe("Tests ExistingEntry", () => {
           entry={mockWord}
           updateWord={(word: Word) => null}
           removeWord={(word: Word) => null}
-          spellChecker={new SpellChecker()}
           semanticDomain={{ name: "", id: "" }}
           displayDuplicates={true}
           toggleDisplayDuplicates={() => null}
-          displaySpellingSuggestions={true}
-          toggleDisplaySpellingSuggestions={() => null}
           recorder={new Recorder()}
           focusNewEntry={() => null}
         />

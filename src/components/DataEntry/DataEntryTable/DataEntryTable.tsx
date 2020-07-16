@@ -14,7 +14,6 @@ import theme from "../../../types/theme";
 import { SemanticDomain, Word } from "../../../types/word";
 import { Recorder } from "../../Pronunciations/Recorder";
 import DomainTree from "../../TreeView/SemanticDomain";
-import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
@@ -65,11 +64,9 @@ export class DataEntryTable extends React.Component<
     };
     this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
-    this.spellChecker = new SpellChecker();
   }
   refNewEntry: React.RefObject<NewEntry>;
   recorder: Recorder;
-  spellChecker: SpellChecker;
 
   async componentDidMount() {
     let allWords = await this.props.getWordsFromBackend();
@@ -252,19 +249,12 @@ export class DataEntryTable extends React.Component<
                   }
                   removeWord={(word: Word) => this.removeWord(word)}
                   recorder={this.recorder}
-                  spellChecker={this.spellChecker}
                   semanticDomain={this.props.semanticDomain}
                   displayDuplicates={
                     this.state.displayDuplicatesIndex === index
                   }
                   toggleDisplayDuplicates={() => {
                     this.toggleDisplayDuplicates(index);
-                  }}
-                  displaySpellingSuggestions={
-                    this.state.displaySpellingSuggestionsIndex === index
-                  }
-                  toggleDisplaySpellingSuggestions={() => {
-                    this.toggleDisplaySpellingSuggestions(index);
                   }}
                   focusNewEntry={() => {
                     if (this.refNewEntry.current)
@@ -291,7 +281,6 @@ export class DataEntryTable extends React.Component<
                 this.updateWordForNewEntry(wordToUpdate, glossIndex)
               }
               addNewWord={(word: Word) => this.addNewWord(word)}
-              spellChecker={this.spellChecker}
               semanticDomain={this.props.semanticDomain}
               autocompleteSetting={this.state.autoComplete}
               displayDuplicates={
@@ -301,15 +290,6 @@ export class DataEntryTable extends React.Component<
               }
               toggleDisplayDuplicates={() => {
                 this.toggleDisplayDuplicates(
-                  this.state.recentlyAddedWords.length
-                );
-              }}
-              displaySpellingSuggestions={
-                this.state.displaySpellingSuggestionsIndex ===
-                this.state.recentlyAddedWords.length
-              }
-              toggleDisplaySpellingSuggestions={() => {
-                this.toggleDisplaySpellingSuggestions(
                   this.state.recentlyAddedWords.length
                 );
               }}
@@ -341,11 +321,7 @@ export class DataEntryTable extends React.Component<
               onClick={() => {
                 if (this.refNewEntry.current) {
                   let newEntry = this.refNewEntry.current.state.newEntry;
-                  if (
-                    newEntry &&
-                    newEntry.vernacular &&
-                    newEntry.vernacular !== ""
-                  ) {
+                  if (newEntry && newEntry.vernacular) {
                     this.addNewWord(newEntry).then(() => {
                       // When the server responds clear out recently added words so
                       // this word doesn't appear in the next domain
