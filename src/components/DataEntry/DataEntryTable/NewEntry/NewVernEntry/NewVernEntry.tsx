@@ -1,6 +1,8 @@
 import React from "react";
 import { TextField, Tooltip } from "@material-ui/core";
-
+import { Autocomplete } from "@material-ui/lab";
+import { Word } from "../../../../../types/word";
+import { AutoComplete } from "../../../../../types/AutoComplete";
 import {
   Translate,
   LocalizeContextProps,
@@ -9,10 +11,16 @@ import {
 
 interface NewVernEntryProps {
   vernacular: string;
+  newEntry: Word;
   showAutocompleteToggle: boolean;
+  autocompleteSetting: AutoComplete;
   vernInput: React.RefObject<HTMLDivElement>;
+  allWords: Word[];
   toggleAutocompleteView: () => void;
-  updateVernField: (newValue: string) => void;
+  updateNewEntry: (newEntry: Word) => void;
+}
+interface NewVernEntryState {
+  duplicates: Word[];
 }
 
 /**
@@ -20,12 +28,12 @@ interface NewVernEntryProps {
  * vernacular already exists in a collection
  */
 export class NewVernEntry extends React.Component<
-  LocalizeContextProps & NewVernEntryProps
+  LocalizeContextProps & NewVernEntryProps & NewVernEntryState
 > {
   render() {
     return (
       <div>
-        <TextField
+        {/* <TextField
           autoFocus
           id="newvernentry"
           label={<Translate id="addWords.vernacular" />}
@@ -34,6 +42,21 @@ export class NewVernEntry extends React.Component<
           value={this.props.vernacular}
           onChange={(e) => this.props.updateVernField(e.target.value)}
           inputRef={this.props.vernInput}
+        /> */}
+        <Autocomplete
+          freeSolo
+          fullWidth
+          id="newvernentry"
+          value={this.props.vernacular}
+          options={this.props.allWords.map((dup) => dup.vernacular)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={<Translate id="addWords.vernacular" />}
+              margin="normal"
+              variant="outlined"
+            />
+          )}
         />
         {this.props.showAutocompleteToggle && (
           <Tooltip
