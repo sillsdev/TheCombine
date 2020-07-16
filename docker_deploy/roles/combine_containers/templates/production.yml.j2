@@ -1,0 +1,43 @@
+﻿version: "3.8"
+services:
+  web:
+    build: ./Backend
+    volumes:
+      - backend_data:/root/.CombineFiles
+    expose:
+      - 80
+    depends_on:
+      - db
+    env_file:
+      - ./{{ backend_env_file }}
+    restart: unless-stopped
+  nginx:
+    build:
+      context: .
+      dockerfile: ./prodDockerfile
+    volumes:
+        - ./nginx/conf.d:/etc/nginx/user.conf.d:ro
+        - letsencrypt:/etc/letencrypt
+    environment:
+        CERTBOT_EMAIL: {{ certbot_email }}
+    ports:
+      - 80:80
+      - 443:443
+    command:
+      - "/bin/bash"
+      - "{{ frontend_entrypoint }}"
+    depends_on:
+      - web
+    restart: unless-stopped
+  db:
+    restart: unless-stopped
+    image: mongo:4.2
+    volumes:
+      - mongo_data:/data/db
+    expose:
+      - 27017
+
+volumes:
+  mongo_data:
+  backend_data:
+  letsencrypt:

@@ -1,0 +1,10 @@
+---
+
+source_dir: /opt/TheCombine
+config_dir: "{{ source_dir }}/config"
+
+backend_env_file: ".env.backend.prod"
+backend_env_dir: "{{ source_dir }}/Backend"
+
+frontend_env_file: ".env.frontend.prod"
+frontend_env_dir: "{{ source_dir }}"

@@ -1,0 +1,8 @@
+[local]
+localhost ansible_connection=local
+
+[server]
+thecombine
+
+[nuc]
+thecombine[1:100].languagetechnology.org

@@ -1,0 +1,50 @@
+---
+- name: create production docker-compose file
+  template:
+    src: production.yml.j2
+    dest: "{{ source_dir }}/production.yml"
+    owner: root
+    group: root
+    mode: 0400
+
+- name: create init docker-compose file
+  debug:
+    msg: "TODO: Create compose file to initialize the database"
+
+- name: create backend .env file
+  template:
+    src: env.backend.j2
+    dest: "{{ source_dir }}/.env.backend.prod"
+    owner: root
+    group: root
+    mode: 0400
+
+- name: create config directory
+  file:
+    name: "{{ config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode:  0755
+
+- name: create frontend config.js
+  template:
+    src: config.js.j2
+    dest: "{{ config_dir }}/config.js"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: initialize containers
+  debug:
+    msg: "TODO: Initialize the database"
+
+- name: build the containers
+  command: docker-compose -f production.yml build --parallel
+  args:
+    chdir: "{{ source_dir }}"
+
+- name: start the containers
+  command: docker-compose -f production.yml up --detach
+  args:
+    chdir: "{{ source_dir }}"

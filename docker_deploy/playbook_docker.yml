@@ -1,0 +1,36 @@
+---
+##############################################################
+# Playbook: playbook_docker.yml
+#
+# playbook_docker.yml is a "Work In Progress" playbook to
+# develop the playbooks for installing and running TheCombine
+# as a collection of Docker containers.
+##############################################################
+
+- name: Setup TheCombine Using Docker
+  hosts: server
+  gather_facts: yes
+  become: yes
+
+  vars_files:
+    - "vars/config_common.yml"
+    - "vars/vault_config.yml"
+
+  tasks:
+    - name: install docker subsystem
+      import_role:
+        name: docker_install
+      tags:
+        - docker
+
+    - name: install TheCombine source files
+      import_role:
+        name: the_combine_source
+      tags:
+        - combine_source
+
+    - name: configure docker containers for TheCombine
+      import_role:
+        name: combine_containers
+      tags:
+        - docker_config

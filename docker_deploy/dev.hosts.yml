@@ -1,0 +1,14 @@
+---
+
+all:
+  hosts:
+  children:
+    nuc:
+      hosts:
+        curly:
+          combine_server_name: nuc2.gradynh.com
+
+    server:
+      hosts:
+        aws-combine:
+          combine_server_name: thecombine.gradynh.com
