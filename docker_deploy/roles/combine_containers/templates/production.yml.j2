@@ -10,6 +10,9 @@ services:
       - db
     env_file:
       - ./{{ backend_env_file }}
+    entrypoint:
+      - dotnet
+      - BackendFramework.dll
     restart: unless-stopped
   nginx:
     build:
@@ -25,7 +28,7 @@ services:
       - 443:443
     command:
       - "/bin/bash"
-      - "{{ frontend_entrypoint }}"
+      - "{{ frontend_start_script }}"
     depends_on:
       - web
     restart: unless-stopped

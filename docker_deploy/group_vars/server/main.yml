@@ -14,4 +14,4 @@ certbot_email: jimgrady.jg@gmail.com
 # frontend container supports mulitple entrypoints
 # each of which defines a different method for managing
 # its SSL Certificates
-frontend_entrypoint: /scripts/entrypoint.sh
+frontend_start_script: /scripts/entrypoint.sh
