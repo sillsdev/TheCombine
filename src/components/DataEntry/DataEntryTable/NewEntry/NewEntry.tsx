@@ -9,7 +9,6 @@ import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateRes
 import {
   addSemanticDomainToSense,
   addSenseToWord,
-  duplicatesFromFrontier,
 } from "../ExistingEntry/ExistingEntry";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import NewVernEntry from "./NewVernEntry/NewVernEntry";
@@ -53,10 +52,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.glossInput = React.createRef<HTMLDivElement>();
     this.duplicateInput = React.createRef<HTMLDivElement>();
   }
-
-  readonly maxStartsWith: number = 4;
-  readonly maxDuplicates: number = 2;
-
   private defaultNewEntry() {
     return {
       id: "",
@@ -82,7 +77,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       plural: "",
     };
   }
-
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
   duplicateInput: React.RefObject<HTMLDivElement>;
@@ -129,25 +123,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  updateVernField(newValue: string) {
-    this.focusAutoScroll();
-    let autoCompleteWords: Word[] = this.autoCompleteCandidates(
-      this.props.allWords,
-      newValue
-    );
-    let isDuplicate: boolean =
-      this.props.autocompleteSetting !== AutoComplete.Off &&
-      autoCompleteWords.length > 0;
-    this.setState({
-      isDuplicate: isDuplicate,
-      duplicates: autoCompleteWords,
-      newEntry: {
-        ...this.state.newEntry,
-        vernacular: newValue,
-      },
-    });
-  }
-
   resetState() {
     this.setState({
       newEntry: this.defaultNewEntry(),
@@ -155,40 +130,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       duplicates: [],
       activeGloss: "",
     });
-  }
-
-  /** Returns autocomplete choices from the frontier words
-   * Populates maxStartsWith 'starts with' options and then
-   * adds up to maxDuplicates options
-   */
-  autoCompleteCandidates(existingWords: Word[], vernacular: string): Word[] {
-    // filter existingWords to those that start with vernacular
-    // then map them into an array sorted by length and take the 2 shortest
-    // and the rest longest (should make finding the long words easier)
-    let scoredStartsWith: [Word, number][] = [];
-    let startsWith = existingWords.filter((word) =>
-      word.vernacular.startsWith(vernacular)
-    );
-    for (let w of startsWith) {
-      scoredStartsWith.push([w, w.vernacular.length]);
-    }
-    var keepers = scoredStartsWith
-      .sort((a, b) => a[1] - b[1])
-      .map((word) => word[0]);
-    if (keepers.length > 4) {
-      keepers.splice(2, keepers.length - this.maxStartsWith);
-    }
-    for (let d of duplicatesFromFrontier(
-      existingWords,
-      vernacular,
-      this.maxDuplicates
-    )) {
-      let word = existingWords.find((word) => word.id === d);
-      if (word !== undefined && !keepers.includes(word)) {
-        keepers.push(word);
-      }
-    }
-    return keepers;
   }
 
   /** Move the focus to the vernacular textbox */
@@ -233,8 +174,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
           >
             <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
               <NewVernEntry
+                duplicates={[]}
                 vernacular={this.state.newEntry.vernacular}
+                newEntry={this.state.newEntry}
                 vernInput={this.vernInput}
+                allWords={this.props.allWords}
+                autocompleteSetting={this.props.autocompleteSetting}
                 showAutocompleteToggle={
                   this.props.autocompleteSetting === AutoComplete.OnRequest &&
                   this.state.isDuplicate
@@ -242,10 +187,9 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 toggleAutocompleteView={() =>
                   this.toggleDuplicateResolutionView()
                 }
-                updateVernField={(newValue: string) => {
-                  this.updateVernField(newValue);
-                  this.props.setIsReadyState(newValue.trim().length > 0);
-                }}
+                updateNewEntry={(newEntryUpdated: Word) =>
+                  this.setState({ newEntry: newEntryUpdated })
+                }
               />
             </Grid>
             <Grid item xs={12}>
