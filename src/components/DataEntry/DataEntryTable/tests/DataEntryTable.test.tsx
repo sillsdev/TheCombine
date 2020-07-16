@@ -6,10 +6,9 @@ import renderer, {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import * as backend from "../../../../backend";
-import { SemanticDomain, Word, State } from "../../../../types/word";
+import { SemanticDomain, Word } from "../../../../types/word";
 import { defaultProject as mockProject } from "../../../../types/project";
 import { defaultState } from "../../../App/DefaultState";
-import { filterWords } from "../../DataEntryComponent";
 import { mockDomainTree } from "../../tests/MockDomainTree";
 import { mockWord } from "../../tests/MockWord";
 import DataEntryTable from "../DataEntryTable";

@@ -24,15 +24,13 @@ jest.mock("../../../backend", () => {
 });
 
 describe("Tests DataEntryComponent", () => {
-  it("should filter out words that are not accessible", () => {
+  it("should return empty Word Array when given empty Word Array", () => {
     let words: Word[] = [];
     let expectedWords: Word[] = [];
     expect(filterWords(words)).toEqual(expectedWords);
   });
 
   it("should filter out words that are inaccessible", () => {
-    let word = { ...mockWord };
-    word.senses[0].accessibility = State.active;
     let words: Word[] = [
       {
         ...mockWord,
@@ -48,7 +46,7 @@ describe("Tests DataEntryComponent", () => {
     expect(filterWords(words)).toEqual(expectedWords);
   });
 
-  it("should filter out words that are inaccessible", () => {
+  it("should not filter words that are accessible", () => {
     let word = { ...mockWord };
     word.senses[0].accessibility = State.active;
     let words: Word[] = [
@@ -91,10 +89,10 @@ describe("Tests DataEntryComponent", () => {
     unfilteredWords[1].vernacular = "two";
     unfilteredWords[2].senses[0].semanticDomains[0] = mockDomains[1];
     unfilteredWords[2].vernacular = "three";
-    unfilteredWords[3].senses[0].semanticDomains[0] = mockDomains[1];
+    unfilteredWords[3].senses[0].semanticDomains[0] = mockDomains[0];
     unfilteredWords[3].vernacular = "four";
 
-    let expectedValue: Word[] = [];
+    let expectedValue: Word[] = [unfilteredWords[3]];
     expect(filterWordsByDomain(unfilteredWords, mockDomains[0])).toStrictEqual(
       expectedValue
     );
@@ -117,7 +115,7 @@ describe("Tests DataEntryComponent", () => {
     for (let currentWord of unfilteredWords) {
       currentWord.senses[0].semanticDomains[0] = mockDomain;
     }
-    unfilteredWords[0].vernacular = "Allways";
+    unfilteredWords[0].vernacular = "Always";
     unfilteredWords[1].vernacular = "Be";
     unfilteredWords[2].vernacular = "?character";
 
