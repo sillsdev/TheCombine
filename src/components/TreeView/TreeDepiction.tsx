@@ -1,6 +1,6 @@
 import { Grid, GridList, GridListTile } from "@material-ui/core";
 import React, { ReactNode } from "react";
-// Images
+
 import {
   endcapLeft,
   endcapRight,
@@ -89,9 +89,6 @@ export default class TreeDepiction extends React.Component<
             width: (subdomains.length * 2 - 1) * this.state.tileWidth,
           }}
         >
-          {/* Content */}
-          {this.domainRow()}
-
           {/* Left endcap */}
           {this.treeTile(endcapLeft)}
 
@@ -100,6 +97,9 @@ export default class TreeDepiction extends React.Component<
 
           {/* Right endcap */}
           {this.treeTile(endcapRight)}
+
+          {/* Content */}
+          {this.domainRow()}
         </GridList>
       );
     else
@@ -112,6 +112,7 @@ export default class TreeDepiction extends React.Component<
             width: this.state.tileWidth,
           }}
         >
+          {this.treeTile(pillar)}
           <GridListTile>
             <DomainTile
               domain={subdomains[0]}
@@ -119,10 +120,9 @@ export default class TreeDepiction extends React.Component<
                 this.props.animate(e);
                 this.setState({ bounce: Math.random() });
               }}
-              direction={Direction.Up}
+              direction={Direction.Down}
             />
           </GridListTile>
-          {this.treeTile(pillar)}
         </GridList>
       );
   }
@@ -180,7 +180,7 @@ export default class TreeDepiction extends React.Component<
                 this.props.animate(e);
                 this.setState({ bounce: Math.random() });
               }}
-              direction={Direction.Up}
+              direction={Direction.Down}
             />
           </GridListTile>
         );
@@ -193,7 +193,10 @@ export default class TreeDepiction extends React.Component<
   // Creates a section of the tree diagram (one of the branches) set to proper dimensions
   treeTile(name: string): ReactNode {
     return (
-      <GridListTile key={name + Math.random() * 1000}>
+      <GridListTile
+        key={name + Math.random() * 1000}
+        style={{ transform: "scaleY(-1)" }}
+      >
         <img
           src={name}
           alt={name}
@@ -207,10 +210,30 @@ export default class TreeDepiction extends React.Component<
   render() {
     return (
       <React.Fragment>
-        {/* Label next options, if applicable */}
+        {/* Label parent domain, if available */}
         <Grid item>
-          {this.props.currentDomain.subdomains.length > 0 && this.subDomains()}
+          {this.props.currentDomain.parentDomain && (
+            <GridList
+              cols={1}
+              spacing={0}
+              style={{ width: this.state.tileWidth }}
+              cellHeight="auto"
+            >
+              <GridListTile>
+                <DomainTile
+                  domain={this.props.currentDomain.parentDomain}
+                  onClick={(e) => {
+                    this.props.animate(e);
+                    this.setState({ bounce: Math.random() });
+                  }}
+                  direction={Direction.Up}
+                />
+              </GridListTile>
+              {this.treeTile(parent)}
+            </GridList>
+          )}
         </Grid>
+
         {/* Label current domain */}
         <Grid item>
           <TreeViewHeader
@@ -222,28 +245,10 @@ export default class TreeDepiction extends React.Component<
             }}
           />
         </Grid>
-        {/* Optionally create the header for the parent domain */}
+
+        {/* Label subdomains, if available */}
         <Grid item>
-          {this.props.currentDomain.parentDomain && (
-            <GridList
-              cols={1}
-              spacing={0}
-              style={{ width: this.state.tileWidth }}
-              cellHeight="auto"
-            >
-              {this.treeTile(parent)}
-              <GridListTile>
-                <DomainTile
-                  domain={this.props.currentDomain.parentDomain}
-                  onClick={(e) => {
-                    this.props.animate(e);
-                    this.setState({ bounce: Math.random() });
-                  }}
-                  direction={Direction.Down}
-                />
-              </GridListTile>
-            </GridList>
-          )}
+          {this.props.currentDomain.subdomains.length > 0 && this.subDomains()}
         </Grid>
       </React.Fragment>
     );
