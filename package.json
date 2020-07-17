@@ -1,6 +1,7 @@
 {
   "name": "thecombine",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "api": "dotnet run --project Backend/BackendFramework.csproj",
@@ -14,6 +15,8 @@
     "frontend": "react-scripts start",
     "gen-backend-coverage-report": "tsc genBackendCoverageReport.ts && node genBackendCoverageReport.js",
     "import-sem-doms": "tsc importSemanticDomains.ts && node importSemanticDomains.js",
+    "license-report": "npm install && license-checker --production",
+    "license-summary": "npm install && license-checker --production --summary",
     "lint": "eslint --ext js,ts,tsx,jsx src",
     "predatabase": "tsc setupMongo.ts && node setupMongo.js",
     "prettier": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
@@ -87,6 +90,7 @@
     "@types/redux-thunk": "^2.1.0",
     "@types/validator": "^13.0.0",
     "jest-teamcity-reporter": "^0.9.0",
+    "license-checker": "^25.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "2.0.5",
     "react-test-renderer": "^16.13.1",
