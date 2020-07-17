@@ -202,6 +202,20 @@ all database objects), create a user normally and then execute:
 > npm run set-admin-user -- <USERNAME>
 ```
 
+### Generate License Report
+
+To generate a summary of licenses used in production:
+
+```batch
+> npm run license-summary
+```
+
+To generate a full report of the licenses used in production:
+
+```batch
+> npm run license-report
+```
+
 ## Docker
 
 ### Requirements
