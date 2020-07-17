@@ -8,24 +8,16 @@ import renderer, { ReactTestInstance } from "react-test-renderer";
 import { Provider } from "react-redux";
 import { DataEntryTable } from "../DataEntryTable/DataEntryTable";
 import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";
-import { mockDomainTree } from "./MockDomainTree";
+import mockDomainTree from "../../TreeView/tests/MockSemanticDomain";
 import { mockWord, mockDomainWord } from "./MockWord";
 import { defaultProject as mockProject } from "../../../types/project";
-import {
-  Word,
-  State,
-  DomainWord,
-  SemanticDomain,
-  Sense,
-} from "../../../types/word";
+import { Word, State, DomainWord, Sense } from "../../../types/word";
 import {
   filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "../DataEntryComponent";
-import DomainTree from "../../TreeView/SemanticDomain";
-import _ from "lodash";
-import { mockSemanticDomain } from "../DataEntryTable/tests/DataEntryTable.test";
+import DomainTree from "../../../types/SemanticDomain";
 
 jest.mock("../../../backend", () => {
   return {

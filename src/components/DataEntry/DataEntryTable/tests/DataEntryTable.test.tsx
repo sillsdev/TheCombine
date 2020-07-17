@@ -7,18 +7,11 @@ import renderer, {
 import configureMockStore from "redux-mock-store";
 
 import * as backend from "../../../../backend";
-<<<<<<< HEAD
-=======
-import { SemanticDomain, Word } from "../../../../types/word";
->>>>>>> adf204f... cleanup imports and test naming
 import { defaultProject as mockProject } from "../../../../types/project";
-import { SemanticDomain, Word } from "../../../../types/word";
+import { SemanticDomain, State, Word } from "../../../../types/word";
 import { defaultState } from "../../../App/DefaultState";
-<<<<<<< HEAD
+import { filterWords } from "../../DataEntryComponent";
 import { baseDomain } from "../../../../types/SemanticDomain";
-=======
-import { mockDomainTree } from "../../tests/MockDomainTree";
->>>>>>> adf204f... cleanup imports and test naming
 import { mockWord } from "../../tests/MockWord";
 import DataEntryTable from "../DataEntryTable";
 import { NewEntry } from "../NewEntry/NewEntry";
@@ -70,6 +63,49 @@ beforeEach(() => {
 });
 
 describe("Tests DataEntryTable", () => {
+  it("should filter out words that are not accessible", () => {
+    let words: Word[] = [];
+    let expectedWords: Word[] = [];
+    expect(filterWords(words)).toEqual(expectedWords);
+  });
+
+  it("should filter out words that are inaccessible", () => {
+    let word = { ...mockWord };
+    word.senses[0].accessibility = State.active;
+    let words: Word[] = [
+      {
+        ...mockWord,
+        senses: [
+          {
+            glosses: [],
+            semanticDomains: [],
+          },
+        ],
+      },
+    ];
+    let expectedWords: Word[] = [];
+    expect(filterWords(words)).toEqual(expectedWords);
+  });
+
+  it("should filter out words that are inaccessible", () => {
+    let word = { ...mockWord };
+    word.senses[0].accessibility = State.active;
+    let words: Word[] = [
+      {
+        ...mockWord,
+        senses: [
+          {
+            glosses: [],
+            semanticDomains: [],
+            accessibility: State.active,
+          },
+        ],
+      },
+    ];
+    let expectedWords: Word[] = [...words];
+    expect(filterWords(words)).toEqual(expectedWords);
+  });
+
   it("should call add word on backend when new entry has data and complete is clicked", (done) => {
     jest.clearAllMocks();
     // Verify that NewEntry is present
