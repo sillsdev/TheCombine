@@ -145,7 +145,11 @@ export class Login extends React.Component<
 
               {/* "Forgot password?" link to reset password */}
               <Typography>
-                <Link href={"#"} variant="subtitle2">
+                <Link
+                  href={"#"}
+                  onClick={() => history.push("/forgot/request")}
+                  variant="subtitle2"
+                >
                   <Translate id="login.forgotPassword" />
                 </Link>
               </Typography>

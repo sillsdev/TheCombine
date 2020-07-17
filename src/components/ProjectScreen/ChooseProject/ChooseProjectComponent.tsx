@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 
 import { Project } from "../../../types/project";
-import { getAllProjectsByUser } from "../../../backend";
+import { getAllActiveProjectsByUser } from "../../../backend";
 import history from "../../../history";
 import { getCurrentUser } from "../../../backend/localStorage";
 
@@ -34,7 +34,7 @@ class ChooseProject extends React.Component<
     this.state = { projectList: [] };
     const user = getCurrentUser();
     if (user) {
-      getAllProjectsByUser(user).then((projects) => {
+      getAllActiveProjectsByUser(user).then((projects) => {
         this.setState({ ...this.state, projectList: projects });
       });
     }

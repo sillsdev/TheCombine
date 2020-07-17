@@ -6,13 +6,14 @@ import {
   Translate,
   withLocalize,
 } from "react-localize-redux";
+
 import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
 import { AutoComplete } from "../../../types/AutoComplete";
 import theme from "../../../types/theme";
 import { SemanticDomain, Word } from "../../../types/word";
 import { Recorder } from "../../Pronunciations/Recorder";
-import DomainTree from "../../TreeView/SemanticDomain";
+import DomainTree from "../../../types/SemanticDomain";
 import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
@@ -25,6 +26,7 @@ interface DataEntryTableProps {
   getWordsFromBackend: () => Promise<Word[]>;
   showExistingData: () => void;
   isSmallScreen: boolean;
+  hideQuestions: () => void;
 }
 
 interface WordAccess {
@@ -209,12 +211,15 @@ export class DataEntryTable extends React.Component<
       >
         <input type="submit" style={{ display: "none" }} />
 
-        <Grid container spacing={3}>
+        <Grid container>
           <Grid item xs={4}>
             <Typography
               variant="h5"
               align="center"
-              style={{ marginTop: theme.spacing(2) }}
+              style={{
+                marginTop: theme.spacing(2),
+                marginBottom: theme.spacing(2),
+              }}
             >
               <Translate id="addWords.vernacular" />
             </Typography>
@@ -223,7 +228,10 @@ export class DataEntryTable extends React.Component<
             <Typography
               variant="h5"
               align="center"
-              style={{ marginTop: theme.spacing(2) }}
+              style={{
+                marginTop: theme.spacing(2),
+                marginBottom: theme.spacing(2),
+              }}
             >
               <Translate id="addWords.glosses" />
             </Typography>
@@ -352,6 +360,9 @@ export class DataEntryTable extends React.Component<
                 let recentlyAddedWords: WordAccess[] = [];
                 this.props.displaySemanticDomainView(true);
                 this.setState({ recentlyAddedWords });
+
+                //Since DataEntryComponent isn't rerendered, just hidden, this will enforce questions being hidden as a default
+                this.props.hideQuestions();
               }}
             >
               <Translate id="addWords.done" />

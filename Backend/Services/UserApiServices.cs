@@ -32,12 +32,14 @@ namespace BackendFramework.Services
         {
             private const int SaltLength = 16;
 
-            /// <summary> Use SHA1 length. </summary>
-            private const int HashLength = 160 / 8;
+            /// <summary> Use SHA256 length. </summary>
+            private const int HashLength = 256 / 8;
 
             /// <summary> Hash iterations to slow down brute force password cracking. </summary>
             /// It's important that this value is not too low, or password cracking is made easier.
-            private const int HashIterations = 10000;
+            /// Value selected from default Django 3.1 iteration count (appropriate as of August 2020).
+            /// https://docs.djangoproject.com/en/dev/releases/3.1/#django-contrib-auth
+            private const int HashIterations = 216000;
 
             /// <summary>
             /// Hash a password with a generated salt and return the combined bytes suitable for storage.
@@ -85,7 +87,8 @@ namespace BackendFramework.Services
             /// <summary> Hash a password and salt using PBKDF2. </summary>
             private static byte[] HashPassword(string password, byte[] salt)
             {
-                using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, HashIterations, HashAlgorithmName.SHA1);
+                // SHA256 is the recommended PBKDF2 hash algorithm.
+                using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, HashIterations, HashAlgorithmName.SHA256);
                 return pbkdf2.GetBytes(HashLength);
             }
 
@@ -124,7 +127,7 @@ namespace BackendFramework.Services
         {
             const int tokenExpirationMinutes = 60 * 4;
             var tokenHandler = new JwtSecurityTokenHandler();
-            var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
+            var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY");
             var key = Encoding.ASCII.GetBytes(secretKey);
 
             // Fetch the projects Id and the roles for each Id
@@ -208,6 +211,30 @@ namespace BackendFramework.Services
             return string.IsNullOrEmpty(user?.Avatar) ? null : user.Avatar;
         }
 
+        /// <summary> Finds <see cref="User"/> with specified userId and changes it's password </summary>
+        public async Task<ResultOfUpdate> ChangePassword(string userId, string password)
+        {
+            var hash = PasswordHash.HashPassword(password);
+
+            var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
+            var updateDef = Builders<User>.Update
+                .Set(x => x.Password, Convert.ToBase64String(hash));
+
+            var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
+            if (!updateResult.IsAcknowledged)
+            {
+                return ResultOfUpdate.NotFound;
+            }
+            else if (updateResult.ModifiedCount > 0)
+            {
+                return ResultOfUpdate.Updated;
+            }
+            else
+            {
+                return ResultOfUpdate.NoChange;
+            }
+        }
+
         /// <summary> Adds a <see cref="User"/> </summary>
         /// <returns> The <see cref="User"/> created, or null if the user could not be created. </returns>
         public async Task<User> Create(User user)
@@ -278,30 +305,6 @@ namespace BackendFramework.Services
             {
                 updateDef = updateDef.Set(x => x.IsAdmin, user.IsAdmin);
             }
-
-            var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
-            if (!updateResult.IsAcknowledged)
-            {
-                return ResultOfUpdate.NotFound;
-            }
-            else if (updateResult.ModifiedCount > 0)
-            {
-                return ResultOfUpdate.Updated;
-            }
-            else
-            {
-                return ResultOfUpdate.NoChange;
-            }
-        }
-
-        /// <summary> Finds <see cref="User"/> with specified userId and changes it's password </summary>
-        public async Task<ResultOfUpdate> ChangePassword(string userid, string password)
-        {
-            var hash = PasswordHash.HashPassword(password);
-
-            var filter = Builders<User>.Filter.Eq(x => x.Id, userid);
-            var updateDef = Builders<User>.Update
-                .Set(x => x.Password, Convert.ToBase64String(hash));
 
             var updateResult = await _userDatabase.Users.UpdateOneAsync(filter, updateDef);
             if (!updateResult.IsAcknowledged)

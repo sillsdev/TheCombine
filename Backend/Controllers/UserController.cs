@@ -6,6 +6,9 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using MimeKit;
+using System.Web.Http;
 
 namespace BackendFramework.Controllers
 {
@@ -17,11 +20,65 @@ namespace BackendFramework.Controllers
     {
         private readonly IUserService _userService;
         private readonly IPermissionService _permissionService;
+        private readonly IEmailService _emailService;
+        private readonly IPasswordResetService _passwordResetService;
 
-        public UserController(IUserService userService, IPermissionService permissionService)
+        public UserController(IUserService userService, IPermissionService permissionService, IEmailService emailService, IPasswordResetService passwordResetService)
         {
             _userService = userService;
             _permissionService = permissionService;
+            _emailService = emailService;
+            _passwordResetService = passwordResetService;
+        }
+
+        /// <summary> Sends a password reset request </summary>
+        /// <remarks> GET: v1/users/forgot </remarks>
+        [AllowAnonymous]
+        [HttpPost("forgot")]
+        public async Task<IActionResult> ResetPasswordRequest([FromBody] PasswordResetData data)
+        {
+            var email = data.Email;
+            // create password reset
+            var resetRequest = await _passwordResetService.CreatePasswordReset(email);
+
+            // find user attached to email
+            var user = _userService.GetAllUsers().Result.Single(user => user.Email.Equals(email));
+
+            // create email
+            var message = new MimeMessage();
+            message.To.Add(new MailboxAddress(user.Name, user.Email));
+            message.Subject = "Combine password reset";
+            message.Body = new TextPart("plain")
+            {
+                Text = string.Format("A password reset has been requested for the user {0}. Follow the link to reset "
+                        + "{0}'s password. {1}/forgot/reset/{2} \n\n If you did not request a password reset please "
+                        + "ignore this email", user.Username, data.Domain, resetRequest.Token)
+            };
+            if (await _emailService.SendEmail(message))
+            {
+                return new OkResult();
+            }
+            else
+            {
+                return new InternalServerErrorResult();
+            }
+        }
+
+        /// <summary> Resets a password using a token </summary>
+        /// <remarks> POST: v1/users/reset </remarks>
+        [AllowAnonymous]
+        [HttpPost("forgot/reset")]
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetData data)
+        {
+            var result = await _passwordResetService.ResetPassword(data.Token, data.NewPassword);
+            if (result)
+            {
+                return new OkResult();
+            }
+            else
+            {
+                return new ForbidResult();
+            }
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
@@ -55,7 +112,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/users/authenticate </remarks>
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody]Credentials cred)
+        public async Task<IActionResult> Authenticate([FromBody] Credentials cred)
         {
             try
             {
@@ -97,7 +154,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of created user </returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]User user)
+        public async Task<IActionResult> Post([FromBody] User user)
         {
             var returnUser = await _userService.Create(user);
             if (returnUser == null)
@@ -187,6 +244,14 @@ namespace BackendFramework.Controllers
                 return new OkResult();
             }
             return new NotFoundResult();
+        }
+
+        public class PasswordResetData
+        {
+            public string Email;
+            public string Token;
+            public string NewPassword;
+            public string Domain;
         }
     }
 }

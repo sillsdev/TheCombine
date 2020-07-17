@@ -126,6 +126,21 @@
       "Veuillez entrer un email valide"
     ]
   },
+  "passwordReset": {
+    "resetRequestTitle": [
+      "Reset Password Request",
+      "Restablecer solicitud de contraseña"
+    ],
+    "resetTitle": ["Reset Password", "Restablecer la contraseña"],
+    "tokenLabel": ["Token", "simbólico"],
+    "resetRequestInstructions": [
+      "We will send a one time reset link for your account to your email",
+      "Le enviaremos un enlace de restablecimiento único para su cuenta a su correo electrónico"
+    ],
+    "submit": ["Submit", "Enviar"],
+    "resetFail": ["Password reset expired", "Error al restablecer contraseña"],
+    "emailError": ["Email doesn't exist"]
+  },
   "userMenu": {
     "siteSettings": [
       "Site Settings",
@@ -172,6 +187,50 @@
       "Seleccionar Proyecto",
       "Sélectionner un projet"
     ]
+  },
+  "siteSettings": {
+    "archiveProject": {
+      "button": ["Archive", "Archivar", "Archiver"],
+      "warnTitle": [
+        "Proceed with Caution!",
+        "¡Proceder con precaución!",
+        "Procéder avec prudence !"
+      ],
+      "warnText": [
+        "This project will not be accessible to any users.",
+        "Este proyecto no será accesible para ningún usuario.",
+        "Ce projet ne sera accessible à aucun utilisateur."
+      ],
+      "cancel": [
+        "Cancel and keep project",
+        "Cancelar y mantener proyecto",
+        "Annuler et conserver projet"
+      ],
+      "confirm": [
+        "Archive project for all users",
+        "Archivar proyeto para todos usarios",
+        "Archiver projet pour tous utilisateurs"
+      ]
+    },
+    "restoreProject": {
+      "button": ["Restore", "Restaurar", "Restaurer"],
+      "warnTitle": [
+        "Proceed with Caution!",
+        "¡Proceder con precaución!",
+        "Procéder avec prudence !"
+      ],
+      "warnText": [
+        "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
+        "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
+        "Quelqu'un avait probablement une bonne raison de archiver ce projet. Voulez-vous vraiment le restaurer ?"
+      ],
+      "cancel": [
+        "Cancel and leave project archived",
+        "Cancelar y dejar proyecto como archivado",
+        "Annuler et laisser projet tel qu'archivé"
+      ],
+      "confirm": ["Restore project", "Restaurat proyeto", "Restaurer projet"]
+    }
   },
   "projectSettings": {
     "language": {
@@ -229,11 +288,14 @@
         "admin": ["Admin", "Administración", "Admin"]
       }
     },
-    "export": [
-      "Export Project",
-      "Proyecto de exportación",
-      "Exporter le projet"
-    ],
+    "exportProject": {
+      "label": [
+        "Export Project",
+        "Proyecto de exportación",
+        "Exporter le projet"
+      ],
+      "button": ["Export", "Exportar", "Exporter"]
+    },
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
       "off": ["Off", "Apagar", "Éteint"],

@@ -7,7 +7,7 @@
 cat  << EOF
 window['runtimeConfig'] = {
     useConnectionBaseUrlForApi: true,
-    captchaRequired: $CAPTCHA_REQUIRED,
-    captchaSiteKey: "$CAPTCHA_SITE"
+    captchaRequired: $COMBINE_CAPTCHA_REQUIRED,
+    captchaSiteKey: "$COMBINE_CAPTCHA_SITE"
 }
 EOF

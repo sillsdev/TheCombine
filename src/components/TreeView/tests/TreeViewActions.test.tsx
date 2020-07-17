@@ -1,5 +1,5 @@
 import { TraverseTreeAction, TreeActionType } from "../TreeViewActions";
-import SemanticDomainWithSubdomains from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 
 describe("Test TraverseTreeAction", () => {
   it("Creates the right action", () => {

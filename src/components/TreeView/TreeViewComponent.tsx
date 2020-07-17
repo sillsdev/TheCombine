@@ -3,7 +3,7 @@ import { Grid, Zoom } from "@material-ui/core";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import TreeProps from "./TreeProps";
 import TreeDepiction from "./TreeDepiction";
-import SemanticDomainWithSubdomains from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
 import { createDomains } from "./TreeViewReducer";
 
 // Domain data
@@ -32,7 +32,7 @@ export class TreeView extends React.Component<
 
     this.animate = this.animate.bind(this);
 
-    var domains = en;
+    let domains: SemanticDomainWithSubdomains[];
     if (props.activeLanguage) {
       // not defined in unit tests
       switch (props.activeLanguage.code) {
@@ -42,7 +42,12 @@ export class TreeView extends React.Component<
         case "es":
           domains = es;
           break;
+        default:
+          domains = en;
+          break;
       }
+    } else {
+      domains = en;
     }
     // If the state has the current domain defined then use that in the navigateTree call
     if (this.props.currentDomain.name !== "") {

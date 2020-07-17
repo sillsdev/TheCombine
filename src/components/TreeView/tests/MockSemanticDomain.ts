@@ -1,4 +1,4 @@
-import SemanticDomainWithSubdomains from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 
 // Parent
 const PAR: SemanticDomainWithSubdomains = {
@@ -6,6 +6,7 @@ const PAR: SemanticDomainWithSubdomains = {
   id: "1",
   subdomains: [],
   description: "parent desc",
+  questions: [],
 };
 
 // Following subdomains
@@ -16,6 +17,7 @@ for (let i: number = 0; i < 3; i++)
     parentDomain: PAR,
     subdomains: [],
     description: `kid ${i}`,
+    questions: [],
   });
 
 // Give subdomain 0 an even # of subdomains
@@ -26,6 +28,7 @@ for (let i: number = 0; i < 4; i++)
     parentDomain: PAR.subdomains[0],
     subdomains: [],
     description: `evens ${i}`,
+    questions: [],
   });
 
 // Give the the next subdomain an odd # of subdomains
@@ -36,6 +39,7 @@ for (let i: number = 0; i < 3; i++)
     parentDomain: PAR.subdomains[1],
     subdomains: [],
     description: `odds ${i}`,
+    questions: [],
   });
 
 // Give the the last subdomain one subdomain
@@ -45,6 +49,7 @@ PAR.subdomains[2].subdomains.push({
   parentDomain: PAR.subdomains[2],
   subdomains: [],
   description: "so lonely...",
+  questions: [],
 });
 
 //Extend the last subtree for a total depth of 5
@@ -55,6 +60,7 @@ PAR.subdomains[2].subdomains[0].subdomains.push({
   parentDomain: PAR.subdomains[2].subdomains[0],
   subdomains: [],
   description: "almost at the bottom...",
+  questions: [],
 });
 
 PAR.subdomains[2].subdomains[0].subdomains[0].subdomains.push({
@@ -63,6 +69,7 @@ PAR.subdomains[2].subdomains[0].subdomains[0].subdomains.push({
   parentDomain: PAR.subdomains[2].subdomains[0].subdomains[0],
   subdomains: [],
   description: "ROCK BOTTOM",
+  questions: [],
 });
 
 export default PAR;

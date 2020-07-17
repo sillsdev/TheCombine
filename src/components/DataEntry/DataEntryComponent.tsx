@@ -7,7 +7,7 @@ import theme from "../../types/theme";
 import { SemanticDomain, Word, State, DomainWord } from "../../types/word";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import TreeViewComponent from "../TreeView";
-import DomainTree from "../TreeView/SemanticDomain";
+import DomainTree from "../../types/SemanticDomain";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "./ExistingDataTable/ExistingDataTable";
@@ -22,6 +22,7 @@ interface DataEntryState {
   domainWords: DomainWord[];
   isSmallScreen: boolean;
   drawerOpen: boolean;
+  questionsVisible: boolean;
 }
 
 const paperStyle = {
@@ -94,6 +95,7 @@ export class DataEntryComponent extends React.Component<
       domainWords: [],
       isSmallScreen: window.matchMedia("(max-width: 960px)").matches,
       drawerOpen: false,
+      questionsVisible: false,
     };
   }
 
@@ -155,7 +157,13 @@ export class DataEntryComponent extends React.Component<
         <Grid container justify="center" spacing={3} wrap={"nowrap"}>
           <Grid item>
             <Paper style={paperStyle}>
-              <DataEntryHeader domain={this.props.domain} />
+              <DataEntryHeader
+                domain={this.props.domain}
+                questionsVisible={this.state.questionsVisible}
+                setQuestionVisibility={(visibility: boolean) =>
+                  this.setState({ questionsVisible: visibility })
+                }
+              />
               <Divider />
               <DataEntryTable
                 domain={this.props.domain}
@@ -170,6 +178,9 @@ export class DataEntryComponent extends React.Component<
                 getWordsFromBackend={() => this.getWordsFromBackend()}
                 showExistingData={() => this.toggleDrawer(true)}
                 isSmallScreen={this.state.isSmallScreen}
+                hideQuestions={() => {
+                  this.setState({ questionsVisible: false });
+                }}
               />
             </Paper>
           </Grid>
