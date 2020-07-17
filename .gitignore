@@ -12,6 +12,7 @@
 # Production
 /build
 production.yml
+prodDockerfile
 
 # Misc
 .DS_Store

@@ -5,11 +5,19 @@
     dest: "{{ source_dir }}/production.yml"
     owner: root
     group: root
-    mode: 0400
+    mode: 0600
 
 - name: create init docker-compose file
   debug:
     msg: "TODO: Create compose file to initialize the database"
+
+- name: create production Dockerfile for frontend
+  template:
+    src: prodDockerfile.j2
+    dest: "{{ source_dir }}/prodDockerfile"
+    owner: root
+    group: root
+    mode: 0600
 
 - name: create backend .env file
   template:
@@ -17,11 +25,11 @@
     dest: "{{ source_dir }}/.env.backend.prod"
     owner: root
     group: root
-    mode: 0400
+    mode: 0600
 
 - name: create config directory
   file:
-    name: "{{ config_dir }}"
+    name: "{{ source_dir }}/{{ config_dir }}"
     state: directory
     owner: root
     group: root
@@ -30,7 +38,7 @@
 - name: create frontend config.js
   template:
     src: config.js.j2
-    dest: "{{ config_dir }}/config.js"
+    dest: "{{ source_dir }}/{{ config_dir }}/config.js"
     owner: root
     group: root
     mode: 0644

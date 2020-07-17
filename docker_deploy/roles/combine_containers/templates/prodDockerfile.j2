@@ -23,4 +23,4 @@ ENV NGINX_HOST_DIR /usr/share/nginx/html
 COPY --from=builder /app/build ${NGINX_HOST_DIR}
 
 # Configure frontend.
-COPY config/config.js ${NGINX_HOST_DIR}/config.js
+COPY {{ config_dir }}/config.js ${NGINX_HOST_DIR}/config.js

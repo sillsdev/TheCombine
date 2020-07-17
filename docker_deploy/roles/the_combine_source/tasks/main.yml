@@ -10,13 +10,13 @@
 # check to see if source code is installed
 - name: check for existing source code
   stat:
-    path: /opt/TheCombine
+    path: "{{ source_dir }}"
   register: combinestat
 
 - name: get source code from GitHub
   git:
     repo: "https://github.com/sillsdev/TheCombine.git"
-    dest: "/opt/TheCombine"
+    dest: "{{ source_dir }}"
     clone: yes
     update: yes
     version: docker_deploy

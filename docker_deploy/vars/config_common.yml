@@ -1,7 +1,7 @@
 ---
 
-source_dir: /opt/TheCombine
-config_dir: "{{ source_dir }}/config"
+source_dir: /opt/combine
+config_dir: docker_config
 
 backend_env_file: ".env.backend.prod"
 backend_env_dir: "{{ source_dir }}/Backend"
