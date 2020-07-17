@@ -38,7 +38,7 @@ A rapid word collection tool.
      `dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.6.1`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
-4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
+4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
    it in your `.profile` (Linux) or the _System_ app (Windows).
 5. If you want the email services to work you will need to set the following environment variables.
@@ -165,7 +165,7 @@ To completely erase the current Mongo database, run:
 
 #### Local
 
-To create a new admin user, first set the `ASPNETCORE_ADMIN_PASSWORD`
+To create a new admin user, first set the `COMBINE_ADMIN_PASSWORD`
 environment variable and then run:
 
 ```batch
@@ -188,7 +188,7 @@ password environment variables.
 This will create the user and exit. If successful, the exit code will be `0`,
 otherwise an error will be logged and the exit code will be non-`0`.
 
-**Important**: Remove the `ASPNETCORE_*` environment variables from
+**Important**: Remove the `COMBINE_*` environment variables from
 `.env.backend.auth` so that subsequent launches will start up the backend.
 
 ### (Development Only) Grant an Existing User Admin Rights
@@ -214,6 +214,9 @@ separately. This is included by default in Docker Desktop for Windows and macOS.
 
 For more information see the
 [Docker Compose docs](https://docs.docker.com/compose/).
+
+Copy `.env.backend.template` to `.env.backend` and fill in the environment
+variables.
 
 ```batch
 > docker-compose build --parallel
@@ -279,7 +282,7 @@ services:
   frontend:
     build:
       args:
-        - CAPTCHA_REQUIRED=false
+        - COMBINE_CAPTCHA_REQUIRED=false
 ```
 
 Use this file when building and launching the Docker Compose project.

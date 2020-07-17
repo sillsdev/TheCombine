@@ -124,7 +124,7 @@ namespace BackendFramework.Services
         {
             const int tokenExpirationMinutes = 60 * 4;
             var tokenHandler = new JwtSecurityTokenHandler();
-            var secretKey = Environment.GetEnvironmentVariable("ASPNETCORE_JWT_SECRET_KEY");
+            var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY");
             var key = Encoding.ASCII.GetBytes(secretKey);
 
             // Fetch the projects Id and the roles for each Id
