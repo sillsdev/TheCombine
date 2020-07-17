@@ -1,15 +1,15 @@
-import React from "react";
 import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
-import { Translate } from "react-localize-redux";
 import { ExitToApp, Person, SettingsApplications } from "@material-ui/icons";
+import React from "react";
+import { Translate } from "react-localize-redux";
 
+import { avatarSrc } from "../../backend";
+import { getCurrentUser, setProjectId } from "../../backend/localStorage";
 import history from "../../history";
 import theme from "../../types/theme";
-import { avatarSrc } from "../../backend";
-import { getCurrentUser } from "../../backend/localStorage";
 
 /**
- * Avatar in appbar with dropdown (Project settings, user settings, log out)
+ * Avatar in appbar with dropdown (Site settings (for admins), user settings, log out)
  */
 export default function UserMenu() {
   const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(
@@ -71,6 +71,7 @@ export default function UserMenu() {
         {isAdmin && (
           <MenuItem
             onClick={() => {
+              setProjectId("");
               history.push("/site-settings");
             }}
           >
