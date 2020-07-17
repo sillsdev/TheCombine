@@ -41,17 +41,17 @@ A rapid word collection tool.
 4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
    it in your `.profile` (Linux) or the _System_ app (Windows).
-6. If you want the email services to work you will need to set the following environment variables:
+5. If you want the email services to work you will need to set the following environment variables:
    - `COMBINE_SMTP_SERVER`
    - `COMBINE_SMTP_PORT`
    - `COMBINE_SMTP_USERNAME`
    - `COMBINE_SMTP_PASSWORD`
    - `COMBINE_SMTP_ADDRESS`
    - `COMBINE_SMTP_FROM`
-5. (VS Code Users Only) Enable automatic formatting on save.
+6. (VS Code Users Only) Enable automatic formatting on save.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
-6. Run `npm start` from the project directory to install dependencies and start
+7. Run `npm start` from the project directory to install dependencies and start
    the project
 
 [chocolatey]: https://chocolatey.org/
