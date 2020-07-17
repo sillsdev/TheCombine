@@ -1,7 +1,7 @@
 {
   "name": "thecombine",
   "version": "0.1.0",
-  "private": true,
+  "license": "MIT",
   "scripts": {
     "predatabase": "tsc setupMongo.ts && node setupMongo.js",
     "database": "mongod --dbpath=./mongo_database",
@@ -21,7 +21,9 @@
     "gen-backend-coverage-report": "tsc genBackendCoverageReport.ts && node genBackendCoverageReport.js",
     "eject": "react-scripts eject",
     "prettier": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
-    "prettier-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\""
+    "prettier-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\"",
+    "license-summary": "npm install && license-checker --production --summary",
+    "license-report": "npm install && license-checker --production"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -85,6 +87,7 @@
     "@types/redux-thunk": "^2.1.0",
     "@types/validator": "^13.0.0",
     "jest-teamcity-reporter": "^0.9.0",
+    "license-checker": "^25.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "2.0.5",
     "react-test-renderer": "^16.13.1",
