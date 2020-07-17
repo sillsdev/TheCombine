@@ -1,8 +1,11 @@
 //Sam Delaney, 6/12/19
 
+import {
+  simpleWord,
+  testWordList as mockTestWordList,
+  Word,
+} from "../../../../types/word";
 import DupFinder, { DefaultParams } from "../DuplicateFinder";
-import { Word, simpleWord } from "../../../../types/word";
-import { testWordList as mockTestWordList } from "../../../../types/word";
 
 jest.mock("../../../../backend", () => {
   return {
@@ -40,7 +43,7 @@ describe("dupFinder Tests", () => {
     let parent = simpleWord("Yank", "Mayonnaise");
 
     let duplicates: [Word[], number] = [[], Number.MIN_SAFE_INTEGER];
-    await finder.fetchWordsFromDB().then((gotWords) => {
+    await finder.fetchWordsFromDB().then(() => {
       duplicates = finder.getDuplicatesOfWord(parent);
 
       duplicates[0].forEach((duplicate) => {

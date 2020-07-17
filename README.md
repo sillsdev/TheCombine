@@ -25,7 +25,7 @@ A rapid word collection tool.
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
        using the appropriate Node.js version.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-     - On Ubuntu 18.04, follow these 
+     - On Ubuntu 18.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
    - [MongoDB Server](https://docs.mongodb.com/manual/administration/install-community/) and add
      /bin to PATH Environment Variable
@@ -41,7 +41,7 @@ A rapid word collection tool.
 4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
    it in your `.profile` (Linux) or the _System_ app (Windows).
-6. If you want the email services to work you will need to set the following environment variables.
+5. If you want the email services to work you will need to set the following environment variables.
    These values must be kept secret, so ask your email administrator to supply them.
    - `ASPNETCORE_SMTP_SERVER`
    - `ASPNETCORE_SMTP_PORT`
@@ -49,10 +49,10 @@ A rapid word collection tool.
    - `ASPNETCORE_SMTP_PASSWORD`
    - `ASPNETCORE_SMTP_ADDRESS`
    - `ASPNETCORE_SMTP_FROM`
-5. (VS Code Users Only) Enable automatic formatting on save.
+6. (VS Code Users Only) Enable automatic formatting on save.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
-6. Run `npm start` from the project directory to install dependencies and start
+7. Run `npm start` from the project directory to install dependencies and start
    the project
 
 [chocolatey]: https://chocolatey.org/
@@ -63,8 +63,8 @@ In the project directory, you can run:
 
 ### `npm start`
 
-> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set 
- [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable. 
+> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set
+> [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable.
 
 Installs the necessary packages and runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -177,14 +177,14 @@ password environment variables.
 ```
 
 This will create the user and exit. If successful, the exit code will be `0`,
-otherwise an error will be logged and the exit code will be non-`0`. 
+otherwise an error will be logged and the exit code will be non-`0`.
 
 **Important**: Remove the `ASPNETCORE_*` environment variables from
 `.env.backend.auth` so that subsequent launches will start up the backend.
 
-### (Development Only) Grant an Existing User Admin Rights 
+### (Development Only) Grant an Existing User Admin Rights
 
-To grant an *existing* user database administrator rights (all permissions for
+To grant an _existing_ user database administrator rights (all permissions for
 all database objects), create a user normally and then execute:
 
 ```batch
