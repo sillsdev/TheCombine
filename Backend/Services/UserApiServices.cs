@@ -32,12 +32,14 @@ namespace BackendFramework.Services
         {
             private const int SaltLength = 16;
 
-            /// <summary> Use SHA1 length. </summary>
-            private const int HashLength = 160 / 8;
+            /// <summary> Use SHA256 length. </summary>
+            private const int HashLength = 256 / 8;
 
             /// <summary> Hash iterations to slow down brute force password cracking. </summary>
             /// It's important that this value is not too low, or password cracking is made easier.
-            private const int HashIterations = 10000;
+            /// Value selected from default Django 3.1 iteration count (appropriate as of August 2020).
+            /// https://docs.djangoproject.com/en/dev/releases/3.1/#django-contrib-auth
+            private const int HashIterations = 216000;
 
             /// <summary>
             /// Hash a password with a generated salt and return the combined bytes suitable for storage.
@@ -85,7 +87,8 @@ namespace BackendFramework.Services
             /// <summary> Hash a password and salt using PBKDF2. </summary>
             private static byte[] HashPassword(string password, byte[] salt)
             {
-                using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, HashIterations, HashAlgorithmName.SHA1);
+                // SHA256 is the recommended PBKDF2 hash algorithm.
+                using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, HashIterations, HashAlgorithmName.SHA256);
                 return pbkdf2.GetBytes(HashLength);
             }
 
