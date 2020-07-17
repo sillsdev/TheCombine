@@ -64,7 +64,7 @@ function createDataEntryComponentInstance(
 }
 
 describe("Tests DataEntryComponent", () => {
-  fit("Questions hidden on complete clicked", () => {
+  it("Questions hidden on complete clicked", () => {
     const newDomain = { ...baseDomain, questions: ["Q1", "Q2", "Q3"] };
     const parentInstance: ReactTestInstance = createDataEntryComponentInstance(
       newDomain
