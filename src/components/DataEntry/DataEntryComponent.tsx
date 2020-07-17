@@ -144,18 +144,7 @@ export class DataEntryComponent extends React.Component<
     return words;
   }
 
-  updateWords = () => {
-    this.getWordsFromBackend().then(() => {
-      let domainWords = sortDomainWordByVern(
-        this.state.existingWords,
-        this.props.domain
-      );
-      this.setState({
-        domainWords: domainWords,
-        displaySemanticDomain: false,
-      });
-    });
-  };
+  updateWords = () => {};
 
   render() {
     let semanticDomain: SemanticDomain = {
@@ -208,7 +197,18 @@ export class DataEntryComponent extends React.Component<
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
             <AppBarComponent currentTab={CurrentTab.DataEntry} />
             <TreeViewComponent
-              returnControlToCaller={() => this.updateWords()}
+              returnControlToCaller={() =>
+                this.getWordsFromBackend().then(() => {
+                  let domainWords = sortDomainWordByVern(
+                    this.state.existingWords,
+                    this.props.domain
+                  );
+                  this.setState((prevState) => ({
+                    domainWords: domainWords,
+                    displaySemanticDomain: false,
+                  }));
+                })
+              }
             />
           </Dialog>
         </Grid>
