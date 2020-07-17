@@ -2,7 +2,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import { store } from "../../../store";
-import SemanticDomainWithSubdomains from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 import TreeViewComponent, { TreeView } from "../TreeViewComponent";
 import MockDomain from "./MockSemanticDomain";
 
@@ -64,6 +64,7 @@ describe("Tests AddWords", () => {
       id: "test",
       description: "super testy",
       subdomains: [],
+      questions: [],
     };
 
     treeHandle.animate(newDom);

@@ -43,6 +43,7 @@ A rapid word collection tool.
    it in your `.profile` (Linux) or the _System_ app (Windows).
 5. If you want the email services to work you will need to set the following environment variables.
    These values must be kept secret, so ask your email administrator to supply them.
+
    - `ASPNETCORE_SMTP_SERVER`
    - `ASPNETCORE_SMTP_PORT`
    - `ASPNETCORE_SMTP_USERNAME`
@@ -142,7 +143,15 @@ See the section about
 [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
 more information.
 
-### Drop Database
+## `npm run import-sem-doms`
+
+Imports Semantic Domains from the provided xml file.
+
+```bash
+npm run import-sem-doms -- <XML_FILE_PATH>
+```
+
+## Drop Database
 
 To completely erase the current Mongo database, run:
 
@@ -236,7 +245,7 @@ To stop and remove any stored data:
 
 #### SSL Certificates
 
-To update SSL certificates after images have been built and are running, 
+To update SSL certificates after images have been built and are running,
 find the `frontend` container name. By default this will be formatted as
 `<lowercase_parent_dir>_frontend_1`.
 

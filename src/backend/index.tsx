@@ -1,13 +1,13 @@
 import axios from "axios";
 
 import { authHeader } from "../components/Login/AuthHeaders";
-import SemanticDomainWithSubdomains from "../components/TreeView/SemanticDomain";
 import history from "../history";
 import { Goal, GoalType } from "../types/goals";
 import { Project } from "../types/project";
 import { RuntimeConfig } from "../types/runtimeConfig";
 import { User } from "../types/user";
 import { UserEdit } from "../types/userEdit";
+import SemanticDomainWithSubdomains from "../types/SemanticDomain";
 import { UserRole } from "../types/userRole";
 import { MergeWord, Word } from "../types/word";
 import * as LocalStorage from "./localStorage";

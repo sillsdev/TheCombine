@@ -13,6 +13,7 @@
     "eject": "react-scripts eject",
     "frontend": "react-scripts start",
     "gen-backend-coverage-report": "tsc genBackendCoverageReport.ts && node genBackendCoverageReport.js",
+    "import-sem-doms": "tsc importSemanticDomains.ts && node importSemanticDomains.js",
     "lint": "eslint --ext js,ts,tsx,jsx src",
     "predatabase": "tsc setupMongo.ts && node setupMongo.js",
     "prettier": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
@@ -48,6 +49,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
+    "xml2js": "^0.4.23",
     "validator": "^13.1.1"
   },
   "eslintConfig": {
