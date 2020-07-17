@@ -11,7 +11,13 @@ import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";
 import { mockDomainTree } from "./MockDomainTree";
 import { mockWord, mockDomainWord } from "./MockWord";
 import { defaultProject as mockProject } from "../../../types/project";
-import { Word, State, DomainWord } from "../../../types/word";
+import {
+  Word,
+  State,
+  DomainWord,
+  SemanticDomain,
+  Sense,
+} from "../../../types/word";
 import {
   filterWords,
   filterWordsByDomain,
@@ -19,6 +25,7 @@ import {
 } from "../DataEntryComponent";
 import DomainTree from "../../TreeView/SemanticDomain";
 import _ from "lodash";
+import { mockSemanticDomain } from "../DataEntryTable/tests/DataEntryTable.test";
 
 jest.mock("../../../backend", () => {
   return {
@@ -149,29 +156,44 @@ describe("Tests DataEntryComponent", () => {
     mockDomains[1].name = "weather";
     mockDomains[1].id = "ID_two";
 
-    var unfilteredWords: Word[] = [
-      _.cloneDeep(mockWord),
-      _.cloneDeep(mockWord),
-      _.cloneDeep(mockWord),
-      _.cloneDeep(mockWord),
+    let sense: Sense[] = [
+      {
+        glosses: [{ language: "en", def: "" }],
+        semanticDomains: [mockDomains[0]],
+        accessibility: State.active,
+      },
+      {
+        glosses: [{ language: "en", def: "" }],
+        semanticDomains: [mockDomains[1]],
+        accessibility: State.active,
+      },
     ];
 
-    unfilteredWords[0].senses[0].semanticDomains[0] = mockDomains[1];
-    unfilteredWords[0].vernacular = "one";
-    unfilteredWords[1].senses[0].semanticDomains[0] = mockDomains[1];
-    unfilteredWords[1].vernacular = "two";
-    unfilteredWords[2].senses[0].semanticDomains[0] = mockDomains[1];
-    unfilteredWords[2].vernacular = "three";
-    unfilteredWords[3].senses[0].semanticDomains[0] = mockDomains[0];
-    unfilteredWords[3].vernacular = "four";
+    var unfilteredWords: Word[] = [
+      {
+        ...mockWord,
+        vernacular: "one",
+        senses: [...mockWord.senses, sense[0]],
+      },
+      {
+        ...mockWord,
+        vernacular: "two",
+        senses: [...mockWord.senses, sense[1]],
+      },
+      {
+        ...mockWord,
+        vernacular: "three",
+        senses: [...mockWord.senses, sense[0]],
+      },
+    ];
 
     let domainWords: DomainWord[] = [];
     let curDomainWord: DomainWord = {
-      word: unfilteredWords[3],
-      gloss: unfilteredWords[3].senses[0].glosses[0],
+      word: unfilteredWords[1],
+      gloss: unfilteredWords[1].senses[0].glosses[0],
     };
     domainWords.push(curDomainWord);
-    expect(filterWordsByDomain(unfilteredWords, mockDomains[0])).toStrictEqual(
+    expect(filterWordsByDomain(unfilteredWords, mockDomains[1])).toStrictEqual(
       domainWords
     );
   });
