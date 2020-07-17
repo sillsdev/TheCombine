@@ -1,13 +1,14 @@
 import React from "react";
 import { Provider } from "react-redux";
 import renderer, {
-  ReactTestRenderer,
   ReactTestInstance,
+  ReactTestRenderer,
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
+
 import * as backend from "../../../../backend";
-import { SemanticDomain, Word, State } from "../../../../types/word";
 import { defaultProject as mockProject } from "../../../../types/project";
+import { SemanticDomain, State, Word } from "../../../../types/word";
 import { defaultState } from "../../../App/DefaultState";
 import { filterWords } from "../../DataEntryComponent";
 import { mockDomainTree } from "../../tests/MockDomainTree";
@@ -48,7 +49,10 @@ beforeEach(() => {
           domain={mockDomainTree}
           semanticDomain={mockSemanticDomain}
           displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
-          domainWords={[]}
+          getWordsFromBackend={() => {
+            return new Promise(() => []);
+          }}
+          showExistingData={() => {}}
           isSmallScreen={false}
         />
       </Provider>

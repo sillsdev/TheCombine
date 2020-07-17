@@ -1,5 +1,6 @@
-import { Word, SemanticDomain } from "./word";
+import { randomIntString } from "../utilities";
 import { AutoComplete } from "./AutoComplete";
+import { SemanticDomain, testWordList, Word } from "./word";
 
 export interface CustomField {
   name: string;
@@ -9,6 +10,7 @@ export interface CustomField {
 export interface Project {
   id: string;
   name: string;
+  isActive: boolean;
   semanticDomains: SemanticDomain[];
   userRoles: string;
   vernacularWritingSystem: string;
@@ -25,6 +27,7 @@ export interface Project {
 export const defaultProject = {
   id: "",
   name: "",
+  isActive: true,
   semanticDomains: [],
   userRoles: "",
   vernacularWritingSystem: "",
@@ -35,5 +38,15 @@ export const defaultProject = {
   wordFields: [],
   partsOfSpeech: [],
   words: [],
-  autocompleteSetting: "Off",
+  autocompleteSetting: AutoComplete.Off,
 } as Project;
+
+// Randomize properties as needed for tests.
+export function randomProject(): Project {
+  let project = { ...defaultProject };
+  project.id = randomIntString();
+  project.name = randomIntString();
+  project.isActive = Math.random() < 0.5;
+  project.words = testWordList();
+  return project;
+}
