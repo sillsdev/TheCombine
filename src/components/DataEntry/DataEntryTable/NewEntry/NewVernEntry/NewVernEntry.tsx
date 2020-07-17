@@ -1,7 +1,8 @@
 import React from "react";
-import { TextField, Tooltip } from "@material-ui/core";
+import { Popper, TextField, Tooltip, Typography } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { Word } from "../../../../../types/word";
+import { shade } from "../../../../../types/theme";
 import { AutoComplete } from "../../../../../types/AutoComplete";
 import {
   Translate,
@@ -22,7 +23,23 @@ interface NewVernEntryProps {
 interface NewVernEntryState {
   duplicates: Word[];
 }
-
+function OptionComponent(option: Word) {
+  return (
+    <React.Fragment>
+      {option.vernacular}
+      {" | "}
+      {option.senses[0].glosses.map((gloss) => gloss.def)}
+      {" | "}
+      {option.senses[0].semanticDomains.map((domain) => (
+        <React.Fragment>
+          <Typography style={{ background: shade, borderRadius: "15px" }}>
+            {domain.id}: {domain.name}
+          </Typography>
+        </React.Fragment>
+      ))}
+    </React.Fragment>
+  );
+}
 /**
  * An editable vernacular field for new words that indicates whether the
  * vernacular already exists in a collection
@@ -31,30 +48,27 @@ export class NewVernEntry extends React.Component<
   LocalizeContextProps & NewVernEntryProps & NewVernEntryState
 > {
   render() {
+    const CustomDropdown = function (props: any) {
+      return (
+        <Popper {...props} style={{ width: 600 }} placement="bottom-start" />
+      );
+    };
     return (
       <div>
-        {/* <TextField
-          autoFocus
-          id="newvernentry"
-          label={<Translate id="addWords.vernacular" />}
-          fullWidth
-          variant="outlined"
-          value={this.props.vernacular}
-          onChange={(e) => this.props.updateVernField(e.target.value)}
-          inputRef={this.props.vernInput}
-        /> */}
         <Autocomplete
           freeSolo
-          fullWidth
+          PopperComponent={CustomDropdown}
           id="newvernentry"
           value={this.props.vernacular}
-          options={this.props.allWords.map((dup) => dup.vernacular)}
+          options={this.props.allWords.map((dup) => dup)}
+          getOptionLabel={(option) => option.vernacular}
+          renderOption={(option, state) => OptionComponent(option)}
           renderInput={(params) => (
             <TextField
               {...params}
               label={<Translate id="addWords.vernacular" />}
-              margin="normal"
               variant="outlined"
+              fullWidth
             />
           )}
         />
