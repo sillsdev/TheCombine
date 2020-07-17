@@ -59,7 +59,7 @@ namespace BackendFramework
             }
             else
             {
-                _logger.LogError(String.Format("Environment variable: `{0}` is not defined. {1}", name, error));
+                _logger.LogError($"Environment variable: `{name}` is not defined. {error}");
                 return def;
             }
         }
@@ -67,7 +67,7 @@ namespace BackendFramework
         /// <summary> Determine if executing within a container (e.g. Docker). </summary>
         private static bool IsInContainer()
         {
-            return Environment.GetEnvironmentVariable("ASPNETCORE_IS_IN_CONTAINER") != null;
+            return Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") != null;
         }
 
         private class AdminUserCreationException : Exception
@@ -88,7 +88,7 @@ namespace BackendFramework
             });
 
             // Configure JWT Authentication
-            const string secretKeyEnvName = "ASPNETCORE_JWT_SECRET_KEY";
+            const string secretKeyEnvName = "COMBINE_JWT_SECRET_KEY";
             var secretKey = Environment.GetEnvironmentVariable(secretKeyEnvName);
 
             // The JWT key size must be at least 128 bits long.
@@ -134,13 +134,20 @@ namespace BackendFramework
                     var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
                     options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
                     options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
-                options.SmtpServer = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_SERVER", null, "Email services will not work");
-                options.SmtpPort = int.Parse(this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_PORT", null, "Email services will not work"));
-                options.SmtpUsername = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_USERNAME", null, "Email services will not work");
-                options.SmtpPassword = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_PASSWORD", null, "Email services will not work");
-                options.SmtpAddress = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_ADDRESS", null, "Email services will not work");
-                options.SmtpFrom = this.CheckedEnvironmentVariable("ASPNETCORE_SMTP_FROM", null, "Email services will not work");
-                options.PassResetExpireTime = int.Parse(this.CheckedEnvironmentVariable("ASPNETCORE_PASSWORD_RESET_EXPIRE_TIME", "15"));
+                    options.SmtpServer = CheckedEnvironmentVariable(
+                        "COMBINE_SMTP_SERVER", null, "Email services will not work");
+                    options.SmtpPort = int.Parse(CheckedEnvironmentVariable(
+                        "COMBINE_SMTP_PORT", null, "Email services will not work"));
+                    options.SmtpUsername = CheckedEnvironmentVariable(
+                        "COMBINE_SMTP_USERNAME", null, "Email services will not work");
+                    options.SmtpPassword = CheckedEnvironmentVariable(
+                        "COMBINE_SMTP_PASSWORD", null, "Email services will not work");
+                    options.SmtpAddress = CheckedEnvironmentVariable(
+                        "COMBINE_SMTP_ADDRESS", null, "Email services will not work");
+                    options.SmtpFrom = CheckedEnvironmentVariable(
+                        "COMBINE_SMTP_FROM", null, "Email services will not work");
+                    options.PassResetExpireTime = int.Parse(this.CheckedEnvironmentVariable(
+                        "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "15"));
                 });
 
             // Register concrete types for dependency injection
@@ -240,7 +247,7 @@ namespace BackendFramework
         private bool CreateAdminUser(IUserService userService)
         {
             const string createAdminUsernameArg = "create-admin-username";
-            const string createAdminPasswordEnv = "ASPNETCORE_ADMIN_PASSWORD";
+            const string createAdminPasswordEnv = "COMBINE_ADMIN_PASSWORD";
 
             var username = Configuration.GetValue<string>(createAdminUsernameArg);
             if (username == null)

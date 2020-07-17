@@ -1,6 +1,7 @@
 import { List, ListItem, Typography } from "@material-ui/core";
 import React from "react";
-import { getAllProjectsByUser } from "../../../backend";
+
+import { getAllActiveProjectsByUser } from "../../../backend";
 import { getCurrentUser } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import { User } from "../../../types/user";
@@ -25,19 +26,18 @@ export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
       currentUser: getCurrentUser(),
     };
 
-    if (this.state.currentUser) {
-      getAllProjectsByUser(this.state.currentUser).then((projects) => {
-        this.setState({ projectList: projects });
-      });
-    }
+    this.updateProjectList();
   }
 
   componentDidUpdate(prevProps: SwitchProps) {
-    if (
-      prevProps.project.name !== this.props.project.name &&
-      this.state.currentUser
-    ) {
-      getAllProjectsByUser(this.state.currentUser).then((projects) => {
+    if (prevProps.project.name !== this.props.project.name) {
+      this.updateProjectList();
+    }
+  }
+
+  private updateProjectList() {
+    if (this.state.currentUser) {
+      getAllActiveProjectsByUser(this.state.currentUser).then((projects) => {
         this.setState({ projectList: projects });
       });
     }

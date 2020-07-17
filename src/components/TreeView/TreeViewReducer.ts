@@ -1,6 +1,8 @@
 import { TreeViewAction, TreeActionType } from "./TreeViewActions";
-import SemanticDomainWithSubdomains from "./SemanticDomain";
 import { StoreAction, StoreActions } from "../../rootActions";
+import SemanticDomainWithSubdomains, {
+  baseDomain,
+} from "../../types/SemanticDomain";
 
 export interface TreeViewState {
   currentDomain: SemanticDomainWithSubdomains;
@@ -34,12 +36,7 @@ function addParentDomains(parent: SemanticDomainWithSubdomains) {
 
 // Creates a dummy default state
 export const defaultState: TreeViewState = {
-  currentDomain: {
-    name: "",
-    id: "",
-    description: "",
-    subdomains: [],
-  },
+  currentDomain: baseDomain,
 };
 
 export const treeViewReducer = (
