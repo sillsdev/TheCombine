@@ -2,7 +2,7 @@ import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import TreeDepiction from "../TreeDepiction";
 import MockDomain from "./MockSemanticDomain";
-import SemanticDomainWithSubdomains from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 
 var treeMaster: ReactTestRenderer;
 describe("Tests AddWords", () => {

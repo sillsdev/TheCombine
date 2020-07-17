@@ -1,18 +1,18 @@
-import { setWordData, moveSense, clearTree } from "../MergeDupStepActions";
+import { StoreAction, StoreActions } from "../../../../rootActions";
 import { testWordList } from "../../../../types/word";
+import { randElement, uuid } from "../../../../utilities";
+import { clearTree, moveSense, setWordData } from "../MergeDupStepActions";
 import mergeDupStepReducer, {
-  MergeTreeState,
   defaultState,
+  MergeTreeState,
 } from "../MergeDupStepReducer";
 import {
-  Hash,
-  MergeTreeWord,
-  MergeTreeReference,
   defaultData,
   defaultTree,
+  Hash,
+  MergeTreeReference,
+  MergeTreeWord,
 } from "../MergeDupsTree";
-import { randElement, uuid } from "../../../../utilities";
-import { StoreAction, StoreActions } from "../../../../rootActions";
 
 // Actions to test
 //
@@ -77,7 +77,7 @@ describe("MergeDupStep reducer tests", () => {
   });
 
   test("set data", () => {
-    let wordList = testWordList();
+    const wordList = testWordList();
     let data = mergeDupStepReducer(undefined, setWordData(wordList));
     // check if data has all words present
     for (let word of wordList) {

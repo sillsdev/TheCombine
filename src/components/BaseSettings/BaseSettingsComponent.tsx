@@ -1,6 +1,7 @@
-import React, { ReactNode } from "react";
 import { Grid, Typography } from "@material-ui/core";
-import theme from "../../../types/theme";
+import React, { ReactNode } from "react";
+
+import theme from "../../types/theme";
 
 interface SettingsProps {
   title: ReactNode;
