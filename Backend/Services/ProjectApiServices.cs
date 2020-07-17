@@ -105,11 +105,11 @@ namespace BackendFramework.Services
 
         public async Task<string> CreateLinkWithToken(Project project, string emailAddress)
         {
-            var token = project.CreateToken();
+            var token = new EmailInvite(2, emailAddress);
             project.InviteTokens.Add(token);
             await Update(project.Id, project);
 
-            string linkWithIdentifier = "/invite/" + project.Id + "/" + token + "/" + emailAddress;
+            string linkWithIdentifier = "/invite/" + project.Id + "/" + token.Token;
             return linkWithIdentifier;
         }
 
@@ -124,7 +124,6 @@ namespace BackendFramework.Services
                 Text = string.Format("You have been invited to a TheCombine project called {0}. \n"
                         + "To become a member of the project, first go to {1}/login and login or register. \n"
                         + "Then go to {1}{2} to add yourself to the project. \n"
-                        + "If you used a different email with your account, replace it in the URL. \n\n"
                         + "If you did not expect an invite please ignore this email.",
                          project.Name, domain, link)
             };
@@ -135,7 +134,7 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, string token)
+        public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite)
         {
             try
             {
@@ -164,8 +163,9 @@ namespace BackendFramework.Services
                 user = await _userService.MakeJwt(user);
                 await _userService.Update(user.Id, user);
 
-                // Removes token and update user
-                project.InviteTokens.Remove(token);
+                // Removes token and updates user
+
+                project.InviteTokens.Remove(emailInvite);
                 await Update(project.Id, project);
 
                 return true;

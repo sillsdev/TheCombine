@@ -50,7 +50,7 @@ namespace BackendFramework.Models
         public List<string> PartsOfSpeech { get; set; }
 
         [BsonElement("inviteToken")]
-        public List<string> InviteTokens { get; set; }
+        public List<EmailInvite> InviteTokens { get; set; }
 
         public Project()
         {
@@ -64,7 +64,7 @@ namespace BackendFramework.Models
             CustomFields = new List<CustomField>();
             WordFields = new List<string>();
             PartsOfSpeech = new List<string>();
-            InviteTokens = new List<string>();
+            InviteTokens = new List<EmailInvite>();
         }
 
         public Project Clone()
@@ -81,7 +81,7 @@ namespace BackendFramework.Models
                 CustomFields = new List<CustomField>(),
                 WordFields = new List<string>(),
                 PartsOfSpeech = new List<string>(),
-                InviteTokens = new List<string>()
+                InviteTokens = new List<EmailInvite>()
             };
 
             foreach (var sd in SemanticDomains)
@@ -114,7 +114,7 @@ namespace BackendFramework.Models
             }
             foreach (var it in InviteTokens)
             {
-                clone.InviteTokens.Add(it.Clone() as string);
+                clone.InviteTokens.Add(it.Clone());
             }
 
             return clone;
@@ -149,17 +149,6 @@ namespace BackendFramework.Models
 
                 other.InviteTokens.Count == InviteTokens.Count &&
                 other.InviteTokens.All(InviteTokens.Contains);
-        }
-
-        private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
-        private const int TokenSize = 8;
-
-        public string CreateToken()
-        {
-            var byteToken = new byte[TokenSize];
-            Rng.GetBytes(byteToken);
-            var token = WebEncoders.Base64UrlEncode(byteToken);
-            return token;
         }
 
         public override bool Equals(object obj)
@@ -204,6 +193,50 @@ namespace BackendFramework.Models
             {
                 Name = Name.Clone() as string,
                 Type = Type.Clone() as string
+            };
+        }
+    }
+
+    public class EmailInvite
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string Token { get; set; }
+        public DateTime ExpireTime { get; set; }
+
+        public EmailInvite()
+        {
+
+        }
+
+        private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
+        private const int TokenSize = 8;
+
+        public EmailInvite(int expireTime)
+        {
+            var expireTimeDifference = expireTime;
+            Id = "";
+            Email = "";
+            ExpireTime = DateTime.Now.AddDays(expireTimeDifference);
+
+            var byteToken = new byte[TokenSize];
+            Rng.GetBytes(byteToken);
+            Token = WebEncoders.Base64UrlEncode(byteToken);
+        }
+
+        public EmailInvite(int expireTime, string email) : this(expireTime)
+        {
+            Email = email;
+        }
+
+        public EmailInvite Clone()
+        {
+            return new EmailInvite
+            {
+                Id = Id.Clone() as string,
+                Email = Email.Clone() as string,
+                Token = Token.Clone() as string,
+                ExpireTime = ExpireTime
             };
         }
     }

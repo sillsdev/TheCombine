@@ -32,11 +32,6 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
   async onSubmit() {
     var project = LocalStorage.getProjectId();
     await Backend.emailInviteToProject(project, this.state.emailAddress);
-    /*await Backend.validateLink(
-      "5f1056c8269ac8391ca76718",
-      "5f1052fad343ec338c11a55d",
-      "1111111"
-    );*/
     this.props.close();
   }
 

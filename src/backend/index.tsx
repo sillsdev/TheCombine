@@ -490,11 +490,10 @@ export async function emailInviteToProject(
 
 export async function validateLink(
   projectId: string,
-  emailAddress: string,
   token: string
 ): Promise<boolean> {
   let resp = await backendServer.put(
-    `projects/invite/${projectId}/validate/${token}/${emailAddress}`,
+    `projects/invite/${projectId}/validate/${token}`,
     "",
     {
       headers: authHeader(),

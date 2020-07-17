@@ -78,7 +78,7 @@ namespace Backend.Tests
             return Task.FromResult(true);
         }
 
-        public Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, string token)
+        public Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite token)
         {
             return Task.FromResult(true);
         }

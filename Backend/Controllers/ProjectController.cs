@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System;
 using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
@@ -312,17 +313,29 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Validates token in url and adds user to project </summary>
-        /// <remarks> PUT: v1/projects/invite/{projectId}/validate/{emailAddress}/{token} </remarks>
-        [HttpPut("invite/{projectId}/validate/{token}/{emailAddress}")]
-        public async Task<IActionResult> ValidateToken(string projectId, string token, string emailAddress)
+        /// <remarks> PUT: v1/projects/invite/{projectId}/validate/{token} </remarks>
+        [HttpPut("invite/{projectId}/validate/{token}")]
+        public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
+
             var project = await _projectService.GetProject(projectId);
+            var activeTokenExists = false;
+            var tokenObj = new EmailInvite();
 
-            var user = _userService.GetAllUsers().Result.Single(user => user.Email.Equals(emailAddress));
+            foreach (EmailInvite tok in project.InviteTokens)
+            {
+                if (tok.Token == token && DateTime.Now < tok.ExpireTime)
+                {
+                    activeTokenExists = true;
+                    break;
+                }
+            }
 
-            if (project.InviteTokens.Contains(token)
+            var user = _userService.GetAllUsers().Result.Single(user => user.Email.Equals(tokenObj.Email));
+
+            if (activeTokenExists
                 && !user.ProjectRoles.ContainsKey(projectId)
-                && await _projectService.RemoveTokenAndCreateUserRole(project, user, token))
+                && await _projectService.RemoveTokenAndCreateUserRole(project, user, tokenObj))
             {
                 return new OkObjectResult(true);
             }
