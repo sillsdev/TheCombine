@@ -5,7 +5,7 @@ services:
     volumes:
       - backend_data:/root/.CombineFiles
     expose:
-      - 80
+      - 5000
     depends_on:
       - database
     env_file:
