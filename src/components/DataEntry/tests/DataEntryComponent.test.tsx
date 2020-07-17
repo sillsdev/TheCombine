@@ -112,8 +112,6 @@ describe("Tests DataEntryComponent", () => {
   });
 
   it("should not filter words that are accessible", () => {
-    let word = { ...mockWord };
-    word.senses[0].accessibility = State.active;
     let words: Word[] = [
       {
         ...mockWord,

@@ -199,12 +199,11 @@ export class DataEntryComponent extends React.Component<
             <TreeViewComponent
               returnControlToCaller={() =>
                 this.getWordsFromBackend().then(() => {
-                  let domainWords = sortDomainWordByVern(
-                    this.state.existingWords,
-                    this.props.domain
-                  );
-                  this.setState((prevState) => ({
-                    domainWords: domainWords,
+                  this.setState(() => ({
+                    domainWords: sortDomainWordByVern(
+                      this.state.existingWords,
+                      this.props.domain
+                    ),
                     displaySemanticDomain: false,
                   }));
                 })
