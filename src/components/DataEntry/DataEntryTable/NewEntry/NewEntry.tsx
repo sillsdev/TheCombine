@@ -9,7 +9,6 @@ import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateRes
 import {
   addSemanticDomainToSense,
   addSenseToWord,
-  duplicatesFromFrontier,
 } from "../ExistingEntry/ExistingEntry";
 import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
 import NewGlossEntry from "./NewGlossEntry/NewGlossEntry";
