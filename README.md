@@ -44,12 +44,13 @@ A rapid word collection tool.
 5. If you want the email services to work you will need to set the following environment variables.
    These values must be kept secret, so ask your email administrator to supply them.
 
-   - `ASPNETCORE_SMTP_SERVER`
-   - `ASPNETCORE_SMTP_PORT`
-   - `ASPNETCORE_SMTP_USERNAME`
-   - `ASPNETCORE_SMTP_PASSWORD`
-   - `ASPNETCORE_SMTP_ADDRESS`
-   - `ASPNETCORE_SMTP_FROM`
+   - `COMBINE_SMTP_SERVER`
+   - `COMBINE_SMTP_PORT`
+   - `COMBINE_SMTP_USERNAME`
+   - `COMBINE_SMTP_PASSWORD`
+   - `COMBINE_SMTP_ADDRESS`
+   - `COMBINE_SMTP_FROM`
+
 6. (VS Code Users Only) Enable automatic formatting on save.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
@@ -199,6 +200,20 @@ all database objects), create a user normally and then execute:
 ```batch
 # Note the -- before the user name.
 > npm run set-admin-user -- <USERNAME>
+```
+
+### Generate License Report
+
+To generate a summary of licenses used in production:
+
+```batch
+> npm run license-summary
+```
+
+To generate a full report of the licenses used in production:
+
+```batch
+> npm run license-report
 ```
 
 ## Docker
