@@ -28,16 +28,22 @@ export class GlossEntry extends React.Component<
         filterOptions={(options: unknown[]) => options}
         freeSolo
         options={this.spellChecker.getSpellingSuggestions(this.props.gloss)}
+        value={this.props.gloss}
+        onChange={(event, newValue) => {
+          this.props.updateGlossField(newValue ? (newValue as string) : "");
+        }}
+        inputValue={this.props.gloss}
+        onInputChange={(event, newInputValue) => {
+          this.props.updateGlossField(
+            newInputValue ? (newInputValue as string) : ""
+          );
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
             label={<Translate id="addWords.glosses" />}
             fullWidth
             variant="outlined"
-            value={this.props.gloss}
-            onChange={(e) => {
-              this.props.updateGlossField(e.target.value);
-            }}
             inputRef={this.props.glossInput}
           />
         )}

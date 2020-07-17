@@ -332,6 +332,12 @@ export class DataEntryTable extends React.Component<
                     this.refNewEntry.current.resetState();
                   }
                 }
+                // Update all editable words in case any were updated.
+                this.state.recentlyAddedWords.map((wordAccess) =>
+                  wordAccess.mutable
+                    ? null /*TODO: find way to update word in ExistingEntry child.*/
+                    : null
+                );
                 let recentlyAddedWords: WordAccess[] = [];
                 this.props.displaySemanticDomainView(true);
                 this.setState({ recentlyAddedWords });
