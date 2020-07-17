@@ -22,6 +22,7 @@ namespace BackendFramework
     public class Startup
     {
         private const string AllowedOrigins = "AllowAll";
+        private const int DefaultPasswordResetExpireTime = 15;
 
         private readonly ILogger<Startup> _logger;
 
@@ -50,7 +51,7 @@ namespace BackendFramework
         {
         }
 
-        private string CheckedEnvironmentVariable(string name, string def, string error = "")
+        private string CheckedEnvironmentVariable(string name, string defaultValue, string error = "")
         {
             var contents = Environment.GetEnvironmentVariable(name);
             if (contents != null)
@@ -60,7 +61,7 @@ namespace BackendFramework
             else
             {
                 _logger.LogError($"Environment variable: `{name}` is not defined. {error}");
-                return def;
+                return defaultValue;
             }
         }
 
@@ -134,20 +135,23 @@ namespace BackendFramework
                     var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
                     options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
                     options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
+
+                    const string emailServiceFailureMessage = "Email services will not work.";
                     options.SmtpServer = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_SERVER", null, "Email services will not work");
+                        "COMBINE_SMTP_SERVER", null, emailServiceFailureMessage);
                     options.SmtpPort = int.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_PORT", null, "Email services will not work"));
+                        "COMBINE_SMTP_PORT", IEmailContext.InvalidPort.ToString(), emailServiceFailureMessage));
                     options.SmtpUsername = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_USERNAME", null, "Email services will not work");
+                        "COMBINE_SMTP_USERNAME", null, emailServiceFailureMessage);
                     options.SmtpPassword = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_PASSWORD", null, "Email services will not work");
+                        "COMBINE_SMTP_PASSWORD", null, emailServiceFailureMessage);
                     options.SmtpAddress = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_ADDRESS", null, "Email services will not work");
+                        "COMBINE_SMTP_ADDRESS", null, emailServiceFailureMessage);
                     options.SmtpFrom = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_FROM", null, "Email services will not work");
-                    options.PassResetExpireTime = int.Parse(this.CheckedEnvironmentVariable(
-                        "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "15"));
+                        "COMBINE_SMTP_FROM", null, emailServiceFailureMessage);
+                    options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
+                        "COMBINE_PASSWORD_RESET_EXPIRE_TIME", DefaultPasswordResetExpireTime.ToString(),
+                        $"Using default value: {DefaultPasswordResetExpireTime}"));
                 });
 
             // Register concrete types for dependency injection
