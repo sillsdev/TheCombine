@@ -7,7 +7,7 @@ import theme from "../../types/theme";
 import { SemanticDomain, Word, State, DomainWord } from "../../types/word";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import TreeViewComponent from "../TreeView";
-import DomainTree from "../TreeView/SemanticDomain";
+import DomainTree from "../../types/SemanticDomain";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "./ExistingDataTable/ExistingDataTable";
@@ -22,6 +22,7 @@ interface DataEntryState {
   domainWords: DomainWord[];
   isSmallScreen: boolean;
   drawerOpen: boolean;
+  questionsVisible: boolean;
 }
 
 const paperStyle = {
@@ -78,6 +79,21 @@ export function filterWordsByDomain(
   return domainWords;
 }
 
+export function sortDomainWordByVern(
+  existingWords: Word[],
+  domain: SemanticDomain
+): DomainWord[] {
+  let domainWords: DomainWord[] = filterWordsByDomain(existingWords, domain);
+  domainWords.sort((a, b) =>
+    a.word.vernacular.length < 1
+      ? -1
+      : a.word.vernacular < b.word.vernacular
+      ? -1
+      : 1
+  );
+  return domainWords;
+}
+
 /**
  * Allows users to add words to a project, add senses to an existing word,
  * and add the current semantic domain to a sense
@@ -94,6 +110,7 @@ export class DataEntryComponent extends React.Component<
       domainWords: [],
       isSmallScreen: window.matchMedia("(max-width: 960px)").matches,
       drawerOpen: false,
+      questionsVisible: false,
     };
   }
 
@@ -117,21 +134,6 @@ export class DataEntryComponent extends React.Component<
       drawerOpen: openClose,
     });
 
-  sortDomainWordByVern(): DomainWord[] {
-    let domainWords: DomainWord[] = filterWordsByDomain(
-      this.state.existingWords,
-      this.props.domain
-    );
-    domainWords.sort((a, b) =>
-      a.word.vernacular.length < 1
-        ? -1
-        : a.word.vernacular < b.word.vernacular
-        ? -1
-        : 1
-    );
-    return domainWords;
-  }
-
   async getWordsFromBackend(): Promise<Word[]> {
     let words = await getFrontierWords();
     this.setState({
@@ -141,6 +143,8 @@ export class DataEntryComponent extends React.Component<
 
     return words;
   }
+
+  updateWords = () => {};
 
   render() {
     let semanticDomain: SemanticDomain = {
@@ -155,7 +159,13 @@ export class DataEntryComponent extends React.Component<
         <Grid container justify="center" spacing={3} wrap={"nowrap"}>
           <Grid item>
             <Paper style={paperStyle}>
-              <DataEntryHeader domain={this.props.domain} />
+              <DataEntryHeader
+                domain={this.props.domain}
+                questionsVisible={this.state.questionsVisible}
+                setQuestionVisibility={(visibility: boolean) =>
+                  this.setState({ questionsVisible: visibility })
+                }
+              />
               <Divider />
               <DataEntryTable
                 domain={this.props.domain}
@@ -170,6 +180,9 @@ export class DataEntryComponent extends React.Component<
                 getWordsFromBackend={() => this.getWordsFromBackend()}
                 showExistingData={() => this.toggleDrawer(true)}
                 isSmallScreen={this.state.isSmallScreen}
+                hideQuestions={() => {
+                  this.setState({ questionsVisible: false });
+                }}
               />
             </Paper>
           </Grid>
@@ -184,14 +197,17 @@ export class DataEntryComponent extends React.Component<
           <Dialog fullScreen open={this.state.displaySemanticDomain}>
             <AppBarComponent currentTab={CurrentTab.DataEntry} />
             <TreeViewComponent
-              returnControlToCaller={() => {
+              returnControlToCaller={() =>
                 this.getWordsFromBackend().then(() => {
-                  this.setState({
-                    domainWords: this.sortDomainWordByVern(),
+                  this.setState((prevState) => ({
+                    domainWords: sortDomainWordByVern(
+                      prevState.existingWords,
+                      this.props.domain
+                    ),
                     displaySemanticDomain: false,
-                  });
-                });
-              }}
+                  }));
+                })
+              }
             />
           </Dialog>
         </Grid>

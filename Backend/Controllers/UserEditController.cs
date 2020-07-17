@@ -34,7 +34,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
@@ -59,7 +59,7 @@ namespace BackendFramework.Controllers
 #pragma warning restore 1998
         {
 #if DEBUG
-            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }
@@ -82,7 +82,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{userEditId}")]
         public async Task<IActionResult> Get(string projectId, string userEditId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
@@ -108,7 +108,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.MergeAndCharSet, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
                 return new ForbidResult();
             }
@@ -124,7 +124,7 @@ namespace BackendFramework.Controllers
         [HttpPost("{userEditId}")]
         public async Task<IActionResult> Post(string projectId, string userEditId, [FromBody]Edit newEdit)
         {
-            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
@@ -169,7 +169,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Put(string projectId, string userEditId,
             [FromBody] UserEditObjectWrapper userEdit)
         {
-            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
@@ -210,7 +210,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{userEditId}")]
         public async Task<IActionResult> Delete(string projectId, string userEditId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }

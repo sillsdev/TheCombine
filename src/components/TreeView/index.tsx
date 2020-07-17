@@ -3,7 +3,7 @@ import { StoreState } from "../../types";
 import { connect } from "react-redux";
 import { Dispatch } from "react";
 import { TreeViewAction, TraverseTreeAction } from "./TreeViewActions";
-import SemanticDomainWithSubdomains from "./SemanticDomain";
+import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
 
 function mapStateToProps(state: StoreState) {
   return {

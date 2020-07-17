@@ -5,7 +5,7 @@ services:
     volumes:
       - backend_data:/root/.CombineFiles
     expose:
-      - 80
+      - 5000
     depends_on:
       - database
     env_file:
@@ -15,8 +15,8 @@ services:
     build:
       context: .
       args:
-        - CAPTCHA_REQUIRED=true
-        - CAPTCHA_SITE=6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3
+        - COMBINE_CAPTCHA_REQUIRED=true
+        - COMBINE_CAPTCHA_SITE=6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3
     volumes:
       - frontend_ssl_certs:/ssl
     ports:

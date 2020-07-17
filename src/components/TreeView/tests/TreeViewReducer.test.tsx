@@ -5,7 +5,7 @@ import {
   createDomains,
 } from "../TreeViewReducer";
 import { TreeViewAction, TreeActionType } from "../TreeViewActions";
-import SemanticDomainWithSubdomains from "../SemanticDomain";
+import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 import { StoreAction, StoreActions } from "../../../rootActions";
 
 describe("Test the TreeViewReducer", () => {
@@ -14,10 +14,23 @@ describe("Test the TreeViewReducer", () => {
       name: "Foo",
       id: "x",
       description: "foo description",
+      questions: [],
     };
     const subdomains = [
-      { name: "Bar", id: "x.1", description: "bar desc", subdomains: [] },
-      { name: "Baz", id: "x.2", description: "baz desc", subdomains: [] },
+      {
+        name: "Bar",
+        id: "x.1",
+        description: "bar desc",
+        subdomains: [],
+        questions: [],
+      },
+      {
+        name: "Baz",
+        id: "x.2",
+        description: "baz desc",
+        subdomains: [],
+        questions: [],
+      },
     ];
     const initialJson = [
       {
@@ -37,6 +50,7 @@ describe("Test the TreeViewReducer", () => {
             subdomains: [...subdomains],
           },
         ],
+        questions: [],
       },
     };
     expected.currentDomain.subdomains[0].subdomains.map((value) => {
