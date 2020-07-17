@@ -14,6 +14,8 @@
     "frontend": "react-scripts start",
     "gen-backend-coverage-report": "tsc genBackendCoverageReport.ts && node genBackendCoverageReport.js",
     "import-sem-doms": "tsc importSemanticDomains.ts && node importSemanticDomains.js",
+    "license-summary": "npm install && license-checker --production --summary",
+    "license-report": "npm install && license-checker --production",
     "lint": "eslint --ext js,ts,tsx,jsx src",
     "predatabase": "tsc setupMongo.ts && node setupMongo.js",
     "prettier": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
@@ -22,14 +24,7 @@
     "start": "npm install && npm-run-all --parallel frontend database api",
     "test": "dotnet test Backend.Tests/Backend.Tests.csproj && react-scripts test",
     "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
-    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
-    "coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov && react-scripts test --coverage --watchAll=false",
-    "gen-backend-coverage-report": "tsc genBackendCoverageReport.ts && node genBackendCoverageReport.js",
-    "eject": "react-scripts eject",
-    "prettier": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
-    "prettier-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\"",
-    "license-summary": "npm install && license-checker --production --summary",
-    "license-report": "npm install && license-checker --production"
+    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
