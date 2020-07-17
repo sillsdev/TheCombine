@@ -8,7 +8,6 @@ import renderer, { ReactTestInstance } from "react-test-renderer";
 import { Provider } from "react-redux";
 import { DataEntryTable } from "../DataEntryTable/DataEntryTable";
 import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";
-import mockDomainTree from "../../TreeView/tests/MockSemanticDomain";
 import { mockWord, mockDomainWord } from "./MockWord";
 import { defaultProject as mockProject } from "../../../types/project";
 import { Word, State, DomainWord, Sense } from "../../../types/word";
@@ -17,7 +16,6 @@ import {
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "../DataEntryComponent";
-import DomainTree from "../../../types/SemanticDomain";
 
 jest.mock("../../../backend", () => {
   return {
@@ -134,9 +132,9 @@ describe("Tests DataEntryComponent", () => {
 
   it("filters out words that do not match desired domain", () => {
     jest.clearAllMocks();
-    var mockDomains: DomainTree[] = [
-      { ...mockDomainTree },
-      { ...mockDomainTree },
+    var mockDomains: SemanticDomainWithSubdomains[] = [
+      { ...baseDomain },
+      { ...baseDomain },
     ];
 
     mockDomains[0].name = "daily";
@@ -187,7 +185,7 @@ describe("Tests DataEntryComponent", () => {
   });
 
   it("sorts words alphabetically", () => {
-    let mockDomain = mockDomainTree;
+    let mockDomain = baseDomain;
     mockDomain.name = "daily";
     let unfilteredWords: Word[] = [
       { ...mockWord },
