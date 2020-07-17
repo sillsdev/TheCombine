@@ -491,7 +491,7 @@ export async function emailInviteToProject(
 export async function validateLink(
   projectId: string,
   token: string
-): Promise<boolean> {
+): Promise<boolean[]> {
   let resp = await backendServer.put(
     `projects/invite/${projectId}/validate/${token}`,
     "",

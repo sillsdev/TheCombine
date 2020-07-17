@@ -314,34 +314,56 @@ namespace BackendFramework.Controllers
 
         /// <summary> Validates token in url and adds user to project </summary>
         /// <remarks> PUT: v1/projects/invite/{projectId}/validate/{token} </remarks>
+        [AllowAnonymous]
         [HttpPut("invite/{projectId}/validate/{token}")]
         public async Task<IActionResult> ValidateToken(string projectId, string token)
         {
 
             var project = await _projectService.GetProject(projectId);
+            var users = await _userService.GetAllUsers();
+            var status = new bool[2];
             var activeTokenExists = false;
+            var userIsRegistered = false;
             var tokenObj = new EmailInvite();
+            var currentUser = new User();
 
             foreach (EmailInvite tok in project.InviteTokens)
             {
                 if (tok.Token == token && DateTime.Now < tok.ExpireTime)
                 {
+                    tokenObj = tok;
                     activeTokenExists = true;
                     break;
                 }
             }
-
-            var user = _userService.GetAllUsers().Result.Single(user => user.Email.Equals(tokenObj.Email));
-
-            if (activeTokenExists
-                && !user.ProjectRoles.ContainsKey(projectId)
-                && await _projectService.RemoveTokenAndCreateUserRole(project, user, tokenObj))
+            foreach (User user in users)
             {
-                return new OkObjectResult(true);
+                if (user.Email == tokenObj.Email)
+                {
+                    currentUser = user;
+                    userIsRegistered = true;
+                    break;
+                }
+            }
+
+            status[0] = activeTokenExists;
+            status[1] = userIsRegistered;
+
+            if (activeTokenExists && !userIsRegistered)
+            {
+                return new OkObjectResult(status);
+            }
+            else if (activeTokenExists && userIsRegistered
+               && !currentUser.ProjectRoles.ContainsKey(projectId)
+               && await _projectService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
+            {
+                return new OkObjectResult(status);
             }
             else
             {
-                return new OkObjectResult(false);
+                status[0] = false;
+                status[1] = false;
+                return new OkObjectResult(status);
             }
         }
 

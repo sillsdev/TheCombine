@@ -15,7 +15,8 @@ import ProjectSettings from "../ProjectSettings";
 import ProjectScreen from "../ProjectScreen/ProjectScreenComponent";
 import SiteSettings from "../SiteSettings";
 import UserSettings from "../UserSettings/UserSettings";
-import RegisterInvite from "../Login/RegisterInvitePage/RegisterInviteComponent";
+import ProjectInvite from "../ProjectInvite";
+
 /**
  * The top-level component
  */
@@ -39,7 +40,7 @@ export default class App extends React.Component {
           <Route path="/forgot/reset/:token" component={PasswordReset} />
           <Route path="/forgot/reset/" component={PasswordReset} />
           <Route path="/forgot/request" component={ResetRequest} />
-          <Route path="/invite/:project/:token" component={RegisterInvite} />
+          <Route path="/invite/:project/:token" component={ProjectInvite} />
           <Route component={PageNotFound} />
         </Switch>
       </div>

@@ -1,13 +1,17 @@
-import RegisterInvite, {
-  RegisterInviteStateProps,
-} from "./RegisterInviteComponent";
-import { StoreState } from "../../../types";
+import ProjectInvite, {
+  ProjectInviteStateProps,
+} from "./ProjectInviteComponent";
+import { StoreState } from "../../types";
 
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { UserAction, asyncRegister, registerReset } from "../LoginActions";
+import {
+  UserAction,
+  asyncRegisterForEmailInvite,
+  registerReset,
+} from "../Login/LoginActions";
 
-function mapStateToProps(state: StoreState): RegisterInviteStateProps {
+function mapStateToProps(state: StoreState): ProjectInviteStateProps {
   return {
     inProgress: state.loginState.registerAttempt,
     success: state.loginState.registerSuccess,
@@ -20,7 +24,7 @@ export function mapDispatchToProps(
 ) {
   return {
     register: (name: string, user: string, email: string, password: string) => {
-      dispatch(asyncRegister(name, user, email, password));
+      dispatch(asyncRegisterForEmailInvite(name, user, email, password));
     },
     reset: () => {
       dispatch(registerReset());
@@ -28,4 +32,4 @@ export function mapDispatchToProps(
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterInvite);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectInvite);

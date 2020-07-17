@@ -36,6 +36,10 @@ export interface RegisterStateProps {
   failureMessage: string;
 }
 
+export interface RegisterProps {
+  returnToEmailInvite?: () => void;
+}
+
 interface RegisterState {
   name: string;
   user: string;
@@ -52,11 +56,17 @@ interface RegisterState {
 }
 
 class Register extends React.Component<
-  RegisterDispatchProps & RegisterStateProps & LocalizeContextProps,
+  RegisterProps &
+    RegisterDispatchProps &
+    RegisterStateProps &
+    LocalizeContextProps,
   RegisterState
 > {
   constructor(
-    props: RegisterDispatchProps & RegisterStateProps & LocalizeContextProps
+    props: RegisterProps &
+      RegisterDispatchProps &
+      RegisterStateProps &
+      LocalizeContextProps
   ) {
     super(props);
     this.state = {
@@ -108,7 +118,7 @@ class Register extends React.Component<
     }
   }
 
-  register(e: React.FormEvent<HTMLFormElement>) {
+  async register(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let name = this.state.name.trim();
     let user = this.state.user.trim();
@@ -134,6 +144,12 @@ class Register extends React.Component<
       this.setState({ error });
     } else if (this.props.register) {
       this.props.register(name, user, email, pass);
+      // Temporary solution - Not sure how to force register to finish first
+      setTimeout(() => {
+        if (this.props.returnToEmailInvite) {
+          this.props.returnToEmailInvite();
+        }
+      }, 1000);
     }
   }
 
@@ -147,6 +163,7 @@ class Register extends React.Component<
     } else {
       failureMessage = <Translate id="login.networkError" />;
     }
+
     return (
       <Grid container justify="center">
         <Card style={{ width: 450 }}>
