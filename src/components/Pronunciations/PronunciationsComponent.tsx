@@ -1,18 +1,18 @@
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import AudioPlayer from "./AudioPlayer";
-import AudioRecorder from "./AudioRecorder";
+
 import * as Backend from "../../backend";
 import theme from "../../types/theme";
-import { Recorder } from "./Recorder";
+import AudioPlayer from "./AudioPlayer";
+import AudioRecorder from "./AudioRecorder";
+import Recorder from "./Recorder";
 
 export interface PronunciationProps {
   wordId: string;
   pronunciationFiles: string[];
-  refreshWord?: (oldId: string, newId: string) => void;
+  recorder?: Recorder;
   deleteAudio?: (wordId: string, fileName: string) => void;
   uploadAudio?: (wordId: string, audioFile: File) => void;
-  recorder?: Recorder;
 }
 
 /** Audio recording/playing component */

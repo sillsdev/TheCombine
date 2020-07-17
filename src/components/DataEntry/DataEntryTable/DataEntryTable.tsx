@@ -10,10 +10,10 @@ import {
 import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
 import { AutoComplete } from "../../../types/AutoComplete";
+import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import { SemanticDomain, Word } from "../../../types/word";
-import { Recorder } from "../../Pronunciations/Recorder";
-import DomainTree from "../../../types/SemanticDomain";
+import Recorder from "../../Pronunciations/Recorder";
 import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";

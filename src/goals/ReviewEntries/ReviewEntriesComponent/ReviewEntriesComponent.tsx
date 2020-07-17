@@ -6,8 +6,9 @@ import {
   Translate,
   withLocalize,
 } from "react-localize-redux";
-import * as backend from "../../../backend";
-import { Recorder } from "../../../components/Pronunciations/Recorder";
+
+import { getFrontierWords } from "../../../backend";
+import Recorder from "../../../components/Pronunciations/Recorder";
 import theme from "../../../types/theme";
 import { Word } from "../../../types/word";
 import columns from "./CellComponents/CellColumns";
@@ -54,9 +55,9 @@ export class ReviewEntriesComponent extends React.Component<
   }
 
   componentDidMount() {
-    backend
-      .getFrontierWords()
-      .then((frontier: Word[]) => this.updateLocalWords(frontier));
+    getFrontierWords().then((frontier: Word[]) =>
+      this.updateLocalWords(frontier)
+    );
   }
 
   // Creates the local set of words from the frontier
