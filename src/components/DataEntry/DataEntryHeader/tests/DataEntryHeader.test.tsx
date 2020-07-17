@@ -10,9 +10,12 @@ const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 const mockCallback = jest.fn();
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("Tests DataEntryHeader", () => {
   it("No questions should disable switch and show no questions", () => {
-    mockCallback.mockClear();
     const instance = createDataEntryHeaderInstance(
       baseDomain,
       true,
@@ -26,8 +29,6 @@ describe("Tests DataEntryHeader", () => {
   });
 
   it("Questions Visible should show questions", () => {
-    mockCallback.mockClear();
-
     const newDomain = { ...baseDomain, questions: ["Q1", "Q2", "Q3"] };
 
     const instance = createDataEntryHeaderInstance(
@@ -48,8 +49,6 @@ describe("Tests DataEntryHeader", () => {
   });
 
   it("Callback should be called on switch click", () => {
-    mockCallback.mockClear();
-
     const newDomain = { ...baseDomain, questions: ["Q1", "Q2"] };
 
     const instance: ReactTestInstance = createDataEntryHeaderInstance(
