@@ -74,7 +74,6 @@ function createDataEntryComponentInstance(
 }
 
 describe("Tests DataEntryComponent", () => {
-<<<<<<< HEAD
   fit("Questions hidden on complete clicked", () => {
     const newDomain = { ...baseDomain, questions: ["Q1", "Q2", "Q3"] };
     const parentInstance: ReactTestInstance = createDataEntryComponentInstance(
@@ -100,10 +99,7 @@ describe("Tests DataEntryComponent", () => {
     expect(questionSwitch.props.checked).toBeFalsy();
   });
 
-  it("should filter out words that are not accessible", () => {
-=======
   it("should return empty Word Array when given empty Word Array", () => {
->>>>>>> adf204f... cleanup imports and test naming
     let words: Word[] = [];
     let expectedWords: Word[] = [];
     expect(filterWords(words)).toEqual(expectedWords);
