@@ -27,7 +27,23 @@
     group: root
     mode: 0600
 
-- name: create config directory
+- name: create nginx config directory
+  file:
+    name: "{{ source_dir }}/{{ nginx_config }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create nginx config file
+  template:
+    src: thecombine.conf.j2
+    dest: "{{ source_dir }}/{{ nginx_config }}/thecombine.conf"
+    owner: root
+    group: root
+    mode: 0600
+    
+- name: create runtime config directory
   file:
     name: "{{ source_dir }}/{{ config_dir }}"
     state: directory
