@@ -52,11 +52,11 @@ export class DataEntryHeader extends React.Component<
     );
   }
 }
-export function getQuestions(qV: boolean, questions: string[]) {
-  if (qV) {
-    return questions.map((q, index) => (
+export function getQuestions(questionsVisible: boolean, questions: string[]) {
+  if (questionsVisible) {
+    return questions.map((question, index) => (
       <Typography id={"q" + index} key={index}>
-        {q}
+        {question}
       </Typography>
     ));
   }

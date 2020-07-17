@@ -4,10 +4,7 @@ import SemanticDomainWithSubdomains, {
   baseDomain,
 } from "../../../types/SemanticDomain";
 import configureMockStore from "redux-mock-store";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
+import renderer, { ReactTestInstance } from "react-test-renderer";
 import { Provider } from "react-redux";
 import { DataEntryTable } from "../DataEntryTable/DataEntryTable";
 import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";

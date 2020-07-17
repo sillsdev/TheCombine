@@ -8,10 +8,11 @@ import SemanticDomainWithSubdomains, {
 } from "../../../../types/SemanticDomain";
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
+const mockCallback = jest.fn();
 
 describe("Tests DataEntryHeader", () => {
   it("No questions should disable switch and show no questions", () => {
-    const mockCallback = jest.fn();
+    mockCallback.mockClear();
     const instance = createDataEntryHeaderInstance(
       baseDomain,
       true,
@@ -25,8 +26,9 @@ describe("Tests DataEntryHeader", () => {
   });
 
   it("Questions Visible should show questions", () => {
+    mockCallback.mockClear();
+
     const newDomain = { ...baseDomain, questions: ["Q1", "Q2", "Q3"] };
-    const mockCallback = jest.fn();
 
     const instance = createDataEntryHeaderInstance(
       newDomain,
@@ -46,8 +48,9 @@ describe("Tests DataEntryHeader", () => {
   });
 
   it("Callback should be called on switch click", () => {
+    mockCallback.mockClear();
+
     const newDomain = { ...baseDomain, questions: ["Q1", "Q2"] };
-    const mockCallback = jest.fn();
 
     const instance: ReactTestInstance = createDataEntryHeaderInstance(
       newDomain,
@@ -64,16 +67,16 @@ describe("Tests DataEntryHeader", () => {
 });
 
 function createDataEntryHeaderInstance(
-  dom: SemanticDomainWithSubdomains,
-  qV: boolean,
-  mCb: jest.Mock
+  _domain: SemanticDomainWithSubdomains,
+  _questionsVisible: boolean,
+  _mockCallback: jest.Mock
 ): ReactTestInstance {
   return renderer.create(
     <Provider store={mockStore}>
       <DataEntryHeader
-        domain={dom}
-        questionsVisible={qV}
-        setQuestionVisibility={mCb}
+        domain={_domain}
+        questionsVisible={_questionsVisible}
+        setQuestionVisibility={_mockCallback}
       />
     </Provider>
   ).root;
