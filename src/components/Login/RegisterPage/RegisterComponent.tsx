@@ -149,7 +149,7 @@ class Register extends React.Component<
         if (this.props.returnToEmailInvite) {
           this.props.returnToEmailInvite();
         }
-      }, 1000);
+      }, 1050);
     }
   }
 

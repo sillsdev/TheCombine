@@ -3,6 +3,7 @@ import { RouteComponentProps } from "react-router-dom";
 import * as Backend from "../../backend";
 import Register from "../Login/RegisterPage/RegisterComponent";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import history from "../../history";
 
 //(props: RouteComponentProps)
 export interface ProjectInviteDispatchProps {
@@ -75,6 +76,9 @@ class ProjectInvite extends React.Component<
         isAlreadyUser: true,
       });
     }
+    if (status[0] && status[1]) {
+      history.push("/login");
+    }
   }
 
   render() {
@@ -91,13 +95,6 @@ class ProjectInvite extends React.Component<
 
     return (
       <div>
-        <p>
-          If the project was added successfully, you will need to log out and
-          log back in to see it.
-        </p>
-        <p>
-          <a href="http://localhost:3000">TheCombine</a>
-        </p>
         {!this.state.isAlreadyUser && this.state.isValidLink ? text : ""}
       </div>
     );
