@@ -1,13 +1,13 @@
-import renderer, { ReactTestRenderer } from "react-test-renderer";
-import TestRenderer from "react-test-renderer";
-import { ProjectSwitch } from "../ProjectSwitch";
-import React from "react";
 import { ListItem } from "@material-ui/core";
-import { defaultProject } from "../../../../types/project";
-import configureMockStore from "redux-mock-store";
+import React from "react";
 import { Provider } from "react-redux";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
-const projects = [defaultProject, defaultProject, defaultProject];
+import { defaultProject, randomProject } from "../../../../types/project";
+import { ProjectSwitch } from "../ProjectSwitch";
+
+const projects = [randomProject(), randomProject(), randomProject()];
 var switchMaster: ReactTestRenderer;
 var switchHandle: ProjectSwitch;
 
@@ -20,7 +20,7 @@ describe("Testing login component", () => {
     };
     const mockStore = createMockStore(state);
     renderer.act(() => {
-      switchMaster = TestRenderer.create(
+      switchMaster = renderer.create(
         <Provider store={mockStore}>
           <ProjectSwitch
             project={defaultProject}
