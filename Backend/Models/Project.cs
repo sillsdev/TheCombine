@@ -274,18 +274,14 @@ namespace BackendFramework.Models
         {
             Id = baseObj.Id;
             Name = baseObj.Name;
-            IsActive = baseObj.IsActive;
             PartsOfSpeech = baseObj.PartsOfSpeech;
             RejectedCharacters = baseObj.RejectedCharacters;
             SemanticDomains = baseObj.SemanticDomains;
             VernacularWritingSystem = baseObj.VernacularWritingSystem;
-            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
-            ValidCharacters = baseObj.ValidCharacters;
-            RejectedCharacters = baseObj.RejectedCharacters;
-            CustomFields = baseObj.CustomFields;
             WordFields = baseObj.WordFields;
-            PartsOfSpeech = baseObj.PartsOfSpeech;
-            InviteTokens = baseObj.InviteTokens;
+            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
+            CustomFields = baseObj.CustomFields;
+            ValidCharacters = baseObj.ValidCharacters;
             AutocompleteSetting = baseObj.AutocompleteSetting;
         }
     }
