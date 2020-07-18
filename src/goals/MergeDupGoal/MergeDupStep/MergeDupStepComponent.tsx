@@ -273,7 +273,7 @@ class MergeDupStep extends React.Component<
           >
             <DragDropContext onDragEnd={(res) => this.handleDrop(res)}>
               {Object.keys(this.props.words).map((key) => (
-                <GridListTile key={key} style={{ height: "50vh", margin: 8 }}>
+                <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
                   <MergeRow
                     sideBar={this.state.sideBar}
                     setSidebar={(el) =>
@@ -313,7 +313,7 @@ class MergeDupStep extends React.Component<
               float: "right",
               marginRight: 30,
             }}
-            onClick={(_) => {}}
+            onClick={(_) => this.saveContinue()}
             title={this.props.translate("mergeDups.helpText.next") as string}
           >
             <Translate id="goal.mergeDups.done" />
