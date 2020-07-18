@@ -122,8 +122,7 @@ namespace BackendFramework.Services
             message.Body = new TextPart("plain")
             {
                 Text = string.Format("You have been invited to a TheCombine project called {0}. \n"
-                        + "To become a member of the project, first go to {1}/login and login or register. \n"
-                        + "Then go to {1}{2} to add yourself to the project. \n"
+                        + "To become a member of this project, go to {1}{2}. \n\n"
                         + "If you did not expect an invite please ignore this email.",
                          project.Name, domain, link)
             };
