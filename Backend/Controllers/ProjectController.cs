@@ -300,14 +300,14 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Generates invite link and sends email containing link </summary>
-        /// <remarks> PUT: v1/projects/invite/{projectId}/{emailAddress} </remarks>
+        /// <remarks> PUT: v1/projects/invite </remarks>
         [HttpPut("invite")]
         public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
         {
             var project = await _projectService.GetProject(data.ProjectId);
             var linkWithIdentifier = await _projectService.CreateLinkWithToken(project, data.EmailAddress);
 
-            await _projectService.EmailLink(data.EmailAddress, linkWithIdentifier, data.Domain, project);
+            await _projectService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
 
             return new OkObjectResult(linkWithIdentifier);
         }
@@ -370,6 +370,7 @@ namespace BackendFramework.Controllers
         public class EmailInviteData
         {
             public string EmailAddress;
+            public string Message;
             public string ProjectId;
             public string Domain;
         }

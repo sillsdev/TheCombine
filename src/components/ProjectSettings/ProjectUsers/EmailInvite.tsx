@@ -18,6 +18,7 @@ interface InviteProps {
 
 interface InviteState {
   emailAddress: string;
+  message: string;
   isValid: boolean;
 }
 class EmailInvite extends React.Component<InviteProps, InviteState> {
@@ -25,18 +26,23 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     super(props);
     this.state = {
       emailAddress: "",
+      message: "",
       isValid: false,
     };
   }
 
   async onSubmit() {
-    var project = LocalStorage.getProjectId();
-    await Backend.emailInviteToProject(project, this.state.emailAddress);
+    var projectId = LocalStorage.getProjectId();
+    await Backend.emailInviteToProject(
+      projectId,
+      this.state.emailAddress,
+      this.state.message
+    );
     this.props.close();
   }
 
   /** Updates the state to match the value in a textbox */
-  updateField(
+  updateEmailField(
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
@@ -55,6 +61,17 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     }
   }
 
+  updateMessageField(
+    e: React.ChangeEvent<
+      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
+    >
+  ) {
+    const value = e.target.value;
+    this.setState({
+      message: value,
+    });
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -67,7 +84,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
               <TextField
                 required
                 label={<Translate id="projectSettings.invite.emailLabel" />}
-                onChange={(e) => this.updateField(e)}
+                onChange={(e) => this.updateEmailField(e)}
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
@@ -76,6 +93,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
               />
               <TextField
                 label="Message"
+                onChange={(e) => this.updateMessageField(e)}
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"

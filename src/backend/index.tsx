@@ -472,12 +472,14 @@ export async function addUserRole(
 
 export async function emailInviteToProject(
   projectId: string,
-  emailAddress: string
+  emailAddress: string,
+  message: string
 ): Promise<string> {
   let resp = await backendServer.put(
     `projects/invite`,
     {
       EmailAddress: emailAddress,
+      Message: message,
       ProjectId: projectId,
       Domain: window.location.origin,
     },

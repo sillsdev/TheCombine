@@ -113,7 +113,7 @@ namespace BackendFramework.Services
             return linkWithIdentifier;
         }
 
-        public async Task<bool> EmailLink(string emailAddress, string link, string domain, Project project)
+        public async Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project)
         {
             // create email
             var message = new MimeMessage();
@@ -123,8 +123,9 @@ namespace BackendFramework.Services
             {
                 Text = string.Format("You have been invited to a TheCombine project called {0}. \n"
                         + "To become a member of this project, go to {1}{2}. \n\n"
+                        + "Message from Project Admin: {3} \n\n"
                         + "If you did not expect an invite please ignore this email.",
-                         project.Name, domain, link)
+                         project.Name, domain, link, emailMessage)
             };
             if (await _emailService.SendEmail(message))
             {
