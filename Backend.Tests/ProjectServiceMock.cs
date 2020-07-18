@@ -73,7 +73,7 @@ namespace Backend.Tests
             return Task.FromResult("");
         }
 
-        public Task<bool> EmailLink(string emailAddress, string link, string domain, Project project)
+        public Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project)
         {
             return Task.FromResult(true);
         }
