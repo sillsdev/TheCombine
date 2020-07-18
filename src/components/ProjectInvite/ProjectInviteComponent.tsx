@@ -5,7 +5,6 @@ import Register from "../Login/RegisterPage/RegisterComponent";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import history from "../../history";
 
-//(props: RouteComponentProps)
 export interface ProjectInviteDispatchProps {
   register?: (
     name: string,
