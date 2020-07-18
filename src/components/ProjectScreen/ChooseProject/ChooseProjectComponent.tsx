@@ -11,7 +11,6 @@ import {
   ListItem,
   Typography,
 } from "@material-ui/core";
-import { User } from "../../../types/user";
 import { Project } from "../../../types/project";
 import { getAllActiveProjectsByUser } from "../../../backend";
 import history from "../../../history";
