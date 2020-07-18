@@ -221,12 +221,16 @@ export function updateFrontierWord(
   };
 }
 
-// Converts the ReviewEntriesWord into a Word to send to the backend
-export function refreshWord(oldWordId: string, newWordId: string) {
+// Performs an action then converts the ReviewEntriesWord into a Word to send to the backend
+function refreshWord(
+  oldWordId: string,
+  action: (wordId: string) => Promise<string>
+) {
   return async (
     dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
     getState: () => StoreState
   ) => {
+    const newWordId = await action(oldWordId);
     const newWord = await backend.getWord(newWordId);
     const analysisLang = getState().currentProject.analysisWritingSystems[0]
       ? getState().currentProject.analysisWritingSystems[0]
@@ -238,34 +242,16 @@ export function refreshWord(oldWordId: string, newWordId: string) {
   };
 }
 
-// Similar to refreshWord but deletes an audio first
 export function deleteAudio(wordId: string, fileName: string) {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
-    getState: () => StoreState
-  ) => {
-    const newWordId = await backend.deleteAudio(wordId, fileName);
-    const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems[0]
-      ? getState().currentProject.analysisWritingSystems[0]
-      : "en";
-
-    dispatch(updateWord(wordId, newWordId, parseWord(newWord, analysisLang)));
+  let deleteAction = (wordId: string) => {
+    return backend.deleteAudio(wordId, fileName);
   };
+  return refreshWord(wordId, deleteAction);
 }
 
-// Similar to refreshWord but uploads an audio first
 export function uploadAudio(wordId: string, audioFile: File) {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
-    getState: () => StoreState
-  ) => {
-    const newWordId = await backend.uploadAudio(wordId, audioFile);
-    const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems[0]
-      ? getState().currentProject.analysisWritingSystems[0]
-      : "en";
-
-    dispatch(updateWord(wordId, newWordId, parseWord(newWord, analysisLang)));
+  let uploadAction = (wordId: string) => {
+    return backend.uploadAudio(wordId, audioFile);
   };
+  return refreshWord(wordId, uploadAction);
 }

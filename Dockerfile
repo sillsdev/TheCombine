@@ -15,10 +15,9 @@ FROM nginx:stable-alpine
 
 WORKDIR /app
 
-# Args used to configure frontend.
-ARG API_BASE_URL
-ARG CAPTCHA_REQUIRED
-ARG CAPTCHA_SITE
+# Args used to configure frontend build.
+ARG COMBINE_CAPTCHA_REQUIRED
+ARG COMBINE_CAPTCHA_SITE
 
 ENV NGINX_HOST_DIR /usr/share/nginx/html
 

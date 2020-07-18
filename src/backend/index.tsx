@@ -1,15 +1,15 @@
 import axios from "axios";
 
-import { Word, MergeWord } from "../types/word";
-import { User } from "../types/user";
-import { Project } from "../types/project";
 import { authHeader } from "../components/Login/AuthHeaders";
-import { Goal, GoalType } from "../types/goals";
-import { UserEdit } from "../types/userEdit";
 import history from "../history";
-import SemanticDomainWithSubdomains from "../components/TreeView/SemanticDomain";
-import { UserRole } from "../types/userRole";
+import { Goal, GoalType } from "../types/goals";
+import { Project } from "../types/project";
 import { RuntimeConfig } from "../types/runtimeConfig";
+import { User } from "../types/user";
+import { UserEdit } from "../types/userEdit";
+import SemanticDomainWithSubdomains from "../types/SemanticDomain";
+import { UserRole } from "../types/userRole";
+import { MergeWord, Word } from "../types/word";
 import * as LocalStorage from "./localStorage";
 
 const baseURL = `${RuntimeConfig.getInstance().baseUrl()}/v1`;
@@ -216,13 +216,20 @@ export async function getAllProjects(): Promise<Project[]> {
   return resp.data;
 }
 
-export async function getAllProjectsByUser(user: User): Promise<Project[]> {
+export async function getAllActiveProjectsByUser(
+  user: User
+): Promise<Project[]> {
   let projectIds: string[] = Object.keys(user.projectRoles);
   let projects: Project[] = [];
   for (let projectId of projectIds) {
-    await getProject(projectId).then((project) => {
-      projects.push(project);
-    });
+    try {
+      await getProject(projectId).then((project) => {
+        project.isActive && projects.push(project);
+      });
+    } catch (err) {
+      /** If there was an error, the project probably was manually deleted
+       from the database or is ill-formatted. */
+    }
   }
   return projects;
 }
@@ -236,6 +243,28 @@ export async function getProject(id: string): Promise<Project> {
 
 export async function updateProject(project: Project) {
   let resp = await backendServer.put(`projects/${project.id}`, project, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
+export async function archiveProject(id: string) {
+  let project = await backendServer.get(`projects/${id}`, {
+    headers: authHeader(),
+  });
+  project.data.isActive = false;
+  let resp = await backendServer.put(`projects/${id}`, project.data, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
+export async function restoreProject(id: string) {
+  let project = await backendServer.get(`projects/${id}`, {
+    headers: authHeader(),
+  });
+  project.data.isActive = true;
+  let resp = await backendServer.put(`projects/${id}`, project.data, {
     headers: authHeader(),
   });
   return resp.data;
