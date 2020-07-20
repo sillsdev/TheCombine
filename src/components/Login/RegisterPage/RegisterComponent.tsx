@@ -189,7 +189,9 @@ class Register extends React.Component<
                 helperText={
                   this.state.error["user"] ? (
                     <Translate id="login.usernameInvalid" />
-                  ) : null
+                  ) : (
+                    <Translate id="login.usernameRequirements" />
+                  )
                 }
                 variant="outlined"
                 style={{ width: "100%" }}

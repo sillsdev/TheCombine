@@ -96,9 +96,14 @@
       "N'a pas réussi à s'inscrire"
     ],
     "usernameInvalid": [
-      "This username is too short (must be at least 3 characters) or already taken",
-      "Este nombre de usuario es demasiado corto (debe tener al menos 3 caracteres) o ya está en uso",
-      "Ce nom d'utilisateur est trop court (doit contenir au moins 3 caractères) ou est déjà utilisé"
+      "This username is too short or already taken",
+      "Este nombre de usuario es demasiado corto o ya está en uso",
+      "Ce nom d'utilisateur est trop court ou est déjà utilisé"
+    ],
+    "usernameRequirements": [
+      "Username must be 3 characters or longer.",
+      "El nombre de usuario debe tener 3 caracteres o más.",
+      "Le nom d'utilisateur doit contenir 3 caractères ou plus."
     ],
     "emailTaken": [
       "A user with this email already exists",
