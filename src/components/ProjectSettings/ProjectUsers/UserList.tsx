@@ -16,6 +16,7 @@ import {
   Translate,
   withLocalize,
 } from "react-localize-redux";
+
 import theme from "../../../types/theme";
 import { User } from "../../../types/user";
 
@@ -30,7 +31,6 @@ interface UserListState {
   filterInput: string;
   filteredNonProjUsers: User[];
   filteredProjUsers: User[];
-  hovering: boolean;
   hoverUserID: string;
 }
 
@@ -43,16 +43,16 @@ class UserList extends React.Component<
 
     this.state = {
       filterInput: "",
-      hovering: false,
       hoverUserID: "",
       filteredNonProjUsers: [],
       filteredProjUsers: [],
     };
   }
-  componentWillReceiveProps() {
+
+  /*  componentWillReceiveProps() {
     this.handleChange(this.state.filterInput);
   }
-
+*/
   handleChange(event: string) {
     let filteredNonProjUsers: User[] = [];
     let filteredProjUsers: User[] = [];
@@ -106,12 +106,8 @@ class UserList extends React.Component<
           {this.state.filteredProjUsers.map((user) => (
             <ListItem
               key={user.id}
-              onMouseEnter={() =>
-                this.setState({ hovering: true, hoverUserID: user.id })
-              }
-              onMouseLeave={() =>
-                this.setState({ hovering: false, hoverUserID: "" })
-              }
+              onMouseEnter={() => this.setState({ hoverUserID: user.id })}
+              onMouseLeave={() => this.setState({ hoverUserID: "" })}
             >
               <ListItemIcon>
                 <Done />
@@ -127,16 +123,17 @@ class UserList extends React.Component<
           {this.state.filteredNonProjUsers.map((user) => (
             <ListItem
               key={user.id}
-              onMouseEnter={() =>
-                this.setState({ hovering: true, hoverUserID: user.id })
-              }
-              onMouseLeave={() =>
-                this.setState({ hovering: false, hoverUserID: "" })
-              }
+              onMouseEnter={() => this.setState({ hoverUserID: user.id })}
+              onMouseLeave={() => this.setState({ hoverUserID: "" })}
             >
               <ListItemText primary={`${user.name} (${user.username})`} />
-              {this.state.hovering && this.state.hoverUserID === user.id && (
-                <Button onClick={() => this.props.addToProject(user)}>
+              {this.state.hoverUserID === user.id && (
+                <Button
+                  onClick={() => {
+                    this.props.addToProject(user);
+                    //this.handleChange(this.state.filterInput);
+                  }}
+                >
                   <Translate id="projectSettings.invite.addButton" />
                 </Button>
               )}
