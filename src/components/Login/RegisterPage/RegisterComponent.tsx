@@ -1,23 +1,23 @@
-import * as React from "react";
 import {
-  Translate,
-  LocalizeContextProps,
-  withLocalize,
-} from "react-localize-redux";
-import {
-  Grid,
+  Button,
   Card,
   CardContent,
-  Typography,
-  Button,
-  TextField,
   CircularProgress,
+  Grid,
+  TextField,
+  Typography,
 } from "@material-ui/core";
 import { Check } from "@material-ui/icons";
+import * as React from "react";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 
+import { isEmailTaken, isUsernameTaken } from "../../../backend";
 import history from "../../../history";
 import { buttonSuccess } from "../../../types/theme";
-import { isUsernameTaken, isEmailTaken } from "../../../backend";
 import { passwordRequirements } from "../../../utilities";
 
 export interface RegisterDispatchProps {
@@ -120,7 +120,7 @@ class Register extends React.Component<
     let error = { ...this.state.error };
     error.name = name === "";
     error.password = !passwordRequirements(pass);
-    error.user = user === "";
+    error.user = user.length < 3;
     error.confirmPassword = pass !== confPass;
     error.email = email === "";
 
@@ -188,7 +188,7 @@ class Register extends React.Component<
                 error={this.state.error["user"]}
                 helperText={
                   this.state.error["user"] ? (
-                    <Translate id="login.usernameTaken" />
+                    <Translate id="login.usernameInvalid" />
                   ) : null
                 }
                 variant="outlined"
