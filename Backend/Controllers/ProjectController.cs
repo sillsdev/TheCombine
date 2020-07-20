@@ -56,7 +56,7 @@ namespace BackendFramework.Controllers
             }
 
             var allUsers = await _userService.GetAllUsers();
-            var projectUsers = allUsers.FindAll(user => user.WorkedProjects.ContainsKey(projectId));
+            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
             return new ObjectResult(projectUsers);
         }

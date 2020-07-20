@@ -49,44 +49,34 @@ class UserList extends React.Component<
     };
   }
 
-  /*  componentWillReceiveProps() {
-    this.handleChange(this.state.filterInput);
-  }
-*/
   handleChange(event: string) {
     let filteredNonProjUsers: User[] = [];
     let filteredProjUsers: User[] = [];
 
     if (event.length >= 3) {
-      filteredNonProjUsers = this.props.allUsers.filter((user) => {
-        const name = user.name.toLowerCase();
-        const username = user.username.toLowerCase();
-        const email = user.email.toLowerCase();
-        const filter = event.toLowerCase();
-
-        return (
-          name.includes(filter) ||
-          username.includes(filter) ||
-          email.includes(filter)
-        );
-      });
-
-      filteredProjUsers = this.props.projUsers.filter((item) => {
-        const name = item.name.toLowerCase();
-        const username = item.username.toLowerCase();
-        const email = item.email.toLowerCase();
-        const filter = event.toLowerCase();
-        return (
-          name.includes(filter) ||
-          username.includes(filter) ||
-          email.includes(filter)
-        );
-      });
+      filteredNonProjUsers = this.filterUsers(this.props.allUsers, event);
+      filteredProjUsers = this.filterUsers(this.props.projUsers, event);
     }
+
     this.setState({
       filterInput: event,
       filteredNonProjUsers: filteredNonProjUsers,
       filteredProjUsers: filteredProjUsers,
+    });
+  }
+
+  filterUsers(users: User[], event: string): User[] {
+    return users.filter((user) => {
+      const name = user.name.toLowerCase();
+      const username = user.username.toLowerCase();
+      const email = user.email.toLowerCase();
+      const filter = event.toLowerCase();
+
+      return (
+        name.includes(filter) ||
+        username.includes(filter) ||
+        email.includes(filter)
+      );
     });
   }
 
@@ -100,8 +90,8 @@ class UserList extends React.Component<
           type="text"
           onChange={(e) => this.handleChange(e.target.value)}
           placeholder="Search..."
+          value={this.state.filterInput}
         />
-
         <List>
           {this.state.filteredProjUsers.map((user) => (
             <ListItem
@@ -131,7 +121,7 @@ class UserList extends React.Component<
                 <Button
                   onClick={() => {
                     this.props.addToProject(user);
-                    //this.handleChange(this.state.filterInput);
+                    this.handleChange("");
                   }}
                 >
                   <Translate id="projectSettings.invite.addButton" />
