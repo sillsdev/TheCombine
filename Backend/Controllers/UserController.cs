@@ -83,7 +83,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Returns all <see cref="User"/>s </summary>
         /// <remarks> GET: v1/users/projects/{projectId}/allusers </remarks>
-        [HttpGet("projects/{projectId}/allusers")]
+        [HttpGet("allusers")]
         public async Task<IActionResult> GetAllUsers()
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
