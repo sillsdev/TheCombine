@@ -1,46 +1,49 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import {
-  ExistingEntry,
-  addSenseToWord,
-  addSemanticDomainToSense,
-  duplicatesFromFrontier,
-} from "../ExistingEntry";
-import { Word, SemanticDomain, State, Sense } from "../../../../../types/word";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
+
+import { SemanticDomain, Sense, State, Word } from "../../../../../types/word";
 import { defaultState } from "../../../../App/DefaultState";
+import Recorder from "../../../../Pronunciations/Recorder";
 import { mockWord } from "../../../tests/MockWord";
 import { mockSemanticDomain } from "../../tests/DataEntryTable.test";
-import { Recorder } from "../../../../Pronunciations/Recorder";
-jest.mock("../ExistingVernacular/ExistingVernacular");
+import {
+  addSemanticDomainToSense,
+  addSenseToWord,
+  duplicatesFromFrontier,
+  ExistingEntry,
+} from "../ExistingEntry";
+
+jest.mock("../../../../Pronunciations/Recorder");
 jest.mock("../../GlossEntry/GlossEntry");
 jest.mock("../DeleteEntry/DeleteEntry");
-jest.mock("../../../../Pronunciations/Recorder");
+jest.mock("../ExistingVernacular/ExistingVernacular");
+
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
+
 describe("Tests ExistingEntry", () => {
   it("renders without crashing", () => {
-    const div = document.createElement("div");
-    ReactDOM.render(
-      <Provider store={mockStore}>
-        <ExistingEntry
-          wordsBeingAdded={[]}
-          existingWords={[]}
-          entryIndex={0}
-          entry={mockWord}
-          updateWord={(word: Word) => null}
-          removeWord={(word: Word) => null}
-          semanticDomain={{ name: "", id: "" }}
-          displayDuplicates={true}
-          toggleDisplayDuplicates={() => null}
-          recorder={new Recorder()}
-          focusNewEntry={() => null}
-        />
-      </Provider>,
-      div
-    );
-    ReactDOM.unmountComponentAtNode(div);
+    renderer.act(() => {
+      renderer.create(
+        <Provider store={mockStore}>
+          <ExistingEntry
+            wordsBeingAdded={[]}
+            existingWords={[]}
+            entryIndex={0}
+            entry={mockWord}
+            updateWord={(word: Word) => null}
+            removeWord={(word: Word) => null}
+            semanticDomain={{ name: "", id: "" }}
+            displayDuplicates={true}
+            toggleDisplayDuplicates={() => null}
+            recorder={new Recorder()}
+            focusNewEntry={() => null}
+          />
+        </Provider>
+      );
+    });
   });
   it("adds a sense to a word that has no senses already", () => {
     let semanticDomain: SemanticDomain = mockSemanticDomain;

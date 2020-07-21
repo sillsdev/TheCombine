@@ -1,5 +1,7 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
+
+import { uploadAudio } from "../../../../backend";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import theme from "../../../../types/theme";
 import {
@@ -9,8 +11,8 @@ import {
   State,
   Word,
 } from "../../../../types/word";
-import PronunciationsComponent from "../../../Pronunciations/PronunciationsComponent";
-import { Recorder } from "../../../Pronunciations/Recorder";
+import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
+import Recorder from "../../../Pronunciations/Recorder";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 import GlossEntry from "../GlossEntry/GlossEntry";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
@@ -284,12 +286,8 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  removeWord(word: Word, callback?: Function) {
-    this.props.removeWord(word);
-  }
-
   removeEntry() {
-    this.removeWord(this.props.entry);
+    this.props.removeWord(this.props.entry);
   }
 
   conditionallyUpdateWord() {
@@ -372,11 +370,13 @@ export class ExistingEntry extends React.Component<
               position: "relative",
             }}
           >
-            <PronunciationsComponent
+            <Pronunciations
               wordId={this.state.existingEntry.id}
               recorder={this.props.recorder}
               pronunciationFiles={this.state.existingEntry.audio}
-              //TODO: wordUpdated={wordupdatemethod}
+              uploadAudio={(wordId: string, audioFile: File) => {
+                uploadAudio(wordId, audioFile);
+              }}
             />
           </Grid>
           <Grid
