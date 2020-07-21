@@ -14,8 +14,6 @@ import ProjectManagement from "./ProjectManagement";
 import UserManagment from "./UserManagment/UserManagment";
 import { Project } from "../../types/project";
 
-interface SiteSettingsProps {}
-
 interface SiteSettingsStates {
   projectName?: Project;
 }
@@ -41,7 +39,6 @@ class SiteSettingsComponent extends React.Component<
             icon={<People />}
             title={<Translate id="projectSettings.userList" />}
             body={<UserManagment />}
-            //"TO BE ADDED... (searchable?) list of users with option to delete each, and popup to confirm deletion."
           />
         </Grid>
       </React.Fragment>
