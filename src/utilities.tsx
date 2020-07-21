@@ -21,6 +21,10 @@ export function passwordRequirements(password: string): boolean {
   return password.length >= 8;
 }
 
+export function usernameRequirements(username: string): boolean {
+  return username.length >= 3;
+}
+
 export function randElement<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
