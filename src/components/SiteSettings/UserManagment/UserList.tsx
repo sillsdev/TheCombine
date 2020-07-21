@@ -29,7 +29,6 @@ interface UserListState {
   filterInput: string;
   prevFilterInput?: string;
   filteredUsers: User[];
-  userToEdit?: User;
 }
 
 class UserList extends React.Component<
@@ -54,7 +53,7 @@ class UserList extends React.Component<
   handleChange(event: string) {
     let filteredUsers: User[] = [];
 
-    if (event.length >= 3) {
+    if (event.length >= 1) {
       filteredUsers = this.props.allUsers.filter((user) => {
         const name = user.name.toLowerCase();
         const username = user.username.toLowerCase();
