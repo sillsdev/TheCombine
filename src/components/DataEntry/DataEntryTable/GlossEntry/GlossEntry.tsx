@@ -22,10 +22,15 @@ export class GlossEntry extends React.Component<
   GlossEntryProps & LocalizeContextProps
 > {
   spellChecker = new SpellChecker();
+  maxSuggestions = 5;
   render() {
     return (
       <Autocomplete
-        filterOptions={(options: unknown[]) => options}
+        filterOptions={(options: unknown[]) =>
+          options.length <= this.maxSuggestions
+            ? options
+            : options.slice(0, this.maxSuggestions)
+        }
         freeSolo
         options={this.spellChecker.getSpellingSuggestions(this.props.gloss)}
         value={this.props.gloss}
