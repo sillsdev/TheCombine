@@ -1,22 +1,13 @@
-import { Button, Grid, Typography, IconButton } from "@material-ui/core";
+import { Button, Grid, Typography, Box } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 import Modal from "react-modal";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
-import {
-  addUserRole,
-  avatarSrc,
-  getAllUsers,
-  getAllUsersInCurrentProject,
-} from "../../../backend";
-import { getCurrentUser } from "../../../backend/localStorage";
-import { Project } from "../../../types/project";
+import { avatarSrc, getAllUsers } from "../../../backend";
 import { User } from "../../../types/user";
 import UserList from "./UserList";
-import { Done, Clear } from "@material-ui/icons";
-import { useRouteMatch } from "react-router-dom";
 const customStyles = {
   content: {
     top: "50%",
@@ -91,32 +82,52 @@ class UserManagment extends React.Component<UserProps, UserState> {
       .catch((err) => console.log(err));
   }
 
+  printUserName() {
+    if (this.state.userToEdit) {
+      return <React.Fragment>{this.state.userToEdit.username}</React.Fragment>;
+    }
+  }
+
   private deleteUser(user: User) {}
 
   handleConfirmDeletion() {
     let user = this.state.userToEdit;
     return (
       <React.Fragment>
-        <Grid>
-          <Grid item>
-            <Typography>
-              <Translate id="projectSettings.invite.searchTitle" />
+        <Grid container spacing={2} justify="center">
+          <Grid item xs={12} justify="center">
+            <Typography style={{ color: "primary" }}>
+              <Box fontWeight="fontWeightBold">{this.printUserName()}</Box>
             </Typography>
           </Grid>
-          <Grid item xs={5}>
-            <IconButton
-              color="primary"
+          <Grid item xs={12} justify="center">
+            <Typography>
+              <Box fontWeight="fontWeightBold">
+                <Translate id="siteSettings.confirmDelete.title" />
+              </Box>
+            </Typography>
+          </Grid>
+          <Grid item xs={5} justify="center">
+            <Button
               onClick={() => {
                 if (user) this.deleteUser(user);
               }}
             >
-              <Done />
-            </IconButton>
+              <Typography style={{ color: "red" }}>
+                <Box fontWeight="fontWeightBold" m={1}>
+                  <Translate id="siteSettings.confirmDelete.delete" />
+                </Box>
+              </Typography>
+            </Button>
           </Grid>
-          <Grid item xs={5}>
-            <IconButton color="primary" onClick={() => this.handleCloseModal()}>
-              <Clear />
-            </IconButton>
+          <Grid item xs={5} justify="center">
+            <Button onClick={() => this.handleCloseModal()}>
+              <Typography style={{ color: "inherit" }}>
+                <Box fontWeight="fontWeightBold">
+                  <Translate id="siteSettings.confirmDelete.cancel" />
+                </Box>
+              </Typography>
+            </Button>
           </Grid>
         </Grid>
       </React.Fragment>

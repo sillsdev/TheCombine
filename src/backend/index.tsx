@@ -173,7 +173,7 @@ export async function authenticateUser(
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  let resp = await backendServer.get(`allusers`, {
+  let resp = await backendServer.get(`users/allusers`, {
     headers: authHeader(),
   });
   return resp.data;
