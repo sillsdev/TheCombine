@@ -12,7 +12,6 @@ import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
 import ProjectManagement from "./ProjectManagement";
 import UserManagment from "./UserManagment/UserManagment";
-import { Project } from "../../types/project";
 
 class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
   render() {
