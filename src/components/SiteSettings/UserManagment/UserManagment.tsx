@@ -82,7 +82,8 @@ class UserManagment extends React.Component<UserProps, UserState> {
       })
       .catch((err) => console.log(err));
   }
-
+  /* deleteUser will be the function called to delete a User 
+  from the Entire Combine once the backend for this is created */
   private deleteUser(user: User) {}
 
   render() {
