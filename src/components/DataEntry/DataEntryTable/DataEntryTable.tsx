@@ -236,33 +236,29 @@ export class DataEntryTable extends React.Component<
 
           {this.state.recentlyAddedWords.map((wordAccess, index) =>
             wordAccess.mutable ? (
-              <React.Fragment key={wordAccess.word.id}>
-                <ExistingEntry
-                  key={wordAccess.word.id}
-                  wordsBeingAdded={this.state.recentlyAddedWords.map(
-                    (wordAccess) => wordAccess.word
-                  )}
-                  existingWords={this.state.existingWords}
-                  entryIndex={index}
-                  entry={wordAccess.word}
-                  updateWord={(wordToUpdate: Word, wordToDelete?: Word) =>
-                    this.updateExistingWord(wordToUpdate, wordToDelete)
-                  }
-                  removeWord={(word: Word) => this.removeWord(word)}
-                  recorder={this.recorder}
-                  semanticDomain={this.props.semanticDomain}
-                  displayDuplicates={
-                    this.state.displayDuplicatesIndex === index
-                  }
-                  toggleDisplayDuplicates={() => {
-                    this.toggleDisplayDuplicates(index);
-                  }}
-                  focusNewEntry={() => {
-                    if (this.refNewEntry.current)
-                      this.refNewEntry.current.focusVernInput();
-                  }}
-                />
-              </React.Fragment>
+              <ExistingEntry
+                key={wordAccess.word.id}
+                wordsBeingAdded={this.state.recentlyAddedWords.map(
+                  (wordAccess) => wordAccess.word
+                )}
+                existingWords={this.state.existingWords}
+                entryIndex={index}
+                entry={wordAccess.word}
+                updateWord={(wordToUpdate: Word, wordToDelete?: Word) =>
+                  this.updateExistingWord(wordToUpdate, wordToDelete)
+                }
+                removeWord={(word: Word) => this.removeWord(word)}
+                recorder={this.recorder}
+                semanticDomain={this.props.semanticDomain}
+                displayDuplicates={this.state.displayDuplicatesIndex === index}
+                toggleDisplayDuplicates={() => {
+                  this.toggleDisplayDuplicates(index);
+                }}
+                focusNewEntry={() => {
+                  if (this.refNewEntry.current)
+                    this.refNewEntry.current.focusVernInput();
+                }}
+              />
             ) : (
               <ImmutableExistingEntry
                 key={wordAccess.word.id}
@@ -328,13 +324,6 @@ export class DataEntryTable extends React.Component<
                     this.refNewEntry.current.resetState();
                   }
                 }
-
-                // Update all editable words in case any were edited
-                this.state.recentlyAddedWords.map((wordAccess) =>
-                  wordAccess.mutable
-                    ? this.updateWordInBackend(wordAccess.word) //This doesn't do it!!!!!
-                    : null
-                );
 
                 // Reset everything
                 this.props.hideQuestions();

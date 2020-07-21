@@ -359,6 +359,10 @@ export class ExistingEntry extends React.Component<
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
+              onBlur={(newValue: string) => {
+                this.updateGlossField(newValue);
+                this.conditionallyUpdateWord();
+              }}
             />
           </Grid>
           <Grid

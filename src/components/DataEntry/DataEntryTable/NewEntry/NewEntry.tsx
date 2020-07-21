@@ -89,26 +89,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.props.toggleDisplayDuplicates();
   }
 
-  chooseSpellingSuggestion(suggestion: string) {
-    this.setState({
-      newEntry: {
-        ...this.state.newEntry,
-        senses: [
-          {
-            ...this.state.newEntry.senses[0], // Newly entered words only have one sense
-            glosses: [
-              {
-                language: "en",
-                def: suggestion,
-              },
-            ],
-          },
-        ],
-      },
-      activeGloss: suggestion,
-    });
-  }
-
   addNewSense(existingWord: Word, newSense: string, index: number) {
     let updatedWord = addSenseToWord(
       this.props.semanticDomain,

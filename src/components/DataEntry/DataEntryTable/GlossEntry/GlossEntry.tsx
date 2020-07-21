@@ -13,6 +13,7 @@ interface GlossEntryProps {
   gloss: string;
   glossInput?: React.RefObject<HTMLDivElement>;
   updateGlossField: (newValue: string) => void;
+  onBlur?: (newValue: string) => void;
 }
 
 /**
@@ -21,8 +22,9 @@ interface GlossEntryProps {
 export class GlossEntry extends React.Component<
   GlossEntryProps & LocalizeContextProps
 > {
+  readonly maxSuggestions = 5;
+
   spellChecker = new SpellChecker();
-  maxSuggestions = 5;
   render() {
     return (
       <Autocomplete
@@ -34,14 +36,17 @@ export class GlossEntry extends React.Component<
         freeSolo
         options={this.spellChecker.getSpellingSuggestions(this.props.gloss)}
         value={this.props.gloss}
+        onBlur={() => {
+          if (this.props.onBlur) this.props.onBlur(this.props.gloss);
+        }}
+        //onKeyDown={(event) => {}}
         onChange={(event, newValue) => {
-          this.props.updateGlossField(newValue ? (newValue as string) : "");
+          const newText = newValue ? (newValue as string) : "";
+          this.props.updateGlossField(newText);
         }}
         inputValue={this.props.gloss}
         onInputChange={(event, newInputValue) => {
-          this.props.updateGlossField(
-            newInputValue ? (newInputValue as string) : ""
-          );
+          this.props.updateGlossField(newInputValue);
         }}
         renderInput={(params) => (
           <TextField
