@@ -12,12 +12,10 @@ import {
   CardContent,
   TextField,
   Card,
-  InputLabel,
-  Select,
-  MenuItem,
 } from "@material-ui/core";
 import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 import FileInputButton from "../../Buttons/FileInputButton";
+import PickLanguage from "./PickLangauge";
 
 export interface CreateProjectProps {
   asyncCreateProject: (
@@ -153,46 +151,8 @@ class CreateProject extends React.Component<
                 this.state.error["name"] && <Translate id="login.required" />
               }
             />
-            <Grid container justify="center" style={{ marginBottom: 20 }}>
-              <Grid item xs={6}>
-                {/* select vernacular language*/}
-                <InputLabel id="select-vernacular-language-label">
-                  Vernacular Language
-                </InputLabel>
-                <Select
-                  labelId="select-vernacular-language-label"
-                  id="select-vernacular-language"
-                  value={this.state.vernacularLanguage}
-                  onChange={this.handleVernacularLanguageChange}
-                  error={this.state.error["vernLanguage"]}
-                >
-                  {this.getAvailableVernLanguages().map((language) => (
-                    <MenuItem key={language} value={language}>
-                      {language}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-              <Grid item xs={6}>
-                {/* select analysis language */}
-                <InputLabel id="select-analysis-language-label">
-                  Analysis Language
-                </InputLabel>
-                <Select
-                  labelId="select-analysis-language-label"
-                  id="select-analysis-language"
-                  value={this.state.analysisLanguage}
-                  onChange={this.handleAnalysisLanguageChange}
-                  error={this.state.error["analysisLanguage"]}
-                >
-                  {this.getAvailableAnalysisLanguages().map((language) => (
-                    <MenuItem key={language} value={language}>
-                      {language}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-            </Grid>
+            {/*language picker */}
+            <PickLanguage />
 
             {/* File upload */}
             <Typography
