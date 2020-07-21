@@ -14,14 +14,7 @@ import ProjectManagement from "./ProjectManagement";
 import UserManagment from "./UserManagment/UserManagment";
 import { Project } from "../../types/project";
 
-interface SiteSettingsStates {
-  projectName?: Project;
-}
-
-class SiteSettingsComponent extends React.Component<
-  LocalizeContextProps,
-  SiteSettingsStates
-> {
+class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
   render() {
     return (
       <React.Fragment>
