@@ -230,6 +230,11 @@
         "Annuler et laisser projet tel qu'archivé"
       ],
       "confirm": ["Restore project", "Restaurat proyeto", "Restaurer projet"]
+    },
+    "confirmDelete": {
+      "title": ["Confirm Deleting User from The Combine Database", null, null],
+      "delete": ["Delete", null, null],
+      "cancel": ["Cancel", null, null]
     }
   },
   "projectSettings": {

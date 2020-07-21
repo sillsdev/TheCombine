@@ -82,7 +82,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns all <see cref="User"/>s </summary>
-        /// <remarks> GET: v1/users/projects/{projectId}/allusers </remarks>
+        /// <remarks> GET: v1/users/allusers </remarks>
         [HttpGet("allusers")]
         public async Task<IActionResult> GetAllUsers()
         {
