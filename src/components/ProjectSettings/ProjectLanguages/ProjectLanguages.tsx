@@ -1,7 +1,5 @@
 import React from "react";
-import { TextField, Grid, Button } from "@material-ui/core";
-
-import { updateProject } from "../../../backend";
+import { Grid, Typography } from "@material-ui/core";
 import { Project } from "../../../types/project";
 import {
   Translate,
@@ -36,10 +34,18 @@ class ProjectName extends React.Component<
 
   render() {
     return (
-      <Grid container spacing={1}>
-        <Grid item xs={12}></Grid>
-        <Grid item></Grid>
-      </Grid>
+      <React.Fragment>
+        <Typography>
+          <Translate id="projectSettings.language.vernacular" />
+          {": "}
+          {this.props.project.vernacularWritingSystem}
+        </Typography>
+        <Typography>
+          <Translate id="projectSettings.language.analysis" />
+          {": "}
+          {this.props.project.name}
+        </Typography>
+      </React.Fragment>
     );
   }
 }

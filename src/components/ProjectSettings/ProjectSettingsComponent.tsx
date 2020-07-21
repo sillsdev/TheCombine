@@ -18,6 +18,7 @@ import {
   List,
   People,
   Sms,
+  Language,
 } from "@material-ui/icons";
 
 import * as backend from "../../backend";
@@ -123,8 +124,10 @@ class ProjectSettingsComponent extends React.Component<
             {/*Project Vernacular and Analysis Languages*/}
             {this.props.project.name && (
               <BaseSettingsComponent
-                icon={<div />}
-                title={<Translate id="projectSettings.languages" />}
+                icon={<Language />}
+                title={
+                  <Translate id="projectSettings.language.interfaceLanguage" />
+                }
                 body={<ProjectLanguages project={this.props.project} />}
               />
             )}
