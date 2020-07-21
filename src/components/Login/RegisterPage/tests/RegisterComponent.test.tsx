@@ -57,6 +57,48 @@ describe("Testing register component", () => {
   test("Register: no data", () => {
     testRegister("", "", "", "", "", true, true, true, false, true);
   });
+  test("Register: confirm password doesn't match password", () => {
+    testRegister(
+      "Frodo Baggins",
+      "underhill",
+      "1234567890",
+      "1234567899",
+      "a@b.c",
+      false,
+      false,
+      false,
+      true,
+      false
+    );
+  });
+  test("Register: username too short", () => {
+    testRegister(
+      "Samwise Gamgee",
+      "sg",
+      "12345678",
+      "12345678",
+      "a@b.c",
+      false,
+      true,
+      false,
+      false,
+      false
+    );
+  });
+  test("Register: password too short", () => {
+    testRegister(
+      "Bilbo Baggins",
+      "bbb",
+      "sting",
+      "sting",
+      "a@b.c",
+      false,
+      false,
+      true,
+      false,
+      false
+    );
+  });
 });
 
 function testRegister(
