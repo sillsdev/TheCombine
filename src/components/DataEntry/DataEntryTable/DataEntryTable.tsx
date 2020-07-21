@@ -320,31 +320,29 @@ export class DataEntryTable extends React.Component<
               color={this.state.isReady ? "primary" : "secondary"}
               style={{ marginTop: theme.spacing(2) }}
               onClick={() => {
+                // Check if there is a new word, but the user clicked complete instead of pressing enter
                 if (this.refNewEntry.current) {
                   let newEntry = this.refNewEntry.current.state.newEntry;
                   if (newEntry && newEntry.vernacular) {
-                    this.addNewWord(newEntry).then(() => {
-                      // When the server responds clear out recently added words so
-                      // this word doesn't appear in the next domain
-                      let recentlyAddedWords: WordAccess[] = [];
-                      this.setState({ recentlyAddedWords });
-                    });
-                    // clear the data from the NewEntry fields
+                    this.addNewWord(newEntry);
                     this.refNewEntry.current.resetState();
                   }
                 }
-                // Update all editable words in case any were updated.
+
+                // Update all editable words in case any were edited
                 this.state.recentlyAddedWords.map((wordAccess) =>
                   wordAccess.mutable
-                    ? null /*TODO: find way to update word in ExistingEntry child.*/
+                    ? this.updateWordInBackend(wordAccess.word) //This doesn't do it!!!!!
                     : null
                 );
+
+                // Reset everything
+                this.props.hideQuestions();
                 let recentlyAddedWords: WordAccess[] = [];
-                this.props.displaySemanticDomainView(true);
                 this.setState({ recentlyAddedWords });
 
-                //Since DataEntryComponent isn't rerendered, just hidden, this will enforce questions being hidden as a default
-                this.props.hideQuestions();
+                // Reveal the TreeView, hiding DataEntry
+                this.props.displaySemanticDomainView(true);
               }}
             >
               <Translate id="addWords.done" />
