@@ -24,7 +24,6 @@ interface UserProps {}
 
 interface UserState {
   allUsers: User[];
-  modalOpen: boolean;
   openUser?: User;
   userAvatar: { [key: string]: string };
   showModal: boolean;
@@ -37,7 +36,6 @@ class UserManagment extends React.Component<UserProps, UserState> {
     super(props);
     this.state = {
       allUsers: [],
-      modalOpen: false,
       userAvatar: {},
       showModal: false,
     };
@@ -59,7 +57,7 @@ class UserManagment extends React.Component<UserProps, UserState> {
   componentDidUpdate() {
     if (this.state.userToEdit !== this.state.prevUserToEdit) {
       this.populateUsers();
-      this.setState({ prevUserToEdit: this.state.userToEdit });
+      this.setState((prevState) => ({ prevUserToEdit: prevState.userToEdit }));
     }
   }
 
