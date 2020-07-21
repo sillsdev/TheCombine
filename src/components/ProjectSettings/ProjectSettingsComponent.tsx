@@ -33,6 +33,7 @@ import ProjectName from "./ProjectName";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
 import ProjectUsers from "./ProjectUsers";
 import ProjectSwitch from "./ProjectSwitch";
+import ProjectLanguages from "./ProjectLanguages/ProjectLanguages";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -116,6 +117,15 @@ class ProjectSettingsComponent extends React.Component<
                 icon={<Edit />}
                 title={<Translate id="projectSettings.name" />}
                 body={<ProjectName />}
+              />
+            )}
+
+            {/*Project Vernacular and Analysis Languages*/}
+            {this.props.project.name && (
+              <BaseSettingsComponent
+                icon={<div />}
+                title={<Translate id="projectSettings.languages" />}
+                body={<ProjectLanguages project={this.props.project} />}
               />
             )}
 
