@@ -29,6 +29,7 @@ interface UserState {
   userAvatar: { [key: string]: string };
   showModal: boolean;
   userToEdit?: User;
+  prevUserToEdit?: User;
 }
 
 class UserManagment extends React.Component<UserProps, UserState> {
@@ -56,7 +57,10 @@ class UserManagment extends React.Component<UserProps, UserState> {
   };
 
   componentDidUpdate() {
-    this.populateUsers();
+    if (this.state.userToEdit !== this.state.prevUserToEdit) {
+      this.populateUsers();
+      this.setState({ prevUserToEdit: this.state.userToEdit });
+    }
   }
 
   private populateUsers() {
@@ -65,7 +69,7 @@ class UserManagment extends React.Component<UserProps, UserState> {
         this.setState({
           allUsers: returnedUsers,
         });
-        returnedUsers.forEach((u: User, n: number, array: User[]) => {
+        returnedUsers.forEach((u: User) => {
           avatarSrc(u)
             .then((result) => {
               let avatarsCopy = JSON.parse(
