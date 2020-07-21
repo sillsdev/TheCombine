@@ -107,7 +107,7 @@ class UserManagment extends React.Component<UserProps, UserState> {
             pauseOnHover
           />
         </Grid>
-        {/* </Grid> */}
+
         <Modal
           isOpen={this.state.showModal}
           style={customStyles}
