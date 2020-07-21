@@ -27,6 +27,7 @@ interface UserListProps {
 
 interface UserListState {
   filterInput: string;
+  prevFilterInput?: string;
   filteredUsers: User[];
   userToEdit?: User;
 }
@@ -43,8 +44,11 @@ class UserList extends React.Component<
       filteredUsers: [],
     };
   }
-  componentWillReceiveProps() {
-    this.handleChange(this.state.filterInput);
+  componentDidUpdate() {
+    if (this.state.prevFilterInput !== this.state.filterInput) {
+      this.handleChange(this.state.filterInput);
+      this.setState((state) => ({ prevFilterInput: state.filterInput }));
+    }
   }
 
   handleChange(event: string) {
