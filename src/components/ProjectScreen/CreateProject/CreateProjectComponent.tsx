@@ -4,6 +4,7 @@ import {
   Translate,
   LocalizeContextProps,
   withLocalize,
+  Language,
 } from "react-localize-redux";
 import {
   Grid,
@@ -11,9 +12,14 @@ import {
   CardContent,
   TextField,
   Card,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 import FileInputButton from "../../Buttons/FileInputButton";
+import classes from "*.module.css";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
@@ -28,6 +34,8 @@ interface CreateProjectState {
   languageData?: File;
   fileName?: string;
   error: { name: boolean };
+  vernacularLanguage?: Language;
+  analysisLanguage?: Language;
 }
 
 class CreateProject extends React.Component<
@@ -78,6 +86,14 @@ class CreateProject extends React.Component<
     }
   }
 
+  handleVernacularLanguageChange = (event: any) => {
+    this.setState({ vernacularLanguage: event.target.value });
+  };
+
+  handleAnalysisLanguageChange = (event: any) => {
+    this.setState({ analysisLanguage: event.target.value });
+  };
+
   render() {
     //visual definition
     return (
@@ -102,6 +118,36 @@ class CreateProject extends React.Component<
                 this.state.error["name"] && <Translate id="login.required" />
               }
             />
+            <Grid container justify="center" style={{ marginBottom: 20 }}>
+              <Grid item xs={6}>
+                {/* select vernacular language*/}
+                <InputLabel id="select-vernacular-language-label">
+                  Vernacular Language
+                </InputLabel>
+                <Select
+                  labelId="select-vernacular-language-label"
+                  id="select-vernacular-language"
+                  value={this.state.vernacularLanguage}
+                  onChange={this.handleVernacularLanguageChange}
+                ></Select>
+              </Grid>
+              <Grid item xs={6}>
+                {/* select analysis language */}
+                <InputLabel id="select-analysis-language-label">
+                  Analysis Language
+                </InputLabel>
+                <Select
+                  labelId="select-analysis-language-label"
+                  id="select-analysis-language"
+                  value={this.state.analysisLanguage}
+                  onChange={this.handleAnalysisLanguageChange}
+                >
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </Grid>
+            </Grid>
 
             {/* File upload */}
             <Typography
