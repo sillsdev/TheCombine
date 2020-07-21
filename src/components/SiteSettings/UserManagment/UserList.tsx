@@ -32,7 +32,6 @@ interface UserListState {
   filteredProjUsers: User[];
   hovering: boolean;
   hoverUserID: string;
-  showModal: boolean;
   userToEdit?: User;
 }
 
@@ -49,7 +48,6 @@ class UserList extends React.Component<
       hoverUserID: "",
       filteredNonProjUsers: [],
       filteredProjUsers: [],
-      showModal: false,
     };
   }
   componentWillReceiveProps() {
@@ -58,7 +56,6 @@ class UserList extends React.Component<
 
   handleChange(event: string) {
     let filteredNonProjUsers: User[] = [];
-    let filteredProjUsers: User[] = [];
 
     if (event.length >= 3) {
       filteredNonProjUsers = this.props.allUsers.filter((user) => {
