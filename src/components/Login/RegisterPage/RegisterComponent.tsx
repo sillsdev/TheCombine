@@ -18,7 +18,7 @@ import {
 import { isEmailTaken, isUsernameTaken } from "../../../backend";
 import history from "../../../history";
 import { buttonSuccess } from "../../../types/theme";
-import { passwordRequirements } from "../../../utilities";
+import { passwordRequirements, usernameRequirements } from "../../../utilities";
 
 export interface RegisterDispatchProps {
   register?: (
@@ -120,7 +120,7 @@ class Register extends React.Component<
     let error = { ...this.state.error };
     error.name = name === "";
     error.password = !passwordRequirements(pass);
-    error.user = user.length < 3;
+    error.user = !usernameRequirements(user);
     error.confirmPassword = pass !== confPass;
     error.email = email === "";
 
