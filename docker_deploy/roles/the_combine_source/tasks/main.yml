@@ -27,5 +27,5 @@
 - name: update source code from GitHub
   command: git pull
   args:
-    chdir: /opt/TheCombine
+    chdir: "{{ source_dir }}"
   when: combinestat.stat.exists
