@@ -5,11 +5,10 @@ import {
   Input,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
   Typography,
 } from "@material-ui/core";
-import { Done, DeleteForever } from "@material-ui/icons";
+import { DeleteForever } from "@material-ui/icons";
 import * as React from "react";
 import {
   LocalizeContextProps,
@@ -28,10 +27,7 @@ interface UserListProps {
 
 interface UserListState {
   filterInput: string;
-  filteredNonProjUsers: User[];
-  filteredProjUsers: User[];
-  hovering: boolean;
-  hoverUserID: string;
+  filteredUsers: User[];
   userToEdit?: User;
 }
 
@@ -44,10 +40,7 @@ class UserList extends React.Component<
 
     this.state = {
       filterInput: "",
-      hovering: false,
-      hoverUserID: "",
-      filteredNonProjUsers: [],
-      filteredProjUsers: [],
+      filteredUsers: [],
     };
   }
   componentWillReceiveProps() {
@@ -55,10 +48,10 @@ class UserList extends React.Component<
   }
 
   handleChange(event: string) {
-    let filteredNonProjUsers: User[] = [];
+    let filteredUsers: User[] = [];
 
     if (event.length >= 3) {
-      filteredNonProjUsers = this.props.allUsers.filter((user) => {
+      filteredUsers = this.props.allUsers.filter((user) => {
         const name = user.name.toLowerCase();
         const username = user.username.toLowerCase();
         const email = user.email.toLowerCase();
@@ -74,7 +67,7 @@ class UserList extends React.Component<
 
     this.setState({
       filterInput: event,
-      filteredNonProjUsers: filteredNonProjUsers,
+      filteredUsers: filteredUsers,
     });
   }
 
@@ -92,43 +85,17 @@ class UserList extends React.Component<
           />
 
           <List>
-            {this.state.filteredProjUsers.map((user) => (
-              <ListItem
-                key={user.id}
-                onMouseEnter={() =>
-                  this.setState({ hovering: true, hoverUserID: user.id })
-                }
-                onMouseLeave={() =>
-                  this.setState({ hovering: false, hoverUserID: "" })
-                }
-              >
-                <ListItemIcon>
-                  <Done />
-                </ListItemIcon>
+            {this.state.filteredUsers.map((user) => (
+              <ListItem key={user.id}>
                 <Avatar
                   alt="User Avatar"
                   src={this.props.userAvatar[user.id]}
                   style={{ marginRight: theme.spacing(1) }}
                 />
                 <ListItemText primary={`${user.name} (${user.username})`} />
-              </ListItem>
-            ))}
-            {this.state.filteredNonProjUsers.map((user) => (
-              <ListItem
-                key={user.id}
-                onMouseEnter={() =>
-                  this.setState({ hovering: true, hoverUserID: user.id })
-                }
-                onMouseLeave={() =>
-                  this.setState({ hovering: false, hoverUserID: "" })
-                }
-              >
-                <ListItemText primary={`${user.name} (${user.username})`} />
-                {this.state.hovering && this.state.hoverUserID === user.id && (
-                  <Button onClick={() => this.props.handleOpenModal(user)}>
-                    <DeleteForever />
-                  </Button>
-                )}
+                <Button onClick={() => this.props.handleOpenModal(user)}>
+                  <DeleteForever />
+                </Button>
               </ListItem>
             ))}
           </List>
