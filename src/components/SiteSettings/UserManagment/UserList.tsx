@@ -8,10 +8,8 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
-  IconButton,
-  Modal,
 } from "@material-ui/core";
-import { Done, DeleteForever, Clear } from "@material-ui/icons";
+import { Done, DeleteForever } from "@material-ui/icons";
 import * as React from "react";
 import {
   LocalizeContextProps,
@@ -20,17 +18,6 @@ import {
 } from "react-localize-redux";
 import theme from "../../../types/theme";
 import { User } from "../../../types/user";
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
 
 interface UserListProps {
   allUsers: User[];
