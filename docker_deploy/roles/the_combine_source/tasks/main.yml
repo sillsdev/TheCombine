@@ -19,7 +19,7 @@
     dest: "{{ source_dir }}"
     clone: yes
     update: yes
-    version: docker_deploy
+    version: "{{ combine_source_version }}"
     depth: 1
     track_submodules: yes
   when: not combinestat.stat.exists
