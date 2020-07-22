@@ -21,10 +21,11 @@
     update: yes
     version: "{{ combine_source_version }}"
     track_submodules: yes
-  when: not combinestat.stat.exists
-
-- name: update source code from GitHub
-  command: git pull
-  args:
-    chdir: "{{ source_dir }}"
-  when: combinestat.stat.exists
+    force: yes
+#   when: not combinestat.stat.exists
+#
+# - name: update source code from GitHub
+#   command: git pull
+#   args:
+#     chdir: "{{ source_dir }}"
+#   when: combinestat.stat.exists

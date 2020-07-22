@@ -1,8 +1,8 @@
 ---
 - name: create production docker-compose file
   template:
-    src: production.yml.j2
-    dest: "{{ source_dir }}/production.yml"
+    src: docker-compose.prod.yml.j2
+    dest: "{{ source_dir }}/docker-compose.prod.yml"
     owner: root
     group: root
     mode: 0600
@@ -42,7 +42,7 @@
     owner: root
     group: root
     mode: 0600
-    
+
 - name: create runtime config directory
   file:
     name: "{{ source_dir }}/{{ config_dir }}"
@@ -64,11 +64,11 @@
     msg: "TODO: Initialize the database"
 
 - name: build the containers
-  command: docker-compose -f production.yml build --parallel
+  command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --parallel
   args:
     chdir: "{{ source_dir }}"
 
 - name: start the containers
-  command: docker-compose -f production.yml up --detach
+  command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml --detach
   args:
     chdir: "{{ source_dir }}"

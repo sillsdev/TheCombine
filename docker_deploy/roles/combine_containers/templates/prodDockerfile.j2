@@ -16,6 +16,9 @@ FROM staticfloat/nginx-certbot
 WORKDIR /app
 
 # Args used to configure frontend.
+ARG API_BASE_URL
+ARG CAPTCHA_REQUIRED
+ARG CAPTCHA_SITE
 ARG CERTBOT_EMAIL
 
 ENV NGINX_HOST_DIR /usr/share/nginx/html
