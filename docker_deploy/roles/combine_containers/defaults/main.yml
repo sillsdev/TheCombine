@@ -8,3 +8,5 @@ config_captcha_sitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
 combine_env_vars:
   ASPNETCORE_ENVIRONMENT: Production
   DOTNET_PRINT_TELEMETRY_MESSAGE: false
+
+certbot_is_staging: 0

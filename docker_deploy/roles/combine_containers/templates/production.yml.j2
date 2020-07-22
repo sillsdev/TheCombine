@@ -23,6 +23,7 @@ services:
         - letsencrypt:/etc/letencrypt
     environment:
         CERTBOT_EMAIL: {{ certbot_email }}
+        IS_STAGING: {{ certbot_is_staging }}
     ports:
       - 80:80
       - 443:443
