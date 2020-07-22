@@ -10,10 +10,10 @@ import {
 import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
 import { AutoComplete } from "../../../types/AutoComplete";
+import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import { SemanticDomain, Word } from "../../../types/word";
-import { Recorder } from "../../Pronunciations/Recorder";
-import DomainTree from "../../TreeView/SemanticDomain";
+import Recorder from "../../Pronunciations/Recorder";
 import SpellChecker from "../spellChecker";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
@@ -26,6 +26,7 @@ interface DataEntryTableProps {
   getWordsFromBackend: () => Promise<Word[]>;
   showExistingData: () => void;
   isSmallScreen: boolean;
+  hideQuestions: () => void;
 }
 
 interface WordAccess {
@@ -359,6 +360,9 @@ export class DataEntryTable extends React.Component<
                 let recentlyAddedWords: WordAccess[] = [];
                 this.props.displaySemanticDomainView(true);
                 this.setState({ recentlyAddedWords });
+
+                //Since DataEntryComponent isn't rerendered, just hidden, this will enforce questions being hidden as a default
+                this.props.hideQuestions();
               }}
             >
               <Translate id="addWords.done" />

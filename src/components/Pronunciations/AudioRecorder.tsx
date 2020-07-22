@@ -1,8 +1,9 @@
-import React from "react";
 import { Tooltip } from "@material-ui/core";
-import RecorderIconHolder from "./RecorderIconHolder";
-import { Recorder } from "./Recorder";
+import React from "react";
 import { Translate } from "react-localize-redux";
+
+import Recorder from "./Recorder";
+import RecorderIconHolder from "./RecorderIconHolder";
 
 export interface RecorderProps {
   wordId: string;

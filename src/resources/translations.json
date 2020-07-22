@@ -95,10 +95,15 @@
       "Error al iniciar sesión",
       "N'a pas réussi à s'inscrire"
     ],
-    "usernameTaken": [
-      "A user with this username already exists",
-      null,
-      "Un utilisateur avec ce nom d'utilisateur existe déjà"
+    "usernameInvalid": [
+      "This username is too short or already taken",
+      "Este nombre de usuario es demasiado corto o ya está en uso",
+      "Ce nom d'utilisateur est trop court ou est déjà utilisé"
+    ],
+    "usernameRequirements": [
+      "Username must be 3 characters or longer.",
+      "El nombre de usuario debe tener 3 caracteres o más.",
+      "Le nom d'utilisateur doit contenir 3 caractères ou plus."
     ],
     "emailTaken": [
       "A user with this email already exists",
@@ -188,6 +193,50 @@
       "Sélectionner un projet"
     ]
   },
+  "siteSettings": {
+    "archiveProject": {
+      "button": ["Archive", "Archivar", "Archiver"],
+      "warnTitle": [
+        "Proceed with Caution!",
+        "¡Proceder con precaución!",
+        "Procéder avec prudence !"
+      ],
+      "warnText": [
+        "This project will not be accessible to any users.",
+        "Este proyecto no será accesible para ningún usuario.",
+        "Ce projet ne sera accessible à aucun utilisateur."
+      ],
+      "cancel": [
+        "Cancel and keep project",
+        "Cancelar y mantener proyecto",
+        "Annuler et conserver projet"
+      ],
+      "confirm": [
+        "Archive project for all users",
+        "Archivar proyeto para todos usarios",
+        "Archiver projet pour tous utilisateurs"
+      ]
+    },
+    "restoreProject": {
+      "button": ["Restore", "Restaurar", "Restaurer"],
+      "warnTitle": [
+        "Proceed with Caution!",
+        "¡Proceder con precaución!",
+        "Procéder avec prudence !"
+      ],
+      "warnText": [
+        "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
+        "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
+        "Quelqu'un avait probablement une bonne raison de archiver ce projet. Voulez-vous vraiment le restaurer ?"
+      ],
+      "cancel": [
+        "Cancel and leave project archived",
+        "Cancelar y dejar proyecto como archivado",
+        "Annuler et laisser projet tel qu'archivé"
+      ],
+      "confirm": ["Restore project", "Restaurat proyeto", "Restaurer projet"]
+    }
+  },
   "projectSettings": {
     "language": {
       "header": ["Language", "Lenguaje", "Langue"],
@@ -244,11 +293,14 @@
         "admin": ["Admin", "Administración", "Admin"]
       }
     },
-    "export": [
-      "Export Project",
-      "Proyecto de exportación",
-      "Exporter le projet"
-    ],
+    "exportProject": {
+      "label": [
+        "Export Project",
+        "Proyecto de exportación",
+        "Exporter le projet"
+      ],
+      "button": ["Export", "Exportar", "Exporter"]
+    },
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
       "off": ["Off", "Apagar", "Éteint"],

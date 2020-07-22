@@ -1,9 +1,7 @@
 const RecordRTC = require("recordrtc");
 
-export class Recorder {
+export default class Recorder {
   private recordRTC: any;
-  private audioBlob!: Blob;
-  private stream?: MediaStream;
 
   constructor() {
     navigator.mediaDevices
@@ -29,12 +27,7 @@ export class Recorder {
     return this.recordRTC.getBlob();
   }
 
-  clearData(): any {
-    //this.recordRTC.clearData();
-  }
-
   private onMicrophoneAvailable(audioStream: MediaStream) {
-    this.stream = audioStream;
     this.recordRTC = RecordRTC(audioStream, {
       type: "audio",
       bitrate: "128000",

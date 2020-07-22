@@ -86,7 +86,7 @@ export function simpleWord(vern: string, gloss: string): Word {
   };
 }
 
-export function multiGlossWord(vern: string, glosses: string[]) {
+export function multiGlossWord(vern: string, glosses: string[]): Word {
   return {
     id: randomIntString(),
     vernacular: vern,

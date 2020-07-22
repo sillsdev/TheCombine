@@ -25,7 +25,7 @@ A rapid word collection tool.
        [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions)
        using the appropriate Node.js version.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-     - On Ubuntu 18.04, follow these 
+     - On Ubuntu 18.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
    - [MongoDB Server](https://docs.mongodb.com/manual/administration/install-community/) and add
      /bin to PATH Environment Variable
@@ -38,20 +38,23 @@ A rapid word collection tool.
      `dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.6.1`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
-4. Set the environment variable `ASPNETCORE_JWT_SECRET_KEY` to a string
+4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
    it in your `.profile` (Linux) or the _System_ app (Windows).
-6. If you want the email services to work you will need to set the following environment variables:
-   - `ASPNETCORE_SMTP_SERVER`
-   - `ASPNETCORE_SMTP_PORT`
-   - `ASPNETCORE_SMTP_USERNAME`
-   - `ASPNETCORE_SMTP_PASSWORD`
-   - `ASPNETCORE_SMTP_ADDRESS`
-   - `ASPNETCORE_SMTP_FROM`
-5. (VS Code Users Only) Enable automatic formatting on save.
+5. If you want the email services to work you will need to set the following environment variables.
+   These values must be kept secret, so ask your email administrator to supply them.
+
+   - `COMBINE_SMTP_SERVER`
+   - `COMBINE_SMTP_PORT`
+   - `COMBINE_SMTP_USERNAME`
+   - `COMBINE_SMTP_PASSWORD`
+   - `COMBINE_SMTP_ADDRESS`
+   - `COMBINE_SMTP_FROM`
+
+6. (VS Code Users Only) Enable automatic formatting on save.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
-6. Run `npm start` from the project directory to install dependencies and start
+7. Run `npm start` from the project directory to install dependencies and start
    the project
 
 [chocolatey]: https://chocolatey.org/
@@ -62,8 +65,8 @@ In the project directory, you can run:
 
 ### `npm start`
 
-> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set 
- [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable. 
+> Note: To avoid browser tabs from being opened automatically every time the frontend is launched, set
+> [`BROWSER=none`](https://create-react-app.dev/docs/advanced-configuration/) environment variable.
 
 Installs the necessary packages and runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -141,7 +144,15 @@ See the section about
 [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
 more information.
 
-### Drop Database
+## `npm run import-sem-doms`
+
+Imports Semantic Domains from the provided xml file.
+
+```bash
+npm run import-sem-doms -- <XML_FILE_PATH>
+```
+
+## Drop Database
 
 To completely erase the current Mongo database, run:
 
@@ -155,7 +166,7 @@ To completely erase the current Mongo database, run:
 
 #### Local
 
-To create a new admin user, first set the `ASPNETCORE_ADMIN_PASSWORD`
+To create a new admin user, first set the `COMBINE_ADMIN_PASSWORD`
 environment variable and then run:
 
 ```batch
@@ -176,19 +187,33 @@ password environment variables.
 ```
 
 This will create the user and exit. If successful, the exit code will be `0`,
-otherwise an error will be logged and the exit code will be non-`0`. 
+otherwise an error will be logged and the exit code will be non-`0`.
 
-**Important**: Remove the `ASPNETCORE_*` environment variables from
+**Important**: Remove the `COMBINE_*` environment variables from
 `.env.backend.auth` so that subsequent launches will start up the backend.
 
-### (Development Only) Grant an Existing User Admin Rights 
+### (Development Only) Grant an Existing User Admin Rights
 
-To grant an *existing* user database administrator rights (all permissions for
+To grant an _existing_ user database administrator rights (all permissions for
 all database objects), create a user normally and then execute:
 
 ```batch
 # Note the -- before the user name.
 > npm run set-admin-user -- <USERNAME>
+```
+
+### Generate License Report
+
+To generate a summary of licenses used in production:
+
+```batch
+> npm run license-summary
+```
+
+To generate a full report of the licenses used in production:
+
+```batch
+> npm run license-report
 ```
 
 ## Docker
@@ -204,6 +229,9 @@ separately. This is included by default in Docker Desktop for Windows and macOS.
 
 For more information see the
 [Docker Compose docs](https://docs.docker.com/compose/).
+
+Copy `.env.backend.template` to `.env.backend` and fill in the environment
+variables.
 
 ```batch
 > docker-compose build --parallel
@@ -232,7 +260,7 @@ To stop and remove any stored data:
 
 #### SSL Certificates
 
-To update SSL certificates after images have been built and are running, 
+To update SSL certificates after images have been built and are running,
 find the `frontend` container name. By default this will be formatted as
 `<lowercase_parent_dir>_frontend_1`.
 
@@ -269,7 +297,7 @@ services:
   frontend:
     build:
       args:
-        - CAPTCHA_REQUIRED=false
+        - COMBINE_CAPTCHA_REQUIRED=false
 ```
 
 Use this file when building and launching the Docker Compose project.

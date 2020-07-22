@@ -37,7 +37,7 @@ namespace BackendFramework.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }
@@ -50,13 +50,13 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}/users")]
         public async Task<IActionResult> GetAllUsers(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return new ForbidResult();
             }
 
             var allUsers = await _userService.GetAllUsers();
-            var projectUsers = allUsers.FindAll(user => user.WorkedProjects.ContainsKey(projectId));
+            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
             return new ObjectResult(projectUsers);
         }
@@ -67,7 +67,7 @@ namespace BackendFramework.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete()
         {
-            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }
@@ -79,7 +79,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{projectId}")]
         public async Task<IActionResult> Get(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.WordEntry, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
@@ -90,7 +90,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundResult();
             }
 
-            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 // If there are fields we need to hide from lower users remove them here
             }
@@ -149,7 +149,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}")]
         public async Task<IActionResult> Put(string projectId, [FromBody] Project project)
         {
-            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return new ForbidResult();
             }
@@ -172,9 +172,9 @@ namespace BackendFramework.Controllers
         /// <summary> Updates <see cref="Project"/> with specified id with a new list of chars </summary>
         /// <remarks> PUT: v1/projects/{projectId} </remarks>
         [HttpPut("{projectId}/characters")]
-        public async Task<IActionResult> PutChars(string projectId, [FromBody]Project project)
+        public async Task<IActionResult> PutChars(string projectId, [FromBody] Project project)
         {
-            if (!_permissionService.HasProjectPermission(Permission.MergeAndCharSet, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
                 return new ForbidResult();
             }
@@ -192,7 +192,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{projectId}")]
         public async Task<IActionResult> Delete(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.DatabaseAdmin, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
                 return new ForbidResult();
             }
@@ -225,9 +225,9 @@ namespace BackendFramework.Controllers
 
         // Change user role using project Id
         [HttpPut("{projectId}/users/{userId}")]
-        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody]int[] permissions)
+        public async Task<IActionResult> UpdateUserRole(string projectId, string userId, [FromBody] int[] permissions)
         {
-            if (!_permissionService.HasProjectPermission(Permission.DeleteEditSettingsAndUsers, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return new ForbidResult();
             }
@@ -247,14 +247,15 @@ namespace BackendFramework.Controllers
             }
             else
             {
+
+                // Generate the userRole
                 var usersRole = new UserRole();
-                userRoleId = usersRole.Id;
                 usersRole.ProjectId = projectId;
-
                 usersRole = await _userRoleService.Create(usersRole);
+                userRoleId = usersRole.Id;
 
-                // Generate the userRoles and update the user
-                changeUser.ProjectRoles.Add(projectId, usersRole.Id);
+                // Update the user
+                changeUser.ProjectRoles.Add(projectId, userRoleId);
                 await _userService.Update(changeUser.Id, changeUser);
             }
             var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
@@ -282,7 +283,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> CanUploadLift(string projectId)
 #pragma warning restore 1998
         {
-            if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
