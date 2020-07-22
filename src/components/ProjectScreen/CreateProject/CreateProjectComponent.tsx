@@ -4,7 +4,6 @@ import {
   Translate,
   LocalizeContextProps,
   withLocalize,
-  Language,
 } from "react-localize-redux";
 import {
   Grid,
@@ -15,14 +14,15 @@ import {
 } from "@material-ui/core";
 import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 import FileInputButton from "../../Buttons/FileInputButton";
-import PickLanguage from "./PickLangauge";
+import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
+import { WritingSystem } from "../../../types/project";
 
 export interface CreateProjectProps {
   asyncCreateProject: (
     name: string,
     languageData: File,
-    vernacularLanguage: Language,
-    analysisLanguage: Language
+    vernacularLanguage: WritingSystem,
+    analysisLanguage: WritingSystem
   ) => void;
   reset: () => void;
   inProgress: boolean;
@@ -32,11 +32,11 @@ export interface CreateProjectProps {
 
 interface CreateProjectState {
   name: string;
+  error: { name: boolean; vernLanguage: boolean; analysisLanguage: boolean };
+  vernLanguage: WritingSystem;
+  analysisLanguage: WritingSystem;
   languageData?: File;
   fileName?: string;
-  error: { name: boolean; vernLanguage: boolean; analysisLanguage: boolean };
-  vernacularLanguage?: Language;
-  analysisLanguage?: Language;
 }
 
 class CreateProject extends React.Component<
@@ -48,7 +48,62 @@ class CreateProject extends React.Component<
     this.state = {
       name: "",
       error: { name: false, vernLanguage: false, analysisLanguage: false },
+      vernLanguage: { name: "", bcp47: "", font: "" },
+      analysisLanguage: { name: "", bcp47: "", font: "" },
     };
+    this.setVernBcp47 = this.setVernBcp47.bind(this);
+    this.setVernLgName = this.setVernLgName.bind(this);
+    this.setVernFontName = this.setVernFontName.bind(this);
+    this.setAnalysisBcp47 = this.setAnalysisBcp47.bind(this);
+    this.setAnalysisLgName = this.setAnalysisLgName.bind(this);
+    this.setAnalysisFontName = this.setAnalysisFontName.bind(this);
+  }
+
+  setVernBcp47(item: any) {
+    if (item) {
+      let tempItem: WritingSystem = this.state.vernLanguage;
+      tempItem.bcp47 = item;
+      this.setState({ vernLanguage: tempItem });
+    }
+  }
+
+  setVernLgName(item: any) {
+    if (item) {
+      let tempItem: WritingSystem = this.state.vernLanguage;
+      tempItem.name = item;
+      this.setState({ vernLanguage: tempItem });
+    }
+  }
+  setVernFontName(item: any) {
+    if (item) {
+      let tempItem: WritingSystem = this.state.vernLanguage;
+      tempItem.font = item;
+      this.setState({ vernLanguage: tempItem });
+    }
+  }
+
+  setAnalysisBcp47(item: any) {
+    if (item) {
+      let tempItem: WritingSystem = this.state.analysisLanguage;
+      tempItem.bcp47 = item;
+      this.setState({ analysisLanguage: tempItem });
+    }
+  }
+
+  setAnalysisLgName(item: any) {
+    if (item) {
+      let tempItem: WritingSystem = this.state.analysisLanguage;
+      tempItem.name = item;
+      this.setState({ analysisLanguage: tempItem });
+    }
+  }
+
+  setAnalysisFontName(item: any) {
+    if (item) {
+      let tempItem: WritingSystem = this.state.analysisLanguage;
+      tempItem.font = item;
+      this.setState({ analysisLanguage: tempItem });
+    }
   }
 
   componentDidMount() {
@@ -86,21 +141,12 @@ class CreateProject extends React.Component<
     if (this.props.success) return;
 
     const name = this.state.name.trim();
-    const vernLang = this.state.vernacularLanguage;
+    const vernLang = this.state.vernLanguage;
     const analysisLang = this.state.analysisLanguage;
     const languageData = this.state.languageData;
-
     if (name === "") {
       this.setState({
         error: { name: true, vernLanguage: false, analysisLanguage: false },
-      });
-    } else if (!vernLang) {
-      this.setState({
-        error: { name: false, vernLanguage: true, analysisLanguage: false },
-      });
-    } else if (!analysisLang) {
-      this.setState({
-        error: { name: false, vernLanguage: false, analysisLanguage: true },
       });
     } else if (this.props.asyncCreateProject) {
       this.props.asyncCreateProject(
@@ -110,21 +156,6 @@ class CreateProject extends React.Component<
         analysisLang
       );
     }
-  }
-
-  handleVernacularLanguageChange = (event: any) => {
-    this.setState({ vernacularLanguage: event.target.value });
-  };
-
-  handleAnalysisLanguageChange = (event: any) => {
-    this.setState({ analysisLanguage: event.target.value });
-  };
-
-  getAvailableVernLanguages() {
-    return ["option1", "option2", "option3"];
-  }
-  getAvailableAnalysisLanguages() {
-    return ["option4", "option5", "option6"];
   }
 
   render() {
@@ -137,7 +168,6 @@ class CreateProject extends React.Component<
             <Typography variant="h5" align="center" gutterBottom>
               <Translate id="createProject.title" />
             </Typography>
-
             {/* Project name field */}
             <TextField
               label={<Translate id="createProject.name" />}
@@ -151,9 +181,50 @@ class CreateProject extends React.Component<
                 this.state.error["name"] && <Translate id="login.required" />
               }
             />
-            {/*language picker */}
-            <PickLanguage />
-
+            {/*Vernacular language picker */}
+            <Grid container spacing={1}>
+              <Grid item>
+                <Typography>
+                  <Translate id="projectSettings.language.vernacular" />
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography>
+                  <Translate id="projectSettings.language.header" />
+                </Typography>
+              </Grid>
+            </Grid>
+            <LanguagePicker
+              value={this.state.vernLanguage.bcp47}
+              setCode={this.setVernBcp47}
+              name={this.state.vernLanguage.name}
+              setName={this.setVernLgName}
+              font={this.state.vernLanguage.font}
+              setFont={this.setVernFontName}
+              t={languagePickerStrings_en}
+            />
+            {/*Analysis language picker */}
+            <Grid container spacing={1}>
+              <Grid item>
+                <Typography>
+                  <Translate id="projectSettings.language.analysis" />
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography>
+                  <Translate id="projectSettings.language.header" />
+                </Typography>
+              </Grid>
+            </Grid>
+            <LanguagePicker
+              value={this.state.analysisLanguage.bcp47}
+              setCode={this.setAnalysisBcp47}
+              name={this.state.analysisLanguage.name}
+              setName={this.setAnalysisLgName}
+              font={this.state.analysisLanguage.font}
+              setFont={this.setAnalysisFontName}
+              t={languagePickerStrings_en}
+            />
             {/* File upload */}
             <Typography
               variant="body1"
@@ -168,7 +239,6 @@ class CreateProject extends React.Component<
             >
               <Translate id="createProject.browse" />
             </FileInputButton>
-
             {/* Displays the name of the selected file */}
             {this.state.fileName && (
               <Typography variant="body1" noWrap style={{ marginTop: 30 }}>
@@ -176,7 +246,6 @@ class CreateProject extends React.Component<
                 {this.state.fileName}
               </Typography>
             )}
-
             {/* Form submission button */}
             <Grid container justify="flex-end">
               <LoadingDoneButton

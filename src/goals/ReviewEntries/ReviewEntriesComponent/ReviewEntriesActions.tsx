@@ -232,12 +232,12 @@ function refreshWord(
   ) => {
     const newWordId = await action(oldWordId);
     const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems[0]
-      ? getState().currentProject.analysisWritingSystems[0]
-      : "en";
+    const analysisLang = getState().currentProject.analysisWritingSystem
+      ? getState().currentProject.analysisWritingSystem
+      : { name: "en", bcp47: "en-US", font: "" };
 
     dispatch(
-      updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang))
+      updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang.name))
     );
   };
 }

@@ -75,7 +75,7 @@ class ProjectSettingsComponent extends React.Component<
           settings.projectName = this.props.project.name;
           settings.languageSettings = {
             vernacular: this.props.project.vernacularWritingSystem,
-            analysis: [...this.props.project.analysisWritingSystems],
+            analysis: this.props.project.analysisWritingSystem,
             uiLang: this.props.activeLanguage.code,
           };
           settings.autocompleteSetting = this.props.project.autocompleteSetting;

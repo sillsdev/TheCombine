@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid, Typography } from "@material-ui/core";
-import { Project } from "../../../types/project";
+import { Project, WritingSystem } from "../../../types/project";
 import {
   Translate,
   LocalizeContextProps,
@@ -32,27 +32,17 @@ class ProjectName extends React.Component<
     }
   }
 
-  getAnalysisLangNames() {
-    let names: string[] = [
-      "read, ",
-      "this, ",
-      "before, ",
-      "you, ",
-      "give, ",
-      "up, ",
-    ];
-    for (let languages of this.props.project.analysisWritingSystems) {
-      names.push(languages.concat(", "));
-    }
-    let tempName = names[names.length - 1];
-    names[names.length - 1] = tempName.substr(0, tempName.length - 2);
-    return names;
+  getAnalysisLang() {
+    let analysisLang: WritingSystem = this.props.project
+      .vernacularWritingSystem;
+
+    return analysisLang;
   }
 
   getVernLang() {
-    let result: string = this.props.project.vernacularWritingSystem;
-    result = "The writing system does not work right now";
-    return result;
+    let vernacularLang: WritingSystem = this.props.project
+      .vernacularWritingSystem;
+    return vernacularLang;
   }
 
   render() {
@@ -61,12 +51,16 @@ class ProjectName extends React.Component<
         <Typography>
           <Translate id="projectSettings.language.vernacular" />
           {": "}
-          {this.getVernLang()}
+          {this.getVernLang().name}
+          {this.getVernLang().bcp47}
+          {this.getVernLang().font}
         </Typography>
         <Typography>
           <Translate id="projectSettings.language.analysis" />
           {": "}
-          {this.getAnalysisLangNames()}
+          {this.getAnalysisLang().name}
+          {this.getAnalysisLang().bcp47}
+          {this.getAnalysisLang().font}
         </Typography>
       </React.Fragment>
     );

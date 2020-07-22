@@ -5,6 +5,7 @@ import history from "../../../history";
 import { asyncGetUserEdits, GoalAction } from "../../GoalTimeline/GoalsActions";
 import { ThunkDispatch } from "redux-thunk";
 import { StoreState } from "../../../types";
+import { WritingSystem } from "../../../types/project";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;
@@ -20,6 +21,8 @@ export type RESET = typeof RESET;
 
 export interface CreateProjectData {
   name: string;
+  vernacularLanguage: WritingSystem;
+  analysisLanguage: WritingSystem;
   languageData?: File;
   errorMsg?: string;
 }
@@ -33,7 +36,12 @@ export interface CreateProjectAction {
 }
 
 //thunk action creator
-export function asyncCreateProject(name: string, languageData?: File) {
+export function asyncCreateProject(
+  name: string,
+  vernacularLanguage: WritingSystem,
+  analysisLanguage: WritingSystem,
+  languageData?: File
+) {
   return async (
     dispatch: ThunkDispatch<
       StoreState,
@@ -41,10 +49,13 @@ export function asyncCreateProject(name: string, languageData?: File) {
       CreateProjectAction | ProjectAction | GoalAction
     >
   ) => {
-    dispatch(inProgress(name));
+    dispatch(inProgress(name, vernacularLanguage, analysisLanguage));
     // Create project
     let project: Project = { ...defaultProject };
     project.name = name;
+    project.vernacularWritingSystem = vernacularLanguage;
+    project.analysisWritingSystem = analysisLanguage;
+
     backend
       .createProject(project)
       .then((createdProject) => {
@@ -57,7 +68,7 @@ export function asyncCreateProject(name: string, languageData?: File) {
               .getProject(createdProject.id)
               .then((res) => {
                 dispatch(setCurrentProject(res));
-                dispatch(success(name));
+                dispatch(success(name, vernacularLanguage, analysisLanguage));
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {
                   dispatch(asyncGetUserEdits());
@@ -65,14 +76,28 @@ export function asyncCreateProject(name: string, languageData?: File) {
                 }, 1000);
               })
               .catch((err) => {
-                dispatch(failure(name, err.response.statusText));
+                dispatch(
+                  failure(
+                    name,
+                    vernacularLanguage,
+                    analysisLanguage,
+                    err.response.statusText
+                  )
+                );
               })
               .catch((err) => {
-                dispatch(failure(name, err.response.statusText));
+                dispatch(
+                  failure(
+                    name,
+                    vernacularLanguage,
+                    analysisLanguage,
+                    err.response.statusText
+                  )
+                );
               });
           });
         } else {
-          dispatch(success(name));
+          dispatch(success(name, vernacularLanguage, analysisLanguage));
           setTimeout(() => {
             dispatch(asyncGetUserEdits());
             history.push("/project-settings");
@@ -86,35 +111,54 @@ export function asyncCreateProject(name: string, languageData?: File) {
         } else {
           errorMessage = err.response.statusText;
         }
-        dispatch(failure(name, errorMessage));
+        dispatch(
+          failure(name, vernacularLanguage, analysisLanguage, errorMessage)
+        );
       });
   };
 }
 
-export function inProgress(name: string): CreateProjectAction {
+export function inProgress(
+  name: string,
+  vernacularLanguage: WritingSystem,
+  analysisLanguage: WritingSystem
+): CreateProjectAction {
   return {
     type: IN_PROGRESS,
-    payload: { name },
+    payload: { name, vernacularLanguage, analysisLanguage },
   };
 }
 
-export function success(name: string): CreateProjectAction {
+export function success(
+  name: string,
+  vernacularLanguage: WritingSystem,
+  analysisLanguage: WritingSystem
+): CreateProjectAction {
   return {
     type: SUCCESS,
-    payload: { name },
+    payload: { name, vernacularLanguage, analysisLanguage },
   };
 }
 
 export function failure(
   name: string,
+  vernacularLanguage: WritingSystem,
+  analysisLanguage: WritingSystem,
   errorMsg: string = ""
 ): CreateProjectAction {
   return {
     type: FAILURE,
-    payload: { name, errorMsg },
+    payload: { name, errorMsg, vernacularLanguage, analysisLanguage },
   };
 }
 
 export function reset(): CreateProjectAction {
-  return { type: RESET, payload: { name: "" } };
+  return {
+    type: RESET,
+    payload: {
+      name: "",
+      vernacularLanguage: { name: "", bcp47: "", font: "" },
+      analysisLanguage: { name: "", bcp47: "", font: "" },
+    },
+  };
 }

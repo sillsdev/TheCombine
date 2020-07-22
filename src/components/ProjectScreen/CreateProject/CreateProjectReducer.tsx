@@ -5,11 +5,13 @@ import {
   RESET,
   CreateProjectAction,
 } from "./CreateProjectActions";
-import { Project } from "../../../types/project";
+import { Project, WritingSystem } from "../../../types/project";
 import { StoreAction, StoreActions } from "../../../rootActions";
 
 export interface CreateProjectState {
   name: string;
+  vernacularLanguage: WritingSystem;
+  analysisLanguage: WritingSystem;
   inProgress: boolean;
   success: boolean;
   errorMsg: string;
@@ -18,6 +20,8 @@ export interface CreateProjectState {
 
 export const defaultState: CreateProjectState = {
   name: "",
+  vernacularLanguage: { name: "", bcp47: "", font: "" },
+  analysisLanguage: { name: "", bcp47: "", font: "" },
   success: false,
   inProgress: false,
   errorMsg: "",
@@ -31,6 +35,8 @@ export const createProjectReducer = (
     case IN_PROGRESS:
       return {
         name: action.payload.name,
+        vernacularLanguage: action.payload.vernacularLanguage,
+        analysisLanguage: action.payload.analysisLanguage,
         success: false,
         inProgress: true,
         errorMsg: "",
@@ -38,6 +44,8 @@ export const createProjectReducer = (
     case SUCCESS:
       return {
         name: action.payload.name,
+        vernacularLanguage: action.payload.vernacularLanguage,
+        analysisLanguage: action.payload.analysisLanguage,
         success: true,
         inProgress: false,
         errorMsg: "",
@@ -45,6 +53,8 @@ export const createProjectReducer = (
     case FAILURE:
       return {
         name: action.payload.name,
+        vernacularLanguage: action.payload.vernacularLanguage,
+        analysisLanguage: action.payload.analysisLanguage,
         success: false,
         inProgress: false,
         errorMsg: action.payload.errorMsg || "",
