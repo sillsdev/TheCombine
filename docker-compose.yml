@@ -10,7 +10,6 @@ services:
       - database
     env_file:
       - ./.env.backend
-      - ./.env.backend.auth
   frontend:
     build:
       context: .
