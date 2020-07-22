@@ -8,7 +8,7 @@ import AudioPlayer from "../AudioPlayer";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import AudioRecorder from "../AudioRecorder";
 import { mockWord } from "../../../components/DataEntry/tests/MockWord";
-import RecorderIconHolder from "../RecorderIconHolder";
+import RecorderIcon from "../RecorderIcon";
 
 const createMockStore = configureMockStore([]);
 
@@ -52,7 +52,7 @@ describe("pronunciation tests", () => {
     renderer.act(() => {
       testRenderer.update(
         <Provider store={mockStore}>
-          <RecorderIconHolder
+          <RecorderIcon
             startRecording={mockStartRecording}
             stopRecording={mockStopRecording}
             wordId={mockWord.id}

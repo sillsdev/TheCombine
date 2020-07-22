@@ -5,13 +5,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateRecordingStatus } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import { recorderStatus } from "../../types/theme";
 
-export interface RecorderIconHolderProps {
+export interface RecorderIconProps {
   wordId: string;
   startRecording: () => void;
   stopRecording: () => void;
 }
 
-export default function RecorderIconHolder(props: RecorderIconHolderProps) {
+export default function RecorderIcon(props: RecorderIconProps) {
   const isRecording = useSelector(
     (state: any) => state.reviewEntriesState.isRecording
   );
