@@ -20,7 +20,6 @@
     clone: yes
     update: yes
     version: "{{ combine_source_version }}"
-    depth: 1
     track_submodules: yes
   when: not combinestat.stat.exists
 
