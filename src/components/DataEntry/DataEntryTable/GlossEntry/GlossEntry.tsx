@@ -39,7 +39,6 @@ export class GlossEntry extends React.Component<
         onBlur={() => {
           if (this.props.onBlur) this.props.onBlur(this.props.gloss);
         }}
-        //onKeyDown={(event) => {}}
         onChange={(event, newValue) => {
           const newText = newValue ? (newValue as string) : "";
           this.props.updateGlossField(newText);

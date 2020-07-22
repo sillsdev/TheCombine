@@ -311,7 +311,7 @@ export class ExistingEntry extends React.Component<
           container
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
-          onKeyDown={(e) => {
+          onKeyUp={(e) => {
             if (
               e.key === "Enter" &&
               this.state.existingEntry.vernacular !== ""
