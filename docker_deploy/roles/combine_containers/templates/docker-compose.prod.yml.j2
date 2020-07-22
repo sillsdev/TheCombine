@@ -11,7 +11,7 @@ services:
       dockerfile: ./prodDockerfile
     volumes:
         - ./{{ config_dir }}/nginx/conf.d:/etc/nginx/user.conf.d:ro
-        - letsencrypt:/etc/letencrypt
+        - letsencrypt:/etc/letsencrypt
     environment:
         CERTBOT_EMAIL: {{ certbot_email }}
         IS_STAGING: {{ certbot_is_staging }}
@@ -23,3 +23,7 @@ services:
     restart: unless-stopped
   database:
     restart: unless-stopped
+
+volumes:
+  letsencrypt:
+    
