@@ -48,8 +48,8 @@ class CreateProject extends React.Component<
     this.state = {
       name: "",
       error: { name: false, vernLanguage: false, analysisLanguage: false },
-      vernLanguage: { name: "", bcp47: "", font: "" },
-      analysisLanguage: { name: "", bcp47: "", font: "" },
+      vernLanguage: { name: "", bcp47: "und", font: "" },
+      analysisLanguage: { name: "", bcp47: "und", font: "" },
     };
     this.setVernBcp47 = this.setVernBcp47.bind(this);
     this.setVernLgName = this.setVernLgName.bind(this);
@@ -148,6 +148,14 @@ class CreateProject extends React.Component<
       this.setState({
         error: { name: true, vernLanguage: false, analysisLanguage: false },
       });
+    } else if (vernLang.name === "") {
+      this.setState({
+        error: { name: false, vernLanguage: true, analysisLanguage: false },
+      });
+    } else if (analysisLang.name === "") {
+      this.setState({
+        error: { name: false, vernLanguage: false, analysisLanguage: true },
+      });
     } else if (this.props.asyncCreateProject) {
       this.props.asyncCreateProject(
         name,
@@ -204,7 +212,7 @@ class CreateProject extends React.Component<
               t={languagePickerStrings_en}
             />
             {/*Analysis language picker */}
-            <Grid container spacing={1}>
+            <Grid container spacing={1} style={{ marginTop: 20 }}>
               <Grid item>
                 <Typography>
                   <Translate id="projectSettings.language.analysis" />
@@ -236,6 +244,7 @@ class CreateProject extends React.Component<
             <FileInputButton
               updateFile={(file) => this.updateLanguageData(file)}
               accept=".zip"
+              style={{ marginTop: 20 }}
             >
               <Translate id="createProject.browse" />
             </FileInputButton>
