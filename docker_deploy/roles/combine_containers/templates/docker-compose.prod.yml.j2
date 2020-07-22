@@ -1,8 +1,6 @@
 ﻿version: "3.8"
 services:
   backend:
-    env_file:
-      - ./{{ backend_env_file }}
     entrypoint:
       - dotnet
       - BackendFramework.dll

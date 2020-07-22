@@ -22,7 +22,7 @@
 - name: create backend .env file
   template:
     src: env.backend.j2
-    dest: "{{ source_dir }}/.env.backend.prod"
+    dest: "{{ source_dir }}/.env.backend"
     owner: root
     group: root
     mode: 0600
