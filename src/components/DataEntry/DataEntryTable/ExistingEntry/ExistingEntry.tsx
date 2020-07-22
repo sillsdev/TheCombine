@@ -247,7 +247,10 @@ export class ExistingEntry extends React.Component<
       existingEntry: {
         ...this.state.existingEntry,
         senses: [
-          { glosses: [{ language: "en", def: newValue }], semanticDomains: [] },
+          {
+            ...this.state.existingEntry.senses[0],
+            glosses: [{ language: "en", def: newValue }],
+          },
         ],
       },
     });
