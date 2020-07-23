@@ -24,10 +24,10 @@ namespace BackendFramework.Models
         public List<SemanticDomain> SemanticDomains { get; set; }
 
         [BsonElement("vernacularWritingSystem")]
-        public string VernacularWritingSystem { get; set; }
+        public WritingSystem VernacularWritingSystem { get; set; }
 
-        [BsonElement("analysisWritingSystems")]
-        public List<string> AnalysisWritingSystems { get; set; }
+        [BsonElement("analysisWritingSystem")]
+        public WritingSystem AnalysisWritingSystem { get; set; }
 
         [BsonElement("validCharacters")]
         public List<string> ValidCharacters { get; set; }
@@ -55,9 +55,9 @@ namespace BackendFramework.Models
             Id = "";
             Name = "";
             IsActive = true;
-            VernacularWritingSystem = "";
+            VernacularWritingSystem = new WritingSystem();
             SemanticDomains = new List<SemanticDomain>();
-            AnalysisWritingSystems = new List<string>();
+            AnalysisWritingSystem = new WritingSystem();
             ValidCharacters = new List<string>();
             RejectedCharacters = new List<string>();
             CustomFields = new List<CustomField>();
@@ -72,9 +72,9 @@ namespace BackendFramework.Models
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
                 IsActive = IsActive,
-                VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
+                VernacularWritingSystem = VernacularWritingSystem.Clone() as WritingSystem,
                 SemanticDomains = new List<SemanticDomain>(),
-                AnalysisWritingSystems = new List<string>(),
+                AnalysisWritingSystem = AnalysisWritingSystem.Clone() as WritingSystem,
                 ValidCharacters = new List<string>(),
                 RejectedCharacters = new List<string>(),
                 CustomFields = new List<CustomField>(),
@@ -85,10 +85,6 @@ namespace BackendFramework.Models
             foreach (var sd in SemanticDomains)
             {
                 clone.SemanticDomains.Add(sd.Clone());
-            }
-            foreach (var aws in AnalysisWritingSystems)
-            {
-                clone.AnalysisWritingSystems.Add(aws.Clone() as string);
             }
             foreach (var cs in ValidCharacters)
             {
@@ -124,8 +120,7 @@ namespace BackendFramework.Models
                 other.SemanticDomains.Count == SemanticDomains.Count &&
                 other.SemanticDomains.All(SemanticDomains.Contains) &&
 
-                other.AnalysisWritingSystems.Count == AnalysisWritingSystems.Count &&
-                other.AnalysisWritingSystems.All(AnalysisWritingSystems.Contains) &&
+                other.AnalysisWritingSystem.Equals(AnalysisWritingSystem) &&
 
                 other.ValidCharacters.Count == ValidCharacters.Count &&
                 other.ValidCharacters.All(ValidCharacters.Contains) &&
@@ -164,7 +159,7 @@ namespace BackendFramework.Models
             hash.Add(IsActive);
             hash.Add(SemanticDomains);
             hash.Add(VernacularWritingSystem);
-            hash.Add(AnalysisWritingSystems);
+            hash.Add(AnalysisWritingSystem);
             hash.Add(ValidCharacters);
             hash.Add(RejectedCharacters);
             hash.Add(CustomFields);
@@ -185,6 +180,23 @@ namespace BackendFramework.Models
             {
                 Name = Name.Clone() as string,
                 Type = Type.Clone() as string
+            };
+        }
+    }
+
+    public class WritingSystem
+    {
+        public string Name { get; set; }
+        public string Bcp47 { get; set; }
+        public string Font { get; set; }
+
+        public WritingSystem Clone()
+        {
+            return new WritingSystem
+            {
+                Name = Name.Clone() as string,
+                Bcp47 = Bcp47.Clone() as string,
+                Font = Font.Clone() as string
             };
         }
     }
@@ -221,7 +233,7 @@ namespace BackendFramework.Models
             SemanticDomains = baseObj.SemanticDomains;
             VernacularWritingSystem = baseObj.VernacularWritingSystem;
             WordFields = baseObj.WordFields;
-            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
+            AnalysisWritingSystem = baseObj.AnalysisWritingSystem;
             CustomFields = baseObj.CustomFields;
             ValidCharacters = baseObj.ValidCharacters;
             AutocompleteSetting = baseObj.AutocompleteSetting;
