@@ -20,9 +20,9 @@ import { WritingSystem } from "../../../types/project";
 export interface CreateProjectProps {
   asyncCreateProject: (
     name: string,
-    languageData: File,
     vernacularLanguage: WritingSystem,
-    analysisLanguage: WritingSystem
+    analysisLanguage: WritingSystem,
+    languageData: File
   ) => void;
   reset: () => void;
   inProgress: boolean;
@@ -159,9 +159,9 @@ class CreateProject extends React.Component<
     } else if (this.props.asyncCreateProject) {
       this.props.asyncCreateProject(
         name,
-        languageData as File,
-        vernLang,
-        analysisLang
+        vernLang as WritingSystem,
+        analysisLang as WritingSystem,
+        languageData as File
       );
     }
   }

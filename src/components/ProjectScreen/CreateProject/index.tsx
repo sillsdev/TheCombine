@@ -26,9 +26,9 @@ export function mapDispatchToProps(
   return {
     asyncCreateProject: (
       name: string,
-      languageData: File,
       vernacularLanguage: WritingSystem,
-      analysisLanguage: WritingSystem
+      analysisLanguage: WritingSystem,
+      languageData: File
     ) => {
       dispatch(
         asyncCreateProject(
