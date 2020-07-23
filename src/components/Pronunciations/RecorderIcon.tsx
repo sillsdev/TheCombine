@@ -22,7 +22,7 @@ export default function RecorderIcon(props: RecorderIconProps) {
 
   const useStyles = makeStyles((theme) => ({
     button: {
-      margin: theme.spacing(1),
+      marginRight: theme.spacing(1),
     },
     iconPress: {
       color: recorderStatus.active.color,
