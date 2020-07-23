@@ -8,13 +8,16 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: ./Dockerfile.prod
     volumes:
-        - ./{{ config_dir }}/nginx/conf.d:/etc/nginx/user.conf.d:ro
+        - ./nginx/conf.d:/etc/nginx/user.conf.d:ro
         - letsencrypt:/etc/letsencrypt
     environment:
         CERTBOT_EMAIL: {{ certbot_email }}
         IS_STAGING: {{ certbot_is_staging }}
+        SERVER_NAME: {{ combine_server_name }}
+        SSL_CERTIFICATE: /etc/letsencrypt/live/{{ combine_server_name }}/fullchain.pem
+        SSL_PRIVATE_KEY: /etc/letsencrypt/live/{{ combine_server_name }}/privkey.pem
+        BACKEND_URL: "http://backend"
     command:
       - "/bin/bash"
       - "{{ frontend_start_script }}"

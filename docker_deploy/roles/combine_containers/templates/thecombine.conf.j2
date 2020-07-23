@@ -6,7 +6,7 @@ server {
   charset             utf-8;
 
   location /v1 {
-        proxy_pass         http://web;
+        proxy_pass         http://backend;
         proxy_http_version 1.1;
         proxy_set_header   Upgrade $http_upgrade;
         proxy_set_header   Connection keep-alive;

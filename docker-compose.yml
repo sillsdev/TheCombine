@@ -16,7 +16,11 @@ services:
       args:
         - COMBINE_CAPTCHA_REQUIRED=true
         - COMBINE_CAPTCHA_SITE=6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3
-
+    environment:
+      SERVER_NAME: localhost
+      SSL_CERTIFICATE: /ssl/cert.pem
+      SSL_PRIVATE_KEY: /ssl/key.pem
+      BACKEND_URL: "http://backend:5000"
     volumes:
       - ./nginx/conf.d:/etc/nginx/user.conf.d:ro
       - frontend_ssl_certs:/ssl

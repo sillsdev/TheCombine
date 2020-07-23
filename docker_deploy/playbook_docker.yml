@@ -34,10 +34,3 @@
         name: combine_containers
       tags:
         - docker_config
-
-    - name: setup combine shortcuts
-      import_role:
-        name: combine_shortcuts
-      become: no
-      tags:
-        - shortcuts
