@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { toast, ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
+
 import {
   addUserRole,
   avatarSrc,
@@ -16,6 +17,7 @@ import { Project } from "../../../types/project";
 import { User } from "../../../types/user";
 import EmailInvite from "./EmailInvite";
 import UserList from "./UserList";
+
 const customStyles = {
   content: {
     top: "50%",
@@ -103,7 +105,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   addToProject(user: User) {
     const currentUser = getCurrentUser();
     if (currentUser && user.id !== currentUser.id) {
-      addUserRole([1, 2, 3], user)
+      addUserRole([3, 2, 1], user)
         .then(() => {
           toast(<Translate id="projectSettings.invite.toastSuccess" />);
           this.populateUsers();

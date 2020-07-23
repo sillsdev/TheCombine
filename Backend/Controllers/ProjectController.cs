@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
             }
 
             var allUsers = await _userService.GetAllUsers();
-            var projectUsers = allUsers.FindAll(user => user.WorkedProjects.ContainsKey(projectId));
+            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
             return new ObjectResult(projectUsers);
         }
@@ -249,14 +249,15 @@ namespace BackendFramework.Controllers
             }
             else
             {
+
+                // Generate the userRole
                 var usersRole = new UserRole();
-                userRoleId = usersRole.Id;
                 usersRole.ProjectId = projectId;
-
                 usersRole = await _userRoleService.Create(usersRole);
+                userRoleId = usersRole.Id;
 
-                // Generate the userRoles and update the user
-                changeUser.ProjectRoles.Add(projectId, usersRole.Id);
+                // Update the user
+                changeUser.ProjectRoles.Add(projectId, userRoleId);
                 await _userService.Update(changeUser.Id, changeUser);
             }
             var userRole = await _userRoleService.GetUserRole(projectId, userRoleId);
