@@ -158,5 +158,35 @@ namespace Backend.Tests
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
         }
+
+        [Test]
+        public void TestEmailInviteToProject()
+        {
+            var project = _projectService.Create(RandomProject()).Result;
+            var linkWithIdentifier = _projectService.CreateLinkWithToken(project, "example@address.com");
+            Assert.AreEqual(linkWithIdentifier, "/invite/" + project.Id + "/token123");
+        }
+
+
+        private static User RandomUser()
+        {
+            var user = new User { Email = Util.RandString() };
+            return user;
+        }
+        [Test]
+        public void TestValidateLink()
+        {
+            _userService.Create(RandomUser());
+            _userService.Create(RandomUser());
+            _userService.Create(RandomUser());
+            var project = RandomProject();
+            var token1 = new EmailInvite(2, "example1@address.com");
+            var token2 = new EmailInvite(2, "example2@address.com");
+            var token3 = new EmailInvite(2, "example3@address.com");
+            project.InviteTokens.Add(token1);
+            project.InviteTokens.Add(token2);
+            project.InviteTokens.Add(token3);
+            _ = _controller.ValidateToken(project.Id, token1.Token);
+        }
     }
 }

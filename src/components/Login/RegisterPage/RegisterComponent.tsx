@@ -56,7 +56,10 @@ interface RegisterState {
 }
 
 export class Register extends React.Component<
-  RegisterDispatchProps & RegisterStateProps & LocalizeContextProps,
+  RegisterDispatchProps &
+    RegisterStateProps &
+    RegisterProps &
+    LocalizeContextProps,
   RegisterState
 > {
   constructor(

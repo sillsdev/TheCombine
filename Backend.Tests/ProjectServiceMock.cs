@@ -70,7 +70,7 @@ namespace Backend.Tests
 
         public Task<string> CreateLinkWithToken(Project project, string emailAddress)
         {
-            return Task.FromResult("");
+            return Task.FromResult("/invite/" + project.Id + "/token123");
         }
 
         public Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project)
