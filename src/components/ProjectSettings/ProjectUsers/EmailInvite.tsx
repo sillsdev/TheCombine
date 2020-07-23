@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { Translate } from "react-localize-redux";
 import validator from "validator";
+import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 import * as Backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
 
@@ -20,6 +21,8 @@ interface InviteState {
   emailAddress: string;
   message: string;
   isValid: boolean;
+  loading: boolean;
+  done: boolean;
 }
 class EmailInvite extends React.Component<InviteProps, InviteState> {
   constructor(props: InviteProps) {
@@ -28,16 +31,25 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
       emailAddress: "",
       message: "",
       isValid: false,
+      loading: false,
+      done: false,
     };
   }
 
   async onSubmit() {
+    this.setState({
+      loading: true,
+    });
     var projectId = LocalStorage.getProjectId();
     await Backend.emailInviteToProject(
       projectId,
       this.state.emailAddress,
       this.state.message
     );
+    this.setState({
+      loading: false,
+      done: true,
+    });
     this.props.close();
   }
 
@@ -100,14 +112,16 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
               ></TextField>
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item>
-                  <Button
+                  <LoadingDoneButton
                     variant="contained"
                     color="primary"
                     onClick={() => this.onSubmit()}
                     disabled={!this.state.isValid}
+                    loading={this.state.loading}
+                    done={this.state.done}
                   >
                     <Translate id="projectSettings.invite.inviteButton" />
-                  </Button>
+                  </LoadingDoneButton>
                 </Grid>
               </Grid>
             </CardContent>
