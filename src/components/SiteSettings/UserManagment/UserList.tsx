@@ -17,6 +17,7 @@ import {
 } from "react-localize-redux";
 import theme from "../../../types/theme";
 import { User } from "../../../types/user";
+import { getCurrentUser } from "../../../backend/localStorage";
 
 interface UserListProps {
   allUsers: User[];
@@ -26,9 +27,10 @@ interface UserListProps {
 }
 
 interface UserListState {
+  currentUser: User | null;
   filterInput: string;
-  prevFilterInput?: string;
   filteredUsers: User[];
+  prevFilterInput?: string;
 }
 
 class UserList extends React.Component<
@@ -39,6 +41,7 @@ class UserList extends React.Component<
     super(props);
 
     this.state = {
+      currentUser: getCurrentUser(),
       filterInput: "",
       filteredUsers: [],
     };
@@ -96,9 +99,12 @@ class UserList extends React.Component<
                   style={{ marginRight: theme.spacing(1) }}
                 />
                 <ListItemText primary={`${user.name} (${user.username})`} />
-                <Button onClick={() => this.props.handleOpenModal(user)}>
-                  <DeleteForever />
-                </Button>
+                {this.state.currentUser &&
+                  user.id !== this.state.currentUser.id && (
+                    <Button onClick={() => this.props.handleOpenModal(user)}>
+                      <DeleteForever />
+                    </Button>
+                  )}
               </ListItem>
             ))}
           </List>
