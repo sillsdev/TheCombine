@@ -13,8 +13,8 @@
 
 - name: create production Dockerfile for frontend
   template:
-    src: prodDockerfile.j2
-    dest: "{{ source_dir }}/prodDockerfile"
+    src: Dockerfile.prod.j2
+    dest: "{{ source_dir }}/Dockerfile.prod"
     owner: root
     group: root
     mode: 0600
@@ -69,6 +69,6 @@
     chdir: "{{ source_dir }}"
 
 - name: start the containers
-  command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml --detach
+  command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --detach
   args:
     chdir: "{{ source_dir }}"

@@ -11,7 +11,7 @@ COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:stable-alpine
+FROM staticfloat/nginx-certbot
 
 WORKDIR /app
 
@@ -32,4 +32,4 @@ RUN ./generate_config.sh > ${NGINX_HOST_DIR}/config.js \
 # Overwrite this with real certificate for authentication in production.
 COPY nginx/certs /ssl
 
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+#COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
