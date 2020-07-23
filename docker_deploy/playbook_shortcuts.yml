@@ -1,0 +1,41 @@
+---
+
+##############################################################
+# Playbook: playbook_shorcuts
+# Role to add conveniences for manual
+# management of TheCombine on a target
+# system.
+#
+# Bash Aliases:
+#   bash aliases are created to make it easier to
+#   manage TheCombine containers with the correct
+#   YAML files that define the production environment:
+#    * combine-build - runs docker-compose to build
+#                      TheCombine containers for
+#                      production
+#    * combine-up - runs docker-compose up to bring up
+#                   the containers created with combine-build
+#    * combine-down - stops and removes the containers for
+#                     TheCombine.
+##############################################################
+
+- name: Setup Shortcuts for TheCombine Using Docker
+  hosts: server
+  gather_facts: yes
+  become: no
+
+  vars:
+    - alias_file: "{{ ansible_env.HOME }}/.bash_aliases"
+    - sudo_cmd: "{{ 'sudo ' if ansible_env.USER != 'root' else '' }}"
+
+  vars_files:
+    - vars/config_common.yml
+
+  tasks:
+    - name: DEBUG - do we sudo?
+      debug:
+        var: sudo_cmd
+
+    - name: Add combine aliases
+      import_role:
+        name: combine_shortcuts

@@ -9,3 +9,5 @@ backend_env_dir: "{{ source_dir }}/Backend"
 
 frontend_env_file: ".env.frontend.prod"
 frontend_env_dir: "{{ source_dir }}"
+
+production_override_yaml: docker-compose.prod.yml

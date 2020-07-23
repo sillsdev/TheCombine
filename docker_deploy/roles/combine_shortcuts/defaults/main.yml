@@ -1,0 +1,4 @@
+---
+
+alias_file: "{{ ansible_env.HOME }}/.bash_aliases"
+production_override_yaml: docker-compose.prod.yml

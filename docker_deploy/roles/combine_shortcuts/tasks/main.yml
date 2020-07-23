@@ -1,0 +1,36 @@
+---
+#####################################
+# combine_shortcuts
+#
+# Role to add conveniences for manual
+# management of TheCombine on a target
+# system.
+#
+# Bash Aliases:
+#   bash aliases are created to make it easier to
+#   manage TheCombine containers with the correct
+#   YAML files that define the production environment:
+#    * combine-build - runs docker-compose to build
+#                      TheCombine containers for
+#                      production
+#    * combine-up - runs docker-compose up to bring up
+#                   the containers created with combine-build
+#    * combine-down - stops and removes the containers for
+#                     TheCombine.
+#######################################
+
+- name: DEBUG - Print alias file
+  debug:
+    msg: "Alias file: {{ alias_file }}"
+- name: Add combine aliases
+  blockinfile:
+    path: "{{ alias_file }}"
+    create: yes
+    state: present
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+    mode: 0600
+    block: |
+      alias combine-up="{{sudo_cmd}}docker-compose -f docker-compose.yml -f {{ production_override_yaml }} up --detach"
+      alias combine-build="{{sudo_cmd}}docker-compose -f docker-compose.yml -f {{ production_override_yaml }} build --parallel"
+      alias combine-down="{{sudo_cmd}}docker-compose -f docker-compose.yml -f {{ production_override_yaml }} down"
