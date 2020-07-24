@@ -182,6 +182,18 @@ class CreateProject extends React.Component<
     }
   }
 
+  translateLanguage() {
+    return (
+      <React.Fragment>
+        <Grid item>
+          <Typography>
+            <Translate id="projectSettings.language.header" />
+          </Typography>
+        </Grid>
+      </React.Fragment>
+    );
+  }
+
   render() {
     //visual definition
     return (
@@ -212,11 +224,7 @@ class CreateProject extends React.Component<
                   <Translate id="projectSettings.language.vernacular" />
                 </Typography>
               </Grid>
-              <Grid item>
-                <Typography>
-                  <Translate id="projectSettings.language.header" />
-                </Typography>
-              </Grid>
+              {this.translateLanguage()}
             </Grid>
             <LanguagePicker
               value={this.state.vernLanguage.bcp47}
@@ -234,11 +242,7 @@ class CreateProject extends React.Component<
                   <Translate id="projectSettings.language.analysis" />
                 </Typography>
               </Grid>
-              <Grid item>
-                <Typography>
-                  <Translate id="projectSettings.language.header" />
-                </Typography>
-              </Grid>
+              {this.translateLanguage()}
             </Grid>
             <LanguagePicker
               value={this.state.analysisLanguages[0].bcp47}

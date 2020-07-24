@@ -11,21 +11,9 @@ interface LanguageProps {
   project: Project;
 }
 
-interface LanguageState {
-  projectName: string;
-}
-
 class ProjectLanguage extends React.Component<
-  LanguageProps & LocalizeContextProps,
-  LanguageState
+  LanguageProps & LocalizeContextProps
 > {
-  constructor(props: LanguageProps & LocalizeContextProps) {
-    super(props);
-    this.state = {
-      projectName: props.project.name,
-    };
-  }
-
   componentDidUpdate(prevProps: LanguageProps) {
     if (prevProps.project.id !== this.props.project.id) {
       let name = this.props.project.name;
