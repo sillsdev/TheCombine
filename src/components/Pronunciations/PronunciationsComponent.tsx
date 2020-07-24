@@ -11,6 +11,7 @@ export interface PronunciationProps {
   pronunciationFiles: string[];
   recorder?: Recorder;
   deleteAudio?: (wordId: string, fileName: string) => void;
+  //getAudioUrl?: (wordId: string, fileName: string) => string;
   uploadAudio?: (wordId: string, audioFile: File) => void;
 }
 
@@ -23,13 +24,17 @@ export class Pronunciations extends React.Component<
     if (this.props.pronunciationFiles === null) {
       audioButtons = null;
     } else {
-      audioButtons = this.props.pronunciationFiles.map((file) => {
+      audioButtons = this.props.pronunciationFiles.map((fileName) => {
         return (
           <AudioPlayer
-            key={file}
+            key={fileName}
             wordId={this.props.wordId}
-            fileName={file}
-            pronunciationUrl={Backend.getAudioUrl(this.props.wordId, file)}
+            fileName={fileName}
+            pronunciationUrl={Backend.getAudioUrl(this.props.wordId, fileName)}
+            /*    this.props.getAudioUrl
+                ? this.props.getAudioUrl(this.props.wordId, fileName)
+                : Backend.getAudioUrl(this.props.wordId, fileName)
+            }*/
             deleteAudio={this.props.deleteAudio}
           />
         );

@@ -13,6 +13,7 @@ import { AutoComplete } from "../../../types/AutoComplete";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import { SemanticDomain, Word } from "../../../types/word";
+import { getFileNameForWord } from "../../Pronunciations/AudioRecorder";
 import Recorder from "../../Pronunciations/Recorder";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
@@ -84,14 +85,26 @@ export class DataEntryTable extends React.Component<
     if (e) e.preventDefault();
   }
 
-  async addNewWord(wordToAdd: Word) {
-    let updatedWord = await Backend.createWord(wordToAdd);
-    let updatedNewWords = [...this.state.recentlyAddedWords];
-    updatedNewWords.push({ word: updatedWord, mutable: true, glossIndex: 0 });
-    let words: Word[] = await this.props.getWordsFromBackend();
+  async addNewWord(wordToAdd: Word, audioFiles: File[]) {
+    let newWord = await Backend.createWord(wordToAdd);
+    let wordId = newWord.id;
+    let updatedAudioFile;
+    for (const audioFile of audioFiles) {
+      updatedAudioFile = { ...audioFile };
+      updatedAudioFile.name = getFileNameForWord(wordId);
+      wordId = await Backend.uploadAudio(wordId, audioFile);
+    }
+    let newWordWithAudio = await Backend.getWord(wordId);
+    let recentlyAddedWords = [...this.state.recentlyAddedWords];
+    recentlyAddedWords.push({
+      word: newWordWithAudio,
+      mutable: true,
+      glossIndex: 0,
+    });
+    let existingWords: Word[] = await this.props.getWordsFromBackend();
     this.setState({
-      existingWords: words,
-      recentlyAddedWords: updatedNewWords,
+      existingWords,
+      recentlyAddedWords,
     });
   }
 
@@ -277,7 +290,9 @@ export class DataEntryTable extends React.Component<
               updateWord={(wordToUpdate: Word, glossIndex: number) =>
                 this.updateWordForNewEntry(wordToUpdate, glossIndex)
               }
-              addNewWord={(word: Word) => this.addNewWord(word)}
+              addNewWord={(word: Word, audioFiles: File[]) =>
+                this.addNewWord(word, audioFiles)
+              }
               semanticDomain={this.props.semanticDomain}
               autocompleteSetting={this.state.autoComplete}
               displayDuplicates={
@@ -293,6 +308,7 @@ export class DataEntryTable extends React.Component<
               setIsReadyState={(isReady: boolean) =>
                 this.setState({ isReady: isReady })
               }
+              recorder={this.recorder}
             />
           </Grid>
         </Grid>
@@ -319,8 +335,10 @@ export class DataEntryTable extends React.Component<
                 // Check if there is a new word, but the user clicked complete instead of pressing enter
                 if (this.refNewEntry.current) {
                   let newEntry = this.refNewEntry.current.state.newEntry;
+                  let newEntryAudio = this.refNewEntry.current.state
+                    .tempAudioFiles;
                   if (newEntry && newEntry.vernacular) {
-                    this.addNewWord(newEntry);
+                    this.addNewWord(newEntry, newEntryAudio);
                     this.refNewEntry.current.resetState();
                   }
                 }
