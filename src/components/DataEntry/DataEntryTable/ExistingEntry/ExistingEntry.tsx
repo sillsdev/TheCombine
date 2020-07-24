@@ -13,11 +13,9 @@ import {
 } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import SpellChecker from "../../spellChecker";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
-import { SpellingSuggestionsView } from "../SpellingSuggestions/SpellingSuggestions";
+import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
-import ExistingGloss from "./ExistingGloss/ExistingGloss";
 import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
 
 interface ExistingEntryProps {
@@ -27,23 +25,18 @@ interface ExistingEntryProps {
   entry: Word;
   updateWord: (wordToUpdate: Word, wordToDelete?: Word) => void;
   removeWord: (word: Word) => void;
-  spellChecker: SpellChecker;
   semanticDomain: SemanticDomain;
   displayDuplicates: boolean;
   toggleDisplayDuplicates: () => void;
-  displaySpellingSuggestions: boolean;
-  toggleDisplaySpellingSuggestions: () => void;
   recorder: Recorder;
   focusNewEntry: () => void;
 }
 
 interface ExistingEntryState {
-  displaySpellingSuggestions: boolean;
   displayDuplicates: boolean;
   existingEntry: Word;
   duplicateIds?: string[];
   duplicates?: Word[];
-  isSpelledCorrectly: boolean;
   isDuplicate: boolean;
   hovering: boolean;
 }
@@ -170,10 +163,8 @@ export class ExistingEntry extends React.Component<
     }
 
     this.state = {
-      displaySpellingSuggestions: false,
       displayDuplicates: false,
       existingEntry: { ...this.props.entry },
-      isSpelledCorrectly: true,
       isDuplicate: isDuplicate,
       duplicates: duplicateWords,
       duplicateIds: possibleDups,
@@ -208,38 +199,8 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  toggleSpellingSuggestionsView() {
-    this.props.toggleDisplaySpellingSuggestions();
-  }
-
   toggleDuplicateResolutionView() {
     this.props.toggleDisplayDuplicates();
-  }
-
-  chooseSpellingSuggestion(suggestion: string) {
-    let updatedWord: Word = { ...this.props.entry };
-    updatedWord.senses[0].glosses[0].def = suggestion; // Newly entered words only have one sense
-
-    this.props.updateWord(updatedWord);
-    this.props.toggleDisplaySpellingSuggestions();
-    this.setState({
-      isSpelledCorrectly: true,
-      displaySpellingSuggestions: false,
-      existingEntry: {
-        ...this.state.existingEntry,
-        senses: [
-          {
-            ...this.state.existingEntry.senses[0],
-            glosses: [
-              {
-                language: "en",
-                def: suggestion,
-              },
-            ],
-          },
-        ],
-      },
-    });
   }
 
   addNewSense(existingWord: Word, newSense: string) {
@@ -282,20 +243,16 @@ export class ExistingEntry extends React.Component<
   }
 
   updateGlossField(newValue: string) {
-    let isSpelledCorrectly =
-      newValue.trim() !== "" ? this.isSpelledCorrectly(newValue) : true;
     this.setState({
-      isSpelledCorrectly: isSpelledCorrectly,
       existingEntry: {
         ...this.state.existingEntry,
         senses: [
-          { glosses: [{ language: "en", def: newValue }], semanticDomains: [] },
+          {
+            ...this.state.existingEntry.senses[0],
+            glosses: [{ language: "en", def: newValue }],
+          },
         ],
       },
-      displaySpellingSuggestions:
-        this.state.displaySpellingSuggestions && isSpelledCorrectly
-          ? false
-          : this.state.displaySpellingSuggestions,
     });
   }
 
@@ -332,14 +289,6 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  isSpelledCorrectly(word: string): boolean {
-    return this.props.spellChecker.correct(word);
-  }
-
-  getSpellingSuggestions(word: string): string[] {
-    return this.props.spellChecker.getSpellingSuggestions(word);
-  }
-
   removeEntry() {
     this.props.removeWord(this.props.entry);
   }
@@ -362,7 +311,7 @@ export class ExistingEntry extends React.Component<
           container
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
-          onKeyDown={(e) => {
+          onKeyUp={(e) => {
             if (
               e.key === "Enter" &&
               this.state.existingEntry.vernacular !== ""
@@ -401,8 +350,8 @@ export class ExistingEntry extends React.Component<
               position: "relative",
             }}
           >
-            <ExistingGloss
-              glosses={
+            <GlossWithSuggestions
+              gloss={
                 this.state.existingEntry.senses &&
                 this.state.existingEntry.senses[0] &&
                 this.state.existingEntry.senses[0].glosses &&
@@ -410,13 +359,13 @@ export class ExistingEntry extends React.Component<
                   ? this.state.existingEntry.senses[0].glosses[0].def
                   : ""
               }
-              isSpelledCorrectly={this.state.isSpelledCorrectly}
-              toggleSpellingSuggestionsView={() =>
-                this.toggleSpellingSuggestionsView()
-              }
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
+              onBlur={(newValue: string) => {
+                this.updateGlossField(newValue);
+                this.conditionallyUpdateWord();
+              }}
             />
           </Grid>
           <Grid
@@ -451,29 +400,6 @@ export class ExistingEntry extends React.Component<
             )}
           </Grid>
         </Grid>
-        {this.props.displaySpellingSuggestions && (
-          <SpellingSuggestionsView
-            mispelledWord={
-              this.state.existingEntry.senses &&
-              this.state.existingEntry.senses[0] &&
-              this.state.existingEntry.senses[0].glosses &&
-              this.state.existingEntry.senses[0].glosses[0]
-                ? this.state.existingEntry.senses[0].glosses[0].def
-                : ""
-            }
-            spellingSuggestions={this.getSpellingSuggestions(
-              this.state.existingEntry.senses &&
-                this.state.existingEntry.senses[0] &&
-                this.state.existingEntry.senses[0].glosses &&
-                this.state.existingEntry.senses[0].glosses[0]
-                ? this.state.existingEntry.senses[0].glosses[0].def
-                : ""
-            )}
-            chooseSpellingSuggestion={(suggestion: string) =>
-              this.chooseSpellingSuggestion(suggestion)
-            }
-          />
-        )}
         {this.props.displayDuplicates &&
           this.state.isDuplicate &&
           this.state.duplicates &&
