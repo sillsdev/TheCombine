@@ -7,10 +7,6 @@
     group: root
     mode: 0600
 
-- name: create init docker-compose file
-  debug:
-    msg: "TODO: Create compose file to initialize the database"
-
 - name: create backend .env file
   template:
     src: env.backend.j2
@@ -23,7 +19,3 @@
   command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build --parallel
   args:
     chdir: "{{ source_dir }}"
-
-- name: initialize containers
-  debug:
-    msg: "TODO: Initialize the database"

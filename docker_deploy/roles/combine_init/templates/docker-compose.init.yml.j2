@@ -1,0 +1,9 @@
+﻿version: "3.8"
+services:
+  backend:
+    env_file:
+      - .env.backend.init
+    entrypoint:
+      - dotnet
+      - BackendFramework.dll
+      - create-admin-username={{ combine_admin_username }}

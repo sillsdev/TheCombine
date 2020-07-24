@@ -39,7 +39,7 @@
       import_role:
         name: combine_init
       tags:
-        - admin_user
+        - init
 
     - name: start the containers
       command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --detach
