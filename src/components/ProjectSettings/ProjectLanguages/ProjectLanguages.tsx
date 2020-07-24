@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { Project, WritingSystem } from "../../../types/project";
 import {
   Translate,
@@ -7,28 +7,29 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-interface NameProps {
+interface LanguageProps {
   project: Project;
 }
 
-interface NameState {
+interface LanguageState {
   projectName: string;
 }
 
-class ProjectName extends React.Component<
-  NameProps & LocalizeContextProps,
-  NameState
+class ProjectLanguage extends React.Component<
+  LanguageProps & LocalizeContextProps,
+  LanguageState
 > {
-  constructor(props: NameProps & LocalizeContextProps) {
+  constructor(props: LanguageProps & LocalizeContextProps) {
     super(props);
     this.state = {
       projectName: props.project.name,
     };
   }
 
-  componentDidUpdate(prevProps: NameProps) {
+  componentDidUpdate(prevProps: LanguageProps) {
     if (prevProps.project.id !== this.props.project.id) {
-      this.setState({ projectName: this.props.project.name });
+      let name = this.props.project.name;
+      this.setState({ projectName: name });
     }
   }
 
@@ -67,4 +68,4 @@ class ProjectName extends React.Component<
   }
 }
 
-export default withLocalize(ProjectName);
+export default withLocalize(ProjectLanguage);
