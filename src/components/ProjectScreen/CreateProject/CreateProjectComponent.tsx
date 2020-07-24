@@ -59,35 +59,37 @@ class CreateProject extends React.Component<
     this.setAnalysisFontName = this.setAnalysisFontName.bind(this);
   }
 
-  setVernBcp47(item: any) {
+  setVernBcp47(item: string) {
     if (item) {
-      let tempItem: WritingSystem = this.state.vernLanguage;
-      tempItem.bcp47 = item;
-      this.setState({ vernLanguage: tempItem });
+      let tempLang: WritingSystem = { ...this.state.vernLanguage };
+      tempLang.bcp47 = item;
+      this.setState({ vernLanguage: tempLang });
     }
   }
 
   setVernLgName(item: any) {
     if (item) {
-      let tempItem: WritingSystem = this.state.vernLanguage;
-      tempItem.name = item;
-      this.setState({ vernLanguage: tempItem });
+      let tempLang: WritingSystem = { ...this.state.vernLanguage };
+      tempLang.name = item;
+      this.setState({ vernLanguage: tempLang });
     }
   }
   setVernFontName(item: any) {
     if (item) {
-      let tempItem: WritingSystem = this.state.vernLanguage;
-      tempItem.font = item;
-      this.setState({ vernLanguage: tempItem });
+      let tempLang: WritingSystem = { ...this.state.vernLanguage };
+      tempLang.font = item;
+      this.setState({ vernLanguage: tempLang });
     }
   }
 
   setAnalysisBcp47(item: any) {
     if (item) {
       if (this.state.analysisLanguages[0]) {
-        let tempItem: WritingSystem[] = this.state.analysisLanguages;
-        tempItem[0].bcp47 = item;
-        this.setState({ analysisLanguages: tempItem });
+        let tempLang: WritingSystem[] = { ...this.state.analysisLanguages };
+        tempLang[0].bcp47 = item;
+        this.setState({
+          analysisLanguages: tempLang,
+        });
       } else {
         let tempItem: WritingSystem[] = [{ name: "", bcp47: "", font: "" }];
         tempItem[0].bcp47 = item;
@@ -98,9 +100,9 @@ class CreateProject extends React.Component<
 
   setAnalysisLgName(item: any) {
     if (this.state.analysisLanguages[0]) {
-      let tempItem: WritingSystem[] = this.state.analysisLanguages;
-      tempItem[0].name = item;
-      this.setState({ analysisLanguages: tempItem });
+      let tempLang: WritingSystem[] = { ...this.state.analysisLanguages };
+      tempLang[0].name = item;
+      this.setState({ analysisLanguages: tempLang });
     } else {
       let tempItem: WritingSystem[] = [{ name: "", bcp47: "", font: "" }];
       tempItem[0].name = item;
@@ -110,9 +112,9 @@ class CreateProject extends React.Component<
 
   setAnalysisFontName(item: any) {
     if (this.state.analysisLanguages[0]) {
-      let tempItem: WritingSystem[] = this.state.analysisLanguages;
-      tempItem[0].font = item;
-      this.setState({ analysisLanguages: tempItem });
+      let tempLang: WritingSystem[] = { ...this.state.analysisLanguages };
+      tempLang[0].font = item;
+      this.setState({ analysisLanguages: tempLang });
     } else {
       let tempItem: WritingSystem[] = [{ name: "", bcp47: "", font: "" }];
       tempItem[0].font = item;
@@ -166,7 +168,7 @@ class CreateProject extends React.Component<
       this.setState({
         error: { name: false, vernLanguage: true, analysisLanguage: false },
       });
-    } else if (analysisLang[0] && analysisLang[0].name === "") {
+    } else if (!analysisLang[0] || analysisLang[0].name === "") {
       this.setState({
         error: { name: false, vernLanguage: false, analysisLanguage: true },
       });

@@ -42,7 +42,7 @@
     name: String,
     semanticDomains: <a href=words/semanticDomain.md>semanticDomain</a>[],
     vernacularWritingSystem: WritingSystem,
-    analysisWritingSystem: WritingSystem,
+    analysisWritingSystems: WritingSystem[],
     validCharacters: String[],
     rejectedCharacters: String[],
     customFields: <a href=customField.md>CustomField</a>[],

@@ -10,7 +10,7 @@ Extension of [`Project`](project.md) with [`User`](..\users\user.md) attribute. 
     semanticDomains: <a href=words/semanticDomain.md>semanticDomain</a>[],
     words: <a href=words/word.md>Word</a>[],
     vernacularWritingSystem: WritingSystem,
-    analysisWritingSystem: WritingSystem,
+    analysisWritingSystems: WritingSystem[],
     characterSet: String[],
     customFields: <a href=customField.md>CustomField</a>[],
     wordFields: String[],

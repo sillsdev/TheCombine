@@ -232,7 +232,7 @@ function refreshWord(
   ) => {
     const newWordId = await action(oldWordId);
     const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems
+    const analysisLang = getState().currentProject.analysisWritingSystems[0]
       ? getState().currentProject.analysisWritingSystems[0]
       : { name: "en", bcp47: "en-US", font: "" };
 

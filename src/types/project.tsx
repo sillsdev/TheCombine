@@ -26,7 +26,6 @@ export interface Project {
   words: Word[];
   customFields: CustomField[];
   autocompleteSetting: AutoComplete;
-  font: string;
 }
 
 export const defaultProject = {
@@ -44,7 +43,6 @@ export const defaultProject = {
   partsOfSpeech: [],
   words: [],
   autocompleteSetting: AutoComplete.Off,
-  font: "",
 } as Project;
 
 // Randomize properties as needed for tests.
@@ -64,7 +62,6 @@ export function randomProject(): Project {
       font: randomIntString(),
     },
   ];
-  project.font = randomIntString();
   project.isActive = Math.random() < 0.5;
   project.words = testWordList();
   return project;
