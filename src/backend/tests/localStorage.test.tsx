@@ -17,8 +17,9 @@ beforeEach(() => {
 });
 
 afterAll(() => {
+  LocalStorage.removeCurrentUser();
   if (oldUser) LocalStorage.setCurrentUser(oldUser);
-  if (oldProjectId) LocalStorage.setProjectId(oldProjectId);
+  LocalStorage.setProjectId(oldProjectId);
 });
 
 describe("Test GoalsActions", () => {
