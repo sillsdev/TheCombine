@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import { Project, WritingSystem } from "../../../types/project";
 import {
   Translate,
@@ -23,7 +23,7 @@ class ProjectLanguage extends React.Component<
 
   getAnalysisLang() {
     let analysisLang: WritingSystem = this.props.project
-      .vernacularWritingSystem;
+      .analysisWritingSystems[0];
 
     return analysisLang;
   }
@@ -40,16 +40,48 @@ class ProjectLanguage extends React.Component<
         <Typography>
           <Translate id="projectSettings.language.vernacular" />
           {": "}
-          {this.getVernLang().name}
-          {this.getVernLang().bcp47}
-          {this.getVernLang().font}
+          <Grid container spacing={1}>
+            <Grid item>
+              <Translate id="projectSettings.language.name" />
+              {": "}
+              {this.getVernLang().name} {", "}
+            </Grid>
+            <Grid item>
+              <Translate id="projectSettings.language.bcp47" />
+              {": "}
+              {this.getVernLang().bcp47}
+              {", "}
+            </Grid>
+            <Grid item>
+              <Translate id="projectSettings.language.font" />
+              {": "}
+              {this.getVernLang().font}
+            </Grid>
+          </Grid>
         </Typography>
-        <Typography>
+        <Typography style={{ marginTop: 10 }}>
           <Translate id="projectSettings.language.analysis" />
           {": "}
-          {this.getAnalysisLang().name}
-          {this.getAnalysisLang().bcp47}
-          {this.getAnalysisLang().font}
+          <Grid container spacing={1}>
+            <Grid container spacing={1}>
+              <Grid item>
+                <Translate id="projectSettings.language.name" />
+                {": "}
+                {this.getAnalysisLang().name} {", "}
+              </Grid>
+              <Grid item>
+                <Translate id="projectSettings.language.bcp47" />
+                {": "}
+                {this.getAnalysisLang().bcp47}
+                {", "}
+              </Grid>
+              <Grid item>
+                <Translate id="projectSettings.language.font" />
+                {": "}
+                {this.getAnalysisLang().font}
+              </Grid>
+            </Grid>
+          </Grid>
         </Typography>
       </React.Fragment>
     );

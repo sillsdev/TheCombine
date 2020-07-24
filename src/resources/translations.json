@@ -253,7 +253,10 @@
         "Interface Language",
         "Lenguaje de interfaz",
         "Langue de l'interface"
-      ]
+      ],
+      "bcp47": ["bcp47", "bcp47", "bcp47"],
+      "name": ["name", "Nom", null],
+      "font": ["font", null, null]
     },
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
     "projectList": ["Projects", "Proyectos", "Projets"],
