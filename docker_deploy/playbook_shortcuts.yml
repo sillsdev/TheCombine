@@ -24,18 +24,7 @@
   gather_facts: yes
   become: no
 
-  vars:
-    - alias_file: "{{ ansible_env.HOME }}/.bash_aliases"
-    - sudo_cmd: "{{ 'sudo ' if ansible_env.USER != 'root' else '' }}"
-
-  vars_files:
-    - vars/config_common.yml
-
   tasks:
-    - name: DEBUG - do we sudo?
-      debug:
-        var: sudo_cmd
-
     - name: Add combine aliases
       import_role:
         name: combine_shortcuts
