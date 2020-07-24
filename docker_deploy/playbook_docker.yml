@@ -34,3 +34,9 @@
         name: combine_containers
       tags:
         - docker_config
+
+    - name: install shortcuts for root
+      import_role:
+        name: combine_shortcuts
+      tags:
+        shortcuts
