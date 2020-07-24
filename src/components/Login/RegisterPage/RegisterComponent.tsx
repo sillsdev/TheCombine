@@ -23,7 +23,7 @@ import { passwordRequirements, usernameRequirements } from "../../../utilities";
 export interface RegisterDispatchProps {
   register?: (
     name: string,
-    user: string,
+    username: string,
     email: string,
     password: string
   ) => void;
@@ -38,15 +38,15 @@ export interface RegisterStateProps {
 
 interface RegisterState {
   name: string;
-  user: string;
+  username: string;
   password: string;
   confirmPassword: string;
   email: string;
   error: {
-    password: boolean;
-    user: boolean;
-    confirmPassword: boolean;
     name: boolean;
+    username: boolean;
+    password: boolean;
+    confirmPassword: boolean;
     email: boolean;
   };
 }
@@ -61,15 +61,15 @@ export class Register extends React.Component<
     super(props);
     this.state = {
       name: "",
-      user: "",
+      username: "",
       password: "",
       confirmPassword: "",
       email: "",
       error: {
-        password: false,
-        user: false,
-        confirmPassword: false,
         name: false,
+        username: false,
+        password: false,
+        confirmPassword: false,
         email: false,
       },
     };
@@ -97,7 +97,7 @@ export class Register extends React.Component<
   async checkUsername(username: string) {
     let usernameTaken = await isUsernameTaken(username);
     if (usernameTaken) {
-      this.setState({ error: { ...this.state.error, user: true } });
+      this.setState({ error: { ...this.state.error, username: true } });
     }
   }
 
@@ -111,29 +111,29 @@ export class Register extends React.Component<
   register(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let name = this.state.name.trim();
-    let user = this.state.user.trim();
-    let email = this.state.email.trim();
+    let username = this.state.username.trim();
     let pass = this.state.password.trim();
     let confPass = this.state.confirmPassword.trim();
+    let email = this.state.email.trim();
 
     // error checking
     let error = { ...this.state.error };
     error.name = name === "";
+    error.username = !usernameRequirements(username);
     error.password = !passwordRequirements(pass);
-    error.user = !usernameRequirements(user);
     error.confirmPassword = pass !== confPass;
     error.email = email === "";
 
     if (
       error.name ||
+      error.username ||
       error.password ||
-      error.user ||
       error.confirmPassword ||
       error.email
     ) {
       this.setState({ error });
     } else if (this.props.register) {
-      this.props.register(name, user, email, pass);
+      this.props.register(name, username, email, pass);
     }
   }
 
@@ -182,12 +182,12 @@ export class Register extends React.Component<
                 required
                 autoComplete="username"
                 label={<Translate id="login.username" />}
-                value={this.state.user}
-                onChange={(e) => this.updateField(e, "user")}
-                onBlur={() => this.checkUsername(this.state.user)}
-                error={this.state.error["user"]}
+                value={this.state.username}
+                onChange={(e) => this.updateField(e, "username")}
+                onBlur={() => this.checkUsername(this.state.username)}
+                error={this.state.error["username"]}
                 helperText={
-                  this.state.error["user"] ? (
+                  this.state.error["username"] ? (
                     <Translate id="login.usernameInvalid" />
                   ) : (
                     <Translate id="login.usernameRequirements" />

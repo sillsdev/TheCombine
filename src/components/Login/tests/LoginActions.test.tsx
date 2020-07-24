@@ -1,29 +1,32 @@
-import * as action from "../LoginActions";
-import * as reducer from "../LoginReducer";
-import * as rootAction from "../../../rootActions";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import * as LocalStorage from "../../../backend/localStorage";
+import * as rootAction from "../../../rootActions";
+import { User } from "../../../types/user";
+import * as action from "../LoginActions";
+import * as reducer from "../LoginReducer";
+
 const createMockStore = configureMockStore([thunk]);
 
-const user = { user: "testUser", password: "testPass" };
+const mockUser: User = new User("testName", "testUsername", "testPassword");
 
 describe("LoginAction Tests", () => {
   let mockState: reducer.LoginState = reducer.defaultState;
 
   let loginAttempt: action.UserAction = {
     type: action.LOGIN_ATTEMPT,
-    payload: { user: user.user },
+    payload: { username: mockUser.username },
   };
 
   let loginSuccess: action.UserAction = {
     type: action.LOGIN_SUCCESS,
-    payload: { user: user.user },
+    payload: { username: mockUser.username },
   };
 
   let logout: action.UserAction = {
     type: action.LOGOUT,
-    payload: { user: user.user },
+    payload: { username: mockUser.username },
   };
 
   let reset: rootAction.StoreAction = {
@@ -32,22 +35,22 @@ describe("LoginAction Tests", () => {
 
   let registerAttempt: action.UserAction = {
     type: action.REGISTER_ATTEMPT,
-    payload: { user: user.user },
+    payload: { username: mockUser.username },
   };
 
   let registerFailure: action.UserAction = {
     type: action.REGISTER_FAILURE,
-    payload: { user: user.user },
+    payload: { username: mockUser.username },
   };
 
   test("register returns correct value", () => {
-    expect(action.registerAttempt(user.user)).toEqual(registerAttempt);
+    expect(action.registerAttempt(mockUser.username)).toEqual(registerAttempt);
   });
 
   test("asyncLogin correctly affects state", () => {
     const mockStore = createMockStore(mockState);
     const mockDispatch = mockStore.dispatch<any>(
-      action.asyncLogin(user.user, user.password)
+      action.asyncLogin(mockUser.username, mockUser.password)
     );
 
     mockDispatch
@@ -63,7 +66,12 @@ describe("LoginAction Tests", () => {
   test("asyncRegister correctly affects state", () => {
     const mockStore = createMockStore(mockState);
     const mockDispatch = mockStore.dispatch<any>(
-      action.asyncRegister("name", user.user, "", user.password)
+      action.asyncRegister(
+        mockUser.name,
+        mockUser.username,
+        mockUser.email,
+        mockUser.password
+      )
     );
 
     mockDispatch
@@ -106,14 +114,14 @@ describe("LoginAction Tests", () => {
   test("loginReset returns correct value", () => {
     expect(action.loginReset()).toEqual({
       type: action.LOGIN_RESET,
-      payload: { user: "" },
+      payload: { username: "" },
     });
   });
 
   test("registerReset returns correct value", () => {
     expect(action.registerReset()).toEqual({
       type: action.REGISTER_RESET,
-      payload: { user: "" },
+      payload: { username: "" },
     });
   });
 
@@ -122,11 +130,11 @@ describe("LoginAction Tests", () => {
   });
 
   test("logout creates a proper action", () => {
-    localStorage.setItem("user", user.user);
+    LocalStorage.setCurrentUser(mockUser);
     const mockStore = createMockStore(mockState);
     mockStore.dispatch<any>(action.logoutAndResetStore());
     expect(mockStore.getActions()).toEqual([logout, reset]);
-    expect(localStorage.getItem("user")).toBe(null);
+    expect(LocalStorage.getCurrentUser()).toBe(null);
   });
 });
 
@@ -134,8 +142,8 @@ function testActionCreatorAgainst(
   action: (name: string) => action.UserAction,
   type: action.LoginType
 ) {
-  expect(action(user.user)).toEqual({
+  expect(action(mockUser.username)).toEqual({
     type: type,
-    payload: { user: user.user },
+    payload: { username: mockUser.username },
   });
 }

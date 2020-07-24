@@ -1,19 +1,19 @@
+import { StoreAction, StoreActions } from "../../rootActions";
 import {
-  UserAction,
   LOGIN_ATTEMPT,
   LOGIN_FAILURE,
-  LOGIN_SUCCESS,
   LOGIN_RESET,
-  REGISTER_FAILURE,
-  REGISTER_ATTEMPT,
-  REGISTER_SUCCESS,
-  REGISTER_RESET,
+  LOGIN_SUCCESS,
   LOGOUT,
+  REGISTER_ATTEMPT,
+  REGISTER_FAILURE,
+  REGISTER_RESET,
+  REGISTER_SUCCESS,
+  UserAction,
 } from "./LoginActions";
-import { StoreAction, StoreActions } from "../../rootActions";
 
 export interface LoginState {
-  user: string;
+  username: string;
   success: boolean;
   loginAttempt: boolean;
   loginFailure: boolean;
@@ -23,7 +23,7 @@ export interface LoginState {
 }
 
 export const defaultState: LoginState = {
-  user: "",
+  username: "",
   success: false,
   loginAttempt: false,
   loginFailure: false,
@@ -40,7 +40,7 @@ export const loginReducer = (
     case LOGIN_ATTEMPT:
       return {
         ...state,
-        user: action.payload.user,
+        username: action.payload.username,
         success: false,
         loginAttempt: true,
         loginFailure: false,
@@ -48,7 +48,7 @@ export const loginReducer = (
     case LOGIN_FAILURE:
       return {
         ...state,
-        user: action.payload.user,
+        username: action.payload.username,
         success: false,
         loginAttempt: false,
         loginFailure: true,
@@ -56,13 +56,13 @@ export const loginReducer = (
     case LOGIN_SUCCESS:
       return {
         ...state,
-        user: action.payload.user,
+        username: action.payload.username,
         success: true,
       };
     case REGISTER_ATTEMPT:
       return {
         ...state,
-        user: action.payload.user,
+        username: action.payload.username,
         registerAttempt: true,
         registerSuccess: false,
         registerFailure: "",
@@ -70,7 +70,7 @@ export const loginReducer = (
     case REGISTER_SUCCESS:
       return {
         ...state,
-        user: action.payload.user,
+        username: action.payload.username,
         registerAttempt: false,
         registerSuccess: true,
       };
@@ -79,7 +79,7 @@ export const loginReducer = (
         ...state,
         registerAttempt: false,
         registerSuccess: false,
-        registerFailure: action.payload.user,
+        registerFailure: action.payload.username,
       };
     case LOGIN_RESET:
     case LOGOUT:

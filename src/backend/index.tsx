@@ -21,7 +21,7 @@ const backendServer = axios.create({
 backendServer.interceptors.response.use(
   (resp) => {
     if (resp.data.__UpdatedUser) {
-      localStorage.setItem("user", JSON.stringify(resp.data.__UpdatedUser));
+      LocalStorage.setCurrentUser(resp.data.__UpdatedUser);
     }
     delete resp.data.__UpdatedUser;
     return resp;
@@ -163,13 +163,13 @@ export function isEmailTaken(emailAddress: string): Promise<boolean> {
 export async function authenticateUser(
   username: string,
   password: string
-): Promise<string> {
+): Promise<User> {
   let resp = await backendServer.post(
     `users/authenticate`,
     { Username: username, Password: password },
     { headers: authHeader() }
   );
-  return JSON.stringify(resp.data);
+  return resp.data;
 }
 
 export async function getAllUsers(): Promise<User[]> {

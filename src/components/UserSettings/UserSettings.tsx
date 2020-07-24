@@ -1,9 +1,3 @@
-import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
 import {
   Avatar,
   Button,
@@ -18,14 +12,20 @@ import {
   Typography,
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
+import React from "react";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 
-import { User } from "../../types/user";
-import AvatarUpload from "./AvatarUpload";
-import AppBarComponent from "../AppBar/AppBarComponent";
 import { avatarSrc, getUser, updateUser } from "../../backend";
-import theme from "../../types/theme";
-import { getCurrentUser } from "../../backend/localStorage";
+import { getCurrentUser, setCurrentUser } from "../../backend/localStorage";
 import { CurrentTab } from "../../types/currentTab";
+import theme from "../../types/theme";
+import { User } from "../../types/user";
+import AppBarComponent from "../AppBar/AppBarComponent";
+import AvatarUpload from "./AvatarUpload";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   return (
@@ -237,10 +237,9 @@ export default withLocalize(UserSettings);
 
 /** Update user in localstorage with user from backend */
 export async function updateCurrentUser() {
-  const userString = localStorage.getItem("user");
-  const user: User = userString ? JSON.parse(userString) : null;
+  const user = getCurrentUser();
   if (user) {
     const updatedUser = await getUser(user.id);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setCurrentUser(updatedUser);
   }
 }

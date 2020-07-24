@@ -6,8 +6,8 @@ import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
 import {
-  MergeTreeActions,
   MergeTreeAction,
+  MergeTreeActions,
 } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
 import { goalDataMock } from "../../../goals/MergeDupGoal/MergeDupStep/tests/MockMergeDupData";
 import { ReviewEntries } from "../../../goals/ReviewEntries/ReviewEntries";
@@ -54,7 +54,7 @@ jest.mock("../../../backend", () => {
 // inside of beforeAll()
 let mockGoalData: MergeDupData;
 
-let oldUser: string | null;
+let oldUser: User | null;
 let oldProjectId: string | null;
 const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
@@ -67,8 +67,8 @@ const createMockStore = configureMockStore([thunk]);
 let mockStore: MockStoreEnhanced<unknown, {}>;
 
 beforeAll(() => {
-  oldUser = localStorage.getItem("user");
-  oldProjectId = localStorage.getItem("projectId");
+  oldUser = LocalStorage.getCurrentUser();
+  oldProjectId = LocalStorage.getProjectId();
   mockGoalData = goalDataMock;
 
   const mockStoreState = {
@@ -87,8 +87,8 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("projectId");
+  LocalStorage.removeCurrentUser();
+  LocalStorage.removeProjectId();
 });
 
 afterEach(() => {
@@ -96,8 +96,8 @@ afterEach(() => {
 });
 
 afterAll(() => {
-  if (oldUser) localStorage.setItem("user", oldUser);
-  if (oldProjectId) localStorage.setItem("projectId", oldProjectId);
+  if (oldUser) LocalStorage.setCurrentUser(oldUser);
+  if (oldProjectId) LocalStorage.setProjectId(oldProjectId);
 });
 
 describe("Test GoalsActions", () => {
@@ -139,8 +139,8 @@ describe("Test GoalsActions", () => {
   });
 
   it("should dispatch an action to load a user edit", async () => {
-    localStorage.setItem("user", JSON.stringify(mockUser));
-    localStorage.setItem("projectId", mockProjectId);
+    LocalStorage.setCurrentUser(mockUser);
+    LocalStorage.setProjectId(mockProjectId);
 
     await mockStore
       .dispatch<any>(actions.asyncGetUserEdits())
@@ -158,8 +158,8 @@ describe("Test GoalsActions", () => {
   });
 
   it("should not dispatch any actions when creating a new user edit", async () => {
-    localStorage.setItem("user", JSON.stringify(mockUser));
-    localStorage.removeItem("projectId");
+    LocalStorage.setCurrentUser(mockUser);
+
     await mockStore
       .dispatch<any>(actions.asyncGetUserEdits())
       .then(() => {})
@@ -171,10 +171,10 @@ describe("Test GoalsActions", () => {
   });
 
   it("should create an async action to add a goal to history", async () => {
-    const goal: Goal = new CreateCharInv();
-    localStorage.setItem("projectId", mockProjectId);
-    localStorage.setItem("user", JSON.stringify(mockUser));
+    LocalStorage.setCurrentUser(mockUser);
+    LocalStorage.setProjectId(mockProjectId);
 
+    const goal: Goal = new CreateCharInv();
     await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
 
     let addGoalToHistory: actions.AddGoalToHistoryAction = {
@@ -183,15 +183,6 @@ describe("Test GoalsActions", () => {
     };
 
     expect(mockStore.getActions()).toEqual([addGoalToHistory]);
-  });
-
-  it("should return a user", () => {
-    localStorage.setItem("user", JSON.stringify(mockUser));
-    expect(LocalStorage.getCurrentUser()).toEqual(mockUser);
-  });
-
-  it("should return undefined when there is no user", () => {
-    expect(LocalStorage.getCurrentUser()).toEqual(null);
   });
 
   it("should dispatch UPDATE_GOAL and SET_DATA", async () => {
@@ -310,14 +301,12 @@ describe("Test GoalsActions", () => {
   });
 
   it("should return a userEditId", () => {
-    localStorage.setItem("user", JSON.stringify(mockUser));
-    localStorage.setItem("projectId", mockProjectId);
+    LocalStorage.setProjectId(mockProjectId);
+
     expect(actions.getUserEditId(mockUser)).toEqual(mockUserEditId);
   });
 
   it("should return undefined when a user edit doesn't exist", () => {
-    let user: User = new User("", "", "");
-    localStorage.setItem("user", JSON.stringify(user));
     expect(actions.getUserEditId(mockUser)).toEqual(undefined);
   });
 

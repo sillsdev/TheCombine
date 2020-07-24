@@ -3,6 +3,7 @@ import history from "../../history";
 import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 import * as backend from "../../backend";
+import * as LocalStorage from "../../backend/localStorage";
 import { User } from "../../types/user";
 import { StoreAction, reset } from "../../rootActions";
 
@@ -34,7 +35,7 @@ export const REGISTER_RESET = "REGISTER_RESET";
 export type REGISTER_RESET = typeof REGISTER_RESET;
 
 export interface LoginData {
-  user: string;
+  username: string;
   password?: string;
 }
 
@@ -57,79 +58,79 @@ export interface UserAction {
 }
 
 //thunk action creator
-export function asyncLogin(user: string, password: string) {
+export function asyncLogin(username: string, password: string) {
   return async (dispatch: Dispatch<UserAction>, getState: any) => {
-    dispatch(loginAttempt(user));
+    dispatch(loginAttempt(username));
     //attempt to login with server
     await backend
-      .authenticateUser(user, password)
-      .then((res: string) => {
-        localStorage.setItem("user", res); //Store tokens
-        dispatch(loginSuccess(user));
+      .authenticateUser(username, password)
+      .then((res: User) => {
+        LocalStorage.setCurrentUser(res); //Store tokens
+        dispatch(loginSuccess(username));
         history.push("/");
       })
       .catch((err) => {
-        dispatch(loginFailure(user));
+        dispatch(loginFailure(username));
       });
   };
 }
 
-export function loginAttempt(user: string): UserAction {
+export function loginAttempt(username: string): UserAction {
   return {
     type: LOGIN_ATTEMPT,
-    payload: { user },
+    payload: { username },
   };
 }
 
-export function loginFailure(user: string): UserAction {
+export function loginFailure(username: string): UserAction {
   return {
     type: LOGIN_FAILURE,
-    payload: { user },
+    payload: { username },
   };
 }
 
-export function loginSuccess(user: string): UserAction {
+export function loginSuccess(username: string): UserAction {
   return {
     type: LOGIN_SUCCESS,
-    payload: { user },
+    payload: { username },
   };
 }
 
 export function loginReset(): UserAction {
   return {
     type: LOGIN_RESET,
-    payload: { user: "" },
+    payload: { username: "" },
   };
 }
 
 export function logoutAndResetStore() {
   return (dispatch: Dispatch<UserAction | StoreAction>) => {
-    const user = localStorage.getItem("user");
+    const user = LocalStorage.getCurrentUser();
     if (user) {
-      dispatch(logout(user));
+      dispatch(logout(user.username));
     }
     dispatch(reset());
-    localStorage.removeItem("user");
+    LocalStorage.removeCurrentUser();
   };
 }
 
 export function asyncRegister(
   name: string,
-  user: string,
+  username: string,
   email: string,
   password: string
 ) {
   return async (
     dispatch: Dispatch<UserAction | ThunkAction<any, {}, {}, AnyAction>>
   ) => {
-    dispatch(registerAttempt(user));
+    dispatch(registerAttempt(username));
     // Create new user
-    let newUser = new User(name, user, password);
+    let newUser = new User(name, username, password);
     newUser.email = email;
     await backend
       .addUser(newUser)
       .then((res) => {
-        dispatch(registerSuccess(user));
+        dispatch(registerSuccess(username));
         setTimeout(() => {
           dispatch(registerReset());
           history.push("/login");
@@ -142,37 +143,37 @@ export function asyncRegister(
       });
   };
 }
-export function registerAttempt(user: string): UserAction {
+export function registerAttempt(username: string): UserAction {
   return {
     type: REGISTER_ATTEMPT,
-    payload: { user },
+    payload: { username },
   };
 }
 
-export function registerSuccess(user: string): UserAction {
+export function registerSuccess(username: string): UserAction {
   return {
     type: REGISTER_SUCCESS,
-    payload: { user },
+    payload: { username },
   };
 }
 
 export function registerFailure(errorMessage: string): UserAction {
   return {
     type: REGISTER_FAILURE,
-    payload: { user: errorMessage },
+    payload: { username: errorMessage },
   };
 }
 
 export function registerReset(): UserAction {
   return {
     type: REGISTER_RESET,
-    payload: { user: "" },
+    payload: { username: "" },
   };
 }
 
-function logout(user: string): UserAction {
+function logout(username: string): UserAction {
   return {
     type: LOGOUT,
-    payload: { user: user },
+    payload: { username },
   };
 }

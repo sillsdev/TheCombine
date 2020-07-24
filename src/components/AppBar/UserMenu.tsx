@@ -34,9 +34,8 @@ export default function UserMenu() {
   getAvatar();
 
   // Determine if the user is an Admin user.
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
-  const isAdmin: boolean = user && user.isAdmin;
+  const user = getCurrentUser();
+  const isAdmin: boolean | null = user && user.isAdmin;
 
   return (
     <div>

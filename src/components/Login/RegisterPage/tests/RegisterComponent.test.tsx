@@ -103,19 +103,19 @@ describe("Testing register component", () => {
 
 function testRegister(
   name: string,
-  user: string,
+  username: string,
   password: string,
   confirmPassword: string,
   email: string,
   error_name: boolean,
-  error_user: boolean,
+  error_username: boolean,
   error_password: boolean,
   error_confirmPassword: boolean,
   error_email: boolean
 ) {
   registerHandle.instance.setState({
     name,
-    user,
+    username,
     password,
     confirmPassword,
     email,
@@ -123,7 +123,7 @@ function testRegister(
   registerHandle.instance.register(MOCK_EVENT);
   expect(registerHandle.instance.state.error).toEqual({
     name: error_name,
-    user: error_user,
+    username: error_username,
     password: error_password,
     confirmPassword: error_confirmPassword,
     email: error_email,

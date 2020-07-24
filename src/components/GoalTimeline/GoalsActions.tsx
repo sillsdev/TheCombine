@@ -1,28 +1,28 @@
 import { Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { Goal, GoalType } from "../../types/goals";
-import { ActionWithPayload } from "../../types/mockAction";
 import * as Backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
-import history from "../../history";
-import { User } from "../../types/user";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
-import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
-import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
-import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
-import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
-import { Edit } from "../../types/userEdit";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { StoreState } from "../../types";
-import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   MergeTreeAction,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
+import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
+import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
+import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
+import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
+import history from "../../history";
+import { StoreState } from "../../types";
+import { Goal, GoalType } from "../../types/goals";
+import { ActionWithPayload } from "../../types/mockAction";
+import { User } from "../../types/user";
+import { Edit } from "../../types/userEdit";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -138,9 +138,7 @@ export function loadGoalData(goal: Goal) {
 
         let newGroups = [];
 
-        let blacklist: Hash<boolean> = JSON.parse(
-          localStorage.getItem("mergedups_blacklist") || "{}"
-        );
+        let blacklist = LocalStorage.getMergeDupsBlacklist();
 
         for (let group of groups) {
           let newGroup = [];
@@ -217,33 +215,26 @@ function getUserEditIdFromProjectId(
 }
 
 function updateUserIfExists(projectId: string, userEditId: string): User {
-  let currentUserString = localStorage.getItem("user");
+  let currentUser = LocalStorage.getCurrentUser();
   let updatedUser: User = new User("", "", "");
-  if (currentUserString) {
-    let updatedUserString = updateUserWithUserEditId(
-      currentUserString,
+  if (currentUser) {
+    let updatedUser = updateUserWithUserEditId(
+      currentUser,
       projectId,
       userEditId
     );
-    localStorage.setItem("user", updatedUserString);
-    updatedUser = JSON.parse(updatedUserString);
+    LocalStorage.setCurrentUser(updatedUser);
   }
   return updatedUser;
 }
 
 function updateUserWithUserEditId(
-  userObjectString: string,
+  user: User,
   projectId: string,
   userEditId: string
-): string {
-  let currentUserObject: User = JSON.parse(userObjectString);
-  currentUserObject = addProjectToWorkedProjects(
-    currentUserObject,
-    projectId,
-    userEditId
-  );
-  let updatedUserString = JSON.stringify(currentUserObject);
-  return updatedUserString;
+): User {
+  let updatedUser = addProjectToWorkedProjects(user, projectId, userEditId);
+  return updatedUser;
 }
 
 function addProjectToWorkedProjects(

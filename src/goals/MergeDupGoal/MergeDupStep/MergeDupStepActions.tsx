@@ -393,11 +393,9 @@ export function mergeAll() {
       getState().mergeDuplicateGoal.mergeTreeState.data.words
     );
     let hash = wordIDs.sort().reduce((val, acc) => `${acc}:${val}`, "");
-    let blacklist: Hash<boolean> = JSON.parse(
-      localStorage.getItem("mergedups_blacklist") || "{}"
-    );
+    let blacklist = LocalStorage.getMergeDupsBlacklist();
     blacklist[hash] = true;
-    localStorage.setItem("mergedups_blacklist", JSON.stringify(blacklist));
+    LocalStorage.setMergeDupsBlacklist(blacklist);
     // merge words
     let mapping: Hash<{ srcWord: string; order: number }> = {};
     const words = Object.keys(

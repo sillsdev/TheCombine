@@ -12,12 +12,12 @@ import {
 } from "../LoginActions";
 import { StoreActions, StoreAction } from "../../../rootActions";
 
-const user = { user: "testUser", password: "testPass" };
+const user = { username: "testUser", password: "testPass" };
 
 describe("LoginReducer Tests", () => {
   let dummyState: reducer.LoginState = {
     ...reducer.defaultState,
-    user: user.user,
+    username: user.username,
     success: false,
   };
 
@@ -29,7 +29,7 @@ describe("LoginReducer Tests", () => {
     registerFailure: "",
     registerSuccess: false,
     success: false,
-    user: "testUser",
+    username: "testUser",
   };
 
   let action: UserAction = {
@@ -53,7 +53,7 @@ describe("LoginReducer Tests", () => {
       ...reducer.defaultState,
       loginAttempt: false,
       loginFailure: true,
-      user: user.user,
+      username: user.username,
       success: false,
     };
 
@@ -69,7 +69,7 @@ describe("LoginReducer Tests", () => {
       registerFailure: "",
       registerSuccess: false,
       success: false,
-      user: "testUser",
+      username: "testUser",
     };
     action.type = REGISTER_ATTEMPT;
 
@@ -79,7 +79,7 @@ describe("LoginReducer Tests", () => {
   test("default state, expecting login success", () => {
     let loginSuccessState: reducer.LoginState = {
       ...dummyState,
-      user: user.user,
+      username: user.username,
       success: true,
     };
     action.type = LOGIN_SUCCESS;
@@ -90,7 +90,7 @@ describe("LoginReducer Tests", () => {
   test("default state, expecting register success", () => {
     let registerSuccessState: reducer.LoginState = {
       ...dummyState,
-      user: user.user,
+      username: user.username,
       registerAttempt: false,
       registerSuccess: true,
     };
