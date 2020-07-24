@@ -16,7 +16,7 @@ import {
 } from "../ExistingEntry";
 
 jest.mock("../../../../Pronunciations/Recorder");
-jest.mock("../../GlossEntry/GlossEntry");
+jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");
 jest.mock("../DeleteEntry/DeleteEntry");
 jest.mock("../ExistingVernacular/ExistingVernacular");
 
@@ -33,8 +33,8 @@ describe("Tests ExistingEntry", () => {
             existingWords={[]}
             entryIndex={0}
             entry={mockWord}
-            updateWord={(word: Word) => null}
-            removeWord={(word: Word) => null}
+            updateWord={() => null}
+            removeWord={() => null}
             semanticDomain={{ name: "", id: "" }}
             displayDuplicates={true}
             toggleDisplayDuplicates={() => null}

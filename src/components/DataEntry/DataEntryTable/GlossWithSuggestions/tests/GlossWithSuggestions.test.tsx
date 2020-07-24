@@ -1,16 +1,16 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import LocalizedGlossEntry from "../GlossEntry";
+import LocalizedGlossWithSuggestions from "../GlossWithSuggestions";
 
-describe("Tests GlossEntry", () => {
+describe("Tests GlossWithSuggestions", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedGlossEntry
+        <LocalizedGlossWithSuggestions
           gloss={""}
           glossInput={React.createRef<HTMLDivElement>()}
-          updateGlossField={(newValue: string) => null}
+          updateGlossField={() => null}
         />
       );
     });

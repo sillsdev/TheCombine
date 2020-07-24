@@ -9,7 +9,7 @@ import {
 
 import SpellChecker from "../../spellChecker";
 
-interface GlossEntryProps {
+interface GlossWithSuggestionsProps {
   gloss: string;
   glossInput?: React.RefObject<HTMLDivElement>;
   updateGlossField: (newValue: string) => void;
@@ -19,8 +19,8 @@ interface GlossEntryProps {
 /**
  * An editable gloss field that suggests spellings when current word isn't recognized.
  */
-export class GlossEntry extends React.Component<
-  GlossEntryProps & LocalizeContextProps
+export class GlossWithSuggestions extends React.Component<
+  GlossWithSuggestionsProps & LocalizeContextProps
 > {
   readonly maxSuggestions = 5;
 
@@ -33,18 +33,19 @@ export class GlossEntry extends React.Component<
             ? options
             : options.slice(0, this.maxSuggestions)
         }
+        // freeSolo allows use of a typed entry not available as a drop-down option
         freeSolo
         options={this.spellChecker.getSpellingSuggestions(this.props.gloss)}
         value={this.props.gloss}
         onBlur={() => {
           if (this.props.onBlur) this.props.onBlur(this.props.gloss);
         }}
-        onChange={(event, newValue) => {
+        onChange={(e, newValue) => {
           const newText = newValue ? (newValue as string) : "";
           this.props.updateGlossField(newText);
         }}
         inputValue={this.props.gloss}
-        onInputChange={(event, newInputValue) => {
+        onInputChange={(e, newInputValue) => {
           this.props.updateGlossField(newInputValue);
         }}
         renderInput={(params) => (
@@ -61,4 +62,4 @@ export class GlossEntry extends React.Component<
   }
 }
 
-export default withLocalize(GlossEntry);
+export default withLocalize(GlossWithSuggestions);

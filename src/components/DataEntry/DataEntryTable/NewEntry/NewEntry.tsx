@@ -11,7 +11,7 @@ import {
   addSenseToWord,
   duplicatesFromFrontier,
 } from "../ExistingEntry/ExistingEntry";
-import GlossEntry from "../GlossEntry/GlossEntry";
+import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import NewVernEntry from "./NewVernEntry/NewVernEntry";
 
 interface NewEntryProps {
@@ -263,7 +263,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               position: "relative",
             }}
           >
-            <GlossEntry
+            <GlossWithSuggestions
               gloss={this.state.activeGloss}
               glossInput={this.glossInput}
               updateGlossField={(newValue: string) =>

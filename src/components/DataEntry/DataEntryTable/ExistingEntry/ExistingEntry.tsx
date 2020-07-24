@@ -14,7 +14,7 @@ import {
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
-import GlossEntry from "../GlossEntry/GlossEntry";
+import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
 import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
 
@@ -350,7 +350,7 @@ export class ExistingEntry extends React.Component<
               position: "relative",
             }}
           >
-            <GlossEntry
+            <GlossWithSuggestions
               gloss={
                 this.state.existingEntry.senses &&
                 this.state.existingEntry.senses[0] &&
