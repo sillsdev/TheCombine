@@ -217,13 +217,34 @@ namespace BackendFramework.Models
                 Font = Font.Clone() as string
             };
         }
-        public bool Equals(WritingSystem ws)
+        public override bool Equals(object obj)
         {
-            if (ws != null && Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font)
+            if ((obj == null) || !GetType().Equals(obj.GetType()))
             {
-                return true;
+                return false;
             }
-            return false;
+            else
+            {
+                var ws = obj as WritingSystem;
+                if (ws != null && Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Bcp47, Font);
+        }
+
+        override public String ToString()
+        {
+            return String.Format("<name: {0}, bcp47: {1}, font: {2}>");
         }
     }
 
