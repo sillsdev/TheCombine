@@ -21,7 +21,7 @@ export interface CreateProjectProps {
   asyncCreateProject: (
     name: string,
     vernacularLanguage: WritingSystem,
-    analysisLanguage: WritingSystem,
+    analysisLanguages: WritingSystem[],
     languageData: File
   ) => void;
   reset: () => void;
@@ -34,7 +34,7 @@ interface CreateProjectState {
   name: string;
   error: { name: boolean; vernLanguage: boolean; analysisLanguage: boolean };
   vernLanguage: WritingSystem;
-  analysisLanguage: WritingSystem;
+  analysisLanguages: WritingSystem[];
   languageData?: File;
   fileName?: string;
 }
@@ -49,7 +49,7 @@ class CreateProject extends React.Component<
       name: "",
       error: { name: false, vernLanguage: false, analysisLanguage: false },
       vernLanguage: { name: "", bcp47: "und", font: "" },
-      analysisLanguage: { name: "", bcp47: "und", font: "" },
+      analysisLanguages: [{ name: "", bcp47: "und", font: "" }],
     };
     this.setVernBcp47 = this.setVernBcp47.bind(this);
     this.setVernLgName = this.setVernLgName.bind(this);
@@ -84,25 +84,39 @@ class CreateProject extends React.Component<
 
   setAnalysisBcp47(item: any) {
     if (item) {
-      let tempItem: WritingSystem = this.state.analysisLanguage;
-      tempItem.bcp47 = item;
-      this.setState({ analysisLanguage: tempItem });
+      if (this.state.analysisLanguages[0]) {
+        let tempItem: WritingSystem[] = this.state.analysisLanguages;
+        tempItem[0].bcp47 = item;
+        this.setState({ analysisLanguages: tempItem });
+      } else {
+        let tempItem: WritingSystem[] = [{ name: "", bcp47: "", font: "" }];
+        tempItem[0].bcp47 = item;
+        this.setState({ analysisLanguages: tempItem });
+      }
     }
   }
 
   setAnalysisLgName(item: any) {
-    if (item) {
-      let tempItem: WritingSystem = this.state.analysisLanguage;
-      tempItem.name = item;
-      this.setState({ analysisLanguage: tempItem });
+    if (this.state.analysisLanguages[0]) {
+      let tempItem: WritingSystem[] = this.state.analysisLanguages;
+      tempItem[0].name = item;
+      this.setState({ analysisLanguages: tempItem });
+    } else {
+      let tempItem: WritingSystem[] = [{ name: "", bcp47: "", font: "" }];
+      tempItem[0].name = item;
+      this.setState({ analysisLanguages: tempItem });
     }
   }
 
   setAnalysisFontName(item: any) {
-    if (item) {
-      let tempItem: WritingSystem = this.state.analysisLanguage;
-      tempItem.font = item;
-      this.setState({ analysisLanguage: tempItem });
+    if (this.state.analysisLanguages[0]) {
+      let tempItem: WritingSystem[] = this.state.analysisLanguages;
+      tempItem[0].font = item;
+      this.setState({ analysisLanguages: tempItem });
+    } else {
+      let tempItem: WritingSystem[] = [{ name: "", bcp47: "", font: "" }];
+      tempItem[0].font = item;
+      this.setState({ analysisLanguages: tempItem });
     }
   }
 
@@ -142,7 +156,7 @@ class CreateProject extends React.Component<
 
     const name = this.state.name.trim();
     const vernLang = this.state.vernLanguage;
-    const analysisLang = this.state.analysisLanguage;
+    const analysisLang = this.state.analysisLanguages;
     const languageData = this.state.languageData;
     if (name === "") {
       this.setState({
@@ -152,7 +166,7 @@ class CreateProject extends React.Component<
       this.setState({
         error: { name: false, vernLanguage: true, analysisLanguage: false },
       });
-    } else if (analysisLang.name === "") {
+    } else if (analysisLang[0] && analysisLang[0].name === "") {
       this.setState({
         error: { name: false, vernLanguage: false, analysisLanguage: true },
       });
@@ -160,7 +174,7 @@ class CreateProject extends React.Component<
       this.props.asyncCreateProject(
         name,
         vernLang as WritingSystem,
-        analysisLang as WritingSystem,
+        analysisLang as WritingSystem[],
         languageData as File
       );
     }
@@ -225,11 +239,11 @@ class CreateProject extends React.Component<
               </Grid>
             </Grid>
             <LanguagePicker
-              value={this.state.analysisLanguage.bcp47}
+              value={this.state.analysisLanguages[0].bcp47}
               setCode={this.setAnalysisBcp47}
-              name={this.state.analysisLanguage.name}
+              name={this.state.analysisLanguages[0].bcp47}
               setName={this.setAnalysisLgName}
-              font={this.state.analysisLanguage.font}
+              font={this.state.analysisLanguages[0].bcp47}
               setFont={this.setAnalysisFontName}
               t={languagePickerStrings_en}
             />

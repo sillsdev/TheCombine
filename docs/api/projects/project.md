@@ -41,8 +41,8 @@
 {
     name: String,
     semanticDomains: <a href=words/semanticDomain.md>semanticDomain</a>[],
-    vernacularWritingSystem: String,
-    analysisWritingSystems: String[],
+    vernacularWritingSystem: WritingSystem,
+    analysisWritingSystem: WritingSystem,
     validCharacters: String[],
     rejectedCharacters: String[],
     customFields: <a href=customField.md>CustomField</a>[],

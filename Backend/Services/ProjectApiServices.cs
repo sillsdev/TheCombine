@@ -71,7 +71,7 @@ namespace BackendFramework.Services
                 .Set(x => x.IsActive, project.IsActive)
                 .Set(x => x.SemanticDomains, project.SemanticDomains)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
-                .Set(x => x.AnalysisWritingSystem, project.AnalysisWritingSystem)
+                .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)
                 .Set(x => x.ValidCharacters, project.ValidCharacters)
                 .Set(x => x.RejectedCharacters, project.RejectedCharacters)
                 .Set(x => x.CustomFields, project.CustomFields)

@@ -26,8 +26,8 @@ namespace BackendFramework.Models
         [BsonElement("vernacularWritingSystem")]
         public WritingSystem VernacularWritingSystem { get; set; }
 
-        [BsonElement("analysisWritingSystem")]
-        public WritingSystem AnalysisWritingSystem { get; set; }
+        [BsonElement("analysisWritingSystems")]
+        public List<WritingSystem> AnalysisWritingSystems { get; set; }
 
         [BsonElement("validCharacters")]
         public List<string> ValidCharacters { get; set; }
@@ -57,7 +57,7 @@ namespace BackendFramework.Models
             IsActive = true;
             VernacularWritingSystem = new WritingSystem();
             SemanticDomains = new List<SemanticDomain>();
-            AnalysisWritingSystem = new WritingSystem();
+            AnalysisWritingSystems = new List<WritingSystem>();
             ValidCharacters = new List<string>();
             RejectedCharacters = new List<string>();
             CustomFields = new List<CustomField>();
@@ -72,9 +72,9 @@ namespace BackendFramework.Models
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
                 IsActive = IsActive,
-                VernacularWritingSystem = VernacularWritingSystem.Clone() as WritingSystem,
+                VernacularWritingSystem = VernacularWritingSystem.Clone(),
                 SemanticDomains = new List<SemanticDomain>(),
-                AnalysisWritingSystem = AnalysisWritingSystem.Clone() as WritingSystem,
+                AnalysisWritingSystems = new List<WritingSystem>(),
                 ValidCharacters = new List<string>(),
                 RejectedCharacters = new List<string>(),
                 CustomFields = new List<CustomField>(),
@@ -85,6 +85,10 @@ namespace BackendFramework.Models
             foreach (var sd in SemanticDomains)
             {
                 clone.SemanticDomains.Add(sd.Clone());
+            }
+            foreach (var aw in AnalysisWritingSystems)
+            {
+                clone.AnalysisWritingSystems.Add(aw.Clone());
             }
             foreach (var cs in ValidCharacters)
             {
@@ -120,7 +124,8 @@ namespace BackendFramework.Models
                 other.SemanticDomains.Count == SemanticDomains.Count &&
                 other.SemanticDomains.All(SemanticDomains.Contains) &&
 
-                other.AnalysisWritingSystem.Equals(AnalysisWritingSystem) &&
+                other.AnalysisWritingSystems.Count == AnalysisWritingSystems.Count &&
+                other.AnalysisWritingSystems.All(AnalysisWritingSystems.Contains) &&
 
                 other.ValidCharacters.Count == ValidCharacters.Count &&
                 other.ValidCharacters.All(ValidCharacters.Contains) &&
@@ -159,7 +164,7 @@ namespace BackendFramework.Models
             hash.Add(IsActive);
             hash.Add(SemanticDomains);
             hash.Add(VernacularWritingSystem);
-            hash.Add(AnalysisWritingSystem);
+            hash.Add(AnalysisWritingSystems);
             hash.Add(ValidCharacters);
             hash.Add(RejectedCharacters);
             hash.Add(CustomFields);
@@ -189,6 +194,19 @@ namespace BackendFramework.Models
         public string Name { get; set; }
         public string Bcp47 { get; set; }
         public string Font { get; set; }
+
+        public WritingSystem()
+        {
+            Name = "";
+            Bcp47 = "";
+            Font = "";
+        }
+        public WritingSystem(WritingSystem ws)
+        {
+            Name = ws.Name;
+            Bcp47 = ws.Bcp47;
+            Font = ws.Font;
+        }
 
         public WritingSystem Clone()
         {
@@ -233,7 +251,7 @@ namespace BackendFramework.Models
             SemanticDomains = baseObj.SemanticDomains;
             VernacularWritingSystem = baseObj.VernacularWritingSystem;
             WordFields = baseObj.WordFields;
-            AnalysisWritingSystem = baseObj.AnalysisWritingSystem;
+            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
             CustomFields = baseObj.CustomFields;
             ValidCharacters = baseObj.ValidCharacters;
             AutocompleteSetting = baseObj.AutocompleteSetting;

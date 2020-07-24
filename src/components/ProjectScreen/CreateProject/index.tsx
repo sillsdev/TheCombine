@@ -27,14 +27,14 @@ export function mapDispatchToProps(
     asyncCreateProject: (
       name: string,
       vernacularLanguage: WritingSystem,
-      analysisLanguage: WritingSystem,
+      analysisLanguages: WritingSystem[],
       languageData: File
     ) => {
       dispatch(
         asyncCreateProject(
           name,
           vernacularLanguage,
-          analysisLanguage,
+          analysisLanguages,
           languageData
         )
       );

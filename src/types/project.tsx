@@ -18,7 +18,7 @@ export interface Project {
   semanticDomains: SemanticDomain[];
   userRoles: string;
   vernacularWritingSystem: WritingSystem;
-  analysisWritingSystem: WritingSystem;
+  analysisWritingSystems: WritingSystem[];
   validCharacters: string[];
   rejectedCharacters: string[];
   wordFields: string[];
@@ -36,7 +36,7 @@ export const defaultProject = {
   semanticDomains: [],
   userRoles: "",
   vernacularWritingSystem: { name: "", bcp47: "", font: "" },
-  analysisWritingSystem: { name: "", bcp47: "", font: "" },
+  analysisWritingSystems: [{ name: "", bcp47: "", font: "" }],
   validCharacters: [],
   rejectedCharacters: [],
   customFields: [],
@@ -52,8 +52,18 @@ export function randomProject(): Project {
   let project = { ...defaultProject };
   project.id = randomIntString();
   project.name = randomIntString();
-  project.vernacularWritingSystem = { name: "", bcp47: "", font: "" };
-  project.analysisWritingSystem = { name: "", bcp47: "", font: "" };
+  project.vernacularWritingSystem = {
+    name: randomIntString(),
+    bcp47: randomIntString(),
+    font: randomIntString(),
+  };
+  project.analysisWritingSystems = [
+    {
+      name: randomIntString(),
+      bcp47: randomIntString(),
+      font: randomIntString(),
+    },
+  ];
   project.font = randomIntString();
   project.isActive = Math.random() < 0.5;
   project.words = testWordList();

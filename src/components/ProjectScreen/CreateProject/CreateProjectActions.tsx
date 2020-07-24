@@ -22,7 +22,7 @@ export type RESET = typeof RESET;
 export interface CreateProjectData {
   name: string;
   vernacularLanguage: WritingSystem;
-  analysisLanguage: WritingSystem;
+  analysisLanguages: WritingSystem[];
   languageData?: File;
   errorMsg?: string;
 }
@@ -39,7 +39,7 @@ export interface CreateProjectAction {
 export function asyncCreateProject(
   name: string,
   vernacularLanguage: WritingSystem,
-  analysisLanguage: WritingSystem,
+  analysisLanguages: WritingSystem[],
   languageData?: File
 ) {
   return async (
@@ -49,12 +49,12 @@ export function asyncCreateProject(
       CreateProjectAction | ProjectAction | GoalAction
     >
   ) => {
-    dispatch(inProgress(name, vernacularLanguage, analysisLanguage));
+    dispatch(inProgress(name, vernacularLanguage, analysisLanguages));
     // Create project
     let project: Project = { ...defaultProject };
     project.name = name;
     project.vernacularWritingSystem = vernacularLanguage;
-    project.analysisWritingSystem = analysisLanguage;
+    project.analysisWritingSystems = analysisLanguages;
 
     backend
       .createProject(project)
@@ -68,7 +68,7 @@ export function asyncCreateProject(
               .getProject(createdProject.id)
               .then((res) => {
                 dispatch(setCurrentProject(res));
-                dispatch(success(name, vernacularLanguage, analysisLanguage));
+                dispatch(success(name, vernacularLanguage, analysisLanguages));
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {
                   dispatch(asyncGetUserEdits());
@@ -80,7 +80,7 @@ export function asyncCreateProject(
                   failure(
                     name,
                     vernacularLanguage,
-                    analysisLanguage,
+                    analysisLanguages,
                     err.response.statusText
                   )
                 );
@@ -90,14 +90,14 @@ export function asyncCreateProject(
                   failure(
                     name,
                     vernacularLanguage,
-                    analysisLanguage,
+                    analysisLanguages,
                     err.response.statusText
                   )
                 );
               });
           });
         } else {
-          dispatch(success(name, vernacularLanguage, analysisLanguage));
+          dispatch(success(name, vernacularLanguage, analysisLanguages));
           setTimeout(() => {
             dispatch(asyncGetUserEdits());
             history.push("/project-settings");
@@ -112,7 +112,7 @@ export function asyncCreateProject(
           errorMessage = err.response.statusText;
         }
         dispatch(
-          failure(name, vernacularLanguage, analysisLanguage, errorMessage)
+          failure(name, vernacularLanguage, analysisLanguages, errorMessage)
         );
       });
   };
@@ -121,34 +121,34 @@ export function asyncCreateProject(
 export function inProgress(
   name: string,
   vernacularLanguage: WritingSystem,
-  analysisLanguage: WritingSystem
+  analysisLanguages: WritingSystem[]
 ): CreateProjectAction {
   return {
     type: IN_PROGRESS,
-    payload: { name, vernacularLanguage, analysisLanguage },
+    payload: { name, vernacularLanguage, analysisLanguages },
   };
 }
 
 export function success(
   name: string,
   vernacularLanguage: WritingSystem,
-  analysisLanguage: WritingSystem
+  analysisLanguages: WritingSystem[]
 ): CreateProjectAction {
   return {
     type: SUCCESS,
-    payload: { name, vernacularLanguage, analysisLanguage },
+    payload: { name, vernacularLanguage, analysisLanguages },
   };
 }
 
 export function failure(
   name: string,
   vernacularLanguage: WritingSystem,
-  analysisLanguage: WritingSystem,
+  analysisLanguages: WritingSystem[],
   errorMsg: string = ""
 ): CreateProjectAction {
   return {
     type: FAILURE,
-    payload: { name, errorMsg, vernacularLanguage, analysisLanguage },
+    payload: { name, errorMsg, vernacularLanguage, analysisLanguages },
   };
 }
 
@@ -158,7 +158,7 @@ export function reset(): CreateProjectAction {
     payload: {
       name: "",
       vernacularLanguage: { name: "", bcp47: "", font: "" },
-      analysisLanguage: { name: "", bcp47: "", font: "" },
+      analysisLanguages: [{ name: "", bcp47: "", font: "" }],
     },
   };
 }
