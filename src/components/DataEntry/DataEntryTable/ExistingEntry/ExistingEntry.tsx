@@ -1,7 +1,7 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
 
-import { uploadAudio } from "../../../../backend";
+import { deleteAudio, getWord, uploadAudio } from "../../../../backend";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import theme from "../../../../types/theme";
 import {
@@ -156,15 +156,15 @@ export class ExistingEntry extends React.Component<
     super(props);
 
     let possibleDups = duplicatesFromFrontier(
-      this.props.existingWords,
-      this.props.entry.vernacular,
+      props.existingWords,
+      props.entry.vernacular,
       this.maxDuplicates,
       props.entry.id
     );
     let isDuplicate: boolean = possibleDups.length > 0;
     let duplicateWords: Word[] | undefined;
     if (isDuplicate) {
-      duplicateWords = this.props.existingWords.filter((word) =>
+      duplicateWords = props.existingWords.filter((word) =>
         possibleDups.includes(word.id)
       );
     }
@@ -172,7 +172,7 @@ export class ExistingEntry extends React.Component<
     this.state = {
       displaySpellingSuggestions: false,
       displayDuplicates: false,
-      existingEntry: { ...this.props.entry },
+      existingEntry: { ...props.entry },
       isSpelledCorrectly: true,
       isDuplicate: isDuplicate,
       duplicates: duplicateWords,
@@ -240,6 +240,22 @@ export class ExistingEntry extends React.Component<
         ],
       },
     });
+  }
+
+  // This appears to work but may not cause the parent component (e.g., this.props.entry)
+  // to be updated as needed for other local functionality.
+  async uploadAudio(newAudio: File) {
+    let newWordId = await uploadAudio(this.state.existingEntry.id, newAudio);
+    let newWord = await getWord(newWordId);
+    this.setState({ existingEntry: newWord });
+  }
+  async deleteAudio(oldAudioPath: string) {
+    let newWordId = await deleteAudio(
+      this.state.existingEntry.id,
+      oldAudioPath
+    );
+    let newWord = await getWord(newWordId);
+    this.setState({ existingEntry: newWord });
   }
 
   addNewSense(existingWord: Word, newSense: string) {
@@ -423,17 +439,20 @@ export class ExistingEntry extends React.Component<
             item
             xs={3}
             style={{
-              paddingLeft: theme.spacing(2),
-              paddingRight: theme.spacing(2),
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
               position: "relative",
             }}
           >
             <Pronunciations
               wordId={this.state.existingEntry.id}
-              recorder={this.props.recorder}
               pronunciationFiles={this.state.existingEntry.audio}
+              recorder={this.props.recorder}
+              deleteAudio={(wordId: string, fileName: string) => {
+                this.deleteAudio(fileName);
+              }}
               uploadAudio={(wordId: string, audioFile: File) => {
-                uploadAudio(wordId, audioFile);
+                this.uploadAudio(audioFile);
               }}
             />
           </Grid>
