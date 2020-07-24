@@ -1,25 +1,26 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { DuplicateResolutionView } from "../DuplicateResolutionView";
+import renderer from "react-test-renderer";
+
 import { Word, Sense } from "../../../../../types/word";
 import { mockWord } from "../../../tests/MockWord";
+import { DuplicateResolutionView } from "../DuplicateResolutionView";
 
-describe("Tests DeleteEntry", () => {
+describe("Tests DuplicateResolutionView", () => {
   it("renders without crashing", () => {
-    const div = document.createElement("div");
-    ReactDOM.render(
-      <DuplicateResolutionView
-        existingEntry={mockWord}
-        newSense={""}
-        addSense={(existingWord: Word, newSense: string) => null}
-        addSemanticDomain={(
-          existingWord: Word,
-          sense: Sense,
-          index: number
-        ) => {}}
-      />,
-      div
-    );
-    ReactDOM.unmountComponentAtNode(div);
+    renderer.act(() => {
+      renderer.create(
+        <DuplicateResolutionView
+          existingEntry={mockWord}
+          newSense={""}
+          addSense={(existingWord: Word, newSense: string) => null}
+          addSemanticDomain={(
+            existingWord: Word,
+            sense: Sense,
+            index: number
+          ) => {}}
+          duplicateInput={React.createRef<HTMLDivElement>()}
+        />
+      );
+    });
   });
 });
