@@ -19,9 +19,10 @@
 #                     TheCombine.
 #######################################
 
-- name: DEBUG - Print alias file
+- name: Log - Print alias file
   debug:
-    msg: "Alias file: {{ alias_file }}"
+    msg: "Updating alias file: {{ alias_file }}"
+
 - name: Add combine aliases
   blockinfile:
     path: "{{ alias_file }}"
