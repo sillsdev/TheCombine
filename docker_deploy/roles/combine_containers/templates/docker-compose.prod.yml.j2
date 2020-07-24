@@ -8,6 +8,9 @@ services:
   frontend:
     build:
       context: .
+      args:
+        - COMBINE_CAPTCHA_REQUIRED=true
+        - COMBINE_CAPTCHA_SITE={{ config_captcha_sitekey }}
     volumes:
         - ./nginx/conf.d:/etc/nginx/user.conf.d:ro
         - letsencrypt:/etc/letsencrypt
