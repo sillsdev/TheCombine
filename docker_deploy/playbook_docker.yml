@@ -25,7 +25,7 @@
 
     - name: install TheCombine source files
       import_role:
-        name: the_combine_source
+        name: combine_source
       tags:
         - combine_source
 
@@ -34,6 +34,17 @@
         name: combine_containers
       tags:
         - docker_config
+
+    - name: install application presets
+      import_role:
+        name: combine_init
+      tags:
+        - admin_user
+
+    - name: start the containers
+      command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --detach
+      args:
+        chdir: "{{ source_dir }}"
 
     - name: install shortcuts for root
       import_role:

@@ -27,8 +27,3 @@
 - name: initialize containers
   debug:
     msg: "TODO: Initialize the database"
-
-- name: start the containers
-  command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --detach
-  args:
-    chdir: "{{ source_dir }}"
