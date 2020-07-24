@@ -217,6 +217,14 @@ namespace BackendFramework.Models
                 Font = Font.Clone() as string
             };
         }
+        public bool Equals(WritingSystem ws)
+        {
+            if (ws != null && Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 
     public class SemanticDomainWithSubdomains

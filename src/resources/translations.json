@@ -246,7 +246,17 @@
     "language": {
       "header": ["Language", "Lenguaje", "Langue"],
       "vernacular": ["Vernacular", "Vernáculo", "Vernaculaire"],
+      "vernacularLanguage": [
+        " Vernacular Language",
+        "Vernáculo Lenguaje",
+        "Vernaculaire Langue"
+      ],
       "analysis": ["Analysis", "Análisis", "Analyse"],
+      "analysisLanguage": [
+        "Analysis Language",
+        "Análisis Lenguaje",
+        "Analyse Langue"
+      ],
       "uiLang": ["Interface", "Interfaz", "Interface"],
       "save": ["Save", "Guardar", "Enregistrer"],
       "interfaceLanguage": [

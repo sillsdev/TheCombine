@@ -224,14 +224,9 @@ class CreateProject extends React.Component<
               }
             />
             {/*Vernacular language picker */}
-            <Grid container spacing={1}>
-              <Grid item>
-                <Typography>
-                  <Translate id="projectSettings.language.vernacular" />
-                </Typography>
-              </Grid>
-              {this.translateLanguage()}
-            </Grid>
+            <Typography>
+              <Translate id="projectSettings.language.vernacularLanguage" />
+            </Typography>
             <LanguagePicker
               value={this.state.vernLanguage.bcp47}
               setCode={this.setVernBcp47}
@@ -242,14 +237,9 @@ class CreateProject extends React.Component<
               t={languagePickerStrings_en}
             />
             {/*Analysis language picker */}
-            <Grid container spacing={1} style={{ marginTop: 20 }}>
-              <Grid item>
-                <Typography>
-                  <Translate id="projectSettings.language.analysis" />
-                </Typography>
-              </Grid>
-              {this.translateLanguage()}
-            </Grid>
+            <Typography style={{ marginTop: 10 }}>
+              <Translate id="projectSettings.language.analysisLanguage" />
+            </Typography>
             <LanguagePicker
               value={this.state.analysisLanguages[0].bcp47}
               setCode={this.setAnalysisBcp47}
