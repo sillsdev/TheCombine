@@ -213,7 +213,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       <Grid item xs={12}>
         <Grid
           container
-          onKeyDown={(e) => {
+          onKeyUp={(e) => {
             if (e.key === "Enter" && this.state.newEntry.vernacular) {
               this.props.addNewWord(this.state.newEntry);
               this.focusVernInput();
