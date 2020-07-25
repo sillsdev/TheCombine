@@ -244,7 +244,7 @@ namespace BackendFramework.Models
 
         override public String ToString()
         {
-            return String.Format("<name: {0}, bcp47: {1}, font: {2}>");
+            return String.Format("<name: {0}, bcp47: {1}, font: {2}>", Name, Bcp47, Font);
         }
     }
 

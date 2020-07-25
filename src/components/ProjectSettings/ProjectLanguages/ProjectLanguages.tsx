@@ -14,13 +14,6 @@ interface LanguageProps {
 class ProjectLanguage extends React.Component<
   LanguageProps & LocalizeContextProps
 > {
-  componentDidUpdate(prevProps: LanguageProps) {
-    if (prevProps.project.id !== this.props.project.id) {
-      let name = this.props.project.name;
-      this.setState({ projectName: name });
-    }
-  }
-
   getAnalysisLang() {
     let analysisLang: WritingSystem = this.props.project
       .analysisWritingSystems[0];
@@ -57,6 +50,7 @@ class ProjectLanguage extends React.Component<
       </React.Fragment>
     );
   }
+
   render() {
     return (
       <React.Fragment>
