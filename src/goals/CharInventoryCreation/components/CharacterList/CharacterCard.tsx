@@ -25,9 +25,6 @@ const useStyles = makeStyles(
       maxWidth: 345,
       margin: theme.spacing(1),
     },
-    media: {
-      height: 140,
-    },
   })
 );
 

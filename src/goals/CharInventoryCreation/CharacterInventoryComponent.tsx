@@ -71,13 +71,8 @@ export class CharacterInventory extends React.Component<
   render() {
     return (
       <div>
-        <Grid
-          container
-          justify="center"
-          spacing={2}
-          style={{ background: "#fff" }}
-        >
-          <Grid item sm={9} xs={12} style={{ borderRight: "1px solid #ccc" }}>
+        <Grid container justify="center" spacing={2}>
+          <Grid item xs={12}>
             <Grid
               container
               spacing={2}
