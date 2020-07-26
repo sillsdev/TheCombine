@@ -61,26 +61,26 @@ class CreateProject extends React.Component<
 
   setVernBcp47(item: string) {
     if (item) {
-      this.setState(() => {
-        this.state.vernLanguage.bcp47 = item;
-        return { vernLanguage: this.state.vernLanguage };
+      this.setState((state) => {
+        state.vernLanguage.bcp47 = item;
+        return { vernLanguage: state.vernLanguage };
       });
     }
   }
 
   setVernLgName(item: string) {
     if (item) {
-      this.setState(() => {
-        this.state.vernLanguage.name = item;
-        return { vernLanguage: this.state.vernLanguage };
+      this.setState((state) => {
+        state.vernLanguage.name = item;
+        return { vernLanguage: state.vernLanguage };
       });
     }
   }
   setVernFontName(item: string) {
     if (item) {
-      this.setState(() => {
-        this.state.vernLanguage.font = item;
-        return { vernLanguage: this.state.vernLanguage };
+      this.setState((state) => {
+        state.vernLanguage.font = item;
+        return { vernLanguage: state.vernLanguage };
       });
     }
   }
