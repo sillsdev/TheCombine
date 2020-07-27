@@ -23,9 +23,10 @@ afterAll(() => {
 });
 
 describe("Test GoalsActions", () => {
-  it("should return the set user", () => {
+  it("should return the set user, minus password", () => {
     LocalStorage.setCurrentUser(mockUser);
-    expect(LocalStorage.getCurrentUser()).toEqual(mockUser);
+    const passwordlessUser: User = { ...mockUser, password: "" };
+    expect(LocalStorage.getCurrentUser()).toEqual(passwordlessUser);
   });
 
   it("should return null when there is no user", () => {

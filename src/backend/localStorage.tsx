@@ -66,7 +66,9 @@ export function removeProjectId() {
 }
 
 export function setCurrentUser(user: User) {
-  const userString = JSON.stringify(user);
+  // Don't keep password (even hashed) in local storage
+  const cleanedUser: User = { ...user, password: "" };
+  const userString = JSON.stringify(cleanedUser);
   localStorage.setItem(localStorageKeys.user, userString);
 }
 
