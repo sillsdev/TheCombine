@@ -1,22 +1,23 @@
 import React from "react";
-import DataEntryComponent from "../DataEntryComponent";
+import { Provider } from "react-redux";
+import renderer, { ReactTestInstance } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+
+import { defaultProject as mockProject } from "../../../types/project";
 import SemanticDomainWithSubdomains, {
   baseDomain,
 } from "../../../types/SemanticDomain";
-import configureMockStore from "redux-mock-store";
-import renderer, { ReactTestInstance } from "react-test-renderer";
-import { Provider } from "react-redux";
-import { DataEntryTable } from "../DataEntryTable/DataEntryTable";
-import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";
-import { mockWord, mockDomainWord } from "./MockWord";
-import { defaultProject as mockProject } from "../../../types/project";
-import { Word, State, DomainWord, Sense } from "../../../types/word";
-import {
+import { DomainWord, Sense, State, Word } from "../../../types/word";
+import DataEntryComponent, {
   filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "../DataEntryComponent";
+import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";
+import { DataEntryTable } from "../DataEntryTable/DataEntryTable";
+import { mockWord, mockDomainWord } from "./MockWord";
 
+jest.mock("@material-ui/core/Dialog");
 jest.mock("../../../backend", () => {
   return {
     createWord: jest.fn((_word: Word) => {
@@ -30,11 +31,10 @@ jest.mock("../../../backend", () => {
     }),
   };
 });
-
-jest.mock("../../TreeView");
-jest.mock("../../AppBar/AppBarComponent"); //ReactTestRenderer doesn't like rendering UserMenu
-jest.mock("@material-ui/core/Dialog");
+jest.mock("../../AppBar/AppBarComponent"); // ReactTestRenderer doesn't like rendering UserMenu
 jest.mock("../../Pronunciations/Recorder");
+jest.mock("../../TreeView");
+
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 

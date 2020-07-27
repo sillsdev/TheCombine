@@ -7,6 +7,7 @@ import { AutoComplete } from "../../../../../types/AutoComplete";
 import { defaultState } from "../../../../App/DefaultState";
 import { NewEntry } from "../NewEntry";
 
+jest.mock("../../../../Pronunciations/Recorder");
 jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");
 jest.mock("../NewVernEntry/NewVernEntry");
 
