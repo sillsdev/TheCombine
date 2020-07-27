@@ -85,14 +85,21 @@ export class DataEntryTable extends React.Component<
     if (e) e.preventDefault();
   }
 
-  async addNewWord(wordToAdd: Word, audioFiles: File[]) {
+  async addNewWord(wordToAdd: Word, audioURLs: string[]) {
     let newWord = await Backend.createWord(wordToAdd);
     let wordId = newWord.id;
-    let updatedAudioFile;
-    for (const audioFile of audioFiles) {
-      updatedAudioFile = { ...audioFile };
-      updatedAudioFile.name = getFileNameForWord(wordId);
+    let audioBlob: Blob;
+    let fileName: string;
+    let audioFile: File;
+    for (const audioURL of audioURLs) {
+      audioBlob = await fetch(audioURL).then((result) => result.blob());
+      fileName = getFileNameForWord(wordId);
+      audioFile = new File([audioBlob], fileName, {
+        type: audioBlob.type,
+        lastModified: Date.now(),
+      });
       wordId = await Backend.uploadAudio(wordId, audioFile);
+      URL.revokeObjectURL(audioURL);
     }
     let newWordWithAudio = await Backend.getWord(wordId);
     let recentlyAddedWords = [...this.state.recentlyAddedWords];
@@ -290,8 +297,8 @@ export class DataEntryTable extends React.Component<
               updateWord={(wordToUpdate: Word, glossIndex: number) =>
                 this.updateWordForNewEntry(wordToUpdate, glossIndex)
               }
-              addNewWord={(word: Word, audioFiles: File[]) =>
-                this.addNewWord(word, audioFiles)
+              addNewWord={(word: Word, audioFileURLs: string[]) =>
+                this.addNewWord(word, audioFileURLs)
               }
               semanticDomain={this.props.semanticDomain}
               autocompleteSetting={this.state.autoComplete}
@@ -336,7 +343,7 @@ export class DataEntryTable extends React.Component<
                 if (this.refNewEntry.current) {
                   let newEntry = this.refNewEntry.current.state.newEntry;
                   let newEntryAudio = this.refNewEntry.current.state
-                    .tempAudioFiles;
+                    .audioFileURLs;
                   if (newEntry && newEntry.vernacular) {
                     this.addNewWord(newEntry, newEntryAudio);
                     this.refNewEntry.current.resetState();

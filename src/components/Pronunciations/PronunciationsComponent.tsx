@@ -11,7 +11,7 @@ export interface PronunciationProps {
   pronunciationFiles: string[];
   recorder?: Recorder;
   deleteAudio?: (wordId: string, fileName: string) => void;
-  //getAudioUrl?: (wordId: string, fileName: string) => string;
+  getAudioUrl?: (wordId: string, fileName: string) => string;
   uploadAudio?: (wordId: string, audioFile: File) => void;
 }
 
@@ -30,11 +30,12 @@ export class Pronunciations extends React.Component<
             key={fileName}
             wordId={this.props.wordId}
             fileName={fileName}
-            pronunciationUrl={Backend.getAudioUrl(this.props.wordId, fileName)}
-            /*    this.props.getAudioUrl
+            pronunciationUrl={
+              //Backend.getAudioUrl(this.props.wordId, fileName)}
+              this.props.getAudioUrl
                 ? this.props.getAudioUrl(this.props.wordId, fileName)
                 : Backend.getAudioUrl(this.props.wordId, fileName)
-            }*/
+            }
             deleteAudio={this.props.deleteAudio}
           />
         );

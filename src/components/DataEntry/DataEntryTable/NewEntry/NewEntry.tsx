@@ -23,7 +23,7 @@ interface NewEntryProps {
     glossIndex: number,
     shouldBeMutable?: boolean
   ) => void;
-  addNewWord: (newWord: Word, newAudio: File[]) => void;
+  addNewWord: (newWord: Word, newAudio: string[]) => void;
   semanticDomain: SemanticDomain;
   autocompleteSetting: AutoComplete;
   displayDuplicates: boolean;
@@ -37,7 +37,8 @@ interface NewEntryState {
   duplicates: Word[];
   isDuplicate: boolean;
   activeGloss: string;
-  tempAudioFiles: File[];
+  //tempAudioFiles: File[];
+  audioFileURLs: string[];
 }
 
 /**
@@ -51,7 +52,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isDuplicate: false,
       duplicates: [],
       activeGloss: "",
-      tempAudioFiles: [],
+      //tempAudioFiles: [],
+      audioFileURLs: [],
     };
 
     this.vernInput = React.createRef<HTMLDivElement>();
@@ -97,16 +99,27 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   addAudio(audioFile: File) {
-    let tempAudioFiles = [...this.state.tempAudioFiles];
-    tempAudioFiles.push(audioFile);
-    this.setState({ tempAudioFiles });
+    //let tempAudioFiles = [...this.state.tempAudioFiles];
+    let audioFileURLs = [...this.state.audioFileURLs];
+    //tempAudioFiles.push(audioFile);
+    audioFileURLs.push(URL.createObjectURL(audioFile));
+    this.setState({
+      //tempAudioFiles,
+      audioFileURLs,
+    });
   }
 
   removeAudio(fileName: string) {
-    const tempAudioFiles = this.state.tempAudioFiles.filter(
+    /*const tempAudioFiles = this.state.tempAudioFiles.filter(
       (file) => file.name !== fileName
+    );*/
+    const audioFileURLs = this.state.audioFileURLs.filter(
+      (fileURL) => fileURL !== fileName
     );
-    this.setState({ tempAudioFiles });
+    this.setState({
+      //tempAudioFiles,
+      audioFileURLs,
+    });
   }
 
   addNewSense(existingWord: Word, newSense: string, index: number) {
@@ -174,7 +187,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isDuplicate: false,
       duplicates: [],
       activeGloss: "",
-      tempAudioFiles: [],
+      //tempAudioFiles: [],
+      audioFileURLs: [],
     });
   }
 
@@ -230,7 +244,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   };
 
   addNewWordAndReset() {
-    this.props.addNewWord(this.state.newEntry, this.state.tempAudioFiles);
+    this.props.addNewWord(this.state.newEntry, this.state.audioFileURLs);
     this.focusVernInput();
     this.resetState();
   }
@@ -306,19 +320,20 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
           >
             <Pronunciations
               wordId={""}
-              pronunciationFiles={[]}
+              pronunciationFiles={this.state.audioFileURLs}
+              //{[]}
               // ToDo: Implement playing audio files from this.state
-              /*this.state.tempAudioFiles.map((file) => {
-                return file.name;
-              })}*/
+              /*{this.state.tempAudioFiles.map((file) => {
+                  return file.name;
+                })*/
               recorder={this.props.recorder}
-              deleteAudio={(wordId: string, fileName: string) => {
+              deleteAudio={(_wordId: string, fileName: string) => {
                 this.removeAudio(fileName);
               }}
-              uploadAudio={(wordId: string, audioFile: File) => {
+              uploadAudio={(_wordId: string, audioFile: File) => {
                 this.addAudio(audioFile);
               }}
-              //getAudioUrl={() => null}
+              getAudioUrl={(_wordId: string, fileName: string) => fileName}
             />
           </Grid>
           {this.props.autocompleteSetting !== AutoComplete.Off &&
