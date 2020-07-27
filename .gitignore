@@ -72,6 +72,7 @@ docker_deploy/*.hosts.yml
 
 # Docker installation/configuration artifacts
 .env.backend.prod
+.env.backend.init
 
 # Playbooks for ad hoc testing/development
 deploy/_playbook*.yml
