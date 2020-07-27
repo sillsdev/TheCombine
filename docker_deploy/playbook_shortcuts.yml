@@ -20,7 +20,7 @@
 ##############################################################
 
 - name: Setup Shortcuts for TheCombine Using Docker
-  hosts: server
+  hosts: all
   gather_facts: yes
   become: no
 

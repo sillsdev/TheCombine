@@ -18,8 +18,8 @@ services:
         CERTBOT_EMAIL: {{ certbot_email }}
         IS_STAGING: {{ certbot_is_staging }}
         SERVER_NAME: {{ combine_server_name }}
-        SSL_CERTIFICATE: /etc/letsencrypt/live/{{ combine_server_name }}/fullchain.pem
-        SSL_PRIVATE_KEY: /etc/letsencrypt/live/{{ combine_server_name }}/privkey.pem
+        SSL_CERTIFICATE: {{ ssl_certificate }}
+        SSL_PRIVATE_KEY: {{ ssl_private_key }}
         BACKEND_URL: "http://backend"
     command:
       - "/bin/bash"

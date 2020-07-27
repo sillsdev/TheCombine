@@ -1,0 +1,17 @@
+---
+#################################################
+# Group specific configuration items
+#
+# Group: server
+#################################################
+
+config_captcha_required: "false"
+config_captcha_sitekey: "6LemQNgUAAAAAAwJ6dps-Uncg5xsNuDdMxehfW8d"
+
+certbot_email: ''
+
+# entrypoint for the frontend container.  The
+# frontend container supports mulitple entrypoints
+# each of which defines a different method for managing
+# its SSL Certificates
+frontend_start_script: /scripts/entrypoint.sh

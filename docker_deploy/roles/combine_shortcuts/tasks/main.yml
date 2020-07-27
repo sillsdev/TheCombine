@@ -28,8 +28,6 @@
     path: "{{ alias_file }}"
     create: yes
     state: present
-    owner: "{{ ansible_env.USER }}"
-    group: "{{ ansible_env.USER }}"
     mode: 0600
     block: |
       alias combine-up="{{sudo_cmd}}docker-compose -f docker-compose.yml -f {{ production_override_yaml }} up --detach"

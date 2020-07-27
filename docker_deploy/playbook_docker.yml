@@ -8,7 +8,7 @@
 ##############################################################
 
 - name: Setup TheCombine Using Docker
-  hosts: server
+  hosts: server, qa
   gather_facts: yes
   become: yes
 
