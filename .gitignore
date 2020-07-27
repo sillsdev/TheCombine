@@ -11,8 +11,8 @@
 
 # Production
 /build
-production.yml
-prodDockerfile
+docker-compose.prod.yml
+docker-compose.init.yml
 
 # Misc
 .DS_Store
