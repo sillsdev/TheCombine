@@ -17,6 +17,10 @@
     - "vars/vault_config.yml"
 
   tasks:
+    - name: install Ansible dependencies
+      import_role:
+        name: ansible_depends
+
     - name: install docker subsystem
       import_role:
         name: docker_install
