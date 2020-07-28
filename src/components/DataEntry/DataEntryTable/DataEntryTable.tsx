@@ -106,8 +106,6 @@ export class DataEntryTable extends React.Component<
     );
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
-    let index: number = this.state.existingWords.indexOf(existingWord);
-    if (index === -1) throw new Error(wordToUpdate + " does not exist");
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
 
