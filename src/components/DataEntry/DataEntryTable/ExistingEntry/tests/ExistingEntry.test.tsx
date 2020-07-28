@@ -35,6 +35,8 @@ describe("Tests ExistingEntry", () => {
             entry={mockWord}
             updateWord={() => null}
             removeWord={() => null}
+            addAudioToWord={() => null}
+            deleteAudioFromWord={() => null}
             semanticDomain={{ name: "", id: "" }}
             displayDuplicates={true}
             toggleDisplayDuplicates={() => null}
