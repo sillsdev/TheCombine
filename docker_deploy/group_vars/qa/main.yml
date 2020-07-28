@@ -5,8 +5,8 @@
 # Group: server
 #################################################
 
-config_captcha_required: "false"
-config_captcha_sitekey: "6LemQNgUAAAAAAwJ6dps-Uncg5xsNuDdMxehfW8d"
+ssl_certificate: "/ssl/cert.pem"
+ssl_private_key: "/ssl/key.pem"
 
 certbot_email: ''
 
