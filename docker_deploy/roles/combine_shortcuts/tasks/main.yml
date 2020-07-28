@@ -30,7 +30,7 @@
     state: present
     mode: 0600
     block: |
-      alias combine-up="{{sudo_cmd}}docker-compose -f docker-compose.yml -f {{ production_override_yaml }} up --detach"
-      alias combine-build="{{sudo_cmd}}docker-compose -f docker-compose.yml -f {{ production_override_yaml }} build --parallel"
-      alias combine-down="{{sudo_cmd}}docker-compose -f docker-compose.yml -f {{ production_override_yaml }} down"
-      alias combine-logs="{{sudo_cmd}}docker-compose -f docker-compose.yml -f {{ production_override_yaml }} logs"
+      alias combine-up="docker-compose -f docker-compose.yml -f {{ production_override_yaml }} up --detach"
+      alias combine-build="docker-compose -f docker-compose.yml -f {{ production_override_yaml }} build --parallel"
+      alias combine-down="docker-compose -f docker-compose.yml -f {{ production_override_yaml }} down"
+      alias combine-logs="docker-compose -f docker-compose.yml -f {{ production_override_yaml }} logs"

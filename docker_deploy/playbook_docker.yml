@@ -24,34 +24,9 @@
     - name: install docker subsystem
       import_role:
         name: docker_install
-      tags:
-        - docker
 
-    - name: install TheCombine source files
+    - name: create combine user
       import_role:
-        name: combine_source
+        name: combine_user
       tags:
-        - combine_source
-
-    - name: configure docker containers for TheCombine
-      import_role:
-        name: combine_containers
-      tags:
-        - docker_config
-
-    - name: install application presets
-      import_role:
-        name: combine_init
-      tags:
-        - init
-
-    - name: start the containers
-      command: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --detach
-      args:
-        chdir: "{{ source_dir }}"
-
-    - name: install shortcuts for root
-      import_role:
-        name: combine_shortcuts
-      tags:
-        shortcuts
+        - combine_user

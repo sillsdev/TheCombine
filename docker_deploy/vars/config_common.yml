@@ -1,8 +1,6 @@
 ---
 
-source_dir: /opt/combine
-config_dir: docker_config
-nginx_config: "{{ config_dir }}/nginx/conf.d"
+source_dir: "{{ ansible_env.HOME }}/src/combine"
 
 backend_env_file: ".env.backend.prod"
 backend_env_dir: "{{ source_dir }}/Backend"

@@ -10,16 +10,12 @@
   template:
     src: docker-compose.init.yml.j2
     dest: "{{ source_dir }}/docker-compose.init.yml"
-    owner: root
-    group: root
     mode: 0600
 
 - name: create backend init .env file
   template:
     src: env.backend.init.j2
     dest: "{{ source_dir }}/.env.backend.init"
-    owner: root
-    group: root
     mode: 0600
 
 - name: run the initialization
