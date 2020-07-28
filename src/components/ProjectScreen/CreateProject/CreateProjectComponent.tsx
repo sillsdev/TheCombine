@@ -59,70 +59,67 @@ class CreateProject extends React.Component<
     this.setAnalysisFontName = this.setAnalysisFontName.bind(this);
   }
 
-  setVernBcp47(item: string) {
-    if (item) {
+  setVernBcp47(bcp47: string) {
+    if (bcp47) {
       this.setState((state) => {
-        state.vernLanguage.bcp47 = item;
+        state.vernLanguage.bcp47 = bcp47;
         return { vernLanguage: state.vernLanguage };
       });
     }
   }
 
-  setVernLgName(item: string) {
-    if (item) {
+  setVernLgName(name: string) {
+    if (name) {
       this.setState((state) => {
-        state.vernLanguage.name = item;
+        state.vernLanguage.name = name;
         return { vernLanguage: state.vernLanguage };
       });
     }
   }
-  setVernFontName(item: string) {
-    if (item) {
+  setVernFontName(font: string) {
+    if (font) {
       this.setState((state) => {
-        state.vernLanguage.font = item;
+        state.vernLanguage.font = font;
         return { vernLanguage: state.vernLanguage };
       });
     }
   }
 
-  setAnalysisBcp47(item: string) {
-    if (item) {
+  setAnalysisBcp47(bcp47: string) {
+    if (bcp47) {
       if (this.state.analysisLanguages[0]) {
         this.setState((state) => {
-          state.analysisLanguages[0].bcp47 = item;
+          state.analysisLanguages[0].bcp47 = bcp47;
           return { analysisLanguages: state.analysisLanguages };
         });
       } else {
-        let tempItem: WritingSystem[] = [{ name: "", bcp47: "", font: "" }];
-        tempItem[0].bcp47 = item;
-        this.setState({ analysisLanguages: tempItem });
+        let tempLang: WritingSystem[] = [{ name: "", bcp47: bcp47, font: "" }];
+        this.setState({ analysisLanguages: tempLang });
       }
     }
   }
 
-  setAnalysisLgName(item: string) {
+  setAnalysisLgName(name: string) {
     if (this.state.analysisLanguages[0]) {
       this.setState((state) => {
-        state.analysisLanguages[0].name = item;
+        state.analysisLanguages[0].name = name;
         return { analysisLanguages: state.analysisLanguages };
       });
     } else {
-      let tempItem: WritingSystem[] = [{ name: "", bcp47: "", font: "" }];
-      tempItem[0].name = item;
-      this.setState({ analysisLanguages: tempItem });
+      let tempLang: WritingSystem[] = [{ name: name, bcp47: "", font: "" }];
+      this.setState({ analysisLanguages: tempLang });
     }
   }
 
-  setAnalysisFontName(item: string) {
+  setAnalysisFontName(font: string) {
     if (this.state.analysisLanguages[0]) {
       this.setState((state) => {
-        state.analysisLanguages[0].font = item;
+        state.analysisLanguages[0].font = font;
         return { analysisLanguages: state.analysisLanguages };
       });
     } else {
-      let tempItem: WritingSystem[] = [{ name: "", bcp47: "", font: "" }];
-      tempItem[0].font = item;
-      this.setState({ analysisLanguages: tempItem });
+      let tempLang: WritingSystem[] = [{ name: "", bcp47: "", font: font }];
+      this.setState({ analysisLanguages: tempLang });
     }
   }
 

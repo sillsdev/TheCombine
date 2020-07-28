@@ -264,7 +264,7 @@
         "Lenguaje de interfaz",
         "Langue de l'interface"
       ],
-      "bcp47": ["bcp47", "bcp47", "bcp47"],
+      "bcp47": ["BCP 47 Code", "BCP 47", "BCP 47"],
       "name": ["name", "Nom", null],
       "font": ["font", null, null]
     },
