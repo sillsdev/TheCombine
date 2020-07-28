@@ -76,6 +76,7 @@ docker_deploy/*.hosts.yml
 
 # Playbooks for ad hoc testing/development
 deploy/_playbook*.yml
+docker_deploy/_playbook*.yml
 
 # Emacs backup files (this is Jim's fault)
 *~
