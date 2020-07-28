@@ -10,9 +10,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Typography,
 } from "@material-ui/core";
-import CharacterCard from "./CharacterCard";
+import { CharacterCard } from "./CharacterCard";
 import { CharacterSetEntry } from "../../CharacterInventoryReducer";
+import theme from "../../../../types/theme";
 
 export interface CharacterListProps {
   setSelectedCharacter: (character: string) => void;
@@ -22,6 +24,7 @@ export interface CharacterListProps {
 interface CharacterListState {
   hoverChar: string;
   sortOrder: sortOrder;
+  fontHeight: string;
 }
 
 enum sortOrder {
@@ -41,7 +44,16 @@ export class CharacterList extends React.Component<
     this.state = {
       hoverChar: "",
       sortOrder: sortOrder.characterAscending,
+      fontHeight: "24px",
     };
+  }
+
+  componentDidMount() {
+    this.setFontHeight("60px");
+  }
+
+  setFontHeight(i: string) {
+    this.setState({ fontHeight: i });
   }
 
   render() {
@@ -97,6 +109,8 @@ export class CharacterList extends React.Component<
                 onClick={() =>
                   this.props.setSelectedCharacter(character.character)
                 }
+                fontHeight={this.state.fontHeight}
+                setFontHeight={(i: string) => this.setFontHeight(i)}
               />
             ))
           }

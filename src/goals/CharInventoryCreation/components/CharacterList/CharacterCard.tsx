@@ -1,5 +1,4 @@
-import React from "react";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import React, { useRef, createRef } from "react";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
@@ -14,45 +13,11 @@ export interface CharacterCardProps {
   count: number;
   status: characterStatus;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  fontHeight: string;
+  setFontHeight: (i: string) => void;
 }
 
-const useStyles = makeStyles(
-  createStyles({
-    header: {
-      marginLeft: theme.spacing(1),
-    },
-    card: {
-      maxWidth: 345,
-      margin: theme.spacing(1),
-    },
-  })
-);
-
-export default function CharacterCard(props: CharacterCardProps) {
-  const classes = useStyles();
-
-  return (
-    <Card className={classes.card} onClick={props.onClick}>
-      <CardActionArea>
-        <Typography variant="h1" className={classes.header}>
-          {props.char}
-          {/* There is a zero-width joiner here to make height consistent for non-printing characters: */}
-          {"‍"}
-        </Typography>
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="h2">
-            {charToHexValue(props.char)}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {props.count}{" "}
-            <Translate id="charInventory.characterSet.occurrences" />
-          </Typography>
-          <CharacterStatusText status={props.status} />
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  );
-}
+interface CharacterCardStates {}
 
 function charToHexValue(char: string) {
   let hex: string = char.charCodeAt(0).toString(16).toUpperCase();
@@ -60,4 +25,50 @@ function charToHexValue(char: string) {
     hex = "0" + hex;
   }
   return "U+" + hex;
+}
+
+export class CharacterCard extends React.Component<
+  CharacterCardProps,
+  CharacterCardStates
+> {
+  render() {
+    return (
+      <React.Fragment>
+        <Card
+          style={{
+            maxWidth: 345,
+            margin: theme.spacing(1),
+          }}
+          onClick={this.props.onClick}
+        >
+          <CardActionArea>
+            <Typography
+              variant="h2"
+              align="center"
+              style={{
+                height: this.props.fontHeight,
+                marginLeft: theme.spacing(1),
+                paddingTop: theme.spacing(1),
+              }}
+              id="character"
+            >
+              {this.props.char}
+              {""}
+            </Typography>
+
+            <CardContent>
+              <Typography gutterBottom variant="h6" component="h2">
+                {charToHexValue(this.props.char)}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                {this.props.count}{" "}
+                <Translate id="charInventory.characterSet.occurrences" />
+              </Typography>
+              <CharacterStatusText status={this.props.status} />
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </React.Fragment>
+    );
+  }
 }
