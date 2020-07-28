@@ -32,7 +32,7 @@ export interface CreateProjectProps {
 
 interface CreateProjectState {
   name: string;
-  error: { name: boolean; vernLanguage: boolean; analysisLanguage: boolean };
+  error: { name: boolean };
   vernLanguage: WritingSystem;
   analysisLanguages: WritingSystem[];
   languageData?: File;
@@ -47,15 +47,15 @@ class CreateProject extends React.Component<
     super(props);
     this.state = {
       name: "",
-      error: { name: false, vernLanguage: false, analysisLanguage: false },
+      error: { name: false },
       vernLanguage: { name: "", bcp47: "und", font: "" },
       analysisLanguages: [{ name: "", bcp47: "und", font: "" }],
     };
     this.setVernBcp47 = this.setVernBcp47.bind(this);
-    this.setVernLgName = this.setVernLgName.bind(this);
+    this.setVernLangName = this.setVernLangName.bind(this);
     this.setVernFontName = this.setVernFontName.bind(this);
     this.setAnalysisBcp47 = this.setAnalysisBcp47.bind(this);
-    this.setAnalysisLgName = this.setAnalysisLgName.bind(this);
+    this.setAnalysisLangName = this.setAnalysisLangName.bind(this);
     this.setAnalysisFontName = this.setAnalysisFontName.bind(this);
   }
 
@@ -68,7 +68,7 @@ class CreateProject extends React.Component<
     }
   }
 
-  setVernLgName(name: string) {
+  setVernLangName(name: string) {
     if (name) {
       this.setState((state) => {
         state.vernLanguage.name = name;
@@ -99,7 +99,7 @@ class CreateProject extends React.Component<
     }
   }
 
-  setAnalysisLgName(name: string) {
+  setAnalysisLangName(name: string) {
     if (this.state.analysisLanguages[0]) {
       this.setState((state) => {
         state.analysisLanguages[0].name = name;
@@ -139,8 +139,6 @@ class CreateProject extends React.Component<
       name,
       error: {
         name: name === "",
-        vernLanguage: false,
-        analysisLanguage: false,
       },
     });
   }
@@ -163,15 +161,7 @@ class CreateProject extends React.Component<
     const languageData = this.state.languageData;
     if (name === "") {
       this.setState({
-        error: { name: true, vernLanguage: false, analysisLanguage: false },
-      });
-    } else if (vernLang.name === "") {
-      this.setState({
-        error: { name: false, vernLanguage: true, analysisLanguage: false },
-      });
-    } else if (!analysisLang[0] || analysisLang[0].name === "") {
-      this.setState({
-        error: { name: false, vernLanguage: false, analysisLanguage: true },
+        error: { name: true },
       });
     } else if (this.props.asyncCreateProject) {
       this.props.asyncCreateProject(
@@ -181,18 +171,6 @@ class CreateProject extends React.Component<
         languageData as File
       );
     }
-  }
-
-  translateLanguage() {
-    return (
-      <React.Fragment>
-        <Grid item>
-          <Typography>
-            <Translate id="projectSettings.language.header" />
-          </Typography>
-        </Grid>
-      </React.Fragment>
-    );
   }
 
   render() {
@@ -226,7 +204,7 @@ class CreateProject extends React.Component<
               value={this.state.vernLanguage.bcp47}
               setCode={this.setVernBcp47}
               name={this.state.vernLanguage.name}
-              setName={this.setVernLgName}
+              setName={this.setVernLangName}
               font={this.state.vernLanguage.font}
               setFont={this.setVernFontName}
               t={languagePickerStrings_en}
@@ -239,7 +217,7 @@ class CreateProject extends React.Component<
               value={this.state.analysisLanguages[0].bcp47}
               setCode={this.setAnalysisBcp47}
               name={this.state.analysisLanguages[0].bcp47}
-              setName={this.setAnalysisLgName}
+              setName={this.setAnalysisLangName}
               font={this.state.analysisLanguages[0].bcp47}
               setFont={this.setAnalysisFontName}
               t={languagePickerStrings_en}

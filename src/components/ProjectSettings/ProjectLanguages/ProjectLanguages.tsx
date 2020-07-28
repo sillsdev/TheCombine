@@ -14,18 +14,6 @@ interface LanguageProps {
 class ProjectLanguage extends React.Component<
   LanguageProps & LocalizeContextProps
 > {
-  getAnalysisLang() {
-    let analysisLang: WritingSystem = this.props.project
-      .analysisWritingSystems[0];
-
-    return analysisLang;
-  }
-
-  getVernLang() {
-    let vernacularLang: WritingSystem = this.props.project
-      .vernacularWritingSystem;
-    return vernacularLang;
-  }
   renderWritingSystem(ws: WritingSystem) {
     return (
       <React.Fragment>
@@ -57,12 +45,14 @@ class ProjectLanguage extends React.Component<
         <Typography>
           <Translate id="projectSettings.language.vernacular" />
           {": "}
-          {this.renderWritingSystem(this.getVernLang())}
+          {this.renderWritingSystem(this.props.project.vernacularWritingSystem)}
         </Typography>
         <Typography style={{ marginTop: 10 }}>
           <Translate id="projectSettings.language.analysis" />
           {": "}
-          {this.renderWritingSystem(this.getAnalysisLang())}
+          {this.renderWritingSystem(
+            this.props.project.analysisWritingSystems[0]
+          )}
         </Typography>
       </React.Fragment>
     );

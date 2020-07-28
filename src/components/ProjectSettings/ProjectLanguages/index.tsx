@@ -11,12 +11,4 @@ function mapStateToProps(state: StoreState) {
     project: state.currentProject,
   };
 }
-
-export function mapDispatchToProps(dispatch: Dispatch<ProjectAction>) {
-  return {
-    setCurrentProject: (project: Project) => {
-      dispatch(setCurrentProject(project));
-    },
-  };
-}
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectLanguages);
+export default connect(mapStateToProps)(ProjectLanguages);
