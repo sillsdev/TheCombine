@@ -1,7 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
 
-import { deleteAudio, getWord, uploadAudio } from "../../../../backend";
 import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import theme from "../../../../types/theme";
 import {
@@ -25,6 +24,8 @@ interface ExistingEntryProps {
   entry: Word;
   updateWord: (wordToUpdate: Word, wordToDelete?: Word) => void;
   removeWord: (word: Word) => void;
+  addAudioToWord: (wordId: string, audioFile: File) => void;
+  deleteAudioFromWord: (wordId: string, fileName: string) => void;
   semanticDomain: SemanticDomain;
   displayDuplicates: boolean;
   toggleDisplayDuplicates: () => void;
@@ -46,7 +47,7 @@ export function addSenseToWord(
   existingWord: Word,
   gloss: string
 ): Word {
-  let updatedWord = { ...existingWord };
+  let updatedWord: Word = { ...existingWord };
 
   let newGloss: Gloss = {
     language: "en",
@@ -69,15 +70,16 @@ export function addSemanticDomainToSense(
   sense: Sense,
   index: number
 ): Word {
-  let updatedWord = { ...existingWord };
+  let updatedWord: Word = { ...existingWord };
   let newSense: Sense = {
     ...sense,
     semanticDomains: [...sense.semanticDomains, semanticDomain],
   };
-
-  let senses = existingWord.senses;
-  let updatedSenses: Sense[] = updateSenses(senses, newSense, index);
-
+  let updatedSenses: Sense[] = updateSenses(
+    existingWord.senses,
+    newSense,
+    index
+  );
   updatedWord.senses = updatedSenses;
   return updatedWord;
 }
@@ -98,19 +100,19 @@ export function duplicatesFromFrontier(
   maximum: number,
   entryToExclude?: string
 ): string[] {
-  let Finder = new DuplicateFinder();
+  let Finder: DuplicateFinder = new DuplicateFinder();
 
-  var duplicateWords: [string, number][] = [];
-  for (let word of existingWords) {
-    let accessible = false;
-    for (let sense of word.senses) {
+  let duplicateWords: [string, number][] = [];
+  for (const word of existingWords) {
+    let accessible: boolean = false;
+    for (const sense of word.senses) {
       if (sense.accessibility === 0) {
         accessible = true;
         break;
       }
     }
     if (accessible) {
-      let levenD: number = Finder.getLevenshteinDistance(
+      const levenD: number = Finder.getLevenshteinDistance(
         vernacular,
         word.vernacular
       );
@@ -124,7 +126,7 @@ export function duplicatesFromFrontier(
     }
   }
 
-  let sorted = duplicateWords.sort((a, b) => a[1] - b[1]);
+  let sorted: [string, number][] = duplicateWords.sort((a, b) => a[1] - b[1]);
   sorted.length = Math.min(duplicateWords.length, maximum);
   return sorted.map((item) => item[0]);
 }
@@ -148,7 +150,7 @@ export class ExistingEntry extends React.Component<
   constructor(props: ExistingEntryProps) {
     super(props);
 
-    let possibleDups = duplicatesFromFrontier(
+    let possibleDups: string[] = duplicatesFromFrontier(
       props.existingWords,
       props.entry.vernacular,
       this.maxDuplicates,
@@ -203,24 +205,8 @@ export class ExistingEntry extends React.Component<
     this.props.toggleDisplayDuplicates();
   }
 
-  // This appears to work but may not cause the parent component (e.g., this.props.entry)
-  // to be updated as needed for other local functionality.
-  async uploadAudio(newAudio: File) {
-    let newWordId = await uploadAudio(this.state.existingEntry.id, newAudio);
-    let newWord = await getWord(newWordId);
-    this.setState({ existingEntry: newWord });
-  }
-  async deleteAudio(oldAudioPath: string) {
-    let newWordId = await deleteAudio(
-      this.state.existingEntry.id,
-      oldAudioPath
-    );
-    let newWord = await getWord(newWordId);
-    this.setState({ existingEntry: newWord });
-  }
-
   addNewSense(existingWord: Word, newSense: string) {
-    let updatedWord = addSenseToWord(
+    let updatedWord: Word = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
       newSense
@@ -239,7 +225,7 @@ export class ExistingEntry extends React.Component<
   }
 
   addSemanticDomain(existingWord: Word, sense: Sense, index: number) {
-    let updatedWord = addSemanticDomainToSense(
+    let updatedWord: Word = addSemanticDomainToSense(
       this.props.semanticDomain,
       existingWord,
       sense,
@@ -273,7 +259,7 @@ export class ExistingEntry extends React.Component<
   }
 
   updateVernField(newValue: string) {
-    let possibleDups = duplicatesFromFrontier(
+    let possibleDups: string[] = duplicatesFromFrontier(
       this.props.existingWords,
       newValue,
       this.maxDuplicates,
@@ -328,10 +314,7 @@ export class ExistingEntry extends React.Component<
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
           onKeyUp={(e) => {
-            if (
-              e.key === "Enter" &&
-              this.state.existingEntry.vernacular !== ""
-            ) {
+            if (e.key === "Enter" && this.state.existingEntry.vernacular) {
               this.focusOnNewEntry();
             }
           }}
@@ -398,10 +381,10 @@ export class ExistingEntry extends React.Component<
               pronunciationFiles={this.state.existingEntry.audio}
               recorder={this.props.recorder}
               deleteAudio={(wordId: string, fileName: string) => {
-                this.deleteAudio(fileName);
+                this.props.deleteAudioFromWord(wordId, fileName);
               }}
               uploadAudio={(wordId: string, audioFile: File) => {
-                this.uploadAudio(audioFile);
+                this.props.addAudioToWord(wordId, audioFile);
               }}
             />
           </Grid>
