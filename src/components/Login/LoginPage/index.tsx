@@ -1,14 +1,14 @@
-import Login, { LoginStateProps, LoginDispatchProps } from "./LoginComponent";
-import { StoreState } from "../../../types";
-
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
+
+import { StoreState } from "../../../types";
 import {
   asyncLogin,
-  UserAction,
   loginReset,
   logoutAndResetStore,
+  UserAction,
 } from "../LoginActions";
+import Login, { LoginDispatchProps, LoginStateProps } from "./LoginComponent";
 
 function mapStateToProps(state: StoreState): LoginStateProps {
   return {
@@ -21,8 +21,8 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, UserAction>
 ): LoginDispatchProps {
   return {
-    login: (user: string, password: string) => {
-      dispatch(asyncLogin(user, password));
+    login: (username: string, password: string) => {
+      dispatch(asyncLogin(username, password));
     },
     logout: () => {
       dispatch(logoutAndResetStore());
