@@ -6,9 +6,25 @@ import {
 } from "../CreateProjectActions";
 import { StoreActions, StoreAction } from "../../../../rootActions";
 
+const vernWritingSystem = {
+  name: "",
+  bcp47: "",
+  font: "",
+};
+
+const analysisWritingSystem = [
+  {
+    name: "",
+    bcp47: "",
+    font: "",
+  },
+];
+
 const project = {
   name: "testProjectName",
   languageData: new File([], "testFile.lift"),
+  vernacularLanguage: vernWritingSystem,
+  analysisLanguages: analysisWritingSystem,
 };
 
 describe("createActionReducer Tests", () => {
@@ -17,6 +33,8 @@ describe("createActionReducer Tests", () => {
     success: false,
     inProgress: true,
     errorMsg: "",
+    vernacularLanguage: vernWritingSystem,
+    analysisLanguages: analysisWritingSystem,
   };
 
   let inProgress: CreateProjectAction = {
