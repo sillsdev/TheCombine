@@ -52,41 +52,35 @@ class CreateProject extends React.Component<
       vernLanguage: { name: "", bcp47: "und", font: "" },
       analysisLanguages: [{ name: "", bcp47: "und", font: "" }],
     };
-    this.setVernBcp47 = this.setVernBcp47.bind(this);
-    this.setVernLangName = this.setVernLangName.bind(this);
-    this.setVernFontName = this.setVernFontName.bind(this);
-    this.setAnalysisBcp47 = this.setAnalysisBcp47.bind(this);
-    this.setAnalysisLangName = this.setAnalysisLangName.bind(this);
-    this.setAnalysisFontName = this.setAnalysisFontName.bind(this);
   }
 
-  setVernBcp47(bcp47: string) {
+  setVernBcp47 = (bcp47: string) => {
     if (bcp47) {
       this.setState((state) => {
         state.vernLanguage.bcp47 = bcp47;
         return { vernLanguage: state.vernLanguage };
       });
     }
-  }
+  };
 
-  setVernLangName(name: string) {
+  setVernLangName = (name: string) => {
     if (name) {
       this.setState((state) => {
         state.vernLanguage.name = name;
         return { vernLanguage: state.vernLanguage };
       });
     }
-  }
-  setVernFontName(font: string) {
+  };
+  setVernFontName = (font: string) => {
     if (font) {
       this.setState((state) => {
         state.vernLanguage.font = font;
         return { vernLanguage: state.vernLanguage };
       });
     }
-  }
+  };
 
-  setAnalysisBcp47(bcp47: string) {
+  setAnalysisBcp47 = (bcp47: string) => {
     if (bcp47) {
       if (this.state.analysisLanguages[0]) {
         this.setState((state) => {
@@ -98,9 +92,9 @@ class CreateProject extends React.Component<
         this.setState({ analysisLanguages: tempLang });
       }
     }
-  }
+  };
 
-  setAnalysisLangName(name: string) {
+  setAnalysisLangName = (name: string) => {
     if (this.state.analysisLanguages[0]) {
       this.setState((state) => {
         state.analysisLanguages[0].name = name;
@@ -110,9 +104,9 @@ class CreateProject extends React.Component<
       let tempLang: WritingSystem[] = [{ name: name, bcp47: "", font: "" }];
       this.setState({ analysisLanguages: tempLang });
     }
-  }
+  };
 
-  setAnalysisFontName(font: string) {
+  setAnalysisFontName = (font: string) => {
     if (this.state.analysisLanguages[0]) {
       this.setState((state) => {
         state.analysisLanguages[0].font = font;
@@ -122,7 +116,7 @@ class CreateProject extends React.Component<
       let tempLang: WritingSystem[] = [{ name: "", bcp47: "", font: font }];
       this.setState({ analysisLanguages: tempLang });
     }
-  }
+  };
 
   componentDidMount() {
     this.props.reset();
