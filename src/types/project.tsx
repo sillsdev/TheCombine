@@ -50,18 +50,6 @@ export function randomProject(): Project {
   let project = { ...defaultProject };
   project.id = randomIntString();
   project.name = randomIntString();
-  project.vernacularWritingSystem = {
-    name: randomIntString(),
-    bcp47: randomIntString(),
-    font: randomIntString(),
-  };
-  project.analysisWritingSystems = [
-    {
-      name: randomIntString(),
-      bcp47: randomIntString(),
-      font: randomIntString(),
-    },
-  ];
   project.isActive = Math.random() < 0.5;
   project.words = testWordList();
   return project;

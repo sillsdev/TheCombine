@@ -16,6 +16,7 @@ import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 import FileInputButton from "../../Buttons/FileInputButton";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import { WritingSystem } from "../../../types/project";
+import theme from "../../../types/theme";
 
 export interface CreateProjectProps {
   asyncCreateProject: (
@@ -166,8 +167,8 @@ class CreateProject extends React.Component<
     } else if (this.props.asyncCreateProject) {
       this.props.asyncCreateProject(
         name,
-        vernLang as WritingSystem,
-        analysisLang as WritingSystem[],
+        vernLang,
+        analysisLang,
         languageData as File
       );
     }
@@ -225,7 +226,7 @@ class CreateProject extends React.Component<
             {/* File upload */}
             <Typography
               variant="body1"
-              style={{ marginRight: 20 }}
+              style={{ marginRight: theme.spacing(1) }}
               display="inline"
             >
               <Translate id="createProject.upload?" />
@@ -233,7 +234,7 @@ class CreateProject extends React.Component<
             <FileInputButton
               updateFile={(file) => this.updateLanguageData(file)}
               accept=".zip"
-              style={{ marginTop: 20 }}
+              style={{ marginTop: theme.spacing(1) }}
             >
               <Translate id="createProject.browse" />
             </FileInputButton>
