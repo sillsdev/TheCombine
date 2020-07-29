@@ -37,10 +37,14 @@ const palette = {
   contrastThreshold: 3,
   tonalOffset: 0.2,
 };
+
 const typography = {
+  //Font is chosen from left to right according to what is available.
+  //Add variable font that can be changed by the user.
   // Copied from default theme
   fontFamily: ['"Noto Sans"', '"Helvetica"', '"Arial"', "sans-serif"].join(","),
 };
+
 const dynamicFontParams = { factor: 2 };
 
 // Theme for the entire project
