@@ -25,6 +25,7 @@
       - gnupg-agent
       - software-properties-common
     state: present
+  notify: reboot target
 
 - name: Install Docker apt key
   apt_key:
@@ -43,6 +44,7 @@
       - docker-ce
       - docker-ce-cli
       - containerd.io
+  notify: reboot target
 
 - name: Install Docker Compose
   get_url:
