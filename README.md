@@ -176,22 +176,6 @@ environment variable and then run:
 
 The exit code will be set to `0` on success and non-`0` otherwise.
 
-#### Docker
-
-Copy `.env.backend.auth.template` to `.env.backend.auth` add fill in the username and
-password environment variables.
-
-```batch
-> docker-compose build --parallel
-> docker-compose up --abort-on-container-exit
-```
-
-This will create the user and exit. If successful, the exit code will be `0`,
-otherwise an error will be logged and the exit code will be non-`0`.
-
-**Important**: Remove the `COMBINE_*` environment variables from
-`.env.backend.auth` so that subsequent launches will start up the backend.
-
 ### (Development Only) Grant an Existing User Admin Rights
 
 To grant an _existing_ user database administrator rights (all permissions for
@@ -231,7 +215,7 @@ For more information see the
 [Docker Compose docs](https://docs.docker.com/compose/).
 
 Copy `.env.backend.template` to `.env.backend` and fill in the environment
-variables.
+variables. Do not fill in the COMBINE_ADMIN_* variables except to create an admin user; see [Create a New Admin User (Docker Environment)](#create-a-new-admin-user-docker-environment)
 
 ```batch
 > docker-compose build --parallel
@@ -241,8 +225,7 @@ variables.
 Browse to https://localhost.
 
 > By default self-signed certificates are included, so you will need to accept
-> a warning in the browser. See [SSL Certificates](#ssl-certificates) for
-> production deployment.
+> a warning in the browser.
 
 To view logs:
 
@@ -255,57 +238,29 @@ To stop and remove any stored data:
 ```batch
 > docker-compose down --volumes
 ```
+### Create a New Admin User (Docker Environment)
 
-### Configuration
+If you have not already created your .env.backend file (see above), copy `.env.backend.template` to `.env.backend`.  Edit `.env.backend` as follows:
+ * Fill in the environment variables.
+ * Uncomment and fill in the COMBINE_ADMIN_USERNAME and COMBINE_ADMIN_PASSWORD environment variables.
+ * Set the file permissions so that only you have read or write access.
 
-#### SSL Certificates
-
-To update SSL certificates after images have been built and are running,
-find the `frontend` container name. By default this will be formatted as
-`<lowercase_parent_dir>_frontend_1`.
-
-```batch
-> docker-compose images
-      Container             Repository         Tag       Image Id       Size
-------------------------------------------------------------------------------
-thecombine_backend_1    thecombine_backend    latest   73cf7b867c22   292.2 MB
-thecombine_database_1   mongo                 4.2      2b2cc1f48aed   387.8 MB
-thecombine_frontend_1   thecombine_frontend   latest   7cca1c1f1a5f   32.55 MB
-```
-
-Copy new certificates from local filesystem into the container:
+Run the following command to install the admin user in the *CombineDatabase*:
 
 ```batch
-> docker cp new_cert.pem thecombine_frontend_1:/ssl/cert.pem
-> docker cp new_key.pem thecombine_frontend_1:/ssl/key.pem
+> docker-compose build --parallel
+> docker-compose up --abort-on-container-exit
 ```
 
-Restart the Docker Compose project:
+This will create the user and exit. If successful, the exit code will be `0`,
+otherwise an error will be logged and the exit code will be non-`0`.
 
-```batch
-> docker-compose down
-> docker-compose up --detatch
-```
+**Important**: Remove the `COMBINE_ADMIN_*` environment variables from
+`.env.backend` so that subsequent launches will start up the backend.
 
-#### Modifying Build Arguments
+### Production
 
-Create a file `production.yml`, and override build arguments as needed.
-
-```yaml
-version: "3.8"
-services:
-  frontend:
-    build:
-      args:
-        - COMBINE_CAPTCHA_REQUIRED=false
-```
-
-Use this file when building and launching the Docker Compose project.
-
-```batch
-> docker-compose -f docker-compose.yml -f production.yml build --parallel
-> docker-compose -f docker-compose.yml -f production.yml up --detach
-```
+The process for configuring and deploying *TheCombine* for production targets is described in ./docs/docker_deploy/README.md
 
 ## Learn More
 
