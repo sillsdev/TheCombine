@@ -104,9 +104,10 @@ export function duplicatesFromFrontier(
 
   let duplicateWords: [string, number][] = [];
   for (const word of existingWords) {
+    if (entryToExclude && word.id === entryToExclude) continue;
     let accessible: boolean = false;
     for (const sense of word.senses) {
-      if (sense.accessibility === 0) {
+      if (sense.accessibility === State.active) {
         accessible = true;
         break;
       }
@@ -116,11 +117,8 @@ export function duplicatesFromFrontier(
         vernacular,
         word.vernacular
       );
-      // 2 here is the maximum acceptable score
-      if (
-        levenD < 2 &&
-        (entryToExclude === undefined || word.id !== entryToExclude)
-      ) {
+
+      if (levenD < Finder.maxScore) {
         duplicateWords.push([word.id, levenD]);
       }
     }
