@@ -5,7 +5,7 @@ import { Translate } from "react-localize-redux";
 import { uploadAvatar } from "../../backend";
 import FileInputButton from "../Buttons/FileInputButton";
 import LoadingDoneButton from "../Buttons/LoadingDoneButton";
-import { getCurrentUser } from "../../backend/localStorage";
+import { getUserId } from "../../backend/localStorage";
 
 /**
  * Allows the current user to select an image and upload as their avatar
@@ -18,7 +18,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
 
   function updateFile(file: File) {
     if (file) {
-      const filename = file.name;
+      const filename: string = file.name;
       setFile(file);
       setFilename(filename);
     }
@@ -26,12 +26,11 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
 
   function upload(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
-    const avatar = file;
-
-    const user = getCurrentUser()!;
+    const avatar: File | undefined = file;
+    const userId: string = getUserId()!;
     if (avatar) {
       setLoading(true);
-      uploadAvatar(user, avatar)
+      uploadAvatar(userId, avatar)
         .then(() => onDone())
         .catch(() => setLoading(false));
     }

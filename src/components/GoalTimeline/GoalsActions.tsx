@@ -70,7 +70,9 @@ function asyncCreateNewUserEditsObject(projectId: string) {
   return async () => {
     await Backend.createUserEdit()
       .then(async (userEditId: string) => {
-        let updatedUser: User = updateUserIfExists(projectId, userEditId);
+        const userId: string = LocalStorage.getUserId();
+        let updatedUser: User = await Backend.getUser(userId);
+        updatedUser.workedProjects[projectId] = userEditId;
         await Backend.updateUser(updatedUser);
       })
       .catch((err) => {
@@ -81,15 +83,12 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const user = LocalStorage.getCurrentUser();
-    if (user) {
-      const projectId: string = LocalStorage.getProjectId();
-      const userEditId: string | undefined = getUserEditIdFromProjectId(
-        user.workedProjects,
-        projectId
-      );
+    const userId: string = LocalStorage.getUserId();
+    if (userId) {
+      const userEditId: string | undefined = await getUserEditId(userId);
 
-      if (userEditId !== undefined) {
+      const projectId: string = LocalStorage.getProjectId();
+      if (userEditId) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
         dispatch(asyncCreateNewUserEditsObject(projectId));
@@ -100,10 +99,10 @@ export function asyncGetUserEdits() {
 
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const user = LocalStorage.getCurrentUser();
-    if (user) {
-      let userEditId: string | undefined = getUserEditId(user);
-      if (userEditId !== undefined) {
+    const userId: string = LocalStorage.getUserId();
+    if (userId) {
+      let userEditId: string | undefined = await getUserEditId(userId);
+      if (userEditId) {
         dispatch(loadGoalData(goal)).then(
           (returnedGoal) => (goal = returnedGoal)
         );
@@ -138,9 +137,7 @@ export function loadGoalData(goal: Goal) {
 
         let newGroups = [];
 
-        let blacklist: Hash<boolean> = JSON.parse(
-          localStorage.getItem("mergedups_blacklist") || "{}"
-        );
+        let blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
 
         for (let group of groups) {
           let newGroup = [];
@@ -196,63 +193,18 @@ export function updateStepData(goal: Goal): Goal {
   return goal;
 }
 
-export function getUserEditId(user: User): string | undefined {
-  const projectId = LocalStorage.getProjectId();
-  const userEditId: string | undefined = getUserEditIdFromProjectId(
-    user.workedProjects,
-    projectId
+export async function getUserEditId(
+  userId: string
+): Promise<string | undefined> {
+  const projectId: string = LocalStorage.getProjectId();
+  const user: User = await Backend.getUser(userId);
+  const projectIds = Object.keys(user.workedProjects);
+  const matches: string[] = projectIds.filter(
+    (project) => projectId === project
   );
-  return userEditId;
-}
-
-function getUserEditIdFromProjectId(
-  workedProjects: Hash<string>,
-  projectId: string
-): string | undefined {
-  let projectIds = Object.keys(workedProjects);
-  let matches: string[] = projectIds.filter((project) => projectId === project);
-  if (matches.length === 1) {
-    return workedProjects[matches[0]];
+  if (matches) {
+    return user.workedProjects[matches[0]];
   }
-}
-
-function updateUserIfExists(projectId: string, userEditId: string): User {
-  let currentUserString = localStorage.getItem("user");
-  let updatedUser: User = new User("", "", "");
-  if (currentUserString) {
-    let updatedUserString = updateUserWithUserEditId(
-      currentUserString,
-      projectId,
-      userEditId
-    );
-    localStorage.setItem("user", updatedUserString);
-    updatedUser = JSON.parse(updatedUserString);
-  }
-  return updatedUser;
-}
-
-function updateUserWithUserEditId(
-  userObjectString: string,
-  projectId: string,
-  userEditId: string
-): string {
-  let currentUserObject: User = JSON.parse(userObjectString);
-  currentUserObject = addProjectToWorkedProjects(
-    currentUserObject,
-    projectId,
-    userEditId
-  );
-  let updatedUserString = JSON.stringify(currentUserObject);
-  return updatedUserString;
-}
-
-function addProjectToWorkedProjects(
-  user: User,
-  projectId: string,
-  userEditId: string
-): User {
-  user.workedProjects[projectId] = userEditId;
-  return user;
 }
 
 export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {

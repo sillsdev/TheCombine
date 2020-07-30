@@ -21,7 +21,7 @@ const backendServer = axios.create({
 backendServer.interceptors.response.use(
   (resp) => {
     if (resp.data.__UpdatedUser) {
-      localStorage.setItem("user", JSON.stringify(resp.data.__UpdatedUser));
+      LocalStorage.setUserId(resp.data.__UpdatedUser.id);
     }
     delete resp.data.__UpdatedUser;
     return resp;
@@ -226,6 +226,7 @@ export async function getAllActiveProjectsByUser(
     } catch (err) {
       /** If there was an error, the project probably was manually deleted
        from the database or is ill-formatted. */
+      console.log(err);
     }
   }
   return projects;
@@ -325,18 +326,18 @@ export function getAudioUrl(wordId: string, fileName: string): string {
   return `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/download/audio/${fileName}`;
 }
 
-export async function uploadAvatar(user: User, img: File): Promise<string> {
+export async function uploadAvatar(userId: string, img: File): Promise<string> {
   let data = new FormData();
   data.append("file", img);
-  let resp = await backendServer.post(`users/${user.id}/upload/avatar`, data, {
+  let resp = await backendServer.post(`users/${userId}/upload/avatar`, data, {
     headers: { ...authHeader(), "content-type": "application/json" },
   });
   return resp.data;
 }
 
 /** Returns the string to display the image inline in Base64 <img src= */
-export async function avatarSrc(user: User): Promise<string> {
-  let resp = await backendServer.get(`users/${user.id}/download/avatar`, {
+export async function avatarSrc(userId: string): Promise<string> {
+  let resp = await backendServer.get(`users/${userId}/download/avatar`, {
     headers: authHeader(),
     responseType: "arraybuffer",
   });

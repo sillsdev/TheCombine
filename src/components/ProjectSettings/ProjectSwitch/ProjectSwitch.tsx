@@ -1,10 +1,9 @@
 import { List, ListItem, Typography } from "@material-ui/core";
 import React from "react";
 
-import { getAllActiveProjectsByUser } from "../../../backend";
-import { getCurrentUser } from "../../../backend/localStorage";
+import { getAllActiveProjectsByUser, getUser } from "../../../backend";
+import { getUserId } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
-import { User } from "../../../types/user";
 import { randomIntString } from "../../../utilities";
 
 interface SwitchProps {
@@ -14,7 +13,7 @@ interface SwitchProps {
 
 interface SwitchState {
   projectList: Project[];
-  currentUser: User | null;
+  currentUserId: string;
 }
 
 export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
@@ -23,7 +22,7 @@ export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
 
     this.state = {
       projectList: [],
-      currentUser: getCurrentUser(),
+      currentUserId: getUserId(),
     };
 
     this.updateProjectList();
@@ -36,10 +35,12 @@ export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
   }
 
   private updateProjectList() {
-    if (this.state.currentUser) {
-      getAllActiveProjectsByUser(this.state.currentUser).then((projects) => {
-        this.setState({ projectList: projects });
-      });
+    if (this.state.currentUserId) {
+      getUser(this.state.currentUserId).then((user) =>
+        getAllActiveProjectsByUser(user).then((projects) => {
+          this.setState({ projectList: projects });
+        })
+      );
     }
   }
 

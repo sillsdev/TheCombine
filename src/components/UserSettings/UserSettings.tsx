@@ -24,7 +24,7 @@ import AvatarUpload from "./AvatarUpload";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import { avatarSrc, getUser, updateUser } from "../../backend";
 import theme from "../../types/theme";
-import { getCurrentUser } from "../../backend/localStorage";
+import { getUserId } from "../../backend/localStorage";
 import { CurrentTab } from "../../types/currentTab";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
@@ -95,21 +95,32 @@ class UserSettings extends React.Component<
 > {
   constructor(props: LocalizeContextProps) {
     super(props);
-    const user = getCurrentUser()!;
     this.state = {
+      user: new User("", "", ""),
+      name: "",
+      phone: "",
+      email: "",
+      avatarDialogOpen: false,
+    };
+    this.getUser();
+    this.getAvatar();
+  }
+
+  async getUser() {
+    const userId: string = getUserId();
+    const user: User = await getUser(userId);
+    this.setState({
       user,
       name: user.name,
       phone: user.phone,
       email: user.email,
-      avatarDialogOpen: false,
-    };
-    this.getAvatar();
+    });
   }
 
   async getAvatar() {
-    const user = getCurrentUser()!;
-    const a = await avatarSrc(user);
-    this.setState({ avatar: a });
+    const userId: string = getUserId();
+    const avatar: string = await avatarSrc(userId);
+    this.setState({ avatar });
   }
 
   /** Updates the state to match the value in a textbox */
@@ -130,8 +141,8 @@ class UserSettings extends React.Component<
     e.preventDefault();
     let newUser = this.state.user;
     newUser.name = this.state.name;
-    newUser.email = this.state.email;
     newUser.phone = this.state.phone;
+    newUser.email = this.state.email;
     updateUser(newUser);
   }
 
@@ -234,13 +245,3 @@ class UserSettings extends React.Component<
 }
 
 export default withLocalize(UserSettings);
-
-/** Update user in localstorage with user from backend */
-export async function updateCurrentUser() {
-  const userString = localStorage.getItem("user");
-  const user: User = userString ? JSON.parse(userString) : null;
-  if (user) {
-    const updatedUser = await getUser(user.id);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-  }
-}

@@ -3,8 +3,8 @@ import { ExitToApp, Person, SettingsApplications } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { avatarSrc } from "../../backend";
-import { getCurrentUser, setProjectId } from "../../backend/localStorage";
+import { avatarSrc, getUser } from "../../backend";
+import { getUserId, setProjectId } from "../../backend/localStorage";
 import history from "../../history";
 import theme from "../../types/theme";
 
@@ -16,6 +16,7 @@ export default function UserMenu() {
     null
   );
   const [avatar, setAvatar] = React.useState<null | string>(null);
+  const [isAdmin, setIsAdmin] = React.useState<null | boolean>(null);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorElement(event.currentTarget);
@@ -26,17 +27,20 @@ export default function UserMenu() {
   }
 
   async function getAvatar() {
-    const user = getCurrentUser()!;
-    const a = await avatarSrc(user);
+    const userId = getUserId();
+    const a = await avatarSrc(userId);
     setAvatar(a);
   }
 
   getAvatar();
 
-  // Determine if the user is an Admin user.
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
-  const isAdmin: boolean = user && user.isAdmin;
+  async function getIsAdmin() {
+    const userId = getUserId();
+    const user = await getUser(userId);
+    setIsAdmin(user.isAdmin);
+  }
+
+  getIsAdmin();
 
   return (
     <div>

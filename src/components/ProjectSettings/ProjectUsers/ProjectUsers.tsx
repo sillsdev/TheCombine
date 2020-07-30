@@ -12,7 +12,7 @@ import {
   getAllUsers,
   getAllUsersInCurrentProject,
 } from "../../../backend";
-import { getCurrentUser } from "../../../backend/localStorage";
+import { getUserId } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import { User } from "../../../types/user";
 import EmailInvite from "./EmailInvite";
@@ -85,7 +85,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
               ),
             });
             returnedUsers.forEach((u: User, n: number, array: User[]) => {
-              avatarSrc(u)
+              avatarSrc(u.id)
                 .then((result) => {
                   let avatarsCopy = JSON.parse(
                     JSON.stringify(this.state.userAvatar)
@@ -103,8 +103,8 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   }
 
   addToProject(user: User) {
-    const currentUser = getCurrentUser();
-    if (currentUser && user.id !== currentUser.id) {
+    const currentUserId: string = getUserId();
+    if (user.id !== currentUserId) {
       addUserRole([3, 2, 1], user)
         .then(() => {
           toast(<Translate id="projectSettings.invite.toastSuccess" />);

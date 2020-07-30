@@ -160,10 +160,10 @@ export function mergeSense() {
 }
 
 async function addStepToGoal(goal: Goal, indexInHistory: number) {
-  const user = LocalStorage.getCurrentUser();
-  if (user) {
-    let userEditId: string | undefined = getUserEditId(user);
-    if (userEditId !== undefined) {
+  const userId: string = LocalStorage.getUserId();
+  if (userId) {
+    let userEditId: string | undefined = await getUserEditId(userId);
+    if (userEditId) {
       await backend.addStepToGoal(userEditId, indexInHistory, goal);
     }
   }
@@ -389,21 +389,21 @@ export function mergeAll() {
     getState: () => StoreState
   ) => {
     // generate blacklist
-    let wordIDs = Object.keys(
+    const wordIDs: string[] = Object.keys(
       getState().mergeDuplicateGoal.mergeTreeState.data.words
     );
-    let hash = wordIDs.sort().reduce((val, acc) => `${acc}:${val}`, "");
-    let blacklist: Hash<boolean> = JSON.parse(
-      localStorage.getItem("mergedups_blacklist") || "{}"
-    );
+    const hash: string = wordIDs
+      .sort()
+      .reduce((val, acc) => `${acc}:${val}`, "");
+    let blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
     blacklist[hash] = true;
-    localStorage.setItem("mergedups_blacklist", JSON.stringify(blacklist));
+    LocalStorage.setMergeDupsBlacklist(blacklist);
     // merge words
     let mapping: Hash<{ srcWord: string; order: number }> = {};
     const words = Object.keys(
       getState().mergeDuplicateGoal.mergeTreeState.tree.words
     );
-    for (let wordID of words) {
+    for (const wordID of words) {
       mapping = await mergeWord(wordID, getState, mapping);
     }
   };

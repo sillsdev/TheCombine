@@ -12,6 +12,7 @@ import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
 import { User } from "../../../types/user";
 import { CharacterSetEntry } from "../CharacterInventoryReducer";
 import * as backend from "../../../backend";
+import * as LocalStorage from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import { Goal } from "../../../types/goals";
 
@@ -61,11 +62,13 @@ const MOCK_STATE = {
   },
 };
 
-let oldUser: string | null;
-let oldProjectId: string | null;
+let oldUserId: string;
+let oldProjectId: string;
 const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
+const mockUserId: string = "34456";
 let mockUser: User = new User("", "", "");
+mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 jest.mock("../../../backend", () => ({
@@ -85,13 +88,13 @@ const createMockStore = configureMockStore([thunk]);
 const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(MOCK_STATE);
 
 beforeAll(() => {
-  oldUser = localStorage.getItem("user");
-  oldProjectId = localStorage.getItem("projectId");
+  oldProjectId = LocalStorage.getProjectId();
+  oldUserId = LocalStorage.getUserId();
 });
 
 beforeEach(() => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("projectId");
+  LocalStorage.remove(LocalStorage.localStorageKeys.projectId);
+  LocalStorage.remove(LocalStorage.localStorageKeys.userId);
 });
 
 afterEach(() => {
@@ -99,8 +102,8 @@ afterEach(() => {
 });
 
 afterAll(() => {
-  if (oldUser) localStorage.setItem("user", oldUser);
-  if (oldProjectId) localStorage.setItem("projectId", oldProjectId);
+  LocalStorage.setProjectId(oldProjectId);
+  LocalStorage.setUserId(oldUserId);
 });
 
 describe("Testing CharacterInventoryActions", () => {
@@ -112,8 +115,8 @@ describe("Testing CharacterInventoryActions", () => {
   });
 
   test("uploadInventory dispatches correct actions", async () => {
-    localStorage.setItem("user", JSON.stringify(mockUser));
-    localStorage.setItem("projectId", mockProjectId);
+    LocalStorage.setProjectId(mockProjectId);
+    LocalStorage.setUserId(mockUserId);
     let mockStore = createMockStore(MOCK_STATE);
     const mockUpload = uploadInventory();
     await mockUpload(

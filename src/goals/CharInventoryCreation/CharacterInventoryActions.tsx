@@ -19,7 +19,7 @@ import {
   characterStatus,
 } from "./CharacterInventoryReducer";
 import * as backend from "../../backend";
-import * as LocalStorage from "../../backend/localStorage";
+import { getUserId } from "../../backend/localStorage";
 
 export enum CharacterInventoryType {
   SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
@@ -214,10 +214,10 @@ async function saveChangesToGoal(
   history: Goal[],
   dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
-  const user = LocalStorage.getCurrentUser();
-  if (user) {
-    let userEditId: string | undefined = getUserEditId(user);
-    if (userEditId !== undefined) {
+  const userId: string = getUserId();
+  if (userId) {
+    const userEditId: string | undefined = await getUserEditId(userId);
+    if (userEditId) {
       let indexInHistory: number = getIndexInHistory(history, updatedGoal);
 
       dispatch(updateGoal(updatedGoal));

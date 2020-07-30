@@ -36,12 +36,12 @@ export class AppBarComponent extends React.Component<
               >
                 <Grid item xs>
                   <Logo />
-                  {getProjectId() !== "" && (
+                  {getProjectId() && (
                     <NavigationButtons currentTab={this.props.currentTab} />
                   )}
                 </Grid>
                 <Grid item xs>
-                  {getProjectId() !== "" && (
+                  {getProjectId() && (
                     <ProjectNameButton currentTab={this.props.currentTab} />
                   )}
                 </Grid>

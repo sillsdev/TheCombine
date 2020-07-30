@@ -3,10 +3,11 @@ import * as reducer from "../LoginReducer";
 import * as rootAction from "../../../rootActions";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
+import * as LocalStorage from "../../../backend/localStorage";
 
 const createMockStore = configureMockStore([thunk]);
 
-const user = { user: "testUser", password: "testPass" };
+const user = { id: "testUserId", user: "testUser", password: "testPass" };
 
 describe("LoginAction Tests", () => {
   let mockState: reducer.LoginState = reducer.defaultState;
@@ -122,11 +123,11 @@ describe("LoginAction Tests", () => {
   });
 
   test("logout creates a proper action", () => {
-    localStorage.setItem("user", user.user);
+    LocalStorage.setUserId(user.id);
     const mockStore = createMockStore(mockState);
     mockStore.dispatch<any>(action.logoutAndResetStore());
     expect(mockStore.getActions()).toEqual([logout, reset]);
-    expect(localStorage.getItem("user")).toBe(null);
+    expect(LocalStorage.getUserId).toEqual("");
   });
 });
 

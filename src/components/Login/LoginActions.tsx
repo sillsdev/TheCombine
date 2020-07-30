@@ -3,6 +3,7 @@ import history from "../../history";
 import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 import * as backend from "../../backend";
+import * as LocalStorage from "../../backend/localStorage";
 import { User } from "../../types/user";
 import { StoreAction, reset } from "../../rootActions";
 
@@ -63,9 +64,10 @@ export function asyncLogin(user: string, password: string) {
     //attempt to login with server
     await backend
       .authenticateUser(user, password)
-      .then((res: string) => {
-        localStorage.setItem("user", res); //Store tokens
-        dispatch(loginSuccess(user));
+      .then((userString: string) => {
+        const user: User = JSON.parse(userString);
+        LocalStorage.setUserId(user.id);
+        dispatch(loginSuccess(user.id));
         history.push("/");
       })
       .catch((err) => {
@@ -104,12 +106,12 @@ export function loginReset(): UserAction {
 
 export function logoutAndResetStore() {
   return (dispatch: Dispatch<UserAction | StoreAction>) => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      dispatch(logout(user));
+    const userId = LocalStorage.getUserId();
+    if (userId) {
+      dispatch(logout(userId));
     }
     dispatch(reset());
-    localStorage.removeItem("user");
+    LocalStorage.remove(LocalStorage.localStorageKeys.userId);
   };
 }
 

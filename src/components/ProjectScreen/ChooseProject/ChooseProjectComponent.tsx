@@ -1,9 +1,3 @@
-import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
 import {
   Card,
   CardContent,
@@ -11,11 +5,17 @@ import {
   ListItem,
   Typography,
 } from "@material-ui/core";
+import React from "react";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 
-import { Project } from "../../../types/project";
-import { getAllActiveProjectsByUser } from "../../../backend";
+import { getAllActiveProjectsByUser, getUser } from "../../../backend";
+import { getUserId } from "../../../backend/localStorage";
 import history from "../../../history";
-import { getCurrentUser } from "../../../backend/localStorage";
+import { Project } from "../../../types/project";
 
 export interface ChooseProjectProps {
   setCurrentProject: (project: Project) => void;
@@ -32,11 +32,13 @@ class ChooseProject extends React.Component<
   constructor(props: ChooseProjectProps & LocalizeContextProps) {
     super(props);
     this.state = { projectList: [] };
-    const user = getCurrentUser();
-    if (user) {
-      getAllActiveProjectsByUser(user).then((projects) => {
-        this.setState({ ...this.state, projectList: projects });
-      });
+    const userId: string = getUserId();
+    if (userId) {
+      getUser(userId)
+        .then((user) => getAllActiveProjectsByUser(user))
+        .then((projectList) => {
+          this.setState({ projectList });
+        });
     }
   }
 
