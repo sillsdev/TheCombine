@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import CreateProjectComponent from "../index";
@@ -19,13 +18,11 @@ it("renders without crashing", () => {
   };
   const mockStore = createMockStore(state);
 
-  renderer.act(() => {
-    renderer.create(
-      <Provider store={mockStore}>
-        <CreateProjectComponent />
-      </Provider>
-    );
-  });
+  renderer.create(
+    <Provider store={mockStore}>
+      <CreateProjectComponent />
+    </Provider>
+  );
 });
 
 it("errors on empty name", () => {
@@ -40,11 +37,9 @@ it("errors on empty name", () => {
   };
   const mockStore = createMockStore(state);
 
-  renderer.act(() => {
-    const testRenderer = renderer.create(
-      <Provider store={mockStore}>
-        <CreateProjectComponent />
-      </Provider>
-    );
-  });
+  const testRenderer = renderer.create(
+    <Provider store={mockStore}>
+      <CreateProjectComponent />
+    </Provider>
+  );
 });
