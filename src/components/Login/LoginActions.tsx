@@ -3,6 +3,7 @@ import history from "../../history";
 import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 import * as backend from "../../backend";
+import { getCurrentUser, setAvatar } from "../../backend/localStorage";
 import { User } from "../../types/user";
 import { StoreAction, reset } from "../../rootActions";
 
@@ -59,13 +60,20 @@ export interface UserAction {
 //thunk action creator
 export function asyncLogin(user: string, password: string) {
   return async (dispatch: Dispatch<UserAction>, getState: any) => {
-    dispatch(loginAttempt(user));
-    //attempt to login with server
     await backend
       .authenticateUser(user, password)
-      .then((res: string) => {
-        localStorage.setItem("user", res); //Store tokens
+      .then(async (res: string) => {
+        await localStorage.setItem("user", res); //Store tokens'
         dispatch(loginSuccess(user));
+        var currentUser = getCurrentUser();
+        if (currentUser) {
+          try {
+            var avatar = await backend.avatarSrc(currentUser!);
+            setAvatar(avatar);
+          } catch (e) {
+            setAvatar("");
+          }
+        }
         history.push("/");
       })
       .catch((err) => {

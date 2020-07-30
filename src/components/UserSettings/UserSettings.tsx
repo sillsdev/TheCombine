@@ -22,9 +22,9 @@ import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 import { User } from "../../types/user";
 import AvatarUpload from "./AvatarUpload";
 import AppBarComponent from "../AppBar/AppBarComponent";
-import { avatarSrc, getUser, updateUser } from "../../backend";
+import { getUser, updateUser } from "../../backend";
 import theme from "../../types/theme";
-import { getCurrentUser } from "../../backend/localStorage";
+import * as LocalStorage from "../../backend/localStorage";
 import { CurrentTab } from "../../types/currentTab";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
@@ -95,7 +95,7 @@ class UserSettings extends React.Component<
 > {
   constructor(props: LocalizeContextProps) {
     super(props);
-    const user = getCurrentUser()!;
+    const user = LocalStorage.getCurrentUser()!;
     this.state = {
       user,
       name: user.name,
@@ -107,9 +107,8 @@ class UserSettings extends React.Component<
   }
 
   async getAvatar() {
-    const user = getCurrentUser()!;
-    const a = await avatarSrc(user);
-    this.setState({ avatar: a });
+    var avat = await LocalStorage.getAvatar();
+    this.setState({ avatar: avat });
   }
 
   /** Updates the state to match the value in a textbox */
