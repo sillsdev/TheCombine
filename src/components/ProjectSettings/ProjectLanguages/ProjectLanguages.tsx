@@ -15,14 +15,11 @@ interface LanguageProps {
 class ProjectLanguages extends React.Component<
   LanguageProps & LocalizeContextProps
 > {
-  renderWritingSystem(ws: WritingSystem, index: number) {
+  renderWritingSystem(ws: WritingSystem, index?: number) {
     return (
-      <React.Fragment>
+      <React.Fragment key={index}>
         <Grid container spacing={1}>
-          <Grid item>
-            {index + 1}
-            {". "}
-          </Grid>
+          {index !== undefined && <Grid item>{`${index + 1}. `}</Grid>}
           <Grid item>
             <Translate id="projectSettings.language.name" />
             {": "}
@@ -50,10 +47,7 @@ class ProjectLanguages extends React.Component<
         <Typography>
           <Translate id="projectSettings.language.vernacular" />
           {": "}
-          {this.renderWritingSystem(
-            this.props.project.vernacularWritingSystem,
-            0
-          )}
+          {this.renderWritingSystem(this.props.project.vernacularWritingSystem)}
         </Typography>
         <Typography style={{ marginTop: theme.spacing(1) }}>
           <Translate id="projectSettings.language.analysis" />

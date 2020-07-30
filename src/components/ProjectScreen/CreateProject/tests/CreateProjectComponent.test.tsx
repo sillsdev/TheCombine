@@ -1,14 +1,25 @@
 import React from "react";
 import configureMockStore from "redux-mock-store";
-import LocalizedCreateProject, {
-  CreateProject,
-} from "../CreateProjectComponent";
+import { Provider } from "react-redux";
 import renderer, {
-  ReactTestRenderer,
   ReactTestInstance,
+  ReactTestRenderer,
 } from "react-test-renderer";
 
+import CreateProjectComponent from "../";
+import { CreateProject } from "../CreateProjectComponent";
+
 const createMockStore = configureMockStore([]);
+const mockState = {
+  currentProject: {},
+  createProjectState: {
+    name: "",
+    inProgress: false,
+    success: false,
+    errorMsg: "",
+  },
+};
+const mockStore = createMockStore(mockState);
 
 const DATA = "stuff";
 const MOCK_EVENT = {
@@ -18,58 +29,30 @@ const MOCK_EVENT = {
   },
 };
 
-var projectMaster: ReactTestRenderer;
-var projectHandle: ReactTestInstance;
+let projectMaster: ReactTestRenderer;
+let projectHandle: ReactTestInstance;
 
 it("renders without crashing", () => {
-  const state = {
-    currentProject: {},
-    createProjectState: {
-      name: "",
-      inProgress: false,
-      success: false,
-      errorMsg: "",
-    },
-  };
-  const mockStore = createMockStore(state);
   renderer.act(() => {
     renderer.create(
-      <LocalizedCreateProject
-        inProgress={false}
-        success={false}
-        errorMsg={""}
-        asyncCreateProject={jest.fn()}
-        reset={jest.fn()}
-      />
+      <Provider store={mockStore}>
+        <CreateProjectComponent />
+      </Provider>
     );
   });
 });
 
 it("errors on empty name", () => {
-  const state = {
-    currentProject: {},
-    createProjectState: {
-      name: "",
-      inProgress: false,
-      success: false,
-      errorMsg: "",
-    },
-  };
-  const mockStore = createMockStore(state);
   renderer.act(() => {
     projectMaster = renderer.create(
-      <LocalizedCreateProject
-        inProgress={false}
-        success={false}
-        errorMsg={""}
-        asyncCreateProject={jest.fn()}
-        reset={jest.fn()}
-      />
+      <Provider store={mockStore}>
+        <CreateProjectComponent />
+      </Provider>
     );
   });
 
   projectHandle = projectMaster.root.findByType(CreateProject);
-  const testComponent = projectHandle.instance;
+  let testComponent = projectHandle.instance;
   testComponent.setState({ name: "" });
   testComponent.createProject(MOCK_EVENT);
   expect(testComponent.state.error.name).toBe(true);

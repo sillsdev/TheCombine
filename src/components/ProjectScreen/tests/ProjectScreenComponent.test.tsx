@@ -1,10 +1,11 @@
 import React from "react";
-import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
-import ProjectScreen from "../ProjectScreenComponent";
 import renderer from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
-jest.mock("../CreateProject/CreateProjectComponent");
+import ProjectScreen from "../ProjectScreenComponent";
+
+jest.mock("../../AppBar/AppBarComponent", () => "div");
 
 const createMockStore = configureMockStore([]);
 const state = {
@@ -17,6 +18,7 @@ const state = {
   },
 };
 const mockStore = createMockStore(state);
+
 it("renders without crashing", () => {
   renderer.act(() => {
     renderer.create(

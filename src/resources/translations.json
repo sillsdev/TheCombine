@@ -248,25 +248,25 @@
       "vernacular": ["Vernacular", "Vernáculo", "Vernaculaire"],
       "vernacularLanguage": [
         "Vernacular Language",
-        "Vernáculo Lenguaje",
-        "Vernaculaire Langue"
+        "Lenguaje vernácula",
+        "Langue vernaculaire"
       ],
       "analysis": ["Analysis", "Análisis", "Analyse"],
       "analysisLanguage": [
         "Analysis Language",
-        "Análisis Lenguaje",
-        "Analyse Langue"
+        "Lenguaje de análisis",
+        "Langue d'analyse"
       ],
       "uiLang": ["Interface", "Interfaz", "Interface"],
       "save": ["Save", "Guardar", "Enregistrer"],
       "interfaceLanguage": [
-        "Interface Language",
-        "Lenguaje de interfaz",
-        "Langue de l'interface"
+        "Interface Languages",
+        "Lenguajes de interfaz",
+        "Langues de l'interface"
       ],
       "bcp47": ["BCP 47 Code", "BCP 47", "BCP 47"],
-      "name": ["name", "Nom", null],
-      "font": ["font", null, null]
+      "name": ["Name", "Nombre", "Nom"],
+      "font": ["Font", "Font", "Font"]
     },
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
     "projectList": ["Projects", "Proyectos", "Projets"],

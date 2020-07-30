@@ -1,8 +1,8 @@
-import * as action from "../CreateProjectActions";
-import * as reducer from "../CreateProjectReducer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import { IN_PROGRESS } from "../CreateProjectActions";
+
+import * as action from "../CreateProjectActions";
+import * as reducer from "../CreateProjectReducer";
 
 const createMockStore = configureMockStore([thunk]);
 
@@ -10,15 +10,15 @@ const project = {
   name: "testProjectName",
 
   vernacularLanguage: {
-    name: "testvernname",
-    bcp47: "testverncode",
-    font: "testvernfont",
+    name: "testVernName",
+    bcp47: "testVernCode",
+    font: "testVernFont",
   },
   analysisLanguages: [
     {
-      name: "testanalysisname",
-      bcp47: "testanalysiscode",
-      font: "testanalysisfont",
+      name: "testAnalysisName",
+      bcp47: "testAnalysisCode",
+      font: "testAnalysisFont",
     },
   ],
   languageData: new File([], "testFile.lift"),
@@ -43,7 +43,7 @@ describe("CreateProjectAction Tests", () => {
         project.analysisLanguages
       )
     ).toEqual({
-      type: IN_PROGRESS,
+      type: action.IN_PROGRESS,
       payload: {
         name: project.name,
         vernacularLanguage: project.vernacularLanguage,

@@ -1,23 +1,22 @@
-//external modules
+import {
+  Card,
+  CardContent,
+  Grid,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import * as React from "react";
 import {
   Translate,
   LocalizeContextProps,
   withLocalize,
 } from "react-localize-redux";
-import {
-  Grid,
-  Typography,
-  CardContent,
-  TextField,
-  Card,
-  FormControl,
-} from "@material-ui/core";
-import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
-import FileInputButton from "../../Buttons/FileInputButton";
-import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
+
 import { WritingSystem } from "../../../types/project";
 import theme from "../../../types/theme";
+import FileInputButton from "../../Buttons/FileInputButton";
+import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 
 export interface CreateProjectProps {
   asyncCreateProject: (
@@ -227,7 +226,7 @@ export class CreateProject extends React.Component<
               <Translate id="createProject.upload?" />
             </Typography>
             <FileInputButton
-              updateFile={(file) => this.updateLanguageData(file)}
+              updateFile={(file: File) => this.updateLanguageData(file)}
               accept=".zip"
               style={{ marginTop: theme.spacing(2) }}
             >
