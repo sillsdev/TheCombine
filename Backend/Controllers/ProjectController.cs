@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
         /// <summary> Returns all <see cref="Project"/>s </summary>
         /// <remarks> GET: v1/projects </remarks>
         [HttpGet]
-        public async Task<IActionResult> GetAllProjects()
+        public async Task<IActionResult> Get()
         {
             return new ObjectResult(await _projectService.GetAllProjects());
         }
