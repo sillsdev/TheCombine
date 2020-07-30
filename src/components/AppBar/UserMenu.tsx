@@ -1,10 +1,8 @@
 import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
 import { ExitToApp, Person, SettingsApplications } from "@material-ui/icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { Translate } from "react-localize-redux";
-
-import { avatarSrc } from "../../backend";
-import { getCurrentUser, setProjectId } from "../../backend/localStorage";
+import * as LocalStorage from "../../backend/localStorage";
 import history from "../../history";
 import theme from "../../types/theme";
 
@@ -25,13 +23,13 @@ export default function UserMenu() {
     setAnchorElement(null);
   }
 
-  async function getAvatar() {
-    const user = getCurrentUser()!;
-    const a = await avatarSrc(user);
-    setAvatar(a);
+  function getAvatar() {
+    const userAvatar = LocalStorage.getAvatar();
+    setAvatar(userAvatar!);
   }
-
-  getAvatar();
+  useEffect(() => {
+    getAvatar();
+  });
 
   // Determine if the user is an Admin user.
   const userString = localStorage.getItem("user");
@@ -71,7 +69,7 @@ export default function UserMenu() {
         {isAdmin && (
           <MenuItem
             onClick={() => {
-              setProjectId("");
+              LocalStorage.setProjectId("");
               history.push("/site-settings");
             }}
           >
