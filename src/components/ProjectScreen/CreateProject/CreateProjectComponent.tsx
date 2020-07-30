@@ -184,7 +184,7 @@ class CreateProject extends React.Component<
               value={this.state.name}
               onChange={(e) => this.updateName(e)}
               variant="outlined"
-              style={{ width: "100%", marginBottom: 30 }}
+              style={{ width: "100%", marginBottom: theme.spacing(2) }}
               margin="normal"
               error={this.state.error["name"]}
               helperText={
@@ -197,30 +197,30 @@ class CreateProject extends React.Component<
             </Typography>
             <LanguagePicker
               value={this.state.vernLanguage.bcp47}
-              setCode={this.setVernBcp47}
+              setCode={(bcp47: string) => this.setVernBcp47(bcp47)}
               name={this.state.vernLanguage.name}
-              setName={this.setVernLangName}
+              setName={(name: string) => this.setVernLangName(name)}
               font={this.state.vernLanguage.font}
-              setFont={this.setVernFontName}
+              setFont={(font: string) => this.setVernFontName(font)}
               t={languagePickerStrings_en}
             />
             {/*Analysis language picker */}
-            <Typography style={{ marginTop: 10 }}>
+            <Typography style={{ marginTop: theme.spacing(2) }}>
               <Translate id="projectSettings.language.analysisLanguage" />
             </Typography>
             <LanguagePicker
               value={this.state.analysisLanguages[0].bcp47}
-              setCode={this.setAnalysisBcp47}
+              setCode={(bcp47: string) => this.setAnalysisBcp47(bcp47)}
               name={this.state.analysisLanguages[0].bcp47}
-              setName={this.setAnalysisLangName}
+              setName={(name: string) => this.setAnalysisLangName(name)}
               font={this.state.analysisLanguages[0].bcp47}
-              setFont={this.setAnalysisFontName}
+              setFont={(font: string) => this.setAnalysisFontName(font)}
               t={languagePickerStrings_en}
             />
             {/* File upload */}
             <Typography
               variant="body1"
-              style={{ marginRight: theme.spacing(1) }}
+              style={{ marginRight: theme.spacing(2) }}
               display="inline"
             >
               <Translate id="createProject.upload?" />
@@ -228,13 +228,17 @@ class CreateProject extends React.Component<
             <FileInputButton
               updateFile={(file) => this.updateLanguageData(file)}
               accept=".zip"
-              style={{ marginTop: theme.spacing(1) }}
+              style={{ marginTop: theme.spacing(2) }}
             >
               <Translate id="createProject.browse" />
             </FileInputButton>
             {/* Displays the name of the selected file */}
             {this.state.fileName && (
-              <Typography variant="body1" noWrap style={{ marginTop: 30 }}>
+              <Typography
+                variant="body1"
+                noWrap
+                style={{ marginTop: theme.spacing(1) }}
+              >
                 <Translate id="createProject.fileSelected" />:{" "}
                 {this.state.fileName}
               </Typography>
@@ -246,7 +250,7 @@ class CreateProject extends React.Component<
                 done={this.props.success}
                 color="primary"
                 style={{
-                  marginTop: 30,
+                  marginTop: theme.spacing(1),
                 }}
                 doneText={<Translate id="createProject.success" />}
               >

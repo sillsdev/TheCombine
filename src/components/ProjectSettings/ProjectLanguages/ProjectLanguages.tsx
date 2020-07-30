@@ -6,18 +6,23 @@ import {
   LocalizeContextProps,
   withLocalize,
 } from "react-localize-redux";
+import theme from "../../../types/theme";
 
 interface LanguageProps {
   project: Project;
 }
 
-class ProjectLanguage extends React.Component<
+class ProjectLanguages extends React.Component<
   LanguageProps & LocalizeContextProps
 > {
-  renderWritingSystem(ws: WritingSystem) {
+  renderWritingSystem(ws: WritingSystem, index: number) {
     return (
       <React.Fragment>
         <Grid container spacing={1}>
+          <Grid item>
+            {index + 1}
+            {". "}
+          </Grid>
           <Grid item>
             <Translate id="projectSettings.language.name" />
             {": "}
@@ -45,13 +50,17 @@ class ProjectLanguage extends React.Component<
         <Typography>
           <Translate id="projectSettings.language.vernacular" />
           {": "}
-          {this.renderWritingSystem(this.props.project.vernacularWritingSystem)}
+          {this.renderWritingSystem(
+            this.props.project.vernacularWritingSystem,
+            0
+          )}
         </Typography>
-        <Typography style={{ marginTop: 10 }}>
+        <Typography style={{ marginTop: theme.spacing(1) }}>
           <Translate id="projectSettings.language.analysis" />
           {": "}
-          {this.renderWritingSystem(
-            this.props.project.analysisWritingSystems[0]
+          {this.props.project.analysisWritingSystems.map(
+            (writingSystem, index) =>
+              this.renderWritingSystem(writingSystem, index)
           )}
         </Typography>
       </React.Fragment>
@@ -59,4 +68,4 @@ class ProjectLanguage extends React.Component<
   }
 }
 
-export default withLocalize(ProjectLanguage);
+export default withLocalize(ProjectLanguages);
