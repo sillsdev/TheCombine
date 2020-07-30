@@ -41,7 +41,7 @@ interface CreateProjectState {
   fileName?: string;
 }
 
-class CreateProject extends React.Component<
+export class CreateProject extends React.Component<
   CreateProjectProps & LocalizeContextProps,
   CreateProjectState
 > {

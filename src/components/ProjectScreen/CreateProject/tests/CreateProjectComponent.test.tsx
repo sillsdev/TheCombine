@@ -1,10 +1,25 @@
 import React from "react";
 import configureMockStore from "redux-mock-store";
-import { Provider } from "react-redux";
-import CreateProjectComponent from "../index";
-import renderer from "react-test-renderer";
+import LocalizedCreateProject, {
+  CreateProject,
+} from "../CreateProjectComponent";
+import renderer, {
+  ReactTestRenderer,
+  ReactTestInstance,
+} from "react-test-renderer";
 
 const createMockStore = configureMockStore([]);
+
+const DATA = "stuff";
+const MOCK_EVENT = {
+  preventDefault: jest.fn(),
+  target: {
+    value: DATA,
+  },
+};
+
+var projectMaster: ReactTestRenderer;
+var projectHandle: ReactTestInstance;
 
 it("renders without crashing", () => {
   const state = {
@@ -17,12 +32,17 @@ it("renders without crashing", () => {
     },
   };
   const mockStore = createMockStore(state);
-
-  renderer.create(
-    <Provider store={mockStore}>
-      <CreateProjectComponent />
-    </Provider>
-  );
+  renderer.act(() => {
+    renderer.create(
+      <LocalizedCreateProject
+        inProgress={false}
+        success={false}
+        errorMsg={""}
+        asyncCreateProject={jest.fn()}
+        reset={jest.fn()}
+      />
+    );
+  });
 });
 
 it("errors on empty name", () => {
@@ -36,10 +56,21 @@ it("errors on empty name", () => {
     },
   };
   const mockStore = createMockStore(state);
+  renderer.act(() => {
+    projectMaster = renderer.create(
+      <LocalizedCreateProject
+        inProgress={false}
+        success={false}
+        errorMsg={""}
+        asyncCreateProject={jest.fn()}
+        reset={jest.fn()}
+      />
+    );
+  });
 
-  const testRenderer = renderer.create(
-    <Provider store={mockStore}>
-      <CreateProjectComponent />
-    </Provider>
-  );
+  projectHandle = projectMaster.root.findByType(CreateProject);
+  const testComponent = projectHandle.instance;
+  testComponent.setState({ name: "" });
+  testComponent.createProject(MOCK_EVENT);
+  expect(testComponent.state.error.name).toBe(true);
 });
