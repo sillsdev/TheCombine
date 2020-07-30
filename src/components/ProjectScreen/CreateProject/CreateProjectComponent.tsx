@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 import FileInputButton from "../../Buttons/FileInputButton";
+import { getAllProjects } from "../../../backend";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
@@ -27,7 +28,8 @@ interface CreateProjectState {
   name: string;
   languageData?: File;
   fileName?: string;
-  error: { name: boolean };
+  error: { empty: boolean; nameTaken: boolean };
+  allProjects?: string[];
 }
 
 class CreateProject extends React.Component<
@@ -36,24 +38,39 @@ class CreateProject extends React.Component<
 > {
   constructor(props: CreateProjectProps & LocalizeContextProps) {
     super(props);
-    this.state = { name: "", error: { name: false } };
+    this.state = { name: "", error: { empty: false, nameTaken: false } };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.reset();
+    await getAllProjects().then((projects) => {
+      var names = projects.map((project) => project.name);
+      this.setState({ allProjects: names });
+    });
   }
 
-  updateName(
+  async updateName(
     evt: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
   ) {
     const name = evt.target.value;
     const languageData = this.state.languageData;
+    var duplicateName = false;
+    if (this.state.allProjects) {
+      this.state.allProjects.forEach((projectName) => {
+        if (projectName === name) {
+          duplicateName = true;
+        }
+      });
+    }
     this.setState({
       languageData,
       name,
-      error: { name: name === "" },
+      error: {
+        empty: name === "",
+        nameTaken: duplicateName,
+      },
     });
   }
 
@@ -72,7 +89,13 @@ class CreateProject extends React.Component<
     const name = this.state.name.trim();
     const languageData = this.state.languageData;
     if (name === "") {
-      this.setState({ error: { name: true } });
+      this.setState({
+        error: { empty: true, nameTaken: true },
+      });
+    } else if (this.state.error["nameTaken"]) {
+      this.setState({
+        error: { empty: false, nameTaken: true },
+      });
     } else if (this.props.asyncCreateProject) {
       this.props.asyncCreateProject(name, languageData as File);
     }
@@ -97,9 +120,14 @@ class CreateProject extends React.Component<
               variant="outlined"
               style={{ width: "100%", marginBottom: 30 }}
               margin="normal"
-              error={this.state.error["name"]}
+              error={this.state.error["empty"] || this.state.error["nameTaken"]}
               helperText={
-                this.state.error["name"] && <Translate id="login.required" />
+                (this.state.error["empty"] && (
+                  <Translate id="login.required" />
+                )) ||
+                (this.state.error["nameTaken"] && (
+                  <Translate id="createProject.nameTaken" />
+                ))
               }
             />
 

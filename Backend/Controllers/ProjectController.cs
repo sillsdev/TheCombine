@@ -35,12 +35,8 @@ namespace BackendFramework.Controllers
         /// <summary> Returns all <see cref="Project"/>s </summary>
         /// <remarks> GET: v1/projects </remarks>
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllProjects()
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
-            {
-                return new ForbidResult();
-            }
             return new ObjectResult(await _projectService.GetAllProjects());
         }
 
