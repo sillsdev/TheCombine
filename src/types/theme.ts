@@ -38,9 +38,15 @@ const palette = {
   tonalOffset: 0.2,
 };
 
-var typography = {
+const typography = {
   // Copied from default theme
-  fontFamily: ['"Noto Sans"', '"Helvetica"', '"Arial"', "sans-serif"].join(","),
+  fontFamily: [
+    '"Roboto"',
+    '"Noto Sans"',
+    '"Helvetica"',
+    '"Arial"',
+    "sans-serif",
+  ].join(","),
 };
 
 const dynamicFontParams = { factor: 2 };
