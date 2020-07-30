@@ -158,53 +158,5 @@ namespace Backend.Tests
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
         }
-
-        [Test]
-        public void TestEmailInviteToProject()
-        {
-            var project = _projectService.Create(RandomProject()).Result;
-            var linkWithIdentifier = _projectService.CreateLinkWithToken(project, "example@address.com").Result;
-            Assert.AreEqual(linkWithIdentifier, "/invite/" + project.Id + "/token123");
-        }
-
-
-        private static User RandomUser()
-        {
-            var user = new User { Email = Util.RandString() };
-            return user;
-        }
-        [Test]
-        public void TestValidateLink()
-        {
-            var user1 = _userService.Create(RandomUser()).Result;
-            var user2 = _userService.Create(RandomUser()).Result;
-            var user3 = _userService.Create(RandomUser()).Result;
-            user1.Email = "example1@address.com";
-            user2.Email = "example22@address.com";
-            user3.Email = "example3@address.com";
-            var project = RandomProject();
-            var token1 = new EmailInvite(2, "example1@address.com");
-            var token2 = new EmailInvite(2, "example2@address.com");
-            var token3 = new EmailInvite(-2, "example3@address.com");
-            project.InviteTokens.Add(token1);
-            project.InviteTokens.Add(token2);
-            project.InviteTokens.Add(token3);
-
-            var status = (_controller.ValidateToken(project.Id, token1.Token).Result as ObjectResult).Value as bool[];
-            Assert.AreEqual(status[0], true);
-            Assert.AreEqual(status[1], true);
-
-            /*status = (_controller.ValidateToken(project.Id, token2.Token).Result as ObjectResult).Value as bool[];
-            Assert.AreEqual(status[0], true);
-            Assert.AreEqual(status[1], false);
-
-            status = (_controller.ValidateToken(project.Id, "FakeToken").Result as ObjectResult).Value as bool[];
-            Assert.AreEqual(status[0], false);
-            Assert.AreEqual(status[1], false);
-
-            status = (_controller.ValidateToken(project.Id, token3.Token).Result as ObjectResult).Value as bool[];
-            Assert.AreEqual(status[0], false);
-            Assert.AreEqual(status[1], false);*/
-        }
     }
 }
