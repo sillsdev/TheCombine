@@ -15,3 +15,11 @@ export function setProjectId(id: string) {
 export function getProjectId(): string {
   return localStorage.getItem("projectId") || "";
 }
+
+export function setAvatar(src: string) {
+  localStorage.setItem("avatar", src);
+}
+
+export function getAvatar(): string {
+  return localStorage.getItem("avatar") || "";
+}
