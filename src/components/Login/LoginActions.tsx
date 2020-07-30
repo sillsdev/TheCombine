@@ -151,17 +151,17 @@ export function registerAttempt(username: string): UserAction {
   };
 }
 
-export function registerSuccess(username: string): UserAction {
-  return {
-    type: REGISTER_SUCCESS,
-    payload: { username },
-  };
-}
-
 export function registerFailure(errorMessage: string): UserAction {
   return {
     type: REGISTER_FAILURE,
     payload: { username: errorMessage },
+  };
+}
+
+export function registerSuccess(username: string): UserAction {
+  return {
+    type: REGISTER_SUCCESS,
+    payload: { username },
   };
 }
 
