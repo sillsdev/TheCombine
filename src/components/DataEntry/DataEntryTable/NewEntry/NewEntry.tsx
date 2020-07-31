@@ -174,7 +174,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
           >
             <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
               <NewVernEntry
-                duplicates={[]}
                 vernacular={this.state.newEntry.vernacular}
                 newEntry={this.state.newEntry}
                 vernInput={this.vernInput}
