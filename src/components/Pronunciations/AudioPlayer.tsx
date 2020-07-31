@@ -22,7 +22,7 @@ export interface PlayerProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
-      margin: theme.spacing(1),
+      marginRight: theme.spacing(1),
     },
     icon: {
       color: green[800],

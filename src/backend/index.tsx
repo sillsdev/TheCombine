@@ -324,7 +324,7 @@ export async function deleteAudio(
   fileName: string
 ): Promise<string> {
   let resp = await backendServer.delete(
-    `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
+    `projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
     { headers: authHeader() }
   );
   return resp.data;

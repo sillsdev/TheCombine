@@ -3,7 +3,7 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 
 import Recorder from "./Recorder";
-import RecorderIconHolder from "./RecorderIconHolder";
+import RecorderIcon from "./RecorderIcon";
 
 export interface RecorderProps {
   wordId: string;
@@ -50,7 +50,7 @@ export default function AudioRecorder(props: RecorderProps) {
 
   return (
     <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
-      <RecorderIconHolder
+      <RecorderIcon
         wordId={props.wordId}
         startRecording={startRecording}
         stopRecording={stopRecording}
