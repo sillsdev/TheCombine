@@ -1,22 +1,32 @@
-import * as reducer from "../CreateProjectReducer";
+import { StoreAction, StoreActions } from "../../../../rootActions";
 import {
   CreateProjectAction,
   IN_PROGRESS,
   RESET,
 } from "../CreateProjectActions";
-import { StoreActions, StoreAction } from "../../../../rootActions";
+import * as reducer from "../CreateProjectReducer";
+
+const emptyWritingSystem = {
+  name: "",
+  bcp47: "",
+  font: "",
+};
 
 const project = {
   name: "testProjectName",
   languageData: new File([], "testFile.lift"),
+  vernacularLanguage: emptyWritingSystem,
+  analysisLanguages: [emptyWritingSystem],
 };
 
 describe("createActionReducer Tests", () => {
   let resultState: reducer.CreateProjectState = {
     name: project.name,
-    success: false,
     inProgress: true,
+    success: false,
     errorMsg: "",
+    vernacularLanguage: project.vernacularLanguage,
+    analysisLanguages: project.analysisLanguages,
   };
 
   let inProgress: CreateProjectAction = {

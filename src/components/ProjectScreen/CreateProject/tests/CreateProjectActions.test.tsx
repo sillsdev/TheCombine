@@ -1,13 +1,26 @@
-import * as action from "../CreateProjectActions";
-import * as reducer from "../CreateProjectReducer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import { IN_PROGRESS } from "../CreateProjectActions";
+
+import * as action from "../CreateProjectActions";
+import * as reducer from "../CreateProjectReducer";
 
 const createMockStore = configureMockStore([thunk]);
 
 const project = {
   name: "testProjectName",
+
+  vernacularLanguage: {
+    name: "testVernName",
+    bcp47: "testVernCode",
+    font: "testVernFont",
+  },
+  analysisLanguages: [
+    {
+      name: "testAnalysisName",
+      bcp47: "testAnalysisCode",
+      font: "testAnalysisFont",
+    },
+  ],
   languageData: new File([], "testFile.lift"),
 };
 
@@ -15,20 +28,39 @@ describe("CreateProjectAction Tests", () => {
   let mockState: reducer.CreateProjectState = reducer.defaultState;
   let CreateProject: action.CreateProjectAction = {
     type: action.IN_PROGRESS,
-    payload: { name: project.name },
+    payload: {
+      name: project.name,
+      vernacularLanguage: project.vernacularLanguage,
+      analysisLanguages: project.analysisLanguages,
+    },
   };
 
   test("inProgress returns correct value", () => {
-    expect(action.inProgress(project.name)).toEqual({
-      type: IN_PROGRESS,
-      payload: { name: project.name },
+    expect(
+      action.inProgress(
+        project.name,
+        project.vernacularLanguage,
+        project.analysisLanguages
+      )
+    ).toEqual({
+      type: action.IN_PROGRESS,
+      payload: {
+        name: project.name,
+        vernacularLanguage: project.vernacularLanguage,
+        analysisLanguages: project.analysisLanguages,
+      },
     });
   });
 
   test("asyncCreateProject correctly affects state", () => {
     const mockStore = createMockStore(mockState);
     const mockDispatch = mockStore.dispatch<any>(
-      action.asyncCreateProject(project.name, project.languageData)
+      action.asyncCreateProject(
+        project.name,
+        project.vernacularLanguage,
+        project.analysisLanguages,
+        project.languageData
+      )
     );
 
     mockDispatch

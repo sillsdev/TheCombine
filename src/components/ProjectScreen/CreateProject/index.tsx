@@ -9,6 +9,7 @@ import {
   reset,
 } from "./CreateProjectActions";
 import { ProjectAction } from "../../Project/ProjectActions";
+import { WritingSystem } from "../../../types/project";
 
 function mapStateToProps(state: StoreState) {
   return {
@@ -23,8 +24,20 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, CreateProjectAction | ProjectAction>
 ) {
   return {
-    asyncCreateProject: (name: string, languageData: File) => {
-      dispatch(asyncCreateProject(name, languageData));
+    asyncCreateProject: (
+      name: string,
+      vernacularLanguage: WritingSystem,
+      analysisLanguages: WritingSystem[],
+      languageData: File
+    ) => {
+      dispatch(
+        asyncCreateProject(
+          name,
+          vernacularLanguage,
+          analysisLanguages,
+          languageData
+        )
+      );
     },
     reset: () => {
       dispatch(reset());
