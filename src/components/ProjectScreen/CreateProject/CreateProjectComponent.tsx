@@ -159,11 +159,11 @@ export class CreateProject extends React.Component<
     const languageData = this.state.languageData;
     if (name === "") {
       this.setState({
-        error: { empty: true, nameTaken: this.state.error.nameTaken },
+        error: { empty: true, nameTaken: false },
       });
     } else if (await projectDuplicateCheck(this.state.name)) {
       this.setState({
-        error: { empty: this.state.error.empty, nameTaken: true },
+        error: { empty: false, nameTaken: true },
       });
     } else if (this.props.asyncCreateProject) {
       this.props.asyncCreateProject(
