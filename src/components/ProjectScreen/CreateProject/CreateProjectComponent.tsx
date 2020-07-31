@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 import FileInputButton from "../../Buttons/FileInputButton";
-import { getAllProjects } from "../../../backend";
+import { projectDuplicateCheck } from "../../../backend";
 
 export interface CreateProjectProps {
   asyncCreateProject: (name: string, languageData: File) => void;
@@ -41,35 +41,23 @@ class CreateProject extends React.Component<
     this.state = { name: "", error: { empty: false, nameTaken: false } };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.props.reset();
-    await getAllProjects().then((projects) => {
-      var names = projects.map((project) => project.name);
-      this.setState({ allProjects: names });
-    });
   }
 
-  async updateName(
+  updateName(
     evt: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
   ) {
     const name = evt.target.value;
     const languageData = this.state.languageData;
-    var duplicateName = false;
-    if (this.state.allProjects) {
-      this.state.allProjects.forEach((projectName) => {
-        if (projectName === name) {
-          duplicateName = true;
-        }
-      });
-    }
     this.setState({
       languageData,
       name,
       error: {
         empty: name === "",
-        nameTaken: duplicateName,
+        nameTaken: false,
       },
     });
   }
@@ -82,7 +70,7 @@ class CreateProject extends React.Component<
     }
   }
 
-  createProject(e: React.FormEvent<EventTarget>) {
+  async createProject(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
     if (this.props.success) return;
 
@@ -90,11 +78,11 @@ class CreateProject extends React.Component<
     const languageData = this.state.languageData;
     if (name === "") {
       this.setState({
-        error: { empty: true, nameTaken: true },
+        error: { ...this.state.error, empty: true },
       });
-    } else if (this.state.error["nameTaken"]) {
+    } else if (await projectDuplicateCheck(this.state.name)) {
       this.setState({
-        error: { empty: false, nameTaken: true },
+        error: { ...this.state.error, nameTaken: true },
       });
     } else if (this.props.asyncCreateProject) {
       this.props.asyncCreateProject(name, languageData as File);

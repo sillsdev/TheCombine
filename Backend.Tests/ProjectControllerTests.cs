@@ -158,5 +158,19 @@ namespace Backend.Tests
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
         }
+
+        [Test]
+        public void TestProjectDuplicateCheck()
+        {
+            var project1 = _projectService.Create(RandomProject()).Result;
+            var project2 = _projectService.Create(RandomProject()).Result;
+            var project3 = _projectService.Create(RandomProject()).Result;
+            var modProject = project1.Clone();
+            modProject.Name = "Proj";
+            _ = _controller.Put(modProject.Id, modProject);
+
+            Assert.AreEqual(_projectService.DuplicateCheck("Proj").Result, true);
+            Assert.AreEqual(_projectService.DuplicateCheck("NewProj").Result, false);
+        }
     }
 }
