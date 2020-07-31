@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "@material-ui/core";
 import history from "../../history";
-import { getProjectId } from "../../backend/localStorage";
-import { getProject } from "../../backend/index";
-import { Project } from "../../types/project";
 import { CurrentTab, tabColor } from "../../types/currentTab";
 import { useSelector } from "react-redux";
 
