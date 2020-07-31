@@ -120,5 +120,30 @@ namespace BackendFramework.Controllers
 
             return new ObjectResult(gotWord.Id);
         }
+
+        /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
+        /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId}/audio/delete/{fileName} </remarks>
+        [HttpDelete("{wordId}/audio/delete/{fileName}")]
+        public async Task<IActionResult> Delete(string projectId, string wordId, string fileName)
+        {
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return new ForbidResult();
+            }
+
+            // sanitize user input
+            if ((!SanitizeId(projectId)) || (!SanitizeId(wordId)))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
+            var newWord = await _wordService.Delete(projectId, wordId, fileName);
+
+            if (newWord != null)
+            {
+                return new OkObjectResult(newWord.Id);
+            }
+            return new NotFoundObjectResult("The project was found, but the word audio was not deleted");
+        }
     }
 }
