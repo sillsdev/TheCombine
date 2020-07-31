@@ -1,4 +1,4 @@
-import React, { useRef, createRef } from "react";
+import React from "react";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
@@ -13,7 +13,8 @@ export interface CharacterCardProps {
   count: number;
   status: characterStatus;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  fontHeight: string;
+  fontHeight: number;
+  cardWidth: number;
 }
 
 interface CharacterCardStates {}
@@ -35,7 +36,7 @@ export class CharacterCard extends React.Component<
       <React.Fragment>
         <Card
           style={{
-            maxWidth: 345,
+            maxWidth: this.props.cardWidth,
             margin: theme.spacing(1),
           }}
           onClick={this.props.onClick}
