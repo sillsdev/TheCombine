@@ -28,7 +28,7 @@ exports[`Tests AppBarComponent Ensures ProjectName Tab is shaded when itself is 
   <span
     className="MuiButton-label"
   >
-    
+    Project
   </span>
 </button>
 `;
@@ -126,7 +126,7 @@ exports[`Tests AppBarComponent Ensures only one tab is shaded 2`] = `
   <span
     className="MuiButton-label"
   >
-    
+    Project
   </span>
   <span
     className="MuiTouchRipple-root"

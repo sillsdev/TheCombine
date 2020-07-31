@@ -40,6 +40,19 @@ export const defaultState = {
   passwordResetState: {
     ...passwordResetState,
   },
+  currentProject: {
+    id: "1",
+    name: "Project",
+    isActive: true,
+    semanticDomains: [],
+    vernacularWritingSystem: "",
+    analysisWritingSystems: [],
+    validCharacters: [],
+    autocompleteSetting: "",
+    customFields: [],
+    wordFields: [],
+    partsOfSpeech: [],
+  },
   reviewEntriesState: {
     ...reviewEntriesState,
   },
