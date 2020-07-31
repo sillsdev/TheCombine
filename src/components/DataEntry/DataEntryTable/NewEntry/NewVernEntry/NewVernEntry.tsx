@@ -89,7 +89,6 @@ export class NewVernEntry extends React.Component<
         <Popper {...props} style={{ width: 600 }} placement="bottom-start" />
       );
     };
-
     return (
       <div>
         <Autocomplete

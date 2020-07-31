@@ -5,30 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-<<<<<<< Updated upstream
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}"
-=======
-      "name": "Attach",
-      "port": 9229,
-      "request": "attach",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "pwa-node"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Jest Tests",
-      "program": "${workspaceRoot}\\node_modules\\jest\\bin\\jest.js",
-      "args": ["-i"],
-      "preLaunchTask": "build",
-      "internalConsoleOptions": "openOnSessionStart",
-      "outFiles": ["${workspaceRoot}/dist/**/*"],
-      "envFile": "${workspaceRoot}/.env"
->>>>>>> Stashed changes
     },
     {
       "name": ".NET Core Launch (web)",
