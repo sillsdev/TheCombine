@@ -37,7 +37,7 @@ namespace BackendFramework.Controllers
         [HttpPost("forgot")]
         public async Task<IActionResult> ResetPasswordRequest([FromBody] PasswordResetData data)
         {
-            var email = data.Email;
+            var email = data.Email.ToLower();
             // create password reset
             var resetRequest = await _passwordResetService.CreatePasswordReset(email);
 
@@ -116,6 +116,7 @@ namespace BackendFramework.Controllers
         {
             try
             {
+                cred.Username = cred.Username.ToLower();
                 var user = await _userService.Authenticate(cred.Username, cred.Password);
                 if (user == null)
                 {
@@ -156,6 +157,8 @@ namespace BackendFramework.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] User user)
         {
+            user.Username = user.Username.ToLower();
+            user.Email = user.Email.ToLower();
             var returnUser = await _userService.Create(user);
             if (returnUser == null)
             {
@@ -172,6 +175,7 @@ namespace BackendFramework.Controllers
         [HttpPost("checkusername/{username}")]
         public async Task<IActionResult> CheckUsername(string username)
         {
+            username = username.ToLower();
             var usernameTaken = (await _userService.GetAllUsers()).Find(x => x.Username == username) != null;
             if (usernameTaken)
             {
@@ -188,6 +192,7 @@ namespace BackendFramework.Controllers
         [HttpPost("checkemail/{email}")]
         public async Task<IActionResult> CheckEmail(string email)
         {
+            email = email.ToLower();
             var emailTaken = (await _userService.GetAllUsers()).Find(x => x.Email == email) != null;
             if (emailTaken)
             {
