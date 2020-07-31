@@ -1,11 +1,12 @@
+import { Grid, Typography } from "@material-ui/core";
 import React from "react";
-import { Typography, Grid } from "@material-ui/core";
-import { Project, WritingSystem } from "../../../types/project";
 import {
-  Translate,
   LocalizeContextProps,
+  Translate,
   withLocalize,
 } from "react-localize-redux";
+
+import { Project, WritingSystem } from "../../../types/project";
 import theme from "../../../types/theme";
 
 interface LanguageProps {

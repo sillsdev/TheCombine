@@ -1,11 +1,11 @@
-import * as backend from "../../../backend";
-import { Project, defaultProject } from "../../../types/project";
-import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
-import history from "../../../history";
-import { asyncGetUserEdits, GoalAction } from "../../GoalTimeline/GoalsActions";
 import { ThunkDispatch } from "redux-thunk";
+
+import * as backend from "../../../backend";
+import history from "../../../history";
 import { StoreState } from "../../../types";
-import { WritingSystem } from "../../../types/project";
+import { defaultProject, Project, WritingSystem } from "../../../types/project";
+import { asyncGetUserEdits, GoalAction } from "../../GoalTimeline/GoalsActions";
+import { setCurrentProject, ProjectAction } from "../../Project/ProjectActions";
 
 export const IN_PROGRESS = "CREATE_PROJECT_IN_PROGRESS";
 export type IN_PROGRESS = typeof IN_PROGRESS;

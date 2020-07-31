@@ -1,6 +1,7 @@
-import ProjectLanguages from "./ProjectLanguages";
-import { StoreState } from "../../../types";
 import { connect } from "react-redux";
+
+import { StoreState } from "../../../types";
+import ProjectLanguages from "./ProjectLanguages";
 
 function mapStateToProps(state: StoreState) {
   return {

@@ -1,14 +1,15 @@
-import { Word, Sense, State } from "../../../types/word";
+import { ThunkDispatch } from "redux-thunk";
+
+import * as backend from "../../../backend";
+import { StoreState } from "../../../types";
+import { Sense, State, Word } from "../../../types/word";
 import {
-  ReviewEntriesWord,
-  SEP_CHAR,
-  ReviewEntriesSense,
   OLD_SENSE,
   parseWord,
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+  SEP_CHAR,
 } from "./ReviewEntriesTypes";
-import * as backend from "../../../backend";
-import { ThunkDispatch } from "redux-thunk";
-import { StoreState } from "../../../types";
 
 export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
