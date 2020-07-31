@@ -184,25 +184,6 @@ namespace BackendFramework.Controllers
             return new NotFoundObjectResult("The project was found, but the word was not deleted");
         }
 
-        /// <summary> Deletes audio in <see cref="Word"/> with specified ID </summary>
-        /// <remarks> DELETE: v1/projects/{projectId}/words/{wordId}/audio/delete/{fileName} </remarks>
-        [HttpDelete("{wordId}/audio/delete/{fileName}")]
-        public async Task<IActionResult> Delete(string projectId, string wordId, string fileName)
-        {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
-            {
-                return new ForbidResult();
-            }
-
-            var newWord = await _wordService.Delete(projectId, wordId, fileName);
-
-            if (newWord != null)
-            {
-                return new OkObjectResult(newWord.Id);
-            }
-            return new NotFoundObjectResult("The project was found, but the word audio was not deleted");
-        }
-
         /// <summary> Merge children <see cref="Word"/>s with the parent </summary>
         /// <remarks> PUT: v1/projects/{projectId}/words </remarks>
         /// <returns> List of ids of new words </returns>
