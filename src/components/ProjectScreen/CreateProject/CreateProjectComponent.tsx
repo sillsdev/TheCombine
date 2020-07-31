@@ -165,7 +165,7 @@ export class CreateProject extends React.Component<
       this.setState({
         error: { empty: false, nameTaken: true },
       });
-    } else if (this.props.asyncCreateProject) {
+    } else {
       this.props.asyncCreateProject(
         name,
         vernLang,
