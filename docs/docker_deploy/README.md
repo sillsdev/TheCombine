@@ -176,7 +176,8 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
 
   ## Vault Password
   The Ansible playbooks require that some of the variable files are encrypted.  When running one of the playbooks, you will need to provide the password for the encrypted files.  The password can be provided by:
-    1. entering the password when prompted.  Add the <tt>--ask-vault-pass</tt> option for <tt>ansible-playbook</tt> to be prompted for the password when it is required.  This is the default for <tt>./setup-nuc.sh</tt>
+
+    1. entering the password when prompted.  Add the <tt>--ask-vault-pass</tt> option for <tt>ansible-playbook</tt> to be prompted for the password when it is required.
     2. specify a file that has the password.  Add the <tt>--vault-password-file</tt> option for <tt>ansible-playbook</tt> followed by the path of a file that holds the vault password.
     3. set the environment variable <tt>ANSIBLE_VAULT_PASSWORD_FILE</tt> to the path of a file that holds the vault password.  This prevents you from needing to provide the vault password whenever you run an ansible playbook, either directly or from within a script such as <tt>setup-nuc.sh</tt>.  *Make sure that you are the only one with read permission for the password file!*
 
