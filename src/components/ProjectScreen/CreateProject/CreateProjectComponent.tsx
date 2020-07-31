@@ -34,12 +34,11 @@ export interface CreateProjectProps {
 
 interface CreateProjectState {
   name: string;
-  error: { name: boolean };
+  error: { empty: boolean; nameTaken: boolean };
   vernLanguage: WritingSystem;
   analysisLanguages: WritingSystem[];
   languageData?: File;
   fileName?: string;
-  error: { empty: boolean; nameTaken: boolean };
 }
 
 export class CreateProject extends React.Component<
@@ -51,7 +50,7 @@ export class CreateProject extends React.Component<
 
     this.state = {
       name: "",
-      error: { name: false, nameTaken: false },
+      error: { empty: false, nameTaken: false },
       vernLanguage: { name: "", bcp47: "und", font: "" },
       analysisLanguages: [{ name: "", bcp47: "und", font: "" }],
     };
