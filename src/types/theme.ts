@@ -41,8 +41,8 @@ const palette = {
 const typography = {
   // Copied from default theme
   fontFamily: [
-    '"Roboto"',
     '"Noto Sans"',
+    '"Roboto"',
     '"Helvetica"',
     '"Arial"',
     "sans-serif",

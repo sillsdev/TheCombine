@@ -14,7 +14,6 @@ export interface CharacterCardProps {
   status: characterStatus;
   onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   fontHeight: string;
-  setFontHeight: (i: string) => void;
 }
 
 interface CharacterCardStates {}

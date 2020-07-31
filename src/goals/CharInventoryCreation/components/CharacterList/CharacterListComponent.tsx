@@ -44,16 +44,8 @@ export class CharacterList extends React.Component<
     this.state = {
       hoverChar: "",
       sortOrder: sortOrder.characterAscending,
-      fontHeight: "24px",
+      fontHeight: "60px",
     };
-  }
-
-  componentDidMount() {
-    this.setFontHeight("60px");
-  }
-
-  setFontHeight(i: string) {
-    this.setState({ fontHeight: i });
   }
 
   render() {
@@ -110,7 +102,6 @@ export class CharacterList extends React.Component<
                   this.props.setSelectedCharacter(character.character)
                 }
                 fontHeight={this.state.fontHeight}
-                setFontHeight={(i: string) => this.setFontHeight(i)}
               />
             ))
           }
