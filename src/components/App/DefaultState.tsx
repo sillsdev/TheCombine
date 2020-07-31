@@ -4,6 +4,7 @@ import { defaultState as createProjectState } from "../ProjectScreen/CreateProje
 import { defaultState as goalSelectorState } from "../GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
 import { defaultState as passwordResetState } from "../PasswordReset/reducer";
 import { defaultState as reviewEntriesState } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { defaultProject } from "../../types/project";
 
 export const defaultState = {
   draggedWordState: {
@@ -39,6 +40,10 @@ export const defaultState = {
   },
   passwordResetState: {
     ...passwordResetState,
+  },
+  currentProject: {
+    ...defaultProject,
+    name: "Project",
   },
   reviewEntriesState: {
     ...reviewEntriesState,
