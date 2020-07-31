@@ -1,22 +1,29 @@
-import { authHeaderWithUserGetter } from "../AuthHeaders";
+import * as LocalStorage from "../../../backend/localStorage";
+import authHeader from "../AuthHeaders";
 
-const mockComponentWithToken = { token: "testToken" };
-const mockUserGetter = jest.fn();
+let oldUserToken: string;
+
+beforeAll(() => {
+  oldUserToken = LocalStorage.getUserToken();
+});
 
 beforeEach(() => {
-  mockUserGetter.mockReset();
+  LocalStorage.setUserToken("");
+});
+
+afterAll(() => {
+  LocalStorage.setUserToken(oldUserToken);
 });
 
 describe("AuthHeaders Tests", () => {
   test("Creates header that includes token", () => {
-    mockUserGetter.mockReturnValue(mockComponentWithToken);
-    const authHeaderOut = authHeaderWithUserGetter(mockUserGetter);
+    LocalStorage.setUserToken("testToken");
+    const authHeaderOut = authHeader();
     expect(authHeaderOut.authorization).toMatch(/testToken/);
   });
+
   test("Creates empty header if user has no token prop", () => {
-    mockUserGetter.mockReturnValue({});
-    const authHeaderOut = authHeaderWithUserGetter(mockUserGetter);
-    expect(mockUserGetter).toHaveBeenCalledTimes(1);
+    const authHeaderOut = authHeader();
     expect(authHeaderOut).toEqual({});
   });
 });

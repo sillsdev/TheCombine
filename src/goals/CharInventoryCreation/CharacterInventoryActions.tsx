@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 
-import { StoreState } from "../../types";
+import * as backend from "../../backend";
 import {
   ProjectAction,
   setCurrentProject,
@@ -11,15 +11,14 @@ import {
   GoalAction,
   updateGoal,
 } from "../../components/GoalTimeline/GoalsActions";
-import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
+import { StoreState } from "../../types";
 import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
+import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
 import {
   CharacterSetEntry,
   characterStatus,
 } from "./CharacterInventoryReducer";
-import * as backend from "../../backend";
-import { getUserId } from "../../backend/localStorage";
 
 export enum CharacterInventoryType {
   SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
@@ -214,17 +213,14 @@ async function saveChangesToGoal(
   history: Goal[],
   dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
-  const userId: string = getUserId();
-  if (userId) {
-    const userEditId: string | undefined = await getUserEditId(userId);
-    if (userEditId) {
-      let indexInHistory: number = getIndexInHistory(history, updatedGoal);
+  const userEditId: string | undefined = getUserEditId();
+  if (userEditId) {
+    let indexInHistory: number = getIndexInHistory(history, updatedGoal);
 
-      dispatch(updateGoal(updatedGoal));
-      await backend
-        .addStepToGoal(userEditId, indexInHistory, updatedGoal)
-        .catch((err: string) => console.log(err));
-    }
+    dispatch(updateGoal(updatedGoal));
+    await backend
+      .addStepToGoal(userEditId, indexInHistory, updatedGoal)
+      .catch((err: string) => console.log(err));
   }
 }
 

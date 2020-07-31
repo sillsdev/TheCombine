@@ -73,7 +73,9 @@ function asyncCreateNewUserEditsObject(projectId: string) {
         const userId: string = LocalStorage.getUserId();
         let updatedUser: User = await Backend.getUser(userId);
         updatedUser.workedProjects[projectId] = userEditId;
-        await Backend.updateUser(updatedUser);
+        Backend.updateUser(updatedUser).then((user: User) =>
+          LocalStorage.setUser(user)
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -83,11 +85,9 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const userId: string = LocalStorage.getUserId();
-    if (userId) {
-      const userEditId: string | undefined = await getUserEditId(userId);
-
-      const projectId: string = LocalStorage.getProjectId();
+    const projectId: string = LocalStorage.getProjectId();
+    if (projectId) {
+      const userEditId: string | undefined = getUserEditId();
       if (userEditId) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
@@ -99,22 +99,20 @@ export function asyncGetUserEdits() {
 
 export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const userId: string = LocalStorage.getUserId();
-    if (userId) {
-      let userEditId: string | undefined = await getUserEditId(userId);
-      if (userEditId) {
-        dispatch(loadGoalData(goal)).then(
-          (returnedGoal) => (goal = returnedGoal)
-        );
-        await Backend.addGoalToUserEdit(userEditId, goal)
-          .then((resp) => {
-            dispatch(addGoalToHistory(goal));
-            history.push(`/goals/${resp}`);
-          })
-          .catch((err: string) => {
-            console.log(err);
-          });
-      }
+    let userEditId: string | undefined = getUserEditId();
+    if (userEditId) {
+      dispatch(loadGoalData(goal)).then(
+        (returnedGoal) => (goal = returnedGoal)
+      );
+      await Backend.addGoalToUserEdit(userEditId, goal)
+        .then((resp) => {
+          dispatch(addGoalToHistory(goal));
+          history.push(`/goals/${resp}`);
+          LocalStorage.updateWorkedProjects();
+        })
+        .catch((err: string) => {
+          console.log(err);
+        });
     }
   };
 }
@@ -193,17 +191,15 @@ export function updateStepData(goal: Goal): Goal {
   return goal;
 }
 
-export async function getUserEditId(
-  userId: string
-): Promise<string | undefined> {
+export function getUserEditId(): string | undefined {
   const projectId: string = LocalStorage.getProjectId();
-  const user: User = await Backend.getUser(userId);
-  const projectIds = Object.keys(user.workedProjects);
+  const workedProjects: Hash<string> = LocalStorage.getWorkedProjects();
+  const projectIds = Object.keys(workedProjects);
   const matches: string[] = projectIds.filter(
     (project) => projectId === project
   );
   if (matches) {
-    return user.workedProjects[matches[0]];
+    return workedProjects[matches[0]];
   }
 }
 

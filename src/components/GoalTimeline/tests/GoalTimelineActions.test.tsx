@@ -56,9 +56,11 @@ jest.mock("../../../backend", () => {
 // so calls to imported variables fail. Fixed by initializing these variables
 // inside of beforeAll()
 let mockGoalData: MergeDupData;
-
-let oldUserId: string;
+const createMockStore = configureMockStore([thunk]);
+let mockStore: MockStoreEnhanced<unknown, {}>;
 let oldProjectId: string;
+let oldUserId: string;
+
 const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
 const mockUserId: string = "34567";
@@ -68,12 +70,11 @@ mockUser.workedProjects[mockProjectId] = mockUserEditId;
 const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [] };
 const mockGoal: Goal = new CreateCharInv();
 
-const createMockStore = configureMockStore([thunk]);
-let mockStore: MockStoreEnhanced<unknown, {}>;
-
 beforeAll(() => {
+  // Save things in localStorage to restore once tests are done
   oldProjectId = LocalStorage.getProjectId();
   oldUserId = LocalStorage.getUserId();
+
   mockGoalData = goalDataMock;
 
   const mockStoreState = {
@@ -92,8 +93,10 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
+  // Clear everything from localStorage interacted with by these tests.
   LocalStorage.remove(LocalStorage.localStorageKeys.projectId);
   LocalStorage.remove(LocalStorage.localStorageKeys.userId);
+  LocalStorage.remove(LocalStorage.localStorageKeys.workedProjects);
 });
 
 afterEach(() => {
@@ -102,7 +105,8 @@ afterEach(() => {
 
 afterAll(() => {
   LocalStorage.setProjectId(oldProjectId);
-  LocalStorage.setUserId(oldUserId);
+  // Update all user-related things in LocalStorage to the backend values for that userId.
+  LocalStorage.updateUser(oldUserId);
 });
 
 describe("Test GoalsActions", () => {
@@ -145,7 +149,7 @@ describe("Test GoalsActions", () => {
 
   it("should dispatch an action to load a user edit", async () => {
     LocalStorage.setProjectId(mockProjectId);
-    LocalStorage.setUserId(mockUserId);
+    LocalStorage.setUser(mockUser);
 
     await mockStore
       .dispatch<any>(actions.asyncGetUserEdits())
@@ -163,7 +167,7 @@ describe("Test GoalsActions", () => {
   });
 
   it("should not dispatch any actions when creating a new user edit", async () => {
-    LocalStorage.setUserId(mockUserId);
+    LocalStorage.setUser(mockUser);
 
     await mockStore
       .dispatch<any>(actions.asyncGetUserEdits())
@@ -178,7 +182,7 @@ describe("Test GoalsActions", () => {
   it("should create an async action to add a goal to history", async () => {
     const goal: Goal = new CreateCharInv();
     LocalStorage.setProjectId(mockProjectId);
-    LocalStorage.setUserId(mockUserId);
+    LocalStorage.setUser(mockUser);
 
     await mockStore.dispatch<any>(actions.asyncAddGoalToHistory(goal));
 
@@ -307,13 +311,19 @@ describe("Test GoalsActions", () => {
 
   it("should return a userEditId", () => {
     LocalStorage.setProjectId(mockProjectId);
-    LocalStorage.setUserId(mockUserId);
-
-    expect(actions.getUserEditId(mockUserId)).toEqual(mockUserEditId);
+    LocalStorage.setUser(mockUser);
+    expect(actions.getUserEditId()).toEqual(mockUserEditId);
   });
 
-  it("should return undefined when a user edit doesn't exist", () => {
-    expect(actions.getUserEditId(mockUserId)).toEqual(undefined);
+  it("should return undefined when no projectId is set", () => {
+    LocalStorage.setUser(mockUser);
+    expect(actions.getUserEditId()).toEqual(undefined);
+  });
+
+  it("should return undefined when no userId exists for the project", () => {
+    LocalStorage.setProjectId("differentThanMockProjectId");
+    LocalStorage.setUser(mockUser);
+    expect(actions.getUserEditId()).toEqual(undefined);
   });
 
   it("should return the correct goal", () => {

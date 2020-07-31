@@ -1,20 +1,21 @@
-import {
-  setValidCharacters,
-  uploadInventory,
-  CharacterInventoryType,
-} from "../CharacterInventoryActions";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
-import { StoreState } from "../../../types";
-import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
-import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
-import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
-import { User } from "../../../types/user";
-import { CharacterSetEntry } from "../CharacterInventoryReducer";
+
 import * as backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
-import { Project } from "../../../types/project";
+import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
+import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
+import { StoreState } from "../../../types";
 import { Goal } from "../../../types/goals";
+import { Project } from "../../../types/project";
+import { User } from "../../../types/user";
+import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
+import {
+  CharacterInventoryType,
+  setValidCharacters,
+  uploadInventory,
+} from "../CharacterInventoryActions";
+import { CharacterSetEntry } from "../CharacterInventoryReducer";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
@@ -71,16 +72,20 @@ let mockUser: User = new User("", "", "");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
-jest.mock("../../../backend", () => ({
-  updateProject: jest.fn((_project: Project) => {
-    return Promise.resolve("projectId");
-  }),
-  addStepToGoal: jest.fn(
-    (_userEditId: string, _indexInHistory: number, _goal: Goal) => {
-      return Promise.resolve(mockGoal);
-    }
-  ),
-}));
+jest.mock("../../../backend", () => {
+  const originalBackend = jest.requireActual("../../../backend");
+  return {
+    ...originalBackend,
+    updateProject: jest.fn((_project: Project) => {
+      return Promise.resolve("projectId");
+    }),
+    addStepToGoal: jest.fn(
+      (_userEditId: string, _indexInHistory: number, _goal: Goal) => {
+        return Promise.resolve(mockGoal);
+      }
+    ),
+  };
+});
 
 const mockGoal: Goal = new CreateCharInv();
 
@@ -116,7 +121,7 @@ describe("Testing CharacterInventoryActions", () => {
 
   test("uploadInventory dispatches correct actions", async () => {
     LocalStorage.setProjectId(mockProjectId);
-    LocalStorage.setUserId(mockUserId);
+    LocalStorage.setUser(mockUser);
     let mockStore = createMockStore(MOCK_STATE);
     const mockUpload = uploadInventory();
     await mockUpload(

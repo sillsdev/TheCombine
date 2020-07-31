@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { authHeader } from "../components/Login/AuthHeaders";
+import authHeader from "../components/Login/AuthHeaders";
 import history from "../history";
 import { Goal, GoalType } from "../types/goals";
 import { Project } from "../types/project";

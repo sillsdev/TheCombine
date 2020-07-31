@@ -50,23 +50,21 @@ export type LoginType =
   | REGISTER_FAILURE
   | REGISTER_RESET;
 
-//action types
-
 export interface UserAction {
   type: LoginType;
   payload: LoginData;
 }
 
-//thunk action creator
+// thunk action creator
 export function asyncLogin(user: string, password: string) {
   return async (dispatch: Dispatch<UserAction>, getState: any) => {
     dispatch(loginAttempt(user));
-    //attempt to login with server
+    // Attempt to login with server
     await backend
       .authenticateUser(user, password)
       .then((userString: string) => {
         const user: User = JSON.parse(userString);
-        LocalStorage.setUserId(user.id);
+        LocalStorage.setUser(user);
         dispatch(loginSuccess(user.id));
         history.push("/");
       })
@@ -106,12 +104,12 @@ export function loginReset(): UserAction {
 
 export function logoutAndResetStore() {
   return (dispatch: Dispatch<UserAction | StoreAction>) => {
-    const userId = LocalStorage.getUserId();
-    if (userId) {
-      dispatch(logout(userId));
+    const username: string = LocalStorage.getUsername();
+    if (username) {
+      dispatch(logout(username));
     }
     dispatch(reset());
-    LocalStorage.remove(LocalStorage.localStorageKeys.userId);
+    LocalStorage.clearLocalStorage();
   };
 }
 
