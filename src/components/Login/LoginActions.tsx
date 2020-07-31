@@ -61,12 +61,20 @@ export interface UserAction {
 export function asyncLogin(username: string, password: string) {
   return async (dispatch: Dispatch<UserAction>, getState: any) => {
     dispatch(loginAttempt(username));
-    //attempt to login with server
     await backend
       .authenticateUser(username, password)
-      .then((userString: string) => {
-        localStorage.setItem("user", userString); //Store tokens
+      .then(async (userString: string) => {
+        await localStorage.setItem("user", userString); //Store tokens'
         dispatch(loginSuccess(username));
+        const currentUser = backend.getCurrentUser();
+        if (currentUser) {
+          try {
+            var avatar = await backend.avatarSrc(currentUser!);
+            backend.setAvatar(avatar);
+          } catch (e) {
+            backend.setAvatar("");
+          }
+        }
         history.push("/");
       })
       .catch((err) => {
