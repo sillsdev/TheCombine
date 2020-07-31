@@ -6,7 +6,6 @@ import { getCurrentUser } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import { User } from "../../../types/user";
 import { randomIntString } from "../../../utilities";
-import history from "../../../history";
 
 interface SwitchProps {
   project: Project;
@@ -44,9 +43,8 @@ export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
     }
   }
 
-  private async selectProject(project: Project) {
-    await this.props.setCurrentProject(project);
-    window.location.reload(false);
+  private selectProject(project: Project) {
+    this.props.setCurrentProject(project);
   }
 
   getListItems() {

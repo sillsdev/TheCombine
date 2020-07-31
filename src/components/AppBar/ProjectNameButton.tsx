@@ -5,6 +5,7 @@ import { getProjectId } from "../../backend/localStorage";
 import { getProject } from "../../backend/index";
 import { Project } from "../../types/project";
 import { CurrentTab, tabColor } from "../../types/currentTab";
+import { useSelector } from "react-redux";
 
 interface ProjectNameButtonProps {
   currentTab: CurrentTab;
@@ -12,15 +13,7 @@ interface ProjectNameButtonProps {
 
 /** A button that redirects to the project settings */
 export default function ProjectNameButton(props: ProjectNameButtonProps) {
-  const [projectName, setProjectName] = useState("");
-
-  useEffect(() => {
-    const getProjectName = async () => {
-      const project: Project = await getProject(getProjectId());
-      setProjectName(project.name);
-    };
-    getProjectName();
-  }, []);
+  const projectName = useSelector((state: any) => state.currentProject.name);
 
   return (
     <React.Fragment>
