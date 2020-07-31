@@ -3,6 +3,7 @@ import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 
 import * as backend from "../../backend";
+import { getCurrentUser, setAvatar } from "../../backend/localStorage";
 import history from "../../history";
 import { StoreAction, reset } from "../../rootActions";
 import { User } from "../../types/user";
@@ -66,13 +67,13 @@ export function asyncLogin(username: string, password: string) {
       .then(async (userString: string) => {
         await localStorage.setItem("user", userString); //Store tokens'
         dispatch(loginSuccess(username));
-        const currentUser = backend.getCurrentUser();
+        const currentUser = getCurrentUser();
         if (currentUser) {
           try {
             var avatar = await backend.avatarSrc(currentUser!);
-            backend.setAvatar(avatar);
+            setAvatar(avatar);
           } catch (e) {
-            backend.setAvatar("");
+            setAvatar("");
           }
         }
         history.push("/");
