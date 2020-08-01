@@ -26,10 +26,10 @@ namespace BackendFramework.Models
         public List<SemanticDomain> SemanticDomains { get; set; }
 
         [BsonElement("vernacularWritingSystem")]
-        public string VernacularWritingSystem { get; set; }
+        public WritingSystem VernacularWritingSystem { get; set; }
 
         [BsonElement("analysisWritingSystems")]
-        public List<string> AnalysisWritingSystems { get; set; }
+        public List<WritingSystem> AnalysisWritingSystems { get; set; }
 
         [BsonElement("validCharacters")]
         public List<string> ValidCharacters { get; set; }
@@ -60,9 +60,9 @@ namespace BackendFramework.Models
             Id = "";
             Name = "";
             IsActive = true;
-            VernacularWritingSystem = "";
+            VernacularWritingSystem = new WritingSystem();
             SemanticDomains = new List<SemanticDomain>();
-            AnalysisWritingSystems = new List<string>();
+            AnalysisWritingSystems = new List<WritingSystem>();
             ValidCharacters = new List<string>();
             RejectedCharacters = new List<string>();
             CustomFields = new List<CustomField>();
@@ -78,9 +78,9 @@ namespace BackendFramework.Models
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
                 IsActive = IsActive,
-                VernacularWritingSystem = VernacularWritingSystem.Clone() as string,
+                VernacularWritingSystem = VernacularWritingSystem.Clone(),
                 SemanticDomains = new List<SemanticDomain>(),
-                AnalysisWritingSystems = new List<string>(),
+                AnalysisWritingSystems = new List<WritingSystem>(),
                 ValidCharacters = new List<string>(),
                 RejectedCharacters = new List<string>(),
                 CustomFields = new List<CustomField>(),
@@ -93,9 +93,9 @@ namespace BackendFramework.Models
             {
                 clone.SemanticDomains.Add(sd.Clone());
             }
-            foreach (var aws in AnalysisWritingSystems)
+            foreach (var aw in AnalysisWritingSystems)
             {
-                clone.AnalysisWritingSystems.Add(aws.Clone() as string);
+                clone.AnalysisWritingSystems.Add(aw.Clone());
             }
             foreach (var cs in ValidCharacters)
             {
@@ -245,6 +245,65 @@ namespace BackendFramework.Models
                 Token = Token.Clone() as string,
                 ExpireTime = ExpireTime
             };
+        }
+    }
+
+    public class WritingSystem
+    {
+        public string Name { get; set; }
+        public string Bcp47 { get; set; }
+        public string Font { get; set; }
+
+        public WritingSystem()
+        {
+            Name = "";
+            Bcp47 = "";
+            Font = "";
+        }
+        public WritingSystem(WritingSystem ws)
+        {
+            Name = ws.Name;
+            Bcp47 = ws.Bcp47;
+            Font = ws.Font;
+        }
+
+        public WritingSystem Clone()
+        {
+            return new WritingSystem
+            {
+                Name = Name.Clone() as string,
+                Bcp47 = Bcp47.Clone() as string,
+                Font = Font.Clone() as string
+            };
+        }
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                var ws = obj as WritingSystem;
+                if (ws != null && Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Bcp47, Font);
+        }
+
+        override public String ToString()
+        {
+            return String.Format("<name: {0}, bcp47: {1}, font: {2}>", Name, Bcp47, Font);
         }
     }
 

@@ -6,15 +6,19 @@ export interface CustomField {
   name: string;
   type: string;
 }
-
+export interface WritingSystem {
+  name: string;
+  bcp47: string;
+  font: string;
+}
 export interface Project {
   id: string;
   name: string;
   isActive: boolean;
   semanticDomains: SemanticDomain[];
   userRoles: string;
-  vernacularWritingSystem: string;
-  analysisWritingSystems: string[];
+  vernacularWritingSystem: WritingSystem;
+  analysisWritingSystems: WritingSystem[];
   validCharacters: string[];
   rejectedCharacters: string[];
   wordFields: string[];
@@ -30,8 +34,8 @@ export const defaultProject = {
   isActive: true,
   semanticDomains: [],
   userRoles: "",
-  vernacularWritingSystem: "",
-  analysisWritingSystems: [],
+  vernacularWritingSystem: { name: "", bcp47: "", font: "" },
+  analysisWritingSystems: [{ name: "", bcp47: "", font: "" }],
   validCharacters: [],
   rejectedCharacters: [],
   customFields: [],
