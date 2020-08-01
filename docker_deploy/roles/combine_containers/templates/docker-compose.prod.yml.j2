@@ -7,28 +7,18 @@ services:
     restart: unless-stopped
   frontend:
     build:
-      context: .
       args:
         - COMBINE_CAPTCHA_REQUIRED={{ config_captcha_required }}
         - COMBINE_CAPTCHA_SITE={{ config_captcha_sitekey }}
-    volumes:
-        - ./nginx/conf.d:/etc/nginx/user.conf.d:ro
-        - letsencrypt:/etc/letsencrypt
     environment:
         CERTBOT_EMAIL: {{ certbot_email }}
         IS_STAGING: {{ certbot_is_staging }}
         SERVER_NAME: {{ combine_server_name }}
         SSL_CERTIFICATE: {{ ssl_certificate }}
         SSL_PRIVATE_KEY: {{ ssl_private_key }}
-        BACKEND_URL: "http://backend"
     command:
       - "/bin/bash"
       - "{{ frontend_start_script }}"
-    depends_on:
-      - backend
     restart: unless-stopped
   database:
     restart: unless-stopped
-
-volumes:
-  letsencrypt:
