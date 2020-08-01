@@ -96,6 +96,11 @@ describe("Test GoalTimelineVertical", () => {
     // Cleanup
     createTimeMaster();
   });
+
+  it("Generates proper suggestion data: empty suggestion data", () => {
+    createTimeMaster([], []);
+    expect(timeHandle.createSuggestionData()).toEqual(goals);
+  });
 });
 
 function createTimeMaster(history?: Goal[], suggestions?: Goal[]): void {
