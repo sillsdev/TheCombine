@@ -83,19 +83,26 @@ playbooks.  Each time you will be prompted for passwords:
    Ansible vaults.  See the current process owner (above) for the Vault password.
 
 #### Install Combine Pre-requisites
-The first playbook
 
- * `cd <COMBINE>/docker_deploy`
- * `ansible-playbook playbook_docker.yml --limit <target> -u <target_user> -K --ask-vault-pass`
+Run the first playbook to install all the packages that are needed by *TheCombine*:
+```
+cd <COMBINE>/docker_deploy
+ansible-playbook playbook_docker.yml --limit <target> -u <target_user> -K --ask-vault-pass
+```
 
-   Notes:
-    - Do not add the `-K` option if you do not need to enter your password to
-      run `sudo` commands
-    - The *\<target\>* must be listed in the hosts.yml file (in
-      \<COMBINE\>/docker_deploy).  If it is not, then you need to create your
-      own inventory file (see [below](#creating-your-own-inventory-file)).
+Notes:
+- Do not add the `-K` option if you do not need to enter your password to
+  run `sudo` commands
+- The *\<target\>* must be listed in the hosts.yml file (in
+  \<COMBINE\>/docker_deploy).  If it is not, then you need to create your
+  own inventory file (see [below](#creating-your-own-inventory-file)).
 
- * `ansible-playbook playbook_publish.yml --limit <target> -u combine --ask-vault-pass`
+#### Install *TheCombine*
+
+Run the second playbook to configure the docker containers and start them up:
+```
+ansible-playbook playbook_publish.yml --limit <target> -u combine --ask-vault-pass
+```
 
  #### Creating Your Own Inventory File
 
