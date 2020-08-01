@@ -23,6 +23,7 @@
 
   vars_files:
     - "vars/config_common.yml"
+    - "vars/packages.yml"
     - "vars/vault_config.yml"
 
   tasks:
