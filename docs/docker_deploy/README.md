@@ -82,6 +82,13 @@ playbooks.  Each time you will be prompted for passwords:
  * `Vault password` - some of the Ansible variable files are encrypted in
    Ansible vaults.  See the current process owner (above) for the Vault password.
 
+#### Minimum System Requirements
+
+The minimum system requirements for installing *TheCombine* on a target are:
+- Ubuntu 18.04 Server operating system (see [Install Ubuntu Bionic Server](#install-ubuntu-bionic-server))
+- 2 GB RAM
+- 12 GB Storage
+
 #### Install Combine Pre-requisites
 
 Run the first playbook to install all the packages that are needed by *TheCombine*:
