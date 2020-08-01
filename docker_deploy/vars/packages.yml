@@ -6,6 +6,6 @@
 ###############################
 
 # Packages installed by playbook_docker.yml
-docker_compose_version: 1.26.0
+docker_compose_version: 1.26.2
 
 # Packages installed by playbook_publish.yml
