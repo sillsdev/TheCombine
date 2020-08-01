@@ -1,9 +1,6 @@
 ﻿version: "3.8"
 services:
   backend:
-    entrypoint:
-      - dotnet
-      - BackendFramework.dll
     restart: unless-stopped
   frontend:
     build:
@@ -16,9 +13,6 @@ services:
         SERVER_NAME: {{ combine_server_name }}
         SSL_CERTIFICATE: {{ ssl_certificate }}
         SSL_PRIVATE_KEY: {{ ssl_private_key }}
-    command:
-      - "/bin/bash"
-      - "{{ frontend_start_script }}"
     restart: unless-stopped
   database:
     restart: unless-stopped

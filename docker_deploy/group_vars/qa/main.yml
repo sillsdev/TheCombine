@@ -9,9 +9,3 @@ ssl_certificate: "/ssl/cert.pem"
 ssl_private_key: "/ssl/key.pem"
 
 certbot_email: ''
-
-# entrypoint for the frontend container.  The
-# frontend container supports mulitple entrypoints
-# each of which defines a different method for managing
-# its SSL Certificates
-frontend_start_script: /scripts/entrypoint.sh
