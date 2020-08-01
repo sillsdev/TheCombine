@@ -116,7 +116,7 @@ function createTimeline(history?: Goal[], suggestions?: Goal[]): ReactElement {
       loadHistory={LOAD_HISTORY}
       allPossibleGoals={goals}
       history={history ? history : goals.slice(0, 3)}
-      suggestions={suggestions ? suggestions : goals.slice(3)}
+      suggestions={suggestions ? suggestions : goals.slice(0, 3)}
     />
   );
 }

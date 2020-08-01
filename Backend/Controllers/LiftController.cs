@@ -159,10 +159,10 @@ namespace BackendFramework.Controllers
                 // Import words from lift file
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
 
-                // Add character set to project from ldml file
+                // Add character set to project from ldml file 
                 var proj = _projectService.GetProject(projectId).Result;
                 _liftService.LdmlImport(
-                    Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem);
+                    Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem.Bcp47);
 
                 return new ObjectResult(resp);
             }

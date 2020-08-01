@@ -111,10 +111,14 @@ export class GoalTimelineVertical extends React.Component<
 
     for (let goal of this.props.allPossibleGoals) {
       hasGoal = false;
-      for (let i = 0; i < data.length && !hasGoal; i++)
-        if (goal === data[i]) hasGoal = true;
-
-      if (!hasGoal && goal !== this.props.suggestions[0]) data.push(goal);
+      for (let i = 0; i < data.length && !hasGoal; i++) {
+        if (goal.name === data[i].name) {
+          hasGoal = true;
+        }
+      }
+      if (!hasGoal && goal.name !== this.props.suggestions[0].name) {
+        data.push(goal);
+      }
     }
 
     return data;
