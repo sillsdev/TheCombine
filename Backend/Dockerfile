@@ -15,6 +15,8 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_PRINT_TELEMETRY_MESSAGE=false
 
 WORKDIR /app
 COPY launch.sh ./
