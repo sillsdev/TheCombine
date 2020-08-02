@@ -50,6 +50,11 @@
       args:
         chdir: "{{ source_dir }}"
 
+    - name: prune old images
+      command: docker image prune --force
+      args:
+        chdir: "{{ source_dir }}"
+
     - name: install shortcuts
       import_role:
         name: combine_shortcuts
