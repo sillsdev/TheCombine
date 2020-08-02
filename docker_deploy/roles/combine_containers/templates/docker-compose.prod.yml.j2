@@ -1,7 +1,5 @@
 ﻿version: "3.8"
 services:
-  backend:
-    restart: unless-stopped
   frontend:
     build:
       args:
@@ -13,6 +11,3 @@ services:
         SERVER_NAME: {{ combine_server_name }}
         SSL_CERTIFICATE: {{ ssl_certificate }}
         SSL_PRIVATE_KEY: {{ ssl_private_key }}
-    restart: unless-stopped
-  database:
-    restart: unless-stopped

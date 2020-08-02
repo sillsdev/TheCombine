@@ -10,6 +10,7 @@ services:
       - database
     env_file:
       - ./.env.backend
+    restart: unless-stopped
   frontend:
     build:
       context: .
@@ -30,12 +31,14 @@ services:
       - 443:443
     depends_on:
       - backend
+    restart: unless-stopped
   database:
     image: mongo:4.2
     volumes:
       - database_data:/data/db
     expose:
       - 27017
+    restart: unless-stopped
 
 volumes:
   backend_data:
