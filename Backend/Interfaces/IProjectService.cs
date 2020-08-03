@@ -13,6 +13,7 @@ namespace BackendFramework.Interfaces
         Task<ResultOfUpdate> Update(string projectId, Project project);
         Task<bool> Delete(string projectId);
         Task<bool> DeleteAllProjects();
+        Task<bool> DuplicateCheck(string projectName);
         bool CanImportLift(string projectId);
     }
 }
