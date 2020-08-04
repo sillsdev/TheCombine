@@ -267,6 +267,15 @@ export async function restoreProject(id: string) {
   return resp.data;
 }
 
+export async function projectDuplicateCheck(
+  projectName: string
+): Promise<boolean> {
+  let resp = await backendServer.get(`projects/duplicate/${projectName}`, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
 export async function uploadLift(
   project: Project,
   lift: File

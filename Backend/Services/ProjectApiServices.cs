@@ -171,6 +171,19 @@ namespace BackendFramework.Services
             }
         }
 
+        public async Task<bool> DuplicateCheck(string projectName)
+        {
+            var projects = await GetAllProjects();
+            foreach (var project in projects)
+            {
+                if (project.Name == projectName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool CanImportLift(string projectId)
         {
             var currentPath = FileUtilities.GenerateFilePath(

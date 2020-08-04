@@ -82,6 +82,18 @@ namespace Backend.Tests
         {
             return Task.FromResult(true);
         }
+        
+        public Task<bool> DuplicateCheck(string projectName)
+        {
+            foreach (var project in _projects)
+            {
+                if (project.Name == projectName)
+                {
+                    return Task.FromResult(true);
+                }
+            }
+            return Task.FromResult(false);
+        }
 
         public bool CanImportLift(string projectId)
         {
