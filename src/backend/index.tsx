@@ -173,12 +173,14 @@ export async function authenticateUser(
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  let resp = await backendServer.get(
-    `users/projects/${LocalStorage.getProjectId()}/allusers`,
-    {
-      headers: authHeader(),
-    }
-  );
+  let projectId: string = LocalStorage.getProjectId();
+  /* If an admin user tries to get the list of users,
+   the current projectId may be an empty string,
+   which causes a 404 error. */
+  projectId = projectId ? projectId : "_";
+  let resp = await backendServer.get(`users/projects/${projectId}/allusers`, {
+    headers: authHeader(),
+  });
   return resp.data;
 }
 
