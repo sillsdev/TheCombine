@@ -117,6 +117,12 @@ After `npm run coverage` has run, generate the HTML coverage report:
 
 Open `coverage-backend/index.html` in a browser.
 
+#### `npm run test:debug`
+
+Runs Jest tests for debugging, awaiting for an attach from an IDE.
+
+For VSCode, run the **Debug Jest Tests** configuration within the Run tab on the left taskbar.
+
 ### `npm run dotnet-format`
 
 Automatically format the C# source files in the backend.

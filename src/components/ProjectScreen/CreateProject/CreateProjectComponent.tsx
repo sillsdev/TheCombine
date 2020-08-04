@@ -16,6 +16,7 @@ import {
 import { WritingSystem } from "../../../types/project";
 import theme from "../../../types/theme";
 import FileInputButton from "../../Buttons/FileInputButton";
+import { projectDuplicateCheck } from "../../../backend";
 import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 
 export interface CreateProjectProps {
@@ -33,7 +34,7 @@ export interface CreateProjectProps {
 
 interface CreateProjectState {
   name: string;
-  error: { name: boolean };
+  error: { empty: boolean; nameTaken: boolean };
   vernLanguage: WritingSystem;
   analysisLanguages: WritingSystem[];
   languageData?: File;
@@ -46,9 +47,10 @@ export class CreateProject extends React.Component<
 > {
   constructor(props: CreateProjectProps & LocalizeContextProps) {
     super(props);
+
     this.state = {
       name: "",
-      error: { name: false },
+      error: { empty: false, nameTaken: false },
       vernLanguage: { name: "", bcp47: "und", font: "" },
       analysisLanguages: [{ name: "", bcp47: "und", font: "" }],
     };
@@ -133,7 +135,8 @@ export class CreateProject extends React.Component<
       languageData,
       name,
       error: {
-        name: name === "",
+        empty: name === "",
+        nameTaken: false,
       },
     });
   }
@@ -146,7 +149,7 @@ export class CreateProject extends React.Component<
     }
   }
 
-  createProject(e: React.FormEvent<EventTarget>) {
+  async createProject(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
     if (this.props.success) return;
 
@@ -156,9 +159,13 @@ export class CreateProject extends React.Component<
     const languageData = this.state.languageData;
     if (name === "") {
       this.setState({
-        error: { name: true },
+        error: { empty: true, nameTaken: false },
       });
-    } else if (this.props.asyncCreateProject) {
+    } else if (await projectDuplicateCheck(this.state.name)) {
+      this.setState({
+        error: { empty: false, nameTaken: true },
+      });
+    } else {
       this.props.asyncCreateProject(
         name,
         vernLang,
@@ -186,9 +193,14 @@ export class CreateProject extends React.Component<
               variant="outlined"
               style={{ width: "100%", marginBottom: theme.spacing(2) }}
               margin="normal"
-              error={this.state.error["name"]}
+              error={this.state.error["empty"] || this.state.error["nameTaken"]}
               helperText={
-                this.state.error["name"] && <Translate id="login.required" />
+                (this.state.error["empty"] && (
+                  <Translate id="login.required" />
+                )) ||
+                (this.state.error["nameTaken"] && (
+                  <Translate id="createProject.nameTaken" />
+                ))
               }
             />
             {/*Vernacular language picker */}
