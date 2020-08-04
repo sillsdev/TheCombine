@@ -270,6 +270,15 @@ export async function restoreProject(id: string) {
   return resp.data;
 }
 
+export async function projectDuplicateCheck(
+  projectName: string
+): Promise<boolean> {
+  let resp = await backendServer.get(`projects/duplicate/${projectName}`, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
 export async function uploadLift(
   project: Project,
   lift: File
@@ -318,7 +327,7 @@ export async function deleteAudio(
   fileName: string
 ): Promise<string> {
   let resp = await backendServer.delete(
-    `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
+    `projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
     { headers: authHeader() }
   );
   return resp.data;
