@@ -74,7 +74,7 @@ export default function ArchiveProjectButton(
             loading={loading}
             {...props}
           >
-            <Translate id="buttons.archive" />
+            <Translate id="buttons.confirm" />
           </LoadingButton>
         </DialogActions>
       </Dialog>

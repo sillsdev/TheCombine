@@ -74,7 +74,7 @@ export default function RestoreProjectButton(
             loading={loading}
             {...props}
           >
-            <Translate id="buttons.restore" />
+            <Translate id="buttons.confirm" />
           </LoadingButton>
         </DialogActions>
       </Dialog>
