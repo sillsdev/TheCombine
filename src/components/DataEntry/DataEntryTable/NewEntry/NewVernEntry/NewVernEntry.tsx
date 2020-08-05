@@ -6,6 +6,9 @@ import {
   Typography,
   Dialog,
   DialogContent,
+  List,
+  ListItem,
+  Grid,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { Word, Sense, simpleWord } from "../../../../../types/word";
@@ -16,6 +19,12 @@ import {
   LocalizeContextProps,
   withLocalize,
 } from "react-localize-redux";
+import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import {
+  ReviewEntriesWord,
+  parseWord,
+} from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 interface NewVernEntryProps {
   vernacular: string;
@@ -29,10 +38,10 @@ interface NewVernEntryProps {
 }
 interface NewVernEntryState {
   open: boolean;
-  selectedVernacularWord?: Word;
+  selectedVernacularWord: Word;
 }
 function VernDialog(props: {
-  vernacularWord?: Word;
+  vernacularWord: Word;
   open: boolean;
   onClose?: () => void;
 }) {
@@ -44,27 +53,53 @@ function VernDialog(props: {
     </Dialog>
   );
 }
-function SenseList(props: { vernacularWord?: Word }) {
-  // <div>
-  //   props.vernacularWords.map((word) => <h1>word.vernacular</h1>);
-  // </div>
+function SenseList(props: { vernacularWord: Word }) {
+  // TODO: Fetch words with duplicate vernaculars (homographs)
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const handleListItemClick = (index: number) => {
+    setSelectedIndex(index);
+  };
+  let currentWord: ReviewEntriesWord = parseWord(props.vernacularWord, "en"); //TODO get analysis lang
   if (props.vernacularWord) {
     return (
-      <React.Fragment>
-        <h1>{props.vernacularWord.vernacular}</h1>
-        {props.vernacularWord.senses.map((sense) => {
-          sense.glosses.map((gloss) => gloss.def);
-        })}
-        {props.vernacularWord.senses[0].glosses.map((gloss) => gloss.def)}
-        {" | "}
-        {props.vernacularWord.senses[0].semanticDomains.map((domain) => (
-          <React.Fragment>
-            <Typography style={{ background: shade, borderRadius: "15px" }}>
-              {domain.id}: {domain.name}
-            </Typography>
-          </React.Fragment>
-        ))}
-      </React.Fragment>
+      <Grid
+        onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => {
+          if (e.key === "Enter") {
+            // save vern and close
+          } else if (e.key === "Tab" || e.key === "ArrowDown") {
+            setSelectedIndex((selectedIndex + 1) % 2); //TODO change 2 to the length of the list of items
+          } else if (e.key === "ArrowUp") {
+            let newIndex = selectedIndex - 1;
+            if (newIndex < 0) {
+              newIndex = 1; // TODO Set the new index equal to the len(list of items) - 1
+            }
+            setSelectedIndex(newIndex);
+          }
+        }}
+      >
+        <h1>Select the desired vernacular</h1>
+        <List>
+          <ListItem
+            selected={selectedIndex === 0}
+            onClick={() => handleListItemClick(0)}
+          >
+            {<h4>{props.vernacularWord.vernacular}</h4>}
+            <SenseCell
+              editable={false}
+              sortingByGloss={true}
+              value={currentWord.senses}
+              rowData={currentWord}
+            />
+            <DomainCell rowData={currentWord} sortingByDomains={false} />
+          </ListItem>
+          <ListItem
+            selected={selectedIndex === 1}
+            onClick={() => handleListItemClick(1)}
+          >
+            {"New Entry for " + props.vernacularWord.vernacular}
+          </ListItem>
+        </List>
+      </Grid>
     );
   }
   return <h1>Vern Words Undefined</h1>;
@@ -81,6 +116,7 @@ export class NewVernEntry extends React.Component<
     super(props);
     this.state = {
       open: false,
+      selectedVernacularWord: simpleWord("", ""),
     };
   }
   render() {
