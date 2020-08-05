@@ -7,7 +7,6 @@
     ],
     "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
     "domain": ["Domain", "Dominio", "Domaine"],
-    "done": ["Complete", "Completar", "Complète"],
     "glosses": ["Glosses", "Traducciones", "Gloses"],
     "mispelledWord": [
       "This word is mispelled",
@@ -195,59 +194,28 @@
     ]
   },
   "siteSettings": {
-    "archiveProject": {
-      "button": ["Archive", "Archivar", "Archiver"],
-      "warnTitle": [
-        "Proceed with Caution!",
-        "¡Proceder con precaución!",
-        "Procéder avec prudence !"
-      ],
-      "warnText": [
-        "This project will not be accessible to any users.",
-        "Este proyecto no será accesible para ningún usuario.",
-        "Ce projet ne sera accessible à aucun utilisateur."
-      ],
-      "cancel": [
-        "Cancel and keep project",
-        "Cancelar y mantener proyecto",
-        "Annuler et conserver projet"
-      ],
-      "confirm": [
-        "Archive project for all users",
-        "Archivar proyeto para todos usarios",
-        "Archiver projet pour tous utilisateurs"
-      ]
-    },
-    "restoreProject": {
-      "button": ["Restore", "Restaurar", "Restaurer"],
-      "warnTitle": [
-        "Proceed with Caution!",
-        "¡Proceder con precaución!",
-        "Procéder avec prudence !"
-      ],
-      "warnText": [
-        "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
-        "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
-        "Quelqu'un avait probablement une bonne raison de archiver ce projet. Voulez-vous vraiment le restaurer ?"
-      ],
-      "cancel": [
-        "Cancel and leave project archived",
-        "Cancelar y dejar proyecto como archivado",
-        "Annuler et laisser projet tel qu'archivé"
-      ],
-      "confirm": ["Restore project", "Restaurat proyeto", "Restaurer projet"]
-    },
+    "preceedWithCaution": [
+      "Proceed with Caution!",
+      "¡Proceder con precaución!",
+      "Procéder avec prudence !"
+    ],
+    "archiveProjectText": [
+      "This project will not be accessible to any users.",
+      "Este proyecto no será accesible para ningún usuario.",
+      "Ce projet ne sera accessible à aucun utilisateur."
+    ],
+    "restoreProjectText": [
+      "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
+      "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
+      "Quelqu'un avait probablement une bonne raison de archiver ce projet. Voulez-vous vraiment le restaurer ?"
+    ],
     "deleteUser": {
-      "confirmDelete": {
-        "title": [
-          "Confirm Deleting User from The Combine Database",
-          null,
-          null
-        ],
-        "delete": ["Delete", null, null],
-        "cancel": ["Cancel", null, null]
-      },
-      "toastSuccess": ["User successfully delete", null, null],
+      "confirm": [
+        "Confirm Deleting User from The Combine Database",
+        null,
+        null
+      ],
+      "toastSuccess": ["User successfully deleted", null, null],
       "toastFailure": ["Failed to delete user", null, null]
     }
   },
@@ -267,7 +235,6 @@
         "Langue d'analyse"
       ],
       "uiLang": ["Interface", "Interfaz", "Interface"],
-      "save": ["Save", "Guardar", "Enregistrer"],
       "interfaceLanguage": [
         "Interface Languages",
         "Lenguajes de interfaz",
@@ -288,7 +255,6 @@
         "Les données importées seront ajoutées à ce projet. Combine n'essaiera pas de dédupliquer, d'écraser ou de synchroniser. Le fichier doit être une archive zippée en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>."
       ],
       "chooseFile": ["Choose File", "Escoger Archivo", "Choisissez Fichier"],
-      "upload": ["Upload", "Cargar", "Télécharger"],
       "done": ["Done!", "Completado!", "Achevé!"],
       "notAllowed": [
         "You have already imported a Lift file to this project.",
@@ -340,7 +306,6 @@
         "Invitar por correo electrónico",
         "Inviter par email"
       ],
-      "inviteButton": ["Invite", "Invitar", "Inviter"],
       "or": ["OR", "O", "OU"],
       "searchPlaceholder": ["Search...", "Buscar...", "Chercher..."],
       "searchTitle": [
@@ -348,14 +313,17 @@
         "Encontrar usarios",
         "Rechercher utilisateurs"
       ],
-      "addButton": ["Add", "Añadir", "Ajouter"],
       "emailLabel": ["Email", "Correo electrónico", "Email"],
       "messageLabel": ["Message", "Mensaje", "Message"],
-      "toastSuccess": ["Added User!", "¡Usario añadido!", "Utilisateur Ajouté"],
+      "toastSuccess": [
+        "Added User!",
+        "¡Usario añadido!",
+        "Utilisateur Ajouté !"
+      ],
       "toastFail": [
         "Failed to add user!",
         "¡Error al añadir usuario!",
-        "Échec de l'ajout de l'utilisateur!"
+        "Échec de l'ajout de l'utilisateur !"
       ]
     }
   },
@@ -505,9 +473,6 @@
       ],
       "accepted": ["Accepted", "Aceptado", "Acceptée"],
       "rejected": ["Rejected", "Rechazado", "Rejeté"],
-      "undecided": ["Undecided", "Indeciso", "Incertain"],
-      "accept": ["Accept", "Aceptar", "Accepter"],
-      "reject": ["Reject", "Rechazar", "Rejeter"],
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
         "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar.",
@@ -542,8 +507,6 @@
         "Ajouter les caractères dans ce mot au jeu"
       ]
     },
-    "save": ["Save", "Guardar", "Enregistrer"],
-    "cancel": ["Cancel", "Cancelar", "Annuler"],
     "dialog": {
       "title": [
         "Unsaved changes",
@@ -605,7 +568,22 @@
       "Cet objectif n'a pas encore été mis en œuvre"
     ]
   },
-  "buttons": { "done": ["done", "hecho", "achevé"] },
+  "buttons": {
+    "accept": ["Accept", "Aceptar", "Accepter"],
+    "add": ["Add", "Añadir", "Ajouter"],
+    "archive": ["Archive", "Archivar", "Archiver"],
+    "cancel": ["Cancel", "Cancelar", "Annuler"],
+    "complete": ["Complete", "Completo", "Complète"],
+    "confirm": ["Confirm", "Confirmar", "Confirmer"],
+    "delete": ["Delete", "Eliminar", "Effacer"],
+    "done": ["Done", "Hecho", "Achevé"],
+    "invite": ["Invite", "Invitar", "Inviter"],
+    "reject": ["Reject", "Rechazar", "Rejeter"],
+    "restore": ["Restore", "Restaurar", "Restaurer"],
+    "save": ["Save", "Guardar", "Enregistrer"],
+    "undecided": ["Undecided", "Indeciso", "Incertain"],
+    "upload": ["Upload", "Cargar", "Télécharger"]
+  },
   "pronunciations": {
     "recordTooltip": [
       "Press and hold to record.",

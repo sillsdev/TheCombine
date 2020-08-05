@@ -47,7 +47,7 @@ export default function RestoreProjectButton(
   return (
     <React.Fragment>
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        <Translate id="siteSettings.restoreProject.button" />
+        <Translate id="buttons.restore" />
       </Button>
       <Dialog
         open={open}
@@ -56,16 +56,16 @@ export default function RestoreProjectButton(
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          <Translate id="siteSettings.restoreProject.warnTitle" />
+          <Translate id="siteSettings.proceedWithCaution" />
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Translate id="siteSettings.restoreProject.warnText" />
+            <Translate id="siteSettings.restoreProjectText" />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="primary">
-            <Translate id="siteSettings.restoreProject.cancel" />
+            <Translate id="buttons.cancel" />
           </Button>
           <LoadingButton
             onClick={restoreProj}
@@ -74,7 +74,7 @@ export default function RestoreProjectButton(
             loading={loading}
             {...props}
           >
-            <Translate id="siteSettings.restoreProject.confirm" />
+            <Translate id="buttons.restore" />
           </LoadingButton>
         </DialogActions>
       </Dialog>

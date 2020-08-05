@@ -33,7 +33,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                 {props.user.username}
               </Typography>
               <Typography align="center" variant="h6">
-                <Translate id="siteSettings.deleteUser.confirmDelete.title" />
+                <Translate id="siteSettings.deleteUser.confirm" />
               </Typography>
             </CardContent>
             <CardActions>
@@ -51,7 +51,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                       variant="h6"
                       style={{ color: "red" }}
                     >
-                      <Translate id="siteSettings.deleteUser.confirmDelete.delete" />
+                      <Translate id="buttons.delete" />
                     </Typography>
                   </Button>
                 </Grid>
@@ -66,7 +66,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                       variant="h6"
                       style={{ color: "inherit" }}
                     >
-                      <Translate id="siteSettings.deleteUser.confirmDelete.cancel" />
+                      <Translate id="buttons.cancel" />
                     </Typography>
                   </Button>
                 </Grid>

@@ -47,7 +47,7 @@ export default function ArchiveProjectButton(
   return (
     <React.Fragment>
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        <Translate id="siteSettings.archiveProject.button" />
+        <Translate id="buttons.archive" />
       </Button>
       <Dialog
         open={open}
@@ -56,16 +56,16 @@ export default function ArchiveProjectButton(
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          <Translate id="siteSettings.archiveProject.warnTitle" />
+          <Translate id="siteSettings.proceedWithCaution" />
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Translate id="siteSettings.archiveProject.warnText" />
+            <Translate id="siteSettings.archiveProjectText" />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="outlined" color="primary">
-            <Translate id="siteSettings.archiveProject.cancel" />
+            <Translate id="buttons.cancel" />
           </Button>
           <LoadingButton
             onClick={archiveProj}
@@ -74,7 +74,7 @@ export default function ArchiveProjectButton(
             loading={loading}
             {...props}
           >
-            <Translate id="siteSettings.archiveProject.confirm" />
+            <Translate id="buttons.archive" />
           </LoadingButton>
         </DialogActions>
       </Dialog>
