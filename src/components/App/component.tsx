@@ -13,7 +13,7 @@ import PageNotFound from "../PageNotFound/component";
 import { PrivateRoute } from "../PrivateRoute";
 import ProjectSettings from "../ProjectSettings";
 import ProjectScreen from "../ProjectScreen/ProjectScreenComponent";
-import SiteSettings from "../SiteSettings";
+import SiteSettings from "../SiteSettings/SiteSettingsComponent";
 import UserSettings from "../UserSettings/UserSettings";
 
 /**

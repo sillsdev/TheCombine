@@ -84,7 +84,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
                     onClick={this.onSubmit}
                     disabled={!this.state.isValid}
                   >
-                    <Translate id="projectSettings.invite.inviteButton" />
+                    <Translate id="buttons.invite" />
                   </Button>
                 </Grid>
               </Grid>

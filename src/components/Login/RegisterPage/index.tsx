@@ -1,9 +1,9 @@
-import Register, { RegisterStateProps } from "./RegisterComponent";
-import { StoreState } from "../../../types";
-
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
-import { UserAction, asyncRegister, registerReset } from "../LoginActions";
+
+import { StoreState } from "../../../types";
+import { asyncRegister, registerReset, UserAction } from "../LoginActions";
+import Register, { RegisterStateProps } from "./RegisterComponent";
 
 function mapStateToProps(state: StoreState): RegisterStateProps {
   return {
@@ -17,8 +17,13 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, UserAction>
 ) {
   return {
-    register: (name: string, user: string, email: string, password: string) => {
-      dispatch(asyncRegister(name, user, email, password));
+    register: (
+      name: string,
+      username: string,
+      email: string,
+      password: string
+    ) => {
+      dispatch(asyncRegister(name, username, email, password));
     },
     reset: () => {
       dispatch(registerReset());
