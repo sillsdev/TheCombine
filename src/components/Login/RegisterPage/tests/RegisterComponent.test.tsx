@@ -55,29 +55,29 @@ describe("Testing register component", () => {
 
   // These test whether various combinations of registration data should result in errors
   test("Register: no data", () => {
-    testRegister("", "", "", "", "", true, true, true, false, true);
+    testRegister("", "", "", "", "", true, true, true, true, false);
   });
   test("Register: confirm password doesn't match password", () => {
     testRegister(
       "Frodo Baggins",
       "underhill",
+      "a@b.c",
       "1234567890",
       "1234567899",
-      "a@b.c",
       false,
       false,
       false,
-      true,
-      false
+      false,
+      true
     );
   });
   test("Register: username too short", () => {
     testRegister(
       "Samwise Gamgee",
       "sg",
-      "12345678",
-      "12345678",
       "a@b.c",
+      "12345678",
+      "12345678",
       false,
       true,
       false,
@@ -89,13 +89,13 @@ describe("Testing register component", () => {
     testRegister(
       "Bilbo Baggins",
       "bbb",
-      "sting",
-      "sting",
       "a@b.c",
+      "sting",
+      "sting",
+      false,
       false,
       false,
       true,
-      false,
       false
     );
   });
@@ -103,29 +103,29 @@ describe("Testing register component", () => {
 
 function testRegister(
   name: string,
-  user: string,
+  username: string,
+  email: string,
   password: string,
   confirmPassword: string,
-  email: string,
   error_name: boolean,
-  error_user: boolean,
+  error_username: boolean,
+  error_email: boolean,
   error_password: boolean,
-  error_confirmPassword: boolean,
-  error_email: boolean
+  error_confirmPassword: boolean
 ) {
   registerHandle.instance.setState({
     name,
-    user,
+    username,
+    email,
     password,
     confirmPassword,
-    email,
   });
   registerHandle.instance.register(MOCK_EVENT);
   expect(registerHandle.instance.state.error).toEqual({
     name: error_name,
-    user: error_user,
+    username: error_username,
+    email: error_email,
     password: error_password,
     confirmPassword: error_confirmPassword,
-    email: error_email,
   });
 }
