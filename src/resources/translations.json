@@ -184,7 +184,8 @@
       "Archivo seleccionado",
       "Fichier sélectionné"
     ],
-    "success": ["Project Created!", "Proyecto creado!", "Projet créé !"]
+    "success": ["Project Created!", "Proyecto creado!", "Projet créé !"],
+    "nameTaken": ["Name taken", "Nombre tomado", "Nom pris"]
   },
   "selectProject": {
     "title": [
