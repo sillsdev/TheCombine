@@ -14,7 +14,7 @@ import { User } from "../../../types/user";
 
 interface ConfirmDeletionProps {
   user?: User;
-  deleteUser: (user: User) => void;
+  deleteUser: (userId: string) => void;
   handleCloseModal: () => void;
 }
 
@@ -33,7 +33,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                 {props.user.username}
               </Typography>
               <Typography align="center" variant="h6">
-                <Translate id="siteSettings.confirmDelete.title" />
+                <Translate id="siteSettings.deleteUser.confirm" />
               </Typography>
             </CardContent>
             <CardActions>
@@ -42,7 +42,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      if (props.user) props.deleteUser(props.user);
+                      if (props.user) props.deleteUser(props.user.id);
                     }}
                     color="secondary"
                   >
@@ -51,7 +51,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                       variant="h6"
                       style={{ color: "red" }}
                     >
-                      <Translate id="siteSettings.confirmDelete.delete" />
+                      <Translate id="buttons.delete" />
                     </Typography>
                   </Button>
                 </Grid>
@@ -66,7 +66,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                       variant="h6"
                       style={{ color: "inherit" }}
                     >
-                      <Translate id="siteSettings.confirmDelete.cancel" />
+                      <Translate id="buttons.cancel" />
                     </Typography>
                   </Button>
                 </Grid>

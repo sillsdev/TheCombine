@@ -22,7 +22,6 @@ import { getCurrentUser } from "../../../backend/localStorage";
 interface UserListProps {
   allUsers: User[];
   userAvatar: { [key: string]: string };
-  deleteUser: (user: User) => void;
   handleOpenModal: (user: User) => void;
 }
 
