@@ -378,7 +378,7 @@ export class DataEntryTable extends React.Component<
                 this.props.displaySemanticDomainView(true);
               }}
             >
-              <Translate id="addWords.done" />
+              <Translate id="buttons.complete" />
             </Button>
           </Grid>
         </Grid>

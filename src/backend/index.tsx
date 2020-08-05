@@ -206,6 +206,13 @@ export async function updateUser(user: User): Promise<User> {
   return { ...user, id: resp.data };
 }
 
+export async function deleteUser(userId: string): Promise<string> {
+  let resp = await backendServer.delete(`users/${userId}`, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
 export async function createProject(project: Project): Promise<Project> {
   let resp = await backendServer.post(`projects/`, project, {
     headers: authHeader(),

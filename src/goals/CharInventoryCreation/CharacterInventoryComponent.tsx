@@ -110,7 +110,7 @@ export class CharacterInventory extends React.Component<
                 }}
                 style={{ margin: theme.spacing(1) }}
               >
-                <Save /> <Translate id="charInventory.save" />
+                <Save /> <Translate id="buttons.save" />
               </Button>
               <Button
                 id={CANCEL}
@@ -121,7 +121,7 @@ export class CharacterInventory extends React.Component<
                 style={{ margin: theme.spacing(1) }}
               >
                 {" "}
-                <Translate id="charInventory.cancel" />
+                <Translate id="buttons.cancel" />
               </Button>
             </Grid>
           </Grid>

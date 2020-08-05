@@ -69,7 +69,7 @@ class ProjectName extends React.Component<
             }
             onClick={() => this.updateName(this.state.projectName)}
           >
-            <Translate id="projectSettings.language.save" />
+            <Translate id="buttons.save" />
           </Button>
         </Grid>
       </Grid>
