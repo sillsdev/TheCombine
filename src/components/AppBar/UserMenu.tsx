@@ -3,20 +3,20 @@ import { ExitToApp, Person, SettingsApplications } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { avatarSrc, getUser } from "../../backend";
-import { getUserId, setProjectId } from "../../backend/localStorage";
+import { getUser } from "../../backend";
+import * as LocalStorage from "../../backend/localStorage";
 import history from "../../history";
 import theme from "../../types/theme";
 
 /**
- * Avatar in appbar with dropdown (Site settings (for admins), user settings, log out)
+ * Avatar in appbar with dropdown: site settings (for admins), user settings, log out
  */
 export default function UserMenu() {
   const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(
     null
   );
-  const [avatar, setAvatar] = React.useState<null | string>(null);
-  const [isAdmin, setIsAdmin] = React.useState<null | boolean>(null);
+  const [avatar, setAvatar] = React.useState<string>("");
+  const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorElement(event.currentTarget);
@@ -26,16 +26,12 @@ export default function UserMenu() {
     setAnchorElement(null);
   }
 
-  async function getAvatar() {
-    const userId = getUserId();
-    const a = await avatarSrc(userId);
-    setAvatar(a);
-  }
-
-  getAvatar();
+  React.useEffect(() => {
+    setAvatar(LocalStorage.getAvatar());
+  }, []);
 
   async function getIsAdmin() {
-    const userId = getUserId();
+    const userId = LocalStorage.getUserId();
     const user = await getUser(userId);
     setIsAdmin(user.isAdmin);
   }
@@ -75,7 +71,7 @@ export default function UserMenu() {
         {isAdmin && (
           <MenuItem
             onClick={() => {
-              setProjectId("");
+              LocalStorage.setProjectId("");
               history.push("/site-settings");
             }}
           >

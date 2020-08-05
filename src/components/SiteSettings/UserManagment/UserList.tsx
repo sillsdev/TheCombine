@@ -23,7 +23,6 @@ import { User } from "../../../types/user";
 interface UserListProps {
   allUsers: User[];
   userAvatar: { [key: string]: string };
-  deleteUser: (user: User) => void;
   handleOpenModal: (user: User) => void;
 }
 

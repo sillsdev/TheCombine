@@ -19,13 +19,13 @@ import {
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 
-import { User } from "../../types/user";
-import AvatarUpload from "./AvatarUpload";
-import AppBarComponent from "../AppBar/AppBarComponent";
-import { avatarSrc, getUser, updateUser } from "../../backend";
-import theme from "../../types/theme";
-import { getUserId } from "../../backend/localStorage";
+import { getUser, updateUser } from "../../backend";
+import { getAvatar, getUserId } from "../../backend/localStorage";
 import { CurrentTab } from "../../types/currentTab";
+import theme from "../../types/theme";
+import { User } from "../../types/user";
+import AppBarComponent from "../AppBar/AppBarComponent";
+import AvatarUpload from "./AvatarUpload";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
   return (
@@ -118,8 +118,7 @@ class UserSettings extends React.Component<
   }
 
   async getAvatar() {
-    const userId: string = getUserId();
-    const avatar: string = await avatarSrc(userId);
+    const avatar: string = getAvatar();
     this.setState({ avatar });
   }
 

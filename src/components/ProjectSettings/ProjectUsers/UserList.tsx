@@ -124,7 +124,7 @@ class UserList extends React.Component<
                     this.handleChange("");
                   }}
                 >
-                  <Translate id="projectSettings.invite.addButton" />
+                  <Translate id="buttons.add" />
                 </Button>
               )}
             </ListItem>

@@ -70,11 +70,11 @@ export class DataEntryTable extends React.Component<
   recorder: Recorder;
 
   async componentDidMount() {
-    let allWords = await this.props.getWordsFromBackend();
-    let autoCompleteSetting = await getProjectAutocompleteSetting();
+    let existingWords: Word[] = await this.props.getWordsFromBackend();
+    let autoComplete: AutoComplete = await getProjectAutocompleteSetting();
     this.setState({
-      existingWords: allWords,
-      autoComplete: autoCompleteSetting,
+      existingWords,
+      autoComplete,
     });
   }
 
@@ -85,29 +85,31 @@ export class DataEntryTable extends React.Component<
   }
 
   async addNewWord(wordToAdd: Word) {
-    let updatedWord = await Backend.createWord(wordToAdd);
-    let updatedNewWords = [...this.state.recentlyAddedWords];
-    updatedNewWords.push({ word: updatedWord, mutable: true, glossIndex: 0 });
-    let words: Word[] = await this.props.getWordsFromBackend();
+    let updatedWord: Word = await Backend.createWord(wordToAdd);
+    let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
+    recentlyAddedWords.push({
+      word: updatedWord,
+      mutable: true,
+      glossIndex: 0,
+    });
+    let existingWords: Word[] = await this.props.getWordsFromBackend();
     this.setState({
-      existingWords: words,
-      recentlyAddedWords: updatedNewWords,
+      existingWords,
+      recentlyAddedWords,
     });
   }
 
   /** Update the word in the backend and the frontend */
   async updateWordForNewEntry(wordToUpdate: Word, glossIndex: number) {
-    let existingWord = this.state.existingWords.find(
+    let existingWord: Word | undefined = this.state.existingWords.find(
       (word) => word.id === wordToUpdate.id
     );
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
-    let index = this.state.existingWords.indexOf(existingWord);
-    if (index === -1) throw new Error(wordToUpdate + " does not exist");
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
 
-    let recentlyAddedWords = [...this.state.recentlyAddedWords];
+    let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
 
     let updatedWordAccess: WordAccess = {
       word: updatedWord,
@@ -116,43 +118,79 @@ export class DataEntryTable extends React.Component<
     };
 
     recentlyAddedWords.push(updatedWordAccess);
-    this.setState({ recentlyAddedWords: recentlyAddedWords });
+    this.setState({ recentlyAddedWords });
+  }
+
+  async addAudioToExistingWord(oldWordId: string, audioFile: File) {
+    let index: number = this.state.recentlyAddedWords.findIndex(
+      (w) => w.word.id === oldWordId
+    );
+    if (index === -1) {
+      console.log("Word does not exist in recentlyAddedWords");
+      return;
+    }
+    const updatedWordId: string = await Backend.uploadAudio(
+      oldWordId,
+      audioFile
+    );
+    let updatedWord: Word = await Backend.getWord(updatedWordId);
+    let updatedWordAccess: WordAccess = {
+      ...this.state.recentlyAddedWords[index],
+      word: updatedWord,
+    };
+    this.updateWordInFrontend(index, updatedWordAccess);
+  }
+
+  async deleteAudioFromExistingWord(oldWordId: string, fileName: string) {
+    let index: number = this.state.recentlyAddedWords.findIndex(
+      (w) => w.word.id === oldWordId
+    );
+    if (index === -1) {
+      console.log("Word does not exist in recentlyAddedWords");
+      return;
+    }
+    const updatedWordId: string = await Backend.deleteAudio(
+      oldWordId,
+      fileName
+    );
+    let updatedWord: Word = await Backend.getWord(updatedWordId);
+    let updatedWordAccess: WordAccess = {
+      ...this.state.recentlyAddedWords[index],
+      word: updatedWord,
+    };
+    this.updateWordInFrontend(index, updatedWordAccess);
   }
 
   async updateExistingWord(wordToUpdate: Word, wordToDelete?: Word) {
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
-    let recentlyAddedWords = [...this.state.recentlyAddedWords];
-    let frontendWords: Word[] = recentlyAddedWords.map(
-      (wordAccess) => wordAccess.word
+    let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
+
+    const oldWordId: string = wordToDelete ? wordToDelete.id : wordToUpdate.id;
+    const index: number = recentlyAddedWords.findIndex(
+      (w) => w.word.id === oldWordId
     );
+    if (index === -1) {
+      console.log("Word does not exist in recentlyAddedWords");
+      return;
+    }
 
     if (wordToDelete) {
       // Delete word from backend, then replace word in frontend with updated one
-      let index = frontendWords.findIndex((w) => w.id === wordToDelete.id);
-      if (index === -1) {
-        console.log("Word does not exist in recentlyAddedWords");
-      } else {
-        let updatedWordAccess: WordAccess = {
-          word: updatedWord,
-          mutable: false,
-          glossIndex: 0,
-        };
-        this.updateWordInFrontend(index, updatedWordAccess);
-        this.deleteWordAndUpdateExistingWords(wordToDelete);
-      }
+      let updatedWordAccess: WordAccess = {
+        word: updatedWord,
+        mutable: false,
+        glossIndex: 0,
+      };
+      this.updateWordInFrontend(index, updatedWordAccess);
+      this.deleteWordAndUpdateExistingWords(wordToDelete);
     } else {
       // Update word
-      let index = frontendWords.findIndex((w) => w.id === wordToUpdate.id);
-      if (index === -1) {
-        console.log("Word does not exist in recentlyAddedWords");
-      } else {
-        let updatedWordAccess: WordAccess = {
-          word: updatedWord,
-          mutable: true,
-          glossIndex: 0,
-        };
-        this.updateWordInFrontend(index, updatedWordAccess);
-      }
+      let updatedWordAccess: WordAccess = {
+        word: updatedWord,
+        mutable: true,
+        glossIndex: 0,
+      };
+      this.updateWordInFrontend(index, updatedWordAccess);
     }
   }
 
@@ -163,9 +201,9 @@ export class DataEntryTable extends React.Component<
   }
 
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
-    let updatedWord = await Backend.updateWord(wordToUpdate);
-    let words = await this.props.getWordsFromBackend();
-    this.setState({ existingWords: words });
+    let updatedWord: Word = await Backend.updateWord(wordToUpdate);
+    let existingWords: Word[] = await this.props.getWordsFromBackend();
+    this.setState({ existingWords });
     return updatedWord;
   }
 
@@ -248,6 +286,12 @@ export class DataEntryTable extends React.Component<
                   this.updateExistingWord(wordToUpdate, wordToDelete)
                 }
                 removeWord={(word: Word) => this.removeWord(word)}
+                addAudioToWord={(wordId: string, audioFile: File) =>
+                  this.addAudioToExistingWord(wordId, audioFile)
+                }
+                deleteAudioFromWord={(wordId: string, fileName: string) =>
+                  this.deleteAudioFromExistingWord(wordId, fileName)
+                }
                 recorder={this.recorder}
                 semanticDomain={this.props.semanticDomain}
                 displayDuplicates={this.state.displayDuplicatesIndex === index}
@@ -334,7 +378,7 @@ export class DataEntryTable extends React.Component<
                 this.props.displaySemanticDomainView(true);
               }}
             >
-              <Translate id="addWords.done" />
+              <Translate id="buttons.complete" />
             </Button>
           </Grid>
         </Grid>

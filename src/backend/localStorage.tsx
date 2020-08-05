@@ -3,6 +3,7 @@ import { User } from "../types/user";
 import { getUser } from ".";
 
 export enum localStorageKeys {
+  avatar = "avatar",
   mergeDupsBlacklist = "mergeDupsBlacklist",
   projectId = "projectId",
   userId = "userId",
@@ -15,6 +16,10 @@ export function clearLocalStorage() {
   for (const key in localStorageKeys) {
     remove(key as localStorageKeys);
   }
+}
+
+export function getAvatar(): string {
+  return localStorage.getItem(localStorageKeys.avatar) || "";
 }
 
 export function getMergeDupsBlacklist(): Hash<boolean> {
@@ -45,6 +50,10 @@ export function getWorkedProjects(): Hash<string> {
 
 export function remove(localStorageKey: localStorageKeys) {
   localStorage.removeItem(localStorageKey);
+}
+
+export function setAvatar(src: string) {
+  localStorage.setItem(localStorageKeys.avatar, src);
 }
 
 export function setMergeDupsBlacklist(blacklist: Hash<boolean>) {

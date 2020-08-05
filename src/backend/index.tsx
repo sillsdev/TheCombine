@@ -173,7 +173,12 @@ export async function authenticateUser(
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  let resp = await backendServer.get(`users/allusers`, {
+  let projectId: string = LocalStorage.getProjectId();
+  /* If an admin user tries to get the list of users,
+   the current projectId may be an empty string,
+   which causes a 404 error. */
+  projectId = projectId ? projectId : "_";
+  let resp = await backendServer.get(`users/projects/${projectId}/allusers`, {
     headers: authHeader(),
   });
   return resp.data;
@@ -199,6 +204,13 @@ export async function updateUser(user: User): Promise<User> {
     headers: authHeader(),
   });
   return { ...user, id: resp.data };
+}
+
+export async function deleteUser(userId: string): Promise<string> {
+  let resp = await backendServer.delete(`users/${userId}`, {
+    headers: authHeader(),
+  });
+  return resp.data;
 }
 
 export async function createProject(project: Project): Promise<Project> {
@@ -268,6 +280,15 @@ export async function restoreProject(id: string) {
   return resp.data;
 }
 
+export async function projectDuplicateCheck(
+  projectName: string
+): Promise<boolean> {
+  let resp = await backendServer.get(`projects/duplicate/${projectName}`, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
 export async function uploadLift(
   project: Project,
   lift: File
@@ -316,7 +337,7 @@ export async function deleteAudio(
   fileName: string
 ): Promise<string> {
   let resp = await backendServer.delete(
-    `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
+    `projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/delete/${fileName}`,
     { headers: authHeader() }
   );
   return resp.data;
