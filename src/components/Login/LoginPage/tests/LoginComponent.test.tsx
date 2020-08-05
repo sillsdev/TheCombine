@@ -59,28 +59,28 @@ describe("Testing login component", () => {
   });
 
   test("Login: no password", () => {
-    testLogin("User", "", false, true);
+    testLogin("Username", "", false, true);
   });
 
-  test("Login: no user", () => {
+  test("Login: no username", () => {
     testLogin("", "Password", true, false);
   });
 
   test("Login: all fields good", () => {
-    testLogin("User", "Password", false, false);
+    testLogin("Username", "Password", false, false);
   });
 });
 
 function testLogin(
-  user: string,
+  username: string,
   password: string,
-  goodUser: boolean,
+  goodUsername: boolean,
   goodPassword: boolean
 ) {
-  loginHandle.instance.setState({ user: user, password: password });
+  loginHandle.instance.setState({ username, password });
   loginHandle.instance.login(MOCK_EVENT);
   expect(loginHandle.instance.state.error).toEqual({
-    username: goodUser,
+    username: goodUsername,
     password: goodPassword,
   });
 }
