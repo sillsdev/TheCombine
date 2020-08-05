@@ -1,7 +1,8 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
+import { Translate } from "react-localize-redux";
 import Modal from "react-modal";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
 import { avatarSrc, deleteUser, getAllUsers } from "../../../backend";
@@ -83,6 +84,19 @@ class UserManagment extends React.Component<UserProps, UserState> {
       .catch((err) => console.log(err));
   }
 
+  deleteUser(userId: string) {
+    deleteUser(userId)
+      .then(() => {
+        toast(<Translate id="siteSettings.deleteUser.toastSuccess" />);
+        this.populateUsers();
+      })
+      .catch((err: string) => {
+        console.log(err);
+        toast(<Translate id="siteSettings.deleteUser.toastFailure" />);
+      });
+    this.handleCloseModal();
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -113,7 +127,7 @@ class UserManagment extends React.Component<UserProps, UserState> {
         >
           <ConfirmDeletion
             user={this.state.userToEdit}
-            deleteUser={deleteUser}
+            deleteUser={(userId: string) => this.deleteUser(userId)}
             handleCloseModal={this.handleCloseModal}
           />
         </Modal>

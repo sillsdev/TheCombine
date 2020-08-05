@@ -237,10 +237,18 @@
       ],
       "confirm": ["Restore project", "Restaurat proyeto", "Restaurer projet"]
     },
-    "confirmDelete": {
-      "title": ["Confirm Deleting User from The Combine Database", null, null],
-      "delete": ["Delete", null, null],
-      "cancel": ["Cancel", null, null]
+    "deleteUser": {
+      "confirmDelete": {
+        "title": [
+          "Confirm Deleting User from The Combine Database",
+          null,
+          null
+        ],
+        "delete": ["Delete", null, null],
+        "cancel": ["Cancel", null, null]
+      },
+      "toastSuccess": ["User successfully delete", null, null],
+      "toastFailure": ["Failed to delete user", null, null]
     }
   },
   "projectSettings": {
