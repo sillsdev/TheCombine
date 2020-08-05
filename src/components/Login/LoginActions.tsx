@@ -65,6 +65,7 @@ export function asyncLogin(username: string, password: string) {
       .then(async (userString: string) => {
         const user: User = JSON.parse(userString);
         LocalStorage.setUser(user);
+        LocalStorage.setUserToken(user.token);
         dispatch(loginSuccess(user.username));
         try {
           const avatar: string = await backend.avatarSrc(user.id);

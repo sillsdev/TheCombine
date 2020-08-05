@@ -12,6 +12,7 @@ export enum localStorageKeys {
   workedProjects = "workedProjects",
 }
 
+// This function should only be used on Logout.
 export function clearLocalStorage() {
   for (const key in localStorageKeys) {
     remove(key as localStorageKeys);
@@ -66,10 +67,11 @@ export function setProjectId(id: string) {
   localStorage.setItem(localStorageKeys.projectId, id);
 }
 
+// avatar, password, and token are not returned with user by the backend,
+// so we don't want to update them here.
 export function setUser(user: User) {
   setUserId(user.id);
   setUsername(user.username);
-  setUserToken(user.token);
   setWorkedProjects(user.workedProjects);
 }
 
