@@ -21,7 +21,7 @@ const backendServer = axios.create({
 backendServer.interceptors.response.use(
   (resp) => {
     if (resp.data.__UpdatedUser) {
-      LocalStorage.setUserId(resp.data.__UpdatedUser.id);
+      LocalStorage.updateUser(resp.data.__UpdatedUser.id);
     }
     delete resp.data.__UpdatedUser;
     return resp;

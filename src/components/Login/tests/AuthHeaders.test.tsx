@@ -1,23 +1,23 @@
-import { getUserToken, setUserToken } from "../../../backend/localStorage";
+import { getToken, setToken } from "../../../backend/localStorage";
 import authHeader from "../AuthHeaders";
 
-let oldUserToken: string;
+let oldToken: string;
 
 beforeAll(() => {
-  oldUserToken = getUserToken();
+  oldToken = getToken();
 });
 
 beforeEach(() => {
-  setUserToken("");
+  setToken("");
 });
 
 afterAll(() => {
-  setUserToken(oldUserToken);
+  setToken(oldToken);
 });
 
 describe("AuthHeaders Tests", () => {
   test("Creates header that includes token", () => {
-    setUserToken("testToken");
+    setToken("testToken");
     const authHeaderOut = authHeader();
     expect(authHeaderOut.authorization).toMatch(/testToken/);
   });

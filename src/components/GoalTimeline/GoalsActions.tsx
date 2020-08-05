@@ -74,7 +74,7 @@ function asyncCreateNewUserEditsObject(projectId: string) {
         let updatedUser: User = await Backend.getUser(userId);
         updatedUser.workedProjects[projectId] = userEditId;
         Backend.updateUser(updatedUser).then((user: User) =>
-          LocalStorage.setUser(user)
+          LocalStorage.setCurrentUser(user)
         );
       })
       .catch((err) => {
@@ -108,7 +108,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
         .then((resp) => {
           dispatch(addGoalToHistory(goal));
           history.push(`/goals/${resp}`);
-          LocalStorage.updateWorkedProjects();
+          LocalStorage.updateUser();
         })
         .catch((err: string) => {
           console.log(err);
@@ -193,7 +193,8 @@ export function updateStepData(goal: Goal): Goal {
 
 export function getUserEditId(): string | undefined {
   const projectId: string = LocalStorage.getProjectId();
-  const workedProjects: Hash<string> = LocalStorage.getWorkedProjects();
+  const user: User | undefined = LocalStorage.getCurrentUser();
+  const workedProjects: Hash<string> = user ? user.workedProjects : {};
   const projectIds = Object.keys(workedProjects);
   const matches: string[] = projectIds.filter(
     (project) => projectId === project

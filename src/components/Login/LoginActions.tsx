@@ -64,8 +64,8 @@ export function asyncLogin(username: string, password: string) {
       .authenticateUser(username, password)
       .then(async (userString: string) => {
         const user: User = JSON.parse(userString);
-        LocalStorage.setUser(user);
-        LocalStorage.setUserToken(user.token);
+        LocalStorage.setCurrentUser(user);
+        LocalStorage.setToken(user.token);
         dispatch(loginSuccess(user.username));
         try {
           const avatar: string = await backend.avatarSrc(user.id);
@@ -112,9 +112,9 @@ export function loginReset(): UserAction {
 
 export function logoutAndResetStore() {
   return (dispatch: Dispatch<UserAction | StoreAction>) => {
-    const username: string = LocalStorage.getUsername();
-    if (username) {
-      dispatch(logout(username));
+    const user: User | undefined = LocalStorage.getCurrentUser();
+    if (user) {
+      dispatch(logout(user.username));
     }
     dispatch(reset());
     LocalStorage.clearLocalStorage();

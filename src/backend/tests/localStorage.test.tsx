@@ -1,32 +1,29 @@
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { User } from "../../types/user";
-import { getUser } from "../";
 import * as LocalStorage from "../localStorage";
 
 const mockAvatar: string = "mockAvatar";
 const mockBlacklist: Hash<boolean> = { mockKey: true };
-const mockName: string = "mockName";
 const mockProjectId: string = "mockProjId";
 const mockToken: string = "mockToken";
 const mockUserId: string = "mockUserId";
-const mockUsername: string = "mockUsername";
-const mockWorkedProjects: Hash<string> = { mockKey: "mockValue" };
-let mockUser: User = new User(mockName, mockUsername, "mockPassword");
-mockUser.id = mockUserId;
-mockUser.workedProjects = mockWorkedProjects;
+const mockUser: User = {
+  ...new User("mockName", "mockUsername", "mockPassword"),
+  id: mockUserId,
+};
 
 let oldAvatar: string;
 let oldMergeDupsBlacklist: Hash<boolean>;
 let oldProjectId: string;
+let oldToken: string;
 let oldUserId: string;
-let oldUserToken: string;
 
 beforeAll(() => {
   oldAvatar = LocalStorage.getAvatar();
   oldMergeDupsBlacklist = LocalStorage.getMergeDupsBlacklist();
   oldProjectId = LocalStorage.getProjectId();
+  oldToken = LocalStorage.getToken();
   oldUserId = LocalStorage.getUserId();
-  oldUserToken = LocalStorage.getUserToken();
 });
 
 beforeEach(() => {
@@ -36,30 +33,28 @@ beforeEach(() => {
 afterAll(() => {
   LocalStorage.clearLocalStorage();
   if (oldUserId) {
-    getUser(oldUserId).then((User) => LocalStorage.setUser(User));
+    LocalStorage.updateUser(oldUserId);
   }
   LocalStorage.setAvatar(oldAvatar);
   LocalStorage.setMergeDupsBlacklist(oldMergeDupsBlacklist);
   LocalStorage.setProjectId(oldProjectId);
-  LocalStorage.setUserToken(oldUserToken);
+  LocalStorage.setToken(oldToken);
 });
 
 describe("Test localStorage", () => {
   it("should return empty elements when nothing has been stored", () => {
     expect(LocalStorage.getAvatar()).toEqual("");
+    expect(LocalStorage.getCurrentUser()).toEqual(undefined);
     expect(LocalStorage.getMergeDupsBlacklist()).toEqual({});
     expect(LocalStorage.getProjectId()).toEqual("");
+    expect(LocalStorage.getToken()).toEqual("");
     expect(LocalStorage.getUserId()).toEqual("");
-    expect(LocalStorage.getUsername()).toEqual("");
-    expect(LocalStorage.getUserToken()).toEqual("");
-    expect(LocalStorage.getWorkedProjects()).toEqual({});
   });
 
-  it("should set id, username, workedProjects when setting a user", () => {
-    LocalStorage.setUser(mockUser);
+  it("should set user and userId when setting a user", () => {
+    LocalStorage.setCurrentUser(mockUser);
+    expect(LocalStorage.getCurrentUser()).toEqual(mockUser);
     expect(LocalStorage.getUserId()).toEqual(mockUser.id);
-    expect(LocalStorage.getUsername()).toEqual(mockUser.username);
-    expect(LocalStorage.getWorkedProjects()).toEqual(mockUser.workedProjects);
   });
 
   it("should return the set value", () => {
@@ -69,13 +64,9 @@ describe("Test localStorage", () => {
     expect(LocalStorage.getMergeDupsBlacklist()).toEqual(mockBlacklist);
     LocalStorage.setProjectId(mockProjectId);
     expect(LocalStorage.getProjectId()).toEqual(mockProjectId);
+    LocalStorage.setToken(mockToken);
+    expect(LocalStorage.getToken()).toEqual(mockToken);
     LocalStorage.setUserId(mockUserId);
     expect(LocalStorage.getUserId()).toEqual(mockUserId);
-    LocalStorage.setUsername(mockUsername);
-    expect(LocalStorage.getUsername()).toEqual(mockUsername);
-    LocalStorage.setUserToken(mockToken);
-    expect(LocalStorage.getUserToken()).toEqual(mockToken);
-    LocalStorage.setWorkedProjects(mockWorkedProjects);
-    expect(LocalStorage.getWorkedProjects()).toEqual(mockWorkedProjects);
   });
 });

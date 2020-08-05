@@ -155,7 +155,7 @@ describe("LoginAction Tests", () => {
   });
 
   test("logout creates a proper action", () => {
-    LocalStorage.setUser(user);
+    LocalStorage.setCurrentUser(user);
     const mockStore = createMockStore(mockState);
     mockStore.dispatch<any>(LoginAction.logoutAndResetStore());
     expect(mockStore.getActions()).toEqual([logout, reset]);

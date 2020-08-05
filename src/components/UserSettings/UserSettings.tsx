@@ -19,8 +19,12 @@ import {
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
 
-import { getUser, updateUser } from "../../backend";
-import { getAvatar, getUserId } from "../../backend/localStorage";
+import { updateUser } from "../../backend";
+import {
+  getAvatar,
+  getCurrentUser,
+  setCurrentUser,
+} from "../../backend/localStorage";
 import { CurrentTab } from "../../types/currentTab";
 import theme from "../../types/theme";
 import { User } from "../../types/user";
@@ -82,8 +86,8 @@ interface UserSettingsState {
   name: string;
   phone: string;
   email: string;
+  avatar: string;
   avatarDialogOpen: boolean;
-  avatar?: string;
 }
 
 /**
@@ -95,31 +99,16 @@ class UserSettings extends React.Component<
 > {
   constructor(props: LocalizeContextProps) {
     super(props);
+    const potentialUser: User | undefined = getCurrentUser();
+    const user: User = potentialUser ? potentialUser : new User("", "", "");
     this.state = {
-      user: new User("", "", ""),
-      name: "",
-      phone: "",
-      email: "",
-      avatarDialogOpen: false,
-    };
-    this.getUser();
-    this.getAvatar();
-  }
-
-  async getUser() {
-    const userId: string = getUserId();
-    const user: User = await getUser(userId);
-    this.setState({
-      user,
-      name: user.name,
+      user: user,
+      name: user.phone,
       phone: user.phone,
       email: user.email,
-    });
-  }
-
-  async getAvatar() {
-    const avatar: string = getAvatar();
-    this.setState({ avatar });
+      avatar: getAvatar(),
+      avatarDialogOpen: false,
+    };
   }
 
   /** Updates the state to match the value in a textbox */
@@ -138,11 +127,11 @@ class UserSettings extends React.Component<
 
   onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    let newUser = this.state.user;
+    let newUser: User = this.state.user;
     newUser.name = this.state.name;
     newUser.phone = this.state.phone;
     newUser.email = this.state.email;
-    updateUser(newUser);
+    updateUser(newUser).then((user: User) => setCurrentUser(user));
   }
 
   render() {
@@ -234,8 +223,7 @@ class UserSettings extends React.Component<
         <AvatarDialog
           open={this.state.avatarDialogOpen}
           onClose={() => {
-            this.setState({ avatarDialogOpen: false });
-            this.getAvatar();
+            this.setState({ avatar: getAvatar(), avatarDialogOpen: false });
           }}
         />
       </React.Fragment>

@@ -63,8 +63,8 @@ const MOCK_STATE = {
   },
 };
 
-let oldUserId: string;
 let oldProjectId: string;
+let oldUser: User | undefined;
 const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
 const mockUserId: string = "34456";
@@ -93,12 +93,14 @@ const createMockStore = configureMockStore([thunk]);
 const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(MOCK_STATE);
 
 beforeAll(() => {
+  // Save things in localStorage to restore once tests are done
   oldProjectId = LocalStorage.getProjectId();
-  oldUserId = LocalStorage.getUserId();
+  oldUser = LocalStorage.getCurrentUser();
 });
 
 beforeEach(() => {
   LocalStorage.remove(LocalStorage.localStorageKeys.projectId);
+  LocalStorage.remove(LocalStorage.localStorageKeys.user);
   LocalStorage.remove(LocalStorage.localStorageKeys.userId);
 });
 
@@ -108,7 +110,9 @@ afterEach(() => {
 
 afterAll(() => {
   LocalStorage.setProjectId(oldProjectId);
-  LocalStorage.setUserId(oldUserId);
+  if (oldUser) {
+    LocalStorage.setCurrentUser(oldUser);
+  }
 });
 
 describe("Testing CharacterInventoryActions", () => {
@@ -120,8 +124,8 @@ describe("Testing CharacterInventoryActions", () => {
   });
 
   test("uploadInventory dispatches correct actions", async () => {
+    LocalStorage.setCurrentUser(mockUser);
     LocalStorage.setProjectId(mockProjectId);
-    LocalStorage.setUser(mockUser);
     let mockStore = createMockStore(MOCK_STATE);
     const mockUpload = uploadInventory();
     await mockUpload(
