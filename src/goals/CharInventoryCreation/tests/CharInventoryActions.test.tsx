@@ -72,18 +72,16 @@ let mockUser: User = new User("", "", "");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
-jest.mock("../../../backend", () => {
-  return {
-    updateProject: jest.fn((_project: Project) => {
-      return Promise.resolve("projectId");
-    }),
-    addStepToGoal: jest.fn(
-      (_userEditId: string, _indexInHistory: number, _goal: Goal) => {
-        return Promise.resolve(mockGoal);
-      }
-    ),
-  };
-});
+jest.mock("../../../backend", () => ({
+  updateProject: jest.fn((_project: Project) => {
+    return Promise.resolve("projectId");
+  }),
+  addStepToGoal: jest.fn(
+    (_userEditId: string, _indexInHistory: number, _goal: Goal) => {
+      return Promise.resolve(mockGoal);
+    }
+  ),
+}));
 
 const mockGoal: Goal = new CreateCharInv();
 
