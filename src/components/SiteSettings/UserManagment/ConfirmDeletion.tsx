@@ -14,7 +14,7 @@ import { User } from "../../../types/user";
 
 interface ConfirmDeletionProps {
   user?: User;
-  deleteUser: (user: User) => void;
+  deleteUser: (userId: string) => void;
   handleCloseModal: () => void;
 }
 
@@ -42,7 +42,7 @@ export default function ConfirmDeletion(props: ConfirmDeletionProps) {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      if (props.user) props.deleteUser(props.user);
+                      if (props.user) props.deleteUser(props.user.id);
                     }}
                     color="secondary"
                   >

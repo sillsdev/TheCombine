@@ -4,7 +4,7 @@ import Modal from "react-modal";
 import { ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
-import { avatarSrc, getAllUsers } from "../../../backend";
+import { avatarSrc, deleteUser, getAllUsers } from "../../../backend";
 import { User } from "../../../types/user";
 import UserList from "./UserList";
 import ConfirmDeletion from "./ConfirmDeletion";
@@ -82,9 +82,6 @@ class UserManagment extends React.Component<UserProps, UserState> {
       })
       .catch((err) => console.log(err));
   }
-  /* deleteUser will be the function called to delete a User 
-  from the Entire Combine once the backend for this is created */
-  private deleteUser(user: User) {}
 
   render() {
     return (
@@ -93,7 +90,6 @@ class UserManagment extends React.Component<UserProps, UserState> {
           <UserList
             allUsers={this.state.allUsers}
             userAvatar={this.state.userAvatar}
-            deleteUser={(user: User) => this.deleteUser(user)}
             handleOpenModal={(user: User) => this.handleOpenModal(user)}
           />
           <ToastContainer
@@ -117,7 +113,7 @@ class UserManagment extends React.Component<UserProps, UserState> {
         >
           <ConfirmDeletion
             user={this.state.userToEdit}
-            deleteUser={this.deleteUser}
+            deleteUser={deleteUser}
             handleCloseModal={this.handleCloseModal}
           />
         </Modal>
