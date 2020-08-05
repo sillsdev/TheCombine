@@ -16,14 +16,13 @@ let oldAvatar: string;
 let oldMergeDupsBlacklist: Hash<boolean>;
 let oldProjectId: string;
 let oldToken: string;
-let oldUserId: string;
+let oldUser: User | undefined;
 
 beforeAll(() => {
   oldAvatar = LocalStorage.getAvatar();
   oldMergeDupsBlacklist = LocalStorage.getMergeDupsBlacklist();
   oldProjectId = LocalStorage.getProjectId();
   oldToken = LocalStorage.getToken();
-  oldUserId = LocalStorage.getUserId();
 });
 
 beforeEach(() => {
@@ -32,10 +31,10 @@ beforeEach(() => {
 
 afterAll(() => {
   LocalStorage.clearLocalStorage();
-  if (oldUserId) {
-    LocalStorage.updateUser(oldUserId);
-  }
   LocalStorage.setAvatar(oldAvatar);
+  if (oldUser) {
+    LocalStorage.setCurrentUser(oldUser);
+  }
   LocalStorage.setMergeDupsBlacklist(oldMergeDupsBlacklist);
   LocalStorage.setProjectId(oldProjectId);
   LocalStorage.setToken(oldToken);
@@ -51,22 +50,17 @@ describe("Test localStorage", () => {
     expect(LocalStorage.getUserId()).toEqual("");
   });
 
-  it("should set user and userId when setting a user", () => {
-    LocalStorage.setCurrentUser(mockUser);
-    expect(LocalStorage.getCurrentUser()).toEqual(mockUser);
-    expect(LocalStorage.getUserId()).toEqual(mockUser.id);
-  });
-
   it("should return the set value", () => {
     LocalStorage.setAvatar(mockAvatar);
     expect(LocalStorage.getAvatar()).toEqual(mockAvatar);
+    LocalStorage.setCurrentUser(mockUser);
+    expect(LocalStorage.getCurrentUser()).toEqual(mockUser);
+    expect(LocalStorage.getUserId()).toEqual(mockUser.id);
     LocalStorage.setMergeDupsBlacklist(mockBlacklist);
     expect(LocalStorage.getMergeDupsBlacklist()).toEqual(mockBlacklist);
     LocalStorage.setProjectId(mockProjectId);
     expect(LocalStorage.getProjectId()).toEqual(mockProjectId);
     LocalStorage.setToken(mockToken);
     expect(LocalStorage.getToken()).toEqual(mockToken);
-    LocalStorage.setUserId(mockUserId);
-    expect(LocalStorage.getUserId()).toEqual(mockUserId);
   });
 });

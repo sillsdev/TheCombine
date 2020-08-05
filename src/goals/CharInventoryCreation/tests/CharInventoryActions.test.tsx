@@ -97,7 +97,6 @@ beforeAll(() => {
 beforeEach(() => {
   LocalStorage.remove(LocalStorage.localStorageKeys.projectId);
   LocalStorage.remove(LocalStorage.localStorageKeys.user);
-  LocalStorage.remove(LocalStorage.localStorageKeys.userId);
 });
 
 afterEach(() => {

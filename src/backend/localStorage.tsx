@@ -8,7 +8,6 @@ export enum localStorageKeys {
   projectId = "projectId",
   token = "token",
   user = "user",
-  userId = "userId",
 }
 
 // This function should only be used on Logout.
@@ -43,7 +42,8 @@ export function getToken(): string {
 }
 
 export function getUserId(): string {
-  return localStorage.getItem(localStorageKeys.userId) || "";
+  const user: User | undefined = getCurrentUser();
+  return user ? user.id : "";
 }
 
 export function remove(localStorageKey: localStorageKeys) {
@@ -59,7 +59,6 @@ export function setAvatar(src: string) {
 export function setCurrentUser(user: User) {
   const userString: string = JSON.stringify(user);
   localStorage.setItem(localStorageKeys.user, userString);
-  setUserId(user.id);
 }
 
 export function setMergeDupsBlacklist(blacklist: Hash<boolean>) {
@@ -74,13 +73,6 @@ export function setProjectId(id: string) {
 
 export function setToken(token: string) {
   localStorage.setItem(localStorageKeys.token, token);
-}
-
-// You generally don't want to use this on its own,
-// but rather setCurrentUser(user) or updateUser(userId),
-// to assure user and userId aren't out of sync
-export function setUserId(userId: string) {
-  localStorage.setItem(localStorageKeys.userId, userId);
 }
 
 export async function updateUser(userId?: string) {
