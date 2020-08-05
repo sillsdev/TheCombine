@@ -73,9 +73,7 @@ mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 jest.mock("../../../backend", () => {
-  const originalBackend = jest.requireActual("../../../backend");
   return {
-    ...originalBackend,
     updateProject: jest.fn((_project: Project) => {
       return Promise.resolve("projectId");
     }),
