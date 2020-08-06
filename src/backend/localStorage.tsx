@@ -50,7 +50,6 @@ export function getProjectId(): string {
   return localStorage.getItem(localStorageKeys.projectId) || "";
 }
 export function setProjectId(id: string) {
-  if (id !== getProjectId()) remove(localStorageKeys.mergeDupsBlacklist);
   localStorage.setItem(localStorageKeys.projectId, id);
 }
 

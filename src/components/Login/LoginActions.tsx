@@ -58,7 +58,7 @@ export interface UserAction {
 
 // thunk action creator
 export function asyncLogin(username: string, password: string) {
-  return async (dispatch: Dispatch<UserAction>) => {
+  return async (dispatch: Dispatch<UserAction>, getState: any) => {
     dispatch(loginAttempt(username));
     await backend
       .authenticateUser(username, password)

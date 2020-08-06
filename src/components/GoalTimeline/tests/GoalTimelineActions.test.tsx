@@ -59,7 +59,6 @@ jest.mock("../../../backend", () => {
 let mockGoalData: MergeDupData;
 const createMockStore = configureMockStore([thunk]);
 let mockStore: MockStoreEnhanced<unknown, {}>;
-let oldBlacklist: Hash<boolean>;
 let oldProjectId: string;
 let oldUser: User | undefined;
 
@@ -67,12 +66,13 @@ const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
 const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [] };
 const mockUserId: string = "34567";
-let mockUser: User;
+let mockUser: User = new User("", "", "");
+mockUser.id = mockUserId;
+mockUser.workedProjects[mockProjectId] = mockUserEditId;
 const mockGoal: Goal = new CreateCharInv();
 
 beforeAll(() => {
   // Save things in localStorage to restore once tests are done
-  oldBlacklist = LocalStorage.getMergeDupsBlacklist();
   oldProjectId = LocalStorage.getProjectId();
   oldUser = LocalStorage.getCurrentUser();
 
@@ -97,11 +97,6 @@ beforeEach(() => {
   // Clear everything from localStorage interacted with by these tests.
   LocalStorage.remove(LocalStorage.localStorageKeys.projectId);
   LocalStorage.remove(LocalStorage.localStorageKeys.user);
-
-  // Reset the mockUser
-  mockUser = new User("", "", "");
-  mockUser.id = mockUserId;
-  mockUser.workedProjects[mockProjectId] = mockUserEditId;
 });
 
 afterEach(() => {
@@ -109,7 +104,6 @@ afterEach(() => {
 });
 
 afterAll(() => {
-  LocalStorage.setMergeDupsBlacklist(oldBlacklist);
   LocalStorage.setProjectId(oldProjectId);
   if (oldUser) {
     LocalStorage.setCurrentUser(oldUser);
