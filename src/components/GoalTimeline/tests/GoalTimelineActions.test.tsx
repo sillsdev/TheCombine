@@ -5,7 +5,6 @@ import * as LocalStorage from "../../../backend/localStorage";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
-import { Hash } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   MergeTreeActions,
   MergeTreeAction,

@@ -16,7 +16,7 @@ export default function UserMenu() {
   const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(
     null
   );
-  const [avatar, setAvatar] = React.useState<string>("");
+  const avatar = LocalStorage.getAvatar();
   const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -27,10 +27,6 @@ export default function UserMenu() {
     setAnchorElement(null);
   }
 
-  React.useEffect(() => {
-    setAvatar(LocalStorage.getAvatar());
-  }, []);
-
   async function getIsAdmin() {
     const userId = LocalStorage.getUserId();
     await getUser(userId)
@@ -40,7 +36,9 @@ export default function UserMenu() {
       .catch((err) => console.log(err));
   }
 
-  getIsAdmin();
+  React.useEffect(() => {
+    getIsAdmin();
+  }, []);
 
   return (
     <div>
