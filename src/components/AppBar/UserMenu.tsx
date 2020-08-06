@@ -7,6 +7,7 @@ import { getUser } from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
 import history from "../../history";
 import theme from "../../types/theme";
+import { User } from "../../types/user";
 
 /**
  * Avatar in appbar with dropdown: site settings (for admins), user settings, log out
@@ -32,8 +33,11 @@ export default function UserMenu() {
 
   async function getIsAdmin() {
     const userId = LocalStorage.getUserId();
-    const user = await getUser(userId);
-    setIsAdmin(user.isAdmin);
+    await getUser(userId)
+      .then((user: User) => {
+        setIsAdmin(user.isAdmin);
+      })
+      .catch((err) => console.log(err));
   }
 
   getIsAdmin();

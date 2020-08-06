@@ -5,6 +5,7 @@ import * as LocalStorage from "../../../backend/localStorage";
 import { CreateCharInv } from "../../../goals/CreateCharInv/CreateCharInv";
 import { HandleFlags } from "../../../goals/HandleFlags/HandleFlags";
 import { MergeDups, MergeDupData } from "../../../goals/MergeDupGoal/MergeDups";
+import { Hash } from "../../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   MergeTreeActions,
   MergeTreeAction,
@@ -41,7 +42,7 @@ jest.mock("../../../backend", () => {
       return Promise.resolve(mockUserEdit);
     }),
     createUserEdit: jest.fn(() => {
-      return Promise.resolve("");
+      return Promise.resolve(mockUserEditId);
     }),
     updateUser: jest.fn((_user: User) => {
       return Promise.resolve(mockUser);
@@ -58,20 +59,20 @@ jest.mock("../../../backend", () => {
 let mockGoalData: MergeDupData;
 const createMockStore = configureMockStore([thunk]);
 let mockStore: MockStoreEnhanced<unknown, {}>;
+let oldBlacklist: Hash<boolean>;
 let oldProjectId: string;
 let oldUser: User | undefined;
 
 const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
-const mockUserId: string = "34567";
-let mockUser: User = new User("", "", "");
-mockUser.id = mockUserId;
-mockUser.workedProjects[mockProjectId] = mockUserEditId;
 const mockUserEdit: UserEdit = { id: mockUserEditId, edits: [] };
+const mockUserId: string = "34567";
+let mockUser: User;
 const mockGoal: Goal = new CreateCharInv();
 
 beforeAll(() => {
   // Save things in localStorage to restore once tests are done
+  oldBlacklist = LocalStorage.getMergeDupsBlacklist();
   oldProjectId = LocalStorage.getProjectId();
   oldUser = LocalStorage.getCurrentUser();
 
@@ -96,6 +97,11 @@ beforeEach(() => {
   // Clear everything from localStorage interacted with by these tests.
   LocalStorage.remove(LocalStorage.localStorageKeys.projectId);
   LocalStorage.remove(LocalStorage.localStorageKeys.user);
+
+  // Reset the mockUser
+  mockUser = new User("", "", "");
+  mockUser.id = mockUserId;
+  mockUser.workedProjects[mockProjectId] = mockUserEditId;
 });
 
 afterEach(() => {
@@ -103,6 +109,7 @@ afterEach(() => {
 });
 
 afterAll(() => {
+  LocalStorage.setMergeDupsBlacklist(oldBlacklist);
   LocalStorage.setProjectId(oldProjectId);
   if (oldUser) {
     LocalStorage.setCurrentUser(oldUser);
@@ -138,7 +145,9 @@ describe("Test GoalsActions", () => {
   });
 
   it("should create an async action to load user edits", async () => {
-    await mockStore.dispatch<any>(actions.asyncLoadExistingUserEdits("1", "1"));
+    await mockStore.dispatch<any>(
+      actions.asyncLoadExistingUserEdits(mockProjectId, mockUserEditId)
+    );
 
     let loadUserEdits: actions.LoadUserEditsAction = {
       type: actions.GoalsActions.LOAD_USER_EDITS,

@@ -58,12 +58,11 @@ export interface UserAction {
 
 // thunk action creator
 export function asyncLogin(username: string, password: string) {
-  return async (dispatch: Dispatch<UserAction>, getState: any) => {
+  return async (dispatch: Dispatch<UserAction>) => {
     dispatch(loginAttempt(username));
     await backend
       .authenticateUser(username, password)
-      .then(async (userString: string) => {
-        const user: User = JSON.parse(userString);
+      .then(async (user: User) => {
         LocalStorage.setCurrentUser(user);
         LocalStorage.setToken(user.token);
         dispatch(loginSuccess(user.username));

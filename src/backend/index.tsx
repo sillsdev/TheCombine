@@ -163,13 +163,13 @@ export function isEmailTaken(emailAddress: string): Promise<boolean> {
 export async function authenticateUser(
   username: string,
   password: string
-): Promise<string> {
+): Promise<User> {
   let resp = await backendServer.post(
     `users/authenticate`,
     { Username: username, Password: password },
     { headers: authHeader() }
   );
-  return JSON.stringify(resp.data);
+  return resp.data;
 }
 
 export async function getAllUsers(): Promise<User[]> {

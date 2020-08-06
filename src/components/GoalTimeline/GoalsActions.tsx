@@ -1,28 +1,28 @@
 import { Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { Goal, GoalType } from "../../types/goals";
-import { ActionWithPayload } from "../../types/mockAction";
 import * as Backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
-import history from "../../history";
-import { User } from "../../types/user";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
-import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
-import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
-import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
-import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
-import { Edit } from "../../types/userEdit";
+import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { StoreState } from "../../types";
-import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   MergeTreeAction,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
+import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
+import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
+import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
+import history from "../../history";
+import { StoreState } from "../../types";
+import { Goal, GoalType } from "../../types/goals";
+import { ActionWithPayload } from "../../types/mockAction";
+import { User } from "../../types/user";
+import { Edit } from "../../types/userEdit";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -71,11 +71,21 @@ function asyncCreateNewUserEditsObject(projectId: string) {
     await Backend.createUserEdit()
       .then(async (userEditId: string) => {
         const userId: string = LocalStorage.getUserId();
-        let updatedUser: User = await Backend.getUser(userId);
-        updatedUser.workedProjects[projectId] = userEditId;
-        Backend.updateUser(updatedUser).then((user: User) =>
-          LocalStorage.setCurrentUser(user)
-        );
+        await Backend.getUser(userId)
+          .then(async (user: User) => {
+            let updatingUser: User = user;
+            updatingUser.workedProjects[projectId] = userEditId;
+            await Backend.updateUser(updatingUser)
+              .then((updatedUser: User) =>
+                LocalStorage.setCurrentUser(updatedUser)
+              )
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -87,7 +97,7 @@ export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     const projectId: string = LocalStorage.getProjectId();
     if (projectId) {
-      const userEditId: string | undefined = getUserEditId();
+      const userEditId: string | undefined = getUserEditId(projectId);
       if (userEditId) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
@@ -191,16 +201,17 @@ export function updateStepData(goal: Goal): Goal {
   return goal;
 }
 
-export function getUserEditId(): string | undefined {
-  const projectId: string = LocalStorage.getProjectId();
+export function getUserEditId(projectId?: string): string | undefined {
+  projectId = projectId ? projectId : LocalStorage.getProjectId();
   const user: User | undefined = LocalStorage.getCurrentUser();
-  const workedProjects: Hash<string> = user ? user.workedProjects : {};
-  const projectIds = Object.keys(workedProjects);
-  const matches: string[] = projectIds.filter(
-    (project) => projectId === project
-  );
-  if (matches) {
-    return workedProjects[matches[0]];
+  if (user && projectId) {
+    const projectIds = Object.keys(user.workedProjects);
+    const matches: string[] = projectIds.filter(
+      (project) => projectId === project
+    );
+    if (matches.length === 1) {
+      return user.workedProjects[matches[0]];
+    }
   }
 }
 
