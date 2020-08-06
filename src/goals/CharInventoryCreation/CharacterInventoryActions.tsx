@@ -1,6 +1,7 @@
 import { Dispatch } from "react";
 
 import * as backend from "../../backend";
+import { getCurrentUser } from "../../backend/localStorage";
 import {
   ProjectAction,
   setCurrentProject,
@@ -14,6 +15,7 @@ import {
 import { StoreState } from "../../types";
 import { Goal } from "../../types/goals";
 import { Project } from "../../types/project";
+import { User } from "../../types/user";
 import { CreateCharInv } from "../CreateCharInv/CreateCharInv";
 import {
   CharacterSetEntry,
@@ -213,14 +215,17 @@ async function saveChangesToGoal(
   history: Goal[],
   dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
-  const userEditId: string | undefined = getUserEditId();
-  if (userEditId) {
-    let indexInHistory: number = getIndexInHistory(history, updatedGoal);
+  const user: User | undefined = getCurrentUser();
+  if (user) {
+    const userEditId: string | undefined = getUserEditId(user);
+    if (userEditId) {
+      let indexInHistory: number = getIndexInHistory(history, updatedGoal);
 
-    dispatch(updateGoal(updatedGoal));
-    await backend
-      .addStepToGoal(userEditId, indexInHistory, updatedGoal)
-      .catch((err: string) => console.log(err));
+      dispatch(updateGoal(updatedGoal));
+      await backend
+        .addStepToGoal(userEditId, indexInHistory, updatedGoal)
+        .catch((err: string) => console.log(err));
+    }
   }
 }
 

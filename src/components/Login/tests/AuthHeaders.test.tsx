@@ -22,7 +22,7 @@ describe("AuthHeaders Tests", () => {
     expect(authHeaderOut.authorization).toMatch(/testToken/);
   });
 
-  test("Creates empty header if user has no token prop", () => {
+  test("Creates empty header if no token", () => {
     const authHeaderOut = authHeader();
     expect(authHeaderOut).toEqual({});
   });

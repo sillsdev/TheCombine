@@ -312,20 +312,17 @@ describe("Test GoalsActions", () => {
   });
 
   it("should return a userEditId", () => {
-    LocalStorage.setCurrentUser(mockUser);
     LocalStorage.setProjectId(mockProjectId);
-    expect(actions.getUserEditId()).toEqual(mockUserEditId);
+    expect(actions.getUserEditId(mockUser)).toEqual(mockUserEditId);
   });
 
   it("should return undefined when no projectId is set", () => {
-    LocalStorage.setCurrentUser(mockUser);
-    expect(actions.getUserEditId()).toEqual(undefined);
+    expect(actions.getUserEditId(mockUser)).toEqual(undefined);
   });
 
   it("should return undefined when no userId exists for the project", () => {
-    LocalStorage.setCurrentUser(mockUser);
     LocalStorage.setProjectId("differentThanMockProjectId");
-    expect(actions.getUserEditId()).toEqual(undefined);
+    expect(actions.getUserEditId(mockUser)).toEqual(undefined);
   });
 
   it("should return the correct goal", () => {
