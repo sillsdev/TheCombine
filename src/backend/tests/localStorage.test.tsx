@@ -39,7 +39,7 @@ afterAll(() => {
 describe("Test localStorage", () => {
   it("should return empty elements when nothing has been stored", () => {
     expect(LocalStorage.getAvatar()).toEqual("");
-    expect(LocalStorage.getCurrentUser()).toEqual(undefined);
+    expect(LocalStorage.getCurrentUser()).toEqual(null);
     expect(LocalStorage.getMergeDupsBlacklist()).toEqual({});
     expect(LocalStorage.getProjectId()).toEqual("");
     expect(LocalStorage.getUserId()).toEqual("");
