@@ -84,12 +84,9 @@ export function asyncGetUserEdits() {
     const user: User | null = LocalStorage.getCurrentUser();
     if (user) {
       const projectId: string = LocalStorage.getProjectId();
-      const userEditId: string | undefined = getUserEditIdFromProjectId(
-        user.workedProjects,
-        projectId
-      );
+      const userEditId: string | undefined = getUserEditId(user);
 
-      if (userEditId) {
+      if (userEditId !== undefined) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
         dispatch(asyncCreateNewUserEditsObject(projectId));
@@ -196,21 +193,10 @@ export function updateStepData(goal: Goal): Goal {
 
 export function getUserEditId(user: User): string | undefined {
   const projectId = LocalStorage.getProjectId();
-  const userEditId: string | undefined = getUserEditIdFromProjectId(
-    user.workedProjects,
-    projectId
-  );
-  return userEditId;
-}
-
-function getUserEditIdFromProjectId(
-  workedProjects: Hash<string>,
-  projectId: string
-): string | undefined {
-  let projectIds = Object.keys(workedProjects);
+  let projectIds = Object.keys(user.workedProjects);
   let matches: string[] = projectIds.filter((project) => projectId === project);
   if (matches.length === 1) {
-    return workedProjects[matches[0]];
+    return user.workedProjects[matches[0]];
   }
 }
 
