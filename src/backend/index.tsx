@@ -226,11 +226,12 @@ export async function getAllProjects(): Promise<Project[]> {
 }
 
 export async function getAllActiveProjectsByUser(
-  user: User
+  userId: string
 ): Promise<Project[]> {
-  let projectIds: string[] = Object.keys(user.projectRoles);
+  const user: User = await getUser(userId);
+  const projectIds: string[] = Object.keys(user.projectRoles);
   let projects: Project[] = [];
-  for (let projectId of projectIds) {
+  for (const projectId of projectIds) {
     try {
       await getProject(projectId).then((project) => {
         project.isActive && projects.push(project);

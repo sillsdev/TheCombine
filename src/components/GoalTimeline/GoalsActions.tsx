@@ -81,7 +81,7 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const user: User | undefined = LocalStorage.getCurrentUser();
+    const user: User | null = LocalStorage.getCurrentUser();
     if (user) {
       const projectId: string = LocalStorage.getProjectId();
       const userEditId: string | undefined = getUserEditIdFromProjectId(
@@ -215,7 +215,7 @@ function getUserEditIdFromProjectId(
 }
 
 function updateUserIfExists(projectId: string, userEditId: string): User {
-  let currentUser: User | undefined = LocalStorage.getCurrentUser();
+  let currentUser: User | null = LocalStorage.getCurrentUser();
   let updatedUser: User = new User("", "", "");
   if (currentUser) {
     updatedUser = updateUserWithUserEditId(currentUser, projectId, userEditId);

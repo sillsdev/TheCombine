@@ -12,7 +12,7 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import { getAllActiveProjectsByUser, getUser } from "../../../backend";
+import { getAllActiveProjectsByUser } from "../../../backend";
 import { getUserId } from "../../../backend/localStorage";
 import history from "../../../history";
 import { Project } from "../../../types/project";
@@ -34,11 +34,9 @@ class ChooseProject extends React.Component<
     this.state = { projectList: [] };
     const userId: string = getUserId();
     if (userId) {
-      getUser(userId)
-        .then((user) => getAllActiveProjectsByUser(user))
-        .then((projectList) => {
-          this.setState({ projectList });
-        });
+      getAllActiveProjectsByUser(userId).then((projectList) => {
+        this.setState({ projectList });
+      });
     }
   }
 

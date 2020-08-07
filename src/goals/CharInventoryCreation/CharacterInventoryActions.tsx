@@ -215,10 +215,10 @@ async function saveChangesToGoal(
   history: Goal[],
   dispatch: Dispatch<CharacterInventoryAction | ProjectAction | GoalAction>
 ) {
-  const user: User | undefined = getCurrentUser();
+  const user: User | null = getCurrentUser();
   if (user) {
     const userEditId: string | undefined = getUserEditId(user);
-    if (userEditId) {
+    if (userEditId !== undefined) {
       let indexInHistory: number = getIndexInHistory(history, updatedGoal);
 
       dispatch(updateGoal(updatedGoal));

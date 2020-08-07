@@ -26,11 +26,9 @@ export function setAvatar(src: string) {
 
 // Since avatar, password, and token are not returned with Backend's GetUser,
 // we can't expect them in what we are saving to localStorage.
-export function getCurrentUser(): User | undefined {
+export function getCurrentUser(): User | null {
   const userString: string | null = localStorage.getItem(localStorageKeys.user);
-  if (userString) {
-    return JSON.parse(userString);
-  }
+  return userString ? JSON.parse(userString) : null;
 }
 export function setCurrentUser(user: User) {
   const userString: string = JSON.stringify(user);
@@ -61,7 +59,7 @@ export function setToken(token: string) {
 }
 
 export function getUserId(): string {
-  const user: User | undefined = getCurrentUser();
+  const user: User | null = getCurrentUser();
   return user ? user.id : "";
 }
 

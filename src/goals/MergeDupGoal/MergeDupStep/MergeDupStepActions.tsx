@@ -161,10 +161,10 @@ export function mergeSense() {
 }
 
 async function addStepToGoal(goal: Goal, indexInHistory: number) {
-  const user: User | undefined = LocalStorage.getCurrentUser();
+  const user: User | null = LocalStorage.getCurrentUser();
   if (user) {
     let userEditId: string | undefined = getUserEditId(user);
-    if (userEditId) {
+    if (userEditId !== undefined) {
       await backend.addStepToGoal(userEditId, indexInHistory, goal);
     }
   }

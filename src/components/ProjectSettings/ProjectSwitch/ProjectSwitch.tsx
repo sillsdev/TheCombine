@@ -1,7 +1,7 @@
 import { List, ListItem, Typography } from "@material-ui/core";
 import React from "react";
 
-import { getAllActiveProjectsByUser, getUser } from "../../../backend";
+import { getAllActiveProjectsByUser } from "../../../backend";
 import { getUserId } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import { randomIntString } from "../../../utilities";
@@ -13,7 +13,6 @@ interface SwitchProps {
 
 interface SwitchState {
   projectList: Project[];
-  currentUserId: string;
 }
 
 export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
@@ -22,7 +21,6 @@ export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
 
     this.state = {
       projectList: [],
-      currentUserId: getUserId(),
     };
 
     this.updateProjectList();
@@ -35,12 +33,11 @@ export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
   }
 
   private updateProjectList() {
-    if (this.state.currentUserId) {
-      getUser(this.state.currentUserId).then((user) =>
-        getAllActiveProjectsByUser(user).then((projects) => {
-          this.setState({ projectList: projects });
-        })
-      );
+    const userId: string = getUserId();
+    if (userId) {
+      getAllActiveProjectsByUser(userId).then((projects) => {
+        this.setState({ projectList: projects });
+      });
     }
   }
 
