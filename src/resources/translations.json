@@ -430,6 +430,7 @@
       "Créer un inventaire de caractères"
     ],
     "characters": ["characters", "caracteres", "caractères"],
+    "examples": ["Examples", "Ejemplos", "Exemples"],
     "occurrences": ["occurrences", "ocurrencias", "occurrences"],
     "status": ["status", "estado", "statut"],
     "sortBy": ["Sort by", "Sort by", "Trier par"],

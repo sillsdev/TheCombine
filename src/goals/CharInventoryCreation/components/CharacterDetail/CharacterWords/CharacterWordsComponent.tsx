@@ -1,5 +1,7 @@
-import * as React from "react";
 import { Typography, Link } from "@material-ui/core";
+import * as React from "react";
+import { Translate } from "react-localize-redux";
+
 import { highlight } from "../../../../../types/theme";
 
 export interface CharacterWordsProps {
@@ -11,10 +13,8 @@ export interface CharacterWordsProps {
 export default function CharacterWords(props: CharacterWordsProps) {
   return (
     <React.Fragment>
-      <Typography>
-        <Link href={"#"} variant="overline">
-          Examples ⟶
-        </Link>
+      <Typography variant="overline">
+        <Translate id="charInventory.examples" />
       </Typography>
       {getWordsContainingChar(props.character, props.allWords, 5).map(
         (word) => (
