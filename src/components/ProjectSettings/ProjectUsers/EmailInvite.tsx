@@ -119,7 +119,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
                     loading={this.state.loading}
                     done={this.state.done}
                   >
-                    <Translate id="projectSettings.invite.inviteButton" />
+                    <Translate id="buttons.invite" />
                   </LoadingDoneButton>
                 </Grid>
               </Grid>

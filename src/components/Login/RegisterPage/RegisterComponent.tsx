@@ -23,7 +23,7 @@ import { passwordRequirements, usernameRequirements } from "../../../utilities";
 export interface RegisterDispatchProps {
   register?: (
     name: string,
-    user: string,
+    username: string,
     email: string,
     password: string
   ) => void;
@@ -42,16 +42,16 @@ export interface RegisterProps {
 
 interface RegisterState {
   name: string;
-  user: string;
+  username: string;
+  email: string;
   password: string;
   confirmPassword: string;
-  email: string;
   error: {
-    password: boolean;
-    user: boolean;
-    confirmPassword: boolean;
     name: boolean;
+    username: boolean;
     email: boolean;
+    password: boolean;
+    confirmPassword: boolean;
   };
 }
 
@@ -71,16 +71,16 @@ export class Register extends React.Component<
     super(props);
     this.state = {
       name: "",
-      user: "",
+      username: "",
+      email: "",
       password: "",
       confirmPassword: "",
-      email: "",
       error: {
-        password: false,
-        user: false,
-        confirmPassword: false,
         name: false,
+        username: false,
         email: false,
+        password: false,
+        confirmPassword: false,
       },
     };
   }
@@ -96,7 +96,7 @@ export class Register extends React.Component<
     >,
     field: K
   ) {
-    const value = e.target.value;
+    const value: string = e.target.value;
 
     this.setState({
       [field]: value,
@@ -105,14 +105,14 @@ export class Register extends React.Component<
   }
 
   async checkUsername(username: string) {
-    let usernameTaken = await isUsernameTaken(username);
+    const usernameTaken: boolean = await isUsernameTaken(username);
     if (usernameTaken) {
-      this.setState({ error: { ...this.state.error, user: true } });
+      this.setState({ error: { ...this.state.error, username: true } });
     }
   }
 
   async checkEmail(username: string) {
-    let emailTaken = await isEmailTaken(username);
+    const emailTaken: boolean = await isEmailTaken(username);
     if (emailTaken) {
       this.setState({ error: { ...this.state.error, email: true } });
     }
@@ -120,30 +120,30 @@ export class Register extends React.Component<
 
   async register(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    let name = this.state.name.trim();
-    let user = this.state.user.trim();
-    let email = this.state.email.trim();
-    let pass = this.state.password.trim();
-    let confPass = this.state.confirmPassword.trim();
+    const name: string = this.state.name.trim();
+    const username: string = this.state.username.trim();
+    const email: string = this.state.email.trim();
+    const password: string = this.state.password.trim();
+    const confirmPassword: string = this.state.confirmPassword.trim();
 
     // error checking
     let error = { ...this.state.error };
     error.name = name === "";
-    error.password = !passwordRequirements(pass);
-    error.user = !usernameRequirements(user);
-    error.confirmPassword = pass !== confPass;
+    error.username = !usernameRequirements(username);
     error.email = email === "";
+    error.password = !passwordRequirements(password);
+    error.confirmPassword = password !== confirmPassword;
 
     if (
       error.name ||
+      error.username ||
+      error.email ||
       error.password ||
-      error.user ||
-      error.confirmPassword ||
-      error.email
+      error.confirmPassword
     ) {
       this.setState({ error });
     } else if (this.props.register) {
-      this.props.register(name, user, email, pass);
+      this.props.register(name, username, email, password);
       // Temporary solution - Not sure how to force register to finish first
       setTimeout(() => {
         if (this.props.returnToEmailInvite) {
@@ -199,12 +199,12 @@ export class Register extends React.Component<
                 required
                 autoComplete="username"
                 label={<Translate id="login.username" />}
-                value={this.state.user}
-                onChange={(e) => this.updateField(e, "user")}
-                onBlur={() => this.checkUsername(this.state.user)}
-                error={this.state.error["user"]}
+                value={this.state.username}
+                onChange={(e) => this.updateField(e, "username")}
+                onBlur={() => this.checkUsername(this.state.username)}
+                error={this.state.error["username"]}
                 helperText={
-                  this.state.error["user"] ? (
+                  this.state.error["username"] ? (
                     <Translate id="login.usernameInvalid" />
                   ) : (
                     <Translate id="login.usernameRequirements" />
