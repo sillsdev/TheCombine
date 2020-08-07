@@ -16,7 +16,7 @@ export interface AuthHeader {
 
 export default function authHeader(): AuthHeader {
   const user: User | null = getCurrentUser();
-  if (user) {
+  if (user && user.token) {
     return { authorization: "Bearer " + user.token };
   } else {
     return {};

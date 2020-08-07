@@ -4,19 +4,19 @@ import { ThunkDispatch } from "redux-thunk";
 import * as Backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
-import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
-import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
-import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
-import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   MergeTreeAction,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
+import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
+import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
+import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
 import history from "../../history";
 import { StoreState } from "../../types";
 import { Goal, GoalType } from "../../types/goals";
