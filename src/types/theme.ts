@@ -1,9 +1,7 @@
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-
-// Import colors
-import { blue, grey, red, green, yellow } from "@material-ui/core/colors";
-import { responsiveFontSizes } from "@material-ui/core/styles";
+import { blue, green, grey, red, yellow } from "@material-ui/core/colors";
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
+
 // Constants which define colors later:
 const primary: string = blue[600];
 const secondary: string = grey[200];
@@ -41,8 +39,8 @@ const palette = {
 const typography = {
   // Copied from default theme
   fontFamily: [
-    '"Noto Sans"',
     '"Roboto"',
+    '"Noto Sans"',
     '"Helvetica"',
     '"Arial"',
     "sans-serif",

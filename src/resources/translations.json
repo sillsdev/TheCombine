@@ -67,7 +67,7 @@
       "¿Se te olvidó tu contraseña?",
       "Mot de passe oublié ?"
     ],
-    "login": ["Login", "Iniciar sesión", "Connexion"],
+    "login": ["Login", "Iniciar sesión", "Se connecter"],
     "failed": [
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña.",
@@ -111,7 +111,6 @@
     ],
     "networkError": ["Network error", "Error de red", "Erreur réseau"],
     "loggingIn": ["Logging in...", "Iniciar sesión...", "Se connecter..."],
-    "logout": ["Log out", "cerrar sesión", "Déconnexion"],
     "required": ["Required", "necesario", "Requis"],
     "confirmPassword": [
       "Confirm Password",
@@ -161,7 +160,7 @@
       "Ajustes de usuario",
       "Réglages utilisateur"
     ],
-    "logout": ["Log Out", "cerrar sesión", "Déconnexion"]
+    "logout": ["Log Out", "Cerrar sesión", "Se déconnecter"]
   },
   "createProject": {
     "title": ["Create Project", "Crear Proyecto", "Créer un projet"],
@@ -471,8 +470,6 @@
         "Caracteres Rechazados...",
         "Caractères rejetés"
       ],
-      "accepted": ["Accepted", "Aceptado", "Acceptée"],
-      "rejected": ["Rejected", "Rechazado", "Rejeté"],
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
         "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar.",
@@ -570,6 +567,7 @@
   },
   "buttons": {
     "accept": ["Accept", "Aceptar", "Accepter"],
+    "accepted": ["Accepted", "Aceptado", "Acceptée"],
     "add": ["Add", "Añadir", "Ajouter"],
     "archive": ["Archive", "Archivar", "Archiver"],
     "cancel": ["Cancel", "Cancelar", "Annuler"],
@@ -579,6 +577,7 @@
     "done": ["Done", "Hecho", "Achevé"],
     "invite": ["Invite", "Invitar", "Inviter"],
     "reject": ["Reject", "Rechazar", "Rejeter"],
+    "rejected": ["Rejected", "Rechazado", "Rejeté"],
     "restore": ["Restore", "Restaurar", "Restaurer"],
     "save": ["Save", "Guardar", "Enregistrer"],
     "undecided": ["Undecided", "Indeciso", "Incertain"],

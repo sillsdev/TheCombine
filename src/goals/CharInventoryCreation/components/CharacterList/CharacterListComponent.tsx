@@ -1,18 +1,19 @@
+import {
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 import * as React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
   Translate,
 } from "react-localize-redux";
-import {
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@material-ui/core";
-import { CharacterCard } from "./CharacterCard";
+
 import { CharacterSetEntry } from "../../CharacterInventoryReducer";
+import CharacterCard from "./CharacterCard";
 
 export interface CharacterListProps {
   setSelectedCharacter: (character: string) => void;

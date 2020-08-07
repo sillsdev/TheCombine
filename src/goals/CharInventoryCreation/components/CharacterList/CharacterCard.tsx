@@ -1,12 +1,15 @@
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
-import theme from "../../../../types/theme";
-import CharacterStatusText from "./CharacterStatusText";
 import { Translate } from "react-localize-redux";
+
+import theme from "../../../../types/theme";
 import { characterStatus } from "../../CharacterInventoryReducer";
+import CharacterStatusText from "./CharacterStatusText";
 
 export interface CharacterCardProps {
   char: string;
@@ -17,20 +20,7 @@ export interface CharacterCardProps {
   cardWidth: number;
 }
 
-interface CharacterCardStates {}
-
-function charToHexValue(char: string) {
-  let hex: string = char.charCodeAt(0).toString(16).toUpperCase();
-  while (hex.length < 4) {
-    hex = "0" + hex;
-  }
-  return "U+" + hex;
-}
-
-export class CharacterCard extends React.Component<
-  CharacterCardProps,
-  CharacterCardStates
-> {
+export default class CharacterCard extends React.Component<CharacterCardProps> {
   render() {
     return (
       <React.Fragment>
@@ -71,4 +61,12 @@ export class CharacterCard extends React.Component<
       </React.Fragment>
     );
   }
+}
+
+function charToHexValue(char: string) {
+  let hex: string = char.charCodeAt(0).toString(16).toUpperCase();
+  while (hex.length < 4) {
+    hex = "0" + hex;
+  }
+  return "U+" + hex;
 }

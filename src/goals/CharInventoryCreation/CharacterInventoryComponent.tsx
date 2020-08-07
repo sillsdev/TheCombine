@@ -72,7 +72,7 @@ export class CharacterInventory extends React.Component<
     return (
       <div>
         <Grid container justify="center" spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xl={10} lg={9} md={8} xs={12}>
             <Grid
               container
               spacing={2}
@@ -86,7 +86,7 @@ export class CharacterInventory extends React.Component<
             </Grid>
           </Grid>
 
-          <Grid item sm={3} xs={12}>
+          <Grid item xl={2} lg={3} md={4} xs={12}>
             {this.props.selectedCharacter === "" ? (
               <React.Fragment />
             ) : (
