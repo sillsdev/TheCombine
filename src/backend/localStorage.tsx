@@ -6,7 +6,6 @@ export enum localStorageKeys {
   avatar = "avatar",
   mergeDupsBlacklist = "mergeDupsBlacklist",
   projectId = "projectId",
-  token = "token",
   user = "user",
 }
 
@@ -24,8 +23,6 @@ export function setAvatar(src: string) {
   localStorage.setItem(localStorageKeys.avatar, src);
 }
 
-// Since avatar, password, and token are not returned with Backend's GetUser,
-// we can't expect them in what we are saving to localStorage.
 export function getCurrentUser(): User | null {
   const userString: string | null = localStorage.getItem(localStorageKeys.user);
   return userString ? JSON.parse(userString) : null;
@@ -49,13 +46,6 @@ export function getProjectId(): string {
 }
 export function setProjectId(id: string) {
   localStorage.setItem(localStorageKeys.projectId, id);
-}
-
-export function getToken(): string {
-  return localStorage.getItem(localStorageKeys.token) || "";
-}
-export function setToken(token: string) {
-  localStorage.setItem(localStorageKeys.token, token);
 }
 
 export function getUserId(): string {

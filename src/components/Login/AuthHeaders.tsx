@@ -1,4 +1,5 @@
-import { getToken } from "../../backend/localStorage";
+import { getCurrentUser } from "../../backend/localStorage";
+import { User } from "../../types/user";
 
 export interface AuthHeader {
   authorization?: string;
@@ -14,9 +15,9 @@ export interface AuthHeader {
  */
 
 export default function authHeader(): AuthHeader {
-  const token: string = getToken();
-  if (token) {
-    return { authorization: "Bearer " + token };
+  const user: User | null = getCurrentUser();
+  if (user) {
+    return { authorization: "Bearer " + user.token };
   } else {
     return {};
   }

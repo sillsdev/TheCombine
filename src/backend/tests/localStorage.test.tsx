@@ -5,7 +5,6 @@ import * as LocalStorage from "../localStorage";
 const mockAvatar: string = "mockAvatar";
 const mockBlacklist: Hash<boolean> = { mockKey: true };
 const mockProjectId: string = "mockProjId";
-const mockToken: string = "mockToken";
 const mockUserId: string = "mockUserId";
 const mockUser: User = {
   ...new User("mockName", "mockUsername", "mockPassword"),
@@ -15,14 +14,12 @@ const mockUser: User = {
 let oldAvatar: string;
 let oldMergeDupsBlacklist: Hash<boolean>;
 let oldProjectId: string;
-let oldToken: string;
 let oldUser: User | undefined;
 
 beforeAll(() => {
   oldAvatar = LocalStorage.getAvatar();
   oldMergeDupsBlacklist = LocalStorage.getMergeDupsBlacklist();
   oldProjectId = LocalStorage.getProjectId();
-  oldToken = LocalStorage.getToken();
 });
 
 beforeEach(() => {
@@ -37,7 +34,6 @@ afterAll(() => {
   }
   LocalStorage.setMergeDupsBlacklist(oldMergeDupsBlacklist);
   LocalStorage.setProjectId(oldProjectId);
-  LocalStorage.setToken(oldToken);
 });
 
 describe("Test localStorage", () => {
@@ -46,7 +42,6 @@ describe("Test localStorage", () => {
     expect(LocalStorage.getCurrentUser()).toEqual(undefined);
     expect(LocalStorage.getMergeDupsBlacklist()).toEqual({});
     expect(LocalStorage.getProjectId()).toEqual("");
-    expect(LocalStorage.getToken()).toEqual("");
     expect(LocalStorage.getUserId()).toEqual("");
   });
 
@@ -60,7 +55,5 @@ describe("Test localStorage", () => {
     expect(LocalStorage.getMergeDupsBlacklist()).toEqual(mockBlacklist);
     LocalStorage.setProjectId(mockProjectId);
     expect(LocalStorage.getProjectId()).toEqual(mockProjectId);
-    LocalStorage.setToken(mockToken);
-    expect(LocalStorage.getToken()).toEqual(mockToken);
   });
 });
