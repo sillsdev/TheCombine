@@ -55,17 +55,34 @@ export class ReviewEntriesComponent extends React.Component<
   }
 
   componentDidMount() {
-    getFrontierWords().then((frontier: Word[]) =>
-      this.updateLocalWords(frontier)
-    );
+    this.updateLocalWords();
   }
 
   // Creates the local set of words from the frontier
-  private updateLocalWords(frontier: Word[]) {
+  private updateLocalWords() {
+    var updatedFrontier: Word[] = new Array();
+    getFrontierWords().then((frontier: Word[]) => {
+      frontier.forEach((word) => {
+        var deleted = true;
+        word.senses.forEach((sense) => {
+          if (
+            sense.accessibility != undefined &&
+            sense.accessibility != null &&
+            sense.accessibility != 1
+          ) {
+            deleted = false;
+          }
+        });
+        if (!deleted) {
+          updatedFrontier.push(word);
+        }
+      });
+    });
+
     let newWords: ReviewEntriesWord[] = [];
     let currentWord: ReviewEntriesWord;
 
-    for (let word of frontier) {
+    for (let word of updatedFrontier) {
       // Create a new currentword
       currentWord = parseWord(word, this.props.language, this.recorder);
 
@@ -114,6 +131,9 @@ export class ReviewEntriesComponent extends React.Component<
                         setTimeout(() => {
                           resolve();
                         }, 500);
+                      })
+                      .then(() => {
+                        this.updateLocalWords();
                       })
                       .catch((reason) => {
                         // May wish to change this alert method
