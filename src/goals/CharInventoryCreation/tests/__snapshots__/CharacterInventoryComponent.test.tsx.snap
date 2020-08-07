@@ -360,7 +360,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
               />
             </svg>
              
-            Missing translationId: charInventory.save for language: \${ languageCode }
+            Missing translationId: buttons.save for language: \${ languageCode }
           </span>
           <span
             className="MuiTouchRipple-root"
@@ -394,7 +394,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
             className="MuiButton-label"
           >
              
-            Missing translationId: charInventory.cancel for language: \${ languageCode }
+            Missing translationId: buttons.cancel for language: \${ languageCode }
           </span>
           <span
             className="MuiTouchRipple-root"

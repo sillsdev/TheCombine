@@ -21,13 +21,13 @@ export default function CharacterStatusControl(
         aria-label="small outlined secondary button group"
       >
         <Button onClick={() => props.accept(props.character)}>
-          <Translate id="charInventory.characterSet.accept" />
+          <Translate id="buttons.accept" />
         </Button>
         <Button onClick={() => props.unset(props.character)}>
-          <Translate id="charInventory.characterSet.undecided" />
+          <Translate id="buttons.undecided" />
         </Button>
         <Button onClick={() => props.reject(props.character)}>
-          <Translate id="charInventory.characterSet.reject" />
+          <Translate id="buttons.reject" />
         </Button>
       </ButtonGroup>
     </React.Fragment>

@@ -54,8 +54,8 @@ it("errors on empty name", () => {
   projectHandle = projectMaster.root.findByType(CreateProject);
   let testComponent = projectHandle.instance;
 
-  expect(testComponent.state.error.name).toBe(false);
+  expect(testComponent.state.error.empty).toBe(false);
   testComponent.setState({ name: "" });
   testComponent.createProject(MOCK_EVENT);
-  expect(testComponent.state.error.name).toBe(true);
+  expect(testComponent.state.error.empty).toBe(true);
 });
