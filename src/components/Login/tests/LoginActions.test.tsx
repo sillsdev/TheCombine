@@ -1,13 +1,19 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
+import * as LocalStorage from "../../../backend/localStorage";
 import * as RootAction from "../../../rootActions";
+import { User } from "../../../types/user";
 import * as LoginAction from "../LoginActions";
 import * as LoginReducer from "../LoginReducer";
 
 const createMockStore = configureMockStore([thunk]);
 
-const user = { username: "testUsername", password: "testPassword" };
+const user = {
+  ...new User("testName", "testUsername", "testPassword"),
+  token: "testToken",
+  email: "test@e.mail",
+};
 
 describe("LoginAction Tests", () => {
   let mockState: LoginReducer.LoginState = LoginReducer.defaultState;
@@ -64,7 +70,12 @@ describe("LoginAction Tests", () => {
   test("asyncRegister correctly affects state", () => {
     const mockStore = createMockStore(mockState);
     const mockDispatch = mockStore.dispatch<any>(
-      LoginAction.asyncRegister("name", user.username, "", user.password)
+      LoginAction.asyncRegister(
+        user.name,
+        user.username,
+        user.email,
+        user.password
+      )
     );
 
     mockDispatch
@@ -143,12 +154,12 @@ describe("LoginAction Tests", () => {
     );
   });
 
-  test("logout creates a proper LoginAction", () => {
-    localStorage.setItem("user", JSON.stringify(user));
+  test("logout creates a proper action", () => {
+    LocalStorage.setCurrentUser(user);
     const mockStore = createMockStore(mockState);
     mockStore.dispatch<any>(LoginAction.logoutAndResetStore());
     expect(mockStore.getActions()).toEqual([logout, reset]);
-    expect(localStorage.getItem("user")).toBe(null);
+    expect(LocalStorage.getUserId()).toEqual("");
   });
 });
 

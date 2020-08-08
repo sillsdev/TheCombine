@@ -176,7 +176,6 @@
       "Subir archivo de proyecto .zip?",
       "Télécharger le fichier .zip de projet ?"
     ],
-    "browse": ["Browse", "Navegar", "Parcourir"],
     "create": ["Create Project", "Crear Proyecto", "Créer un projet"],
     "fileSelected": [
       "File selected",
@@ -291,8 +290,7 @@
         "Export Project",
         "Proyecto de exportación",
         "Exporter le projet"
-      ],
-      "button": ["Export", "Exportar", "Exporter"]
+      ]
     },
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
@@ -572,11 +570,13 @@
     "accept": ["Accept", "Aceptar", "Accepter"],
     "add": ["Add", "Añadir", "Ajouter"],
     "archive": ["Archive", "Archivar", "Archiver"],
+    "browse": ["Browse", "Navegar", "Parcourir"],
     "cancel": ["Cancel", "Cancelar", "Annuler"],
     "complete": ["Complete", "Completo", "Complète"],
     "confirm": ["Confirm", "Confirmar", "Confirmer"],
     "delete": ["Delete", "Eliminar", "Effacer"],
     "done": ["Done", "Hecho", "Achevé"],
+    "export": ["Export", "Exportar", "Exporter"],
     "invite": ["Invite", "Invitar", "Inviter"],
     "reject": ["Reject", "Rechazar", "Rejeter"],
     "restore": ["Restore", "Restaurar", "Restaurer"],

@@ -14,6 +14,7 @@ export class User {
   username: string;
   uiLang: string;
   token: string;
+  isAdmin: boolean;
 
   constructor(name: string, username: string, password: string) {
     this.id = "";
@@ -29,5 +30,6 @@ export class User {
     this.username = username;
     this.uiLang = "";
     this.token = "";
+    this.isAdmin = false;
   }
 }
