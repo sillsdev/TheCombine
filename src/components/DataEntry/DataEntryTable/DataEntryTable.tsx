@@ -8,7 +8,7 @@ import {
 } from "react-localize-redux";
 
 import * as Backend from "../../../backend";
-import * as LocalStorage from "../../../backend/localStorage";
+import { getProjectId } from "../../../backend/localStorage";
 import { AutoComplete } from "../../../types/AutoComplete";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
@@ -44,7 +44,7 @@ export interface DataEntryTableState {
 }
 
 async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
-  let proj = await Backend.getProject(LocalStorage.getProjectId());
+  let proj = await Backend.getProject(getProjectId());
   return proj.autocompleteSetting;
 }
 

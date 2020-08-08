@@ -3,7 +3,7 @@ import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
 
 import * as backend from "../../backend";
-import { getCurrentUser, setAvatar } from "../../backend/localStorage";
+import * as LocalStorage from "../../backend/localStorage";
 import history from "../../history";
 import { StoreAction, reset } from "../../rootActions";
 import { User } from "../../types/user";
@@ -51,31 +51,27 @@ export type LoginType =
   | REGISTER_RESET
   | LOGOUT;
 
-//action types
-
 export interface UserAction {
   type: LoginType;
   payload: LoginData;
 }
 
-//thunk action creator
+// thunk action creator
 export function asyncLogin(username: string, password: string) {
   return async (dispatch: Dispatch<UserAction>, getState: any) => {
     dispatch(loginAttempt(username));
     await backend
       .authenticateUser(username, password)
-      .then(async (userString: string) => {
-        await localStorage.setItem("user", userString); //Store tokens'
-        dispatch(loginSuccess(username));
-        const currentUser = getCurrentUser();
-        if (currentUser) {
-          try {
-            var avatar = await backend.avatarSrc(currentUser!);
-            setAvatar(avatar);
-          } catch (e) {
-            setAvatar("");
-          }
+      .then(async (user: User) => {
+        LocalStorage.setCurrentUser(user);
+        dispatch(loginSuccess(user.username));
+        try {
+          const avatar: string = await backend.avatarSrc(user.id);
+          LocalStorage.setAvatar(avatar);
+        } catch (e) {
+          LocalStorage.setAvatar("");
         }
+
         history.push("/");
       })
       .catch((err) => {
@@ -114,13 +110,12 @@ export function loginReset(): UserAction {
 
 export function logoutAndResetStore() {
   return (dispatch: Dispatch<UserAction | StoreAction>) => {
-    const userString: string | null = localStorage.getItem("user");
-    if (userString) {
-      const user: User = JSON.parse(userString);
+    const user: User | null = LocalStorage.getCurrentUser();
+    if (user) {
       dispatch(logout(user.username));
     }
     dispatch(reset());
-    localStorage.removeItem("user");
+    LocalStorage.clearLocalStorage();
   };
 }
 

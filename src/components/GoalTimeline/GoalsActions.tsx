@@ -1,28 +1,28 @@
 import { Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { Goal, GoalType } from "../../types/goals";
-import { ActionWithPayload } from "../../types/mockAction";
 import * as Backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
-import history from "../../history";
-import { User } from "../../types/user";
 import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
-import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
-import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
-import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
-import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
-import { Edit } from "../../types/userEdit";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import { StoreState } from "../../types";
+import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
 import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   MergeTreeAction,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
+import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
+import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
+import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
+import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
+import history from "../../history";
+import { StoreState } from "../../types";
+import { Goal, GoalType } from "../../types/goals";
+import { ActionWithPayload } from "../../types/mockAction";
+import { User } from "../../types/user";
+import { Edit } from "../../types/userEdit";
 
 export enum GoalsActions {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -81,13 +81,10 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const user = LocalStorage.getCurrentUser();
+    const user: User | null = LocalStorage.getCurrentUser();
     if (user) {
       const projectId: string = LocalStorage.getProjectId();
-      const userEditId: string | undefined = getUserEditIdFromProjectId(
-        user.workedProjects,
-        projectId
-      );
+      const userEditId: string | undefined = getUserEditId(user);
 
       if (userEditId !== undefined) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
@@ -138,9 +135,7 @@ export function loadGoalData(goal: Goal) {
 
         let newGroups = [];
 
-        let blacklist: Hash<boolean> = JSON.parse(
-          localStorage.getItem("mergedups_blacklist") || "{}"
-        );
+        let blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
 
         for (let group of groups) {
           let newGroup = [];
@@ -198,55 +193,24 @@ export function updateStepData(goal: Goal): Goal {
 
 export function getUserEditId(user: User): string | undefined {
   const projectId = LocalStorage.getProjectId();
-  const userEditId: string | undefined = getUserEditIdFromProjectId(
-    user.workedProjects,
-    projectId
-  );
-  return userEditId;
-}
-
-function getUserEditIdFromProjectId(
-  workedProjects: Hash<string>,
-  projectId: string
-): string | undefined {
-  let projectIds = Object.keys(workedProjects);
+  let projectIds = Object.keys(user.workedProjects);
   let matches: string[] = projectIds.filter((project) => projectId === project);
   if (matches.length === 1) {
-    return workedProjects[matches[0]];
+    return user.workedProjects[matches[0]];
   }
 }
 
 function updateUserIfExists(projectId: string, userEditId: string): User {
-  let currentUserString = localStorage.getItem("user");
+  let currentUser: User | null = LocalStorage.getCurrentUser();
   let updatedUser: User = new User("", "", "");
-  if (currentUserString) {
-    let updatedUserString = updateUserWithUserEditId(
-      currentUserString,
-      projectId,
-      userEditId
-    );
-    localStorage.setItem("user", updatedUserString);
-    updatedUser = JSON.parse(updatedUserString);
+  if (currentUser) {
+    updatedUser = updateUserWithUserEditId(currentUser, projectId, userEditId);
+    LocalStorage.setCurrentUser(updatedUser);
   }
   return updatedUser;
 }
 
 function updateUserWithUserEditId(
-  userObjectString: string,
-  projectId: string,
-  userEditId: string
-): string {
-  let currentUserObject: User = JSON.parse(userObjectString);
-  currentUserObject = addProjectToWorkedProjects(
-    currentUserObject,
-    projectId,
-    userEditId
-  );
-  let updatedUserString = JSON.stringify(currentUserObject);
-  return updatedUserString;
-}
-
-function addProjectToWorkedProjects(
   user: User,
   projectId: string,
   userEditId: string
