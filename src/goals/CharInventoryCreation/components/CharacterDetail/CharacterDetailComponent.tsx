@@ -28,6 +28,7 @@ export default function CharacterDetail(props: CharacterDetailProps) {
         <Typography variant="h1" align="center">
           {props.character}
           {""}
+          {/* There is a zero-width joiner here in case of non-printing characters. */}
         </Typography>
       </Grid>
       <Grid item xs={8}>

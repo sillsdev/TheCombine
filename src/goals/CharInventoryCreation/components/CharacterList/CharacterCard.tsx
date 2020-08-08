@@ -44,6 +44,7 @@ export default class CharacterCard extends React.Component<CharacterCardProps> {
             >
               {this.props.char}
               {""}
+              {/* There is a zero-width joiner here to make height consistent for non-printing characters. */}
             </Typography>
 
             <CardContent>
