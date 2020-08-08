@@ -42,7 +42,7 @@ export default function ExportProjectButton(
         loading={loading}
         {...props}
       >
-        <Translate id="projectSettings.exportProject.button" />
+        <Translate id="buttons.export" />
       </LoadingButton>
       {exportedFile && (
         <a ref={downloadLink} href={exportedFile} style={{ display: "none" }}>

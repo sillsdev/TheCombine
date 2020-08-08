@@ -6,13 +6,8 @@ import { toast, ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
 
-import {
-  addUserRole,
-  avatarSrc,
-  getAllUsers,
-  getAllUsersInCurrentProject,
-} from "../../../backend";
-import { getCurrentUser } from "../../../backend/localStorage";
+import * as backend from "../../../backend";
+import { getUserId } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import { User } from "../../../types/user";
 import EmailInvite from "./EmailInvite";
@@ -74,25 +69,25 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   }
 
   private populateUsers() {
-    getAllUsersInCurrentProject()
+    backend
+      .getAllUsersInCurrentProject()
       .then((projUsers) => {
         this.setState({ projUsers });
-        getAllUsers()
+        backend
+          .getAllUsers()
           .then((returnedUsers) => {
             this.setState({
               allUsers: returnedUsers.filter(
                 (user) => !this.state.projUsers.find((u) => u.id === user.id)
               ),
             });
-            returnedUsers.forEach((u: User, n: number, array: User[]) => {
-              avatarSrc(u)
+            returnedUsers.forEach((u: User) => {
+              backend
+                .avatarSrc(u.id)
                 .then((result) => {
-                  let avatarsCopy = JSON.parse(
-                    JSON.stringify(this.state.userAvatar)
-                  );
-                  avatarsCopy[u.id] = result;
-                  this.setState({ userAvatar: avatarsCopy });
-                  console.log(avatarsCopy);
+                  let userAvatar = this.state.userAvatar;
+                  userAvatar[u.id] = result;
+                  this.setState({ userAvatar });
                 })
                 .catch((err) => console.log(err));
             });
@@ -103,9 +98,10 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
   }
 
   addToProject(user: User) {
-    const currentUser = getCurrentUser();
-    if (currentUser && user.id !== currentUser.id) {
-      addUserRole([3, 2, 1], user)
+    const currentUserId: string = getUserId();
+    if (user.id !== currentUserId) {
+      backend
+        .addUserRole([3, 2, 1], user)
         .then(() => {
           toast(<Translate id="projectSettings.invite.toastSuccess" />);
           this.populateUsers();

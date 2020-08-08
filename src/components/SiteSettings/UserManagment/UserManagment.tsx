@@ -69,7 +69,7 @@ class UserManagment extends React.Component<UserProps, UserState> {
           allUsers: returnedUsers,
         });
         returnedUsers.forEach((u: User) => {
-          avatarSrc(u)
+          avatarSrc(u.id)
             .then((result) => {
               let avatarsCopy = JSON.parse(
                 JSON.stringify(this.state.userAvatar)
