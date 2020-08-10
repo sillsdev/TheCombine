@@ -21,7 +21,7 @@ interface NewEntryProps {
   updateWord: (
     updatedWord: Word,
     glossIndex: number,
-    shouldBeMutable?: boolean
+    newAudio: string[]
   ) => void;
   addNewWord: (newWord: Word, newAudio: string[]) => void;
   semanticDomain: SemanticDomain;
@@ -37,7 +37,6 @@ interface NewEntryState {
   duplicates: Word[];
   isDuplicate: boolean;
   activeGloss: string;
-  //tempAudioFiles: File[];
   audioFileURLs: string[];
 }
 
@@ -52,7 +51,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isDuplicate: false,
       duplicates: [],
       activeGloss: "",
-      //tempAudioFiles: [],
       audioFileURLs: [],
     };
 
@@ -99,25 +97,18 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   addAudio(audioFile: File) {
-    //let tempAudioFiles = [...this.state.tempAudioFiles];
     let audioFileURLs = [...this.state.audioFileURLs];
-    //tempAudioFiles.push(audioFile);
     audioFileURLs.push(URL.createObjectURL(audioFile));
     this.setState({
-      //tempAudioFiles,
       audioFileURLs,
     });
   }
 
   removeAudio(fileName: string) {
-    /*const tempAudioFiles = this.state.tempAudioFiles.filter(
-      (file) => file.name !== fileName
-    );*/
     const audioFileURLs = this.state.audioFileURLs.filter(
       (fileURL) => fileURL !== fileName
     );
     this.setState({
-      //tempAudioFiles,
       audioFileURLs,
     });
   }
@@ -128,9 +119,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, index, false);
+    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
     this.props.toggleDisplayDuplicates();
-    // ToDo: Add audio
     this.resetState();
   }
 
@@ -141,9 +131,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       sense,
       index
     );
-    this.props.updateWord(updatedWord, index, false);
+    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
     this.props.toggleDisplayDuplicates();
-    // ToDo: Add audio
     this.resetState();
   }
 
@@ -187,7 +176,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isDuplicate: false,
       duplicates: [],
       activeGloss: "",
-      //tempAudioFiles: [],
       audioFileURLs: [],
     });
   }
@@ -321,11 +309,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             <Pronunciations
               wordId={""}
               pronunciationFiles={this.state.audioFileURLs}
-              //{[]}
-              // ToDo: Implement playing audio files from this.state
-              /*{this.state.tempAudioFiles.map((file) => {
-                  return file.name;
-                })*/
               recorder={this.props.recorder}
               deleteAudio={(_wordId: string, fileName: string) => {
                 this.removeAudio(fileName);

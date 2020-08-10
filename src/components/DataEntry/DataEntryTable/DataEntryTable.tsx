@@ -87,28 +87,18 @@ export class DataEntryTable extends React.Component<
 
   async addNewWord(wordToAdd: Word, audioURLs: string[]) {
     let newWord: Word = await Backend.createWord(wordToAdd);
-    let wordId: string = newWord.id;
-    let audioBlob: Blob;
-    let fileName: string;
-    let audioFile: File;
-    for (const audioURL of audioURLs) {
-      audioBlob = await fetch(audioURL).then((result) => result.blob());
-      fileName = getFileNameForWord(wordId);
-      audioFile = new File([audioBlob], fileName, {
-        type: audioBlob.type,
-        lastModified: Date.now(),
-      });
-      wordId = await Backend.uploadAudio(wordId, audioFile);
-      URL.revokeObjectURL(audioURL);
-    }
+    let wordId: string = await this.addAudiosToBackend(newWord.id, audioURLs);
     let newWordWithAudio: Word = await Backend.getWord(wordId);
+    let existingWords: Word[] = await this.props.getWordsFromBackend();
+
     let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
-    recentlyAddedWords.push({
+    let newWordAccess: WordAccess = {
       word: newWordWithAudio,
       mutable: true,
       glossIndex: 0,
-    });
-    let existingWords: Word[] = await this.props.getWordsFromBackend();
+    };
+    recentlyAddedWords.push(newWordAccess);
+
     this.setState({
       existingWords,
       recentlyAddedWords,
@@ -116,7 +106,11 @@ export class DataEntryTable extends React.Component<
   }
 
   /** Update the word in the backend and the frontend */
-  async updateWordForNewEntry(wordToUpdate: Word, glossIndex: number) {
+  async updateWordForNewEntry(
+    wordToUpdate: Word,
+    glossIndex: number,
+    audioURLs: string[]
+  ) {
     let existingWord: Word | undefined = this.state.existingWords.find(
       (word) => word.id === wordToUpdate.id
     );
@@ -124,17 +118,42 @@ export class DataEntryTable extends React.Component<
       throw new Error("You are trying to update a nonexistent word");
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
+    let updatedWordId: string = await this.addAudiosToBackend(
+      updatedWord.id,
+      audioURLs
+    );
+    updatedWord = await Backend.getWord(updatedWordId);
 
     let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
-
     let updatedWordAccess: WordAccess = {
       word: updatedWord,
       mutable: false,
       glossIndex: glossIndex,
     };
-
     recentlyAddedWords.push(updatedWordAccess);
+
     this.setState({ recentlyAddedWords });
+  }
+
+  async addAudiosToBackend(
+    wordId: string,
+    audioURLs: string[]
+  ): Promise<string> {
+    let updatedWordId: string = wordId;
+    let audioBlob: Blob;
+    let fileName: string;
+    let audioFile: File;
+    for (const audioURL of audioURLs) {
+      audioBlob = await fetch(audioURL).then((result) => result.blob());
+      fileName = getFileNameForWord(updatedWordId);
+      audioFile = new File([audioBlob], fileName, {
+        type: audioBlob.type,
+        lastModified: Date.now(),
+      });
+      updatedWordId = await Backend.uploadAudio(updatedWordId, audioFile);
+      URL.revokeObjectURL(audioURL);
+    }
+    return updatedWordId;
   }
 
   async addAudioToExistingWord(oldWordId: string, audioFile: File) {
@@ -334,8 +353,16 @@ export class DataEntryTable extends React.Component<
             <NewEntry
               ref={this.refNewEntry}
               allWords={this.state.existingWords}
-              updateWord={(wordToUpdate: Word, glossIndex: number) =>
-                this.updateWordForNewEntry(wordToUpdate, glossIndex)
+              updateWord={(
+                wordToUpdate: Word,
+                glossIndex: number,
+                audioFileURLs: string[]
+              ) =>
+                this.updateWordForNewEntry(
+                  wordToUpdate,
+                  glossIndex,
+                  audioFileURLs
+                )
               }
               addNewWord={(word: Word, audioFileURLs: string[]) =>
                 this.addNewWord(word, audioFileURLs)

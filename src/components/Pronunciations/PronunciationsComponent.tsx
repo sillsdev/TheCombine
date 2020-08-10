@@ -31,7 +31,6 @@ export class Pronunciations extends React.Component<
             wordId={this.props.wordId}
             fileName={fileName}
             pronunciationUrl={
-              //Backend.getAudioUrl(this.props.wordId, fileName)}
               this.props.getAudioUrl
                 ? this.props.getAudioUrl(this.props.wordId, fileName)
                 : Backend.getAudioUrl(this.props.wordId, fileName)
