@@ -7,12 +7,12 @@ import { CreateCharInv } from "../../goals/CreateCharInv/CreateCharInv";
 import { CreateStrWordInv } from "../../goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "../../goals/HandleFlags/HandleFlags";
 import DupFinder from "../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
+import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import {
   MergeTreeAction,
   refreshWords,
 } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepActions";
-import { MergeDupData, MergeDups } from "../../goals/MergeDupGoal/MergeDups";
-import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
@@ -81,13 +81,10 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const user = LocalStorage.getCurrentUser();
+    const user: User | null = LocalStorage.getCurrentUser();
     if (user) {
       const projectId: string = LocalStorage.getProjectId();
-      const userEditId: string | undefined = getUserEditIdFromProjectId(
-        user.workedProjects,
-        projectId
-      );
+      const userEditId: string | undefined = getUserEditId(user);
 
       if (userEditId !== undefined) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
@@ -138,7 +135,7 @@ export function loadGoalData(goal: Goal) {
 
         let newGroups = [];
 
-        let blacklist = LocalStorage.getMergeDupsBlacklist();
+        let blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
 
         for (let group of groups) {
           let newGroup = [];
@@ -196,48 +193,24 @@ export function updateStepData(goal: Goal): Goal {
 
 export function getUserEditId(user: User): string | undefined {
   const projectId = LocalStorage.getProjectId();
-  const userEditId: string | undefined = getUserEditIdFromProjectId(
-    user.workedProjects,
-    projectId
-  );
-  return userEditId;
-}
-
-function getUserEditIdFromProjectId(
-  workedProjects: Hash<string>,
-  projectId: string
-): string | undefined {
-  let projectIds = Object.keys(workedProjects);
+  let projectIds = Object.keys(user.workedProjects);
   let matches: string[] = projectIds.filter((project) => projectId === project);
   if (matches.length === 1) {
-    return workedProjects[matches[0]];
+    return user.workedProjects[matches[0]];
   }
 }
 
 function updateUserIfExists(projectId: string, userEditId: string): User {
-  let currentUser = LocalStorage.getCurrentUser();
+  let currentUser: User | null = LocalStorage.getCurrentUser();
   let updatedUser: User = new User("", "", "");
   if (currentUser) {
-    let updatedUser = updateUserWithUserEditId(
-      currentUser,
-      projectId,
-      userEditId
-    );
+    updatedUser = updateUserWithUserEditId(currentUser, projectId, userEditId);
     LocalStorage.setCurrentUser(updatedUser);
   }
   return updatedUser;
 }
 
 function updateUserWithUserEditId(
-  user: User,
-  projectId: string,
-  userEditId: string
-): User {
-  let updatedUser = addProjectToWorkedProjects(user, projectId, userEditId);
-  return updatedUser;
-}
-
-function addProjectToWorkedProjects(
   user: User,
   projectId: string,
   userEditId: string

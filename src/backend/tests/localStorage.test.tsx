@@ -1,44 +1,59 @@
+import { Hash } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 import { User } from "../../types/user";
 import * as LocalStorage from "../localStorage";
 
-let mockUser: User = new User("mockName", "mockUsername", "mockPassword");
-let mockProjectId: string = "mockProjId";
-let oldUser: User | null;
+const mockAvatar: string = "mockAvatar";
+const mockBlacklist: Hash<boolean> = { mockKey: true };
+const mockProjectId: string = "mockProjId";
+const mockUserId: string = "mockUserId";
+const mockUser: User = {
+  ...new User("mockName", "mockUsername", "mockPassword"),
+  id: mockUserId,
+};
+
+let oldAvatar: string;
+let oldMergeDupsBlacklist: Hash<boolean>;
 let oldProjectId: string;
+let oldUser: User | undefined;
 
 beforeAll(() => {
-  oldUser = LocalStorage.getCurrentUser();
+  oldAvatar = LocalStorage.getAvatar();
+  oldMergeDupsBlacklist = LocalStorage.getMergeDupsBlacklist();
   oldProjectId = LocalStorage.getProjectId();
 });
 
 beforeEach(() => {
-  LocalStorage.removeCurrentUser();
-  LocalStorage.removeProjectId();
+  LocalStorage.clearLocalStorage();
 });
 
 afterAll(() => {
-  LocalStorage.removeCurrentUser();
-  if (oldUser) LocalStorage.setCurrentUser(oldUser);
+  LocalStorage.clearLocalStorage();
+  LocalStorage.setAvatar(oldAvatar);
+  if (oldUser) {
+    LocalStorage.setCurrentUser(oldUser);
+  }
+  LocalStorage.setMergeDupsBlacklist(oldMergeDupsBlacklist);
   LocalStorage.setProjectId(oldProjectId);
 });
 
-describe("Test GoalsActions", () => {
-  it("should return the set user, minus password", () => {
-    LocalStorage.setCurrentUser(mockUser);
-    const passwordlessUser: User = { ...mockUser, password: "" };
-    expect(LocalStorage.getCurrentUser()).toEqual(passwordlessUser);
-  });
-
-  it("should return null when there is no user", () => {
+describe("Test localStorage", () => {
+  it("should return empty elements when nothing has been stored", () => {
+    expect(LocalStorage.getAvatar()).toEqual("");
     expect(LocalStorage.getCurrentUser()).toEqual(null);
+    expect(LocalStorage.getMergeDupsBlacklist()).toEqual({});
+    expect(LocalStorage.getProjectId()).toEqual("");
+    expect(LocalStorage.getUserId()).toEqual("");
   });
 
-  it("should return the set projectId", () => {
+  it("should return the set value", () => {
+    LocalStorage.setAvatar(mockAvatar);
+    expect(LocalStorage.getAvatar()).toEqual(mockAvatar);
+    LocalStorage.setCurrentUser(mockUser);
+    expect(LocalStorage.getCurrentUser()).toEqual(mockUser);
+    expect(LocalStorage.getUserId()).toEqual(mockUser.id);
+    LocalStorage.setMergeDupsBlacklist(mockBlacklist);
+    expect(LocalStorage.getMergeDupsBlacklist()).toEqual(mockBlacklist);
     LocalStorage.setProjectId(mockProjectId);
     expect(LocalStorage.getProjectId()).toEqual(mockProjectId);
-  });
-
-  it("should return empty string when there is no project id", () => {
-    expect(LocalStorage.getProjectId()).toEqual("");
   });
 });

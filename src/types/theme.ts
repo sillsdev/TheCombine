@@ -1,8 +1,5 @@
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-
-// Import colors
-import { blue, grey, red, green, yellow } from "@material-ui/core/colors";
-import { responsiveFontSizes } from "@material-ui/core/styles";
+import { blue, green, grey, red, yellow } from "@material-ui/core/colors";
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
 // Constants which define colors later:
@@ -38,10 +35,18 @@ const palette = {
   contrastThreshold: 3,
   tonalOffset: 0.2,
 };
+
 const typography = {
   // Copied from default theme
-  fontFamily: ['"Roboto"', '"Helvetica"', '"Arial"', "sans-serif"].join(","),
+  fontFamily: [
+    '"Roboto"',
+    '"Noto Sans"',
+    '"Helvetica"',
+    '"Arial"',
+    "sans-serif",
+  ].join(","),
 };
+
 const dynamicFontParams = { factor: 2 };
 
 // Theme for the entire project

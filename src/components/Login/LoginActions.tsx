@@ -1,11 +1,12 @@
 import { Dispatch } from "react";
-import history from "../../history";
 import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
+
 import * as backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
-import { User } from "../../types/user";
+import history from "../../history";
 import { StoreAction, reset } from "../../rootActions";
+import { User } from "../../types/user";
 
 export const LOGIN_ATTEMPT = "LOGIN_ATTEMPT";
 export type LOGIN_ATTEMPT = typeof LOGIN_ATTEMPT;
@@ -44,29 +45,33 @@ export type LoginType =
   | LOGIN_FAILURE
   | LOGIN_SUCCESS
   | LOGIN_RESET
-  | LOGOUT
   | REGISTER_ATTEMPT
-  | REGISTER_SUCCESS
   | REGISTER_FAILURE
-  | REGISTER_RESET;
-
-//action types
+  | REGISTER_SUCCESS
+  | REGISTER_RESET
+  | LOGOUT;
 
 export interface UserAction {
   type: LoginType;
   payload: LoginData;
 }
 
-//thunk action creator
+// thunk action creator
 export function asyncLogin(username: string, password: string) {
   return async (dispatch: Dispatch<UserAction>, getState: any) => {
     dispatch(loginAttempt(username));
-    //attempt to login with server
     await backend
       .authenticateUser(username, password)
-      .then((res: User) => {
-        LocalStorage.setCurrentUser(res); //Store tokens
-        dispatch(loginSuccess(username));
+      .then(async (user: User) => {
+        LocalStorage.setCurrentUser(user);
+        dispatch(loginSuccess(user.username));
+        try {
+          const avatar: string = await backend.avatarSrc(user.id);
+          LocalStorage.setAvatar(avatar);
+        } catch (e) {
+          LocalStorage.setAvatar("");
+        }
+
         history.push("/");
       })
       .catch((err) => {
@@ -105,12 +110,12 @@ export function loginReset(): UserAction {
 
 export function logoutAndResetStore() {
   return (dispatch: Dispatch<UserAction | StoreAction>) => {
-    const user = LocalStorage.getCurrentUser();
+    const user: User | null = LocalStorage.getCurrentUser();
     if (user) {
       dispatch(logout(user.username));
     }
     dispatch(reset());
-    LocalStorage.removeCurrentUser();
+    LocalStorage.clearLocalStorage();
   };
 }
 
@@ -125,7 +130,7 @@ export function asyncRegister(
   ) => {
     dispatch(registerAttempt(username));
     // Create new user
-    let newUser = new User(name, username, password);
+    let newUser: User = new User(name, username, password);
     newUser.email = email;
     await backend
       .addUser(newUser)
@@ -150,17 +155,17 @@ export function registerAttempt(username: string): UserAction {
   };
 }
 
-export function registerSuccess(username: string): UserAction {
-  return {
-    type: REGISTER_SUCCESS,
-    payload: { username },
-  };
-}
-
 export function registerFailure(errorMessage: string): UserAction {
   return {
     type: REGISTER_FAILURE,
     payload: { username: errorMessage },
+  };
+}
+
+export function registerSuccess(username: string): UserAction {
+  return {
+    type: REGISTER_SUCCESS,
+    payload: { username },
   };
 }
 

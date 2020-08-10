@@ -74,13 +74,13 @@ describe("Testing login component", () => {
 function testLogin(
   username: string,
   password: string,
-  goodUser: boolean,
+  goodUsername: boolean,
   goodPassword: boolean
 ) {
-  loginHandle.instance.setState({ username: username, password: password });
+  loginHandle.instance.setState({ username, password });
   loginHandle.instance.login(MOCK_EVENT);
   expect(loginHandle.instance.state.error).toEqual({
-    username: goodUser,
+    username: goodUsername,
     password: goodPassword,
   });
 }

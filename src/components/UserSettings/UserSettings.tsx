@@ -1,3 +1,9 @@
+import React from "react";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 import {
   Avatar,
   Button,
@@ -12,15 +18,13 @@ import {
   Typography,
 } from "@material-ui/core";
 import { CameraAlt, Email, Person, Phone } from "@material-ui/icons";
-import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
 
-import { avatarSrc, getUser, updateUser } from "../../backend";
-import { getCurrentUser, setCurrentUser } from "../../backend/localStorage";
+import { updateUser } from "../../backend";
+import {
+  getAvatar,
+  getCurrentUser,
+  setCurrentUser,
+} from "../../backend/localStorage";
 import { CurrentTab } from "../../types/currentTab";
 import theme from "../../types/theme";
 import { User } from "../../types/user";
@@ -82,8 +86,8 @@ interface UserSettingsState {
   name: string;
   phone: string;
   email: string;
+  avatar: string;
   avatarDialogOpen: boolean;
-  avatar?: string;
 }
 
 /**
@@ -95,21 +99,16 @@ class UserSettings extends React.Component<
 > {
   constructor(props: LocalizeContextProps) {
     super(props);
-    const user = getCurrentUser()!;
+    const potentialUser: User | null = getCurrentUser();
+    const user: User = potentialUser ? potentialUser : new User("", "", "");
     this.state = {
-      user,
-      name: user.name,
+      user: user,
+      name: user.phone,
       phone: user.phone,
       email: user.email,
+      avatar: getAvatar(),
       avatarDialogOpen: false,
     };
-    this.getAvatar();
-  }
-
-  async getAvatar() {
-    const user = getCurrentUser()!;
-    const a = await avatarSrc(user);
-    this.setState({ avatar: a });
   }
 
   /** Updates the state to match the value in a textbox */
@@ -128,11 +127,11 @@ class UserSettings extends React.Component<
 
   onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    let newUser = this.state.user;
+    let newUser: User = this.state.user;
     newUser.name = this.state.name;
-    newUser.email = this.state.email;
     newUser.phone = this.state.phone;
-    updateUser(newUser);
+    newUser.email = this.state.email;
+    updateUser(newUser).then((user: User) => setCurrentUser(user));
   }
 
   render() {
@@ -224,8 +223,7 @@ class UserSettings extends React.Component<
         <AvatarDialog
           open={this.state.avatarDialogOpen}
           onClose={() => {
-            this.setState({ avatarDialogOpen: false });
-            this.getAvatar();
+            this.setState({ avatar: getAvatar(), avatarDialogOpen: false });
           }}
         />
       </React.Fragment>
@@ -234,12 +232,3 @@ class UserSettings extends React.Component<
 }
 
 export default withLocalize(UserSettings);
-
-/** Update user in localstorage with user from backend */
-export async function updateCurrentUser() {
-  const user = getCurrentUser();
-  if (user) {
-    const updatedUser = await getUser(user.id);
-    setCurrentUser(updatedUser);
-  }
-}

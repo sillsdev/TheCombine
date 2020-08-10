@@ -1,10 +1,11 @@
-import { Button, TextField } from "@material-ui/core";
 import {
+  Button,
   Card,
   CardContent,
   CircularProgress,
   Grid,
   Link,
+  TextField,
   Typography,
 } from "@material-ui/core";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
@@ -33,7 +34,12 @@ export interface LoginState {
   username: string;
   password: string;
   isVerified: boolean;
-  error: { password: boolean; username: boolean };
+  error: LoginError;
+}
+
+interface LoginError {
+  username: boolean;
+  password: boolean;
 }
 
 export class Login extends React.Component<
@@ -50,7 +56,7 @@ export class Login extends React.Component<
       username: "",
       password: "",
       isVerified: !RuntimeConfig.getInstance().captchaRequired(),
-      error: { password: false, username: false },
+      error: { username: false, password: false },
     };
   }
 
@@ -79,8 +85,8 @@ export class Login extends React.Component<
   login(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
 
-    let username = this.state.username.trim();
-    let password = this.state.password.trim();
+    const username: string = this.state.username.trim();
+    const password: string = this.state.password.trim();
     let error = { ...this.state.error };
     error.username = username === "";
     error.password = password === "";

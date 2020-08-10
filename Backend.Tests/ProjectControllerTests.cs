@@ -44,7 +44,17 @@ namespace Backend.Tests
 
         private static Project RandomProject()
         {
-            var project = new Project { Name = Util.RandString(), SemanticDomains = new List<SemanticDomain>() };
+            var project = new Project
+            {
+                Name = Util.RandString(),
+                VernacularWritingSystem = { Name = Util.RandString(), Bcp47 = Util.RandString(), Font = Util.RandString() },
+                AnalysisWritingSystems = new List<WritingSystem>(),
+                SemanticDomains = new List<SemanticDomain>()
+            };
+            project.AnalysisWritingSystems.Add(new WritingSystem());
+            project.AnalysisWritingSystems[0].Name = Util.RandString();
+            project.AnalysisWritingSystems[0].Bcp47 = Util.RandString();
+            project.AnalysisWritingSystems[0].Font = Util.RandString();
 
             for (var i = 1; i < 4; i++)
             {
@@ -84,7 +94,8 @@ namespace Backend.Tests
             _projectService.Create(RandomProject());
             _projectService.Create(RandomProject());
 
-            var projects = (_controller.Get().Result as ObjectResult).Value as List<Project>;
+
+            var projects = (_controller.GetAllProjects().Result as ObjectResult).Value as List<Project>;
             Assert.That(projects, Has.Count.EqualTo(3));
             _projectService.GetAllProjects().Result.ForEach(project => Assert.Contains(project, projects));
         }
@@ -157,6 +168,20 @@ namespace Backend.Tests
             Assert.That(sdList, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains, Has.Count.EqualTo(3));
             Assert.That(sdList[0].Subdomains[0].Subdomains, Has.Count.EqualTo(3));
+        }
+
+        [Test]
+        public void TestProjectDuplicateCheck()
+        {
+            var project1 = _projectService.Create(RandomProject()).Result;
+            var project2 = _projectService.Create(RandomProject()).Result;
+            var project3 = _projectService.Create(RandomProject()).Result;
+            var modProject = project1.Clone();
+            modProject.Name = "Proj";
+            _ = _controller.Put(modProject.Id, modProject);
+
+            Assert.AreEqual(_projectService.DuplicateCheck("Proj").Result, true);
+            Assert.AreEqual(_projectService.DuplicateCheck("NewProj").Result, false);
         }
     }
 }

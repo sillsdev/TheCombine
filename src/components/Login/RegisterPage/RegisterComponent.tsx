@@ -39,15 +39,15 @@ export interface RegisterStateProps {
 interface RegisterState {
   name: string;
   username: string;
+  email: string;
   password: string;
   confirmPassword: string;
-  email: string;
   error: {
     name: boolean;
     username: boolean;
+    email: boolean;
     password: boolean;
     confirmPassword: boolean;
-    email: boolean;
   };
 }
 
@@ -62,15 +62,15 @@ export class Register extends React.Component<
     this.state = {
       name: "",
       username: "",
+      email: "",
       password: "",
       confirmPassword: "",
-      email: "",
       error: {
         name: false,
         username: false,
+        email: false,
         password: false,
         confirmPassword: false,
-        email: false,
       },
     };
   }
@@ -86,7 +86,7 @@ export class Register extends React.Component<
     >,
     field: K
   ) {
-    const value = e.target.value;
+    const value: string = e.target.value;
 
     this.setState({
       [field]: value,
@@ -95,14 +95,14 @@ export class Register extends React.Component<
   }
 
   async checkUsername(username: string) {
-    let usernameTaken = await isUsernameTaken(username);
+    const usernameTaken: boolean = await isUsernameTaken(username);
     if (usernameTaken) {
       this.setState({ error: { ...this.state.error, username: true } });
     }
   }
 
   async checkEmail(username: string) {
-    let emailTaken = await isEmailTaken(username);
+    const emailTaken: boolean = await isEmailTaken(username);
     if (emailTaken) {
       this.setState({ error: { ...this.state.error, email: true } });
     }
@@ -110,30 +110,30 @@ export class Register extends React.Component<
 
   register(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    let name = this.state.name.trim();
-    let username = this.state.username.trim();
-    let pass = this.state.password.trim();
-    let confPass = this.state.confirmPassword.trim();
-    let email = this.state.email.trim();
+    const name: string = this.state.name.trim();
+    const username: string = this.state.username.trim();
+    const email: string = this.state.email.trim();
+    const password: string = this.state.password.trim();
+    const confirmPassword: string = this.state.confirmPassword.trim();
 
     // error checking
     let error = { ...this.state.error };
     error.name = name === "";
     error.username = !usernameRequirements(username);
-    error.password = !passwordRequirements(pass);
-    error.confirmPassword = pass !== confPass;
     error.email = email === "";
+    error.password = !passwordRequirements(password);
+    error.confirmPassword = password !== confirmPassword;
 
     if (
       error.name ||
       error.username ||
+      error.email ||
       error.password ||
-      error.confirmPassword ||
-      error.email
+      error.confirmPassword
     ) {
       this.setState({ error });
     } else if (this.props.register) {
-      this.props.register(name, username, email, pass);
+      this.props.register(name, username, email, password);
     }
   }
 

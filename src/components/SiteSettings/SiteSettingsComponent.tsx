@@ -10,7 +10,7 @@ import {
 import { CurrentTab } from "../../types/currentTab";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
-import ProjectManagement from "./ProjectManagement";
+import ProjectManagement from "./ProjectManagement/ProjectManagement";
 import UserManagment from "./UserManagment/UserManagment";
 
 class SiteSettingsComponent extends React.Component<LocalizeContextProps> {

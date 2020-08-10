@@ -5,6 +5,8 @@ import configureMockStore from "redux-mock-store";
 
 import { SemanticDomain, Sense, State, Word } from "../../../../../types/word";
 import { defaultState } from "../../../../App/DefaultState";
+import AudioPlayer from "../../../../Pronunciations/AudioPlayer";
+import AudioRecorder from "../../../../Pronunciations/AudioRecorder";
 import Recorder from "../../../../Pronunciations/Recorder";
 import { mockWord } from "../../../tests/MockWord";
 import { mockSemanticDomain } from "../../tests/DataEntryTable.test";
@@ -15,6 +17,7 @@ import {
   ExistingEntry,
 } from "../ExistingEntry";
 
+jest.mock("../../../../../backend");
 jest.mock("../../../../Pronunciations/Recorder");
 jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");
 jest.mock("../DeleteEntry/DeleteEntry");
@@ -23,28 +26,51 @@ jest.mock("../ExistingVernacular/ExistingVernacular");
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 
+let testMaster: renderer.ReactTestRenderer;
+let testHandle: renderer.ReactTestInstance;
+
+function renderWithWord(word: Word) {
+  renderer.act(() => {
+    testMaster = renderer.create(
+      <Provider store={mockStore}>
+        <ExistingEntry
+          wordsBeingAdded={[]}
+          existingWords={[]}
+          entryIndex={0}
+          entry={word}
+          updateWord={() => null}
+          removeWord={() => null}
+          addAudioToWord={() => null}
+          deleteAudioFromWord={() => null}
+          semanticDomain={{ name: "", id: "" }}
+          displayDuplicates={true}
+          toggleDisplayDuplicates={() => null}
+          recorder={new Recorder()}
+          focusNewEntry={() => null}
+        />
+      </Provider>
+    );
+  });
+  testHandle = testMaster.root;
+}
+
 describe("Tests ExistingEntry", () => {
   it("renders without crashing", () => {
-    renderer.act(() => {
-      renderer.create(
-        <Provider store={mockStore}>
-          <ExistingEntry
-            wordsBeingAdded={[]}
-            existingWords={[]}
-            entryIndex={0}
-            entry={mockWord}
-            updateWord={() => null}
-            removeWord={() => null}
-            semanticDomain={{ name: "", id: "" }}
-            displayDuplicates={true}
-            toggleDisplayDuplicates={() => null}
-            recorder={new Recorder()}
-            focusNewEntry={() => null}
-          />
-        </Provider>
-      );
-    });
+    renderWithWord(mockWord);
   });
+
+  it("renders recorder and no players", () => {
+    renderWithWord(mockWord);
+    expect(testHandle.findAllByType(AudioPlayer).length).toEqual(0);
+    expect(testHandle.findAllByType(AudioRecorder).length).toEqual(1);
+  });
+
+  it("renders recorder and 3 players", () => {
+    renderWithWord({ ...mockWord, audio: ["a.wav", "b.wav", "c.wav"] });
+    expect(testHandle.findAllByType(AudioPlayer).length).toEqual(3);
+    expect(testHandle.findAllByType(AudioRecorder).length).toEqual(1);
+  });
+
   it("adds a sense to a word that has no senses already", () => {
     let semanticDomain: SemanticDomain = mockSemanticDomain;
     let word: Word = mockWord;
@@ -60,6 +86,7 @@ describe("Tests ExistingEntry", () => {
     };
     expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
   });
+
   it("adds a sense to a word that already has a sense", () => {
     let semanticDomain: SemanticDomain = mockSemanticDomain;
     let existingSense: Sense = {
@@ -82,6 +109,7 @@ describe("Tests ExistingEntry", () => {
     };
     expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
   });
+
   it("adds a semantic domain to an existing sense", () => {
     let semanticDomain: SemanticDomain = mockSemanticDomain;
     let sense: Sense = {
@@ -108,6 +136,7 @@ describe("Tests ExistingEntry", () => {
       addSemanticDomainToSense(semanticDomain, word, sense, senseIndex)
     ).toEqual(expectedWord);
   });
+
   it("finds no duplicates", () => {
     let existingWords: Word[] = [];
     let vernacular: string = "vernacular";
@@ -115,6 +144,7 @@ describe("Tests ExistingEntry", () => {
       0
     );
   });
+
   it("finds a duplicate", () => {
     let word: Word = { ...mockWord };
     word.vernacular = "test";
@@ -125,6 +155,7 @@ describe("Tests ExistingEntry", () => {
       "1234567890"
     );
   });
+
   it("finds multiple duplicates", () => {
     let dupWord: Word = { ...mockWord };
     dupWord.id = "1234567890";
@@ -144,6 +175,7 @@ describe("Tests ExistingEntry", () => {
     expect(foundDups.length > 0).toEqual(true);
     expect(foundDups.length).toEqual(2);
   });
+
   it("finds no duplicate", () => {
     let existingWords: Word[] = [];
     let word: Word = { ...mockWord };
@@ -152,6 +184,7 @@ describe("Tests ExistingEntry", () => {
       duplicatesFromFrontier(existingWords, vernacular, 1, word.id).length
     ).toEqual(0);
   });
+
   it("determines a word is not a duplicate of itself", () => {
     let word: Word = { ...mockWord };
     word.vernacular = "test";
@@ -162,6 +195,7 @@ describe("Tests ExistingEntry", () => {
       duplicatesFromFrontier(existingWords, vernacular, 1, word.id).length
     ).toEqual(0);
   });
+
   it("finds a duplicate", () => {
     let dupWord: Word = { ...mockWord };
     dupWord.id = "1234567890";

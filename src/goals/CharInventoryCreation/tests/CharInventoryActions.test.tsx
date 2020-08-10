@@ -3,8 +3,8 @@ import thunk from "redux-thunk";
 
 import * as backend from "../../../backend";
 import * as LocalStorage from "../../../backend/localStorage";
-import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
 import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
+import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
 import { StoreState } from "../../../types";
 import { Goal } from "../../../types/goals";
 import { Project } from "../../../types/project";
@@ -63,13 +63,14 @@ const MOCK_STATE = {
   },
 };
 
+let oldProjectId: string;
 let oldUser: User | null;
-let oldProjectId: string | null;
 const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
+const mockUserId: string = "34456";
 let mockUser: User = new User("", "", "");
+mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
-const mockGoal: Goal = new CreateCharInv();
 
 jest.mock("../../../backend", () => ({
   updateProject: jest.fn((_project: Project) => {
@@ -82,17 +83,20 @@ jest.mock("../../../backend", () => ({
   ),
 }));
 
+const mockGoal: Goal = new CreateCharInv();
+
 const createMockStore = configureMockStore([thunk]);
 const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(MOCK_STATE);
 
 beforeAll(() => {
-  oldUser = LocalStorage.getCurrentUser();
+  // Save things in localStorage to restore once tests are done
   oldProjectId = LocalStorage.getProjectId();
+  oldUser = LocalStorage.getCurrentUser();
 });
 
 beforeEach(() => {
-  LocalStorage.removeCurrentUser();
-  LocalStorage.removeProjectId();
+  LocalStorage.remove(LocalStorage.localStorageKeys.projectId);
+  LocalStorage.remove(LocalStorage.localStorageKeys.user);
 });
 
 afterEach(() => {
@@ -100,8 +104,10 @@ afterEach(() => {
 });
 
 afterAll(() => {
-  if (oldUser) LocalStorage.setCurrentUser(oldUser);
-  if (oldProjectId) LocalStorage.setProjectId(oldProjectId);
+  LocalStorage.setProjectId(oldProjectId);
+  if (oldUser) {
+    LocalStorage.setCurrentUser(oldUser);
+  }
 });
 
 describe("Testing CharacterInventoryActions", () => {
@@ -115,7 +121,6 @@ describe("Testing CharacterInventoryActions", () => {
   test("uploadInventory dispatches correct actions", async () => {
     LocalStorage.setCurrentUser(mockUser);
     LocalStorage.setProjectId(mockProjectId);
-
     let mockStore = createMockStore(MOCK_STATE);
     const mockUpload = uploadInventory();
     await mockUpload(
