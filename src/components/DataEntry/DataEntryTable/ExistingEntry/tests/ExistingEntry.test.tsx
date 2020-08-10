@@ -3,13 +3,17 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { SemanticDomain, Sense, State, Word } from "../../../../../types/word";
+import {
+  SemanticDomain,
+  Sense,
+  simpleWord,
+  State,
+  Word,
+} from "../../../../../types/word";
 import { defaultState } from "../../../../App/DefaultState";
 import AudioPlayer from "../../../../Pronunciations/AudioPlayer";
 import AudioRecorder from "../../../../Pronunciations/AudioRecorder";
 import Recorder from "../../../../Pronunciations/Recorder";
-import { mockWord } from "../../../tests/MockWord";
-import { mockSemanticDomain } from "../../tests/DataEntryTable.test";
 import {
   addSemanticDomainToSense,
   addSenseToWord,
@@ -25,6 +29,11 @@ jest.mock("../ExistingVernacular/ExistingVernacular");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
+const mockWord: Word = simpleWord("", "");
+const mockSemanticDomain: SemanticDomain = {
+  name: "",
+  id: "",
+};
 
 let testMaster: renderer.ReactTestRenderer;
 let testHandle: renderer.ReactTestInstance;

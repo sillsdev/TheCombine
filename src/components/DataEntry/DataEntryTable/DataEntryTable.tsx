@@ -49,6 +49,27 @@ async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
   return proj.autocompleteSetting;
 }
 
+async function addAudiosToBackend(
+  wordId: string,
+  audioURLs: string[]
+): Promise<string> {
+  let updatedWordId: string = wordId;
+  let audioBlob: Blob;
+  let fileName: string;
+  let audioFile: File;
+  for (const audioURL of audioURLs) {
+    audioBlob = await fetch(audioURL).then((result) => result.blob());
+    fileName = getFileNameForWord(updatedWordId);
+    audioFile = new File([audioBlob], fileName, {
+      type: audioBlob.type,
+      lastModified: Date.now(),
+    });
+    updatedWordId = await Backend.uploadAudio(updatedWordId, audioFile);
+    URL.revokeObjectURL(audioURL);
+  }
+  return updatedWordId;
+}
+
 /**
  * A data entry table containing word entries
  */
@@ -87,7 +108,7 @@ export class DataEntryTable extends React.Component<
 
   async addNewWord(wordToAdd: Word, audioURLs: string[]) {
     let newWord: Word = await Backend.createWord(wordToAdd);
-    let wordId: string = await this.addAudiosToBackend(newWord.id, audioURLs);
+    let wordId: string = await addAudiosToBackend(newWord.id, audioURLs);
     let newWordWithAudio: Word = await Backend.getWord(wordId);
     let existingWords: Word[] = await this.props.getWordsFromBackend();
 
@@ -118,7 +139,7 @@ export class DataEntryTable extends React.Component<
       throw new Error("You are trying to update a nonexistent word");
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
-    let updatedWordId: string = await this.addAudiosToBackend(
+    let updatedWordId: string = await addAudiosToBackend(
       updatedWord.id,
       audioURLs
     );
@@ -133,27 +154,6 @@ export class DataEntryTable extends React.Component<
     recentlyAddedWords.push(updatedWordAccess);
 
     this.setState({ recentlyAddedWords });
-  }
-
-  async addAudiosToBackend(
-    wordId: string,
-    audioURLs: string[]
-  ): Promise<string> {
-    let updatedWordId: string = wordId;
-    let audioBlob: Blob;
-    let fileName: string;
-    let audioFile: File;
-    for (const audioURL of audioURLs) {
-      audioBlob = await fetch(audioURL).then((result) => result.blob());
-      fileName = getFileNameForWord(updatedWordId);
-      audioFile = new File([audioBlob], fileName, {
-        type: audioBlob.type,
-        lastModified: Date.now(),
-      });
-      updatedWordId = await Backend.uploadAudio(updatedWordId, audioFile);
-      URL.revokeObjectURL(audioURL);
-    }
-    return updatedWordId;
   }
 
   async addAudioToExistingWord(oldWordId: string, audioFile: File) {

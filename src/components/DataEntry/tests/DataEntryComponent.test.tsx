@@ -7,7 +7,13 @@ import { defaultProject as mockProject } from "../../../types/project";
 import SemanticDomainWithSubdomains, {
   baseDomain,
 } from "../../../types/SemanticDomain";
-import { DomainWord, Sense, State, Word } from "../../../types/word";
+import {
+  DomainWord,
+  Sense,
+  simpleWord,
+  State,
+  Word,
+} from "../../../types/word";
 import DataEntryComponent, {
   filterWords,
   filterWordsByDomain,
@@ -15,7 +21,6 @@ import DataEntryComponent, {
 } from "../DataEntryComponent";
 import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";
 import { DataEntryTable } from "../DataEntryTable/DataEntryTable";
-import { mockWord, mockDomainWord } from "./MockWord";
 
 jest.mock("@material-ui/core/Dialog");
 jest.mock("../../../backend", () => {
@@ -37,6 +42,11 @@ jest.mock("../../TreeView");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
+const mockWord: Word = simpleWord("", "");
+const mockDomainWord: DomainWord = {
+  word: mockWord,
+  gloss: mockWord.senses[0].glosses[0],
+};
 
 //Needed to mock window until refactored
 Object.defineProperty(window, "matchMedia", {
@@ -142,12 +152,12 @@ describe("Tests DataEntryComponent", () => {
 
     let sense: Sense[] = [
       {
-        glosses: [{ language: "en", def: "" }],
+        glosses: [{ language: "", def: "" }],
         semanticDomains: [mockDomains[0]],
         accessibility: State.active,
       },
       {
-        glosses: [{ language: "en", def: "" }],
+        glosses: [{ language: "", def: "" }],
         semanticDomains: [mockDomains[1]],
         accessibility: State.active,
       },
