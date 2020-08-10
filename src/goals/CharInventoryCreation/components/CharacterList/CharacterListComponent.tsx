@@ -1,18 +1,19 @@
+import {
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 import * as React from "react";
 import {
   LocalizeContextProps,
   withLocalize,
   Translate,
 } from "react-localize-redux";
-import {
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@material-ui/core";
-import CharacterCard from "./CharacterCard";
+
 import { CharacterSetEntry } from "../../CharacterInventoryReducer";
+import CharacterCard from "./CharacterCard";
 
 export interface CharacterListProps {
   setSelectedCharacter: (character: string) => void;
@@ -22,6 +23,8 @@ export interface CharacterListProps {
 interface CharacterListState {
   hoverChar: string;
   sortOrder: sortOrder;
+  fontHeight: number;
+  cardWidth: number;
 }
 
 enum sortOrder {
@@ -41,6 +44,8 @@ export class CharacterList extends React.Component<
     this.state = {
       hoverChar: "",
       sortOrder: sortOrder.characterAscending,
+      fontHeight: 65,
+      cardWidth: 150,
     };
   }
 
@@ -87,7 +92,6 @@ export class CharacterList extends React.Component<
         <React.Fragment>
           {
             /* The grid of character tiles */
-
             orderedCharacters.map((character) => (
               <CharacterCard
                 char={character.character}
@@ -97,6 +101,8 @@ export class CharacterList extends React.Component<
                 onClick={() =>
                   this.props.setSelectedCharacter(character.character)
                 }
+                fontHeight={this.state.fontHeight}
+                cardWidth={this.state.cardWidth}
               />
             ))
           }

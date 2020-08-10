@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Grid, Typography } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 
-import { uploadAvatar } from "../../backend";
+import { uploadAvatar, avatarSrc } from "../../backend";
 import FileInputButton from "../Buttons/FileInputButton";
 import LoadingDoneButton from "../Buttons/LoadingDoneButton";
-import { getCurrentUser } from "../../backend/localStorage";
+import { getUserId, setAvatar } from "../../backend/localStorage";
 
 /**
  * Allows the current user to select an image and upload as their avatar
@@ -18,27 +18,29 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
 
   function updateFile(file: File) {
     if (file) {
-      const filename = file.name;
+      const filename: string = file.name;
       setFile(file);
       setFilename(filename);
     }
   }
 
-  function upload(e: React.FormEvent<EventTarget>) {
+  async function upload(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
-    const avatar = file;
-
-    const user = getCurrentUser()!;
+    const avatar: File | undefined = file;
     if (avatar) {
       setLoading(true);
-      uploadAvatar(user, avatar)
+      const userId: string = getUserId();
+      await uploadAvatar(userId, avatar)
         .then(() => onDone())
         .catch(() => setLoading(false));
     }
   }
 
-  function onDone() {
+  async function onDone() {
     setDone(true);
+    const userId: string = getUserId();
+    const avatar: string = await avatarSrc(userId);
+    setAvatar(avatar);
     setTimeout(() => {
       if (props.doneCallback) props.doneCallback();
     }, 500);
@@ -58,7 +60,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
             updateFile={(file) => updateFile(file)}
             accept=".jpg"
           >
-            <Translate id="createProject.browse" />
+            <Translate id="buttons.browse" />
           </FileInputButton>
         </Grid>
         <Grid item>

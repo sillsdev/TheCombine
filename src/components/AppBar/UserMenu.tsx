@@ -3,19 +3,21 @@ import { ExitToApp, Person, SettingsApplications } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { avatarSrc } from "../../backend";
-import { getCurrentUser, setProjectId } from "../../backend/localStorage";
+import { getUser } from "../../backend";
+import * as LocalStorage from "../../backend/localStorage";
 import history from "../../history";
 import theme from "../../types/theme";
+import { User } from "../../types/user";
 
 /**
- * Avatar in appbar with dropdown (Site settings (for admins), user settings, log out)
+ * Avatar in appbar with dropdown: site settings (for admins), user settings, log out
  */
 export default function UserMenu() {
   const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(
     null
   );
-  const [avatar, setAvatar] = React.useState<null | string>(null);
+  const avatar = LocalStorage.getAvatar();
+  const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorElement(event.currentTarget);
@@ -25,18 +27,18 @@ export default function UserMenu() {
     setAnchorElement(null);
   }
 
-  async function getAvatar() {
-    const user = getCurrentUser()!;
-    const a = await avatarSrc(user);
-    setAvatar(a);
+  async function getIsAdmin() {
+    const userId = LocalStorage.getUserId();
+    await getUser(userId)
+      .then((user: User) => {
+        setIsAdmin(user.isAdmin);
+      })
+      .catch((err) => console.log(err));
   }
 
-  getAvatar();
-
-  // Determine if the user is an Admin user.
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
-  const isAdmin: boolean = user && user.isAdmin;
+  React.useEffect(() => {
+    getIsAdmin();
+  }, []);
 
   return (
     <div>
@@ -71,7 +73,7 @@ export default function UserMenu() {
         {isAdmin && (
           <MenuItem
             onClick={() => {
-              setProjectId("");
+              LocalStorage.setProjectId("");
               history.push("/site-settings");
             }}
           >

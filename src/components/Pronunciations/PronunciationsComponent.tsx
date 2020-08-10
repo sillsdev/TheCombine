@@ -2,7 +2,6 @@ import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import * as Backend from "../../backend";
-import theme from "../../types/theme";
 import AudioPlayer from "./AudioPlayer";
 import AudioRecorder from "./AudioRecorder";
 import Recorder from "./Recorder";
@@ -37,10 +36,7 @@ export class Pronunciations extends React.Component<
       });
     }
     return (
-      <div
-        className="pronunciationAudio"
-        style={{ paddingRight: theme.spacing(1) }}
-      >
+      <div className="pronunciationAudio">
         <AudioRecorder
           key={this.props.wordId}
           wordId={this.props.wordId}

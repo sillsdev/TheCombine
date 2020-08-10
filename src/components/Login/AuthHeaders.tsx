@@ -1,10 +1,9 @@
 import { getCurrentUser } from "../../backend/localStorage";
+import { User } from "../../types/user";
 
 export interface AuthHeader {
   authorization?: string;
 }
-
-export type ReturnObjectWithToken = () => { token: any } | null;
 
 /**
  * Returns authorization header with JWT token.
@@ -15,17 +14,11 @@ export type ReturnObjectWithToken = () => { token: any } | null;
  * example: `axios.post("localhost:5001", data, { headers: authHeader() })`
  */
 
-export function authHeaderWithUserGetter(
-  getCurrentUser: ReturnObjectWithToken
-): AuthHeader {
-  const user = getCurrentUser();
+export default function authHeader(): AuthHeader {
+  const user: User | null = getCurrentUser();
   if (user && user.token) {
     return { authorization: "Bearer " + user.token };
   } else {
     return {};
   }
-}
-
-export function authHeader(): AuthHeader {
-  return authHeaderWithUserGetter(getCurrentUser);
 }

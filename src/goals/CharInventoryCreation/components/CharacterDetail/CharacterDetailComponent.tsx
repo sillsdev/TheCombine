@@ -1,11 +1,12 @@
+import { Grid, IconButton, Typography } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 import * as React from "react";
-import { Grid, Typography, IconButton } from "@material-ui/core";
+
 import theme from "../../../../types/theme";
 import CharacterInfo from "./CharacterInfo";
 import CharacterStatusControl from "./CharacterStatusControl";
 import CharacterWords from "./CharacterWords";
 import FindAndReplace from "./FindAndReplace";
-import { Close } from "@material-ui/icons";
 
 export interface CharacterDetailProps {
   character: string;
@@ -24,7 +25,11 @@ export default function CharacterDetail(props: CharacterDetailProps) {
       style={{ padding: theme.spacing(1) }}
     >
       <Grid item xs={3}>
-        <Typography variant="h1">{props.character}</Typography>
+        <Typography variant="h1" align="center">
+          {props.character}
+          {""}
+          {/* There is a zero-width joiner here in case of non-printing characters. */}
+        </Typography>
       </Grid>
       <Grid item xs={8}>
         <CharacterStatusControl character={props.character} />

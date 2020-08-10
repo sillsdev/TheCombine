@@ -35,7 +35,7 @@ namespace BackendFramework.Controllers
         /// <summary> Returns all <see cref="Project"/>s </summary>
         /// <remarks> GET: v1/projects </remarks>
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAllProjects()
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.DatabaseAdmin))
             {
@@ -296,6 +296,13 @@ namespace BackendFramework.Controllers
             }
 
             return new OkObjectResult(_projectService.CanImportLift(projectId));
+        }
+
+        [HttpGet("duplicate/{projectName}")]
+        public async Task<IActionResult> projectDuplicateCheck(string projectName)
+        {
+            var isDuplicate = await _projectService.DuplicateCheck(projectName);
+            return new OkObjectResult(isDuplicate);
         }
     }
 }

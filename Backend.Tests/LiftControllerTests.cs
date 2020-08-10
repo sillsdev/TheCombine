@@ -251,7 +251,7 @@ namespace Backend.Tests
                     Assert.That(!(result is BadRequestObjectResult));
 
                     proj = _projServ.GetProject(proj.Id).Result;
-                    Assert.AreEqual(proj.VernacularWritingSystem, dataSet.Value.Language);
+                    Assert.AreEqual(proj.VernacularWritingSystem.Bcp47, dataSet.Value.Language);
 
                     fstream.Close();
 
@@ -296,7 +296,7 @@ namespace Backend.Tests
                     Assert.That(!(result is BadRequestObjectResult));
 
                     proj2 = _projServ.GetProject(proj2.Id).Result;
-                    Assert.AreEqual(proj2.VernacularWritingSystem, dataSet.Value.Language);
+                    Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, dataSet.Value.Language);
 
                     fstream.Close();
 

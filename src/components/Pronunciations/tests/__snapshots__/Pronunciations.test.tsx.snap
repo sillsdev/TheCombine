@@ -3,11 +3,6 @@
 exports[`pronunciation tests displays buttons 1`] = `
 <div
   className="pronunciationAudio"
-  style={
-    Object {
-      "paddingRight": 8,
-    }
-  }
 >
   <button
     aria-label="record"

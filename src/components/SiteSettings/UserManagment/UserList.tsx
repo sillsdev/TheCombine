@@ -15,19 +15,19 @@ import {
   Translate,
   withLocalize,
 } from "react-localize-redux";
+
+import { getUserId } from "../../../backend/localStorage";
 import theme from "../../../types/theme";
 import { User } from "../../../types/user";
-import { getCurrentUser } from "../../../backend/localStorage";
 
 interface UserListProps {
   allUsers: User[];
   userAvatar: { [key: string]: string };
-  deleteUser: (user: User) => void;
   handleOpenModal: (user: User) => void;
 }
 
 interface UserListState {
-  currentUser: User | null;
+  currentUserId: string;
   filterInput: string;
   filteredUsers: User[];
   prevFilterInput?: string;
@@ -41,7 +41,7 @@ class UserList extends React.Component<
     super(props);
 
     this.state = {
-      currentUser: getCurrentUser(),
+      currentUserId: getUserId(),
       filterInput: "",
       filteredUsers: [],
     };
@@ -99,12 +99,11 @@ class UserList extends React.Component<
                   style={{ marginRight: theme.spacing(1) }}
                 />
                 <ListItemText primary={`${user.name} (${user.username})`} />
-                {this.state.currentUser &&
-                  user.id !== this.state.currentUser.id && (
-                    <Button onClick={() => this.props.handleOpenModal(user)}>
-                      <DeleteForever />
-                    </Button>
-                  )}
+                {user.id !== this.state.currentUserId && (
+                  <Button onClick={() => this.props.handleOpenModal(user)}>
+                    <DeleteForever />
+                  </Button>
+                )}
               </ListItem>
             ))}
           </List>
