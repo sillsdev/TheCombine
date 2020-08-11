@@ -49,9 +49,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
   }
-
-  readonly maxStartsWith: number = 4;
-
   private defaultNewEntry() {
     return {
       id: "",
@@ -77,7 +74,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       plural: "",
     };
   }
-
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
 
@@ -192,11 +188,16 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
               <NewVernEntry
                 vernacular={this.state.newEntry.vernacular}
+                newEntry={this.state.newEntry}
                 vernInput={this.vernInput}
                 updateVernField={(newValue: string) => {
                   this.updateVernField(newValue);
                   this.props.setIsReadyState(newValue.trim().length > 0);
                 }}
+                allWords={this.props.allWords}
+                updateNewEntry={(newEntryUpdated: Word) =>
+                  this.setState({ newEntry: newEntryUpdated })
+                }
               />
             </Grid>
             <Grid item xs={12}>
