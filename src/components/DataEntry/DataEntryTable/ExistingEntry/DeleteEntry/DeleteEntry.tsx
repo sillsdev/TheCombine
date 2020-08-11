@@ -22,7 +22,7 @@ export class DeleteEntry extends React.Component<
       <React.Fragment>
         <Tooltip title={<Translate id="addWords.deleteRow" />} placement="top">
           <IconButton
-            tabIndex="-1"
+            tabIndex={-1}
             size="small"
             onClick={() => this.props.removeEntry()}
           >

@@ -59,7 +59,7 @@ export default function AudioPlayer(props: PlayerProps) {
   return (
     <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
       <IconButton
-        tabIndex="-1"
+        tabIndex={-1}
         onClick={deleteOrTogglePlay}
         className={classes.button}
         aria-label="play"
