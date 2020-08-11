@@ -4,19 +4,9 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
 <div>
   <div
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-justify-xs-center"
-    style={
-      Object {
-        "background": "#fff",
-      }
-    }
   >
     <div
-      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-9"
-      style={
-        Object {
-          "borderRight": "1px solid #ccc",
-        }
-      }
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8 MuiGrid-grid-lg-9 MuiGrid-grid-xl-10"
     >
       <div
         className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 MuiGrid-align-items-xs-center"
@@ -309,7 +299,7 @@ exports[`Testing Character Inventory Component Renders properly (snapshot test) 
       </div>
     </div>
     <div
-      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-3"
+      className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4 MuiGrid-grid-lg-3 MuiGrid-grid-xl-2"
     />
     <div
       className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
