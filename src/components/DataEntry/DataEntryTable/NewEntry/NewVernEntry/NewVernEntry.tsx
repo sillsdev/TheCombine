@@ -31,7 +31,8 @@ interface NewVernEntryProps {
 }
 interface NewVernEntryState {
   open: boolean;
-  selectedVernacularWord: Word;
+  duplicateVerns: Word[];
+  selectedVernacular: Word;
 }
 
 /**
@@ -46,7 +47,8 @@ export class NewVernEntry extends React.Component<
     super(props);
     this.state = {
       open: false,
-      selectedVernacularWord: simpleWord("", ""),
+      duplicateVerns: [],
+      selectedVernacular: simpleWord("", ""), //TODO verify that this is not used to create a new word
     };
     this.vernListRef = React.createRef();
   }
@@ -79,23 +81,40 @@ export class NewVernEntry extends React.Component<
               console.log("NULL SELECTION");
               this.setState({
                 open: true,
-                selectedVernacularWord: simpleWord("vern", "gloss"),
+                duplicateVerns: [simpleWord("", "")],
               });
             } else if (typeof value === "string") {
               console.log("STRING SELECTION");
               this.setState({
                 open: true,
-                selectedVernacularWord: simpleWord("vern", "gloss"),
+                duplicateVerns: [simpleWord("", "")],
               });
             } else {
-              this.setState({ open: true, selectedVernacularWord: value });
+              this.setState({ duplicateVerns: [] });
+              let newDuplicateVerns: Word[] = [];
+              this.props.allWords.forEach((word) => {
+                if (value.vernacular === word.vernacular) {
+                  newDuplicateVerns.push(word);
+                }
+              });
+              this.setState({ open: true, duplicateVerns: newDuplicateVerns });
             }
           }}
         />
         <VernDialog
           open={this.state.open}
-          handleClose={() => this.setState({ open: false })}
-          vernacularWord={this.state.selectedVernacularWord}
+          handleClose={(selectedIndex: number) => {
+            //set new vernacular to
+            if (selectedIndex === this.state.duplicateVerns.length) {
+              //New Entry Here
+            } else {
+              this.setState({
+                open: false,
+                selectedVernacular: this.state.duplicateVerns[selectedIndex],
+              });
+            }
+          }}
+          vernacularWords={this.state.duplicateVerns}
           vernListRef={this.vernListRef}
         />
       </div>
@@ -106,9 +125,9 @@ export class NewVernEntry extends React.Component<
 export default withLocalize(NewVernEntry);
 
 function VernDialog(props: {
-  vernacularWord: Word;
+  vernacularWords: Word[];
   open: boolean;
-  handleClose: () => void;
+  handleClose: (selectedIndex: number) => void;
   vernListRef: React.RefObject<HTMLDivElement>;
 }) {
   return (
@@ -119,8 +138,8 @@ function VernDialog(props: {
       disableEscapeKeyDown
     >
       <DialogContent>
-        <SenseList
-          vernacularWord={props.vernacularWord}
+        <VernList
+          vernacularWords={props.vernacularWords}
           vernListRef={props.vernListRef}
           closeDialog={props.handleClose}
         />
@@ -128,22 +147,19 @@ function VernDialog(props: {
     </Dialog>
   );
 }
-interface SenseListProps {
-  vernacularWord: Word;
+interface VernListProps {
+  vernacularWords: Word[];
   vernListRef: React.RefObject<HTMLDivElement>;
-  closeDialog: () => void;
+  closeDialog: (selectedIndex: number) => void;
 }
-interface SenseListState {
+interface VernListState {
   selectedIndex: number;
 }
-class SenseList extends React.Component<SenseListProps, SenseListState> {
-  // TODO: Fetch words with duplicate vernaculars (homographs)
-  currentWord: ReviewEntriesWord;
-  constructor(props: any) {
-    super(props);
-    this.currentWord = parseWord(props.vernacularWord, "en"); //TODO get analysis lang
-  }
+class VernList extends React.Component<VernListProps, VernListState> {
+  // constructor() {
+  //   super(props);
 
+  // }
   render() {
     return (
       <React.Fragment>
@@ -153,22 +169,29 @@ class SenseList extends React.Component<SenseListProps, SenseListState> {
           onKeyDown={(e: React.KeyboardEvent<HTMLUListElement>) => {
             if (e.key === "Enter") {
               // TODO Save vern (set new entry)
-              this.props.closeDialog();
+              this.props.closeDialog(0); //TODO change this
             }
           }}
+          //onChange={(event: object, value: any) => this.setState({selectedWord: value})}
         >
+          {this.props.vernacularWords.map((word: Word) => (
+            <MenuItem>
+              {<h4>{word.vernacular}</h4>}
+              <SenseCell
+                editable={false}
+                sortingByGloss={true}
+                value={parseWord(word, "en").senses}
+                rowData={parseWord(word, "en")}
+              />
+              <DomainCell
+                rowData={parseWord(word, "en")}
+                sortingByDomains={false}
+              />
+            </MenuItem>
+          ))}
+
           <MenuItem>
-            {<h4>{this.props.vernacularWord.vernacular}</h4>}
-            <SenseCell
-              editable={false}
-              sortingByGloss={true}
-              value={this.currentWord.senses}
-              rowData={this.currentWord}
-            />
-            <DomainCell rowData={this.currentWord} sortingByDomains={false} />
-          </MenuItem>
-          <MenuItem>
-            {"New Entry for " + this.props.vernacularWord.vernacular}
+            {"New Entry for " + this.props.vernacularWords[0].vernacular}
           </MenuItem>
         </MenuList>
       </React.Fragment>
