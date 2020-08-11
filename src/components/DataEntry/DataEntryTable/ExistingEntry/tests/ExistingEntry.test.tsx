@@ -17,7 +17,6 @@ import Recorder from "../../../../Pronunciations/Recorder";
 import {
   addSemanticDomainToSense,
   addSenseToWord,
-  duplicatesFromFrontier,
   ExistingEntry,
 } from "../ExistingEntry";
 
@@ -52,8 +51,6 @@ function renderWithWord(word: Word) {
           addAudioToWord={() => null}
           deleteAudioFromWord={() => null}
           semanticDomain={{ name: "", id: "" }}
-          displayDuplicates={true}
-          toggleDisplayDuplicates={() => null}
           recorder={new Recorder()}
           focusNewEntry={() => null}
         />
@@ -144,78 +141,5 @@ describe("Tests ExistingEntry", () => {
     expect(
       addSemanticDomainToSense(semanticDomain, word, sense, senseIndex)
     ).toEqual(expectedWord);
-  });
-
-  it("finds no duplicates", () => {
-    let existingWords: Word[] = [];
-    let vernacular: string = "vernacular";
-    expect(duplicatesFromFrontier(existingWords, vernacular, 1).length).toEqual(
-      0
-    );
-  });
-
-  it("finds a duplicate", () => {
-    let word: Word = { ...mockWord };
-    word.vernacular = "test";
-    word.id = "1234567890";
-    let existingWords: Word[] = [word];
-    let vernacular: string = "test";
-    expect(duplicatesFromFrontier(existingWords, vernacular, 1)[0]).toEqual(
-      "1234567890"
-    );
-  });
-
-  it("finds multiple duplicates", () => {
-    let dupWord: Word = { ...mockWord };
-    dupWord.id = "1234567890";
-    dupWord.vernacular = "testing";
-    let dupWord2: Word = { ...mockWord };
-    dupWord2.id = "1234567891";
-    dupWord2.vernacular = "testind";
-    let newWord: Word = { ...mockWord };
-    newWord.id = "0492039";
-    newWord.vernacular = "testing";
-    let existingWords: Word[] = [dupWord, dupWord2];
-    let foundDups = duplicatesFromFrontier(
-      existingWords,
-      newWord.vernacular,
-      2
-    );
-    expect(foundDups.length > 0).toEqual(true);
-    expect(foundDups.length).toEqual(2);
-  });
-
-  it("finds no duplicate", () => {
-    let existingWords: Word[] = [];
-    let word: Word = { ...mockWord };
-    let vernacular: string = "vernacular";
-    expect(
-      duplicatesFromFrontier(existingWords, vernacular, 1, word.id).length
-    ).toEqual(0);
-  });
-
-  it("determines a word is not a duplicate of itself", () => {
-    let word: Word = { ...mockWord };
-    word.vernacular = "test";
-    word.id = "1234567890";
-    let existingWords: Word[] = [word];
-    let vernacular: string = "test";
-    expect(
-      duplicatesFromFrontier(existingWords, vernacular, 1, word.id).length
-    ).toEqual(0);
-  });
-
-  it("finds a duplicate", () => {
-    let dupWord: Word = { ...mockWord };
-    dupWord.id = "1234567890";
-    dupWord.vernacular = "test";
-    let newWord: Word = { ...mockWord };
-    newWord.id = "0492039";
-    newWord.vernacular = "test";
-    let existingWords: Word[] = [dupWord];
-    expect(
-      duplicatesFromFrontier(existingWords, newWord.vernacular, 1, newWord.id)
-        .length
-    ).toEqual(1);
   });
 });

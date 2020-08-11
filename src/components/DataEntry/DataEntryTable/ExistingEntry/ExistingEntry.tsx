@@ -1,7 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
 
-import DuplicateFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import theme from "../../../../types/theme";
 import {
   Gloss,
@@ -12,7 +11,6 @@ import {
 } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
 import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
@@ -27,18 +25,13 @@ interface ExistingEntryProps {
   addAudioToWord: (wordId: string, audioFile: File) => void;
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
   semanticDomain: SemanticDomain;
-  displayDuplicates: boolean;
-  toggleDisplayDuplicates: () => void;
   recorder: Recorder;
   focusNewEntry: () => void;
 }
 
 interface ExistingEntryState {
-  displayDuplicates: boolean;
   existingEntry: Word;
-  duplicateIds?: string[];
-  duplicates?: Word[];
-  isDuplicate: boolean;
+  isNew: boolean;
   hovering: boolean;
 }
 
@@ -94,41 +87,6 @@ function updateSenses(
   return updatedSenses;
 }
 
-export function duplicatesFromFrontier(
-  existingWords: Word[],
-  vernacular: string,
-  maximum: number,
-  entryToExclude?: string
-): string[] {
-  let Finder: DuplicateFinder = new DuplicateFinder();
-
-  let duplicateWords: [string, number][] = [];
-  for (const word of existingWords) {
-    if (entryToExclude && word.id === entryToExclude) continue;
-    let accessible: boolean = false;
-    for (const sense of word.senses) {
-      if (sense.accessibility === State.active) {
-        accessible = true;
-        break;
-      }
-    }
-    if (accessible) {
-      const levenD: number = Finder.getLevenshteinDistance(
-        vernacular,
-        word.vernacular
-      );
-
-      if (levenD < Finder.maxScore) {
-        duplicateWords.push([word.id, levenD]);
-      }
-    }
-  }
-
-  let sorted: [string, number][] = duplicateWords.sort((a, b) => a[1] - b[1]);
-  sorted.length = Math.min(duplicateWords.length, maximum);
-  return sorted.map((item) => item[0]);
-}
-
 // extract, or remove altogether
 function wordsAreEqual(a: Word, b: Word): boolean {
   return (
@@ -144,63 +102,14 @@ export class ExistingEntry extends React.Component<
   ExistingEntryProps,
   ExistingEntryState
 > {
-  readonly maxDuplicates: number = 5;
   constructor(props: ExistingEntryProps) {
     super(props);
 
-    let possibleDups: string[] = duplicatesFromFrontier(
-      props.existingWords,
-      props.entry.vernacular,
-      this.maxDuplicates,
-      props.entry.id
-    );
-    let isDuplicate: boolean = possibleDups.length > 0;
-    let duplicateWords: Word[] | undefined;
-    if (isDuplicate) {
-      duplicateWords = props.existingWords.filter((word) =>
-        possibleDups.includes(word.id)
-      );
-    }
-
     this.state = {
-      displayDuplicates: false,
       existingEntry: { ...props.entry },
-      isDuplicate: isDuplicate,
-      duplicates: duplicateWords,
-      duplicateIds: possibleDups,
+      isNew: true,
       hovering: false,
     };
-    this.duplicateInput = React.createRef<HTMLDivElement>();
-  }
-
-  duplicateInput: React.RefObject<HTMLDivElement>;
-
-  componentDidMount() {
-    let possibleDups = duplicatesFromFrontier(
-      this.props.existingWords,
-      this.props.entry.vernacular,
-      this.maxDuplicates,
-      this.props.entry.id
-    );
-    let isDuplicate: boolean = possibleDups.length > 0;
-    let duplicateIds: string[] | undefined;
-    let duplicateWords: Word[] | undefined;
-    if (isDuplicate) {
-      duplicateIds = possibleDups;
-      duplicateWords = this.props.existingWords.filter((word) =>
-        duplicateIds!.includes(word.id)
-      );
-    }
-
-    this.setState({
-      isDuplicate,
-      duplicateIds,
-      duplicates: duplicateWords,
-    });
-  }
-
-  toggleDuplicateResolutionView() {
-    this.props.toggleDisplayDuplicates();
   }
 
   addNewSense(existingWord: Word, newSense: string) {
@@ -209,17 +118,7 @@ export class ExistingEntry extends React.Component<
       existingWord,
       newSense
     );
-    if (!this.state.duplicates) {
-      return;
-    }
     this.props.updateWord(updatedWord, this.props.entry);
-    this.props.toggleDisplayDuplicates();
-    this.setState({
-      displayDuplicates: false,
-      isDuplicate: false,
-      duplicates: undefined,
-      duplicateIds: undefined,
-    });
   }
 
   addSemanticDomain(existingWord: Word, sense: Sense, index: number) {
@@ -229,17 +128,7 @@ export class ExistingEntry extends React.Component<
       sense,
       index
     );
-    if (!this.state.duplicates) {
-      return;
-    }
     this.props.updateWord(updatedWord, this.props.entry);
-    this.props.toggleDisplayDuplicates();
-    this.setState({
-      displayDuplicates: false,
-      isDuplicate: false,
-      duplicates: undefined,
-      duplicateIds: undefined,
-    });
   }
 
   updateGlossField(newValue: string) {
@@ -257,35 +146,11 @@ export class ExistingEntry extends React.Component<
   }
 
   updateVernField(newValue: string) {
-    let possibleDups: string[] = duplicatesFromFrontier(
-      this.props.existingWords,
-      newValue,
-      this.maxDuplicates,
-      this.props.entry.id
-    );
-    let isDuplicate: boolean = possibleDups.length > 0;
-
-    if (isDuplicate) {
-      let duplicateWords:
-        | Word[]
-        | undefined = this.props.existingWords.filter((word) =>
-        possibleDups.includes(word.id)
-      );
-      this.setState({
-        isDuplicate: true,
-        duplicateIds: possibleDups,
-        duplicates: duplicateWords,
-      });
-    }
     this.setState({
       existingEntry: {
         ...this.state.existingEntry,
         vernacular: newValue,
       },
-      displayDuplicates:
-        this.state.displayDuplicates && isDuplicate
-          ? this.state.displayDuplicates
-          : false,
     });
   }
 
@@ -328,12 +193,6 @@ export class ExistingEntry extends React.Component<
           >
             <ExistingVernacular
               vernacular={this.state.existingEntry.vernacular}
-              isDuplicate={
-                this.state.displayDuplicates && this.state.isDuplicate
-              }
-              toggleDuplicateResolutionView={() =>
-                this.toggleDuplicateResolutionView()
-              }
               updateField={(newValue: string) => this.updateVernField(newValue)}
               updateWord={() => this.conditionallyUpdateWord()}
             />
@@ -400,31 +259,6 @@ export class ExistingEntry extends React.Component<
             )}
           </Grid>
         </Grid>
-        {this.props.displayDuplicates &&
-          this.state.isDuplicate &&
-          this.state.duplicates &&
-          this.state.duplicates.map((duplicate) => (
-            <DuplicateResolutionView
-              existingEntry={duplicate}
-              newSense={
-                this.state.existingEntry.senses &&
-                this.state.existingEntry.senses[0] &&
-                this.state.existingEntry.senses[0].glosses &&
-                this.state.existingEntry.senses[0].glosses[0]
-                  ? this.state.existingEntry.senses[0].glosses[0].def
-                  : ""
-              }
-              addSense={(existingWord: Word, newSense: string) =>
-                this.addNewSense(existingWord, newSense)
-              }
-              addSemanticDomain={(
-                existingWord: Word,
-                sense: Sense,
-                index: number
-              ) => this.addSemanticDomain(existingWord, sense, index)}
-              duplicateInput={this.duplicateInput}
-            />
-          ))}
       </Grid>
     );
   }

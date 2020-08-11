@@ -8,8 +8,6 @@ import {
 } from "react-localize-redux";
 
 import * as Backend from "../../../backend";
-import { getProjectId } from "../../../backend/localStorage";
-import { AutoComplete } from "../../../types/AutoComplete";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import { SemanticDomain, Word } from "../../../types/word";
@@ -38,15 +36,7 @@ interface WordAccess {
 export interface DataEntryTableState {
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
-  displayDuplicatesIndex?: number;
-  displaySpellingSuggestionsIndex?: number;
   isReady: boolean;
-  autoComplete: AutoComplete;
-}
-
-async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
-  let proj = await Backend.getProject(getProjectId());
-  return proj.autocompleteSetting;
 }
 
 async function addAudiosToBackend(
@@ -83,7 +73,6 @@ export class DataEntryTable extends React.Component<
       existingWords: [],
       recentlyAddedWords: [],
       isReady: false,
-      autoComplete: AutoComplete.Off,
     };
     this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
@@ -93,10 +82,8 @@ export class DataEntryTable extends React.Component<
 
   async componentDidMount() {
     let existingWords: Word[] = await this.props.getWordsFromBackend();
-    let autoComplete: AutoComplete = await getProjectAutocompleteSetting();
     this.setState({
       existingWords,
-      autoComplete,
     });
   }
 
@@ -260,18 +247,6 @@ export class DataEntryTable extends React.Component<
     this.setState({ recentlyAddedWords });
   }
 
-  toggleDisplayDuplicates(index: number) {
-    if (this.state.displayDuplicatesIndex === index)
-      this.setState({ displayDuplicatesIndex: undefined });
-    else this.setState({ displayDuplicatesIndex: index });
-  }
-
-  toggleDisplaySpellingSuggestions(index: number) {
-    if (this.state.displaySpellingSuggestionsIndex === index)
-      this.setState({ displaySpellingSuggestionsIndex: undefined });
-    else this.setState({ displaySpellingSuggestionsIndex: index });
-  }
-
   render() {
     return (
       <form
@@ -329,10 +304,6 @@ export class DataEntryTable extends React.Component<
                 }
                 recorder={this.recorder}
                 semanticDomain={this.props.semanticDomain}
-                displayDuplicates={this.state.displayDuplicatesIndex === index}
-                toggleDisplayDuplicates={() => {
-                  this.toggleDisplayDuplicates(index);
-                }}
                 focusNewEntry={() => {
                   if (this.refNewEntry.current)
                     this.refNewEntry.current.focusVernInput();
@@ -368,17 +339,6 @@ export class DataEntryTable extends React.Component<
                 this.addNewWord(word, audioFileURLs)
               }
               semanticDomain={this.props.semanticDomain}
-              autocompleteSetting={this.state.autoComplete}
-              displayDuplicates={
-                this.state.autoComplete === AutoComplete.AlwaysOn ||
-                this.state.displayDuplicatesIndex ===
-                  this.state.recentlyAddedWords.length
-              }
-              toggleDisplayDuplicates={() => {
-                this.toggleDisplayDuplicates(
-                  this.state.recentlyAddedWords.length
-                );
-              }}
               setIsReadyState={(isReady: boolean) =>
                 this.setState({ isReady: isReady })
               }
