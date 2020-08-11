@@ -9,6 +9,8 @@ import {
   List,
   ListItem,
   Grid,
+  MenuList,
+  MenuItem,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { Word, Sense, simpleWord } from "../../../../../types/word";
@@ -49,7 +51,7 @@ export class NewVernEntry extends React.Component<
   LocalizeContextProps & NewVernEntryProps,
   NewVernEntryState
 > {
-  vernListRef: React.RefObject<typeof List>;
+  vernListRef: React.RefObject<HTMLDivElement>;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -137,7 +139,7 @@ function VernDialog(props: {
   vernacularWord: Word;
   open: boolean;
   handleClose: () => void;
-  vernListRef: React.RefObject<typeof List>;
+  vernListRef: React.RefObject<HTMLDivElement>;
 }) {
   return (
     <Dialog
@@ -158,7 +160,7 @@ function VernDialog(props: {
 }
 interface SenseListProps {
   vernacularWord: Word;
-  vernListRef: React.RefObject<typeof List>;
+  vernListRef: React.RefObject<HTMLDivElement>;
   closeDialog: () => void;
 }
 interface SenseListState {
@@ -170,50 +172,22 @@ class SenseList extends React.Component<SenseListProps, SenseListState> {
   constructor(props: any) {
     super(props);
     this.currentWord = parseWord(props.vernacularWord, "en"); //TODO get analysis lang
-    this.state = {
-      selectedIndex: 0,
-    };
   }
-
-  // componentDidMount() {
-  //   console.log(this.props.vernListRef.current);
-  //   this.props.vernListRef.current?.focus();
-  // }
 
   render() {
     return (
-      <Grid
-        onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => {
-          if (e.key === "Enter") {
-            // TODO Save vern (set new entry)
-            this.props.closeDialog();
-          } else if (e.key === "ArrowDown") {
-            this.setState({
-              selectedIndex: (this.state.selectedIndex + 1) % 2,
-            }); //TODO change 2 to the length of the list of items
-          } else if (e.key === "ArrowUp") {
-            let newIndex = this.state.selectedIndex - 1;
-            if (newIndex < 0) {
-              newIndex = 1; // TODO Set the new index equal to the len(list of items) - 1
-            }
-            this.setState({ selectedIndex: newIndex });
-          }
-        }}
-        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
-          if (e.key === "Tab") {
-            e.preventDefault();
-            this.setState({
-              selectedIndex: (this.state.selectedIndex + 1) % 2,
-            }); //TODO change 2 to the length of the list of items
-          }
-        }}
-      >
+      <React.Fragment>
         <h1>Select the desired vernacular</h1>
-        <List>
-          <ListItem
-            selected={this.state.selectedIndex === 0}
-            onClick={() => this.setState({ selectedIndex: 0 })}
-          >
+        <MenuList
+          autoFocusItem={true}
+          onKeyDown={(e: React.KeyboardEvent<HTMLUListElement>) => {
+            if (e.key === "Enter") {
+              // TODO Save vern (set new entry)
+              this.props.closeDialog();
+            }
+          }}
+        >
+          <MenuItem>
             {<h4>{this.props.vernacularWord.vernacular}</h4>}
             <SenseCell
               editable={false}
@@ -222,15 +196,12 @@ class SenseList extends React.Component<SenseListProps, SenseListState> {
               rowData={this.currentWord}
             />
             <DomainCell rowData={this.currentWord} sortingByDomains={false} />
-          </ListItem>
-          <ListItem
-            selected={this.state.selectedIndex === 1}
-            onClick={() => this.setState({ selectedIndex: 1 })}
-          >
+          </MenuItem>
+          <MenuItem>
             {"New Entry for " + this.props.vernacularWord.vernacular}
-          </ListItem>
-        </List>
-      </Grid>
+          </MenuItem>
+        </MenuList>
+      </React.Fragment>
     );
   }
 }
