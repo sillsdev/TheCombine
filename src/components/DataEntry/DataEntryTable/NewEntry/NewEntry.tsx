@@ -5,6 +5,8 @@ import { Translate } from "react-localize-redux";
 import { AutoComplete } from "../../../../types/AutoComplete";
 import theme from "../../../../types/theme";
 import { SemanticDomain, Sense, Word } from "../../../../types/word";
+import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
+import Recorder from "../../../Pronunciations/Recorder";
 import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
 import {
   addSemanticDomainToSense,
@@ -19,14 +21,15 @@ interface NewEntryProps {
   updateWord: (
     updatedWord: Word,
     glossIndex: number,
-    shouldBeMutable?: boolean
+    newAudio: string[]
   ) => void;
-  addNewWord: (newWord: Word) => void;
+  addNewWord: (newWord: Word, newAudio: string[]) => void;
   semanticDomain: SemanticDomain;
   autocompleteSetting: AutoComplete;
   displayDuplicates: boolean;
   toggleDisplayDuplicates: () => void;
   setIsReadyState: (isReady: boolean) => void;
+  recorder?: Recorder;
 }
 
 interface NewEntryState {
@@ -34,6 +37,7 @@ interface NewEntryState {
   duplicates: Word[];
   isDuplicate: boolean;
   activeGloss: string;
+  audioFileURLs: string[];
 }
 
 /**
@@ -47,6 +51,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isDuplicate: false,
       duplicates: [],
       activeGloss: "",
+      audioFileURLs: [],
     };
 
     this.vernInput = React.createRef<HTMLDivElement>();
@@ -91,13 +96,30 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.props.toggleDisplayDuplicates();
   }
 
+  addAudio(audioFile: File) {
+    let audioFileURLs = [...this.state.audioFileURLs];
+    audioFileURLs.push(URL.createObjectURL(audioFile));
+    this.setState({
+      audioFileURLs,
+    });
+  }
+
+  removeAudio(fileName: string) {
+    const audioFileURLs = this.state.audioFileURLs.filter(
+      (fileURL) => fileURL !== fileName
+    );
+    this.setState({
+      audioFileURLs,
+    });
+  }
+
   addNewSense(existingWord: Word, newSense: string, index: number) {
     let updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, index, false);
+    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
     this.props.toggleDisplayDuplicates();
     this.resetState();
   }
@@ -109,7 +131,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       sense,
       index
     );
-    this.props.updateWord(updatedWord, index, false);
+    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
     this.props.toggleDisplayDuplicates();
     this.resetState();
   }
@@ -154,6 +176,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       isDuplicate: false,
       duplicates: [],
       activeGloss: "",
+      audioFileURLs: [],
     });
   }
 
@@ -208,17 +231,20 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     }
   };
 
+  addNewWordAndReset() {
+    this.props.addNewWord(this.state.newEntry, this.state.audioFileURLs);
+    this.focusVernInput();
+    this.resetState();
+  }
+
   render() {
     return (
       <Grid item xs={12}>
         <Grid
           container
           onKeyUp={(e) => {
-            if (e.key === "Enter" && this.state.newEntry.vernacular) {
-              this.props.addNewWord(this.state.newEntry);
-              this.focusVernInput();
-              this.resetState();
-            }
+            if (e.key === "Enter" && this.state.newEntry.vernacular)
+              this.addNewWordAndReset();
           }}
         >
           <Grid
@@ -269,6 +295,28 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
+            />
+          </Grid>
+          <Grid
+            item
+            xs={3}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            <Pronunciations
+              wordId={""}
+              pronunciationFiles={this.state.audioFileURLs}
+              recorder={this.props.recorder}
+              deleteAudio={(_wordId: string, fileName: string) => {
+                this.removeAudio(fileName);
+              }}
+              uploadAudio={(_wordId: string, audioFile: File) => {
+                this.addAudio(audioFile);
+              }}
+              getAudioUrl={(_wordId: string, fileName: string) => fileName}
             />
           </Grid>
           {this.props.autocompleteSetting !== AutoComplete.Off &&
