@@ -40,70 +40,7 @@ interface NewVernEntryState {
   open: boolean;
   selectedVernacularWord: Word;
 }
-function VernDialog(props: {
-  vernacularWord: Word;
-  open: boolean;
-  onClose?: () => void;
-}) {
-  return (
-    <Dialog open={props.open}>
-      <DialogContent>
-        <SenseList vernacularWord={props.vernacularWord} />
-      </DialogContent>
-    </Dialog>
-  );
-}
-function SenseList(props: { vernacularWord: Word }) {
-  // TODO: Fetch words with duplicate vernaculars (homographs)
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const handleListItemClick = (index: number) => {
-    setSelectedIndex(index);
-  };
-  let currentWord: ReviewEntriesWord = parseWord(props.vernacularWord, "en"); //TODO get analysis lang
-  if (props.vernacularWord) {
-    return (
-      <Grid
-        onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => {
-          if (e.key === "Enter") {
-            // save vern and close
-          } else if (e.key === "Tab" || e.key === "ArrowDown") {
-            setSelectedIndex((selectedIndex + 1) % 2); //TODO change 2 to the length of the list of items
-          } else if (e.key === "ArrowUp") {
-            let newIndex = selectedIndex - 1;
-            if (newIndex < 0) {
-              newIndex = 1; // TODO Set the new index equal to the len(list of items) - 1
-            }
-            setSelectedIndex(newIndex);
-          }
-        }}
-      >
-        <h1>Select the desired vernacular</h1>
-        <List>
-          <ListItem
-            selected={selectedIndex === 0}
-            onClick={() => handleListItemClick(0)}
-          >
-            {<h4>{props.vernacularWord.vernacular}</h4>}
-            <SenseCell
-              editable={false}
-              sortingByGloss={true}
-              value={currentWord.senses}
-              rowData={currentWord}
-            />
-            <DomainCell rowData={currentWord} sortingByDomains={false} />
-          </ListItem>
-          <ListItem
-            selected={selectedIndex === 1}
-            onClick={() => handleListItemClick(1)}
-          >
-            {"New Entry for " + props.vernacularWord.vernacular}
-          </ListItem>
-        </List>
-      </Grid>
-    );
-  }
-  return <h1>Vern Words Undefined</h1>;
-}
+
 /**
  * An editable vernacular field for new words that indicates whether the
  * vernacular already exists in a collection
@@ -112,12 +49,14 @@ export class NewVernEntry extends React.Component<
   LocalizeContextProps & NewVernEntryProps,
   NewVernEntryState
 > {
+  vernListRef: React.RefObject<typeof List>;
   constructor(props: any) {
     super(props);
     this.state = {
       open: false,
       selectedVernacularWord: simpleWord("", ""),
     };
+    this.vernListRef = React.createRef();
   }
   render() {
     const CustomDropdown = function (props: any) {
@@ -183,8 +122,9 @@ export class NewVernEntry extends React.Component<
         )}
         <VernDialog
           open={this.state.open}
-          onClose={() => console.log("closing")}
+          handleClose={() => this.setState({ open: false })}
           vernacularWord={this.state.selectedVernacularWord}
+          vernListRef={this.vernListRef}
         />
       </div>
     );
@@ -192,3 +132,105 @@ export class NewVernEntry extends React.Component<
 }
 
 export default withLocalize(NewVernEntry);
+
+function VernDialog(props: {
+  vernacularWord: Word;
+  open: boolean;
+  handleClose: () => void;
+  vernListRef: React.RefObject<typeof List>;
+}) {
+  return (
+    <Dialog
+      open={props.open}
+      onClose={props.handleClose}
+      disableBackdropClick
+      disableEscapeKeyDown
+    >
+      <DialogContent>
+        <SenseList
+          vernacularWord={props.vernacularWord}
+          vernListRef={props.vernListRef}
+          closeDialog={props.handleClose}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+interface SenseListProps {
+  vernacularWord: Word;
+  vernListRef: React.RefObject<typeof List>;
+  closeDialog: () => void;
+}
+interface SenseListState {
+  selectedIndex: number;
+}
+class SenseList extends React.Component<SenseListProps, SenseListState> {
+  // TODO: Fetch words with duplicate vernaculars (homographs)
+  currentWord: ReviewEntriesWord;
+  constructor(props: any) {
+    super(props);
+    this.currentWord = parseWord(props.vernacularWord, "en"); //TODO get analysis lang
+    this.state = {
+      selectedIndex: 0,
+    };
+  }
+
+  // componentDidMount() {
+  //   console.log(this.props.vernListRef.current);
+  //   this.props.vernListRef.current?.focus();
+  // }
+
+  render() {
+    return (
+      <Grid
+        onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => {
+          if (e.key === "Enter") {
+            // TODO Save vern (set new entry)
+            this.props.closeDialog();
+          } else if (e.key === "ArrowDown") {
+            this.setState({
+              selectedIndex: (this.state.selectedIndex + 1) % 2,
+            }); //TODO change 2 to the length of the list of items
+          } else if (e.key === "ArrowUp") {
+            let newIndex = this.state.selectedIndex - 1;
+            if (newIndex < 0) {
+              newIndex = 1; // TODO Set the new index equal to the len(list of items) - 1
+            }
+            this.setState({ selectedIndex: newIndex });
+          }
+        }}
+        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+          if (e.key === "Tab") {
+            e.preventDefault();
+            this.setState({
+              selectedIndex: (this.state.selectedIndex + 1) % 2,
+            }); //TODO change 2 to the length of the list of items
+          }
+        }}
+      >
+        <h1>Select the desired vernacular</h1>
+        <List>
+          <ListItem
+            selected={this.state.selectedIndex === 0}
+            onClick={() => this.setState({ selectedIndex: 0 })}
+          >
+            {<h4>{this.props.vernacularWord.vernacular}</h4>}
+            <SenseCell
+              editable={false}
+              sortingByGloss={true}
+              value={this.currentWord.senses}
+              rowData={this.currentWord}
+            />
+            <DomainCell rowData={this.currentWord} sortingByDomains={false} />
+          </ListItem>
+          <ListItem
+            selected={this.state.selectedIndex === 1}
+            onClick={() => this.setState({ selectedIndex: 1 })}
+          >
+            {"New Entry for " + this.props.vernacularWord.vernacular}
+          </ListItem>
+        </List>
+      </Grid>
+    );
+  }
+}
