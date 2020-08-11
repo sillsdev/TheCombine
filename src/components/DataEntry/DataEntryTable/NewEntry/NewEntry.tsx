@@ -290,6 +290,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             }}
           >
             <GlossWithSuggestions
+              isNew={true}
               gloss={this.state.activeGloss}
               glossInput={this.glossInput}
               updateGlossField={(newValue: string) =>
