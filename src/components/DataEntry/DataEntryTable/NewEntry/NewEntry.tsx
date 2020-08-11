@@ -29,8 +29,16 @@ interface NewEntryProps {
 interface NewEntryState {
   newEntry: Word;
   isNew: boolean;
+  wordId?: string;
   activeGloss: string;
   audioFileURLs: string[];
+}
+
+function focusInput(inputRef: React.RefObject<HTMLDivElement>) {
+  if (inputRef.current) {
+    inputRef.current.focus();
+    inputRef.current.scrollIntoView({ behavior: "smooth" });
+  }
 }
 
 /**
@@ -143,6 +151,17 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
+  updateWordId(wordId: string) {
+    if (wordId) {
+      this.setState({ isNew: false });
+    }
+    this.setState({ wordId });
+  }
+
+  clearWordId() {
+    this.setState({ isNew: true, wordId: undefined });
+  }
+
   resetState() {
     this.setState({
       newEntry: this.defaultNewEntry(),
@@ -153,10 +172,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
 
   /** Move the focus to the vernacular textbox */
   focusVernInput() {
-    if (this.vernInput.current) {
-      this.vernInput.current.focus();
-      this.vernInput.current.scrollIntoView({ behavior: "smooth" });
-    }
+    focusInput(this.vernInput);
+  }
+
+  /** Move the focus to the gloss textbox */
+  focusGlossInput() {
+    focusInput(this.glossInput);
   }
 
   addNewWordAndReset() {
@@ -171,8 +192,17 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         <Grid
           container
           onKeyUp={(e) => {
-            if (e.key === "Enter" && this.state.newEntry.vernacular)
-              this.addNewWordAndReset();
+            if (e.key === "Enter") {
+              if (this.state.newEntry.vernacular) {
+                if (this.state.activeGloss) {
+                  this.addNewWordAndReset();
+                } else {
+                  this.focusGlossInput();
+                }
+              } else {
+                this.focusVernInput();
+              }
+            }
           }}
         >
           <Grid
@@ -188,16 +218,13 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
               <NewVernEntry
                 vernacular={this.state.newEntry.vernacular}
-                newEntry={this.state.newEntry}
                 vernInput={this.vernInput}
                 updateVernField={(newValue: string) => {
                   this.updateVernField(newValue);
                   this.props.setIsReadyState(newValue.trim().length > 0);
                 }}
+                updateWordId={(wordId: string) => this.updateWordId(wordId)}
                 allWords={this.props.allWords}
-                updateNewEntry={(newEntryUpdated: Word) =>
-                  this.setState({ newEntry: newEntryUpdated })
-                }
               />
             </Grid>
             <Grid item xs={12}>
