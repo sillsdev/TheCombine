@@ -21,7 +21,11 @@ export class DeleteEntry extends React.Component<
     return (
       <React.Fragment>
         <Tooltip title={<Translate id="addWords.deleteRow" />} placement="top">
-          <IconButton size="small" onClick={() => this.props.removeEntry()}>
+          <IconButton
+            tabIndex={-1}
+            size="small"
+            onClick={() => this.props.removeEntry()}
+          >
             <Delete />
           </IconButton>
         </Tooltip>

@@ -8,21 +8,12 @@ import configureMockStore from "redux-mock-store";
 
 import * as backend from "../../../../backend";
 import { defaultProject as mockProject } from "../../../../types/project";
-import { SemanticDomain, State, Word } from "../../../../types/word";
-import { defaultState } from "../../../App/DefaultState";
-import { filterWords } from "../../DataEntryComponent";
 import { baseDomain } from "../../../../types/SemanticDomain";
-import { mockWord } from "../../tests/MockWord";
+import { SemanticDomain, simpleWord, Word } from "../../../../types/word";
+import { defaultState } from "../../../App/DefaultState";
 import DataEntryTable from "../DataEntryTable";
 import { NewEntry } from "../NewEntry/NewEntry";
 
-export const mockSemanticDomain: SemanticDomain = {
-  name: "",
-  id: "",
-};
-
-jest.mock("../../../Pronunciations/Recorder");
-// mock the functions in the backend that these tests exercise
 jest.mock("../../../../backend", () => {
   return {
     createWord: jest.fn((_word: Word) => {
@@ -36,13 +27,22 @@ jest.mock("../../../../backend", () => {
     }),
   };
 });
+jest.mock("../../../Pronunciations/Recorder");
 
-var testRenderer: ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
+let testHandle: ReactTestInstance;
+
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
+const mockWord: Word = simpleWord("", "");
+const mockSemanticDomain: SemanticDomain = {
+  name: "",
+  id: "",
+};
 const hideQuestionsMock = jest.fn();
 
 beforeEach(() => {
+  jest.clearAllMocks();
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
@@ -63,79 +63,13 @@ beforeEach(() => {
 });
 
 describe("Tests DataEntryTable", () => {
-  it("should filter out words that are not accessible", () => {
-    let words: Word[] = [];
-    let expectedWords: Word[] = [];
-    expect(filterWords(words)).toEqual(expectedWords);
-  });
-
-  it("should filter out words that are inaccessible", () => {
-    let word = { ...mockWord };
-    word.senses[0].accessibility = State.active;
-    let words: Word[] = [
-      {
-        ...mockWord,
-        senses: [
-          {
-            glosses: [],
-            semanticDomains: [],
-          },
-        ],
-      },
-    ];
-    let expectedWords: Word[] = [];
-    expect(filterWords(words)).toEqual(expectedWords);
-  });
-
-  it("should filter out words that are inaccessible", () => {
-    let word = { ...mockWord };
-    word.senses[0].accessibility = State.active;
-    let words: Word[] = [
-      {
-        ...mockWord,
-        senses: [
-          {
-            glosses: [],
-            semanticDomains: [],
-            accessibility: State.active,
-          },
-        ],
-      },
-    ];
-    let expectedWords: Word[] = [...words];
-    expect(filterWords(words)).toEqual(expectedWords);
-  });
-
   it("should call add word on backend when new entry has data and complete is clicked", (done) => {
-    jest.clearAllMocks();
     // Verify that NewEntry is present
     let newEntryItems = testRenderer.root.findAllByType(NewEntry);
     expect(newEntryItems.length).toBe(1);
-    var newEntryWord: Word = {
-      id: "",
-      vernacular: "hasvernword",
-      senses: [
-        {
-          glosses: [
-            {
-              language: "en",
-              def: "",
-            },
-          ],
-          semanticDomains: [],
-        },
-      ],
-      audio: [],
-      created: "",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      otherField: "",
-      plural: "",
-    };
-    var newEntryHandle: ReactTestInstance = newEntryItems[0];
-    newEntryHandle.instance.setState(
+    let newEntryWord: Word = simpleWord("hasVern", "");
+    testHandle = newEntryItems[0];
+    testHandle.instance.setState(
       {
         newEntry: newEntryWord,
       },
@@ -150,36 +84,13 @@ describe("Tests DataEntryTable", () => {
   });
 
   it("should NOT call add word on backend when new entry has no data and complete is clicked", (done) => {
-    jest.clearAllMocks();
     // Verify that NewEntry is present
     let newEntryItems = testRenderer.root.findAllByType(NewEntry);
     expect(newEntryItems.length).toBe(1);
     // set the new entry to have no useful content
-    var newEntryWord: Word = {
-      id: "",
-      vernacular: "",
-      senses: [
-        {
-          glosses: [
-            {
-              language: "en",
-              def: "",
-            },
-          ],
-          semanticDomains: [],
-        },
-      ],
-      audio: [],
-      created: "",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      otherField: "",
-      plural: "",
-    };
-    var newEntryHandle: ReactTestInstance = newEntryItems[0];
-    newEntryHandle.instance.setState(
+    let newEntryWord: Word = simpleWord("", "");
+    testHandle = newEntryItems[0];
+    testHandle.instance.setState(
       {
         newEntry: newEntryWord,
       },
@@ -194,7 +105,6 @@ describe("Tests DataEntryTable", () => {
   });
 
   it("calls hideQuestions when complete is clicked", () => {
-    jest.clearAllMocks();
     testRenderer.root.findByProps({ id: "complete" }).props.onClick();
     expect(hideQuestionsMock).toBeCalledTimes(1);
   });

@@ -13,6 +13,7 @@ import { AutoComplete } from "../../../types/AutoComplete";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import { SemanticDomain, Word } from "../../../types/word";
+import { getFileNameForWord } from "../../Pronunciations/AudioRecorder";
 import Recorder from "../../Pronunciations/Recorder";
 import { ExistingEntry } from "./ExistingEntry/ExistingEntry";
 import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
@@ -46,6 +47,27 @@ export interface DataEntryTableState {
 async function getProjectAutocompleteSetting(): Promise<AutoComplete> {
   let proj = await Backend.getProject(getProjectId());
   return proj.autocompleteSetting;
+}
+
+async function addAudiosToBackend(
+  wordId: string,
+  audioURLs: string[]
+): Promise<string> {
+  let updatedWordId: string = wordId;
+  let audioBlob: Blob;
+  let fileName: string;
+  let audioFile: File;
+  for (const audioURL of audioURLs) {
+    audioBlob = await fetch(audioURL).then((result) => result.blob());
+    fileName = getFileNameForWord(updatedWordId);
+    audioFile = new File([audioBlob], fileName, {
+      type: audioBlob.type,
+      lastModified: Date.now(),
+    });
+    updatedWordId = await Backend.uploadAudio(updatedWordId, audioFile);
+    URL.revokeObjectURL(audioURL);
+  }
+  return updatedWordId;
 }
 
 /**
@@ -84,15 +106,20 @@ export class DataEntryTable extends React.Component<
     if (e) e.preventDefault();
   }
 
-  async addNewWord(wordToAdd: Word) {
-    let updatedWord: Word = await Backend.createWord(wordToAdd);
+  async addNewWord(wordToAdd: Word, audioURLs: string[]) {
+    let newWord: Word = await Backend.createWord(wordToAdd);
+    let wordId: string = await addAudiosToBackend(newWord.id, audioURLs);
+    let newWordWithAudio: Word = await Backend.getWord(wordId);
+    let existingWords: Word[] = await this.props.getWordsFromBackend();
+
     let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
-    recentlyAddedWords.push({
-      word: updatedWord,
+    let newWordAccess: WordAccess = {
+      word: newWordWithAudio,
       mutable: true,
       glossIndex: 0,
-    });
-    let existingWords: Word[] = await this.props.getWordsFromBackend();
+    };
+    recentlyAddedWords.push(newWordAccess);
+
     this.setState({
       existingWords,
       recentlyAddedWords,
@@ -100,7 +127,11 @@ export class DataEntryTable extends React.Component<
   }
 
   /** Update the word in the backend and the frontend */
-  async updateWordForNewEntry(wordToUpdate: Word, glossIndex: number) {
+  async updateWordForNewEntry(
+    wordToUpdate: Word,
+    glossIndex: number,
+    audioURLs: string[]
+  ) {
     let existingWord: Word | undefined = this.state.existingWords.find(
       (word) => word.id === wordToUpdate.id
     );
@@ -108,16 +139,20 @@ export class DataEntryTable extends React.Component<
       throw new Error("You are trying to update a nonexistent word");
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
+    let updatedWordId: string = await addAudiosToBackend(
+      updatedWord.id,
+      audioURLs
+    );
+    updatedWord = await Backend.getWord(updatedWordId);
 
     let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
-
     let updatedWordAccess: WordAccess = {
       word: updatedWord,
       mutable: false,
       glossIndex: glossIndex,
     };
-
     recentlyAddedWords.push(updatedWordAccess);
+
     this.setState({ recentlyAddedWords });
   }
 
@@ -318,10 +353,20 @@ export class DataEntryTable extends React.Component<
             <NewEntry
               ref={this.refNewEntry}
               allWords={this.state.existingWords}
-              updateWord={(wordToUpdate: Word, glossIndex: number) =>
-                this.updateWordForNewEntry(wordToUpdate, glossIndex)
+              updateWord={(
+                wordToUpdate: Word,
+                glossIndex: number,
+                audioFileURLs: string[]
+              ) =>
+                this.updateWordForNewEntry(
+                  wordToUpdate,
+                  glossIndex,
+                  audioFileURLs
+                )
               }
-              addNewWord={(word: Word) => this.addNewWord(word)}
+              addNewWord={(word: Word, audioFileURLs: string[]) =>
+                this.addNewWord(word, audioFileURLs)
+              }
               semanticDomain={this.props.semanticDomain}
               autocompleteSetting={this.state.autoComplete}
               displayDuplicates={
@@ -337,6 +382,7 @@ export class DataEntryTable extends React.Component<
               setIsReadyState={(isReady: boolean) =>
                 this.setState({ isReady: isReady })
               }
+              recorder={this.recorder}
             />
           </Grid>
         </Grid>
@@ -359,12 +405,15 @@ export class DataEntryTable extends React.Component<
               variant="contained"
               color={this.state.isReady ? "primary" : "secondary"}
               style={{ marginTop: theme.spacing(2) }}
+              tabIndex={-1}
               onClick={() => {
                 // Check if there is a new word, but the user clicked complete instead of pressing enter
                 if (this.refNewEntry.current) {
                   let newEntry = this.refNewEntry.current.state.newEntry;
+                  let newEntryAudio = this.refNewEntry.current.state
+                    .audioFileURLs;
                   if (newEntry && newEntry.vernacular) {
-                    this.addNewWord(newEntry);
+                    this.addNewWord(newEntry, newEntryAudio);
                     this.refNewEntry.current.resetState();
                   }
                 }
