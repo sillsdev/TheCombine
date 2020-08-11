@@ -49,6 +49,7 @@ export default function RecorderIcon(props: RecorderIconProps) {
 
   return (
     <IconButton
+      tabIndex={-1}
       onMouseDown={toggleIsRecordingToTrue}
       onTouchStart={toggleIsRecordingToTrue}
       onMouseUp={toggleIsRecordingToFalse}
