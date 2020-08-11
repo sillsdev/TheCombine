@@ -405,6 +405,7 @@ export class DataEntryTable extends React.Component<
               variant="contained"
               color={this.state.isReady ? "primary" : "secondary"}
               style={{ marginTop: theme.spacing(2) }}
+              tabIndex="-1"
               onClick={() => {
                 // Check if there is a new word, but the user clicked complete instead of pressing enter
                 if (this.refNewEntry.current) {
