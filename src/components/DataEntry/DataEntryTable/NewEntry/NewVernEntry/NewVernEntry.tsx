@@ -15,10 +15,7 @@ import {
 } from "react-localize-redux";
 import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import {
-  ReviewEntriesWord,
-  parseWord,
-} from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 interface NewVernEntryProps {
   vernacular: string;
@@ -29,7 +26,8 @@ interface NewVernEntryProps {
 }
 interface NewVernEntryState {
   open: boolean;
-  selectedWord?: Word;
+  duplicateVerns: Word[];
+  selectedVernacular?: Word;
 }
 
 /**
@@ -44,6 +42,7 @@ export class NewVernEntry extends React.Component<
     super(props);
     this.state = {
       open: false,
+      duplicateVerns: [],
     };
     this.vernListRef = React.createRef();
   }
@@ -55,9 +54,11 @@ export class NewVernEntry extends React.Component<
           freeSolo
           id="newvernentry"
           value={this.props.vernacular}
-          options={this.props.allWords}
-          getOptionLabel={(option) => (option ? option.vernacular : "")}
-          renderOption={(option) => (option ? option.vernacular : "")}
+          options={
+            this.props.vernacular
+              ? this.props.allWords.map((word) => word.vernacular)
+              : []
+          }
           renderInput={(params) => (
             <TextField
               {...params}
@@ -67,14 +68,21 @@ export class NewVernEntry extends React.Component<
             />
           )}
           onChange={(_event, value) => {
-            if (!value) {
-              this.props.updateVernField("");
-              this.setState({ open: false, selectedWord: undefined });
-            } else if (typeof value === "string") {
-              this.props.updateVernField(value);
+            if (value === null) {
+              this.setState({
+                duplicateVerns: [],
+                selectedVernacular: undefined,
+              });
             } else {
-              this.props.updateVernField(value.vernacular);
-              this.setState({ open: true, selectedWord: value });
+              this.props.updateVernField(value);
+              let duplicateVerns: Word[] = this.props.allWords.filter(
+                (word) => value === word.vernacular
+              );
+              if (duplicateVerns.length > 0) {
+                this.setState({ open: true, duplicateVerns });
+              } else {
+                this.setState({ selectedVernacular: undefined });
+              }
             }
           }}
           onInputChange={(_event, value) => {
@@ -83,8 +91,18 @@ export class NewVernEntry extends React.Component<
         />
         <VernDialog
           open={this.state.open}
-          handleClose={() => this.setState({ open: false })}
-          vernacular={this.props.vernacular}
+          handleClose={(selectedIndex: number) => {
+            //set new vernacular to
+            if (selectedIndex === this.state.duplicateVerns.length) {
+              //New Entry Here
+            } else {
+              this.setState({
+                open: false,
+                selectedVernacular: this.state.duplicateVerns[selectedIndex],
+              });
+            }
+          }}
+          vernacularWords={this.state.duplicateVerns}
           vernListRef={this.vernListRef}
         />
       </div>
@@ -95,9 +113,9 @@ export class NewVernEntry extends React.Component<
 export default withLocalize(NewVernEntry);
 
 function VernDialog(props: {
-  vernacular: string;
+  vernacularWords: Word[];
   open: boolean;
-  handleClose: () => void;
+  handleClose: (selectedIndex: number) => void;
   vernListRef: React.RefObject<HTMLDivElement>;
 }) {
   return (
@@ -108,8 +126,8 @@ function VernDialog(props: {
       disableEscapeKeyDown
     >
       <DialogContent>
-        <SenseList
-          vernacular={props.vernacular}
+        <VernList
+          vernacularWords={props.vernacularWords}
           vernListRef={props.vernListRef}
           closeDialog={props.handleClose}
         />
@@ -117,23 +135,19 @@ function VernDialog(props: {
     </Dialog>
   );
 }
-
-interface SenseListProps {
-  vernacular: string;
+interface VernListProps {
+  vernacularWords: Word[];
   vernListRef: React.RefObject<HTMLDivElement>;
-  closeDialog: () => void;
+  closeDialog: (selectedIndex: number) => void;
 }
-interface SenseListState {
+interface VernListState {
   selectedIndex: number;
 }
-class SenseList extends React.Component<SenseListProps, SenseListState> {
-  // TODO: Fetch words with duplicate vernaculars (homographs)
-  currentWord: ReviewEntriesWord;
-  constructor(props: any) {
-    super(props);
-    this.currentWord = parseWord(props.vernacularWord, "en"); //TODO get analysis lang
-  }
+class VernList extends React.Component<VernListProps, VernListState> {
+  // constructor() {
+  //   super(props);
 
+  // }
   render() {
     return (
       <React.Fragment>
@@ -143,21 +157,30 @@ class SenseList extends React.Component<SenseListProps, SenseListState> {
           onKeyDown={(e: React.KeyboardEvent<HTMLUListElement>) => {
             if (e.key === "Enter") {
               // TODO Save vern (set new entry)
-              this.props.closeDialog();
+              this.props.closeDialog(0); //TODO change this
             }
           }}
+          //onChange={(event: object, value: any) => this.setState({selectedWord: value})}
         >
+          {this.props.vernacularWords.map((word: Word) => (
+            <MenuItem>
+              {<h4>{word.vernacular}</h4>}
+              <SenseCell
+                editable={false}
+                sortingByGloss={true}
+                value={parseWord(word, "en").senses}
+                rowData={parseWord(word, "en")}
+              />
+              <DomainCell
+                rowData={parseWord(word, "en")}
+                sortingByDomains={false}
+              />
+            </MenuItem>
+          ))}
+
           <MenuItem>
-            {<h4>{this.props.vernacular}</h4>}
-            <SenseCell
-              editable={false}
-              sortingByGloss={true}
-              value={this.currentWord.senses}
-              rowData={this.currentWord}
-            />
-            <DomainCell rowData={this.currentWord} sortingByDomains={false} />
+            {"New Entry for " + this.props.vernacularWords[0].vernacular}
           </MenuItem>
-          <MenuItem>{"New Entry for " + this.props.vernacular}</MenuItem>
         </MenuList>
       </React.Fragment>
     );
