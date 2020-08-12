@@ -20,12 +20,14 @@ import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponen
 import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 interface NewVernEntryProps {
+  isNew?: boolean;
   vernacular: string;
-  vernInput: React.RefObject<HTMLDivElement>;
+  vernInput?: React.RefObject<HTMLDivElement>;
   updateVernField: (newValue: string) => void;
   allWords: Word[];
-  updateWordId: (wordId: string) => void;
   handleEnter: (e: React.KeyboardEvent) => void;
+  updateWordId?: (wordId: string) => void;
+  onBlur?: () => void;
 }
 interface NewVernEntryState {
   open: boolean;
@@ -84,15 +86,9 @@ export class NewVernEntry extends React.Component<
           id="newvernentry"
           value={this.props.vernacular}
           options={this.state.suggestedVerns}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={<Translate id="addWords.vernacular" />}
-              variant="outlined"
-              fullWidth
-              inputRef={this.props.vernInput}
-            />
-          )}
+          onBlur={() => {
+            if (this.props.onBlur) this.props.onBlur();
+          }}
           onChange={(_event, value) => {
             if (value === null) {
               this.setState({
@@ -117,6 +113,17 @@ export class NewVernEntry extends React.Component<
             this.updateSuggestedVerns(value);
           }}
           onKeyDown={(e) => this.props.handleEnter(e)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              fullWidth
+              inputRef={this.props.vernInput}
+              label={
+                this.props.isNew ? <Translate id="addWords.vernacular" /> : ""
+              }
+              variant={this.props.isNew ? "outlined" : "standard"}
+            />
+          )}
         />
         <VernDialog
           open={this.state.open}

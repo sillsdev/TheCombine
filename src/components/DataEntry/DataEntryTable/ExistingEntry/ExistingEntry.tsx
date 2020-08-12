@@ -12,11 +12,10 @@ import {
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
+import NewVernEntry from "../NewEntry/NewVernEntry/NewVernEntry";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
-import ExistingVernacular from "./ExistingVernacular/ExistingVernacular";
 
 interface ExistingEntryProps {
-  wordsBeingAdded: Word[];
   existingWords: Word[];
   entryIndex: number;
   entry: Word;
@@ -186,10 +185,13 @@ export class ExistingEntry extends React.Component<
               position: "relative",
             }}
           >
-            <ExistingVernacular
+            <NewVernEntry
               vernacular={this.state.existingEntry.vernacular}
-              updateField={(newValue: string) => this.updateVernField(newValue)}
-              updateWord={() => this.conditionallyUpdateWord()}
+              updateVernField={(newValue: string) =>
+                this.updateVernField(newValue)
+              }
+              allWords={this.props.existingWords}
+              onBlur={() => this.conditionallyUpdateWord()}
             />
           </Grid>
           <Grid
@@ -213,8 +215,7 @@ export class ExistingEntry extends React.Component<
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
-              onBlur={(newValue: string) => {
-                this.updateGlossField(newValue);
+              onBlur={() => {
                 this.conditionallyUpdateWord();
               }}
               handleEnter={(e: React.KeyboardEvent) => {
