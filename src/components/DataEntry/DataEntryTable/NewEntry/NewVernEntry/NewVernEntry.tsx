@@ -29,7 +29,6 @@ interface NewVernEntryProps {
 interface NewVernEntryState {
   open: boolean;
   allVerns: string[];
-  suggestionFinder: DupFinder;
   suggestedVerns: string[];
   duplicateVerns: Word[];
   selectedVernacular?: Word;
@@ -42,7 +41,10 @@ export class NewVernEntry extends React.Component<
   LocalizeContextProps & NewVernEntryProps,
   NewVernEntryState
 > {
+  readonly maxSuggestions = 5;
   vernListRef: React.RefObject<HTMLDivElement>;
+  suggestionFinder: DupFinder = new DupFinder();
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -50,7 +52,6 @@ export class NewVernEntry extends React.Component<
       allVerns: [],
       duplicateVerns: [],
       suggestedVerns: [],
-      suggestionFinder: new DupFinder(),
     };
     this.vernListRef = React.createRef();
   }
@@ -66,10 +67,10 @@ export class NewVernEntry extends React.Component<
     if (value) {
       const sortedVerns: string[] = this.state.allVerns.sort(
         (a: string, b: string) =>
-          this.state.suggestionFinder.getLevenshteinDistance(a, value) -
-          this.state.suggestionFinder.getLevenshteinDistance(b, value)
+          this.suggestionFinder.getLevenshteinDistance(a, value) -
+          this.suggestionFinder.getLevenshteinDistance(b, value)
       );
-      suggestedVerns = sortedVerns.slice(0, 5);
+      suggestedVerns = sortedVerns.slice(0, this.maxSuggestions);
     }
     this.setState({ suggestedVerns });
   }
