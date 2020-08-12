@@ -17,6 +17,7 @@ import {
   GetApp,
   List,
   People,
+  PersonAdd,
   Sms,
   Language,
 } from "@material-ui/icons";
@@ -28,12 +29,12 @@ import { Project } from "../../types/project";
 import { UserRole } from "../../types/userRole";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
-import ProjectImport from "./ProjectImport";
-import ProjectName from "./ProjectName";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
-import ProjectUsers from "./ProjectUsers";
-import ProjectSwitch from "./ProjectSwitch";
+import ProjectImport from "./ProjectImport";
 import ProjectLanguages from "./ProjectLanguages/ProjectLanguages";
+import ProjectName from "./ProjectName";
+import ProjectSwitch from "./ProjectSwitch";
+import ProjectUsers, { ActiveUsers } from "./ProjectUsers";
 
 interface ProjectSettingsProps {
   project: Project;
@@ -188,11 +189,20 @@ class ProjectSettingsComponent extends React.Component<
               }
             />
 
-            {/* Add users to project */}
+            {/* See current users in project */}
             {this.state.projectName && (
               <BaseSettingsComponent
                 icon={<People />}
-                title={<Translate id="projectSettings.user.header" />}
+                title={<Translate id="projectSettings.user.currentUsers" />}
+                body={<ActiveUsers />}
+              />
+            )}
+
+            {/* Add users to project */}
+            {this.state.projectName && (
+              <BaseSettingsComponent
+                icon={<PersonAdd />}
+                title={<Translate id="projectSettings.user.addUser" />}
                 body={<ProjectUsers />}
               />
             )}
