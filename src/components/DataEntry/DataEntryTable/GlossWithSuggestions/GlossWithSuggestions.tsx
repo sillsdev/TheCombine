@@ -15,6 +15,7 @@ interface GlossWithSuggestionsProps {
   glossInput?: React.RefObject<HTMLDivElement>;
   updateGlossField: (newValue: string) => void;
   onBlur?: (newValue: string) => void;
+  handleEnter: (e: React.KeyboardEvent) => void;
 }
 
 /**
@@ -58,6 +59,7 @@ export class GlossWithSuggestions extends React.Component<
             inputRef={this.props.glossInput}
           />
         )}
+        onKeyUp={(e: React.KeyboardEvent) => this.props.handleEnter(e)}
       />
     );
   }

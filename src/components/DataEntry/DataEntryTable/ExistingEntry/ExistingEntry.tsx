@@ -176,11 +176,6 @@ export class ExistingEntry extends React.Component<
           container
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
-          onKeyUp={(e) => {
-            if (e.key === "Enter" && this.state.existingEntry.vernacular) {
-              this.focusOnNewEntry();
-            }
-          }}
         >
           <Grid
             item
@@ -221,6 +216,10 @@ export class ExistingEntry extends React.Component<
               onBlur={(newValue: string) => {
                 this.updateGlossField(newValue);
                 this.conditionallyUpdateWord();
+              }}
+              handleEnter={(e: React.KeyboardEvent) => {
+                //TODO: check for empty gloss
+                this.focusOnNewEntry();
               }}
             />
           </Grid>

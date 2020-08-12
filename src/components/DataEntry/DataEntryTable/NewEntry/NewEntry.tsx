@@ -186,25 +186,24 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.resetState();
   }
 
+  handleEnter(e: React.KeyboardEvent) {
+    if (e.key === "Enter") {
+      if (this.state.newEntry.vernacular) {
+        if (this.state.activeGloss) {
+          this.addNewWordAndReset();
+        } else {
+          this.focusGlossInput();
+        }
+      } else {
+        this.focusVernInput();
+      }
+    }
+  }
+
   render() {
     return (
       <Grid item xs={12}>
-        <Grid
-          container
-          onKeyUp={(e) => {
-            if (e.key === "Enter") {
-              if (this.state.newEntry.vernacular) {
-                if (this.state.activeGloss) {
-                  this.addNewWordAndReset();
-                } else {
-                  this.focusGlossInput();
-                }
-              } else {
-                this.focusVernInput();
-              }
-            }
-          }}
-        >
+        <Grid container>
           <Grid
             container
             item
@@ -225,6 +224,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 }}
                 updateWordId={(wordId: string) => this.updateWordId(wordId)}
                 allWords={this.props.allWords}
+                handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -249,6 +249,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
+              handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
             />
           </Grid>
           <Grid

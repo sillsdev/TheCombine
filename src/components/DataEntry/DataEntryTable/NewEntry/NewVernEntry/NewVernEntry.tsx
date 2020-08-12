@@ -23,6 +23,7 @@ interface NewVernEntryProps {
   updateVernField: (newValue: string) => void;
   allWords: Word[];
   updateWordId: (wordId: string) => void;
+  handleEnter: (e: React.KeyboardEvent) => void;
 }
 interface NewVernEntryState {
   open: boolean;
@@ -88,6 +89,7 @@ export class NewVernEntry extends React.Component<
           onInputChange={(_event, value) => {
             this.props.updateVernField(value);
           }}
+          onKeyDown={(e) => this.props.handleEnter(e)}
         />
         <VernDialog
           open={this.state.open}
@@ -144,20 +146,16 @@ interface VernListState {
   selectedIndex: number;
 }
 class VernList extends React.Component<VernListProps, VernListState> {
-  // constructor() {
-  //   super(props);
-
-  // }
   render() {
     return (
       <React.Fragment>
         <h1>Select the desired vernacular</h1>
         <MenuList
-          autoFocusItem={true}
+          autoFocusItem
           onKeyDown={(e: React.KeyboardEvent<HTMLUListElement>) => {
             if (e.key === "Enter") {
               // TODO Save vern (set new entry)
-              this.props.closeDialog(0); //TODO change this
+              this.props.closeDialog(this.state.selectedIndex);
             }
           }}
           //onChange={(event: object, value: any) => this.setState({selectedWord: value})}
