@@ -286,9 +286,6 @@ export class DataEntryTable extends React.Component<
             wordAccess.mutable ? (
               <ExistingEntry
                 key={wordAccess.word.id}
-                wordsBeingAdded={this.state.recentlyAddedWords.map(
-                  (wordAccess) => wordAccess.word
-                )}
                 existingWords={this.state.existingWords}
                 entryIndex={index}
                 entry={wordAccess.word}

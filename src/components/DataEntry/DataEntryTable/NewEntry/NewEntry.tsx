@@ -217,6 +217,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
           >
             <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
               <NewVernEntry
+                isNew={true}
                 vernacular={this.state.newEntry.vernacular}
                 vernInput={this.vernInput}
                 updateVernField={(newValue: string) => {

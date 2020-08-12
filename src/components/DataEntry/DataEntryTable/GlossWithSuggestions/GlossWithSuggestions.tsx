@@ -14,7 +14,7 @@ interface GlossWithSuggestionsProps {
   gloss: string;
   glossInput?: React.RefObject<HTMLDivElement>;
   updateGlossField: (newValue: string) => void;
-  onBlur?: (newValue: string) => void;
+  onBlur?: () => void;
 }
 
 /**
@@ -39,7 +39,7 @@ export class GlossWithSuggestions extends React.Component<
         options={this.spellChecker.getSpellingSuggestions(this.props.gloss)}
         value={this.props.gloss}
         onBlur={() => {
-          if (this.props.onBlur) this.props.onBlur(this.props.gloss);
+          if (this.props.onBlur) this.props.onBlur();
         }}
         onChange={(e, newValue) => {
           const newText = newValue ? (newValue as string) : "";
@@ -52,10 +52,10 @@ export class GlossWithSuggestions extends React.Component<
         renderInput={(params) => (
           <TextField
             {...params}
-            label={this.props.isNew ? <Translate id="addWords.glosses" /> : ""}
             fullWidth
-            variant={this.props.isNew ? "outlined" : "standard"}
             inputRef={this.props.glossInput}
+            label={this.props.isNew ? <Translate id="addWords.glosses" /> : ""}
+            variant={this.props.isNew ? "outlined" : "standard"}
           />
         )}
       />
