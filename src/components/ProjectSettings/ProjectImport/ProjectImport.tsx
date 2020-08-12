@@ -89,7 +89,7 @@ export class ProjectImport extends React.Component<
               onClick={() => this.uploadWords()}
             >
               <Translate
-                id={`projectSettings.import.${
+                id={`buttons.${
                   this.state.uploadState === UploadState.Done
                     ? "done"
                     : "upload"

@@ -8,11 +8,12 @@ import {
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import * as React from "react";
 import {
-  Translate,
   LocalizeContextProps,
+  Translate,
   withLocalize,
 } from "react-localize-redux";
 
+import { projectDuplicateCheck } from "../../../backend";
 import { WritingSystem } from "../../../types/project";
 import theme from "../../../types/theme";
 import FileInputButton from "../../Buttons/FileInputButton";
@@ -33,7 +34,7 @@ export interface CreateProjectProps {
 
 interface CreateProjectState {
   name: string;
-  error: { name: boolean };
+  error: { empty: boolean; nameTaken: boolean };
   vernLanguage: WritingSystem;
   analysisLanguages: WritingSystem[];
   languageData?: File;
@@ -46,9 +47,10 @@ export class CreateProject extends React.Component<
 > {
   constructor(props: CreateProjectProps & LocalizeContextProps) {
     super(props);
+
     this.state = {
       name: "",
-      error: { name: false },
+      error: { empty: false, nameTaken: false },
       vernLanguage: { name: "", bcp47: "und", font: "" },
       analysisLanguages: [{ name: "", bcp47: "und", font: "" }],
     };
@@ -71,7 +73,7 @@ export class CreateProject extends React.Component<
       });
     }
   };
-  setVernFontName = (font: string) => {
+  setVernFont = (font: string) => {
     if (font) {
       this.setState((state) => {
         state.vernLanguage.font = font;
@@ -106,7 +108,7 @@ export class CreateProject extends React.Component<
     }
   };
 
-  setAnalysisFontName = (font: string) => {
+  setAnalysisFont = (font: string) => {
     if (this.state.analysisLanguages[0]) {
       this.setState((state) => {
         state.analysisLanguages[0].font = font;
@@ -133,7 +135,8 @@ export class CreateProject extends React.Component<
       languageData,
       name,
       error: {
-        name: name === "",
+        empty: name === "",
+        nameTaken: false,
       },
     });
   }
@@ -146,7 +149,7 @@ export class CreateProject extends React.Component<
     }
   }
 
-  createProject(e: React.FormEvent<EventTarget>) {
+  async createProject(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
     if (this.props.success) return;
 
@@ -156,9 +159,13 @@ export class CreateProject extends React.Component<
     const languageData = this.state.languageData;
     if (name === "") {
       this.setState({
-        error: { name: true },
+        error: { empty: true, nameTaken: false },
       });
-    } else if (this.props.asyncCreateProject) {
+    } else if (await projectDuplicateCheck(this.state.name)) {
+      this.setState({
+        error: { empty: false, nameTaken: true },
+      });
+    } else {
       this.props.asyncCreateProject(
         name,
         vernLang,
@@ -186,9 +193,14 @@ export class CreateProject extends React.Component<
               variant="outlined"
               style={{ width: "100%", marginBottom: theme.spacing(2) }}
               margin="normal"
-              error={this.state.error["name"]}
+              error={this.state.error["empty"] || this.state.error["nameTaken"]}
               helperText={
-                this.state.error["name"] && <Translate id="login.required" />
+                (this.state.error["empty"] && (
+                  <Translate id="login.required" />
+                )) ||
+                (this.state.error["nameTaken"] && (
+                  <Translate id="createProject.nameTaken" />
+                ))
               }
             />
             {/*Vernacular language picker */}
@@ -201,7 +213,7 @@ export class CreateProject extends React.Component<
               name={this.state.vernLanguage.name}
               setName={(name: string) => this.setVernLangName(name)}
               font={this.state.vernLanguage.font}
-              setFont={(font: string) => this.setVernFontName(font)}
+              setFont={(font: string) => this.setVernFont(font)}
               t={languagePickerStrings_en}
             />
             {/*Analysis language picker */}
@@ -214,7 +226,7 @@ export class CreateProject extends React.Component<
               name={this.state.analysisLanguages[0].bcp47}
               setName={(name: string) => this.setAnalysisLangName(name)}
               font={this.state.analysisLanguages[0].bcp47}
-              setFont={(font: string) => this.setAnalysisFontName(font)}
+              setFont={(font: string) => this.setAnalysisFont(font)}
               t={languagePickerStrings_en}
             />
             {/* File upload */}
@@ -230,7 +242,7 @@ export class CreateProject extends React.Component<
               accept=".zip"
               style={{ marginTop: theme.spacing(2) }}
             >
-              <Translate id="createProject.browse" />
+              <Translate id="buttons.browse" />
             </FileInputButton>
             {/* Displays the name of the selected file */}
             {this.state.fileName && (

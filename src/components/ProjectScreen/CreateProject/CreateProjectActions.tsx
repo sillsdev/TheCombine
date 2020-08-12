@@ -84,16 +84,6 @@ export function asyncCreateProject(
                     err.response.statusText
                   )
                 );
-              })
-              .catch((err) => {
-                dispatch(
-                  failure(
-                    name,
-                    vernacularLanguage,
-                    analysisLanguages,
-                    err.response.statusText
-                  )
-                );
               });
           });
         } else {

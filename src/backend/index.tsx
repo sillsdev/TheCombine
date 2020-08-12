@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { authHeader } from "../components/Login/AuthHeaders";
+import authHeader from "../components/Login/AuthHeaders";
 import history from "../history";
 import { Goal, GoalType } from "../types/goals";
 import { Project } from "../types/project";
@@ -21,7 +21,7 @@ const backendServer = axios.create({
 backendServer.interceptors.response.use(
   (resp) => {
     if (resp.data.__UpdatedUser) {
-      localStorage.setItem("user", JSON.stringify(resp.data.__UpdatedUser));
+      LocalStorage.setCurrentUser(resp.data.__UpdatedUser);
     }
     delete resp.data.__UpdatedUser;
     return resp;
@@ -163,17 +163,22 @@ export function isEmailTaken(emailAddress: string): Promise<boolean> {
 export async function authenticateUser(
   username: string,
   password: string
-): Promise<string> {
+): Promise<User> {
   let resp = await backendServer.post(
     `users/authenticate`,
     { Username: username, Password: password },
     { headers: authHeader() }
   );
-  return JSON.stringify(resp.data);
+  return resp.data;
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  let resp = await backendServer.get(`users/allusers`, {
+  let projectId: string = LocalStorage.getProjectId();
+  /* If an admin user tries to get the list of users,
+   the current projectId may be an empty string,
+   which causes a 404 error. */
+  projectId = projectId ? projectId : "_";
+  let resp = await backendServer.get(`users/projects/${projectId}/allusers`, {
     headers: authHeader(),
   });
   return resp.data;
@@ -201,6 +206,13 @@ export async function updateUser(user: User): Promise<User> {
   return { ...user, id: resp.data };
 }
 
+export async function deleteUser(userId: string): Promise<string> {
+  let resp = await backendServer.delete(`users/${userId}`, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
 export async function createProject(project: Project): Promise<Project> {
   let resp = await backendServer.post(`projects/`, project, {
     headers: authHeader(),
@@ -214,11 +226,12 @@ export async function getAllProjects(): Promise<Project[]> {
 }
 
 export async function getAllActiveProjectsByUser(
-  user: User
+  userId: string
 ): Promise<Project[]> {
-  let projectIds: string[] = Object.keys(user.projectRoles);
+  const user: User = await getUser(userId);
+  const projectIds: string[] = Object.keys(user.projectRoles);
   let projects: Project[] = [];
-  for (let projectId of projectIds) {
+  for (const projectId of projectIds) {
     try {
       await getProject(projectId).then((project) => {
         project.isActive && projects.push(project);
@@ -226,6 +239,7 @@ export async function getAllActiveProjectsByUser(
     } catch (err) {
       /** If there was an error, the project probably was manually deleted
        from the database or is ill-formatted. */
+      console.log(err);
     }
   }
   return projects;
@@ -262,6 +276,15 @@ export async function restoreProject(id: string) {
   });
   project.data.isActive = true;
   let resp = await backendServer.put(`projects/${id}`, project.data, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+
+export async function projectDuplicateCheck(
+  projectName: string
+): Promise<boolean> {
+  let resp = await backendServer.get(`projects/duplicate/${projectName}`, {
     headers: authHeader(),
   });
   return resp.data;
@@ -325,18 +348,18 @@ export function getAudioUrl(wordId: string, fileName: string): string {
   return `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/download/audio/${fileName}`;
 }
 
-export async function uploadAvatar(user: User, img: File): Promise<string> {
+export async function uploadAvatar(userId: string, img: File): Promise<string> {
   let data = new FormData();
   data.append("file", img);
-  let resp = await backendServer.post(`users/${user.id}/upload/avatar`, data, {
+  let resp = await backendServer.post(`users/${userId}/upload/avatar`, data, {
     headers: { ...authHeader(), "content-type": "application/json" },
   });
   return resp.data;
 }
 
 /** Returns the string to display the image inline in Base64 <img src= */
-export async function avatarSrc(user: User): Promise<string> {
-  let resp = await backendServer.get(`users/${user.id}/download/avatar`, {
+export async function avatarSrc(userId: string): Promise<string> {
+  let resp = await backendServer.get(`users/${userId}/download/avatar`, {
     headers: authHeader(),
     responseType: "arraybuffer",
   });

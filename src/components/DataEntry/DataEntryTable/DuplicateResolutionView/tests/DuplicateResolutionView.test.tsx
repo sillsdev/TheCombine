@@ -1,9 +1,10 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import { Word, Sense } from "../../../../../types/word";
-import { mockWord } from "../../../tests/MockWord";
+import { simpleWord, Word } from "../../../../../types/word";
 import { DuplicateResolutionView } from "../DuplicateResolutionView";
+
+const mockWord: Word = simpleWord("", "");
 
 describe("Tests DuplicateResolutionView", () => {
   it("renders without crashing", () => {
@@ -12,12 +13,8 @@ describe("Tests DuplicateResolutionView", () => {
         <DuplicateResolutionView
           existingEntry={mockWord}
           newSense={""}
-          addSense={(existingWord: Word, newSense: string) => null}
-          addSemanticDomain={(
-            existingWord: Word,
-            sense: Sense,
-            index: number
-          ) => {}}
+          addSense={() => null}
+          addSemanticDomain={() => {}}
           duplicateInput={React.createRef<HTMLDivElement>()}
         />
       );

@@ -1,16 +1,14 @@
 import React from "react";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../App/DefaultState";
-import { defaultState as reviewEntriesState } from "../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
 import { Provider } from "react-redux";
-import Pronunciations from "../PronunciationsComponent";
-import AudioPlayer from "../AudioPlayer";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import AudioRecorder from "../AudioRecorder";
-import { mockWord } from "../../../components/DataEntry/tests/MockWord";
-import RecorderIcon from "../RecorderIcon";
 
-const createMockStore = configureMockStore([]);
+import { defaultState as reviewEntriesState } from "../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { defaultState } from "../../App/DefaultState";
+import AudioPlayer from "../AudioPlayer";
+import AudioRecorder from "../AudioRecorder";
+import Pronunciations from "../PronunciationsComponent";
+import RecorderIcon from "../RecorderIcon";
 
 // Mock the node module used by AudioRecorder
 jest.mock("../Recorder");
@@ -18,6 +16,7 @@ jest.mock("../Recorder");
 // Variables
 var testRenderer: ReactTestRenderer;
 
+const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({
   ...defaultState,
   reviewEntriesState: {
@@ -55,7 +54,7 @@ describe("pronunciation tests", () => {
           <RecorderIcon
             startRecording={mockStartRecording}
             stopRecording={mockStopRecording}
-            wordId={mockWord.id}
+            wordId={"mockId"}
           />
         </Provider>
       );

@@ -1,19 +1,23 @@
 import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
 import { ExitToApp, Person, SettingsApplications } from "@material-ui/icons";
-import React, { useEffect } from "react";
+import React from "react";
 import { Translate } from "react-localize-redux";
+
+import { getUser } from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
 import history from "../../history";
 import theme from "../../types/theme";
+import { User } from "../../types/user";
 
 /**
- * Avatar in appbar with dropdown (Site settings (for admins), user settings, log out)
+ * Avatar in appbar with dropdown: site settings (for admins), user settings, log out
  */
 export default function UserMenu() {
   const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(
     null
   );
-  const [avatar, setAvatar] = React.useState<null | string>(null);
+  const avatar = LocalStorage.getAvatar();
+  const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorElement(event.currentTarget);
@@ -23,18 +27,18 @@ export default function UserMenu() {
     setAnchorElement(null);
   }
 
-  function getAvatar() {
-    const userAvatar = LocalStorage.getAvatar();
-    setAvatar(userAvatar!);
+  async function getIsAdmin() {
+    const userId = LocalStorage.getUserId();
+    await getUser(userId)
+      .then((user: User) => {
+        setIsAdmin(user.isAdmin);
+      })
+      .catch((err) => console.log(err));
   }
-  useEffect(() => {
-    getAvatar();
-  });
 
-  // Determine if the user is an Admin user.
-  const userString = localStorage.getItem("user");
-  const user = userString ? JSON.parse(userString) : null;
-  const isAdmin: boolean = user && user.isAdmin;
+  React.useEffect(() => {
+    getIsAdmin();
+  }, []);
 
   return (
     <div>

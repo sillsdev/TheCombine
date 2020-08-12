@@ -1,22 +1,28 @@
 import React from "react";
-import DataEntryComponent from "../DataEntryComponent";
+import { Provider } from "react-redux";
+import renderer, { ReactTestInstance } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+
+import { defaultProject as mockProject } from "../../../types/project";
 import SemanticDomainWithSubdomains, {
   baseDomain,
 } from "../../../types/SemanticDomain";
-import configureMockStore from "redux-mock-store";
-import renderer, { ReactTestInstance } from "react-test-renderer";
-import { Provider } from "react-redux";
-import { DataEntryTable } from "../DataEntryTable/DataEntryTable";
-import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";
-import { mockWord, mockDomainWord } from "./MockWord";
-import { defaultProject as mockProject } from "../../../types/project";
-import { Word, State, DomainWord, Sense } from "../../../types/word";
 import {
+  DomainWord,
+  Sense,
+  simpleWord,
+  State,
+  Word,
+} from "../../../types/word";
+import DataEntryComponent, {
   filterWords,
   filterWordsByDomain,
   sortDomainWordByVern,
 } from "../DataEntryComponent";
+import { DataEntryHeader } from "../DataEntryHeader/DataEntryHeader";
+import { DataEntryTable } from "../DataEntryTable/DataEntryTable";
 
+jest.mock("@material-ui/core/Dialog");
 jest.mock("../../../backend", () => {
   return {
     createWord: jest.fn((_word: Word) => {
@@ -30,13 +36,17 @@ jest.mock("../../../backend", () => {
     }),
   };
 });
-
-jest.mock("../../TreeView");
-jest.mock("../../AppBar/AppBarComponent"); //ReactTestRenderer doesn't like rendering UserMenu
-jest.mock("@material-ui/core/Dialog");
+jest.mock("../../AppBar/AppBarComponent"); // ReactTestRenderer doesn't like rendering UserMenu
 jest.mock("../../Pronunciations/Recorder");
+jest.mock("../../TreeView");
+
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
+const mockWord: Word = simpleWord("", "");
+const mockDomainWord: DomainWord = {
+  word: mockWord,
+  gloss: mockWord.senses[0].glosses[0],
+};
 
 //Needed to mock window until refactored
 Object.defineProperty(window, "matchMedia", {
@@ -142,12 +152,12 @@ describe("Tests DataEntryComponent", () => {
 
     let sense: Sense[] = [
       {
-        glosses: [{ language: "en", def: "" }],
+        glosses: [{ language: "", def: "" }],
         semanticDomains: [mockDomains[0]],
         accessibility: State.active,
       },
       {
-        glosses: [{ language: "en", def: "" }],
+        glosses: [{ language: "", def: "" }],
         semanticDomains: [mockDomains[1]],
         accessibility: State.active,
       },
