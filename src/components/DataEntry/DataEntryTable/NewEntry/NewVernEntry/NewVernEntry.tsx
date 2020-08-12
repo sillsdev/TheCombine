@@ -89,6 +89,7 @@ export class NewVernEntry extends React.Component<
               label={<Translate id="addWords.vernacular" />}
               variant="outlined"
               fullWidth
+              inputRef={this.props.vernInput}
             />
           )}
           onChange={(_event, value) => {
