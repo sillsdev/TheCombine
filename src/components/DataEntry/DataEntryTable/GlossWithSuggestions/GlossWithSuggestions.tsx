@@ -10,6 +10,7 @@ import {
 import SpellChecker from "../../spellChecker";
 
 interface GlossWithSuggestionsProps {
+  isNew?: boolean;
   gloss: string;
   glossInput?: React.RefObject<HTMLDivElement>;
   updateGlossField: (newValue: string) => void;
@@ -51,9 +52,9 @@ export class GlossWithSuggestions extends React.Component<
         renderInput={(params) => (
           <TextField
             {...params}
-            label={<Translate id="addWords.glosses" />}
+            label={this.props.isNew ? <Translate id="addWords.glosses" /> : ""}
             fullWidth
-            variant="outlined"
+            variant={this.props.isNew ? "outlined" : "standard"}
             inputRef={this.props.glossInput}
           />
         )}
