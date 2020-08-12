@@ -24,7 +24,7 @@ services:
       SSL_PRIVATE_KEY: /ssl/key.pem
     volumes:
       - ./nginx/conf.d:/etc/nginx/user.conf.d:ro
-      - ./nginx/scripts:/usr/share/nginx/html/scripts:ro
+      - /opt/combine/config/scripts:/usr/share/nginx/html/scripts:ro
       - frontend_ssl_certs:/ssl
       - letsencrypt:/etc/letsencrypt
     ports:
