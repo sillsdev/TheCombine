@@ -17,3 +17,13 @@
     version: "{{ combine_source_version }}"
     track_submodules: yes
     force: yes
+
+- name: create directory for nginx runtime scripts
+  file:
+    path: "{{ source_dir }}/docker_deploy/nginx/scripts"
+    state: directory
+
+- name: create runtime config file
+  template:
+    src: config.js.j2
+    dest: "{{ source_dir }}/docker_deploy/nginx/scripts/config.js"
