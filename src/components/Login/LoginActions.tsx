@@ -148,6 +148,36 @@ export function asyncRegister(
       });
   };
 }
+
+export function asyncRegisterForEmailInvite(
+  name: string,
+  username: string,
+  email: string,
+  password: string
+) {
+  return async (
+    dispatch: Dispatch<UserAction | ThunkAction<any, {}, {}, AnyAction>>
+  ) => {
+    dispatch(registerAttempt(username));
+    // Create new user
+    let newUser: User = new User(name, username, password);
+    newUser.email = email;
+    await backend
+      .addUser(newUser)
+      .then((res) => {
+        dispatch(registerSuccess(username));
+        setTimeout(() => {
+          dispatch(registerReset());
+        }, 1000);
+      })
+      .catch((err) => {
+        dispatch(
+          registerFailure((err.response && err.response.status) || err.message)
+        );
+      });
+  };
+}
+
 export function registerAttempt(username: string): UserAction {
   return {
     type: REGISTER_ATTEMPT,
