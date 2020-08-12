@@ -7,31 +7,31 @@ import {
   MenuList,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import { Word } from "../../../../../types/word";
+import { Word } from "../../../../types/word";
 import {
   LocalizeContextProps,
   Translate,
   withLocalize,
 } from "react-localize-redux";
 
-import DupFinder from "../../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
-import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import DupFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import SenseCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import DomainCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import { parseWord } from "../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
-interface NewVernEntryProps {
+interface VernWithSuggestionsProps {
   isNew?: boolean;
   vernacular: string;
   vernInput?: React.RefObject<HTMLDivElement>;
   updateVernField: (newValue: string) => void;
   allWords: Word[];
+  allVerns: string[];
   handleEnter: (e: React.KeyboardEvent) => void;
   updateWordId?: (word?: Word) => void;
   onBlur?: () => void;
 }
-interface NewVernEntryState {
+interface VernWithSuggestionsState {
   open: boolean;
-  allVerns: string[];
   suggestedVerns: string[];
   duplicateVerns: Word[];
   selectedVernacular?: Word;
@@ -40,9 +40,9 @@ interface NewVernEntryState {
 /**
  * An editable vernacular field for new words
  */
-export class NewVernEntry extends React.Component<
-  LocalizeContextProps & NewVernEntryProps,
-  NewVernEntryState
+export class VernWithSuggestions extends React.Component<
+  LocalizeContextProps & VernWithSuggestionsProps,
+  VernWithSuggestionsState
 > {
   readonly maxSuggestions = 5;
   vernListRef: React.RefObject<HTMLDivElement>;
@@ -52,7 +52,6 @@ export class NewVernEntry extends React.Component<
     super(props);
     this.state = {
       open: false,
-      allVerns: [],
       duplicateVerns: [],
       suggestedVerns: [],
     };
@@ -60,15 +59,9 @@ export class NewVernEntry extends React.Component<
   }
 
   updateSuggestedVerns(value?: string | null) {
-    if (!this.state.allVerns.length) {
-      const allVerns: string[] = this.props.allWords.map(
-        (word: Word) => word.vernacular
-      );
-      this.setState({ allVerns });
-    }
     let suggestedVerns: string[] = [];
     if (value) {
-      const sortedVerns: string[] = this.state.allVerns.sort(
+      const sortedVerns: string[] = this.props.allVerns.sort(
         (a: string, b: string) =>
           this.suggestionFinder.getLevenshteinDistance(a, value) -
           this.suggestionFinder.getLevenshteinDistance(b, value)
@@ -144,7 +137,7 @@ export class NewVernEntry extends React.Component<
   }
 }
 
-export default withLocalize(NewVernEntry);
+export default withLocalize(VernWithSuggestions);
 
 function VernDialog(props: {
   vernacularWords: Word[];

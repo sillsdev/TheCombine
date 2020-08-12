@@ -12,11 +12,12 @@ import {
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import NewVernEntry from "../NewEntry/NewVernEntry/NewVernEntry";
+import NewVernEntry from "../VernWithSuggestions/VernWithSuggestions";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
 
 interface ExistingEntryProps {
-  existingWords: Word[];
+  allVerns: string[];
+  allWords: Word[];
   entryIndex: number;
   entry: Word;
   updateWord: (wordToUpdate: Word, wordToDelete?: Word) => void;
@@ -190,7 +191,8 @@ export class ExistingEntry extends React.Component<
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
-              allWords={this.props.existingWords}
+              allVerns={this.props.allVerns}
+              allWords={this.props.allWords}
               onBlur={() => this.conditionallyUpdateWord()}
               handleEnter={() => {}}
             />

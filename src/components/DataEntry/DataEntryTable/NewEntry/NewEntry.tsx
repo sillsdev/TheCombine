@@ -11,9 +11,10 @@ import {
   addSenseToWord,
 } from "../ExistingEntry/ExistingEntry";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import NewVernEntry from "./NewVernEntry/NewVernEntry";
+import NewVernEntry from "../VernWithSuggestions/VernWithSuggestions";
 
 interface NewEntryProps {
+  allVerns: string[];
   allWords: Word[];
   updateWord: (
     updatedWord: Word,
@@ -261,6 +262,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                   this.props.setIsReadyState(newValue.trim().length > 0);
                 }}
                 updateWordId={(word?: Word) => this.updateWordId(word)}
+                allVerns={this.props.allVerns}
                 allWords={this.props.allWords}
                 handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
               />

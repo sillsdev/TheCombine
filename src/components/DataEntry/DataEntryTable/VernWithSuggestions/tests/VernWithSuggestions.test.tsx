@@ -1,19 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import LocalizedNewVernEntry from "../NewVernEntry";
-import { simpleWord } from "../../../../../../types/word";
 
-describe("Tests NewVernEntry", () => {
+import LocalizedVernWithSuggestions from "../VernWithSuggestions";
+
+describe("Tests VernWithSuggestions", () => {
   it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
-      <LocalizedNewVernEntry
+      <LocalizedVernWithSuggestions
         vernacular={""}
         vernInput={React.createRef<HTMLDivElement>()}
         updateVernField={() => null}
-        newEntry={simpleWord("", "")}
+        allVerns={[]}
         allWords={[]}
-        updateNewEntry={() => null}
+        handleEnter={() => null}
       />,
       div
     );

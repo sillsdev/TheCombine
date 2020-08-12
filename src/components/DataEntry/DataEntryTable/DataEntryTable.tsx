@@ -33,7 +33,8 @@ interface WordAccess {
   glossIndex: number;
 }
 
-export interface DataEntryTableState {
+interface DataEntryTableState {
+  existingVerns: string[];
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
   isReady: boolean;
@@ -70,6 +71,7 @@ export class DataEntryTable extends React.Component<
   constructor(props: DataEntryTableProps & LocalizeContextProps) {
     super(props);
     this.state = {
+      existingVerns: [],
       existingWords: [],
       recentlyAddedWords: [],
       isReady: false,
@@ -81,10 +83,7 @@ export class DataEntryTable extends React.Component<
   recorder: Recorder;
 
   async componentDidMount() {
-    let existingWords: Word[] = await this.props.getWordsFromBackend();
-    this.setState({
-      existingWords,
-    });
+    this.updateExisting();
   }
 
   /** Finished with this page of words, select new semantic domain */
@@ -97,7 +96,7 @@ export class DataEntryTable extends React.Component<
     let newWord: Word = await Backend.createWord(wordToAdd);
     let wordId: string = await addAudiosToBackend(newWord.id, audioURLs);
     let newWordWithAudio: Word = await Backend.getWord(wordId);
-    let existingWords: Word[] = await this.props.getWordsFromBackend();
+    this.updateExisting();
 
     let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
     let newWordAccess: WordAccess = {
@@ -108,7 +107,6 @@ export class DataEntryTable extends React.Component<
     recentlyAddedWords.push(newWordAccess);
 
     this.setState({
-      existingWords,
       recentlyAddedWords,
     });
   }
@@ -224,9 +222,16 @@ export class DataEntryTable extends React.Component<
 
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
     let updatedWord: Word = await Backend.updateWord(wordToUpdate);
-    let existingWords: Word[] = await this.props.getWordsFromBackend();
-    this.setState({ existingWords });
+    this.updateExisting();
     return updatedWord;
+  }
+
+  async updateExisting() {
+    const existingWords: Word[] = await this.props.getWordsFromBackend();
+    const existingVerns: string[] = [
+      ...new Set(existingWords.map((word: Word) => word.vernacular)),
+    ];
+    this.setState({ existingVerns, existingWords });
   }
 
   async removeWord(word: Word) {
@@ -234,10 +239,8 @@ export class DataEntryTable extends React.Component<
     this.removeWordFromDisplay(word);
   }
 
-  async deleteWordAndUpdateExistingWords(word: Word) {
-    await Backend.deleteWord(word);
-    let existingWords: Word[] = await this.props.getWordsFromBackend();
-    this.setState({ existingWords });
+  deleteWordAndUpdateExistingWords(word: Word) {
+    Backend.deleteWord(word).then(() => this.updateExisting());
   }
 
   removeWordFromDisplay(word: Word) {
@@ -286,7 +289,8 @@ export class DataEntryTable extends React.Component<
             wordAccess.mutable ? (
               <ExistingEntry
                 key={wordAccess.word.id}
-                existingWords={this.state.existingWords}
+                allVerns={this.state.existingVerns}
+                allWords={this.state.existingWords}
                 entryIndex={index}
                 entry={wordAccess.word}
                 updateWord={(wordToUpdate: Word, wordToDelete?: Word) =>
@@ -320,6 +324,7 @@ export class DataEntryTable extends React.Component<
           <Grid item xs={12}>
             <NewEntry
               ref={this.refNewEntry}
+              allVerns={this.state.existingVerns}
               allWords={this.state.existingWords}
               updateWord={(
                 wordToUpdate: Word,

@@ -8,7 +8,7 @@ import { NewEntry } from "../NewEntry";
 
 jest.mock("../../../../Pronunciations/Recorder");
 jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");
-jest.mock("../NewVernEntry/NewVernEntry");
+jest.mock("../../VernWithSuggestions/VernWithSuggestions");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
@@ -19,6 +19,7 @@ describe("Tests NewEntry", () => {
       renderer.create(
         <Provider store={mockStore}>
           <NewEntry
+            allVerns={[]}
             allWords={[]}
             updateWord={() => null}
             addNewWord={() => null}
