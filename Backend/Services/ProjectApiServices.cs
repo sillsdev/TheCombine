@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -5,6 +6,7 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Driver;
+using MimeKit;
 
 namespace BackendFramework.Services
 {
@@ -12,10 +14,16 @@ namespace BackendFramework.Services
     public class ProjectService : IProjectService
     {
         private readonly IProjectContext _projectDatabase;
+        private readonly IUserService _userService;
+        private readonly IUserRoleService _userRoleService;
+        private readonly IEmailService _emailService;
 
-        public ProjectService(IProjectContext collectionSettings)
+        public ProjectService(IProjectContext collectionSettings, IUserService userService, IUserRoleService userRoleService, IEmailService emailService)
         {
             _projectDatabase = collectionSettings;
+            _userService = userService;
+            _userRoleService = userRoleService;
+            _emailService = emailService;
         }
 
         /// <summary> Finds all <see cref="Project"/>s </summary>
@@ -77,7 +85,8 @@ namespace BackendFramework.Services
                 .Set(x => x.CustomFields, project.CustomFields)
                 .Set(x => x.WordFields, project.WordFields)
                 .Set(x => x.PartsOfSpeech, project.PartsOfSpeech)
-                .Set(x => x.AutocompleteSetting, project.AutocompleteSetting);
+                .Set(x => x.AutocompleteSetting, project.AutocompleteSetting)
+                .Set(x => x.InviteTokens, project.InviteTokens);
 
             var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 
@@ -92,6 +101,73 @@ namespace BackendFramework.Services
             else
             {
                 return ResultOfUpdate.NoChange;
+            }
+        }
+
+        public async Task<string> CreateLinkWithToken(Project project, string emailAddress)
+        {
+            var token = new EmailInvite(2, emailAddress);
+            project.InviteTokens.Add(token);
+            await Update(project.Id, project);
+
+            string linkWithIdentifier = "/invite/" + project.Id + "/" + token.Token;
+            return linkWithIdentifier;
+        }
+
+        public async Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project)
+        {
+            // create email
+            var message = new MimeMessage();
+            message.To.Add(new MailboxAddress("FutureCombineUser", emailAddress));
+            message.Subject = "TheCombine Project Invite";
+            message.Body = new TextPart("plain")
+            {
+                Text = string.Format("You have been invited to a TheCombine project called {0}. \n"
+                        + "To become a member of this project, go to {1}{2}. \n\n"
+                        + "Message from Project Admin: {3} \n\n"
+                        + "If you did not expect an invite please ignore this email.",
+                         project.Name, domain, link, emailMessage)
+            };
+            if (await _emailService.SendEmail(message))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite)
+        {
+            try
+            {
+                var userRole = new UserRole
+                {
+                    Permissions = new List<int>
+                {
+                    (int) Permission.MergeAndCharSet,
+                    (int) Permission.Unused,
+                    (int) Permission.WordEntry
+                },
+                    ProjectId = project.Id
+                };
+                userRole = await _userRoleService.Create(userRole);
+
+                // Generate the userRoles and update the user
+                user.ProjectRoles.Add(project.Id, userRole.Id);
+                await _userService.Update(user.Id, user);
+                // Generate the JWT based on those new userRoles
+                user = await _userService.MakeJwt(user);
+                await _userService.Update(user.Id, user);
+
+                // Removes token and updates user
+
+                project.InviteTokens.Remove(emailInvite);
+                await Update(project.Id, project);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
