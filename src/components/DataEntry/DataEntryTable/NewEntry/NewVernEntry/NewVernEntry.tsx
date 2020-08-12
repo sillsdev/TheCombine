@@ -3,16 +3,18 @@ import {
   TextField,
   Dialog,
   DialogContent,
-  MenuList,
   MenuItem,
+  MenuList,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { Word } from "../../../../../types/word";
 import {
-  Translate,
   LocalizeContextProps,
+  Translate,
   withLocalize,
 } from "react-localize-redux";
+
+import DupFinder from "../../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
@@ -26,6 +28,9 @@ interface NewVernEntryProps {
 }
 interface NewVernEntryState {
   open: boolean;
+  allVerns: string[];
+  suggestionFinder: DupFinder;
+  suggestedVerns: string[];
   duplicateVerns: Word[];
   selectedVernacular?: Word;
 }
@@ -42,9 +47,31 @@ export class NewVernEntry extends React.Component<
     super(props);
     this.state = {
       open: false,
+      allVerns: [],
       duplicateVerns: [],
+      suggestedVerns: [],
+      suggestionFinder: new DupFinder(),
     };
     this.vernListRef = React.createRef();
+  }
+
+  updateSuggestedVerns(value?: string | null) {
+    if (!this.state.allVerns.length) {
+      const allVerns: string[] = this.props.allWords.map(
+        (word: Word) => word.vernacular
+      );
+      this.setState({ allVerns });
+    }
+    let suggestedVerns: string[] = [];
+    if (value) {
+      const sortedVerns: string[] = this.state.allVerns.sort(
+        (a: string, b: string) =>
+          this.state.suggestionFinder.getLevenshteinDistance(a, value) -
+          this.state.suggestionFinder.getLevenshteinDistance(b, value)
+      );
+      suggestedVerns = sortedVerns.slice(0, 5);
+    }
+    this.setState({ suggestedVerns });
   }
 
   render() {
@@ -54,11 +81,7 @@ export class NewVernEntry extends React.Component<
           freeSolo
           id="newvernentry"
           value={this.props.vernacular}
-          options={
-            this.props.vernacular
-              ? this.props.allWords.map((word) => word.vernacular)
-              : []
-          }
+          options={this.state.suggestedVerns}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -84,9 +107,11 @@ export class NewVernEntry extends React.Component<
                 this.setState({ selectedVernacular: undefined });
               }
             }
+            this.updateSuggestedVerns(value);
           }}
           onInputChange={(_event, value) => {
             this.props.updateVernField(value);
+            this.updateSuggestedVerns(value);
           }}
         />
         <VernDialog
