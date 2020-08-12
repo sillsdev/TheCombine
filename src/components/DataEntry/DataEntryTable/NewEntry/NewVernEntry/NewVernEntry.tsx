@@ -26,7 +26,7 @@ interface NewVernEntryProps {
   updateVernField: (newValue: string) => void;
   allWords: Word[];
   handleEnter: (e: React.KeyboardEvent) => void;
-  updateWordId?: (wordId: string) => void;
+  updateWordId?: (word?: Word) => void;
   onBlur?: () => void;
 }
 interface NewVernEntryState {
@@ -132,6 +132,9 @@ export class NewVernEntry extends React.Component<
               open: false,
               selectedVernacular: selectedWord,
             });
+            if (this.props.updateWordId) {
+              this.props.updateWordId(selectedWord);
+            }
           }}
           vernacularWords={this.state.duplicateVerns}
           vernListRef={this.vernListRef}

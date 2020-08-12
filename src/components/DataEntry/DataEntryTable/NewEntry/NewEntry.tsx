@@ -151,11 +151,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  updateWordId(wordId: string) {
-    if (wordId) {
-      this.setState({ isNew: false });
+  updateWordId(word?: Word) {
+    if (word) {
+      this.setState({ isNew: false, wordId: word.id });
+    } else {
+      this.setState({ isNew: true, wordId: undefined });
     }
-    this.setState({ wordId });
   }
 
   clearWordId() {
@@ -186,11 +187,47 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     this.resetState();
   }
 
+  addOrUpdateWord() {
+    if (this.state.isNew) {
+      this.addNewWordAndReset();
+    } else {
+      let existingWord: Word | undefined = this.props.allWords.find(
+        (word: Word) => word.id === this.state.wordId
+      );
+      if (!existingWord)
+        throw new Error(
+          "Attempting to edit an existing word but did not find one"
+        );
+      existingWord.senses.forEach((sense) => {
+        if (
+          sense.glosses &&
+          sense.glosses.length &&
+          sense.glosses[0].def === this.state.activeGloss
+        ) {
+          if (
+            sense.semanticDomains
+              .map((semanticDomain) => semanticDomain.id)
+              .includes(this.props.semanticDomain.id)
+          ) {
+            // User is trying to add a sense that already exists
+            return;
+          } else {
+            this.addSemanticDomain(existingWord!, sense, 0); //Existing word already null checked
+            return;
+          }
+        }
+      });
+      this.addNewSense(existingWord, this.state.activeGloss, 0);
+    }
+  }
+
   handleEnter(e: React.KeyboardEvent) {
     if (e.key === "Enter") {
       if (this.state.newEntry.vernacular) {
         if (this.state.activeGloss) {
-          this.addNewWordAndReset();
+          this.addOrUpdateWord();
+          this.resetState();
+          this.focusVernInput();
         } else {
           this.focusGlossInput();
         }
@@ -223,7 +260,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                   this.updateVernField(newValue);
                   this.props.setIsReadyState(newValue.trim().length > 0);
                 }}
-                updateWordId={(wordId: string) => this.updateWordId(wordId)}
+                updateWordId={(word?: Word) => this.updateWordId(word)}
                 allWords={this.props.allWords}
                 handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
               />
