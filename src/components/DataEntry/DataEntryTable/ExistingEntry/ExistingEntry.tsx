@@ -192,6 +192,7 @@ export class ExistingEntry extends React.Component<
               }
               allWords={this.props.existingWords}
               onBlur={() => this.conditionallyUpdateWord()}
+              handleEnter={() => {}}
             />
           </Grid>
           <Grid
