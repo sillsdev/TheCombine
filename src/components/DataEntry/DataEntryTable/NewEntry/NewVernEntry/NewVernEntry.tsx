@@ -25,13 +25,13 @@ interface NewVernEntryProps {
   vernInput?: React.RefObject<HTMLDivElement>;
   updateVernField: (newValue: string) => void;
   allWords: Word[];
+  allVerns: string[];
   handleEnter: (e: React.KeyboardEvent) => void;
   updateWordId?: (wordId: string) => void;
   onBlur?: () => void;
 }
 interface NewVernEntryState {
   open: boolean;
-  allVerns: string[];
   suggestedVerns: string[];
   duplicateVerns: Word[];
   selectedVernacular?: Word;
@@ -52,7 +52,6 @@ export class NewVernEntry extends React.Component<
     super(props);
     this.state = {
       open: false,
-      allVerns: [],
       duplicateVerns: [],
       suggestedVerns: [],
     };
@@ -60,15 +59,9 @@ export class NewVernEntry extends React.Component<
   }
 
   updateSuggestedVerns(value?: string | null) {
-    if (!this.state.allVerns.length) {
-      const allVerns: string[] = this.props.allWords.map(
-        (word: Word) => word.vernacular
-      );
-      this.setState({ allVerns });
-    }
     let suggestedVerns: string[] = [];
     if (value) {
-      const sortedVerns: string[] = this.state.allVerns.sort(
+      const sortedVerns: string[] = this.props.allVerns.sort(
         (a: string, b: string) =>
           this.suggestionFinder.getLevenshteinDistance(a, value) -
           this.suggestionFinder.getLevenshteinDistance(b, value)

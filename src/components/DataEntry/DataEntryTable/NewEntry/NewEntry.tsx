@@ -14,6 +14,7 @@ import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import NewVernEntry from "./NewVernEntry/NewVernEntry";
 
 interface NewEntryProps {
+  allVerns: string[];
   allWords: Word[];
   updateWord: (
     updatedWord: Word,
@@ -224,6 +225,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                   this.props.setIsReadyState(newValue.trim().length > 0);
                 }}
                 updateWordId={(wordId: string) => this.updateWordId(wordId)}
+                allVerns={this.props.allVerns}
                 allWords={this.props.allWords}
                 handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
               />
