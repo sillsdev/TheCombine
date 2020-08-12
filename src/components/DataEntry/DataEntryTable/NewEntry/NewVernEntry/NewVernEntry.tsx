@@ -120,16 +120,11 @@ export class NewVernEntry extends React.Component<
         />
         <VernDialog
           open={this.state.open}
-          handleClose={(selectedIndex: number) => {
-            //set new vernacular to
-            if (selectedIndex === this.state.duplicateVerns.length) {
-              //New Entry Here
-            } else {
-              this.setState({
-                open: false,
-                selectedVernacular: this.state.duplicateVerns[selectedIndex],
-              });
-            }
+          handleClose={(selectedWord?: Word) => {
+            this.setState({
+              open: false,
+              selectedVernacular: selectedWord,
+            });
           }}
           vernacularWords={this.state.duplicateVerns}
           vernListRef={this.vernListRef}
@@ -144,13 +139,13 @@ export default withLocalize(NewVernEntry);
 function VernDialog(props: {
   vernacularWords: Word[];
   open: boolean;
-  handleClose: (selectedIndex: number) => void;
+  handleClose: (selectedWord?: Word) => void;
   vernListRef: React.RefObject<HTMLDivElement>;
 }) {
   return (
     <Dialog
       open={props.open}
-      onClose={props.handleClose}
+      onClose={() => props.handleClose}
       disableBackdropClick
       disableEscapeKeyDown
     >
@@ -167,7 +162,7 @@ function VernDialog(props: {
 interface VernListProps {
   vernacularWords: Word[];
   vernListRef: React.RefObject<HTMLDivElement>;
-  closeDialog: (selectedIndex: number) => void;
+  closeDialog: (selectedWord?: Word) => void;
 }
 interface VernListState {
   selectedIndex: number;
@@ -179,16 +174,18 @@ class VernList extends React.Component<VernListProps, VernListState> {
         <h1>Select the desired vernacular</h1>
         <MenuList
           autoFocusItem
-          onKeyDown={(e: React.KeyboardEvent<HTMLUListElement>) => {
-            if (e.key === "Enter") {
-              // TODO Save vern (set new entry)
-              this.props.closeDialog(this.state.selectedIndex);
-            }
-          }}
-          //onChange={(event: object, value: any) => this.setState({selectedWord: value})}
+          // onKeyDown={(e: React.KeyboardEvent<HTMLUListElement>) => {
+          //   if (e.key === "Enter") {
+          //     // TODO Save vern (set new entry)
+          //     this.props.closeDialog();
+          //   }
+          // }}
         >
           {this.props.vernacularWords.map((word: Word) => (
-            <MenuItem>
+            <MenuItem
+              onClick={() => this.props.closeDialog(word)}
+              key={word.id}
+            >
               {<h4>{word.vernacular}</h4>}
               <SenseCell
                 editable={false}
@@ -203,7 +200,7 @@ class VernList extends React.Component<VernListProps, VernListState> {
             </MenuItem>
           ))}
 
-          <MenuItem>
+          <MenuItem onClick={() => this.props.closeDialog(undefined)}>
             {"New Entry for " + this.props.vernacularWords[0].vernacular}
           </MenuItem>
         </MenuList>
