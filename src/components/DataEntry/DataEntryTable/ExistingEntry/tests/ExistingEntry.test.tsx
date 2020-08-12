@@ -23,8 +23,8 @@ import {
 jest.mock("../../../../../backend");
 jest.mock("../../../../Pronunciations/Recorder");
 jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");
+jest.mock("../../VernWithSuggestions/VernWithSuggestions");
 jest.mock("../DeleteEntry/DeleteEntry");
-jest.mock("../ExistingVernacular/ExistingVernacular");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
@@ -42,8 +42,8 @@ function renderWithWord(word: Word) {
     testMaster = renderer.create(
       <Provider store={mockStore}>
         <ExistingEntry
-          wordsBeingAdded={[]}
-          existingWords={[]}
+          allVerns={[]}
+          allWords={[]}
           entryIndex={0}
           entry={word}
           updateWord={() => null}

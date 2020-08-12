@@ -7,19 +7,19 @@ import {
   MenuList,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import { Word } from "../../../../../types/word";
+import { Word } from "../../../../types/word";
 import {
   LocalizeContextProps,
   Translate,
   withLocalize,
 } from "react-localize-redux";
 
-import DupFinder from "../../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
-import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import DupFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import SenseCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import DomainCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import { parseWord } from "../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
-interface NewVernEntryProps {
+interface VernWithSuggestionsProps {
   isNew?: boolean;
   vernacular: string;
   vernInput?: React.RefObject<HTMLDivElement>;
@@ -30,7 +30,7 @@ interface NewVernEntryProps {
   updateWordId?: (wordId: string) => void;
   onBlur?: () => void;
 }
-interface NewVernEntryState {
+interface VernWithSuggestionsState {
   open: boolean;
   suggestedVerns: string[];
   duplicateVerns: Word[];
@@ -40,9 +40,9 @@ interface NewVernEntryState {
 /**
  * An editable vernacular field for new words
  */
-export class NewVernEntry extends React.Component<
-  LocalizeContextProps & NewVernEntryProps,
-  NewVernEntryState
+export class VernWithSuggestions extends React.Component<
+  LocalizeContextProps & VernWithSuggestionsProps,
+  VernWithSuggestionsState
 > {
   readonly maxSuggestions = 5;
   vernListRef: React.RefObject<HTMLDivElement>;
@@ -134,7 +134,7 @@ export class NewVernEntry extends React.Component<
   }
 }
 
-export default withLocalize(NewVernEntry);
+export default withLocalize(VernWithSuggestions);
 
 function VernDialog(props: {
   vernacularWords: Word[];

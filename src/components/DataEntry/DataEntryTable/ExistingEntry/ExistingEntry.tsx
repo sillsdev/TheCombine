@@ -12,7 +12,7 @@ import {
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import NewVernEntry from "../NewEntry/NewVernEntry/NewVernEntry";
+import NewVernEntry from "../VernWithSuggestions/VernWithSuggestions";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
 
 interface ExistingEntryProps {

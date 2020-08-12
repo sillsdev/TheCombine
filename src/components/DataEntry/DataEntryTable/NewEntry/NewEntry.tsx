@@ -11,7 +11,7 @@ import {
   addSenseToWord,
 } from "../ExistingEntry/ExistingEntry";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import NewVernEntry from "./NewVernEntry/NewVernEntry";
+import NewVernEntry from "../VernWithSuggestions/VernWithSuggestions";
 
 interface NewEntryProps {
   allVerns: string[];
