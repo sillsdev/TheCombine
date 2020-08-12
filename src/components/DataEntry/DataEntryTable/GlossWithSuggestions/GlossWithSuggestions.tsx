@@ -25,8 +25,8 @@ export class GlossWithSuggestions extends React.Component<
   GlossWithSuggestionsProps & LocalizeContextProps
 > {
   readonly maxSuggestions = 5;
-
   spellChecker = new SpellChecker();
+
   render() {
     return (
       <Autocomplete
