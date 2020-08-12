@@ -60,6 +60,7 @@ namespace BackendFramework.Models
             Id = "";
             Name = "";
             IsActive = true;
+            AutocompleteSetting = AutocompleteSetting.Off;
             VernacularWritingSystem = new WritingSystem();
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<WritingSystem>();
@@ -342,6 +343,8 @@ namespace BackendFramework.Models
             CustomFields = baseObj.CustomFields;
             ValidCharacters = baseObj.ValidCharacters;
             AutocompleteSetting = baseObj.AutocompleteSetting;
+            IsActive = baseObj.IsActive;
+            InviteTokens = baseObj.InviteTokens;
         }
     }
 
