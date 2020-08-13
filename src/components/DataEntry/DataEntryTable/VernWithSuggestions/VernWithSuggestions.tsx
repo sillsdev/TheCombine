@@ -90,8 +90,18 @@ export class VernWithSuggestions extends React.Component<
           id="newvernentry"
           value={this.props.vernacular}
           options={this.state.suggestedVerns}
-          onBlur={() => {
-            if (this.props.onBlur) this.props.onBlur();
+          onBlur={(_event: React.FocusEvent<HTMLDivElement>) => {
+            let dupVernWords: Word[] = this.props.updateVernField(
+              this.props.vernacular
+            );
+            if (dupVernWords.length > 0) {
+              this.setState({ open: true, dupVernWords });
+            } else {
+              this.clearSelectedWord();
+            }
+            if (this.props.onBlur) {
+              this.props.onBlur();
+            }
           }}
           onChange={(_event, value) => {
             let dupVernWords: Word[] = [];
@@ -110,6 +120,7 @@ export class VernWithSuggestions extends React.Component<
             this.updateSuggestedVerns(value);
           }}
           onInputChange={(_event, value) => {
+            console.log("Input Changed: " + value);
             this.props.updateVernField(value);
             this.updateSuggestedVerns(value);
             if (value !== this.state.selectedVernacular) {
@@ -198,15 +209,7 @@ class VernList extends React.Component<VernListProps, VernListState> {
     return (
       <React.Fragment>
         <h1>Select the desired vernacular</h1>
-        <MenuList
-          autoFocusItem
-          // onKeyDown={(e: React.KeyboardEvent<HTMLUListElement>) => {
-          //   if (e.key === "Enter") {
-          //     // TODO Save vern (set new entry)
-          //     this.props.closeDialog();
-          //   }
-          // }}
-        >
+        <MenuList autoFocusItem>
           {this.props.vernacularWords.map((word: Word) => (
             <StyledMenuItem
               onClick={() => this.props.closeDialog(word)}
