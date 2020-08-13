@@ -392,7 +392,7 @@ export async function addGoalToUserEdit(
     `projects/${projectId}/useredits/${userEditId}`,
     userEditTuple,
     {
-      headers: { ...authHeader() },
+      headers: authHeader(),
     }
   );
   return resp.data;
@@ -525,4 +525,38 @@ export async function addUserRole(
       headers: authHeader(),
     }
   );
+}
+
+export async function emailInviteToProject(
+  projectId: string,
+  emailAddress: string,
+  message: string
+): Promise<string> {
+  let resp = await backendServer.put(
+    `projects/invite`,
+    {
+      EmailAddress: emailAddress,
+      Message: message,
+      ProjectId: projectId,
+      Domain: window.location.origin,
+    },
+    {
+      headers: authHeader(),
+    }
+  );
+  return resp.data;
+}
+
+export async function validateLink(
+  projectId: string,
+  token: string
+): Promise<boolean[]> {
+  let resp = await backendServer.put(
+    `projects/invite/${projectId}/validate/${token}`,
+    "",
+    {
+      headers: authHeader(),
+    }
+  );
+  return resp.data;
 }
