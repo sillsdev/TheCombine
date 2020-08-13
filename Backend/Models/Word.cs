@@ -31,6 +31,9 @@ namespace BackendFramework.Models
         [BsonElement("modified")]
         public string Modified { get; set; }
 
+        [BsonElement("accessibility")]
+        public int Accessibility { get; set; }
+
         [BsonElement("history")]
         public List<string> History { get; set; }
 
@@ -56,6 +59,7 @@ namespace BackendFramework.Models
             PartOfSpeech = "";
             OtherField = "";
             ProjectId = "";
+            Accessibility = (int)State.Active;
             Audio = new List<string>();
             EditedBy = new List<string>();
             History = new List<string>();
@@ -74,6 +78,7 @@ namespace BackendFramework.Models
                 PartOfSpeech = PartOfSpeech.Clone() as string,
                 OtherField = OtherField.Clone() as string,
                 ProjectId = ProjectId.Clone() as string,
+                Accessibility = Accessibility,
                 Audio = new List<string>(),
                 EditedBy = new List<string>(),
                 History = new List<string>(),
@@ -147,6 +152,7 @@ namespace BackendFramework.Models
             hash.Add(Audio);
             hash.Add(Created);
             hash.Add(Modified);
+            hash.Add(Accessibility);
             hash.Add(History);
             hash.Add(PartOfSpeech);
             hash.Add(EditedBy);

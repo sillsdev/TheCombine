@@ -71,7 +71,7 @@ namespace BackendFramework.Services
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<List<Word>> GetFrontier(string projectId)
         {
-            return await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).ToListAsync();
+            return await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId && w.Accessibility == (int)State.Active).ToListAsync();
         }
 
         /// <summary> Adds a <see cref="Word"/> only to the Frontier </summary>

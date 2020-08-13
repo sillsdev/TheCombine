@@ -14,12 +14,14 @@ namespace BackendFramework.Controllers
     public class FrontierController : Controller
     {
         private readonly IWordRepository _repo;
+        private readonly IWordService _wordService;
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public FrontierController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService)
+        public FrontierController(IWordRepository repo, IWordService wordService, IProjectService projServ, IPermissionService permissionService)
         {
             _repo = repo;
+            _wordService = wordService;
             _projectService = projServ;
             _permissionService = permissionService;
         }
@@ -50,7 +52,7 @@ namespace BackendFramework.Controllers
         [HttpPost]
         // TODO: Remove this warning suppression when the function is implemented for release mode.
 #pragma warning disable 1998
-        public async Task<IActionResult> PostFrontier(string projectId, [FromBody]Word word)
+        public async Task<IActionResult> PostFrontier(string projectId, [FromBody] Word word)
 #pragma warning restore 1998
         {
 #if DEBUG
@@ -74,35 +76,28 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        /// <summary> Deletes all words in a project's frontier </summary>
+        /// <summary> Deletes (or at least tags as deleted) Frontier <see cref="Word"/> with specified ID </summary>
         /// <remarks> DELETE: v1/projects/{projectId}/words/frontier/{wordId} </remarks>
         [HttpDelete("{wordId}")]
-        // TODO: Remove this warning suppression when the function is implemented for release mode.
-#pragma warning disable 1998
-        public async Task<IActionResult> DeleteFrontier(string projectId, string wordId)
-#pragma warning restore 1998
+        public async Task<IActionResult> DeleteFrontierWord(string projectId, string wordId)
         {
-#if DEBUG
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
 
             // Ensure project exists
-            var project = _projectService.GetProject(projectId);
-            if (project == null)
+            var proj = _projectService.GetProject(projectId);
+            if (proj == null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
-            if (await _repo.DeleteFrontier(projectId, wordId))
+            if (await _wordService.DeleteFrontierWord(wordId))
             {
-                return new OkResult();
+                return new OkObjectResult(true);
             }
-            return new NotFoundResult();
-#else
-            return new NotFoundResult();
-#endif
+            return new NotFoundObjectResult("The project was found, but the word was not deleted");
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Backend.Tests
     public class WordControllerTests
     {
         private IWordRepository _repo;
+        private IWordContext _wordContext;
         private IWordService _wordService;
         private WordController _wordController;
         private IProjectService _projectService;
@@ -23,7 +24,7 @@ namespace Backend.Tests
         {
             _permissionService = new PermissionServiceMock();
             _repo = new WordRepositoryMock();
-            _wordService = new WordService(_repo);
+            _wordService = new WordService(_repo, _wordContext);
             _projectService = new ProjectServiceMock();
             _projectService = new ProjectServiceMock();
             _wordController = new WordController(_repo, _wordService, _projectService, _permissionService);

@@ -17,6 +17,7 @@ namespace Backend.Tests
     public class LiftControllerTests
     {
         private IWordRepository _wordrepo;
+        private IWordContext _wordContext;
         private IWordService _wordService;
         private IProjectService _projServ;
         private LiftController _liftController;
@@ -29,7 +30,7 @@ namespace Backend.Tests
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
             _liftController = new LiftController(_wordrepo, _projServ, _permissionService);
-            _wordService = new WordService(_wordrepo);
+            _wordService = new WordService(_wordrepo, _wordContext);
         }
 
         static Project RandomProject()

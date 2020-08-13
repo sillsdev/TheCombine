@@ -1,0 +1,62 @@
+import React from "react";
+import { Chip } from "@material-ui/core";
+import { Delete } from "@material-ui/icons";
+
+import AlignedList, { SPACER } from "../AlignedList";
+import { ReviewEntriesWord } from "../../ReviewEntriesTypes";
+import * as backend from "../../../../../backend";
+
+interface DeleteCellProps {
+  rowData: ReviewEntriesWord;
+  delete?: (deleteIndex: string) => void;
+
+  // State prop
+  words: ReviewEntriesWord[];
+
+  // Dispatch prop
+  updateAllWords: (words: ReviewEntriesWord[]) => void;
+}
+
+class DeleteCell extends React.Component<DeleteCellProps> {
+  async deleteFrontierWord(wordId: string) {
+    await backend.deleteFrontierWord(wordId);
+    var updatedWords: ReviewEntriesWord[] = [];
+    for (var i = 0; i < this.props.words.length; i++) {
+      if (this.props.words[i].id !== wordId) {
+        updatedWords.push(this.props.words[i]);
+      }
+    }
+    this.props.updateAllWords(updatedWords);
+  }
+
+  render() {
+    return this.props.delete !== undefined ? (
+      <AlignedList
+        key={`delete:${this.props.rowData.id}`}
+        listId={`delete${this.props.rowData.id}`}
+        contents={this.props.rowData.senses.map((value) => (
+          <React.Fragment>
+            <Chip
+              color={value.deleted ? "secondary" : "default"}
+              label={<Delete />}
+              onClick={() => {
+                this.props.delete!(value.senseId);
+              }}
+            />
+          </React.Fragment>
+        ))}
+        bottomCell={SPACER}
+      />
+    ) : (
+      <Chip
+        color={"default"}
+        label={<Delete />}
+        onClick={() => {
+          this.deleteFrontierWord(this.props.rowData.id);
+        }}
+      />
+    );
+  }
+}
+
+export default DeleteCell;
