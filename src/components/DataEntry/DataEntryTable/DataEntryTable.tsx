@@ -30,7 +30,7 @@ interface DataEntryTableProps {
 interface WordAccess {
   word: Word;
   mutable?: boolean;
-  glossIndex: number;
+  senseIndex: number;
 }
 
 interface DataEntryTableState {
@@ -102,7 +102,7 @@ export class DataEntryTable extends React.Component<
     let newWordAccess: WordAccess = {
       word: newWordWithAudio,
       mutable: true,
-      glossIndex: 0,
+      senseIndex: 0,
     };
     recentlyAddedWords.push(newWordAccess);
 
@@ -114,7 +114,7 @@ export class DataEntryTable extends React.Component<
   /** Update the word in the backend and the frontend */
   async updateWordForNewEntry(
     wordToUpdate: Word,
-    glossIndex: number,
+    senseIndex: number,
     audioURLs: string[]
   ) {
     let existingWord: Word | undefined = this.state.existingWords.find(
@@ -134,7 +134,7 @@ export class DataEntryTable extends React.Component<
     let updatedWordAccess: WordAccess = {
       word: updatedWord,
       mutable: false,
-      glossIndex: glossIndex,
+      senseIndex: senseIndex,
     };
     recentlyAddedWords.push(updatedWordAccess);
 
@@ -199,7 +199,7 @@ export class DataEntryTable extends React.Component<
       let updatedWordAccess: WordAccess = {
         word: updatedWord,
         mutable: false,
-        glossIndex: 0,
+        senseIndex: 0,
       };
       this.updateWordInFrontend(index, updatedWordAccess);
       this.deleteWordAndUpdateExistingWords(wordToDelete);
@@ -208,7 +208,7 @@ export class DataEntryTable extends React.Component<
       let updatedWordAccess: WordAccess = {
         word: updatedWord,
         mutable: true,
-        glossIndex: 0,
+        senseIndex: 0,
       };
       this.updateWordInFrontend(index, updatedWordAccess);
     }
@@ -315,7 +315,7 @@ export class DataEntryTable extends React.Component<
                 key={wordAccess.word.id}
                 vernacular={wordAccess.word.vernacular}
                 gloss={
-                  wordAccess.word.senses[wordAccess.glossIndex].glosses[0].def
+                  wordAccess.word.senses[wordAccess.senseIndex].glosses[0].def
                 }
               />
             )
@@ -328,12 +328,12 @@ export class DataEntryTable extends React.Component<
               allWords={this.state.existingWords}
               updateWord={(
                 wordToUpdate: Word,
-                glossIndex: number,
+                senseIndex: number,
                 audioFileURLs: string[]
               ) =>
                 this.updateWordForNewEntry(
                   wordToUpdate,
-                  glossIndex,
+                  senseIndex,
                   audioFileURLs
                 )
               }
