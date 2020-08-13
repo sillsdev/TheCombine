@@ -1,0 +1,99 @@
+import {
+  Dialog,
+  DialogContent,
+  withStyles,
+  MenuItem,
+  MenuList,
+} from "@material-ui/core";
+import { Word } from "../../../../../types/word";
+import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import theme from "../../../../../types/theme";
+import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import React from "react";
+
+export function VernDialog(
+  props: {
+    vernacularWords: Word[];
+    open: boolean;
+    handleClose: (selectedWord?: Word) => void;
+    vernListRef: React.RefObject<HTMLDivElement>;
+  } & LocalizeContextProps
+) {
+  return (
+    <Dialog
+      open={props.open}
+      onClose={() => props.handleClose()}
+      disableBackdropClick
+      disableEscapeKeyDown
+    >
+      <DialogContent>
+        <VernList
+          vernacularWords={props.vernacularWords}
+          vernListRef={props.vernListRef}
+          closeDialog={props.handleClose}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+interface VernListProps {
+  vernacularWords: Word[];
+  vernListRef: React.RefObject<HTMLDivElement>;
+  closeDialog: (selectedWord: Word) => void;
+}
+
+// Copied from customized menus at https://material-ui.com/components/menus/
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
+
+export function VernList(props: VernListProps) {
+  return (
+    <React.Fragment>
+      <h1>Select the desired vernacular</h1>
+      <MenuList autoFocusItem>
+        {props.vernacularWords.map((word: Word) => (
+          <StyledMenuItem onClick={() => props.closeDialog(word)} key={word.id}>
+            {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
+            <div style={{ margin: theme.spacing(4) }}>
+              <SenseCell
+                editable={false}
+                sortingByGloss={false}
+                value={parseWord(word, "en").senses}
+                rowData={parseWord(word, "en")}
+              />
+            </div>
+            <div style={{ margin: theme.spacing(4) }}>
+              <DomainCell
+                rowData={parseWord(word, "en")}
+                sortingByDomains={false}
+              />
+            </div>
+          </StyledMenuItem>
+        ))}
+
+        <StyledMenuItem
+          onClick={() =>
+            props.closeDialog({
+              vernacular: props.vernacularWords[0].vernacular,
+              id: "",
+            } as Word)
+          }
+        >
+          {"New Entry for " + props.vernacularWords[0].vernacular}
+        </StyledMenuItem>
+      </MenuList>
+    </React.Fragment>
+  );
+}
+export default withLocalize(VernDialog);
