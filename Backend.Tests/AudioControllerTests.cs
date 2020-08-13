@@ -14,7 +14,6 @@ namespace Backend.Tests
     public class AudioControllerTests
     {
         private IWordRepository _wordrepo;
-        private IWordContext _wordContext;
         private WordService _wordService;
         private WordController _wordController;
         private AudioController _audioController;
@@ -27,7 +26,7 @@ namespace Backend.Tests
         public void Setup()
         {
             _wordrepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordrepo, _wordContext);
+            _wordService = new WordService(_wordrepo);
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
             _permissionService = new PermissionServiceMock();

@@ -13,9 +13,7 @@ namespace BackendFramework.Interfaces
         Task<Word> Add(Word word);
         Task<bool> DeleteAllWords(string projectId);
         Task<List<Word>> GetFrontier(string projectId);
-        Task<Word> GetFrontierWordToDelete(string wordId);
         Task<Word> AddFrontier(Word word);
-        Task<int> UpdateFrontierWord(Word word);
         Task<bool> DeleteFrontier(string projectId, string wordId);
     }
 }

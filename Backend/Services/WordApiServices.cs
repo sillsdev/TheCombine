@@ -78,13 +78,31 @@ namespace BackendFramework.Services
 
         /// <summary> Makes a new word in Frontier that has deleted tag on each sense </summary>
         /// <returns> A bool: success of operation </returns>
-        public async Task<bool> DeleteFrontierWord(string wordId)
+        public async Task<bool> DeleteFrontierWord(string projectId, string wordId)
         {
-            var newWord = await _repo.GetFrontierWordToDelete(wordId);
-            newWord.Accessibility = (int)State.Deleted;
+            var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
+            var word = await _repo.GetWord(projectId, wordId);
 
-            var result = await _repo.UpdateFrontierWord(newWord);
-            return result == 1;
+            // We only want to update words that are in the frontier
+            if (wordIsInFrontier)
+            {
+                word.Id = "";
+                word.ProjectId = projectId;
+                word.Accessibility = 1;
+
+                // Keep track of the old word
+                if (word.History == null)
+                {
+                    word.History = new List<string> { wordId };
+                }
+                // If we are updating the history, don't overwrite it, just add to the history
+                else
+                {
+                    word.History.Add(wordId);
+                }
+            }
+
+            return wordIsInFrontier;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>

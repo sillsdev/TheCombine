@@ -93,7 +93,7 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            if (await _wordService.DeleteFrontierWord(wordId))
+            if (await _wordService.DeleteFrontierWord(projectId, wordId))
             {
                 return new OkObjectResult(true);
             }
