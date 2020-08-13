@@ -103,24 +103,24 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  addNewSense(existingWord: Word, newSense: string, index: number) {
+  addNewSense(existingWord: Word, newSense: string, glossIndex: number) {
     let updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
+    this.props.updateWord(updatedWord, glossIndex, this.state.audioFileURLs);
     this.resetState();
   }
 
-  addSemanticDomain(existingWord: Word, sense: Sense, index: number) {
+  addSemanticDomain(existingWord: Word, sense: Sense, glossIndex: number) {
     let updatedWord = addSemanticDomainToSense(
       this.props.semanticDomain,
       existingWord,
       sense,
-      index
+      glossIndex
     );
-    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
+    this.props.updateWord(updatedWord, glossIndex, this.state.audioFileURLs);
     this.resetState();
   }
 
