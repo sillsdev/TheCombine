@@ -25,7 +25,6 @@ interface VernWithSuggestionsState {
   open: boolean;
   suggestedVerns: string[];
   dupVernWords: Word[];
-  selectedVernacular?: string;
 }
 
 /**
@@ -62,16 +61,6 @@ export class VernWithSuggestions extends React.Component<
     this.setState({ suggestedVerns });
   }
 
-  selectWord(word: Word) {
-    this.props.updateWordId(word.id);
-    this.setState({ selectedVernacular: word.vernacular });
-  }
-
-  clearSelectedWord() {
-    this.props.updateWordId();
-    this.setState({ selectedVernacular: undefined });
-  }
-
   render() {
     return (
       <div>
@@ -87,7 +76,7 @@ export class VernWithSuggestions extends React.Component<
             if (dupVernWords.length > 0) {
               this.setState({ open: true, dupVernWords });
             } else {
-              this.clearSelectedWord();
+              this.props.updateWordId();
             }
             if (this.props.onBlur) {
               this.props.onBlur();
@@ -98,13 +87,13 @@ export class VernWithSuggestions extends React.Component<
             let dupVernWords: Word[] = [];
             let open: boolean = false;
             if (!value) {
-              this.clearSelectedWord();
+              this.props.updateWordId();
               this.props.updateVernField("");
             } else {
               dupVernWords = this.props.updateVernField(value!);
               open = dupVernWords.length > 0;
               if (!open) {
-                this.clearSelectedWord();
+                this.props.updateWordId();
               }
             }
             this.setState({ dupVernWords, open });
@@ -115,9 +104,7 @@ export class VernWithSuggestions extends React.Component<
             const dupVernWords = this.props.updateVernField(value);
             this.setState({ dupVernWords });
             this.updateSuggestedVerns(value);
-            if (value !== this.state.selectedVernacular) {
-              this.clearSelectedWord();
-            }
+            this.props.updateWordId();
           }}
           onKeyDown={(e) => {
             if (!this.state.open) this.props.handleEnter(e);
@@ -139,9 +126,9 @@ export class VernWithSuggestions extends React.Component<
           handleClose={(selectedWord?: Word) => {
             this.setState({ open: false });
             if (selectedWord) {
-              this.selectWord(selectedWord);
+              this.props.updateWordId(selectedWord.id);
             } else {
-              this.clearSelectedWord();
+              this.props.updateWordId();
             }
           }}
           vernacularWords={this.state.dupVernWords}
