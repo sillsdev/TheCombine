@@ -17,7 +17,7 @@ import Recorder from "../../../../Pronunciations/Recorder";
 import RecentEntry, {
   addSemanticDomainToSense,
   addSenseToWord,
-} from "../ExistingEntry";
+} from "../RecentEntry";
 
 jest.mock("../../../../../backend");
 jest.mock("../../../../Pronunciations/Recorder");

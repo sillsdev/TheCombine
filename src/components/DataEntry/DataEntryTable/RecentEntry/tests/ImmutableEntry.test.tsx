@@ -1,12 +1,12 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import { ImmutableExistingEntry } from "../ImmutableExistingEntry";
+import ImmutableEntry from "../ImmutableEntry";
 
 describe("Tests ExistingEntry", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
-      renderer.create(<ImmutableExistingEntry vernacular={""} gloss={""} />);
+      renderer.create(<ImmutableEntry vernacular={""} gloss={""} />);
     });
   });
 });

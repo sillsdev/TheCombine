@@ -2,7 +2,7 @@ import { Grid, TextField } from "@material-ui/core";
 import React from "react";
 import theme from "../../../../types/theme";
 
-interface ImmutableExistingEntryProps {
+interface ImmutableEntryProps {
   vernacular: string;
   gloss: string;
 }
@@ -10,8 +10,8 @@ interface ImmutableExistingEntryProps {
 /**
  * Displays a word users cannot edit any more
  */
-export class ImmutableExistingEntry extends React.Component<
-  ImmutableExistingEntryProps
+export default class ImmutableEntry extends React.Component<
+  ImmutableEntryProps
 > {
   render() {
     return (

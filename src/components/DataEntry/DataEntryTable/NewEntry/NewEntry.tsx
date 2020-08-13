@@ -9,7 +9,7 @@ import Recorder from "../../../Pronunciations/Recorder";
 import {
   addSemanticDomainToSense,
   addSenseToWord,
-} from "../ExistingEntry/ExistingEntry";
+} from "../RecentEntry/RecentEntry";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 

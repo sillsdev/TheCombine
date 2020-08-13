@@ -13,8 +13,8 @@ import theme from "../../../types/theme";
 import { SemanticDomain, Word } from "../../../types/word";
 import { getFileNameForWord } from "../../Pronunciations/AudioRecorder";
 import Recorder from "../../Pronunciations/Recorder";
-import RecentEntry from "./ExistingEntry/ExistingEntry";
-import { ImmutableExistingEntry } from "./ExistingEntry/ImmutableExistingEntry";
+import ImmutableEntry from "./RecentEntry/ImmutableEntry";
+import RecentEntry from "./RecentEntry/RecentEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
 
 interface DataEntryTableProps {
@@ -310,7 +310,7 @@ export class DataEntryTable extends React.Component<
                 }}
               />
             ) : (
-              <ImmutableExistingEntry
+              <ImmutableEntry
                 key={wordAccess.word.id}
                 vernacular={wordAccess.word.vernacular}
                 gloss={
