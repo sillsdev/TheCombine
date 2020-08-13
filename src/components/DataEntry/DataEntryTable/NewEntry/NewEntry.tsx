@@ -11,7 +11,7 @@ import {
   addSenseToWord,
 } from "../ExistingEntry/ExistingEntry";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import NewVernEntry from "../VernWithSuggestions/VernWithSuggestions";
+import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 
 interface NewEntryProps {
   allVerns: string[];
@@ -29,7 +29,7 @@ interface NewEntryProps {
 
 interface NewEntryState {
   newEntry: Word;
-  isNew: boolean;
+  isDupVern: boolean;
   wordId?: string;
   activeGloss: string;
   audioFileURLs: string[];
@@ -50,9 +50,9 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     super(props);
     this.state = {
       newEntry: this.defaultNewEntry(),
-      isNew: true,
       activeGloss: "",
       audioFileURLs: [],
+      isDupVern: false,
     };
 
     this.vernInput = React.createRef<HTMLDivElement>();
@@ -139,29 +139,27 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  updateVernField(newValue: string) {
-    let isNew: boolean =
-      this.props.allWords.filter((word: Word) => word.vernacular === newValue)
-        .length === 0;
+  updateVernField(newValue: string): Word[] {
+    var dupVernWords: Word[] = [];
+    var isDupVern: boolean = false;
+    if (newValue) {
+      dupVernWords = this.props.allWords.filter(
+        (word: Word) => word.vernacular === newValue
+      );
+      isDupVern = dupVernWords.length > 0;
+    }
     this.setState({
-      isNew,
+      isDupVern,
       newEntry: {
         ...this.state.newEntry,
         vernacular: newValue,
       },
     });
+    return dupVernWords;
   }
 
-  updateWordId(word?: Word) {
-    if (word) {
-      this.setState({ isNew: false, wordId: word.id });
-    } else {
-      this.setState({ isNew: true, wordId: undefined });
-    }
-  }
-
-  clearWordId() {
-    this.setState({ isNew: true, wordId: undefined });
+  updateWordId(wordId?: string) {
+    this.setState({ wordId });
   }
 
   resetState() {
@@ -169,6 +167,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       newEntry: this.defaultNewEntry(),
       activeGloss: "",
       audioFileURLs: [],
+      isDupVern: false,
+      wordId: undefined,
     });
   }
 
@@ -189,9 +189,14 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
   }
 
   addOrUpdateWord() {
-    if (this.state.isNew) {
+    if (!this.state.isDupVern || this.state.wordId === "") {
+      // Either a new Vern is typed, or user has selected new entry for this duplicate vern
       this.addNewWordAndReset();
+    } else if (this.state.wordId === undefined && this.state.isDupVern) {
+      // Duplicate vern and the user hasn't made a selection
+      // ToDo: Force open the Vern dialog to force a selection.
     } else {
+      // Duplicate vern and the user has selected an entry to modify
       let existingWord: Word | undefined = this.props.allWords.find(
         (word: Word) => word.id === this.state.wordId
       );
@@ -253,17 +258,16 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             }}
           >
             <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
-              <NewVernEntry
+              <VernWithSuggestions
                 isNew={true}
                 vernacular={this.state.newEntry.vernacular}
                 vernInput={this.vernInput}
                 updateVernField={(newValue: string) => {
-                  this.updateVernField(newValue);
                   this.props.setIsReadyState(newValue.trim().length > 0);
+                  return this.updateVernField(newValue);
                 }}
-                updateWordId={(word?: Word) => this.updateWordId(word)}
+                updateWordId={(wordId?: string) => this.updateWordId(wordId)}
                 allVerns={this.props.allVerns}
-                allWords={this.props.allWords}
                 handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
               />
             </Grid>

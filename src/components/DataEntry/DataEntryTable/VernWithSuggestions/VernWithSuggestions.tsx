@@ -1,19 +1,19 @@
-import React from "react";
 import {
-  TextField,
   Dialog,
   DialogContent,
   MenuItem,
   MenuList,
+  TextField,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import { Word } from "../../../../types/word";
+import React from "react";
 import {
   LocalizeContextProps,
   Translate,
   withLocalize,
 } from "react-localize-redux";
 
+import { Word } from "../../../../types/word";
 import DupFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import SenseCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import DomainCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
@@ -23,18 +23,17 @@ interface VernWithSuggestionsProps {
   isNew?: boolean;
   vernacular: string;
   vernInput?: React.RefObject<HTMLDivElement>;
-  updateVernField: (newValue: string) => void;
-  allWords: Word[];
+  updateVernField: (newValue: string) => Word[];
   allVerns: string[];
   handleEnter: (e: React.KeyboardEvent) => void;
-  updateWordId?: (word?: Word) => void;
+  updateWordId: (wordId?: string) => void;
   onBlur?: () => void;
 }
 interface VernWithSuggestionsState {
   open: boolean;
   suggestedVerns: string[];
-  duplicateVerns: Word[];
-  selectedVernacular?: Word;
+  dupVernWords: Word[];
+  selectedVernacular?: string;
 }
 
 /**
@@ -52,8 +51,8 @@ export class VernWithSuggestions extends React.Component<
     super(props);
     this.state = {
       open: false,
-      duplicateVerns: [],
       suggestedVerns: [],
+      dupVernWords: [],
     };
     this.vernListRef = React.createRef();
   }
@@ -71,6 +70,16 @@ export class VernWithSuggestions extends React.Component<
     this.setState({ suggestedVerns });
   }
 
+  selectWord(word: Word) {
+    this.props.updateWordId(word.id);
+    this.setState({ selectedVernacular: word.vernacular });
+  }
+
+  clearSelectedWord() {
+    this.props.updateWordId();
+    this.setState({ selectedVernacular: undefined });
+  }
+
   render() {
     return (
       <div>
@@ -83,27 +92,27 @@ export class VernWithSuggestions extends React.Component<
             if (this.props.onBlur) this.props.onBlur();
           }}
           onChange={(_event, value) => {
-            if (value === null) {
-              this.setState({
-                duplicateVerns: [],
-                selectedVernacular: undefined,
-              });
+            let dupVernWords: Word[] = [];
+            let open: boolean = false;
+            if (!value) {
+              this.clearSelectedWord();
+              this.props.updateVernField("");
             } else {
-              this.props.updateVernField(value);
-              let duplicateVerns: Word[] = this.props.allWords.filter(
-                (word) => value === word.vernacular
-              );
-              if (duplicateVerns.length > 0) {
-                this.setState({ open: true, duplicateVerns });
-              } else {
-                this.setState({ selectedVernacular: undefined });
+              dupVernWords = this.props.updateVernField(value!);
+              open = dupVernWords.length > 0;
+              if (!open) {
+                this.clearSelectedWord();
               }
             }
+            this.setState({ dupVernWords, open });
             this.updateSuggestedVerns(value);
           }}
           onInputChange={(_event, value) => {
             this.props.updateVernField(value);
             this.updateSuggestedVerns(value);
+            if (value !== this.state.selectedVernacular) {
+              this.clearSelectedWord();
+            }
           }}
           onKeyDown={(e) => this.props.handleEnter(e)}
           renderInput={(params) => (
@@ -121,15 +130,14 @@ export class VernWithSuggestions extends React.Component<
         <VernDialog
           open={this.state.open}
           handleClose={(selectedWord?: Word) => {
-            this.setState({
-              open: false,
-              selectedVernacular: selectedWord,
-            });
-            if (this.props.updateWordId) {
-              this.props.updateWordId(selectedWord);
+            this.setState({ open: false });
+            if (selectedWord) {
+              this.selectWord(selectedWord);
+            } else {
+              this.clearSelectedWord();
             }
           }}
-          vernacularWords={this.state.duplicateVerns}
+          vernacularWords={this.state.dupVernWords}
           vernListRef={this.vernListRef}
         />
       </div>
@@ -148,7 +156,7 @@ function VernDialog(props: {
   return (
     <Dialog
       open={props.open}
-      onClose={() => props.handleClose}
+      onClose={() => props.handleClose()}
       disableBackdropClick
       disableEscapeKeyDown
     >
@@ -165,7 +173,7 @@ function VernDialog(props: {
 interface VernListProps {
   vernacularWords: Word[];
   vernListRef: React.RefObject<HTMLDivElement>;
-  closeDialog: (selectedWord?: Word) => void;
+  closeDialog: (selectedWord: Word) => void;
 }
 interface VernListState {
   selectedIndex: number;
@@ -203,7 +211,14 @@ class VernList extends React.Component<VernListProps, VernListState> {
             </MenuItem>
           ))}
 
-          <MenuItem onClick={() => this.props.closeDialog(undefined)}>
+          <MenuItem
+            onClick={() =>
+              this.props.closeDialog({
+                vernacular: this.props.vernacularWords[0].vernacular,
+                id: "",
+              } as Word)
+            }
+          >
             {"New Entry for " + this.props.vernacularWords[0].vernacular}
           </MenuItem>
         </MenuList>

@@ -12,7 +12,7 @@ import {
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import NewVernEntry from "../VernWithSuggestions/VernWithSuggestions";
+import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
 
 interface ExistingEntryProps {
@@ -31,7 +31,8 @@ interface ExistingEntryProps {
 
 interface ExistingEntryState {
   existingEntry: Word;
-  isNew: boolean;
+  isDupVern: boolean;
+  wordId?: string;
   hovering: boolean;
 }
 
@@ -107,7 +108,7 @@ export class ExistingEntry extends React.Component<
 
     this.state = {
       existingEntry: { ...props.entry },
-      isNew: true,
+      isDupVern: false,
       hovering: false,
     };
   }
@@ -145,13 +146,27 @@ export class ExistingEntry extends React.Component<
     });
   }
 
-  updateVernField(newValue: string) {
+  updateVernField(newValue: string): Word[] {
+    var dupVernWords: Word[] = [];
+    var isDupVern: boolean = false;
+    if (newValue) {
+      dupVernWords = this.props.allWords.filter(
+        (word: Word) => word.vernacular === newValue
+      );
+      isDupVern = dupVernWords.length > 0;
+    }
     this.setState({
+      isDupVern,
       existingEntry: {
         ...this.state.existingEntry,
         vernacular: newValue,
       },
     });
+    return dupVernWords;
+  }
+
+  updateWordId(wordId?: string) {
+    this.setState({ wordId });
   }
 
   removeEntry() {
@@ -186,13 +201,13 @@ export class ExistingEntry extends React.Component<
               position: "relative",
             }}
           >
-            <NewVernEntry
+            <VernWithSuggestions
               vernacular={this.state.existingEntry.vernacular}
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
+              updateWordId={(wordId?: string) => this.updateWordId(wordId)}
               allVerns={this.props.allVerns}
-              allWords={this.props.allWords}
               onBlur={() => this.conditionallyUpdateWord()}
               handleEnter={() => {}}
             />
