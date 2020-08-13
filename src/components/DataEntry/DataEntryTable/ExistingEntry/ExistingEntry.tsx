@@ -15,12 +15,16 @@ import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
 
-interface ExistingEntryProps {
+interface RecentEntryProps {
   allVerns: string[];
   allWords: Word[];
   entryIndex: number;
   entry: Word;
-  updateWord: (wordToUpdate: Word, wordToDelete?: Word) => void;
+  updateWord: (
+    wordToUpdate: Word,
+    wordToDelete: Word,
+    senseIndex?: number
+  ) => void;
   removeWord: (word: Word) => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
@@ -29,8 +33,8 @@ interface ExistingEntryProps {
   focusNewEntry: () => void;
 }
 
-interface ExistingEntryState {
-  existingEntry: Word;
+interface RecentEntryState {
+  recentEntry: Word;
   isDupVern: boolean;
   wordId?: string;
   hovering: boolean;
@@ -91,15 +95,15 @@ function wordsAreEqual(a: Word, b: Word): boolean {
 /**
  * Displays a word a user can still make edits to
  */
-export class ExistingEntry extends React.Component<
-  ExistingEntryProps,
-  ExistingEntryState
+export default class RecentEntry extends React.Component<
+  RecentEntryProps,
+  RecentEntryState
 > {
-  constructor(props: ExistingEntryProps) {
+  constructor(props: RecentEntryProps) {
     super(props);
 
     this.state = {
-      existingEntry: { ...props.entry },
+      recentEntry: { ...props.entry },
       isDupVern: false,
       hovering: false,
     };
@@ -120,16 +124,16 @@ export class ExistingEntry extends React.Component<
       existingWord,
       senseIndex
     );
-    this.props.updateWord(updatedWord, this.props.entry);
+    this.props.updateWord(updatedWord, this.props.entry, senseIndex);
   }
 
   updateGlossField(newValue: string) {
     this.setState({
-      existingEntry: {
-        ...this.state.existingEntry,
+      recentEntry: {
+        ...this.state.recentEntry,
         senses: [
           {
-            ...this.state.existingEntry.senses[0],
+            ...this.state.recentEntry.senses[0],
             glosses: [{ language: "en", def: newValue }],
           },
         ],
@@ -148,8 +152,8 @@ export class ExistingEntry extends React.Component<
     }
     this.setState({
       isDupVern,
-      existingEntry: {
-        ...this.state.existingEntry,
+      recentEntry: {
+        ...this.state.recentEntry,
         vernacular: newValue,
       },
     });
@@ -165,8 +169,8 @@ export class ExistingEntry extends React.Component<
   }
 
   conditionallyUpdateWord() {
-    if (!wordsAreEqual(this.props.entry, this.state.existingEntry)) {
-      this.props.updateWord(this.state.existingEntry);
+    if (!wordsAreEqual(this.state.recentEntry, this.props.entry)) {
+      this.props.updateWord(this.state.recentEntry, this.props.entry);
     }
   }
 
@@ -193,13 +197,17 @@ export class ExistingEntry extends React.Component<
             }}
           >
             <VernWithSuggestions
-              vernacular={this.state.existingEntry.vernacular}
+              vernacular={this.state.recentEntry.vernacular}
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
               updateWordId={(wordId?: string) => this.updateWordId(wordId)}
               allVerns={this.props.allVerns}
-              onBlur={() => this.conditionallyUpdateWord()}
+              onBlur={() => {
+                if (!this.state.isDupVern || this.state.wordId !== undefined) {
+                  this.conditionallyUpdateWord();
+                }
+              }}
               handleEnter={() => {}}
             />
           </Grid>
@@ -214,11 +222,11 @@ export class ExistingEntry extends React.Component<
           >
             <GlossWithSuggestions
               gloss={
-                this.state.existingEntry.senses &&
-                this.state.existingEntry.senses[0] &&
-                this.state.existingEntry.senses[0].glosses &&
-                this.state.existingEntry.senses[0].glosses[0]
-                  ? this.state.existingEntry.senses[0].glosses[0].def
+                this.state.recentEntry.senses &&
+                this.state.recentEntry.senses[0] &&
+                this.state.recentEntry.senses[0].glosses &&
+                this.state.recentEntry.senses[0].glosses[0]
+                  ? this.state.recentEntry.senses[0].glosses[0].def
                   : ""
               }
               updateGlossField={(newValue: string) =>
@@ -227,9 +235,9 @@ export class ExistingEntry extends React.Component<
               onBlur={() => {
                 this.conditionallyUpdateWord();
               }}
-              handleEnter={(e: React.KeyboardEvent) => {
-                //TODO: check for empty gloss
+              handleEnter={() => {
                 this.focusOnNewEntry();
+                //TODO: check for empty gloss
               }}
             />
           </Grid>
@@ -243,8 +251,8 @@ export class ExistingEntry extends React.Component<
             }}
           >
             <Pronunciations
-              wordId={this.state.existingEntry.id}
-              pronunciationFiles={this.state.existingEntry.audio}
+              wordId={this.state.recentEntry.id}
+              pronunciationFiles={this.state.recentEntry.audio}
               recorder={this.props.recorder}
               deleteAudio={(wordId: string, fileName: string) => {
                 this.props.deleteAudioFromWord(wordId, fileName);
