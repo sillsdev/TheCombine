@@ -5,6 +5,8 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace BackendFramework.Models
 {
@@ -50,11 +52,15 @@ namespace BackendFramework.Models
         [BsonElement("partsOfSpeech")]
         public List<string> PartsOfSpeech { get; set; }
 
+        [BsonElement("inviteToken")]
+        public List<EmailInvite> InviteTokens { get; set; }
+
         public Project()
         {
             Id = "";
             Name = "";
             IsActive = true;
+            AutocompleteSetting = AutocompleteSetting.Off;
             VernacularWritingSystem = new WritingSystem();
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<WritingSystem>();
@@ -63,6 +69,7 @@ namespace BackendFramework.Models
             CustomFields = new List<CustomField>();
             WordFields = new List<string>();
             PartsOfSpeech = new List<string>();
+            InviteTokens = new List<EmailInvite>();
         }
 
         public Project Clone()
@@ -79,7 +86,8 @@ namespace BackendFramework.Models
                 RejectedCharacters = new List<string>(),
                 CustomFields = new List<CustomField>(),
                 WordFields = new List<string>(),
-                PartsOfSpeech = new List<string>()
+                PartsOfSpeech = new List<string>(),
+                InviteTokens = new List<EmailInvite>()
             };
 
             foreach (var sd in SemanticDomains)
@@ -109,6 +117,10 @@ namespace BackendFramework.Models
             foreach (var pos in PartsOfSpeech)
             {
                 clone.PartsOfSpeech.Add(pos.Clone() as string);
+            }
+            foreach (var it in InviteTokens)
+            {
+                clone.InviteTokens.Add(it.Clone());
             }
 
             return clone;
@@ -140,7 +152,10 @@ namespace BackendFramework.Models
                 other.WordFields.All(WordFields.Contains) &&
 
                 other.PartsOfSpeech.Count == PartsOfSpeech.Count &&
-                other.PartsOfSpeech.All(PartsOfSpeech.Contains);
+                other.PartsOfSpeech.All(PartsOfSpeech.Contains) &&
+
+                other.InviteTokens.Count == InviteTokens.Count &&
+                other.InviteTokens.All(InviteTokens.Contains);
         }
 
         public override bool Equals(object obj)
@@ -170,6 +185,7 @@ namespace BackendFramework.Models
             hash.Add(CustomFields);
             hash.Add(WordFields);
             hash.Add(PartsOfSpeech);
+            hash.Add(InviteTokens);
             return hash.ToHashCode();
         }
     }
@@ -185,6 +201,50 @@ namespace BackendFramework.Models
             {
                 Name = Name.Clone() as string,
                 Type = Type.Clone() as string
+            };
+        }
+    }
+
+    public class EmailInvite
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string Token { get; set; }
+        public DateTime ExpireTime { get; set; }
+
+        public EmailInvite()
+        {
+
+        }
+
+        private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
+        private const int TokenSize = 8;
+
+        public EmailInvite(int expireTime)
+        {
+            var expireTimeDifference = expireTime;
+            Id = "";
+            Email = "";
+            ExpireTime = DateTime.Now.AddDays(expireTimeDifference);
+
+            var byteToken = new byte[TokenSize];
+            Rng.GetBytes(byteToken);
+            Token = WebEncoders.Base64UrlEncode(byteToken);
+        }
+
+        public EmailInvite(int expireTime, string email) : this(expireTime)
+        {
+            Email = email;
+        }
+
+        public EmailInvite Clone()
+        {
+            return new EmailInvite
+            {
+                Id = Id.Clone() as string,
+                Email = Email.Clone() as string,
+                Token = Token.Clone() as string,
+                ExpireTime = ExpireTime
             };
         }
     }
@@ -274,7 +334,6 @@ namespace BackendFramework.Models
         {
             Id = baseObj.Id;
             Name = baseObj.Name;
-            IsActive = baseObj.IsActive;
             PartsOfSpeech = baseObj.PartsOfSpeech;
             RejectedCharacters = baseObj.RejectedCharacters;
             SemanticDomains = baseObj.SemanticDomains;
@@ -284,6 +343,8 @@ namespace BackendFramework.Models
             CustomFields = baseObj.CustomFields;
             ValidCharacters = baseObj.ValidCharacters;
             AutocompleteSetting = baseObj.AutocompleteSetting;
+            IsActive = baseObj.IsActive;
+            InviteTokens = baseObj.InviteTokens;
         }
     }
 
