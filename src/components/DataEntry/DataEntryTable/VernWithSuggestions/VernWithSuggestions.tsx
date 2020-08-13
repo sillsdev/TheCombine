@@ -121,19 +121,21 @@ export class VernWithSuggestions extends React.Component<
             />
           )}
         />
-        <VernDialog
-          open={this.state.open}
-          handleClose={(selectedWord?: Word) => {
-            this.setState({ open: false });
-            if (selectedWord) {
-              this.props.updateWordId(selectedWord.id);
-            } else {
-              this.props.updateWordId();
-            }
-          }}
-          vernacularWords={this.state.dupVernWords}
-          vernListRef={this.vernListRef}
-        />
+        {this.props.isNew && (
+          <VernDialog
+            open={this.state.open}
+            handleClose={(selectedWord?: Word) => {
+              this.setState({ open: false });
+              if (selectedWord) {
+                this.props.updateWordId(selectedWord.id);
+              } else {
+                this.props.updateWordId();
+              }
+            }}
+            vernacularWords={this.state.dupVernWords}
+            vernListRef={this.vernListRef}
+          />
+        )}
       </div>
     );
   }
