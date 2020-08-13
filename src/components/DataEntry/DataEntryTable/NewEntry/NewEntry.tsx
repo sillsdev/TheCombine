@@ -194,9 +194,11 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       this.addNewWordAndReset();
     } else if (this.state.wordId === undefined && this.state.isDupVern) {
       // Duplicate vern and the user hasn't made a selection
-      // ToDo: Force open the Vern dialog to force a selection.
+      // Change focus away from vern to trigger vern's onBlur
+      this.focusGlossInput();
     } else {
-      // Duplicate vern and the user has selected an entry to modify
+      // Duplicate vern and the user has selected an entry to modify,
+      // so wordId is defined and non-empty
       let existingWord: Word | undefined = this.props.allWords.find(
         (word: Word) => word.id === this.state.wordId
       );

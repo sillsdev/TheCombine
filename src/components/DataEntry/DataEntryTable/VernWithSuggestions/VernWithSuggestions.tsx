@@ -94,6 +94,7 @@ export class VernWithSuggestions extends React.Component<
             if (this.props.onBlur) this.props.onBlur();
           }}
           onChange={(_event, value) => {
+            // onChange is triggered when an option is selected
             let dupVernWords: Word[] = [];
             let open: boolean = false;
             if (!value) {
@@ -110,13 +111,17 @@ export class VernWithSuggestions extends React.Component<
             this.updateSuggestedVerns(value);
           }}
           onInputChange={(_event, value) => {
-            this.props.updateVernField(value);
+            // onInputChange is triggered by typing
+            const dupVernWords = this.props.updateVernField(value);
+            this.setState({ dupVernWords });
             this.updateSuggestedVerns(value);
             if (value !== this.state.selectedVernacular) {
               this.clearSelectedWord();
             }
           }}
-          onKeyDown={(e) => this.props.handleEnter(e)}
+          onKeyDown={(e) => {
+            if (!this.state.open) this.props.handleEnter(e);
+          }}
           renderInput={(params) => (
             <TextField
               {...params}
