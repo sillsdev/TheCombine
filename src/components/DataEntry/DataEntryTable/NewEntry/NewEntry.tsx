@@ -11,7 +11,7 @@ import {
   addSenseToWord,
 } from "../ExistingEntry/ExistingEntry";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import NewVernEntry from "../VernWithSuggestions/VernWithSuggestions";
+import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 
 interface NewEntryProps {
   allVerns: string[];
@@ -103,24 +103,24 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  addNewSense(existingWord: Word, newSense: string, index: number) {
+  addNewSense(existingWord: Word, newSense: string, glossIndex: number) {
     let updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
+    this.props.updateWord(updatedWord, glossIndex, this.state.audioFileURLs);
     this.resetState();
   }
 
-  addSemanticDomain(existingWord: Word, sense: Sense, index: number) {
+  addSemanticDomain(existingWord: Word, sense: Sense, glossIndex: number) {
     let updatedWord = addSemanticDomainToSense(
       this.props.semanticDomain,
       existingWord,
       sense,
-      index
+      glossIndex
     );
-    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
+    this.props.updateWord(updatedWord, glossIndex, this.state.audioFileURLs);
     this.resetState();
   }
 
@@ -253,7 +253,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             }}
           >
             <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
-              <NewVernEntry
+              <VernWithSuggestions
                 isNew={true}
                 vernacular={this.state.newEntry.vernacular}
                 vernInput={this.vernInput}

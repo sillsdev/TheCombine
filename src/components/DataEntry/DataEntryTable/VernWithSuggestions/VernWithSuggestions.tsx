@@ -5,6 +5,7 @@ import {
   DialogContent,
   MenuItem,
   MenuList,
+  withStyles,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { Word } from "../../../../types/word";
@@ -18,6 +19,7 @@ import DupFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateF
 import SenseCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import DomainCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { parseWord } from "../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import theme from "../../../../types/theme";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
@@ -170,6 +172,19 @@ interface VernListProps {
 interface VernListState {
   selectedIndex: number;
 }
+
+//Copied from customized menus at https://material-ui.com/components/menus/
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
+
 class VernList extends React.Component<VernListProps, VernListState> {
   render() {
     return (
@@ -185,27 +200,31 @@ class VernList extends React.Component<VernListProps, VernListState> {
           // }}
         >
           {this.props.vernacularWords.map((word: Word) => (
-            <MenuItem
+            <StyledMenuItem
               onClick={() => this.props.closeDialog(word)}
               key={word.id}
             >
-              {<h4>{word.vernacular}</h4>}
-              <SenseCell
-                editable={false}
-                sortingByGloss={true}
-                value={parseWord(word, "en").senses}
-                rowData={parseWord(word, "en")}
-              />
-              <DomainCell
-                rowData={parseWord(word, "en")}
-                sortingByDomains={false}
-              />
-            </MenuItem>
+              {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
+              <div style={{ margin: theme.spacing(4) }}>
+                <SenseCell
+                  editable={false}
+                  sortingByGloss={false}
+                  value={parseWord(word, "en").senses}
+                  rowData={parseWord(word, "en")}
+                />
+              </div>
+              <div style={{ margin: theme.spacing(4) }}>
+                <DomainCell
+                  rowData={parseWord(word, "en")}
+                  sortingByDomains={false}
+                />
+              </div>
+            </StyledMenuItem>
           ))}
 
-          <MenuItem onClick={() => this.props.closeDialog(undefined)}>
+          <StyledMenuItem onClick={() => this.props.closeDialog(undefined)}>
             {"New Entry for " + this.props.vernacularWords[0].vernacular}
-          </MenuItem>
+          </StyledMenuItem>
         </MenuList>
       </React.Fragment>
     );
