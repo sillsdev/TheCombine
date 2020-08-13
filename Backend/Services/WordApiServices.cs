@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using MongoDB.Driver;
 
 namespace BackendFramework.Services
 {
@@ -14,23 +13,35 @@ namespace BackendFramework.Services
     public class WordService : IWordService
     {
         private readonly IWordRepository _repo;
-        private readonly IWordContext _wordDatabase;
 
-        public WordService(IWordRepository repo, IWordContext wordDatabase)
+        public WordService(IWordRepository repo)
         {
             _repo = repo;
-            _wordDatabase = wordDatabase;
         }
 
         /// <summary> Makes a new word in Frontier that has deleted tag on each sense </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string wordId)
         {
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.Eq(x => x.Id, wordId);
-            var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
+            var wordIsInFrontier = _repo.DeleteFrontier(projectId, wordId).Result;
 
-            return true;
+            // We only want to add the deleted word if the word started in the frontier
+            if (wordIsInFrontier)
+            {
+                var wordToDelete = _repo.GetWord(projectId, wordId).Result;
+                wordToDelete.Id = "";
+                wordToDelete.History = new List<string>() { wordId };
+                wordToDelete.Accessibility = (int)State.Deleted;
+
+                foreach (var senseAcc in wordToDelete.Senses)
+                {
+                    senseAcc.Accessibility = (int)State.Deleted;
+                }
+
+                await _repo.Create(wordToDelete);
+            }
+
+            return wordIsInFrontier;
         }
 
         /// <summary> Removes audio with specified Id from a word </summary>
@@ -69,15 +80,11 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteFrontierWord(string wordId)
         {
-            var filterDef = new FilterDefinitionBuilder<Word>();
-
-            var word = await _wordDatabase.Frontier.Find(w => w.Id == wordId).ToListAsync();
-
-            var newWord = word.ElementAt(0);
+            var newWord = await _repo.GetFrontierWordToDelete(wordId);
             newWord.Accessibility = (int)State.Deleted;
 
-            var result = await _wordDatabase.Frontier.ReplaceOneAsync(w => w.Id == wordId, newWord);
-            return result.ModifiedCount == 1;
+            var result = await _repo.UpdateFrontierWord(newWord);
+            return result == 1;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>

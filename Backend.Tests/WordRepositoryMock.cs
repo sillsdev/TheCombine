@@ -49,6 +49,12 @@ namespace Backend.Tests
             return Task.FromResult(_frontier.Select(word => word.Clone()).ToList());
         }
 
+        public Task<Word> GetFrontierWordToDelete(string wordId)
+        {
+            var word = _frontier.Find(word => word.Id == wordId);
+            return Task.FromResult(word.Clone());
+        }
+
         public Task<Word> AddFrontier(Word word)
         {
             _frontier.Add(word.Clone());
@@ -61,6 +67,13 @@ namespace Backend.Tests
             _frontier.RemoveAll(word => word.Id == wordId);
             return Task.FromResult(origLength != _frontier.Count);
 
+        }
+
+        public Task<int> UpdateFrontierWord(Word word)
+        {
+            var removedCount = _frontier.RemoveAll(oldWord => oldWord.Id == word.Id);
+            _frontier.Add(word.Clone());
+            return Task.FromResult(removedCount);
         }
 
         public Task<Word> Add(Word word)
