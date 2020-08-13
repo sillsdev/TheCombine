@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  MenuItem,
-  MenuList,
-  TextField,
-  withStyles,
-} from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React from "react";
 import {
@@ -14,12 +7,9 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import theme from "../../../../types/theme";
 import { Word } from "../../../../types/word";
 import DupFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import SenseCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
-import DomainCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import { parseWord } from "../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import VernDialog from "./VernDialog/VernDialog";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
@@ -163,92 +153,3 @@ export class VernWithSuggestions extends React.Component<
 }
 
 export default withLocalize(VernWithSuggestions);
-
-function VernDialog(props: {
-  vernacularWords: Word[];
-  open: boolean;
-  handleClose: (selectedWord?: Word) => void;
-  vernListRef: React.RefObject<HTMLDivElement>;
-}) {
-  return (
-    <Dialog
-      open={props.open}
-      onClose={() => props.handleClose()}
-      disableBackdropClick
-      disableEscapeKeyDown
-    >
-      <DialogContent>
-        <VernList
-          vernacularWords={props.vernacularWords}
-          vernListRef={props.vernListRef}
-          closeDialog={props.handleClose}
-        />
-      </DialogContent>
-    </Dialog>
-  );
-}
-interface VernListProps {
-  vernacularWords: Word[];
-  vernListRef: React.RefObject<HTMLDivElement>;
-  closeDialog: (selectedWord: Word) => void;
-}
-interface VernListState {
-  selectedIndex: number;
-}
-
-// Copied from customized menus at https://material-ui.com/components/menus/
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
-
-class VernList extends React.Component<VernListProps, VernListState> {
-  render() {
-    return (
-      <React.Fragment>
-        <h1>Select the desired vernacular</h1>
-        <MenuList autoFocusItem>
-          {this.props.vernacularWords.map((word: Word) => (
-            <StyledMenuItem
-              onClick={() => this.props.closeDialog(word)}
-              key={word.id}
-            >
-              {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
-              <div style={{ margin: theme.spacing(4) }}>
-                <SenseCell
-                  editable={false}
-                  sortingByGloss={false}
-                  value={parseWord(word, "en").senses}
-                  rowData={parseWord(word, "en")}
-                />
-              </div>
-              <div style={{ margin: theme.spacing(4) }}>
-                <DomainCell
-                  rowData={parseWord(word, "en")}
-                  sortingByDomains={false}
-                />
-              </div>
-            </StyledMenuItem>
-          ))}
-
-          <StyledMenuItem
-            onClick={() =>
-              this.props.closeDialog({
-                vernacular: this.props.vernacularWords[0].vernacular,
-                id: "",
-              } as Word)
-            }
-          >
-            {"New Entry for " + this.props.vernacularWords[0].vernacular}
-          </StyledMenuItem>
-        </MenuList>
-      </React.Fragment>
-    );
-  }
-}
