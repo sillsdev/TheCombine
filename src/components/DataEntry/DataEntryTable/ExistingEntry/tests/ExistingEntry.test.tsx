@@ -14,10 +14,9 @@ import { defaultState } from "../../../../App/DefaultState";
 import AudioPlayer from "../../../../Pronunciations/AudioPlayer";
 import AudioRecorder from "../../../../Pronunciations/AudioRecorder";
 import Recorder from "../../../../Pronunciations/Recorder";
-import {
+import RecentEntry, {
   addSemanticDomainToSense,
   addSenseToWord,
-  ExistingEntry,
 } from "../ExistingEntry";
 
 jest.mock("../../../../../backend");
@@ -41,7 +40,7 @@ function renderWithWord(word: Word) {
   renderer.act(() => {
     testMaster = renderer.create(
       <Provider store={mockStore}>
-        <ExistingEntry
+        <RecentEntry
           allVerns={[]}
           allWords={[]}
           entryIndex={0}
@@ -138,8 +137,8 @@ describe("Tests ExistingEntry", () => {
         },
       ],
     };
-    expect(
-      addSemanticDomainToSense(semanticDomain, word, sense, senseIndex)
-    ).toEqual(expectedWord);
+    expect(addSemanticDomainToSense(semanticDomain, word, senseIndex)).toEqual(
+      expectedWord
+    );
   });
 });
