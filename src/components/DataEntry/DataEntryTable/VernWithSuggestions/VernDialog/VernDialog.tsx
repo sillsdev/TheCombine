@@ -5,20 +5,20 @@ import {
   MenuItem,
   MenuList,
 } from "@material-ui/core";
-import { Word } from "../../../../../types/word";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
-import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
-import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import theme from "../../../../../types/theme";
-import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import React from "react";
+import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+
+import theme from "../../../../../types/theme";
+import { Word } from "../../../../../types/word";
+import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
+import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 export function VernDialog(
   props: {
     vernacularWords: Word[];
     open: boolean;
     handleClose: (selectedWord?: Word) => void;
-    vernListRef: React.RefObject<HTMLDivElement>;
   } & LocalizeContextProps
 ) {
   return (
@@ -31,7 +31,6 @@ export function VernDialog(
       <DialogContent>
         <VernList
           vernacularWords={props.vernacularWords}
-          vernListRef={props.vernListRef}
           closeDialog={props.handleClose}
         />
       </DialogContent>
@@ -41,12 +40,11 @@ export function VernDialog(
 
 interface VernListProps {
   vernacularWords: Word[];
-  vernListRef: React.RefObject<HTMLDivElement>;
   closeDialog: (selectedWord: Word) => void;
 }
 
 // Copied from customized menus at https://material-ui.com/components/menus/
-const StyledMenuItem = withStyles((theme) => ({
+export const StyledMenuItem = withStyles((theme) => ({
   root: {
     "&:focus": {
       backgroundColor: theme.palette.primary.main,
@@ -63,7 +61,11 @@ export function VernList(props: VernListProps) {
       <h1>Select the desired vernacular</h1>
       <MenuList autoFocusItem>
         {props.vernacularWords.map((word: Word) => (
-          <StyledMenuItem onClick={() => props.closeDialog(word)} key={word.id}>
+          <StyledMenuItem
+            onClick={() => props.closeDialog(word)}
+            key={word.id}
+            id={word.id}
+          >
             {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
             <div style={{ margin: theme.spacing(4) }}>
               <SenseCell

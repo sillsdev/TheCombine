@@ -35,7 +35,6 @@ export class VernWithSuggestions extends React.Component<
   VernWithSuggestionsState
 > {
   readonly maxSuggestions = 5;
-  vernListRef: React.RefObject<HTMLDivElement>;
   suggestionFinder: DupFinder = new DupFinder();
 
   constructor(props: any) {
@@ -45,7 +44,6 @@ export class VernWithSuggestions extends React.Component<
       suggestedVerns: [],
       dupVernWords: [],
     };
-    this.vernListRef = React.createRef();
   }
 
   updateSuggestedVerns(value?: string | null) {
@@ -133,7 +131,6 @@ export class VernWithSuggestions extends React.Component<
               }
             }}
             vernacularWords={this.state.dupVernWords}
-            vernListRef={this.vernListRef}
           />
         )}
       </div>
