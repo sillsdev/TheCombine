@@ -61,31 +61,23 @@ export function addSenseToWord(
 export function addSemanticDomainToSense(
   semanticDomain: SemanticDomain,
   existingWord: Word,
-  sense: Sense,
-  index: number
+  senseIndex: number
 ): Word {
-  let updatedWord: Word = { ...existingWord };
-  let newSense: Sense = {
-    ...sense,
-    semanticDomains: [...sense.semanticDomains, semanticDomain],
-  };
-  let updatedSenses: Sense[] = updateSenses(
-    existingWord.senses,
-    newSense,
-    index
-  );
-  updatedWord.senses = updatedSenses;
-  return updatedWord;
-}
-
-function updateSenses(
-  senses: Sense[],
-  senseToUpdate: Sense,
-  index: number
-): Sense[] {
-  let updatedSenses: Sense[] = [...senses];
-  updatedSenses.splice(index, 1, senseToUpdate);
-  return updatedSenses;
+  if (senseIndex >= existingWord.senses.length) {
+    throw new Error("senseIndex too large");
+  } else {
+    const oldSense: Sense = existingWord.senses[senseIndex];
+    let updatedDomains: SemanticDomain[] = [...oldSense.semanticDomains];
+    updatedDomains.push(semanticDomain);
+    const updatedSense: Sense = {
+      ...oldSense,
+      semanticDomains: updatedDomains,
+    };
+    let updatedSenses: Sense[] = existingWord.senses;
+    updatedSenses.splice(senseIndex, 1, updatedSense);
+    const updatedWord: Word = { ...existingWord, senses: updatedSenses };
+    return updatedWord;
+  }
 }
 
 // extract, or remove altogether
@@ -122,12 +114,11 @@ export class ExistingEntry extends React.Component<
     this.props.updateWord(updatedWord, this.props.entry);
   }
 
-  addSemanticDomain(existingWord: Word, sense: Sense, index: number) {
+  addSemanticDomain(existingWord: Word, senseIndex: number) {
     let updatedWord: Word = addSemanticDomainToSense(
       this.props.semanticDomain,
       existingWord,
-      sense,
-      index
+      senseIndex
     );
     this.props.updateWord(updatedWord, this.props.entry);
   }

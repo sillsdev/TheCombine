@@ -18,7 +18,7 @@ interface NewEntryProps {
   allWords: Word[];
   updateWord: (
     updatedWord: Word,
-    glossIndex: number,
+    senseIndex: number,
     newAudio: string[]
   ) => void;
   addNewWord: (newWord: Word, newAudio: string[]) => void;
@@ -103,24 +103,27 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  addNewSense(existingWord: Word, newSense: string, glossIndex: number) {
+  addNewSense(existingWord: Word, newSense: string) {
     let updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
       newSense
     );
-    this.props.updateWord(updatedWord, glossIndex, this.state.audioFileURLs);
+    this.props.updateWord(
+      updatedWord,
+      updatedWord.senses.length - 1,
+      this.state.audioFileURLs
+    );
     this.resetState();
   }
 
-  addSemanticDomain(existingWord: Word, sense: Sense, glossIndex: number) {
+  addSemanticDomain(existingWord: Word, senseIndex: number) {
     let updatedWord = addSemanticDomainToSense(
       this.props.semanticDomain,
       existingWord,
-      sense,
-      glossIndex
+      senseIndex
     );
-    this.props.updateWord(updatedWord, glossIndex, this.state.audioFileURLs);
+    this.props.updateWord(updatedWord, senseIndex, this.state.audioFileURLs);
     this.resetState();
   }
 
@@ -206,7 +209,7 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         throw new Error(
           "Attempting to edit an existing word but did not find one"
         );
-      existingWord.senses.forEach((sense) => {
+      existingWord.senses.forEach((sense: Sense, index: number) => {
         if (
           sense.glosses &&
           sense.glosses.length &&
@@ -220,12 +223,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             // User is trying to add a sense that already exists
             return;
           } else {
-            this.addSemanticDomain(existingWord!, sense, 0); //Existing word already null checked
+            this.addSemanticDomain(existingWord!, index); //Existing word already null checked
             return;
           }
         }
       });
-      this.addNewSense(existingWord, this.state.activeGloss, 0);
+      this.addNewSense(existingWord, this.state.activeGloss);
     }
   }
 
