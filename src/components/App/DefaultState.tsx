@@ -4,6 +4,7 @@ import { defaultState as createProjectState } from "../ProjectScreen/CreateProje
 import { defaultState as goalSelectorState } from "../GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
 import { defaultState as passwordResetState } from "../PasswordReset/reducer";
 import { defaultState as reviewEntriesState } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { defaultState as treeViewState } from "../TreeView/TreeViewReducer";
 import { defaultProject } from "../../types/project";
 
 export const defaultState = {
@@ -26,6 +27,9 @@ export const defaultState = {
     dropWord: () => null,
     clearMerges: () => null,
     draggedWord: simpleWord("Thou", "You"),
+  },
+  treeViewState: {
+    ...treeViewState,
   },
   goalsState: {
     ...goalTimelineState,
