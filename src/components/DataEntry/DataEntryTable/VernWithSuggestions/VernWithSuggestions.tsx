@@ -61,7 +61,7 @@ export class VernWithSuggestions extends React.Component<
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Autocomplete
           freeSolo
           id="newvernentry"
@@ -133,7 +133,7 @@ export class VernWithSuggestions extends React.Component<
             vernacularWords={this.state.dupVernWords}
           />
         )}
-      </div>
+      </React.Fragment>
     );
   }
 }
