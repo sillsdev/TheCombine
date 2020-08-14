@@ -54,15 +54,46 @@ export class VernWithSuggestions extends React.Component<
     };
   }
 
+  autoCompleteCandidates(vernacular: string): string[] {
+    // filter allVerns to those that start with vernacular
+    // then map them into an array sorted by length and take the 2 shortest
+    // and the rest longest (should make finding the long words easier)
+    let scoredStartsWith: [string, number][] = [];
+    let startsWith = this.props.allVerns.filter((vern: string) =>
+      vern.startsWith(vernacular)
+    );
+    for (const v of startsWith) {
+      scoredStartsWith.push([v, v.length]);
+    }
+    let keepers = scoredStartsWith
+      .sort((a, b) => a[1] - b[1])
+      .map((vern) => vern[0]);
+    if (keepers.length > this.maxSuggestions) {
+      keepers.splice(2, keepers.length - this.maxSuggestions);
+    }
+    return keepers;
+  }
+
   updateSuggestedVerns(value?: string | null) {
     let suggestedVerns: string[] = [];
     if (value) {
-      const sortedVerns: string[] = this.props.allVerns.sort(
-        (a: string, b: string) =>
-          this.suggestionFinder.getLevenshteinDistance(a, value) -
-          this.suggestionFinder.getLevenshteinDistance(b, value)
-      );
-      suggestedVerns = sortedVerns.slice(0, this.maxSuggestions);
+      suggestedVerns = [...this.autoCompleteCandidates(value)];
+      if (suggestedVerns.length < this.maxSuggestions) {
+        let sortedVerns: string[] = [...this.props.allVerns].sort(
+          (a: string, b: string) =>
+            this.suggestionFinder.getLevenshteinDistance(a, value) -
+            this.suggestionFinder.getLevenshteinDistance(b, value)
+        );
+        let candidate: string;
+        while (
+          suggestedVerns.length < this.maxSuggestions &&
+          sortedVerns.length
+        ) {
+          candidate = sortedVerns.shift()!;
+          if (!suggestedVerns.includes(candidate))
+            suggestedVerns.push(candidate);
+        }
+      }
     }
     this.setState({ suggestedVerns });
   }
