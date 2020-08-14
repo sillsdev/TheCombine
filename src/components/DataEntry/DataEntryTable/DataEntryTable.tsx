@@ -137,7 +137,7 @@ export class DataEntryTable extends React.Component<
 
   /** Finished with this page of words, select new semantic domain */
   // TODO: Implement
-  submit(e?: React.FormEvent<HTMLFormElement>, callback?: Function) {
+  submit(e?: React.FormEvent<HTMLFormElement>, _c?: Function) {
     if (e) e.preventDefault();
   }
 
@@ -291,7 +291,7 @@ export class DataEntryTable extends React.Component<
     this.setState({ existingVerns, existingWords });
   }
 
-  async undoRecentEntry(entryIndex: number) {
+  async undoRecentEntry(entryIndex: number): Promise<string> {
     if (entryIndex >= this.state.recentlyAddedWords.length)
       throw new RangeError("Entry doesn't exist in recent entries.");
     const recentEntry: WordAccess = this.state.recentlyAddedWords[entryIndex];
@@ -315,13 +315,14 @@ export class DataEntryTable extends React.Component<
         ...recentSense,
         semanticDomains: updatedSemanticDomains,
       };
-      await this.updateSense(recentWord, senseIndex, updatedSense);
+      return await this.updateSense(recentWord, senseIndex, updatedSense);
     } else if (senseCount > 1) {
       // If there is more than one sense in this word, only remove this sense.
-      await this.removeSense(recentWord, senseIndex);
+      return await this.removeSense(recentWord, senseIndex);
     } else {
       // Since this is the only sense, delete the word.
       await this.deleteWord(recentWord);
+      return "";
     }
   }
 
@@ -375,8 +376,8 @@ export class DataEntryTable extends React.Component<
         ...simpleWord(oldWord.vernacular, newGloss),
         id: "",
       };
-      await this.undoRecentEntry(entryIndex).then(async () => {
-        await this.addNewWord(newWord, [], entryIndex);
+      await this.undoRecentEntry(entryIndex).then(async (wordId) => {
+        await this.updateWordWithNewGloss(wordId, newGloss, []);
       });
     }
   }
@@ -396,23 +397,29 @@ export class DataEntryTable extends React.Component<
   }
 
   // Update a sense in a word and replace every displayed instance of that word.
-  async updateSense(word: Word, senseIndex: number, updatedSense: Sense) {
+  async updateSense(
+    word: Word,
+    senseIndex: number,
+    updatedSense: Sense
+  ): Promise<string> {
     let senses: Sense[] = [...word.senses];
     senses.splice(senseIndex, 1, updatedSense);
     const updatedWord: Word = { ...word, senses };
-    await this.updateWordInBackend(updatedWord).then((newWord: Word) =>
-      this.replaceInDisplay(word.id, newWord)
-    );
+    return await this.updateWordInBackend(updatedWord).then((newWord: Word) => {
+      this.replaceInDisplay(word.id, newWord);
+      return newWord.id;
+    });
   }
 
   // Remove a sense from a word and replace every displayed instance of that word.
-  async removeSense(word: Word, senseIndex: number) {
+  async removeSense(word: Word, senseIndex: number): Promise<string> {
     let senses: Sense[] = [...word.senses];
     senses.splice(senseIndex, 1);
     const updatedWord: Word = { ...word, senses };
-    await this.updateWordInBackend(updatedWord).then((newWord: Word) =>
-      this.replaceInDisplay(word.id, newWord, senseIndex)
-    );
+    return await this.updateWordInBackend(updatedWord).then((newWord: Word) => {
+      this.replaceInDisplay(word.id, newWord, senseIndex);
+      return newWord.id;
+    });
   }
 
   // Replace every displayed instance of a word.
