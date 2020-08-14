@@ -18,12 +18,13 @@ interface VernWithSuggestionsProps {
   vernInput?: React.RefObject<HTMLDivElement>;
   updateVernField: (newValue: string) => Word[];
   allVerns: string[];
-  handleEnter: (e: React.KeyboardEvent) => void;
+  handleEnterAndTab: (e: React.KeyboardEvent) => void;
   updateWordId: (wordId?: string) => void;
   onBlur?: () => void;
 }
 interface VernWithSuggestionsState {
-  open: boolean;
+  vernOpen: boolean;
+  senseOpen: boolean;
   suggestedVerns: string[];
   dupVernWords: Word[];
 }
@@ -41,7 +42,8 @@ export class VernWithSuggestions extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
-      open: false,
+      vernOpen: false,
+      senseOpen: false,
       suggestedVerns: [],
       dupVernWords: [],
     };
@@ -62,7 +64,7 @@ export class VernWithSuggestions extends React.Component<
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Autocomplete
           freeSolo
           disabled={this.props.isDisabled}
@@ -73,7 +75,7 @@ export class VernWithSuggestions extends React.Component<
               this.props.vernacular
             );
             if (dupVernWords.length > 0) {
-              this.setState({ open: true, dupVernWords });
+              this.setState({ vernOpen: true, dupVernWords });
             } else {
               this.props.updateWordId();
             }
@@ -84,18 +86,18 @@ export class VernWithSuggestions extends React.Component<
           onChange={(_event, value) => {
             // onChange is triggered when an option is selected
             let dupVernWords: Word[] = [];
-            let open: boolean = false;
+            let vernOpen: boolean = false;
             if (!value) {
               this.props.updateWordId();
               this.props.updateVernField("");
             } else {
               dupVernWords = this.props.updateVernField(value!);
-              open = dupVernWords.length > 0;
-              if (!open) {
+              vernOpen = dupVernWords.length > 0;
+              if (!vernOpen) {
                 this.props.updateWordId();
               }
             }
-            this.setState({ dupVernWords, open });
+            this.setState({ dupVernWords, vernOpen });
             this.updateSuggestedVerns(value);
           }}
           onInputChange={(_event, value) => {
@@ -106,7 +108,7 @@ export class VernWithSuggestions extends React.Component<
             this.props.updateWordId();
           }}
           onKeyUp={(e) => {
-            if (!this.state.open) this.props.handleEnter(e);
+            if (!this.state.vernOpen) this.props.handleEnterAndTab(e);
           }}
           renderInput={(params) => (
             <TextField
@@ -122,11 +124,12 @@ export class VernWithSuggestions extends React.Component<
         />
         {this.props.isNew && (
           <VernDialog
-            open={this.state.open}
-            handleClose={(selectedWord?: Word) => {
-              this.setState({ open: false });
-              if (selectedWord) {
-                this.props.updateWordId(selectedWord.id);
+            open={this.state.vernOpen}
+            handleClose={(selectedWordId?: string) => {
+              this.setState({ vernOpen: false });
+              if (selectedWordId) {
+                this.props.updateWordId(selectedWordId);
+                this.setState({ senseOpen: selectedWordId === "" }); //new entry id is an empty string
               } else {
                 this.props.updateWordId();
               }
@@ -134,7 +137,7 @@ export class VernWithSuggestions extends React.Component<
             vernacularWords={this.state.dupVernWords}
           />
         )}
-      </div>
+      </React.Fragment>
     );
   }
 }

@@ -212,6 +212,8 @@ export default class NewEntry extends React.Component<
         throw new Error(
           "Attempting to edit an existing word but did not find one"
         );
+      let isDuplicateSense: boolean = false;
+      let senseExists: boolean = false;
       existingWord.senses.forEach((sense: Sense, index: number) => {
         if (
           sense.glosses &&
@@ -224,19 +226,23 @@ export default class NewEntry extends React.Component<
               .includes(this.props.semanticDomain.id)
           ) {
             // User is trying to add a sense that already exists
+            isDuplicateSense = true;
             return;
           } else {
             this.addSemanticDomain(existingWord!, index); //Existing word already null checked
+            senseExists = true;
             return;
           }
         }
       });
-      this.addNewSense(existingWord, this.state.activeGloss);
+      if (!isDuplicateSense && !senseExists)
+        this.addNewSense(existingWord, this.state.activeGloss);
+      if (isDuplicateSense) alert("This sense already exists for this domain"); //TODO alert the user}
     }
   }
 
-  handleEnter(e: React.KeyboardEvent) {
-    if (e.key === "Enter") {
+  handleEnterAndTab(e: React.KeyboardEvent) {
+    if (e.key === "Enter" || e.key === "Tab") {
       if (this.state.newEntry.vernacular) {
         if (this.state.activeGloss) {
           this.addOrUpdateWord();
@@ -276,7 +282,9 @@ export default class NewEntry extends React.Component<
                 }}
                 updateWordId={(wordId?: string) => this.updateWordId(wordId)}
                 allVerns={this.props.allVerns}
-                handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
+                handleEnterAndTab={(e: React.KeyboardEvent) =>
+                  this.handleEnterAndTab(e)
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -301,7 +309,9 @@ export default class NewEntry extends React.Component<
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
-              handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
+              handleEnterAndTab={(e: React.KeyboardEvent) =>
+                this.handleEnterAndTab(e)
+              }
             />
           </Grid>
           <Grid

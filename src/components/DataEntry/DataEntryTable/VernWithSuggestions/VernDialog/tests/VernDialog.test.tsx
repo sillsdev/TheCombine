@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 
-describe("Tests VernDialog ", () => {
+describe("Tests VernList ", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
       renderer.create(
