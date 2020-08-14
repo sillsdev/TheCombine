@@ -92,8 +92,8 @@ export default class NewEntry extends React.Component<
   }
 
   updateVernField(newValue: string): Word[] {
-    var dupVernWords: Word[] = [];
-    var isDupVern: boolean = false;
+    let dupVernWords: Word[] = [];
+    let isDupVern: boolean = false;
     if (newValue) {
       dupVernWords = this.props.allWords.filter(
         (word: Word) => word.vernacular === newValue
