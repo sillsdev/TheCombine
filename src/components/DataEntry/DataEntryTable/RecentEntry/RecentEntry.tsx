@@ -124,7 +124,7 @@ export default class RecentEntry extends React.Component<
                 this.updateVernField(newValue)
               }
               updateWordId={(wordId?: string) => this.updateWordId(wordId)}
-              allVerns={this.props.allVerns}
+              allVerns={[]}
               onBlur={() => {
                 this.conditionallyUpdateVern();
               }}

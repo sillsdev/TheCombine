@@ -59,7 +59,10 @@ export class GlossWithSuggestions extends React.Component<
             variant={this.props.isNew ? "outlined" : "standard"}
           />
         )}
-        onKeyUp={(e: React.KeyboardEvent) => this.props.handleEnterAndTab(e)}
+        onKeyUp={(e: React.KeyboardEvent) => {
+          if (e.key === "Enter" || e.key === "Tab")
+            this.props.handleEnterAndTab(e);
+        }}
       />
     );
   }
