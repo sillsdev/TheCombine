@@ -142,9 +142,9 @@ export class DataEntryTable extends React.Component<
   }
 
   async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
-    let newWord: Word = await Backend.createWord(wordToAdd);
-    let wordId: string = await addAudiosToBackend(newWord.id, audioURLs);
-    let newWordWithAudio: Word = await Backend.getWord(wordId);
+    const newWord: Word = await Backend.createWord(wordToAdd);
+    const wordId: string = await addAudiosToBackend(newWord.id, audioURLs);
+    const newWordWithAudio: Word = await Backend.getWord(wordId);
     await this.updateExisting();
 
     let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
