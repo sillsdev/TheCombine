@@ -67,6 +67,15 @@ export class VernWithSuggestions extends React.Component<
     this.setState({ suggestedVerns });
   }
 
+  handleSelection(value: string) {
+    let dupVernWords: Word[] = this.props.updateVernField(value);
+    if (dupVernWords.length > 0) {
+      this.setState({ vernOpen: true, dupVernWords });
+    } else {
+      this.props.updateWordId();
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -76,33 +85,15 @@ export class VernWithSuggestions extends React.Component<
           value={this.props.vernacular}
           options={this.state.suggestedVerns}
           onBlur={(_event: React.FocusEvent<HTMLDivElement>) => {
-            let dupVernWords: Word[] = this.props.updateVernField(
-              this.props.vernacular
-            );
-            if (dupVernWords.length > 0) {
-              this.setState({ vernOpen: true, dupVernWords });
-            } else {
-              this.props.updateWordId();
-            }
             if (this.props.onBlur) {
               this.props.onBlur();
             }
+            this.handleSelection(this.props.vernacular);
           }}
           onChange={(_event, value) => {
             // onChange is triggered when an option is selected
-            let dupVernWords: Word[] = [];
-            let vernOpen: boolean = false;
-            if (!value) {
-              this.props.updateWordId();
-              this.props.updateVernField("");
-            } else {
-              dupVernWords = this.props.updateVernField(value!);
-              vernOpen = dupVernWords.length > 0;
-              if (!vernOpen) {
-                this.props.updateWordId();
-              }
-            }
-            this.setState({ dupVernWords, vernOpen });
+            if (!value) value = "";
+            this.handleSelection(value);
             this.updateSuggestedVerns(value);
           }}
           onInputChange={(_event, value) => {
@@ -134,7 +125,6 @@ export class VernWithSuggestions extends React.Component<
               this.setState({ vernOpen: false }, () => {
                 this.props.updateWordId(selectedWordId);
               });
-              console.log("ID: " + selectedWordId);
               if (selectedWordId) {
                 let selectedWord: Word = this.state.dupVernWords.find(
                   (word: Word) => word.id === selectedWordId
