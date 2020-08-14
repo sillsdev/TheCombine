@@ -209,6 +209,8 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
         throw new Error(
           "Attempting to edit an existing word but did not find one"
         );
+      let isDuplicateSense: boolean = false;
+      let senseExists: boolean = false;
       existingWord.senses.forEach((sense: Sense, index: number) => {
         if (
           sense.glosses &&
@@ -221,14 +223,19 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               .includes(this.props.semanticDomain.id)
           ) {
             // User is trying to add a sense that already exists
+            isDuplicateSense = true;
             return;
           } else {
             this.addSemanticDomain(existingWord!, index); //Existing word already null checked
+            senseExists = true;
             return;
           }
         }
       });
-      this.addNewSense(existingWord, this.state.activeGloss);
+      if (!isDuplicateSense && !senseExists)
+        this.addNewSense(existingWord, this.state.activeGloss);
+      if (isDuplicateSense)
+        console.log("This sense already exists for this domain"); //TODO alert the user}
     }
   }
 
