@@ -55,7 +55,7 @@ export class Login extends React.Component<
     this.state = {
       username: "",
       password: "",
-      isVerified: !RuntimeConfig.getInstance().captchaRequired(),
+      isVerified: true, //!RuntimeConfig.getInstance().captchaRequired(),
       error: { username: false, password: false },
     };
   }

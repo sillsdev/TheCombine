@@ -18,21 +18,10 @@ import DeleteEntry from "./DeleteEntry/DeleteEntry";
 interface RecentEntryProps {
   allVerns: string[];
   allWords: Word[];
-  entryIndex: number;
   entry: Word;
   senseIndex: number;
-  updateWord: (
-    wordToUpdate: Word,
-    wordToDelete: Word,
-    senseIndex?: number
-  ) => void;
-  updateSense: (
-    oldWord: Word,
-    senseIndex: number,
-    updatedSense: Sense,
-    updatedVernacular: string,
-    targetWordId?: string
-  ) => void;
+  updateGloss: (newGloss: string) => void;
+  updateVern: (newVernacular: string, targetWordId?: string) => void;
   removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
@@ -42,8 +31,8 @@ interface RecentEntryProps {
 }
 
 interface RecentEntryState {
-  sense: Sense;
   vernacular: string;
+  gloss: string;
   isDupVern: boolean;
   wordId?: string;
   hovering: boolean;
@@ -77,7 +66,7 @@ export function addSemanticDomainToSense(
   senseIndex: number
 ): Word {
   if (senseIndex >= existingWord.senses.length) {
-    throw new Error("senseIndex too large");
+    throw new RangeError("senseIndex too large");
   } else {
     const oldSense: Sense = existingWord.senses[senseIndex];
     let updatedDomains: SemanticDomain[] = [...oldSense.semanticDomains];
@@ -107,23 +96,21 @@ export default class RecentEntry extends React.Component<
     if (sense.glosses.length < 1) sense.glosses.push({ def: "", language: "" });
 
     this.state = {
-      sense: sense,
       vernacular: props.entry.vernacular,
+      gloss: sense.glosses.length > 0 ? sense.glosses[0].def : "",
       isDupVern: false,
       hovering: false,
     };
   }
 
-  updateGlossField(newValue: string) {
-    const newGloss: Gloss = { ...this.state.sense.glosses[0], def: newValue };
-    const sense: Sense = { ...this.state.sense, glosses: [newGloss] };
-    this.setState({ sense });
+  updateGlossField(gloss: string) {
+    this.setState({ gloss });
   }
 
   updateVernField(newValue?: string): Word[] {
-    var vernacular: string = "";
-    var dupVernWords: Word[] = [];
-    var isDupVern: boolean = false;
+    let vernacular: string = "";
+    let dupVernWords: Word[] = [];
+    let isDupVern: boolean = false;
     if (newValue) {
       vernacular = newValue;
       dupVernWords = this.props.allWords.filter(
@@ -142,28 +129,20 @@ export default class RecentEntry extends React.Component<
     this.setState({ wordId });
   }
 
-  conditionallyUpdateWord() {
-    if (this.isSenseUpdated()) {
-      //this.props.updateWord(this.props.entry, this.state.sense);
-      this.props.updateSense(
-        this.props.entry,
-        this.props.entryIndex,
-        this.state.sense,
-        this.state.vernacular,
-        this.state.wordId
-      );
-    }
-  }
-
-  isSenseUpdated() {
-    if (this.props.entry.vernacular !== this.state.vernacular) return true;
+  conditionallyUpdateGloss() {
     if (
       this.props.entry.senses[this.props.senseIndex].glosses[0].def !==
-      this.state.sense.glosses[0].def
+      this.state.gloss
     )
-      return true;
-    if (this.state.wordId) return true;
-    return false;
+      this.props.updateGloss(this.state.gloss);
+  }
+
+  conditionallyUpdateVern() {
+    if (
+      this.props.entry.vernacular !== this.state.vernacular ||
+      this.state.wordId !== undefined
+    )
+      this.props.updateVern(this.state.vernacular, this.state.wordId);
   }
 
   focusOnNewEntry = () => {
@@ -173,7 +152,7 @@ export default class RecentEntry extends React.Component<
 
   render() {
     return (
-      <Grid item xs={12} key={this.props.entryIndex}>
+      <React.Fragment>
         <Grid
           container
           onMouseEnter={() => this.setState({ hovering: true })}
@@ -197,9 +176,7 @@ export default class RecentEntry extends React.Component<
               updateWordId={(wordId?: string) => this.updateWordId(wordId)}
               allVerns={this.props.allVerns}
               onBlur={() => {
-                if (!this.state.isDupVern || this.state.wordId !== undefined) {
-                  this.conditionallyUpdateWord();
-                }
+                this.conditionallyUpdateVern();
               }}
               handleEnter={() => {}}
             />
@@ -214,12 +191,12 @@ export default class RecentEntry extends React.Component<
             }}
           >
             <GlossWithSuggestions
-              gloss={this.state.sense.glosses[0].def!}
+              gloss={this.state.gloss}
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
               onBlur={() => {
-                this.conditionallyUpdateWord();
+                this.conditionallyUpdateGloss();
               }}
               handleEnter={() => {
                 this.focusOnNewEntry();
@@ -263,7 +240,7 @@ export default class RecentEntry extends React.Component<
             )}
           </Grid>
         </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

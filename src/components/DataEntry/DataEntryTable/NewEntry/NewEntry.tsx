@@ -45,7 +45,10 @@ function focusInput(inputRef: React.RefObject<HTMLDivElement>) {
 /**
  * Displays data related to creating a new word entry
  */
-export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
+export default class NewEntry extends React.Component<
+  NewEntryProps,
+  NewEntryState
+> {
   constructor(props: NewEntryProps) {
     super(props);
     this.state = {

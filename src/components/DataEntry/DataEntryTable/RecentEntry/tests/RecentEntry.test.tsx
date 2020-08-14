@@ -43,11 +43,10 @@ function renderWithWord(word: Word) {
         <RecentEntry
           allVerns={[]}
           allWords={[]}
-          entryIndex={0}
           entry={word}
           senseIndex={0}
-          updateWord={() => null}
-          updateSense={() => null}
+          updateGloss={() => null}
+          updateVern={() => null}
           removeEntry={() => null}
           addAudioToWord={() => null}
           deleteAudioFromWord={() => null}

@@ -12,7 +12,7 @@ import { baseDomain } from "../../../../types/SemanticDomain";
 import { SemanticDomain, simpleWord, Word } from "../../../../types/word";
 import { defaultState } from "../../../App/DefaultState";
 import DataEntryTable from "../DataEntryTable";
-import { NewEntry } from "../NewEntry/NewEntry";
+import NewEntry from "../NewEntry/NewEntry";
 
 jest.mock("../../../../backend", () => {
   return {

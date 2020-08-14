@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { defaultState } from "../../../../App/DefaultState";
-import { NewEntry } from "../NewEntry";
+import NewEntry from "../NewEntry";
 
 jest.mock("../../../../Pronunciations/Recorder");
 jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");

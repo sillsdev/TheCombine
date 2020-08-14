@@ -105,7 +105,7 @@ export class VernWithSuggestions extends React.Component<
             this.updateSuggestedVerns(value);
             this.props.updateWordId();
           }}
-          onKeyDown={(e) => {
+          onKeyUp={(e) => {
             if (!this.state.open) this.props.handleEnter(e);
           }}
           renderInput={(params) => (
