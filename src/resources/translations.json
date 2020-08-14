@@ -261,8 +261,13 @@
       ]
     },
     "user": {
-      "header": ["Users and Roles", "Usarios", "Utilisateurs et rôles"],
-      "addUser": ["Add a user", "Añadir un usario", "Ajouter un utilisateur"],
+      "currentUsers": [
+        "Current Users",
+        "Usarios Actuales",
+        "Utilisateurs Actuels"
+      ],
+      "usersAndRoles": ["Users and Roles", "Usarios", "Utilisateurs et rôles"],
+      "addUser": ["Add User", "Añadir Usario", "Ajouter Utilisateur"],
       "selectUser": [
         "Choose a user",
         "Escoger un usario",

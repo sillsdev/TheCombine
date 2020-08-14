@@ -103,7 +103,7 @@ class UserSettings extends React.Component<
     const user: User = potentialUser ? potentialUser : new User("", "", "");
     this.state = {
       user: user,
-      name: user.phone,
+      name: user.name,
       phone: user.phone,
       email: user.email,
       avatar: getAvatar(),
