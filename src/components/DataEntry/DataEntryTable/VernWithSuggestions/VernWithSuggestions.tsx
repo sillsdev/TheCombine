@@ -126,12 +126,11 @@ export class VernWithSuggestions extends React.Component<
           <VernDialog
             open={this.state.vernOpen}
             handleClose={(selectedWordId?: string) => {
-              this.setState({ vernOpen: false });
-              if (selectedWordId) {
+              this.setState({ vernOpen: false }, () => {
                 this.props.updateWordId(selectedWordId);
+              });
+              if (selectedWordId) {
                 this.setState({ senseOpen: selectedWordId === "" }); //new entry id is an empty string
-              } else {
-                this.props.updateWordId();
               }
             }}
             vernacularWords={this.state.dupVernWords}

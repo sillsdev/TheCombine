@@ -62,7 +62,7 @@ export function SenseList(props: SenseListProps) {
       <MenuList autoFocusItem>
         {props.selectedVernacular.senses.map((sense: Sense) => (
           <StyledMenuItem
-            onClick={() => props.closeDialog(word.id)}
+            onClick={() => props.closeDialog("")}
             key={sense.glosses[0].def}
             id={sense.glosses[0].def}
           >

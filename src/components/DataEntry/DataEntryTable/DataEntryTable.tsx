@@ -15,6 +15,7 @@ import {
   SemanticDomain,
   Sense,
   simpleWord,
+  State,
   Word,
 } from "../../../types/word";
 import { getFileNameForWord } from "../../Pronunciations/AudioRecorder";
@@ -63,6 +64,50 @@ async function addAudiosToBackend(
     URL.revokeObjectURL(audioURL);
   }
   return updatedWordId;
+}
+
+export function addSemanticDomainToSense(
+  semanticDomain: SemanticDomain,
+  existingWord: Word,
+  senseIndex: number
+): Word {
+  if (senseIndex >= existingWord.senses.length) {
+    throw new RangeError("senseIndex too large");
+  } else {
+    const oldSense: Sense = existingWord.senses[senseIndex];
+    let updatedDomains: SemanticDomain[] = [...oldSense.semanticDomains];
+    updatedDomains.push(semanticDomain);
+    const updatedSense: Sense = {
+      ...oldSense,
+      semanticDomains: updatedDomains,
+    };
+    let updatedSenses: Sense[] = existingWord.senses;
+    updatedSenses.splice(senseIndex, 1, updatedSense);
+    const updatedWord: Word = { ...existingWord, senses: updatedSenses };
+    return updatedWord;
+  }
+}
+
+export function addSenseToWord(
+  semanticDomain: SemanticDomain,
+  existingWord: Word,
+  gloss: string
+): Word {
+  let updatedWord: Word = { ...existingWord };
+
+  let newGloss: Gloss = {
+    language: "en",
+    def: gloss,
+  };
+
+  let newSense: Sense = {
+    glosses: [newGloss],
+    semanticDomains: [semanticDomain],
+    accessibility: State.active,
+  };
+
+  updatedWord.senses.push(newSense); // Fix which sense we are adding to
+  return updatedWord;
 }
 
 /**
@@ -143,9 +188,73 @@ export class DataEntryTable extends React.Component<
     };
     recentlyAddedWords.push(updatedWordAccess);
 
-    this.setState({ recentlyAddedWords }, () => {
-      this.replaceInDisplay(wordToUpdate.id, updatedWord);
+    this.setState({ recentlyAddedWords }, async () => {
+      await this.replaceInDisplay(wordToUpdate.id, updatedWord);
     });
+  }
+
+  // Checks if sense already exists with this gloss and semantic domain
+  // returns false if encounters duplicate
+  async updateWordWithNewGloss(
+    wordId: string,
+    gloss: string,
+    audioFileURLs: string[] = []
+  ): Promise<boolean> {
+    let existingWord: Word | undefined = this.state.existingWords.find(
+      (word: Word) => word.id === wordId
+    );
+    if (!existingWord)
+      throw new Error(
+        "Attempting to edit an existing word but did not find one"
+      );
+
+    let sense: Sense;
+    for (
+      let senseIndex = 0;
+      senseIndex < existingWord.senses.length;
+      senseIndex++
+    ) {
+      sense = existingWord.senses[senseIndex];
+      if (
+        sense.glosses &&
+        sense.glosses.length &&
+        sense.glosses[0].def === gloss
+      ) {
+        if (
+          sense.semanticDomains
+            .map((semanticDomain) => semanticDomain.id)
+            .includes(this.props.semanticDomain.id)
+        ) {
+          // User is trying to add a sense that already exists
+          alert("This sense already exists for this domain");
+          return false;
+        } else {
+          let updatedWord = addSemanticDomainToSense(
+            this.props.semanticDomain,
+            existingWord!, // Existing word already null checked
+            senseIndex
+          );
+          await this.updateWordForNewEntry(
+            updatedWord,
+            senseIndex,
+            audioFileURLs
+          );
+          return true;
+        }
+      }
+    }
+    // The gloss is new for this word, so add a new sense.
+    const updatedWord = addSenseToWord(
+      this.props.semanticDomain,
+      existingWord,
+      gloss
+    );
+    await this.updateWordForNewEntry(
+      updatedWord,
+      updatedWord.senses.length - 1, // Was added at the end of the sense list
+      audioFileURLs
+    );
+    return true;
   }
 
   async addAudioToRecentWord(oldWordId: string, audioFile: File) {
@@ -405,17 +514,11 @@ export class DataEntryTable extends React.Component<
               ref={this.refNewEntry}
               allVerns={this.state.existingVerns}
               allWords={this.state.existingWords}
-              updateWord={(
-                wordToUpdate: Word,
-                senseIndex: number,
+              updateWordWithNewGloss={(
+                wordId: string,
+                gloss: string,
                 audioFileURLs: string[]
-              ) =>
-                this.updateWordForNewEntry(
-                  wordToUpdate,
-                  senseIndex,
-                  audioFileURLs
-                )
-              }
+              ) => this.updateWordWithNewGloss(wordId, gloss, audioFileURLs)}
               addNewWord={(word: Word, audioFileURLs: string[]) =>
                 this.addNewWord(word, audioFileURLs)
               }

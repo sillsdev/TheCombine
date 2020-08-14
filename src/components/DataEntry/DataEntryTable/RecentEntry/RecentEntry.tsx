@@ -2,13 +2,7 @@ import { Grid } from "@material-ui/core";
 import React from "react";
 
 import theme from "../../../../types/theme";
-import {
-  Gloss,
-  SemanticDomain,
-  Sense,
-  State,
-  Word,
-} from "../../../../types/word";
+import { SemanticDomain, Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
@@ -36,50 +30,6 @@ interface RecentEntryState {
   isDupVern: boolean;
   wordId?: string;
   hovering: boolean;
-}
-
-export function addSenseToWord(
-  semanticDomain: SemanticDomain,
-  existingWord: Word,
-  gloss: string
-): Word {
-  let updatedWord: Word = { ...existingWord };
-
-  let newGloss: Gloss = {
-    language: "en",
-    def: gloss,
-  };
-
-  let newSense: Sense = {
-    glosses: [newGloss],
-    semanticDomains: [semanticDomain],
-    accessibility: State.active,
-  };
-
-  updatedWord.senses.push(newSense); // Fix which sense we are adding to
-  return updatedWord;
-}
-
-export function addSemanticDomainToSense(
-  semanticDomain: SemanticDomain,
-  existingWord: Word,
-  senseIndex: number
-): Word {
-  if (senseIndex >= existingWord.senses.length) {
-    throw new RangeError("senseIndex too large");
-  } else {
-    const oldSense: Sense = existingWord.senses[senseIndex];
-    let updatedDomains: SemanticDomain[] = [...oldSense.semanticDomains];
-    updatedDomains.push(semanticDomain);
-    const updatedSense: Sense = {
-      ...oldSense,
-      semanticDomains: updatedDomains,
-    };
-    let updatedSenses: Sense[] = existingWord.senses;
-    updatedSenses.splice(senseIndex, 1, updatedSense);
-    const updatedWord: Word = { ...existingWord, senses: updatedSenses };
-    return updatedWord;
-  }
 }
 
 /**

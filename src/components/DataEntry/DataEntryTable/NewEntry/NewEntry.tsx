@@ -3,25 +3,21 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 
 import theme from "../../../../types/theme";
-import { SemanticDomain, Sense, Word } from "../../../../types/word";
+import { SemanticDomain, simpleWord, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import {
-  addSemanticDomainToSense,
-  addSenseToWord,
-} from "../RecentEntry/RecentEntry";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 
 interface NewEntryProps {
   allVerns: string[];
   allWords: Word[];
-  updateWord: (
-    updatedWord: Word,
-    senseIndex: number,
-    newAudio: string[]
-  ) => void;
-  addNewWord: (newWord: Word, newAudio: string[]) => void;
+  updateWordWithNewGloss: (
+    wordId: string,
+    gloss: string,
+    audioFileURLs: string[]
+  ) => Promise<boolean>;
+  addNewWord: (newWord: Word, newAudio: string[]) => Promise<void>;
   semanticDomain: SemanticDomain;
   setIsReadyState: (isReady: boolean) => void;
   recorder?: Recorder;
@@ -52,39 +48,13 @@ export default class NewEntry extends React.Component<
   constructor(props: NewEntryProps) {
     super(props);
     this.state = {
-      newEntry: this.defaultNewEntry(),
+      newEntry: { ...simpleWord("", ""), id: "" },
       activeGloss: "",
       audioFileURLs: [],
       isDupVern: false,
     };
-
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
-  }
-  private defaultNewEntry() {
-    return {
-      id: "",
-      vernacular: "",
-      senses: [
-        {
-          glosses: [
-            {
-              language: "en",
-              def: "",
-            },
-          ],
-          semanticDomains: [this.props.semanticDomain],
-        },
-      ],
-      audio: [],
-      created: "",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      otherField: "",
-      plural: "",
-    };
   }
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
@@ -104,30 +74,6 @@ export default class NewEntry extends React.Component<
     this.setState({
       audioFileURLs,
     });
-  }
-
-  addNewSense(existingWord: Word, newSense: string) {
-    let updatedWord = addSenseToWord(
-      this.props.semanticDomain,
-      existingWord,
-      newSense
-    );
-    this.props.updateWord(
-      updatedWord,
-      updatedWord.senses.length - 1,
-      this.state.audioFileURLs
-    );
-    this.resetState();
-  }
-
-  addSemanticDomain(existingWord: Word, senseIndex: number) {
-    let updatedWord = addSemanticDomainToSense(
-      this.props.semanticDomain,
-      existingWord,
-      senseIndex
-    );
-    this.props.updateWord(updatedWord, senseIndex, this.state.audioFileURLs);
-    this.resetState();
   }
 
   updateGlossField(newValue: string) {
@@ -170,7 +116,7 @@ export default class NewEntry extends React.Component<
 
   resetState() {
     this.setState({
-      newEntry: this.defaultNewEntry(),
+      newEntry: { ...simpleWord("", ""), id: "" },
       activeGloss: "",
       audioFileURLs: [],
       isDupVern: false,
@@ -189,9 +135,12 @@ export default class NewEntry extends React.Component<
   }
 
   addNewWordAndReset() {
-    this.props.addNewWord(this.state.newEntry, this.state.audioFileURLs);
+    this.props
+      .addNewWord(this.state.newEntry, this.state.audioFileURLs)
+      .then(() => {
+        this.resetState();
+      });
     this.focusVernInput();
-    this.resetState();
   }
 
   addOrUpdateWord() {
@@ -205,39 +154,15 @@ export default class NewEntry extends React.Component<
     } else {
       // Duplicate vern and the user has selected an entry to modify,
       // so wordId is defined and non-empty
-      let existingWord: Word | undefined = this.props.allWords.find(
-        (word: Word) => word.id === this.state.wordId
-      );
-      if (!existingWord)
-        throw new Error(
-          "Attempting to edit an existing word but did not find one"
-        );
-      let isDuplicateSense: boolean = false;
-      let senseExists: boolean = false;
-      existingWord.senses.forEach((sense: Sense, index: number) => {
-        if (
-          sense.glosses &&
-          sense.glosses.length &&
-          sense.glosses[0].def === this.state.activeGloss
-        ) {
-          if (
-            sense.semanticDomains
-              .map((semanticDomain) => semanticDomain.id)
-              .includes(this.props.semanticDomain.id)
-          ) {
-            // User is trying to add a sense that already exists
-            isDuplicateSense = true;
-            return;
-          } else {
-            this.addSemanticDomain(existingWord!, index); //Existing word already null checked
-            senseExists = true;
-            return;
-          }
-        }
-      });
-      if (!isDuplicateSense && !senseExists)
-        this.addNewSense(existingWord, this.state.activeGloss);
-      if (isDuplicateSense) alert("This sense already exists for this domain"); //TODO alert the user}
+      this.props
+        .updateWordWithNewGloss(
+          this.state.wordId!,
+          this.state.activeGloss,
+          this.state.audioFileURLs
+        )
+        .then((result: boolean) => {
+          if (result) this.resetState();
+        });
     }
   }
 
