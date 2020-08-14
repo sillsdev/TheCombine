@@ -58,7 +58,7 @@ export const StyledMenuItem = withStyles((theme) => ({
 export function VernList(props: VernListProps) {
   return (
     <React.Fragment>
-      <h1>Select the desired vernacular</h1>
+      <h1>Select the desired entry</h1>
       <MenuList autoFocusItem>
         {props.vernacularWords.map((word: Word) => (
           <StyledMenuItem
@@ -85,7 +85,7 @@ export function VernList(props: VernListProps) {
         ))}
 
         <StyledMenuItem onClick={() => props.closeDialog("")}>
-          {"New Entry for " + props.vernacularWords[0].vernacular}
+          {"New entry for " + props.vernacularWords[0].vernacular}
         </StyledMenuItem>
       </MenuList>
     </React.Fragment>

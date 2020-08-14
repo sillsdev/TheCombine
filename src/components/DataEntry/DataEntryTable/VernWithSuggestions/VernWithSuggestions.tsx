@@ -98,8 +98,11 @@ export class VernWithSuggestions extends React.Component<
     this.setState({ suggestedVerns });
   }
 
-  handleSelection(value: string) {
-    let dupVernWords: Word[] = this.props.updateVernField(value);
+  handleSelection(value?: string) {
+    let dupVernWords: Word[] = this.state.dupVernWords;
+    if (value !== undefined) {
+      dupVernWords = this.props.updateVernField(value);
+    }
     if (dupVernWords.length > 0) {
       this.setState({ vernOpen: true, dupVernWords });
     } else {
@@ -119,7 +122,8 @@ export class VernWithSuggestions extends React.Component<
             if (this.props.onBlur) {
               this.props.onBlur();
             }
-            this.handleSelection(this.props.vernacular);
+            if (this.state.selectedWord.vernacular !== this.props.vernacular)
+              this.handleSelection();
           }}
           onChange={(_event, value) => {
             // onChange is triggered when an option is selected
@@ -134,7 +138,7 @@ export class VernWithSuggestions extends React.Component<
             this.updateSuggestedVerns(value);
             this.props.updateWordId();
           }}
-          onKeyUp={(e) => {
+          onKeyPress={(e) => {
             if (!this.state.vernOpen) this.props.handleEnterAndTab(e);
           }}
           renderInput={(params) => (
