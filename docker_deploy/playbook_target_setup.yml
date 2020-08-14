@@ -1,0 +1,36 @@
+---
+##############################################################
+# Playbook: playbook_setup_target.yml
+#
+# playbook_setup_target.yml installs the packages and
+# configuration files that are required to run TheCombine
+# as a collection of Docker containers.
+#
+##############################################################
+
+- name: Setup TheCombine Using Docker
+  hosts: all
+  gather_facts: yes
+  become: yes
+
+  vars_files:
+    - "vars/config_common.yml"
+    - "vars/packages.yml"
+    - "vars/vault_config.yml"
+
+  tasks:
+    - name: install required packages dependencies
+      import_role:
+        name: package_install
+
+    - name: install docker subsystem
+      import_role:
+        name: docker_install
+
+    - name: create combine user
+      import_role:
+        name: combine_user
+
+    - name: install combine configuration files
+      import_role:
+        name: combine_config
