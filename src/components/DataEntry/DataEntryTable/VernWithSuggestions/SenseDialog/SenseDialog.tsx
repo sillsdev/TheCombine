@@ -9,14 +9,14 @@ import React from "react";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 import theme from "../../../../../types/theme";
-import { Word } from "../../../../../types/word";
+import { Word, Sense } from "../../../../../types/word";
 import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
-export function VernDialog(
+export function SenseDialog(
   props: {
-    vernacularWords: Word[];
+    selectedVernacular: Word;
     open: boolean;
     handleClose: (selectedWordId?: string) => void;
   } & LocalizeContextProps
@@ -29,8 +29,8 @@ export function VernDialog(
       disableEscapeKeyDown
     >
       <DialogContent>
-        <VernList
-          vernacularWords={props.vernacularWords}
+        <SenseList
+          selectedVernacular={props.selectedVernacular}
           closeDialog={props.handleClose}
         />
       </DialogContent>
@@ -38,8 +38,8 @@ export function VernDialog(
   );
 }
 
-interface VernListProps {
-  vernacularWords: Word[];
+interface SenseListProps {
+  selectedVernacular: Word;
   closeDialog: (selectedWordId: string) => void;
 }
 
@@ -55,40 +55,29 @@ export const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-export function VernList(props: VernListProps) {
+export function SenseList(props: SenseListProps) {
   return (
     <React.Fragment>
-      <h1>Select the desired vernacular</h1>
+      <h1>Select the desired sense</h1>
       <MenuList autoFocusItem>
-        {props.vernacularWords.map((word: Word) => (
+        {props.selectedVernacular.senses.map((sense: Sense) => (
           <StyledMenuItem
             onClick={() => props.closeDialog(word.id)}
-            key={word.id}
-            id={word.id}
+            key={sense.glosses[0].def}
+            id={sense.glosses[0].def}
           >
-            {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
             <div style={{ margin: theme.spacing(4) }}>
-              <SenseCell
-                editable={false}
-                sortingByGloss={false}
-                value={parseWord(word, "en").senses}
-                rowData={parseWord(word, "en")}
-              />
+              {sense.glosses[0].def}
             </div>
-            <div style={{ margin: theme.spacing(4) }}>
-              <DomainCell
-                rowData={parseWord(word, "en")}
-                sortingByDomains={false}
-              />
-            </div>
+            <div style={{ margin: theme.spacing(4) }}>Semantic Domains</div>
           </StyledMenuItem>
         ))}
 
         <StyledMenuItem onClick={() => props.closeDialog("")}>
-          {"New Entry for " + props.vernacularWords[0].vernacular}
+          {"New Sense for " + props.selectedVernacular.vernacular}
         </StyledMenuItem>
       </MenuList>
     </React.Fragment>
   );
 }
-export default withLocalize(VernDialog);
+export default withLocalize(SenseDialog);

@@ -201,7 +201,7 @@ export default class RecentEntry extends React.Component<
                   this.conditionallyUpdateWord();
                 }
               }}
-              handleEnter={() => {}}
+              handleEnterAndTab={() => {}}
             />
           </Grid>
           <Grid
@@ -221,7 +221,7 @@ export default class RecentEntry extends React.Component<
               onBlur={() => {
                 this.conditionallyUpdateWord();
               }}
-              handleEnter={() => {
+              handleEnterAndTab={() => {
                 this.focusOnNewEntry();
                 //TODO: check for empty gloss
               }}

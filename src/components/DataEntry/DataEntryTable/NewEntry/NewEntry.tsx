@@ -234,13 +234,12 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
       });
       if (!isDuplicateSense && !senseExists)
         this.addNewSense(existingWord, this.state.activeGloss);
-      if (isDuplicateSense)
-        console.log("This sense already exists for this domain"); //TODO alert the user}
+      if (isDuplicateSense) alert("This sense already exists for this domain"); //TODO alert the user}
     }
   }
 
-  handleEnter(e: React.KeyboardEvent) {
-    if (e.key === "Enter") {
+  handleEnterAndTab(e: React.KeyboardEvent) {
+    if (e.key === "Enter" || e.key === "Tab") {
       if (this.state.newEntry.vernacular) {
         if (this.state.activeGloss) {
           this.addOrUpdateWord();
@@ -280,7 +279,9 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 }}
                 updateWordId={(wordId?: string) => this.updateWordId(wordId)}
                 allVerns={this.props.allVerns}
-                handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
+                handleEnterAndTab={(e: React.KeyboardEvent) =>
+                  this.handleEnterAndTab(e)
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -305,7 +306,9 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
-              handleEnter={(e: React.KeyboardEvent) => this.handleEnter(e)}
+              handleEnterAndTab={(e: React.KeyboardEvent) =>
+                this.handleEnterAndTab(e)
+              }
             />
           </Grid>
           <Grid
