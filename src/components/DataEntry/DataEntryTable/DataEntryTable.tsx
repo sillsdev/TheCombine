@@ -145,7 +145,7 @@ export class DataEntryTable extends React.Component<
     let newWord: Word = await Backend.createWord(wordToAdd);
     let wordId: string = await addAudiosToBackend(newWord.id, audioURLs);
     let newWordWithAudio: Word = await Backend.getWord(wordId);
-    this.updateExisting();
+    await this.updateExisting();
 
     let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
     let newWordAccess: WordAccess = {
@@ -279,7 +279,7 @@ export class DataEntryTable extends React.Component<
 
   async updateWordInBackend(wordToUpdate: Word): Promise<Word> {
     let updatedWord: Word = await Backend.updateWord(wordToUpdate);
-    this.updateExisting();
+    await this.updateExisting();
     return updatedWord;
   }
 
@@ -444,7 +444,9 @@ export class DataEntryTable extends React.Component<
   }
 
   async deleteWord(word: Word) {
-    await Backend.deleteWord(word).then(() => this.updateExisting());
+    await Backend.deleteWord(word).then(
+      async () => await this.updateExisting()
+    );
   }
 
   render() {
