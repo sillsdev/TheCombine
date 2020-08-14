@@ -20,12 +20,20 @@ interface RecentEntryProps {
   allWords: Word[];
   entryIndex: number;
   entry: Word;
+  senseIndex: number;
   updateWord: (
     wordToUpdate: Word,
     wordToDelete: Word,
     senseIndex?: number
   ) => void;
-  removeWord: (word: Word) => void;
+  updateSense: (
+    oldWord: Word,
+    senseIndex: number,
+    updatedSense: Sense,
+    updatedVernacular: string,
+    targetWordId?: string
+  ) => void;
+  removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
   semanticDomain: SemanticDomain;
@@ -34,7 +42,8 @@ interface RecentEntryProps {
 }
 
 interface RecentEntryState {
-  recentEntry: Word;
+  sense: Sense;
+  vernacular: string;
   isDupVern: boolean;
   wordId?: string;
   hovering: boolean;
@@ -84,14 +93,6 @@ export function addSemanticDomainToSense(
   }
 }
 
-// extract, or remove altogether
-function wordsAreEqual(a: Word, b: Word): boolean {
-  return (
-    a.vernacular === b.vernacular &&
-    a.senses[0].glosses[0].def === b.senses[0].glosses[0].def
-  );
-}
-
 /**
  * Displays a word a user can still make edits to
  */
@@ -102,49 +103,29 @@ export default class RecentEntry extends React.Component<
   constructor(props: RecentEntryProps) {
     super(props);
 
+    let sense: Sense = { ...props.entry.senses[props.senseIndex] };
+    if (sense.glosses.length < 1) sense.glosses.push({ def: "", language: "" });
+
     this.state = {
-      recentEntry: { ...props.entry },
+      sense: sense,
+      vernacular: props.entry.vernacular,
       isDupVern: false,
       hovering: false,
     };
   }
 
-  addNewSense(existingWord: Word, newSense: string) {
-    let updatedWord: Word = addSenseToWord(
-      this.props.semanticDomain,
-      existingWord,
-      newSense
-    );
-    this.props.updateWord(updatedWord, this.props.entry);
-  }
-
-  addSemanticDomain(existingWord: Word, senseIndex: number) {
-    let updatedWord: Word = addSemanticDomainToSense(
-      this.props.semanticDomain,
-      existingWord,
-      senseIndex
-    );
-    this.props.updateWord(updatedWord, this.props.entry, senseIndex);
-  }
-
   updateGlossField(newValue: string) {
-    this.setState({
-      recentEntry: {
-        ...this.state.recentEntry,
-        senses: [
-          {
-            ...this.state.recentEntry.senses[0],
-            glosses: [{ language: "en", def: newValue }],
-          },
-        ],
-      },
-    });
+    const newGloss: Gloss = { ...this.state.sense.glosses[0], def: newValue };
+    const sense: Sense = { ...this.state.sense, glosses: [newGloss] };
+    this.setState({ sense });
   }
 
-  updateVernField(newValue: string): Word[] {
+  updateVernField(newValue?: string): Word[] {
+    var vernacular: string = "";
     var dupVernWords: Word[] = [];
     var isDupVern: boolean = false;
     if (newValue) {
+      vernacular = newValue;
       dupVernWords = this.props.allWords.filter(
         (word: Word) => word.vernacular === newValue
       );
@@ -152,10 +133,7 @@ export default class RecentEntry extends React.Component<
     }
     this.setState({
       isDupVern,
-      recentEntry: {
-        ...this.state.recentEntry,
-        vernacular: newValue,
-      },
+      vernacular,
     });
     return dupVernWords;
   }
@@ -164,14 +142,28 @@ export default class RecentEntry extends React.Component<
     this.setState({ wordId });
   }
 
-  removeEntry() {
-    this.props.removeWord(this.props.entry);
+  conditionallyUpdateWord() {
+    if (this.isSenseUpdated()) {
+      //this.props.updateWord(this.props.entry, this.state.sense);
+      this.props.updateSense(
+        this.props.entry,
+        this.props.entryIndex,
+        this.state.sense,
+        this.state.vernacular,
+        this.state.wordId
+      );
+    }
   }
 
-  conditionallyUpdateWord() {
-    if (!wordsAreEqual(this.state.recentEntry, this.props.entry)) {
-      this.props.updateWord(this.state.recentEntry, this.props.entry);
-    }
+  isSenseUpdated() {
+    if (this.props.entry.vernacular !== this.state.vernacular) return true;
+    if (
+      this.props.entry.senses[this.props.senseIndex].glosses[0].def !==
+      this.state.sense.glosses[0].def
+    )
+      return true;
+    if (this.state.wordId) return true;
+    return false;
   }
 
   focusOnNewEntry = () => {
@@ -197,7 +189,8 @@ export default class RecentEntry extends React.Component<
             }}
           >
             <VernWithSuggestions
-              vernacular={this.state.recentEntry.vernacular}
+              vernacular={this.state.vernacular}
+              isDisabled={this.props.entry.senses.length > 1}
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
@@ -221,14 +214,7 @@ export default class RecentEntry extends React.Component<
             }}
           >
             <GlossWithSuggestions
-              gloss={
-                this.state.recentEntry.senses &&
-                this.state.recentEntry.senses[0] &&
-                this.state.recentEntry.senses[0].glosses &&
-                this.state.recentEntry.senses[0].glosses[0]
-                  ? this.state.recentEntry.senses[0].glosses[0].def
-                  : ""
-              }
+              gloss={this.state.sense.glosses[0].def!}
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
               }
@@ -251,8 +237,9 @@ export default class RecentEntry extends React.Component<
             }}
           >
             <Pronunciations
-              wordId={this.state.recentEntry.id}
-              pronunciationFiles={this.state.recentEntry.audio}
+              wordId={this.props.entry.id}
+              senseIndex={this.props.senseIndex}
+              pronunciationFiles={this.props.entry.audio}
               recorder={this.props.recorder}
               deleteAudio={(wordId: string, fileName: string) => {
                 this.props.deleteAudioFromWord(wordId, fileName);
@@ -272,7 +259,7 @@ export default class RecentEntry extends React.Component<
             }}
           >
             {this.state.hovering && (
-              <DeleteEntry removeEntry={() => this.removeEntry()} />
+              <DeleteEntry removeEntry={() => this.props.removeEntry()} />
             )}
           </Grid>
         </Grid>

@@ -45,8 +45,10 @@ function renderWithWord(word: Word) {
           allWords={[]}
           entryIndex={0}
           entry={word}
+          senseIndex={0}
           updateWord={() => null}
-          removeWord={() => null}
+          updateSense={() => null}
+          removeEntry={() => null}
           addAudioToWord={() => null}
           deleteAudioFromWord={() => null}
           semanticDomain={{ name: "", id: "" }}

@@ -13,6 +13,7 @@ import VernDialog from "./VernDialog/VernDialog";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
+  isDisabled?: boolean;
   vernacular: string;
   vernInput?: React.RefObject<HTMLDivElement>;
   updateVernField: (newValue: string) => Word[];
@@ -64,7 +65,7 @@ export class VernWithSuggestions extends React.Component<
       <React.Fragment>
         <Autocomplete
           freeSolo
-          id="newvernentry"
+          disabled={this.props.isDisabled}
           value={this.props.vernacular}
           options={this.state.suggestedVerns}
           onBlur={(_event: React.FocusEvent<HTMLDivElement>) => {
