@@ -372,10 +372,6 @@ export class DataEntryTable extends React.Component<
       await this.updateSense(oldWord, senseIndex, newSense);
     } else {
       // This is a modification that has to be retracted and replaced with a new entry
-      const newWord: Word = {
-        ...simpleWord(oldWord.vernacular, newGloss),
-        id: "",
-      };
       await this.undoRecentEntry(entryIndex).then(async (wordId) => {
         await this.updateWordWithNewGloss(wordId, newGloss, []);
       });
