@@ -11,7 +11,7 @@ export interface RecorderProps {
   uploadAudio?: (wordId: string, audioFile: File) => void;
 }
 
-function getFileNameForWord(wordId: string): string {
+export function getFileNameForWord(wordId: string): string {
   var fourCharParts = wordId.match(/.{1,6}/g);
   var compressed =
     fourCharParts === null

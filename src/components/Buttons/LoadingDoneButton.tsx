@@ -9,6 +9,7 @@ interface Props {
   loading: boolean;
   done: boolean;
   doneText?: React.ReactNode | string;
+  disabled?: boolean;
 }
 
 /**
@@ -20,7 +21,7 @@ export default function LoadingDoneButton(props: Props & ButtonProps) {
       type="submit"
       variant="contained"
       {...props}
-      disabled={props.loading}
+      disabled={props.disabled ? props.disabled : props.loading}
       style={{
         backgroundColor: props.done ? buttonSuccess : undefined,
         color: props.done ? "white" : undefined,

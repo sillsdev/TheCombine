@@ -1,19 +1,21 @@
-import {
-  setValidCharacters,
-  uploadInventory,
-  CharacterInventoryType,
-} from "../CharacterInventoryActions";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 import thunk from "redux-thunk";
-import { StoreState } from "../../../types";
-import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
-import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
-import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
-import { User } from "../../../types/user";
-import { CharacterSetEntry } from "../CharacterInventoryReducer";
+
 import * as backend from "../../../backend";
-import { Project } from "../../../types/project";
+import * as LocalStorage from "../../../backend/localStorage";
+import { GoalsActions } from "../../../components/GoalTimeline/GoalsActions";
+import { SET_CURRENT_PROJECT } from "../../../components/Project/ProjectActions";
+import { StoreState } from "../../../types";
 import { Goal } from "../../../types/goals";
+import { Project } from "../../../types/project";
+import { User } from "../../../types/user";
+import { CreateCharInv } from "../../CreateCharInv/CreateCharInv";
+import {
+  CharacterInventoryType,
+  setValidCharacters,
+  uploadInventory,
+} from "../CharacterInventoryActions";
+import { CharacterSetEntry } from "../CharacterInventoryReducer";
 
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
@@ -61,11 +63,13 @@ const MOCK_STATE = {
   },
 };
 
-let oldUser: string | null;
-let oldProjectId: string | null;
+let oldProjectId: string;
+let oldUser: User | null;
 const mockProjectId: string = "12345";
 const mockUserEditId: string = "23456";
+const mockUserId: string = "34456";
 let mockUser: User = new User("", "", "");
+mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 jest.mock("../../../backend", () => ({
@@ -85,13 +89,14 @@ const createMockStore = configureMockStore([thunk]);
 const mockStore: MockStoreEnhanced<unknown, {}> = createMockStore(MOCK_STATE);
 
 beforeAll(() => {
-  oldUser = localStorage.getItem("user");
-  oldProjectId = localStorage.getItem("projectId");
+  // Save things in localStorage to restore once tests are done
+  oldProjectId = LocalStorage.getProjectId();
+  oldUser = LocalStorage.getCurrentUser();
 });
 
 beforeEach(() => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("projectId");
+  LocalStorage.remove(LocalStorage.localStorageKeys.projectId);
+  LocalStorage.remove(LocalStorage.localStorageKeys.user);
 });
 
 afterEach(() => {
@@ -99,8 +104,10 @@ afterEach(() => {
 });
 
 afterAll(() => {
-  if (oldUser) localStorage.setItem("user", oldUser);
-  if (oldProjectId) localStorage.setItem("projectId", oldProjectId);
+  LocalStorage.setProjectId(oldProjectId);
+  if (oldUser) {
+    LocalStorage.setCurrentUser(oldUser);
+  }
 });
 
 describe("Testing CharacterInventoryActions", () => {
@@ -112,8 +119,8 @@ describe("Testing CharacterInventoryActions", () => {
   });
 
   test("uploadInventory dispatches correct actions", async () => {
-    localStorage.setItem("user", JSON.stringify(mockUser));
-    localStorage.setItem("projectId", mockProjectId);
+    LocalStorage.setCurrentUser(mockUser);
+    LocalStorage.setProjectId(mockProjectId);
     let mockStore = createMockStore(MOCK_STATE);
     const mockUpload = uploadInventory();
     await mockUpload(

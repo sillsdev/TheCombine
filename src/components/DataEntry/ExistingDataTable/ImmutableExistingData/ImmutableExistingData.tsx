@@ -1,6 +1,5 @@
 import React from "react";
-import { Grid, TextField } from "@material-ui/core";
-import theme from "../../../../types/theme";
+import { Grid, Typography } from "@material-ui/core";
 
 interface ImmutableExistingDataProps {
   vernacular: string;
@@ -15,30 +14,30 @@ export class ImmutableExistingData extends React.Component<
 > {
   render() {
     return (
-      <Grid container wrap={"nowrap"}>
+      <Grid container wrap="nowrap" justify="space-around">
         <Grid
           item
-          xs
+          xs={5}
           key={"vernacular_" + this.props.vernacular}
           style={{
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2),
+            borderBottomStyle: "dotted",
+            borderBottomWidth: 1,
             position: "relative",
           }}
         >
-          <TextField disabled fullWidth value={this.props.vernacular} />
+          <Typography variant="body1">{this.props.vernacular}</Typography>
         </Grid>
         <Grid
           item
-          xs
+          xs={5}
           key={"gloss_" + this.props.gloss}
           style={{
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2),
+            borderBottomStyle: "dotted",
+            borderBottomWidth: 1,
             position: "relative",
           }}
         >
-          <TextField disabled fullWidth value={this.props.gloss} />
+          <Typography variant="body1">{this.props.gloss}</Typography>
         </Grid>
       </Grid>
     );
