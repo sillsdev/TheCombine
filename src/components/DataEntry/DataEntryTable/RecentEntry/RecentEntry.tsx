@@ -33,7 +33,7 @@ interface RecentEntryProps {
     updatedVernacular: string,
     targetWordId?: string
   ) => void;
-  removeEntry: (entryIndex: number) => void;
+  removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
   semanticDomain: SemanticDomain;
@@ -144,7 +144,7 @@ export default class RecentEntry extends React.Component<
 
   conditionallyUpdateWord() {
     if (this.isSenseUpdated()) {
-      //this.props.updateWord(this.props.entryIndex, this.state.sense);
+      //this.props.updateWord(this.props.entry, this.state.sense);
       this.props.updateSense(
         this.props.entry,
         this.props.entryIndex,
@@ -190,6 +190,7 @@ export default class RecentEntry extends React.Component<
           >
             <VernWithSuggestions
               vernacular={this.state.vernacular}
+              isDisabled={this.props.entry.senses.length > 1}
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
@@ -237,6 +238,7 @@ export default class RecentEntry extends React.Component<
           >
             <Pronunciations
               wordId={this.props.entry.id}
+              senseIndex={this.props.senseIndex}
               pronunciationFiles={this.props.entry.audio}
               recorder={this.props.recorder}
               deleteAudio={(wordId: string, fileName: string) => {
@@ -257,11 +259,7 @@ export default class RecentEntry extends React.Component<
             }}
           >
             {this.state.hovering && (
-              <DeleteEntry
-                removeEntry={() =>
-                  this.props.removeEntry(this.props.entryIndex)
-                }
-              />
+              <DeleteEntry removeEntry={() => this.props.removeEntry()} />
             )}
           </Grid>
         </Grid>

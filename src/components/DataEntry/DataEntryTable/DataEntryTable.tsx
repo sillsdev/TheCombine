@@ -13,7 +13,6 @@ import theme from "../../../types/theme";
 import { SemanticDomain, Sense, Word } from "../../../types/word";
 import { getFileNameForWord } from "../../Pronunciations/AudioRecorder";
 import Recorder from "../../Pronunciations/Recorder";
-import ImmutableEntry from "./RecentEntry/ImmutableEntry";
 import RecentEntry from "./RecentEntry/RecentEntry";
 import { NewEntry } from "./NewEntry/NewEntry";
 
@@ -138,47 +137,25 @@ export class DataEntryTable extends React.Component<
     };
     recentlyAddedWords.push(updatedWordAccess);
 
-    this.setState({ recentlyAddedWords });
+    this.setState({ recentlyAddedWords }, () => {
+      this.replaceInDisplay(wordToUpdate.id, updatedWord);
+    });
   }
 
   async addAudioToRecentWord(oldWordId: string, audioFile: File) {
-    let index: number = this.state.recentlyAddedWords.findIndex(
-      (w) => w.word.id === oldWordId
-    );
-    if (index === -1) {
-      console.log("Word does not exist in recentlyAddedWords");
-      return;
-    }
-    const updatedWordId: string = await Backend.uploadAudio(
-      oldWordId,
-      audioFile
-    );
-    let updatedWord: Word = await Backend.getWord(updatedWordId);
-    let updatedWordAccess: WordAccess = {
-      ...this.state.recentlyAddedWords[index],
-      word: updatedWord,
-    };
-    this.updateWordInFrontend(index, updatedWordAccess);
+    Backend.uploadAudio(oldWordId, audioFile).then((newWordId: string) => {
+      Backend.getWord(newWordId).then((newWord: Word) => {
+        this.replaceInDisplay(oldWordId, newWord);
+      });
+    });
   }
 
   async deleteAudioFromRecentWord(oldWordId: string, fileName: string) {
-    let index: number = this.state.recentlyAddedWords.findIndex(
-      (w) => w.word.id === oldWordId
-    );
-    if (index === -1) {
-      console.log("Word does not exist in recentlyAddedWords");
-      return;
-    }
-    const updatedWordId: string = await Backend.deleteAudio(
-      oldWordId,
-      fileName
-    );
-    let updatedWord: Word = await Backend.getWord(updatedWordId);
-    let updatedWordAccess: WordAccess = {
-      ...this.state.recentlyAddedWords[index],
-      word: updatedWord,
-    };
-    this.updateWordInFrontend(index, updatedWordAccess);
+    Backend.deleteAudio(oldWordId, fileName).then((newWordId: string) => {
+      Backend.getWord(newWordId).then((newWord: Word) => {
+        this.replaceInDisplay(oldWordId, newWord);
+      });
+    });
   }
 
   async updateRecentWord(
@@ -230,17 +207,22 @@ export class DataEntryTable extends React.Component<
   }
 
   async undoRecentEntry(entryIndex: number) {
-    if (entryIndex <= this.state.recentlyAddedWords.length)
+    if (entryIndex >= this.state.recentlyAddedWords.length)
       throw new Error("Entry doesn't exist in recent entries.");
-    const recentEntry: WordAccess = {
-      ...this.state.recentlyAddedWords[entryIndex],
-    };
-    const senseCount: number = recentEntry.word.senses.length;
+    const recentEntry: WordAccess = this.state.recentlyAddedWords[entryIndex];
+
+    // Copy all the parts we need
+    const recentWord: Word = { ...recentEntry.word };
+    const senseCount: number = recentWord.senses.length;
+    const senseIndex: number = recentEntry.senseIndex;
     const recentSense: Sense = {
-      ...recentEntry.word.senses[recentEntry.senseIndex],
+      ...recentWord.senses[senseIndex],
     };
+
+    this.removeRecentEntry(entryIndex);
+
     if (recentSense.semanticDomains.length > 1) {
-      // If there is more than one semantic domain on the gloss, just remove that.
+      // If there is more than one semantic domain in this sense, only remove the domain
       const updatedSemanticDomains: SemanticDomain[] = recentSense.semanticDomains.filter(
         (semDom: SemanticDomain) => semDom.id !== this.props.semanticDomain.id
       );
@@ -248,20 +230,13 @@ export class DataEntryTable extends React.Component<
         ...recentSense,
         semanticDomains: updatedSemanticDomains,
       };
-      this.updateSense(
-        recentEntry.word,
-        recentEntry.senseIndex,
-        updatedSense
-      ).then(() => this.removeRecentEntry(entryIndex));
+      this.updateSense(recentWord, senseIndex, updatedSense);
     } else if (senseCount > 1) {
-      // If there is more than one sense, just remove that.
-      this.removeSense(recentEntry.word, recentEntry.senseIndex).then(() =>
-        this.removeRecentEntry(entryIndex)
-      );
+      // If there is more than one sense in this word, only remove this sense.
+      this.removeSense(recentWord, senseIndex);
     } else {
       // Since this is the only sense, delete the word.
-      this.deleteWord(recentEntry.word);
-      this.removeRecentEntry(entryIndex);
+      this.deleteWord(recentWord);
     }
   }
 
@@ -271,40 +246,49 @@ export class DataEntryTable extends React.Component<
     this.setState({ recentlyAddedWords });
   }
 
-  // Update a sense in a word and refresh every displayed instance of that word.
+  // Update a sense in a word and replace every displayed instance of that word.
   async updateSense(word: Word, senseIndex: number, updatedSense: Sense) {
     let senses: Sense[] = [...word.senses];
     senses.splice(senseIndex, 1, updatedSense);
     const updatedWord: Word = { ...word, senses };
-    const freshWord: Word = await this.updateWordInBackend(updatedWord);
-    let recentlyAddedWords: WordAccess[] = this.state.recentlyAddedWords;
-    recentlyAddedWords.forEach((entry: WordAccess, index: number) => {
-      if (entry.word.id === word.id) {
-        const freshEntry: WordAccess = { ...entry, word: freshWord };
-        recentlyAddedWords.splice(index, 1, freshEntry);
-      }
-    });
+    this.updateWordInBackend(updatedWord).then((newWord: Word) =>
+      this.replaceInDisplay(word.id, newWord)
+    );
   }
 
-  // Remove a sense from a word and refresh every displayed instance of that word.
+  // Remove a sense from a word and replace every displayed instance of that word.
   async removeSense(word: Word, senseIndex: number) {
     let senses: Sense[] = [...word.senses];
     senses.splice(senseIndex, 1);
     const updatedWord: Word = { ...word, senses };
-    const freshWord: Word = await this.updateWordInBackend(updatedWord);
+    this.updateWordInBackend(updatedWord).then((newWord: Word) =>
+      this.replaceInDisplay(word.id, newWord, senseIndex)
+    );
+  }
+
+  // Replace every displayed instance of a word.
+  // If senseIndex is provided, that sense was removed.
+  async replaceInDisplay(
+    oldWordId: string,
+    newWord: Word,
+    removedSenseIndex?: number
+  ) {
     let recentlyAddedWords: WordAccess[] = this.state.recentlyAddedWords;
     recentlyAddedWords.forEach((entry: WordAccess, index: number) => {
-      if (entry.word.id === word.id) {
-        let freshSenseIndex: number = entry.senseIndex;
-        if (freshSenseIndex >= senseIndex) {
-          freshSenseIndex--;
+      if (entry.word.id === oldWordId) {
+        let newSenseIndex: number = entry.senseIndex;
+        if (
+          removedSenseIndex !== undefined &&
+          newSenseIndex >= removedSenseIndex
+        ) {
+          newSenseIndex--;
         }
-        const freshEntry: WordAccess = {
+        const newEntry: WordAccess = {
           ...entry,
-          word: freshWord,
-          senseIndex: freshSenseIndex,
+          word: newWord,
+          senseIndex: newSenseIndex,
         };
-        recentlyAddedWords.splice(index, 1, freshEntry);
+        recentlyAddedWords.splice(index, 1, newEntry);
       }
     });
   }
@@ -348,48 +332,43 @@ export class DataEntryTable extends React.Component<
             </Typography>
           </Grid>
 
-          {this.state.recentlyAddedWords.map((wordAccess, index) =>
-            wordAccess.mutable ? (
-              <RecentEntry
-                key={wordAccess.word.id}
-                allVerns={this.state.existingVerns}
-                allWords={this.state.existingWords}
-                entryIndex={index}
-                entry={wordAccess.word}
-                senseIndex={wordAccess.senseIndex}
-                updateWord={(
-                  wordToUpdate: Word,
-                  wordToDelete: Word,
-                  senseIndex?: number
-                ) =>
-                  this.updateRecentWord(wordToUpdate, wordToDelete, senseIndex)
-                }
-                removeEntry={(entryIndex: number) =>
-                  this.undoRecentEntry(entryIndex)
-                }
-                addAudioToWord={(wordId: string, audioFile: File) =>
-                  this.addAudioToRecentWord(wordId, audioFile)
-                }
-                deleteAudioFromWord={(wordId: string, fileName: string) =>
-                  this.deleteAudioFromRecentWord(wordId, fileName)
-                }
-                recorder={this.recorder}
-                semanticDomain={this.props.semanticDomain}
-                focusNewEntry={() => {
-                  if (this.refNewEntry.current)
-                    this.refNewEntry.current.focusVernInput();
-                }}
-              />
-            ) : (
-              <ImmutableEntry
-                key={wordAccess.word.id}
-                vernacular={wordAccess.word.vernacular}
-                gloss={
-                  wordAccess.word.senses[wordAccess.senseIndex].glosses[0].def
-                }
-              />
-            )
-          )}
+          {this.state.recentlyAddedWords.map((wordAccess, index) => (
+            <RecentEntry
+              key={wordAccess.word.id + "_" + wordAccess.senseIndex}
+              allVerns={this.state.existingVerns}
+              allWords={this.state.existingWords}
+              entryIndex={index}
+              entry={wordAccess.word}
+              senseIndex={wordAccess.senseIndex}
+              updateWord={(
+                wordToUpdate: Word,
+                wordToDelete: Word,
+                senseIndex?: number
+              ) =>
+                this.updateRecentWord(wordToUpdate, wordToDelete, senseIndex)
+              }
+              updateSense={(
+                oldWord: Word,
+                senseIndex: number,
+                updatedSense: Sense,
+                updatedVernacular: string,
+                targetWordId?: string
+              ) => null}
+              removeEntry={() => this.undoRecentEntry(index)}
+              addAudioToWord={(wordId: string, audioFile: File) =>
+                this.addAudioToRecentWord(wordId, audioFile)
+              }
+              deleteAudioFromWord={(wordId: string, fileName: string) =>
+                this.deleteAudioFromRecentWord(wordId, fileName)
+              }
+              recorder={this.recorder}
+              semanticDomain={this.props.semanticDomain}
+              focusNewEntry={() => {
+                if (this.refNewEntry.current)
+                  this.refNewEntry.current.focusVernInput();
+              }}
+            />
+          ))}
 
           <Grid item xs={12}>
             <NewEntry
