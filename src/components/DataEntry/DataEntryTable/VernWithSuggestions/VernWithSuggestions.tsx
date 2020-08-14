@@ -7,8 +7,9 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import { Word } from "../../../../types/word";
+import { Word, simpleWord } from "../../../../types/word";
 import DupFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import SenseDialog from "./SenseDialog/SenseDialog";
 import VernDialog from "./VernDialog/VernDialog";
 
 interface VernWithSuggestionsProps {
@@ -17,16 +18,19 @@ interface VernWithSuggestionsProps {
   vernacular: string;
   vernInput?: React.RefObject<HTMLDivElement>;
   updateVernField: (newValue: string) => Word[];
+  setActiveGloss: (newGloss: string) => void;
   allVerns: string[];
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
   updateWordId: (wordId?: string) => void;
   onBlur?: () => void;
 }
+
 interface VernWithSuggestionsState {
   vernOpen: boolean;
   senseOpen: boolean;
   suggestedVerns: string[];
   dupVernWords: Word[];
+  selectedWord: Word;
 }
 
 /**
@@ -46,6 +50,7 @@ export class VernWithSuggestions extends React.Component<
       senseOpen: false,
       suggestedVerns: [],
       dupVernWords: [],
+      selectedWord: { ...simpleWord("", ""), id: "" },
     };
   }
 
@@ -129,11 +134,32 @@ export class VernWithSuggestions extends React.Component<
               this.setState({ vernOpen: false }, () => {
                 this.props.updateWordId(selectedWordId);
               });
+              console.log("ID: " + selectedWordId);
               if (selectedWordId) {
-                this.setState({ senseOpen: selectedWordId === "" }); //new entry id is an empty string
+                let selectedWord: Word = this.state.dupVernWords.find(
+                  (word: Word) => word.id === selectedWordId
+                )!;
+                this.setState({
+                  selectedWord,
+                  senseOpen: selectedWordId !== "",
+                }); //new entry id is an empty string
               }
             }}
             vernacularWords={this.state.dupVernWords}
+          />
+        )}
+        {this.props.isNew && (
+          <SenseDialog
+            selectedWord={this.state.selectedWord}
+            open={this.state.senseOpen}
+            handleClose={(senseIndex: number) => {
+              if (senseIndex >= 0) {
+                this.props.setActiveGloss(
+                  this.state.selectedWord.senses[senseIndex].glosses[0].def
+                );
+              }
+              this.setState({ senseOpen: false });
+            }}
           />
         )}
       </React.Fragment>

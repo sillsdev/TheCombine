@@ -210,6 +210,9 @@ export default class NewEntry extends React.Component<
                 handleEnterAndTab={(e: React.KeyboardEvent) =>
                   this.handleEnterAndTab(e)
                 }
+                setActiveGloss={(newGloss: string) =>
+                  this.setState({ activeGloss: newGloss })
+                }
               />
             </Grid>
             <Grid item xs={12}>
