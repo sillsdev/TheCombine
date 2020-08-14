@@ -282,6 +282,10 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
                 handleEnterAndTab={(e: React.KeyboardEvent) =>
                   this.handleEnterAndTab(e)
                 }
+                selectedVernacularSenses={this.state.newEntry.senses}
+                setActiveGloss={(newGloss: string) =>
+                  this.setState({ activeGloss: newGloss })
+                }
               />
             </Grid>
             <Grid item xs={12}>

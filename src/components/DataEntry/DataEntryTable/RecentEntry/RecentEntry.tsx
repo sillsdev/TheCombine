@@ -202,6 +202,8 @@ export default class RecentEntry extends React.Component<
                 }
               }}
               handleEnterAndTab={() => {}}
+              selectedVernacularSenses={[]}
+              setActiveGloss={() => {}}
             />
           </Grid>
           <Grid
