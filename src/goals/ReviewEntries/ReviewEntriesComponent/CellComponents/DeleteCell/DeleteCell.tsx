@@ -1,5 +1,5 @@
 import React from "react";
-import { Chip } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 
 import AlignedList, { SPACER } from "../AlignedList";
@@ -36,25 +36,23 @@ class DeleteCell extends React.Component<DeleteCellProps> {
         listId={`delete${this.props.rowData.id}`}
         contents={this.props.rowData.senses.map((value) => (
           <React.Fragment>
-            <Chip
-              color={value.deleted ? "secondary" : "default"}
-              label={<Delete />}
+            <IconButton
               onClick={() => {
                 this.props.delete!(value.senseId);
               }}
-            />
+            >
+              <Delete />
+            </IconButton>
           </React.Fragment>
         ))}
         bottomCell={SPACER}
       />
     ) : (
-      <Chip
-        color={"default"}
-        label={<Delete />}
-        onClick={() => {
-          this.deleteFrontierWord(this.props.rowData.id);
-        }}
-      />
+      <IconButton
+        onClick={() => this.deleteFrontierWord(this.props.rowData.id)}
+      >
+        <Delete />
+      </IconButton>
     );
   }
 }
