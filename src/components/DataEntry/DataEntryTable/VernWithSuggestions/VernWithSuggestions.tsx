@@ -168,12 +168,11 @@ export class VernWithSuggestions extends React.Component<
                   senseOpen: true,
                 });
               } else if (selectedWordId === "") {
-                this.setState({
-                  selectedWord: {
-                    ...simpleWord(this.props.vernacular, ""),
-                    id: "",
-                  },
-                });
+                let selectedWord: Word = {
+                  ...simpleWord(this.props.vernacular, ""),
+                  id: "",
+                };
+                this.setState({ selectedWord });
               }
             }}
             vernacularWords={this.state.dupVernWords}
