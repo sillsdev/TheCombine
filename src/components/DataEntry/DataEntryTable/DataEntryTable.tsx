@@ -248,7 +248,7 @@ export class DataEntryTable extends React.Component<
   }
 
   async deleteWordAndUpdateExistingWords(word: Word) {
-    await Backend.deleteWord(word);
+    await Backend.deleteFrontierWord(word.id);
     let existingWords: Word[] = await this.props.getWordsFromBackend();
     this.setState({ existingWords });
   }
