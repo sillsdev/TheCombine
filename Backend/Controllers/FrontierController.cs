@@ -18,7 +18,8 @@ namespace BackendFramework.Controllers
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public FrontierController(IWordRepository repo, IWordService wordService, IProjectService projServ, IPermissionService permissionService)
+        public FrontierController(IWordRepository repo, IWordService wordService,
+            IProjectService projServ, IPermissionService permissionService)
         {
             _repo = repo;
             _wordService = wordService;
@@ -76,7 +77,7 @@ namespace BackendFramework.Controllers
 #endif
         }
 
-        /// <summary> Deletes (or at least tags as deleted) Frontier <see cref="Word"/> with specified ID </summary>
+        /// <summary> Deletes Frontier <see cref="Word"/> with specified ID </summary>
         /// <remarks> DELETE: v1/projects/{projectId}/words/frontier/{wordId} </remarks>
         [HttpDelete("{wordId}")]
         public async Task<IActionResult> DeleteFrontierWord(string projectId, string wordId)
@@ -93,11 +94,11 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            if (await _wordService.DeleteFrontierWord(projectId, wordId))
+            if (await _wordService.DeleteFrontierWord(projectId, wordId) == "Not found")
             {
-                return new OkObjectResult(true);
+                return new NotFoundObjectResult("The project was found, but the frontier word was not deleted");
             }
-            return new NotFoundObjectResult("The project was found, but the word was not deleted");
+            return new OkObjectResult(wordId);
         }
     }
 }

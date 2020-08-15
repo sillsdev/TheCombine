@@ -76,33 +76,36 @@ namespace BackendFramework.Services
             return wordWithAudioToDelete;
         }
 
-        /// <summary> Makes a new word in Frontier that has deleted tag on each sense </summary>
-        /// <returns> A bool: success of operation </returns>
-        public async Task<bool> DeleteFrontierWord(string projectId, string wordId)
+        /// <summary> Deletes word in frontier collection and adds word with deleted tag in word collection </summary>
+        /// <returns> A string: id of new word </returns>
+        public async Task<string> DeleteFrontierWord(string projectId, string wordId)
         {
             var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
-            var word = await _repo.GetWord(projectId, wordId);
 
-            // We only want to update words that are in the frontier
-            if (wordIsInFrontier)
+            if (!wordIsInFrontier)
             {
-                word.Id = "";
-                word.ProjectId = projectId;
-                word.Accessibility = 1;
-
-                // Keep track of the old word
-                if (word.History == null)
-                {
-                    word.History = new List<string> { wordId };
-                }
-                // If we are updating the history, don't overwrite it, just add to the history
-                else
-                {
-                    word.History.Add(wordId);
-                }
+                return "Not found";
             }
 
-            return wordIsInFrontier;
+            var word = await _repo.GetWord(projectId, wordId);
+
+            word.Id = "";
+            word.ProjectId = projectId;
+            word.Accessibility = 1;
+
+            // Keep track of the old word
+            if (word.History == null)
+            {
+                word.History = new List<string> { wordId };
+            }
+            // If we are updating the history, don't overwrite it, just add to the history
+            else
+            {
+                word.History.Add(wordId);
+            }
+
+            var deletedWord = await _repo.Add(word);
+            return deletedWord.Id;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
