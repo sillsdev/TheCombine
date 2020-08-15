@@ -134,8 +134,8 @@ export default class NewEntry extends React.Component<
     focusInput(this.glossInput);
   }
 
-  addNewWordAndReset() {
-    this.props
+  async addNewWordAndReset() {
+    await this.props
       .addNewWord(this.state.newEntry, this.state.audioFileURLs)
       .then(() => {
         this.resetState();
@@ -143,10 +143,10 @@ export default class NewEntry extends React.Component<
     this.focusVernInput();
   }
 
-  addOrUpdateWord() {
+  async addOrUpdateWord() {
     if (!this.state.isDupVern || this.state.wordId === "") {
       // Either a new Vern is typed, or user has selected new entry for this duplicate vern
-      this.addNewWordAndReset();
+      await this.addNewWordAndReset();
     } else if (this.state.wordId === undefined && this.state.isDupVern) {
       // Duplicate vern and the user hasn't made a selection
       // Change focus away from vern to trigger vern's onBlur
@@ -154,23 +154,24 @@ export default class NewEntry extends React.Component<
     } else {
       // Duplicate vern and the user has selected an entry to modify,
       // so wordId is defined and non-empty
-      this.props
+      await this.props
         .updateWordWithNewGloss(
           this.state.wordId!,
           this.state.activeGloss,
           this.state.audioFileURLs
         )
         .then((result: boolean) => {
+          // result=true means that the submission was successsful
           if (result) this.resetState();
         });
     }
   }
 
-  handleEnterAndTab(e: React.KeyboardEvent) {
+  async handleEnterAndTab(e: React.KeyboardEvent) {
     if (e.key === "Enter" || e.key === "Tab") {
       if (this.state.newEntry.vernacular) {
         if (this.state.activeGloss) {
-          this.addOrUpdateWord();
+          await this.addOrUpdateWord();
           this.resetState();
           this.focusVernInput();
         } else {
