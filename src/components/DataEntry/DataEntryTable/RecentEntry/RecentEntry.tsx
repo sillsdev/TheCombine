@@ -27,7 +27,7 @@ interface RecentEntryProps {
 interface RecentEntryState {
   vernacular: string;
   gloss: string;
-  isDupVern: boolean;
+  //isDupVern: boolean;
   //wordId?: string;
   hovering: boolean;
 }
@@ -48,7 +48,7 @@ export default class RecentEntry extends React.Component<
     this.state = {
       vernacular: props.entry.vernacular,
       gloss: sense.glosses.length > 0 ? sense.glosses[0].def : "",
-      isDupVern: false,
+      //isDupVern: false,
       hovering: false,
     };
   }
@@ -60,16 +60,16 @@ export default class RecentEntry extends React.Component<
   updateVernField(newValue?: string): Word[] {
     let vernacular: string = "";
     let dupVernWords: Word[] = [];
-    let isDupVern: boolean = false;
+    //let isDupVern: boolean = false;
     if (newValue) {
       vernacular = newValue;
-      dupVernWords = this.props.allWords.filter(
+      /*dupVernWords = this.props.allWords.filter(
         (word: Word) => word.vernacular === newValue
       );
-      isDupVern = dupVernWords.length > 0;
+      isDupVern = dupVernWords.length > 0;*/
     }
     this.setState({
-      isDupVern,
+      //isDupVern,
       vernacular,
     });
     return dupVernWords;
@@ -128,7 +128,9 @@ export default class RecentEntry extends React.Component<
               onBlur={() => {
                 this.conditionallyUpdateVern();
               }}
-              handleEnterAndTab={() => {}}
+              handleEnterAndTab={() => {
+                if (this.state.vernacular) this.focusOnNewEntry();
+              }}
               setActiveGloss={() => {}}
             />
           </Grid>
@@ -150,8 +152,7 @@ export default class RecentEntry extends React.Component<
                 this.conditionallyUpdateGloss();
               }}
               handleEnterAndTab={() => {
-                this.focusOnNewEntry();
-                //TODO: check for empty gloss
+                if (this.state.gloss) this.focusOnNewEntry();
               }}
             />
           </Grid>

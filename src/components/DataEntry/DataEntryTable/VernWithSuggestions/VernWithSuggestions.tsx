@@ -7,7 +7,7 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import { Word, simpleWord } from "../../../../types/word";
+import { simpleWord, Word } from "../../../../types/word";
 import DupFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import SenseDialog from "./SenseDialog/SenseDialog";
 import VernDialog from "./VernDialog/VernDialog";
@@ -22,6 +22,7 @@ interface VernWithSuggestionsProps {
   allVerns: string[];
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
   updateWordId: (wordId?: string) => void;
+  selectedWordId?: string;
   onBlur?: () => void;
 }
 
@@ -98,11 +99,8 @@ export class VernWithSuggestions extends React.Component<
     this.setState({ suggestedVerns });
   }
 
-  handleSelection(value?: string) {
-    let dupVernWords: Word[] = this.state.dupVernWords;
-    if (value !== undefined) {
-      dupVernWords = this.props.updateVernField(value);
-    }
+  handleSelection(value: string) {
+    let dupVernWords: Word[] = this.props.updateVernField(value);
     if (dupVernWords.length > 0) {
       this.setState({ vernOpen: true, dupVernWords });
     } else {
@@ -122,8 +120,8 @@ export class VernWithSuggestions extends React.Component<
             if (this.props.onBlur) {
               this.props.onBlur();
             }
-            if (this.state.selectedWord.vernacular !== this.props.vernacular)
-              this.handleSelection();
+            if (this.props.selectedWordId === undefined)
+              this.handleSelection(this.props.vernacular);
           }}
           onChange={(_event, value) => {
             // onChange is triggered when an option is selected
@@ -138,8 +136,9 @@ export class VernWithSuggestions extends React.Component<
             this.updateSuggestedVerns(value);
             this.props.updateWordId();
           }}
-          onKeyPress={(e) => {
-            if (!this.state.vernOpen) this.props.handleEnterAndTab(e);
+          onKeyPress={(e: React.KeyboardEvent) => {
+            if (!this.state.vernOpen && (e.key === "Enter" || e.key === "Tab"))
+              this.props.handleEnterAndTab(e);
           }}
           renderInput={(params) => (
             <TextField
@@ -166,8 +165,15 @@ export class VernWithSuggestions extends React.Component<
                 )!;
                 this.setState({
                   selectedWord,
-                  senseOpen: selectedWordId !== "",
-                }); //new entry id is an empty string
+                  senseOpen: true,
+                });
+              } else if (selectedWordId === "") {
+                this.setState({
+                  selectedWord: {
+                    ...simpleWord(this.props.vernacular, ""),
+                    id: "",
+                  },
+                });
               }
             }}
             vernacularWords={this.state.dupVernWords}

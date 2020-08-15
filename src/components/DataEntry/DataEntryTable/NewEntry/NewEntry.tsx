@@ -168,7 +168,7 @@ export default class NewEntry extends React.Component<
   }
 
   async handleEnterAndTab(e: React.KeyboardEvent) {
-    if (e.key === "Enter" || e.key === "Tab") {
+    if (e.key === "Enter") {
       if (this.state.newEntry.vernacular) {
         if (this.state.activeGloss) {
           await this.addOrUpdateWord();
@@ -207,6 +207,7 @@ export default class NewEntry extends React.Component<
                   return this.updateVernField(newValue);
                 }}
                 updateWordId={(wordId?: string) => this.updateWordId(wordId)}
+                selectedWordId={this.state.wordId}
                 allVerns={this.props.allVerns}
                 handleEnterAndTab={(e: React.KeyboardEvent) =>
                   this.handleEnterAndTab(e)
