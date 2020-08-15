@@ -20,10 +20,10 @@ interface DeleteCellProps {
 class DeleteCell extends React.Component<DeleteCellProps> {
   async deleteFrontierWord(wordId: string) {
     await backend.deleteFrontierWord(wordId);
-    var updatedWords: ReviewEntriesWord[] = [];
-    for (var i = 0; i < this.props.words.length; i++) {
-      if (this.props.words[i].id !== wordId) {
-        updatedWords.push(this.props.words[i]);
+    let updatedWords: ReviewEntriesWord[] = [];
+    for (let word of this.props.words) {
+      if (word.id !== wordId) {
+        updatedWords.push(word);
       }
     }
     this.props.updateAllWords(updatedWords);
