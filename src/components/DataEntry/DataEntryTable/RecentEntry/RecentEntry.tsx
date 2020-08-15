@@ -28,7 +28,7 @@ interface RecentEntryState {
   vernacular: string;
   gloss: string;
   isDupVern: boolean;
-  wordId?: string;
+  //wordId?: string;
   hovering: boolean;
 }
 
@@ -75,9 +75,9 @@ export default class RecentEntry extends React.Component<
     return dupVernWords;
   }
 
-  updateWordId(wordId?: string) {
+  /*updateWordId(wordId?: string) {
     this.setState({ wordId });
-  }
+  }*/
 
   conditionallyUpdateGloss() {
     if (
@@ -89,10 +89,10 @@ export default class RecentEntry extends React.Component<
 
   conditionallyUpdateVern() {
     if (
-      this.props.entry.vernacular !== this.state.vernacular ||
-      this.state.wordId !== undefined
+      this.props.entry.vernacular !== this.state.vernacular //||
+      //this.state.wordId !== undefined
     )
-      this.props.updateVern(this.state.vernacular, this.state.wordId);
+      this.props.updateVern(this.state.vernacular); //, this.state.wordId);
   }
 
   focusOnNewEntry = () => {
@@ -123,7 +123,7 @@ export default class RecentEntry extends React.Component<
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
-              updateWordId={(wordId?: string) => this.updateWordId(wordId)}
+              updateWordId={(wordId?: string) => null} //this.updateWordId(wordId)}
               allVerns={[]}
               onBlur={() => {
                 this.conditionallyUpdateVern();
