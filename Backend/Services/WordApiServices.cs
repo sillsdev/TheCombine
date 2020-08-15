@@ -31,11 +31,11 @@ namespace BackendFramework.Services
                 var wordToDelete = _repo.GetWord(projectId, wordId).Result;
                 wordToDelete.Id = "";
                 wordToDelete.History = new List<string>() { wordId };
-                wordToDelete.Accessibility = (int)State.Deleted;
+                wordToDelete.Accessibility = State.Deleted;
 
                 foreach (var senseAcc in wordToDelete.Senses)
                 {
-                    senseAcc.Accessibility = (int)State.Deleted;
+                    senseAcc.Accessibility = State.Deleted;
                 }
 
                 await _repo.Create(wordToDelete);
@@ -91,7 +91,7 @@ namespace BackendFramework.Services
 
             word.Id = "";
             word.ProjectId = projectId;
-            word.Accessibility = 1;
+            word.Accessibility = State.Deleted;
 
             // Keep track of the old word
             if (word.History == null)
@@ -161,7 +161,7 @@ namespace BackendFramework.Services
                 }
                 for (var i = 0; i < currentChildWord.Senses.Count; i++)
                 {
-                    currentChildWord.Senses[i].Accessibility = (int)newChildWordState.SenseStates[i];
+                    currentChildWord.Senses[i].Accessibility = newChildWordState.SenseStates[i];
                 }
 
                 // Change the child word's history to its previous self
@@ -189,7 +189,7 @@ namespace BackendFramework.Services
                             break;
                         // Add the sense to a separate word and the word to its history
                         case State.Separate:
-                            currentChildWord.Senses[i].Accessibility = (int)State.Active;
+                            currentChildWord.Senses[i].Accessibility = State.Active;
                             separateWord.Senses.Add(currentChildWord.Senses[i]);
                             if (!separateWord.History.Contains(currentChildWord.Id))
                             {
