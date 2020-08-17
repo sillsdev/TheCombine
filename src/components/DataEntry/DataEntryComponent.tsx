@@ -63,11 +63,10 @@ export function filterWordsByDomain(
 ): DomainWord[] {
   const domainWords: DomainWord[] = [];
   const domainName: String = domain.name;
-  let domainMatched: Boolean = false;
 
   for (const currentWord of words) {
     currentWord.senses.forEach((currentSense: Sense, senseIndex: number) => {
-      domainMatched = false;
+      let domainMatched: Boolean = false;
       for (const currentDomain of currentSense.semanticDomains) {
         if (currentDomain.name === domainName) {
           domainMatched = true;

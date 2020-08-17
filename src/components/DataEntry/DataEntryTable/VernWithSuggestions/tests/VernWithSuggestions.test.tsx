@@ -10,10 +10,9 @@ describe("Tests VernWithSuggestions", () => {
         <LocalizedVernWithSuggestions
           vernacular={""}
           vernInput={React.createRef<HTMLDivElement>()}
-          updateVernField={() => []}
+          updateVernField={() => false}
           updateWordId={() => null}
           allVerns={[]}
-          setActiveGloss={() => null}
           handleEnterAndTab={() => null}
         />
       );

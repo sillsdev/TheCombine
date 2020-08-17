@@ -56,15 +56,10 @@ export default class RecentEntry extends React.Component<
     this.setState({ gloss });
   }
 
-  updateVernField(newValue?: string): Word[] {
-    let vernacular: string = "";
-    if (newValue) {
-      vernacular = newValue;
-    }
-    this.setState({
-      vernacular,
-    });
-    return [];
+  updateVernField(newValue?: string): boolean {
+    const vernacular: string = newValue ? newValue : "";
+    this.setState({ vernacular });
+    return false;
   }
 
   conditionallyUpdateGloss() {
@@ -115,7 +110,6 @@ export default class RecentEntry extends React.Component<
               handleEnterAndTab={() => {
                 if (this.state.vernacular) this.focusOnNewEntry();
               }}
-              setActiveGloss={() => {}}
             />
           </Grid>
           <Grid

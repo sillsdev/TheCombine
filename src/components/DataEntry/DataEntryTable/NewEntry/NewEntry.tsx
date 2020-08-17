@@ -8,6 +8,8 @@ import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
+import SenseDialog from "./SenseDialog";
+import VernDialog from "./VernDialog";
 
 interface NewEntryProps {
   allVerns: string[];
@@ -26,9 +28,13 @@ interface NewEntryProps {
 interface NewEntryState {
   newEntry: Word;
   isDupVern: boolean;
+  dupVernWords: Word[];
   wordId?: string;
+  selectedWord: Word;
   activeGloss: string;
   audioFileURLs: string[];
+  vernOpen: boolean;
+  senseOpen: boolean;
 }
 
 function focusInput(inputRef: React.RefObject<HTMLDivElement>) {
@@ -52,6 +58,10 @@ export default class NewEntry extends React.Component<
       activeGloss: "",
       audioFileURLs: [],
       isDupVern: false,
+      dupVernWords: [],
+      selectedWord: { ...simpleWord("", ""), id: "" },
+      vernOpen: false,
+      senseOpen: false,
     };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
@@ -92,7 +102,7 @@ export default class NewEntry extends React.Component<
     });
   }
 
-  updateVernField(newValue: string): Word[] {
+  updateVernField(newValue: string): boolean {
     let dupVernWords: Word[] = [];
     let isDupVern: boolean = false;
     if (newValue) {
@@ -103,12 +113,13 @@ export default class NewEntry extends React.Component<
     }
     this.setState({
       isDupVern,
+      dupVernWords,
       newEntry: {
         ...this.state.newEntry,
         vernacular: newValue,
       },
     });
-    return dupVernWords;
+    return isDupVern;
   }
 
   updateWordId(wordId?: string) {
@@ -213,9 +224,45 @@ export default class NewEntry extends React.Component<
                 handleEnterAndTab={(e: React.KeyboardEvent) =>
                   this.handleEnterAndTab(e)
                 }
-                setActiveGloss={(newGloss: string) =>
-                  this.setState({ activeGloss: newGloss })
-                }
+                openVernDialog={() => {
+                  this.setState({ vernOpen: true });
+                }}
+              />
+              <VernDialog
+                open={this.state.vernOpen}
+                handleClose={(selectedWordId?: string) => {
+                  this.setState({ vernOpen: false }, () => {
+                    this.updateWordId(selectedWordId);
+                  });
+                  if (selectedWordId) {
+                    let selectedWord: Word = this.state.dupVernWords.find(
+                      (word: Word) => word.id === selectedWordId
+                    )!;
+                    this.setState({
+                      selectedWord,
+                      senseOpen: true,
+                    });
+                  } else if (selectedWordId === "") {
+                    let selectedWord: Word = {
+                      ...simpleWord(this.state.newEntry.vernacular, ""),
+                      id: "",
+                    };
+                    this.setState({ selectedWord });
+                  }
+                }}
+                vernacularWords={this.state.dupVernWords}
+              />
+              <SenseDialog
+                selectedWord={this.state.selectedWord}
+                open={this.state.senseOpen}
+                handleClose={(senseIndex: number) => {
+                  if (senseIndex >= 0) {
+                    this.updateGlossField(
+                      this.state.selectedWord.senses[senseIndex].glosses[0].def
+                    );
+                  }
+                  this.setState({ senseOpen: false });
+                }}
               />
             </Grid>
             <Grid item xs={12}>
