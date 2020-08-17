@@ -59,6 +59,7 @@ export interface Merge {
 export interface DomainWord {
   word: Word;
   gloss: Gloss;
+  senseIndex?: number;
 }
 
 export function hasSenses(word: Word): boolean {

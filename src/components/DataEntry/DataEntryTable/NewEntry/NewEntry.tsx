@@ -60,7 +60,7 @@ export default class NewEntry extends React.Component<
   glossInput: React.RefObject<HTMLDivElement>;
 
   addAudio(audioFile: File) {
-    let audioFileURLs = [...this.state.audioFileURLs];
+    const audioFileURLs = [...this.state.audioFileURLs];
     audioFileURLs.push(URL.createObjectURL(audioFile));
     this.setState({
       audioFileURLs,

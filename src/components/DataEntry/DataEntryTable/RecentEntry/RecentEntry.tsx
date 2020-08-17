@@ -40,7 +40,7 @@ export default class RecentEntry extends React.Component<
   constructor(props: RecentEntryProps) {
     super(props);
 
-    let sense: Sense = { ...props.entry.senses[props.senseIndex] };
+    const sense: Sense = { ...props.entry.senses[props.senseIndex] };
     //ToDo: Use analysis language from project instead of "en"
     if (sense.glosses.length < 1)
       sense.glosses.push({ def: "", language: "en" });

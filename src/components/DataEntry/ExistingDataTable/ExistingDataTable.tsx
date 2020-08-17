@@ -1,5 +1,6 @@
 import { Drawer, Grid, List } from "@material-ui/core";
 import React from "react";
+
 import { SemanticDomain, DomainWord } from "../../../types/word";
 import { ImmutableExistingData } from "./ImmutableExistingData/ImmutableExistingData";
 
@@ -11,19 +12,20 @@ interface ExistingDataTableProps {
   toggleDrawer: (openClosed: boolean) => void;
 }
 
-/*Displays previously entered data in a panel to the right of the DataEntryTable */
-export class ExistingDataTable extends React.Component<ExistingDataTableProps> {
+/* Displays previously entered data in a panel to the right of the DataEntryTable */
+export default class ExistingDataTable extends React.Component<
+  ExistingDataTableProps
+> {
   closeDrawer = () => {
     this.props.toggleDrawer(false);
   };
 
   list() {
-    let domainWords: DomainWord[] = this.props.domainWords;
     return (
       <List style={{ minWidth: "300px" }}>
-        {domainWords.map((domainWord) => (
+        {this.props.domainWords.map((domainWord) => (
           <ImmutableExistingData
-            key={domainWord.word.id}
+            key={domainWord.word.id + domainWord.senseIndex}
             vernacular={domainWord.word.vernacular}
             gloss={domainWord.gloss.def}
           />

@@ -75,13 +75,13 @@ export function addSemanticDomainToSense(
     throw new RangeError("senseIndex too large");
   } else {
     const oldSense: Sense = existingWord.senses[senseIndex];
-    let updatedDomains: SemanticDomain[] = [...oldSense.semanticDomains];
+    const updatedDomains: SemanticDomain[] = [...oldSense.semanticDomains];
     updatedDomains.push(semanticDomain);
     const updatedSense: Sense = {
       ...oldSense,
       semanticDomains: updatedDomains,
     };
-    let updatedSenses: Sense[] = existingWord.senses;
+    const updatedSenses: Sense[] = existingWord.senses;
     updatedSenses.splice(senseIndex, 1, updatedSense);
     const updatedWord: Word = { ...existingWord, senses: updatedSenses };
     return updatedWord;
@@ -93,15 +93,15 @@ export function addSenseToWord(
   existingWord: Word,
   gloss: string
 ): Word {
-  let updatedWord: Word = { ...existingWord };
+  const updatedWord: Word = { ...existingWord };
 
   //ToDo: Use analysis language from project instead of "en"
-  let newGloss: Gloss = {
+  const newGloss: Gloss = {
     language: "en",
     def: gloss,
   };
 
-  let newSense: Sense = {
+  const newSense: Sense = {
     glosses: [newGloss],
     semanticDomains: [semanticDomain],
     accessibility: State.active,
@@ -148,8 +148,8 @@ export class DataEntryTable extends React.Component<
     const newWordWithAudio: Word = await Backend.getWord(wordId);
     await this.updateExisting();
 
-    let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
-    let newWordAccess: WordAccess = {
+    const recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
+    const newWordAccess: WordAccess = {
       word: newWordWithAudio,
       senseIndex: 0,
     };
@@ -158,9 +158,7 @@ export class DataEntryTable extends React.Component<
     } else {
       recentlyAddedWords.push(newWordAccess);
     }
-    this.setState({
-      recentlyAddedWords,
-    });
+    this.setState({ recentlyAddedWords });
   }
 
   /** Update the word in the backend and the frontend */

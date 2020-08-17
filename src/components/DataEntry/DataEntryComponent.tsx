@@ -1,17 +1,23 @@
-import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
+import { Dialog, Divider, Grid, Paper } from "@material-ui/core";
 import React from "react";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { getFrontierWords } from "../../backend";
 import { CurrentTab } from "../../types/currentTab";
 import DomainTree from "../../types/SemanticDomain";
 import theme from "../../types/theme";
-import { SemanticDomain, Word, State, DomainWord } from "../../types/word";
+import {
+  DomainWord,
+  SemanticDomain,
+  Sense,
+  State,
+  Word,
+} from "../../types/word";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import TreeViewComponent from "../TreeView";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
-import { ExistingDataTable } from "./ExistingDataTable/ExistingDataTable";
+import ExistingDataTable from "./ExistingDataTable/ExistingDataTable";
 
 interface DataEntryProps {
   domain: DomainTree;
@@ -35,10 +41,10 @@ const paperStyle = {
 
 /** Filter out words that do not have correct accessibility */
 export function filterWords(words: Word[]): Word[] {
-  let filteredWords: Word[] = [];
-  for (let word of words) {
+  const filteredWords: Word[] = [];
+  for (const word of words) {
     let shouldInclude = true;
-    for (let sense of word.senses) {
+    for (const sense of word.senses) {
       if (sense.accessibility !== State.active) {
         shouldInclude = false;
         break;
@@ -55,26 +61,27 @@ export function filterWordsByDomain(
   words: Word[],
   domain: SemanticDomain
 ): DomainWord[] {
-  let domainWords: DomainWord[] = [];
-  let domainName: String = domain.name;
+  const domainWords: DomainWord[] = [];
+  const domainName: String = domain.name;
   let domainMatched: Boolean = false;
 
-  for (let currentWord of words) {
-    for (let currentSense of currentWord.senses) {
+  for (const currentWord of words) {
+    currentWord.senses.forEach((currentSense: Sense, senseIndex: number) => {
       domainMatched = false;
-      for (let currentDomain of currentSense.semanticDomains) {
+      for (const currentDomain of currentSense.semanticDomains) {
         if (currentDomain.name === domainName) {
           domainMatched = true;
         }
       }
       if (domainMatched) {
-        let newDomainWord: DomainWord = {
+        const newDomainWord: DomainWord = {
           word: currentWord,
           gloss: currentSense.glosses[0],
+          senseIndex,
         };
         domainWords.push(newDomainWord);
       }
-    }
+    });
   }
 
   return domainWords;
@@ -84,7 +91,7 @@ export function sortDomainWordByVern(
   existingWords: Word[],
   domain: SemanticDomain
 ): DomainWord[] {
-  let domainWords: DomainWord[] = filterWordsByDomain(existingWords, domain);
+  const domainWords: DomainWord[] = filterWordsByDomain(existingWords, domain);
   domainWords.sort((a, b) =>
     a.word.vernacular.length < 1
       ? -1
@@ -124,7 +131,8 @@ export class DataEntryComponent extends React.Component<
   }
 
   handleWindowSizeChange = () => {
-    let smallScreen: boolean = window.matchMedia("(max-width: 960px)").matches;
+    const smallScreen: boolean = window.matchMedia("(max-width: 960px)")
+      .matches;
     this.setState({
       isSmallScreen: smallScreen,
     });
@@ -136,16 +144,14 @@ export class DataEntryComponent extends React.Component<
     });
 
   async getWordsFromBackend(): Promise<Word[]> {
-    let words = await getFrontierWords();
-    this.setState({
-      existingWords: words,
-    });
-    words = filterWords(words);
+    const existingWords = await getFrontierWords();
+    this.setState({ existingWords });
+    const words = filterWords(existingWords);
     return words;
   }
 
   render() {
-    let semanticDomain: SemanticDomain = {
+    const semanticDomain: SemanticDomain = {
       name: this.props.domain.name,
       id: this.props.domain.id,
     };

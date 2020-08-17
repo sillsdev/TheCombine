@@ -59,14 +59,14 @@ export class VernWithSuggestions extends React.Component<
     // filter allVerns to those that start with vernacular
     // then map them into an array sorted by length and take the 2 shortest
     // and the rest longest (should make finding the long words easier)
-    let scoredStartsWith: [string, number][] = [];
-    let startsWith = this.props.allVerns.filter((vern: string) =>
+    const scoredStartsWith: [string, number][] = [];
+    const startsWith = this.props.allVerns.filter((vern: string) =>
       vern.startsWith(vernacular)
     );
     for (const v of startsWith) {
       scoredStartsWith.push([v, v.length]);
     }
-    let keepers = scoredStartsWith
+    const keepers = scoredStartsWith
       .sort((a, b) => a[1] - b[1])
       .map((vern) => vern[0]);
     if (keepers.length > this.maxSuggestions) {
@@ -80,7 +80,7 @@ export class VernWithSuggestions extends React.Component<
     if (value) {
       suggestedVerns = [...this.autoCompleteCandidates(value)];
       if (suggestedVerns.length < this.maxSuggestions) {
-        let sortedVerns: string[] = [...this.props.allVerns].sort(
+        const sortedVerns: string[] = [...this.props.allVerns].sort(
           (a: string, b: string) =>
             this.suggestionFinder.getLevenshteinDistance(a, value) -
             this.suggestionFinder.getLevenshteinDistance(b, value)
@@ -100,7 +100,7 @@ export class VernWithSuggestions extends React.Component<
   }
 
   handleSelection(value: string) {
-    let dupVernWords: Word[] = this.props.updateVernField(value);
+    const dupVernWords: Word[] = this.props.updateVernField(value);
     if (dupVernWords.length > 0) {
       this.setState({ vernOpen: true, dupVernWords });
     } else {
