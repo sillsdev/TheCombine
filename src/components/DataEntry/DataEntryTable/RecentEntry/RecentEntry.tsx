@@ -27,8 +27,6 @@ interface RecentEntryProps {
 interface RecentEntryState {
   vernacular: string;
   gloss: string;
-  //isDupVern: boolean;
-  //wordId?: string;
   hovering: boolean;
 }
 
@@ -43,12 +41,13 @@ export default class RecentEntry extends React.Component<
     super(props);
 
     let sense: Sense = { ...props.entry.senses[props.senseIndex] };
-    if (sense.glosses.length < 1) sense.glosses.push({ def: "", language: "" });
+    //ToDo: Use analysis language from project instead of "en"
+    if (sense.glosses.length < 1)
+      sense.glosses.push({ def: "", language: "en" });
 
     this.state = {
       vernacular: props.entry.vernacular,
       gloss: sense.glosses.length > 0 ? sense.glosses[0].def : "",
-      //isDupVern: false,
       hovering: false,
     };
   }
@@ -59,25 +58,14 @@ export default class RecentEntry extends React.Component<
 
   updateVernField(newValue?: string): Word[] {
     let vernacular: string = "";
-    let dupVernWords: Word[] = [];
-    //let isDupVern: boolean = false;
     if (newValue) {
       vernacular = newValue;
-      /*dupVernWords = this.props.allWords.filter(
-        (word: Word) => word.vernacular === newValue
-      );
-      isDupVern = dupVernWords.length > 0;*/
     }
     this.setState({
-      //isDupVern,
       vernacular,
     });
-    return dupVernWords;
+    return [];
   }
-
-  /*updateWordId(wordId?: string) {
-    this.setState({ wordId });
-  }*/
 
   conditionallyUpdateGloss() {
     if (
@@ -88,16 +76,12 @@ export default class RecentEntry extends React.Component<
   }
 
   conditionallyUpdateVern() {
-    if (
-      this.props.entry.vernacular !== this.state.vernacular //||
-      //this.state.wordId !== undefined
-    )
-      this.props.updateVern(this.state.vernacular); //, this.state.wordId);
+    if (this.props.entry.vernacular !== this.state.vernacular)
+      this.props.updateVern(this.state.vernacular);
   }
 
   focusOnNewEntry = () => {
     this.props.focusNewEntry();
-    //reference NewEntry's focus thing here
   };
 
   render() {
@@ -123,7 +107,7 @@ export default class RecentEntry extends React.Component<
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
-              updateWordId={(wordId?: string) => null} //this.updateWordId(wordId)}
+              updateWordId={() => null}
               allVerns={[]}
               onBlur={() => {
                 this.conditionallyUpdateVern();

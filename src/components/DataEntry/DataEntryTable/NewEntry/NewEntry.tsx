@@ -82,6 +82,7 @@ export default class NewEntry extends React.Component<
         ...this.state.newEntry,
         senses: [
           {
+            //ToDo: Use analysis language from project instead of "en"
             glosses: [{ language: "en", def: newValue }],
             semanticDomains: [this.props.semanticDomain],
           },

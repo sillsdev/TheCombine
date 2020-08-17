@@ -95,6 +95,7 @@ export function addSenseToWord(
 ): Word {
   let updatedWord: Word = { ...existingWord };
 
+  //ToDo: Use analysis language from project instead of "en"
   let newGloss: Gloss = {
     language: "en",
     def: gloss,
