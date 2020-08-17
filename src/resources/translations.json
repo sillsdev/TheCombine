@@ -307,9 +307,8 @@
     },
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
-      "off": ["Off", "Apagar", "Éteint"],
-      "request": ["Optional", "Opcional", "En option"],
-      "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
+      "off": ["Off", "Apagado", "Éteint"],
+      "on": ["On", "Encendido", "Allumé"]
     },
     "invite": {
       "inviteByEmailLabel": [

@@ -22,6 +22,7 @@ interface RecentEntryProps {
   semanticDomain: SemanticDomain;
   recorder: Recorder;
   focusNewEntry: () => void;
+  analysisLang: string;
 }
 
 interface RecentEntryState {
@@ -41,9 +42,8 @@ export default class RecentEntry extends React.Component<
     super(props);
 
     const sense: Sense = { ...props.entry.senses[props.senseIndex] };
-    //ToDo: Use analysis language from project instead of "en"
     if (sense.glosses.length < 1)
-      sense.glosses.push({ def: "", language: "en" });
+      sense.glosses.push({ def: "", language: this.props.analysisLang });
 
     this.state = {
       vernacular: props.entry.vernacular,

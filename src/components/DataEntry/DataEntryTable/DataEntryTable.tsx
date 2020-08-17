@@ -8,6 +8,8 @@ import {
 } from "react-localize-redux";
 
 import * as Backend from "../../../backend";
+import { getProjectId } from "../../../backend/localStorage";
+import { AutoComplete } from "../../../types/AutoComplete";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import {
@@ -22,6 +24,7 @@ import { getFileNameForWord } from "../../Pronunciations/AudioRecorder";
 import Recorder from "../../Pronunciations/Recorder";
 import NewEntry from "./NewEntry/NewEntry";
 import RecentEntry from "./RecentEntry/RecentEntry";
+import { Project } from "../../../types/project";
 
 interface DataEntryTableProps {
   domain: DomainTree;
@@ -43,6 +46,8 @@ interface DataEntryTableState {
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
   isReady: boolean;
+  analysisLang: string;
+  suggestVerns: boolean;
 }
 
 async function addAudiosToBackend(
@@ -91,22 +96,16 @@ export function addSemanticDomainToSense(
 export function addSenseToWord(
   semanticDomain: SemanticDomain,
   existingWord: Word,
-  gloss: string
+  gloss: string,
+  language: string
 ): Word {
   const updatedWord: Word = { ...existingWord };
-
-  //ToDo: Use analysis language from project instead of "en"
-  const newGloss: Gloss = {
-    language: "en",
-    def: gloss,
-  };
-
+  const newGloss: Gloss = { language, def: gloss };
   const newSense: Sense = {
     glosses: [newGloss],
     semanticDomains: [semanticDomain],
     accessibility: State.active,
   };
-
   updatedWord.senses.push(newSense);
   return updatedWord;
 }
@@ -125,6 +124,8 @@ export class DataEntryTable extends React.Component<
       existingWords: [],
       recentlyAddedWords: [],
       isReady: false,
+      analysisLang: "en",
+      suggestVerns: true,
     };
     this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
@@ -134,6 +135,16 @@ export class DataEntryTable extends React.Component<
 
   async componentDidMount() {
     await this.updateExisting();
+    await this.getProjectSettings();
+  }
+
+  async getProjectSettings() {
+    const proj: Project = await Backend.getProject(getProjectId());
+    let analysisLang: string = "en";
+    if (proj.analysisWritingSystems.length > 0)
+      analysisLang = proj.analysisWritingSystems[0].bcp47;
+    const suggestVerns: boolean = proj.autocompleteSetting === AutoComplete.On;
+    this.setState({ analysisLang, suggestVerns });
   }
 
   /** Finished with this page of words, select new semantic domain */
@@ -246,7 +257,8 @@ export class DataEntryTable extends React.Component<
     const updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
-      gloss
+      gloss,
+      this.state.analysisLang
     );
     await this.updateWordForNewEntry(
       updatedWord,
@@ -490,8 +502,12 @@ export class DataEntryTable extends React.Component<
             <Grid item xs={12} key={index}>
               <RecentEntry
                 key={wordAccess.word.id + "_" + wordAccess.senseIndex}
-                allVerns={this.state.existingVerns}
-                allWords={this.state.existingWords}
+                allVerns={
+                  this.state.suggestVerns ? this.state.existingVerns : []
+                }
+                allWords={
+                  this.state.suggestVerns ? this.state.existingWords : []
+                }
                 entry={wordAccess.word}
                 senseIndex={wordAccess.senseIndex}
                 updateGloss={(newGloss: string) =>
@@ -513,6 +529,7 @@ export class DataEntryTable extends React.Component<
                   if (this.refNewEntry.current)
                     this.refNewEntry.current.focusVernInput();
                 }}
+                analysisLang={this.state.analysisLang}
               />
             </Grid>
           ))}
@@ -520,8 +537,8 @@ export class DataEntryTable extends React.Component<
           <Grid item xs={12}>
             <NewEntry
               ref={this.refNewEntry}
-              allVerns={this.state.existingVerns}
-              allWords={this.state.existingWords}
+              allVerns={this.state.suggestVerns ? this.state.existingVerns : []}
+              allWords={this.state.suggestVerns ? this.state.existingWords : []}
               updateWordWithNewGloss={(
                 wordId: string,
                 gloss: string,
@@ -531,10 +548,9 @@ export class DataEntryTable extends React.Component<
                 this.addNewWord(word, audioFileURLs)
               }
               semanticDomain={this.props.semanticDomain}
-              setIsReadyState={(isReady: boolean) =>
-                this.setState({ isReady: isReady })
-              }
+              setIsReadyState={(isReady: boolean) => this.setState({ isReady })}
               recorder={this.recorder}
+              analysisLang={this.state.analysisLang}
             />
           </Grid>
         </Grid>

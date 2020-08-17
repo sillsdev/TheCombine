@@ -131,7 +131,9 @@ describe("Tests DataEntryTable", () => {
       ...word,
       senses: [...word.senses, newSense],
     };
-    expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
+    expect(addSenseToWord(semanticDomain, word, gloss, "en")).toEqual(
+      expectedWord
+    );
   });
 
   it("adds a sense to a word that already has a sense", () => {
@@ -154,7 +156,9 @@ describe("Tests DataEntryTable", () => {
       ...word,
       senses: [...word.senses, expectedSense],
     };
-    expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
+    expect(addSenseToWord(semanticDomain, word, gloss, "en")).toEqual(
+      expectedWord
+    );
   });
 
   it("adds a semantic domain to an existing sense", () => {

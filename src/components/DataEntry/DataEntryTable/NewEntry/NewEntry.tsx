@@ -23,6 +23,7 @@ interface NewEntryProps {
   semanticDomain: SemanticDomain;
   setIsReadyState: (isReady: boolean) => void;
   recorder?: Recorder;
+  analysisLang: string;
 }
 
 interface NewEntryState {
@@ -92,8 +93,7 @@ export default class NewEntry extends React.Component<
         ...this.state.newEntry,
         senses: [
           {
-            //ToDo: Use analysis language from project instead of "en"
-            glosses: [{ language: "en", def: newValue }],
+            glosses: [{ language: this.props.analysisLang, def: newValue }],
             semanticDomains: [this.props.semanticDomain],
           },
         ],
