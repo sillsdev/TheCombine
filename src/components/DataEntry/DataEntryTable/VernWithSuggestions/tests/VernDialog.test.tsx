@@ -1,10 +1,11 @@
 import React from "react";
+import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { VernList, StyledMenuItem } from "../VernDialog";
-import { simpleWord, Word, testWordList } from "../../../../../../types/word";
-import { Provider } from "react-redux";
+import { simpleWord, testWordList, Word } from "../../../../../types/word";
+import { StyledMenuItem, VernList } from "../VernDialog";
+
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 
@@ -14,7 +15,7 @@ describe("Tests VernList ", () => {
       renderer.create(
         <VernList
           vernacularWords={[simpleWord("", "")]}
-          closeDialog={(_selectedWord: Word) => null}
+          closeDialog={() => null}
         />
       );
     });

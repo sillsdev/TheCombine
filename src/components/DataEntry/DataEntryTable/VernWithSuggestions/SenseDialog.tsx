@@ -4,14 +4,19 @@ import {
   MenuItem,
   MenuList,
   withStyles,
+  Typography,
 } from "@material-ui/core";
 import React from "react";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 
-import theme from "../../../../../types/theme";
-import { Sense, Word } from "../../../../../types/word";
-import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import theme from "../../../../types/theme";
+import { Sense, Word } from "../../../../types/word";
+import DomainCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import { parseWord } from "../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 function SenseDialog(
   props: {
@@ -52,7 +57,9 @@ export const StyledMenuItem = withStyles((theme) => ({
 export function SenseList(props: SenseListProps) {
   return (
     <React.Fragment>
-      <h1>{props.selectedWord.vernacular}</h1>
+      <Typography variant="h3">
+        <Translate id="addWords.selectSense" />
+      </Typography>
       <MenuList autoFocusItem>
         {props.selectedWord.senses.map((sense: Sense, index: number) => (
           <StyledMenuItem
@@ -76,7 +83,8 @@ export function SenseList(props: SenseListProps) {
         ))}
 
         <StyledMenuItem onClick={() => props.closeDialog(-1)}>
-          {"New Sense for " + props.selectedWord.vernacular}
+          <Translate id="addWords.newSenseFor" />
+          {props.selectedWord.vernacular}
         </StyledMenuItem>
       </MenuList>
     </React.Fragment>
