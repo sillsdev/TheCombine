@@ -1,13 +1,14 @@
 import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
 import React from "react";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+
 import { getFrontierWords } from "../../backend";
 import { CurrentTab } from "../../types/currentTab";
+import DomainTree from "../../types/SemanticDomain";
 import theme from "../../types/theme";
 import { SemanticDomain, Word, State, DomainWord } from "../../types/word";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import TreeViewComponent from "../TreeView";
-import DomainTree from "../../types/SemanticDomain";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "./ExistingDataTable/ExistingDataTable";
@@ -140,11 +141,8 @@ export class DataEntryComponent extends React.Component<
       existingWords: words,
     });
     words = filterWords(words);
-
     return words;
   }
-
-  updateWords = () => {};
 
   render() {
     let semanticDomain: SemanticDomain = {
