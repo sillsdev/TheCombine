@@ -63,7 +63,7 @@ export const StyledMenuItem = withStyles((theme) => ({
 export function VernList(props: VernListProps) {
   return (
     <React.Fragment>
-      <Typography variant="h3">
+      <Typography variant="h4">
         <Translate id="addWords.selectEntry" />
       </Typography>
       <MenuList autoFocusItem>
@@ -87,7 +87,6 @@ export function VernList(props: VernListProps) {
             </div>
           </StyledMenuItem>
         ))}
-
         <StyledMenuItem onClick={() => props.closeDialog("")}>
           <Translate id="addWords.newEntryFor" />
           {props.vernacularWords[0].vernacular}

@@ -57,7 +57,7 @@ export const StyledMenuItem = withStyles((theme) => ({
 export function SenseList(props: SenseListProps) {
   return (
     <React.Fragment>
-      <Typography variant="h3">
+      <Typography variant="h4">
         <Translate id="addWords.selectSense" />
       </Typography>
       <MenuList autoFocusItem>
