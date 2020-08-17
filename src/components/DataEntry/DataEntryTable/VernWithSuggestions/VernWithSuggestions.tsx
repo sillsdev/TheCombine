@@ -35,7 +35,8 @@ interface VernWithSuggestionsState {
 }
 
 /**
- * An editable vernacular field for new words
+ * An editable vernacular field that suggests existing entries
+ * with the same or similar vernacular
  */
 export class VernWithSuggestions extends React.Component<
   LocalizeContextProps & VernWithSuggestionsProps,

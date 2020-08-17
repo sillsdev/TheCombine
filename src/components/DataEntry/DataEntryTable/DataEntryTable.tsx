@@ -107,12 +107,12 @@ export function addSenseToWord(
     accessibility: State.active,
   };
 
-  updatedWord.senses.push(newSense); // Fix which sense we are adding to
+  updatedWord.senses.push(newSense);
   return updatedWord;
 }
 
 /**
- * A data entry table containing word entries
+ * A data entry table containing recent word entries
  */
 export class DataEntryTable extends React.Component<
   DataEntryTableProps & LocalizeContextProps,

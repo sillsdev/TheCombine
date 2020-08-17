@@ -12,7 +12,10 @@ interface ExistingDataTableProps {
   toggleDrawer: (openClosed: boolean) => void;
 }
 
-/* Displays previously entered data in a panel to the right of the DataEntryTable */
+/**
+ * Displays words previously entered in the present semantic domain
+ * in a panel beside the DataEntryTable
+ */
 export default class ExistingDataTable extends React.Component<
   ExistingDataTableProps
 > {

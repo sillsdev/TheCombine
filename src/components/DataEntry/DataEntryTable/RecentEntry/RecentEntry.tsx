@@ -31,7 +31,7 @@ interface RecentEntryState {
 }
 
 /**
- * Displays a word a user can still make edits to
+ * Displays a recently entered word that a user can still edit
  */
 export default class RecentEntry extends React.Component<
   RecentEntryProps,
