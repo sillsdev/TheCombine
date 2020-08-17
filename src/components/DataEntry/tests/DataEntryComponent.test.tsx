@@ -46,6 +46,7 @@ const mockWord: Word = simpleWord("", "");
 const mockDomainWord: DomainWord = {
   word: mockWord,
   gloss: mockWord.senses[0].glosses[0],
+  senseIndex: 0,
 };
 
 //Needed to mock window until refactored
@@ -182,9 +183,10 @@ describe("Tests DataEntryComponent", () => {
     ];
 
     let domainWords: DomainWord[] = [];
-    let curDomainWord: DomainWord = {
+    const curDomainWord: DomainWord = {
       word: unfilteredWords[1],
       gloss: unfilteredWords[1].senses[0].glosses[0],
+      senseIndex: 1,
     };
     domainWords.push(curDomainWord);
     expect(filterWordsByDomain(unfilteredWords, mockDomains[1])).toStrictEqual(

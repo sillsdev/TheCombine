@@ -2,13 +2,14 @@ import React from "react";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../../App/DefaultState";
+
 import { baseDomain } from "../../../../types/SemanticDomain";
-import { ExistingDataTable } from "../ExistingDataTable";
+import { defaultState } from "../../../App/DefaultState";
+import ExistingDataTable from "../ExistingDataTable";
 
 jest.mock("../ImmutableExistingData/ImmutableExistingData");
 
-var testRenderer: ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 
