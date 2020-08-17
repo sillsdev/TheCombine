@@ -104,6 +104,7 @@ export function multiGlossWord(vern: string, glosses: string[]): Word {
 
 export function testWordList(): Word[] {
   return [
+    { ...simpleWord("NoSense", ""), senses: [] },
     simpleWord("Yoink", "Hello"),
     simpleWord("Yode", "Goodbye"),
     simpleWord("Yoff", "Yes"),

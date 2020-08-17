@@ -2,8 +2,8 @@ import React from "react";
 import { Grid, Typography } from "@material-ui/core";
 
 interface ImmutableExistingDataProps {
-  vernacular: string;
-  gloss: string;
+  vernacular?: string;
+  gloss?: string;
 }
 
 /**
