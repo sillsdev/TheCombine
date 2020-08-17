@@ -1,10 +1,10 @@
 import {
   Dialog,
   DialogContent,
-  withStyles,
   MenuItem,
   MenuList,
   Typography,
+  withStyles,
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -78,15 +78,12 @@ export function VernList(props: VernListProps) {
               <SenseCell
                 editable={false}
                 sortingByGloss={false}
-                value={parseWord(word, "en").senses}
-                rowData={parseWord(word, "en")}
+                value={parseWord(word).senses}
+                rowData={parseWord(word)}
               />
             </div>
             <div style={{ margin: theme.spacing(4) }}>
-              <DomainCell
-                rowData={parseWord(word, "en")}
-                sortingByDomains={false}
-              />
+              <DomainCell rowData={parseWord(word)} sortingByDomains={false} />
             </div>
           </StyledMenuItem>
         ))}

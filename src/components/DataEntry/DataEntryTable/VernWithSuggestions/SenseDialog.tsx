@@ -3,8 +3,8 @@ import {
   DialogContent,
   MenuItem,
   MenuList,
-  withStyles,
   Typography,
+  withStyles,
 } from "@material-ui/core";
 import React from "react";
 import {
