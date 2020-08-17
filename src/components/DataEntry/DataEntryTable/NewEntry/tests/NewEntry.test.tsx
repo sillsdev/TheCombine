@@ -3,13 +3,12 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { AutoComplete } from "../../../../../types/AutoComplete";
 import { defaultState } from "../../../../App/DefaultState";
-import { NewEntry } from "../NewEntry";
+import NewEntry from "../NewEntry";
 
 jest.mock("../../../../Pronunciations/Recorder");
 jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");
-jest.mock("../NewVernEntry/NewVernEntry");
+jest.mock("../../VernWithSuggestions/VernWithSuggestions");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
@@ -20,13 +19,11 @@ describe("Tests NewEntry", () => {
       renderer.create(
         <Provider store={mockStore}>
           <NewEntry
+            allVerns={[]}
             allWords={[]}
             updateWord={() => null}
             addNewWord={() => null}
             semanticDomain={{ name: "", id: "" }}
-            displayDuplicates={false}
-            autocompleteSetting={AutoComplete.OnRequest}
-            toggleDisplayDuplicates={() => null}
             setIsReadyState={() => null}
           />
         </Provider>
