@@ -9,8 +9,8 @@ import {
 
 import { simpleWord, Word } from "../../../../types/word";
 import DupFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
-import SenseDialog from "./SenseDialog/SenseDialog";
-import VernDialog from "./VernDialog/VernDialog";
+import SenseDialog from "./SenseDialog";
+import VernDialog from "./VernDialog";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
