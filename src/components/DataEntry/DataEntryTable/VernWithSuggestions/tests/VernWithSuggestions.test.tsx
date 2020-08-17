@@ -13,12 +13,8 @@ describe("Tests VernWithSuggestions", () => {
           updateVernField={() => []}
           updateWordId={() => null}
           allVerns={[]}
-<<<<<<< HEAD
-          handleEnter={() => null}
-=======
           setActiveGloss={() => null}
           handleEnterAndTab={() => null}
->>>>>>> cleanup-data-entry
         />
       );
     });
