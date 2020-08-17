@@ -60,7 +60,7 @@ namespace BackendFramework.Models
             Id = "";
             Name = "";
             IsActive = true;
-            AutocompleteSetting = AutocompleteSetting.Off;
+            AutocompleteSetting = AutocompleteSetting.On;
             VernacularWritingSystem = new WritingSystem();
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<WritingSystem>();
@@ -352,7 +352,6 @@ namespace BackendFramework.Models
     public enum AutocompleteSetting
     {
         Off,
-        OnRequest,
-        AlwaysOn
+        On
     }
 }
