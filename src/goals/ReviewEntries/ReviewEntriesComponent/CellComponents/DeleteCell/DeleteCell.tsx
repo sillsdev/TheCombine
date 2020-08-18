@@ -37,6 +37,7 @@ class DeleteCell extends React.Component<DeleteCellProps> {
         contents={this.props.rowData.senses.map((value) => (
           <React.Fragment>
             <IconButton
+              size="small"
               onClick={() => {
                 this.props.delete!(value.senseId);
               }}
