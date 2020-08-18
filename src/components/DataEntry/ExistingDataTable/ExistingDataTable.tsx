@@ -25,7 +25,7 @@ export class ExistingDataTable extends React.Component<ExistingDataTableProps> {
           <ImmutableExistingData
             key={domainWord.word.id}
             vernacular={domainWord.word.vernacular}
-            gloss={domainWord.gloss.def}
+            gloss={domainWord.gloss ? domainWord.gloss.def : ""}
           />
         ))}
       </List>

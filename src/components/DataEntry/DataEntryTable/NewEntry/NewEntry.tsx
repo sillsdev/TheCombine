@@ -2,99 +2,62 @@ import { Grid, Typography } from "@material-ui/core";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { AutoComplete } from "../../../../types/AutoComplete";
 import theme from "../../../../types/theme";
-import { SemanticDomain, Sense, Word } from "../../../../types/word";
+import { SemanticDomain, simpleWord, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import { DuplicateResolutionView } from "../DuplicateResolutionView/DuplicateResolutionView";
-import {
-  addSemanticDomainToSense,
-  addSenseToWord,
-  duplicatesFromFrontier,
-} from "../ExistingEntry/ExistingEntry";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import NewVernEntry from "./NewVernEntry/NewVernEntry";
+import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 
 interface NewEntryProps {
+  allVerns: string[];
   allWords: Word[];
-  updateWord: (
-    updatedWord: Word,
-    glossIndex: number,
-    newAudio: string[]
-  ) => void;
-  addNewWord: (newWord: Word, newAudio: string[]) => void;
+  updateWordWithNewGloss: (
+    wordId: string,
+    gloss: string,
+    audioFileURLs: string[]
+  ) => Promise<boolean>;
+  addNewWord: (newWord: Word, newAudio: string[]) => Promise<void>;
   semanticDomain: SemanticDomain;
-  autocompleteSetting: AutoComplete;
-  displayDuplicates: boolean;
-  toggleDisplayDuplicates: () => void;
   setIsReadyState: (isReady: boolean) => void;
   recorder?: Recorder;
 }
 
 interface NewEntryState {
   newEntry: Word;
-  duplicates: Word[];
-  isDuplicate: boolean;
+  isDupVern: boolean;
+  wordId?: string;
   activeGloss: string;
   audioFileURLs: string[];
+}
+
+function focusInput(inputRef: React.RefObject<HTMLDivElement>) {
+  if (inputRef.current) {
+    inputRef.current.focus();
+    inputRef.current.scrollIntoView({ behavior: "smooth" });
+  }
 }
 
 /**
  * Displays data related to creating a new word entry
  */
-export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
+export default class NewEntry extends React.Component<
+  NewEntryProps,
+  NewEntryState
+> {
   constructor(props: NewEntryProps) {
     super(props);
     this.state = {
-      newEntry: this.defaultNewEntry(),
-      isDuplicate: false,
-      duplicates: [],
+      newEntry: { ...simpleWord("", ""), id: "" },
       activeGloss: "",
       audioFileURLs: [],
+      isDupVern: false,
     };
-
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
-    this.duplicateInput = React.createRef<HTMLDivElement>();
   }
-
-  readonly maxStartsWith: number = 4;
-  readonly maxDuplicates: number = 2;
-
-  private defaultNewEntry() {
-    return {
-      id: "",
-      vernacular: "",
-      senses: [
-        {
-          glosses: [
-            {
-              language: "en",
-              def: "",
-            },
-          ],
-          semanticDomains: [this.props.semanticDomain],
-        },
-      ],
-      audio: [],
-      created: "",
-      modified: "",
-      history: [],
-      partOfSpeech: "",
-      editedBy: [],
-      otherField: "",
-      plural: "",
-    };
-  }
-
   vernInput: React.RefObject<HTMLDivElement>;
   glossInput: React.RefObject<HTMLDivElement>;
-  duplicateInput: React.RefObject<HTMLDivElement>;
-
-  toggleDuplicateResolutionView() {
-    this.props.toggleDisplayDuplicates();
-  }
 
   addAudio(audioFile: File) {
     let audioFileURLs = [...this.state.audioFileURLs];
@@ -113,29 +76,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  addNewSense(existingWord: Word, newSense: string, index: number) {
-    let updatedWord = addSenseToWord(
-      this.props.semanticDomain,
-      existingWord,
-      newSense
-    );
-    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
-    this.props.toggleDisplayDuplicates();
-    this.resetState();
-  }
-
-  addSemanticDomain(existingWord: Word, sense: Sense, index: number) {
-    let updatedWord = addSemanticDomainToSense(
-      this.props.semanticDomain,
-      existingWord,
-      sense,
-      index
-    );
-    this.props.updateWord(updatedWord, index, this.state.audioFileURLs);
-    this.props.toggleDisplayDuplicates();
-    this.resetState();
-  }
-
   updateGlossField(newValue: string) {
     this.setState({
       newEntry: {
@@ -151,102 +91,102 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
     });
   }
 
-  updateVernField(newValue: string) {
-    this.focusAutoScroll();
-    let autoCompleteWords: Word[] = this.autoCompleteCandidates(
-      this.props.allWords,
-      newValue
-    );
-    let isDuplicate: boolean =
-      this.props.autocompleteSetting !== AutoComplete.Off &&
-      autoCompleteWords.length > 0;
+  updateVernField(newValue: string): Word[] {
+    let dupVernWords: Word[] = [];
+    let isDupVern: boolean = false;
+    if (newValue) {
+      dupVernWords = this.props.allWords.filter(
+        (word: Word) => word.vernacular === newValue
+      );
+      isDupVern = dupVernWords.length > 0;
+    }
     this.setState({
-      isDuplicate: isDuplicate,
-      duplicates: autoCompleteWords,
+      isDupVern,
       newEntry: {
         ...this.state.newEntry,
         vernacular: newValue,
       },
     });
+    return dupVernWords;
+  }
+
+  updateWordId(wordId?: string) {
+    this.setState({ wordId });
   }
 
   resetState() {
     this.setState({
-      newEntry: this.defaultNewEntry(),
-      isDuplicate: false,
-      duplicates: [],
+      newEntry: { ...simpleWord("", ""), id: "" },
       activeGloss: "",
       audioFileURLs: [],
+      isDupVern: false,
+      wordId: undefined,
     });
-  }
-
-  /** Returns autocomplete choices from the frontier words
-   * Populates maxStartsWith 'starts with' options and then
-   * adds up to maxDuplicates options
-   */
-  autoCompleteCandidates(existingWords: Word[], vernacular: string): Word[] {
-    // filter existingWords to those that start with vernacular
-    // then map them into an array sorted by length and take the 2 shortest
-    // and the rest longest (should make finding the long words easier)
-    let scoredStartsWith: [Word, number][] = [];
-    let startsWith = existingWords.filter((word) =>
-      word.vernacular.startsWith(vernacular)
-    );
-    for (let w of startsWith) {
-      scoredStartsWith.push([w, w.vernacular.length]);
-    }
-    var keepers = scoredStartsWith
-      .sort((a, b) => a[1] - b[1])
-      .map((word) => word[0]);
-    if (keepers.length > 4) {
-      keepers.splice(2, keepers.length - this.maxStartsWith);
-    }
-    for (let d of duplicatesFromFrontier(
-      existingWords,
-      vernacular,
-      this.maxDuplicates
-    )) {
-      let word = existingWords.find((word) => word.id === d);
-      if (word !== undefined && !keepers.includes(word)) {
-        keepers.push(word);
-      }
-    }
-    return keepers;
   }
 
   /** Move the focus to the vernacular textbox */
   focusVernInput() {
-    if (this.vernInput.current) {
-      this.vernInput.current.focus();
-      this.vernInput.current.scrollIntoView({ behavior: "smooth" });
+    focusInput(this.vernInput);
+  }
+
+  /** Move the focus to the gloss textbox */
+  focusGlossInput() {
+    focusInput(this.glossInput);
+  }
+
+  async addNewWordAndReset() {
+    await this.props
+      .addNewWord(this.state.newEntry, this.state.audioFileURLs)
+      .then(() => {
+        this.resetState();
+      });
+    this.focusVernInput();
+  }
+
+  async addOrUpdateWord() {
+    if (!this.state.isDupVern || this.state.wordId === "") {
+      // Either a new Vern is typed, or user has selected new entry for this duplicate vern
+      await this.addNewWordAndReset();
+    } else if (this.state.wordId === undefined && this.state.isDupVern) {
+      // Duplicate vern and the user hasn't made a selection
+      // Change focus away from vern to trigger vern's onBlur
+      this.focusGlossInput();
+    } else {
+      // Duplicate vern and the user has selected an entry to modify,
+      // so wordId is defined and non-empty
+      await this.props
+        .updateWordWithNewGloss(
+          this.state.wordId!,
+          this.state.activeGloss,
+          this.state.audioFileURLs
+        )
+        .then((result: boolean) => {
+          // result=true means that the submission was successsful
+          if (result) this.resetState();
+        });
     }
   }
 
-  focusAutoScroll = () => {
-    if (this.duplicateInput.current) {
-      this.duplicateInput.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
+  async handleEnterAndTab(e: React.KeyboardEvent) {
+    if (e.key === "Enter") {
+      if (this.state.newEntry.vernacular) {
+        if (this.state.activeGloss) {
+          await this.addOrUpdateWord();
+          this.resetState();
+          this.focusVernInput();
+        } else {
+          this.focusGlossInput();
+        }
+      } else {
+        this.focusVernInput();
+      }
     }
-  };
-
-  addNewWordAndReset() {
-    this.props.addNewWord(this.state.newEntry, this.state.audioFileURLs);
-    this.focusVernInput();
-    this.resetState();
   }
 
   render() {
     return (
       <Grid item xs={12}>
-        <Grid
-          container
-          onKeyUp={(e) => {
-            if (e.key === "Enter" && this.state.newEntry.vernacular)
-              this.addNewWordAndReset();
-          }}
-        >
+        <Grid container>
           <Grid
             container
             item
@@ -258,20 +198,23 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
             }}
           >
             <Grid item xs={12} style={{ paddingBottom: theme.spacing(1) }}>
-              <NewVernEntry
+              <VernWithSuggestions
+                isNew={true}
                 vernacular={this.state.newEntry.vernacular}
                 vernInput={this.vernInput}
-                showAutocompleteToggle={
-                  this.props.autocompleteSetting === AutoComplete.OnRequest &&
-                  this.state.isDuplicate
-                }
-                toggleAutocompleteView={() =>
-                  this.toggleDuplicateResolutionView()
-                }
                 updateVernField={(newValue: string) => {
-                  this.updateVernField(newValue);
                   this.props.setIsReadyState(newValue.trim().length > 0);
+                  return this.updateVernField(newValue);
                 }}
+                updateWordId={(wordId?: string) => this.updateWordId(wordId)}
+                selectedWordId={this.state.wordId}
+                allVerns={this.props.allVerns}
+                handleEnterAndTab={(e: React.KeyboardEvent) =>
+                  this.handleEnterAndTab(e)
+                }
+                setActiveGloss={(newGloss: string) =>
+                  this.setState({ activeGloss: newGloss })
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -295,6 +238,9 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               glossInput={this.glossInput}
               updateGlossField={(newValue: string) =>
                 this.updateGlossField(newValue)
+              }
+              handleEnterAndTab={(e: React.KeyboardEvent) =>
+                this.handleEnterAndTab(e)
               }
             />
           </Grid>
@@ -320,35 +266,6 @@ export class NewEntry extends React.Component<NewEntryProps, NewEntryState> {
               getAudioUrl={(_wordId: string, fileName: string) => fileName}
             />
           </Grid>
-          {this.props.autocompleteSetting !== AutoComplete.Off &&
-            this.props.displayDuplicates &&
-            this.state.isDuplicate &&
-            this.state.duplicates.map((duplicate) =>
-              duplicate === null ? null : (
-                <Grid
-                  item
-                  xs={12}
-                  key={"duplicateNewVernEntry" + duplicate.id}
-                  style={{ background: "whitesmoke" }}
-                >
-                  <DuplicateResolutionView
-                    existingEntry={duplicate}
-                    newSense={this.state.activeGloss}
-                    addSense={(
-                      existingWord: Word,
-                      newSense: string,
-                      index: number
-                    ) => this.addNewSense(existingWord, newSense, index)}
-                    addSemanticDomain={(
-                      existingWord: Word,
-                      sense: Sense,
-                      index: number
-                    ) => this.addSemanticDomain(existingWord, sense, index)}
-                    duplicateInput={this.duplicateInput}
-                  />
-                </Grid>
-              )
-            )}
         </Grid>
       </Grid>
     );
