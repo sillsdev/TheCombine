@@ -94,10 +94,13 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            if (await _wordService.DeleteFrontierWord(projectId, wordId) == "Not found")
+            // Ensure word exists in frontier
+            var id = await _wordService.DeleteFrontierWord(projectId, wordId);
+            if (id == null)
             {
-                return new NotFoundObjectResult("The project was found, but the frontier word was not deleted");
+                return new NotFoundObjectResult(wordId);
             }
+
             return new OkObjectResult(wordId);
         }
     }

@@ -84,7 +84,7 @@ namespace BackendFramework.Services
 
             if (!wordIsInFrontier)
             {
-                return "Not found";
+                return null;
             }
 
             var word = await _repo.GetWord(projectId, wordId);
