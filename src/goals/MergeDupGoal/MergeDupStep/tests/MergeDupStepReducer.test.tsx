@@ -45,11 +45,14 @@ describe("MergeDupStep reducer tests", () => {
   };
 
   let getRandomRef = (words: Hash<MergeTreeWord>): MergeTreeReference => {
-    let wordID = randElement(Object.keys(words));
-
-    let senseID = randElement(Object.keys(words[wordID].senses));
-
-    let dupID = randElement(Object.keys(words[wordID].senses[senseID]));
+    let wordID: string = "";
+    let senseID: string = "";
+    while (!wordID || !senseID || !words[wordID].senses[senseID]) {
+      // This while loops make sure words with no senses aren't selected.
+      wordID = randElement(Object.keys(words));
+      senseID = randElement(Object.keys(words[wordID].senses));
+    }
+    const dupID = randElement(Object.keys(words[wordID].senses[senseID]));
     return {
       word: wordID,
       sense: senseID,
