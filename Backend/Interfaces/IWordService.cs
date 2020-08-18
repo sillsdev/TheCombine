@@ -11,6 +11,7 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> Merge(string projectId, MergeWords mergeWords);
         Task<bool> WordIsUnique(Word word);
         Task<Word> Delete(string projectID, string wordId, string fileName);
+        Task<string> DeleteFrontierWord(string projectId, string wordId);
         string GetAudioFilePath(string projectId, string wordId, string fileName);
     }
 }

@@ -141,7 +141,7 @@ namespace BackendFramework.Services
             // Write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
             var frontier = _repo.GetFrontier(projectId).Result;
-            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.Active).ToList();
+            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == State.Active).ToList();
 
             // TODO: this is wrong, deleted is a subset of active, are not exclusive
             var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();

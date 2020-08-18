@@ -2,12 +2,15 @@ import React from "react";
 import { Grid, Chip, Dialog, IconButton } from "@material-ui/core";
 import Add from "@material-ui/icons/Add";
 
-import { ReviewEntriesWord, ReviewEntriesSense } from "../ReviewEntriesTypes";
-import { SemanticDomain } from "../../../../types/word";
-import TreeView from "../../../../components/TreeView";
-import AlignedList, { SPACER } from "./AlignedList";
+import {
+  ReviewEntriesWord,
+  ReviewEntriesSense,
+} from "../../ReviewEntriesTypes";
+import { SemanticDomain } from "../../../../../types/word";
+import TreeView from "../../../../../components/TreeView";
+import AlignedList, { SPACER } from "../AlignedList";
 import { Translate } from "react-localize-redux";
-import { highlight } from "../../../../types/theme";
+import { highlight } from "../../../../../types/theme";
 
 interface DomainCellProps {
   rowData: ReviewEntriesWord;

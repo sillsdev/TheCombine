@@ -11,7 +11,6 @@ namespace BackendFramework.Interfaces
         Task<Word> Create(Word word);
         Task<Word> Add(Word word);
         Task<bool> DeleteAllWords(string projectId);
-
         Task<List<Word>> GetFrontier(string projectId);
         Task<Word> AddFrontier(Word word);
         Task<bool> DeleteFrontier(string projectId, string wordId);

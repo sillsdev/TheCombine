@@ -117,7 +117,7 @@ namespace Backend.Tests
 
             foreach (var sense in word.Senses)
             {
-                sense.Accessibility = (int)State.Active;
+                sense.Accessibility = State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
                 foreach (var gloss in sense.Glosses)

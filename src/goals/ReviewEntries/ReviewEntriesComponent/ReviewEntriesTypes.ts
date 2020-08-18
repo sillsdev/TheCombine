@@ -46,7 +46,7 @@ function parseSense(sense: Sense, analysisLang: string) {
     domains: [],
     deleted:
       sense.accessibility !== undefined &&
-      sense.accessibility === State.deleted,
+      sense.accessibility === State.Deleted,
     senseId: uuid() + OLD_SENSE,
   };
 
