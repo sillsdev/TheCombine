@@ -1,11 +1,11 @@
 import { randomIntString } from "../utilities";
 
 export enum State {
-  active,
-  deleted,
-  sense,
-  duplicate,
-  separate,
+  Active = "Active",
+  Deleted = "Deleted",
+  Sense = "Sense",
+  Duplicate = "Duplicate",
+  Separate = "Separate"
 }
 
 export interface Gloss {
