@@ -103,7 +103,7 @@ export function addSenseToWord(
   let newSense: Sense = {
     glosses: [newGloss],
     semanticDomains: [semanticDomain],
-    accessibility: State.active,
+    accessibility: State.Active,
   };
 
   updatedWord.senses.push(newSense); // Fix which sense we are adding to

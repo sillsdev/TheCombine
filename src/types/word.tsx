@@ -5,7 +5,7 @@ export enum State {
   Deleted = "Deleted",
   Sense = "Sense",
   Duplicate = "Duplicate",
-  Separate = "Separate"
+  Separate = "Separate",
 }
 
 export interface Gloss {

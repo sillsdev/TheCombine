@@ -42,7 +42,7 @@ const domain1: SemanticDomain = { name: "Shadow", id: "8.3.3.2.1" };
 const sense0_frontier: Sense = {
   glosses: [gloss1],
   semanticDomains: [domain1],
-  accessibility: State.active,
+  accessibility: State.Active,
 };
 const sense0_local: ReviewEntriesSense = {
   senseId: "sense0",

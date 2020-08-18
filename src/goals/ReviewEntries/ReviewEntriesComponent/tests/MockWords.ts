@@ -62,7 +62,7 @@ export function createMockSense(
       .split(SEP_CHAR)
       .map((value: any) => ({ def: value.trim(), language })),
     semanticDomains: sense.domains,
-    accessibility: State.active,
+    accessibility: State.Active,
   };
 }
 

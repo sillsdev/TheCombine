@@ -179,7 +179,7 @@ export function updateFrontierWord(
         if (!editSense)
           editSense = ({
             glosses: [],
-            accessibility: State.Active
+            accessibility: State.Active,
           } as any) as Sense;
 
         // Take all glosses from what the user edited, then add all glosses from the original word which are not in the current language

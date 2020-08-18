@@ -125,7 +125,7 @@ describe("Tests DataEntryTable", () => {
     let newSense: Sense = {
       glosses: [{ language: "en", def: gloss }],
       semanticDomains: [semanticDomain],
-      accessibility: State.active,
+      accessibility: State.Active,
     };
     const expectedWord: Word = {
       ...word,
@@ -148,7 +148,7 @@ describe("Tests DataEntryTable", () => {
     let expectedSense: Sense = {
       glosses: [{ language: "en", def: gloss }],
       semanticDomains: [semanticDomain],
-      accessibility: State.active,
+      accessibility: State.Active,
     };
     const expectedWord: Word = {
       ...word,
@@ -162,7 +162,7 @@ describe("Tests DataEntryTable", () => {
     let sense: Sense = {
       glosses: [{ language: "en", def: "yeet" }],
       semanticDomains: [],
-      accessibility: State.active,
+      accessibility: State.Active,
     };
     let word: Word = {
       ...mockWord,
