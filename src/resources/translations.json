@@ -1,24 +1,33 @@
 {
   "addWords": {
-    "addNewSense": [
-      "Add New Sense +",
-      "Añadir sentido nuevo +",
-      "Ajouter nouvel sens +"
+    "selectEntry": [
+      "Select an entry",
+      "Escoger una entrada",
+      "Choisissez une entrée"
+    ],
+    "selectSense": [
+      "Select a sense",
+      "Escoger un sentido",
+      "Choisissez un sens"
+    ],
+    "newEntryFor": [
+      "New entry for: ",
+      "Nuevo entrada para: ",
+      "Nouvelle entrée pour : "
+    ],
+    "newSenseFor": [
+      "New sense for: ",
+      "Sentido nuevo para: ",
+      "Nouveau sens pour : "
     ],
     "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
     "domain": ["Domain", "Dominio", "Domaine"],
     "glosses": ["Glosses", "Traducciones", "Gloses"],
-    "mispelledWord": [
-      "This word is mispelled",
-      "Esta palabra está mal escrita",
-      "Ce mot est mal orthographié"
-    ],
     "pressEnter": [
       "Press enter to save word",
       "Presione enter para guardar la palabra",
       "Appuyez sur Entrée pour enregistrer le mot"
     ],
-    "similarWord": ["Similar word", "Palabra similar", "Mot similaire"],
     "vernacular": ["Vernacular", "Vernáculo", "Vernaculaire"],
     "wordInDatabase": [
       "This word is already in the database",
@@ -298,9 +307,8 @@
     },
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
-      "off": ["Off", "Apagar", "Éteint"],
-      "request": ["Optional", "Opcional", "En option"],
-      "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
+      "off": ["Off", "Apagado", "Éteint"],
+      "on": ["On", "Encendido", "Allumé"]
     },
     "invite": {
       "inviteByEmailLabel": [
