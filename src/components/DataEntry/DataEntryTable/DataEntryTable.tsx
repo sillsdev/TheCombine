@@ -392,11 +392,6 @@ export class DataEntryTable extends React.Component<
     );
   }
 
-  async deleteWordAndUpdateExistingWords(word: Word) {
-    await Backend.deleteFrontierWord(word.id);
-    let existingWords: Word[] = await this.props.getWordsFromBackend();
-    this.setState({ existingWords });
-  }
   // Update a sense in a word and replace every displayed instance of that word.
   async updateSense(
     word: Word,
@@ -452,7 +447,7 @@ export class DataEntryTable extends React.Component<
   }
 
   async deleteWord(word: Word) {
-    await Backend.deleteWord(word).then(
+    await Backend.deleteFrontierWord(word.id).then(
       async () => await this.updateExisting()
     );
   }
