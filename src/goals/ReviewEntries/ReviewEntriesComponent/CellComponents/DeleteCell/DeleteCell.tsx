@@ -1,6 +1,6 @@
 import React from "react";
 import { IconButton } from "@material-ui/core";
-import { Delete } from "@material-ui/icons";
+import { Delete, RestoreFromTrash } from "@material-ui/icons";
 
 import AlignedList, { SPACER } from "../AlignedList";
 import { ReviewEntriesWord } from "../../ReviewEntriesTypes";
@@ -42,7 +42,7 @@ class DeleteCell extends React.Component<DeleteCellProps> {
                 this.props.delete!(value.senseId);
               }}
             >
-              <Delete />
+              {value.deleted ? <RestoreFromTrash /> : <Delete />}
             </IconButton>
           </React.Fragment>
         ))}
