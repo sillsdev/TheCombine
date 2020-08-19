@@ -5,6 +5,7 @@ import { Delete, RestoreFromTrash } from "@material-ui/icons";
 import AlignedList, { SPACER } from "../AlignedList";
 import { ReviewEntriesWord } from "../../ReviewEntriesTypes";
 import * as backend from "../../../../../backend";
+import DeleteWordDialog from "../DeleteWordDialog";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
@@ -17,16 +18,34 @@ interface DeleteCellProps {
   updateAllWords: (words: ReviewEntriesWord[]) => void;
 }
 
-class DeleteCell extends React.Component<DeleteCellProps> {
-  async deleteFrontierWord(wordId: string) {
+interface DeleteCellState {
+  dialogOpen: boolean;
+}
+
+class DeleteCell extends React.Component<DeleteCellProps, DeleteCellState> {
+  constructor(props: DeleteCellProps) {
+    super(props);
+    this.state = { dialogOpen: false };
+  }
+
+  async deleteFrontierWord() {
+    const wordId = this.props.rowData.id;
     await backend.deleteFrontierWord(wordId);
-    let updatedWords: ReviewEntriesWord[] = [];
-    for (let word of this.props.words) {
+    const updatedWords: ReviewEntriesWord[] = [];
+    for (const word of this.props.words) {
       if (word.id !== wordId) {
         updatedWords.push(word);
       }
     }
     this.props.updateAllWords(updatedWords);
+    this.setState({ dialogOpen: false });
+  }
+
+  handleOpen() {
+    this.setState({ dialogOpen: true });
+  }
+  handleClose() {
+    this.setState({ dialogOpen: false });
   }
 
   render() {
@@ -49,11 +68,16 @@ class DeleteCell extends React.Component<DeleteCellProps> {
         bottomCell={SPACER}
       />
     ) : (
-      <IconButton
-        onClick={() => this.deleteFrontierWord(this.props.rowData.id)}
-      >
-        <Delete />
-      </IconButton>
+      <React.Fragment>
+        <IconButton onClick={() => this.handleOpen()}>
+          <Delete />
+        </IconButton>
+        <DeleteWordDialog
+          open={this.state.dialogOpen}
+          handleCancel={() => this.handleClose()}
+          handleAccept={() => this.deleteFrontierWord()}
+        />
+      </React.Fragment>
     );
   }
 }
