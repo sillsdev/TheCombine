@@ -13,3 +13,7 @@ production_override_yaml: docker-compose.prod.yml
 combine_user: combine
 combine_group: app
 combine_app_dir: /opt/combine
+
+aws_ecr: 883525205171.dkr.ecr.us-east-2.amazonaws.com
+combine_image_backend: "{{ aws_ecr }}/combine/backend:latest"
+combine_image_frontend: "{{ aws_ecr }}/combine/frontend:latest"
