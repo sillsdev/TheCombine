@@ -8,7 +8,9 @@ import {
 } from "react-localize-redux";
 
 import { simpleWord, Word } from "../../../../types/word";
-import DupFinder from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
+import DupFinder, {
+  DefaultParams,
+} from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import SenseDialog from "./SenseDialog/SenseDialog";
 import VernDialog from "./VernDialog/VernDialog";
 
@@ -42,7 +44,11 @@ export class VernWithSuggestions extends React.Component<
   VernWithSuggestionsState
 > {
   readonly maxSuggestions = 5;
-  suggestionFinder: DupFinder = new DupFinder();
+  readonly maxLevDistance = 3; // The default 5 allows too much distance
+  suggestionFinder: DupFinder = new DupFinder({
+    ...DefaultParams,
+    maxScore: this.maxLevDistance,
+  });
 
   constructor(props: any) {
     super(props);
@@ -80,7 +86,12 @@ export class VernWithSuggestions extends React.Component<
     if (value) {
       suggestedVerns = [...this.autoCompleteCandidates(value)];
       if (suggestedVerns.length < this.maxSuggestions) {
-        let sortedVerns: string[] = [...this.props.allVerns].sort(
+        const viableVerns: string[] = this.props.allVerns.filter(
+          (vern: string) =>
+            this.suggestionFinder.getLevenshteinDistance(vern, value) <
+            this.suggestionFinder.maxScore
+        );
+        const sortedVerns: string[] = viableVerns.sort(
           (a: string, b: string) =>
             this.suggestionFinder.getLevenshteinDistance(a, value) -
             this.suggestionFinder.getLevenshteinDistance(b, value)
