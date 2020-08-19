@@ -9,7 +9,7 @@
 ##############################################################
 
 - name: Setup TheCombine Using Docker
-  hosts: all
+  hosts: server,qa,nuc
   gather_facts: yes
   become: yes
 
