@@ -1,12 +1,17 @@
 import {
   Dialog,
   DialogContent,
-  withStyles,
   MenuItem,
   MenuList,
+  Typography,
+  withStyles,
 } from "@material-ui/core";
 import React from "react";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 
 import theme from "../../../../../types/theme";
 import { Word } from "../../../../../types/word";
@@ -58,7 +63,9 @@ export const StyledMenuItem = withStyles((theme) => ({
 export function VernList(props: VernListProps) {
   return (
     <React.Fragment>
-      <h1>Select the desired entry</h1>
+      <Typography variant="h3">
+        <Translate id="addWords.selectEntry" />
+      </Typography>
       <MenuList autoFocusItem>
         {props.vernacularWords.map((word: Word) => (
           <StyledMenuItem
@@ -85,7 +92,8 @@ export function VernList(props: VernListProps) {
         ))}
 
         <StyledMenuItem onClick={() => props.closeDialog("")}>
-          {"New entry for " + props.vernacularWords[0].vernacular}
+          <Translate id="addWords.newEntryFor" />
+          {props.vernacularWords[0].vernacular}
         </StyledMenuItem>
       </MenuList>
     </React.Fragment>
