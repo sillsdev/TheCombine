@@ -9,10 +9,19 @@ import configureMockStore from "redux-mock-store";
 import * as backend from "../../../../backend";
 import { defaultProject as mockProject } from "../../../../types/project";
 import { baseDomain } from "../../../../types/SemanticDomain";
-import { SemanticDomain, simpleWord, Word } from "../../../../types/word";
+import {
+  SemanticDomain,
+  simpleWord,
+  Word,
+  Sense,
+  State,
+} from "../../../../types/word";
 import { defaultState } from "../../../App/DefaultState";
-import DataEntryTable from "../DataEntryTable";
-import { NewEntry } from "../NewEntry/NewEntry";
+import DataEntryTable, {
+  addSemanticDomainToSense,
+  addSenseToWord,
+} from "../DataEntryTable";
+import NewEntry from "../NewEntry/NewEntry";
 
 jest.mock("../../../../backend", () => {
   return {
@@ -107,5 +116,71 @@ describe("Tests DataEntryTable", () => {
   it("calls hideQuestions when complete is clicked", () => {
     testRenderer.root.findByProps({ id: "complete" }).props.onClick();
     expect(hideQuestionsMock).toBeCalledTimes(1);
+  });
+
+  it("adds a sense to a word that has no senses already", () => {
+    let semanticDomain: SemanticDomain = mockSemanticDomain;
+    let word: Word = mockWord;
+    let gloss = "yeet";
+    let newSense: Sense = {
+      glosses: [{ language: "en", def: gloss }],
+      semanticDomains: [semanticDomain],
+      accessibility: State.Active,
+    };
+    const expectedWord: Word = {
+      ...word,
+      senses: [...word.senses, newSense],
+    };
+    expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
+  });
+
+  it("adds a sense to a word that already has a sense", () => {
+    let semanticDomain: SemanticDomain = mockSemanticDomain;
+    let existingSense: Sense = {
+      glosses: [{ language: "", def: "" }],
+      semanticDomains: [{ name: "domain", id: "10.2" }],
+    };
+    let word: Word = {
+      ...mockWord,
+      senses: [...mockWord.senses, existingSense],
+    };
+    let gloss = "yeet";
+    let expectedSense: Sense = {
+      glosses: [{ language: "en", def: gloss }],
+      semanticDomains: [semanticDomain],
+      accessibility: State.Active,
+    };
+    const expectedWord: Word = {
+      ...word,
+      senses: [...word.senses, expectedSense],
+    };
+    expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
+  });
+
+  it("adds a semantic domain to an existing sense", () => {
+    let semanticDomain: SemanticDomain = mockSemanticDomain;
+    let sense: Sense = {
+      glosses: [{ language: "en", def: "yeet" }],
+      semanticDomains: [],
+      accessibility: State.Active,
+    };
+    let word: Word = {
+      ...mockWord,
+      senses: [...mockWord.senses, sense],
+    };
+    let senseIndex = word.senses.length - 1;
+    let expectedWord: Word = {
+      ...mockWord,
+      senses: [
+        ...mockWord.senses,
+        {
+          ...sense,
+          semanticDomains: [semanticDomain],
+        },
+      ],
+    };
+    expect(addSemanticDomainToSense(semanticDomain, word, senseIndex)).toEqual(
+      expectedWord
+    );
   });
 });

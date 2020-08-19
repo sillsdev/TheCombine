@@ -8,6 +8,7 @@ import Recorder from "./Recorder";
 
 export interface PronunciationProps {
   wordId: string;
+  senseIndex?: number;
   pronunciationFiles: string[];
   recorder?: Recorder;
   deleteAudio?: (wordId: string, fileName: string) => void;
@@ -43,7 +44,11 @@ export class Pronunciations extends React.Component<
     return (
       <div className="pronunciationAudio">
         <AudioRecorder
-          key={this.props.wordId}
+          key={
+            this.props.senseIndex
+              ? this.props.wordId + "_" + this.props.senseIndex
+              : this.props.wordId
+          }
           wordId={this.props.wordId}
           recorder={this.props.recorder}
           uploadAudio={this.props.uploadAudio}

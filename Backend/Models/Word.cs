@@ -4,6 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
 
 namespace BackendFramework.Models
 {
@@ -31,6 +33,10 @@ namespace BackendFramework.Models
         [BsonElement("modified")]
         public string Modified { get; set; }
 
+        [BsonElement("accessibility")]
+        [BsonRepresentation(BsonType.String)]
+        public State Accessibility { get; set; }
+
         [BsonElement("history")]
         public List<string> History { get; set; }
 
@@ -56,6 +62,7 @@ namespace BackendFramework.Models
             PartOfSpeech = "";
             OtherField = "";
             ProjectId = "";
+            Accessibility = State.Active;
             Audio = new List<string>();
             EditedBy = new List<string>();
             History = new List<string>();
@@ -74,6 +81,7 @@ namespace BackendFramework.Models
                 PartOfSpeech = PartOfSpeech.Clone() as string,
                 OtherField = OtherField.Clone() as string,
                 ProjectId = ProjectId.Clone() as string,
+                Accessibility = Accessibility,
                 Audio = new List<string>(),
                 EditedBy = new List<string>(),
                 History = new List<string>(),
@@ -147,6 +155,7 @@ namespace BackendFramework.Models
             hash.Add(Audio);
             hash.Add(Created);
             hash.Add(Modified);
+            hash.Add(Accessibility);
             hash.Add(History);
             hash.Add(PartOfSpeech);
             hash.Add(EditedBy);
@@ -165,7 +174,8 @@ namespace BackendFramework.Models
         public List<SemanticDomain> SemanticDomains { get; set; }
 
         [BsonElement("accessibility")]
-        public int Accessibility { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public State Accessibility { get; set; }
 
         public Sense Clone()
         {
@@ -314,6 +324,7 @@ namespace BackendFramework.Models
     }
 
     /// <summary> Information about the state of the word in that database used for merging </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum State
     {
         Active,

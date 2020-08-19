@@ -264,7 +264,7 @@ export async function mergeWord(
               ...sense,
               srcWord: wordID,
               order: senses[wordID].length,
-              state: State.separate,
+              state: State.Separate,
             });
           }
         }
@@ -284,16 +284,16 @@ export async function mergeWord(
         senseIndex = map.order;
       }
       // set this sense to be merged as sense
-      senses[wordID][senseIndex].state = State.sense;
+      senses[wordID][senseIndex].state = State.Sense;
 
       // we want a list of all senses skipping the first
       let dups = senseIDs
         .slice(1)
-        .map((id) => ({ ...data.senses[id], state: State.duplicate }));
+        .map((id) => ({ ...data.senses[id], state: State.Duplicate }));
 
       // set each dup to be merged as duplicates
       dups.forEach((dup) => {
-        senses[dup.srcWord][dup.order].state = State.duplicate;
+        senses[dup.srcWord][dup.order].state = State.Duplicate;
         // put this sense's semdoms in the parent senses's
         for (let semdom of senses[dup.srcWord][dup.order].semanticDomains) {
           if (
@@ -320,7 +320,7 @@ export async function mergeWord(
     // construct sense children
     let children = Object.values(senses).map((word) => {
       word.forEach((sense) => {
-        if (sense.state === State.sense || sense.state === State.active) {
+        if (sense.state === State.Sense || sense.state === State.Active) {
           parent.senses.push({
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
@@ -355,25 +355,25 @@ export async function mergeWord(
       let origWord = children[wordIndex];
 
       // if merge contains separate increment index
-      if (origWord.senses.includes(State.separate)) {
+      if (origWord.senses.includes(State.Separate)) {
         separateIndex++;
       }
 
       for (let senseIndex in origWord.senses) {
         let src = `${origWord.wordID}:${senseIndex}`;
         switch (origWord.senses[senseIndex]) {
-          case State.sense:
+          case State.Sense:
             mapping[src] = { srcWord: newWords[0], order: keepCounts[0] };
             keepCounts[0]++;
             break;
-          case State.separate:
+          case State.Separate:
             mapping[src] = {
               srcWord: newWords[separateIndex],
               order: keepCounts[separateIndex],
             };
             keepCounts[separateIndex]++;
             break;
-          case State.duplicate:
+          case State.Duplicate:
             mapping[src] = { srcWord: newWords[0], order: -1 };
             break;
           default:

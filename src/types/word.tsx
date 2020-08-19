@@ -1,11 +1,11 @@
 import { randomIntString } from "../utilities";
 
 export enum State {
-  active,
-  deleted,
-  sense,
-  duplicate,
-  separate,
+  Active = "Active",
+  Deleted = "Deleted",
+  Sense = "Sense",
+  Duplicate = "Duplicate",
+  Separate = "Separate",
 }
 
 export interface Gloss {
@@ -104,6 +104,7 @@ export function multiGlossWord(vern: string, glosses: string[]): Word {
 
 export function testWordList(): Word[] {
   return [
+    { ...simpleWord("NoSense", ""), senses: [] },
     simpleWord("Yoink", "Hello"),
     simpleWord("Yode", "Goodbye"),
     simpleWord("Yoff", "Yes"),

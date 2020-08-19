@@ -129,7 +129,7 @@ describe("Tests DataEntryComponent", () => {
           {
             glosses: [],
             semanticDomains: [],
-            accessibility: State.active,
+            accessibility: State.Active,
           },
         ],
       },
@@ -154,12 +154,12 @@ describe("Tests DataEntryComponent", () => {
       {
         glosses: [{ language: "", def: "" }],
         semanticDomains: [mockDomains[0]],
-        accessibility: State.active,
+        accessibility: State.Active,
       },
       {
         glosses: [{ language: "", def: "" }],
         semanticDomains: [mockDomains[1]],
-        accessibility: State.active,
+        accessibility: State.Active,
       },
     ];
 
