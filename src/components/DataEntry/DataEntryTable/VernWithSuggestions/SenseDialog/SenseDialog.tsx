@@ -9,7 +9,7 @@ import React from "react";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 import theme from "../../../../../types/theme";
-import { Sense, Word } from "../../../../../types/word";
+import { Sense, State, Word } from "../../../../../types/word";
 import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
@@ -54,26 +54,30 @@ export function SenseList(props: SenseListProps) {
     <React.Fragment>
       <h1>{props.selectedWord.vernacular}</h1>
       <MenuList autoFocusItem>
-        {props.selectedWord.senses.map((sense: Sense, index: number) => (
-          <StyledMenuItem
-            onClick={() => props.closeDialog(index)}
-            key={sense.glosses[0].def}
-            id={sense.glosses[0].def}
-          >
-            <div style={{ margin: theme.spacing(4) }}>
-              <h3>{sense.glosses[0].def}</h3>
-            </div>
-            <div style={{ margin: theme.spacing(4) }}>
-              <DomainCell
-                rowData={parseWord(
-                  { ...props.selectedWord, senses: [sense] } as Word,
-                  "en"
-                )}
-                sortingByDomains={false}
-              />
-            </div>
-          </StyledMenuItem>
-        ))}
+        {props.selectedWord.senses.map(
+          (sense: Sense, index: number) =>
+            (sense.accessibility === undefined ||
+              sense.accessibility === State.Active) && (
+              <StyledMenuItem
+                onClick={() => props.closeDialog(index)}
+                key={sense.glosses[0].def}
+                id={sense.glosses[0].def}
+              >
+                <div style={{ margin: theme.spacing(4) }}>
+                  <h3>{sense.glosses[0].def}</h3>
+                </div>
+                <div style={{ margin: theme.spacing(4) }}>
+                  <DomainCell
+                    rowData={parseWord(
+                      { ...props.selectedWord, senses: [sense] } as Word,
+                      "en"
+                    )}
+                    sortingByDomains={false}
+                  />
+                </div>
+              </StyledMenuItem>
+            )
+        )}
 
         <StyledMenuItem onClick={() => props.closeDialog(-1)}>
           {"New Sense for " + props.selectedWord.vernacular}
