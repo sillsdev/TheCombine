@@ -68,14 +68,16 @@ class DeleteCell extends React.Component<DeleteCellProps, DeleteCellState> {
         bottomCell={SPACER}
       />
     ) : (
-      <IconButton onClick={() => this.handleOpen()}>
-        <Delete />
+      <React.Fragment>
+        <IconButton onClick={() => this.handleOpen()}>
+          <Delete />
+        </IconButton>
         <DeleteWordDialog
           open={this.state.dialogOpen}
           handleCancel={() => this.handleClose()}
           handleAccept={() => this.deleteFrontierWord()}
         />
-      </IconButton>
+      </React.Fragment>
     );
   }
 }
