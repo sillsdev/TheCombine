@@ -21,10 +21,11 @@ describe("Tests NewEntry", () => {
           <NewEntry
             allVerns={[]}
             allWords={[]}
-            updateWord={() => null}
-            addNewWord={() => null}
+            updateWordWithNewGloss={() => new Promise(() => {})}
+            addNewWord={() => new Promise(() => {})}
             semanticDomain={{ name: "", id: "" }}
             setIsReadyState={() => null}
+            analysisLang={""}
           />
         </Provider>
       );

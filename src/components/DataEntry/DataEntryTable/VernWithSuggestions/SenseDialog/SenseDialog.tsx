@@ -65,10 +65,10 @@ export function SenseList(props: SenseListProps) {
             </div>
             <div style={{ margin: theme.spacing(4) }}>
               <DomainCell
-                rowData={parseWord(
-                  { ...props.selectedWord, senses: [sense] } as Word,
-                  "en"
-                )}
+                rowData={parseWord({
+                  ...props.selectedWord,
+                  senses: [sense],
+                } as Word)}
                 sortingByDomains={false}
               />
             </div>

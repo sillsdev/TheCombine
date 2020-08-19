@@ -22,7 +22,7 @@ export interface ReviewEntriesSense {
 
 export function parseWord(
   word: Word,
-  analysisLang: string,
+  analysisLang?: string,
   commonRecorder?: Recorder
 ) {
   let currentWord: ReviewEntriesWord = {
@@ -39,7 +39,7 @@ export function parseWord(
   return currentWord;
 }
 // Convert a Sense into a ReviewEntriesSense
-function parseSense(sense: Sense, analysisLang: string) {
+function parseSense(sense: Sense, analysisLang?: string) {
   let hasGloss: boolean;
   let currentSense: ReviewEntriesSense = {
     glosses: "",
@@ -61,7 +61,7 @@ function parseSense(sense: Sense, analysisLang: string) {
   hasGloss = false;
   if (sense.glosses)
     for (let gloss of sense.glosses)
-      if (gloss.language === analysisLang) {
+      if (analysisLang === undefined || gloss.language === analysisLang) {
         hasGloss = true;
         currentSense.glosses += gloss.def + SEPARATOR;
       }
