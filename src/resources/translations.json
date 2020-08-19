@@ -408,6 +408,11 @@
       "No tenemos un domain",
       "Aucun domaine sélectionné"
     ],
+    "deleteWord": [
+      "This word will be permanently deleted!",
+      "¡Esta palabra se eliminará permanentemente!",
+      "Ce mot sera définitivement supprimé !"
+    ],
     "error": {
       "gloss": [
         "Glosses cannot be left blank",
