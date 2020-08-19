@@ -8,6 +8,9 @@ import {
 } from "react-localize-redux";
 
 import * as Backend from "../../../backend";
+import { getProjectId } from "../../../backend/localStorage";
+import { AutoComplete } from "../../../types/AutoComplete";
+import { Project } from "../../../types/project";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import {
@@ -43,6 +46,7 @@ interface DataEntryTableState {
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
   isReady: boolean;
+  suggestVerns: boolean;
 }
 
 async function addAudiosToBackend(
@@ -111,7 +115,7 @@ export function addSenseToWord(
 }
 
 /**
- * A data entry table containing word entries
+ * A data entry table containing recent word entries
  */
 export class DataEntryTable extends React.Component<
   DataEntryTableProps & LocalizeContextProps,
@@ -124,6 +128,7 @@ export class DataEntryTable extends React.Component<
       existingWords: [],
       recentlyAddedWords: [],
       isReady: false,
+      suggestVerns: true,
     };
     this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
@@ -133,6 +138,13 @@ export class DataEntryTable extends React.Component<
 
   async componentDidMount() {
     await this.updateExisting();
+    await this.getProjectSettings();
+  }
+
+  async getProjectSettings() {
+    const proj: Project = await Backend.getProject(getProjectId());
+    const suggestVerns: boolean = proj.autocompleteSetting === AutoComplete.On;
+    this.setState({ suggestVerns });
   }
 
   /** Finished with this page of words, select new semantic domain */
@@ -491,8 +503,12 @@ export class DataEntryTable extends React.Component<
             <Grid item xs={12} key={index}>
               <RecentEntry
                 key={wordAccess.word.id + "_" + wordAccess.senseIndex}
-                allVerns={this.state.existingVerns}
-                allWords={this.state.existingWords}
+                allVerns={
+                  this.state.suggestVerns ? this.state.existingVerns : []
+                }
+                allWords={
+                  this.state.suggestVerns ? this.state.existingWords : []
+                }
                 entry={wordAccess.word}
                 senseIndex={wordAccess.senseIndex}
                 updateGloss={(newGloss: string) =>
@@ -521,8 +537,8 @@ export class DataEntryTable extends React.Component<
           <Grid item xs={12}>
             <NewEntry
               ref={this.refNewEntry}
-              allVerns={this.state.existingVerns}
-              allWords={this.state.existingWords}
+              allVerns={this.state.suggestVerns ? this.state.existingVerns : []}
+              allWords={this.state.suggestVerns ? this.state.existingWords : []}
               updateWordWithNewGloss={(
                 wordId: string,
                 gloss: string,
@@ -532,9 +548,7 @@ export class DataEntryTable extends React.Component<
                 this.addNewWord(word, audioFileURLs)
               }
               semanticDomain={this.props.semanticDomain}
-              setIsReadyState={(isReady: boolean) =>
-                this.setState({ isReady: isReady })
-              }
+              setIsReadyState={(isReady: boolean) => this.setState({ isReady })}
               recorder={this.recorder}
             />
           </Grid>

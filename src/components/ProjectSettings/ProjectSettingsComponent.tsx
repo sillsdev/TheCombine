@@ -178,11 +178,8 @@ class ProjectSettingsComponent extends React.Component<
                     <MenuItem value="Off">
                       <Translate id="projectSettings.autocomplete.off" />
                     </MenuItem>
-                    <MenuItem value="OnRequest">
-                      <Translate id="projectSettings.autocomplete.request" />
-                    </MenuItem>
-                    <MenuItem value="AlwaysOn">
-                      <Translate id="projectSettings.autocomplete.always" />
+                    <MenuItem value="On">
+                      <Translate id="projectSettings.autocomplete.on" />
                     </MenuItem>
                   </Select>
                 </FormControl>
