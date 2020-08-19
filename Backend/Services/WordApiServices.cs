@@ -31,10 +31,11 @@ namespace BackendFramework.Services
                 var wordToDelete = _repo.GetWord(projectId, wordId).Result;
                 wordToDelete.Id = "";
                 wordToDelete.History = new List<string>() { wordId };
+                wordToDelete.Accessibility = State.Deleted;
 
                 foreach (var senseAcc in wordToDelete.Senses)
                 {
-                    senseAcc.Accessibility = (int)State.Deleted;
+                    senseAcc.Accessibility = State.Deleted;
                 }
 
                 await _repo.Create(wordToDelete);
@@ -73,6 +74,38 @@ namespace BackendFramework.Services
             }
 
             return wordWithAudioToDelete;
+        }
+
+        /// <summary> Deletes word in frontier collection and adds word with deleted tag in word collection </summary>
+        /// <returns> A string: id of new word </returns>
+        public async Task<string> DeleteFrontierWord(string projectId, string wordId)
+        {
+            var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
+
+            if (!wordIsInFrontier)
+            {
+                return null;
+            }
+
+            var word = await _repo.GetWord(projectId, wordId);
+
+            word.Id = "";
+            word.ProjectId = projectId;
+            word.Accessibility = State.Deleted;
+
+            // Keep track of the old word
+            if (word.History == null)
+            {
+                word.History = new List<string> { wordId };
+            }
+            // If we are updating the history, don't overwrite it, just add to the history
+            else
+            {
+                word.History.Add(wordId);
+            }
+
+            var deletedWord = await _repo.Add(word);
+            return deletedWord.Id;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
@@ -128,7 +161,7 @@ namespace BackendFramework.Services
                 }
                 for (var i = 0; i < currentChildWord.Senses.Count; i++)
                 {
-                    currentChildWord.Senses[i].Accessibility = (int)newChildWordState.SenseStates[i];
+                    currentChildWord.Senses[i].Accessibility = newChildWordState.SenseStates[i];
                 }
 
                 // Change the child word's history to its previous self
@@ -156,7 +189,7 @@ namespace BackendFramework.Services
                             break;
                         // Add the sense to a separate word and the word to its history
                         case State.Separate:
-                            currentChildWord.Senses[i].Accessibility = (int)State.Active;
+                            currentChildWord.Senses[i].Accessibility = State.Active;
                             separateWord.Senses.Add(currentChildWord.Senses[i]);
                             if (!separateWord.History.Contains(currentChildWord.Id))
                             {

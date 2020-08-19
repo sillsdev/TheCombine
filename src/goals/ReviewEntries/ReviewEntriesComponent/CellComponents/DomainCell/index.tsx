@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import DomainCell from "./DomainCell";
-import { StoreState } from "../../../../types";
+import { StoreState } from "../../../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {

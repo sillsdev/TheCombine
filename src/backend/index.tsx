@@ -131,6 +131,14 @@ export async function deleteWordById(id: string): Promise<string> {
   return resp.data;
 }
 
+export async function deleteFrontierWord(id: string): Promise<string> {
+  let resp = await backendServer.delete(
+    `projects/${LocalStorage.getProjectId()}/words/frontier/${id}`,
+    { headers: authHeader() }
+  );
+  return resp.data;
+}
+
 export async function getFrontierWords(): Promise<Word[]> {
   let resp = await backendServer.get(
     `projects/${LocalStorage.getProjectId()}/words/frontier`,

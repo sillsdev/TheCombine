@@ -33,14 +33,14 @@ jest.mock("../../../../backend", () => {
       const M0: { parent: Word; children: MergeWord[] } = {
         parent: { ...mockWordList["WA2"], id: "WA", history: [] },
         children: [
-          { wordID: "WA", senses: [State.sense, State.sense] },
-          { wordID: "WB", senses: [State.duplicate, State.separate] },
+          { wordID: "WA", senses: [State.Sense, State.Sense] },
+          { wordID: "WB", senses: [State.Duplicate, State.Separate] },
         ],
       };
 
       const M1: { parent: Word; children: MergeWord[] } = {
         parent: { ...mockWordList["WB2"], history: [], id: "WB" },
-        children: [{ wordID: "WB2", senses: [State.sense] }],
+        children: [{ wordID: "WB2", senses: [State.Sense] }],
       };
 
       expect([M0, M1]).toContainEqual({ parent, children });
@@ -135,8 +135,8 @@ const treeA: { tree: MergeTree } = {
 test("test merge", async () => {
   let parent = { ...data.data.words.WA };
   let children = [
-    { wordID: "WA", senses: [State.sense, State.sense] },
-    { wordID: "WB", senses: [State.duplicate, State.separate] },
+    { wordID: "WA", senses: [State.Sense, State.Sense] },
+    { wordID: "WB", senses: [State.Duplicate, State.Separate] },
   ];
 
   const mockStore = createMockStore({
