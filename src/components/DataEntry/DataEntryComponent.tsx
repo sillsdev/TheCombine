@@ -4,7 +4,13 @@ import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import { getFrontierWords } from "../../backend";
 import { CurrentTab } from "../../types/currentTab";
 import theme from "../../types/theme";
-import { SemanticDomain, Word, State, DomainWord } from "../../types/word";
+import {
+  DomainWord,
+  SemanticDomain,
+  Sense,
+  State,
+  Word,
+} from "../../types/word";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import TreeViewComponent from "../TreeView";
 import DomainTree from "../../types/SemanticDomain";
@@ -32,14 +38,14 @@ const paperStyle = {
   marginRight: "auto",
 };
 
-/** Filter out words that do not have correct accessibility */
+/** Filter out words that do not have at least 1 active sense */
 export function filterWords(words: Word[]): Word[] {
   let filteredWords: Word[] = [];
   for (let word of words) {
-    let shouldInclude = true;
+    let shouldInclude = false;
     for (let sense of word.senses) {
-      if (sense.accessibility !== State.active) {
-        shouldInclude = false;
+      if (sense.accessibility === State.Active) {
+        shouldInclude = true;
         break;
       }
     }
@@ -59,7 +65,10 @@ export function filterWordsByDomain(
   let domainMatched: Boolean = false;
 
   for (let currentWord of words) {
-    for (let currentSense of currentWord.senses) {
+    for (let currentSense of currentWord.senses.filter(
+      (s: Sense) =>
+        s.accessibility === State.Active || s.accessibility === undefined
+    )) {
       domainMatched = false;
       for (let currentDomain of currentSense.semanticDomains) {
         if (currentDomain.name === domainName) {

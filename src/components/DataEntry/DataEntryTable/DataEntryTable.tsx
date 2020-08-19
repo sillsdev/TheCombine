@@ -103,7 +103,7 @@ export function addSenseToWord(
   let newSense: Sense = {
     glosses: [newGloss],
     semanticDomains: [semanticDomain],
-    accessibility: State.active,
+    accessibility: State.Active,
   };
 
   updatedWord.senses.push(newSense); // Fix which sense we are adding to
@@ -447,7 +447,7 @@ export class DataEntryTable extends React.Component<
   }
 
   async deleteWord(word: Word) {
-    await Backend.deleteWord(word).then(
+    await Backend.deleteFrontierWord(word.id).then(
       async () => await this.updateExisting()
     );
   }
