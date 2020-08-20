@@ -21,10 +21,10 @@ describe("Tests NewEntry", () => {
           <NewEntry
             allVerns={[]}
             allWords={[]}
-            updateWordWithNewGloss={() => new Promise(() => {})}
-            addNewWord={() => new Promise(() => {})}
+            updateWordWithNewGloss={jest.fn()}
+            addNewWord={jest.fn()}
             semanticDomain={{ name: "", id: "" }}
-            setIsReadyState={() => null}
+            setIsReadyState={jest.fn()}
             analysisLang={""}
           />
         </Provider>
