@@ -10,11 +10,11 @@ describe("Tests VernWithSuggestions", () => {
         <LocalizedVernWithSuggestions
           vernacular={""}
           vernInput={React.createRef<HTMLDivElement>()}
-          updateVernField={() => []}
-          setActiveGloss={() => null}
-          updateWordId={() => null}
+          updateVernField={jest.fn()}
+          setActiveGloss={jest.fn()}
+          updateWordId={jest.fn()}
           allVerns={[]}
-          handleEnterAndTab={() => null}
+          handleEnterAndTab={jest.fn()}
           analysisLang={"en"}
         />
       );

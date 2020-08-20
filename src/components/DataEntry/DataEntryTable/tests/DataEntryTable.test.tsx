@@ -58,13 +58,11 @@ beforeEach(() => {
         <DataEntryTable
           domain={baseDomain}
           semanticDomain={mockSemanticDomain}
-          displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
+          displaySemanticDomainView={jest.fn()}
           isSmallScreen={false}
           hideQuestions={hideQuestionsMock}
-          getWordsFromBackend={() => {
-            return new Promise(() => []);
-          }}
-          showExistingData={() => {}}
+          getWordsFromBackend={jest.fn()}
+          showExistingData={jest.fn()}
         />
       </Provider>
     );

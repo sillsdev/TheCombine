@@ -21,7 +21,7 @@ describe("Tests VernList ", () => {
       renderer.create(
         <VernList
           vernacularWords={[simpleWord("", "")]}
-          closeDialog={() => null}
+          closeDialog={jest.fn()}
           analysisLang={"en"}
         />
       );
