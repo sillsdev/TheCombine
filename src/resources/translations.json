@@ -307,7 +307,7 @@
     },
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
-      "off": ["Off", "Apagar", "Éteint"],
+      "off": ["Off", "Apagado", "Éteint"],
       "on": ["On", "Encendido", "Allumé"]
     },
     "invite": {
