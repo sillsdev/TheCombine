@@ -23,8 +23,19 @@ namespace Backend.Tests
 
         private static User RandomUser()
         {
-            var user = new User { Username = Util.RandString(), Password = Util.RandString() };
+            var user = new User { Username = Util.RandString(10), Password = Util.RandString(10) };
             return user;
+        }
+
+        [Test]
+        public void TestRandString()
+        {
+            var randomString = Util.RandString(10);
+            Assert.IsTrue(char.IsUpper(randomString[0]));
+            Assert.IsTrue(char.IsLower(randomString[1]));
+            Assert.IsTrue(char.IsLower(randomString[2]));
+            Assert.IsTrue(char.IsLower(randomString[3]));
+            Assert.IsTrue(char.IsUpper(randomString[4]));
         }
 
         [Test]
@@ -112,5 +123,73 @@ namespace Backend.Tests
             _ = _controller.Delete().Result;
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
         }
+
+        [Test]
+        public void TestCheckUsername()
+        {
+            var user1 = RandomUser();
+            var user2 = RandomUser();
+            var username1 = user1.Username;
+            var username2 = user2.Username;
+
+            _userService.Create(user1);
+            _userService.Create(user2);
+
+            var result1 = (_controller.CheckUsername(username1.ToLowerInvariant())).Result as StatusCodeResult;
+            //Assert.AreEqual(result1.StatusCode, 200);
+
+            var result2 = (_controller.CheckUsername(username2.ToUpperInvariant())).Result as StatusCodeResult;
+            //Assert.AreEqual(result2.StatusCode, 200);
+
+            var result3 = (_controller.CheckUsername(username1)).Result as StatusCodeResult;
+            //Assert.AreEqual(result3.StatusCode, 200);
+        }
+
+        [Test]
+        public void TestCheckEmail()
+        {
+            var user1 = RandomUser();
+            var user2 = RandomUser();
+            var email1 = user1.Email;
+            var email2 = user2.Email;
+
+            _userService.Create(user1);
+            _userService.Create(user2);
+
+            var result1 = (_controller.CheckEmail(email1.ToLowerInvariant())).Result as StatusCodeResult;
+            //Assert.AreEqual(result1.StatusCode, 200);
+
+            var result2 = (_controller.CheckEmail(email2.ToUpperInvariant())).Result as StatusCodeResult;
+            //Assert.AreEqual(result2.StatusCode, 200);
+
+            var result3 = (_controller.CheckEmail(email1)).Result as StatusCodeResult;
+            //Assert.AreEqual(result3.StatusCode, 200);
+        }
+
+        /*Test]
+        public void TestToLower()
+        {
+            var user = RandomUser();
+            user.Username = "USERNAME";
+            user.Email = "Example@Email.COM";
+            user.Password = "qwerty";
+
+            _ = _controller.Post(user);
+
+            Assert.AreEqual("username", _userService.GetAllUsers().Result[0].Username);
+            Assert.AreEqual("example@email.com", _userService.GetAllUsers().Result[0].Email);
+
+            var credentials = new Credentials();
+            credentials.Username = "UsErNaMe";
+            credentials.Password = "qwerty";
+
+            var result1 = (_controller.Authenticate(credentials).Result as OkObjectResult).Value;
+            var userResult = result1 as User;
+            Assert.IsNotNull(result1);
+            Assert.AreEqual("username", userResult.Username);
+
+            //var result2 = (_controller.CheckUsername("uSerName")).Result;
+            //Assert.IsNotNull(result2);
+        }*/
     }
 }
