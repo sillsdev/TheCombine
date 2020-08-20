@@ -44,9 +44,7 @@ function parseSense(sense: Sense, analysisLang: string) {
   let currentSense: ReviewEntriesSense = {
     glosses: "",
     domains: [],
-    deleted:
-      sense.accessibility !== undefined &&
-      sense.accessibility === State.Deleted,
+    deleted: sense.accessibility === State.Deleted,
     senseId: uuid() + OLD_SENSE,
   };
 
