@@ -417,6 +417,11 @@
       "No tenemos un domain",
       "Aucun domaine sélectionné"
     ],
+    "deleteWord": [
+      "This word will be permanently deleted!",
+      "¡Esta palabra se eliminará permanentemente!",
+      "Ce mot sera définitivement supprimé !"
+    ],
     "error": {
       "gloss": [
         "Glosses cannot be left blank",
@@ -427,6 +432,11 @@
         "Domains cannot be left blank",
         "No guardar sentidos sin dominios",
         "Les domaines ne peuvent pas être laissés vides"
+      ],
+      "senses": [
+        "Cannot save an entry with no senses",
+        "No guardar entrada sin sentidos",
+        "Ne pas enregistrer entrée sans sens"
       ],
       "vernacular": [
         "Vernacular cannot be left blank",
