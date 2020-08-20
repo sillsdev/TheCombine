@@ -26,6 +26,7 @@ interface VernWithSuggestionsProps {
   updateWordId: (wordId?: string) => void;
   selectedWordId?: string;
   onBlur?: () => void;
+  analysisLang: string;
 }
 
 interface VernWithSuggestionsState {
@@ -187,6 +188,7 @@ export class VernWithSuggestions extends React.Component<
               }
             }}
             vernacularWords={this.state.dupVernWords}
+            analysisLang={this.props.analysisLang}
           />
         )}
         {this.props.isNew && (
@@ -201,6 +203,7 @@ export class VernWithSuggestions extends React.Component<
               }
               this.setState({ senseOpen: false });
             }}
+            analysisLang={this.props.analysisLang}
           />
         )}
       </React.Fragment>

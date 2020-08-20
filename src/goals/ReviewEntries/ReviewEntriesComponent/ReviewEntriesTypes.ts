@@ -22,7 +22,7 @@ export interface ReviewEntriesSense {
 
 export function parseWord(
   word: Word,
-  analysisLang: string,
+  analysisLang: string, // bcp47 code
   commonRecorder?: Recorder
 ) {
   let currentWord: ReviewEntriesWord = {

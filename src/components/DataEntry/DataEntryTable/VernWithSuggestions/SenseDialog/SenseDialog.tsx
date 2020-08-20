@@ -23,6 +23,7 @@ function SenseDialog(
     selectedWord: Word;
     open: boolean;
     handleClose: (senseIndex: number) => void;
+    analysisLang: string;
   } & LocalizeContextProps
 ) {
   return (
@@ -31,6 +32,7 @@ function SenseDialog(
         <SenseList
           selectedWord={props.selectedWord}
           closeDialog={props.handleClose}
+          analysisLang={props.analysisLang}
         />
       </DialogContent>
     </Dialog>
@@ -40,6 +42,7 @@ function SenseDialog(
 interface SenseListProps {
   selectedWord: Word;
   closeDialog: (senseIndex: number) => void;
+  analysisLang: string;
 }
 
 // Copied from customized menus at https://material-ui.com/components/menus/
@@ -73,8 +76,11 @@ export function SenseList(props: SenseListProps) {
             <div style={{ margin: theme.spacing(4) }}>
               <DomainCell
                 rowData={parseWord(
-                  { ...props.selectedWord, senses: [sense] } as Word,
-                  "en"
+                  {
+                    ...props.selectedWord,
+                    senses: [sense],
+                  } as Word,
+                  props.analysisLang
                 )}
                 sortingByDomains={false}
               />
