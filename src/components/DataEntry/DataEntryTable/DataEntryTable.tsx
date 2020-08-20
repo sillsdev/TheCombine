@@ -8,6 +8,8 @@ import {
 } from "react-localize-redux";
 
 import * as Backend from "../../../backend";
+import { getProjectId } from "../../../backend/localStorage";
+import { Project } from "../../../types/project";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import {
@@ -43,6 +45,7 @@ interface DataEntryTableState {
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
   isReady: boolean;
+  analysisLang: string;
 }
 
 async function addAudiosToBackend(
@@ -91,22 +94,17 @@ export function addSemanticDomainToSense(
 export function addSenseToWord(
   semanticDomain: SemanticDomain,
   existingWord: Word,
-  gloss: string
+  gloss: string,
+  language: string
 ): Word {
-  let updatedWord: Word = { ...existingWord };
-
-  let newGloss: Gloss = {
-    language: "en",
-    def: gloss,
-  };
-
-  let newSense: Sense = {
+  const updatedWord: Word = { ...existingWord };
+  const newGloss: Gloss = { language, def: gloss };
+  const newSense: Sense = {
     glosses: [newGloss],
     semanticDomains: [semanticDomain],
     accessibility: State.Active,
   };
-
-  updatedWord.senses.push(newSense); // Fix which sense we are adding to
+  updatedWord.senses.push(newSense);
   return updatedWord;
 }
 
@@ -124,6 +122,7 @@ export class DataEntryTable extends React.Component<
       existingWords: [],
       recentlyAddedWords: [],
       isReady: false,
+      analysisLang: "en",
     };
     this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
@@ -133,6 +132,15 @@ export class DataEntryTable extends React.Component<
 
   async componentDidMount() {
     await this.updateExisting();
+    await this.getProjectSettings();
+  }
+
+  async getProjectSettings() {
+    const proj: Project = await Backend.getProject(getProjectId());
+    let analysisLang: string = "en";
+    if (proj.analysisWritingSystems.length > 0)
+      analysisLang = proj.analysisWritingSystems[0].bcp47;
+    this.setState({ analysisLang });
   }
 
   /** Finished with this page of words, select new semantic domain */
@@ -157,9 +165,7 @@ export class DataEntryTable extends React.Component<
     } else {
       recentlyAddedWords.push(newWordAccess);
     }
-    this.setState({
-      recentlyAddedWords,
-    });
+    this.setState({ recentlyAddedWords });
   }
 
   /** Update the word in the backend and the frontend */
@@ -241,7 +247,8 @@ export class DataEntryTable extends React.Component<
     const updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
-      gloss
+      gloss,
+      this.state.analysisLang
     );
     await this.updateWordForNewEntry(
       updatedWord,
@@ -508,6 +515,7 @@ export class DataEntryTable extends React.Component<
                   if (this.refNewEntry.current)
                     this.refNewEntry.current.focusVernInput();
                 }}
+                analysisLang={this.state.analysisLang}
               />
             </Grid>
           ))}
@@ -530,6 +538,7 @@ export class DataEntryTable extends React.Component<
                 this.setState({ isReady: isReady })
               }
               recorder={this.recorder}
+              analysisLang={this.state.analysisLang}
             />
           </Grid>
         </Grid>
