@@ -11,9 +11,11 @@ describe("Tests VernWithSuggestions", () => {
           vernacular={""}
           vernInput={React.createRef<HTMLDivElement>()}
           updateVernField={() => []}
+          setActiveGloss={() => null}
           updateWordId={() => null}
           allVerns={[]}
-          handleEnter={() => null}
+          handleEnterAndTab={() => null}
+          analysisLang={"en"}
         />
       );
     });

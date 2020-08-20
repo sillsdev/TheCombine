@@ -216,6 +216,7 @@ export default class NewEntry extends React.Component<
                 setActiveGloss={(newGloss: string) =>
                   this.setState({ activeGloss: newGloss })
                 }
+                analysisLang={this.props.analysisLang}
               />
             </Grid>
             <Grid item xs={12}>

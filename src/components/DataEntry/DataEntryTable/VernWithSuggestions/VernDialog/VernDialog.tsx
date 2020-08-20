@@ -24,6 +24,7 @@ export function VernDialog(
     vernacularWords: Word[];
     open: boolean;
     handleClose: (selectedWordId?: string) => void;
+    analysisLang: string;
   } & LocalizeContextProps
 ) {
   return (
@@ -37,6 +38,7 @@ export function VernDialog(
         <VernList
           vernacularWords={props.vernacularWords}
           closeDialog={props.handleClose}
+          analysisLang={props.analysisLang}
         />
       </DialogContent>
     </Dialog>
@@ -46,6 +48,7 @@ export function VernDialog(
 interface VernListProps {
   vernacularWords: Word[];
   closeDialog: (selectedWordId: string) => void;
+  analysisLang: string;
 }
 
 // Copied from customized menus at https://material-ui.com/components/menus/
@@ -91,13 +94,13 @@ export function VernList(props: VernListProps) {
                 <SenseCell
                   editable={false}
                   sortingByGloss={false}
-                  value={parseWord(word).senses}
-                  rowData={parseWord(word)}
+                  value={parseWord(word, props.analysisLang).senses}
+                  rowData={parseWord(word, props.analysisLang)}
                 />
               </div>
               <div style={{ margin: theme.spacing(4) }}>
                 <DomainCell
-                  rowData={parseWord(word)}
+                  rowData={parseWord(word, props.analysisLang)}
                   sortingByDomains={false}
                 />
               </div>
