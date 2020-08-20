@@ -200,16 +200,22 @@ export class DataEntryTable extends React.Component<
     gloss: string,
     audioFileURLs: string[] = []
   ): Promise<boolean> {
-    const existingWord: Word | undefined = this.state.existingWords.find(
+    let existingWord: Word | undefined = this.state.existingWords.find(
       (word: Word) => word.id === wordId
     );
     if (!existingWord)
-      throw new Error("You are trying to update a nonexistent word");
+      throw new Error(
+        "Attempting to edit an existing word but did not find one"
+      );
 
-    existingWord.senses.forEach(async (sense: Sense, senseIndex: number) => {
+    let sense: Sense;
+    for (
+      let senseIndex = 0;
+      senseIndex < existingWord.senses.length;
+      senseIndex++
+    ) {
+      sense = existingWord.senses[senseIndex];
       if (
-        (sense.accessibility === undefined ||
-          sense.accessibility === State.Active) &&
         sense.glosses &&
         sense.glosses.length &&
         sense.glosses[0].def === gloss
@@ -223,7 +229,7 @@ export class DataEntryTable extends React.Component<
           alert("This sense already exists for this domain");
           return false;
         } else {
-          const updatedWord = addSemanticDomainToSense(
+          let updatedWord = addSemanticDomainToSense(
             this.props.semanticDomain,
             existingWord!, // Existing word already null checked
             senseIndex
@@ -236,7 +242,7 @@ export class DataEntryTable extends React.Component<
           return true;
         }
       }
-    });
+    }
     // The gloss is new for this word, so add a new sense.
     const updatedWord = addSenseToWord(
       this.props.semanticDomain,
