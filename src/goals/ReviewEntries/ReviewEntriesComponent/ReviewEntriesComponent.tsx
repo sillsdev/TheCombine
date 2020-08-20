@@ -52,12 +52,9 @@ export class ReviewEntriesComponent extends React.Component<
       errorMsg: undefined,
     };
     this.recorder = new Recorder();
-  }
-
-  componentDidMount() {
-    getFrontierWords().then((frontier: Word[]) =>
-      this.updateLocalWords(frontier)
-    );
+    getFrontierWords().then((frontier: Word[]) => {
+      this.updateLocalWords(frontier);
+    });
   }
 
   // Creates the local set of words from the frontier
