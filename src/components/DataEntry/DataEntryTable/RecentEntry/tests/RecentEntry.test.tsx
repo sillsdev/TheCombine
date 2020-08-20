@@ -40,7 +40,7 @@ function renderWithWord(word: Word) {
           semanticDomain={{ name: "", id: "" }}
           recorder={new Recorder()}
           focusNewEntry={() => null}
-          analysisLang={""}
+          analysisLang={"en"}
         />
       </Provider>
     );
