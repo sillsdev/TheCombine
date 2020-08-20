@@ -69,7 +69,7 @@ function updateWord(
 export function updateRecordingStatus(
   recordingStatus: boolean,
   wordId: string | undefined
-) {
+): ReviewUpdateRecordingStatus {
   return {
     type: ReviewEntriesActionTypes.UpdateRecordingStatus,
     recordingStatus,
