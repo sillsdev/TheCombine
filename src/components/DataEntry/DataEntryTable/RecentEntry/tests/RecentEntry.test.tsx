@@ -37,6 +37,7 @@ function renderWithWord(word: Word) {
           deleteAudioFromWord={jest.fn()}
           recorder={new Recorder()}
           focusNewEntry={jest.fn()}
+          analysisLang={"en"}
         />
       </Provider>
     );

@@ -19,6 +19,7 @@ interface RecentEntryProps {
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
   recorder: Recorder;
   focusNewEntry: () => void;
+  analysisLang: string;
 }
 
 interface RecentEntryState {
@@ -38,7 +39,8 @@ export default class RecentEntry extends React.Component<
     super(props);
 
     let sense: Sense = { ...props.entry.senses[props.senseIndex] };
-    if (sense.glosses.length < 1) sense.glosses.push({ def: "", language: "" });
+    if (sense.glosses.length < 1)
+      sense.glosses.push({ def: "", language: this.props.analysisLang });
 
     this.state = {
       vernacular: props.entry.vernacular,
@@ -106,6 +108,7 @@ export default class RecentEntry extends React.Component<
                 if (this.state.vernacular) this.focusOnNewEntry();
               }}
               setActiveGloss={() => {}}
+              analysisLang={this.props.analysisLang}
             />
           </Grid>
           <Grid
