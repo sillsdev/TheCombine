@@ -15,6 +15,7 @@ export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
   UpdateRecordingStatus = "UPDATE_RECORDING_STATUS",
+  ClearReviewEntriesState = "CLEAR_REVIEW_ENTRIES_STATE",
 }
 
 interface ReviewUpdateWords {
@@ -35,10 +36,15 @@ interface ReviewUpdateRecordingStatus {
   wordId: string | undefined;
 }
 
+interface ReviewClearReviewEntriesState {
+  type: ReviewEntriesActionTypes.ClearReviewEntriesState;
+}
+
 export type ReviewEntriesAction =
   | ReviewUpdateWords
   | ReviewUpdateWord
-  | ReviewUpdateRecordingStatus;
+  | ReviewUpdateRecordingStatus
+  | ReviewClearReviewEntriesState;
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -63,11 +69,17 @@ function updateWord(
 export function updateRecordingStatus(
   recordingStatus: boolean,
   wordId: string | undefined
-) {
+): ReviewUpdateRecordingStatus {
   return {
     type: ReviewEntriesActionTypes.UpdateRecordingStatus,
     recordingStatus,
     wordId,
+  };
+}
+
+export function clearReviewEntriesState(): ReviewClearReviewEntriesState {
+  return {
+    type: ReviewEntriesActionTypes.ClearReviewEntriesState,
   };
 }
 
@@ -211,12 +223,13 @@ export function updateFrontierWord(
             ...editSense,
             semanticDomains: newSense.domains,
           };
-      } else
-        return ({
-          ...editSense,
-          accessibility: State.Deleted,
-        } as any) as Sense;
+      } else return ({ accessibility: State.Deleted } as any) as Sense;
     });
+    /* Deleted senses must be filtered out after the above map
+       because the mapping makes use of original sense indexing */
+    editWord.senses = editWord.senses.filter(
+      (sense) => sense.accessibility !== State.Deleted
+    );
 
     dispatch(
       updateWord(
