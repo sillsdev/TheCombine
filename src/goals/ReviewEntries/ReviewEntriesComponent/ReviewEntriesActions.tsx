@@ -223,12 +223,13 @@ export function updateFrontierWord(
             ...editSense,
             semanticDomains: newSense.domains,
           };
-      } else
-        return ({
-          ...editSense,
-          accessibility: State.Deleted,
-        } as any) as Sense;
+      } else return ({ accessibility: State.Deleted } as any) as Sense;
     });
+    /* Deleted senses must be filtered out after the above map
+       because the mapping makes use of original sense indexing */
+    editWord.senses = editWord.senses.filter(
+      (sense) => sense.accessibility !== State.Deleted
+    );
 
     dispatch(
       updateWord(
