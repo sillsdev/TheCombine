@@ -218,8 +218,6 @@ export class DataEntryTable extends React.Component<
 
     existingWord.senses.forEach(async (sense: Sense, senseIndex: number) => {
       if (
-        (sense.accessibility === undefined ||
-          sense.accessibility === State.Active) &&
         sense.glosses &&
         sense.glosses.length &&
         sense.glosses[0].def === gloss
