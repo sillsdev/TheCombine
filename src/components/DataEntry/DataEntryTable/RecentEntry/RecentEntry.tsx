@@ -134,7 +134,7 @@ export default class RecentEntry extends React.Component<
                 if (this.state.vernacular) this.focusOnNewEntry();
               }}
               setActiveGloss={() => {}}
-              analysisLang={""}
+              analysisLang={this.props.analysisLang}
             />
           </Grid>
           <Grid
