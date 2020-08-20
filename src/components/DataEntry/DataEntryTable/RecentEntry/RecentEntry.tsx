@@ -2,7 +2,7 @@ import { Grid } from "@material-ui/core";
 import React from "react";
 
 import theme from "../../../../types/theme";
-import { SemanticDomain, Sense, Word } from "../../../../types/word";
+import { Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
@@ -10,8 +10,6 @@ import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
 
 interface RecentEntryProps {
-  allVerns: string[];
-  allWords: Word[];
   entry: Word;
   senseIndex: number;
   updateGloss: (newGloss: string) => void;
@@ -19,7 +17,6 @@ interface RecentEntryProps {
   removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
-  semanticDomain: SemanticDomain;
   recorder: Recorder;
   focusNewEntry: () => void;
 }
@@ -27,13 +24,11 @@ interface RecentEntryProps {
 interface RecentEntryState {
   vernacular: string;
   gloss: string;
-  //isDupVern: boolean;
-  //wordId?: string;
   hovering: boolean;
 }
 
 /**
- * Displays a word a user can still make edits to
+ * Displays a recently entered word that a user can still edit
  */
 export default class RecentEntry extends React.Component<
   RecentEntryProps,
@@ -48,7 +43,6 @@ export default class RecentEntry extends React.Component<
     this.state = {
       vernacular: props.entry.vernacular,
       gloss: sense.glosses.length > 0 ? sense.glosses[0].def : "",
-      //isDupVern: false,
       hovering: false,
     };
   }
@@ -58,26 +52,10 @@ export default class RecentEntry extends React.Component<
   }
 
   updateVernField(newValue?: string): Word[] {
-    let vernacular: string = "";
-    let dupVernWords: Word[] = [];
-    //let isDupVern: boolean = false;
-    if (newValue) {
-      vernacular = newValue;
-      /*dupVernWords = this.props.allWords.filter(
-        (word: Word) => word.vernacular === newValue
-      );
-      isDupVern = dupVernWords.length > 0;*/
-    }
-    this.setState({
-      //isDupVern,
-      vernacular,
-    });
-    return dupVernWords;
+    const vernacular: string = newValue ? newValue : "";
+    this.setState({ vernacular });
+    return [];
   }
-
-  /*updateWordId(wordId?: string) {
-    this.setState({ wordId });
-  }*/
 
   conditionallyUpdateGloss() {
     if (
@@ -88,16 +66,12 @@ export default class RecentEntry extends React.Component<
   }
 
   conditionallyUpdateVern() {
-    if (
-      this.props.entry.vernacular !== this.state.vernacular //||
-      //this.state.wordId !== undefined
-    )
-      this.props.updateVern(this.state.vernacular); //, this.state.wordId);
+    if (this.props.entry.vernacular !== this.state.vernacular)
+      this.props.updateVern(this.state.vernacular);
   }
 
   focusOnNewEntry = () => {
     this.props.focusNewEntry();
-    //reference NewEntry's focus thing here
   };
 
   render() {
@@ -123,7 +97,7 @@ export default class RecentEntry extends React.Component<
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
-              updateWordId={(wordId?: string) => null} //this.updateWordId(wordId)}
+              updateWordId={() => null}
               allVerns={[]}
               onBlur={() => {
                 this.conditionallyUpdateVern();
