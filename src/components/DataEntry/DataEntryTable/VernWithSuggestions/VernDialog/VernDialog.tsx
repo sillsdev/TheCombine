@@ -14,7 +14,7 @@ import {
 } from "react-localize-redux";
 
 import theme from "../../../../../types/theme";
-import { Word } from "../../../../../types/word";
+import { Sense, State, Word } from "../../../../../types/word";
 import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import SenseCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
@@ -67,26 +67,43 @@ export function VernList(props: VernListProps) {
         <Translate id="addWords.selectEntry" />
       </Typography>
       <MenuList autoFocusItem>
-        {props.vernacularWords.map((word: Word) => (
-          <StyledMenuItem
-            onClick={() => props.closeDialog(word.id)}
-            key={word.id}
-            id={word.id}
-          >
-            {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
-            <div style={{ margin: theme.spacing(4) }}>
-              <SenseCell
-                editable={false}
-                sortingByGloss={false}
-                value={parseWord(word).senses}
-                rowData={parseWord(word)}
-              />
-            </div>
-            <div style={{ margin: theme.spacing(4) }}>
-              <DomainCell rowData={parseWord(word)} sortingByDomains={false} />
-            </div>
-          </StyledMenuItem>
-        ))}
+        {props.vernacularWords.map((word: Word) => {
+          const filteredWord: Word = {
+            ...word,
+            senses: word.senses.filter(
+              (s: Sense) =>
+                s.accessibility === undefined ||
+                s.accessibility === State.Active
+            ),
+          };
+          return (
+            <StyledMenuItem
+              onClick={() => props.closeDialog(filteredWord.id)}
+              key={filteredWord.id}
+              id={filteredWord.id}
+            >
+              {
+                <h4 style={{ margin: theme.spacing(2) }}>
+                  {filteredWord.vernacular}
+                </h4>
+              }
+              <div style={{ margin: theme.spacing(4) }}>
+                <SenseCell
+                  editable={false}
+                  sortingByGloss={false}
+                  value={parseWord(word).senses}
+                  rowData={parseWord(word)}
+                />
+              </div>
+              <div style={{ margin: theme.spacing(4) }}>
+                <DomainCell
+                  rowData={parseWord(word)}
+                  sortingByDomains={false}
+                />
+              </div>
+            </StyledMenuItem>
+          );
+        })}
 
         <StyledMenuItem onClick={() => props.closeDialog("")}>
           <Translate id="addWords.newEntryFor" />
