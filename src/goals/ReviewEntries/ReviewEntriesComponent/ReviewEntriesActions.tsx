@@ -211,12 +211,11 @@ export function updateFrontierWord(
             ...editSense,
             semanticDomains: newSense.domains,
           };
-      } else
-        return ({
-          ...editSense,
-          accessibility: State.Deleted,
-        } as any) as Sense;
+      } else return ({ accessibility: State.Deleted } as any) as Sense;
     });
+    editWord.senses = editWord.senses.filter(
+      (sense) => sense.accessibility !== State.Deleted
+    );
 
     dispatch(
       updateWord(
