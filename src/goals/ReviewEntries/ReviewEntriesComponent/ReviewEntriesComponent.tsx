@@ -22,6 +22,7 @@ interface ReviewEntriesProps {
   words: ReviewEntriesWord[];
 
   // Dispatch changes
+  clearState: () => void;
   updateAllWords: (words: ReviewEntriesWord[]) => void;
   updateFrontierWord: (
     newData: ReviewEntriesWord,
@@ -52,9 +53,7 @@ export class ReviewEntriesComponent extends React.Component<
       errorMsg: undefined,
     };
     this.recorder = new Recorder();
-  }
-
-  componentDidMount() {
+    this.props.clearState();
     getFrontierWords().then((frontier: Word[]) =>
       this.updateLocalWords(frontier)
     );
