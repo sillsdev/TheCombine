@@ -15,6 +15,7 @@ export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
   UpdateRecordingStatus = "UPDATE_RECORDING_STATUS",
+  ClearReviewEntriesState = "CLEAR_REVIEW_ENTRIES_STATE",
 }
 
 interface ReviewUpdateWords {
@@ -35,10 +36,15 @@ interface ReviewUpdateRecordingStatus {
   wordId: string | undefined;
 }
 
+interface ReviewClearReviewEntriesState {
+  type: ReviewEntriesActionTypes.ClearReviewEntriesState;
+}
+
 export type ReviewEntriesAction =
   | ReviewUpdateWords
   | ReviewUpdateWord
-  | ReviewUpdateRecordingStatus;
+  | ReviewUpdateRecordingStatus
+  | ReviewClearReviewEntriesState;
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -68,6 +74,12 @@ export function updateRecordingStatus(
     type: ReviewEntriesActionTypes.UpdateRecordingStatus,
     recordingStatus,
     wordId,
+  };
+}
+
+export function clearReviewEntriesState(): ReviewClearReviewEntriesState {
+  return {
+    type: ReviewEntriesActionTypes.ClearReviewEntriesState,
   };
 }
 

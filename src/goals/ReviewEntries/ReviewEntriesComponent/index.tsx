@@ -7,6 +7,7 @@ import {
   ReviewEntriesAction,
   updateAllWords,
   updateFrontierWord,
+  clearReviewEntriesState,
 } from "./ReviewEntriesActions";
 import { StoreState } from "../../../types";
 
@@ -21,6 +22,7 @@ function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>
 ) {
   return {
+    clearState: () => dispatch(clearReviewEntriesState()),
     updateAllWords: (words: ReviewEntriesWord[]) =>
       dispatch(updateAllWords(words)),
     updateFrontierWord: (
