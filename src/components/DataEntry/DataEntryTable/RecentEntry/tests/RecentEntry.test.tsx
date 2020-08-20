@@ -32,14 +32,15 @@ function renderWithWord(word: Word) {
           allWords={[]}
           entry={word}
           senseIndex={0}
-          updateGloss={() => null}
-          updateVern={() => null}
-          removeEntry={() => null}
-          addAudioToWord={() => null}
-          deleteAudioFromWord={() => null}
+          updateGloss={jest.fn()}
+          updateVern={jest.fn()}
+          removeEntry={jest.fn()}
+          addAudioToWord={jest.fn()}
+          deleteAudioFromWord={jest.fn()}
           semanticDomain={{ name: "", id: "" }}
           recorder={new Recorder()}
-          focusNewEntry={() => null}
+          focusNewEntry={jest.fn()}
+          analysisLang={"en"}
         />
       </Provider>
     );

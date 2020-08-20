@@ -58,13 +58,11 @@ beforeEach(() => {
         <DataEntryTable
           domain={baseDomain}
           semanticDomain={mockSemanticDomain}
-          displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
+          displaySemanticDomainView={jest.fn()}
           isSmallScreen={false}
           hideQuestions={hideQuestionsMock}
-          getWordsFromBackend={() => {
-            return new Promise(() => []);
-          }}
-          showExistingData={() => {}}
+          getWordsFromBackend={jest.fn()}
+          showExistingData={jest.fn()}
         />
       </Provider>
     );
@@ -131,7 +129,9 @@ describe("Tests DataEntryTable", () => {
       ...word,
       senses: [...word.senses, newSense],
     };
-    expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
+    expect(addSenseToWord(semanticDomain, word, gloss, "en")).toEqual(
+      expectedWord
+    );
   });
 
   it("adds a sense to a word that already has a sense", () => {
@@ -154,7 +154,9 @@ describe("Tests DataEntryTable", () => {
       ...word,
       senses: [...word.senses, expectedSense],
     };
-    expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
+    expect(addSenseToWord(semanticDomain, word, gloss, "en")).toEqual(
+      expectedWord
+    );
   });
 
   it("adds a semantic domain to an existing sense", () => {
