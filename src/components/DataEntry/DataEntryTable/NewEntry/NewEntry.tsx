@@ -21,6 +21,7 @@ interface NewEntryProps {
   semanticDomain: SemanticDomain;
   setIsReadyState: (isReady: boolean) => void;
   recorder?: Recorder;
+  analysisLang: string;
 }
 
 interface NewEntryState {
@@ -82,7 +83,7 @@ export default class NewEntry extends React.Component<
         ...this.state.newEntry,
         senses: [
           {
-            glosses: [{ language: "en", def: newValue }],
+            glosses: [{ language: this.props.analysisLang, def: newValue }],
             semanticDomains: [this.props.semanticDomain],
           },
         ],
@@ -215,6 +216,7 @@ export default class NewEntry extends React.Component<
                 setActiveGloss={(newGloss: string) =>
                   this.setState({ activeGloss: newGloss })
                 }
+                analysisLang={this.props.analysisLang}
               />
             </Grid>
             <Grid item xs={12}>
