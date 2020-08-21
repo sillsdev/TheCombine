@@ -492,12 +492,6 @@ export class DataEntryTable extends React.Component<
             <Grid item xs={12} key={index}>
               <RecentEntry
                 key={wordAccess.word.id + "_" + wordAccess.senseIndex}
-                allVerns={
-                  this.state.suggestVerns ? this.state.existingVerns : []
-                }
-                allWords={
-                  this.state.suggestVerns ? this.state.existingWords : []
-                }
                 entry={wordAccess.word}
                 senseIndex={wordAccess.senseIndex}
                 updateGloss={(newGloss: string) =>
@@ -514,7 +508,6 @@ export class DataEntryTable extends React.Component<
                   this.deleteAudioFromRecentWord(wordId, fileName)
                 }
                 recorder={this.recorder}
-                semanticDomain={this.props.semanticDomain}
                 focusNewEntry={() => {
                   if (this.refNewEntry.current) {
                     this.refNewEntry.current.focusVernInput();
