@@ -212,7 +212,13 @@ export class DataEntryTable extends React.Component<
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
 
-    existingWord.senses.forEach(async (sense: Sense, senseIndex: number) => {
+    let sense: Sense;
+    for (
+      let senseIndex = 0;
+      senseIndex < existingWord.senses.length;
+      senseIndex++
+    ) {
+      sense = existingWord.senses[senseIndex];
       if (
         sense.glosses &&
         sense.glosses.length &&
@@ -240,7 +246,7 @@ export class DataEntryTable extends React.Component<
           return true;
         }
       }
-    });
+    }
     // The gloss is new for this word, so add a new sense.
     const updatedWord = addSenseToWord(
       this.props.semanticDomain,
