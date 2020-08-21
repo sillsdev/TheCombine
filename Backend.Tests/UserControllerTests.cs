@@ -136,13 +136,16 @@ namespace Backend.Tests
             _userService.Create(user2);
 
             var result1 = (_controller.CheckUsername(username1.ToLowerInvariant())).Result as StatusCodeResult;
-            //Assert.AreEqual(result1.StatusCode, 200);
+            Assert.AreEqual(result1.StatusCode, 400);
 
             var result2 = (_controller.CheckUsername(username2.ToUpperInvariant())).Result as StatusCodeResult;
-            //Assert.AreEqual(result2.StatusCode, 200);
+            Assert.AreEqual(result2.StatusCode, 400);
 
             var result3 = (_controller.CheckUsername(username1)).Result as StatusCodeResult;
-            //Assert.AreEqual(result3.StatusCode, 200);
+            Assert.AreEqual(result3.StatusCode, 400);
+
+            var result4 = (_controller.CheckUsername("NewUsername")).Result as StatusCodeResult;
+            Assert.AreEqual(result4.StatusCode, 200);
         }
 
         [Test]
@@ -157,13 +160,16 @@ namespace Backend.Tests
             _userService.Create(user2);
 
             var result1 = (_controller.CheckEmail(email1.ToLowerInvariant())).Result as StatusCodeResult;
-            //Assert.AreEqual(result1.StatusCode, 200);
+            Assert.AreEqual(result1.StatusCode, 400);
 
             var result2 = (_controller.CheckEmail(email2.ToUpperInvariant())).Result as StatusCodeResult;
-            //Assert.AreEqual(result2.StatusCode, 200);
+            Assert.AreEqual(result2.StatusCode, 400);
 
             var result3 = (_controller.CheckEmail(email1)).Result as StatusCodeResult;
-            //Assert.AreEqual(result3.StatusCode, 200);
+            Assert.AreEqual(result3.StatusCode, 400);
+
+            var result4 = (_controller.CheckEmail("NewEmail")).Result as StatusCodeResult;
+            Assert.AreEqual(result4.StatusCode, 200);
         }
 
         /*Test]
