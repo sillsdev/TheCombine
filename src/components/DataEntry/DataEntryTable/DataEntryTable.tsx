@@ -138,15 +138,18 @@ export class DataEntryTable extends React.Component<
   async getProjectSettings() {
     const proj: Project = await Backend.getProject(getProjectId());
     let analysisLang: string = "en";
-    if (proj.analysisWritingSystems.length > 0)
+    if (proj.analysisWritingSystems.length > 0) {
       analysisLang = proj.analysisWritingSystems[0].bcp47;
+    }
     this.setState({ analysisLang });
   }
 
   /** Finished with this page of words, select new semantic domain */
   // TODO: Implement
   submit(e?: React.FormEvent<HTMLFormElement>, _c?: Function) {
-    if (e) e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
   }
 
   async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
@@ -177,8 +180,9 @@ export class DataEntryTable extends React.Component<
     let existingWord: Word | undefined = this.state.existingWords.find(
       (word) => word.id === wordToUpdate.id
     );
-    if (!existingWord)
+    if (!existingWord) {
       throw new Error("You are trying to update a nonexistent word");
+    }
 
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
     let updatedWordId: string = await addAudiosToBackend(
@@ -209,8 +213,9 @@ export class DataEntryTable extends React.Component<
     const existingWord: Word | undefined = this.state.existingWords.find(
       (word: Word) => word.id === wordId
     );
-    if (!existingWord)
+    if (!existingWord) {
       throw new Error("You are trying to update a nonexistent word");
+    }
 
     for (const [senseIndex, sense] of existingWord.senses.entries()) {
       if (
@@ -291,8 +296,9 @@ export class DataEntryTable extends React.Component<
   }
 
   async undoRecentEntry(entryIndex: number): Promise<string> {
-    if (entryIndex >= this.state.recentlyAddedWords.length)
+    if (entryIndex >= this.state.recentlyAddedWords.length) {
       throw new RangeError("Entry doesn't exist in recent entries.");
+    }
     const recentEntry: WordAccess = this.state.recentlyAddedWords[entryIndex];
 
     // Copy all the parts we need
@@ -490,8 +496,6 @@ export class DataEntryTable extends React.Component<
             <Grid item xs={12} key={index}>
               <RecentEntry
                 key={wordAccess.word.id + "_" + wordAccess.senseIndex}
-                allVerns={this.state.existingVerns}
-                allWords={this.state.existingWords}
                 entry={wordAccess.word}
                 senseIndex={wordAccess.senseIndex}
                 updateGloss={(newGloss: string) =>
@@ -508,10 +512,10 @@ export class DataEntryTable extends React.Component<
                   this.deleteAudioFromRecentWord(wordId, fileName)
                 }
                 recorder={this.recorder}
-                semanticDomain={this.props.semanticDomain}
                 focusNewEntry={() => {
-                  if (this.refNewEntry.current)
+                  if (this.refNewEntry.current) {
                     this.refNewEntry.current.focusVernInput();
+                  }
                 }}
                 analysisLang={this.state.analysisLang}
               />
