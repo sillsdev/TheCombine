@@ -150,7 +150,7 @@ See the section about
 [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
 more information.
 
-## `npm run import-sem-doms`
+### `npm run import-sem-doms`
 
 Imports Semantic Domains from the provided xml file.
 
