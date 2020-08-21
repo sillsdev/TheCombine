@@ -1,7 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { updateFrontierWord } from "../ReviewEntriesActions";
+import { updateFrontierWord, setAnalysisLang } from "../ReviewEntriesActions";
 import {
   ReviewEntriesWord,
   OLD_SENSE,
@@ -15,18 +15,31 @@ import {
   Gloss,
   Sense,
 } from "../../../../types/word";
-import { updateWord, getWord } from "../../../../backend";
+import { defaultProject as mockProject } from "../../../../types/project";
+import { updateWord, getWord, getProject } from "../../../../backend";
+import { getProjectId } from "../../../../backend/localStorage";
 
 jest.mock("../../../../backend", () => ({
   updateWord: jest.fn(),
   getWord: jest.fn(),
+  getProject: jest.fn(),
+}));
+
+jest.mock("../../../../backend/localStorage", () => ({
+  getProjectId: jest.fn(),
 }));
 
 const mockUpdateWord = (updateWord as unknown) as jest.Mock<any>;
 const mockGetWord = (getWord as unknown) as jest.Mock<any>;
+const mockGetProject = (getProject as unknown) as jest.Mock<any>;
+const mockGetProjectId = (getProjectId as unknown) as jest.Mock<any>;
 
 mockUpdateWord.mockImplementation((oldFrontierWord) => Promise.resolve(""));
 mockGetWord.mockImplementation(() => Promise.resolve(oldFrontierWord));
+mockGetProject.mockImplementation((id) =>
+  Promise.resolve({ ...mockProject, analysisWritingSystems: [{ bcp47: "fr" }] })
+);
+mockGetProjectId.mockImplementation(() => Promise.resolve(""));
 
 // Mocks
 const mockStore = configureMockStore([thunk])();
@@ -322,6 +335,11 @@ describe("Test ReviewEntriesActions", () => {
         .catch(() => true)
     ).toBeTruthy();
   });
+
+  // Tests setting the analysis language
+  it("Sets the analysis language", async () => {
+    await mockStore.dispatch<any>(setAnalysisLang());
+  });
 });
 
 function mockBackendReturn(data: Word) {
@@ -340,6 +358,10 @@ function makeDispatch(
   return mockStore.dispatch<any>(
     updateFrontierWord(newWord, oldWord, language)
   );
+}
+
+function setAnalysisDispatch() {
+  return mockStore.dispatch<any>(setAnalysisLang());
 }
 
 function checkResultantData(newFrontierWord: Word) {
