@@ -37,12 +37,12 @@ namespace BackendFramework.Controllers
         [HttpPost("forgot")]
         public async Task<IActionResult> ResetPasswordRequest([FromBody] PasswordResetData data)
         {
-            var email = data.Email;
             // create password reset
-            var resetRequest = await _passwordResetService.CreatePasswordReset(email);
+            var resetRequest = await _passwordResetService.CreatePasswordReset(data.Email);
 
             // find user attached to email
-            var user = _userService.GetAllUsers().Result.Single(user => user.Email.Equals(email));
+            var user = _userService.GetAllUsers().Result.Single(user =>
+                user.Email.ToLowerInvariant().Equals(data.Email.ToLowerInvariant()));
 
             // create email
             var message = new MimeMessage();
@@ -172,7 +172,8 @@ namespace BackendFramework.Controllers
         [HttpPost("checkusername/{username}")]
         public async Task<IActionResult> CheckUsername(string username)
         {
-            var usernameTaken = (await _userService.GetAllUsers()).Find(x => x.Username == username) != null;
+            var usernameTaken = (await _userService.GetAllUsers()).Find(x =>
+                x.Username.ToLowerInvariant() == username.ToLowerInvariant()) != null;
             if (usernameTaken)
             {
                 return BadRequest();
@@ -188,7 +189,8 @@ namespace BackendFramework.Controllers
         [HttpPost("checkemail/{email}")]
         public async Task<IActionResult> CheckEmail(string email)
         {
-            var emailTaken = (await _userService.GetAllUsers()).Find(x => x.Email == email) != null;
+            var emailTaken = (await _userService.GetAllUsers()).Find(x =>
+                x.Email.ToLowerInvariant() == email.ToLowerInvariant()) != null;
             if (emailTaken)
             {
                 return BadRequest();
