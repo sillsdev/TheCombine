@@ -112,8 +112,8 @@ export function setAnalysisLang() {
   return async (
     dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>
   ) => {
-    var projectId = getProjectId();
-    var project = await backend.getProject(projectId);
+    const projectId = getProjectId();
+    const project = await backend.getProject(projectId);
     // Needs to be changed when multiple analysis writing systems is allowed
     dispatch(setAnalysisLanguage(project.analysisWritingSystems[0].bcp47));
   };
