@@ -79,13 +79,13 @@ export function addSemanticDomainToSense(
     throw new RangeError("senseIndex too large");
   } else {
     const oldSense = existingWord.senses[senseIndex];
-    const updatedDomains: SemanticDomain[] = [...oldSense.semanticDomains];
+    const updatedDomains = [...oldSense.semanticDomains];
     updatedDomains.push(semanticDomain);
     const updatedSense: Sense = {
       ...oldSense,
       semanticDomains: updatedDomains,
     };
-    const updatedSenses: Sense[] = [...existingWord.senses];
+    const updatedSenses = [...existingWord.senses];
     updatedSenses.splice(senseIndex, 1, updatedSense);
     const updatedWord: Word = { ...existingWord, senses: updatedSenses };
     return updatedWord;
@@ -161,8 +161,8 @@ export class DataEntryTable extends React.Component<
     const newWordWithAudio = await Backend.getWord(wordId);
     await this.updateExisting();
 
-    let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
-    let newWordAccess: WordAccess = {
+    const recentlyAddedWords = [...this.state.recentlyAddedWords];
+    const newWordAccess: WordAccess = {
       word: newWordWithAudio,
       senseIndex: 0,
     };
@@ -188,11 +188,11 @@ export class DataEntryTable extends React.Component<
     }
 
     let updatedWord = await this.updateWordInBackend(wordToUpdate);
-    let updatedWordId = await addAudiosToBackend(updatedWord.id, audioURLs);
+    const updatedWordId = await addAudiosToBackend(updatedWord.id, audioURLs);
     updatedWord = await Backend.getWord(updatedWordId);
 
-    let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
-    let updatedWordAccess: WordAccess = {
+    const recentlyAddedWords = [...this.state.recentlyAddedWords];
+    const updatedWordAccess: WordAccess = {
       word: updatedWord,
       senseIndex: senseIndex,
     };
@@ -380,7 +380,7 @@ export class DataEntryTable extends React.Component<
   }
 
   removeRecentEntry(entryIndex: number) {
-    const recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
+    const recentlyAddedWords = [...this.state.recentlyAddedWords];
     recentlyAddedWords.splice(entryIndex, 1);
     this.setState({ recentlyAddedWords });
   }
@@ -399,7 +399,7 @@ export class DataEntryTable extends React.Component<
     senseIndex: number,
     updatedSense: Sense
   ): Promise<string> {
-    let senses: Sense[] = [...word.senses];
+    const senses = [...word.senses];
     senses.splice(senseIndex, 1, updatedSense);
     const updatedWord: Word = { ...word, senses };
     return await this.updateWordInBackend(updatedWord).then((newWord) => {
@@ -410,7 +410,7 @@ export class DataEntryTable extends React.Component<
 
   // Remove a sense from a word and replace every displayed instance of that word.
   async removeSense(word: Word, senseIndex: number): Promise<string> {
-    let senses: Sense[] = [...word.senses];
+    const senses = [...word.senses];
     senses.splice(senseIndex, 1);
     const updatedWord: Word = { ...word, senses };
     return await this.updateWordInBackend(updatedWord).then((newWord) => {
@@ -426,7 +426,7 @@ export class DataEntryTable extends React.Component<
     newWord: Word,
     removedSenseIndex?: number
   ) {
-    const recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
+    const recentlyAddedWords = [...this.state.recentlyAddedWords];
     recentlyAddedWords.forEach((entry, index) => {
       if (entry.word.id === oldWordId) {
         let newSenseIndex = entry.senseIndex;
