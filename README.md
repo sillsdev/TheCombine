@@ -33,9 +33,9 @@ A rapid word collection tool.
    - [VS Code](https://code.visualstudio.com/download) and Prettier code
      formatting extension
    - [dotnet-format](https://github.com/dotnet/format):
-     `dotnet tool install --global dotnet-format --version 3.3.111304`
+     `dotnet tool update --global dotnet-format --version 4.1.131201`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-     `dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.6.1`
+     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
 4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string
