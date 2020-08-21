@@ -16,6 +16,7 @@ Key Sections:
 - [Annotate Arrays as `Type[]`](#array)
 - [File Names](#filename)
 - [`type` vs `interface`](#type-vs-interface)
+- [One-line `if` statements](#one-line-if-statements)
 
 ## Variable and Function
 
@@ -273,16 +274,9 @@ if (error != undefined)
 
 ## Formatting
 
-The TypeScript compiler ships with a very nice formatting language service. Whatever output it gives by default is good enough to reduce the cognitive overload on the team.
+Use [Prettier](https://prettier.io/) to format TypeScript code as described in the README.
 
-Use [`tsfmt`](https://github.com/vvakame/typescript-formatter) to automatically format your code on the command line. Also your IDE (atom/vscode/vs/sublime) already has formatting support built-in.
-
-Examples:
-
-```ts
-// Space before type i.e. foo:<space>string
-const foo: string = "hello";
-```
+> Reason: Reduce the cognitive overload on the team.
 
 ## Quotes
 
@@ -332,3 +326,25 @@ class X implements FooBar {
 ```
 
 - Otherwise use whatever makes you happy that day.
+
+## One line `if` statements
+
+Add braces to one-line `if` statements;
+
+**Good**
+
+```
+if (isEmpty) {
+  callFun();
+}
+```
+
+**Bad**
+
+```
+if (isEmpty)
+  callFun();
+``` 
+
+> Reason: Avoiding braces can cause developers to miss bugs, such as Apple's infamous 
+> [goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)  
