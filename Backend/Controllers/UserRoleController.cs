@@ -97,7 +97,7 @@ namespace BackendFramework.Controllers
         /// <remarks> POST: v1/projects/{projectId}/userroles </remarks>
         /// <returns> Id of updated UserRole </returns>
         [HttpPost]
-        public async Task<IActionResult> Post(string projectId, [FromBody]UserRole userRole)
+        public async Task<IActionResult> Post(string projectId, [FromBody] UserRole userRole)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
