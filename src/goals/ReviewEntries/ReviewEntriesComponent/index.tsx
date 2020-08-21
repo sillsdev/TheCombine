@@ -8,14 +8,14 @@ import {
   updateAllWords,
   updateFrontierWord,
   clearReviewEntriesState,
+  setAnalysisLang,
 } from "./ReviewEntriesActions";
 import { StoreState } from "../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
-    //Needs to be changed if we allow multiple Analysis Writing Systems
-    language: state.currentProject.analysisWritingSystems[0].bcp47,
     words: state.reviewEntriesState.words,
+    language: state.reviewEntriesState.analysisLanguage,
   };
 }
 
@@ -24,6 +24,7 @@ function mapDispatchToProps(
 ) {
   return {
     clearState: () => dispatch(clearReviewEntriesState()),
+    setAnalysisLanguage: () => dispatch(setAnalysisLang()),
     updateAllWords: (words: ReviewEntriesWord[]) =>
       dispatch(updateAllWords(words)),
     updateFrontierWord: (

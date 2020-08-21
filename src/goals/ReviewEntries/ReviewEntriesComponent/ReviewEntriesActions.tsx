@@ -1,6 +1,7 @@
 import { ThunkDispatch } from "redux-thunk";
 
 import * as backend from "../../../backend";
+import { getProjectId } from "../../../backend/localStorage";
 import { StoreState } from "../../../types";
 import { Sense, State, Word } from "../../../types/word";
 import {
@@ -12,10 +13,16 @@ import {
 } from "./ReviewEntriesTypes";
 
 export enum ReviewEntriesActionTypes {
+  SetAnalysisLanguage = "SET_ANALYSIS_LANGUAGE",
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
   UpdateRecordingStatus = "UPDATE_RECORDING_STATUS",
   ClearReviewEntriesState = "CLEAR_REVIEW_ENTRIES_STATE",
+}
+
+interface ReviewSetAnalysisLanguage {
+  type: ReviewEntriesActionTypes.SetAnalysisLanguage;
+  analysisLanguage: string;
 }
 
 interface ReviewUpdateWords {
@@ -41,10 +48,20 @@ interface ReviewClearReviewEntriesState {
 }
 
 export type ReviewEntriesAction =
+  | ReviewSetAnalysisLanguage
   | ReviewUpdateWords
   | ReviewUpdateWord
   | ReviewUpdateRecordingStatus
   | ReviewClearReviewEntriesState;
+
+function setAnalysisLanguage(
+  analysisLanguage: string
+): ReviewSetAnalysisLanguage {
+  return {
+    type: ReviewEntriesActionTypes.SetAnalysisLanguage,
+    analysisLanguage,
+  };
+}
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -89,6 +106,17 @@ function getError(sense: ReviewEntriesSense): string | undefined {
   if (sense.glosses.length === 0) return "reviewEntries.error.gloss";
   else if (sense.domains.length === 0) return "reviewEntries.error.domain";
   else return undefined;
+}
+
+export function setAnalysisLang() {
+  return async (
+    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>
+  ) => {
+    var projectId = getProjectId();
+    var project = await backend.getProject(projectId);
+    // Needs to be changed when multiple analysis writing systems is allowed
+    dispatch(setAnalysisLanguage(project.analysisWritingSystems[0].bcp47));
+  };
 }
 
 // Returns a cleaned array of senses ready to be saved:
