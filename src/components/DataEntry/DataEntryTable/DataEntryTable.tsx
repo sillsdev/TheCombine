@@ -212,13 +212,7 @@ export class DataEntryTable extends React.Component<
     if (!existingWord)
       throw new Error("You are trying to update a nonexistent word");
 
-    let sense: Sense;
-    for (
-      let senseIndex = 0;
-      senseIndex < existingWord.senses.length;
-      senseIndex++
-    ) {
-      sense = existingWord.senses[senseIndex];
+    for (const [senseIndex, sense] of existingWord.senses.entries()) {
       if (
         sense.glosses &&
         sense.glosses.length &&
