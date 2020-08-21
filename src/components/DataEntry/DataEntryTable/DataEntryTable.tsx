@@ -172,18 +172,11 @@ export class DataEntryTable extends React.Component<
   }
 
   /** Update the word in the backend and the frontend */
-  async updateWordForNewEntry(
+  async updateWordBackAndFront(
     wordToUpdate: Word,
     senseIndex: number,
     audioURLs: string[]
   ) {
-    let existingWord: Word | undefined = this.state.existingWords.find(
-      (word) => word.id === wordToUpdate.id
-    );
-    if (!existingWord) {
-      throw new Error("You are trying to update a nonexistent word");
-    }
-
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
     let updatedWordId: string = await addAudiosToBackend(
       updatedWord.id,
@@ -237,7 +230,7 @@ export class DataEntryTable extends React.Component<
             existingWord!, // Existing word already null checked
             senseIndex
           );
-          await this.updateWordForNewEntry(
+          await this.updateWordBackAndFront(
             updatedWord,
             senseIndex,
             audioFileURLs
@@ -253,7 +246,7 @@ export class DataEntryTable extends React.Component<
       gloss,
       this.state.analysisLang
     );
-    await this.updateWordForNewEntry(
+    await this.updateWordBackAndFront(
       updatedWord,
       updatedWord.senses.length - 1, // Was added at the end of the sense list
       audioFileURLs

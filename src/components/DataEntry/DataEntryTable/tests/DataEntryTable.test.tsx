@@ -10,11 +10,12 @@ import * as backend from "../../../../backend";
 import { defaultProject as mockProject } from "../../../../types/project";
 import { baseDomain } from "../../../../types/SemanticDomain";
 import {
+  multiGlossWord,
   SemanticDomain,
-  simpleWord,
-  Word,
   Sense,
+  simpleWord,
   State,
+  Word,
 } from "../../../../types/word";
 import { defaultState } from "../../../App/DefaultState";
 import DataEntryTable, {
@@ -33,6 +34,9 @@ jest.mock("../../../../backend", () => {
     }),
     getProject: jest.fn((_id: string) => {
       return Promise.resolve(mockProject);
+    }),
+    updateWord: jest.fn((_word: Word) => {
+      return Promise.resolve(mockWord);
     }),
   };
 });
@@ -90,12 +94,12 @@ describe("Tests DataEntryTable", () => {
     );
   });
 
-  it("should NOT call add word on backend when new entry has no data and complete is clicked", (done) => {
+  it("should NOT call add word on backend when new entry has no vernacular and complete is clicked", (done) => {
     // Verify that NewEntry is present
     let newEntryItems = testRenderer.root.findAllByType(NewEntry);
     expect(newEntryItems.length).toBe(1);
     // set the new entry to have no useful content
-    let newEntryWord: Word = simpleWord("", "");
+    let newEntryWord: Word = simpleWord("", "hasGloss");
     testHandle = newEntryItems[0];
     testHandle.instance.setState(
       {
@@ -183,6 +187,76 @@ describe("Tests DataEntryTable", () => {
     };
     expect(addSemanticDomainToSense(semanticDomain, word, senseIndex)).toEqual(
       expectedWord
+    );
+  });
+
+  it("doesn't update word in backend if sense is a duplicate", () => {
+    testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
+    const word = multiGlossWord("vern", ["gloss1", "gloss2"]);
+    word.senses[1].semanticDomains = [
+      { name: "", id: "differentSemDomId" },
+      { name: "", id: testHandle.instance.props.semanticDomain.id },
+    ];
+    testHandle.instance.setState(
+      {
+        existingWords: [word],
+      },
+      () => {
+        testHandle = testRenderer.root.findAllByType(NewEntry)[0];
+        testHandle.props
+          .updateWordWithNewGloss(word.id, "gloss2", [])
+          .then(() => {
+            // Assert that the backend function for updating the word was NOT called
+            expect(backend.updateWord).not.toBeCalled();
+          });
+      }
+    );
+  });
+
+  it("updates word in backend if gloss exists with different semantic domain", () => {
+    testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
+    const word = multiGlossWord("vern", ["gloss1", "gloss2"]);
+    word.senses[0].semanticDomains = [
+      { name: "", id: "differentSemDomId" },
+      { name: "", id: "anotherDifferentSemDomId" },
+      { name: "", id: "andAThird" },
+    ];
+    testHandle.instance.setState(
+      {
+        existingWords: [word],
+      },
+      () => {
+        testHandle = testRenderer.root.findAllByType(NewEntry)[0];
+        testHandle.props
+          .updateWordWithNewGloss(word.id, "gloss1", [])
+          .then(() => {
+            // Assert that the backend function for updating the word was called once
+            expect(backend.updateWord).toBeCalledTimes(1);
+          });
+      }
+    );
+  });
+
+  it("updates word in backend if gloss doesn't exist", () => {
+    testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
+    const word = multiGlossWord("vern", ["gloss1", "gloss2"]);
+    word.senses[0].semanticDomains = [
+      { name: "", id: "differentSemDomId" },
+      { name: "", id: "anotherDifferentSemDomId" },
+    ];
+    testHandle.instance.setState(
+      {
+        existingWords: [word],
+      },
+      () => {
+        testHandle = testRenderer.root.findAllByType(NewEntry)[0];
+        testHandle.props
+          .updateWordWithNewGloss(word.id, "differentGloss", [])
+          .then(() => {
+            // Assert that the backend function for updating the word was called once
+            expect(backend.updateWord).toBeCalledTimes(1);
+          });
+      }
     );
   });
 });
