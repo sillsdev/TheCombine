@@ -13,7 +13,8 @@ import { StoreState } from "../../../types";
 
 function mapStateToProps(state: StoreState) {
   return {
-    language: state.reviewEntriesState.language,
+    //Needs to be changed if we allow multiple Analysis Writing Systems
+    language: state.currentProject.analysisWritingSystems[0].bcp47,
     words: state.reviewEntriesState.words,
   };
 }

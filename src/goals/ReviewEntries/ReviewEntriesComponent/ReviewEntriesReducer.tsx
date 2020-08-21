@@ -6,14 +6,12 @@ import {
 
 export interface ReviewEntriesState {
   words: ReviewEntriesWord[];
-  language: string;
   isRecording: boolean;
   wordBeingRecorded: string | undefined;
 }
 
 export const defaultState: ReviewEntriesState = {
   words: [],
-  language: "en",
   isRecording: false,
   wordBeingRecorded: undefined,
 };
