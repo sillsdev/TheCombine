@@ -141,7 +141,7 @@ namespace BackendFramework.Services
             // Write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
             var frontier = _repo.GetFrontier(projectId).Result;
-            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == (int)State.Active).ToList();
+            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == State.Active).ToList();
 
             // TODO: this is wrong, deleted is a subset of active, are not exclusive
             var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();
@@ -231,9 +231,9 @@ namespace BackendFramework.Services
             // Export character set to ldml
             var ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            if (proj.VernacularWritingSystem != "")
+            if (proj.VernacularWritingSystem.Bcp47 != "")
             {
-                LdmlExport(ldmlDir, proj.VernacularWritingSystem);
+                LdmlExport(ldmlDir, proj.VernacularWritingSystem.Bcp47);
             }
 
             // Compress everything
@@ -247,7 +247,7 @@ namespace BackendFramework.Services
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
         private void AddVern(LexEntry entry, Word wordEntry, string projectId)
         {
-            var lang = _projService.GetProject(projectId).Result.VernacularWritingSystem;
+            var lang = _projService.GetProject(projectId).Result.VernacularWritingSystem.Bcp47;
             entry.LexicalForm.MergeIn(MultiText.Create(new LiftMultiText { { lang, wordEntry.Vernacular } }));
         }
 
@@ -388,18 +388,18 @@ namespace BackendFramework.Services
             if (!entry.CitationForm.IsEmpty) // Prefer citation form for vernacular
             {
                 newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
-                if (proj.VernacularWritingSystem == "")
+                if (proj.VernacularWritingSystem.Bcp47 == "")
                 {
-                    proj.VernacularWritingSystem = entry.CitationForm.FirstValue.Key;
+                    proj.VernacularWritingSystem.Bcp47 = entry.CitationForm.FirstValue.Key;
                     await _projService.Update(_projectId, proj);
                 }
             }
             else if (!entry.LexicalForm.IsEmpty) // lexeme form for backup
             {
                 newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
-                if (proj.VernacularWritingSystem == "")
+                if (proj.VernacularWritingSystem.Bcp47 == "")
                 {
-                    proj.VernacularWritingSystem = entry.LexicalForm.FirstValue.Key;
+                    proj.VernacularWritingSystem.Bcp47 = entry.LexicalForm.FirstValue.Key;
                     await _projService.Update(_projectId, proj);
                 }
             }

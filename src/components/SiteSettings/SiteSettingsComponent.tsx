@@ -10,7 +10,8 @@ import {
 import { CurrentTab } from "../../types/currentTab";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
-import ProjectManagement from "./ProjectManagement";
+import ProjectManagement from "./ProjectManagement/ProjectManagement";
+import UserManagment from "./UserManagment/UserManagment";
 
 class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
   render() {
@@ -29,9 +30,7 @@ class SiteSettingsComponent extends React.Component<LocalizeContextProps> {
           <BaseSettingsComponent
             icon={<People />}
             title={<Translate id="projectSettings.userList" />}
-            body={
-              "TO BE ADDED... (searchable?) list of users with option to delete each, and popup to confirm deletion."
-            }
+            body={<UserManagment />}
           />
         </Grid>
       </React.Fragment>

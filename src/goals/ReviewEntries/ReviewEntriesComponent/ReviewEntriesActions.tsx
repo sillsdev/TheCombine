@@ -1,19 +1,21 @@
-import { Word, Sense, State } from "../../../types/word";
+import { ThunkDispatch } from "redux-thunk";
+
+import * as backend from "../../../backend";
+import { StoreState } from "../../../types";
+import { Sense, State, Word } from "../../../types/word";
 import {
-  ReviewEntriesWord,
-  SEP_CHAR,
-  ReviewEntriesSense,
   OLD_SENSE,
   parseWord,
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+  SEP_CHAR,
 } from "./ReviewEntriesTypes";
-import * as backend from "../../../backend";
-import { ThunkDispatch } from "redux-thunk";
-import { StoreState } from "../../../types";
 
 export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
   UpdateRecordingStatus = "UPDATE_RECORDING_STATUS",
+  ClearReviewEntriesState = "CLEAR_REVIEW_ENTRIES_STATE",
 }
 
 interface ReviewUpdateWords {
@@ -34,10 +36,15 @@ interface ReviewUpdateRecordingStatus {
   wordId: string | undefined;
 }
 
+interface ReviewClearReviewEntriesState {
+  type: ReviewEntriesActionTypes.ClearReviewEntriesState;
+}
+
 export type ReviewEntriesAction =
   | ReviewUpdateWords
   | ReviewUpdateWord
-  | ReviewUpdateRecordingStatus;
+  | ReviewUpdateRecordingStatus
+  | ReviewClearReviewEntriesState;
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -62,7 +69,7 @@ function updateWord(
 export function updateRecordingStatus(
   recordingStatus: boolean,
   wordId: string | undefined
-) {
+): ReviewUpdateRecordingStatus {
   return {
     type: ReviewEntriesActionTypes.UpdateRecordingStatus,
     recordingStatus,
@@ -70,8 +77,15 @@ export function updateRecordingStatus(
   };
 }
 
+export function clearReviewEntriesState(): ReviewClearReviewEntriesState {
+  return {
+    type: ReviewEntriesActionTypes.ClearReviewEntriesState,
+  };
+}
+
 // Return the translation code for our error, or undefined if there is no error
 function getError(sense: ReviewEntriesSense): string | undefined {
+  if (sense.deleted) return undefined;
   if (sense.glosses.length === 0) return "reviewEntries.error.gloss";
   else if (sense.domains.length === 0) return "reviewEntries.error.domain";
   else return undefined;
@@ -131,12 +145,17 @@ function cleanSenses(
 }
 
 // Clean the vernacular field of a word:
+// * If all senses are deleted, reject
 // * If there's no vernacular field, add in the vernacular of old field
 // * If neither the word nor oldWord has a vernacular, reject
 function cleanWord(
   word: ReviewEntriesWord,
   oldWord: ReviewEntriesWord
 ): ReviewEntriesWord | string {
+  const activeSenseIndex: number = word.senses.findIndex(
+    (s: ReviewEntriesSense) => !s.deleted
+  );
+  if (activeSenseIndex === -1) return "reviewEntries.error.senses";
   let vernacular =
     word.vernacular.length !== 0 ? word.vernacular : oldWord.vernacular;
   if (vernacular.length !== 0) {
@@ -178,7 +197,7 @@ export function updateFrontierWord(
         if (!editSense)
           editSense = ({
             glosses: [],
-            accessibility: State.active,
+            accessibility: State.Active,
           } as any) as Sense;
 
         // Take all glosses from what the user edited, then add all glosses from the original word which are not in the current language
@@ -204,12 +223,13 @@ export function updateFrontierWord(
             ...editSense,
             semanticDomains: newSense.domains,
           };
-      } else
-        return ({
-          ...editSense,
-          accessibility: State.deleted,
-        } as any) as Sense;
+      } else return ({ accessibility: State.Deleted } as any) as Sense;
     });
+    /* Deleted senses must be filtered out after the above map
+       because the mapping makes use of original sense indexing */
+    editWord.senses = editWord.senses.filter(
+      (sense) => sense.accessibility !== State.Deleted
+    );
 
     dispatch(
       updateWord(
@@ -221,51 +241,38 @@ export function updateFrontierWord(
   };
 }
 
-// Converts the ReviewEntriesWord into a Word to send to the backend
-export function refreshWord(oldWordId: string, newWordId: string) {
+// Performs an action then converts the ReviewEntriesWord into a Word to send to the backend
+function refreshWord(
+  oldWordId: string,
+  action: (wordId: string) => Promise<string>
+) {
   return async (
     dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
     getState: () => StoreState
   ) => {
+    const newWordId = await action(oldWordId);
     const newWord = await backend.getWord(newWordId);
+
     const analysisLang = getState().currentProject.analysisWritingSystems[0]
       ? getState().currentProject.analysisWritingSystems[0]
-      : "en";
+      : { name: "English", bcp47: "en", font: "" };
 
     dispatch(
-      updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang))
+      updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang.bcp47))
     );
   };
 }
 
-// Similar to refreshWord but deletes an audio first
 export function deleteAudio(wordId: string, fileName: string) {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
-    getState: () => StoreState
-  ) => {
-    const newWordId = await backend.deleteAudio(wordId, fileName);
-    const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems[0]
-      ? getState().currentProject.analysisWritingSystems[0]
-      : "en";
-
-    dispatch(updateWord(wordId, newWordId, parseWord(newWord, analysisLang)));
+  let deleteAction = (wordId: string) => {
+    return backend.deleteAudio(wordId, fileName);
   };
+  return refreshWord(wordId, deleteAction);
 }
 
-// Similar to refreshWord but uploads an audio first
 export function uploadAudio(wordId: string, audioFile: File) {
-  return async (
-    dispatch: ThunkDispatch<StoreState, any, ReviewEntriesAction>,
-    getState: () => StoreState
-  ) => {
-    const newWordId = await backend.uploadAudio(wordId, audioFile);
-    const newWord = await backend.getWord(newWordId);
-    const analysisLang = getState().currentProject.analysisWritingSystems[0]
-      ? getState().currentProject.analysisWritingSystems[0]
-      : "en";
-
-    dispatch(updateWord(wordId, newWordId, parseWord(newWord, analysisLang)));
+  let uploadAction = (wordId: string) => {
+    return backend.uploadAudio(wordId, audioFile);
   };
+  return refreshWord(wordId, uploadAction);
 }

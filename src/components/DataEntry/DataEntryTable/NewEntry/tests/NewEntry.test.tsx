@@ -1,32 +1,34 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { NewEntry } from "../NewEntry";
-import { Word } from "../../../../../types/word";
-import SpellChecker from "../../../spellChecker";
-import { AutoComplete } from "../../../../../types/AutoComplete";
+import { Provider } from "react-redux";
+import renderer from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
-jest.mock("../NewVernEntry/NewVernEntry");
-jest.mock("../NewGlossEntry/NewGlossEntry");
+import { defaultState } from "../../../../App/DefaultState";
+import NewEntry from "../NewEntry";
+
+jest.mock("../../../../Pronunciations/Recorder");
+jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");
+jest.mock("../../VernWithSuggestions/VernWithSuggestions");
+
+const createMockStore = configureMockStore([]);
+const mockStore = createMockStore(defaultState);
 
 describe("Tests NewEntry", () => {
   it("renders without crashing", () => {
-    const div = document.createElement("div");
-    ReactDOM.render(
-      <NewEntry
-        allWords={[]}
-        updateWord={(updatedWord: Word) => null}
-        addNewWord={(newWord: Word) => null}
-        spellChecker={new SpellChecker()}
-        semanticDomain={{ name: "", id: "" }}
-        displayDuplicates={false}
-        autocompleteSetting={AutoComplete.OnRequest}
-        toggleDisplayDuplicates={() => null}
-        displaySpellingSuggestions={true}
-        toggleDisplaySpellingSuggestions={() => null}
-        setIsReadyState={() => null}
-      />,
-      div
-    );
-    ReactDOM.unmountComponentAtNode(div);
+    renderer.act(() => {
+      renderer.create(
+        <Provider store={mockStore}>
+          <NewEntry
+            allVerns={[]}
+            allWords={[]}
+            updateWordWithNewGloss={jest.fn()}
+            addNewWord={jest.fn()}
+            semanticDomain={{ name: "", id: "" }}
+            setIsReadyState={jest.fn()}
+            analysisLang={""}
+          />
+        </Provider>
+      );
+    });
   });
 });

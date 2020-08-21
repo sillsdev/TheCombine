@@ -1,25 +1,33 @@
 {
   "addWords": {
-    "addNewSense": [
-      "Add New Sense +",
-      "Añadir sentido nuevo +",
-      "Ajouter nouvel sens +"
+    "selectEntry": [
+      "Select an entry",
+      "Escoger una entrada",
+      "Choisissez une entrée"
+    ],
+    "selectSense": [
+      "Select a sense",
+      "Escoger un sentido",
+      "Choisissez un sens"
+    ],
+    "newEntryFor": [
+      "New entry for: ",
+      "Nuevo entrada para: ",
+      "Nouvelle entrée pour : "
+    ],
+    "newSenseFor": [
+      "New sense for: ",
+      "Sentido nuevo para: ",
+      "Nouveau sens pour : "
     ],
     "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
     "domain": ["Domain", "Dominio", "Domaine"],
-    "done": ["Complete", "Completar", "Complète"],
     "glosses": ["Glosses", "Traducciones", "Gloses"],
-    "mispelledWord": [
-      "This word is mispelled",
-      "Esta palabra está mal escrita",
-      "Ce mot est mal orthographié"
-    ],
     "pressEnter": [
       "Press enter to save word",
       "Presione enter para guardar la palabra",
       "Appuyez sur Entrée pour enregistrer le mot"
     ],
-    "similarWord": ["Similar word", "Palabra similar", "Mot similaire"],
     "vernacular": ["Vernacular", "Vernáculo", "Vernaculaire"],
     "wordInDatabase": [
       "This word is already in the database",
@@ -68,7 +76,7 @@
       "¿Se te olvidó tu contraseña?",
       "Mot de passe oublié ?"
     ],
-    "login": ["Login", "Iniciar sesión", "Connexion"],
+    "login": ["Login", "Iniciar sesión", "Se connecter"],
     "failed": [
       "Failed to log in. Please check your username and password.",
       "Error al iniciar sesión. Por favor verifique su nombre de usuario y contraseña.",
@@ -95,10 +103,15 @@
       "Error al iniciar sesión",
       "N'a pas réussi à s'inscrire"
     ],
-    "usernameTaken": [
-      "A user with this username already exists",
-      null,
-      "Un utilisateur avec ce nom d'utilisateur existe déjà"
+    "usernameInvalid": [
+      "This username is too short or already taken",
+      "Este nombre de usuario es demasiado corto o ya está en uso",
+      "Ce nom d'utilisateur est trop court ou est déjà utilisé"
+    ],
+    "usernameRequirements": [
+      "Username must be 3 characters or longer.",
+      "El nombre de usuario debe tener 3 caracteres o más.",
+      "Le nom d'utilisateur doit contenir 3 caractères ou plus."
     ],
     "emailTaken": [
       "A user with this email already exists",
@@ -107,7 +120,6 @@
     ],
     "networkError": ["Network error", "Error de red", "Erreur réseau"],
     "loggingIn": ["Logging in...", "Iniciar sesión...", "Se connecter..."],
-    "logout": ["Log out", "cerrar sesión", "Déconnexion"],
     "required": ["Required", "necesario", "Requis"],
     "confirmPassword": [
       "Confirm Password",
@@ -157,7 +169,7 @@
       "Ajustes de usuario",
       "Réglages utilisateur"
     ],
-    "logout": ["Log Out", "cerrar sesión", "Déconnexion"]
+    "logout": ["Log Out", "Cerrar sesión", "Se déconnecter"]
   },
   "createProject": {
     "title": ["Create Project", "Crear Proyecto", "Créer un projet"],
@@ -172,14 +184,14 @@
       "Subir archivo de proyecto .zip?",
       "Télécharger le fichier .zip de projet ?"
     ],
-    "browse": ["Browse", "Navegar", "Parcourir"],
     "create": ["Create Project", "Crear Proyecto", "Créer un projet"],
     "fileSelected": [
       "File selected",
       "Archivo seleccionado",
       "Fichier sélectionné"
     ],
-    "success": ["Project Created!", "Proyecto creado!", "Projet créé !"]
+    "success": ["Project Created!", "Proyecto creado!", "Projet créé !"],
+    "nameTaken": ["Name taken", "Nombre tomado", "Nom pris"]
   },
   "selectProject": {
     "title": [
@@ -189,61 +201,55 @@
     ]
   },
   "siteSettings": {
-    "archiveProject": {
-      "button": ["Archive", "Archivar", "Archiver"],
-      "warnTitle": [
-        "Proceed with Caution!",
-        "¡Proceder con precaución!",
-        "Procéder avec prudence !"
-      ],
-      "warnText": [
-        "This project will not be accessible to any users.",
-        "Este proyecto no será accesible para ningún usuario.",
-        "Ce projet ne sera accessible à aucun utilisateur."
-      ],
-      "cancel": [
-        "Cancel and keep project",
-        "Cancelar y mantener proyecto",
-        "Annuler et conserver projet"
-      ],
+    "proceedWithCaution": [
+      "Proceed with Caution!",
+      "¡Proceder con precaución!",
+      "Procéder avec prudence !"
+    ],
+    "archiveProjectText": [
+      "This project will not be accessible to any users.",
+      "Este proyecto no será accesible para ningún usuario.",
+      "Ce projet ne sera accessible à aucun utilisateur."
+    ],
+    "restoreProjectText": [
+      "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
+      "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
+      "Quelqu'un avait probablement une bonne raison de archiver ce projet. Voulez-vous vraiment le restaurer ?"
+    ],
+    "deleteUser": {
       "confirm": [
-        "Archive project for all users",
-        "Archivar proyeto para todos usarios",
-        "Archiver projet pour tous utilisateurs"
-      ]
-    },
-    "restoreProject": {
-      "button": ["Restore", "Restaurar", "Restaurer"],
-      "warnTitle": [
-        "Proceed with Caution!",
-        "¡Proceder con precaución!",
-        "Procéder avec prudence !"
+        "Confirm Deleting User from The Combine Database",
+        null,
+        null
       ],
-      "warnText": [
-        "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
-        "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
-        "Quelqu'un avait probablement une bonne raison de archiver ce projet. Voulez-vous vraiment le restaurer ?"
-      ],
-      "cancel": [
-        "Cancel and leave project archived",
-        "Cancelar y dejar proyecto como archivado",
-        "Annuler et laisser projet tel qu'archivé"
-      ],
-      "confirm": ["Restore project", "Restaurat proyeto", "Restaurer projet"]
+      "toastSuccess": ["User successfully deleted", null, null],
+      "toastFailure": ["Failed to delete user", null, null]
     }
   },
   "projectSettings": {
     "language": {
       "header": ["Language", "Lenguaje", "Langue"],
       "vernacular": ["Vernacular", "Vernáculo", "Vernaculaire"],
+      "vernacularLanguage": [
+        "Vernacular Language",
+        "Lenguaje vernácula",
+        "Langue vernaculaire"
+      ],
       "analysis": ["Analysis", "Análisis", "Analyse"],
+      "analysisLanguage": [
+        "Analysis Language",
+        "Lenguaje de análisis",
+        "Langue d'analyse"
+      ],
       "uiLang": ["Interface", "Interfaz", "Interface"],
-      "save": ["Save", "Guardar", "Enregistrer"],
       "interfaceLanguage": [
-        "Interface Language",
-        "Lenguaje de interfaz",
-        "Langue de l'interface"
-      ]
+        "Interface Languages",
+        "Lenguajes de interfaz",
+        "Langues de l'interface"
+      ],
+      "bcp47": ["BCP 47 Code", "BCP 47", "BCP 47"],
+      "name": ["Name", "Nombre", "Nom"],
+      "font": ["Font", "Font", "Font"]
     },
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
     "projectList": ["Projects", "Proyectos", "Projets"],
@@ -256,7 +262,6 @@
         "Les données importées seront ajoutées à ce projet. Combine n'essaiera pas de dédupliquer, d'écraser ou de synchroniser. Le fichier doit être une archive zippée en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>."
       ],
       "chooseFile": ["Choose File", "Escoger Archivo", "Choisissez Fichier"],
-      "upload": ["Upload", "Cargar", "Télécharger"],
       "done": ["Done!", "Completado!", "Achevé!"],
       "notAllowed": [
         "You have already imported a Lift file to this project.",
@@ -265,8 +270,13 @@
       ]
     },
     "user": {
-      "header": ["Users and Roles", "Usarios", "Utilisateurs et rôles"],
-      "addUser": ["Add a user", "Añadir un usario", "Ajouter un utilisateur"],
+      "currentUsers": [
+        "Current Users",
+        "Usarios Actuales",
+        "Utilisateurs Actuels"
+      ],
+      "usersAndRoles": ["Users and Roles", "Usarios", "Utilisateurs et rôles"],
+      "addUser": ["Add User", "Añadir Usario", "Ajouter Utilisateur"],
       "selectUser": [
         "Choose a user",
         "Escoger un usario",
@@ -293,12 +303,11 @@
         "Export Project",
         "Proyecto de exportación",
         "Exporter le projet"
-      ],
-      "button": ["Export", "Exportar", "Exporter"]
+      ]
     },
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
-      "off": ["Off", "Apagar", "Éteint"],
+      "off": ["Off", "Apagado", "Éteint"],
       "request": ["Optional", "Opcional", "En option"],
       "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
     },
@@ -308,7 +317,6 @@
         "Invitar por correo electrónico",
         "Inviter par email"
       ],
-      "inviteButton": ["Invite", "Invitar", "Inviter"],
       "or": ["OR", "O", "OU"],
       "searchPlaceholder": ["Search...", "Buscar...", "Chercher..."],
       "searchTitle": [
@@ -316,14 +324,17 @@
         "Encontrar usarios",
         "Rechercher utilisateurs"
       ],
-      "addButton": ["Add", "Añadir", "Ajouter"],
       "emailLabel": ["Email", "Correo electrónico", "Email"],
       "messageLabel": ["Message", "Mensaje", "Message"],
-      "toastSuccess": ["Added User!", "¡Usario añadido!", "Utilisateur Ajouté"],
+      "toastSuccess": [
+        "Added User!",
+        "¡Usario añadido!",
+        "Utilisateur Ajouté !"
+      ],
       "toastFail": [
         "Failed to add user!",
         "¡Error al añadir usuario!",
-        "Échec de l'ajout de l'utilisateur!"
+        "Échec de l'ajout de l'utilisateur !"
       ]
     }
   },
@@ -406,6 +417,11 @@
       "No tenemos un domain",
       "Aucun domaine sélectionné"
     ],
+    "deleteWord": [
+      "This word will be permanently deleted!",
+      "¡Esta palabra se eliminará permanentemente!",
+      "Ce mot sera définitivement supprimé !"
+    ],
     "error": {
       "gloss": [
         "Glosses cannot be left blank",
@@ -416,6 +432,11 @@
         "Domains cannot be left blank",
         "No guardar sentidos sin dominios",
         "Les domaines ne peuvent pas être laissés vides"
+      ],
+      "senses": [
+        "Cannot save an entry with no senses",
+        "No guardar entrada sin sentidos",
+        "Ne pas enregistrer entrée sans sens"
       ],
       "vernacular": [
         "Vernacular cannot be left blank",
@@ -431,6 +452,7 @@
       "Créer un inventaire de caractères"
     ],
     "characters": ["characters", "caracteres", "caractères"],
+    "examples": ["Examples", "Ejemplos", "Exemples"],
     "occurrences": ["occurrences", "ocurrencias", "occurrences"],
     "status": ["status", "estado", "statut"],
     "sortBy": ["Sort by", "Sort by", "Trier par"],
@@ -471,11 +493,6 @@
         "Caracteres Rechazados...",
         "Caractères rejetés"
       ],
-      "accepted": ["Accepted", "Aceptado", "Acceptée"],
-      "rejected": ["Rejected", "Rechazado", "Rejeté"],
-      "undecided": ["Undecided", "Indeciso", "Incertain"],
-      "accept": ["Accept", "Aceptar", "Accepter"],
-      "reject": ["Reject", "Rechazar", "Rejeter"],
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
         "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar.",
@@ -510,8 +527,6 @@
         "Ajouter les caractères dans ce mot au jeu"
       ]
     },
-    "save": ["Save", "Guardar", "Enregistrer"],
-    "cancel": ["Cancel", "Cancelar", "Annuler"],
     "dialog": {
       "title": [
         "Unsaved changes",
@@ -573,7 +588,26 @@
       "Cet objectif n'a pas encore été mis en œuvre"
     ]
   },
-  "buttons": { "done": ["done", "hecho", "achevé"] },
+  "buttons": {
+    "accept": ["Accept", "Aceptar", "Accepter"],
+    "accepted": ["Accepted", "Aceptado", "Acceptée"],
+    "add": ["Add", "Añadir", "Ajouter"],
+    "archive": ["Archive", "Archivar", "Archiver"],
+    "browse": ["Browse", "Navegar", "Parcourir"],
+    "cancel": ["Cancel", "Cancelar", "Annuler"],
+    "complete": ["Complete", "Completo", "Complète"],
+    "confirm": ["Confirm", "Confirmar", "Confirmer"],
+    "delete": ["Delete", "Eliminar", "Effacer"],
+    "done": ["Done", "Hecho", "Achevé"],
+    "export": ["Export", "Exportar", "Exporter"],
+    "invite": ["Invite", "Invitar", "Inviter"],
+    "reject": ["Reject", "Rechazar", "Rejeter"],
+    "rejected": ["Rejected", "Rechazado", "Rejeté"],
+    "restore": ["Restore", "Restaurar", "Restaurer"],
+    "save": ["Save", "Guardar", "Enregistrer"],
+    "undecided": ["Undecided", "Indeciso", "Incertain"],
+    "upload": ["Upload", "Cargar", "Télécharger"]
+  },
   "pronunciations": {
     "recordTooltip": [
       "Press and hold to record.",

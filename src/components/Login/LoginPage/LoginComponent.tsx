@@ -1,26 +1,26 @@
-//external modules
-import * as React from "react";
 import {
-  Translate,
-  LocalizeContextProps,
-  withLocalize,
-} from "react-localize-redux";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import {
-  Grid,
+  Button,
   Card,
   CardContent,
   CircularProgress,
-  Typography,
+  Grid,
   Link,
+  TextField,
+  Typography,
 } from "@material-ui/core";
-import history from "../../../history";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
+import * as React from "react";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
+
+import history from "../../../history";
 import { RuntimeConfig } from "../../../types/runtimeConfig";
 
 export interface LoginDispatchProps {
-  login?: (user: string, password: string) => void;
+  login?: (username: string, password: string) => void;
   logout: () => void;
   reset: () => void;
 }
@@ -31,10 +31,15 @@ export interface LoginStateProps {
 }
 
 export interface LoginState {
-  user: string;
+  username: string;
   password: string;
   isVerified: boolean;
-  error: { password: boolean; username: boolean };
+  error: LoginError;
+}
+
+interface LoginError {
+  username: boolean;
+  password: boolean;
 }
 
 export class Login extends React.Component<
@@ -48,10 +53,10 @@ export class Login extends React.Component<
     this.props.logout(); //Hitting the login page will log a user out (doubles as a logout page, essentially)
 
     this.state = {
-      user: "",
+      username: "",
       password: "",
       isVerified: !RuntimeConfig.getInstance().captchaRequired(),
-      error: { password: false, username: false },
+      error: { username: false, password: false },
     };
   }
 
@@ -80,15 +85,15 @@ export class Login extends React.Component<
   login(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
 
-    let user = this.state.user.trim();
-    let pass = this.state.password.trim();
+    const username: string = this.state.username.trim();
+    const password: string = this.state.password.trim();
     let error = { ...this.state.error };
-    error.password = pass === "";
-    error.username = user === "";
-    if (error.password || error.username) {
+    error.username = username === "";
+    error.password = password === "";
+    if (error.username || error.password) {
       this.setState({ error });
     } else if (this.props.login) {
-      this.props.login(user, pass);
+      this.props.login(username, password);
     }
   }
 
@@ -108,8 +113,8 @@ export class Login extends React.Component<
                 required
                 autoComplete="username"
                 label={<Translate id="login.username" />}
-                value={this.state.user}
-                onChange={(e) => this.updateField(e, "user")}
+                value={this.state.username}
+                onChange={(e) => this.updateField(e, "username")}
                 error={this.state.error["username"]}
                 helperText={
                   this.state.error["username"] ? (

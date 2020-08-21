@@ -6,8 +6,9 @@ import {
   Translate,
   withLocalize,
 } from "react-localize-redux";
-import * as backend from "../../../backend";
-import { Recorder } from "../../../components/Pronunciations/Recorder";
+
+import { getFrontierWords } from "../../../backend";
+import Recorder from "../../../components/Pronunciations/Recorder";
 import theme from "../../../types/theme";
 import { Word } from "../../../types/word";
 import columns from "./CellComponents/CellColumns";
@@ -21,6 +22,7 @@ interface ReviewEntriesProps {
   words: ReviewEntriesWord[];
 
   // Dispatch changes
+  clearState: () => void;
   updateAllWords: (words: ReviewEntriesWord[]) => void;
   updateFrontierWord: (
     newData: ReviewEntriesWord,
@@ -51,12 +53,10 @@ export class ReviewEntriesComponent extends React.Component<
       errorMsg: undefined,
     };
     this.recorder = new Recorder();
-  }
-
-  componentDidMount() {
-    backend
-      .getFrontierWords()
-      .then((frontier: Word[]) => this.updateLocalWords(frontier));
+    this.props.clearState();
+    getFrontierWords().then((frontier: Word[]) =>
+      this.updateLocalWords(frontier)
+    );
   }
 
   // Creates the local set of words from the frontier
@@ -92,14 +92,7 @@ export class ReviewEntriesComponent extends React.Component<
               icons={tableIcons}
               title={<Translate id={"reviewEntries.title"} />}
               columns={columns}
-              data={this.props.words.map((word) =>
-                word === null
-                  ? null
-                  : {
-                      ...word,
-                      senses: word.senses.filter((sense) => !sense.deleted),
-                    }
-              )}
+              data={this.props.words}
               editable={{
                 onRowUpdate: (
                   newData: ReviewEntriesWord,

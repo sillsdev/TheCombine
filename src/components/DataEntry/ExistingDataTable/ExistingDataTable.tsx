@@ -20,12 +20,12 @@ export class ExistingDataTable extends React.Component<ExistingDataTableProps> {
   list() {
     let domainWords: DomainWord[] = this.props.domainWords;
     return (
-      <List>
+      <List style={{ minWidth: "300px" }}>
         {domainWords.map((domainWord) => (
           <ImmutableExistingData
             key={domainWord.word.id}
             vernacular={domainWord.word.vernacular}
-            gloss={domainWord.gloss.def}
+            gloss={domainWord.gloss ? domainWord.gloss.def : ""}
           />
         ))}
       </List>
@@ -52,7 +52,9 @@ export class ExistingDataTable extends React.Component<ExistingDataTableProps> {
   renderSidePanel() {
     return (
       <React.Fragment>
-        <Grid item>{this.list()}</Grid>
+        <Grid item md={5} lg={4}>
+          {this.list()}
+        </Grid>
       </React.Fragment>
     );
   }

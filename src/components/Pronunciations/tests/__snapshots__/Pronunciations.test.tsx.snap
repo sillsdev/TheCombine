@@ -3,11 +3,6 @@
 exports[`pronunciation tests displays buttons 1`] = `
 <div
   className="pronunciationAudio"
-  style={
-    Object {
-      "paddingRight": 8,
-    }
-  }
 >
   <button
     aria-label="record"
@@ -25,7 +20,7 @@ exports[`pronunciation tests displays buttons 1`] = `
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
-    tabIndex={0}
+    tabIndex={-1}
     type="button"
   >
     <span
@@ -67,7 +62,7 @@ exports[`pronunciation tests displays buttons 1`] = `
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
-    tabIndex={0}
+    tabIndex={-1}
     title={null}
     type="button"
   >
@@ -107,7 +102,7 @@ exports[`pronunciation tests displays buttons 1`] = `
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}
-    tabIndex={0}
+    tabIndex={-1}
     title={null}
     type="button"
   >

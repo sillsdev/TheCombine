@@ -41,7 +41,7 @@ namespace BackendFramework.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
@@ -159,10 +159,10 @@ namespace BackendFramework.Controllers
                 // Import words from lift file
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
 
-                // Add character set to project from ldml file
+                // Add character set to project from ldml file 
                 var proj = _projectService.GetProject(projectId).Result;
                 _liftService.LdmlImport(
-                    Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem);
+                    Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem.Bcp47);
 
                 return new ObjectResult(resp);
             }
@@ -178,7 +178,7 @@ namespace BackendFramework.Controllers
         [HttpGet("download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
-            if (!_permissionService.HasProjectPermission(Permission.ImportExport, HttpContext))
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }

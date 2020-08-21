@@ -1,8 +1,9 @@
-import React from "react";
 import { Tooltip } from "@material-ui/core";
-import RecorderIconHolder from "./RecorderIconHolder";
-import { Recorder } from "./Recorder";
+import React from "react";
 import { Translate } from "react-localize-redux";
+
+import Recorder from "./Recorder";
+import RecorderIcon from "./RecorderIcon";
 
 export interface RecorderProps {
   wordId: string;
@@ -10,7 +11,7 @@ export interface RecorderProps {
   uploadAudio?: (wordId: string, audioFile: File) => void;
 }
 
-function getFileNameForWord(wordId: string): string {
+export function getFileNameForWord(wordId: string): string {
   var fourCharParts = wordId.match(/.{1,6}/g);
   var compressed =
     fourCharParts === null
@@ -49,7 +50,7 @@ export default function AudioRecorder(props: RecorderProps) {
 
   return (
     <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
-      <RecorderIconHolder
+      <RecorderIcon
         wordId={props.wordId}
         startRecording={startRecording}
         stopRecording={stopRecording}

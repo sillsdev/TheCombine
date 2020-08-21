@@ -46,6 +46,11 @@ export class DataEntryHeader extends React.Component<
           color="primary"
           style={{ paddingTop: "8px" }}
           disabled={!hasQuestions}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              this.props.setQuestionVisibility(!this.props.questionsVisible);
+            }
+          }}
         />
         {getQuestions(this.props.questionsVisible, this.props.domain.questions)}
       </Typography>

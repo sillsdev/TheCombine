@@ -17,7 +17,9 @@ import {
   GetApp,
   List,
   People,
+  PersonAdd,
   Sms,
+  Language,
 } from "@material-ui/icons";
 
 import * as backend from "../../backend";
@@ -27,19 +29,18 @@ import { Project } from "../../types/project";
 import { UserRole } from "../../types/userRole";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
-import { LanguageProps } from "./Language/LanguageSettings";
-import ProjectImport from "./ProjectImport";
-import ProjectName from "./ProjectName";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
-import ProjectUsers from "./ProjectUsers";
+import ProjectImport from "./ProjectImport";
+import ProjectLanguages from "./ProjectLanguages/ProjectLanguages";
+import ProjectName from "./ProjectName";
 import ProjectSwitch from "./ProjectSwitch";
+import ProjectUsers, { ActiveUsers } from "./ProjectUsers";
 
 interface ProjectSettingsProps {
   project: Project;
 }
 
 interface ProjectSettingsState {
-  languageSettings?: LanguageProps;
   projectName?: string;
   imports?: boolean;
   editUsers?: boolean;
@@ -71,11 +72,6 @@ class ProjectSettingsComponent extends React.Component<
       for (let role of currentRole.permissions) {
         if (role === 4) {
           settings.projectName = this.props.project.name;
-          settings.languageSettings = {
-            vernacular: this.props.project.vernacularWritingSystem,
-            analysis: [...this.props.project.analysisWritingSystems],
-            uiLang: this.props.activeLanguage.code,
-          };
           settings.autocompleteSetting = this.props.project.autocompleteSetting;
           settings.imports = await backend.canUploadLift();
         }
@@ -116,6 +112,17 @@ class ProjectSettingsComponent extends React.Component<
                 icon={<Edit />}
                 title={<Translate id="projectSettings.name" />}
                 body={<ProjectName />}
+              />
+            )}
+
+            {/*Project Vernacular and Analysis Languages*/}
+            {this.props.project.name && (
+              <BaseSettingsComponent
+                icon={<Language />}
+                title={
+                  <Translate id="projectSettings.language.interfaceLanguage" />
+                }
+                body={<ProjectLanguages project={this.props.project} />}
               />
             )}
 
@@ -182,11 +189,20 @@ class ProjectSettingsComponent extends React.Component<
               }
             />
 
-            {/* Add users to project */}
+            {/* See current users in project */}
             {this.state.projectName && (
               <BaseSettingsComponent
                 icon={<People />}
-                title={<Translate id="projectSettings.user.header" />}
+                title={<Translate id="projectSettings.user.currentUsers" />}
+                body={<ActiveUsers />}
+              />
+            )}
+
+            {/* Add users to project */}
+            {this.state.projectName && (
+              <BaseSettingsComponent
+                icon={<PersonAdd />}
+                title={<Translate id="projectSettings.user.addUser" />}
                 body={<ProjectUsers />}
               />
             )}

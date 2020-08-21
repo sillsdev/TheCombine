@@ -1,9 +1,8 @@
 import { Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { StoreState } from "../../../types";
-import { Hash, MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
-import { State, Word } from "../../../types/word";
+import * as backend from "../../../backend";
+import * as LocalStorage from "../../../backend/localStorage";
 import {
   getIndexInHistory,
   getUserEditId,
@@ -11,11 +10,13 @@ import {
   UpdateGoalAction,
   updateStepData,
 } from "../../../components/GoalTimeline/GoalsActions";
-import { Goal, GoalHistoryState } from "../../../types/goals";
-import { MergeDups, MergeStepData } from "../MergeDups";
 import navigationHistory from "../../../history";
-import * as backend from "../../../backend";
-import * as LocalStorage from "../../../backend/localStorage";
+import { StoreState } from "../../../types";
+import { Goal, GoalHistoryState } from "../../../types/goals";
+import { User } from "../../../types/user";
+import { State, Word } from "../../../types/word";
+import { MergeDups, MergeStepData } from "../MergeDups";
+import { Hash, MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
 
 export enum MergeTreeActions {
   SET_VERNACULAR = "SET_VERNACULAR",
@@ -160,7 +161,7 @@ export function mergeSense() {
 }
 
 async function addStepToGoal(goal: Goal, indexInHistory: number) {
-  const user = LocalStorage.getCurrentUser();
+  const user: User | null = LocalStorage.getCurrentUser();
   if (user) {
     let userEditId: string | undefined = getUserEditId(user);
     if (userEditId !== undefined) {
@@ -263,7 +264,7 @@ export async function mergeWord(
               ...sense,
               srcWord: wordID,
               order: senses[wordID].length,
-              state: State.separate,
+              state: State.Separate,
             });
           }
         }
@@ -283,16 +284,16 @@ export async function mergeWord(
         senseIndex = map.order;
       }
       // set this sense to be merged as sense
-      senses[wordID][senseIndex].state = State.sense;
+      senses[wordID][senseIndex].state = State.Sense;
 
       // we want a list of all senses skipping the first
       let dups = senseIDs
         .slice(1)
-        .map((id) => ({ ...data.senses[id], state: State.duplicate }));
+        .map((id) => ({ ...data.senses[id], state: State.Duplicate }));
 
       // set each dup to be merged as duplicates
       dups.forEach((dup) => {
-        senses[dup.srcWord][dup.order].state = State.duplicate;
+        senses[dup.srcWord][dup.order].state = State.Duplicate;
         // put this sense's semdoms in the parent senses's
         for (let semdom of senses[dup.srcWord][dup.order].semanticDomains) {
           if (
@@ -319,7 +320,7 @@ export async function mergeWord(
     // construct sense children
     let children = Object.values(senses).map((word) => {
       word.forEach((sense) => {
-        if (sense.state === State.sense || sense.state === State.active) {
+        if (sense.state === State.Sense || sense.state === State.Active) {
           parent.senses.push({
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
@@ -354,25 +355,25 @@ export async function mergeWord(
       let origWord = children[wordIndex];
 
       // if merge contains separate increment index
-      if (origWord.senses.includes(State.separate)) {
+      if (origWord.senses.includes(State.Separate)) {
         separateIndex++;
       }
 
       for (let senseIndex in origWord.senses) {
         let src = `${origWord.wordID}:${senseIndex}`;
         switch (origWord.senses[senseIndex]) {
-          case State.sense:
+          case State.Sense:
             mapping[src] = { srcWord: newWords[0], order: keepCounts[0] };
             keepCounts[0]++;
             break;
-          case State.separate:
+          case State.Separate:
             mapping[src] = {
               srcWord: newWords[separateIndex],
               order: keepCounts[separateIndex],
             };
             keepCounts[separateIndex]++;
             break;
-          case State.duplicate:
+          case State.Duplicate:
             mapping[src] = { srcWord: newWords[0], order: -1 };
             break;
           default:
@@ -389,21 +390,21 @@ export function mergeAll() {
     getState: () => StoreState
   ) => {
     // generate blacklist
-    let wordIDs = Object.keys(
+    const wordIDs: string[] = Object.keys(
       getState().mergeDuplicateGoal.mergeTreeState.data.words
     );
-    let hash = wordIDs.sort().reduce((val, acc) => `${acc}:${val}`, "");
-    let blacklist: Hash<boolean> = JSON.parse(
-      localStorage.getItem("mergedups_blacklist") || "{}"
-    );
+    const hash: string = wordIDs
+      .sort()
+      .reduce((val, acc) => `${acc}:${val}`, "");
+    let blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
     blacklist[hash] = true;
-    localStorage.setItem("mergedups_blacklist", JSON.stringify(blacklist));
+    LocalStorage.setMergeDupsBlacklist(blacklist);
     // merge words
     let mapping: Hash<{ srcWord: string; order: number }> = {};
     const words = Object.keys(
       getState().mergeDuplicateGoal.mergeTreeState.tree.words
     );
-    for (let wordID of words) {
+    for (const wordID of words) {
       mapping = await mergeWord(wordID, getState, mapping);
     }
   };

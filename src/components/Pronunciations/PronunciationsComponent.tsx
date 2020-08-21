@@ -1,18 +1,19 @@
 import React from "react";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+
+import * as Backend from "../../backend";
 import AudioPlayer from "./AudioPlayer";
 import AudioRecorder from "./AudioRecorder";
-import * as Backend from "../../backend";
-import theme from "../../types/theme";
-import { Recorder } from "./Recorder";
+import Recorder from "./Recorder";
 
 export interface PronunciationProps {
   wordId: string;
+  senseIndex?: number;
   pronunciationFiles: string[];
-  refreshWord?: (oldId: string, newId: string) => void;
-  deleteAudio?: (wordId: string, fileName: string) => void;
-  uploadAudio?: (wordId: string, audioFile: File) => void;
   recorder?: Recorder;
+  deleteAudio?: (wordId: string, fileName: string) => void;
+  getAudioUrl?: (wordId: string, fileName: string) => string;
+  uploadAudio?: (wordId: string, audioFile: File) => void;
 }
 
 /** Audio recording/playing component */
@@ -24,25 +25,30 @@ export class Pronunciations extends React.Component<
     if (this.props.pronunciationFiles === null) {
       audioButtons = null;
     } else {
-      audioButtons = this.props.pronunciationFiles.map((file) => {
+      audioButtons = this.props.pronunciationFiles.map((fileName) => {
         return (
           <AudioPlayer
-            key={file}
+            key={fileName}
             wordId={this.props.wordId}
-            fileName={file}
-            pronunciationUrl={Backend.getAudioUrl(this.props.wordId, file)}
+            fileName={fileName}
+            pronunciationUrl={
+              this.props.getAudioUrl
+                ? this.props.getAudioUrl(this.props.wordId, fileName)
+                : Backend.getAudioUrl(this.props.wordId, fileName)
+            }
             deleteAudio={this.props.deleteAudio}
           />
         );
       });
     }
     return (
-      <div
-        className="pronunciationAudio"
-        style={{ paddingRight: theme.spacing(1) }}
-      >
+      <div className="pronunciationAudio">
         <AudioRecorder
-          key={this.props.wordId}
+          key={
+            this.props.senseIndex
+              ? this.props.wordId + "_" + this.props.senseIndex
+              : this.props.wordId
+          }
           wordId={this.props.wordId}
           recorder={this.props.recorder}
           uploadAudio={this.props.uploadAudio}

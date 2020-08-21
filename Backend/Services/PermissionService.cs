@@ -50,7 +50,7 @@ namespace BackendFramework.Services
             return permissionsObj;
         }
 
-        public bool HasProjectPermission(Permission permission, HttpContext request)
+        public bool HasProjectPermission(HttpContext request, Permission permission)
         {
             var userId = GetUserId(request);
             var user = _userService.GetUser(userId).Result;
@@ -66,8 +66,8 @@ namespace BackendFramework.Services
 
             // Retrieve project ID from HTTP request
             // TODO: This method of retrieving the project ID is brittle, should use regex or some other method.
-            const int begOfId = 9;
-            var indexOfProjId = request.Request.Path.ToString().LastIndexOf("projects/") + begOfId;
+            const string projectPath = "projects/";
+            var indexOfProjId = request.Request.Path.ToString().LastIndexOf(projectPath) + projectPath.Length;
             if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
             {
                 // If there is no project ID and they are not admin, do not allow changes

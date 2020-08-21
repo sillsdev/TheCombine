@@ -96,6 +96,11 @@ describe("Test GoalTimelineVertical", () => {
     // Cleanup
     createTimeMaster();
   });
+
+  it("Generates proper suggestion data: empty suggestion data", () => {
+    createTimeMaster([], []);
+    expect(timeHandle.createSuggestionData()).toEqual(goals);
+  });
 });
 
 function createTimeMaster(history?: Goal[], suggestions?: Goal[]): void {
@@ -116,7 +121,7 @@ function createTimeline(history?: Goal[], suggestions?: Goal[]): ReactElement {
       loadHistory={LOAD_HISTORY}
       allPossibleGoals={goals}
       history={history ? history : goals.slice(0, 3)}
-      suggestions={suggestions ? suggestions : goals.slice(3)}
+      suggestions={suggestions ? suggestions : goals.slice(0, 3)}
     />
   );
 }

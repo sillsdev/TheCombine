@@ -22,20 +22,25 @@ export default class ResetRequest extends React.Component<
     props: ResetRequestProps & ResetRequestDispatchProps & LocalizeContextProps
   ) {
     super(props);
-    this.state = { emailExists: false, email: "" };
+    this.state = { emailExists: true, email: "" };
   }
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
-    this.props.passwordResetRequest(this.state.email);
     event.preventDefault();
+    isEmailTaken(this.state.email).then((emailExists: boolean) => {
+      if (emailExists) {
+        this.props.passwordResetRequest(this.state.email);
+      } else {
+        this.setState({ emailExists });
+      }
+    });
   };
 
   async setEmail(email: string) {
-    let emailTaken: boolean = await isEmailTaken(email);
     this.setState((prevState) => ({
       ...prevState,
       email: email,
-      emailExists: emailTaken,
+      emailExists: true,
     }));
   }
 
@@ -53,14 +58,16 @@ export default class ResetRequest extends React.Component<
             <form onSubmit={this.onSubmit}>
               <Grid item>
                 <TextField
+                  required
+                  type="email"
+                  autoComplete="email"
                   variant="outlined"
                   label={<Translate id="login.email" />}
                   value={this.state.email}
                   style={{ width: "100%" }}
-                  error={!this.state.emailExists && this.state.email.length > 1}
+                  error={!this.state.emailExists}
                   helperText={
-                    !this.state.emailExists &&
-                    this.state.email.length > 1 && (
+                    !this.state.emailExists && (
                       <Translate id="passwordReset.emailError" />
                     )
                   }
@@ -72,7 +79,7 @@ export default class ResetRequest extends React.Component<
                 <Button
                   variant="contained"
                   color="primary"
-                  disabled={!this.state.emailExists}
+                  disabled={!this.state.email}
                   onClick={this.onSubmit}
                 >
                   <Translate id="passwordReset.submit" />

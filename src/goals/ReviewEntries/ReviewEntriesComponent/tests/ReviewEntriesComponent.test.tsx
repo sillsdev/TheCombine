@@ -82,6 +82,7 @@ beforeAll(() => {
       <ReviewEntriesConnected
         words={mockWords}
         language="en"
+        clearState={jest.fn()}
         updateAllWords={MOCK_UPDATE}
         updateFrontierWord={jest.fn()}
       />

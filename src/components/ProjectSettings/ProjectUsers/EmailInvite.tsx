@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardContent,
   Grid,
@@ -9,30 +8,52 @@ import {
 import React from "react";
 import { Translate } from "react-localize-redux";
 import validator from "validator";
+import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
+import * as Backend from "../../../backend";
+import * as LocalStorage from "../../../backend/localStorage";
 
-interface InviteProps {}
+interface InviteProps {
+  close: () => void;
+}
 
 interface InviteState {
   emailAddress: string;
+  message: string;
   isValid: boolean;
+  loading: boolean;
+  done: boolean;
 }
 class EmailInvite extends React.Component<InviteProps, InviteState> {
   constructor(props: InviteProps) {
     super(props);
     this.state = {
       emailAddress: "",
+      message: "",
       isValid: false,
+      loading: false,
+      done: false,
     };
   }
 
-  onSubmit = () => {
-    console.warn(
-      "Should send the message to the corresponding email and show if it was succesful or not."
+  async onSubmit() {
+    this.setState({
+      loading: true,
+    });
+    var projectId = LocalStorage.getProjectId();
+    await Backend.emailInviteToProject(
+      projectId,
+      this.state.emailAddress,
+      this.state.message
     );
-  };
+    this.setState({
+      loading: false,
+      done: true,
+    });
+    this.props.close();
+  }
 
   /** Updates the state to match the value in a textbox */
-  updateField(
+  updateEmailField(
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
@@ -51,6 +72,17 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
     }
   }
 
+  updateMessageField(
+    e: React.ChangeEvent<
+      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
+    >
+  ) {
+    const value = e.target.value;
+    this.setState({
+      message: value,
+    });
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -63,7 +95,7 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
               <TextField
                 required
                 label={<Translate id="projectSettings.invite.emailLabel" />}
-                onChange={(e) => this.updateField(e)}
+                onChange={(e) => this.updateEmailField(e)}
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
@@ -72,20 +104,23 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
               />
               <TextField
                 label="Message"
+                onChange={(e) => this.updateMessageField(e)}
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
               ></TextField>
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item>
-                  <Button
+                  <LoadingDoneButton
                     variant="contained"
                     color="primary"
-                    onClick={this.onSubmit}
+                    onClick={() => this.onSubmit()}
                     disabled={!this.state.isValid}
+                    loading={this.state.loading}
+                    done={this.state.done}
                   >
-                    <Translate id="projectSettings.invite.inviteButton" />
-                  </Button>
+                    <Translate id="buttons.invite" />
+                  </LoadingDoneButton>
                 </Grid>
               </Grid>
             </CardContent>

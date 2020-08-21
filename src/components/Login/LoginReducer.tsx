@@ -1,90 +1,79 @@
-import {
-  UserAction,
-  LOGIN_ATTEMPT,
-  LOGIN_FAILURE,
-  LOGIN_SUCCESS,
-  LOGIN_RESET,
-  REGISTER_FAILURE,
-  REGISTER_ATTEMPT,
-  REGISTER_SUCCESS,
-  REGISTER_RESET,
-  LOGOUT,
-} from "./LoginActions";
 import { StoreAction, StoreActions } from "../../rootActions";
+import * as LoginAction from "./LoginActions";
 
 export interface LoginState {
-  user: string;
-  success: boolean;
+  username: string;
   loginAttempt: boolean;
   loginFailure: boolean;
+  loginSuccess: boolean;
   registerAttempt: boolean;
-  registerSuccess: boolean;
   registerFailure: string;
+  registerSuccess: boolean;
 }
 
 export const defaultState: LoginState = {
-  user: "",
-  success: false,
+  username: "",
   loginAttempt: false,
   loginFailure: false,
+  loginSuccess: false,
   registerAttempt: false,
-  registerSuccess: false,
   registerFailure: "",
+  registerSuccess: false,
 };
 
 export const loginReducer = (
   state: LoginState = defaultState, //createStore() calls each reducer with undefined state
-  action: StoreAction | UserAction
+  action: StoreAction | LoginAction.UserAction
 ): LoginState => {
   switch (action.type) {
-    case LOGIN_ATTEMPT:
+    case LoginAction.LOGIN_ATTEMPT:
       return {
         ...state,
-        user: action.payload.user,
-        success: false,
+        username: action.payload.username,
         loginAttempt: true,
+        loginSuccess: false,
         loginFailure: false,
       };
-    case LOGIN_FAILURE:
+    case LoginAction.LOGIN_FAILURE:
       return {
         ...state,
-        user: action.payload.user,
-        success: false,
+        username: action.payload.username,
         loginAttempt: false,
         loginFailure: true,
+        loginSuccess: false,
       };
-    case LOGIN_SUCCESS:
+    case LoginAction.LOGIN_SUCCESS:
       return {
         ...state,
-        user: action.payload.user,
-        success: true,
+        username: action.payload.username,
+        loginSuccess: true,
       };
-    case REGISTER_ATTEMPT:
+    case LoginAction.REGISTER_ATTEMPT:
       return {
         ...state,
-        user: action.payload.user,
+        username: action.payload.username,
         registerAttempt: true,
-        registerSuccess: false,
         registerFailure: "",
+        registerSuccess: false,
       };
-    case REGISTER_SUCCESS:
+    case LoginAction.REGISTER_SUCCESS:
       return {
         ...state,
-        user: action.payload.user,
+        username: action.payload.username,
         registerAttempt: false,
         registerSuccess: true,
       };
-    case REGISTER_FAILURE:
+    case LoginAction.REGISTER_FAILURE:
       return {
         ...state,
         registerAttempt: false,
+        registerFailure: action.payload.username,
         registerSuccess: false,
-        registerFailure: action.payload.user,
       };
-    case LOGIN_RESET:
-    case LOGOUT:
+    case LoginAction.LOGIN_RESET:
+    case LoginAction.LOGOUT:
     case StoreActions.RESET:
-    case REGISTER_RESET:
+    case LoginAction.REGISTER_RESET:
       return defaultState;
     default:
       return state;

@@ -16,6 +16,7 @@ import {
   Translate,
   withLocalize,
 } from "react-localize-redux";
+
 import theme from "../../../types/theme";
 import { User } from "../../../types/user";
 
@@ -30,7 +31,6 @@ interface UserListState {
   filterInput: string;
   filteredNonProjUsers: User[];
   filteredProjUsers: User[];
-  hovering: boolean;
   hoverUserID: string;
 }
 
@@ -43,14 +43,10 @@ class UserList extends React.Component<
 
     this.state = {
       filterInput: "",
-      hovering: false,
       hoverUserID: "",
       filteredNonProjUsers: [],
       filteredProjUsers: [],
     };
-  }
-  componentWillReceiveProps() {
-    this.handleChange(this.state.filterInput);
   }
 
   handleChange(event: string) {
@@ -58,35 +54,29 @@ class UserList extends React.Component<
     let filteredProjUsers: User[] = [];
 
     if (event.length >= 3) {
-      filteredNonProjUsers = this.props.allUsers.filter((user) => {
-        const name = user.name.toLowerCase();
-        const username = user.username.toLowerCase();
-        const email = user.email.toLowerCase();
-        const filter = event.toLowerCase();
-
-        return (
-          name.includes(filter) ||
-          username.includes(filter) ||
-          email.includes(filter)
-        );
-      });
-
-      filteredProjUsers = this.props.projUsers.filter((item) => {
-        const name = item.name.toLowerCase();
-        const username = item.username.toLowerCase();
-        const email = item.email.toLowerCase();
-        const filter = event.toLowerCase();
-        return (
-          name.includes(filter) ||
-          username.includes(filter) ||
-          email.includes(filter)
-        );
-      });
+      filteredNonProjUsers = this.filterUsers(this.props.allUsers, event);
+      filteredProjUsers = this.filterUsers(this.props.projUsers, event);
     }
+
     this.setState({
       filterInput: event,
       filteredNonProjUsers: filteredNonProjUsers,
       filteredProjUsers: filteredProjUsers,
+    });
+  }
+
+  filterUsers(users: User[], event: string): User[] {
+    return users.filter((user) => {
+      const name = user.name.toLowerCase();
+      const username = user.username.toLowerCase();
+      const email = user.email.toLowerCase();
+      const filter = event.toLowerCase();
+
+      return (
+        name.includes(filter) ||
+        username.includes(filter) ||
+        email.includes(filter)
+      );
     });
   }
 
@@ -100,18 +90,14 @@ class UserList extends React.Component<
           type="text"
           onChange={(e) => this.handleChange(e.target.value)}
           placeholder="Search..."
+          value={this.state.filterInput}
         />
-
         <List>
           {this.state.filteredProjUsers.map((user) => (
             <ListItem
               key={user.id}
-              onMouseEnter={() =>
-                this.setState({ hovering: true, hoverUserID: user.id })
-              }
-              onMouseLeave={() =>
-                this.setState({ hovering: false, hoverUserID: "" })
-              }
+              onMouseEnter={() => this.setState({ hoverUserID: user.id })}
+              onMouseLeave={() => this.setState({ hoverUserID: "" })}
             >
               <ListItemIcon>
                 <Done />
@@ -127,17 +113,18 @@ class UserList extends React.Component<
           {this.state.filteredNonProjUsers.map((user) => (
             <ListItem
               key={user.id}
-              onMouseEnter={() =>
-                this.setState({ hovering: true, hoverUserID: user.id })
-              }
-              onMouseLeave={() =>
-                this.setState({ hovering: false, hoverUserID: "" })
-              }
+              onMouseEnter={() => this.setState({ hoverUserID: user.id })}
+              onMouseLeave={() => this.setState({ hoverUserID: "" })}
             >
               <ListItemText primary={`${user.name} (${user.username})`} />
-              {this.state.hovering && this.state.hoverUserID === user.id && (
-                <Button onClick={() => this.props.addToProject(user)}>
-                  <Translate id="projectSettings.invite.addButton" />
+              {this.state.hoverUserID === user.id && (
+                <Button
+                  onClick={() => {
+                    this.props.addToProject(user);
+                    this.handleChange("");
+                  }}
+                >
+                  <Translate id="buttons.add" />
                 </Button>
               )}
             </ListItem>

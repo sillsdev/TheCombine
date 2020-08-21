@@ -3,9 +3,9 @@ services:
   backend:
     build: ./Backend
     volumes:
-      - backend_data:/root/.CombineFiles
+      - backend_data:/home/app/.CombineFiles
     expose:
-      - 80
+      - 5000
     depends_on:
       - database
     env_file:

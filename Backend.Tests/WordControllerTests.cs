@@ -37,7 +37,7 @@ namespace Backend.Tests
             foreach (var sense in word.Senses)
             {
 
-                sense.Accessibility = (int)State.Active;
+                sense.Accessibility = State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
                 foreach (var gloss in sense.Glosses)
@@ -173,37 +173,6 @@ namespace Backend.Tests
             // Ensure the deleted word is in the frontier
             Assert.IsTrue(frontier.Count == 1);
             Assert.IsTrue(frontier[0].Id != origWord.Id);
-            Assert.IsTrue(frontier[0].History.Count == 1);
-        }
-
-        [Test]
-        public void DeleteAudio()
-        {
-            // Fill test database
-            var origWord = _repo.Create(RandomWord()).Result;
-
-            // Add audio file to word
-            origWord.Audio.Add("a.wav");
-
-            // Test delete function
-            var action = _wordController.Delete(_projId, origWord.Id, "a.wav").Result;
-
-            // Original word persists
-            Assert.IsTrue(_repo.GetAllWords(_projId).Result.Count == 2);
-
-            // Get the new word from the database
-            var frontier = _repo.GetFrontier(_projId).Result;
-
-            // Ensure the new word has no audio files
-            Assert.IsTrue(frontier[0].Audio.Count == 0);
-
-            // Test the frontier
-            Assert.That(_repo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
-
-            // Ensure the word with deleted audio is in the frontier
-            Assert.IsTrue(frontier.Count == 1);
-            Assert.IsTrue(frontier[0].Id != origWord.Id);
-            Assert.IsTrue(frontier[0].Audio.Count == 0);
             Assert.IsTrue(frontier[0].History.Count == 1);
         }
 

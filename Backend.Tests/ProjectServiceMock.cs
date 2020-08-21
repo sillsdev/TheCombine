@@ -68,6 +68,33 @@ namespace Backend.Tests
             return Task.FromResult(ResultOfUpdate.NotFound);
         }
 
+        public Task<string> CreateLinkWithToken(Project project, string emailAddress)
+        {
+            return Task.FromResult("");
+        }
+
+        public Task<bool> EmailLink(string emailAddress, string emailMessage, string link, string domain, Project project)
+        {
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite token)
+        {
+            return Task.FromResult(true);
+        }
+        
+        public Task<bool> DuplicateCheck(string projectName)
+        {
+            foreach (var project in _projects)
+            {
+                if (project.Name == projectName)
+                {
+                    return Task.FromResult(true);
+                }
+            }
+            return Task.FromResult(false);
+        }
+
         public bool CanImportLift(string projectId)
         {
             return true;

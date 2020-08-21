@@ -57,6 +57,11 @@ export const reviewEntriesReducer = (
         wordBeingRecorded: action.wordId,
       };
 
+    case ReviewEntriesActionTypes.ClearReviewEntriesState:
+      return {
+        ...defaultState,
+      };
+
     default:
       return state;
   }
