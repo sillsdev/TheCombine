@@ -35,27 +35,35 @@ jest.mock("../../../../backend", () => {
     getProject: jest.fn((_id: string) => {
       return Promise.resolve(mockProject);
     }),
+    getWord: jest.fn(() => {
+      return Promise.resolve([mockMultiWord]);
+    }),
     updateWord: jest.fn((_word: Word) => {
       return Promise.resolve(mockWord);
     }),
   };
 });
 jest.mock("../../../Pronunciations/Recorder");
+jest.mock("../RecentEntry/RecentEntry");
+jest.spyOn(window, "alert").mockImplementation(() => {});
 
 let testRenderer: ReactTestRenderer;
 let testHandle: ReactTestInstance;
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
-const mockWord: Word = simpleWord("", "");
+const mockWord = simpleWord("", "");
+const mockMultiWord = multiGlossWord("vern", ["gloss1", "gloss2"]);
 const mockSemanticDomain: SemanticDomain = {
   name: "",
   id: "",
 };
 const hideQuestionsMock = jest.fn();
+const getWordsFromBackendMock = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
+  getWordsFromBackendMock.mockReturnValue(Promise.resolve([mockMultiWord]));
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
@@ -65,7 +73,7 @@ beforeEach(() => {
           displaySemanticDomainView={jest.fn()}
           isSmallScreen={false}
           hideQuestions={hideQuestionsMock}
-          getWordsFromBackend={jest.fn()}
+          getWordsFromBackend={getWordsFromBackendMock}
           showExistingData={jest.fn()}
         />
       </Provider>
@@ -190,71 +198,75 @@ describe("Tests DataEntryTable", () => {
     );
   });
 
-  it("doesn't update word in backend if sense is a duplicate", () => {
+  it("doesn't update word in backend if sense is a duplicate", (done) => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
-    const word = multiGlossWord("vern", ["gloss1", "gloss2"]);
-    word.senses[1].semanticDomains = [
+    mockMultiWord.senses[0].semanticDomains = [
       { name: "", id: "differentSemDomId" },
       { name: "", id: testHandle.instance.props.semanticDomain.id },
     ];
     testHandle.instance.setState(
       {
-        existingWords: [word],
+        existingWords: [mockMultiWord],
       },
       () => {
-        testHandle = testRenderer.root.findAllByType(NewEntry)[0];
-        testHandle.props
-          .updateWordWithNewGloss(word.id, "gloss2", [])
+        testRenderer.root
+          .findByType(NewEntry)
+          .props.updateWordWithNewGloss(
+            mockMultiWord.id,
+            mockMultiWord.senses[0].glosses[0].def,
+            []
+          )
           .then(() => {
             // Assert that the backend function for updating the word was NOT called
             expect(backend.updateWord).not.toBeCalled();
+            done();
           });
       }
     );
   });
 
-  it("updates word in backend if gloss exists with different semantic domain", () => {
+  it("updates word in backend if gloss exists with different semantic domain", (done) => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
-    const word = multiGlossWord("vern", ["gloss1", "gloss2"]);
-    word.senses[0].semanticDomains = [
+    mockMultiWord.senses[0].semanticDomains = [
       { name: "", id: "differentSemDomId" },
       { name: "", id: "anotherDifferentSemDomId" },
       { name: "", id: "andAThird" },
     ];
     testHandle.instance.setState(
       {
-        existingWords: [word],
+        existingWords: [mockMultiWord],
       },
       () => {
-        testHandle = testRenderer.root.findAllByType(NewEntry)[0];
-        testHandle.props
-          .updateWordWithNewGloss(word.id, "gloss1", [])
+        testRenderer.root
+          .findByType(NewEntry)
+          .props.updateWordWithNewGloss(
+            mockMultiWord.id,
+            mockMultiWord.senses[0].glosses[0].def,
+            []
+          )
           .then(() => {
             // Assert that the backend function for updating the word was called once
             expect(backend.updateWord).toBeCalledTimes(1);
+            done();
           });
       }
     );
   });
 
-  it("updates word in backend if gloss doesn't exist", () => {
+  it("updates word in backend if gloss doesn't exist", (done) => {
     testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
-    const word = multiGlossWord("vern", ["gloss1", "gloss2"]);
-    word.senses[0].semanticDomains = [
-      { name: "", id: "differentSemDomId" },
-      { name: "", id: "anotherDifferentSemDomId" },
-    ];
     testHandle.instance.setState(
       {
-        existingWords: [word],
+        existingWords: [mockMultiWord],
       },
       () => {
-        testHandle = testRenderer.root.findAllByType(NewEntry)[0];
-        testHandle.props
-          .updateWordWithNewGloss(word.id, "differentGloss", [])
+        testRenderer.root
+          .findByType(NewEntry)
+          .props.updateWordWithNewGloss(mockMultiWord.id, "differentGloss", [])
           .then(() => {
             // Assert that the backend function for updating the word was called once
             expect(backend.updateWord).toBeCalledTimes(1);
+            done();
           });
       }
     );
