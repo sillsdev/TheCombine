@@ -158,6 +158,13 @@ Imports Semantic Domains from the provided xml file.
 npm run import-sem-doms -- <XML_FILE_PATH>
 ```
 
+## Inspect Database
+
+To browse the database locally during development, open MongoDB Compass Community.
+
+  1. Under New Connection, enter `mongodb://localhost:27017`
+  2. Under Databases, select CombineDatabase
+
 ## Drop Database
 
 To completely erase the current Mongo database, run:
