@@ -4,7 +4,7 @@
 
 **name** :
 
-**email** : Valid email address
+**email** : Valid email address - Should always be stored in lowercase
 
 **phone** : Valid phone number
 
@@ -16,7 +16,7 @@
 
 **password** :
 
-**username** :
+**username** : Should always be stored in lowercase
 
 **uiLang** :
 
