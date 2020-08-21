@@ -39,8 +39,9 @@ export default class RecentEntry extends React.Component<
     super(props);
 
     let sense: Sense = { ...props.entry.senses[props.senseIndex] };
-    if (sense.glosses.length < 1)
+    if (sense.glosses.length < 1) {
       sense.glosses.push({ def: "", language: this.props.analysisLang });
+    }
 
     this.state = {
       vernacular: props.entry.vernacular,
@@ -63,13 +64,15 @@ export default class RecentEntry extends React.Component<
     if (
       this.props.entry.senses[this.props.senseIndex].glosses[0].def !==
       this.state.gloss
-    )
+    ) {
       this.props.updateGloss(this.state.gloss);
+    }
   }
 
   conditionallyUpdateVern() {
-    if (this.props.entry.vernacular !== this.state.vernacular)
+    if (this.props.entry.vernacular !== this.state.vernacular) {
       this.props.updateVern(this.state.vernacular);
+    }
   }
 
   focusOnNewEntry = () => {
@@ -105,7 +108,9 @@ export default class RecentEntry extends React.Component<
                 this.conditionallyUpdateVern();
               }}
               handleEnterAndTab={() => {
-                if (this.state.vernacular) this.focusOnNewEntry();
+                if (this.state.vernacular) {
+                  this.focusOnNewEntry();
+                }
               }}
               setActiveGloss={() => {}}
               analysisLang={this.props.analysisLang}
@@ -129,7 +134,9 @@ export default class RecentEntry extends React.Component<
                 this.conditionallyUpdateGloss();
               }}
               handleEnterAndTab={() => {
-                if (this.state.gloss) this.focusOnNewEntry();
+                if (this.state.gloss) {
+                  this.focusOnNewEntry();
+                }
               }}
             />
           </Grid>
