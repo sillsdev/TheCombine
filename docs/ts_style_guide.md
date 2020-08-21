@@ -16,6 +16,7 @@ Key Sections:
 - [Annotate Arrays as `Type[]`](#array)
 - [File Names](#filename)
 - [`type` vs `interface`](#type-vs-interface)
+- [One-line `if` statements](#one-line-if-statements)
 
 ## Variable and Function
 
@@ -326,17 +327,21 @@ class X implements FooBar {
 
 - Otherwise use whatever makes you happy that day.
 
-## One-line `if` statements
+## One line `if` statements
 
 Add braces to one-line `if` statements;
 
+**Good**
+
 ```
-# Yes:
 if (isEmpty) {
   callFun();
 }
+```
 
-# No:
+**Bad**
+
+```
 if (isEmpty)
   callFun();
 ``` 
