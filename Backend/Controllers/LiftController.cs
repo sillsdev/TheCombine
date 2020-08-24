@@ -205,9 +205,7 @@ namespace BackendFramework.Controllers
             // Export the data to a zip directory
             var exportedFilepath = CreateLiftExport(projectId);
 
-            var file = System.IO.File.ReadAllBytes(exportedFilepath);
-            var encodedFile = Convert.ToBase64String(file);
-            return new OkObjectResult(encodedFile);
+            return new OkObjectResult(exportedFilepath);
         }
 
         // This method is extracted so that it can be unit tested

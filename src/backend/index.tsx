@@ -322,7 +322,7 @@ export async function exportLift(projectId?: string) {
       headers: { ...authHeader(), Accept: "application/zip" },
     }
   );
-  return `data:application/zip;base64,${resp.data}`;
+  return resp.data;
 }
 
 export async function uploadAudio(
