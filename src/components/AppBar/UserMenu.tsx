@@ -36,12 +36,10 @@ export default function UserMenu() {
       .catch((err) => console.log(err));
   }
 
-  React.useEffect(() => {
-    getIsAdmin();
-  }, []);
+  getIsAdmin();
 
   return (
-    <div>
+    <React.Fragment>
       <Button
         aria-controls="user-menu"
         aria-haspopup="true"
@@ -100,6 +98,6 @@ export default function UserMenu() {
           <Translate id="userMenu.logout" />
         </MenuItem>
       </Menu>
-    </div>
+    </React.Fragment>
   );
 }
