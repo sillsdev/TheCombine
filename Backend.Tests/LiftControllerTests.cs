@@ -256,6 +256,7 @@ namespace Backend.Tests
                     fstream.Close();
 
                     var allWords = _wordrepo.GetAllWords(proj.Id);
+                    Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
                     // Export
                     var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
                     var exportedDirectory = Path.GetDirectoryName(exportedFilePath);
