@@ -153,22 +153,33 @@ export class DataEntryTable extends React.Component<
   }
 
   async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
-    const newWord: Word = await Backend.createWord(wordToAdd);
-    const wordId: string = await addAudiosToBackend(newWord.id, audioURLs);
-    const newWordWithAudio: Word = await Backend.getWord(wordId);
-    await this.updateExisting();
+    await Backend.createWord(wordToAdd)
+      .then(async (newWord) => {
+        const wordId: string = await addAudiosToBackend(newWord.id, audioURLs);
+        const newWordWithAudio: Word = await Backend.getWord(wordId);
+        await this.updateExisting();
 
-    let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
-    let newWordAccess: WordAccess = {
-      word: newWordWithAudio,
-      senseIndex: 0,
-    };
-    if (insertIndex !== undefined && insertIndex < recentlyAddedWords.length) {
-      recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
-    } else {
-      recentlyAddedWords.push(newWordAccess);
-    }
-    this.setState({ recentlyAddedWords });
+        let recentlyAddedWords: WordAccess[] = [
+          ...this.state.recentlyAddedWords,
+        ];
+        let newWordAccess: WordAccess = {
+          word: newWordWithAudio,
+          senseIndex: 0,
+        };
+        if (
+          insertIndex !== undefined &&
+          insertIndex < recentlyAddedWords.length
+        ) {
+          recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
+        } else {
+          recentlyAddedWords.push(newWordAccess);
+        }
+        this.setState({ recentlyAddedWords });
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(this.props.translate("addWords.wordInDatabase"));
+      });
   }
 
   /** Update the word in the backend and the frontend */
@@ -222,7 +233,7 @@ export class DataEntryTable extends React.Component<
             .includes(this.props.semanticDomain.id)
         ) {
           // User is trying to add a sense that already exists
-          alert("This sense already exists for this domain");
+          alert(this.props.translate("addWords.senseInWord"));
           return false;
         } else {
           const updatedWord = addSemanticDomainToSense(
