@@ -141,7 +141,7 @@ namespace BackendFramework.Services
             // Write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
             var frontier = _repo.GetFrontier(projectId).Result;
-            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == State.Active).ToList();
+            var activeWords = frontier.Where(x => x.Senses.Any(s => s.Accessibility == State.Active)).ToList();
 
             // TODO: this is wrong, deleted is a subset of active, are not exclusive
             var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();
@@ -260,7 +260,16 @@ namespace BackendFramework.Services
                 var dict = new Dictionary<string, string>();
                 foreach (var gloss in wordEntry.Senses[i].Glosses)
                 {
-                    dict.Add(gloss.Language, gloss.Def);
+                    if (dict.ContainsKey(gloss.Language))
+                    {
+                        // This is an unexpected situation but rather than crashing or losing data we
+                        // will just append extra definitions for the language with a semicolon separator
+                        dict[gloss.Language] = $"{dict[gloss.Language]};{gloss.Def}";
+                    }
+                    else
+                    {
+                        dict.Add(gloss.Language, gloss.Def);
+                    }
                 }
 
                 var lexSense = new LexSense();
