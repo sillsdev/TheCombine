@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Services;
 
 namespace Backend.Tests
 {
@@ -32,6 +33,7 @@ namespace Backend.Tests
         public Task<Word> Create(Word word)
         {
             word.Id = Guid.NewGuid().ToString();
+            WordRepository.PopulateWordGuids(word);
             _words.Add(word.Clone());
             AddFrontier(word.Clone());
             return Task.FromResult(word.Clone());
