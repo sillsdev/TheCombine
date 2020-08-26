@@ -223,9 +223,9 @@ export class CreateProject extends React.Component<
             <LanguagePicker
               value={this.state.analysisLanguages[0].bcp47}
               setCode={(bcp47: string) => this.setAnalysisBcp47(bcp47)}
-              name={this.state.analysisLanguages[0].bcp47}
+              name={this.state.analysisLanguages[0].name}
               setName={(name: string) => this.setAnalysisLangName(name)}
-              font={this.state.analysisLanguages[0].bcp47}
+              font={this.state.analysisLanguages[0].font}
               setFont={(font: string) => this.setAnalysisFont(font)}
               t={languagePickerStrings_en}
             />
