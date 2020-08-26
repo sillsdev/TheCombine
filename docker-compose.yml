@@ -1,9 +1,9 @@
 ﻿version: "3.8"
 services:
   backend:
-    build: ./Backend
+    image: combine/backend:latest
     volumes:
-      - backend_data:/home/app/.CombineFiles
+      - backend_data:/root/.CombineFiles
     expose:
       - 5000
     depends_on:
@@ -12,18 +12,12 @@ services:
       - ./.env.backend
     restart: unless-stopped
   frontend:
-    build:
-      context: .
-      args:
-        - COMBINE_CAPTCHA_REQUIRED=true
-        - COMBINE_CAPTCHA_SITE=6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3
-    environment:
-      ENVSUBST_VARS: SERVER_NAME SSL_CERTIFICATE SSL_PRIVATE_KEY
-      SERVER_NAME: localhost
-      SSL_CERTIFICATE: /ssl/cert.pem
-      SSL_PRIVATE_KEY: /ssl/key.pem
+    image: combine/frontend:latest
+    env_file:
+      - ./.env.frontend
     volumes:
       - ./nginx/conf.d:/etc/nginx/user.conf.d:ro
+      - ./nginx/scripts:/usr/share/nginx/html/scripts:ro
       - frontend_ssl_certs:/ssl
       - letsencrypt:/etc/letsencrypt
     ports:

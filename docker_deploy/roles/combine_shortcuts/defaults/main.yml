@@ -1,5 +1,0 @@
----
-
-alias_file: "{{ ansible_env.HOME }}/.bash_aliases"
-production_override_yaml: docker-compose.prod.yml
-sudo_cmd: "{{ 'sudo ' if ansible_env.USER != 'root' else '' }}"

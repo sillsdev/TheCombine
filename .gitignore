@@ -17,7 +17,7 @@ docker-compose.init.yml
 # Misc
 .DS_Store
 .env.backend
-.env.backend.auth
+.env.frontend
 .env*.local
 Session.vim
 /*.js
@@ -80,6 +80,7 @@ docker_deploy/_playbook*.yml
 
 # Emacs backup files (this is Jim's fault)
 *~
+\#*#
 
 # JetBrains Rider
 .idea
