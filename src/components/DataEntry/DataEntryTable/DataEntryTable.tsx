@@ -223,6 +223,7 @@ export class DataEntryTable extends React.Component<
         ) {
           // User is trying to add a sense that already exists
           alert("This sense already exists for this domain");
+          return;
         } else {
           const updatedWord = addSemanticDomainToSense(
             this.props.semanticDomain,
@@ -234,6 +235,7 @@ export class DataEntryTable extends React.Component<
             senseIndex,
             audioFileURLs
           );
+          return;
         }
       }
     }
@@ -249,6 +251,7 @@ export class DataEntryTable extends React.Component<
       updatedWord.senses.length - 1, // Was added at the end of the sense list
       audioFileURLs
     );
+    return;
   }
 
   async addAudioToRecentWord(oldWordId: string, audioFile: File) {
