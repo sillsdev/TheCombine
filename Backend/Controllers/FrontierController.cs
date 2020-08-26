@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -44,10 +45,28 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            return new ObjectResult(await _repo.GetFrontier(projectId));
+            return new ObjectResult(await GetAndRepairFrontier(projectId));
         }
 
-        /// <summary> Adds word to a project's frontier </summary>
+		private async Task<object> GetAndRepairFrontier(string projectId)
+		{
+            var frontier = await _repo.GetFrontier(projectId);
+			if (frontier.Count > 0 && frontier[0].Guid != null && frontier[0].Guid != Guid.Empty)
+			{
+				return frontier;
+			}
+
+			foreach (var word in frontier)
+			{
+                word.Guid = new Guid();
+                word.EditedBy.Add("TheCombine_GuidFixer");
+				await _wordService.Update(projectId, word.Id, word);
+			}
+
+			return await _repo.GetFrontier(projectId);
+		}
+
+		/// <summary> Adds word to a project's frontier </summary>
         /// <remarks> POST: v1/projects/{projectId}/words/frontier </remarks>
         /// <returns> Id of word created </returns>
         [HttpPost]

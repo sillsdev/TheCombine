@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
@@ -55,6 +56,10 @@ namespace BackendFramework.Services
         /// <returns> The word created </returns>
         public async Task<Word> Create(Word word)
         {
+			if (word.Guid == null || Guid.Empty.Equals(word.Guid))
+			{
+				word.Guid = Guid.NewGuid();
+			}
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
