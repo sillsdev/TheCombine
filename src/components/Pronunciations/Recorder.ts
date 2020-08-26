@@ -29,9 +29,9 @@ export default class Recorder {
 
   private onMicrophoneAvailable(audioStream: MediaStream) {
     this.recordRTC = new RecordRTC(audioStream, {
+      disableLogs: true, // Comment out or switch to false for dev
       type: "audio",
-      bitrate: 128000,
-      mimeType: "audio/webm",
+      audioBitsPerSecond: 128000, // 128kbps is the maximum
     });
   }
 
