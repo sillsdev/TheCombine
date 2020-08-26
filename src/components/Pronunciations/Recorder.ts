@@ -1,4 +1,4 @@
-const RecordRTC = require("recordrtc");
+import RecordRTC from "recordrtc";
 
 export default class Recorder {
   private recordRTC: any;
@@ -28,11 +28,10 @@ export default class Recorder {
   }
 
   private onMicrophoneAvailable(audioStream: MediaStream) {
-    this.recordRTC = RecordRTC(audioStream, {
+    this.recordRTC = new RecordRTC(audioStream, {
       type: "audio",
-      bitrate: "128000",
+      bitrate: 128000,
       mimeType: "audio/webm",
-      ignoreMutedMedia: false,
     });
   }
 
