@@ -202,7 +202,7 @@ export class DataEntryTable extends React.Component<
     wordId: string,
     gloss: string,
     audioFileURLs: string[] = []
-  ): Promise<boolean> {
+  ): Promise<void> {
     const existingWord: Word | undefined = this.state.existingWords.find(
       (word: Word) => word.id === wordId
     );
@@ -223,7 +223,6 @@ export class DataEntryTable extends React.Component<
         ) {
           // User is trying to add a sense that already exists
           alert("This sense already exists for this domain");
-          return false;
         } else {
           const updatedWord = addSemanticDomainToSense(
             this.props.semanticDomain,
@@ -235,7 +234,6 @@ export class DataEntryTable extends React.Component<
             senseIndex,
             audioFileURLs
           );
-          return true;
         }
       }
     }
@@ -251,7 +249,6 @@ export class DataEntryTable extends React.Component<
       updatedWord.senses.length - 1, // Was added at the end of the sense list
       audioFileURLs
     );
-    return true;
   }
 
   async addAudioToRecentWord(oldWordId: string, audioFile: File) {
