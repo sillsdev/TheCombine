@@ -3,10 +3,15 @@ import {
   DialogContent,
   MenuItem,
   MenuList,
+  Typography,
   withStyles,
 } from "@material-ui/core";
 import React from "react";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 
 import theme from "../../../../../types/theme";
 import { Sense, Word } from "../../../../../types/word";
@@ -18,6 +23,7 @@ function SenseDialog(
     selectedWord: Word;
     open: boolean;
     handleClose: (senseIndex: number) => void;
+    analysisLang: string;
   } & LocalizeContextProps
 ) {
   return (
@@ -26,6 +32,7 @@ function SenseDialog(
         <SenseList
           selectedWord={props.selectedWord}
           closeDialog={props.handleClose}
+          analysisLang={props.analysisLang}
         />
       </DialogContent>
     </Dialog>
@@ -35,6 +42,7 @@ function SenseDialog(
 interface SenseListProps {
   selectedWord: Word;
   closeDialog: (senseIndex: number) => void;
+  analysisLang: string;
 }
 
 // Copied from customized menus at https://material-ui.com/components/menus/
@@ -52,7 +60,9 @@ export const StyledMenuItem = withStyles((theme) => ({
 export function SenseList(props: SenseListProps) {
   return (
     <React.Fragment>
-      <h1>{props.selectedWord.vernacular}</h1>
+      <Typography variant="h3">
+        <Translate id="addWords.selectSense" />
+      </Typography>
       <MenuList autoFocusItem>
         {props.selectedWord.senses.map((sense: Sense, index: number) => (
           <StyledMenuItem
@@ -66,8 +76,11 @@ export function SenseList(props: SenseListProps) {
             <div style={{ margin: theme.spacing(4) }}>
               <DomainCell
                 rowData={parseWord(
-                  { ...props.selectedWord, senses: [sense] } as Word,
-                  "en"
+                  {
+                    ...props.selectedWord,
+                    senses: [sense],
+                  } as Word,
+                  props.analysisLang
                 )}
                 sortingByDomains={false}
               />
@@ -76,7 +89,8 @@ export function SenseList(props: SenseListProps) {
         ))}
 
         <StyledMenuItem onClick={() => props.closeDialog(-1)}>
-          {"New Sense for " + props.selectedWord.vernacular}
+          <Translate id="addWords.newSenseFor" />
+          {props.selectedWord.vernacular}
         </StyledMenuItem>
       </MenuList>
     </React.Fragment>

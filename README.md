@@ -33,9 +33,9 @@ A rapid word collection tool.
    - [VS Code](https://code.visualstudio.com/download) and Prettier code
      formatting extension
    - [dotnet-format](https://github.com/dotnet/format):
-     `dotnet tool install --global dotnet-format --version 3.3.111304`
+     `dotnet tool update --global dotnet-format --version 4.1.131201`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-     `dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.6.1`
+     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
 4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string
@@ -150,7 +150,7 @@ See the section about
 [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
 more information.
 
-## `npm run import-sem-doms`
+### `npm run import-sem-doms`
 
 Imports Semantic Domains from the provided xml file.
 
@@ -158,7 +158,16 @@ Imports Semantic Domains from the provided xml file.
 npm run import-sem-doms -- <XML_FILE_PATH>
 ```
 
-## Drop Database
+## Database
+
+### Inspect Database
+
+To browse the database locally during development, open MongoDB Compass Community.
+
+  1. Under New Connection, enter `mongodb://localhost:27017`
+  2. Under Databases, select CombineDatabase
+
+### Drop Database
 
 To completely erase the current Mongo database, run:
 

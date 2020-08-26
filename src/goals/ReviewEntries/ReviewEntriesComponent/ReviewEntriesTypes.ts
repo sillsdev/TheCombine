@@ -22,7 +22,7 @@ export interface ReviewEntriesSense {
 
 export function parseWord(
   word: Word,
-  analysisLang: string,
+  analysisLang: string, // bcp47 code
   commonRecorder?: Recorder
 ) {
   let currentWord: ReviewEntriesWord = {
@@ -44,9 +44,7 @@ function parseSense(sense: Sense, analysisLang: string) {
   let currentSense: ReviewEntriesSense = {
     glosses: "",
     domains: [],
-    deleted:
-      sense.accessibility !== undefined &&
-      sense.accessibility === State.Deleted,
+    deleted: sense.accessibility === State.Deleted,
     senseId: uuid() + OLD_SENSE,
   };
 

@@ -1,12 +1,17 @@
 import {
   Dialog,
   DialogContent,
-  withStyles,
   MenuItem,
   MenuList,
+  Typography,
+  withStyles,
 } from "@material-ui/core";
 import React from "react";
-import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import {
+  LocalizeContextProps,
+  Translate,
+  withLocalize,
+} from "react-localize-redux";
 
 import theme from "../../../../../types/theme";
 import { Word } from "../../../../../types/word";
@@ -19,6 +24,7 @@ export function VernDialog(
     vernacularWords: Word[];
     open: boolean;
     handleClose: (selectedWordId?: string) => void;
+    analysisLang: string;
   } & LocalizeContextProps
 ) {
   return (
@@ -32,6 +38,7 @@ export function VernDialog(
         <VernList
           vernacularWords={props.vernacularWords}
           closeDialog={props.handleClose}
+          analysisLang={props.analysisLang}
         />
       </DialogContent>
     </Dialog>
@@ -41,6 +48,7 @@ export function VernDialog(
 interface VernListProps {
   vernacularWords: Word[];
   closeDialog: (selectedWordId: string) => void;
+  analysisLang: string;
 }
 
 // Copied from customized menus at https://material-ui.com/components/menus/
@@ -58,7 +66,9 @@ export const StyledMenuItem = withStyles((theme) => ({
 export function VernList(props: VernListProps) {
   return (
     <React.Fragment>
-      <h1>Select the desired entry</h1>
+      <Typography variant="h3">
+        <Translate id="addWords.selectEntry" />
+      </Typography>
       <MenuList autoFocusItem>
         {props.vernacularWords.map((word: Word) => (
           <StyledMenuItem
@@ -71,13 +81,13 @@ export function VernList(props: VernListProps) {
               <SenseCell
                 editable={false}
                 sortingByGloss={false}
-                value={parseWord(word, "en").senses}
-                rowData={parseWord(word, "en")}
+                value={parseWord(word, props.analysisLang).senses}
+                rowData={parseWord(word, props.analysisLang)}
               />
             </div>
             <div style={{ margin: theme.spacing(4) }}>
               <DomainCell
-                rowData={parseWord(word, "en")}
+                rowData={parseWord(word, props.analysisLang)}
                 sortingByDomains={false}
               />
             </div>
@@ -85,7 +95,8 @@ export function VernList(props: VernListProps) {
         ))}
 
         <StyledMenuItem onClick={() => props.closeDialog("")}>
-          {"New entry for " + props.vernacularWords[0].vernacular}
+          <Translate id="addWords.newEntryFor" />
+          {props.vernacularWords[0].vernacular}
         </StyledMenuItem>
       </MenuList>
     </React.Fragment>

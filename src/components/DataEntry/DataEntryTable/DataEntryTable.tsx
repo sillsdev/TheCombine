@@ -8,6 +8,8 @@ import {
 } from "react-localize-redux";
 
 import * as Backend from "../../../backend";
+import { getProjectId } from "../../../backend/localStorage";
+import { Project } from "../../../types/project";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import {
@@ -43,6 +45,7 @@ interface DataEntryTableState {
   existingWords: Word[];
   recentlyAddedWords: WordAccess[];
   isReady: boolean;
+  analysisLang: string;
 }
 
 async function addAudiosToBackend(
@@ -91,22 +94,17 @@ export function addSemanticDomainToSense(
 export function addSenseToWord(
   semanticDomain: SemanticDomain,
   existingWord: Word,
-  gloss: string
+  gloss: string,
+  language: string
 ): Word {
-  let updatedWord: Word = { ...existingWord };
-
-  let newGloss: Gloss = {
-    language: "en",
-    def: gloss,
-  };
-
-  let newSense: Sense = {
+  const updatedWord: Word = { ...existingWord };
+  const newGloss: Gloss = { language, def: gloss };
+  const newSense: Sense = {
     glosses: [newGloss],
     semanticDomains: [semanticDomain],
     accessibility: State.Active,
   };
-
-  updatedWord.senses.push(newSense); // Fix which sense we are adding to
+  updatedWord.senses.push(newSense);
   return updatedWord;
 }
 
@@ -124,6 +122,7 @@ export class DataEntryTable extends React.Component<
       existingWords: [],
       recentlyAddedWords: [],
       isReady: false,
+      analysisLang: "en",
     };
     this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
@@ -133,12 +132,24 @@ export class DataEntryTable extends React.Component<
 
   async componentDidMount() {
     await this.updateExisting();
+    await this.getProjectSettings();
+  }
+
+  async getProjectSettings() {
+    const proj: Project = await Backend.getProject(getProjectId());
+    let analysisLang: string = "en";
+    if (proj.analysisWritingSystems.length > 0) {
+      analysisLang = proj.analysisWritingSystems[0].bcp47;
+    }
+    this.setState({ analysisLang });
   }
 
   /** Finished with this page of words, select new semantic domain */
   // TODO: Implement
   submit(e?: React.FormEvent<HTMLFormElement>, _c?: Function) {
-    if (e) e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
   }
 
   async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
@@ -157,23 +168,15 @@ export class DataEntryTable extends React.Component<
     } else {
       recentlyAddedWords.push(newWordAccess);
     }
-    this.setState({
-      recentlyAddedWords,
-    });
+    this.setState({ recentlyAddedWords });
   }
 
   /** Update the word in the backend and the frontend */
-  async updateWordForNewEntry(
+  async updateWordBackAndFront(
     wordToUpdate: Word,
     senseIndex: number,
     audioURLs: string[]
   ) {
-    let existingWord: Word | undefined = this.state.existingWords.find(
-      (word) => word.id === wordToUpdate.id
-    );
-    if (!existingWord)
-      throw new Error("You are trying to update a nonexistent word");
-
     let updatedWord: Word = await this.updateWordInBackend(wordToUpdate);
     let updatedWordId: string = await addAudiosToBackend(
       updatedWord.id,
@@ -200,21 +203,14 @@ export class DataEntryTable extends React.Component<
     gloss: string,
     audioFileURLs: string[] = []
   ): Promise<boolean> {
-    let existingWord: Word | undefined = this.state.existingWords.find(
+    const existingWord: Word | undefined = this.state.existingWords.find(
       (word: Word) => word.id === wordId
     );
-    if (!existingWord)
-      throw new Error(
-        "Attempting to edit an existing word but did not find one"
-      );
+    if (!existingWord) {
+      throw new Error("You are trying to update a nonexistent word");
+    }
 
-    let sense: Sense;
-    for (
-      let senseIndex = 0;
-      senseIndex < existingWord.senses.length;
-      senseIndex++
-    ) {
-      sense = existingWord.senses[senseIndex];
+    for (const [senseIndex, sense] of existingWord.senses.entries()) {
       if (
         sense.glosses &&
         sense.glosses.length &&
@@ -229,12 +225,12 @@ export class DataEntryTable extends React.Component<
           alert("This sense already exists for this domain");
           return false;
         } else {
-          let updatedWord = addSemanticDomainToSense(
+          const updatedWord = addSemanticDomainToSense(
             this.props.semanticDomain,
             existingWord!, // Existing word already null checked
             senseIndex
           );
-          await this.updateWordForNewEntry(
+          await this.updateWordBackAndFront(
             updatedWord,
             senseIndex,
             audioFileURLs
@@ -247,9 +243,10 @@ export class DataEntryTable extends React.Component<
     const updatedWord = addSenseToWord(
       this.props.semanticDomain,
       existingWord,
-      gloss
+      gloss,
+      this.state.analysisLang
     );
-    await this.updateWordForNewEntry(
+    await this.updateWordBackAndFront(
       updatedWord,
       updatedWord.senses.length - 1, // Was added at the end of the sense list
       audioFileURLs
@@ -292,8 +289,9 @@ export class DataEntryTable extends React.Component<
   }
 
   async undoRecentEntry(entryIndex: number): Promise<string> {
-    if (entryIndex >= this.state.recentlyAddedWords.length)
+    if (entryIndex >= this.state.recentlyAddedWords.length) {
       throw new RangeError("Entry doesn't exist in recent entries.");
+    }
     const recentEntry: WordAccess = this.state.recentlyAddedWords[entryIndex];
 
     // Copy all the parts we need
@@ -491,8 +489,6 @@ export class DataEntryTable extends React.Component<
             <Grid item xs={12} key={index}>
               <RecentEntry
                 key={wordAccess.word.id + "_" + wordAccess.senseIndex}
-                allVerns={this.state.existingVerns}
-                allWords={this.state.existingWords}
                 entry={wordAccess.word}
                 senseIndex={wordAccess.senseIndex}
                 updateGloss={(newGloss: string) =>
@@ -509,11 +505,12 @@ export class DataEntryTable extends React.Component<
                   this.deleteAudioFromRecentWord(wordId, fileName)
                 }
                 recorder={this.recorder}
-                semanticDomain={this.props.semanticDomain}
                 focusNewEntry={() => {
-                  if (this.refNewEntry.current)
+                  if (this.refNewEntry.current) {
                     this.refNewEntry.current.focusVernInput();
+                  }
                 }}
+                analysisLang={this.state.analysisLang}
               />
             </Grid>
           ))}
@@ -536,6 +533,7 @@ export class DataEntryTable extends React.Component<
                 this.setState({ isReady: isReady })
               }
               recorder={this.recorder}
+              analysisLang={this.state.analysisLang}
             />
           </Grid>
         </Grid>

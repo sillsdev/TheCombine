@@ -22,6 +22,7 @@ interface ReviewEntriesProps {
   words: ReviewEntriesWord[];
 
   // Dispatch changes
+  clearState: () => void;
   updateAllWords: (words: ReviewEntriesWord[]) => void;
   updateFrontierWord: (
     newData: ReviewEntriesWord,
@@ -52,9 +53,7 @@ export class ReviewEntriesComponent extends React.Component<
       errorMsg: undefined,
     };
     this.recorder = new Recorder();
-  }
-
-  componentDidMount() {
+    this.props.clearState();
     getFrontierWords().then((frontier: Word[]) =>
       this.updateLocalWords(frontier)
     );
@@ -93,14 +92,7 @@ export class ReviewEntriesComponent extends React.Component<
               icons={tableIcons}
               title={<Translate id={"reviewEntries.title"} />}
               columns={columns}
-              data={this.props.words.map((word) =>
-                word === null
-                  ? null
-                  : {
-                      ...word,
-                      senses: word.senses.filter((sense) => !sense.deleted),
-                    }
-              )}
+              data={this.props.words}
               editable={{
                 onRowUpdate: (
                   newData: ReviewEntriesWord,

@@ -15,24 +15,28 @@ interface ExportProjectButtonProps {
 export default function ExportProjectButton(
   props: ButtonProps & ExportProjectButtonProps
 ) {
-  const [exportedFile, setExportedFile] = React.useState<null | string>(null);
+  const [fileUrl, setFileUrl] = React.useState<null | string>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   let downloadLink = React.createRef<HTMLAnchorElement>();
 
   async function getFile() {
     setLoading(true);
+    let fileString: string;
     props.projectId
-      ? setExportedFile(await exportLift(props.projectId))
-      : setExportedFile(await exportLift());
+      ? (fileString = await exportLift(props.projectId))
+      : (fileString = await exportLift());
+    const file = await fetch(fileString).then(async (res) => res.blob());
+    setFileUrl(URL.createObjectURL(file));
     setLoading(false);
   }
 
   useEffect(() => {
-    if (downloadLink.current && exportedFile !== null) {
+    if (downloadLink.current && fileUrl !== null) {
       downloadLink.current.click();
-      setExportedFile(null);
+      URL.revokeObjectURL(fileUrl);
+      setFileUrl(null);
     }
-  }, [downloadLink, exportedFile]);
+  }, [downloadLink, fileUrl]);
 
   return (
     <React.Fragment>
@@ -44,8 +48,8 @@ export default function ExportProjectButton(
       >
         <Translate id="buttons.export" />
       </LoadingButton>
-      {exportedFile && (
-        <a ref={downloadLink} href={exportedFile} style={{ display: "none" }}>
+      {fileUrl && (
+        <a ref={downloadLink} href={fileUrl} style={{ display: "none" }}>
           (This link should not be visible)
         </a>
       )}

@@ -15,6 +15,7 @@ export enum ReviewEntriesActionTypes {
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
   UpdateRecordingStatus = "UPDATE_RECORDING_STATUS",
+  ClearReviewEntriesState = "CLEAR_REVIEW_ENTRIES_STATE",
 }
 
 interface ReviewUpdateWords {
@@ -35,10 +36,15 @@ interface ReviewUpdateRecordingStatus {
   wordId: string | undefined;
 }
 
+interface ReviewClearReviewEntriesState {
+  type: ReviewEntriesActionTypes.ClearReviewEntriesState;
+}
+
 export type ReviewEntriesAction =
   | ReviewUpdateWords
   | ReviewUpdateWord
-  | ReviewUpdateRecordingStatus;
+  | ReviewUpdateRecordingStatus
+  | ReviewClearReviewEntriesState;
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -63,7 +69,7 @@ function updateWord(
 export function updateRecordingStatus(
   recordingStatus: boolean,
   wordId: string | undefined
-) {
+): ReviewUpdateRecordingStatus {
   return {
     type: ReviewEntriesActionTypes.UpdateRecordingStatus,
     recordingStatus,
@@ -71,8 +77,15 @@ export function updateRecordingStatus(
   };
 }
 
+export function clearReviewEntriesState(): ReviewClearReviewEntriesState {
+  return {
+    type: ReviewEntriesActionTypes.ClearReviewEntriesState,
+  };
+}
+
 // Return the translation code for our error, or undefined if there is no error
 function getError(sense: ReviewEntriesSense): string | undefined {
+  if (sense.deleted) return undefined;
   if (sense.glosses.length === 0) return "reviewEntries.error.gloss";
   else if (sense.domains.length === 0) return "reviewEntries.error.domain";
   else return undefined;
@@ -132,12 +145,17 @@ function cleanSenses(
 }
 
 // Clean the vernacular field of a word:
+// * If all senses are deleted, reject
 // * If there's no vernacular field, add in the vernacular of old field
 // * If neither the word nor oldWord has a vernacular, reject
 function cleanWord(
   word: ReviewEntriesWord,
   oldWord: ReviewEntriesWord
 ): ReviewEntriesWord | string {
+  const activeSenseIndex: number = word.senses.findIndex(
+    (s: ReviewEntriesSense) => !s.deleted
+  );
+  if (activeSenseIndex === -1) return "reviewEntries.error.senses";
   let vernacular =
     word.vernacular.length !== 0 ? word.vernacular : oldWord.vernacular;
   if (vernacular.length !== 0) {
@@ -205,12 +223,13 @@ export function updateFrontierWord(
             ...editSense,
             semanticDomains: newSense.domains,
           };
-      } else
-        return ({
-          ...editSense,
-          accessibility: State.Deleted,
-        } as any) as Sense;
+      } else return ({ accessibility: State.Deleted } as any) as Sense;
     });
+    /* Deleted senses must be filtered out after the above map
+       because the mapping makes use of original sense indexing */
+    editWord.senses = editWord.senses.filter(
+      (sense) => sense.accessibility !== State.Deleted
+    );
 
     dispatch(
       updateWord(
@@ -233,12 +252,13 @@ function refreshWord(
   ) => {
     const newWordId = await action(oldWordId);
     const newWord = await backend.getWord(newWordId);
+
     const analysisLang = getState().currentProject.analysisWritingSystems[0]
       ? getState().currentProject.analysisWritingSystems[0]
       : { name: "English", bcp47: "en", font: "" };
 
     dispatch(
-      updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang.name))
+      updateWord(oldWordId, newWordId, parseWord(newWord, analysisLang.bcp47))
     );
   };
 }
