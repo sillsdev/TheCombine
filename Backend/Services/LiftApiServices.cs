@@ -141,10 +141,12 @@ namespace BackendFramework.Services
             // Write out every word with all of its information
             var allWords = _repo.GetAllWords(projectId).Result;
             var frontier = _repo.GetFrontier(projectId).Result;
-            var activeWords = frontier.Where(x => x.Senses.First().Accessibility == State.Active).ToList();
+            var activeWords = frontier.Where(x => x.Senses.Any(s => s.Accessibility == State.Active)).ToList();
 
-            // TODO: this is wrong, deleted is a subset of active, are not exclusive
-            var deletedWords = allWords.Where(x => activeWords.Contains(x)).ToList();
+            // All words in the frontier with any senses are considered current. The Combine does not import senseless entries
+            // and the interface is supposed to prevent creating them. So the the words found in allWords, but not in activeWords
+            // are exported as 'deleted'.
+            var deletedWords = allWords.Where(x => !activeWords.Contains(x)).ToList();
             foreach (var wordEntry in activeWords)
             {
                 var entry = new LexEntry();
@@ -254,13 +256,23 @@ namespace BackendFramework.Services
         /// <summary> Adds each sense of a word to be written out to lift </summary>
         private void AddSenses(LexEntry entry, Word wordEntry)
         {
-            for (var i = 0; i < wordEntry.Senses.Count; i++)
+            var activeSenses = wordEntry.Senses.Where(s => s.Accessibility == State.Active).ToList();
+            foreach (var currentSense in activeSenses)
             {
                 // Merge in senses
                 var dict = new Dictionary<string, string>();
-                foreach (var gloss in wordEntry.Senses[i].Glosses)
+                foreach (var gloss in currentSense.Glosses)
                 {
-                    dict.Add(gloss.Language, gloss.Def);
+                    if (dict.ContainsKey(gloss.Language))
+                    {
+                        // This is an unexpected situation but rather than crashing or losing data we
+                        // will just append extra definitions for the language with a semicolon separator
+                        dict[gloss.Language] = $"{dict[gloss.Language]};{gloss.Def}";
+                    }
+                    else
+                    {
+                        dict.Add(gloss.Language, gloss.Def);
+                    }
                 }
 
                 var lexSense = new LexSense();
@@ -268,12 +280,12 @@ namespace BackendFramework.Services
                 entry.Senses.Add(lexSense);
 
                 // Merge in semantic domains
-                foreach (var semdom in wordEntry.Senses[i].SemanticDomains)
+                foreach (var semDom in currentSense.SemanticDomains)
                 {
                     var orc = new OptionRefCollection();
-                    orc.Add(semdom.Id + " " + semdom.Name);
+                    orc.Add(semDom.Id + " " + semDom.Name);
 
-                    entry.Senses[i].Properties.Add(
+                    lexSense.Properties.Add(
                         new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
                 }
             }

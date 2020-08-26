@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -179,7 +180,9 @@ namespace Backend.Tests
             _projServ.Create(proj);
 
             var word = RandomWord(proj.Id);
+            var secondWord = RandomWord(proj.Id);
             var createdWord = _wordrepo.Create(word).Result;
+            _wordrepo.Create(secondWord);
 
             word.Id = "";
             word.Vernacular = "updated";
@@ -192,8 +195,10 @@ namespace Backend.Tests
             var exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport",
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);
+            // Make sure we exported 2 live and one dead entry
+            Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
             // There is only one deleted word
-            Assert.AreEqual(text.IndexOf("dateDeleted"), text.LastIndexOf("dateDeleted"));
+            Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
         }
 
         [Test]
@@ -256,6 +261,7 @@ namespace Backend.Tests
                     fstream.Close();
 
                     var allWords = _wordrepo.GetAllWords(proj.Id);
+                    Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
                     // Export
                     var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
                     var exportedDirectory = Path.GetDirectoryName(exportedFilePath);
