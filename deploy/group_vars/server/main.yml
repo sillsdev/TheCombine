@@ -9,6 +9,11 @@ config_base_url: "https://thecombine.languagetechnology.org"
 config_captcha_required: "true"
 config_captcha_sitekey: "6LemQNgUAAAAAAwJ6dps-Uncg5xsNuDdMxehfW8d"
 
+# Server is set to UTC
+install_backups: "yes"
+backup_hour:    "1,7"
+backup_minute:  "15"
+
 #apache web server config items
 apache_listen_address: "*"
 
