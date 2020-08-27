@@ -133,6 +133,8 @@ export class DataEntryTable extends React.Component<
     }
   }
 
+  // Use this before updating any word on the backend,
+  // to make sure that word doesn't get edited by two different functions
   defunctWord(wordId: string) {
     const defunctWordIds = this.state.defunctWordIds;
     if (!defunctWordIds.includes(wordId)) {
@@ -458,8 +460,6 @@ export class DataEntryTable extends React.Component<
     this.setState({ recentlyAddedWords });
   }
 
-  // Use this before updating any word on the backend,
-  // to make sure that word doesn't get edited by two different functions
   async deleteWord(word: Word) {
     this.defunctWord(word.id);
     await Backend.deleteFrontierWord(word.id).then(

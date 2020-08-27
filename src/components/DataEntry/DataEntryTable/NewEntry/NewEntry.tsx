@@ -101,7 +101,7 @@ export default class NewEntry extends React.Component<
         (word: Word) =>
           word.vernacular === newValue &&
           !this.props.defunctWordIds.includes(word.id)
-        // Weed out any words that are being edited by another entry
+        // Weed out any words that are already being edited
       );
       isDupVern = dupVernWords.length > 0;
     }
