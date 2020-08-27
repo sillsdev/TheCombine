@@ -7,9 +7,8 @@ import configureMockStore from "redux-mock-store";
 import { randomProject } from "../../../../types/project";
 import { defaultState } from "../../../App/DefaultState";
 import ExportProjectButton from "../../../ProjectSettings/ProjectExport/ExportProjectButton";
-import ArchiveProjectButton from "../ArchiveProjectButton";
+import ProjectButtonWithConfirmation from "../ProjectButtonWithConfirmation";
 import ProjectManagement from "../ProjectManagement";
-import RestoreProjectButton from "../RestoreProjectButton";
 
 const mockProjects = [randomProject(), randomProject(), randomProject()];
 
@@ -47,10 +46,9 @@ describe("Testing ProjectManagement component", () => {
   });
 
   it("Has the right number of archive/restore buttons", () => {
-    let archiveButtons = testRenderer.root.findAllByType(ArchiveProjectButton);
-    let restoreButtons = testRenderer.root.findAllByType(RestoreProjectButton);
-    expect(archiveButtons.length + restoreButtons.length).toEqual(
-      mockProjects.length
+    let projectButtons = testRenderer.root.findAllByType(
+      ProjectButtonWithConfirmation
     );
+    expect(projectButtons.length).toEqual(mockProjects.length);
   });
 });
