@@ -271,9 +271,9 @@ export class DataEntryTable extends React.Component<
     this.defunctWord(oldWordId);
     await Backend.uploadAudio(oldWordId, audioFile).then(
       async (newWordId: string) => {
-        await Backend.getWord(newWordId).then((newWord: Word) => {
+        await Backend.getWord(newWordId).then(async (newWord: Word) => {
           this.replaceInDisplay(oldWordId, newWord);
-          this.updateExisting();
+          await this.updateExisting();
         });
       }
     );
@@ -283,9 +283,9 @@ export class DataEntryTable extends React.Component<
     this.defunctWord(oldWordId);
     await Backend.deleteAudio(oldWordId, fileName).then(
       async (newWordId: string) => {
-        await Backend.getWord(newWordId).then((newWord: Word) => {
+        await Backend.getWord(newWordId).then(async (newWord: Word) => {
           this.replaceInDisplay(oldWordId, newWord);
-          this.updateExisting();
+          await this.updateExisting();
         });
       }
     );
