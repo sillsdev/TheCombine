@@ -116,6 +116,10 @@ export class DataEntryTable extends React.Component<
     await this.getProjectSettings();
   }
 
+  componentDidUpdate() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   async getProjectSettings() {
     const proj: Project = await Backend.getProject(getProjectId());
     let analysisLang: string = "en";
@@ -503,71 +507,7 @@ export class DataEntryTable extends React.Component<
               <Translate id="addWords.glosses" />
             </Typography>
           </Grid>
-
-          {this.state.recentlyAddedWords.map((wordAccess, index) => (
-            <Grid item xs={12} key={index}>
-              {this.state.defunctWordIds.includes(
-                wordAccess.word.id
-              ) ? null /*Word not shows because it's being edited*/ : (
-                <RecentEntry
-                  key={wordAccess.word.id + "_" + wordAccess.senseIndex}
-                  entry={wordAccess.word}
-                  senseIndex={wordAccess.senseIndex}
-                  updateGloss={(newGloss: string) =>
-                    this.updateRecentEntryGloss(index, newGloss)
-                  }
-                  updateVern={(newVernacular: string, targetWordId?: string) =>
-                    this.updateRecentEntryVern(
-                      index,
-                      newVernacular,
-                      targetWordId
-                    )
-                  }
-                  removeEntry={() => this.undoRecentEntry(index)}
-                  addAudioToWord={(wordId: string, audioFile: File) =>
-                    this.addAudioToRecentWord(wordId, audioFile)
-                  }
-                  deleteAudioFromWord={(wordId: string, fileName: string) =>
-                    this.deleteAudioFromRecentWord(wordId, fileName)
-                  }
-                  recorder={this.recorder}
-                  focusNewEntry={() => {
-                    if (this.refNewEntry.current) {
-                      this.refNewEntry.current.focusVernInput();
-                    }
-                  }}
-                  analysisLang={this.state.analysisLang}
-                />
-              )}
-            </Grid>
-          ))}
-
-          <Grid item xs={12}>
-            <NewEntry
-              ref={this.refNewEntry}
-              allVerns={this.state.existingVerns}
-              allWords={this.state.existingWords}
-              defunctWordIds={this.state.defunctWordIds}
-              updateWordWithNewGloss={(
-                wordId: string,
-                gloss: string,
-                audioFileURLs: string[]
-              ) => this.updateWordWithNewGloss(wordId, gloss, audioFileURLs)}
-              addNewWord={(word: Word, audioFileURLs: string[]) =>
-                this.addNewWord(word, audioFileURLs)
-              }
-              semanticDomain={this.props.semanticDomain}
-              setIsReadyState={(isReady: boolean) =>
-                this.setState({ isReady: isReady })
-              }
-              recorder={this.recorder}
-              analysisLang={this.state.analysisLang}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid container justify="space-between" spacing={3}>
-          <Grid item>
+          <Grid item xs={1}>
             {this.props.isSmallScreen ? (
               <Button
                 style={{ marginTop: theme.spacing(2) }}
@@ -577,7 +517,7 @@ export class DataEntryTable extends React.Component<
               </Button>
             ) : null}
           </Grid>
-          <Grid item>
+          <Grid item xs={3}>
             <Button
               id="complete"
               type="submit"
@@ -610,6 +550,72 @@ export class DataEntryTable extends React.Component<
               <Translate id="buttons.complete" />
             </Button>
           </Grid>
+
+          <Grid item xs={12}>
+            <NewEntry
+              ref={this.refNewEntry}
+              allVerns={this.state.existingVerns}
+              allWords={this.state.existingWords}
+              defunctWordIds={this.state.defunctWordIds}
+              updateWordWithNewGloss={(
+                wordId: string,
+                gloss: string,
+                audioFileURLs: string[]
+              ) => this.updateWordWithNewGloss(wordId, gloss, audioFileURLs)}
+              addNewWord={(word: Word, audioFileURLs: string[]) =>
+                this.addNewWord(word, audioFileURLs)
+              }
+              semanticDomain={this.props.semanticDomain}
+              setIsReadyState={(isReady: boolean) =>
+                this.setState({ isReady: isReady })
+              }
+              recorder={this.recorder}
+              analysisLang={this.state.analysisLang}
+            />
+          </Grid>
+
+          {this.state.recentlyAddedWords
+            .map((wordAccess, index) => (
+              <Grid item xs={12} key={index}>
+                {this.state.defunctWordIds.includes(
+                  wordAccess.word.id
+                ) ? null /*Word not shows because it's being edited*/ : (
+                  <RecentEntry
+                    key={wordAccess.word.id + "_" + wordAccess.senseIndex}
+                    entry={wordAccess.word}
+                    senseIndex={wordAccess.senseIndex}
+                    updateGloss={(newGloss: string) =>
+                      this.updateRecentEntryGloss(index, newGloss)
+                    }
+                    updateVern={(
+                      newVernacular: string,
+                      targetWordId?: string
+                    ) =>
+                      this.updateRecentEntryVern(
+                        index,
+                        newVernacular,
+                        targetWordId
+                      )
+                    }
+                    removeEntry={() => this.undoRecentEntry(index)}
+                    addAudioToWord={(wordId: string, audioFile: File) =>
+                      this.addAudioToRecentWord(wordId, audioFile)
+                    }
+                    deleteAudioFromWord={(wordId: string, fileName: string) =>
+                      this.deleteAudioFromRecentWord(wordId, fileName)
+                    }
+                    recorder={this.recorder}
+                    focusNewEntry={() => {
+                      if (this.refNewEntry.current) {
+                        this.refNewEntry.current.focusVernInput();
+                      }
+                    }}
+                    analysisLang={this.state.analysisLang}
+                  />
+                )}
+              </Grid>
+            ))
+            .reverse()}
         </Grid>
       </form>
     );
