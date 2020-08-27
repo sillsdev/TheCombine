@@ -12,6 +12,7 @@ import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 interface NewEntryProps {
   allVerns: string[];
   allWords: Word[];
+  defunctWordIds: string[];
   updateWordWithNewGloss: (
     wordId: string,
     gloss: string,
@@ -97,7 +98,10 @@ export default class NewEntry extends React.Component<
     let isDupVern: boolean = false;
     if (newValue) {
       dupVernWords = this.props.allWords.filter(
-        (word: Word) => word.vernacular === newValue
+        (word: Word) =>
+          word.vernacular === newValue &&
+          !this.props.defunctWordIds.includes(word.id)
+        // Weed out any words that are being edited by another entry
       );
       isDupVern = dupVernWords.length > 0;
     }
