@@ -337,8 +337,7 @@ describe("Test ReviewEntriesActions", () => {
   });
 
   it("Sets the analysis language", async () => {
-    const result = await mockStore.dispatch<any>(setAnalysisLang());
-    var values = mockStore.getActions()[0];
+    await mockStore.dispatch<any>(setAnalysisLang());
 
     expect(mockStore.getActions()[0].analysisLanguage).toBe("fr");
     expect(mockStore.getActions()[0].type).toBe("SET_ANALYSIS_LANGUAGE");
