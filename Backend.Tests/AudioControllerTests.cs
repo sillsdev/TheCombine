@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using BackendFramework.Controllers;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
@@ -53,7 +52,7 @@ namespace Backend.Tests
                 Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(),
                 "Assets", "sound.mp3");
 
-            // Open the file to read to controller.
+            // Open the file to read to controller.        private static Word RandomWord()
             var fstream = File.OpenRead(filePath);
 
             // Generate parameters for controller call.
