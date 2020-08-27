@@ -32,9 +32,6 @@ namespace Backend.Tests
             _permissionService = new PermissionServiceMock();
             _wordController = new WordController(_wordrepo, _wordService, _projectService, _permissionService);
             _audioController = new AudioController(_wordrepo, _wordService, _permissionService);
-
-            Directory.Delete(FileUtilities.GenerateFilePath(
-                FileUtilities.FileType.Dir, true, "", ""), true);
         }
 
         private static string RandomString(int length = 16)
