@@ -9,6 +9,10 @@ config_base_url: "https://thecombine.languagetechnology.org"
 config_captcha_required: "false"
 config_captcha_sitekey: ""
 
+# NUC is set to EST/EDT (for now)
+backup_hour:    1
+backup_minute:  0
+
 #wifi access point variables
 ap_ssid: "{{ ansible_hostname }}_ap"
 ap_gateway: "10.10.10.1"
