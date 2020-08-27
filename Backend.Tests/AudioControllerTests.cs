@@ -52,7 +52,7 @@ namespace Backend.Tests
                 Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(),
                 "Assets", "sound.mp3");
 
-            // Open the file to read to controller.        private static Word RandomWord()
+            // Open the file to read to controller.
             var fstream = File.OpenRead(filePath);
 
             // Generate parameters for controller call.
