@@ -336,9 +336,12 @@ describe("Test ReviewEntriesActions", () => {
     ).toBeTruthy();
   });
 
-  // Tests setting the analysis language
   it("Sets the analysis language", async () => {
-    await mockStore.dispatch<any>(setAnalysisLang());
+    const result = await mockStore.dispatch<any>(setAnalysisLang());
+    var values = mockStore.getActions()[0];
+
+    expect(mockStore.getActions()[0].analysisLanguage).toBe("fr");
+    expect(mockStore.getActions()[0].type).toBe("SET_ANALYSIS_LANGUAGE");
   });
 });
 
@@ -358,10 +361,6 @@ function makeDispatch(
   return mockStore.dispatch<any>(
     updateFrontierWord(newWord, oldWord, language)
   );
-}
-
-function setAnalysisDispatch() {
-  return mockStore.dispatch<any>(setAnalysisLang());
 }
 
 function checkResultantData(newFrontierWord: Word) {

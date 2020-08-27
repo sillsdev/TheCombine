@@ -54,7 +54,7 @@ export type ReviewEntriesAction =
   | ReviewUpdateRecordingStatus
   | ReviewClearReviewEntriesState;
 
-function setAnalysisLanguage(
+export function setAnalysisLanguage(
   analysisLanguage: string
 ): ReviewSetAnalysisLanguage {
   return {
