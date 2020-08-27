@@ -1,22 +1,17 @@
 import {
   Goal,
-  Tools,
   GoalOption,
   GoalType,
   generateGuid,
+  Tools,
 } from "../../types/goals";
 import { User } from "../../types/user";
 import { Word } from "../../types/word";
 
-//interface for component state
-export interface MergeDupProps {
-  goal?: Goal;
-}
-
+//interfaces for component state
 export interface MergeDupData {
   plannedWords: Word[][];
 }
-
 export interface MergeStepData {
   words: Word[];
 }
