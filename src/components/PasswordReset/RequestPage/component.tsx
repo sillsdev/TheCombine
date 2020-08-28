@@ -2,6 +2,7 @@ import * as React from "react";
 import { Translate, LocalizeContextProps } from "react-localize-redux";
 import { Typography, Card, Button, Grid, TextField } from "@material-ui/core";
 import { isEmailTaken } from "../../../backend";
+import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 
 export interface ResetRequestProps {}
 
@@ -12,6 +13,8 @@ export interface ResetRequestDispatchProps {
 export interface ResetRequestState {
   email: string;
   emailExists: boolean;
+  loading: boolean;
+  done: boolean;
 }
 
 export default class ResetRequest extends React.Component<
@@ -22,18 +25,34 @@ export default class ResetRequest extends React.Component<
     props: ResetRequestProps & ResetRequestDispatchProps & LocalizeContextProps
   ) {
     super(props);
-    this.state = { emailExists: true, email: "" };
+    this.state = { emailExists: true, email: "", loading: false, done: false };
   }
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
-    isEmailTaken(this.state.email).then((emailExists: boolean) => {
-      if (emailExists) {
-        this.props.passwordResetRequest(this.state.email);
-      } else {
-        this.setState({ emailExists });
-      }
+    this.setState({
+      loading: true,
     });
+    isEmailTaken(this.state.email)
+      .then((emailExists: boolean) => {
+        if (emailExists) {
+          this.props.passwordResetRequest(this.state.email);
+        }
+        return emailExists;
+      })
+      .then((emailExists: boolean) => {
+        if (!emailExists) {
+          this.setState({
+            emailExists: false,
+            loading: false,
+          });
+        } else {
+          this.setState({
+            done: true,
+            loading: false,
+          });
+        }
+      });
   };
 
   async setEmail(email: string) {
@@ -76,14 +95,16 @@ export default class ResetRequest extends React.Component<
                 />
               </Grid>
               <Grid item>
-                <Button
+                <LoadingDoneButton
                   variant="contained"
                   color="primary"
+                  onClick={() => this.onSubmit}
                   disabled={!this.state.email}
-                  onClick={this.onSubmit}
+                  loading={this.state.loading}
+                  done={this.state.done}
                 >
                   <Translate id="passwordReset.submit" />
-                </Button>
+                </LoadingDoneButton>
               </Grid>
             </form>
           </Card>
