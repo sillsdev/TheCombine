@@ -23,6 +23,7 @@ interface ReviewEntriesProps {
 
   // Dispatch changes
   clearState: () => void;
+  setAnalysisLanguage: () => void;
   updateAllWords: (words: ReviewEntriesWord[]) => void;
   updateFrontierWord: (
     newData: ReviewEntriesWord,
@@ -55,6 +56,7 @@ export class ReviewEntriesComponent extends React.Component<
     };
     this.recorder = new Recorder();
     this.props.clearState();
+    this.props.setAnalysisLanguage();
     getFrontierWords().then((frontier: Word[]) => {
       this.updateLocalWords(frontier);
       this.setState({ loaded: true });
