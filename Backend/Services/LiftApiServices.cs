@@ -277,6 +277,7 @@ namespace BackendFramework.Services
 
                 var lexSense = new LexSense();
                 lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
+                lexSense.Id = currentSense.Guid.ToString();
                 entry.Senses.Add(lexSense);
 
                 // Merge in semantic domains
