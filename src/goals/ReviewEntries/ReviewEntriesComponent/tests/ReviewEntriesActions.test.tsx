@@ -17,7 +17,6 @@ import {
 } from "../../../../types/word";
 import { defaultProject as mockProject } from "../../../../types/project";
 import { updateWord, getWord, getProject } from "../../../../backend";
-import { getProjectId } from "../../../../backend/localStorage";
 
 jest.mock("../../../../backend", () => ({
   updateWord: jest.fn(),
@@ -32,14 +31,12 @@ jest.mock("../../../../backend/localStorage", () => ({
 const mockUpdateWord = (updateWord as unknown) as jest.Mock<any>;
 const mockGetWord = (getWord as unknown) as jest.Mock<any>;
 const mockGetProject = (getProject as unknown) as jest.Mock<any>;
-const mockGetProjectId = (getProjectId as unknown) as jest.Mock<any>;
 
 mockUpdateWord.mockImplementation((oldFrontierWord) => Promise.resolve(""));
 mockGetWord.mockImplementation(() => Promise.resolve(oldFrontierWord));
 mockGetProject.mockImplementation((id) =>
   Promise.resolve({ ...mockProject, analysisWritingSystems: [{ bcp47: "fr" }] })
 );
-mockGetProjectId.mockImplementation(() => Promise.resolve(""));
 
 // Mocks
 const mockStore = configureMockStore([thunk])();
