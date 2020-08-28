@@ -22,12 +22,16 @@ function SenseDialog(
   props: {
     selectedWord: Word;
     open: boolean;
-    handleClose: (senseIndex: number) => void;
+    handleClose: (senseIndex?: number) => void;
     analysisLang: string;
   } & LocalizeContextProps
 ) {
   return (
-    <Dialog open={props.open} disableBackdropClick disableEscapeKeyDown>
+    <Dialog
+      open={props.open}
+      disableBackdropClick
+      onClose={() => props.handleClose()}
+    >
       <DialogContent>
         <SenseList
           selectedWord={props.selectedWord}
