@@ -153,7 +153,11 @@ namespace BackendFramework.Services
                 // Get child word
                 var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
 
-                addParent.Audio.AddRange(currentChildWord.Audio);
+                // Copy over audio if child doesn't have own surviving entry
+                if (addParent.Id == currentChildWord.Id || !newChildWordState.SenseStates.Exists(x => x == State.Separate))
+                {
+                    addParent.Audio.AddRange(currentChildWord.Audio);
+                }
 
                 // Remove child from frontier
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
