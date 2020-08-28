@@ -54,7 +54,7 @@ namespace BackendFramework.Controllers
         /// <remarks>This method should be removed once all legacy data has been converted</remarks>
         /// <param name="projectId"></param>
         /// <returns></returns>
-		private async Task<object> GetAndRepairFrontier(string projectId)
+        private async Task<object> GetAndRepairFrontier(string projectId)
         {
             var frontier = await _repo.GetFrontier(projectId);
             if (frontier.Count > 0 && frontier[0].Guid != null && frontier[0].Guid != Guid.Empty)
