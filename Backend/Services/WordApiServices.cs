@@ -145,12 +145,16 @@ namespace BackendFramework.Services
 
             var addParent = mergeWords.Parent.Clone();
             addParent.History = new List<string>();
+            addParent.Audio = new List<string>();
 
             // Generate new child words form child word field
             foreach (var newChildWordState in mergeWords.ChildrenWords)
             {
                 // Get child word
                 var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
+
+                addParent.Audio.AddRange(currentChildWord.Audio);
+
                 // Remove child from frontier
                 await _repo.DeleteFrontier(projectId, currentChildWord.Id);
 
