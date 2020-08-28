@@ -181,13 +181,17 @@ namespace Backend.Tests
 
             var word = RandomWord(proj.Id);
             var secondWord = RandomWord(proj.Id);
-            var createdWord = _wordrepo.Create(word).Result;
-            _wordrepo.Create(secondWord);
+            var wordToDelete = RandomWord(proj.Id);
+
+            var wordToUpdate = _wordrepo.Create(word).Result;
+            wordToDelete = _wordrepo.Create(wordToDelete).Result;
+            var untouchedWord = _wordrepo.Create(secondWord).Result;
 
             word.Id = "";
             word.Vernacular = "updated";
 
-            _wordService.Update(proj.Id, createdWord.Id, word);
+            _wordService.Update(proj.Id, wordToUpdate.Id, word);
+            _wordService.DeleteFrontierWord(proj.Id, wordToDelete.Id);
 
             var result = _liftController.ExportLiftFile(proj.Id).Result;
 
@@ -195,6 +199,7 @@ namespace Backend.Tests
             var exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport",
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);
+            //TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are kept vs deleted
             // Make sure we exported 2 live and one dead entry
             Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
             // There is only one deleted word
