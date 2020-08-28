@@ -33,7 +33,7 @@ interface ReviewEntriesProps {
 
 interface ReviewEntriesState {
   editingField: boolean;
-  errorMsg: string | undefined;
+  errorMsg?: string;
   loaded: boolean;
 }
 
@@ -51,7 +51,6 @@ export class ReviewEntriesComponent extends React.Component<
 
     this.state = {
       editingField: false,
-      errorMsg: undefined,
       loaded: false,
     };
     this.recorder = new Recorder();
