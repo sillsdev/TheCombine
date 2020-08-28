@@ -154,7 +154,7 @@ namespace BackendFramework.Services
                 var currentChildWord = await _repo.GetWord(projectId, newChildWordState.SrcWordId);
 
                 // Copy over audio if child doesn't have own surviving entry
-                if (addParent.Id == currentChildWord.Id || !newChildWordState.SenseStates.Exists(x => x == State.Separate))
+                if (!newChildWordState.SenseStates.Exists(x => x == State.Separate))
                 {
                     addParent.Audio.AddRange(currentChildWord.Audio);
                 }
