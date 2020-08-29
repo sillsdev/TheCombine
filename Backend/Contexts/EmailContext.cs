@@ -15,12 +15,12 @@ namespace BackendFramework.Contexts
 
         public EmailContext(IOptions<Settings> options)
         {
-            this.SmtpServer = options.Value.SmtpServer;
-            this.SmtpPort = options.Value.SmtpPort;
-            this.SmtpUsername = options.Value.SmtpUsername;
-            this.SmtpPassword = options.Value.SmtpPassword;
-            this.SmtpAddress = options.Value.SmtpAddress;
-            this.SmtpFrom = options.Value.SmtpFrom;
+            SmtpServer = options.Value.SmtpServer;
+            SmtpPort = options.Value.SmtpPort;
+            SmtpUsername = options.Value.SmtpUsername;
+            SmtpPassword = options.Value.SmtpPassword;
+            SmtpAddress = options.Value.SmtpAddress;
+            SmtpFrom = options.Value.SmtpFrom;
         }
     }
 }

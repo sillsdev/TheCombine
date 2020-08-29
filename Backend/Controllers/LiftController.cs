@@ -72,11 +72,11 @@ namespace BackendFramework.Controllers
             fileUpload.FilePath = GenerateFilePath(
                 FileType.Zip,
                 false,
-                "Compressed-Upload-" + string.Format("{0:yyyy-MM-dd_hh-mm-ss-fff}", DateTime.Now),
+                "Compressed-Upload-" + $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}",
                 Path.Combine(projectId, "Import"));
 
             // Copy file data to a new local file
-            using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
+            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
             }
@@ -98,36 +98,38 @@ namespace BackendFramework.Controllers
             var directoriesExtracted = Directory.GetDirectories(extractDir);
             var extractedDirPath = "";
 
-            // If there was one directory, we're good
-            if (directoriesExtracted.Length == 1)
+            switch (directoriesExtracted.Length)
             {
-                extractedDirPath = directoriesExtracted.FirstOrDefault();
-            }
-            // If there were two, and there was a __MACOSX directory, ignore it
-            else if (directoriesExtracted.Length == 2)
-            {
-                var numDirs = 0;
-                foreach (var dir in directoriesExtracted)
-                {
-                    if (dir.EndsWith("__MACOSX"))
+                // If there was one directory, we're good
+                case 1:
+                    extractedDirPath = directoriesExtracted.FirstOrDefault();
+                    break;
+                // If there were two, and there was a __MACOSX directory, ignore it
+                case 2:
                     {
-                        Directory.Delete(dir, true);
+                        var numDirs = 0;
+                        foreach (var dir in directoriesExtracted)
+                        {
+                            if (dir.EndsWith("__MACOSX"))
+                            {
+                                Directory.Delete(dir, true);
+                            }
+                            else // This directory probably matters
+                            {
+                                extractedDirPath = dir;
+                                numDirs++;
+                            }
+                        }
+                        // Both directories seemed important
+                        if (numDirs == 2)
+                        {
+                            return new BadRequestObjectResult("Your zip file should have one directory");
+                        }
+                        break;
                     }
-                    else // This directory probably matters
-                    {
-                        extractedDirPath = dir;
-                        numDirs++;
-                    }
-                }
-                // Both directories seemed important
-                if (numDirs == 2)
-                {
-                    return new BadRequestObjectResult("Your zip file should have one directory");
-                }
-            }
-            else // There were 0 or more than 2 directories
-            {
-                return new BadRequestObjectResult("Your zip file structure has the wrong number of directories");
+                // There were 0 or more than 2 directories
+                default:
+                    return new BadRequestObjectResult("Your zip file structure has the wrong number of directories");
             }
 
             // Get the directory and rename to be easier to reference elsewhere if needed
@@ -159,7 +161,7 @@ namespace BackendFramework.Controllers
                 // Import words from lift file
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
 
-                // Add character set to project from ldml file 
+                // Add character set to project from ldml file
                 var proj = _projectService.GetProject(projectId).Result;
                 _liftService.LdmlImport(
                     Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem.Bcp47);
@@ -205,7 +207,7 @@ namespace BackendFramework.Controllers
             // Export the data to a zip directory
             var exportedFilepath = CreateLiftExport(projectId);
 
-            var file = System.IO.File.ReadAllBytes(exportedFilepath);
+            var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
             var encodedFile = Convert.ToBase64String(file);
             return new OkObjectResult(encodedFile);
         }

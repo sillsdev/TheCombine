@@ -73,7 +73,7 @@ namespace BackendFramework.Controllers
                 FileUtilities.FileType.Avatar, false, userId, "Avatars");
 
             // Copy file data to a new local file
-            using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
+            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
             }

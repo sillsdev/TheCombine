@@ -177,7 +177,7 @@ namespace BackendFramework.Services
 
                 // Add child word to the database
                 currentChildWord.Id = "";
-                var newChildWord = await _repo.Add(currentChildWord);
+                await _repo.Add(currentChildWord);
 
                 // Handle different states
                 var separateWord = currentChildWord.Clone();

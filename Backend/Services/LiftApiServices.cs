@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -93,7 +92,7 @@ namespace BackendFramework.Services
             }
         }
 
-        private string GetProjectDir(string projectId)
+        private static string GetProjectDir(string projectId)
         {
             // Generate path to home on Linux or Windows
             var pathToHome = FileUtilities.GeneratePathToHome();
@@ -254,7 +253,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds each sense of a word to be written out to lift </summary>
-        private void AddSenses(LexEntry entry, Word wordEntry)
+        private static void AddSenses(LexEntry entry, Word wordEntry)
         {
             var activeSenses = wordEntry.Senses.Where(s => s.Accessibility == State.Active).ToList();
             foreach (var currentSense in activeSenses)
@@ -353,7 +352,8 @@ namespace BackendFramework.Services
             }
         }
 
-        private void WriteRangeElement(XmlWriter liftRangesWriter, string id, string guid, string name, string description)
+        private static void WriteRangeElement(
+            XmlWriter liftRangesWriter, string id, string guid, string name, string description)
         {
             liftRangesWriter.WriteStartElement("range-element");
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
@@ -520,7 +520,7 @@ namespace BackendFramework.Services
         /// <summary> Adds each citation form to the entry for the vernacular </summary>
         public void MergeInCitationForm(LiftEntry entry, LiftMultiText contents)
         {
-            foreach ((var key, var value) in contents)
+            foreach (var (key, value) in contents)
             {
                 entry.CitationForm.Add(key, value.Text);
             }
@@ -539,7 +539,7 @@ namespace BackendFramework.Services
         /// <summary> Adds senses to the entry </summary>
         public void MergeInGloss(LiftSense sense, LiftMultiText multiText)
         {
-            foreach ((var key, var value) in multiText)
+            foreach (var (key, value) in multiText)
             {
                 sense.Gloss.Add(key, value.Text);
             }
@@ -548,7 +548,7 @@ namespace BackendFramework.Services
         /// <summary> Adds each lexeme form to the entry for the vernacular </summary>
         public void MergeInLexemeForm(LiftEntry entry, LiftMultiText contents)
         {
-            foreach ((var key, var value) in contents)
+            foreach (var (key, value) in contents)
             {
                 entry.LexicalForm.Add(key, value);
             }
@@ -591,7 +591,7 @@ namespace BackendFramework.Services
         // They may be useful later if we need to add more complex attributes to words in The Combine
         public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
         {
-            return new LiftExample() { Content = new LiftMultiText() };
+            return new LiftExample { Content = new LiftMultiText() };
         }
 
         public LiftObject GetOrMakeParentReversal(LiftObject parent, LiftMultiText contents, string type)
@@ -603,17 +603,24 @@ namespace BackendFramework.Services
         {
             return new LiftSense(info, new Guid(), sense) { Gloss = new LiftMultiText() };
         }
+
         public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form,
             LiftMultiText gloss, string rawXml)
-        { return new LiftEtymology(); }
+        {
+            return new LiftEtymology();
+        }
+
         public LiftObject MergeInReversal(LiftSense sense, LiftObject parent, LiftMultiText contents, string type,
             string rawXml)
-        { return new LiftReversal(); }
+        {
+            return new LiftReversal();
+        }
 
         public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml)
         {
             return new LiftVariant();
         }
+
         public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
         public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText) { }
         public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }

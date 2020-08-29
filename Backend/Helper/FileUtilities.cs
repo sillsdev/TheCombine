@@ -15,9 +15,9 @@ namespace BackendFramework.Helper
             Dir
         }
 
-        public static bool SanitizeId(String id)
+        public static bool SanitizeId(string id)
         {
-            if (id.All((x => char.IsLetterOrDigit(x) | x == '-')))
+            if (id.All(x => char.IsLetterOrDigit(x) | x == '-'))
             {
                 return true;
             }

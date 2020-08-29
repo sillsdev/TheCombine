@@ -110,7 +110,7 @@ namespace BackendFramework.Services
             project.InviteTokens.Add(token);
             await Update(project.Id, project);
 
-            string linkWithIdentifier = "/invite/" + project.Id + "/" + token.Token;
+            var linkWithIdentifier = "/invite/" + project.Id + "/" + token.Token;
             return linkWithIdentifier;
         }
 

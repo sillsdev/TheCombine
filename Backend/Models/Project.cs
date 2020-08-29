@@ -160,7 +160,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            if (obj == null || !GetType().Equals(obj.GetType()))
             {
                 return false;
             }
@@ -279,7 +279,7 @@ namespace BackendFramework.Models
         }
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            if (obj == null || !GetType().Equals(obj.GetType()))
             {
                 return false;
             }
@@ -302,7 +302,7 @@ namespace BackendFramework.Models
             return HashCode.Combine(Name, Bcp47, Font);
         }
 
-        override public String ToString()
+        public override string ToString()
         {
             return String.Format("<name: {0}, bcp47: {1}, font: {2}>", Name, Bcp47, Font);
         }
@@ -326,7 +326,7 @@ namespace BackendFramework.Models
 
     public class ProjectWithUser : Project
     {
-        public User __UpdatedUser;
+        public User UpdatedUser;
 
         public ProjectWithUser() { }
 
