@@ -122,17 +122,12 @@ namespace BackendFramework.Services
             message.Subject = "TheCombine Project Invite";
             message.Body = new TextPart("plain")
             {
-                Text = string.Format("You have been invited to a TheCombine project called {0}. \n"
-                        + "To become a member of this project, go to {1}{2}. \n\n"
-                        + "Message from Project Admin: {3} \n\n"
-                        + "If you did not expect an invite please ignore this email.",
-                         project.Name, domain, link, emailMessage)
+                Text = $"You have been invited to a TheCombine project called {project.Name}. \n" +
+                       $"To become a member of this project, go to {domain}{link}. \n\n" +
+                       $"Message from Project Admin: {emailMessage} \n\n" +
+                       "If you did not expect an invite please ignore this email."
             };
-            if (await _emailService.SendEmail(message))
-            {
-                return true;
-            }
-            return false;
+            return await _emailService.SendEmail(message);
         }
 
         public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite)

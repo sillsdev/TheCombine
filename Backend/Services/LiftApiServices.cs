@@ -30,7 +30,7 @@ namespace BackendFramework.Services
         /// <summary> Overrides empty function from the base SIL LiftWriter to properly add pronunciation </summary>
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
-            if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
+            if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Any())
             {
                 foreach (var phonetic in entry.Pronunciations)
                 {
@@ -239,7 +239,7 @@ namespace BackendFramework.Services
 
             // Compress everything
             var destinationFileName = Path.Combine(exportDir,
-                Path.Combine($"LiftExportCompressed-{proj.Id}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}", DateTime.Now)}.zip"));
+                Path.Combine($"LiftExportCompressed-{proj.Id}_{$"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}"}.zip"));
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
 
             return destinationFileName;
@@ -434,7 +434,7 @@ namespace BackendFramework.Services
                 var newSense = new Sense { SemanticDomains = new List<SemanticDomain>(), Glosses = new List<Gloss>(), Guid = sense.Guid };
 
                 // Add glosses
-                foreach ((var key, var value) in sense.Gloss)
+                foreach (var (key, value) in sense.Gloss)
                 {
                     newSense.Glosses.Add(new Gloss { Language = key, Def = value.Text });
                 }
@@ -467,8 +467,8 @@ namespace BackendFramework.Services
                 {
                     foreach (var plural in field.Content)
                     {
-                        var PluralForm = entry.Fields.First().Content.First().Value.Text;
-                        newWord.Plural = PluralForm;
+                        var pluralForm = entry.Fields.First().Content.First().Value.Text;
+                        newWord.Plural = pluralForm;
                     }
                 }
             }
@@ -530,8 +530,8 @@ namespace BackendFramework.Services
         public void MergeInField(LiftObject extensible, string typeAttribute, DateTime dateCreated,
             DateTime dateModified, LiftMultiText contents, List<Trait> traits)
         {
-            var textEntry = new LiftMultiText(contents.FirstValue.Key.ToString(),
-                contents.FirstValue.Value.Text.ToString());
+            var textEntry = new LiftMultiText(contents.FirstValue.Key,
+                contents.FirstValue.Value.Text);
             var fieldEntry = new LiftField(typeAttribute, textEntry);
             extensible.Fields.Add(fieldEntry);
         }

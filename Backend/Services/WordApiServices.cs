@@ -173,7 +173,7 @@ namespace BackendFramework.Services
                 }
 
                 // Change the child word's history to its previous self
-                currentChildWord.History = new List<string>() { newChildWordState.SrcWordId };
+                currentChildWord.History = new List<string> { newChildWordState.SrcWordId };
 
                 // Add child word to the database
                 currentChildWord.Id = "";

@@ -304,7 +304,7 @@ namespace BackendFramework.Models
 
         public override string ToString()
         {
-            return String.Format("<name: {0}, bcp47: {1}, font: {2}>", Name, Bcp47, Font);
+            return $"<name: {Name}, bcp47: {Bcp47}, font: {Font}>";
         }
     }
 
