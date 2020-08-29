@@ -250,7 +250,7 @@ namespace BackendFramework.Controllers
             {
 
                 // Generate the userRole
-                var usersRole = new UserRole {ProjectId = projectId};
+                var usersRole = new UserRole { ProjectId = projectId };
                 usersRole = await _userRoleService.Create(usersRole);
                 userRoleId = usersRole.Id;
 
