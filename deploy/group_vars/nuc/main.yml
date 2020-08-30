@@ -5,9 +5,14 @@
 # Group: nuc
 #################################################
 
-config_base_url: "https://thecombine.languagetechnology.org"
 config_captcha_required: "false"
 config_captcha_sitekey: ""
+
+###############################################
+# Configuration for Combine User (& SSL config)
+###############################################
+combine_user: combine
+combine_group: combine
 
 #wifi access point variables
 ap_ssid: "{{ ansible_hostname }}_ap"
@@ -16,8 +21,16 @@ ap_domain: "{{ url_domain }}"
 ap_hostname: "{{ url_hostname }}"
 ap_passphrase: "BigRed@1979"
 
+# configure URL to access the application
+url_domain: "{{ lookup('env', 'TOPLEVELDOMAIN') | default('languagetechnology.org', true) }}"
+url_hostname: "thecombine"
+
 #apache web server config items
 apache_listen_address: "{{ ap_gateway }}"
+apache_ssl_path: "/etc/letsencrypt/live/{{ apache_server_name }}"
+apache_cert_name: "cert.pem"
+apache_key_name:  "privkey.pem"
+apache_csr_name:  "{{ url_hostname }}.csr"
 
 #set backend logging levels
 app_loglevel: "Debug"

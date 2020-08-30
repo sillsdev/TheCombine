@@ -1,10 +1,6 @@
 ---
 # Configuration variable that are common to production and development
 
-# configure URL to access the application
-url_domain: "{{ lookup('env', 'TOPLEVELDOMAIN') | default('languagetechnology.org', true) }}"
-url_hostname: "thecombine"
-
 www_app_dir: "/var/www/{{ url_hostname }}.org/htdocs"
 www_app_owner: www-data
 www_app_group: www-data
@@ -19,7 +15,7 @@ combine_backend_dir: /home/{{ combine_user }}/Backend
 ###############################################
 # non-root user for accessing certificates from
 # the certificate server,
-#(thecombine.languagetechnology.org)
+# (thecombine.languagetechnology.org)
 ###############################################
 cert_server_user: cert-user
 cert_server_login_key_path: site_files/root_keys
@@ -30,12 +26,6 @@ mongo_path: /var/lib/mongodb
 ### Version/distro
 base_distribution: "{{ansible_distribution | lower}}"
 base_distribution_release: "{{ansible_distribution_release}}"
-
-###############################################
-# Configuration for Combine User (& SSL config)
-###############################################
-combine_user: combine
-combine_group: combine
 
 ###############################################
 # Backend logging levels
@@ -63,7 +53,7 @@ backend_cert_org: SIL International
 
 ssl_path: "/home/{{ combine_user }}/.ssl"
 ssl_path_owner: "{{ combine_user }}"
-ssl_path_group: "{{ combine_user }}"
+ssl_path_group: "{{ combine_group }}"
 
 ssl_letsencrypt_install: false
 
@@ -84,11 +74,6 @@ ssl_items:
 
 # Apache configuration
 apache_server_name: "{{ url_hostname }}.{{ url_domain }}"
-# apache_ssl_path: "/etc/letsencrypt/live/{{ apache_server_name }}"
-# apache_ssl_path: "/etc/apache2/ssl"
-# apache_cert_name: "cert.pem"
-# apache_key_name:  "privkey.pem"
-# apache_csr_name:  "{{ url_hostname }}.csr"
 
 apache_module_enable:
   - headers
@@ -99,12 +84,12 @@ apache_module_enable:
   - ssl
 
 apache_site_enable:
-  - "{{ url_hostname }}_languagetechnology_org.conf"
+  - "{{ apache_server_name }}.conf"
 
 apache_vhosts:
   - server_name: "{{ apache_server_name }}"
     server_admin: jimgrady.jg@gmail.com
-    server_file_name: "{{ url_hostname }}_languagetechnology_org"
+    server_file_name: "{{ apache_server_name }}"
     template: vhost_proxypath_ssl.conf.j2
     document_root: "{{ www_app_dir }}"
     directory_extra:
@@ -119,9 +104,9 @@ apache_vhosts:
         listen: "{{ apache_listen_address }}"
         port: 443
         log_level: debug
-        ssl_path: "/etc/letsencrypt/live/{{ apache_server_name }}"
-        certificate_file: "cert.pem"
-        key_file: "privkey.pem"
+        ssl_path: "{{ apache_ssl_path }}"
+        certificate_file: "{{ apache_cert_name }}"
+        key_file: "{{ apache_key_name }}"
         #        chain_file: "fullchain.pem"
         extra:
           - '<ifModule mod_headers.c>'

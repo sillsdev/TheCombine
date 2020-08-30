@@ -1,0 +1,48 @@
+---
+
+- name: Setup TheCombine QA Server
+  hosts: qa
+  gather_facts: yes
+  become: yes
+
+
+  vars_files:
+    - "vars/config_common.yml"
+    - "vars/vault_config.yml"
+
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=true cache_valid_time=600
+      changed_when: false
+
+    - name: Install cron
+      apt: name=cron state=present
+
+  tasks:
+    - name: setup dependencies for Ansible
+      import_role:
+        name: ansible_depends
+
+    - name: install mongodb
+      import_role:
+        name: mongodb
+
+    - name: install .NET core
+      import_role:
+        name: dotnet_core
+      tags:
+        - update_dotnet
+
+    - name: configure Apache server
+      import_role:
+        name: apache_config
+
+    - name: Flush handlers in case any configs have changed.
+      meta: flush_handlers
+
+    - name: Test secure connection to SSL domain.
+      uri:
+        url: "https://{{ url_hostname }}.{{ url_domain }}/"
+        status_code: 200
+      delegate_to: localhost
+      become: false

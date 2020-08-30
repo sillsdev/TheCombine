@@ -4,5 +4,8 @@ localhost ansible_connection=local
 [server]
 thecombine
 
+[qa]
+qa-thecombine.psonet
+
 [nuc]
 thecombine[1:100].languagetechnology.org

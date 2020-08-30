@@ -5,12 +5,23 @@
 # Group: server
 #################################################
 
-config_base_url: "https://thecombine.languagetechnology.org"
-config_captcha_required: "true"
-config_captcha_sitekey: "6LemQNgUAAAAAAwJ6dps-Uncg5xsNuDdMxehfW8d"
+# configure URL to access the application
+url_domain: "{{ lookup('env', 'TOPLEVELDOMAIN') | default('languagetechnology.org', true) }}"
+url_hostname: "thecombine"
+
+
+###############################################
+# Configuration for Combine User (& SSL config)
+###############################################
+combine_user: combine
+combine_group: combine
 
 #apache web server config items
 apache_listen_address: "*"
+apache_ssl_path: "/etc/letsencrypt/live/{{ apache_server_name }}"
+apache_cert_name: "cert.pem"
+apache_key_name:  "privkey.pem"
+apache_csr_name:  "{{ url_hostname }}.csr"
 
 #set backend logging levels
 app_loglevel: "Debug"
@@ -30,7 +41,7 @@ certbot_create_if_missing: true
 certbot_create_method: standalone
 certbot_certs:
   - domains:
-      - thecombine.languagetechnology.org
+      - "{{ url_hostname }}.{{ url_domain }}"
 certbot_create_command: "{{ certbot_script }} certonly --standalone --noninteractive --agree-tos --email {{ cert_item.email | default(certbot_admin_email) }} -d {{ cert_item.domains | join(',') }}"
 certbot_create_standalone_stop_services:
   - apache2

@@ -1,0 +1,28 @@
+---
+#################################################
+# Group specific configuration items
+#
+# Group: qa
+#################################################
+
+# configure URL to access the application
+url_domain: "{{ lookup('env', 'TOPLEVELDOMAIN') | default('psonet', true) }}"
+url_hostname: "{{ ansible_hostname }}"
+
+###############################################
+# Configuration for Combine User (& SSL config)
+###############################################
+combine_user: combine
+combine_group: app
+
+#apache web server config items
+apache_listen_address: "*"
+apache_ssl_path: "/etc/ssl"
+apache_cert_name: "certs/ssl-cert-snakeoil.pem"
+apache_key_name:  "private/ssl-cert-snakeoil.key"
+apache_csr_name:  "{{ url_hostname }}.csr"
+
+#set backend logging levels
+app_loglevel: "Debug"
+sys_loglevel: "Debug"
+ms_loglevel: "Debug"

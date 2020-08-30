@@ -3,7 +3,8 @@
 ######################################
 # This role sets up the NUC to use
 # the Let's Encrypt certificate from
-# thecombine.languagetechnology.org
+# the certificate server (typically
+# thecombine.languagetechnology.org)
 # and to automatically update its
 # copy from the server when connected
 # to the network
@@ -17,7 +18,7 @@
     group: root
     mode: 0755
 
-- name: get certs from thecombine.languagetechnology.org
+- name: get certs from the certificate server
   command: "{{ cert_sync_command }}"
 
 - name: install cert sync script

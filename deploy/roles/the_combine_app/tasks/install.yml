@@ -1,13 +1,5 @@
 ---
 
-- name: create uploads directory
-  file:
-    name: "{{ www_uploads_dir }}"
-    state: directory
-    owner: "{{ www_uploads_owner }}"
-    group: "{{ www_uploads_group }}"
-    mode:  0775
-
 - name: install the react UI pages
   copy:
     src: ../build/

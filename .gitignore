@@ -11,12 +11,13 @@
 
 # Production
 /build
-production.yml
+docker-compose.prod.yml
+docker-compose.init.yml
 
 # Misc
 .DS_Store
 .env.backend
-.env.backend.auth
+.env.frontend
 .env*.local
 Session.vim
 /*.js
@@ -63,13 +64,23 @@ deploy/site_info/
 deploy/site_files/
 deploy/**/*.retry
 deploy/roles_galaxy/
+
 # Host file to be used for ad hoc testing/development
 deploy/*.hosts
+deploy/*.hosts.yml
+docker_deploy/*.hosts.yml
+
+# Docker installation/configuration artifacts
+.env.backend.prod
+.env.backend.init
+
 # Playbooks for ad hoc testing/development
 deploy/_playbook*.yml
+docker_deploy/_playbook*.yml
 
 # Emacs backup files (this is Jim's fault)
 *~
+\#*#
 
 # JetBrains Rider
 .idea
