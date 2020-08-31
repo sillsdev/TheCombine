@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Security;
 using System.Text;
 using System.Xml;
 using BackendFramework.Helper;
@@ -11,6 +13,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
+using SIL.Extensions;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Lift.Parsing;
@@ -30,19 +33,16 @@ namespace BackendFramework.Services
         {
             if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
             {
-                Writer.WriteStartElement("pronunciation");
-
                 foreach (var phonetic in entry.Pronunciations)
                 {
+                    Writer.WriteStartElement("pronunciation");
                     Writer.WriteStartElement("media");
                     Writer.WriteAttributeString("href", Path.GetFileName(phonetic.Forms.First().Form));
                     Writer.WriteEndElement();
+                    Writer.WriteEndElement();
                 }
-
                 // Make sure the writer does not write it again in the wrong format.
                 entry.Pronunciations.Clear();
-
-                Writer.WriteEndElement();
             }
         }
     }
@@ -144,12 +144,12 @@ namespace BackendFramework.Services
             var activeWords = frontier.Where(x => x.Senses.Any(s => s.Accessibility == State.Active)).ToList();
 
             // All words in the frontier with any senses are considered current. The Combine does not import senseless entries
-            // and the interface is supposed to prevent creating them. So the the words found in allWords, but not in activeWords
+            // and the interface is supposed to prevent creating them. So the the words found in allWords with no matching guid in activeWords
             // are exported as 'deleted'.
-            var deletedWords = allWords.Where(x => !activeWords.Contains(x)).ToList();
+            var deletedWords = allWords.Where(x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
             foreach (var wordEntry in activeWords)
             {
-                var entry = new LexEntry();
+                var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid ?? Guid.Empty);
 
                 AddVern(entry, wordEntry, projectId);
                 AddSenses(entry, wordEntry);
@@ -159,7 +159,7 @@ namespace BackendFramework.Services
             }
             foreach (var wordEntry in deletedWords)
             {
-                var entry = new LexEntry();
+                var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid ?? Guid.Empty);
 
                 AddVern(entry, wordEntry, projectId);
                 AddSenses(entry, wordEntry);
@@ -277,6 +277,7 @@ namespace BackendFramework.Services
 
                 var lexSense = new LexSense();
                 lexSense.Gloss.MergeIn(MultiTextBase.Create(dict));
+                lexSense.Id = currentSense.Guid.ToString();
                 entry.Senses.Add(lexSense);
 
                 // Merge in semantic domains
@@ -430,7 +431,7 @@ namespace BackendFramework.Services
             newWord.Senses = new List<Sense>();
             foreach (var sense in entry.Senses)
             {
-                var newSense = new Sense { SemanticDomains = new List<SemanticDomain>(), Glosses = new List<Gloss>() };
+                var newSense = new Sense { SemanticDomains = new List<SemanticDomain>(), Glosses = new List<Gloss>(), Guid = sense.Guid };
 
                 // Add glosses
                 foreach ((var key, var value) in sense.Gloss)
@@ -501,7 +502,7 @@ namespace BackendFramework.Services
         /// <summary> Creates the object to transfer all the data from a word </summary>
         public LiftEntry GetOrMakeEntry(Extensible info, int order)
         {
-            return new LiftEntry(info, new Guid(), order)
+            return new LiftEntry(info, info.Guid, order)
             {
                 LexicalForm = new LiftMultiText(),
                 CitationForm = new LiftMultiText()
@@ -511,7 +512,7 @@ namespace BackendFramework.Services
         /// <summary> Creates an empty sense object and adds it to the entry </summary>
         public LiftSense GetOrMakeSense(LiftEntry entry, Extensible info, string rawXml)
         {
-            var sense = new LiftSense(info, new Guid(), entry) { Gloss = new LiftMultiText() };
+            var sense = new LiftSense(info, info.Guid, entry) { Gloss = new LiftMultiText() };
             entry.Senses.Add(sense);
             return sense;
         }
@@ -623,5 +624,15 @@ namespace BackendFramework.Services
         public void MergeInSource(LiftExample example, string source) { }
         public void MergeInTranslationForm(LiftExample example, string type, LiftMultiText multiText, string rawXml) { }
         public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
+
+        /// <summary>
+        /// Fix the string to be safe in an attribute value of XML.
+        /// </summary>
+        /// <param name="sInput"></param>
+        /// <returns></returns>
+        public static string MakeSafeXmlAttribute(string sInput)
+        {
+            return SecurityElement.Escape(sInput);
+        }
     }
 }
