@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -149,16 +150,16 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(userEditId);
             }
 
-            var result = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
+            var (isSuccess, editIndex) = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
 
             // If the replacement was successful
-            if (result.Item1)
+            if (isSuccess)
             {
-                return new OkObjectResult(result.Item2);
+                return new OkObjectResult(editIndex);
             }
             else
             {
-                return new NotFoundObjectResult(result.Item2);
+                return new NotFoundObjectResult(editIndex);
             }
         }
 
