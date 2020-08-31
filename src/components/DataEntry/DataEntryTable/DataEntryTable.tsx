@@ -144,39 +144,29 @@ export class DataEntryTable extends React.Component<
   }
 
   async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
-    await Backend.createWord(wordToAdd)
-      .then(async (newWord) => {
-        const wordId: string = await this.addAudiosToBackend(
-          newWord.id,
-          audioURLs
-        );
-        const newWordWithAudio: Word = await Backend.getWord(wordId);
-        await this.updateExisting();
+    const newWord = await Backend.createWord(wordToAdd);
+    if (newWord.id === "Duplicate") {
+      alert(
+        this.props.translate("addWords.wordInDatabase") +
+          `: ${wordToAdd.vernacular}, ${wordToAdd.senses[0].glosses[0].def}`
+      );
+      return;
+    }
+    const wordId: string = await this.addAudiosToBackend(newWord.id, audioURLs);
+    const newWordWithAudio: Word = await Backend.getWord(wordId);
+    await this.updateExisting();
 
-        let recentlyAddedWords: WordAccess[] = [
-          ...this.state.recentlyAddedWords,
-        ];
-        let newWordAccess: WordAccess = {
-          word: newWordWithAudio,
-          senseIndex: 0,
-        };
-        if (
-          insertIndex !== undefined &&
-          insertIndex < recentlyAddedWords.length
-        ) {
-          recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
-        } else {
-          recentlyAddedWords.push(newWordAccess);
-        }
-        this.setState({ recentlyAddedWords });
-      })
-      .catch((err) => {
-        console.log(err);
-        alert(
-          this.props.translate("addWords.wordInDatabase") +
-            `: ${wordToAdd.vernacular}, ${wordToAdd.senses[0].glosses[0].def}`
-        );
-      });
+    let recentlyAddedWords: WordAccess[] = [...this.state.recentlyAddedWords];
+    let newWordAccess: WordAccess = {
+      word: newWordWithAudio,
+      senseIndex: 0,
+    };
+    if (insertIndex !== undefined && insertIndex < recentlyAddedWords.length) {
+      recentlyAddedWords.splice(insertIndex, 0, newWordAccess);
+    } else {
+      recentlyAddedWords.push(newWordAccess);
+    }
+    this.setState({ recentlyAddedWords });
   }
 
   /** Update the word in the backend and the frontend */
