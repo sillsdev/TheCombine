@@ -189,4 +189,9 @@ Server,
     ansible-playbook playbook_publish.yml -K --limit qa --ask-vault-pass
     ```
     Notes:
-    - <tt>playbook_server.yml</tt> only needs to be run once.  In order to update to a newer version of *TheCombine*, only the <tt>playbook_publish.yml</tt> needs to be run.
+    - <tt>playbook_server.yml</tt> only needs to be run once.  In order to update
+      to a newer version of *TheCombine*, only the <tt>playbook_publish.yml</tt>
+      needs to be run.
+    - The QA Server is only accessible from the SIL Intranet and uses a self-signed
+      SSL certificate. You will need to accept the certificate to use *TheCombine*
+      on the QA Server.
