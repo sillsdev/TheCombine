@@ -15,8 +15,10 @@
       apt: update_cache=true cache_valid_time=600
       changed_when: false
 
-    - name: Install cron
-      apt: name=cron state=present
+    - name: Install cron, ssl-cert
+      apt:
+        name: ssl-cert
+        state: present
 
   tasks:
     - name: setup dependencies for Ansible
