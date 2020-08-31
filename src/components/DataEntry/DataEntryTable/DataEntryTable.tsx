@@ -172,7 +172,10 @@ export class DataEntryTable extends React.Component<
       })
       .catch((err) => {
         console.log(err);
-        alert(this.props.translate("addWords.wordInDatabase"));
+        alert(
+          this.props.translate("addWords.wordInDatabase") +
+            `: ${wordToAdd.vernacular}, ${wordToAdd.senses[0].glosses[0].def}`
+        );
       });
   }
 
@@ -227,7 +230,10 @@ export class DataEntryTable extends React.Component<
             .includes(this.props.semanticDomain.id)
         ) {
           // User is trying to add a sense that already exists
-          alert(this.props.translate("addWords.senseInWord"));
+          alert(
+            this.props.translate("addWords.senseInWord") +
+              `: ${existingWord.vernacular}, ${gloss}`
+          );
           return;
         } else {
           const updatedWord = addSemanticDomainToSense(
