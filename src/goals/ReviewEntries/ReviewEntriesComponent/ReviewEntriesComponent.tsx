@@ -32,27 +32,17 @@ interface ReviewEntriesProps {
   ) => Promise<void>;
 }
 
-interface ReviewEntriesState {
-  editingField: boolean;
-  errorMsg: string | undefined;
-}
-
 // Constants
 const ROWS_PER_PAGE: number[] = [10, 100, 1000];
 
 export class ReviewEntriesComponent extends React.Component<
-  ReviewEntriesProps & LocalizeContextProps,
-  ReviewEntriesState
+  ReviewEntriesProps & LocalizeContextProps
 > {
   recorder: Recorder;
 
   constructor(props: ReviewEntriesProps & LocalizeContextProps) {
     super(props);
 
-    this.state = {
-      editingField: false,
-      errorMsg: undefined,
-    };
     this.recorder = new Recorder();
     this.props.clearState();
     this.props.setAnalysisLanguage();
