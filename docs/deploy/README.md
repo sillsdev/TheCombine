@@ -1,6 +1,6 @@
 # How To Deploy TheCombine Application
 
-This document describes how to build and deploy *TheCombine* project.  It is designed to run on an Intel NUC, for use in the field, or on the demonstration server, thecombine.languagetechnology.org.
+This document describes how to build and deploy *TheCombine* project.  It is designed to run on an Intel NUC, for use in the field, or on the live server, https://thecombine.languagetechnology.org.
 
 ### Intended Audience
 
@@ -22,7 +22,8 @@ These instructions are for developers that have login access to thecombine.langu
  2. [Additional Details](#additional-details)
     1. [Install Ubuntu Server](#install-ubuntu-bionic-server)
     2. [Setup NUC Options](#setup-nuc-options)
-    3. [Demo Server](#demo-server)
+    3. [Live Server](#live-server)
+    4. [QA Server](#qa-server)
 
 ## Step-by-step Instructions
 This section gives you step-by-step instructions for installing *The Combine* on a new NUC/PC with links to more detailed information.
@@ -69,19 +70,19 @@ The scripts for installing TheCombine use *Ansible* to manage an installation of
 
 #### Create SSH config
 
-In order to run the playbook that registers the NUC on the certificate server (or "demo server") you need to be able to <tt>ssh</tt> to the certificate server from your host machine (or from the VM if you are running Windows on your host machine).
+In order to run the playbook that registers the NUC on the certificate server (or "live server") you need to be able to <tt>ssh</tt> to the certificate server from your host machine (or from the VM if you are running Windows on your host machine).
 
-Create an SSH config file (<tt>~/.ssh/config</tt>) to enable an <tt>ssh</tt> connection to the demo server.  The SSH config file shall contain the following configuration:
+Create an SSH config file (<tt>~/.ssh/config</tt>) to enable an <tt>ssh</tt> connection to the live server.  The SSH config file shall contain the following configuration:
 ```
     Host thecombine
     HostName <ip_address_for_thecombine.languagetechnology.org>
-    User <demo_server_login>
+    User <live_server_login>
     IdentityFile ~/.ssh/id_rsa
 
 ```
 Notes
   - the IP address for thecombine.languagetechnology.org is the actual IP address, not the one published by CloudFlare.
-  - the demo_server_login account must have <tt>sudo</tt> priveleges on thecombine.languagetechnology.org.
+  - the live_server_login account must have <tt>sudo</tt> priveleges on thecombine.languagetechnology.org.
 
 
 ### Installing *TheCombine*
@@ -144,13 +145,14 @@ and the <tt>playbook_publish.yml</tt> playbook.
    - <tt>-h</tt> or <tt>--help</tt> prints the usage text and exits
 1. Any options that are not recognized by <tt>setup-nuc.sh</tt> are passed to the ansible playbooks that are called by <tt>setup-nuc.sh</tt>.  This is especially useful for specifying an alternate inventory file for development or testing purposes.  Note that files whose names end in <tt>".hosts"</tt> are ignored by git.
 
-## Demo Server
+## Live Server
 
-The Demo Server has two purposes:
-  1. it makes *TheCombine* available on the internet for demonstrations; and
-  2. it creates and renews the SSL certificate for the demo server and all NUCs.
+The Live Server has two purposes:
+  1. it makes the `release` of *TheCombine* available to locations with internet
+     access; and
+  2. it creates and renews the SSL certificate for the live server and all NUCs.
 
-In order to setup the Demo Server,
+In order to setup the Live Server,
   * create an SSH config file - see [Create SSH Config](#create-ssh-config)
   * run the following commands from the directory for *TheCombine* repo:
     ```
@@ -158,9 +160,33 @@ In order to setup the Demo Server,
     mkdir roles_galaxy
     ansible-galaxy install -r requirements.yml -p roles_galaxy
     ansible-playbook playbook_server.yml -K
-    certbot certonly --webroot --force-renewal
     ansible-playbook playbook_publish.yml -K --limit thecombine --ask-vault-pass
     ```
     Notes:
     - <tt>playbook_server.yml</tt> only needs to be run once.  In order to update to a newer version of *TheCombine*, only the <tt>playbook_publish.yml</tt> needs to be run.
-    - <tt>playbook_server.yml</tt> currently uses the geerlingguy.certbot role to create the letsencrypt SSL certificate.  This role only supports the <tt>standalone</tt> challenge method.  Run the specified <tt>certbot</tt> command to convert the renewal to use webroot.  The <tt>standalone</tt> certificate requires shutting down the Apache web server to renew the certificate and then restarting it.
+
+  * connect to the live server using `ssh` and run the following command:
+    ```
+    certbot certonly --webroot --force-renewal
+
+    ```
+    This will change the way that the Let's Encrypt certificate is renewed so that
+    the renewal process does not interfere with the operation of *TheCombine*.
+
+## QA Server
+
+A QA Server, `qa-thecombine.psonet`, has been setup for the development team to
+test the latest software on the `qa` branch.  To do the initial setup of the QA
+Server,
+  * create an SSH config file with your login credentials for the QA server - see
+    [Create SSH Config](#create-ssh-config)
+  * run the following commands from the directory for *TheCombine* repo:
+    ```
+    cd deploy
+    mkdir roles_galaxy
+    ansible-galaxy install -r requirements.yml -p roles_galaxy
+    ansible-playbook playbook_qa.yml -K
+    ansible-playbook playbook_publish.yml -K --limit qa --ask-vault-pass
+    ```
+    Notes:
+    - <tt>playbook_server.yml</tt> only needs to be run once.  In order to update to a newer version of *TheCombine*, only the <tt>playbook_publish.yml</tt> needs to be run.
