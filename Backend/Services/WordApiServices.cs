@@ -241,16 +241,15 @@ namespace BackendFramework.Services
             foreach (var matchingVern in allVernaculars)
             {
                 // Iterate over senses of those words
+                var newSenseIndex = 0;
                 foreach (var newSense in word.Senses)
                 {
-                    var newSenseIndex = 0;
                     foundDuplicateSense = false;
 
                     // Iterate over the senses of the new word
+                    var oldSenseIndex = 0;
                     foreach (var oldSense in matchingVern.Senses)
                     {
-                        var oldSenseIndex = 0;
-
                         // If the new sense is a strict subset of the old one, then merge it in
                         if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
                         {
