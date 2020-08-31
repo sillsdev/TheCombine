@@ -102,8 +102,10 @@ namespace BackendFramework.Controllers
             {
                 // If there was one directory, we're good
                 case 1:
-                    extractedDirPath = directoriesExtracted.FirstOrDefault();
-                    break;
+                    {
+                        extractedDirPath = directoriesExtracted.FirstOrDefault();
+                        break;
+                    }
                 // If there were two, and there was a __MACOSX directory, ignore it
                 case 2:
                     {
@@ -129,7 +131,9 @@ namespace BackendFramework.Controllers
                     }
                 // There were 0 or more than 2 directories
                 default:
-                    return new BadRequestObjectResult("Your zip file structure has the wrong number of directories");
+                    {
+                        return new BadRequestObjectResult("Your zip file structure has the wrong number of directories");
+                    }
             }
 
             // Get the directory and rename to be easier to reference elsewhere if needed
