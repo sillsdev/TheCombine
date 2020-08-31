@@ -28,18 +28,16 @@ function renderWithWord(word: Word) {
     testMaster = renderer.create(
       <Provider store={mockStore}>
         <RecentEntry
-          allVerns={[]}
-          allWords={[]}
           entry={word}
           senseIndex={0}
-          updateGloss={() => null}
-          updateVern={() => null}
-          removeEntry={() => null}
-          addAudioToWord={() => null}
-          deleteAudioFromWord={() => null}
-          semanticDomain={{ name: "", id: "" }}
+          updateGloss={jest.fn()}
+          updateVern={jest.fn()}
+          removeEntry={jest.fn()}
+          addAudioToWord={jest.fn()}
+          deleteAudioFromWord={jest.fn()}
           recorder={new Recorder()}
-          focusNewEntry={() => null}
+          focusNewEntry={jest.fn()}
+          analysisLang={"en"}
         />
       </Provider>
     );

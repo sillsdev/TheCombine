@@ -82,7 +82,7 @@ namespace Backend.Tests
         {
             return Task.FromResult(true);
         }
-        
+
         public Task<bool> DuplicateCheck(string projectName)
         {
             foreach (var project in _projects)

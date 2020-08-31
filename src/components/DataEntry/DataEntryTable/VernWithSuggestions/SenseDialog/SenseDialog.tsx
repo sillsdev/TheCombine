@@ -14,7 +14,7 @@ import {
 } from "react-localize-redux";
 
 import theme from "../../../../../types/theme";
-import { Sense, State, Word } from "../../../../../types/word";
+import { Sense, Word } from "../../../../../types/word";
 import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
@@ -22,15 +22,21 @@ function SenseDialog(
   props: {
     selectedWord: Word;
     open: boolean;
-    handleClose: (senseIndex: number) => void;
+    handleClose: (senseIndex?: number) => void;
+    analysisLang: string;
   } & LocalizeContextProps
 ) {
   return (
-    <Dialog open={props.open} disableBackdropClick disableEscapeKeyDown>
+    <Dialog
+      open={props.open}
+      disableBackdropClick
+      onClose={() => props.handleClose()}
+    >
       <DialogContent>
         <SenseList
           selectedWord={props.selectedWord}
           closeDialog={props.handleClose}
+          analysisLang={props.analysisLang}
         />
       </DialogContent>
     </Dialog>
@@ -40,6 +46,7 @@ function SenseDialog(
 interface SenseListProps {
   selectedWord: Word;
   closeDialog: (senseIndex: number) => void;
+  analysisLang: string;
 }
 
 // Copied from customized menus at https://material-ui.com/components/menus/
@@ -61,30 +68,29 @@ export function SenseList(props: SenseListProps) {
         <Translate id="addWords.selectSense" />
       </Typography>
       <MenuList autoFocusItem>
-        {props.selectedWord.senses.map(
-          (sense: Sense, index: number) =>
-            (sense.accessibility === undefined ||
-              sense.accessibility === State.Active) && (
-              <StyledMenuItem
-                onClick={() => props.closeDialog(index)}
-                key={sense.glosses[0].def}
-                id={sense.glosses[0].def}
-              >
-                <div style={{ margin: theme.spacing(4) }}>
-                  <h3>{sense.glosses[0].def}</h3>
-                </div>
-                <div style={{ margin: theme.spacing(4) }}>
-                  <DomainCell
-                    rowData={parseWord(
-                      { ...props.selectedWord, senses: [sense] } as Word,
-                      "en"
-                    )}
-                    sortingByDomains={false}
-                  />
-                </div>
-              </StyledMenuItem>
-            )
-        )}
+        {props.selectedWord.senses.map((sense: Sense, index: number) => (
+          <StyledMenuItem
+            onClick={() => props.closeDialog(index)}
+            key={sense.glosses[0].def}
+            id={sense.glosses[0].def}
+          >
+            <div style={{ margin: theme.spacing(4) }}>
+              <h3>{sense.glosses[0].def}</h3>
+            </div>
+            <div style={{ margin: theme.spacing(4) }}>
+              <DomainCell
+                rowData={parseWord(
+                  {
+                    ...props.selectedWord,
+                    senses: [sense],
+                  } as Word,
+                  props.analysisLang
+                )}
+                sortingByDomains={false}
+              />
+            </div>
+          </StyledMenuItem>
+        ))}
 
         <StyledMenuItem onClick={() => props.closeDialog(-1)}>
           <Translate id="addWords.newSenseFor" />

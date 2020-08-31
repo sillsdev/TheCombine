@@ -10,11 +10,12 @@ import * as backend from "../../../../backend";
 import { defaultProject as mockProject } from "../../../../types/project";
 import { baseDomain } from "../../../../types/SemanticDomain";
 import {
+  multiGlossWord,
   SemanticDomain,
-  simpleWord,
-  Word,
   Sense,
+  simpleWord,
   State,
+  Word,
 } from "../../../../types/word";
 import { defaultState } from "../../../App/DefaultState";
 import DataEntryTable, {
@@ -34,37 +35,46 @@ jest.mock("../../../../backend", () => {
     getProject: jest.fn((_id: string) => {
       return Promise.resolve(mockProject);
     }),
+    getWord: jest.fn(() => {
+      return Promise.resolve([mockMultiWord]);
+    }),
+    updateWord: jest.fn((_word: Word) => {
+      return Promise.resolve(mockWord);
+    }),
   };
 });
 jest.mock("../../../Pronunciations/Recorder");
+jest.mock("../RecentEntry/RecentEntry");
+jest.spyOn(window, "alert").mockImplementation(() => {});
 
 let testRenderer: ReactTestRenderer;
 let testHandle: ReactTestInstance;
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
-const mockWord: Word = simpleWord("", "");
+const mockWord = simpleWord("", "");
+const mockMultiWord = multiGlossWord("vern", ["gloss1", "gloss2"]);
 const mockSemanticDomain: SemanticDomain = {
   name: "",
   id: "",
 };
 const hideQuestionsMock = jest.fn();
+const getWordsFromBackendMock = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
+  getWordsFromBackendMock.mockReturnValue(Promise.resolve([mockMultiWord]));
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <DataEntryTable
           domain={baseDomain}
           semanticDomain={mockSemanticDomain}
-          displaySemanticDomainView={(_isGettingSemanticDomain: boolean) => {}}
+          displaySemanticDomainView={jest.fn()}
           isSmallScreen={false}
           hideQuestions={hideQuestionsMock}
-          getWordsFromBackend={() => {
-            return new Promise(() => []);
-          }}
-          showExistingData={() => {}}
+          getWordsFromBackend={getWordsFromBackendMock}
+          showExistingData={jest.fn()}
         />
       </Provider>
     );
@@ -92,12 +102,12 @@ describe("Tests DataEntryTable", () => {
     );
   });
 
-  it("should NOT call add word on backend when new entry has no data and complete is clicked", (done) => {
+  it("should NOT call add word on backend when new entry has no vernacular and complete is clicked", (done) => {
     // Verify that NewEntry is present
     let newEntryItems = testRenderer.root.findAllByType(NewEntry);
     expect(newEntryItems.length).toBe(1);
     // set the new entry to have no useful content
-    let newEntryWord: Word = simpleWord("", "");
+    let newEntryWord: Word = simpleWord("", "hasGloss");
     testHandle = newEntryItems[0];
     testHandle.instance.setState(
       {
@@ -131,7 +141,9 @@ describe("Tests DataEntryTable", () => {
       ...word,
       senses: [...word.senses, newSense],
     };
-    expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
+    expect(addSenseToWord(semanticDomain, word, gloss, "en")).toEqual(
+      expectedWord
+    );
   });
 
   it("adds a sense to a word that already has a sense", () => {
@@ -154,7 +166,9 @@ describe("Tests DataEntryTable", () => {
       ...word,
       senses: [...word.senses, expectedSense],
     };
-    expect(addSenseToWord(semanticDomain, word, gloss)).toEqual(expectedWord);
+    expect(addSenseToWord(semanticDomain, word, gloss, "en")).toEqual(
+      expectedWord
+    );
   });
 
   it("adds a semantic domain to an existing sense", () => {
@@ -181,6 +195,80 @@ describe("Tests DataEntryTable", () => {
     };
     expect(addSemanticDomainToSense(semanticDomain, word, senseIndex)).toEqual(
       expectedWord
+    );
+  });
+
+  it("doesn't update word in backend if sense is a duplicate", (done) => {
+    testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
+    mockMultiWord.senses[0].semanticDomains = [
+      { name: "", id: "differentSemDomId" },
+      { name: "", id: testHandle.instance.props.semanticDomain.id },
+    ];
+    testHandle.instance.setState(
+      {
+        existingWords: [mockMultiWord],
+      },
+      () => {
+        testRenderer.root
+          .findByType(NewEntry)
+          .props.updateWordWithNewGloss(
+            mockMultiWord.id,
+            mockMultiWord.senses[0].glosses[0].def,
+            []
+          )
+          .then(() => {
+            // Assert that the backend function for updating the word was NOT called
+            expect(backend.updateWord).not.toBeCalled();
+            done();
+          });
+      }
+    );
+  });
+
+  it("updates word in backend if gloss exists with different semantic domain", (done) => {
+    testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
+    mockMultiWord.senses[0].semanticDomains = [
+      { name: "", id: "differentSemDomId" },
+      { name: "", id: "anotherDifferentSemDomId" },
+      { name: "", id: "andAThird" },
+    ];
+    testHandle.instance.setState(
+      {
+        existingWords: [mockMultiWord],
+      },
+      () => {
+        testRenderer.root
+          .findByType(NewEntry)
+          .props.updateWordWithNewGloss(
+            mockMultiWord.id,
+            mockMultiWord.senses[0].glosses[0].def,
+            []
+          )
+          .then(() => {
+            // Assert that the backend function for updating the word was called once
+            expect(backend.updateWord).toBeCalledTimes(1);
+            done();
+          });
+      }
+    );
+  });
+
+  it("updates word in backend if gloss doesn't exist", (done) => {
+    testHandle = testRenderer.root.findAllByType(DataEntryTable)[0];
+    testHandle.instance.setState(
+      {
+        existingWords: [mockMultiWord],
+      },
+      () => {
+        testRenderer.root
+          .findByType(NewEntry)
+          .props.updateWordWithNewGloss(mockMultiWord.id, "differentGloss", [])
+          .then(() => {
+            // Assert that the backend function for updating the word was called once
+            expect(backend.updateWord).toBeCalledTimes(1);
+            done();
+          });
+      }
     );
   });
 });

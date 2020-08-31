@@ -8,6 +8,9 @@
 config_captcha_required: "false"
 config_captcha_sitekey: ""
 
+# NUC is set to EST/EDT (for now)
+backup_hour:    1
+backup_minute:  0
 ###############################################
 # Configuration for Combine User (& SSL config)
 ###############################################

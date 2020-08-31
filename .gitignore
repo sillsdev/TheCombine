@@ -68,15 +68,9 @@ deploy/roles_galaxy/
 # Host file to be used for ad hoc testing/development
 deploy/*.hosts
 deploy/*.hosts.yml
-docker_deploy/*.hosts.yml
-
-# Docker installation/configuration artifacts
-.env.backend.prod
-.env.backend.init
 
 # Playbooks for ad hoc testing/development
 deploy/_playbook*.yml
-docker_deploy/_playbook*.yml
 
 # Emacs backup files (this is Jim's fault)
 *~

@@ -375,7 +375,7 @@ namespace BackendFramework.Controllers
             public string ProjectId;
             public string Domain;
         }
-        
+
         [HttpGet("duplicate/{projectName}")]
         public async Task<IActionResult> projectDuplicateCheck(string projectName)
         {
