@@ -45,11 +45,7 @@ namespace BackendFramework.Services
 
             var deleted = await _wordDatabase.Words.DeleteManyAsync(filter);
             await _wordDatabase.Frontier.DeleteManyAsync(filter);
-            if (deleted.DeletedCount != 0)
-            {
-                return true;
-            }
-            return false;
+            return deleted.DeletedCount != 0;
         }
 
         /// <summary> Adds a <see cref="Word"/> to the WordsCollection and Frontier </summary>

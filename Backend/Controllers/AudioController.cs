@@ -47,7 +47,7 @@ namespace BackendFramework.Controllers
             //}
 
             // sanitize user input
-            if ((!SanitizeId(projectId)) || (!SanitizeId(wordId)))
+            if (!SanitizeId(projectId) || !SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -83,17 +83,12 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if ((!SanitizeId(projectId)) || (!SanitizeId(wordId)))
+            if (!SanitizeId(projectId) || !SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
             }
 
             var file = fileUpload.File;
-            var requestedFileName = fileUpload.File?.FileName;
-            if (string.IsNullOrEmpty(requestedFileName))
-            {
-                requestedFileName = wordId + ".webm";
-            }
 
             // Ensure file is not empty
             if (file.Length == 0)
@@ -103,7 +98,8 @@ namespace BackendFramework.Controllers
 
             // Get path to home
             fileUpload.FilePath = GenerateFilePath(
-                FileType.Audio, false, wordId, Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio"));
+                FileType.Audio, false, wordId,
+                Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio"));
 
             // Copy the file data to a new local file
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
@@ -132,7 +128,7 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if ((!SanitizeId(projectId)) || (!SanitizeId(wordId)))
+            if (!SanitizeId(projectId) || !SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
             }

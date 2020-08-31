@@ -145,7 +145,7 @@ namespace BackendFramework.Services
             var claimString = projectPermissionMap.ToJson();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("UserId", user.Id),
                     new Claim("UserRoleInfo", claimString)
