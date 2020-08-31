@@ -10,25 +10,30 @@ import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { archiveProject } from "../../../backend";
+import { archiveProject, restoreProject } from "../../../backend";
 import LoadingButton from "../../Buttons/LoadingButton";
 
-interface ArchiveProjectButtonProps {
+interface ProjectButtonWithConfirmationProps {
+  archive: boolean;
   projectId: string;
   updateParent: () => void;
 }
 
 /**
- * Button for archiving a project (setting isActive=false)
+ * Button for archiving/restoring project (changing isActive)
  */
-export default function ArchiveProjectButton(
-  props: ButtonProps & ArchiveProjectButtonProps
+export default function ProjectButtonWithConfirmation(
+  props: ButtonProps & ProjectButtonWithConfirmationProps
 ) {
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  async function archiveProj() {
+  async function updateProj() {
     setLoading(true);
-    await archiveProject(props.projectId);
+    if (props.archive) {
+      await archiveProject(props.projectId);
+    } else {
+      await restoreProject(props.projectId);
+    }
     setLoading(false);
     props.updateParent();
     handleClose();
@@ -47,7 +52,7 @@ export default function ArchiveProjectButton(
   return (
     <React.Fragment>
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        <Translate id="buttons.archive" />
+        <Translate id={`buttons.${props.archive ? "archive" : "restore"}`} />
       </Button>
       <Dialog
         open={open}
@@ -60,7 +65,11 @@ export default function ArchiveProjectButton(
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Translate id="siteSettings.archiveProjectText" />
+            <Translate
+              id={`siteSettings.${
+                props.archive ? "archive" : "restore"
+              }ProjectText`}
+            />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -68,7 +77,7 @@ export default function ArchiveProjectButton(
             <Translate id="buttons.cancel" />
           </Button>
           <LoadingButton
-            onClick={archiveProj}
+            onClick={updateProj}
             color="primary"
             variant="contained"
             loading={loading}
