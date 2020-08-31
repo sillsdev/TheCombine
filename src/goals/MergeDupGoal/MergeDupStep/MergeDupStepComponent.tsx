@@ -58,7 +58,6 @@ export interface MergeDupStepProps {
 export interface MergeDupStepState {
   portrait: boolean;
   sideBar: SideBar;
-  colCount: number;
 }
 
 class MergeDupStep extends React.Component<
@@ -68,7 +67,6 @@ class MergeDupStep extends React.Component<
   constructor(props: MergeDupStepProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      colCount: 2,
       portrait: true,
       sideBar: { senses: [], wordID: "WORD", senseID: "SENSE" },
     };

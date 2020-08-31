@@ -29,7 +29,6 @@ export interface MergeStackProps {
 //interface for component state
 interface MergeStackState {
   anchorEl?: HTMLElement;
-  expanded: boolean;
   duplicateCount: number;
 }
 
@@ -47,7 +46,7 @@ class MergeStack extends React.Component<
 > {
   constructor(props: MergeStackProps & LocalizeContextProps) {
     super(props);
-    this.state = { duplicateCount: 1, expanded: false };
+    this.state = { duplicateCount: 1 };
   }
 
   expand() {
