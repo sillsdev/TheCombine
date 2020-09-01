@@ -203,7 +203,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure MergeWords is alright
-            if (mergeWords == null || mergeWords.Parent == null)
+            if (mergeWords?.Parent == null)
             {
                 return new BadRequestResult();
             }

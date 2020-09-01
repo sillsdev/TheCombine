@@ -32,7 +32,6 @@ export function VernDialog(
       open={props.open}
       onClose={() => props.handleClose()}
       disableBackdropClick
-      disableEscapeKeyDown
     >
       <DialogContent>
         <VernList
