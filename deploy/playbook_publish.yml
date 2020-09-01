@@ -10,6 +10,7 @@
   vars_files:
     - "vars/config_common.yml"
     - "vars/vault_config.yml"
+    - "vars/aws.yml"
 
   vars:
     - combine_build_dir: "../Backend/bin/Release/{{ lookup('pipe', 'grep TargetFramework ../Backend/BackendFramework.csproj') | regex_replace('.*<TargetFramework>([^<]+).*', '\\1') }}/"

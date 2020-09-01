@@ -12,7 +12,7 @@
       - zip
 
 - name: retrieve aws-cli installation package
-  geturl:
+  get_url:
     url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
     dest: /opt/awscliv2.zip
   when: aws_version.rc != 0
@@ -21,6 +21,7 @@
   unarchive:
     src: /opt/awscliv2.zip
     dest: /opt
+    remote_src: yes
   when: aws_version.rc != 0
 
 - name: install aws-cli
