@@ -1,0 +1,8 @@
+{{ combine_log_directory }}/{{ combine_log_file }} {
+	daily
+	missingok
+	rotate 14
+	compress
+	notifempty
+	create 0640 {{ combine_log_owner }} {{ combine_log_group }}
+}

@@ -18,7 +18,8 @@ combine_backend_dir: /home/combine/Backend
 combine_log_directory: /var/log
 combine_log_file:  combine.log
 combine_program_id: CombineBackend
-
+combine_log_owner: syslog
+combine_log_group: adm
 
 #############################
 # environment variables for service
