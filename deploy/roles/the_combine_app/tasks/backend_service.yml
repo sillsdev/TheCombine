@@ -43,6 +43,14 @@
     mode: 0644
   notify: Restart combine_backend
 
+- name: create directory for service files
+  file:
+    name: "/home/{{ combine_user }}/.CombineFiles"
+    state: directory
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0755
+
 - name: Start combine_backend
   systemd:
     name: combine_backend
