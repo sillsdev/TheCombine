@@ -55,7 +55,10 @@ class ProjectSettingsComponent extends React.Component<
   constructor(props: ProjectSettingsProps & LocalizeContextProps) {
     super(props);
     this.state = { loading: true };
-    this.getSettings();
+  }
+
+  async componentDidMount() {
+    await this.getSettings();
   }
 
   private async getSettings() {
@@ -80,7 +83,7 @@ class ProjectSettingsComponent extends React.Component<
 
   async componentDidUpdate(prevProps: ProjectSettingsProps) {
     if (prevProps.project.id !== this.props.project.id) {
-      this.getSettings();
+      await this.getSettings();
     }
   }
 
