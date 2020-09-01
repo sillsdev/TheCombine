@@ -26,7 +26,7 @@ namespace BackendFramework
 
         private readonly ILogger<Startup> _logger;
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public Startup(ILogger<Startup> logger, IConfiguration configuration)
         {
@@ -272,7 +272,7 @@ namespace BackendFramework
             if (existingUser != null)
             {
                 _logger.LogInformation($"User {username} already exists. Updating password and granting " +
-                                       $"admin permissions.");
+                                       "admin permissions.");
                 if (userService.ChangePassword(existingUser.Id, password).Result == ResultOfUpdate.NotFound)
                 {
                     _logger.LogError($"Failed to find user {username}.");

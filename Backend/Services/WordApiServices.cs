@@ -173,11 +173,11 @@ namespace BackendFramework.Services
                 }
 
                 // Change the child word's history to its previous self
-                currentChildWord.History = new List<string>() { newChildWordState.SrcWordId };
+                currentChildWord.History = new List<string> { newChildWordState.SrcWordId };
 
                 // Add child word to the database
                 currentChildWord.Id = "";
-                var newChildWord = await _repo.Add(currentChildWord);
+                await _repo.Add(currentChildWord);
 
                 // Handle different states
                 var separateWord = currentChildWord.Clone();
@@ -243,14 +243,11 @@ namespace BackendFramework.Services
                 // Iterate over senses of those words
                 foreach (var newSense in word.Senses)
                 {
-                    var newSenseIndex = 0;
                     foundDuplicateSense = false;
 
                     // Iterate over the senses of the new word
                     foreach (var oldSense in matchingVern.Senses)
                     {
-                        var oldSenseIndex = 0;
-
                         // If the new sense is a strict subset of the old one, then merge it in
                         if (newSense.Glosses.All(s => oldSense.Glosses.Contains(s)))
                         {
@@ -261,13 +258,9 @@ namespace BackendFramework.Services
                             matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
 
                             // Add semantic domains and remove duplicates
-                            matchingVern.Senses[oldSenseIndex].SemanticDomains.AddRange(
-                                word.Senses[newSenseIndex].SemanticDomains);
-                            matchingVern.Senses[oldSenseIndex].SemanticDomains = matchingVern.
-                                Senses[newSenseIndex].SemanticDomains.Distinct().ToList();
+                            oldSense.SemanticDomains.AddRange(newSense.SemanticDomains);
+                            oldSense.SemanticDomains = oldSense.SemanticDomains.Distinct().ToList();
                         }
-
-                        oldSenseIndex++;
                     }
 
                     // If we never found a matching sense in the old word, the words are different
@@ -275,8 +268,6 @@ namespace BackendFramework.Services
                     {
                         break;
                     }
-
-                    newSenseIndex++;
                 }
 
                 // Update the word only if all the senses were duplicates

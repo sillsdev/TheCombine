@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -31,7 +30,7 @@ namespace BackendFramework.Services
         /// <summary> Overrides empty function from the base SIL LiftWriter to properly add pronunciation </summary>
         protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
         {
-            if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Count() > 0)
+            if (entry.Pronunciations.FirstOrDefault() != null && entry.Pronunciations.First().Forms.Any())
             {
                 foreach (var phonetic in entry.Pronunciations)
                 {
@@ -93,7 +92,7 @@ namespace BackendFramework.Services
             }
         }
 
-        private string GetProjectDir(string projectId)
+        private static string GetProjectDir(string projectId)
         {
             // Generate path to home on Linux or Windows
             var pathToHome = FileUtilities.GeneratePathToHome();
@@ -240,7 +239,7 @@ namespace BackendFramework.Services
 
             // Compress everything
             var destinationFileName = Path.Combine(exportDir,
-                Path.Combine($"LiftExportCompressed-{proj.Id}_{string.Format("{0:yyyy-MM-dd_hh-mm-ss}", DateTime.Now)}.zip"));
+                Path.Combine($"LiftExportCompressed-{proj.Id}_{$"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}"}.zip"));
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
 
             return destinationFileName;
@@ -254,7 +253,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds each sense of a word to be written out to lift </summary>
-        private void AddSenses(LexEntry entry, Word wordEntry)
+        private static void AddSenses(LexEntry entry, Word wordEntry)
         {
             var activeSenses = wordEntry.Senses.Where(s => s.Accessibility == State.Active).ToList();
             foreach (var currentSense in activeSenses)
@@ -353,7 +352,8 @@ namespace BackendFramework.Services
             }
         }
 
-        private void WriteRangeElement(XmlWriter liftRangesWriter, string id, string guid, string name, string description)
+        private static void WriteRangeElement(
+            XmlWriter liftRangesWriter, string id, string guid, string name, string description)
         {
             liftRangesWriter.WriteStartElement("range-element");
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
@@ -434,7 +434,7 @@ namespace BackendFramework.Services
                 var newSense = new Sense { SemanticDomains = new List<SemanticDomain>(), Glosses = new List<Gloss>(), Guid = sense.Guid };
 
                 // Add glosses
-                foreach ((var key, var value) in sense.Gloss)
+                foreach (var (key, value) in sense.Gloss)
                 {
                     newSense.Glosses.Add(new Gloss { Language = key, Def = value.Text });
                 }
@@ -467,8 +467,8 @@ namespace BackendFramework.Services
                 {
                     foreach (var plural in field.Content)
                     {
-                        var PluralForm = entry.Fields.First().Content.First().Value.Text;
-                        newWord.Plural = PluralForm;
+                        var pluralForm = entry.Fields.First().Content.First().Value.Text;
+                        newWord.Plural = pluralForm;
                     }
                 }
             }
@@ -520,7 +520,7 @@ namespace BackendFramework.Services
         /// <summary> Adds each citation form to the entry for the vernacular </summary>
         public void MergeInCitationForm(LiftEntry entry, LiftMultiText contents)
         {
-            foreach ((var key, var value) in contents)
+            foreach (var (key, value) in contents)
             {
                 entry.CitationForm.Add(key, value.Text);
             }
@@ -530,8 +530,8 @@ namespace BackendFramework.Services
         public void MergeInField(LiftObject extensible, string typeAttribute, DateTime dateCreated,
             DateTime dateModified, LiftMultiText contents, List<Trait> traits)
         {
-            var textEntry = new LiftMultiText(contents.FirstValue.Key.ToString(),
-                contents.FirstValue.Value.Text.ToString());
+            var textEntry = new LiftMultiText(contents.FirstValue.Key,
+                contents.FirstValue.Value.Text);
             var fieldEntry = new LiftField(typeAttribute, textEntry);
             extensible.Fields.Add(fieldEntry);
         }
@@ -539,7 +539,7 @@ namespace BackendFramework.Services
         /// <summary> Adds senses to the entry </summary>
         public void MergeInGloss(LiftSense sense, LiftMultiText multiText)
         {
-            foreach ((var key, var value) in multiText)
+            foreach (var (key, value) in multiText)
             {
                 sense.Gloss.Add(key, value.Text);
             }
@@ -548,7 +548,7 @@ namespace BackendFramework.Services
         /// <summary> Adds each lexeme form to the entry for the vernacular </summary>
         public void MergeInLexemeForm(LiftEntry entry, LiftMultiText contents)
         {
-            foreach ((var key, var value) in contents)
+            foreach (var (key, value) in contents)
             {
                 entry.LexicalForm.Add(key, value);
             }
@@ -591,7 +591,7 @@ namespace BackendFramework.Services
         // They may be useful later if we need to add more complex attributes to words in The Combine
         public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
         {
-            return new LiftExample() { Content = new LiftMultiText() };
+            return new LiftExample { Content = new LiftMultiText() };
         }
 
         public LiftObject GetOrMakeParentReversal(LiftObject parent, LiftMultiText contents, string type)
@@ -603,17 +603,24 @@ namespace BackendFramework.Services
         {
             return new LiftSense(info, new Guid(), sense) { Gloss = new LiftMultiText() };
         }
+
         public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form,
             LiftMultiText gloss, string rawXml)
-        { return new LiftEtymology(); }
+        {
+            return new LiftEtymology();
+        }
+
         public LiftObject MergeInReversal(LiftSense sense, LiftObject parent, LiftMultiText contents, string type,
             string rawXml)
-        { return new LiftReversal(); }
+        {
+            return new LiftReversal();
+        }
 
         public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml)
         {
             return new LiftVariant();
         }
+
         public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
         public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText) { }
         public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
