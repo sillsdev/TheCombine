@@ -15,13 +15,18 @@
       apt: update_cache=true cache_valid_time=600
       changed_when: false
 
-    - name: Install cron
-      apt: name=cron state=present
-
   tasks:
     - name: setup dependencies for Ansible
       import_role:
         name: ansible_depends
+
+    # apache & cron are neede by certbot
+    - name: install apache2 webserver and cron
+      apt:
+        name:
+          - apache2
+          - cron
+        state: present
 
     - name: Create LetsEncrypt certificate
       import_role:
