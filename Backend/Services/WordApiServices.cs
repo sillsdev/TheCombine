@@ -119,7 +119,7 @@ namespace BackendFramework.Services
             {
                 word.Id = "";
                 word.ProjectId = projectId;
-
+                word.Modified = DateTime.UtcNow.ToLongDateString();
                 // Keep track of the old word
                 if (word.History == null)
                 {

@@ -20,6 +20,7 @@ namespace Backend.Tests
         private IWordRepository _wordrepo;
         private IWordService _wordService;
         private IProjectService _projServ;
+        private ILiftService _liftService;
         private LiftController _liftController;
         private IPermissionService _permissionService;
 
@@ -29,7 +30,8 @@ namespace Backend.Tests
             _permissionService = new PermissionServiceMock();
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
-            _liftController = new LiftController(_wordrepo, _projServ, _permissionService);
+            _liftService = new LiftService(_wordrepo, _projServ);
+            _liftController = new LiftController(_wordrepo, _projServ, _permissionService, _liftService);
             _wordService = new WordService(_wordrepo);
         }
 

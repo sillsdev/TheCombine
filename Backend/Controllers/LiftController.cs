@@ -23,15 +23,15 @@ namespace BackendFramework.Controllers
     public class LiftController : Controller
     {
         private readonly IWordRepository _wordRepo;
-        private readonly LiftService _liftService;
+        private readonly ILiftService _liftService;
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService)
+        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService, ILiftService liftService)
         {
             _wordRepo = repo;
             _projectService = projServ;
-            _liftService = new LiftService(_wordRepo, _projectService);
+            _liftService = liftService;
             _permissionService = permissionService;
         }
 
