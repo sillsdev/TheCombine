@@ -27,6 +27,10 @@
       import_role:
         name: ssl_config
 
+    - name: setup AWS access
+      import_role:
+        name: aws_access
+
     - name: install TheCombine application
       import_role:
         name: the_combine_app
