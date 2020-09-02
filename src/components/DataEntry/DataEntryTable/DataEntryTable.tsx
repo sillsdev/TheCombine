@@ -47,6 +47,7 @@ interface DataEntryTableState {
   isReady: boolean;
   analysisLang: string;
   defunctWordIds: string[];
+  isFetchingFrontier: boolean;
 }
 
 export function addSemanticDomainToSense(
@@ -104,6 +105,7 @@ export class DataEntryTable extends React.Component<
       isReady: false,
       analysisLang: "en",
       defunctWordIds: [],
+      isFetchingFrontier: false,
     };
     this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
@@ -309,11 +311,15 @@ export class DataEntryTable extends React.Component<
   }
 
   async updateExisting() {
-    const existingWords: Word[] = await this.props.getWordsFromBackend();
-    const existingVerns: string[] = [
-      ...new Set(existingWords.map((word: Word) => word.vernacular)),
-    ];
-    this.setState({ existingVerns, existingWords });
+    if (!this.state.isFetchingFrontier) {
+      this.setState({ isFetchingFrontier: true });
+      const existingWords = await this.props.getWordsFromBackend();
+      const existingVerns = [
+        ...new Set(existingWords.map((word: Word) => word.vernacular)),
+      ];
+      const isFetchingFrontier = false;
+      this.setState({ existingVerns, existingWords, isFetchingFrontier });
+    }
   }
 
   async undoRecentEntry(entryIndex: number): Promise<string> {
