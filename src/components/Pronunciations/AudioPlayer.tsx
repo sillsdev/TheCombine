@@ -1,15 +1,18 @@
 import {
-  makeStyles,
-  Theme,
   createStyles,
-  Tooltip,
   IconButton,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Theme,
+  Tooltip,
 } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
-import PlayArrow from "@material-ui/icons/PlayArrow";
+import { PlayArrow, Stop } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
-import { Stop } from "@material-ui/icons";
+
+import theme from "../../types/theme";
 
 export interface PlayerProps {
   pronunciationUrl: string;
@@ -35,17 +38,19 @@ export default function AudioPlayer(props: PlayerProps) {
   const [audio] = React.useState<HTMLAudioElement>(
     new Audio(props.pronunciationUrl)
   );
+  const [timer, setTimer] = React.useState<NodeJS.Timeout | null>(null);
+  const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
 
   const classes = useStyles();
-  // const audio = new Audio(props.pronunciationUrl);
-  // audio.crossOrigin = "annonymous";
 
-  function deleteOrTogglePlay(event: any) {
-    if (event.shiftKey) {
-      if (props.deleteAudio) {
-        props.deleteAudio(props.wordId, props.fileName);
-      }
-    } else if (!playing) {
+  function deletePlay() {
+    if (props.deleteAudio) {
+      props.deleteAudio(props.wordId, props.fileName);
+    }
+  }
+
+  function togglePlay() {
+    if (!playing) {
       audio.play();
       setPlaying(true);
       audio.addEventListener("ended", () => setPlaying(false));
@@ -56,20 +61,84 @@ export default function AudioPlayer(props: PlayerProps) {
     }
   }
 
+  function deleteOrTogglePlay(event?: any) {
+    if (event?.shiftKey) {
+      deletePlay();
+    } else {
+      togglePlay();
+    }
+  }
+
+  function longPressStart(
+    event:
+      | React.TouchEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    setTimer(
+      setTimeout(() => {
+        setAnchor(event.currentTarget);
+        alert("Ding!");
+      }, 1000)
+    );
+  }
+
+  function longPressRelease() {
+    if (timer) {
+      clearTimeout(timer);
+    }
+  }
+
+  function handleClose() {
+    setAnchor(null);
+  }
+
   return (
-    <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
-      <IconButton
-        tabIndex={-1}
-        onClick={deleteOrTogglePlay}
-        className={classes.button}
-        aria-label="play"
+    <React.Fragment>
+      <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
+        <IconButton
+          tabIndex={-1}
+          onClick={deleteOrTogglePlay}
+          onTouchStart={longPressStart}
+          onTouchEnd={longPressRelease}
+          onMouseDown={longPressStart}
+          onMouseUp={longPressRelease}
+          onMouseLeave={longPressRelease}
+          className={classes.button}
+          aria-label="play"
+        >
+          {playing ? (
+            <Stop className={classes.icon} />
+          ) : (
+            <PlayArrow className={classes.icon} color="primary" />
+          )}
+        </IconButton>
+      </Tooltip>
+      <Menu
+        getContentAnchorEl={null}
+        id="play-menu"
+        anchorEl={anchor}
+        keepMounted
+        open={Boolean(anchor)}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
       >
-        {playing ? (
-          <Stop className={classes.icon} />
-        ) : (
-          <PlayArrow className={classes.icon} color="primary" />
-        )}
-      </IconButton>
-    </Tooltip>
+        <MenuItem
+          onClick={() => {
+            togglePlay();
+            handleClose();
+          }}
+        >
+          <PlayArrow style={{ marginRight: theme.spacing(1) }} />
+          <Translate id="userMenu.userSettings" />
+        </MenuItem>
+      </Menu>
+    </React.Fragment>
   );
 }
