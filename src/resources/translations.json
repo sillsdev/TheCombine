@@ -20,6 +20,11 @@
       "Sentido nuevo para: ",
       "Nouveau sens pour : "
     ],
+    "senseInWord": [
+      "The word already has this sense in this semantic domain",
+      "La palabra ya tiene este sentido en este dominio",
+      "Le mot a déjà ce sens dans ce domaine"
+    ],
     "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
     "domain": ["Domain", "Dominio", "Domaine"],
     "glosses": ["Glosses", "Traducciones", "Gloses"],
