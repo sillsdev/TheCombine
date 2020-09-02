@@ -31,7 +31,6 @@ interface UserProps {
 interface UserState {
   allUsers: User[];
   projUsers: User[];
-  modalOpen: boolean;
   openUser?: User;
   userAvatar: { [key: string]: string };
   showModal: boolean;
@@ -43,7 +42,6 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     this.state = {
       allUsers: [],
       projUsers: [],
-      modalOpen: false,
       userAvatar: {},
       showModal: false,
     };

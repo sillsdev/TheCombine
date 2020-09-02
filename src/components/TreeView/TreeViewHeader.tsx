@@ -8,8 +8,9 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import Bounce from "react-reveal/Bounce";
-import DomainTile, { Direction } from "./DomainTile";
+
 import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
+import DomainTile, { Direction } from "./DomainTile";
 
 interface TreeHeaderProps {
   currentDomain: SemanticDomainWithSubdomains;
@@ -30,10 +31,7 @@ export default class TreeViewHeader extends React.Component<
 
   constructor(props: TreeHeaderProps) {
     super(props);
-    this.state = {
-      input: props.currentDomain.id,
-    };
-
+    this.state = { input: props.currentDomain.id };
     this.animating = false;
 
     this.searchAndSelectDomain = this.searchAndSelectDomain.bind(this);
@@ -180,7 +178,8 @@ export default class TreeViewHeader extends React.Component<
 
   // Switches current semantic domain + updates search bar
   updateDomain() {
-    this.setState({ input: this.props.currentDomain.id });
+    const input = this.props.currentDomain.id;
+    this.setState({ input });
   }
 
   // Creates the L/R button + select button + search bar
