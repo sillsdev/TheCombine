@@ -6,14 +6,14 @@ import {
 
 export interface ReviewEntriesState {
   words: ReviewEntriesWord[];
-  language: string;
+  analysisLanguage: string;
   isRecording: boolean;
   wordBeingRecorded: string | undefined;
 }
 
 export const defaultState: ReviewEntriesState = {
   words: [],
-  language: "en",
+  analysisLanguage: "en",
   isRecording: false,
   wordBeingRecorded: undefined,
 };
@@ -23,6 +23,13 @@ export const reviewEntriesReducer = (
   action: ReviewEntriesAction
 ): ReviewEntriesState => {
   switch (action.type) {
+    case ReviewEntriesActionTypes.SetAnalysisLanguage:
+      // Sets the analysis language
+      return {
+        ...state,
+        analysisLanguage: action.analysisLanguage,
+      };
+
     case ReviewEntriesActionTypes.UpdateAllWords:
       // Update the local words
       return {

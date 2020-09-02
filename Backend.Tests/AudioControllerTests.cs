@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using BackendFramework.Controllers;
-using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
@@ -32,9 +31,6 @@ namespace Backend.Tests
             _permissionService = new PermissionServiceMock();
             _wordController = new WordController(_wordrepo, _wordService, _projectService, _permissionService);
             _audioController = new AudioController(_wordrepo, _wordService, _permissionService);
-
-            Directory.Delete(FileUtilities.GenerateFilePath(
-                FileUtilities.FileType.Dir, true, "", ""), true);
         }
 
         private static string RandomString(int length = 16)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -179,12 +180,18 @@ namespace Backend.Tests
             _projServ.Create(proj);
 
             var word = RandomWord(proj.Id);
-            var createdWord = _wordrepo.Create(word).Result;
+            var secondWord = RandomWord(proj.Id);
+            var wordToDelete = RandomWord(proj.Id);
+
+            var wordToUpdate = _wordrepo.Create(word).Result;
+            wordToDelete = _wordrepo.Create(wordToDelete).Result;
+            var untouchedWord = _wordrepo.Create(secondWord).Result;
 
             word.Id = "";
             word.Vernacular = "updated";
 
-            _wordService.Update(proj.Id, createdWord.Id, word);
+            _wordService.Update(proj.Id, wordToUpdate.Id, word);
+            _wordService.DeleteFrontierWord(proj.Id, wordToDelete.Id);
 
             var result = _liftController.ExportLiftFile(proj.Id).Result;
 
@@ -192,8 +199,11 @@ namespace Backend.Tests
             var exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport",
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);
+            //TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are kept vs deleted
+            // Make sure we exported 2 live and one dead entry
+            Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
             // There is only one deleted word
-            Assert.AreEqual(text.IndexOf("dateDeleted"), text.LastIndexOf("dateDeleted"));
+            Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
         }
 
         [Test]
@@ -256,6 +266,7 @@ namespace Backend.Tests
                     fstream.Close();
 
                     var allWords = _wordrepo.GetAllWords(proj.Id);
+                    Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
                     // Export
                     var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
                     var exportedDirectory = Path.GetDirectoryName(exportedFilePath);

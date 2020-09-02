@@ -195,8 +195,14 @@ export class VernWithSuggestions extends React.Component<
           <SenseDialog
             selectedWord={this.state.selectedWord}
             open={this.state.senseOpen}
-            handleClose={(senseIndex: number) => {
-              if (senseIndex >= 0) {
+            handleClose={(senseIndex?: number) => {
+              if (senseIndex === undefined) {
+                this.props.updateWordId();
+                this.setState({
+                  selectedWord: { ...simpleWord("", ""), id: "" },
+                  vernOpen: true,
+                });
+              } else if (senseIndex >= 0) {
                 this.props.setActiveGloss(
                   this.state.selectedWord.senses[senseIndex].glosses[0].def
                 );
