@@ -1,7 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { updateFrontierWord } from "../ReviewEntriesActions";
+import { updateFrontierWord, setAnalysisLang } from "../ReviewEntriesActions";
 import {
   ReviewEntriesWord,
   OLD_SENSE,
@@ -15,18 +15,28 @@ import {
   Gloss,
   Sense,
 } from "../../../../types/word";
-import { updateWord, getWord } from "../../../../backend";
+import { defaultProject as mockProject } from "../../../../types/project";
+import { updateWord, getWord, getProject } from "../../../../backend";
 
 jest.mock("../../../../backend", () => ({
   updateWord: jest.fn(),
   getWord: jest.fn(),
+  getProject: jest.fn(),
+}));
+
+jest.mock("../../../../backend/localStorage", () => ({
+  getProjectId: jest.fn(),
 }));
 
 const mockUpdateWord = (updateWord as unknown) as jest.Mock<any>;
 const mockGetWord = (getWord as unknown) as jest.Mock<any>;
+const mockGetProject = (getProject as unknown) as jest.Mock<any>;
 
 mockUpdateWord.mockImplementation((oldFrontierWord) => Promise.resolve(""));
 mockGetWord.mockImplementation(() => Promise.resolve(oldFrontierWord));
+mockGetProject.mockImplementation((id) =>
+  Promise.resolve({ ...mockProject, analysisWritingSystems: [{ bcp47: "fr" }] })
+);
 
 // Mocks
 const mockStore = configureMockStore([thunk])();
@@ -321,6 +331,13 @@ describe("Test ReviewEntriesActions", () => {
         .then(() => false)
         .catch(() => true)
     ).toBeTruthy();
+  });
+
+  it("Sets the analysis language", async () => {
+    await mockStore.dispatch<any>(setAnalysisLang());
+
+    expect(mockStore.getActions()[0].analysisLanguage).toBe("fr");
+    expect(mockStore.getActions()[0].type).toBe("SET_ANALYSIS_LANGUAGE");
   });
 });
 

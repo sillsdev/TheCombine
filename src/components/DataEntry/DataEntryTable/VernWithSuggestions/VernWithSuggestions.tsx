@@ -26,6 +26,7 @@ interface VernWithSuggestionsProps {
   updateWordId: (wordId?: string) => void;
   selectedWordId?: string;
   onBlur?: () => void;
+  analysisLang: string;
 }
 
 interface VernWithSuggestionsState {
@@ -187,20 +188,28 @@ export class VernWithSuggestions extends React.Component<
               }
             }}
             vernacularWords={this.state.dupVernWords}
+            analysisLang={this.props.analysisLang}
           />
         )}
         {this.props.isNew && (
           <SenseDialog
             selectedWord={this.state.selectedWord}
             open={this.state.senseOpen}
-            handleClose={(senseIndex: number) => {
-              if (senseIndex >= 0) {
+            handleClose={(senseIndex?: number) => {
+              if (senseIndex === undefined) {
+                this.props.updateWordId();
+                this.setState({
+                  selectedWord: { ...simpleWord("", ""), id: "" },
+                  vernOpen: true,
+                });
+              } else if (senseIndex >= 0) {
                 this.props.setActiveGloss(
                   this.state.selectedWord.senses[senseIndex].glosses[0].def
                 );
               }
               this.setState({ senseOpen: false });
             }}
+            analysisLang={this.props.analysisLang}
           />
         )}
       </React.Fragment>

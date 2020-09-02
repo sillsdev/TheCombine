@@ -12,15 +12,17 @@ import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 interface NewEntryProps {
   allVerns: string[];
   allWords: Word[];
+  defunctWordIds: string[];
   updateWordWithNewGloss: (
     wordId: string,
     gloss: string,
     audioFileURLs: string[]
-  ) => Promise<boolean>;
-  addNewWord: (newWord: Word, newAudio: string[]) => Promise<void>;
+  ) => void;
+  addNewWord: (newWord: Word, newAudio: string[]) => void;
   semanticDomain: SemanticDomain;
   setIsReadyState: (isReady: boolean) => void;
   recorder?: Recorder;
+  analysisLang: string;
 }
 
 interface NewEntryState {
@@ -77,18 +79,16 @@ export default class NewEntry extends React.Component<
   }
 
   updateGlossField(newValue: string) {
-    this.setState({
-      newEntry: {
-        ...this.state.newEntry,
-        senses: [
-          {
-            glosses: [{ language: "en", def: newValue }],
-            semanticDomains: [this.props.semanticDomain],
-          },
-        ],
-      },
-      activeGloss: newValue,
-    });
+    const newEntry = {
+      ...this.state.newEntry,
+      senses: [
+        {
+          glosses: [{ language: this.props.analysisLang, def: newValue }],
+          semanticDomains: [this.props.semanticDomain],
+        },
+      ],
+    };
+    this.setState({ newEntry, activeGloss: newValue });
   }
 
   updateVernField(newValue: string): Word[] {
@@ -96,17 +96,15 @@ export default class NewEntry extends React.Component<
     let isDupVern: boolean = false;
     if (newValue) {
       dupVernWords = this.props.allWords.filter(
-        (word: Word) => word.vernacular === newValue
+        (word: Word) =>
+          word.vernacular === newValue &&
+          !this.props.defunctWordIds.includes(word.id)
+        // Weed out any words that are already being edited
       );
       isDupVern = dupVernWords.length > 0;
     }
-    this.setState({
-      isDupVern,
-      newEntry: {
-        ...this.state.newEntry,
-        vernacular: newValue,
-      },
-    });
+    const newEntry = { ...this.state.newEntry, vernacular: newValue };
+    this.setState({ isDupVern, newEntry });
     return dupVernWords;
   }
 
@@ -122,6 +120,7 @@ export default class NewEntry extends React.Component<
       isDupVern: false,
       wordId: undefined,
     });
+    this.focusVernInput();
   }
 
   /** Move the focus to the vernacular textbox */
@@ -134,19 +133,24 @@ export default class NewEntry extends React.Component<
     focusInput(this.glossInput);
   }
 
-  async addNewWordAndReset() {
-    await this.props
-      .addNewWord(this.state.newEntry, this.state.audioFileURLs)
-      .then(() => {
-        this.resetState();
-      });
-    this.focusVernInput();
+  addNewWordAndReset() {
+    this.props.addNewWord(this.state.newEntry, this.state.audioFileURLs);
+    this.resetState();
   }
 
-  async addOrUpdateWord() {
+  updateWordAndReset() {
+    this.props.updateWordWithNewGloss(
+      this.state.wordId!,
+      this.state.activeGloss,
+      this.state.audioFileURLs
+    );
+    this.resetState();
+  }
+
+  addOrUpdateWord() {
     if (!this.state.isDupVern || this.state.wordId === "") {
       // Either a new Vern is typed, or user has selected new entry for this duplicate vern
-      await this.addNewWordAndReset();
+      this.addNewWordAndReset();
     } else if (this.state.wordId === undefined && this.state.isDupVern) {
       // Duplicate vern and the user hasn't made a selection
       // Change focus away from vern to trigger vern's onBlur
@@ -154,16 +158,7 @@ export default class NewEntry extends React.Component<
     } else {
       // Duplicate vern and the user has selected an entry to modify,
       // so wordId is defined and non-empty
-      await this.props
-        .updateWordWithNewGloss(
-          this.state.wordId!,
-          this.state.activeGloss,
-          this.state.audioFileURLs
-        )
-        .then((result: boolean) => {
-          // result=true means that the submission was successsful
-          if (result) this.resetState();
-        });
+      this.updateWordAndReset();
     }
   }
 
@@ -215,6 +210,7 @@ export default class NewEntry extends React.Component<
                 setActiveGloss={(newGloss: string) =>
                   this.setState({ activeGloss: newGloss })
                 }
+                analysisLang={this.props.analysisLang}
               />
             </Grid>
             <Grid item xs={12}>

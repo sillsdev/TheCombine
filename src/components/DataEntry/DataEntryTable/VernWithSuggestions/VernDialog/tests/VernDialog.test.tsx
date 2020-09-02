@@ -21,7 +21,8 @@ describe("Tests VernList ", () => {
       renderer.create(
         <VernList
           vernacularWords={[simpleWord("", "")]}
-          closeDialog={() => null}
+          closeDialog={jest.fn()}
+          analysisLang={"en"}
         />
       );
     });
@@ -54,6 +55,7 @@ function createVernListInstance(
       <VernList
         vernacularWords={_vernacularWords}
         closeDialog={_mockCallback}
+        analysisLang={"en"}
       />
     </Provider>
   ).root;
