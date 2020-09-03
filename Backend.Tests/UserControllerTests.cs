@@ -171,31 +171,5 @@ namespace Backend.Tests
             var result4 = (_controller.CheckEmail("NewEmail")).Result as StatusCodeResult;
             Assert.AreEqual(result4.StatusCode, 200);
         }
-
-        /*Test]
-        public void TestToLower()
-        {
-            var user = RandomUser();
-            user.Username = "USERNAME";
-            user.Email = "Example@Email.COM";
-            user.Password = "qwerty";
-
-            _ = _controller.Post(user);
-
-            Assert.AreEqual("username", _userService.GetAllUsers().Result[0].Username);
-            Assert.AreEqual("example@email.com", _userService.GetAllUsers().Result[0].Email);
-
-            var credentials = new Credentials();
-            credentials.Username = "UsErNaMe";
-            credentials.Password = "qwerty";
-
-            var result1 = (_controller.Authenticate(credentials).Result as OkObjectResult).Value;
-            var userResult = result1 as User;
-            Assert.IsNotNull(result1);
-            Assert.AreEqual("username", userResult.Username);
-
-            //var result2 = (_controller.CheckUsername("uSerName")).Result;
-            //Assert.IsNotNull(result2);
-        }*/
     }
 }
