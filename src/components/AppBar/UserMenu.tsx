@@ -55,7 +55,6 @@ export default function UserMenu() {
         getContentAnchorEl={null}
         id="user-menu"
         anchorEl={anchorElement}
-        keepMounted
         open={Boolean(anchorElement)}
         onClose={handleClose}
         anchorOrigin={{
