@@ -91,7 +91,7 @@ export default class ResetRequest extends React.Component<
                   error={!this.state.emailOrUsernameExists}
                   helperText={
                     !this.state.emailOrUsernameExists && (
-                      <Translate id="passwordReset.emailError" />
+                      <Translate id="passwordReset.notFoundError" />
                     )
                   }
                   margin="normal"

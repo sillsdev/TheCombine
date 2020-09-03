@@ -161,7 +161,7 @@
     ],
     "submit": ["Submit", "Enviar"],
     "resetFail": ["Password reset expired", "Error al restablecer contraseña"],
-    "emailError": [
+    "notFoundError": [
       "No match found",
       "No se encontraron coincidencias",
       "Pas de résultat trouvé"
