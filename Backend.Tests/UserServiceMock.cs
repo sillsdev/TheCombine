@@ -76,7 +76,7 @@ namespace Backend.Tests
         {
             try
             {
-                var foundUser = _users.Single(u => u.Username == username && u.Password == password);
+                var foundUser = _users.Single(u => u.Username.ToLowerInvariant() == username.ToLowerInvariant() && u.Password == password);
                 if (foundUser == null)
                 {
                     return null;
