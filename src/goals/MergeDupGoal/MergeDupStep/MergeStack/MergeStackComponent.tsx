@@ -1,17 +1,18 @@
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import { MergeTreeReference, Hash, TreeDataSense } from "../MergeDupsTree";
-import Card from "@material-ui/core/Card/Card";
 import {
+  Card,
   CardContent,
-  Typography,
-  IconButton,
-  Grid,
   Chip,
+  Grid,
+  IconButton,
+  Typography,
 } from "@material-ui/core";
 import { ArrowForwardIos } from "@material-ui/icons";
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+
 import { SideBar } from "../MergeDupStepComponent";
+import { Hash, MergeTreeReference, TreeDataSense } from "../MergeDupsTree";
 
 //interface for component props
 export interface MergeStackProps {
@@ -28,7 +29,6 @@ export interface MergeStackProps {
 //interface for component state
 interface MergeStackState {
   anchorEl?: HTMLElement;
-  expanded: boolean;
   duplicateCount: number;
 }
 
@@ -46,7 +46,7 @@ class MergeStack extends React.Component<
 > {
   constructor(props: MergeStackProps & LocalizeContextProps) {
     super(props);
-    this.state = { duplicateCount: 1, expanded: false };
+    this.state = { duplicateCount: 1 };
   }
 
   expand() {
@@ -74,9 +74,9 @@ class MergeStack extends React.Component<
 
     if (senseEntries.length > this.state.duplicateCount) {
       this.expand();
-      this.setState({ ...this.state, duplicateCount: senseEntries.length });
-    } else if (senseEntries.length !== this.state.duplicateCount) {
-      this.setState({ ...this.state, duplicateCount: senseEntries.length });
+    }
+    if (senseEntries.length !== this.state.duplicateCount) {
+      this.setState({ duplicateCount: senseEntries.length });
     }
 
     let glosses: { def: string; language: string; sense: string }[] = [];
@@ -119,6 +119,7 @@ class MergeStack extends React.Component<
         senseID: this.props.senseID,
       });
     }
+
     return (
       <Draggable
         key={this.props.senseID}
