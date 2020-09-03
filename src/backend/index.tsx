@@ -34,9 +34,14 @@ backendServer.interceptors.response.use(
   }
 );
 
-export async function resetPasswordRequest(email: string): Promise<boolean> {
+export async function resetPasswordRequest(
+  emailOrUsername: string
+): Promise<boolean> {
   return await backendServer
-    .post("users/forgot", { domain: window.location.origin, email: email })
+    .post("users/forgot", {
+      domain: window.location.origin,
+      emailOrUsername: emailOrUsername,
+    })
     .then(() => true)
     .catch(() => false);
 }

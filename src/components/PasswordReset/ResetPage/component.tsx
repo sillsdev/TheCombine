@@ -2,8 +2,10 @@ import * as React from "react";
 import { Translate, LocalizeContextProps } from "react-localize-redux";
 import { RouteComponentProps } from "react-router";
 import { Typography, Card, Button, Grid, TextField } from "@material-ui/core";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { RequestState } from "../reducer";
 import { passwordRequirements } from "../../../utilities";
+import history from "../../../history";
 
 export interface MatchParams {
   token: string;
@@ -44,6 +46,11 @@ export default class PasswordReset extends React.Component<
     };
   }
 
+  backToLogin = (event: React.FormEvent<HTMLElement>) => {
+    event.preventDefault();
+    history.push("/login");
+  };
+
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
     this.setState((prevState) => ({
       ...prevState,
@@ -63,13 +70,6 @@ export default class PasswordReset extends React.Component<
     }));
   };
 
-  onChangeToken = (token: string) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      token: token,
-    }));
-  };
-
   render() {
     return (
       <div>
@@ -79,17 +79,6 @@ export default class PasswordReset extends React.Component<
               <Typography variant="h5" align="center" gutterBottom>
                 <Translate id="passwordReset.resetTitle" />
               </Typography>
-
-              <Grid item>
-                <TextField
-                  variant="outlined"
-                  label={<Translate id="passwordReset.tokenLabel" />}
-                  value={this.state.token}
-                  style={{ width: "100%" }}
-                  margin="normal"
-                  onChange={(e) => this.onChangeToken(e.target.value)}
-                />
-              </Grid>
               <Grid item>
                 <TextField
                   variant="outlined"
@@ -145,28 +134,41 @@ export default class PasswordReset extends React.Component<
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item>
                   {this.props.resetState === RequestState.Fail &&
-                    this.state.sentAttempt && (
+                  this.state.sentAttempt ? (
+                    <React.Fragment>
                       <Typography
                         variant="body2"
                         style={{ display: "inline", margin: 24, color: "red" }}
                       >
                         <Translate id="passwordReset.resetFail" />
                       </Typography>
-                    )}
-                  <Button
-                    id="submit_button"
-                    variant="contained"
-                    color="primary"
-                    disabled={
-                      !(
-                        this.state.passwordFitsRequirements &&
-                        this.state.isPasswordConfirmed
-                      )
-                    }
-                    onClick={this.onSubmit}
-                  >
-                    <Translate id="passwordReset.submit" />
-                  </Button>
+                      <Button
+                        id="submit_button"
+                        variant="contained"
+                        color="primary"
+                        onClick={this.backToLogin}
+                      >
+                        <Translate id="passwordReset.backToLogin" />
+                        &nbsp;
+                        <ExitToAppIcon />
+                      </Button>
+                    </React.Fragment>
+                  ) : (
+                    <Button
+                      id="submit_button"
+                      variant="contained"
+                      color="primary"
+                      disabled={
+                        !(
+                          this.state.passwordFitsRequirements &&
+                          this.state.isPasswordConfirmed
+                        )
+                      }
+                      onClick={this.onSubmit}
+                    >
+                      <Translate id="passwordReset.submit" />
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </form>

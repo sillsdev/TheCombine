@@ -144,6 +144,11 @@
     ]
   },
   "passwordReset": {
+    "emailOrUsername": [
+      "Email OR Username",
+      "Correo electrónico o nombre de usuario",
+      "E-mail ou nom d'utilisateur"
+    ],
     "resetRequestTitle": [
       "Reset Password Request",
       "Restablecer solicitud de contraseña"
@@ -156,7 +161,16 @@
     ],
     "submit": ["Submit", "Enviar"],
     "resetFail": ["Password reset expired", "Error al restablecer contraseña"],
-    "emailError": ["Email doesn't exist"]
+    "notFoundError": [
+      "No match found",
+      "No se encontraron coincidencias",
+      "Pas de résultat trouvé"
+    ],
+    "backToLogin": [
+      "Back To Login",
+      "Atrás para iniciar sesión",
+      "Retour connexion"
+    ]
   },
   "userMenu": {
     "siteSettings": [
