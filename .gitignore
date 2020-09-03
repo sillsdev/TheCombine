@@ -17,7 +17,6 @@ docker-compose.init.yml
 # Misc
 .DS_Store
 .env.backend
-.env.frontend
 .env*.local
 Session.vim
 /*.js
@@ -69,10 +68,6 @@ deploy/roles_galaxy/
 deploy/*.hosts
 deploy/*.hosts.yml
 docker_deploy/*.hosts.yml
-
-# Docker installation/configuration artifacts
-.env.backend.prod
-.env.backend.init
 
 # Playbooks for ad hoc testing/development
 deploy/_playbook*.yml

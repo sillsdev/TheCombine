@@ -8,38 +8,18 @@
 #
 #######################################################
 
-- name: create folder for docker files
+- name: create folders for docker installation
   file:
-    name: "{{ combine_app_dir }}"
+    name: "{{ item }}"
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
     mode: 0755
     state: directory
-
-- name: create folder for container uploads
-  file:
-    name: "{{ combine_app_dir }}/uploads"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0755
-    state: directory
-
-- name: create folder for frontend scripts
-  file:
-    name: "{{ combine_app_dir }}/nginx/scripts"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0755
-    state: directory
-
-- name: create folder for nginx configuration
-  file:
-    name: "{{ combine_app_dir }}/nginx/conf.d"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0755
-    state: directory
-
+  with_items:
+    - "{{ combine_app_dir }}"
+    - "{{ combine_app_dir }}/uploads"
+    - "{{ combine_app_dir }}/nginx/scripts"
+    - "{{ combine_app_dir }}/nginx/conf.d"
 
 - name: install docker-compose.yml file
   template:

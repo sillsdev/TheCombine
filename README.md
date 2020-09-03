@@ -226,33 +226,49 @@ separately. This is included by default in Docker Desktop for Windows and macOS.
 
 ### Build and Run
 
-For more information see the
-[Docker Compose docs](https://docs.docker.com/compose/).
+For information on *Docker Compose* see the
+[Docker Compose documentation](https://docs.docker.com/compose/).
 
-Copy `.env.backend.template` to `.env.backend` and fill in the environment
+#### Step-by-step Instructions for Running *TheCombine* In Docker
+
+1. Copy `.env.backend.template` to `.env.backend` and fill in the environment
 variables. Do not fill in the COMBINE_ADMIN_* variables except to create an admin user; see [Create a New Admin User (Docker Environment)](#create-a-new-admin-user-docker-environment)
+2. Copy `docker_deploy/roles/combine_config/templates/docker-compose.yml.j2` to `docker_compose.yml` and make the following substitutions:
+   | Jinja2 variable              | Value                   |
+   | ---------------------------- | ----------------------- |
+   | {{ combine_image_backend }}  | combine/backend:latest  |
+   | {{ combine_image_frontend }} | combine/frontend:latest |
+3. Build the images for the Docker containers
 
-```batch
-> docker-compose build --parallel
-> docker-compose up --detach
-```
+   ```batch
+   > docker build -t combine/frontend:latest --pull -f Dockerfile .
+   > cd Backend
+   > docker build -t combine/backend:latest --pull -f Dockerfile .
+   > cd ..
+   ```
+   *Note that docker needs more than 2GB of RAM to build the frontend.*
+   *On Windows this may be limited by the Docker Desktop. Open Docker Desktop*
+   *Settings to change this.*
+4. Run `docker-compose` to start the containers
+   ```batch
+   > docker-compose up --detach
+   ```
+5. Browse to https://localhost.
 
-Browse to https://localhost.
+   *By default self-signed certificates are included, so you will need to accept a warning in the browser.*
 
-> By default self-signed certificates are included, so you will need to accept
-> a warning in the browser.
+6. To view logs:
 
-To view logs:
+   ```batch
+   > docker-compose logs --follow
+   ```
 
-```batch
-> docker-compose logs --follow
-```
+7. To stop and remove any stored data:
 
-To stop and remove any stored data:
+   ```batch
+   > docker-compose down --volumes
+   ```
 
-```batch
-> docker-compose down --volumes
-```
 ### Create a New Admin User (Docker Environment)
 
 If you have not already created your .env.backend file (see above), copy `.env.backend.template` to `.env.backend`.  Edit `.env.backend` as follows:
@@ -263,7 +279,6 @@ If you have not already created your .env.backend file (see above), copy `.env.b
 Run the following command to install the admin user in the *CombineDatabase*:
 
 ```batch
-> docker-compose build --parallel
 > docker-compose up --abort-on-container-exit
 ```
 
