@@ -79,18 +79,16 @@ export default class NewEntry extends React.Component<
   }
 
   updateGlossField(newValue: string) {
-    this.setState({
-      newEntry: {
-        ...this.state.newEntry,
-        senses: [
-          {
-            glosses: [{ language: this.props.analysisLang, def: newValue }],
-            semanticDomains: [this.props.semanticDomain],
-          },
-        ],
-      },
-      activeGloss: newValue,
-    });
+    const newEntry = {
+      ...this.state.newEntry,
+      senses: [
+        {
+          glosses: [{ language: this.props.analysisLang, def: newValue }],
+          semanticDomains: [this.props.semanticDomain],
+        },
+      ],
+    };
+    this.setState({ newEntry, activeGloss: newValue });
   }
 
   updateVernField(newValue: string): Word[] {
@@ -105,13 +103,8 @@ export default class NewEntry extends React.Component<
       );
       isDupVern = dupVernWords.length > 0;
     }
-    this.setState({
-      isDupVern,
-      newEntry: {
-        ...this.state.newEntry,
-        vernacular: newValue,
-      },
-    });
+    const newEntry = { ...this.state.newEntry, vernacular: newValue };
+    this.setState({ isDupVern, newEntry });
     return dupVernWords;
   }
 

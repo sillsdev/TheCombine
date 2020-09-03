@@ -15,6 +15,13 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        /// <summary>
+        /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word edits.
+        /// </summary>
+        /// <remarks>Only nullable for legacy, can be removed once all projects are updated.</remarks>
+        [BsonElement("guid")]
+        public Guid? Guid { get; set; }
+
         [BsonElement("vernacular")]
         public string Vernacular { get; set; }
 
@@ -55,6 +62,7 @@ namespace BackendFramework.Models
         public Word()
         {
             Id = "";
+            Guid = new Guid();
             Vernacular = "";
             Plural = "";
             Created = "";
@@ -74,6 +82,7 @@ namespace BackendFramework.Models
             var clone = new Word
             {
                 Id = Id.Clone() as string,
+                Guid = Guid,
                 Vernacular = Vernacular.Clone() as string,
                 Plural = Plural.Clone() as string,
                 Created = Created.Clone() as string,
@@ -126,7 +135,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            if (obj == null || !GetType().Equals(obj.GetType()))
             {
                 return false;
             }
@@ -135,7 +144,8 @@ namespace BackendFramework.Models
                 var other = obj as Word;
                 return
                     other.Id.Equals(Id) &&
-                    this.ContentEquals(other) &&
+                    ContentEquals(other) &&
+                    other.Guid == Guid &&
                     other.Created.Equals(Created) &&
                     other.Modified.Equals(Modified) &&
                     other.EditedBy.Count == EditedBy.Count &&
@@ -149,6 +159,7 @@ namespace BackendFramework.Models
         {
             var hash = new HashCode();
             hash.Add(Id);
+            hash.Add(Guid);
             hash.Add(Vernacular);
             hash.Add(Plural);
             hash.Add(Senses);
@@ -177,6 +188,13 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.String)]
         public State Accessibility { get; set; }
 
+        /// <summary>
+        /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word edits.
+        /// </summary>
+        /// <remarks>Only nullable for legacy, can be removed once all projects are updated.</remarks>
+        [BsonElement("guid")]
+        public Guid? Guid { get; set; }
+
         public Sense Clone()
         {
             var clone = new Sense
@@ -199,7 +217,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            if (obj == null || !GetType().Equals(obj.GetType()))
             {
                 return false;
             }
@@ -237,7 +255,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            if (obj == null || !GetType().Equals(obj.GetType()))
             {
                 return false;
             }
@@ -279,7 +297,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            if (obj == null || !GetType().Equals(obj.GetType()))
             {
                 return false;
             }
