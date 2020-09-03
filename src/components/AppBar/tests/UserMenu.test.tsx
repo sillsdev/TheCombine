@@ -1,4 +1,4 @@
-import { MenuItem } from "@material-ui/core";
+import { MenuItem, Button } from "@material-ui/core";
 import React from "react";
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
@@ -28,12 +28,20 @@ beforeEach(() => {
 });
 
 function renderUserMenu() {
-  testRenderer = renderer.create(<UserMenu />);
+  renderer.act(() => {
+    testRenderer = renderer.create(
+      <Provider store={mockStore}>
+        <UserMenu />
+      </Provider>
+    );
+  });
 }
 
 describe("Tests UserMenu", () => {
   it("should not show site settings to general users", () => {
+    mockUser.isAdmin = false;
     renderUserMenu();
+    testRenderer.root.findByType(Button).props.onClick();
     const menuItems = testRenderer.root.findAllByType(MenuItem);
     expect(menuItems.length).toBe(2);
   });
