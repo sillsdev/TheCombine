@@ -38,11 +38,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ResetPasswordRequest([FromBody] PasswordResetData data)
         {
             // create password reset
-            var resetRequest = await _passwordResetService.CreatePasswordReset(data.Email);
+            var resetRequest = await _passwordResetService.CreatePasswordReset(data.EmailOrUsername);
 
-            // find user attached to email
-            var user = _userService.GetAllUsers().Result.Single(user =>
-                user.Email.ToLowerInvariant().Equals(data.Email.ToLowerInvariant()));
+            // find user attached to email or username
+            var user = _userService.GetAllUsers().Result.SingleOrDefault(user =>
+                user.Email.ToLowerInvariant().Equals(data.EmailOrUsername.ToLowerInvariant()) ||
+                user.Username.ToLowerInvariant().Equals(data.EmailOrUsername.ToLowerInvariant()));
 
             // create email
             var message = new MimeMessage();
@@ -63,6 +64,7 @@ namespace BackendFramework.Controllers
                 return new InternalServerErrorResult();
             }
         }
+
 
         /// <summary> Resets a password using a token </summary>
         /// <remarks> POST: v1/users/reset </remarks>
@@ -250,7 +252,7 @@ namespace BackendFramework.Controllers
 
         public class PasswordResetData
         {
-            public string Email;
+            public string EmailOrUsername;
             public string Token;
             public string NewPassword;
             public string Domain;
