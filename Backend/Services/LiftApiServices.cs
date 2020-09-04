@@ -119,7 +119,7 @@ namespace BackendFramework.Services
             var liftPath = Path.Combine(zipDir, "NewLiftFile.lift");
 
             // noBOM will work with PrinceXML
-            var liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);
+            using var liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);
             var rangesDest = Path.Combine(zipDir, "NewLiftFile.lift-ranges");
 
             // write header of lift document
@@ -239,7 +239,7 @@ namespace BackendFramework.Services
 
             // Compress everything
             var destinationFileName = Path.Combine(exportDir,
-                Path.Combine($"LiftExportCompressed-{proj.Id}_{$"{DateTime.Now:yyyy-MM-dd_hh-mm-ss}"}.zip"));
+                Path.Combine($"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip"));
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
 
             return destinationFileName;
