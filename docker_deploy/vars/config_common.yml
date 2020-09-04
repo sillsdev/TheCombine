@@ -14,6 +14,6 @@ combine_user: combine
 combine_group: app
 combine_app_dir: /opt/combine
 
-aws_ecr: 883525205171.dkr.ecr.us-east-2.amazonaws.com
+aws_ecr: "{{ lookup('env', 'AWS_ECR') | default('580573161836.dkr.ecr.us-east-1.amazonaws.com', true) }}"
 combine_image_backend: "{{ aws_ecr }}/combine/backend:latest"
 combine_image_frontend: "{{ aws_ecr }}/combine/frontend:latest"
