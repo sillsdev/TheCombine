@@ -63,7 +63,7 @@ A rapid word collection tool.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
 7. Run `npm start` from the project directory to install dependencies and start
-   the project
+   the project.
 
 8. Consult our [C#](docs/c_sharp_style_guide.md)
    and [JavaScript/TypeScript](docs/ts_style_guide.md)
@@ -96,11 +96,11 @@ Runs only the front end of the app in the development mode.
 
 #### `npm run api`
 
-Runs only the API
+Runs only the API.
 
 #### `npm run database`
 
-Runs only the mongo database
+Runs only the mongo database.
 
 ### `npm test`
 
