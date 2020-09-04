@@ -1,5 +1,13 @@
 # The Combine
 
+[![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
+[![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
+
+[lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
+[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts/
+
 A rapid word collection tool.
 
 ## Getting Started with Development
