@@ -53,15 +53,12 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !GetType().Equals(obj.GetType()))
+            if (!(obj is UserEdit other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as UserEdit;
-                return other.Id.Equals(Id) && ContentEquals(other);
-            }
+
+            return other.Id.Equals(Id) && ContentEquals(other);
         }
 
         public override int GetHashCode()

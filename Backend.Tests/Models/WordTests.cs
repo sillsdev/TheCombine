@@ -5,7 +5,7 @@ namespace Backend.Tests.Models
 {
     public class WordTests
     {
-        private const string Vernacular = "Fr";
+        private const string Vernacular = "fr";
 
         [Test]
         public void TestEquals()
