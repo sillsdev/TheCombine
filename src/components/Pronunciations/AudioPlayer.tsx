@@ -69,11 +69,7 @@ export default function AudioPlayer(props: PlayerProps) {
     }
   }
 
-  function longPressStart(
-    event:
-      | React.TouchEvent<HTMLButtonElement>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  function longPressStart(event: React.MouseEvent<HTMLButtonElement>) {
     setTimer(
       setTimeout(() => {
         setAnchor(event.currentTarget);
@@ -98,8 +94,8 @@ export default function AudioPlayer(props: PlayerProps) {
         <IconButton
           tabIndex={-1}
           onClick={deleteOrTogglePlay}
-          onTouchStart={longPressStart}
-          onTouchEnd={longPressRelease}
+          //onTouchStart={longPressStart}
+          //onTouchEnd={longPressRelease}
           onMouseDown={longPressStart}
           onMouseUp={longPressRelease}
           onMouseLeave={longPressRelease}
