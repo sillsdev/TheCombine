@@ -6,6 +6,6 @@ namespace BackendFramework.Interfaces
     {
         void SetProject(string projectId);
         string LiftExport(string projectId);
-        void LdmlImport(string combine, string bcp47);
+        void LdmlImport(string path, string langTag);
     }
 }
