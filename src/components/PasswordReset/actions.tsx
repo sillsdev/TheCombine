@@ -35,13 +35,12 @@ export function resetFail(): ResetAction {
   };
 }
 
-export function asyncResetRequest(email: string) {
+export function asyncResetRequest(emailOrUsername: string) {
   return async (
     dispatch: Dispatch<ResetAction | ThunkAction<any, {}, {}, AnyAction>>
   ) => {
     // make call
-    await resetPasswordRequest(email);
-    history.push("/forgot/reset");
+    await resetPasswordRequest(emailOrUsername);
   };
 }
 
