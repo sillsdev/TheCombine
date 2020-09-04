@@ -44,6 +44,16 @@ namespace BackendFramework.Services
                 entry.Pronunciations.Clear();
             }
         }
+
+        public override void Dispose()
+        {
+            // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation has been
+            //    fixed to properly to avoid needing to override its Dispose method.
+            //    https://github.com/sillsdev/libpalaso/blob/master/SIL.DictionaryServices/Lift/LiftWriter.cs
+            Writer.Close();
+            Writer.Dispose();
+            base.Dispose();
+        }
     }
 
     public class LiftService : ILiftService
@@ -58,6 +68,7 @@ namespace BackendFramework.Services
             _repo = repo;
             _projService = projService;
             _sdList = new List<SemanticDomain>();
+            Sldr.Initialize(true);
         }
 
         /// <summary> Allows projectId to be added to words being imported </summary>
@@ -69,26 +80,16 @@ namespace BackendFramework.Services
         /// <summary> Imports main character set for a project from an ldml file </summary>
         public void LdmlImport(string filePath, string langTag)
         {
-            // SLDR is the SIL locale data repository, it is necessary for reading/writing ldml
-            // It is being initialized in offline mode here to only pull local data
-            Sldr.Initialize(true);
-            try
-            {
-                var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
-                var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-                wsf.Create(langTag, out var wsDef);
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
+            var wsf = new LdmlInFolderWritingSystemFactory(wsr);
+            wsf.Create(langTag, out var wsDef);
 
-                //if there is a main character set, import it to the project
-                if (wsDef.CharacterSets.Contains("main"))
-                {
-                    var newProj = _projService.GetProject(_projectId).Result;
-                    newProj.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
-                    _projService.Update(_projectId, newProj);
-                }
-            }
-            finally //if there was somehow an error above, we still want to cleanup to prevent unhelpful errors later
+            //if there is a main character set, import it to the project
+            if (wsDef.CharacterSets.Contains("main"))
             {
-                Sldr.Cleanup();
+                var newProj = _projService.GetProject(_projectId).Result;
+                newProj.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
+                _projService.Update(_projectId, newProj);
             }
         }
 
@@ -322,41 +323,30 @@ namespace BackendFramework.Services
         /// <summary> Exports main character set from a project to an ldml file </summary>
         private void LdmlExport(string filePath, string langTag)
         {
-            // SLDR is the SIL Locale Data repository, it is necessary for reading/writing ldml
-            // It is being initialized in offline mode here to only pull local data
-            Sldr.Initialize(true);
-            try
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
+            var wsf = new LdmlInFolderWritingSystemFactory(wsr);
+            wsf.Create(langTag, out var wsDef);
+
+            var proj = _projService.GetProject(_projectId).Result;
+
+            // If there isn't already a main character set defined, make one and add it to the writing system
+            // definition
+            if (!wsDef.CharacterSets.TryGet("main", out var chars))
             {
-                var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
-                var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-                wsf.Create(langTag, out var wsDef);
-
-                var proj = _projService.GetProject(_projectId).Result;
-
-                // If there isn't already a main character set defined, make one and add it to the writing system
-                // definition
-                if (!wsDef.CharacterSets.TryGet("main", out var chars))
-                {
-                    chars = new CharacterSetDefinition("main");
-                    wsDef.CharacterSets.Add(chars);
-                }
-
-                // Replace all the characters found with our copy of the character set
-                chars.Characters.Clear();
-                foreach (var character in proj.ValidCharacters)
-                {
-                    chars.Characters.Add(character);
-                }
-
-                // Write out the new definition
-                wsr.Set(wsDef);
-                wsr.Save();
+                chars = new CharacterSetDefinition("main");
+                wsDef.CharacterSets.Add(chars);
             }
-            finally
+
+            // Replace all the characters found with our copy of the character set
+            chars.Characters.Clear();
+            foreach (var character in proj.ValidCharacters)
             {
-                // If there was somehow an error above, we still want to cleanup to prevent unhelpful errors later
-                Sldr.Cleanup();
+                chars.Characters.Add(character);
             }
+
+            // Write out the new definition
+            wsr.Set(wsDef);
+            wsr.Save();
         }
 
         private static void WriteRangeElement(
