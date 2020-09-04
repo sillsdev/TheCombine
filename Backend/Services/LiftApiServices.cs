@@ -436,7 +436,9 @@ namespace BackendFramework.Services
             {
                 var newSense = new Sense
                 {
-                    SemanticDomains = new List<SemanticDomain>(), Glosses = new List<Gloss>(), Guid = sense.Guid
+                    SemanticDomains = new List<SemanticDomain>(),
+                    Glosses = new List<Gloss>(),
+                    Guid = sense.Guid
                 };
 
                 // Add glosses

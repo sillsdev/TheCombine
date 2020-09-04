@@ -22,4 +22,23 @@ namespace Backend.Tests.Models
             Assert.IsFalse(project.Equals(null));
         }
     }
+
+    public class WritingSystemTests
+    {
+        private const string Name = "System 1";
+
+        [Test]
+        public void TestEquals()
+        {
+            var system = new WritingSystem { Name = Name };
+            Assert.That(system.Equals(new WritingSystem { Name = Name }));
+        }
+
+        [Test]
+        public void TestEqualsNull()
+        {
+            var system = new WritingSystem { Name = Name };
+            Assert.IsFalse(system.Equals(null));
+        }
+    }
 }

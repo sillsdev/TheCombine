@@ -258,12 +258,6 @@ namespace BackendFramework.Models
             Bcp47 = "";
             Font = "";
         }
-        public WritingSystem(WritingSystem ws)
-        {
-            Name = ws.Name;
-            Bcp47 = ws.Bcp47;
-            Font = ws.Font;
-        }
 
         public WritingSystem Clone()
         {
@@ -274,24 +268,15 @@ namespace BackendFramework.Models
                 Font = Font.Clone() as string
             };
         }
+
         public override bool Equals(object obj)
         {
-            if (obj == null || !GetType().Equals(obj.GetType()))
+            if (!(obj is WritingSystem ws) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var ws = obj as WritingSystem;
-                if (ws != null && Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+
+            return Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font;
         }
 
         public override int GetHashCode()
