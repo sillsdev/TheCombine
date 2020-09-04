@@ -21,6 +21,7 @@ namespace Backend.Tests.Controllers
         private string _projId;
         private IPermissionService _permissionService;
         private IUserService _userService;
+        private User _jwtAuthenticatedUser;
 
         [SetUp]
         public void Setup()
@@ -36,7 +37,11 @@ namespace Backend.Tests.Controllers
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
-
+            _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
+            _userService.Create(_jwtAuthenticatedUser);
+            _jwtAuthenticatedUser = _userService.Authenticate(
+                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
+            _userEditController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
         }
 
         private UserEdit RandomUserEdit()
