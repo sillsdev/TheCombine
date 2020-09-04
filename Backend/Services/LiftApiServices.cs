@@ -50,9 +50,26 @@ namespace BackendFramework.Services
             // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation has been
             //    fixed to properly to avoid needing to override its Dispose method.
             //    https://github.com/sillsdev/libpalaso/blob/master/SIL.DictionaryServices/Lift/LiftWriter.cs
-            Writer.Close();
-            Writer.Dispose();
-            base.Dispose();
+            Dispose(true);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (Disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                Writer?.Close();
+                Writer?.Dispose();
+            }
+
+            Disposed = true;
+
+            // Generally, the base class Dispose method would be called here, but it accesses
+            // _writer, and we are disposing of that ourselves in the child class to fix a memory leak.
         }
     }
 
