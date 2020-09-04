@@ -1,5 +1,6 @@
 import { randomIntString } from "../utilities";
 import { AutoComplete } from "./AutoComplete";
+import { User } from "./user";
 import { SemanticDomain, testWordList, Word } from "./word";
 
 export interface CustomField {
@@ -26,6 +27,10 @@ export interface Project {
   words: Word[];
   customFields: CustomField[];
   autocompleteSetting: AutoComplete;
+}
+
+export interface ProjectWithUser extends Project {
+  user: User;
 }
 
 export const defaultProject = {

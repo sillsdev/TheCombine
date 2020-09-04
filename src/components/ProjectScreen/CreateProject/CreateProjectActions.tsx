@@ -1,6 +1,7 @@
 import { ThunkDispatch } from "redux-thunk";
 
 import * as backend from "../../../backend";
+import { setCurrentUser } from "../../../backend/localStorage";
 import history from "../../../history";
 import { StoreState } from "../../../types";
 import { defaultProject, Project, WritingSystem } from "../../../types/project";
@@ -59,6 +60,7 @@ export function asyncCreateProject(
     backend
       .createProject(project)
       .then((createdProject) => {
+        setCurrentUser(createdProject.user);
         dispatch(setCurrentProject(createdProject));
 
         // Upload words

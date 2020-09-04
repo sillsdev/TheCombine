@@ -70,15 +70,14 @@ function asyncCreateNewUserEditsObject(projectId: string) {
   return async () => {
     await Backend.createUserEdit()
       .then(async (userEditId: string) => {
-        const localUser = LocalStorage.getCurrentUser();
-        if (localUser) {
-          const currentUser = await Backend.getUser(localUser.id);
+        const currentUserId = LocalStorage.getUserId();
+        if (currentUserId) {
+          const currentUser = await Backend.getUser(currentUserId);
           const updatedUser = updateUserWithUserEditId(
             currentUser,
             projectId,
             userEditId
           );
-          updatedUser.token = localUser.token;
           LocalStorage.setCurrentUser(updatedUser);
           await Backend.updateUser(updatedUser);
         }
