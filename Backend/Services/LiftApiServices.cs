@@ -471,7 +471,7 @@ namespace BackendFramework.Services
             {
                 if (field.Type == "Plural")
                 {
-                    foreach (var plural in field.Content)
+                    foreach (var _ in field.Content)
                     {
                         var pluralForm = entry.Fields.First().Content.First().Value.Text;
                         newWord.Plural = pluralForm;
