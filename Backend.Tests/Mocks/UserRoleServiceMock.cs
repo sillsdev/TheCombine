@@ -6,7 +6,7 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
-namespace Backend.Tests
+namespace Backend.Tests.Mocks
 {
     public class UserRoleServiceMock : IUserRoleService
     {
