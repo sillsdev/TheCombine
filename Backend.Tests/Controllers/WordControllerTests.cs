@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -7,7 +8,7 @@ using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace Backend.Tests
+namespace Backend.Tests.Controllers
 {
     public class WordControllerTests
     {
@@ -30,7 +31,7 @@ namespace Backend.Tests
             _projId = _projectService.Create(new Project()).Result.Id;
         }
 
-        Word RandomWord()
+        private Word RandomWord()
         {
             var word = new Word { Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() } };
 
@@ -42,8 +43,8 @@ namespace Backend.Tests
 
                 foreach (var gloss in sense.Glosses)
                 {
-                    gloss.Def = Util.RandString();
-                    gloss.Language = Util.RandString(3);
+                    gloss.Def = Util.Util.RandString();
+                    gloss.Language = Util.Util.RandString(3);
                 }
 
                 sense.SemanticDomains = new List<SemanticDomain>()
@@ -53,17 +54,17 @@ namespace Backend.Tests
 
                 foreach (var semdom in sense.SemanticDomains)
                 {
-                    semdom.Name = Util.RandString();
-                    semdom.Id = Util.RandString();
-                    semdom.Description = Util.RandString();
+                    semdom.Name = Util.Util.RandString();
+                    semdom.Id = Util.Util.RandString();
+                    semdom.Description = Util.Util.RandString();
                 }
             }
 
-            word.Created = Util.RandString();
-            word.Vernacular = Util.RandString();
-            word.Modified = Util.RandString();
-            word.PartOfSpeech = Util.RandString();
-            word.Plural = Util.RandString();
+            word.Created = Util.Util.RandString();
+            word.Vernacular = Util.Util.RandString();
+            word.Modified = Util.Util.RandString();
+            word.PartOfSpeech = Util.Util.RandString();
+            word.Plural = Util.Util.RandString();
             word.History = new List<string>();
             word.Audio = new List<string>();
             word.ProjectId = _projId;
@@ -221,7 +222,7 @@ namespace Backend.Tests
             var parentChildMergeObject = new MergeWords
             {
                 Parent = RandomWord(),
-                Time = Util.RandString(),
+                Time = Util.Util.RandString(),
                 ChildrenWords = new List<MergeSourceWord>()
             };
 

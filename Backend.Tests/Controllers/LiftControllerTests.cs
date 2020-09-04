@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -13,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace Backend.Tests
+namespace Backend.Tests.Controllers
 {
     public class LiftControllerTests
     {
@@ -44,7 +45,7 @@ namespace Backend.Tests
 
         public string RandomLiftFile(string path)
         {
-            var name = "TEST-TO_BE_STREAMED-" + Util.RandString() + ".lift";
+            var name = "TEST-TO_BE_STREAMED-" + Util.Util.RandString() + ".lift";
             name = Path.Combine(path, name);
             var fs = File.OpenWrite(name);
 
@@ -68,20 +69,20 @@ namespace Backend.Tests
 
             for (var i = 0; i < 3; i++)
             {
-                var dateCreated = $"\"{Util.RandString(20)}\"";
-                var dateModified = $"\"{Util.RandString(20)}\"";
-                var id = $"\"{Util.RandString()}\"";
-                var guid = $"\"{Util.RandString()}\"";
-                var vernLang = $"\"{Util.RandString(3)}\"";
-                var vern = Util.RandString(6);
-                var plural = Util.RandString(8);
-                var audio = $"\"{Util.RandString(3)}.mp3\"";
-                var senseId = $"\"{Util.RandString()}\"";
-                var transLang1 = $"\"{Util.RandString(3)}\"";
-                var transLang2 = $"\"{Util.RandString(3)}\"";
-                var trans1 = Util.RandString(6);
-                var trans2 = Util.RandString(8);
-                var sdValue = $"\"{Util.RandString(4)} {Util.RandString(4)}\"";
+                var dateCreated = $"\"{Util.Util.RandString(20)}\"";
+                var dateModified = $"\"{Util.Util.RandString(20)}\"";
+                var id = $"\"{Util.Util.RandString()}\"";
+                var guid = $"\"{Util.Util.RandString()}\"";
+                var vernLang = $"\"{Util.Util.RandString(3)}\"";
+                var vern = Util.Util.RandString(6);
+                var plural = Util.Util.RandString(8);
+                var audio = $"\"{Util.Util.RandString(3)}.mp3\"";
+                var senseId = $"\"{Util.Util.RandString()}\"";
+                var transLang1 = $"\"{Util.Util.RandString(3)}\"";
+                var transLang2 = $"\"{Util.Util.RandString(3)}\"";
+                var trans1 = Util.Util.RandString(6);
+                var trans2 = Util.Util.RandString(8);
+                var sdValue = $"\"{Util.Util.RandString(4)} {Util.Util.RandString(4)}\"";
 
                 var entry =
                     $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
@@ -123,8 +124,8 @@ namespace Backend.Tests
 
                 foreach (var gloss in sense.Glosses)
                 {
-                    gloss.Def = Util.RandString();
-                    gloss.Language = Util.RandString(3);
+                    gloss.Def = Util.Util.RandString();
+                    gloss.Language = Util.Util.RandString(3);
                 }
 
                 sense.SemanticDomains = new List<SemanticDomain>()
@@ -134,17 +135,17 @@ namespace Backend.Tests
 
                 foreach (var semdom in sense.SemanticDomains)
                 {
-                    semdom.Name = Util.RandString();
-                    semdom.Id = Util.RandString();
-                    semdom.Description = Util.RandString();
+                    semdom.Name = Util.Util.RandString();
+                    semdom.Id = Util.Util.RandString();
+                    semdom.Description = Util.Util.RandString();
                 }
             }
 
-            word.Created = Util.RandString();
-            word.Vernacular = Util.RandString();
-            word.Modified = Util.RandString();
-            word.PartOfSpeech = Util.RandString();
-            word.Plural = Util.RandString();
+            word.Created = Util.Util.RandString();
+            word.Vernacular = Util.Util.RandString();
+            word.Modified = Util.Util.RandString();
+            word.PartOfSpeech = Util.Util.RandString();
+            word.Plural = Util.Util.RandString();
             word.History = new List<string>();
             word.ProjectId = projId;
 
@@ -214,7 +215,6 @@ namespace Backend.Tests
             // Get path to the starting dir
             var pathToStartZips = Path.Combine(Directory.GetParent(Directory.GetParent(
                 Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets");
-            var testZips = Directory.GetFiles(pathToStartZips, "*.zip");
 
             var fileMapping = new Dictionary<string, RoundTripObj>();
 

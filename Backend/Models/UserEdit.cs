@@ -86,15 +86,12 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !GetType().Equals(obj.GetType()))
+            if (!(obj is UserEditObjectWrapper other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as UserEditObjectWrapper;
-                return other.GoalIndex.Equals(GoalIndex) && other.NewEdit.Equals(NewEdit);
-            }
+
+            return other.GoalIndex.Equals(GoalIndex) && other.NewEdit.Equals(NewEdit);
         }
 
         public override int GetHashCode()
@@ -136,19 +133,15 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !GetType().Equals(obj.GetType()))
+            if (!(obj is Edit other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as Edit;
-                return
-                    GoalType.Equals(other.GoalType) &&
 
-                    other.StepData.Count == StepData.Count &&
-                    other.StepData.All(StepData.Contains);
-            }
+            return
+                GoalType.Equals(other.GoalType) &&
+                other.StepData.Count == StepData.Count &&
+                other.StepData.All(StepData.Contains);
         }
 
         public override int GetHashCode()
