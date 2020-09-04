@@ -25,7 +25,7 @@ namespace Backend.Tests.Models
 
     public class GlossTests
     {
-        private const string Language = "Fr";
+        private const string Language = "fr";
         private const string Def = "def";
 
         [Test]
