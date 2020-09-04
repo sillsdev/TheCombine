@@ -44,6 +44,16 @@ namespace BackendFramework.Services
                 entry.Pronunciations.Clear();
             }
         }
+
+        public override void Dispose()
+        {
+            // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation has been
+            //    fixed to properly to avoid needing to override its Dispose method.
+            //    https://github.com/sillsdev/libpalaso/blob/master/SIL.DictionaryServices/Lift/LiftWriter.cs
+            Writer.Close();
+            Writer.Dispose();
+            base.Dispose();
+        }
     }
 
     public class LiftService : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
