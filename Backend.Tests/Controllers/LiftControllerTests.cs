@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -13,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace Backend.Tests
+namespace Backend.Tests.Controllers
 {
     public class LiftControllerTests
     {
@@ -214,7 +215,6 @@ namespace Backend.Tests
             // Get path to the starting dir
             var pathToStartZips = Path.Combine(Directory.GetParent(Directory.GetParent(
                 Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets");
-            var testZips = Directory.GetFiles(pathToStartZips, "*.zip");
 
             var fileMapping = new Dictionary<string, RoundTripObj>();
 

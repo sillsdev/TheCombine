@@ -46,7 +46,6 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-
             // sanitize projectId
             if (!SanitizeId(projectId))
             {

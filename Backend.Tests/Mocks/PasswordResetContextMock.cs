@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using System.Linq;
 
-namespace Backend.Tests
+namespace Backend.Tests.Mocks
 {
     public class PasswordResetContextMock : IPasswordResetContext
     {
