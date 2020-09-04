@@ -458,9 +458,9 @@ function goalNameToGoalTypeId(goalName: string): string {
   return goalType.toString();
 }
 
-export async function createUserEditForUser(): Promise<Object> {
+export async function createUserEdit(): Promise<Object> {
   let resp = await backendServer.post(
-    `projects/${LocalStorage.getProjectId()}/useredits/new/${LocalStorage.getUserId()}`,
+    `projects/${LocalStorage.getProjectId()}/useredits`,
     "",
     {
       headers: authHeader(),

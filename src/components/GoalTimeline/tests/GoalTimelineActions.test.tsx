@@ -40,7 +40,7 @@ jest.mock("../../../backend", () => {
     getUserEditById: jest.fn((_projId: string, _index: string) => {
       return Promise.resolve(mockUserEdit);
     }),
-    createUserEditForUser: jest.fn(() => {
+    createUserEdit: jest.fn(() => {
       return Promise.resolve({});
     }),
     updateUser: jest.fn((_user: User) => {

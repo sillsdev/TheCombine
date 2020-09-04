@@ -89,8 +89,8 @@ namespace Backend.Tests.Controllers
         public void TestCreateUserEdit()
         {
             var userEdit = new UserEdit { ProjectId = _projId };
-            var id = (_userEditController.Post(_projId).Result as ObjectResult).Value as string;
-            userEdit.Id = id;
+            var withUser = (_userEditController.Post(_projId).Result as ObjectResult).Value as WithUser;
+            userEdit.Id = withUser.UpdatedUser.WorkedProjects[_projId];
             Assert.Contains(userEdit, _userEditRepo.GetAllUserEdits(_projId).Result);
         }
 

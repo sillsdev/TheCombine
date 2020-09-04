@@ -105,25 +105,9 @@ namespace BackendFramework.Controllers
 
         /// <summary> Creates a <see cref="UserEdit"/> </summary>
         /// <remarks> POST: v1/projects/{projectId}/useredits </remarks>
-        /// <returns> Id of create UserEdit </returns>
+        /// <returns> UpdatedUser </returns>
         [HttpPost]
         public async Task<IActionResult> Post(string projectId)
-        {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
-            {
-                return new ForbidResult();
-            }
-
-            var userEdit = new UserEdit { ProjectId = projectId };
-            await _repo.Create(userEdit);
-            return new OkObjectResult(userEdit.Id);
-        }
-
-        /// <summary> Creates a <see cref="UserEdit"/> for user </summary>
-        /// <remarks> POST: v1/projects/{projectId}/useredits/new/{userId} </remarks>
-        /// <returns> UpdatedUser </returns>
-        [HttpPost("new/{userId}")]
-        public async Task<IActionResult> Post(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
             {
@@ -133,13 +117,14 @@ namespace BackendFramework.Controllers
             // Generate the new userEdit
             var userEdit = new UserEdit { ProjectId = projectId };
             await _repo.Create(userEdit);
-            // Update the user
-            var currentUser = await _userService.GetUser(userId);
+            // Update current user
+            var currentUserId = _permissionService.GetUserId(HttpContext);
+            var currentUser = await _userService.GetUser(currentUserId);
             currentUser.WorkedProjects.Add(projectId, userEdit.Id);
-            await _userService.Update(userId, currentUser);
-            // Generate the JWT based on those new userEdit
+            await _userService.Update(currentUserId, currentUser);
+            // Generate the JWT based on the new userEdit
             currentUser = await _userService.MakeJwt(currentUser);
-            await _userService.Update(userId, currentUser);
+            await _userService.Update(currentUserId, currentUser);
 
             var output = new WithUser() { UpdatedUser = currentUser };
 

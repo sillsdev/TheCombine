@@ -76,7 +76,7 @@ export function asyncGetUserEdits() {
       if (userEditId !== undefined) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
-        dispatch(Backend.createUserEditForUser);
+        dispatch(Backend.createUserEdit);
       }
     }
   };
