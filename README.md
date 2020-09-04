@@ -65,6 +65,10 @@ A rapid word collection tool.
 7. Run `npm start` from the project directory to install dependencies and start
    the project
 
+8. Consult our [C#](docs/c_sharp_style_guide.md)
+   and [JavaScript/TypeScript](docs/ts_style_guide.md)
+   style guides for best coding practices in this project.
+
 [chocolatey]: https://chocolatey.org/
 
 ## Available Scripts
@@ -172,8 +176,8 @@ npm run import-sem-doms -- <XML_FILE_PATH>
 
 To browse the database locally during development, open MongoDB Compass Community.
 
-  1. Under New Connection, enter `mongodb://localhost:27017`
-  2. Under Databases, select CombineDatabase
+1. Under New Connection, enter `mongodb://localhost:27017`
+2. Under Databases, select CombineDatabase
 
 ### Drop Database
 
