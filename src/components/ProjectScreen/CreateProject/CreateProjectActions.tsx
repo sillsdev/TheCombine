@@ -60,7 +60,6 @@ export function asyncCreateProject(
     backend
       .createProject(project)
       .then((createdProject) => {
-        setCurrentUser(createdProject.user);
         dispatch(setCurrentProject(createdProject));
 
         // Upload words

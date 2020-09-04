@@ -119,6 +119,33 @@ namespace BackendFramework.Controllers
             return new OkObjectResult(userEdit.Id);
         }
 
+        /// <summary> Creates a <see cref="UserEdit"/> for user </summary>
+        /// <remarks> POST: v1/projects/{projectId}/useredits/{userId} </remarks>
+        /// <returns> UpdatedUser </returns>
+        [HttpPost("{userId}")]
+        public async Task<IActionResult> Post(string projectId, string userId)
+        {
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
+            {
+                return new ForbidResult();
+            }
+
+            // Generate the new userEdit
+            var userEdit = new UserEdit { ProjectId = projectId };
+            await _repo.Create(userEdit);
+            // Update the user
+            var currentUser = await _userService.GetUser(userId);
+            currentUser.WorkedProjects.Add(projectId, userEdit.Id);
+            await _userService.Update(userId, currentUser);
+            // Generate the JWT based on those new userEdit
+            currentUser = await _userService.MakeJwt(currentUser);
+            await _userService.Update(userId, currentUser);
+
+            var output = new WithUser() { UpdatedUser = currentUser };
+
+            return new OkObjectResult(output);
+        }
+
         /// <summary> Adds a goal to <see cref="UserEdit"/> with specified id </summary>
         /// <remarks> POST: v1/projects/{projectId}/useredits/{userEditId} </remarks>
         /// <returns> Index of newest edit </returns>

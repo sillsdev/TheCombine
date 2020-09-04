@@ -66,28 +66,6 @@ export function asyncLoadExistingUserEdits(
   };
 }
 
-function asyncCreateNewUserEditsObject(projectId: string) {
-  return async () => {
-    await Backend.createUserEdit()
-      .then(async (userEditId: string) => {
-        const currentUserId = LocalStorage.getUserId();
-        if (currentUserId) {
-          const currentUser = await Backend.getUser(currentUserId);
-          const updatedUser = updateUserWithUserEditId(
-            currentUser,
-            projectId,
-            userEditId
-          );
-          LocalStorage.setCurrentUser(updatedUser);
-          await Backend.updateUser(updatedUser);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-}
-
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     const user: User | null = LocalStorage.getCurrentUser();
@@ -98,7 +76,7 @@ export function asyncGetUserEdits() {
       if (userEditId !== undefined) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
-        dispatch(asyncCreateNewUserEditsObject(projectId));
+        dispatch(Backend.createUserEditForUser);
       }
     }
   };
