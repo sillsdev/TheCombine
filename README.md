@@ -246,9 +246,6 @@ variables. Do not fill in the COMBINE_ADMIN_* variables except to create an admi
    > docker build -t combine/backend:latest --pull -f Dockerfile .
    > cd ..
    ```
-   *Note that docker needs more than 2GB of RAM to build the frontend.*
-   *On Windows this may be limited by the Docker Desktop. Open Docker Desktop*
-   *Settings to change this.*
 4. Run `docker-compose` to start the containers
    ```batch
    > docker-compose up --detach
