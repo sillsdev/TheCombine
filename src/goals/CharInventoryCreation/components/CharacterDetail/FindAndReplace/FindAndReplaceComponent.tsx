@@ -1,9 +1,9 @@
+import { Button, TextField, Typography } from "@material-ui/core";
 import * as React from "react";
-import { TextField, Button, Typography } from "@material-ui/core";
 import {
-  withLocalize,
   LocalizeContextProps,
   Translate,
+  withLocalize,
 } from "react-localize-redux";
 
 export interface FindAndReplaceProps {
@@ -30,11 +30,10 @@ export class FindAndReplace extends React.Component<
   }
 
   componentDidUpdate(prevProps: FindAndReplaceProps & LocalizeContextProps) {
-    if (prevProps.initialFindValue !== this.props.initialFindValue)
-      this.setState({
-        findValue: this.props.initialFindValue,
-        replaceValue: "",
-      });
+    if (prevProps.initialFindValue !== this.props.initialFindValue) {
+      const findValue = this.props.initialFindValue;
+      this.setState({ findValue, replaceValue: "" });
+    }
   }
 
   /** Updates the state to match the value in a textbox */
