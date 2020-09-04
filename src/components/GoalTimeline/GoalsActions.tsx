@@ -70,7 +70,14 @@ function asyncCreateNewUserEditsObject(projectId: string) {
   return async () => {
     await Backend.createUserEdit()
       .then(async (userEditId: string) => {
-        let updatedUser: User = updateUserIfExists(projectId, userEditId);
+        const currentUserId = LocalStorage.getUserId();
+        const currentUser = await Backend.getUser(currentUserId);
+        const updatedUser = updateUserWithUserEditId(
+          currentUser,
+          projectId,
+          userEditId
+        );
+        LocalStorage.setCurrentUser(updatedUser);
         await Backend.updateUser(updatedUser);
       })
       .catch((err) => {
@@ -82,8 +89,8 @@ function asyncCreateNewUserEditsObject(projectId: string) {
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     const user: User | null = LocalStorage.getCurrentUser();
-    if (user) {
-      const projectId: string = LocalStorage.getProjectId();
+    const projectId: string = LocalStorage.getProjectId();
+    if (user && projectId) {
       const userEditId: string | undefined = getUserEditId(user);
 
       if (userEditId !== undefined) {
@@ -198,16 +205,6 @@ export function getUserEditId(user: User): string | undefined {
   if (matches.length === 1) {
     return user.workedProjects[matches[0]];
   }
-}
-
-function updateUserIfExists(projectId: string, userEditId: string): User {
-  let currentUser: User | null = LocalStorage.getCurrentUser();
-  let updatedUser: User = new User("", "", "");
-  if (currentUser) {
-    updatedUser = updateUserWithUserEditId(currentUser, projectId, userEditId);
-    LocalStorage.setCurrentUser(updatedUser);
-  }
-  return updatedUser;
 }
 
 function updateUserWithUserEditId(
