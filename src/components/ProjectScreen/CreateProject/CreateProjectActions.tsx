@@ -1,7 +1,6 @@
 import { ThunkDispatch } from "redux-thunk";
 
 import * as backend from "../../../backend";
-import { setCurrentUser } from "../../../backend/localStorage";
 import history from "../../../history";
 import { StoreState } from "../../../types";
 import { defaultProject, Project, WritingSystem } from "../../../types/project";
@@ -64,7 +63,7 @@ export function asyncCreateProject(
 
         // Upload words
         if (languageData) {
-          backend.uploadLift(createdProject, languageData).then((res) => {
+          backend.uploadLift(createdProject, languageData).then(() => {
             backend
               .getProject(createdProject.id)
               .then((res) => {

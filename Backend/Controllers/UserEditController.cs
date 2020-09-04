@@ -120,9 +120,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Creates a <see cref="UserEdit"/> for user </summary>
-        /// <remarks> POST: v1/projects/{projectId}/useredits/{userId} </remarks>
+        /// <remarks> POST: v1/projects/{projectId}/useredits/new/{userId} </remarks>
         /// <returns> UpdatedUser </returns>
-        [HttpPost("{userId}")]
+        [HttpPost("new/{userId}")]
         public async Task<IActionResult> Post(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.MergeAndCharSet))
