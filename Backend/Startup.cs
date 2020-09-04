@@ -166,7 +166,7 @@ namespace BackendFramework
             services.AddTransient<IUserService, UserService>();
 
             // Lift types
-            services.AddTransient<ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>, LiftService>();
+            services.AddTransient<ILiftService, LiftService>();
 
             // User edit types
             services.AddTransient<IUserEditContext, UserEditContext>();

@@ -46,7 +46,7 @@ namespace BackendFramework.Services
         }
     }
 
-    public class LiftService : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
+    public class LiftService : ILiftService
     {
         private readonly IWordRepository _repo;
         private readonly IProjectService _projService;
@@ -149,7 +149,14 @@ namespace BackendFramework.Services
             foreach (var wordEntry in activeWords)
             {
                 var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid ?? Guid.Empty);
-
+                if (DateTime.TryParse(wordEntry.Created, out var createdTime))
+                {
+                    entry.CreationTime = createdTime;
+                }
+                if (DateTime.TryParse(wordEntry.Modified, out var modifiedTime))
+                {
+                    entry.ModificationTime = modifiedTime;
+                }
                 AddVern(entry, wordEntry, projectId);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir);
