@@ -24,14 +24,14 @@ namespace Backend.Tests.Controllers
 
         private static User RandomUser()
         {
-            var user = new User { Username = Util.Util.RandString(10), Password = Util.Util.RandString(10) };
+            var user = new User { Username = Util.RandString(10), Password = Util.RandString(10) };
             return user;
         }
 
         [Test]
         public void TestRandString()
         {
-            var randomString = Util.Util.RandString(10);
+            var randomString = Util.RandString(10);
             Assert.IsTrue(char.IsUpper(randomString[0]));
             Assert.IsTrue(char.IsLower(randomString[1]));
             Assert.IsTrue(char.IsLower(randomString[2]));

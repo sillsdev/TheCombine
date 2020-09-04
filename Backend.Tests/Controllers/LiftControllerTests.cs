@@ -45,7 +45,7 @@ namespace Backend.Tests.Controllers
 
         public string RandomLiftFile(string path)
         {
-            var name = "TEST-TO_BE_STREAMED-" + Util.Util.RandString() + ".lift";
+            var name = "TEST-TO_BE_STREAMED-" + Util.RandString() + ".lift";
             name = Path.Combine(path, name);
             var fs = File.OpenWrite(name);
 
@@ -69,20 +69,20 @@ namespace Backend.Tests.Controllers
 
             for (var i = 0; i < 3; i++)
             {
-                var dateCreated = $"\"{Util.Util.RandString(20)}\"";
-                var dateModified = $"\"{Util.Util.RandString(20)}\"";
-                var id = $"\"{Util.Util.RandString()}\"";
-                var guid = $"\"{Util.Util.RandString()}\"";
-                var vernLang = $"\"{Util.Util.RandString(3)}\"";
-                var vern = Util.Util.RandString(6);
-                var plural = Util.Util.RandString(8);
-                var audio = $"\"{Util.Util.RandString(3)}.mp3\"";
-                var senseId = $"\"{Util.Util.RandString()}\"";
-                var transLang1 = $"\"{Util.Util.RandString(3)}\"";
-                var transLang2 = $"\"{Util.Util.RandString(3)}\"";
-                var trans1 = Util.Util.RandString(6);
-                var trans2 = Util.Util.RandString(8);
-                var sdValue = $"\"{Util.Util.RandString(4)} {Util.Util.RandString(4)}\"";
+                var dateCreated = $"\"{Util.RandString(20)}\"";
+                var dateModified = $"\"{Util.RandString(20)}\"";
+                var id = $"\"{Util.RandString()}\"";
+                var guid = $"\"{Util.RandString()}\"";
+                var vernLang = $"\"{Util.RandString(3)}\"";
+                var vern = Util.RandString(6);
+                var plural = Util.RandString(8);
+                var audio = $"\"{Util.RandString(3)}.mp3\"";
+                var senseId = $"\"{Util.RandString()}\"";
+                var transLang1 = $"\"{Util.RandString(3)}\"";
+                var transLang2 = $"\"{Util.RandString(3)}\"";
+                var trans1 = Util.RandString(6);
+                var trans2 = Util.RandString(8);
+                var sdValue = $"\"{Util.RandString(4)} {Util.RandString(4)}\"";
 
                 var entry =
                     $@"<entry dateCreated = {dateCreated} dateModified = {dateModified} id = {id} guid = {guid}>
@@ -124,8 +124,8 @@ namespace Backend.Tests.Controllers
 
                 foreach (var gloss in sense.Glosses)
                 {
-                    gloss.Def = Util.Util.RandString();
-                    gloss.Language = Util.Util.RandString(3);
+                    gloss.Def = Util.RandString();
+                    gloss.Language = Util.RandString(3);
                 }
 
                 sense.SemanticDomains = new List<SemanticDomain>()
@@ -135,17 +135,17 @@ namespace Backend.Tests.Controllers
 
                 foreach (var semdom in sense.SemanticDomains)
                 {
-                    semdom.Name = Util.Util.RandString();
-                    semdom.Id = Util.Util.RandString();
-                    semdom.Description = Util.Util.RandString();
+                    semdom.Name = Util.RandString();
+                    semdom.Id = Util.RandString();
+                    semdom.Description = Util.RandString();
                 }
             }
 
-            word.Created = Util.Util.RandString();
-            word.Vernacular = Util.Util.RandString();
-            word.Modified = Util.Util.RandString();
-            word.PartOfSpeech = Util.Util.RandString();
-            word.Plural = Util.Util.RandString();
+            word.Created = Util.RandString();
+            word.Vernacular = Util.RandString();
+            word.Modified = Util.RandString();
+            word.PartOfSpeech = Util.RandString();
+            word.Plural = Util.RandString();
             word.History = new List<string>();
             word.ProjectId = projId;
 

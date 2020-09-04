@@ -43,8 +43,8 @@ namespace Backend.Tests.Controllers
 
                 foreach (var gloss in sense.Glosses)
                 {
-                    gloss.Def = Util.Util.RandString();
-                    gloss.Language = Util.Util.RandString(3);
+                    gloss.Def = Util.RandString();
+                    gloss.Language = Util.RandString(3);
                 }
 
                 sense.SemanticDomains = new List<SemanticDomain>()
@@ -54,17 +54,17 @@ namespace Backend.Tests.Controllers
 
                 foreach (var semdom in sense.SemanticDomains)
                 {
-                    semdom.Name = Util.Util.RandString();
-                    semdom.Id = Util.Util.RandString();
-                    semdom.Description = Util.Util.RandString();
+                    semdom.Name = Util.RandString();
+                    semdom.Id = Util.RandString();
+                    semdom.Description = Util.RandString();
                 }
             }
 
-            word.Created = Util.Util.RandString();
-            word.Vernacular = Util.Util.RandString();
-            word.Modified = Util.Util.RandString();
-            word.PartOfSpeech = Util.Util.RandString();
-            word.Plural = Util.Util.RandString();
+            word.Created = Util.RandString();
+            word.Vernacular = Util.RandString();
+            word.Modified = Util.RandString();
+            word.PartOfSpeech = Util.RandString();
+            word.Plural = Util.RandString();
             word.History = new List<string>();
             word.Audio = new List<string>();
             word.ProjectId = _projId;
@@ -222,7 +222,7 @@ namespace Backend.Tests.Controllers
             var parentChildMergeObject = new MergeWords
             {
                 Parent = RandomWord(),
-                Time = Util.Util.RandString(),
+                Time = Util.RandString(),
                 ChildrenWords = new List<MergeSourceWord>()
             };
 

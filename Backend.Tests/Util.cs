@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Backend.Tests.Util
+namespace Backend.Tests
 {
     public static class Util
     {

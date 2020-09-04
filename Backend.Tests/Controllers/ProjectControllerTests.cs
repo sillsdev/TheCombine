@@ -47,39 +47,39 @@ namespace Backend.Tests.Controllers
         {
             var project = new Project
             {
-                Name = Util.Util.RandString(),
-                VernacularWritingSystem = { Name = Util.Util.RandString(), Bcp47 = Util.Util.RandString(), Font = Util.Util.RandString() },
+                Name = Util.RandString(),
+                VernacularWritingSystem = { Name = Util.RandString(), Bcp47 = Util.RandString(), Font = Util.RandString() },
                 AnalysisWritingSystems = new List<WritingSystem>(),
                 SemanticDomains = new List<SemanticDomain>()
             };
             project.AnalysisWritingSystems.Add(new WritingSystem());
-            project.AnalysisWritingSystems[0].Name = Util.Util.RandString();
-            project.AnalysisWritingSystems[0].Bcp47 = Util.Util.RandString();
-            project.AnalysisWritingSystems[0].Font = Util.Util.RandString();
+            project.AnalysisWritingSystems[0].Name = Util.RandString();
+            project.AnalysisWritingSystems[0].Bcp47 = Util.RandString();
+            project.AnalysisWritingSystems[0].Font = Util.RandString();
 
             for (var i = 1; i < 4; i++)
             {
                 project.SemanticDomains.Add(new SemanticDomain()
                 {
                     Id = $"{i}",
-                    Name = Util.Util.RandString(),
-                    Description = Util.Util.RandString()
+                    Name = Util.RandString(),
+                    Description = Util.RandString()
                 });
                 for (var j = 1; j < 4; j++)
                 {
                     project.SemanticDomains.Add(new SemanticDomain()
                     {
                         Id = $"{i}.{j}",
-                        Name = Util.Util.RandString(),
-                        Description = Util.Util.RandString()
+                        Name = Util.RandString(),
+                        Description = Util.RandString()
                     });
                     for (var k = 1; k < 4; k++)
                     {
                         project.SemanticDomains.Add(new SemanticDomain()
                         {
                             Id = $"{i}.{j}.{k}",
-                            Name = Util.Util.RandString(),
-                            Description = Util.Util.RandString()
+                            Name = Util.RandString(),
+                            Description = Util.RandString()
                         });
                     }
                 }
