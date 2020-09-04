@@ -187,15 +187,6 @@ export function getUserEditId(user: User): string | undefined {
   }
 }
 
-function updateUserWithUserEditId(
-  user: User,
-  projectId: string,
-  userEditId: string
-): User {
-  user.workedProjects[projectId] = userEditId;
-  return user;
-}
-
 export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
   for (let i = 0; i < history.length; i++) {
     if (history[i].hash === currentGoal.hash) {
