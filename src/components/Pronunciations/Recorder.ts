@@ -1,4 +1,4 @@
-import RecordRTC from "recordrtc";
+const RecordRTC = require("recordrtc");
 
 export default class Recorder {
   private recordRTC: any;
@@ -31,7 +31,7 @@ export default class Recorder {
     this.recordRTC = new RecordRTC(audioStream, {
       disableLogs: true, // Comment out or switch to false for dev
       type: "audio",
-      audioBitsPerSecond: 128000, // 128kbps is the maximum
+      mimeType: "audio/webm;codecs=pcm",
     });
   }
 

@@ -33,8 +33,6 @@ interface ReviewEntriesProps {
 }
 
 interface ReviewEntriesState {
-  editingField: boolean;
-  errorMsg?: string;
   loaded: boolean;
 }
 
@@ -49,11 +47,7 @@ export class ReviewEntriesComponent extends React.Component<
 
   constructor(props: ReviewEntriesProps & LocalizeContextProps) {
     super(props);
-
-    this.state = {
-      editingField: false,
-      loaded: false,
-    };
+    this.state = { loaded: false };
     this.recorder = new Recorder();
     this.props.clearState();
     this.props.setAnalysisLanguage();

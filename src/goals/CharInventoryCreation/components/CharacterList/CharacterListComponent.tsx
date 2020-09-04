@@ -21,7 +21,6 @@ export interface CharacterListProps {
 }
 
 interface CharacterListState {
-  hoverChar: string;
   sortOrder: sortOrder;
   fontHeight: number;
   cardWidth: number;
@@ -42,7 +41,6 @@ export class CharacterList extends React.Component<
   constructor(props: CharacterListProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      hoverChar: "",
       sortOrder: sortOrder.characterAscending,
       fontHeight: 65,
       cardWidth: 150,
@@ -72,19 +70,19 @@ export class CharacterList extends React.Component<
               }}
             >
               <MenuItem value={sortOrder.characterAscending}>
-                <Translate id="charInventory.characters" /> 🡡
+                {this.props.translate("charInventory.characters")} 🡡
               </MenuItem>
               <MenuItem value={sortOrder.characterDescending}>
-                <Translate id="charInventory.characters" /> 🡣
+                {this.props.translate("charInventory.characters")} 🡣
               </MenuItem>
               <MenuItem value={sortOrder.occurrencesAscending}>
-                <Translate id="charInventory.occurrences" /> 🡡
+                {this.props.translate("charInventory.occurrences")} 🡡
               </MenuItem>
               <MenuItem value={sortOrder.occurrencesDescending}>
-                <Translate id="charInventory.occurrences" /> 🡣
+                {this.props.translate("charInventory.occurrences")} 🡣
               </MenuItem>
               <MenuItem value={sortOrder.status}>
-                <Translate id="charInventory.status" />
+                {this.props.translate("charInventory.status")}
               </MenuItem>
             </Select>
           </FormControl>

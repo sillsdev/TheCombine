@@ -390,7 +390,10 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteEndElement(); //end range element
         }
 
-        /// <summary> The meat of lift import is done here. This reads in all necessary attributes of a word and adds it to the database. </summary>
+        /// <summary>
+        /// The meat of lift import is done here. This reads in all necessary attributes of a word and adds
+        /// it to the database.
+        /// </summary>
         public async void FinishEntry(LiftEntry entry)
         {
             var newWord = new Word();
@@ -438,7 +441,12 @@ namespace BackendFramework.Services
             newWord.Senses = new List<Sense>();
             foreach (var sense in entry.Senses)
             {
-                var newSense = new Sense { SemanticDomains = new List<SemanticDomain>(), Glosses = new List<Gloss>(), Guid = sense.Guid };
+                var newSense = new Sense
+                {
+                    SemanticDomains = new List<SemanticDomain>(),
+                    Glosses = new List<Gloss>(),
+                    Guid = sense.Guid
+                };
 
                 // Add glosses
                 foreach (var (key, value) in sense.Gloss)
@@ -472,7 +480,7 @@ namespace BackendFramework.Services
             {
                 if (field.Type == "Plural")
                 {
-                    foreach (var plural in field.Content)
+                    foreach (var _ in field.Content)
                     {
                         var pluralForm = entry.Fields.First().Content.First().Value.Text;
                         newWord.Plural = pluralForm;

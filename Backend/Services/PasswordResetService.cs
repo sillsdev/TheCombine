@@ -39,7 +39,8 @@ namespace BackendFramework.Services
             var request = await _passwordResets.FindByToken(token);
             if (request != null && DateTime.Now < request.ExpireTime)
             {
-                var user = (await _userService.GetAllUsers()).Single(u => u.Email == request.Email);
+                var user = (await _userService.GetAllUsers()).Single(u =>
+                    u.Email.ToLowerInvariant() == request.Email.ToLowerInvariant());
                 await _userService.ChangePassword(user.Id, password);
                 await ExpirePasswordReset(request.Email);
                 return true;

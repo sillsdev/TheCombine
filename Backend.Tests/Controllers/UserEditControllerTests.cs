@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace Backend.Tests
+namespace Backend.Tests.Controllers
 {
     public class UserEditControllerTests
     {
