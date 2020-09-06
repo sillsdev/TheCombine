@@ -53,6 +53,7 @@ namespace BackendFramework.Services
         public async Task<Word> Create(Word word)
         {
             PopulateWordGuids(word);
+            word.Created = DateTime.UtcNow.ToLongTimeString();
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
