@@ -17,8 +17,8 @@ docker-compose.yml
 .env.backend
 .env.frontend
 .env*.local
-nginx/scripts/*
-nginx/conf.d/*
+nginx/scripts
+nginx/conf.d
 
 # Misc
 .DS_Store
