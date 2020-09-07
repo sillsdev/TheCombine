@@ -60,6 +60,7 @@ mongo_database
 .vagrant/
 
 # Python
+__pycache__
 *.pyc
 
 # Auto-generated SSL keys and certificate requests
