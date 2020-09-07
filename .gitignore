@@ -11,13 +11,17 @@
 
 # Production
 /build
-docker-compose.prod.yml
-docker-compose.init.yml
+
+# Generated Docker files for development use
+docker-compose.yml
+.env.backend
+.env.frontend
+.env*.local
+nginx/scripts/*
+nginx/conf.d/*
 
 # Misc
 .DS_Store
-.env.backend
-.env*.local
 Session.vim
 /*.js
 
