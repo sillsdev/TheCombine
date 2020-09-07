@@ -158,8 +158,8 @@ namespace BackendFramework.Controllers
             try
             {
                 // Sets the projectId of our parser to add words to that project
-                _liftService.SetProject(projectId);
-                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_liftService);
+                var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
+                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
                 // Import words from lift file
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
@@ -167,7 +167,7 @@ namespace BackendFramework.Controllers
                 // Add character set to project from ldml file
                 var proj = _projectService.GetProject(projectId).Result;
                 _liftService.LdmlImport(
-                    Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem.Bcp47);
+                    Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem.Bcp47, _projectService, proj);
 
                 return new ObjectResult(resp);
             }
@@ -218,8 +218,7 @@ namespace BackendFramework.Controllers
         // This method is extracted so that it can be unit tested
         internal string CreateLiftExport(string projectId)
         {
-            _liftService.SetProject(projectId);
-            var exportedFilepath = _liftService.LiftExport(projectId);
+            var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
             return exportedFilepath;
         }
     }
