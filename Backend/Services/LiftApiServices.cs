@@ -182,7 +182,7 @@ namespace BackendFramework.Services
             }
             else // Make a new lift-ranges file
             {
-                var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
+                using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
                 {
                     Indent = true,
                     NewLineOnAttributes = true
