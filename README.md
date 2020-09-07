@@ -224,6 +224,26 @@ Install [Docker](https://docs.docker.com/get-docker/).
 (Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/)
 separately. This is included by default in Docker Desktop for Windows and macOS.
 
+A Python script, `docker_setup.py` is used to configure the files needed to run
+*TheCombine* in Docker containers.
+
+To install Python on Windows:
+ * Navigate to the [Python 3.8.5 Downloads](https://www.python.org/downloads/release/python-385/) page;
+ * Download the appropriate installer - it is most likely the installer labeled
+   *Windows x86-64 executable installer*
+ * Run the installer.  During the installation be sure to select the checkbox
+   to add Python to your path.
+ * Once Python is installed, install the Jinja2 module:
+   ```batch
+   > pip install Jinja2
+   ```
+To install Python3 on Ubuntu Linux, run the following commands:
+   ```bash
+   sudo apt update
+   sudo apt install python3
+   pip3 install Jinja2
+   ```
+
 ### Build and Run
 
 For information on *Docker Compose* see the
@@ -231,13 +251,12 @@ For information on *Docker Compose* see the
 
 #### Step-by-step Instructions for Running *TheCombine* In Docker
 
-1. Copy `.env.backend.template` to `.env.backend` and fill in the environment
-variables. Do not fill in the COMBINE_ADMIN_* variables except to create an admin user; see [Create a New Admin User (Docker Environment)](#create-a-new-admin-user-docker-environment)
-2. Copy `docker_deploy/roles/combine_config/templates/docker-compose.yml.j2` to `docker_compose.yml` and make the following substitutions:
-   | Jinja2 variable              | Value                   |
-   | ---------------------------- | ----------------------- |
-   | {{ combine_image_backend }}  | combine/backend:latest  |
-   | {{ combine_image_frontend }} | combine/frontend:latest |
+1. Create the required docker files by running `docker_setup.py` from *TheCombine*'s project directory:
+2. The `docker_setup.py` will generate a file, `.env.backend`, that defines
+the environment variables needed by the Backend container.  If you have defined
+them as OS variables in the [Getting Started with Development](#getting-started-with-development) section above, then these variables will already be set.  If not,
+then you will need to edit `.env.backend` and provide values for the variables that
+are listed.
 3. Build the images for the Docker containers
 
    ```batch
@@ -268,9 +287,11 @@ variables. Do not fill in the COMBINE_ADMIN_* variables except to create an admi
 
 ### Create a New Admin User (Docker Environment)
 
-If you have not already created your .env.backend file (see above), copy `.env.backend.template` to `.env.backend`.  Edit `.env.backend` as follows:
+Edit `.env.backend` as follows:
  * Fill in the environment variables.
- * Uncomment and fill in the COMBINE_ADMIN_USERNAME and COMBINE_ADMIN_PASSWORD environment variables.
+ * Add the following environment variables and assign values to them:
+   - COMBINE_ADMIN_USERNAME
+   - COMBINE_ADMIN_PASSWORD
  * Set the file permissions so that only you have read or write access.
 
 Run the following command to install the admin user in the *CombineDatabase*:
