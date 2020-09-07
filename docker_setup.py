@@ -94,10 +94,9 @@ def main():
         with open(template_map[templ_name], 'w') as target_file:
             target_file.write(template.render(dev_config))
 
-    # build_docker_compose(jinja_env, dev_config)
-    # create_env_frontend(jinja_env, dev_config)
-    # create_env_backend()
-    # create_runtime_config()
+    # restrict permissions for the environment files
+    for env_file in [".env.backend", ".env.frontend"]:
+        os.chmod(env_file, 0o600)
 
 # Standard boilerplate to call main().
 if __name__ == '__main__':
