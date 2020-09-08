@@ -68,10 +68,10 @@ export function asyncLoadExistingUserEdits(
 
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const user: User | null = LocalStorage.getCurrentUser();
-    const projectId: string = LocalStorage.getProjectId();
+    const user = LocalStorage.getCurrentUser();
+    const projectId = LocalStorage.getProjectId();
     if (user && projectId) {
-      const userEditId: string | undefined = getUserEditId(user);
+      const userEditId = getUserEditId(user);
 
       if (userEditId !== undefined) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
@@ -86,7 +86,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     const user = LocalStorage.getCurrentUser();
     if (user) {
-      let userEditId: string | undefined = getUserEditId(user);
+      const userEditId = getUserEditId(user);
       if (userEditId !== undefined) {
         dispatch(loadGoalData(goal)).then(
           (returnedGoal) => (goal = returnedGoal)
