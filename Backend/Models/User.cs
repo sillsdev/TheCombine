@@ -166,4 +166,12 @@ namespace BackendFramework.Models
         public string Username { get; set; }
         public string Password { get; set; }
     }
+
+    /// <summary> Contains UpdatedUser for Axios interceptor. </summary>
+    public class WithUser
+    {
+        public User UpdatedUser;
+
+        public WithUser() { }
+    }
 }

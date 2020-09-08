@@ -66,30 +66,17 @@ export function asyncLoadExistingUserEdits(
   };
 }
 
-function asyncCreateNewUserEditsObject(projectId: string) {
-  return async () => {
-    await Backend.createUserEdit()
-      .then(async (userEditId: string) => {
-        let updatedUser: User = updateUserIfExists(projectId, userEditId);
-        await Backend.updateUser(updatedUser);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-}
-
 export function asyncGetUserEdits() {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
-    const user: User | null = LocalStorage.getCurrentUser();
-    if (user) {
-      const projectId: string = LocalStorage.getProjectId();
-      const userEditId: string | undefined = getUserEditId(user);
+    const user = LocalStorage.getCurrentUser();
+    const projectId = LocalStorage.getProjectId();
+    if (user && projectId) {
+      const userEditId = getUserEditId(user);
 
       if (userEditId !== undefined) {
         dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
       } else {
-        dispatch(asyncCreateNewUserEditsObject(projectId));
+        dispatch(Backend.createUserEdit);
       }
     }
   };
@@ -99,7 +86,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
   return async (dispatch: ThunkDispatch<StoreState, any, GoalAction>) => {
     const user = LocalStorage.getCurrentUser();
     if (user) {
-      let userEditId: string | undefined = getUserEditId(user);
+      const userEditId = getUserEditId(user);
       if (userEditId !== undefined) {
         dispatch(loadGoalData(goal)).then(
           (returnedGoal) => (goal = returnedGoal)
@@ -198,25 +185,6 @@ export function getUserEditId(user: User): string | undefined {
   if (matches.length === 1) {
     return user.workedProjects[matches[0]];
   }
-}
-
-function updateUserIfExists(projectId: string, userEditId: string): User {
-  let currentUser: User | null = LocalStorage.getCurrentUser();
-  let updatedUser: User = new User("", "", "");
-  if (currentUser) {
-    updatedUser = updateUserWithUserEditId(currentUser, projectId, userEditId);
-    LocalStorage.setCurrentUser(updatedUser);
-  }
-  return updatedUser;
-}
-
-function updateUserWithUserEditId(
-  user: User,
-  projectId: string,
-  userEditId: string
-): User {
-  user.workedProjects[projectId] = userEditId;
-  return user;
 }
 
 export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
