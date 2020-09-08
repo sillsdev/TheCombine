@@ -41,6 +41,7 @@
     "nspell": "^2.1.2",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^11.0.4",
+    "react-device-detect": "^1.13.1",
     "react-dom": "^16.13.1",
     "react-localize-redux": "^3.5.3",
     "react-modal": "^3.11.2",

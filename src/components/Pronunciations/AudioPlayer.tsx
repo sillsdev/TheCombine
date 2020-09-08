@@ -8,11 +8,10 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
-import { PlayArrow, Stop } from "@material-ui/icons";
+import { Delete, PlayArrow, Stop } from "@material-ui/icons";
 import React from "react";
+import isMobile from "react-device-detect";
 import { Translate } from "react-localize-redux";
-
-import theme from "../../types/theme";
 
 export interface PlayerProps {
   pronunciationUrl: string;
@@ -38,9 +37,8 @@ export default function AudioPlayer(props: PlayerProps) {
   const [audio] = React.useState<HTMLAudioElement>(
     new Audio(props.pronunciationUrl)
   );
-  const [timer, setTimer] = React.useState<NodeJS.Timeout | null>(null);
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
-
+  const isTablet = isMobile; // change to true to test on non-tablet
   const classes = useStyles();
 
   function deletePlay() {
@@ -62,25 +60,14 @@ export default function AudioPlayer(props: PlayerProps) {
   }
 
   function deleteOrTogglePlay(event?: any) {
-    if (event?.shiftKey) {
-      deletePlay();
+    if (event && isTablet) {
+      setAnchor(event.currentTarget);
     } else {
-      togglePlay();
-    }
-  }
-
-  function longPressStart(event: React.MouseEvent<HTMLButtonElement>) {
-    setTimer(
-      setTimeout(() => {
-        setAnchor(event.currentTarget);
-        alert("Ding!");
-      }, 1000)
-    );
-  }
-
-  function longPressRelease() {
-    if (timer) {
-      clearTimeout(timer);
+      if (event?.shiftKey) {
+        deletePlay();
+      } else {
+        togglePlay();
+      }
     }
   }
 
@@ -88,24 +75,23 @@ export default function AudioPlayer(props: PlayerProps) {
     setAnchor(null);
   }
 
+  const refButton = React.createRef<any>();
+
   return (
     <React.Fragment>
       <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
         <IconButton
+          ref={refButton}
           tabIndex={-1}
           onClick={deleteOrTogglePlay}
-          //onTouchStart={longPressStart}
-          //onTouchEnd={longPressRelease}
-          onMouseDown={longPressStart}
-          onMouseUp={longPressRelease}
-          onMouseLeave={longPressRelease}
+          //onTouchStart={(event) => setAnchor(event.currentTarget)} //use this if isMobile doesn't work
           className={classes.button}
           aria-label="play"
         >
           {playing ? (
             <Stop className={classes.icon} />
           ) : (
-            <PlayArrow className={classes.icon} color="primary" />
+            <PlayArrow className={classes.icon} />
           )}
         </IconButton>
       </Tooltip>
@@ -113,7 +99,6 @@ export default function AudioPlayer(props: PlayerProps) {
         getContentAnchorEl={null}
         id="play-menu"
         anchorEl={anchor}
-        keepMounted
         open={Boolean(anchor)}
         onClose={handleClose}
         anchorOrigin={{
@@ -131,8 +116,19 @@ export default function AudioPlayer(props: PlayerProps) {
             handleClose();
           }}
         >
-          <PlayArrow style={{ marginRight: theme.spacing(1) }} />
-          <Translate id="userMenu.userSettings" />
+          {playing ? (
+            <Stop className={classes.icon} />
+          ) : (
+            <PlayArrow className={classes.icon} />
+          )}
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            deletePlay();
+            handleClose();
+          }}
+        >
+          <Delete />
         </MenuItem>
       </Menu>
     </React.Fragment>
