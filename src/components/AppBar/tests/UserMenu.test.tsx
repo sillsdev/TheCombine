@@ -1,4 +1,5 @@
-import { MenuItem, Button } from "@material-ui/core";
+import { Menu, MenuItem, Button } from "@material-ui/core";
+import { renderHook } from "@testing-library/react-hooks";
 import React from "react";
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
@@ -12,6 +13,8 @@ const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 const mockUser = new User("", "", "");
 let testRenderer: ReactTestRenderer;
+//let result: HookResult<JSX.Element>;
+//let waitForNextUpdate = ()=>Promise<void>;
 
 jest.mock("../../../backend", () => {
   return {
@@ -28,20 +31,23 @@ beforeEach(() => {
 });
 
 function renderUserMenu() {
-  renderer.act(() => {
+  const { result, waitForNextUpdate } = renderHook(UserMenu);
+  /*renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <UserMenu />
+        <React.Fragment>{UserMenu()}</React.Fragment>
       </Provider>
     );
-  });
+  });*/
 }
 
 describe("Tests UserMenu", () => {
-  it("should not show site settings to general users", () => {
+  it("should not show site settings to general users", async () => {
     mockUser.isAdmin = false;
-    renderUserMenu();
-    testRenderer.root.findByType(Button).props.onClick();
+    //renderUserMenu();
+    const { result, waitForNextUpdate } = renderHook(UserMenu);
+    await waitForNextUpdate();
+    //testRenderer.root.findByType(Button).props.onClick();
     const menuItems = testRenderer.root.findAllByType(MenuItem);
     expect(menuItems.length).toBe(2);
   });

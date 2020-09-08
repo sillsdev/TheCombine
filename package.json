@@ -79,6 +79,7 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react-hooks": "^3.4.1",
     "@types/jest": "^26.0.5",
     "@types/node": "^14.0.24",
     "@types/nspell": "^2.1.0",
