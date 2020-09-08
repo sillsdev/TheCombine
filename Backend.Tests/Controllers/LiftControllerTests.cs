@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -13,13 +14,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace Backend.Tests
+namespace Backend.Tests.Controllers
 {
     public class LiftControllerTests
     {
         private IWordRepository _wordrepo;
         private IWordService _wordService;
         private IProjectService _projServ;
+        private ILiftService _liftService;
         private LiftController _liftController;
         private IPermissionService _permissionService;
 
@@ -29,7 +31,8 @@ namespace Backend.Tests
             _permissionService = new PermissionServiceMock();
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
-            _liftController = new LiftController(_wordrepo, _projServ, _permissionService);
+            _liftService = new LiftService(_wordrepo, _projServ);
+            _liftController = new LiftController(_wordrepo, _projServ, _permissionService, _liftService);
             _wordService = new WordService(_wordrepo);
         }
 
@@ -214,7 +217,6 @@ namespace Backend.Tests
             // Get path to the starting dir
             var pathToStartZips = Path.Combine(Directory.GetParent(Directory.GetParent(
                 Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets");
-            var testZips = Directory.GetFiles(pathToStartZips, "*.zip");
 
             var fileMapping = new Dictionary<string, RoundTripObj>();
 

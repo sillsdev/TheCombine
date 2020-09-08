@@ -9,8 +9,8 @@ export function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, any>
 ): ResetRequestDispatchProps {
   return {
-    passwordResetRequest: (email: string) => {
-      dispatch(asyncResetRequest(email));
+    passwordResetRequest: (emailOrUsername: string) => {
+      dispatch(asyncResetRequest(emailOrUsername));
     },
   };
 }

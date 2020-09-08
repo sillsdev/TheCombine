@@ -48,6 +48,7 @@ interface DataEntryTableState {
   suggestVerns: boolean;
   analysisLang: string;
   defunctWordIds: string[];
+  isFetchingFrontier: boolean;
 }
 
 export function addSemanticDomainToSense(
@@ -106,6 +107,7 @@ export class DataEntryTable extends React.Component<
       suggestVerns: true,
       analysisLang: "en",
       defunctWordIds: [],
+      isFetchingFrontier: false,
     };
     this.refNewEntry = React.createRef<NewEntry>();
     this.recorder = new Recorder();
@@ -148,6 +150,13 @@ export class DataEntryTable extends React.Component<
 
   async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
     const newWord = await Backend.createWord(wordToAdd);
+    if (newWord.id === "Duplicate") {
+      alert(
+        this.props.translate("addWords.wordInDatabase") +
+          `: ${wordToAdd.vernacular}, ${wordToAdd.senses[0].glosses[0].def}`
+      );
+      return;
+    }
     const wordId = await this.addAudiosToBackend(newWord.id, audioURLs);
     const newWordWithAudio = await Backend.getWord(wordId);
     await this.updateExisting();
@@ -216,7 +225,10 @@ export class DataEntryTable extends React.Component<
             .includes(this.props.semanticDomain.id)
         ) {
           // User is trying to add a sense that already exists
-          alert("This sense already exists for this domain");
+          alert(
+            this.props.translate("addWords.senseInWord") +
+              `: ${existingWord.vernacular}, ${gloss}`
+          );
           return;
         } else {
           const updatedWord = addSemanticDomainToSense(
@@ -295,11 +307,15 @@ export class DataEntryTable extends React.Component<
   }
 
   async updateExisting() {
-    const existingWords = await this.props.getWordsFromBackend();
-    const existingVerns = [
-      ...new Set(existingWords.map((word) => word.vernacular)),
-    ];
-    this.setState({ existingVerns, existingWords });
+    if (!this.state.isFetchingFrontier) {
+      this.setState({ isFetchingFrontier: true });
+      const existingWords = await this.props.getWordsFromBackend();
+      const existingVerns = [
+        ...new Set(existingWords.map((word: Word) => word.vernacular)),
+      ];
+      const isFetchingFrontier = false;
+      this.setState({ existingVerns, existingWords, isFetchingFrontier });
+    }
   }
 
   async undoRecentEntry(entryIndex: number): Promise<string> {

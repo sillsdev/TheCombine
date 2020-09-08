@@ -6,7 +6,7 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
-namespace Backend.Tests
+namespace Backend.Tests.Mocks
 {
     public class UserServiceMock : IUserService
     {
@@ -76,7 +76,7 @@ namespace Backend.Tests
         {
             try
             {
-                var foundUser = _users.Single(u => u.Username == username && u.Password == password);
+                var foundUser = _users.Single(u => u.Username.ToLowerInvariant() == username.ToLowerInvariant() && u.Password == password);
                 if (foundUser == null)
                 {
                     return null;

@@ -135,24 +135,21 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !GetType().Equals(obj.GetType()))
+            if (!(obj is Word other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as Word;
-                return
-                    other.Id.Equals(Id) &&
-                    ContentEquals(other) &&
-                    other.Guid == Guid &&
-                    other.Created.Equals(Created) &&
-                    other.Modified.Equals(Modified) &&
-                    other.EditedBy.Count == EditedBy.Count &&
-                    other.EditedBy.All(EditedBy.Contains) &&
-                    other.History.Count == History.Count &&
-                    other.History.All(History.Contains);
-            }
+
+            return
+                other.Id.Equals(Id) &&
+                ContentEquals(other) &&
+                other.Guid == Guid &&
+                other.Created.Equals(Created) &&
+                other.Modified.Equals(Modified) &&
+                other.EditedBy.Count == EditedBy.Count &&
+                other.EditedBy.All(EditedBy.Contains) &&
+                other.History.Count == History.Count &&
+                other.History.All(History.Contains);
         }
 
         public override int GetHashCode()
@@ -217,20 +214,17 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !GetType().Equals(obj.GetType()))
+            if (!(obj is Sense other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as Sense;
-                return
-                    other.Glosses.Count == Glosses.Count &&
-                    other.Glosses.All(Glosses.Contains) &&
 
-                    other.SemanticDomains.Count == SemanticDomains.Count &&
-                    other.SemanticDomains.All(SemanticDomains.Contains);
-            }
+            return
+                other.Glosses.Count == Glosses.Count &&
+                other.Glosses.All(Glosses.Contains) &&
+
+                other.SemanticDomains.Count == SemanticDomains.Count &&
+                other.SemanticDomains.All(SemanticDomains.Contains);
         }
 
         public override int GetHashCode()
@@ -255,15 +249,12 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !GetType().Equals(obj.GetType()))
+            if (!(obj is Gloss other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as Gloss;
-                return Language.Equals(other.Language) && Def.Equals(other.Def);
-            }
+
+            return Language.Equals(other.Language) && Def.Equals(other.Def);
         }
 
         public override int GetHashCode()
@@ -297,15 +288,12 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !GetType().Equals(obj.GetType()))
+            if (!(obj is SemanticDomain other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as SemanticDomain;
-                return Name.Equals(other.Name) && Id.Equals(other.Id) && Description.Equals(other.Description);
-            }
+
+            return Name.Equals(other.Name) && Id.Equals(other.Id) && Description.Equals(other.Description);
         }
 
         public override int GetHashCode()

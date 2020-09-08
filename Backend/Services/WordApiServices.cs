@@ -119,7 +119,7 @@ namespace BackendFramework.Services
             {
                 word.Id = "";
                 word.ProjectId = projectId;
-
+                word.Modified = DateTime.UtcNow.ToLongDateString();
                 // Keep track of the old word
                 if (word.History == null)
                 {
@@ -241,13 +241,11 @@ namespace BackendFramework.Services
             foreach (var matchingVern in allVernaculars)
             {
                 // Iterate over senses of those words
-                var newSenseIndex = 0;
                 foreach (var newSense in word.Senses)
                 {
                     foundDuplicateSense = false;
 
                     // Iterate over the senses of the new word
-                    var oldSenseIndex = 0;
                     foreach (var oldSense in matchingVern.Senses)
                     {
                         // If the new sense is a strict subset of the old one, then merge it in
@@ -260,13 +258,9 @@ namespace BackendFramework.Services
                             matchingVern.EditedBy = matchingVern.EditedBy.Distinct().ToList();
 
                             // Add semantic domains and remove duplicates
-                            matchingVern.Senses[oldSenseIndex].SemanticDomains.AddRange(
-                                word.Senses[newSenseIndex].SemanticDomains);
-                            matchingVern.Senses[oldSenseIndex].SemanticDomains = matchingVern.
-                                Senses[newSenseIndex].SemanticDomains.Distinct().ToList();
+                            oldSense.SemanticDomains.AddRange(newSense.SemanticDomains);
+                            oldSense.SemanticDomains = oldSense.SemanticDomains.Distinct().ToList();
                         }
-
-                        oldSenseIndex++;
                     }
 
                     // If we never found a matching sense in the old word, the words are different
@@ -274,8 +268,6 @@ namespace BackendFramework.Services
                     {
                         break;
                     }
-
-                    newSenseIndex++;
                 }
 
                 // Update the word only if all the senses were duplicates
