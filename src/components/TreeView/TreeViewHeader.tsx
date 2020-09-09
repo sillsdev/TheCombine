@@ -28,11 +28,13 @@ export default class TreeViewHeader extends React.Component<
   TreeHeaderState
 > {
   animating: boolean;
+  numSep: string;
 
   constructor(props: TreeHeaderProps) {
     super(props);
     this.state = { input: props.currentDomain.id };
     this.animating = false;
+    this.numSep = ".";
 
     this.searchAndSelectDomain = this.searchAndSelectDomain.bind(this);
     this.navigateDomainArrowKeys = this.navigateDomainArrowKeys.bind(this);
@@ -60,33 +62,34 @@ export default class TreeViewHeader extends React.Component<
 
     if (event.key === "Enter") {
       // Find parent domain
-      let parent: SemanticDomainWithSubdomains | undefined = this.props
-        .currentDomain;
+      let parent: SemanticDomainWithSubdomains = this.props.currentDomain;
       while (parent.parentDomain !== undefined) parent = parent.parentDomain;
+      let child: SemanticDomainWithSubdomains | undefined;
 
       // Search for domain
       if (!isNaN(parseInt(this.state.input))) {
-        let i: number = 0;
-        while (parent) {
-          parent = this.searchDomainByNumber(
-            parent,
-            this.state.input.slice(0, i * 2 + 1)
-          );
-          if (parent && parent.id === this.state.input) {
-            this.props.animate(parent);
-            this.props.bounce();
-            this.setState({ input: "" });
-            (event.target as any).value = "";
+        const childNumbers = this.state.input.split(this.numSep);
+        let childNum = "";
+        for (let i = 0; i < childNumbers.length; i++) {
+          // Get rid of non-numeric characters
+          childNum +=
+            (childNum ? this.numSep : "") + childNumbers[i].replace(/\D/g, "");
+          console.log(childNum);
+          child = this.searchDomainByNumber(parent, childNum);
+          if (!child || child.id === parent.id) {
             break;
-          } else if (parent && parent.subdomains.length === 0) {
-            break;
+          } else {
+            parent = { ...child };
           }
-          i++;
         }
+        this.props.animate(parent);
+        this.props.bounce();
+        this.setState({ input: "" });
+        (event.target as any).value = "";
       } else {
-        parent = this.searchDomainByName(parent, this.state.input);
-        if (parent) {
-          this.props.animate(parent);
+        child = this.searchDomainByName(parent, this.state.input);
+        if (child) {
+          this.props.animate(child);
           this.props.bounce();
           this.setState({ input: "" });
           (event.target as any).value = "";
