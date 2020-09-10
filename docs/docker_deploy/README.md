@@ -4,11 +4,9 @@ This document describes how to deploy *TheCombine* to a target machine in Docker
 containers.  This method will replace the initial method of installing
 *TheCombine* directly on the target machine.
 
-## Contact Information
-
 <table>
 <tr>
- <td>Process Owner:</td><td>Jim Grady</td>
+ <td>Author/Owner:</td><td>Jim Grady</td>
 </tr>
 <tr>
  <td>Email:</td><td>jimgrady.jg@gmail.com</td>
@@ -80,21 +78,22 @@ playbooks.  Each time you will be prompted for passwords:
  * `BECOME password` - enter your `sudo` password for the *\<target_user\>*
    on the *\<target\>* machine.
  * `Vault password` - some of the Ansible variable files are encrypted in
-   Ansible vaults.  See the current process owner (above) for the Vault password.
+   Ansible vaults.  See the current owner (above) for the Vault password.
 
 #### Minimum System Requirements
 
 The minimum system requirements for installing *TheCombine* on a target are:
 - Ubuntu 18.04 Server operating system (see [Install Ubuntu Bionic Server](#install-ubuntu-bionic-server))
-- 4 GB RAM
-- 12 GB Storage
+- 2 GB RAM
+- 15 GB Storage
 
 #### Install Combine Pre-requisites
 
-Run the first playbook to install all the packages that are needed by *TheCombine*:
+Run the first playbook to install all the packages that are needed by *TheCombine*
+and to setup the Docker configuration files:
 ```
 cd <COMBINE>/docker_deploy
-ansible-playbook playbook_docker.yml --limit <target> -u <target_user> -K --ask-vault-pass
+ansible-playbook playbook_target_setup.yml --limit <target> -u <target_user> -K --ask-vault-pass
 ```
 
 Notes:
@@ -104,20 +103,29 @@ Notes:
   \<COMBINE\>/docker_deploy).  If it is not, then you need to create your
   own inventory file (see [below](#creating-your-own-inventory-file)).
 
-#### Install *TheCombine*
+#### Build *TheCombine* Containers
 
-Run the second playbook to configure the docker containers and start them up:
+Normally, *TheCombine*'s docker containers are built by the *TeamCity* server
+and pushed to Amazon's Elastic Container Registry (AWS ECR).
+If this has not happened, then you can run the following commands to build the
+containers on your machine and push them to AWS ECR or other registry:
+```bash
+cd <COMBINE>
+AWS_ECR=117995318043.dkr.ecr.us-east-1.amazonaws.com
+docker build -t ${AWS_ECR}/combine/frontend:latest --pull -f Dockerfile .
+cd Backend
+docker build -t ${AWS_ECR}/combine/backend:latest --pull -f Dockerfile .
+docker push ${AWS_ECR}/combine/frontend:latest
+docker push ${AWS_ECR}/combine/backend:latest
 ```
-ansible-playbook playbook_publish.yml --limit <target> -u combine --ask-vault-pass
-```
 
- #### Creating Your Own Inventory File
+#### Creating Your Own Inventory File
 
- You can create your own inventory file to enable Ansible to install the combine
- on a target that is not listed in the hosts.yml inventory file or if you want
- to override a variable that is used to configure the target.
+You can create your own inventory file to enable Ansible to install the combine
+on a target that is not listed in the hosts.yml inventory file or if you want
+to override a variable that is used to configure the target.
 
- To use your own inventory file:
+To use your own inventory file:
   * have the filename match the pattern *.hosts.yml, e.g. dev.hosts.yml, or save
     it in a directory that is not in the combine source tree;
   * use hosts.yml as a model.  The host will need to be in the `server` or the
@@ -151,27 +159,18 @@ their dependencies:
   * ./Dockerfile
   * ./Backend/Dockerfile
   * ./.env.backend
+  * ./.env.frontend
+
 With these files, we can use `docker-compose` to startup *TheCombine* in the
 development environment (see the project top-level README.md).
 
-For production, we take advantage of the `docker-compose` feature that lets us
-specify multiple docker-compose files.  In this case, the development
-`./docker-compose.yml` is the first docker-compose file and the subsequent files
-override or augment the configurations in the base file.  Ansible is used to
-generate the override docker-compose files that are tailored to the specific
-target.
+`playbook_docker.yml` is an Ansible playbook that is used to install docker,
+docker-compose, and the files to configure the docker containers.  It only needs
+to be run once.  When running this playbook, it needs to be run as a user on the
+target system that can be elevated to `root` privileges.  It needs to be run
+once at initial setup and if ever the playbook or its roles change.
 
-There are two Ansible playbooks that are used to perform this task.
-
-## playbook_docker.yml
-
-`playbook_docker.yml` is the first playbook that needs to be run.  It sets up
-the docker environment and it only needs to be run once.  When running this
-playbook, it needs to be run as a user on the target system that can be elevated
-to `root` privileges.  It needs to be run once at initial setup and if ever the
-playbook or its roles change.
-
-`playbook_docker.yml` does the following:
+`playbook_target_setup.yml` does the following:
   1. Install Ansible dependencies to allow subsequent playbooks
   2. Install the docker subsystem.  This includes
      1. install docker prerequisite packages
@@ -189,43 +188,13 @@ playbook or its roles change.
      3. current user, that is, the host user running the playbook, is added as
         an authorized user for `combine`.  This will allow running the next
         playbook as `combine`.
-
-## playbook_publish.yml
-
-`playbook_publish.yml` publishes *TheCombine* on the machine that was prepared
-with the `playbook_docker.yml` playbook.  This playbook needs to be run whenever
-*TheCombine* software is updated.  It will be run as the `combine` user.
-
-`playbook_publish.yml` does the following:
-  1. install *TheCombine* source files from the *GitHub* repository.  It will
-     install the `master` branch unless the `combine_source_version` variable
-     specifies a different branch.  The source files are installed in `/home/combine/src/combine`.
-  2. configure the docker containers for the *\<target\>* system:
-     1. creates the `docker-compose.prod.yml` file to override specific
-        defaults in `docker-compose.yml`.
-     2. creates the `.env.backend` file that specifies the environment variables
-        needed by the backend container.
-     3. builds the containers using `docker-compose`
-  3. installs the admin user for the `TheCombine`
-     1. creates the `docker-compose.init.yml` file which sets the backend
-        initialization entry point and adds an environment variable file to
-        include the admin password specification
-     2. creates `.env.backend.init` to specify required initialization
-        environment variables
-     3. runs the initialization using `docker-compose`
-  4. starts the containers using `docker-compose`
-  5. installs shortcuts to make management of the containers easier.
-     The shortcuts are bash aliases:
-     <table>
-       <tr><th>Alias Name</th><th>Function</th></tr>
-       <tr><td>combine-build</td><td>rebuild the containers</td></tr>
-       <tr><td>combine-down</td><td>stop and remove running containers</td></tr>
-       <tr><td>combine-logs</td><td>show the log files from the containers</td></tr>
-       <tr><td>combine-up</td><td>start <i>TheCombine</i></td></tr>
-     </table>
-     The shortcuts are useful for managing the production containers because
-     for each command, you must specify the same docker compose files so that
-     the correct containers are affected.
+  4. Install TheCombine configuration files
+     1. Install the `docker-compose.yml` that defines the containers and their
+        environment;
+     2. Create the environment variable files for the frontend and backend
+        containers, `.env.frontend` and `.env.backend`;
+     3. Create the runtime configuration for the UI;
+     4. Create the configuration file for the nginx web server.
 
 # Additional Details
 
