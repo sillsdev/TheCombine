@@ -1,0 +1,63 @@
+---
+#######################################################
+#
+# Install the Docker configuration files on the target
+#  - docker-compose.yml
+#  - .env.backend
+#  - .env.frontend
+#
+#######################################################
+
+- name: create folders for docker installation
+  file:
+    name: "{{ item }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0755
+    state: directory
+  with_items:
+    - "{{ combine_app_dir }}"
+    - "{{ combine_app_dir }}/uploads"
+    - "{{ combine_app_dir }}/nginx/scripts"
+    - "{{ combine_app_dir }}/nginx/conf.d"
+
+- name: install docker-compose.yml file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ combine_app_dir }}/docker-compose.yml"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0644
+
+
+- name: create frontend environment file
+  template:
+    src: env.frontend.j2
+    dest: "{{ combine_app_dir }}/.env.frontend"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0600
+
+- name: create backend environment file
+  template:
+    src: env.backend.j2
+    dest: "{{ combine_app_dir }}/.env.backend"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0600
+
+- name: create frontend runtime configuration file
+  template:
+    src: config.js.j2
+    dest: "{{ combine_app_dir }}/nginx/scripts/config.js"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0644
+
+- name: create nginx configuration file
+  copy:
+    src: thecombine.conf
+    dest: "{{ combine_app_dir }}/nginx/conf.d/thecombine.conf"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0644

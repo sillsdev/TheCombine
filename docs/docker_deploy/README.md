@@ -164,7 +164,7 @@ their dependencies:
 With these files, we can use `docker-compose` to startup *TheCombine* in the
 development environment (see the project top-level README.md).
 
-`playbook_docker.yml` is an Ansible playbook that is used to install docker,
+`playbook_target_setup.yml` is an Ansible playbook that is used to install docker,
 docker-compose, and the files to configure the docker containers.  It only needs
 to be run once.  When running this playbook, it needs to be run as a user on the
 target system that can be elevated to `root` privileges.  It needs to be run

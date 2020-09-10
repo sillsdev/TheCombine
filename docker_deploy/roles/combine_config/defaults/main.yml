@@ -1,0 +1,15 @@
+---
+#######################################
+# Default configs for development
+config_captcha_required: true
+config_captcha_sitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+
+#######################################
+# environment variable overrides
+# for non-development deployments
+combine_env_vars:
+
+certbot_is_staging: 0
+
+combine_image_backend: combine/backend
+combine_image_frontend: combine/frontend
