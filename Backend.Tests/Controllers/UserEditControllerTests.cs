@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace Backend.Tests
+namespace Backend.Tests.Controllers
 {
     public class UserEditControllerTests
     {
@@ -20,6 +21,7 @@ namespace Backend.Tests
         private string _projId;
         private IPermissionService _permissionService;
         private IUserService _userService;
+        private User _jwtAuthenticatedUser;
 
         [SetUp]
         public void Setup()
@@ -35,7 +37,11 @@ namespace Backend.Tests
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
-
+            _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
+            _userService.Create(_jwtAuthenticatedUser);
+            _jwtAuthenticatedUser = _userService.Authenticate(
+                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
+            _userEditController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
         }
 
         private UserEdit RandomUserEdit()
@@ -88,8 +94,8 @@ namespace Backend.Tests
         public void TestCreateUserEdit()
         {
             var userEdit = new UserEdit { ProjectId = _projId };
-            var id = (_userEditController.Post(_projId).Result as ObjectResult).Value as string;
-            userEdit.Id = id;
+            var withUser = (_userEditController.Post(_projId).Result as ObjectResult).Value as WithUser;
+            userEdit.Id = withUser.UpdatedUser.WorkedProjects[_projId];
             Assert.Contains(userEdit, _userEditRepo.GetAllUserEdits(_projId).Result);
         }
 

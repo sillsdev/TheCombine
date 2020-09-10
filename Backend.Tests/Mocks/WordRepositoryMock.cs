@@ -6,7 +6,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
 
-namespace Backend.Tests
+namespace Backend.Tests.Mocks
 {
     public class WordRepositoryMock : IWordRepository
     {

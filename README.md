@@ -1,5 +1,13 @@
 # The Combine
 
+[![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
+[![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
+
+[lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
+[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts/
+
 A rapid word collection tool.
 
 ## Getting Started with Development
@@ -27,7 +35,7 @@ A rapid word collection tool.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
      - On Ubuntu 18.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
-   - [MongoDB Server](https://docs.mongodb.com/manual/administration/install-community/) and add
+   - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add
      /bin to PATH Environment Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
    - [VS Code](https://code.visualstudio.com/download) and Prettier code
@@ -55,7 +63,11 @@ A rapid word collection tool.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
 7. Run `npm start` from the project directory to install dependencies and start
-   the project
+   the project.
+
+8. Consult our [C#](docs/c_sharp_style_guide.md)
+   and [JavaScript/TypeScript](docs/ts_style_guide.md)
+   style guides for best coding practices in this project.
 
 [chocolatey]: https://chocolatey.org/
 
@@ -84,11 +96,11 @@ Runs only the front end of the app in the development mode.
 
 #### `npm run api`
 
-Runs only the API
+Runs only the API.
 
 #### `npm run database`
 
-Runs only the mongo database
+Runs only the mongo database.
 
 ### `npm test`
 
@@ -164,8 +176,8 @@ npm run import-sem-doms -- <XML_FILE_PATH>
 
 To browse the database locally during development, open MongoDB Compass Community.
 
-  1. Under New Connection, enter `mongodb://localhost:27017`
-  2. Under Databases, select CombineDatabase
+1. Under New Connection, enter `mongodb://localhost:27017`
+2. Under Databases, select CombineDatabase
 
 ### Drop Database
 

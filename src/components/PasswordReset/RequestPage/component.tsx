@@ -1,7 +1,9 @@
 import * as React from "react";
 import { Translate, LocalizeContextProps } from "react-localize-redux";
-import { Typography, Card, Button, Grid, TextField } from "@material-ui/core";
-import { isEmailTaken } from "../../../backend";
+import { Typography, Card, Grid, TextField } from "@material-ui/core";
+import { isEmailTaken, isUsernameTaken } from "../../../backend";
+import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
+import history from "../../../history";
 
 export interface ResetRequestProps {}
 
@@ -10,8 +12,10 @@ export interface ResetRequestDispatchProps {
 }
 
 export interface ResetRequestState {
-  email: string;
-  emailExists: boolean;
+  emailOrUsername: string;
+  emailOrUsernameExists: boolean;
+  loading: boolean;
+  done: boolean;
 }
 
 export default class ResetRequest extends React.Component<
@@ -22,25 +26,45 @@ export default class ResetRequest extends React.Component<
     props: ResetRequestProps & ResetRequestDispatchProps & LocalizeContextProps
   ) {
     super(props);
-    this.state = { emailExists: true, email: "" };
+    this.state = {
+      emailOrUsernameExists: true,
+      emailOrUsername: "",
+      loading: false,
+      done: false,
+    };
   }
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
-    isEmailTaken(this.state.email).then((emailExists: boolean) => {
-      if (emailExists) {
-        this.props.passwordResetRequest(this.state.email);
-      } else {
-        this.setState({ emailExists });
-      }
+    this.setState({
+      loading: true,
     });
+    setTimeout(() => this.tryResetRequest(), 1000);
   };
 
-  async setEmail(email: string) {
+  async tryResetRequest() {
+    const emailExists = await isEmailTaken(this.state.emailOrUsername);
+    const usernameExists = await isUsernameTaken(this.state.emailOrUsername);
+    if (emailExists || usernameExists) {
+      this.props.passwordResetRequest(this.state.emailOrUsername);
+      this.setState({
+        done: true,
+        loading: false,
+      });
+      setTimeout(() => history.push("/login"), 1000);
+    } else {
+      this.setState({
+        emailOrUsernameExists: false,
+        loading: false,
+      });
+    }
+  }
+
+  async setTextField(emailOrUsername: string) {
     this.setState((prevState) => ({
       ...prevState,
-      email: email,
-      emailExists: true,
+      emailOrUsername,
+      emailOrUsernameExists: true,
     }));
   }
 
@@ -59,31 +83,32 @@ export default class ResetRequest extends React.Component<
               <Grid item>
                 <TextField
                   required
-                  type="email"
-                  autoComplete="email"
+                  type="text"
                   variant="outlined"
-                  label={<Translate id="login.email" />}
-                  value={this.state.email}
+                  label={<Translate id="passwordReset.emailOrUsername" />}
+                  value={this.state.emailOrUsername}
                   style={{ width: "100%" }}
-                  error={!this.state.emailExists}
+                  error={!this.state.emailOrUsernameExists}
                   helperText={
-                    !this.state.emailExists && (
-                      <Translate id="passwordReset.emailError" />
+                    !this.state.emailOrUsernameExists && (
+                      <Translate id="passwordReset.notFoundError" />
                     )
                   }
                   margin="normal"
-                  onChange={(e) => this.setEmail(e.target.value)}
+                  onChange={(e) => this.setTextField(e.target.value)}
                 />
               </Grid>
               <Grid item>
-                <Button
+                <LoadingDoneButton
                   variant="contained"
                   color="primary"
-                  disabled={!this.state.email}
-                  onClick={this.onSubmit}
+                  onClick={() => this.onSubmit}
+                  disabled={!this.state.emailOrUsername}
+                  loading={this.state.loading}
+                  done={this.state.done}
                 >
                   <Translate id="passwordReset.submit" />
-                </Button>
+                </LoadingDoneButton>
               </Grid>
             </form>
           </Card>

@@ -2,7 +2,7 @@
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace Backend.Tests
+namespace Backend.Tests.Mocks
 {
     class PermissionServiceMock : IPermissionService
     {

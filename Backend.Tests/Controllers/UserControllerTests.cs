@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace Backend.Tests
+namespace Backend.Tests.Controllers
 {
     public class UserControllerTests
     {
@@ -23,8 +24,19 @@ namespace Backend.Tests
 
         private static User RandomUser()
         {
-            var user = new User { Username = Util.RandString(), Password = Util.RandString() };
+            var user = new User { Username = Util.RandString(10), Password = Util.RandString(10) };
             return user;
+        }
+
+        [Test]
+        public void TestRandString()
+        {
+            var randomString = Util.RandString(10);
+            Assert.IsTrue(char.IsUpper(randomString[0]));
+            Assert.IsTrue(char.IsLower(randomString[1]));
+            Assert.IsTrue(char.IsLower(randomString[2]));
+            Assert.IsTrue(char.IsLower(randomString[3]));
+            Assert.IsTrue(char.IsUpper(randomString[4]));
         }
 
         [Test]
@@ -111,6 +123,54 @@ namespace Backend.Tests
 
             _ = _controller.Delete().Result;
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(0));
+        }
+
+        [Test]
+        public void TestCheckUsername()
+        {
+            var user1 = RandomUser();
+            var user2 = RandomUser();
+            var username1 = user1.Username;
+            var username2 = user2.Username;
+
+            _userService.Create(user1);
+            _userService.Create(user2);
+
+            var result1 = (_controller.CheckUsername(username1.ToLowerInvariant())).Result as StatusCodeResult;
+            Assert.AreEqual(result1.StatusCode, 400);
+
+            var result2 = (_controller.CheckUsername(username2.ToUpperInvariant())).Result as StatusCodeResult;
+            Assert.AreEqual(result2.StatusCode, 400);
+
+            var result3 = (_controller.CheckUsername(username1)).Result as StatusCodeResult;
+            Assert.AreEqual(result3.StatusCode, 400);
+
+            var result4 = (_controller.CheckUsername("NewUsername")).Result as StatusCodeResult;
+            Assert.AreEqual(result4.StatusCode, 200);
+        }
+
+        [Test]
+        public void TestCheckEmail()
+        {
+            var user1 = RandomUser();
+            var user2 = RandomUser();
+            var email1 = user1.Email;
+            var email2 = user2.Email;
+
+            _userService.Create(user1);
+            _userService.Create(user2);
+
+            var result1 = (_controller.CheckEmail(email1.ToLowerInvariant())).Result as StatusCodeResult;
+            Assert.AreEqual(result1.StatusCode, 400);
+
+            var result2 = (_controller.CheckEmail(email2.ToUpperInvariant())).Result as StatusCodeResult;
+            Assert.AreEqual(result2.StatusCode, 400);
+
+            var result3 = (_controller.CheckEmail(email1)).Result as StatusCodeResult;
+            Assert.AreEqual(result3.StatusCode, 400);
+
+            var result4 = (_controller.CheckEmail("NewEmail")).Result as StatusCodeResult;
+            Assert.AreEqual(result4.StatusCode, 200);
         }
     }
 }

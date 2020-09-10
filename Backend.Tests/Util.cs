@@ -11,7 +11,10 @@ namespace Backend.Tests
             var sb = new StringBuilder();
             for (var i = 0; i < length; i++)
             {
-                sb.Append((char)rnd.Next('a', 'z'));
+                if (i % 4 == 0)
+                    sb.Append((char)rnd.Next('A', 'Z'));
+                else
+                    sb.Append((char)rnd.Next('a', 'z'));
             }
             return sb.ToString();
         }
