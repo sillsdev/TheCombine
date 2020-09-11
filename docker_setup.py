@@ -2,18 +2,10 @@
 
 """
 This script sets up your development environment to be able to run
-TheCombine in docker containers in an environment as similar to the
-production environment as possible.  The script shall be run from the
+TheCombine in Docker containers in an environment as similar to the
+production environment as possible. The script shall be run from the
 project's root directory.
-"""
 
-import argparse
-import os
-from pathlib import Path
-
-from jinja2 import Environment, PackageLoader, select_autoescape
-
-"""
 Tasks:
     1. Create the following directories:
         ./nginx/scripts
@@ -23,6 +15,13 @@ Tasks:
     4. Create backend environment file (w/o SMTP specified)
     5. Create nginx configuration file
 """
+
+import argparse
+import json
+import os
+from pathlib import Path
+
+from jinja2 import Environment, PackageLoader, select_autoescape
 
 project_dir = Path(__file__).resolve().parent
 """Absolute path to the checked out repository."""
@@ -40,9 +39,15 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "--pull-images",
+        action="store_true",
+        help="Pull pre-built Docker images from the Internet rather than rebuild them from the "
+             "current local repository checkout."
+    )
+    parser.add_argument(
         "--no-captcha",
         action="store_true",
-        help="Whether to disable the CAPTCHA from the frontend build.",
+        help="Disable the CAPTCHA from the frontend build.",
     )
     return parser.parse_args()
 
@@ -52,7 +57,7 @@ def main() -> None:
 
     # Define the configuration for the development environment
     dev_config = {
-        "combine_use_image": False,
+        "combine_pull_images": args.pull_images,
         "combine_image_frontend": "combine/frontend:latest",
         "combine_image_backend": "combine/backend:latest",
         "certbot_email": "",
@@ -71,9 +76,10 @@ def main() -> None:
             {"key": "COMBINE_SMTP_FROM", "value": ""},
             {"key": "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "value": "15"},
         ],
-        "config_captcha_required": str(not args.no_captcha).lower(),
+        "config_captcha_required": json.dumps(not args.no_captcha),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
     }
+
     # Templated file map
     template_map = {
         "docker-compose.yml.j2": project_dir / "docker-compose.yml",
@@ -110,7 +116,7 @@ def main() -> None:
 
     # Restrict permissions for the environment files
     for env_file in [project_dir / ".env.backend", project_dir / ".env.frontend"]:
-        os.chmod(env_file, 0o600)
+        env_file.chmod(0o600)
 
 
 # Standard boilerplate to call main().

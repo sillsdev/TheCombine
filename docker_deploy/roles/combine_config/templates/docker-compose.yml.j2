@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   backend:
-{% if combine_use_image %}
+{% if combine_pull_images %}
     image: {{ combine_image_backend }}
 {% else %}
     build: ./Backend
@@ -16,7 +16,7 @@ services:
       - ./.env.backend
     restart: unless-stopped
   frontend:
-{% if combine_use_image %}
+{% if combine_pull_images %}
     image: {{ combine_image_frontend }}
 {% else %}
     build: .
