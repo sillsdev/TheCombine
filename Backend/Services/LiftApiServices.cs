@@ -48,7 +48,7 @@ namespace BackendFramework.Services
         public override void Dispose()
         {
             // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation has been
-            //    fixed to properly to avoid needing to override its Dispose method.
+            //    fixed properly to avoid needing to override its Dispose method.
             //    https://github.com/sillsdev/libpalaso/blob/master/SIL.DictionaryServices/Lift/LiftWriter.cs
             Dispose(true);
         }
