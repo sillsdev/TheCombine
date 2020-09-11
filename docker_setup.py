@@ -96,6 +96,7 @@ def main() -> None:
     for templ_name in template_map:
         template = jinja_env.get_template(templ_name)
         with open(template_map[templ_name], 'w') as target_file:
+            print(f'Writing: {target_file.name}')
             target_file.write(template.render(dev_config))
 
     # restrict permissions for the environment files
