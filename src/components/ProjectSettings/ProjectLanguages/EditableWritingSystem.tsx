@@ -79,33 +79,57 @@ class EditableWritingSystem extends React.Component<
           </Grid>
         ) : (
           <Grid container spacing={1}>
-            {this.props.index !== undefined && (
-              <Grid item>{`${this.props.index + 1}. `}</Grid>
-            )}
-            <Grid item>
-              <Translate id="projectSettings.language.name" />
-              {": "}
-              {this.props.ws.name} {", "}
-            </Grid>
-            <Grid item>
-              <Translate id="projectSettings.language.bcp47" />
-              {": "}
-              {this.props.ws.bcp47}
-              {", "}
-            </Grid>
-            <Grid item>
-              <Translate id="projectSettings.language.font" />
-              {": "}
-              {this.props.ws.font}
-            </Grid>
-            <Grid item>
-              <Button onClick={() => this.setState({ edit: true })}>
-                <Edit />
-              </Button>
-            </Grid>
+            <ImmutableWritingSystem
+              ws={this.props.ws}
+              index={this.props.index}
+              icon={<Edit />}
+              iconAction={() => this.setState({ edit: true })}
+            />
           </Grid>
         )}
       </React.Fragment>
+    );
+  }
+}
+
+interface ImmutableWritingSystemProps {
+  ws: WritingSystem;
+  index?: number;
+  icon?: any;
+  iconAction?: () => void;
+}
+
+export class ImmutableWritingSystem extends React.Component<
+  ImmutableWritingSystemProps
+> {
+  render() {
+    return (
+      <Grid container spacing={1}>
+        {this.props.index !== undefined && (
+          <Grid item>{`${this.props.index + 1}. `}</Grid>
+        )}
+        <Grid item>
+          <Translate id="projectSettings.language.name" />
+          {": "}
+          {this.props.ws.name} {", "}
+        </Grid>
+        <Grid item>
+          <Translate id="projectSettings.language.bcp47" />
+          {": "}
+          {this.props.ws.bcp47}
+          {", "}
+        </Grid>
+        <Grid item>
+          <Translate id="projectSettings.language.font" />
+          {": "}
+          {this.props.ws.font}
+        </Grid>
+        {this.props.icon ? (
+          <Grid item>
+            <Button onClick={this.props.iconAction}>{this.props.icon}</Button>
+          </Grid>
+        ) : null}
+      </Grid>
     );
   }
 }

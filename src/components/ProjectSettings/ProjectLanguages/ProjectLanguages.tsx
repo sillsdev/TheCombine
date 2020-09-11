@@ -1,4 +1,6 @@
-import { Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
+import { Add } from "@material-ui/icons";
+import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
 import {
   LocalizeContextProps,
@@ -9,14 +11,21 @@ import {
 import { updateProject } from "../../../backend";
 import { Project, WritingSystem } from "../../../types/project";
 import theme from "../../../types/theme";
-import EditableWritingSystem from "./EditableWritingSystem";
+import EditableWritingSystem, {
+  ImmutableWritingSystem,
+} from "./EditableWritingSystem";
 
 interface LanguageProps {
   project: Project;
 }
 
+interface LanguageStates {
+  add?: boolean;
+}
+
 class ProjectLanguages extends React.Component<
-  LanguageProps & LocalizeContextProps
+  LanguageProps & LocalizeContextProps,
+  LanguageStates
 > {
   updateProjectWritingSystem(ws: WritingSystem, index?: number) {
     let updatedProject: Project;
@@ -38,15 +47,19 @@ class ProjectLanguages extends React.Component<
     );
   }
 
+  toggleAdd() {
+    const add = !this.state.add;
+    this.setState({ add });
+  }
+
   render() {
     return (
       <React.Fragment>
         <Typography>
           <Translate id="projectSettings.language.vernacular" />
           {": "}
-          <EditableWritingSystem
+          <ImmutableWritingSystem
             ws={this.props.project.vernacularWritingSystem}
-            update={this.updateProjectWritingSystem}
           />
         </Typography>
         <Typography style={{ marginTop: theme.spacing(1) }}>
@@ -60,6 +73,11 @@ class ProjectLanguages extends React.Component<
                 update={this.updateProjectWritingSystem}
               />
             )
+          )}
+          {this.state.add ? null : (
+            <Button onClick={() => this.toggleAdd()}>
+              <Add />
+            </Button>
           )}
         </Typography>
       </React.Fragment>
