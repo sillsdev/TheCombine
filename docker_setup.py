@@ -39,11 +39,6 @@ def config_nginx() -> None:
     )
 
 
-# def build_docker_compose(jinja_env, config):
-#     template = jinja_env.get_template('docker-compose.yml.j2')
-#     with open('docker-compose.yml', 'w') as compose_file:
-#         compose_file.write(template.render(config))
-
 def main() -> None:
     # Define the configuration for the development environment
     dev_config = {
