@@ -22,7 +22,7 @@ Tasks:
  3. create frontend environment file
  4. create backend environment file (w/o SMTP specified)
  5. create nginx configuration file
- """
+"""
 
 
 def config_nginx() -> None:

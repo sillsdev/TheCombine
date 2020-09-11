@@ -231,30 +231,66 @@ To generate a full report of the licenses used in production:
 
 ### Requirements
 
+#### Docker
+
 Install [Docker](https://docs.docker.com/get-docker/).
 
 (Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/)
 separately. This is included by default in Docker Desktop for Windows and macOS.
 
+#### Python
+
 A Python script, `docker_setup.py` is used to configure the files needed to run
 *TheCombine* in Docker containers.
 
-To install Python on Windows:
- * Navigate to the [Python 3.8.5 Downloads](https://www.python.org/downloads/release/python-385/) page;
- * Download the appropriate installer - it is most likely the installer labeled
-   *Windows x86-64 executable installer*
- * Run the installer.  During the installation be sure to select the checkbox
-   to add Python to your path.
- * Once Python is installed, install the Jinja2 module:
-   ```batch
-   > pip install Jinja2
-   ```
-To install Python3 on Ubuntu Linux, run the following commands:
-   ```bash
-   sudo apt update
-   sudo apt install python3
-   pip3 install Jinja2
-   ```
+##### Windows Only
+
+* Navigate to the [Python 3.8.5 Downloads](https://www.python.org/downloads/release/python-385/) page.
+
+* Download and run the appropriate installer - it is most likely the installer labeled
+    *Windows x86-64 executable installer*
+
+* Once Python is installed, create an isolated Python 
+  [virtual environment](https://docs.python.org/3/library/venv.html) using the 
+  [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher
+  installed globally into the `PATH`. 
+
+    ```batch
+    > py -m venv venv
+    > venv\Scripts\activate
+    ```
+ 
+##### Linux Only
+
+To install Python 3 on Ubuntu, run the following commands:
+
+```bash
+$ sudo apt update
+$ sudo apt install python3 python3-venv
+```
+
+Create an isolated Python virtual environment
+
+```bash
+$ python3 -m venv venv
+$ venv/bin/activate
+```
+
+##### Python Packages
+
+With an active virtual environment, install `Jinja2`:
+
+```batch
+(venv) > python -m pip install Jinja2
+```
+
+#### Configure Docker
+
+Run the configuration script in an activated virtual environment.
+
+```batch
+(venv) > python docker_setup.py 
+```
 
 ### Build and Run
 

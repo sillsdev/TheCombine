@@ -62,6 +62,7 @@ mongo_database
 # Python
 __pycache__
 *.pyc
+venv
 
 # Auto-generated SSL keys and certificate requests
 deploy/site_info/
