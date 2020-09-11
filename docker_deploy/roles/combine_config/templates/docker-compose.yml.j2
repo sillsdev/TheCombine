@@ -1,7 +1,11 @@
 version: "3.8"
 services:
   backend:
+{% if combine_use_image %}
     image: {{ combine_image_backend }}
+{% else %}
+    build: ./Backend
+{% endif %}
     volumes:
       - backend_data:/home/app/.CombineFiles
     expose:
@@ -12,7 +16,11 @@ services:
       - ./.env.backend
     restart: unless-stopped
   frontend:
+{% if combine_use_image %}
     image: {{ combine_image_frontend }}
+{% else %}
+    build: .
+{% endif %}
     env_file:
       - ./.env.frontend
     volumes:

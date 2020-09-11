@@ -15,14 +15,13 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 
 """
 Tasks:
- 1. Create the following directories:
+    1. Create the following directories:
         ./nginx/scripts
-        ./nginx/conf.d
- 2. Build docker-compose.yml from
-    roles/combine_config/templates/docker-compose.yml.j2
- 3. Create frontend environment file
- 4. Create backend environment file (w/o SMTP specified)
- 5. Create nginx configuration file
+    2. Build docker-compose.yml from
+       roles/combine_config/templates/docker-compose.yml.j2
+    3. Create frontend environment file
+    4. Create backend environment file (w/o SMTP specified)
+    5. Create nginx configuration file
 """
 
 project_dir = Path(__file__).resolve().parent
@@ -31,13 +30,7 @@ project_dir = Path(__file__).resolve().parent
 
 def config_nginx() -> None:
     nginx_config_dir = project_dir / "nginx"
-    nginx_dirs = [
-        nginx_config_dir / "scripts",
-        nginx_config_dir / "conf.d",
-    ]
-
-    for nginx_dir in nginx_dirs:
-        nginx_dir.mkdir(exist_ok=True)
+    nginx_config_dir.mkdir(exist_ok=True)
 
 
 def parse_args() -> argparse.Namespace:
@@ -59,6 +52,7 @@ def main() -> None:
 
     # Define the configuration for the development environment
     dev_config = {
+        "combine_use_image": False,
         "combine_image_frontend": "combine/frontend:latest",
         "combine_image_backend": "combine/backend:latest",
         "certbot_email": "",
