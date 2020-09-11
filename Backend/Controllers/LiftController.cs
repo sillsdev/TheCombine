@@ -23,15 +23,15 @@ namespace BackendFramework.Controllers
     public class LiftController : Controller
     {
         private readonly IWordRepository _wordRepo;
-        private readonly LiftService _liftService;
+        private readonly ILiftService _liftService;
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService)
+        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService, ILiftService liftService)
         {
             _wordRepo = repo;
             _projectService = projServ;
-            _liftService = new LiftService(_wordRepo, _projectService);
+            _liftService = liftService;
             _permissionService = permissionService;
         }
 
@@ -45,7 +45,6 @@ namespace BackendFramework.Controllers
             {
                 return new ForbidResult();
             }
-
 
             // sanitize projectId
             if (!SanitizeId(projectId))
@@ -159,8 +158,8 @@ namespace BackendFramework.Controllers
             try
             {
                 // Sets the projectId of our parser to add words to that project
-                _liftService.SetProject(projectId);
-                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(_liftService);
+                var liftMerger = _liftService.GetLiftImporterExporter(projectId, _projectService, _wordRepo);
+                var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
                 // Import words from lift file
                 var resp = parser.ReadLiftFile(extractedLiftPath.FirstOrDefault());
@@ -168,7 +167,7 @@ namespace BackendFramework.Controllers
                 // Add character set to project from ldml file
                 var proj = _projectService.GetProject(projectId).Result;
                 _liftService.LdmlImport(
-                    Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem.Bcp47);
+                    Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem.Bcp47, _projectService, proj);
 
                 return new ObjectResult(resp);
             }
@@ -219,8 +218,7 @@ namespace BackendFramework.Controllers
         // This method is extracted so that it can be unit tested
         internal string CreateLiftExport(string projectId)
         {
-            _liftService.SetProject(projectId);
-            var exportedFilepath = _liftService.LiftExport(projectId);
+            var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
             return exportedFilepath;
         }
     }

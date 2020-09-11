@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -7,7 +8,7 @@ using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace Backend.Tests
+namespace Backend.Tests.Controllers
 {
     public class WordControllerTests
     {
@@ -30,7 +31,7 @@ namespace Backend.Tests
             _projId = _projectService.Create(new Project()).Result.Id;
         }
 
-        Word RandomWord()
+        private Word RandomWord()
         {
             var word = new Word { Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() } };
 

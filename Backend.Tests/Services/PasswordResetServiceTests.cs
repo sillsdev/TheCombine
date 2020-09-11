@@ -1,10 +1,11 @@
-using BackendFramework.Models;
+using System;
+using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
+using BackendFramework.Models;
 using BackendFramework.Services;
 using NUnit.Framework;
-using System;
 
-namespace Backend.Tests
+namespace Backend.Tests.Services
 {
     public class PasswordResetServiceTests
     {
