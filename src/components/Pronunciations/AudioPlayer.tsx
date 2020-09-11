@@ -1,5 +1,6 @@
 import {
   createStyles,
+  Fade,
   IconButton,
   makeStyles,
   Menu,
@@ -10,7 +11,6 @@ import {
 import { green } from "@material-ui/core/colors";
 import { Delete, PlayArrow, Stop } from "@material-ui/icons";
 import React from "react";
-import isMobile from "react-device-detect";
 import { Translate } from "react-localize-redux";
 
 export interface PlayerProps {
@@ -38,7 +38,6 @@ export default function AudioPlayer(props: PlayerProps) {
     new Audio(props.pronunciationUrl)
   );
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
-  const isTablet = isMobile; // change to true to test on non-tablet
   const classes = useStyles();
 
   function deletePlay() {
@@ -60,31 +59,41 @@ export default function AudioPlayer(props: PlayerProps) {
   }
 
   function deleteOrTogglePlay(event?: any) {
-    if (event && isTablet) {
-      setAnchor(event.currentTarget);
+    if (event?.shiftKey) {
+      deletePlay();
     } else {
-      if (event?.shiftKey) {
-        deletePlay();
-      } else {
-        togglePlay();
-      }
+      togglePlay();
     }
   }
 
   function handleClose() {
     setAnchor(null);
+    enableContextMenu();
   }
 
-  const refButton = React.createRef<any>();
+  function disableContextMenu(event: any) {
+    event.preventDefault();
+    enableContextMenu();
+  }
+  function enableContextMenu() {
+    document.removeEventListener("contextmenu", disableContextMenu, false);
+  }
+
+  function handleTouch(event: any) {
+    // Temporarily disable context menu since some browsers
+    // interpret a long-press touch as a right-click.
+    document.addEventListener("contextmenu", disableContextMenu, false);
+    setAnchor(event.currentTarget);
+  }
 
   return (
     <React.Fragment>
       <Tooltip title={<Translate id="pronunciations.playTooltip" />}>
         <IconButton
-          ref={refButton}
           tabIndex={-1}
           onClick={deleteOrTogglePlay}
-          //onTouchStart={(event) => setAnchor(event.currentTarget)} //use this if isMobile doesn't work
+          onTouchStart={handleTouch}
+          onTouchEnd={enableContextMenu}
           className={classes.button}
           aria-label="play"
         >
@@ -96,13 +105,14 @@ export default function AudioPlayer(props: PlayerProps) {
         </IconButton>
       </Tooltip>
       <Menu
+        TransitionComponent={Fade}
         getContentAnchorEl={null}
         id="play-menu"
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "bottom",
+          vertical: "top",
           horizontal: "left",
         }}
         transformOrigin={{
