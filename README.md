@@ -286,7 +286,8 @@ With an active virtual environment, install `Jinja2`:
 
 #### Configure Docker
 
-Run the configuration script in an activated virtual environment.
+Run the configuration script in an activated virtual environment to generate
+the necessary configuration files.
 
 ```batch
 (venv) > python docker_setup.py
@@ -299,26 +300,28 @@ Run the configuration script in an activated virtual environment.
 For information on *Docker Compose* see the
 [Docker Compose documentation](https://docs.docker.com/compose/).
 
-#### Step-by-step Instructions for Running *TheCombine* In Docker
+#### Running In Docker
 
-1. Create the required docker files by running `docker_setup.py` from *TheCombine*'s project directory:
+1. Create the required docker files by running `docker_setup.py` from *TheCombine*'s project directory.
+
 2. The `docker_setup.py` will generate a file, `.env.backend`, that defines
-the environment variables needed by the Backend container.  If you have defined
-them as OS variables in the [Getting Started with Development](#getting-started-with-development) section above, then these variables will already be set.  If not,
-then you will need to edit `.env.backend` and provide values for the variables that
-are listed.
+    the environment variables needed by the Backend container.  If you have defined
+    them as OS variables in the [Getting Started with Development](#getting-started-with-development) 
+    section above, then these variables will already be set. If not, then you will need to edit 
+    `.env.backend` and provide values for the variables that are listed.
+
 3. Build the images for the Docker containers
 
    ```batch
-   > docker build -t combine/frontend:latest --pull -f Dockerfile .
-   > cd Backend
-   > docker build -t combine/backend:latest --pull -f Dockerfile .
-   > cd ..
+   > docker-compose build --parallel
    ```
-4. Run `docker-compose` to start the containers
+
+4. Start the containers
+  
    ```batch
    > docker-compose up --detach
    ```
+
 5. Browse to https://localhost.
 
    *By default self-signed certificates are included, so you will need to accept a warning in the browser.*
@@ -338,11 +341,12 @@ are listed.
 ### Create a New Admin User (Docker Environment)
 
 Edit `.env.backend` as follows:
- * Fill in the environment variables.
- * Add the following environment variables and assign values to them:
-   - COMBINE_ADMIN_USERNAME
-   - COMBINE_ADMIN_PASSWORD
- * Set the file permissions so that only you have read or write access.
+
+    * Fill in the environment variables.
+    * Add the following environment variables and assign values to them:
+        - COMBINE_ADMIN_USERNAME
+        - COMBINE_ADMIN_PASSWORD
+    * Set the file permissions so that only you have read or write access.
 
 Run the following command to install the admin user in the *CombineDatabase*:
 
