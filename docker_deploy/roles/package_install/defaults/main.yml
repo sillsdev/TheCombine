@@ -1,8 +1,6 @@
 ---
 
 required_packages:
-  - python3
-  - python3-pip
   - apt-transport-https
   - aptitude
   - software-properties-common
