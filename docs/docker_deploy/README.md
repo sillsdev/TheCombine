@@ -1,8 +1,7 @@
 # Deploy *TheCombine* In Docker Containers
 
-This document describes how to deploy *TheCombine* to a target machine in Docker
-containers.  This method will replace the initial method of installing
-*TheCombine* directly on the target machine.
+This document describes how to install the framework that is needed to deploy
+*TheCombine* to a target machine in Docker containers.
 
 <table>
 <tr>
@@ -186,8 +185,7 @@ once at initial setup and if ever the playbook or its roles change.
         2. `combine` user is also added to the `docker` group
         3. ssh key is generated
      3. current user, that is, the host user running the playbook, is added as
-        an authorized user for `combine`.  This will allow running the next
-        playbook as `combine`.
+        an authorized user for `combine`.
   4. Install TheCombine configuration files
      1. Install the `docker-compose.yml` that defines the containers and their
         environment;
