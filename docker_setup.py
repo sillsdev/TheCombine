@@ -112,6 +112,7 @@ def main() -> None:
             str(Path(".") / "docker_deploy" / "roles" / "combine_config" / "templates")
         ),
         autoescape=select_autoescape(['html', 'xml']),
+        trim_blocks=True,
     )
     config_nginx()
 
