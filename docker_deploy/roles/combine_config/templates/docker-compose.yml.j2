@@ -3,7 +3,7 @@ services:
   backend:
     image: {{ combine_image_backend }}
     volumes:
-      - backend_data:/root/.CombineFiles
+      - backend_data:/home/app/.CombineFiles
     expose:
       - 5000
     depends_on:
