@@ -72,10 +72,10 @@ def main() -> None:
     }
     # Templated file map
     template_map = {
-        "docker-compose.yml.j2": "./docker-compose.yml",
-        "env.frontend.j2": "./.env.frontend",
-        "env.backend.j2": "./.env.backend",
-        "config.js.j2": "./nginx/scripts/config.js",
+        "docker-compose.yml.j2": project_dir / "docker-compose.yml",
+        "env.frontend.j2": project_dir / ".env.frontend",
+        "env.backend.j2": project_dir / ".env.backend",
+        "config.js.j2": project_dir / "nginx/scripts/config.js",
     }
 
     # Set backend private env_vars if they are defined for our process
@@ -95,14 +95,14 @@ def main() -> None:
     )
     config_nginx()
 
-    for templ_name in template_map:
+    for templ_name, templ_path in template_map.items():
         template = jinja_env.get_template(templ_name)
-        with open(template_map[templ_name], 'w') as target_file:
+        with open(templ_path, 'w') as target_file:
             print(f'Writing: {target_file.name}')
             target_file.write(template.render(dev_config))
 
     # Restrict permissions for the environment files
-    for env_file in [".env.backend", ".env.frontend"]:
+    for env_file in [project_dir / ".env.backend", project_dir / ".env.frontend"]:
         os.chmod(env_file, 0o600)
 
 
