@@ -31,7 +31,7 @@ namespace Backend.Tests.Controllers
             _permissionService = new PermissionServiceMock();
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
-            _liftService = new LiftService(_wordrepo, _projServ);
+            _liftService = new LiftService();
             _liftController = new LiftController(_wordrepo, _projServ, _permissionService, _liftService);
             _wordService = new WordService(_wordrepo);
         }
