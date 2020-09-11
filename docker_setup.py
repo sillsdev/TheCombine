@@ -58,6 +58,8 @@ def main() -> None:
     # Define the configuration for the development environment
     dev_config = {
         "combine_pull_images": args.pull_images,
+        # TODO: Update these images to point to hosted images and provide authentication
+        #   instructions.
         "combine_image_frontend": "combine/frontend:latest",
         "combine_image_backend": "combine/backend:latest",
         "certbot_email": "",
