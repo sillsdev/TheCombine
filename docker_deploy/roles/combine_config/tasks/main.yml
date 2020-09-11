@@ -53,11 +53,3 @@
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
     mode: 0644
-
-- name: create nginx configuration file
-  copy:
-    src: thecombine.conf
-    dest: "{{ combine_app_dir }}/nginx/conf.d/thecombine.conf"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0644

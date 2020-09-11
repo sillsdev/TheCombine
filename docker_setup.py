@@ -40,12 +40,6 @@ def config_nginx() -> None:
     for nginx_dir in nginx_dirs:
         nginx_dir.mkdir(exist_ok=True)
 
-    # Copy the nginx config file over
-    shutil.copy2(
-        project_dir / "docker_deploy" / "roles" / "combine_config" / "files" / "thecombine.conf",
-        nginx_config_dir / "conf.d" / "thecombine.conf",
-    )
-
 
 def parse_args() -> argparse.Namespace:
     """Parse user command line arguments."""
