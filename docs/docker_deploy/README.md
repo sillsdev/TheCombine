@@ -102,21 +102,12 @@ Notes:
   \<COMBINE\>/docker_deploy).  If it is not, then you need to create your
   own inventory file (see [below](#creating-your-own-inventory-file)).
 
-#### Build *TheCombine* Containers
+#### Running the *TheCombine* Docker Containers
 
-Normally, *TheCombine*'s docker containers are built by the *TeamCity* server
-and pushed to Amazon's Elastic Container Registry (AWS ECR).
-If this has not happened, then you can run the following commands to build the
-containers on your machine and push them to AWS ECR or other registry:
-```bash
-cd <COMBINE>
-AWS_ECR=117995318043.dkr.ecr.us-east-1.amazonaws.com
-docker build -t ${AWS_ECR}/combine/frontend:latest --pull -f Dockerfile .
-cd Backend
-docker build -t ${AWS_ECR}/combine/backend:latest --pull -f Dockerfile .
-docker push ${AWS_ECR}/combine/frontend:latest
-docker push ${AWS_ECR}/combine/backend:latest
-```
+*TheCombine*'s docker containers are built by SIL's *TeamCity* server.  Once they
+are built successfully, they are installed on the QA or are pushed to
+Amazon's Elastic Container Registry (AWS ECR).  When the container images are
+pushed to AWS ECR, these images are then used to update the Live server.
 
 #### Creating Your Own Inventory File
 
