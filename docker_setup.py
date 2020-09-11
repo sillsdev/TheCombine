@@ -25,7 +25,6 @@ Tasks:
  5. Create nginx configuration file
 """
 
-script_path = Path(__file__)
 project_dir = Path(__file__).resolve().parent
 """Absolute path to the checked out repository."""
 
