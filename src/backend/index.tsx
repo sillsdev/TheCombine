@@ -20,10 +20,10 @@ const backendServer = axios.create({
 
 backendServer.interceptors.response.use(
   (resp) => {
-    if (resp.data.__UpdatedUser) {
-      LocalStorage.setCurrentUser(resp.data.__UpdatedUser);
+    if (resp.data.updatedUser) {
+      LocalStorage.setCurrentUser(resp.data.updatedUser);
     }
-    delete resp.data.__UpdatedUser;
+    delete resp.data.updatedUser;
     return resp;
   },
   (err) => {
@@ -458,7 +458,7 @@ function goalNameToGoalTypeId(goalName: string): string {
   return goalType.toString();
 }
 
-export async function createUserEdit(): Promise<string> {
+export async function createUserEdit(): Promise<Object> {
   let resp = await backendServer.post(
     `projects/${LocalStorage.getProjectId()}/useredits`,
     "",
