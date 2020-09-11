@@ -289,7 +289,9 @@ With an active virtual environment, install `Jinja2`:
 Run the configuration script in an activated virtual environment.
 
 ```batch
-(venv) > python docker_setup.py 
+(venv) > python docker_setup.py
+
+# To view options, run with --help
 ```
 
 ### Build and Run

@@ -7,6 +7,7 @@ production environment as possible.  The script shall be run from the
 project's root directory.
 """
 
+import argparse
 import os
 from pathlib import Path
 import shutil
@@ -46,7 +47,23 @@ def config_nginx() -> None:
     )
 
 
+def parse_args() -> argparse.Namespace:
+    """Parse user command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Generate Docker Compose configuration for project.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--no-captcha",
+        action="store_true",
+        help="Whether to disable the CAPTCHA from the frontend build.",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
+    args = parse_args()
+
     # Define the configuration for the development environment
     dev_config = {
         "combine_image_frontend": "combine/frontend:latest",
@@ -67,7 +84,7 @@ def main() -> None:
             {"key": "COMBINE_SMTP_FROM", "value": ""},
             {"key": "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "value": ""},
         ],
-        "config_captcha_required": "true",
+        "config_captcha_required": str(not args.no_captcha).lower(),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
     }
     # Templated file map
