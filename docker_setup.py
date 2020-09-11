@@ -25,7 +25,7 @@ Tasks:
  """
 
 
-def config_nginx():
+def config_nginx() -> None:
     nginx_dir_list = ["./nginx/scripts", "./nginx/conf.d"]
 
     for nginx in nginx_dir_list:
@@ -44,7 +44,7 @@ def config_nginx():
 #     with open('docker-compose.yml', 'w') as compose_file:
 #         compose_file.write(template.render(config))
 
-def main():
+def main() -> None:
     # Define the configuration for the development environment
     dev_config = {
         "combine_image_frontend": "combine/frontend:latest",
@@ -66,7 +66,7 @@ def main():
             {"key": "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "value": ""},
         ],
         "config_captcha_required": "true",
-        "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+        "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
     }
     # Templated file map
     template_map = {
