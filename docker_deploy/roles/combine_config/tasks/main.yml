@@ -29,7 +29,6 @@
     group: "{{ combine_group }}"
     mode: 0644
 
-
 - name: create frontend environment file
   template:
     src: env.frontend.j2
