@@ -10,7 +10,6 @@ project's root directory.
 import argparse
 import os
 from pathlib import Path
-import shutil
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
