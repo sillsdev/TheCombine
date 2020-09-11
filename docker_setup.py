@@ -8,34 +8,41 @@ project's root directory.
 """
 
 import os
+from pathlib import Path
 import shutil
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
 """
 Tasks:
- 1. create the following directories:
-    ./nginx/scripts
-    ./nginx/conf.d
- 2. build docker-compose.yml from
+ 1. Create the following directories:
+        ./nginx/scripts
+        ./nginx/conf.d
+ 2. Build docker-compose.yml from
     roles/combine_config/templates/docker-compose.yml.j2
- 3. create frontend environment file
- 4. create backend environment file (w/o SMTP specified)
- 5. create nginx configuration file
+ 3. Create frontend environment file
+ 4. Create backend environment file (w/o SMTP specified)
+ 5. Create nginx configuration file
 """
+
+project_dir = Path(__file__).resolve().parent
+"""Absolute path to the checked out repository."""
 
 
 def config_nginx() -> None:
-    nginx_dir_list = ["./nginx/scripts", "./nginx/conf.d"]
+    nginx_config_dir = project_dir / "nginx"
+    nginx_dirs = [
+        nginx_config_dir / "scripts",
+        nginx_config_dir / "conf.d",
+    ]
 
-    for nginx in nginx_dir_list:
-        if not os.path.isdir(nginx):
-            os.mkdir(nginx)
+    for nginx_dir in nginx_dirs:
+        nginx_dir.mkdir(exist_ok=True)
 
-    # copy the nginx config file over
+    # Copy the nginx config file over
     shutil.copy2(
-        "./docker_deploy/roles/combine_config/files/thecombine.conf",
-        "./nginx/conf.d/thecombine.conf",
+        project_dir / "docker_deploy" / "roles" / "combine_config" / "files" / "thecombine.conf",
+        nginx_config_dir / "conf.d" / "thecombine.conf",
     )
 
 
@@ -94,7 +101,7 @@ def main() -> None:
             print(f'Writing: {target_file.name}')
             target_file.write(template.render(dev_config))
 
-    # restrict permissions for the environment files
+    # Restrict permissions for the environment files
     for env_file in [".env.backend", ".env.frontend"]:
         os.chmod(env_file, 0o600)
 
