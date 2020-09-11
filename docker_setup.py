@@ -25,6 +25,7 @@ Tasks:
  5. Create nginx configuration file
 """
 
+script_path = Path(__file__)
 project_dir = Path(__file__).resolve().parent
 """Absolute path to the checked out repository."""
 
@@ -75,7 +76,7 @@ def main() -> None:
         "docker-compose.yml.j2": project_dir / "docker-compose.yml",
         "env.frontend.j2": project_dir / ".env.frontend",
         "env.backend.j2": project_dir / ".env.backend",
-        "config.js.j2": project_dir / "nginx/scripts/config.js",
+        "config.js.j2": project_dir / "nginx" / "scripts" / "config.js",
     }
 
     # Set backend private env_vars if they are defined for our process
@@ -90,7 +91,10 @@ def main() -> None:
 
     # Initialize the Jinja2 environment
     jinja_env = Environment(
-        loader=PackageLoader('docker_setup', "./docker_deploy/roles/combine_config/templates"),
+        loader=PackageLoader(
+            'docker_setup',
+            str(Path(".") / "docker_deploy" / "roles" / "combine_config" / "templates")
+        ),
         autoescape=select_autoescape(['html', 'xml']),
     )
     config_nginx()
