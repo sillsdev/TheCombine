@@ -27,11 +27,6 @@ project_dir = Path(__file__).resolve().parent
 """Absolute path to the checked out repository."""
 
 
-def config_nginx() -> None:
-    nginx_config_dir = project_dir / "nginx"
-    nginx_config_dir.mkdir(exist_ok=True)
-
-
 def parse_args() -> argparse.Namespace:
     """Parse user command line arguments."""
     parser = argparse.ArgumentParser(
@@ -109,7 +104,7 @@ def main() -> None:
         autoescape=select_autoescape(['html', 'xml']),
         trim_blocks=True,
     )
-    config_nginx()
+    (project_dir / "nginx" / "scripts").mkdir(exist_ok=True)
 
     for templ_name, templ_path in template_map.items():
         template = jinja_env.get_template(templ_name)
