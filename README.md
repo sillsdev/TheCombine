@@ -203,22 +203,6 @@ environment variable and then run:
 
 The exit code will be set to `0` on success and non-`0` otherwise.
 
-#### Docker
-
-Copy `.env.backend.auth.template` to `.env.backend.auth` add fill in the username and
-password environment variables.
-
-```batch
-> docker-compose build --parallel
-> docker-compose up --abort-on-container-exit
-```
-
-This will create the user and exit. If successful, the exit code will be `0`,
-otherwise an error will be logged and the exit code will be non-`0`.
-
-**Important**: Remove the `COMBINE_*` environment variables from
-`.env.backend.auth` so that subsequent launches will start up the backend.
-
 ### (Development Only) Grant an Existing User Admin Rights
 
 To grant an _existing_ user database administrator rights (all permissions for
@@ -247,92 +231,138 @@ To generate a full report of the licenses used in production:
 
 ### Requirements
 
+#### Docker
+
 Install [Docker](https://docs.docker.com/get-docker/).
 
 (Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/)
 separately. This is included by default in Docker Desktop for Windows and macOS.
 
+#### Python
+
+A Python script, `docker_setup.py` is used to configure the files needed to run
+*TheCombine* in Docker containers.
+
+##### Windows Only
+
+* Navigate to the [Python 3.8.5 Downloads](https://www.python.org/downloads/release/python-385/) page.
+
+* Download and run the appropriate installer - it is most likely the installer labeled
+    *Windows x86-64 executable installer*
+
+* Once Python is installed, create an isolated Python 
+  [virtual environment](https://docs.python.org/3/library/venv.html) using the 
+  [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher
+  installed globally into the `PATH`. 
+
+    ```batch
+    > py -m venv venv
+    > venv\Scripts\activate
+    ```
+ 
+##### Linux Only
+
+To install Python 3 on Ubuntu, run the following commands:
+
+```bash
+$ sudo apt update
+$ sudo apt install python3 python3-venv
+```
+
+Create an isolated Python virtual environment
+
+```bash
+$ python3 -m venv venv
+$ venv/bin/activate
+```
+
+##### Python Packages
+
+With an active virtual environment, install `Jinja2`:
+
+```batch
+(venv) > python -m pip install Jinja2
+```
+
+#### Configure Docker
+
+Run the configuration script in an activated virtual environment to generate
+the necessary configuration files.
+
+```batch
+(venv) > python docker_setup.py
+
+# To view options, run with --help
+```
+
 ### Build and Run
 
-For more information see the
-[Docker Compose docs](https://docs.docker.com/compose/).
+For information on *Docker Compose* see the
+[Docker Compose documentation](https://docs.docker.com/compose/).
 
-Copy `.env.backend.template` to `.env.backend` and fill in the environment
-variables.
+#### Running In Docker
 
-```batch
-> docker-compose build --parallel
-> docker-compose up --detach
-```
+1. Create the required docker files by running `docker_setup.py` from *TheCombine*'s project directory.
 
-Browse to https://localhost.
+2. The `docker_setup.py` will generate a file, `.env.backend`, that defines
+    the environment variables needed by the Backend container.  If you have defined
+    them as OS variables in the [Getting Started with Development](#getting-started-with-development) 
+    section above, then these variables will already be set. If not, then you will need to edit 
+    `.env.backend` and provide values for the variables that are listed.
 
-> By default self-signed certificates are included, so you will need to accept
-> a warning in the browser. See [SSL Certificates](#ssl-certificates) for
-> production deployment.
+3. Build the images for the Docker containers
 
-To view logs:
+   ```batch
+   > docker-compose build --parallel
+   ```
 
-```batch
-> docker-compose logs --follow
-```
+4. Start the containers
+  
+   ```batch
+   > docker-compose up --detach
+   ```
 
-To stop and remove any stored data:
+5. Browse to https://localhost.
 
-```batch
-> docker-compose down --volumes
-```
+   *By default self-signed certificates are included, so you will need to accept a warning in the browser.*
 
-### Configuration
+6. To view logs:
 
-#### SSL Certificates
+   ```batch
+   > docker-compose logs --follow
+   ```
 
-To update SSL certificates after images have been built and are running,
-find the `frontend` container name. By default this will be formatted as
-`<lowercase_parent_dir>_frontend_1`.
+7. To stop and remove any stored data:
 
-```batch
-> docker-compose images
-      Container             Repository         Tag       Image Id       Size
-------------------------------------------------------------------------------
-thecombine_backend_1    thecombine_backend    latest   73cf7b867c22   292.2 MB
-thecombine_database_1   mongo                 4.2      2b2cc1f48aed   387.8 MB
-thecombine_frontend_1   thecombine_frontend   latest   7cca1c1f1a5f   32.55 MB
-```
+   ```batch
+   > docker-compose down --volumes
+   ```
 
-Copy new certificates from local filesystem into the container:
+### Create a New Admin User (Docker Environment)
 
-```batch
-> docker cp new_cert.pem thecombine_frontend_1:/ssl/cert.pem
-> docker cp new_key.pem thecombine_frontend_1:/ssl/key.pem
-```
+Edit `.env.backend` as follows:
 
-Restart the Docker Compose project:
+    * Fill in the environment variables.
+    * Add the following environment variables and assign values to them:
+        - COMBINE_ADMIN_USERNAME
+        - COMBINE_ADMIN_PASSWORD
+    * Set the file permissions so that only you have read or write access.
+
+Run the following command to install the admin user in the *CombineDatabase*:
 
 ```batch
-> docker-compose down
-> docker-compose up --detatch
+> docker-compose up --abort-on-container-exit
 ```
 
-#### Modifying Build Arguments
+This will create the user and exit. If successful, the exit code will be `0`,
+otherwise an error will be logged and the exit code will be non-`0`.
 
-Create a file `production.yml`, and override build arguments as needed.
+**Important**: Remove the `COMBINE_ADMIN_*` environment variables from
+`.env.backend` so that subsequent launches will start up the backend.
 
-```yaml
-version: "3.8"
-services:
-  frontend:
-    build:
-      args:
-        - COMBINE_CAPTCHA_REQUIRED=false
-```
+### Production
 
-Use this file when building and launching the Docker Compose project.
-
-```batch
-> docker-compose -f docker-compose.yml -f production.yml build --parallel
-> docker-compose -f docker-compose.yml -f production.yml up --detach
-```
+The process for configuring and deploying *TheCombine* for production targets is described in ./docs/docker_deploy/README.md
 
 ## Learn More
 
