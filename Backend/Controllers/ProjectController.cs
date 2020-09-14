@@ -91,10 +91,8 @@ namespace BackendFramework.Controllers
                 return new NotFoundResult();
             }
 
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
-            {
-                // If there are fields we need to hide from lower users remove them here
-            }
+            // If there are fields we need to hide from lower users, check for Permission.DeleteEditSettingsAndUsers
+            // and remove them.
 
             return new ObjectResult(project);
         }
@@ -127,7 +125,7 @@ namespace BackendFramework.Controllers
             userRole = await _userRoleService.Create(userRole);
 
             // Update user with userRole
-            if (currentUser.ProjectRoles.Equals(null))
+            if (currentUser.ProjectRoles is null)
             {
                 currentUser.ProjectRoles = new Dictionary<string, string>();
             }
