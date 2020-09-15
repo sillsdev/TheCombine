@@ -28,7 +28,7 @@ describe("Tests UserMenu", () => {
     expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
   });
 
-  it("should return correct value for isAdmin", (done) => {
+  it("should have correct value for isAdmin", (done) => {
     mockUser.isAdmin = false;
     getIsAdmin().then((result) => {
       expect(result).toEqual(false);
@@ -40,7 +40,7 @@ describe("Tests UserMenu", () => {
     });
   });
 
-  it("should only show site settings to general users", async () => {
+  it("admin users see one more item: Site Settings", async () => {
     renderer.act(() => {
       testRenderer = renderer.create(<UserMenuList isAdmin={false} />);
     });
