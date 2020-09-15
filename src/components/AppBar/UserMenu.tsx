@@ -30,18 +30,13 @@ export default function UserMenu() {
   );
   const avatar = LocalStorage.getAvatar();
   const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
-  const [menuIsOpen, setMenuIsOpen] = React.useState<boolean>(false);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
-    if (event) {
-      setAnchorElement(event.currentTarget);
-    }
-    setMenuIsOpen(true);
+    setAnchorElement(event.currentTarget);
   }
 
   function handleClose() {
     setAnchorElement(null);
-    setMenuIsOpen(false);
   }
 
   getIsAdmin().then((result) => setIsAdmin(result));
@@ -63,7 +58,7 @@ export default function UserMenu() {
         getContentAnchorEl={null}
         id="user-menu"
         anchorEl={anchorElement}
-        open={menuIsOpen} //Boolean(anchorElement)}
+        open={Boolean(anchorElement)}
         onClose={handleClose}
         anchorOrigin={{
           vertical: "bottom",
