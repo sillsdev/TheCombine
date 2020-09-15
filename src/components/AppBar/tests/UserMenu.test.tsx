@@ -1,14 +1,10 @@
 import { MenuItem, Button } from "@material-ui/core";
 import React from "react";
-import configureMockStore from "redux-mock-store";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
 import { User } from "../../../types/user";
-import { defaultState } from "../../App/DefaultState";
 import UserMenu, { getIsAdmin, UserMenuList } from "../UserMenu";
 
-const createMockStore = configureMockStore([]);
-const mockStore = createMockStore(defaultState);
 const mockUser = new User("", "", "");
 let testRenderer: ReactTestRenderer;
 
@@ -19,28 +15,26 @@ jest.mock("../../../backend", () => {
     }),
   };
 });
-jest.mock("../../../backend/localStorage");
-jest.mock("../../../history");
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe("Tests UserMenu", () => {
-  it("renders without crashing", async () => {
+  it("renders without crashing", () => {
     renderer.act(() => {
       testRenderer = renderer.create(<UserMenu />);
     });
-    expect(testRenderer.root.findByType(Button)).toBeTruthy;
+    expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
   });
 
   it("should return correct value for isAdmin", (done) => {
     mockUser.isAdmin = false;
     getIsAdmin().then((result) => {
-      expect(result).toBeFalsy;
+      expect(result).toEqual(false);
       mockUser.isAdmin = true;
       getIsAdmin().then((result) => {
-        expect(result).toBeTruthy;
+        expect(result).toEqual(true);
         done();
       });
     });
