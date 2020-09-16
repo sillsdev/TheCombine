@@ -1,7 +1,11 @@
-﻿version: "3.8"
+version: "3.8"
 services:
   backend:
+{% if combine_pull_images %}
+    image: {{ combine_image_backend }}
+{% else %}
     build: ./Backend
+{% endif %}
     volumes:
       - backend_data:/home/app/.CombineFiles
     expose:
@@ -10,28 +14,35 @@ services:
       - database
     env_file:
       - ./.env.backend
-      - ./.env.backend.auth
+    restart: unless-stopped
   frontend:
-    build:
-      context: .
-      args:
-        - COMBINE_CAPTCHA_REQUIRED=true
-        - COMBINE_CAPTCHA_SITE=6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3
+{% if combine_pull_images %}
+    image: {{ combine_image_frontend }}
+{% else %}
+    build: .
+{% endif %}
+    env_file:
+      - ./.env.frontend
     volumes:
+      - ./nginx/scripts:/usr/share/nginx/html/scripts:ro
       - frontend_ssl_certs:/ssl
+      - letsencrypt:/etc/letsencrypt
     ports:
       - 80:80
       - 443:443
     depends_on:
       - backend
+    restart: unless-stopped
   database:
     image: mongo:4.2
     volumes:
       - database_data:/data/db
     expose:
       - 27017
+    restart: unless-stopped
 
 volumes:
   backend_data:
   frontend_ssl_certs:
   database_data:
+  letsencrypt:

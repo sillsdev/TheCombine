@@ -1,0 +1,11 @@
+---
+#################################################
+# Group specific configuration items
+#
+# Group: server
+#################################################
+
+ssl_certificate: "/ssl/cert.pem"
+ssl_private_key: "/ssl/key.pem"
+
+certbot_email: ''
