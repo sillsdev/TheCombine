@@ -138,6 +138,7 @@ export default class RecentEntry extends React.Component<
                   this.focusOnNewEntry();
                 }
               }}
+              analysisLang={this.props.analysisLang}
             />
           </Grid>
           <Grid

@@ -1,13 +1,21 @@
 import nspell from "nspell";
 
-import aff from "../../resources/dictionaries/en-us.aff";
-import dictionary from "../../resources/dictionaries/en-us.dic";
+import { aff, dic } from "../../resources/dictionaries";
 
 class SpellChecker {
   spell: nspell;
 
-  constructor() {
-    this.spell = nspell(aff, dictionary);
+  constructor(analysisLang = "en") {
+    switch (analysisLang.split("-")[0]) {
+      case "es":
+        this.spell = nspell(aff.es, dic.es);
+        break;
+      case "fr":
+        this.spell = nspell(aff.fr, dic.fr);
+        break;
+      default:
+        this.spell = nspell(aff.en, dic.en);
+    }
   }
 
   correct(word: string) {
