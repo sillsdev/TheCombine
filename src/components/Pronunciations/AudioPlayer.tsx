@@ -13,6 +13,8 @@ import { Delete, PlayArrow, Stop } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import ButtonConfirmation from "../Buttons/ButtonConfirmation";
+
 export interface PlayerProps {
   pronunciationUrl: string;
   wordId: string;
@@ -38,9 +40,10 @@ export default function AudioPlayer(props: PlayerProps) {
     new Audio(props.pronunciationUrl)
   );
   const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
+  const [deleteConf, setDeleteConf] = React.useState<boolean>(false);
   const classes = useStyles();
 
-  function deletePlay() {
+  function deleteAudio() {
     if (props.deleteAudio) {
       props.deleteAudio(props.wordId, props.fileName);
     }
@@ -60,7 +63,7 @@ export default function AudioPlayer(props: PlayerProps) {
 
   function deleteOrTogglePlay(event?: any) {
     if (event?.shiftKey) {
-      deletePlay();
+      setDeleteConf(true);
     } else {
       togglePlay();
     }
@@ -134,13 +137,20 @@ export default function AudioPlayer(props: PlayerProps) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            deletePlay();
+            setDeleteConf(true);
             handleClose();
           }}
         >
           <Delete />
         </MenuItem>
       </Menu>
+      <ButtonConfirmation
+        open={deleteConf}
+        textId="buttons.deletePermanently"
+        titleId="pronunciations.deleteRecording"
+        onClose={() => setDeleteConf(false)}
+        onConfirm={deleteAudio}
+      ></ButtonConfirmation>
     </React.Fragment>
   );
 }
