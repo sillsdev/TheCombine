@@ -20,7 +20,7 @@ interface ButtonConfirmationProps {
 }
 
 /**
- * Button for archiving/restoring project (changing isActive)
+ * Dialog for a button to confirm or cancel its click action
  */
 export default function ButtonConfirmation(props: ButtonConfirmationProps) {
   const [loading, setLoading] = React.useState<boolean>(false);
