@@ -1,20 +1,54 @@
+import { MenuItem, Button } from "@material-ui/core";
 import React from "react";
-import ReactDOM from "react-dom";
-import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../App/DefaultState";
-import { Provider } from "react-redux";
-import UserMenu from "../UserMenu";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-const createMockStore = configureMockStore([]);
+import { User } from "../../../types/user";
+import UserMenu, { getIsAdmin, UserMenuList } from "../UserMenu";
 
-it("renders without crashing", () => {
-  const mockStore = createMockStore(defaultState);
-  const div = document.createElement("div");
-  ReactDOM.render(
-    <Provider store={mockStore}>
-      <UserMenu />
-    </Provider>,
-    div
-  );
-  ReactDOM.unmountComponentAtNode(div);
+const mockUser = new User("", "", "");
+let testRenderer: ReactTestRenderer;
+
+jest.mock("../../../backend", () => {
+  return {
+    getUser: jest.fn(() => {
+      return Promise.resolve(mockUser);
+    }),
+  };
+});
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+describe("Tests UserMenu", () => {
+  it("renders without crashing", () => {
+    renderer.act(() => {
+      testRenderer = renderer.create(<UserMenu />);
+    });
+    expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
+  });
+
+  it("should have correct value for isAdmin", (done) => {
+    mockUser.isAdmin = false;
+    getIsAdmin().then((result) => {
+      expect(result).toEqual(false);
+      mockUser.isAdmin = true;
+      getIsAdmin().then((result) => {
+        expect(result).toEqual(true);
+        done();
+      });
+    });
+  });
+
+  it("admin users see one more item: Site Settings", async () => {
+    renderer.act(() => {
+      testRenderer = renderer.create(<UserMenuList isAdmin={false} />);
+    });
+    const normalMenuItems = testRenderer.root.findAllByType(MenuItem).length;
+    renderer.act(() => {
+      testRenderer = renderer.create(<UserMenuList isAdmin={true} />);
+    });
+    const adminMenuItems = testRenderer.root.findAllByType(MenuItem).length;
+    expect(adminMenuItems).toBe(normalMenuItems + 1);
+  });
 });
