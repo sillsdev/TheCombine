@@ -22,8 +22,24 @@ class SpellChecker {
     return this.spell.correct(word);
   }
 
-  getSpellingSuggestions(word: string) {
-    return this.spell.suggest(word);
+  // If the word string is multiple words (seperated by spaces)
+  // find spelling suggestions for the last word.
+  getSpellingSuggestions(word: string): string[] {
+    // Remove whitespace from ends and internal double-spaces
+    const words = word
+      .trim()
+      .split(" ")
+      .filter((w) => !!w);
+    const final = words.pop();
+    if (!final) {
+      return [];
+    }
+    let suggestions = this.spell.suggest(final);
+    if (words.length) {
+      const allButFinal = words.join(" ") + " ";
+      suggestions = suggestions.map((w) => allButFinal + w);
+    }
+    return suggestions;
   }
 }
 
