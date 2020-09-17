@@ -8,7 +8,6 @@ import {
 } from "react-localize-redux";
 
 import * as Backend from "../../../backend";
-import { getProjectId } from "../../../backend/localStorage";
 import { Project } from "../../../types/project";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
@@ -119,7 +118,7 @@ export class DataEntryTable extends React.Component<
   }
 
   async getProjectSettings() {
-    const proj: Project = await Backend.getProject(getProjectId());
+    const proj: Project = await Backend.getProject();
     let analysisLang: string = "en";
     if (proj.analysisWritingSystems.length > 0) {
       analysisLang = proj.analysisWritingSystems[0].bcp47;
