@@ -192,7 +192,7 @@ const columns: Column<any>[] = [
             return true;
       return false;
     },
-    customSort: (a: any, b: any, type: "row" | "group"): number => {
+    customSort: (a: any, b: any): number => {
       let count = 0;
       let compare: number = 0;
 
@@ -250,7 +250,6 @@ const columns: Column<any>[] = [
     title: "Pronunciations",
     field: "pronunciations",
     filtering: true,
-    sorting: true,
     editable: "never",
     render: (rowData: ReviewEntriesWord) => (
       <PronunciationsCell
@@ -259,6 +258,15 @@ const columns: Column<any>[] = [
         recorder={rowData.recorder}
       />
     ),
+    customSort: (a: any, b: any): number => {
+      const aAudioCount = a?.pronunciationFiles
+        ? a.pronunciationFiles.length
+        : 0;
+      const bAudioCount = b?.pronunciationFiles
+        ? b.pronunciationFiles.length
+        : 0;
+      return bAudioCount - aAudioCount;
+    },
   },
   {
     title: "Delete",
