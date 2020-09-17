@@ -238,6 +238,7 @@ export default class NewEntry extends React.Component<
               handleEnterAndTab={(e: React.KeyboardEvent) =>
                 this.handleEnterAndTab(e)
               }
+              analysisLang={this.props.analysisLang}
             />
           </Grid>
           <Grid

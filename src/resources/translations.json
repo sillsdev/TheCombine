@@ -617,6 +617,11 @@
     "complete": ["Complete", "Completo", "Complète"],
     "confirm": ["Confirm", "Confirmar", "Confirmer"],
     "delete": ["Delete", "Eliminar", "Effacer"],
+    "deletePermanently": [
+      "Delete permanently?",
+      "¿Eliminar para siempre?",
+      "Effacer pour toujours ?"
+    ],
     "done": ["Done", "Hecho", "Achevé"],
     "export": ["Export", "Exportar", "Exporter"],
     "invite": ["Invite", "Invitar", "Inviter"],
@@ -642,6 +647,11 @@
       "Recording error: Could not access a microphone",
       "Error de grabación: no se pudo acceder a un micrófono",
       "Erreur d'enregistrement : Impossible d'accéder à un microphone"
+    ],
+    "deleteRecording": [
+      "Delete Recording",
+      "Eliminar grabación",
+      "Effacer enregistrement"
     ]
   }
 }
