@@ -91,9 +91,9 @@ const columns: Column<any>[] = [
       term: string,
       rowData: ReviewEntriesWord
     ): boolean => {
-      let regex: RegExp = new RegExp(term);
+      let regex: RegExp = new RegExp(term.trim().toLowerCase());
       for (let sense of rowData.senses)
-        if (regex.exec(sense.glosses) !== null) return true;
+        if (regex.exec(sense.glosses.toLowerCase()) !== null) return true;
       return false;
     },
     customSort: (a: any, b: any): number => {
