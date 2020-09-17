@@ -1,5 +1,4 @@
 ---
-
 source_dir: "{{ ansible_env.HOME }}/src/combine"
 
 backend_env_file: ".env.backend.prod"
@@ -11,7 +10,3 @@ frontend_env_dir: "{{ source_dir }}"
 combine_user: combine
 combine_group: app
 combine_app_dir: /opt/combine
-
-aws_ecr: "{{ lookup('env', 'AWS_ECR') | default('117995318043.dkr.ecr.us-east-1.amazonaws.com', true) }}"
-combine_image_backend: "{{ aws_ecr }}/combine/backend:latest"
-combine_image_frontend: "{{ aws_ecr }}/combine/frontend:latest"
