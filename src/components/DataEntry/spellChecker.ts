@@ -25,11 +25,11 @@ class SpellChecker {
   // If the word string is multiple words (seperated by spaces)
   // find spelling suggestions for the last word.
   getSpellingSuggestions(word: string): string[] {
-    // Remove whitespace from ends and internal double-spaces
+    // Remove excess whitespace
     const words = word
       .trim()
       .split(" ")
-      .filter((w) => !!w);
+      .filter((w) => w);
     const final = words.pop();
     if (!final) {
       return [];
