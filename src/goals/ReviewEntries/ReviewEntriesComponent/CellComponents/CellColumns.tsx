@@ -65,6 +65,7 @@ const columns: Column<any>[] = [
       vernacularField({ rowData, value: rowData.vernacular }, false),
     editComponent: (props: any) => vernacularField(props, true),
   },
+  // Glosses column
   {
     title: "Glosses",
     field: "senses",
@@ -95,7 +96,7 @@ const columns: Column<any>[] = [
         if (regex.exec(sense.glosses) !== null) return true;
       return false;
     },
-    customSort: (a: any, b: any, type: "row" | "group"): number => {
+    customSort: (a: any, b: any): number => {
       let count = 0;
       let compare: number = 0;
 
@@ -122,12 +123,13 @@ const columns: Column<any>[] = [
       return compare;
     },
   },
+  // Delete Sense column
   {
     title: "",
     field: "id",
     filtering: false,
     sorting: false,
-    render: (rowData: ReviewEntriesWord) => null,
+    render: () => null,
     editComponent: (props: FieldParameterStandard) => {
       const deleteSense = (senseId: string) => {
         if (props.onRowDataChange)
@@ -146,6 +148,7 @@ const columns: Column<any>[] = [
       return <DeleteCell rowData={props.rowData} delete={deleteSense} />;
     },
   },
+  // Semantic Domains column
   {
     title: "Domains",
     field: "domains",
@@ -182,17 +185,30 @@ const columns: Column<any>[] = [
       term: string,
       rowData: ReviewEntriesWord
     ): boolean => {
-      let regex: RegExp = new RegExp(term);
-      for (let sense of rowData.senses)
-        for (let domain of sense.domains)
-          if (
-            regex.exec(domain.name) !== null ||
-            regex.exec(domain.id) !== null
-          )
-            return true;
+      const terms = term.split(":");
+      if (terms.length === 1) {
+        const regex: RegExp = new RegExp(terms[0].trim().toLowerCase());
+        for (const sense of rowData.senses)
+          for (const domain of sense.domains)
+            if (
+              regex.exec(domain.id) !== null ||
+              regex.exec(domain.name.toLowerCase()) !== null
+            )
+              return true;
+      } else {
+        const regexNumber: RegExp = new RegExp(terms[0].trim());
+        const regexName: RegExp = new RegExp(terms[1].trim().toLowerCase());
+        for (const sense of rowData.senses)
+          for (const domain of sense.domains)
+            if (
+              regexNumber.exec(domain.id) !== null &&
+              regexName.exec(domain.name.toLowerCase()) !== null
+            )
+              return true;
+      }
       return false;
     },
-    customSort: (a: any, b: any, type: "row" | "group"): number => {
+    customSort: (a: any, b: any): number => {
       let count = 0;
       let compare: number = 0;
 
@@ -246,6 +262,7 @@ const columns: Column<any>[] = [
       return compare;
     },
   },
+  // Audio column
   {
     title: "Pronunciations",
     field: "pronunciations",
@@ -260,6 +277,7 @@ const columns: Column<any>[] = [
       />
     ),
   },
+  // Delete Entry column
   {
     title: "Delete",
     field: "delete",
