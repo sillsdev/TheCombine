@@ -185,9 +185,9 @@ const columns: Column<any>[] = [
       term: string,
       rowData: ReviewEntriesWord
     ): boolean => {
-      const terms = term.split(":");
+      const terms = term.split(":").map((t) => t.trim().toLowerCase());
       if (terms.length === 1) {
-        const regex: RegExp = new RegExp(terms[0].trim().toLowerCase());
+        const regex: RegExp = new RegExp(terms[0]);
         for (const sense of rowData.senses)
           for (const domain of sense.domains)
             if (
@@ -196,8 +196,8 @@ const columns: Column<any>[] = [
             )
               return true;
       } else {
-        const regexNumber: RegExp = new RegExp(terms[0].trim());
-        const regexName: RegExp = new RegExp(terms[1].trim().toLowerCase());
+        const regexNumber: RegExp = new RegExp(terms[0]);
+        const regexName: RegExp = new RegExp(terms[1]);
         for (const sense of rowData.senses)
           for (const domain of sense.domains)
             if (
