@@ -20,7 +20,6 @@ export class AppBarComponent extends React.Component<
 > {
   /** An app bar shown at the top of almost every page of The Combine */
   render() {
-    const { REACT_APP_VERSION } = process.env;
     return (
       <React.Fragment>
         <div
@@ -45,9 +44,6 @@ export class AppBarComponent extends React.Component<
                   {getProjectId() !== "" && (
                     <ProjectNameButton currentTab={this.props.currentTab} />
                   )}
-                </Grid>
-                <Grid>
-                  <Button disabled>v{REACT_APP_VERSION}</Button>
                 </Grid>
                 <Grid item>
                   <UserMenu />
