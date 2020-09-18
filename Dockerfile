@@ -13,6 +13,8 @@ RUN npm run build
 # Production environment.
 FROM staticfloat/nginx-certbot
 
+LABEL com.github.sillsdev.thecombine.version="0.1.0-alpha.0"
+
 WORKDIR /app
 
 ENV NGINX_HOST_DIR /usr/share/nginx/html
