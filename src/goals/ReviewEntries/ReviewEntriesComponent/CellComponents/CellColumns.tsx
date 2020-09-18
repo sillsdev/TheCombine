@@ -250,6 +250,7 @@ const columns: Column<any>[] = [
     title: "Pronunciations",
     field: "pronunciations",
     editable: "never",
+    filterPlaceholder: "#",
     render: (rowData: ReviewEntriesWord) => (
       <PronunciationsCell
         wordId={rowData.id}
@@ -263,14 +264,8 @@ const columns: Column<any>[] = [
     ): boolean => {
       return parseInt(filter) === rowData.pronunciationFiles.length;
     },
-    customSort: (a: any, b: any): number => {
-      const aAudioCount = a?.pronunciationFiles
-        ? a.pronunciationFiles.length
-        : 0;
-      const bAudioCount = b?.pronunciationFiles
-        ? b.pronunciationFiles.length
-        : 0;
-      return bAudioCount - aAudioCount;
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      return b.pronunciationFiles.length - a.pronunciationFiles.length;
     },
   },
   {
