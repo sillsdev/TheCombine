@@ -2,7 +2,7 @@ import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
-import { Grid } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import UserMenu from "./UserMenu";
 import Logo from "./Logo";
 import theme from "../../types/theme";
@@ -20,6 +20,7 @@ export class AppBarComponent extends React.Component<
 > {
   /** An app bar shown at the top of almost every page of The Combine */
   render() {
+    const { REACT_APP_VERSION } = process.env;
     return (
       <React.Fragment>
         <div
@@ -45,7 +46,9 @@ export class AppBarComponent extends React.Component<
                     <ProjectNameButton currentTab={this.props.currentTab} />
                   )}
                 </Grid>
-                <Grid>v{process.env.REACT_APP_VERSION}</Grid>
+                <Grid>
+                  <Button disabled>v{REACT_APP_VERSION}</Button>
+                </Grid>
                 <Grid item>
                   <UserMenu />
                 </Grid>
