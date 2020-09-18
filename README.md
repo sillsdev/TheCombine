@@ -229,6 +229,8 @@ To generate a full report of the licenses used in production:
 
 ### Edit Project Version
 
+To update the version string project-wide:
+
 ```bash
 # On Windows use `py` instead of python3.
 $ python3 set_version.py 1.0.1-alpha.0
