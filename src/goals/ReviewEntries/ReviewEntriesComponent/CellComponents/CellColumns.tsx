@@ -216,7 +216,7 @@ const columns: Column<any>[] = [
       }
       return false;
     },
-    customSort: (a: any, b: any): number => {
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
       let count = 0;
       let compare: number = 0;
 
@@ -230,8 +230,9 @@ const columns: Column<any>[] = [
       if (currentSort !== SortStyle.DOMAIN) currentSort = SortStyle.DOMAIN;
 
       // Special case: no senses
-      if (a.senses === undefined || a.senses.length === 0) return 1;
-      else if (b.senses === undefined || b.senses.length === 0) return -1;
+      if (!a.senses.length || !b.senses.length) {
+        return b.senses.length - a.senses.length;
+      }
 
       while (
         compare === 0 &&
@@ -241,9 +242,13 @@ const columns: Column<any>[] = [
         domainsA = a.senses[count].domains;
         domainsB = b.senses[count].domains;
 
-        // If one has no domains, it is the lower rank
-        if (domainsA.length === 0) return 1;
-        else if (domainsB.length === 0) return -1;
+        // If exactly one has no domains, it is the lower rank
+        if (!domainsA.length && domainsB.length) {
+          return 1;
+        }
+        if (domainsA.length && !domainsB.length) {
+          return -1;
+        }
 
         // Check the domains
         for (
