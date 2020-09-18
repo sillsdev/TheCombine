@@ -2,10 +2,16 @@
 #################################################
 # Group specific configuration items
 #
-# Group: server
+# Group: qa
 #################################################
 
 ssl_certificate: "/ssl/cert.pem"
 ssl_private_key: "/ssl/key.pem"
 
-certbot_email: ''
+certbot_email: ""
+
+# QA server does not access AWS S3 nor AWS ECR services
+my_aws_profiles: []
+
+combine_image_backend: "combine/backend:latest"
+combine_image_frontend: "combine/frontend:latest"
