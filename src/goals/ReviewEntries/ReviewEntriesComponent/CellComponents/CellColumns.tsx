@@ -65,6 +65,7 @@ const columns: Column<any>[] = [
       vernacularField({ rowData, value: rowData.vernacular }, false),
     editComponent: (props: any) => vernacularField(props, true),
   },
+  // Glosses column
   {
     title: "Glosses",
     field: "senses",
@@ -90,12 +91,12 @@ const columns: Column<any>[] = [
       term: string,
       rowData: ReviewEntriesWord
     ): boolean => {
-      let regex: RegExp = new RegExp(term);
+      let regex: RegExp = new RegExp(term.trim().toLowerCase());
       for (let sense of rowData.senses)
-        if (regex.exec(sense.glosses) !== null) return true;
+        if (regex.exec(sense.glosses.toLowerCase()) !== null) return true;
       return false;
     },
-    customSort: (a: any, b: any, type: "row" | "group"): number => {
+    customSort: (a: any, b: any): number => {
       let count = 0;
       let compare: number = 0;
 
@@ -122,12 +123,13 @@ const columns: Column<any>[] = [
       return compare;
     },
   },
+  // Delete Sense column
   {
     title: "",
     field: "id",
     filtering: false,
     sorting: false,
-    render: (rowData: ReviewEntriesWord) => null,
+    render: () => null,
     editComponent: (props: FieldParameterStandard) => {
       const deleteSense = (senseId: string) => {
         if (props.onRowDataChange)
@@ -146,6 +148,7 @@ const columns: Column<any>[] = [
       return <DeleteCell rowData={props.rowData} delete={deleteSense} />;
     },
   },
+  // Semantic Domains column
   {
     title: "Domains",
     field: "domains",
@@ -182,17 +185,38 @@ const columns: Column<any>[] = [
       term: string,
       rowData: ReviewEntriesWord
     ): boolean => {
-      let regex: RegExp = new RegExp(term);
-      for (let sense of rowData.senses)
-        for (let domain of sense.domains)
-          if (
-            regex.exec(domain.name) !== null ||
-            regex.exec(domain.id) !== null
-          )
-            return true;
+      /*
+       * Search term expected in one of two formats:
+       * 1. id (e.g., "2.1") XOR name (e.g., "bod")
+       * 2. id AND name, colon-seperated (e.g., "2.1:ody")
+       *   All the above examples would find entries with "2.1: Body"
+       * IGNORED: capitalization; whitespace around terms; 3+ terms
+       *   e.g. " 2.1:BODY:zx:c  " and "2.1  : Body " are equivalent
+       */
+      const terms = term.split(":").map((t) => t.trim().toLowerCase());
+      if (terms.length === 1) {
+        const regex: RegExp = new RegExp(terms[0]);
+        for (const sense of rowData.senses)
+          for (const domain of sense.domains)
+            if (
+              regex.exec(domain.id) !== null ||
+              regex.exec(domain.name.toLowerCase()) !== null
+            )
+              return true;
+      } else {
+        const regexNumber: RegExp = new RegExp(terms[0]);
+        const regexName: RegExp = new RegExp(terms[1]);
+        for (const sense of rowData.senses)
+          for (const domain of sense.domains)
+            if (
+              regexNumber.exec(domain.id) !== null &&
+              regexName.exec(domain.name.toLowerCase()) !== null
+            )
+              return true;
+      }
       return false;
     },
-    customSort: (a: any, b: any): number => {
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
       let count = 0;
       let compare: number = 0;
 
@@ -206,8 +230,9 @@ const columns: Column<any>[] = [
       if (currentSort !== SortStyle.DOMAIN) currentSort = SortStyle.DOMAIN;
 
       // Special case: no senses
-      if (a.senses === undefined || a.senses.length === 0) return 1;
-      else if (b.senses === undefined || b.senses.length === 0) return -1;
+      if (!a.senses.length || !b.senses.length) {
+        return b.senses.length - a.senses.length;
+      }
 
       while (
         compare === 0 &&
@@ -217,9 +242,13 @@ const columns: Column<any>[] = [
         domainsA = a.senses[count].domains;
         domainsB = b.senses[count].domains;
 
-        // If one has no domains, it is the lower rank
-        if (domainsA.length === 0) return 1;
-        else if (domainsB.length === 0) return -1;
+        // If exactly one has no domains, it is the lower rank
+        if (!domainsA.length && domainsB.length) {
+          return 1;
+        }
+        if (domainsA.length && !domainsB.length) {
+          return -1;
+        }
 
         // Check the domains
         for (
@@ -246,6 +275,7 @@ const columns: Column<any>[] = [
       return compare;
     },
   },
+  // Audio column
   {
     title: "Pronunciations",
     field: "pronunciations",
@@ -268,6 +298,7 @@ const columns: Column<any>[] = [
       return b.pronunciationFiles.length - a.pronunciationFiles.length;
     },
   },
+  // Delete Entry column
   {
     title: "Delete",
     field: "delete",
