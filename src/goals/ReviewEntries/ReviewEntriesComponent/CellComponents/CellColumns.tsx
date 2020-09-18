@@ -185,6 +185,14 @@ const columns: Column<any>[] = [
       term: string,
       rowData: ReviewEntriesWord
     ): boolean => {
+      /*
+       * Search term expected in one of two formats:
+       * 1. id (e.g., "2.1") XOR name (e.g., "bod")
+       * 2. id AND name, colon-seperated (e.g., "2.1:ody")
+       *   All the above examples would find entries with "2.1: Body"
+       * IGNORED: capitalization; whitespace around terms; 3+ terms
+       *   e.g. " 2.1:BODY:zx:c  " and "2.1  : Body " are equivalent
+       */
       const terms = term.split(":").map((t) => t.trim().toLowerCase());
       if (terms.length === 1) {
         const regex: RegExp = new RegExp(terms[0]);
