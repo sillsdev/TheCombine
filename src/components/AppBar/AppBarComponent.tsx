@@ -45,6 +45,7 @@ export class AppBarComponent extends React.Component<
                     <ProjectNameButton currentTab={this.props.currentTab} />
                   )}
                 </Grid>
+                <Grid>v{process.env.REACT_APP_VERSION}</Grid>
                 <Grid item>
                   <UserMenu />
                 </Grid>
