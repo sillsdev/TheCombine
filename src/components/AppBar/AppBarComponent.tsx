@@ -2,7 +2,7 @@ import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
-import { Button, Grid } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import UserMenu from "./UserMenu";
 import Logo from "./Logo";
 import theme from "../../types/theme";
