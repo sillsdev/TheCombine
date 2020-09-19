@@ -13,8 +13,6 @@ RUN dotnet publish -c Release -o build
 # Build runtime image.
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
-LABEL com.github.sillsdev.thecombine.version="0.1.0-alpha.0"
-
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1
 ENV ASPNETCORE_ENVIRONMENT=Production
