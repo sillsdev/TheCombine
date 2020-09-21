@@ -1,15 +1,23 @@
 # The Combine
 
-[![GitHub release][github-release-badge]][github-release]
+[![GitHub release][github-version-badge]][github-version]
+![Localization][localization-badge]
+[![GitHub][github-license-badge]][github-license]
+[![GitHub contributors][github-contribs-badge]][github-contribs]
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 
-[github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine?include_prereleases
-[github-release]: https://github.com/sillsdev/TheCombine/releases
+[localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
+[github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
+[github-version]: https://github.com/sillsdev/TheCombine/releases
+[github-license-badge]: https://img.shields.io/github/license/sillsdev/TheCombine
+[github-license]: https://github.com/sillsdev/TheCombine/blob/master/LICENSE
+[github-contribs-badge]: https://img.shields.io/github/contributors/sillsdev/TheCombine?cacheSeconds=10000
+[github-contribs]: https://github.com/sillsdev/TheCombine/graphs/contributors
 [lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
 [lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
 [lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
-[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts/
+[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts
 
 A rapid word collection tool.
 
@@ -234,10 +242,10 @@ To generate a full report of the licenses used in production:
 
 To update the version of the project:
 
-1. Edit package.json `"version"` to a 
+1. Edit package.json `"version"` to a
    [semantic versioning](https://docs.npmjs.com/about-semantic-versioning)
    compatible string (e.g. `"0.1.1-alpha.0"`).
- 2. Run `npm install` to automatically updated `package-lock.json`.
+2. Run `npm install` to automatically update `package-lock.json`.
 
 To retrieve the current version of the project from the terminal:
 
@@ -259,25 +267,25 @@ separately. This is included by default in Docker Desktop for Windows and macOS.
 #### Python
 
 A Python script, `docker_setup.py` is used to configure the files needed to run
-*TheCombine* in Docker containers.
+_TheCombine_ in Docker containers.
 
 ##### Windows Only
 
-* Navigate to the [Python 3.8.5 Downloads](https://www.python.org/downloads/release/python-385/) page.
+- Navigate to the [Python 3.8.5 Downloads](https://www.python.org/downloads/release/python-385/) page.
 
-* Download and run the appropriate installer - it is most likely the installer labeled
-    *Windows x86-64 executable installer*
+- Download and run the appropriate installer - it is most likely the installer labeled
+  _Windows x86-64 executable installer_
 
-* Once Python is installed, create an isolated Python 
-  [virtual environment](https://docs.python.org/3/library/venv.html) using the 
+- Once Python is installed, create an isolated Python
+  [virtual environment](https://docs.python.org/3/library/venv.html) using the
   [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher
-  installed globally into the `PATH`. 
+  installed globally into the `PATH`.
 
-    ```batch
-    > py -m venv venv
-    > venv\Scripts\activate
-    ```
- 
+  ```batch
+  > py -m venv venv
+  > venv\Scripts\activate
+  ```
+
 ##### Linux Only
 
 To install Python 3 on Ubuntu, run the following commands:
@@ -315,18 +323,18 @@ the necessary configuration files.
 
 ### Build and Run
 
-For information on *Docker Compose* see the
+For information on _Docker Compose_ see the
 [Docker Compose documentation](https://docs.docker.com/compose/).
 
 #### Running In Docker
 
-1. Create the required docker files by running `docker_setup.py` from *TheCombine*'s project directory.
+1. Create the required docker files by running `docker_setup.py` from _TheCombine_'s project directory.
 
 2. The `docker_setup.py` will generate a file, `.env.backend`, that defines
-    the environment variables needed by the Backend container.  If you have defined
-    them as OS variables in the [Getting Started with Development](#getting-started-with-development) 
-    section above, then these variables will already be set. If not, then you will need to edit 
-    `.env.backend` and provide values for the variables that are listed.
+   the environment variables needed by the Backend container. If you have defined
+   them as OS variables in the [Getting Started with Development](#getting-started-with-development)
+   section above, then these variables will already be set. If not, then you will need to edit
+   `.env.backend` and provide values for the variables that are listed.
 
 3. Build the images for the Docker containers
 
@@ -335,14 +343,14 @@ For information on *Docker Compose* see the
    ```
 
 4. Start the containers
-  
+
    ```batch
    > docker-compose up --detach
    ```
 
 5. Browse to https://localhost.
 
-   *By default self-signed certificates are included, so you will need to accept a warning in the browser.*
+   _By default self-signed certificates are included, so you will need to accept a warning in the browser._
 
 6. To view logs:
 
@@ -366,7 +374,7 @@ Edit `.env.backend` as follows:
         - COMBINE_ADMIN_PASSWORD
     * Set the file permissions so that only you have read or write access.
 
-Run the following command to install the admin user in the *CombineDatabase*:
+Run the following command to install the admin user in the _CombineDatabase_:
 
 ```batch
 > docker-compose up --abort-on-container-exit
@@ -380,7 +388,7 @@ otherwise an error will be logged and the exit code will be non-`0`.
 
 ### Production
 
-The process for configuring and deploying *TheCombine* for production targets is described in ./docs/docker_deploy/README.md
+The process for configuring and deploying _TheCombine_ for production targets is described in ./docs/docker_deploy/README.md
 
 ## Learn More
 
