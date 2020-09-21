@@ -1,8 +1,11 @@
 # The Combine
 
+[![GitHub release][github-release-badge]][github-release]
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 
+[github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine?include_prereleases
+[github-release]: https://github.com/sillsdev/TheCombine/releases
 [lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
 [lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
 [lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
@@ -225,6 +228,21 @@ To generate a full report of the licenses used in production:
 
 ```batch
 > npm run license-report
+```
+
+### Set Project Version
+
+To update the version of the project:
+
+1. Edit package.json `"version"` to a 
+   [semantic versioning](https://docs.npmjs.com/about-semantic-versioning)
+   compatible string (e.g. `"0.1.1-alpha.0"`).
+ 2. Run `npm install` to automatically updated `package-lock.json`.
+
+To retrieve the current version of the project from the terminal:
+
+```batch
+> npm run --silent version
 ```
 
 ## Docker
