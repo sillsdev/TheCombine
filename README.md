@@ -1,14 +1,17 @@
 # The Combine
 
-[![GitHub][shields-license-badge]][the-combine-license]
-[![GitHub contributors][shields-contrib-badge]][the-combine-contribs]
+[![GitHub release][github-release-badge]][github-release]
+[![GitHub][github-license-badge]][github-license]
+[![GitHub contributors][github-contribs-badge]][github-contribs]
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 
-[shields-license-badge]: https://img.shields.io/github/license/sillsdev/TheCombine
-[the-combine-license]: https://github.com/sillsdev/TheCombine/blob/master/LICENSE
-[shields-contrib-badge]: https://img.shields.io/github/contributors/sillsdev/TheCombine?cacheSeconds=10000
-[the-combine-contribs]: https://github.com/sillsdev/TheCombine/graphs/contributors
+[github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine?include_prereleases
+[github-release]: https://github.com/sillsdev/TheCombine/releases
+[github-license-badge]: https://img.shields.io/github/license/sillsdev/TheCombine
+[github-license]: https://github.com/sillsdev/TheCombine/blob/master/LICENSE
+[github-contribs-badge]: https://img.shields.io/github/contributors/sillsdev/TheCombine?cacheSeconds=10000
+[github-contribs]: https://github.com/sillsdev/TheCombine/graphs/contributors
 [lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
 [lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
 [lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
@@ -231,6 +234,21 @@ To generate a full report of the licenses used in production:
 
 ```batch
 > npm run license-report
+```
+
+### Set Project Version
+
+To update the version of the project:
+
+1. Edit package.json `"version"` to a
+   [semantic versioning](https://docs.npmjs.com/about-semantic-versioning)
+   compatible string (e.g. `"0.1.1-alpha.0"`).
+2. Run `npm install` to automatically updated `package-lock.json`.
+
+To retrieve the current version of the project from the terminal:
+
+```batch
+> npm run --silent version
 ```
 
 ## Docker

@@ -23,6 +23,7 @@ nginx/scripts
 .DS_Store
 Session.vim
 /*.js
+!/printVersion.js
 
 npm-debug.log*
 yarn-debug.log*
