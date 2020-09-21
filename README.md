@@ -6,7 +6,7 @@
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 
-[github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine?include_prereleases
+[github-release-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine?include_prereleases
 [github-release]: https://github.com/sillsdev/TheCombine/releases
 [github-license-badge]: https://img.shields.io/github/license/sillsdev/TheCombine
 [github-license]: https://github.com/sillsdev/TheCombine/blob/master/LICENSE
