@@ -1,8 +1,11 @@
 # The Combine
 
+[![GitHub release][github-release-badge]][github-release]
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 
+[github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine?include_prereleases
+[github-release]: https://github.com/sillsdev/TheCombine/releases
 [lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
 [lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
 [lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
