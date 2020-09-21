@@ -245,7 +245,7 @@ To update the version of the project:
 1. Edit package.json `"version"` to a
    [semantic versioning](https://docs.npmjs.com/about-semantic-versioning)
    compatible string (e.g. `"0.1.1-alpha.0"`).
-2. Run `npm install` to automatically updated `package-lock.json`.
+2. Run `npm install` to automatically update `package-lock.json`.
 
 To retrieve the current version of the project from the terminal:
 
