@@ -1,13 +1,14 @@
 import React from "react";
-
-import columns from "../CellColumns";
-import mockWords from "../../tests/MockWords";
-import { ReviewEntriesWord, SEP_CHAR } from "../../ReviewEntriesTypes";
-import { SemanticDomain } from "../../../../../types/word";
 import ReactDOM from "react-dom";
+
+import { SemanticDomain } from "../../../../../types/word";
+import { ReviewEntriesWord, SEP_CHAR } from "../../ReviewEntriesTypes";
+import mockWords from "../../tests/MockWords";
+import columns from "../CellColumns";
 
 const GLOSS = "hoovy";
 const DOMAIN: SemanticDomain = { name: "Person", id: "0.1" };
+const DOMAIN2: SemanticDomain = { name: "Universe", id: "1" };
 const WORD: ReviewEntriesWord = {
   id: "id",
   vernacular: "pootis",
@@ -15,10 +16,7 @@ const WORD: ReviewEntriesWord = {
     {
       senseId: "sense0",
       glosses: "meaning of life" + SEP_CHAR + "life's meaning",
-      domains: [
-        { name: "Universe", id: "1" },
-        { name: "Joke", id: "0.0" },
-      ],
+      domains: [DOMAIN2, { name: "Joke", id: "0.0" }],
       deleted: false,
     },
     {
@@ -28,6 +26,7 @@ const WORD: ReviewEntriesWord = {
       deleted: false,
     },
   ],
+  pronunciationFiles: [],
 };
 
 // Last sort sense is the sense that should bubble to the end, first sort sense to the front
@@ -92,7 +91,7 @@ describe("Tests cell column functions", () => {
       );
   });
 
-  it("Returns false when searching a word for an extant gloss", () => {
+  it("Returns false when searching a word for a nonexistent gloss", () => {
     if (columns[1].customFilterAndSearch)
       expect(
         columns[1].customFilterAndSearch(`${GLOSS}-NOT!`, WORD)
@@ -124,16 +123,58 @@ describe("Tests cell column functions", () => {
       expect(columns[3].customFilterAndSearch(DOMAIN.name, WORD)).toBeTruthy();
     } else
       fail(
-        "There is no customFilterAndSearch on column[2]: domains.\nDid the domains get moved to a different column?"
+        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
       );
   });
 
-  it("Returns true when searching a word for an extant domain", () => {
+  it("Returns true when searching a word for an extant domain id:name", () => {
     if (columns[3].customFilterAndSearch) {
-      expect(columns[3].customFilterAndSearch(GLOSS, WORD)).toBeFalsy();
+      expect(
+        columns[3].customFilterAndSearch(`${DOMAIN.id}:${DOMAIN.name}`, WORD)
+      ).toBeTruthy();
+      expect(
+        columns[3].customFilterAndSearch(
+          ` ${DOMAIN.id} : ${DOMAIN.name.toUpperCase()} `,
+          WORD
+        )
+      ).toBeTruthy();
     } else
       fail(
-        "There is no customFilterAndSearch on column[2]: domains.\nDid the domains get moved to a different column?"
+        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
+      );
+  });
+
+  it("Handles extra whitespace and different capitalization", () => {
+    if (columns[3].customFilterAndSearch) {
+      expect(
+        columns[3].customFilterAndSearch(
+          ` ${DOMAIN.id} : ${DOMAIN.name.toUpperCase()} `,
+          WORD
+        )
+      ).toBeTruthy();
+    } else
+      fail(
+        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
+      );
+  });
+
+  it("Returns false when searching a word for a nonexistent domain", () => {
+    if (columns[3].customFilterAndSearch) {
+      expect(columns[3].customFilterAndSearch("asdfghjkl", WORD)).toBeFalsy();
+    } else
+      fail(
+        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
+      );
+  });
+
+  it("Returns false when searching for domain id:name that don't occur together", () => {
+    if (columns[3].customFilterAndSearch) {
+      expect(
+        columns[3].customFilterAndSearch(`${DOMAIN.id}:${DOMAIN2.name}`, WORD)
+      ).toBeFalsy();
+    } else
+      fail(
+        "There is no customFilterAndSearch on column[3]: domains.\nDid the domains get moved to a different column?"
       );
   });
 
@@ -147,7 +188,7 @@ describe("Tests cell column functions", () => {
       ).toEqual(SORT_BY_DOMAINS);
     else
       fail(
-        "There is no customSort on column[2]: domains.\nDid the domains get moved to a different column?"
+        "There is no customSort on column[3]: domains.\nDid the domains get moved to a different column?"
       );
   });
 });
