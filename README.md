@@ -1,11 +1,13 @@
 # The Combine
 
 [![GitHub release][github-version-badge]][github-version]
+![Localization][localization-badge]
 [![GitHub][github-license-badge]][github-license]
 [![GitHub contributors][github-contribs-badge]][github-contribs]
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 
+[localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-version]: https://github.com/sillsdev/TheCombine/releases
 [github-license-badge]: https://img.shields.io/github/license/sillsdev/TheCombine
