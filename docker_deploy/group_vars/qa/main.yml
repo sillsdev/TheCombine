@@ -10,8 +10,13 @@ ssl_private_key: "/ssl/key.pem"
 
 certbot_email: ""
 
-# QA server does not access AWS S3 nor AWS ECR services
-my_aws_profiles: []
+# TheCombine is installed on the QA Server by TeamCity.  It will set the
+# IMAGE_TAG environment variable to major.minor.build_no and launch
+# Docker compose
+image_tag: "${IMAGE_TAG}"
 
-combine_image_backend: "combine/backend:latest"
-combine_image_frontend: "combine/frontend:latest"
+combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
+combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
+
+my_aws_profiles:
+  - ecr_read_only

@@ -17,6 +17,12 @@
     - "vars/config_common.yml"
     - "vars/packages.yml"
     - "vars/vault_config.yml"
+    # The aws_prefix allows us to use a different vault file to specify the
+    # AWS credentials while testing.  By default, vars/aws.yml is used.  To
+    # use a different file, such as _test_aws.yml, add the following to your
+    # ansible-playbook command:
+    #   -e "ansible_credentials=_test_aws.yml"
+    - "vars/{{ aws_credentials | default('aws.yml',true) }}"
 
   tasks:
     - name: install required packages dependencies
@@ -34,3 +40,9 @@
     - name: install combine configuration files
       import_role:
         name: combine_config
+
+    - name: setup AWS access
+      import_role:
+        name: aws_access
+      tags:
+        - aws
