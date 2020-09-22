@@ -83,6 +83,7 @@ interface UserMenuListProps {
  * UserMenu options: site settings (for admins), user settings, log out
  */
 export function UserMenuList(props: UserMenuListProps) {
+  const { REACT_APP_VERSION } = process.env;
   return (
     <React.Fragment>
       {/* Only show Site Settings link to Admin users. */}
@@ -114,6 +115,9 @@ export function UserMenuList(props: UserMenuListProps) {
       >
         <ExitToApp style={{ marginRight: theme.spacing(1) }} />
         <Translate id="userMenu.logout" />
+      </MenuItem>
+      <MenuItem disabled style={{ justifyContent: "center" }}>
+        v{REACT_APP_VERSION}
       </MenuItem>
     </React.Fragment>
   );
