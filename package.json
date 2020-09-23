@@ -55,7 +55,6 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
-    "tsc": "^1.20150623.0",
     "validator": "^13.1.1",
     "xml2js": "^0.4.23"
   },
