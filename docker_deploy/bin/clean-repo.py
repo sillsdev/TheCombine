@@ -37,36 +37,46 @@ def parse_args() -> argparse.Namespace:
     )
     return parser.parse_args()
 
+def runAwsCmd(profile, repo, subcommand, awsArgs=None):
+    awsCmd = [ "aws", "ecr" ]
+    if profile:
+        awsCmd.append("--profile="+profile)
+    awsCmd.extend(["--repository-name="+repo, "--output=json", subcommand])
+    if awsArgs:
+        awsCmd.extend(awsArgs)
+
+    return subprocess.run(awsCmd,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE,
+                         universal_newlines=True)
+
 
 def main() -> None:
     args = parse_args()
 
-    print("Repo: ", args.repo)
-    print("Profile: ", args.profile)
-    print("Tags: ", args.keep_tag)
+    # get a list of the current image tags for the specified repo
+    awsResult = runAwsCmd(args.profile[0], args.repo[0], "describe-images")
 
-    awsEcrArgs = [ "aws", "ecr" ]
-    if args.profile:
-        awsEcrArgs.extend(["--profile="+args.profile[0]])
-    awsEcrArgs.extend(["--repository-name="+args.repo[0], "--output=json", "describe-images"])
 
-    print("Command: ", awsEcrArgs)
-
-    awsResult=subprocess.run(awsEcrArgs,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             universal_newlines=True)
-    # print("Results: ", awsResult.stdout)
-
+    # create a list of tags that are not on our list of tags to keep
+    oldTags = []
     repoImages = json.loads(awsResult.stdout)
-    print("Python struct: ", repoImages)
-    print("len(repoImages) == ", len(repoImages))
-    print("repoImages == ", type(repoImages).__name__)
-    for imageStruct in repoImages:
-        print("imageStruct == ", imageStruct.imageDetails)
-        # for detailStruct in imageStruct.imageDetails:
-        #     for tag in detailStruct.imageTags:
-        #         print("found tag: ", tag)
+
+    for imageStruct in repoImages['imageDetails']:
+        for tag in imageStruct['imageTags']:
+            if tag not in args.keep_tag:
+                oldTags.append(tag)
+
+    # convert the list of tags to a set of image-ids for the AWS ECR command
+    if len(oldTags) > 0:
+        imageIds = ["--image-ids"]
+        for tag in oldTags:
+            imageIds.append("imageTag="+tag)
+
+        # Remove all the obsolete tags
+        awsResult = runAwsCmd(args.profile[0], args.repo[0], "batch-delete-image", imageIds)
+        print("Results: ", awsResult.stdout)
+        print("STDERR: ", awsResult.stderr)
 
 # Standard boilerplate to call main().
 if __name__ == '__main__':
