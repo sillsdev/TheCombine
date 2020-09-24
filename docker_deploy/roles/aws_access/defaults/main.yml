@@ -1,0 +1,2 @@
+---
+aws_config_dir: "/home/{{ combine_user }}/.aws"

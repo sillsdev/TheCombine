@@ -46,6 +46,15 @@
       - containerd.io
   notify: reboot target
 
+- name: Configure Docker Image
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode:  0600
+  notify: restart docker
+
 - name: Install Docker Compose
   get_url:
     url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
