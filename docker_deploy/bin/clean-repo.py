@@ -40,8 +40,8 @@ def parse_args() -> argparse.Namespace:
 def runAwsCmd(profile, repo, subcommand, awsArgs=None):
     awsCmd = [ "aws", "ecr" ]
     if profile:
-        awsCmd.append("--profile="+profile)
-    awsCmd.extend(["--repository-name="+repo, "--output=json", subcommand])
+        awsCmd.append("--profile="+profile[0])
+    awsCmd.extend(["--repository-name="+repo[0], "--output=json", subcommand])
     if awsArgs:
         awsCmd.extend(awsArgs)
 
@@ -55,7 +55,7 @@ def main() -> None:
     args = parse_args()
 
     # get a list of the current image tags for the specified repo
-    awsResult = runAwsCmd(args.profile[0], args.repo[0], "describe-images")
+    awsResult = runAwsCmd(args.profile, args.repo, "describe-images")
 
 
     # create a list of tags that are not on our list of tags to keep
@@ -83,10 +83,12 @@ def main() -> None:
             imageIds.append("imageDigest="+imageStruct['imageDigest'])
 
     # Remove all the specified image(s)
-    awsResult = runAwsCmd(args.profile[0], args.repo[0], "batch-delete-image", imageIds)
-    print("Results: ", awsResult.stdout)
-    print("STDERR: ", awsResult.stderr)
-
+    if len(imageIds) > 1:
+        awsResult = runAwsCmd(args.profile, args.repo, "batch-delete-image", imageIds)
+        print("Results: ", awsResult.stdout)
+        print("STDERR: ", awsResult.stderr)
+    else:
+        print("No images/tags were deleted.")
 # Standard boilerplate to call main().
 if __name__ == '__main__':
     main()
