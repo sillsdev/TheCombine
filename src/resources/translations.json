@@ -327,8 +327,7 @@
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
       "off": ["Off", "Apagado", "Éteint"],
-      "request": ["Optional", "Opcional", "En option"],
-      "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
+      "on": ["On", "Encendido", "Allumé"]
     },
     "invite": {
       "inviteByEmailLabel": [

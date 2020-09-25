@@ -42,7 +42,7 @@ export const defaultProject = {
   wordFields: [],
   partsOfSpeech: [],
   words: [],
-  autocompleteSetting: AutoComplete.Off,
+  autocompleteSetting: AutoComplete.On,
 } as Project;
 
 // Randomize properties as needed for tests.

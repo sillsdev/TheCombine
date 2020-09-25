@@ -1,4 +1,4 @@
-/* THIS COMPONENT IS INTENDED TO BE AN EXAMPLE ONLY. 
+/* THIS COMPONENT IS INTENDED TO BE AN EXAMPLE ONLY.
   IT WILL NOT BE USED IN THE APPLICATION.
 */
 
@@ -26,8 +26,6 @@ class Temp extends React.Component<
 > {
   constructor(props: TempProps & LocalizeContextProps) {
     super(props);
-
-    this.state = { demo: "" };
   }
 
   render() {

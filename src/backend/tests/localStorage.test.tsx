@@ -7,7 +7,7 @@ const mockBlacklist: Hash<boolean> = { mockKey: true };
 const mockProjectId: string = "mockProjId";
 const mockUserId: string = "mockUserId";
 const mockUser: User = {
-  ...new User("mockName", "mockUsername", "mockPassword"),
+  ...new User("mockName", "mockUsername", "mockPass"),
   id: mockUserId,
 };
 

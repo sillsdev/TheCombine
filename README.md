@@ -115,32 +115,68 @@ Runs only the mongo database.
 
 ### `npm test`
 
+Run all backend and frontend tests.
+
+#### `npm run test-backend`
+
+Run all backend unit tests.
+
+To run a subset of tests, use the 
+[`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit)
+option.
+
+```bash
+# Note the extra -- needed to separate arguments for npm vs script.
+$ npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.ProjectTests
+```
+
+#### `npm run test-frontend`
+
 Launches the test runners in the interactive watch mode.<br>
 See the section about
 [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
 for more information.
 
-#### `npm run coverage`
+To run a subset of tests, pass in the name of a partial file path to filter:
 
-Launches the test runners to calculate the test coverage of the front and
-back ends of the app.
+```bash
+# Note the extra -- needed to separate arguments for npm vs script.
+$ npm run test-frontend -- DataEntry
+```
+
+#### `npm run coverage-*`
+
+Launches the test runners to calculate the test coverage of the frontend or
+backend of the app.
 
 ##### Frontend Code Coverage Report
+
+Run:
+
+```bash
+$ npm run coverage-backend
+```
 
 To view the frontend code coverage open `coverage/lcov-report/index.html`
 in a browser.
 
 ##### Backend Code Coverage Report
 
-After `npm run coverage` has run, generate the HTML coverage report:
+Run:
 
-```batch
-> npm run gen-backend-coverage-report
+```bash
+$ npm run coverage-backend
+```
+
+Generate the HTML coverage report:
+
+```bash
+$ npm run gen-backend-coverage-report
 ```
 
 Open `coverage-backend/index.html` in a browser.
 
-#### `npm run test:debug`
+#### `npm run test-frontend:debug`
 
 Runs Jest tests for debugging, awaiting for an attach from an IDE.
 
@@ -194,8 +230,8 @@ To browse the database locally during development, open MongoDB Compass Communit
 
 To completely erase the current Mongo database, run:
 
-```batch
-> npm run drop-database
+```bash
+$ npm run drop-database
 ```
 
 ### Create Database Admin User
@@ -207,9 +243,9 @@ To completely erase the current Mongo database, run:
 To create a new admin user, first set the `COMBINE_ADMIN_PASSWORD`
 environment variable and then run:
 
-```batch
-> cd Backend
-> dotnet run create-admin-username=admin
+```bash
+$ cd Backend
+$ dotnet run create-admin-username=admin
 ```
 
 The exit code will be set to `0` on success and non-`0` otherwise.
@@ -219,23 +255,23 @@ The exit code will be set to `0` on success and non-`0` otherwise.
 To grant an _existing_ user database administrator rights (all permissions for
 all database objects), create a user normally and then execute:
 
-```batch
+```bash
 # Note the -- before the user name.
-> npm run set-admin-user -- <USERNAME>
+$ npm run set-admin-user -- <USERNAME>
 ```
 
 ### Generate License Report
 
 To generate a summary of licenses used in production:
 
-```batch
-> npm run license-summary
+```bash
+$ npm run license-summary
 ```
 
 To generate a full report of the licenses used in production:
 
-```batch
-> npm run license-report
+```bash
+$ npm run license-report
 ```
 
 ### Set Project Version
@@ -249,8 +285,8 @@ To update the version of the project:
 
 To retrieve the current version of the project from the terminal:
 
-```batch
-> npm run --silent version
+```bash
+$ npm run --silent version
 ```
 
 ## Docker
@@ -281,9 +317,9 @@ _TheCombine_ in Docker containers.
   [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher
   installed globally into the `PATH`.
 
-  ```batch
-  > py -m venv venv
-  > venv\Scripts\activate
+  ```bash
+  $ py -m venv venv
+  $ venv\Scripts\activate
   ```
 
 ##### Linux Only
@@ -306,8 +342,8 @@ $ venv/bin/activate
 
 With an active virtual environment, install `Jinja2`:
 
-```batch
-(venv) > python -m pip install Jinja2
+```bash
+(venv) $ python -m pip install Jinja2
 ```
 
 #### Configure Docker
@@ -315,8 +351,8 @@ With an active virtual environment, install `Jinja2`:
 Run the configuration script in an activated virtual environment to generate
 the necessary configuration files.
 
-```batch
-(venv) > python docker_setup.py
+```bash
+(venv) $ python docker_setup.py
 
 # To view options, run with --help
 ```
@@ -338,14 +374,14 @@ For information on _Docker Compose_ see the
 
 3. Build the images for the Docker containers
 
-   ```batch
-   > docker-compose build --parallel
+   ```bash
+   $ docker-compose build --parallel
    ```
 
 4. Start the containers
 
-   ```batch
-   > docker-compose up --detach
+   ```bash
+   $ docker-compose up --detach
    ```
 
 5. Browse to https://localhost.
@@ -354,14 +390,14 @@ For information on _Docker Compose_ see the
 
 6. To view logs:
 
-   ```batch
-   > docker-compose logs --follow
+   ```bash
+   $ docker-compose logs --follow
    ```
 
 7. To stop and remove any stored data:
 
-   ```batch
-   > docker-compose down --volumes
+   ```bash
+   $ docker-compose down --volumes
    ```
 
 ### Create a New Admin User (Docker Environment)
@@ -376,8 +412,8 @@ Edit `.env.backend` as follows:
 
 Run the following command to install the admin user in the _CombineDatabase_:
 
-```batch
-> docker-compose up --abort-on-container-exit
+```bash
+$ docker-compose up --abort-on-container-exit
 ```
 
 This will create the user and exit. If successful, the exit code will be `0`,
@@ -388,7 +424,8 @@ otherwise an error will be logged and the exit code will be non-`0`.
 
 ### Production
 
-The process for configuring and deploying _TheCombine_ for production targets is described in ./docs/docker_deploy/README.md
+The process for configuring and deploying _TheCombine_ for production targets is
+described in ./docs/docker_deploy/README.md
 
 ## Learn More
 

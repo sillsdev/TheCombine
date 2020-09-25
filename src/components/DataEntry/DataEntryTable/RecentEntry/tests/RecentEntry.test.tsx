@@ -18,7 +18,7 @@ jest.mock("../DeleteEntry/DeleteEntry");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
-const mockWord: Word = simpleWord("", "");
+const mockWord = simpleWord("", "");
 
 let testMaster: renderer.ReactTestRenderer;
 let testHandle: renderer.ReactTestInstance;
