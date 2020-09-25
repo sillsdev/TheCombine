@@ -1,11 +1,7 @@
 import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
@@ -55,7 +51,9 @@ export class VernWithSuggestions extends React.Component<
               fullWidth
               inputRef={this.props.vernInput}
               label={
-                this.props.isNew ? <Translate id="addWords.vernacular" /> : ""
+                this.props.isNew
+                  ? this.props.translate("addWords.vernacular")
+                  : ""
               }
               variant={this.props.isNew ? "outlined" : "standard"}
             />

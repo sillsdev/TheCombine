@@ -32,14 +32,13 @@ interface NewEntryProps {
 
 interface NewEntryState {
   newEntry: Word;
-  isDupVern: boolean;
-  wordId?: string;
+  suggestedVerns: string[];
+  dupVernWords: Word[];
+  dupSelected: boolean;
   activeGloss: string;
   audioFileURLs: string[];
   vernOpen: boolean;
   senseOpen: boolean;
-  suggestedVerns: string[];
-  dupVernWords: Word[];
   selectedWord: Word;
 }
 
@@ -70,11 +69,11 @@ export default class NewEntry extends React.Component<
       newEntry: { ...simpleWord("", ""), id: "" },
       activeGloss: "",
       audioFileURLs: [],
-      isDupVern: false,
-      vernOpen: false,
-      senseOpen: false,
       suggestedVerns: [],
       dupVernWords: [],
+      dupSelected: false,
+      vernOpen: false,
+      senseOpen: false,
       selectedWord: { ...simpleWord("", ""), id: "" },
     };
     this.vernInput = React.createRef<HTMLDivElement>();
@@ -114,30 +113,32 @@ export default class NewEntry extends React.Component<
   }
 
   updateVernField(newValue: string, openDialog?: boolean) {
-    this.props.setIsReadyState(newValue.trim().length > 0);
-    let dupVernWords: Word[] = [];
-    let isDupVern: boolean = false;
-    if (newValue) {
-      dupVernWords = this.props.allWords.filter(
-        (word: Word) =>
-          word.vernacular === newValue &&
-          !this.props.defunctWordIds.includes(word.id)
-        // Weed out any words that are already being edited
-      );
-      isDupVern = dupVernWords.length > 0;
+    const stateUpdates: Partial<NewEntryState> = {};
+    if (newValue !== this.state.newEntry.vernacular) {
+      this.props.setIsReadyState(newValue.trim().length > 0);
+      this.updateSuggestedVerns(newValue);
+      let dupVernWords: Word[] = [];
+      if (newValue) {
+        dupVernWords = this.props.allWords.filter(
+          (word) =>
+            word.vernacular === newValue &&
+            !this.props.defunctWordIds.includes(word.id)
+          // Weed out any words that are already being edited
+        );
+      }
+      stateUpdates.dupVernWords = dupVernWords;
+      stateUpdates.newEntry = { ...this.state.newEntry, vernacular: newValue };
+      stateUpdates.dupSelected = false;
     }
-    const newEntry = { ...this.state.newEntry, vernacular: newValue };
-    this.setState({ isDupVern, newEntry });
-    this.updateSuggestedVerns(newValue);
-    if (openDialog && isDupVern) {
-      this.setState({ vernOpen: true, dupVernWords });
-    } else {
-      this.updateWordId();
-    }
-  }
-
-  updateWordId(wordId?: string) {
-    this.setState({ wordId });
+    this.setState(stateUpdates as NewEntryState, () => {
+      if (
+        openDialog &&
+        this.state.dupVernWords.length &&
+        !this.state.dupSelected
+      ) {
+        this.setState({ vernOpen: true });
+      }
+    });
   }
 
   resetState() {
@@ -145,8 +146,10 @@ export default class NewEntry extends React.Component<
       newEntry: { ...simpleWord("", ""), id: "" },
       activeGloss: "",
       audioFileURLs: [],
-      isDupVern: false,
-      wordId: undefined,
+      suggestedVerns: [],
+      dupVernWords: [],
+      dupSelected: false,
+      selectedWord: { ...simpleWord("", ""), id: "" },
     });
     this.focusVernInput();
   }
@@ -168,7 +171,7 @@ export default class NewEntry extends React.Component<
 
   updateWordAndReset() {
     this.props.updateWordWithNewGloss(
-      this.state.wordId!,
+      this.state.selectedWord.id,
       this.state.activeGloss,
       this.state.audioFileURLs
     );
@@ -176,25 +179,29 @@ export default class NewEntry extends React.Component<
   }
 
   addOrUpdateWord() {
-    if (!this.state.isDupVern || this.state.wordId === "") {
-      // Either a new Vern is typed, or user has selected new entry for this duplicate vern
-      this.addNewWordAndReset();
-    } else if (this.state.wordId === undefined && this.state.isDupVern) {
-      // Duplicate vern and the user hasn't made a selection
-      // Change focus away from vern to trigger vern's onBlur
-      this.focusGlossInput();
+    if (this.state.dupVernWords.length) {
+      // Duplicate vern ...
+      if (!this.state.dupSelected) {
+        // ... and user hasn't made a selection
+        this.openDialog();
+      } else if (this.state.selectedWord.id) {
+        // ... and user has selected an entry to modify
+        this.updateWordAndReset();
+      } else {
+        // ... and user has selected new entry
+        this.addNewWordAndReset();
+      }
     } else {
-      // Duplicate vern and the user has selected an entry to modify,
-      // so wordId is defined and non-empty
-      this.updateWordAndReset();
+      // New Vern is typed
+      this.addNewWordAndReset();
     }
   }
 
-  async handleEnterAndTab(e: React.KeyboardEvent) {
+  handleEnterAndTab(e: React.KeyboardEvent) {
     if (!this.state.vernOpen && e.key === "Enter") {
       if (this.state.newEntry.vernacular) {
         if (this.state.activeGloss) {
-          await this.addOrUpdateWord();
+          this.addOrUpdateWord();
           this.resetState();
           this.focusVernInput();
         } else {
@@ -211,29 +218,23 @@ export default class NewEntry extends React.Component<
   }
 
   handleCloseVernDialog(selectedWordId?: string) {
-    this.setState({ vernOpen: false }, () => {
-      this.updateWordId(selectedWordId);
-    });
+    const dupSelected = selectedWordId !== undefined;
+    let selectedWord: Word = {
+      ...simpleWord(this.state.newEntry.vernacular, ""),
+      id: "",
+    };
+    let senseOpen = false;
     if (selectedWordId) {
-      let selectedWord: Word = this.state.dupVernWords.find(
+      selectedWord = this.state.dupVernWords.find(
         (word: Word) => word.id === selectedWordId
       )!;
-      this.setState({
-        selectedWord,
-        senseOpen: true,
-      });
-    } else if (selectedWordId === "") {
-      let selectedWord: Word = {
-        ...simpleWord(this.state.newEntry.vernacular, ""),
-        id: "",
-      };
-      this.setState({ selectedWord });
+      senseOpen = true;
     }
+    this.setState({ dupSelected, selectedWord, senseOpen, vernOpen: false });
   }
 
   handleCloseSenseDialog(senseIndex?: number) {
     if (senseIndex === undefined) {
-      this.updateWordId();
       this.setState({
         selectedWord: { ...simpleWord("", ""), id: "" },
         vernOpen: true,
@@ -318,10 +319,7 @@ export default class NewEntry extends React.Component<
                   this.updateVernField(newValue, openDialog);
                 }}
                 onBlur={() => {
-                  this.updateVernField(
-                    this.state.newEntry.vernacular,
-                    this.state.wordId === undefined && this.state.isDupVern
-                  );
+                  this.updateVernField(this.state.newEntry.vernacular, true);
                 }}
                 suggestedVerns={this.state.suggestedVerns}
                 handleEnterAndTab={(e: React.KeyboardEvent) =>
