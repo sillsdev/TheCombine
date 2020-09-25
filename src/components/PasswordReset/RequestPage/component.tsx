@@ -61,11 +61,10 @@ export default class ResetRequest extends React.Component<
   }
 
   async setTextField(emailOrUsername: string) {
-    this.setState((prevState) => ({
-      ...prevState,
+    this.setState({
       emailOrUsername,
       emailOrUsernameExists: true,
-    }));
+    });
   }
 
   render() {
