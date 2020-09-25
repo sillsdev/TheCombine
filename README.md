@@ -28,13 +28,13 @@ A rapid word collection tool.
    ```bash
    # The `--recurse-submodules` is used to fetch many of the Ansible roles used
    # by the Ansible playbooks in the deploy folder.
-   git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
+   $ git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
    ```
 
    If you've already cloned the repo without `--recurse-submodules`, run:
 
    ```bash
-   git submodule update --init --recursive
+   $ git submodule update --init --recursive
    ```
 
 2. Install:
