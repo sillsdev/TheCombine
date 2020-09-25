@@ -1,12 +1,21 @@
 # The Combine
 
+[![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
+[![Backend Actions Status][github-actions-backend-badge]][github-actions]
+[![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
+[![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 [![GitHub release][github-version-badge]][github-version]
 ![Localization][localization-badge]
 [![GitHub][github-license-badge]][github-license]
 [![GitHub contributors][github-contribs-badge]][github-contribs]
-[![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
-[![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 
+[github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
+[github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
+[github-actions]: https://github.com/sillsdev/TheCombine/actions
+[lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
+[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts
 [localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-version]: https://github.com/sillsdev/TheCombine/releases
@@ -14,10 +23,6 @@
 [github-license]: https://github.com/sillsdev/TheCombine/blob/master/LICENSE
 [github-contribs-badge]: https://img.shields.io/github/contributors/sillsdev/TheCombine?cacheSeconds=10000
 [github-contribs]: https://github.com/sillsdev/TheCombine/graphs/contributors
-[lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
-[lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
-[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
-[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts
 
 A rapid word collection tool.
 
@@ -28,13 +33,13 @@ A rapid word collection tool.
    ```bash
    # The `--recurse-submodules` is used to fetch many of the Ansible roles used
    # by the Ansible playbooks in the deploy folder.
-   git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
+   $ git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
    ```
 
    If you've already cloned the repo without `--recurse-submodules`, run:
 
    ```bash
-   git submodule update --init --recursive
+   $ git submodule update --init --recursive
    ```
 
 2. Install:
@@ -214,7 +219,7 @@ more information.
 Imports Semantic Domains from the provided xml file.
 
 ```bash
-npm run import-sem-doms -- <XML_FILE_PATH>
+$ npm run import-sem-doms -- <XML_FILE_PATH>
 ```
 
 ## Database
