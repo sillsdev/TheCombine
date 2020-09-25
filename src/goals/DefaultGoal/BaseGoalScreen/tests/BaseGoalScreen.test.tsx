@@ -1,16 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { User } from "../../../../types/user";
-import { Goal } from "../../../../types/goals";
-import BaseGoalScreen from "../BaseGoalScreen";
-import { MergeDups } from "../../../MergeDupGoal/MergeDups";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
+
+import { Goal } from "../../../../types/goals";
+import { User } from "../../../../types/user";
+import { MergeDups } from "../../../MergeDupGoal/MergeDups";
 import { ValidateChars } from "../../../ValidateChars/ValidateChars";
+import BaseGoalScreen from "../BaseGoalScreen";
 
 const createMockStore = configureMockStore([thunk]);
-
 const mockStoreState = {
   mergeDuplicateGoal: {
     mergeTreeState: {
@@ -33,14 +33,13 @@ const mockStoreState = {
     },
   },
 };
+const mockUser: User = new User("TestUser", "TestUsername", "TestPass");
 
 it("renders without crashing", () => {
   const mockStore = createMockStore(mockStoreState);
-
   const div = document.createElement("div");
-  let user: User = new User("TestUser", "TestUsername", "password");
-  let goal: Goal = new MergeDups();
-  goal.user = user;
+  const goal: Goal = new MergeDups();
+  goal.user = mockUser;
   ReactDOM.render(
     <Provider store={mockStore}>
       <BaseGoalScreen goal={goal} />
@@ -52,11 +51,9 @@ it("renders without crashing", () => {
 
 it("renders without crashing when given goal with non-existent steps", () => {
   const mockStore = createMockStore(mockStoreState);
-
   const div = document.createElement("div");
-  let user: User = new User("TestUser", "TestUsername", "password");
-  let goal: Goal = new ValidateChars();
-  goal.user = user;
+  const goal: Goal = new ValidateChars();
+  goal.user = mockUser;
   ReactDOM.render(
     <Provider store={mockStore}>
       <BaseGoalScreen goal={goal} />
@@ -68,7 +65,6 @@ it("renders without crashing when given goal with non-existent steps", () => {
 
 it("renders without crashing when given undefined goal", () => {
   const mockStore = createMockStore(mockStoreState);
-
   const div = document.createElement("div");
   ReactDOM.render(
     <Provider store={mockStore}>
