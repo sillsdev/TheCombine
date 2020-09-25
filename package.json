@@ -1,12 +1,13 @@
 {
   "name": "thecombine",
-  "version": "0.2.0-alpha.1",
+  "version": "0.3.0",
   "license": "MIT",
   "private": true,
   "scripts": {
     "api": "dotnet run --project Backend/BackendFramework.csproj",
     "build": "react-scripts build",
-    "coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov && react-scripts test --coverage --watchAll=false",
+    "coverage-backend": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov",
+    "coverage-frontend": "react-scripts test --coverage --watchAll=false",
     "database": "mongod --dbpath=./mongo_database",
     "dotnet-format": "dotnet-format",
     "dotnet-format-check": "dotnet-format --check",
@@ -23,9 +24,11 @@
     "prettier-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\"",
     "set-admin-user": "tsc setAdminUser.ts && node setAdminUser.js",
     "start": "npm install && npm-run-all --parallel frontend database api",
-    "test": "dotnet test Backend.Tests/Backend.Tests.csproj && react-scripts test",
+    "test": "npm run test-backend && npm run test-frontend",
+    "test-backend": "dotnet test Backend.Tests/Backend.Tests.csproj",
+    "test-frontend": "react-scripts test",
+    "test-frontend:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
-    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "version": "node printVersion.js"
   },
   "dependencies": {
