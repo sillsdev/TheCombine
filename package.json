@@ -27,8 +27,8 @@
     "test": "npm run test-backend && npm run test-frontend",
     "test-backend": "dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-frontend": "react-scripts test",
+    "test-frontend:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
-    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "version": "node printVersion.js"
   },
   "dependencies": {
