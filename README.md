@@ -115,24 +115,60 @@ Runs only the mongo database.
 
 ### `npm test`
 
+Run all backend and frontend tests.
+
+#### `npm run test-backend`
+
+Run all backend unit tests.
+
+To run a subset of tests, use the 
+[`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit)
+option.
+
+```bash
+# Note the extra -- needed to separate arguments for npm vs script.
+$ npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.ProjectTests
+```
+
+#### `npm run test-frontend`
+
 Launches the test runners in the interactive watch mode.<br>
 See the section about
 [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
 for more information.
 
-#### `npm run coverage`
+To run a subset of tests, pass in the name of a partial file path to filter:
 
-Launches the test runners to calculate the test coverage of the front and
-back ends of the app.
+```bash
+# Note the extra -- needed to separate arguments for npm vs script.
+$ npm run test-frontend -- DataEntry
+```
+
+#### `npm run coverage-*`
+
+Launches the test runners to calculate the test coverage of the frontend or
+backend of the app.
 
 ##### Frontend Code Coverage Report
+
+Run:
+
+```bash
+$ npm run coverage-backend
+```
 
 To view the frontend code coverage open `coverage/lcov-report/index.html`
 in a browser.
 
 ##### Backend Code Coverage Report
 
-After `npm run coverage` has run, generate the HTML coverage report:
+Run:
+
+```bash
+$ npm run coverage-backend
+```
+
+Generate the HTML coverage report:
 
 ```bash
 $ npm run gen-backend-coverage-report
@@ -140,7 +176,7 @@ $ npm run gen-backend-coverage-report
 
 Open `coverage-backend/index.html` in a browser.
 
-#### `npm run test:debug`
+#### `npm run test-frontend:debug`
 
 Runs Jest tests for debugging, awaiting for an attach from an IDE.
 
@@ -194,7 +230,7 @@ To browse the database locally during development, open MongoDB Compass Communit
 
 To completely erase the current Mongo database, run:
 
-```basd
+```bash
 $ npm run drop-database
 ```
 
@@ -388,7 +424,8 @@ otherwise an error will be logged and the exit code will be non-`0`.
 
 ### Production
 
-The process for configuring and deploying _TheCombine_ for production targets is described in ./docs/docker_deploy/README.md
+The process for configuring and deploying _TheCombine_ for production targets is
+described in ./docs/docker_deploy/README.md
 
 ## Learn More
 
