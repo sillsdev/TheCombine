@@ -1,0 +1,73 @@
+---
+##############################################################
+# Role: docker_install
+#
+# Install the Docker Engine, Docker Compose and all their
+# pre-requisite packages.
+#
+# The Docker Engine is installed by adding the repo from
+# docker.com to our apt sources and installing the relevant
+# package.
+#
+# Docker Compose is installed by downloading the ZIP package
+# from GitHub and extracting it to /usr/local/bin
+##############################################################
+- name: Update apt cache.
+  apt: update_cache=true cache_valid_time=600
+  changed_when: false
+
+- name: Install docker pre-requisites
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+    state: present
+  notify: reboot target
+
+- name: Install Docker apt key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+    filename: docker
+
+- name: Install Docker Engine
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+  notify: reboot target
+
+- name: Configure Docker Image
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode:  0600
+  notify: restart docker
+
+- name: Install Docker Compose
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
+    dest: "/usr/local/bin/docker-compose"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create link for /usr/bin/docker-compose
+  file:
+    src: "/usr/local/bin/docker-compose"
+    dest: "/usr/bin/docker-compose"
+    state: link
+    owner: root
+    group: root
+    mode: 0777

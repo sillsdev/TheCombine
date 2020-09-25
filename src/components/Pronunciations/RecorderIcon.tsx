@@ -47,13 +47,32 @@ export default function RecorderIcon(props: RecorderIconProps) {
     dispatch(updateRecordingStatus(false, undefined));
   }
 
+  function handleTouchStart() {
+    // Temporarily disable context menu since some browsers
+    // interpret a long-press touch as a right-click.
+    document.addEventListener("contextmenu", disableContextMenu, false);
+    toggleIsRecordingToTrue();
+  }
+  function handleTouchEnd() {
+    enableContextMenu();
+    toggleIsRecordingToFalse();
+  }
+
+  function disableContextMenu(event: any) {
+    event.preventDefault();
+    enableContextMenu();
+  }
+  function enableContextMenu() {
+    document.removeEventListener("contextmenu", disableContextMenu, false);
+  }
+
   return (
     <IconButton
       tabIndex={-1}
       onMouseDown={toggleIsRecordingToTrue}
-      onTouchStart={toggleIsRecordingToTrue}
+      onTouchStart={handleTouchStart}
       onMouseUp={toggleIsRecordingToFalse}
-      onTouchEnd={toggleIsRecordingToFalse}
+      onTouchEnd={handleTouchEnd}
       className={classes.button}
       aria-label="record"
       id="recordingButton"

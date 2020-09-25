@@ -258,7 +258,10 @@ export async function getAllActiveProjectsByUser(
   return projects;
 }
 
-export async function getProject(id: string): Promise<Project> {
+export async function getProject(id?: string): Promise<Project> {
+  if (!id) {
+    id = LocalStorage.getProjectId();
+  }
   let resp = await backendServer.get(`projects/${id}`, {
     headers: authHeader(),
   });

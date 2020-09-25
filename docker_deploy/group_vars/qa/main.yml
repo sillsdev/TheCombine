@@ -1,0 +1,22 @@
+---
+#################################################
+# Group specific configuration items
+#
+# Group: qa
+#################################################
+
+ssl_certificate: "/ssl/cert.pem"
+ssl_private_key: "/ssl/key.pem"
+
+certbot_email: ""
+
+# TheCombine is installed on the QA Server by TeamCity.  It will set the
+# IMAGE_TAG environment variable to major.minor.build_no and launch
+# Docker compose
+image_tag: "${IMAGE_TAG}"
+
+combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
+combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
+
+my_aws_profiles:
+  - ecr_read_only

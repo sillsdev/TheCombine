@@ -16,6 +16,7 @@ interface GlossWithSuggestionsProps {
   updateGlossField: (newValue: string) => void;
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
   onBlur?: () => void;
+  analysisLang: string;
 }
 
 /**
@@ -25,7 +26,13 @@ export class GlossWithSuggestions extends React.Component<
   GlossWithSuggestionsProps & LocalizeContextProps
 > {
   readonly maxSuggestions = 5;
-  spellChecker = new SpellChecker();
+  spellChecker = new SpellChecker(this.props.analysisLang);
+
+  componentDidUpdate(prevProps: GlossWithSuggestionsProps) {
+    if (prevProps.analysisLang !== this.props.analysisLang) {
+      this.spellChecker = new SpellChecker(this.props.analysisLang);
+    }
+  }
 
   render() {
     return (

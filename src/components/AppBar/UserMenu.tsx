@@ -9,8 +9,20 @@ import history from "../../history";
 import theme from "../../types/theme";
 import { User } from "../../types/user";
 
+export async function getIsAdmin(): Promise<boolean> {
+  const userId = LocalStorage.getUserId();
+  return await getUser(userId)
+    .then((user: User) => {
+      return user.isAdmin;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
 /**
- * Avatar in appbar with dropdown: site settings (for admins), user settings, log out
+ * Avatar in appbar with dropdown UserMenu
  */
 export default function UserMenu() {
   const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(
@@ -27,21 +39,10 @@ export default function UserMenu() {
     setAnchorElement(null);
   }
 
-  async function getIsAdmin() {
-    const userId = LocalStorage.getUserId();
-    await getUser(userId)
-      .then((user: User) => {
-        setIsAdmin(user.isAdmin);
-      })
-      .catch((err) => console.log(err));
-  }
-
-  React.useEffect(() => {
-    getIsAdmin();
-  }, []);
+  getIsAdmin().then((result) => setIsAdmin(result));
 
   return (
-    <div>
+    <React.Fragment>
       <Button
         aria-controls="user-menu"
         aria-haspopup="true"
@@ -57,7 +58,6 @@ export default function UserMenu() {
         getContentAnchorEl={null}
         id="user-menu"
         anchorEl={anchorElement}
-        keepMounted
         open={Boolean(anchorElement)}
         onClose={handleClose}
         anchorOrigin={{
@@ -69,37 +69,56 @@ export default function UserMenu() {
           horizontal: "right",
         }}
       >
-        {/* Only show Site Settings link to Admin users. */}
-        {isAdmin && (
-          <MenuItem
-            onClick={() => {
-              LocalStorage.setProjectId("");
-              history.push("/site-settings");
-            }}
-          >
-            <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
-            <Translate id="userMenu.siteSettings" />
-          </MenuItem>
-        )}
-
-        <MenuItem
-          onClick={() => {
-            history.push("/user-settings");
-          }}
-        >
-          <Person style={{ marginRight: theme.spacing(1) }} />
-          <Translate id="userMenu.userSettings" />
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            history.push("/login");
-          }}
-        >
-          <ExitToApp style={{ marginRight: theme.spacing(1) }} />
-          <Translate id="userMenu.logout" />
-        </MenuItem>
+        <UserMenuList isAdmin={isAdmin} />
       </Menu>
-    </div>
+    </React.Fragment>
+  );
+}
+
+interface UserMenuListProps {
+  isAdmin: boolean;
+}
+
+/**
+ * UserMenu options: site settings (for admins), user settings, log out
+ */
+export function UserMenuList(props: UserMenuListProps) {
+  const { REACT_APP_VERSION } = process.env;
+  return (
+    <React.Fragment>
+      {/* Only show Site Settings link to Admin users. */}
+      {props.isAdmin && (
+        <MenuItem
+          onClick={() => {
+            LocalStorage.setProjectId("");
+            history.push("/site-settings");
+          }}
+        >
+          <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
+          <Translate id="userMenu.siteSettings" />
+        </MenuItem>
+      )}
+
+      <MenuItem
+        onClick={() => {
+          history.push("/user-settings");
+        }}
+      >
+        <Person style={{ marginRight: theme.spacing(1) }} />
+        <Translate id="userMenu.userSettings" />
+      </MenuItem>
+
+      <MenuItem
+        onClick={() => {
+          history.push("/login");
+        }}
+      >
+        <ExitToApp style={{ marginRight: theme.spacing(1) }} />
+        <Translate id="userMenu.logout" />
+      </MenuItem>
+      <MenuItem disabled style={{ justifyContent: "center" }}>
+        v{REACT_APP_VERSION}
+      </MenuItem>
+    </React.Fragment>
   );
 }

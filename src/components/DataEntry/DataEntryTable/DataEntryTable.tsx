@@ -8,7 +8,6 @@ import {
 } from "react-localize-redux";
 
 import * as Backend from "../../../backend";
-import { getProjectId } from "../../../backend/localStorage";
 import { AutoComplete } from "../../../types/AutoComplete";
 import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
@@ -121,7 +120,7 @@ export class DataEntryTable extends React.Component<
   }
 
   async getProjectSettings() {
-    const proj = await Backend.getProject(getProjectId());
+    const proj = await Backend.getProject();
     const suggestVerns = proj.autocompleteSetting === AutoComplete.On;
     let analysisLang = "en";
     if (proj.analysisWritingSystems.length > 0) {

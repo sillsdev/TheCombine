@@ -11,15 +11,19 @@
 
 # Production
 /build
-production.yml
+
+# Generated Docker files for development use
+docker-compose.yml
+.env.backend
+.env.frontend
+.env*.local
+nginx/scripts
 
 # Misc
 .DS_Store
-.env.backend
-.env.backend.auth
-.env*.local
 Session.vim
 /*.js
+!/printVersion.js
 
 npm-debug.log*
 yarn-debug.log*
@@ -56,7 +60,9 @@ mongo_database
 .vagrant/
 
 # Python
+__pycache__
 *.pyc
+venv
 
 # Auto-generated SSL keys and certificate requests
 deploy/site_info/
@@ -67,12 +73,14 @@ deploy/roles_galaxy/
 # Host file to be used for ad hoc testing/development
 deploy/*.hosts
 deploy/*.hosts.yml
+docker_deploy/*.hosts.yml
 
-# Playbooks for ad hoc testing/development
-deploy/_playbook*.yml
+# YAML files for ad hoc testing/development
+_*.yml
 
 # Emacs backup files (this is Jim's fault)
 *~
+\#*#
 
 # JetBrains Rider
 .idea
