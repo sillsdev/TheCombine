@@ -176,7 +176,7 @@ $ npm run gen-backend-coverage-report
 
 Open `coverage-backend/index.html` in a browser.
 
-#### `npm run test:debug`
+#### `npm run test-frontend:debug`
 
 Runs Jest tests for debugging, awaiting for an attach from an IDE.
 
