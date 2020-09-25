@@ -149,7 +149,7 @@ To run a subset of tests, pass in the name of a partial file path to filter:
 $ npm run test-frontend -- DataEntry
 ```
 
-#### `npm run coverage-*`
+#### `npm run test-*:coverage`
 
 Launches the test runners to calculate the test coverage of the frontend or
 backend of the app.
@@ -159,7 +159,7 @@ backend of the app.
 Run:
 
 ```bash
-$ npm run coverage-backend
+$ npm run test-frontend:coverage
 ```
 
 To view the frontend code coverage open `coverage/lcov-report/index.html`
@@ -170,7 +170,7 @@ in a browser.
 Run:
 
 ```bash
-$ npm run coverage-backend
+$ npm run test-backend:coverage
 ```
 
 Generate the HTML coverage report:
