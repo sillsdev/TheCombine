@@ -1,6 +1,7 @@
 # The Combine
 
 [![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
+[![Frontend Coverage][frontend-codecov-badge]][codecov]
 [![Backend Actions Status][github-actions-backend-badge]][github-actions]
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
@@ -10,6 +11,8 @@
 [![GitHub contributors][github-contribs-badge]][github-contribs]
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
+[frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg
+[codecov]: https://codecov.io/gh/sillsdev/TheCombine
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
 [lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
