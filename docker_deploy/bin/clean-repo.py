@@ -28,10 +28,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "repo",
         nargs=1,
-        help="specify the repo to be cleaned."
+        help="Docker image repository to be cleaned."
     )
     parser.add_argument(
-        "keep_tag",
+        "--keep",
         nargs='+',
         help="list of tags to keep",
     )
@@ -62,21 +62,30 @@ def main() -> None:
     oldTags = []
     repoImages = json.loads(awsResult.stdout)
 
+    # initialize list of images to be removed
+    imageIds = ["--image-ids"]
+
+    # iterate of image descriptions returned by AWS
     for imageStruct in repoImages['imageDetails']:
-        for tag in imageStruct['imageTags']:
-            if tag not in args.keep_tag:
-                oldTags.append(tag)
+        # if there are image:tags to keep, find the tags to remove
+        if args.keep != None:
+            # build list of imageTags to be removed and remove them
+            for tag in imageStruct['imageTags']:
+                if tag not in args.keep:
+                    oldTags.append(tag)
+            # convert the list of tags to a set of image-ids for the AWS ECR command
+            if len(oldTags) > 0:
+                for tag in oldTags:
+                    imageIds.append("imageTag="+tag)
+        # if there are no image:tags to keep, remove the image digest
+        else:
+            # remove all images
+            imageIds.append("imageDigest="+imageStruct['imageDigest'])
 
-    # convert the list of tags to a set of image-ids for the AWS ECR command
-    if len(oldTags) > 0:
-        imageIds = ["--image-ids"]
-        for tag in oldTags:
-            imageIds.append("imageTag="+tag)
-
-        # Remove all the obsolete tags
-        awsResult = runAwsCmd(args.profile[0], args.repo[0], "batch-delete-image", imageIds)
-        print("Results: ", awsResult.stdout)
-        print("STDERR: ", awsResult.stderr)
+    # Remove all the specified image(s)
+    awsResult = runAwsCmd(args.profile[0], args.repo[0], "batch-delete-image", imageIds)
+    print("Results: ", awsResult.stdout)
+    print("STDERR: ", awsResult.stderr)
 
 # Standard boilerplate to call main().
 if __name__ == '__main__':
