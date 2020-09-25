@@ -125,9 +125,9 @@ To run a subset of tests, use the
 [`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit)
 option.
 
-```
+```bash
 # Note the extra -- needed to separate arguments for npm vs script.
-> npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.ProjectTests
+$ npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.ProjectTests
 ```
 
 #### `npm run test-frontend`
@@ -139,9 +139,9 @@ for more information.
 
 To run a subset of tests, pass in the name of a partial file path to filter:
 
-```
+```bash
 # Note the extra -- needed to separate arguments for npm vs script.
-> npm run test-frontend -- DataEntry
+$ npm run test-frontend -- DataEntry
 ```
 
 #### `npm run coverage-*`
