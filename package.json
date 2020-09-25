@@ -24,6 +24,7 @@
     "prettier-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\"",
     "set-admin-user": "tsc setAdminUser.ts && node setAdminUser.js",
     "start": "npm install && npm-run-all --parallel frontend database api",
+    "test": "npm run test-backend && npm run test-frontend",
     "test-backend": "dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-frontend": "react-scripts test",
     "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",

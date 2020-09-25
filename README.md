@@ -113,7 +113,9 @@ Runs only the API.
 
 Runs only the mongo database.
 
-### `npm test-*`
+### `npm test`
+
+Run all backend and frontend tests.
 
 #### `npm run test-backend`
 
@@ -123,7 +125,7 @@ To run a subset of tests, use the
 [`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit)
 option.
 
-```batch
+```
 # Note the extra -- needed to separate arguments for npm vs script.
 > npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.ProjectTests
 ```
@@ -137,7 +139,7 @@ for more information.
 
 To run a subset of tests, pass in the name of a partial file path to filter:
 
-```batch
+```
 # Note the extra -- needed to separate arguments for npm vs script.
 > npm run test-frontend -- DataEntry
 ```
