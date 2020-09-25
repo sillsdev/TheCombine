@@ -113,26 +113,60 @@ Runs only the API.
 
 Runs only the mongo database.
 
-### `npm test`
+### `npm test-*`
+
+#### `npm run test-backend`
+
+Run all backend unit tests.
+
+To run a subset of tests, use the 
+[`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit)
+option.
+
+```batch
+# Note the extra -- needed to separate arguments for npm vs script.
+> npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.ProjectTests
+```
+
+#### `npm run test-frontend`
 
 Launches the test runners in the interactive watch mode.<br>
 See the section about
 [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
 for more information.
 
-#### `npm run coverage`
+To run a subset of tests, pass in the name of a partial file path to filter:
 
-Launches the test runners to calculate the test coverage of the front and
-back ends of the app.
+```batch
+# Note the extra -- needed to separate arguments for npm vs script.
+> npm run test-frontend -- DataEntry
+```
+
+#### `npm run coverage-*`
+
+Launches the test runners to calculate the test coverage of the frontend or
+backend of the app.
 
 ##### Frontend Code Coverage Report
+
+Run:
+
+```batch
+> npm run coverage-backend
+```
 
 To view the frontend code coverage open `coverage/lcov-report/index.html`
 in a browser.
 
 ##### Backend Code Coverage Report
 
-After `npm run coverage` has run, generate the HTML coverage report:
+Run:
+
+```batch
+> npm run coverage-backend
+```
+
+Generate the HTML coverage report:
 
 ```batch
 > npm run gen-backend-coverage-report
