@@ -10,7 +10,7 @@ import * as LoginReducer from "../LoginReducer";
 const createMockStore = configureMockStore([thunk]);
 
 const user = {
-  ...new User("testName", "testUsername", "testPassword"),
+  ...new User("testName", "testUsername", "testPass"),
   token: "testToken",
   email: "test@e.mail",
 };
