@@ -18,15 +18,17 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ matrix.dotnet }}
-      - run: dotnet test Backend.Tests/Backend.Tests.csproj
 
       # Coverage.
-      - run: dotnet build BackendFramework.sln /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+      - run: dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
       - name: Upload coverage report
         uses: codecov/codecov-action@v1
         with:
           file: Backend.Tests/coverage.cobertura.xml
           flags: backend
+
+      # Development build.
+      - run: dotnet build BackendFramework.sln
 
       # Release build.
       - run: dotnet publish BackendFramework.sln
