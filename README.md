@@ -11,7 +11,7 @@
 [![GitHub contributors][github-contribs-badge]][github-contribs]
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
-[frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg
+[frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=frontend
 [codecov]: https://codecov.io/gh/sillsdev/TheCombine
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
