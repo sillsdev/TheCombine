@@ -35,9 +35,14 @@ def parse_args() -> argparse.Namespace:
         nargs='+',
         help="list of tags to keep",
     )
+    parser.add_argument(
+        "--dryrun",
+        action="store_true",
+        help="print delete command that would be run instead of executing it"
+    )
     return parser.parse_args()
 
-def runAwsCmd(profile, repo, subcommand, awsArgs=None):
+def runAwsCmd(profile, repo, subcommand, awsArgs=None, dryRun=False):
     awsCmd = [ "aws", "ecr" ]
     if profile:
         awsCmd.append("--profile="+profile[0])
@@ -45,10 +50,14 @@ def runAwsCmd(profile, repo, subcommand, awsArgs=None):
     if awsArgs:
         awsCmd.extend(awsArgs)
 
-    return subprocess.run(awsCmd,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE,
-                         universal_newlines=True)
+    if dryRun:
+        print (awsCmd)
+        return None
+    else:
+        return subprocess.run(awsCmd,
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE,
+                              universal_newlines=True)
 
 
 def main() -> None:
@@ -84,9 +93,10 @@ def main() -> None:
 
     # Remove all the specified image(s)
     if len(imageIds) > 1:
-        awsResult = runAwsCmd(args.profile, args.repo, "batch-delete-image", imageIds)
-        print("Results: ", awsResult.stdout)
-        print("STDERR: ", awsResult.stderr)
+        awsResult = runAwsCmd(args.profile, args.repo, "batch-delete-image", imageIds, args.dryrun)
+        if awsResult != None:
+            print("Results: ", awsResult.stdout)
+            print("STDERR: ", awsResult.stderr)
     else:
         print("No images/tags were deleted.")
 # Standard boilerplate to call main().
