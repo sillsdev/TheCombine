@@ -78,13 +78,13 @@ export default class NewEntry extends React.Component<
   }
 
   updateGlossField(newValue: string) {
-    this.setState((prevState) => ({
+    this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
         senses: [
           {
-            glosses: [{ language: this.props.analysisLang, def: newValue }],
-            semanticDomains: [this.props.semanticDomain],
+            glosses: [{ language: props.analysisLang, def: newValue }],
+            semanticDomains: [props.semanticDomain],
           },
         ],
       },
