@@ -34,12 +34,11 @@ interface NewEntryState {
   newEntry: Word;
   suggestedVerns: string[];
   dupVernWords: Word[];
-  dupSelected: boolean;
   activeGloss: string;
   audioFileURLs: string[];
   vernOpen: boolean;
   senseOpen: boolean;
-  selectedWord: Word;
+  selectedWord?: Word;
 }
 
 function focusInput(inputRef: React.RefObject<HTMLDivElement>) {
@@ -71,10 +70,8 @@ export default class NewEntry extends React.Component<
       audioFileURLs: [],
       suggestedVerns: [],
       dupVernWords: [],
-      dupSelected: false,
       vernOpen: false,
       senseOpen: false,
-      selectedWord: { ...simpleWord("", ""), id: "" },
     };
     this.vernInput = React.createRef<HTMLDivElement>();
     this.glossInput = React.createRef<HTMLDivElement>();
@@ -128,13 +125,12 @@ export default class NewEntry extends React.Component<
       }
       stateUpdates.dupVernWords = dupVernWords;
       stateUpdates.newEntry = { ...this.state.newEntry, vernacular: newValue };
-      stateUpdates.dupSelected = false;
     }
     this.setState(stateUpdates as NewEntryState, () => {
       if (
         openDialog &&
         this.state.dupVernWords.length &&
-        !this.state.dupSelected
+        !this.state.selectedWord
       ) {
         this.setState({ vernOpen: true });
       }
@@ -148,8 +144,7 @@ export default class NewEntry extends React.Component<
       audioFileURLs: [],
       suggestedVerns: [],
       dupVernWords: [],
-      dupSelected: false,
-      selectedWord: { ...simpleWord("", ""), id: "" },
+      selectedWord: undefined,
     });
     this.focusVernInput();
   }
@@ -171,7 +166,7 @@ export default class NewEntry extends React.Component<
 
   updateWordAndReset() {
     this.props.updateWordWithNewGloss(
-      this.state.selectedWord.id,
+      this.state.selectedWord!.id,
       this.state.activeGloss,
       this.state.audioFileURLs
     );
@@ -181,9 +176,9 @@ export default class NewEntry extends React.Component<
   addOrUpdateWord() {
     if (this.state.dupVernWords.length) {
       // Duplicate vern ...
-      if (!this.state.dupSelected) {
+      if (!this.state.selectedWord) {
         // ... and user hasn't made a selection
-        this.openDialog();
+        this.setState({ vernOpen: true });
       } else if (this.state.selectedWord.id) {
         // ... and user has selected an entry to modify
         this.updateWordAndReset();
@@ -202,7 +197,6 @@ export default class NewEntry extends React.Component<
       if (this.state.newEntry.vernacular) {
         if (this.state.activeGloss) {
           this.addOrUpdateWord();
-          this.resetState();
           this.focusVernInput();
         } else {
           this.focusGlossInput();
@@ -213,37 +207,31 @@ export default class NewEntry extends React.Component<
     }
   }
 
-  openDialog() {
-    this.setState({ vernOpen: true });
-  }
-
   handleCloseVernDialog(selectedWordId?: string) {
-    const dupSelected = selectedWordId !== undefined;
-    let selectedWord: Word = {
-      ...simpleWord(this.state.newEntry.vernacular, ""),
-      id: "",
-    };
+    let selectedWord: Word | undefined;
     let senseOpen = false;
-    if (selectedWordId) {
+    if (selectedWordId === "") {
+      selectedWord = {
+        ...simpleWord(this.state.newEntry.vernacular, ""),
+        id: "",
+      };
+    } else if (selectedWordId) {
       selectedWord = this.state.dupVernWords.find(
         (word: Word) => word.id === selectedWordId
-      )!;
+      );
       senseOpen = true;
     }
-    this.setState({ dupSelected, selectedWord, senseOpen, vernOpen: false });
+    this.setState({ selectedWord, senseOpen, vernOpen: false });
   }
 
   handleCloseSenseDialog(senseIndex?: number) {
     if (senseIndex === undefined) {
-      this.setState({
-        selectedWord: { ...simpleWord("", ""), id: "" },
-        vernOpen: true,
-      });
+      this.setState({ selectedWord: undefined, vernOpen: true });
     } else if (senseIndex >= 0) {
-      const activeGloss = this.state.selectedWord.senses[senseIndex].glosses[0]
-        .def;
-      this.setState({ activeGloss });
-    }
+      this.setState((prevState) => ({
+        activeGloss: prevState.selectedWord!.senses[senseIndex].glosses[0].def,
+      }));
+    } // Otherwise, senseIndex===-1, which indicates new sense for the selectedWord
     this.setState({ senseOpen: false });
   }
 
@@ -334,14 +322,16 @@ export default class NewEntry extends React.Component<
                 vernacularWords={this.state.dupVernWords}
                 analysisLang={this.props.analysisLang}
               />
-              <SenseDialog
-                selectedWord={this.state.selectedWord}
-                open={this.state.senseOpen}
-                handleClose={(senseIndex?: number) =>
-                  this.handleCloseSenseDialog(senseIndex)
-                }
-                analysisLang={this.props.analysisLang}
-              />
+              {this.state.selectedWord && (
+                <SenseDialog
+                  selectedWord={this.state.selectedWord}
+                  open={this.state.senseOpen}
+                  handleClose={(senseIndex?: number) =>
+                    this.handleCloseSenseDialog(senseIndex)
+                  }
+                  analysisLang={this.props.analysisLang}
+                />
+              )}
             </Grid>
             <Grid item xs={12}>
               <Typography variant="caption">
@@ -384,13 +374,13 @@ export default class NewEntry extends React.Component<
               wordId={""}
               pronunciationFiles={this.state.audioFileURLs}
               recorder={this.props.recorder}
-              deleteAudio={(_wordId: string, fileName: string) => {
+              deleteAudio={(_, fileName: string) => {
                 this.removeAudio(fileName);
               }}
-              uploadAudio={(_wordId: string, audioFile: File) => {
+              uploadAudio={(_, audioFile: File) => {
                 this.addAudio(audioFile);
               }}
-              getAudioUrl={(_wordId: string, fileName: string) => fileName}
+              getAudioUrl={(_, fileName: string) => fileName}
             />
           </Grid>
         </Grid>
