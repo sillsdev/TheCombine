@@ -1,11 +1,10 @@
+import { Card, Grid, TextField, Typography } from "@material-ui/core";
 import * as React from "react";
-import { Translate, LocalizeContextProps } from "react-localize-redux";
-import { Typography, Card, Grid, TextField } from "@material-ui/core";
-import { isEmailTaken, isUsernameTaken } from "../../../backend";
-import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
-import history from "../../../history";
+import { LocalizeContextProps, Translate } from "react-localize-redux";
 
-export interface ResetRequestProps {}
+import { isEmailTaken, isUsernameTaken } from "../../../backend";
+import history from "../../../history";
+import LoadingDoneButton from "../../Buttons/LoadingDoneButton";
 
 export interface ResetRequestDispatchProps {
   passwordResetRequest: (email: string) => void;
@@ -19,12 +18,10 @@ export interface ResetRequestState {
 }
 
 export default class ResetRequest extends React.Component<
-  ResetRequestProps & ResetRequestDispatchProps & LocalizeContextProps,
+  ResetRequestDispatchProps & LocalizeContextProps,
   ResetRequestState
 > {
-  constructor(
-    props: ResetRequestProps & ResetRequestDispatchProps & LocalizeContextProps
-  ) {
+  constructor(props: ResetRequestDispatchProps & LocalizeContextProps) {
     super(props);
     this.state = {
       emailOrUsernameExists: true,
@@ -36,9 +33,7 @@ export default class ResetRequest extends React.Component<
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
-    this.setState({
-      loading: true,
-    });
+    this.setState({ loading: true });
     setTimeout(() => this.tryResetRequest(), 1000);
   };
 
@@ -47,25 +42,15 @@ export default class ResetRequest extends React.Component<
     const usernameExists = await isUsernameTaken(this.state.emailOrUsername);
     if (emailExists || usernameExists) {
       this.props.passwordResetRequest(this.state.emailOrUsername);
-      this.setState({
-        done: true,
-        loading: false,
-      });
+      this.setState({ done: true, loading: false });
       setTimeout(() => history.push("/login"), 1000);
     } else {
-      this.setState({
-        emailOrUsernameExists: false,
-        loading: false,
-      });
+      this.setState({ emailOrUsernameExists: false, loading: false });
     }
   }
 
-  async setTextField(emailOrUsername: string) {
-    this.setState((prevState) => ({
-      ...prevState,
-      emailOrUsername,
-      emailOrUsernameExists: true,
-    }));
+  setTextField(emailOrUsername: string) {
+    this.setState({ emailOrUsername, emailOrUsernameExists: true });
   }
 
   render() {

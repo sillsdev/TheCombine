@@ -52,22 +52,18 @@ export default class PasswordReset extends React.Component<
   };
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      sentAttempt: true,
-    }));
+    this.setState({ sentAttempt: true });
     this.props.passwordReset(this.state.token, this.state.password);
     event.preventDefault();
   };
 
   onChangePassword = (password: string, confirmPassword: string) => {
-    this.setState((prevState) => ({
-      ...prevState,
+    this.setState({
       passwordFitsRequirements: passwordRequirements(password),
       isPasswordConfirmed: password === confirmPassword,
       password: password,
       passwordConfirm: confirmPassword,
-    }));
+    });
   };
 
   render() {

@@ -88,25 +88,26 @@ export default class NewEntry extends React.Component<
   }
 
   removeAudio(fileName: string) {
-    const audioFileURLs = this.state.audioFileURLs.filter(
-      (fileURL) => fileURL !== fileName
-    );
-    this.setState({
-      audioFileURLs,
-    });
+    this.setState((prevState) => ({
+      audioFileURLs: prevState.audioFileURLs.filter(
+        (fileURL) => fileURL !== fileName
+      ),
+    }));
   }
 
   updateGlossField(newValue: string) {
-    const newEntry = {
-      ...this.state.newEntry,
-      senses: [
-        {
-          glosses: [{ language: this.props.analysisLang, def: newValue }],
-          semanticDomains: [this.props.semanticDomain],
-        },
-      ],
-    };
-    this.setState({ newEntry, activeGloss: newValue });
+    this.setState((prevState, props) => ({
+      newEntry: {
+        ...prevState.newEntry,
+        senses: [
+          {
+            glosses: [{ language: props.analysisLang, def: newValue }],
+            semanticDomains: [props.semanticDomain],
+          },
+        ],
+      },
+      activeGloss: newValue,
+    }));
   }
 
   updateVernField(newValue: string, openDialog?: boolean) {

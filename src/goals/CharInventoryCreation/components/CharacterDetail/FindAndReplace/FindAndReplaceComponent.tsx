@@ -1,10 +1,6 @@
 import { Button, TextField, Typography } from "@material-ui/core";
 import * as React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 export interface FindAndReplaceProps {
   initialFindValue: string;
@@ -31,8 +27,10 @@ export class FindAndReplace extends React.Component<
 
   componentDidUpdate(prevProps: FindAndReplaceProps & LocalizeContextProps) {
     if (prevProps.initialFindValue !== this.props.initialFindValue) {
-      const findValue = this.props.initialFindValue;
-      this.setState({ findValue, replaceValue: "" });
+      this.setState((_, props) => ({
+        findValue: props.initialFindValue,
+        replaceValue: "",
+      }));
     }
   }
 
@@ -55,7 +53,7 @@ export class FindAndReplace extends React.Component<
       <React.Fragment>
         <Typography variant="overline">Find + Replace</Typography>
         <TextField
-          label={<Translate id="charInventory.characterSet.find" />}
+          label={this.props.translate("charInventory.characterSet.find")}
           value={this.state.findValue}
           onChange={(e) => this.updateField(e, "findValue")}
           variant="outlined"
@@ -64,7 +62,7 @@ export class FindAndReplace extends React.Component<
           inputProps={{ maxLength: 100 }}
         />
         <TextField
-          label={<Translate id="charInventory.characterSet.replace" />}
+          label={this.props.translate("charInventory.characterSet.replace")}
           value={this.state.replaceValue}
           onChange={(e) => this.updateField(e, "replaceValue")}
           variant="outlined"
@@ -81,7 +79,7 @@ export class FindAndReplace extends React.Component<
             )
           }
         >
-          <Translate id="charInventory.characterSet.apply" />
+          {this.props.translate("charInventory.characterSet.apply")}
         </Button>
       </React.Fragment>
     );

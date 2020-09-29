@@ -1,10 +1,6 @@
-import { TextField, Grid, Button } from "@material-ui/core";
+import { Button, Grid, TextField } from "@material-ui/core";
 import React from "react";
-import {
-  Translate,
-  LocalizeContextProps,
-  withLocalize,
-} from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { updateProject } from "../../../backend";
 import { Project } from "../../../types/project";
@@ -45,8 +41,7 @@ class ProjectName extends React.Component<
 
   componentDidUpdate(prevProps: NameProps) {
     if (prevProps.project.id !== this.props.project.id) {
-      const projectName = this.props.project.name;
-      this.setState({ projectName });
+      this.setState((_, props) => ({ projectName: props.project.name }));
     }
   }
 
@@ -70,7 +65,7 @@ class ProjectName extends React.Component<
             }
             onClick={() => this.updateName(this.state.projectName)}
           >
-            <Translate id="buttons.save" />
+            {this.props.translate("buttons.save")}
           </Button>
         </Grid>
       </Grid>

@@ -35,8 +35,8 @@ export class ProjectSwitch extends React.Component<SwitchProps, SwitchState> {
   private updateProjectList() {
     const userId: string = getUserId();
     if (userId) {
-      getAllActiveProjectsByUser(userId).then((projects) => {
-        this.setState({ projectList: projects });
+      getAllActiveProjectsByUser(userId).then((projectList) => {
+        this.setState({ projectList });
       });
     }
   }
