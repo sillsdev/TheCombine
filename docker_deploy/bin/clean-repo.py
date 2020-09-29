@@ -13,6 +13,7 @@ import argparse
 import json
 import os
 import subprocess
+import re
 
 def parse_args() -> argparse.Namespace:
     """Parse user command line arguments."""
@@ -33,7 +34,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--keep",
         nargs='+',
-        help="list of tags to keep",
+        help="list of regular expressions that specify tags to keep",
     )
     parser.add_argument(
         "--dryrun",
@@ -72,28 +73,33 @@ def main() -> None:
     repoImages = json.loads(awsResult.stdout)
 
     # initialize list of images to be removed
-    imageIds = ["--image-ids"]
+    image_ids = ["--image-ids"]
 
+    # join patterns of tags to keep to a single regular expression
+    keep_pattern = ''
+    if args.keep != None:
+        keep_pattern = '^(?:% s)$' % '|'.join(args.keep)
+        print("keep_pattern: ", keep_pattern)
     # iterate of image descriptions returned by AWS
     for imageStruct in repoImages['imageDetails']:
         # if there are image:tags to keep, find the tags to remove
-        if args.keep != None:
+        if len(keep_pattern) != None:
             # build list of imageTags to be removed and remove them
             for tag in imageStruct['imageTags']:
-                if tag not in args.keep:
+                if not re.match(keep_pattern, tag):
                     oldTags.append(tag)
             # convert the list of tags to a set of image-ids for the AWS ECR command
             if len(oldTags) > 0:
                 for tag in oldTags:
-                    imageIds.append("imageTag="+tag)
+                    image_ids.append("imageTag="+tag)
         # if there are no image:tags to keep, remove the image digest
         else:
             # remove all images
-            imageIds.append("imageDigest="+imageStruct['imageDigest'])
+            image_ids.append("imageDigest="+imageStruct['imageDigest'])
 
     # Remove all the specified image(s)
-    if len(imageIds) > 1:
-        awsResult = runAwsCmd(args.profile, args.repo, "batch-delete-image", imageIds, args.dryrun)
+    if len(image_ids) > 1:
+        awsResult = runAwsCmd(args.profile, args.repo, "batch-delete-image", image_ids, args.dryrun)
         if awsResult != None:
             print("Results: ", awsResult.stdout)
             print("STDERR: ", awsResult.stderr)
