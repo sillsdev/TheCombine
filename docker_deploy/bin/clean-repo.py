@@ -34,7 +34,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--keep",
         nargs='+',
-        help="list of regular expressions that specify tags to keep",
+        help="list of tags to keep",
+    )
+    parser.add_argument(
+        "--keep_pattern",
+        nargs='+',
+        help="list of regular expressions that specify tags to keep"
     )
     parser.add_argument(
         "--dryrun",
@@ -77,25 +82,23 @@ def main() -> None:
 
     # join patterns of tags to keep to a single regular expression
     keep_pattern = ''
-    if args.keep != None:
-        keep_pattern = '^(?:% s)$' % '|'.join(args.keep)
+    if args.keep_pattern != None:
+        keep_pattern = '^(?:% s)$' % '|'.join(args.keep_pattern)
         print("keep_pattern: ", keep_pattern)
     # iterate of image descriptions returned by AWS
     for imageStruct in repoImages['imageDetails']:
-        # if there are image:tags to keep, find the tags to remove
-        if len(keep_pattern) != None:
-            # build list of imageTags to be removed and remove them
-            for tag in imageStruct['imageTags']:
-                if not re.match(keep_pattern, tag):
+        # check to see if each tag should be kept
+        for tag in imageStruct['imageTags']:
+            # check to see if there are patterns to test
+            if len(keep_pattern) > 0 and not re.match(keep_pattern, tag):
+                # now check to see if it matches any exact tags specified
+                if args.keep != None and tag not in args.keep:
                     oldTags.append(tag)
-            # convert the list of tags to a set of image-ids for the AWS ECR command
-            if len(oldTags) > 0:
-                for tag in oldTags:
-                    image_ids.append("imageTag="+tag)
-        # if there are no image:tags to keep, remove the image digest
-        else:
-            # remove all images
-            image_ids.append("imageDigest="+imageStruct['imageDigest'])
+        # convert the list of tags to a set of image-ids for the AWS ECR command
+        
+        if len(oldTags) > 0:
+            for tag in oldTags:
+                image_ids.append("imageTag="+tag)
 
     # Remove all the specified image(s)
     if len(image_ids) > 1:
