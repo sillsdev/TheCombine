@@ -64,19 +64,17 @@ class UserManagment extends React.Component<UserProps, UserState> {
 
   private populateUsers() {
     getAllUsers()
-      .then((returnedUsers) => {
-        this.setState({
-          allUsers: returnedUsers,
-        });
-        returnedUsers.forEach((u: User) => {
+      .then((allUsers) => {
+        this.setState({ allUsers });
+        allUsers.forEach((u) => {
           avatarSrc(u.id)
             .then((result) => {
-              let avatarsCopy = JSON.parse(
+              const userAvatar = JSON.parse(
                 JSON.stringify(this.state.userAvatar)
               );
-              avatarsCopy[u.id] = result;
-              this.setState({ userAvatar: avatarsCopy });
-              console.log(avatarsCopy);
+              userAvatar[u.id] = result;
+              this.setState({ userAvatar });
+              console.log(userAvatar);
             })
             .catch((err) => console.log(err));
         });

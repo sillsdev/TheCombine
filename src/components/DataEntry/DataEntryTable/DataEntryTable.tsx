@@ -143,8 +143,8 @@ export class DataEntryTable extends React.Component<
     const defunctWordIds = this.state.defunctWordIds;
     if (!defunctWordIds.includes(wordId)) {
       defunctWordIds.push(wordId);
+      this.setState({ defunctWordIds });
     }
-    this.setState({ defunctWordIds });
   }
 
   async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
@@ -608,9 +608,7 @@ export class DataEntryTable extends React.Component<
 
                 // Reset everything
                 this.props.hideQuestions();
-                const defunctWordIds: string[] = [];
-                const recentlyAddedWords: WordAccess[] = [];
-                this.setState({ defunctWordIds, recentlyAddedWords });
+                this.setState({ defunctWordIds: [], recentlyAddedWords: [] });
 
                 // Reveal the TreeView, hiding DataEntry
                 this.props.displaySemanticDomainView(true);
