@@ -1,0 +1,9 @@
+---
+
+aws_config_dir: "/home/{{ combine_user }}/.aws"
+aws_user: teamcity
+aws_group: teamcity
+
+
+my_aws_profiles:
+  - ecr_read_write
