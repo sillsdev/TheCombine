@@ -60,8 +60,8 @@ class UserList extends React.Component<
 
     this.setState({
       filterInput: event,
-      filteredNonProjUsers: filteredNonProjUsers,
-      filteredProjUsers: filteredProjUsers,
+      filteredNonProjUsers,
+      filteredProjUsers,
     });
   }
 

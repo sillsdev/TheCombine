@@ -29,10 +29,9 @@ export class ProjectManagement extends React.Component<
 
   updateProjectList = () => {
     getAllProjects().then((projects) => {
-      this.setState({
-        activeProjects: projects.filter((project) => project.isActive),
-        archivedProjects: projects.filter((project) => !project.isActive),
-      });
+      const activeProjects = projects.filter((project) => project.isActive);
+      const archivedProjects = projects.filter((project) => !project.isActive);
+      this.setState({ activeProjects, archivedProjects });
     });
   };
 

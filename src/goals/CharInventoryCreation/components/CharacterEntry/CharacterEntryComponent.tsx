@@ -49,7 +49,9 @@ export class CharacterEntry extends React.Component<
             spacing={2}
           >
             <Button
-              onClick={() => this.setState({ checked: !this.state.checked })}
+              onClick={() =>
+                this.setState((prevState) => ({ checked: !prevState.checked }))
+              }
             >
               <Translate id="charInventory.characterSet.advanced" />{" "}
               <KeyboardArrowDown
