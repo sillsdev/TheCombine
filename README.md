@@ -1,7 +1,9 @@
 # The Combine
 
 [![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
+[![Frontend Coverage][frontend-codecov-badge]][codecov]
 [![Backend Actions Status][github-actions-backend-badge]][github-actions]
+[![Backend Coverage][backend-codecov-badge]][codecov]
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 [![GitHub release][github-version-badge]][github-version]
@@ -10,7 +12,10 @@
 [![GitHub contributors][github-contribs-badge]][github-contribs]
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
+[frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=frontend
+[codecov]: https://codecov.io/gh/sillsdev/TheCombine
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
+[backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
 [lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
 [lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
@@ -149,7 +154,7 @@ To run a subset of tests, pass in the name of a partial file path to filter:
 $ npm run test-frontend -- DataEntry
 ```
 
-#### `npm run coverage-*`
+#### `npm run test-*:coverage`
 
 Launches the test runners to calculate the test coverage of the frontend or
 backend of the app.
@@ -159,7 +164,7 @@ backend of the app.
 Run:
 
 ```bash
-$ npm run coverage-backend
+$ npm run test-frontend:coverage
 ```
 
 To view the frontend code coverage open `coverage/lcov-report/index.html`
@@ -170,7 +175,7 @@ in a browser.
 Run:
 
 ```bash
-$ npm run coverage-backend
+$ npm run test-backend:coverage
 ```
 
 Generate the HTML coverage report:
