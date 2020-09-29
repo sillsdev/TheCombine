@@ -18,5 +18,10 @@ image_tag: "${IMAGE_TAG}"
 combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
 combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
 
+
+aws_config_dir: "/home/{{ combine_user }}/.aws"
+aws_user: "{{ combine_user }}"
+aws_group: "{{ combine_group }}"
+
 my_aws_profiles:
   - ecr_read_only

@@ -1,2 +1,2 @@
 ---
-aws_config_dir: "/home/{{ combine_user }}/.aws"
+aws_config_dir: "{{ ansible_env.HOME }}/.aws"
