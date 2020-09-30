@@ -88,6 +88,9 @@ def main() -> None:
 
     # create a list of tags that are not on our list of tags to keep
     oldTags = []
+
+    # load the JSON output of the describe-images command into a 'repoImages'
+    # dictionary
     repoImages = json.loads(awsResult.stdout)
 
     # initialize list of images to be removed with the option name for the
@@ -100,7 +103,8 @@ def main() -> None:
         keep_pattern = '^(?:% s)$' % '|'.join(args.keep_pattern)
         if args.verbose:
             print("keep_pattern: ", keep_pattern)
-    # iterate of image descriptions returned by AWS
+
+    # iterate over image descriptions returned by AWS
     for imageStruct in repoImages['imageDetails']:
         # check to see if each tag should be kept
         for tag in imageStruct['imageTags']:
@@ -111,13 +115,12 @@ def main() -> None:
                 # now check to see if it matches any exact tags specified
                 if args.keep != None and tag not in args.keep:
                     oldTags.append(tag)
-        # convert the list of tags to a set of image-ids for the AWS ECR command
-
-        for tag in oldTags:
-            image_ids.append("imageTag="+tag)
 
     # Remove all the specified image(s)
-    if len(image_ids) > 1:
+    if len(oldTags) > 0:
+    # convert the list of tags to a set of image-ids for the AWS ECR command
+        for tag in oldTags:
+            image_ids.append("imageTag="+tag)
         awsCmd = buildAwsCommand(args.profile, args.repo, "batch-delete-image", image_ids)
         awsResult = runAwsCmd(awsCmd, args.verbose, args.dry_run)
     elif args.verbose:
