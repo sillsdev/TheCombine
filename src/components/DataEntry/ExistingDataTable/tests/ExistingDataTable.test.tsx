@@ -12,7 +12,7 @@ jest.mock("../ImmutableExistingData");
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 
-describe("Tests ExistingData", () => {
+describe("ExistingData", () => {
   it("renders on side without crashing", () => {
     renderer.act(() => {
       renderer.create(
