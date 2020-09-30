@@ -166,7 +166,7 @@ namespace BackendFramework.Services
 
             // Remove password and avatar filepath before returning
             user.Password = "";
-            user.Avatar = "";
+            user.Avatar = string.IsNullOrEmpty(user?.Avatar) ? "" : "1";
 
             return user;
         }
@@ -175,7 +175,13 @@ namespace BackendFramework.Services
         public async Task<List<User>> GetAllUsers()
         {
             var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
-            return users.Select(c => { c.Avatar = ""; c.Password = ""; c.Token = ""; return c; }).ToList();
+            return users.Select(c =>
+            {
+                c.Avatar = string.IsNullOrEmpty(c?.Avatar) ? "" : "1";
+                c.Password = "";
+                c.Token = "";
+                return c;
+            }).ToList();
         }
 
         /// <summary> Removes all <see cref="User"/>s </summary>
@@ -195,7 +201,7 @@ namespace BackendFramework.Services
             var userList = await _userDatabase.Users.FindAsync(filter);
 
             var user = userList.FirstOrDefault();
-            user.Avatar = "";
+            user.Avatar = string.IsNullOrEmpty(user?.Avatar) ? "" : "1";
             user.Password = "";
             user.Token = "";
             return user;
@@ -259,7 +265,7 @@ namespace BackendFramework.Services
 
             // Important, don't send plaintext password back to user.
             user.Password = "";
-            user.Avatar = "";
+            user.Avatar = string.IsNullOrEmpty(user?.Avatar) ? "" : "1";
 
             return user;
         }

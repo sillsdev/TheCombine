@@ -73,26 +73,26 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
         this.setState({ projUsers });
         backend
           .getAllUsers()
-          .then((returnedUsers) => {
+          .then(async (returnedUsers) => {
             this.setState((prevState) => ({
               allUsers: returnedUsers.filter(
                 (user) => !prevState.projUsers.find((u) => u.id === user.id)
               ),
             }));
-            returnedUsers.forEach((u: User) => {
-              backend
-                .avatarSrc(u.id)
-                .then((result) => {
-                  let userAvatar = this.state.userAvatar;
-                  userAvatar[u.id] = result;
-                  this.setState({ userAvatar });
-                })
-                .catch((err) => console.log(err));
-            });
+            const userAvatar = this.state.userAvatar;
+            let u: User | undefined;
+            // for loop rather than .forEach forces each await to finish
+            for (let i = 0; i < returnedUsers.length; i++) {
+              u = returnedUsers[i];
+              if (u.avatar) {
+                userAvatar[u.id] = await backend.avatarSrc(u.id);
+              }
+            }
+            this.setState({ userAvatar });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => console.error(err));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   }
 
   addToProject(user: User) {
