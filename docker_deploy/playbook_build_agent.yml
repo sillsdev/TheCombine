@@ -1,14 +1,14 @@
 ---
 ##############################################################
-# Playbook: playbook_setup_target.yml
+# Playbook: playbook_build_agent.yml
 #
-# playbook_setup_target.yml installs the packages and
-# configuration files that are required to run TheCombine
-# as a collection of Docker containers.
+# playbook_build_agent.yml installs the packages and
+# configuration files that are required to build TheCombine
+# in the TeamCity environment.
 #
 ##############################################################
 
-- name: Setup TheCombine Using Docker
+- name: Setup TeamCity build agent for TheCombine
   hosts: build_agent
   gather_facts: yes
   become: yes
