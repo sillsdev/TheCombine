@@ -111,13 +111,13 @@ def main() -> None:
             if args.verbose:
                 print("Testing tag: ", tag, " from ", imageStruct['imagePushedAt'])
             # check to see if there are patterns to test
-            if len(keep_pattern) > 0 and not re.match(keep_pattern, tag):
+            if keep_pattern and not re.match(keep_pattern, tag):
                 # now check to see if it matches any exact tags specified
-                if args.keep != None and tag not in args.keep:
+                if not args.keep or tag not in args.keep:
                     oldTags.append(tag)
 
     # Remove all the specified image(s)
-    if len(oldTags) > 0:
+    if oldTags:
     # Convert the list of tags to a set of image-ids for the AWS ECR command
         for tag in oldTags:
             image_ids.append("imageTag="+tag)
