@@ -314,7 +314,7 @@ separately. This is included by default in Docker Desktop for Windows and macOS.
 
 #### Python
 
-A Python script, `docker_setup.py` is used to configure the files needed to run
+A Python script, `scripts/docker_setup.py` is used to configure the files needed to run
 _TheCombine_ in Docker containers.
 
 ##### Windows Only
@@ -383,7 +383,7 @@ Run the configuration script in an activated virtual environment to generate
 the necessary configuration files.
 
 ```bash
-(venv) $ python docker_setup.py
+(venv) $ python scripts/docker_setup.py
 
 # To view options, run with --help
 ```
