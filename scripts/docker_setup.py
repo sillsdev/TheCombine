@@ -7,8 +7,8 @@ production environment as possible. The script shall be run from the
 project's root directory.
 
 Tasks:
-    1. Create the following directories:
-        ./nginx/scripts
+    1. Create the following directory:
+        ../nginx/scripts
     2. Build docker-compose.yml from
        roles/combine_config/templates/docker-compose.yml.j2
     3. Create frontend environment file
