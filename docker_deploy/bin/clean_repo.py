@@ -4,7 +4,7 @@
 This script cleans out old docker images from the AWS ECR repository
 
 Assumptions:
-  1. aws-cli is installed (see https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
+  1. aws-cli version 2 is installed (see https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
   2. aws-cli has been configured with the access keys required to read/write to the
      specified repository
 """
