@@ -6,6 +6,7 @@
 [![Backend Coverage][backend-codecov-badge]][codecov]
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
+[![Python Actions Status][github-actions-python-badge]][github-actions]
 [![GitHub release][github-version-badge]][github-version]
 ![Localization][localization-badge]
 [![GitHub][github-license-badge]][github-license]
@@ -16,6 +17,7 @@
 [codecov]: https://codecov.io/gh/sillsdev/TheCombine
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
+[github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
 [lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
 [lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript

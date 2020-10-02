@@ -21,4 +21,6 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: pip install tox
+      - run: tox -e fmt-check
       - run: tox -e lint
+      - run: tox -e mypy
