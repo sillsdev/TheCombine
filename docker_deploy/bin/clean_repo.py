@@ -69,7 +69,7 @@ def run_aws_cmd(aws_cmd: List[str], verbose: bool = False, dry_run: bool = False
             print(aws_results)
         return aws_results
 
-def build_aws_cmd(profile: Optional[str], repo: str, subcommand: str, aws_args: Optional[str] = None) -> List[str]:
+def build_aws_cmd(profile: Optional[str], repo: str, subcommand: str, aws_args: Optional[List[str]] = None) -> List[str]:
     aws_cmd = [ "aws", "ecr" ]
     if profile:
         aws_cmd.append(f"--profile={profile}")
@@ -119,11 +119,11 @@ def main() -> None:
     if old_tags:
         # Convert the list of tags to a set of image-ids for the AWS ECR command
         for tag in old_tags:
-            image_ids.append("imageTag="+tag)
+            image_ids.append(f"imageTag={tag}")
         aws_cmd = build_aws_cmd(args.profile, args.repo, "batch-delete-image", image_ids)
         aws_result = run_aws_cmd(aws_cmd, args.verbose, args.dry_run)
         print(aws_result.stdout)
-        print(aws_result.stderr, file=stderr)
+        print(aws_result.stderr, file=sys.stderr)
     elif args.verbose:
         print("No images/tags were deleted.")
 
