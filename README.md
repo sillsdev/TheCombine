@@ -350,10 +350,23 @@ $ venv/bin/activate
 
 ##### Python Packages
 
-With an active virtual environment, install `Jinja2`:
+With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-(venv) $ python -m pip install Jinja2
+(venv) $ python -m pip --upgrade pip pip-tools
+(venv) $ pip-sync dev-requirements.txt
+```
+
+Note, you can also now perform automated code formatting of Python code:
+
+```bash
+(venv) tox -e fmt
+```
+
+To run all Python linting steps:
+
+```bash
+(venv) tox
 ```
 
 #### Configure Docker
