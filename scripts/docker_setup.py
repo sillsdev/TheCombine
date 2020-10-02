@@ -23,7 +23,7 @@ from pathlib import Path
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-project_dir = Path(__file__).resolve().parent
+project_dir = Path(__file__).resolve().parent.parent
 """Absolute path to the checked out repository."""
 
 
@@ -99,7 +99,7 @@ def main() -> None:
     jinja_env = Environment(
         loader=PackageLoader(
             'docker_setup',
-            str(Path(".") / "docker_deploy" / "roles" / "combine_config" / "templates")
+            str(Path("..") / "docker_deploy" / "roles" / "combine_config" / "templates")
         ),
         autoescape=select_autoescape(['html', 'xml']),
         trim_blocks=True,
