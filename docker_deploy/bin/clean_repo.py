@@ -24,7 +24,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--profile",
-        nargs=1,
+        nargs="?",
         help="AWS user profile to use to connect to AWS ECR"
     )
     parser.add_argument(
@@ -57,7 +57,7 @@ def parse_args() -> argparse.Namespace:
     )
     return parser.parse_args()
 
-def run_aws_cmd(aws_cmd, verbose=False, dry_run=False):
+def run_aws_cmd(aws_cmd: str, verbose: bool = False, dry_run: bool = False) -> subprocess.CompletedProcess:
     if dry_run or verbose:
         print (aws_cmd)
     if dry_run:
@@ -71,7 +71,7 @@ def run_aws_cmd(aws_cmd, verbose=False, dry_run=False):
             print(aws_results)
         return aws_results
 
-def build_aws_cmd(profile: str, repo: , subcommand, aws_args=None):
+def build_aws_cmd(profile: Optional[str], repo: str, subcommand: str, aws_args: Optional[str] = None) -> List[str]:
     aws_cmd = [ "aws", "ecr" ]
     if profile:
         aws_cmd.append("--profile="+profile[0])
@@ -84,7 +84,7 @@ def main() -> None:
     args = parse_args()
 
     # Get a list of the current image tags for the specified repo
-    aws_cmd = build_aws_cmd(args.profile, args.repo, "describe-images")
+    aws_cmd = build_aws_cmd(args.profile, args.repo[0], "describe-images")
     aws_result = run_aws_cmd(aws_cmd, args.verbose)
 
     # Create a list of tags that are not on our list of tags to keep
@@ -122,7 +122,7 @@ def main() -> None:
     # Convert the list of tags to a set of image-ids for the AWS ECR command
         for tag in old_tags:
             image_ids.append("imageTag="+tag)
-        aws_cmd = build_aws_cmd(args.profile, args.repo, "batch-delete-image", image_ids)
+        aws_cmd = build_aws_cmd(args.profile, args.repo[0], "batch-delete-image", image_ids)
         aws_result = run_aws_cmd(aws_cmd, args.verbose, args.dry_run)
         print(aws_result.stdout)
         print(aws_result.stderr, file=sys.stderr)
