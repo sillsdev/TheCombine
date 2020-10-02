@@ -355,7 +355,7 @@ $ source venv/bin/activate
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-(venv) $ python -m pip --upgrade pip pip-tools
+(venv) $ python -m pip install --upgrade pip pip-tools
 (venv) $ pip-sync dev-requirements.txt
 ```
 
