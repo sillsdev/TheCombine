@@ -360,13 +360,19 @@ With an active virtual environment, install Python development requirements for 
 Note, you can also now perform automated code formatting of Python code:
 
 ```bash
-(venv) tox -e fmt
+(venv) $ tox -e fmt
 ```
 
 To run all Python linting steps:
 
 ```bash
-(venv) tox
+(venv) $ tox
+```
+
+To upgrade all pinned dependencies:
+
+```bash
+(venv) $ pip-compile --upgrade dev-requirements.in
 ```
 
 #### Configure Docker
