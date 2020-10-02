@@ -11,9 +11,10 @@ Assumptions:
 
 import argparse
 import json
-import os
 import subprocess
 import re
+from sys import stderr
+from typing import List, Optional
 
 def parse_args() -> argparse.Namespace:
     # Parse user command line arguments
@@ -56,42 +57,42 @@ def parse_args() -> argparse.Namespace:
     )
     return parser.parse_args()
 
-def runAwsCmd(awsCmd, verbose=False, dry_run=False):
+def run_aws_cmd(aws_cmd, verbose=False, dry_run=False):
     if dry_run or verbose:
-        print (awsCmd)
+        print (aws_cmd)
     if dry_run:
         return None
     else:
-        awsResults = subprocess.run(awsCmd,
+        aws_results = subprocess.run(aws_cmd,
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE,
                                     universal_newlines=True)
         if verbose:
-            print(awsResults)
-        return awsResults
+            print(aws_results)
+        return aws_results
 
-def buildAwsCommand(profile, repo, subcommand, awsArgs=None):
-    awsCmd = [ "aws", "ecr" ]
+def build_aws_cmd(profile: str, repo: , subcommand, aws_args=None):
+    aws_cmd = [ "aws", "ecr" ]
     if profile:
-        awsCmd.append("--profile="+profile[0])
-    awsCmd.extend(["--repository-name="+repo[0], "--output=json", subcommand])
-    if awsArgs:
-        awsCmd.extend(awsArgs)
-    return awsCmd
+        aws_cmd.append("--profile="+profile[0])
+    aws_cmd.extend(["--repository-name="+repo[0], "--output=json", subcommand])
+    if aws_args:
+        aws_cmd.extend(aws_args)
+    return aws_cmd
 
 def main() -> None:
     args = parse_args()
 
     # Get a list of the current image tags for the specified repo
-    awsCmd = buildAwsCommand(args.profile, args.repo, "describe-images")
-    awsResult = runAwsCmd(awsCmd, args.verbose)
+    aws_cmd = build_aws_cmd(args.profile, args.repo, "describe-images")
+    aws_result = run_aws_cmd(aws_cmd, args.verbose)
 
     # Create a list of tags that are not on our list of tags to keep
-    oldTags = []
+    old_tags = []
 
-    # Load the JSON output of the describe-images command into a 'repoImages'
+    # Load the JSON output of the describe-images command into a 'repo_images'
     # dictionary
-    repoImages = json.loads(awsResult.stdout)
+    repo_images = json.loads(aws_result.stdout)
 
     # Initialize list of images to be removed with the option name for the
     # aws ecr command
@@ -99,32 +100,35 @@ def main() -> None:
 
     # Join patterns of tags to keep to a single regular expression
     keep_pattern = ''
-    if args.keep_pattern != None:
+    if args.keep_pattern is not None:
         keep_pattern = '^(?:% s)$' % '|'.join(args.keep_pattern)
         if args.verbose:
             print("keep_pattern: ", keep_pattern)
 
     # Iterate over image descriptions returned by AWS
-    for imageStruct in repoImages['imageDetails']:
+    for image_struct in repo_images['imageDetails']:
         # check to see if each tag should be kept
-        for tag in imageStruct['imageTags']:
+        for tag in image_struct['imageTags']:
             if args.verbose:
-                print("Testing tag: ", tag, " from ", imageStruct['imagePushedAt'])
+                print("Testing tag: ", tag, " from ", image_struct['imagePushedAt'])
             # check to see if there are patterns to test
             if keep_pattern and not re.match(keep_pattern, tag):
                 # now check to see if it matches any exact tags specified
                 if not args.keep or tag not in args.keep:
-                    oldTags.append(tag)
+                    old_tags.append(tag)
 
     # Remove all the specified image(s)
-    if oldTags:
+    if old_tags:
     # Convert the list of tags to a set of image-ids for the AWS ECR command
-        for tag in oldTags:
+        for tag in old_tags:
             image_ids.append("imageTag="+tag)
-        awsCmd = buildAwsCommand(args.profile, args.repo, "batch-delete-image", image_ids)
-        awsResult = runAwsCmd(awsCmd, args.verbose, args.dry_run)
+        aws_cmd = build_aws_cmd(args.profile, args.repo, "batch-delete-image", image_ids)
+        aws_result = run_aws_cmd(aws_cmd, args.verbose, args.dry_run)
+        print(aws_result.stdout)
+        print(aws_result.stderr, file=sys.stderr)
     elif args.verbose:
         print("No images/tags were deleted.")
-# Standard boilerplate to call main().
+
+
 if __name__ == '__main__':
     main()
