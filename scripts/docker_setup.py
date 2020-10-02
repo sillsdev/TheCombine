@@ -7,8 +7,8 @@ production environment as possible. The script shall be run from the
 project's root directory.
 
 Tasks:
-    1. Create the following directories:
-        ./nginx/scripts
+    1. Create the following directory:
+        ../nginx/scripts
     2. Build docker-compose.yml from
        roles/combine_config/templates/docker-compose.yml.j2
     3. Create frontend environment file
@@ -23,7 +23,7 @@ from pathlib import Path
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-project_dir = Path(__file__).resolve().parent
+project_dir = Path(__file__).resolve().parent.parent
 """Absolute path to the checked out repository."""
 
 
@@ -99,7 +99,7 @@ def main() -> None:
     jinja_env = Environment(
         loader=PackageLoader(
             'docker_setup',
-            str(Path(".") / "docker_deploy" / "roles" / "combine_config" / "templates")
+            str(Path("..") / "docker_deploy" / "roles" / "combine_config" / "templates")
         ),
         autoescape=select_autoescape(['html', 'xml']),
         trim_blocks=True,
