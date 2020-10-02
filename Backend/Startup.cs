@@ -278,6 +278,7 @@ namespace BackendFramework
                     throw new AdminUserCreationException();
                 }
 
+                existingUser.Avatar = "";
                 existingUser.IsAdmin = true;
                 if (userService.Update(existingUser.Id, existingUser, true).Result == ResultOfUpdate.NotFound)
                 {

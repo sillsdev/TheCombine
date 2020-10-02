@@ -164,9 +164,10 @@ namespace BackendFramework.Services
                 return null;
             }
 
-            // Remove password and avatar filepath before returning
+            // Remove avatar filepath and password before returning
+            // .Avatar set to "" will not be updated in the database
+            user.Avatar = "";
             user.Password = "";
-            user.Avatar = string.IsNullOrEmpty(user.Avatar) ? "" : "1";
 
             return user;
         }
@@ -177,6 +178,7 @@ namespace BackendFramework.Services
             var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
             return users.Select(c =>
             {
+                // Remove avatar filepath, password, and token before returning
                 c.Avatar = string.IsNullOrEmpty(c.Avatar) ? "" : "1";
                 c.Password = "";
                 c.Token = "";
@@ -201,7 +203,10 @@ namespace BackendFramework.Services
             var userList = await _userDatabase.Users.FindAsync(filter);
 
             var user = userList.FirstOrDefault();
-            user.Avatar = string.IsNullOrEmpty(user.Avatar) ? "" : "1";
+
+            // Remove avatar filepath, password, and token before returning
+            // .Avatar or .Token set to "" will not be updated in the database
+            user.Avatar = "";
             user.Password = "";
             user.Token = "";
             return user;
@@ -263,9 +268,8 @@ namespace BackendFramework.Services
             user.Password = Convert.ToBase64String(hash);
             await _userDatabase.Users.InsertOneAsync(user);
 
-            // Important, don't send plaintext password back to user.
+            // Important, don't send password back to user.
             user.Password = "";
-            user.Avatar = string.IsNullOrEmpty(user.Avatar) ? "" : "1";
 
             return user;
         }
@@ -296,11 +300,12 @@ namespace BackendFramework.Services
                 .Set(x => x.Username, user.Username)
                 .Set(x => x.UILang, user.UILang);
 
+            // If .Avatar or .Token has been set to null or "",
+            // this prevents it from being erased in the database
             if (!string.IsNullOrEmpty(user.Avatar))
             {
                 updateDef = updateDef.Set(x => x.Avatar, user.Avatar);
             }
-
             if (!string.IsNullOrEmpty(user.Token))
             {
                 updateDef = updateDef.Set(x => x.Token, user.Token);
