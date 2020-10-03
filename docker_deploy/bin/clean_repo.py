@@ -16,7 +16,10 @@ import json
 import re
 import subprocess
 import sys
-from typing import Dict, List, Optional, Unknown
+from typing import Dict, List, Optional, Union
+
+# Type definitions for results from AWS "describe-images"
+AwsJsonResult = Dict[str, List[Dict[str, Union[str, List[str]]]]]
 
 
 def parse_args() -> argparse.Namespace:
@@ -54,6 +57,7 @@ def parse_args() -> argparse.Namespace:
 def run_aws_cmd(
     aws_cmd: List[str], verbose: bool = False, dry_run: bool = False
 ) -> Optional[subprocess.CompletedProcess]:
+
     if dry_run or verbose:
         print(aws_cmd)
     if dry_run:
@@ -70,6 +74,7 @@ def run_aws_cmd(
 def build_aws_cmd(
     profile: Optional[str], repo: str, subcommand: str, aws_args: Optional[List[str]] = None
 ) -> List[str]:
+
     aws_cmd = ["aws", "ecr"]
     if profile:
         aws_cmd.append(f"--profile={profile}")
@@ -80,9 +85,6 @@ def build_aws_cmd(
 
 
 def main() -> None:
-
-    # Type definitions for results from AWS "describe-images"
-    AwsJsonResult = Dict[str, List[Dict[str, Union[str, List[str]]]]]
 
     args = parse_args()
 
