@@ -84,9 +84,6 @@ def main() -> None:
     aws_cmd = build_aws_cmd(args.profile, args.repo, "describe-images")
     aws_result = run_aws_cmd(aws_cmd, args.verbose)
 
-    # Create a list of tags that are not on our list of tags to keep
-    old_tags: List[str] = []
-
     # Load the JSON output of the describe-images command into a 'repo_images'
     # dictionary
     repo_images: AwsJsonResult = json.loads(aws_result.stdout)
@@ -97,6 +94,9 @@ def main() -> None:
         keep_pattern = "^(?:% s)$" % "|".join(args.keep_pattern)
         if args.verbose:
             print(f"keep_pattern: {keep_pattern}")
+
+    # Create a list of tags that are not on our list of tags to keep
+    old_tags: List[str] = []
 
     # Iterate over image descriptions returned by AWS
     for image_struct in repo_images["imageDetails"]:
