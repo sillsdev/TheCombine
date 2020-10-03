@@ -56,7 +56,11 @@ def parse_args() -> argparse.Namespace:
 def run_aws_cmd(aws_cmd: List[str], verbose: bool = False) -> subprocess.CompletedProcess:
 
     aws_results = subprocess.run(
-        aws_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True
+        aws_cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+        check=True,
     )
     if verbose:
         print(aws_results)
@@ -123,7 +127,7 @@ def main() -> None:
         if args.dry_run:
             print(f"AWS Command: {aws_cmd}")
         else:
-            aws_result = run_aws_cmd(aws_cmd, args.verbose)
+            run_aws_cmd(aws_cmd, args.verbose)
     elif args.verbose:
         print("No images/tags were deleted.")
 
