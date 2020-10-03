@@ -136,8 +136,9 @@ def main() -> None:
         elif args.verbose:
             print("No images/tags were deleted.")
     else:
-        cmdStr: str = " ".join(aws_cmd)
-        print(f"Error: Failed to run \"{cmdStr}\"", file=sys.stderr)
+        cmd_str: str = " ".join(aws_cmd)
+        print(f'Error: Failed to run "{cmd_str}"', file=sys.stderr)
+
 
 if __name__ == "__main__":
     main()
