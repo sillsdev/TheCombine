@@ -97,44 +97,47 @@ def main() -> None:
 
     # Load the JSON output of the describe-images command into a 'repo_images'
     # dictionary
-    repo_images: AwsJsonResult = json.loads(aws_result.stdout)
+    if aws_result is not None:
+        repo_images: AwsJsonResult = json.loads(aws_result.stdout)
 
-    # Join patterns of tags to keep to a single regular expression
-    keep_pattern: str = ""
-    if args.keep_pattern is not None:
-        keep_pattern = "^(?:% s)$" % "|".join(args.keep_pattern)
-        if args.verbose:
-            print(f"keep_pattern: {keep_pattern}")
-
-    # Iterate over image descriptions returned by AWS
-    for image_struct in repo_images["imageDetails"]:
-        # check to see if each tag should be kept
-        for tag in image_struct["imageTags"]:
+        # Join patterns of tags to keep to a single regular expression
+        keep_pattern: str = ""
+        if args.keep_pattern is not None:
+            keep_pattern = "^(?:% s)$" % "|".join(args.keep_pattern)
             if args.verbose:
-                print(f"Testing tag: {tag} from {image_struct['imagePushedAt']}")
-            # check to see if there are patterns to test
-            if keep_pattern and not re.match(keep_pattern, tag):
-                # now check to see if it matches any exact tags specified
-                if not args.keep or tag not in args.keep:
-                    old_tags.append(tag)
+                print(f"keep_pattern: {keep_pattern}")
 
-    # Remove all the specified image(s)
-    if len(old_tags) > 0:
-        # Initialize list of images to be removed with the option name for the
-        # aws ecr command
-        image_ids: List[str] = ["--image-ids"]
+        # Iterate over image descriptions returned by AWS
+        for image_struct in repo_images["imageDetails"]:
+            # check to see if each tag should be kept
+            for tag in image_struct["imageTags"]:
+                if args.verbose:
+                    print(f"Testing tag: {tag} from {image_struct['imagePushedAt']}")
+                # check to see if there are patterns to test
+                if keep_pattern and not re.match(keep_pattern, tag):
+                    # now check to see if it matches any exact tags specified
+                    if not args.keep or tag not in args.keep:
+                        old_tags.append(tag)
 
-        # Convert the list of tags to a set of image-ids for the AWS ECR command
-        for tag in old_tags:
-            image_ids.append(f"imageTag={tag}")
-        aws_cmd = build_aws_cmd(args.profile, args.repo, "batch-delete-image", image_ids)
-        aws_result = run_aws_cmd(aws_cmd, args.verbose, args.dry_run)
-        if aws_result is not None:
-            print(aws_result.stdout)
-            print(aws_result.stderr, file=sys.stderr)
-    elif args.verbose:
-        print("No images/tags were deleted.")
+        # Remove all the specified image(s)
+        if len(old_tags) > 0:
+            # Initialize list of images to be removed with the option name for the
+            # aws ecr command
+            image_ids: List[str] = ["--image-ids"]
 
+            # Convert the list of tags to a set of image-ids for the AWS ECR command
+            for tag in old_tags:
+                image_ids.append(f"imageTag={tag}")
+            aws_cmd = build_aws_cmd(args.profile, args.repo, "batch-delete-image", image_ids)
+            aws_result = run_aws_cmd(aws_cmd, args.verbose, args.dry_run)
+            if aws_result is not None:
+                print(aws_result.stdout)
+                print(aws_result.stderr, file=sys.stderr)
+        elif args.verbose:
+            print("No images/tags were deleted.")
+    else:
+        cmdStr: str = " ".join(aws_cmd)
+        print(f"Error: Failed to run \"{cmdStr}\"", file=sys.stderr)
 
 if __name__ == "__main__":
     main()
