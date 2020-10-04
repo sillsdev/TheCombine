@@ -170,7 +170,6 @@ describe("Test ResetPage", () => {
         isPasswordConfirmed: true,
       },
       () => {
-        var resetPage = testRenderer.root.findAllByType(PasswordReset)[0];
         // check errors showup
         var resetFailErrors = testRenderer.root.findAllByProps({
           id: "passwordReset.resetFail",
