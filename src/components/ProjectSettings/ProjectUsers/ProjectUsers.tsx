@@ -84,7 +84,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
             // for loop rather than .forEach forces each await to finish
             for (let i = 0; i < returnedUsers.length; i++) {
               u = returnedUsers[i];
-              if (u.avatar) {
+              if (u.hasAvatar) {
                 userAvatar[u.id] = await backend.avatarSrc(u.id);
               }
             }

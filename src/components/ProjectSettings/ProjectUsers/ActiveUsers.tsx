@@ -43,7 +43,7 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
         // for loop rather than .forEach forces each await to finish
         for (let i = 0; i < projUsers.length; i++) {
           u = projUsers[i];
-          if (u.avatar) {
+          if (u.hasAvatar) {
             userAvatar[u.id] = await avatarSrc(u.id);
           }
         }

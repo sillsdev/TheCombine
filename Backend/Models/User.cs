@@ -15,6 +15,9 @@ namespace BackendFramework.Models
         [BsonElement("avatar")]
         public string Avatar { get; set; }
 
+        [BsonElement("hasAvatar")]
+        public Boolean HasAvatar { get; set; }
+
         [BsonElement("name")]
         public string Name { get; set; }
 
@@ -62,6 +65,7 @@ namespace BackendFramework.Models
         {
             Id = "";
             Avatar = "";
+            HasAvatar = false;
             Name = "";
             Email = "";
             Phone = "";
@@ -82,6 +86,7 @@ namespace BackendFramework.Models
             {
                 Id = Id.Clone() as string,
                 Avatar = Avatar.Clone() as string,
+                HasAvatar = HasAvatar,
                 Name = Name.Clone() as string,
                 Email = Email.Clone() as string,
                 Phone = Phone.Clone() as string,
@@ -113,6 +118,7 @@ namespace BackendFramework.Models
             return
                 other.Id.Equals(Id) &&
                 other.Avatar.Equals(Avatar) &&
+                other.HasAvatar.Equals(HasAvatar) &&
                 other.Name.Equals(Name) &&
                 other.Email.Equals(Email) &&
                 other.Phone.Equals(Phone) &&
@@ -145,6 +151,7 @@ namespace BackendFramework.Models
             var hash = new HashCode();
             hash.Add(Id);
             hash.Add(Avatar);
+            hash.Add(HasAvatar);
             hash.Add(Name);
             hash.Add(Email);
             hash.Add(Phone);

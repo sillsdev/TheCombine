@@ -17,5 +17,6 @@ namespace BackendFramework.Interfaces
         Task<User> Authenticate(string username, string password);
         Task<User> MakeJwt(User user);
         Task<ResultOfUpdate> ChangePassword(string userId, string password);
+        void Sanitize(User user);
     }
 }

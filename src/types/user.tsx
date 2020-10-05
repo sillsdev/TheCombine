@@ -3,6 +3,7 @@ import { Hash } from "../goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
 export class User {
   id: string;
   avatar: string;
+  hasAvatar: boolean;
   name: string;
   email: string;
   phone: string;
@@ -19,6 +20,7 @@ export class User {
   constructor(name: string, username: string, password: string) {
     this.id = "";
     this.avatar = "";
+    this.hasAvatar = false;
     this.name = name;
     this.email = "";
     this.phone = "";
