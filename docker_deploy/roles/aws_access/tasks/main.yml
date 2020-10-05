@@ -37,16 +37,16 @@
   file:
     path: "{{ aws_config_dir }}"
     state: directory
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
+    owner: "{{ aws_user }}"
+    group: "{{ aws_group }}"
     mode: 0700
 
 - name: set aws configuration
   template:
     src: "{{ item }}.j2"
     dest: "{{ aws_config_dir }}/{{ item }}"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
+    owner: "{{ aws_user }}"
+    group: "{{ aws_group }}"
     mode: 0600
   with_items:
     - config
