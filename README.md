@@ -6,6 +6,7 @@
 [![Backend Coverage][backend-codecov-badge]][codecov]
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
+[![Python Actions Status][github-actions-python-badge]][github-actions]
 [![GitHub release][github-version-badge]][github-version]
 ![Localization][localization-badge]
 [![GitHub][github-license-badge]][github-license]
@@ -16,6 +17,7 @@
 [codecov]: https://codecov.io/gh/sillsdev/TheCombine
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
+[github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
 [lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
 [lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
@@ -312,7 +314,7 @@ separately. This is included by default in Docker Desktop for Windows and macOS.
 
 #### Python
 
-A Python script, `docker_setup.py` is used to configure the files needed to run
+A Python script, `scripts/docker_setup.py` is used to configure the files needed to run
 _TheCombine_ in Docker containers.
 
 ##### Windows Only
@@ -345,16 +347,39 @@ Create an isolated Python virtual environment
 
 ```bash
 $ python3 -m venv venv
-$ venv/bin/activate
+$ source venv/bin/activate
 ```
 
 ##### Python Packages
 
-With an active virtual environment, install `Jinja2`:
+With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-(venv) $ python -m pip install Jinja2
+(venv) $ python -m pip install --upgrade pip pip-tools
+(venv) $ pip-sync dev-requirements.txt
 ```
+
+Note, you can also now perform automated code formatting of Python code:
+
+```bash
+(venv) $ tox -e fmt
+```
+
+To run all Python linting steps:
+
+```bash
+(venv) $ tox
+```
+
+To upgrade all pinned dependencies, run the following command under Python 3.6 so the 
+requirements are backwards-compatible.
+
+```bash
+(venv) $ pip-compile --upgrade dev-requirements.in
+```
+
+Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work 
+around a pinning issue with supporting Python 3.6 and 3.7+.
 
 #### Configure Docker
 
@@ -362,7 +387,7 @@ Run the configuration script in an activated virtual environment to generate
 the necessary configuration files.
 
 ```bash
-(venv) $ python docker_setup.py
+(venv) $ python scripts/docker_setup.py
 
 # To view options, run with --help
 ```
