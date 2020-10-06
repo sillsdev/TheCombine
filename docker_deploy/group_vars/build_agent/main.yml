@@ -1,0 +1,7 @@
+---
+
+aws_user: teamcity
+aws_group: teamcity
+
+my_aws_profiles:
+  - ecr_read_write
