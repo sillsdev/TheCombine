@@ -157,6 +157,9 @@ namespace BackendFramework.Services
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            // Sanitize user to remove password, avatar path, and old token
+            // Then add updated token.
             Sanitize(user);
             user.Token = tokenHandler.WriteToken(token);
 
