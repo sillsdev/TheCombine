@@ -13,10 +13,10 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import theme from "../../../../../types/theme";
-import { Sense, Word } from "../../../../../types/word";
-import DomainCell from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import { parseWord } from "../../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import theme from "../../../../types/theme";
+import { Sense, Word } from "../../../../types/word";
+import DomainCell from "../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import { parseWord } from "../../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 function SenseDialog(
   props: {
