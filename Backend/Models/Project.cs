@@ -79,6 +79,7 @@ namespace BackendFramework.Models
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
                 IsActive = IsActive,
+                AutocompleteSetting = AutocompleteSetting,
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
                 SemanticDomains = new List<SemanticDomain>(),
                 AnalysisWritingSystems = new List<WritingSystem>(),
@@ -132,6 +133,7 @@ namespace BackendFramework.Models
                 other.Name.Equals(Name) &&
                 other.IsActive.Equals(IsActive) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
+                other.AutocompleteSetting.Equals(AutocompleteSetting) &&
 
                 other.SemanticDomains.Count == SemanticDomains.Count &&
                 other.SemanticDomains.All(SemanticDomains.Contains) &&
@@ -209,13 +211,10 @@ namespace BackendFramework.Models
         public string Token { get; set; }
         public DateTime ExpireTime { get; set; }
 
-        public EmailInvite()
-        {
-
-        }
-
         private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
         private const int TokenSize = 8;
+
+        public EmailInvite() { }
 
         public EmailInvite(int expireTime)
         {
@@ -309,8 +308,6 @@ namespace BackendFramework.Models
     public class ProjectWithUser : Project
     {
         public User UpdatedUser;
-
-        public ProjectWithUser() { }
 
         public ProjectWithUser(Project baseObj)
         {
