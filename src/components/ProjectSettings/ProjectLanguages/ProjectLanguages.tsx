@@ -2,12 +2,11 @@ import { Button, Grid, Typography } from "@material-ui/core";
 import { Add, ArrowUpward, Clear, Done } from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import { updateProject } from "../../../backend";
-import { Project } from "../../../types/project";
+import { Project, WritingSystem } from "../../../types/project";
 import theme from "../../../types/theme";
-import { ImmutableWritingSystem } from "./EditableWritingSystem";
 
 interface LanguageProps {
   project: Project;
@@ -20,11 +19,11 @@ interface LanguageState {
   font: string;
 }
 
-class ProjectLanguages extends React.Component<
-  LanguageProps & LocalizeContextProps,
+export default class ProjectLanguages extends React.Component<
+  LanguageProps,
   LanguageState
 > {
-  constructor(props: LanguageProps & LocalizeContextProps) {
+  constructor(props: LanguageProps) {
     super(props);
     this.state = this.defaultState;
   }
@@ -76,14 +75,14 @@ class ProjectLanguages extends React.Component<
     return (
       <React.Fragment>
         <Typography>
-          {this.props.translate("projectSettings.language.vernacular")}
+          <Translate id="projectSettings.language.vernacular" />
           {": "}
           <ImmutableWritingSystem
             ws={this.props.project.vernacularWritingSystem}
           />
         </Typography>
         <Typography style={{ marginTop: theme.spacing(1) }}>
-          {this.props.translate("projectSettings.language.analysis")}
+          <Translate id="projectSettings.language.analysis" />
           {": "}
           {this.props.project.analysisWritingSystems.map(
             (writingSystem, index) => (
@@ -135,4 +134,44 @@ class ProjectLanguages extends React.Component<
   }
 }
 
-export default withLocalize(ProjectLanguages);
+interface ImmutableWritingSystemProps {
+  ws: WritingSystem;
+  index?: number;
+  icon?: any;
+  iconAction?: () => void;
+}
+
+export class ImmutableWritingSystem extends React.Component<
+  ImmutableWritingSystemProps
+> {
+  render() {
+    return (
+      <Grid container spacing={1}>
+        {this.props.index !== undefined && (
+          <Grid item>{`${this.props.index + 1}. `}</Grid>
+        )}
+        <Grid item>
+          <Translate id="projectSettings.language.name" />
+          {": "}
+          {this.props.ws.name} {", "}
+        </Grid>
+        <Grid item>
+          <Translate id="projectSettings.language.bcp47" />
+          {": "}
+          {this.props.ws.bcp47}
+          {", "}
+        </Grid>
+        <Grid item>
+          <Translate id="projectSettings.language.font" />
+          {": "}
+          {this.props.ws.font}
+        </Grid>
+        {this.props.icon ? (
+          <Grid item>
+            <Button onClick={this.props.iconAction}>{this.props.icon}</Button>
+          </Grid>
+        ) : null}
+      </Grid>
+    );
+  }
+}
