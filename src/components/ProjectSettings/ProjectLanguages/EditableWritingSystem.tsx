@@ -2,11 +2,7 @@ import { Grid, Button } from "@material-ui/core";
 import { Check, Clear, Edit } from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import { WritingSystem } from "../../../types/project";
 
@@ -23,11 +19,11 @@ interface EditableWritingSystemState {
   edit: boolean;
 }
 
-class EditableWritingSystem extends React.Component<
-  EditableWritingSystemProps & LocalizeContextProps,
+export default class EditableWritingSystem extends React.Component<
+  EditableWritingSystemProps,
   EditableWritingSystemState
 > {
-  constructor(props: EditableWritingSystemProps & LocalizeContextProps) {
+  constructor(props: EditableWritingSystemProps) {
     super(props);
     this.state = { ...props.ws, edit: false };
   }
@@ -133,5 +129,3 @@ export class ImmutableWritingSystem extends React.Component<
     );
   }
 }
-
-export default withLocalize(EditableWritingSystem);

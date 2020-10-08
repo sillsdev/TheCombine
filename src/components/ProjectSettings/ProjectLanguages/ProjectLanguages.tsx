@@ -1,85 +1,135 @@
-import { Button, Typography } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { Button, Grid, Typography } from "@material-ui/core";
+import { Add, ArrowUpward, Clear, Done } from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import { updateProject } from "../../../backend";
-import { Project, WritingSystem } from "../../../types/project";
+import { Project } from "../../../types/project";
 import theme from "../../../types/theme";
-import EditableWritingSystem, {
-  ImmutableWritingSystem,
-} from "./EditableWritingSystem";
+import { ImmutableWritingSystem } from "./EditableWritingSystem";
 
 interface LanguageProps {
   project: Project;
 }
 
-interface LanguageStates {
-  add?: boolean;
+interface LanguageState {
+  add: boolean;
+  name: string;
+  bcp47: string;
+  font: string;
 }
 
 class ProjectLanguages extends React.Component<
   LanguageProps & LocalizeContextProps,
-  LanguageStates
+  LanguageState
 > {
-  updateProjectWritingSystem(ws: WritingSystem, index?: number) {
-    let updatedProject: Project;
-    if (index === undefined) {
-      updatedProject = { ...this.props.project, vernacularWritingSystem: ws };
-    } else {
-      const updatedAnalysisWS: WritingSystem[] = [
-        ...this.props.project.analysisWritingSystems,
-      ];
-      updatedAnalysisWS[index] = ws;
-      updatedProject = {
-        ...this.props.project,
-        analysisWritingSystems: updatedAnalysisWS,
-      };
-    }
+  constructor(props: LanguageProps & LocalizeContextProps) {
+    super(props);
+    this.state = this.defaultState;
+  }
 
-    updateProject(updatedProject).catch(() =>
-      console.log("failed: " + updatedProject)
+  private defaultState: LanguageState = {
+    add: false,
+    name: "",
+    bcp47: "",
+    font: "",
+  };
+
+  setNewAnalysisDefault(index: number) {
+    const newDefault = this.props.project.analysisWritingSystems.splice(
+      index,
+      1
+    )[0];
+    this.props.project.analysisWritingSystems.splice(0, 0, newDefault);
+    updateProject(this.props.project)
+      .then(() => this.resetState())
+      .catch((err) => console.error(err));
+  }
+
+  addAnalysisWritingSystem() {
+    const ws = {
+      name: this.state.name,
+      bcp47: this.state.bcp47,
+      font: this.state.font,
+    };
+    this.props.project.analysisWritingSystems.push(ws);
+    updateProject(this.props.project)
+      .then(() => this.resetState())
+      .catch((err) => console.error(err));
+  }
+
+  isNewWritingSystem() {
+    return (
+      this.state.bcp47 &&
+      !this.props.project.analysisWritingSystems
+        .map((ws) => ws.bcp47)
+        .includes(this.state.bcp47)
     );
   }
 
-  toggleAdd() {
-    const add = !this.state.add;
-    this.setState({ add });
+  resetState() {
+    this.setState(this.defaultState);
   }
 
   render() {
     return (
       <React.Fragment>
         <Typography>
-          <Translate id="projectSettings.language.vernacular" />
+          {this.props.translate("projectSettings.language.vernacular")}
           {": "}
           <ImmutableWritingSystem
             ws={this.props.project.vernacularWritingSystem}
           />
         </Typography>
         <Typography style={{ marginTop: theme.spacing(1) }}>
-          <Translate id="projectSettings.language.analysis" />
+          {this.props.translate("projectSettings.language.analysis")}
           {": "}
           {this.props.project.analysisWritingSystems.map(
             (writingSystem, index) => (
-              <EditableWritingSystem
+              <ImmutableWritingSystem
+                key={index}
                 ws={writingSystem}
                 index={index}
-                update={this.updateProjectWritingSystem}
+                icon={index && <ArrowUpward fontSize="inherit" />}
+                iconAction={() => this.setNewAnalysisDefault(index)}
               />
             )
           )}
-          {this.state.add ? null : (
-            <Button onClick={() => this.toggleAdd()}>
-              <Add />
-            </Button>
-          )}
         </Typography>
+        {this.state.add ? (
+          <Grid container spacing={1} alignItems="center">
+            <Grid item>
+              <LanguagePicker
+                value={this.state.name}
+                setCode={(bcp47: string) => this.setState({ bcp47 })}
+                name={this.state.bcp47}
+                setName={(name: string) => this.setState({ name })}
+                font={this.state.font}
+                setFont={(font: string) => this.setState({ font })}
+                t={languagePickerStrings_en}
+              />
+            </Grid>{" "}
+            <Grid item>
+              <Button
+                size="large"
+                disabled={!this.isNewWritingSystem()}
+                onClick={() => this.addAnalysisWritingSystem()}
+              >
+                <Done />
+              </Button>
+            </Grid>{" "}
+            <Grid item>
+              <Button size="large" onClick={() => this.resetState()}>
+                <Clear />
+              </Button>
+            </Grid>
+          </Grid>
+        ) : (
+          <Button onClick={() => this.setState({ add: true })}>
+            <Add />
+          </Button>
+        )}
       </React.Fragment>
     );
   }
