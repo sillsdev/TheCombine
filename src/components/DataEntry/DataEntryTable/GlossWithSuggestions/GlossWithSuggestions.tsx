@@ -1,11 +1,7 @@
 import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import SpellChecker from "../../spellChecker";
 
@@ -16,6 +12,7 @@ interface GlossWithSuggestionsProps {
   updateGlossField: (newValue: string) => void;
   handleEnterAndTab: (e: React.KeyboardEvent) => void;
   onBlur?: () => void;
+  analysisLang: string;
 }
 
 /**
@@ -25,7 +22,13 @@ export class GlossWithSuggestions extends React.Component<
   GlossWithSuggestionsProps & LocalizeContextProps
 > {
   readonly maxSuggestions = 5;
-  spellChecker = new SpellChecker();
+  spellChecker = new SpellChecker(this.props.analysisLang);
+
+  componentDidUpdate(prevProps: GlossWithSuggestionsProps) {
+    if (prevProps.analysisLang !== this.props.analysisLang) {
+      this.spellChecker = new SpellChecker(this.props.analysisLang);
+    }
+  }
 
   render() {
     return (
@@ -55,7 +58,9 @@ export class GlossWithSuggestions extends React.Component<
             {...params}
             fullWidth
             inputRef={this.props.glossInput}
-            label={this.props.isNew ? <Translate id="addWords.glosses" /> : ""}
+            label={
+              this.props.isNew ? this.props.translate("addWords.gloss") : ""
+            }
             variant={this.props.isNew ? "outlined" : "standard"}
           />
         )}

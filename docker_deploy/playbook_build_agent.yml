@@ -1,0 +1,40 @@
+---
+##############################################################
+# Playbook: playbook_build_agent.yml
+#
+# playbook_build_agent.yml installs the packages and
+# configuration files that are required to build TheCombine
+# in the TeamCity environment.
+#
+##############################################################
+
+- name: Setup TeamCity build agent for TheCombine
+  hosts: build_agent
+  gather_facts: yes
+  become: yes
+
+  vars_files:
+    - "vars/config_common.yml"
+    - "vars/packages.yml"
+    - "vars/vault_config.yml"
+    # The aws_credentials allows us to use a different vault file to specify the
+    # AWS credentials while testing.  By default, vars/aws.yml is used.  To
+    # use a different file, such as _test_aws.yml, add the following to your
+    # ansible-playbook command:
+    #   -e "ansible_credentials=_test_aws.yml"
+    - "vars/{{ aws_credentials | default('aws.yml',true) }}"
+
+  tasks:
+    - name: install required packages dependencies
+      import_role:
+        name: package_install
+
+    - name: install docker subsystem
+      import_role:
+        name: docker_install
+
+    - name: setup AWS access
+      import_role:
+        name: aws_access
+      tags:
+        - aws

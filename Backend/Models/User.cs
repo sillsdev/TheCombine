@@ -132,12 +132,11 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            if (!(obj is User other) || GetType() != obj.GetType())
             {
                 return false;
             }
 
-            var other = obj as User;
             return other.Id.Equals(Id) && ContentEquals(other);
         }
 
@@ -166,5 +165,13 @@ namespace BackendFramework.Models
     {
         public string Username { get; set; }
         public string Password { get; set; }
+    }
+
+    /// <summary> Contains UpdatedUser for Axios interceptor. </summary>
+    public class WithUser
+    {
+        public User UpdatedUser;
+
+        public WithUser() { }
     }
 }

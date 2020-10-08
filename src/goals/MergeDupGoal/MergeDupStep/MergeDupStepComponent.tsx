@@ -3,36 +3,37 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
+  Drawer,
   Grid,
   GridList,
   GridListTile,
   IconButton,
-  Typography,
-  Chip,
-  Drawer,
   Paper,
+  Typography,
 } from "@material-ui/core";
+import { ArrowForwardIos } from "@material-ui/icons";
 import React from "react";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "react-beautiful-dnd";
 import {
   LocalizeContextProps,
   Translate,
   withLocalize,
 } from "react-localize-redux";
+
 import theme from "../../../types/theme";
 import { uuid } from "../../../utilities";
 import {
-  TreeDataSense,
   MergeTreeReference,
   MergeTreeWord,
+  TreeDataSense,
 } from "./MergeDupsTree";
 import MergeRow from "./MergeRow";
-import {
-  Droppable,
-  Draggable,
-  DragDropContext,
-  DropResult,
-} from "react-beautiful-dnd";
-import { ArrowForwardIos } from "@material-ui/icons";
 
 export interface SideBar {
   senses: { id: string; data: TreeDataSense }[];
@@ -57,7 +58,6 @@ export interface MergeDupStepProps {
 export interface MergeDupStepState {
   portrait: boolean;
   sideBar: SideBar;
-  colCount: number;
 }
 
 class MergeDupStep extends React.Component<
@@ -67,7 +67,6 @@ class MergeDupStep extends React.Component<
   constructor(props: MergeDupStepProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      colCount: 2,
       portrait: true,
       sideBar: { senses: [], wordID: "WORD", senseID: "SENSE" },
     };
@@ -76,11 +75,11 @@ class MergeDupStep extends React.Component<
     }
   }
 
+  clearSideBar() {
+    this.setState({ sideBar: { senses: [], wordID: "", senseID: "" } });
+  }
   next() {
-    this.setState({
-      ...this.state,
-      sideBar: { senses: [], wordID: "", senseID: "" },
-    });
+    this.clearSideBar();
     if (this.props.advanceStep) {
       this.props.advanceStep();
     }
@@ -89,10 +88,7 @@ class MergeDupStep extends React.Component<
     }
   }
   saveContinue() {
-    this.setState({
-      ...this.state,
-      sideBar: { senses: [], wordID: "", senseID: "" },
-    });
+    this.clearSideBar();
     if (this.props.mergeAll) {
       this.props.mergeAll().then(() => {
         this.next();
@@ -184,14 +180,7 @@ class MergeDupStep extends React.Component<
               */
               style={{ padding: 30, paddingTop: 64 + 30 }}
             >
-              <IconButton
-                onClick={() =>
-                  this.setState({
-                    ...this.state,
-                    sideBar: { senses: [], senseID: "", wordID: "" },
-                  })
-                }
-              >
+              <IconButton onClick={() => this.clearSideBar()}>
                 <ArrowForwardIos />
               </IconButton>
               <Typography variant="h5">
@@ -276,9 +265,7 @@ class MergeDupStep extends React.Component<
                 <GridListTile key={key} style={{ height: "70vh", margin: 8 }}>
                   <MergeRow
                     sideBar={this.state.sideBar}
-                    setSidebar={(el) =>
-                      this.setState({ ...this.state, sideBar: el })
-                    }
+                    setSidebar={(el) => this.setState({ sideBar: el })}
                     portrait={this.state.portrait}
                     wordID={key}
                   />
@@ -287,7 +274,7 @@ class MergeDupStep extends React.Component<
               <GridListTile key={newId} style={{ margin: 8 }}>
                 <MergeRow
                   sideBar={this.state.sideBar}
-                  setSidebar={(_) => {}}
+                  setSidebar={() => {}}
                   portrait={this.state.portrait}
                   wordID={newId}
                 />

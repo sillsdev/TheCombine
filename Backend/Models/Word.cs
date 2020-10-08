@@ -15,6 +15,13 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        /// <summary>
+        /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word edits.
+        /// </summary>
+        /// <remarks>Only nullable for legacy, can be removed once all projects are updated.</remarks>
+        [BsonElement("guid")]
+        public Guid? Guid { get; set; }
+
         [BsonElement("vernacular")]
         public string Vernacular { get; set; }
 
@@ -55,6 +62,7 @@ namespace BackendFramework.Models
         public Word()
         {
             Id = "";
+            Guid = new Guid();
             Vernacular = "";
             Plural = "";
             Created = "";
@@ -74,6 +82,7 @@ namespace BackendFramework.Models
             var clone = new Word
             {
                 Id = Id.Clone() as string,
+                Guid = Guid,
                 Vernacular = Vernacular.Clone() as string,
                 Plural = Plural.Clone() as string,
                 Created = Created.Clone() as string,
@@ -126,29 +135,28 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            if (!(obj is Word other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as Word;
-                return
-                    other.Id.Equals(Id) &&
-                    this.ContentEquals(other) &&
-                    other.Created.Equals(Created) &&
-                    other.Modified.Equals(Modified) &&
-                    other.EditedBy.Count == EditedBy.Count &&
-                    other.EditedBy.All(EditedBy.Contains) &&
-                    other.History.Count == History.Count &&
-                    other.History.All(History.Contains);
-            }
+
+            return
+                other.Id.Equals(Id) &&
+                ContentEquals(other) &&
+                other.Guid == Guid &&
+                other.Created.Equals(Created) &&
+                other.Modified.Equals(Modified) &&
+                other.EditedBy.Count == EditedBy.Count &&
+                other.EditedBy.All(EditedBy.Contains) &&
+                other.History.Count == History.Count &&
+                other.History.All(History.Contains);
         }
 
         public override int GetHashCode()
         {
             var hash = new HashCode();
             hash.Add(Id);
+            hash.Add(Guid);
             hash.Add(Vernacular);
             hash.Add(Plural);
             hash.Add(Senses);
@@ -177,6 +185,13 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.String)]
         public State Accessibility { get; set; }
 
+        /// <summary>
+        /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word edits.
+        /// </summary>
+        /// <remarks>Only nullable for legacy, can be removed once all projects are updated.</remarks>
+        [BsonElement("guid")]
+        public Guid? Guid { get; set; }
+
         public Sense Clone()
         {
             var clone = new Sense
@@ -199,20 +214,17 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            if (!(obj is Sense other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as Sense;
-                return
-                    other.Glosses.Count == Glosses.Count &&
-                    other.Glosses.All(Glosses.Contains) &&
 
-                    other.SemanticDomains.Count == SemanticDomains.Count &&
-                    other.SemanticDomains.All(SemanticDomains.Contains);
-            }
+            return
+                other.Glosses.Count == Glosses.Count &&
+                other.Glosses.All(Glosses.Contains) &&
+
+                other.SemanticDomains.Count == SemanticDomains.Count &&
+                other.SemanticDomains.All(SemanticDomains.Contains);
         }
 
         public override int GetHashCode()
@@ -237,15 +249,12 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            if (!(obj is Gloss other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as Gloss;
-                return Language.Equals(other.Language) && Def.Equals(other.Def);
-            }
+
+            return Language.Equals(other.Language) && Def.Equals(other.Def);
         }
 
         public override int GetHashCode()
@@ -279,15 +288,12 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            if (!(obj is SemanticDomain other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as SemanticDomain;
-                return Name.Equals(other.Name) && Id.Equals(other.Id) && Description.Equals(other.Description);
-            }
+
+            return Name.Equals(other.Name) && Id.Equals(other.Id) && Description.Equals(other.Description);
         }
 
         public override int GetHashCode()

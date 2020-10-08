@@ -6,7 +6,6 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System;
 using static BackendFramework.Helper.FileUtilities;
 
@@ -92,10 +91,8 @@ namespace BackendFramework.Controllers
                 return new NotFoundResult();
             }
 
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
-            {
-                // If there are fields we need to hide from lower users remove them here
-            }
+            // If there are fields we need to hide from lower users, check for Permission.DeleteEditSettingsAndUsers
+            // and remove them.
 
             return new ObjectResult(project);
         }
@@ -128,7 +125,7 @@ namespace BackendFramework.Controllers
             userRole = await _userRoleService.Create(userRole);
 
             // Update user with userRole
-            if (currentUser.ProjectRoles.Equals(null))
+            if (currentUser.ProjectRoles is null)
             {
                 currentUser.ProjectRoles = new Dictionary<string, string>();
             }
@@ -140,7 +137,7 @@ namespace BackendFramework.Controllers
             currentUser = await _userService.MakeJwt(currentUser);
             await _userService.Update(currentUserId, currentUser);
 
-            var output = new ProjectWithUser(project) { __UpdatedUser = currentUser };
+            var output = new ProjectWithUser(project) { UpdatedUser = currentUser };
 
             return new OkObjectResult(output);
         }
@@ -251,8 +248,7 @@ namespace BackendFramework.Controllers
             {
 
                 // Generate the userRole
-                var usersRole = new UserRole();
-                usersRole.ProjectId = projectId;
+                var usersRole = new UserRole { ProjectId = projectId };
                 usersRole = await _userRoleService.Create(usersRole);
                 userRoleId = usersRole.Id;
 
@@ -328,7 +324,7 @@ namespace BackendFramework.Controllers
             var tokenObj = new EmailInvite();
             var currentUser = new User();
 
-            foreach (EmailInvite tok in project.InviteTokens)
+            foreach (var tok in project.InviteTokens)
             {
                 if (tok.Token == token && DateTime.Now < tok.ExpireTime)
                 {
@@ -337,7 +333,7 @@ namespace BackendFramework.Controllers
                     break;
                 }
             }
-            foreach (User user in users)
+            foreach (var user in users)
             {
                 if (user.Email == tokenObj.Email)
                 {
@@ -375,9 +371,9 @@ namespace BackendFramework.Controllers
             public string ProjectId;
             public string Domain;
         }
-        
+
         [HttpGet("duplicate/{projectName}")]
-        public async Task<IActionResult> projectDuplicateCheck(string projectName)
+        public async Task<IActionResult> ProjectDuplicateCheck(string projectName)
         {
             var isDuplicate = await _projectService.DuplicateCheck(projectName);
             return new OkObjectResult(isDuplicate);

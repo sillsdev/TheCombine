@@ -96,25 +96,26 @@ export class Register extends React.Component<
     >,
     field: K
   ) {
-    const value: string = e.target.value;
-
-    this.setState({
-      [field]: value,
-      error: { ...this.state.error, [field]: false },
-    } as Pick<RegisterState, K>);
+    const value = e.target.value;
+    const error = { ...this.state.error, [field]: false };
+    this.setState({ [field]: value, error } as Pick<RegisterState, K>);
   }
 
   async checkUsername(username: string) {
     const usernameTaken: boolean = await isUsernameTaken(username);
     if (usernameTaken) {
-      this.setState({ error: { ...this.state.error, username: true } });
+      this.setState((prevState) => ({
+        error: { ...prevState.error, username: true },
+      }));
     }
   }
 
   async checkEmail(username: string) {
     const emailTaken: boolean = await isEmailTaken(username);
     if (emailTaken) {
-      this.setState({ error: { ...this.state.error, email: true } });
+      this.setState((prevState) => ({
+        error: { ...prevState.error, email: true },
+      }));
     }
   }
 

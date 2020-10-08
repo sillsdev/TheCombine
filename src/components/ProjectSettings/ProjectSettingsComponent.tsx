@@ -57,8 +57,8 @@ class ProjectSettingsComponent extends React.Component<
     this.state = { loading: true };
   }
 
-  componentWillMount() {
-    this.getSettings();
+  async componentDidMount() {
+    await this.getSettings();
   }
 
   private async getSettings() {
@@ -82,22 +82,16 @@ class ProjectSettingsComponent extends React.Component<
   }
 
   async componentDidUpdate(prevProps: ProjectSettingsProps) {
-    if (prevProps.project.name !== this.props.project.name) {
-      this.getSettings();
+    if (prevProps.project.id !== this.props.project.id) {
+      await this.getSettings();
     }
   }
 
   render() {
-    if (this.state.loading) {
-      return (
-        <React.Fragment>
-          <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
+    return (
+      <React.Fragment>
+        <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
+        {!this.state.loading && (
           <Grid container justify="center" spacing={6}>
             {/* Project List */}
             <BaseSettingsComponent
@@ -148,6 +142,7 @@ class ProjectSettingsComponent extends React.Component<
               body={<ExportProjectButton />}
             />
 
+            {/* Autocomplete setting */}
             <BaseSettingsComponent
               icon={<Sms />}
               title={<Translate id="projectSettings.autocomplete.label" />}
@@ -178,11 +173,8 @@ class ProjectSettingsComponent extends React.Component<
                     <MenuItem value="Off">
                       <Translate id="projectSettings.autocomplete.off" />
                     </MenuItem>
-                    <MenuItem value="OnRequest">
-                      <Translate id="projectSettings.autocomplete.request" />
-                    </MenuItem>
-                    <MenuItem value="AlwaysOn">
-                      <Translate id="projectSettings.autocomplete.always" />
+                    <MenuItem value="On">
+                      <Translate id="projectSettings.autocomplete.on" />
                     </MenuItem>
                   </Select>
                 </FormControl>
@@ -207,9 +199,9 @@ class ProjectSettingsComponent extends React.Component<
               />
             )}
           </Grid>
-        </React.Fragment>
-      );
-    }
+        )}
+      </React.Fragment>
+    );
   }
 }
 

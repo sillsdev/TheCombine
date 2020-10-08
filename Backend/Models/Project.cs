@@ -60,7 +60,7 @@ namespace BackendFramework.Models
             Id = "";
             Name = "";
             IsActive = true;
-            AutocompleteSetting = AutocompleteSetting.Off;
+            AutocompleteSetting = AutocompleteSetting.On;
             VernacularWritingSystem = new WritingSystem();
             SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<WritingSystem>();
@@ -160,15 +160,12 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            if (!(obj is Project other) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var other = obj as Project;
-                return other.Id.Equals(Id) && ContentEquals(other);
-            }
+
+            return other.Id.Equals(Id) && ContentEquals(other);
         }
 
         public override int GetHashCode()
@@ -261,12 +258,6 @@ namespace BackendFramework.Models
             Bcp47 = "";
             Font = "";
         }
-        public WritingSystem(WritingSystem ws)
-        {
-            Name = ws.Name;
-            Bcp47 = ws.Bcp47;
-            Font = ws.Font;
-        }
 
         public WritingSystem Clone()
         {
@@ -277,24 +268,15 @@ namespace BackendFramework.Models
                 Font = Font.Clone() as string
             };
         }
+
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            if (!(obj is WritingSystem ws) || GetType() != obj.GetType())
             {
                 return false;
             }
-            else
-            {
-                var ws = obj as WritingSystem;
-                if (ws != null && Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+
+            return Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font;
         }
 
         public override int GetHashCode()
@@ -302,9 +284,9 @@ namespace BackendFramework.Models
             return HashCode.Combine(Name, Bcp47, Font);
         }
 
-        override public String ToString()
+        public override string ToString()
         {
-            return String.Format("<name: {0}, bcp47: {1}, font: {2}>", Name, Bcp47, Font);
+            return $"<name: {Name}, bcp47: {Bcp47}, font: {Font}>";
         }
     }
 
@@ -326,7 +308,7 @@ namespace BackendFramework.Models
 
     public class ProjectWithUser : Project
     {
-        public User __UpdatedUser;
+        public User UpdatedUser;
 
         public ProjectWithUser() { }
 
@@ -352,7 +334,6 @@ namespace BackendFramework.Models
     public enum AutocompleteSetting
     {
         Off,
-        OnRequest,
-        AlwaysOn
+        On
     }
 }

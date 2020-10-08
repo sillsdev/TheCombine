@@ -15,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using SIL.Lift.Parsing;
 
 namespace BackendFramework
 {
@@ -26,7 +25,7 @@ namespace BackendFramework
 
         private readonly ILogger<Startup> _logger;
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public Startup(ILogger<Startup> logger, IConfiguration configuration)
         {
@@ -165,8 +164,8 @@ namespace BackendFramework
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IUserService, UserService>();
 
-            // Lift types
-            services.AddTransient<ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>, LiftService>();
+            // Lift Service - Singleton to avoid initializing the Sldr multiple times, also to avoid leaking LanguageTag data
+            services.AddSingleton<ILiftService, LiftService>();
 
             // User edit types
             services.AddTransient<IUserEditContext, UserEditContext>();
@@ -272,7 +271,7 @@ namespace BackendFramework
             if (existingUser != null)
             {
                 _logger.LogInformation($"User {username} already exists. Updating password and granting " +
-                                       $"admin permissions.");
+                                       "admin permissions.");
                 if (userService.ChangePassword(existingUser.Id, password).Result == ResultOfUpdate.NotFound)
                 {
                     _logger.LogError($"Failed to find user {username}.");

@@ -54,12 +54,11 @@ namespace BackendFramework.Models
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || !GetType().Equals(obj.GetType()))
+            if (!(obj is UserRole other) || GetType() != obj.GetType())
             {
                 return false;
             }
 
-            var other = obj as UserRole;
             return other.Id.Equals(Id) && ContentEquals(other);
         }
 

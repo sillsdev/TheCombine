@@ -20,7 +20,7 @@
     repo: "deb [arch=amd64] https://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse"
     filename: mongodb-org-{{ mongodb_version }}
     update_cache: yes
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'bionic'
+  when: ansible_distribution == 'Ubuntu'
 
 - name: Install mongodb-org
   apt:

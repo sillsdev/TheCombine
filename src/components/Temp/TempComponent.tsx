@@ -1,15 +1,15 @@
-/* THIS COMPONENT IS INTENDED TO BE AN EXAMPLE ONLY. 
+/* THIS COMPONENT IS INTENDED TO BE AN EXAMPLE ONLY.
   IT WILL NOT BE USED IN THE APPLICATION.
 */
 
 //external modules
+import Button from "@material-ui/core/Button";
 import * as React from "react";
 import {
   Translate,
   LocalizeContextProps,
   withLocalize,
 } from "react-localize-redux";
-import Button from "@material-ui/core/Button";
 
 //interface for component props
 export interface TempProps {
@@ -18,7 +18,9 @@ export interface TempProps {
 }
 
 //interface for component state
-interface TempState {}
+interface TempState {
+  clickCount: number;
+}
 
 class Temp extends React.Component<
   TempProps & LocalizeContextProps,
@@ -26,8 +28,14 @@ class Temp extends React.Component<
 > {
   constructor(props: TempProps & LocalizeContextProps) {
     super(props);
+    this.state = { clickCount: 0 };
+  }
 
-    this.state = { demo: "" };
+  handleButtonClick() {
+    if (this.props.buttonClicked) {
+      this.props.buttonClicked();
+    }
+    this.setState((prevState) => ({ clickCount: prevState.clickCount + 1 }));
   }
 
   render() {
@@ -43,7 +51,7 @@ class Temp extends React.Component<
           <Translate id="temp.makeSpanish" />
         </Button>{" "}
         <br />
-        <Button onClick={this.props.buttonClicked}>
+        <Button onClick={() => this.handleButtonClick()}>
           <Translate id="temp.buttonText" />
         </Button>
       </div>

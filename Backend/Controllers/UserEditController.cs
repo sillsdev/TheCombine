@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -104,7 +105,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Creates a <see cref="UserEdit"/> </summary>
         /// <remarks> POST: v1/projects/{projectId}/useredits </remarks>
-        /// <returns> Id of create UserEdit </returns>
+        /// <returns> UpdatedUser </returns>
         [HttpPost]
         public async Task<IActionResult> Post(string projectId)
         {
@@ -113,9 +114,21 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
+            // Generate the new userEdit
             var userEdit = new UserEdit { ProjectId = projectId };
             await _repo.Create(userEdit);
-            return new OkObjectResult(userEdit.Id);
+            // Update current user
+            var currentUserId = _permissionService.GetUserId(HttpContext);
+            var currentUser = await _userService.GetUser(currentUserId);
+            currentUser.WorkedProjects.Add(projectId, userEdit.Id);
+            await _userService.Update(currentUserId, currentUser);
+            // Generate the JWT based on the new userEdit
+            currentUser = await _userService.MakeJwt(currentUser);
+            await _userService.Update(currentUserId, currentUser);
+
+            var output = new WithUser() { UpdatedUser = currentUser };
+
+            return new OkObjectResult(output);
         }
 
         /// <summary> Adds a goal to <see cref="UserEdit"/> with specified id </summary>
@@ -149,16 +162,16 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(userEditId);
             }
 
-            var result = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
+            var (isSuccess, editIndex) = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
 
             // If the replacement was successful
-            if (result.Item1)
+            if (isSuccess)
             {
-                return new OkObjectResult(result.Item2);
+                return new OkObjectResult(editIndex);
             }
             else
             {
-                return new NotFoundObjectResult(result.Item2);
+                return new NotFoundObjectResult(editIndex);
             }
         }
 

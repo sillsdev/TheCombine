@@ -107,7 +107,8 @@ namespace BackendFramework.Services
         public async Task<User> Authenticate(string username, string password)
         {
             // Fetch the stored user.
-            var userList = await _userDatabase.Users.FindAsync(x => x.Username == username);
+            var userList = await _userDatabase.Users.FindAsync(x =>
+                x.Username.ToLowerInvariant() == username.ToLowerInvariant());
             var foundUser = userList.FirstOrDefault();
 
             // Return null if user with specified username not found.
@@ -144,7 +145,7 @@ namespace BackendFramework.Services
             var claimString = projectPermissionMap.ToJson();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("UserId", user.Id),
                     new Claim("UserRoleInfo", claimString)
@@ -244,7 +245,8 @@ namespace BackendFramework.Services
 
             // Check to see if username or email address is taken
             if (users.Count != 0 && _userDatabase.Users.Find(
-                x => (x.Username == user.Username || x.Email == user.Email)).ToList().Count > 0)
+                x => (x.Username.ToLowerInvariant() == user.Username.ToLowerInvariant() ||
+                x.Email.ToLowerInvariant() == user.Email.ToLowerInvariant())).ToList().Count > 0)
             {
                 return null;
             }

@@ -6,8 +6,7 @@ import { getAllProjects } from "../../../backend";
 import { Project } from "../../../types/project";
 import theme from "../../../types/theme";
 import ExportProjectButton from "../../ProjectSettings/ProjectExport/ExportProjectButton";
-import ArchiveProjectButton from "./ArchiveProjectButton";
-import RestoreProjectButton from "./RestoreProjectButton";
+import ProjectButtonWithConfirmation from "./ProjectButtonWithConfirmation";
 
 interface ProjectManagementState {
   activeProjects: Project[];
@@ -30,10 +29,9 @@ export class ProjectManagement extends React.Component<
 
   updateProjectList = () => {
     getAllProjects().then((projects) => {
-      this.setState({
-        activeProjects: projects.filter((project) => project.isActive),
-        archivedProjects: projects.filter((project) => !project.isActive),
-      });
+      const activeProjects = projects.filter((project) => project.isActive);
+      const archivedProjects = projects.filter((project) => !project.isActive);
+      this.setState({ activeProjects, archivedProjects });
     });
   };
 
@@ -54,17 +52,11 @@ export class ProjectManagement extends React.Component<
             style={{ marginRight: theme.spacing(1) }}
           />
           {/* Archive active project or restore archived project. */}
-          {project.isActive ? (
-            <ArchiveProjectButton
-              projectId={project.id}
-              updateParent={this.updateProjectList}
-            />
-          ) : (
-            <RestoreProjectButton
-              projectId={project.id}
-              updateParent={this.updateProjectList}
-            />
-          )}
+          <ProjectButtonWithConfirmation
+            archive={project.isActive}
+            projectId={project.id}
+            updateParent={this.updateProjectList}
+          />
         </ListItem>
       );
     });

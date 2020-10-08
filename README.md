@@ -1,5 +1,36 @@
 # The Combine
 
+[![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
+[![Frontend Coverage][frontend-codecov-badge]][codecov]
+[![Backend Actions Status][github-actions-backend-badge]][github-actions]
+[![Backend Coverage][backend-codecov-badge]][codecov]
+[![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
+[![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
+[![Python Actions Status][github-actions-python-badge]][github-actions]
+[![GitHub release][github-version-badge]][github-version]
+![Localization][localization-badge]
+[![GitHub][github-license-badge]][github-license]
+[![GitHub contributors][github-contribs-badge]][github-contribs]
+
+[github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
+[frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=frontend
+[codecov]: https://codecov.io/gh/sillsdev/TheCombine
+[github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
+[backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
+[github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
+[github-actions]: https://github.com/sillsdev/TheCombine/actions
+[lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
+[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts
+[localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
+[github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
+[github-version]: https://github.com/sillsdev/TheCombine/releases
+[github-license-badge]: https://img.shields.io/github/license/sillsdev/TheCombine
+[github-license]: https://github.com/sillsdev/TheCombine/blob/master/LICENSE
+[github-contribs-badge]: https://img.shields.io/github/contributors/sillsdev/TheCombine?cacheSeconds=10000
+[github-contribs]: https://github.com/sillsdev/TheCombine/graphs/contributors
+
 A rapid word collection tool.
 
 ## Getting Started with Development
@@ -9,13 +40,13 @@ A rapid word collection tool.
    ```bash
    # The `--recurse-submodules` is used to fetch many of the Ansible roles used
    # by the Ansible playbooks in the deploy folder.
-   git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
+   $ git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
    ```
 
    If you've already cloned the repo without `--recurse-submodules`, run:
 
    ```bash
-   git submodule update --init --recursive
+   $ git submodule update --init --recursive
    ```
 
 2. Install:
@@ -27,15 +58,15 @@ A rapid word collection tool.
    - [.NET Core SDK 3.1 (LTS)](https://dotnet.microsoft.com/download/dotnet-core/3.1)
      - On Ubuntu 18.04, follow these
        [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1804).
-   - [MongoDB Server](https://docs.mongodb.com/manual/administration/install-community/) and add
+   - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add
      /bin to PATH Environment Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
    - [VS Code](https://code.visualstudio.com/download) and Prettier code
      formatting extension
    - [dotnet-format](https://github.com/dotnet/format):
-     `dotnet tool install --global dotnet-format --version 3.3.111304`
+     `dotnet tool update --global dotnet-format --version 4.1.131201`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-     `dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.6.1`
+     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 4.6.1`
 3. (Windows Only) Run `dotnet dev-certs https` and `dotnet dev-certs https --trust` to
    generate and trust an SSL certificate
 4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string
@@ -55,7 +86,11 @@ A rapid word collection tool.
    - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
      check the box.
 7. Run `npm start` from the project directory to install dependencies and start
-   the project
+   the project.
+
+8. Consult our [C#](docs/c_sharp_style_guide.md)
+   and [JavaScript/TypeScript](docs/ts_style_guide.md)
+   style guides for best coding practices in this project.
 
 [chocolatey]: https://chocolatey.org/
 
@@ -84,40 +119,76 @@ Runs only the front end of the app in the development mode.
 
 #### `npm run api`
 
-Runs only the API
+Runs only the API.
 
 #### `npm run database`
 
-Runs only the mongo database
+Runs only the mongo database.
 
 ### `npm test`
+
+Run all backend and frontend tests.
+
+#### `npm run test-backend`
+
+Run all backend unit tests.
+
+To run a subset of tests, use the 
+[`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit)
+option.
+
+```bash
+# Note the extra -- needed to separate arguments for npm vs script.
+$ npm run test-backend -- --filter FullyQualifiedName~Backend.Tests.Models.ProjectTests
+```
+
+#### `npm run test-frontend`
 
 Launches the test runners in the interactive watch mode.<br>
 See the section about
 [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
 for more information.
 
-#### `npm run coverage`
+To run a subset of tests, pass in the name of a partial file path to filter:
 
-Launches the test runners to calculate the test coverage of the front and
-back ends of the app.
+```bash
+# Note the extra -- needed to separate arguments for npm vs script.
+$ npm run test-frontend -- DataEntry
+```
+
+#### `npm run test-*:coverage`
+
+Launches the test runners to calculate the test coverage of the frontend or
+backend of the app.
 
 ##### Frontend Code Coverage Report
+
+Run:
+
+```bash
+$ npm run test-frontend:coverage
+```
 
 To view the frontend code coverage open `coverage/lcov-report/index.html`
 in a browser.
 
 ##### Backend Code Coverage Report
 
-After `npm run coverage` has run, generate the HTML coverage report:
+Run:
 
-```batch
-> npm run gen-backend-coverage-report
+```bash
+$ npm run test-backend:coverage
+```
+
+Generate the HTML coverage report:
+
+```bash
+$ npm run gen-backend-coverage-report
 ```
 
 Open `coverage-backend/index.html` in a browser.
 
-#### `npm run test:debug`
+#### `npm run test-frontend:debug`
 
 Runs Jest tests for debugging, awaiting for an attach from an IDE.
 
@@ -150,20 +221,29 @@ See the section about
 [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
 more information.
 
-## `npm run import-sem-doms`
+### `npm run import-sem-doms`
 
 Imports Semantic Domains from the provided xml file.
 
 ```bash
-npm run import-sem-doms -- <XML_FILE_PATH>
+$ npm run import-sem-doms -- <XML_FILE_PATH>
 ```
 
-## Drop Database
+## Database
+
+### Inspect Database
+
+To browse the database locally during development, open MongoDB Compass Community.
+
+1. Under New Connection, enter `mongodb://localhost:27017`
+2. Under Databases, select CombineDatabase
+
+### Drop Database
 
 To completely erase the current Mongo database, run:
 
-```batch
-> npm run drop-database
+```bash
+$ npm run drop-database
 ```
 
 ### Create Database Admin User
@@ -175,143 +255,212 @@ To completely erase the current Mongo database, run:
 To create a new admin user, first set the `COMBINE_ADMIN_PASSWORD`
 environment variable and then run:
 
-```batch
-> cd Backend
-> dotnet run create-admin-username=admin
+```bash
+$ cd Backend
+$ dotnet run create-admin-username=admin
 ```
 
 The exit code will be set to `0` on success and non-`0` otherwise.
-
-#### Docker
-
-Copy `.env.backend.auth.template` to `.env.backend.auth` add fill in the username and
-password environment variables.
-
-```batch
-> docker-compose build --parallel
-> docker-compose up --abort-on-container-exit
-```
-
-This will create the user and exit. If successful, the exit code will be `0`,
-otherwise an error will be logged and the exit code will be non-`0`.
-
-**Important**: Remove the `COMBINE_*` environment variables from
-`.env.backend.auth` so that subsequent launches will start up the backend.
 
 ### (Development Only) Grant an Existing User Admin Rights
 
 To grant an _existing_ user database administrator rights (all permissions for
 all database objects), create a user normally and then execute:
 
-```batch
+```bash
 # Note the -- before the user name.
-> npm run set-admin-user -- <USERNAME>
+$ npm run set-admin-user -- <USERNAME>
 ```
 
 ### Generate License Report
 
 To generate a summary of licenses used in production:
 
-```batch
-> npm run license-summary
+```bash
+$ npm run license-summary
 ```
 
 To generate a full report of the licenses used in production:
 
-```batch
-> npm run license-report
+```bash
+$ npm run license-report
+```
+
+### Set Project Version
+
+To update the version of the project:
+
+1. Edit package.json `"version"` to a
+   [semantic versioning](https://docs.npmjs.com/about-semantic-versioning)
+   compatible string (e.g. `"0.1.1-alpha.0"`).
+2. Run `npm install` to automatically update `package-lock.json`.
+
+To retrieve the current version of the project from the terminal:
+
+```bash
+$ npm run --silent version
 ```
 
 ## Docker
 
 ### Requirements
 
+#### Docker
+
 Install [Docker](https://docs.docker.com/get-docker/).
 
 (Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/)
 separately. This is included by default in Docker Desktop for Windows and macOS.
 
+#### Python
+
+A Python script, `scripts/docker_setup.py` is used to configure the files needed to run
+_TheCombine_ in Docker containers.
+
+##### Windows Only
+
+- Navigate to the [Python 3.8.5 Downloads](https://www.python.org/downloads/release/python-385/) page.
+
+- Download and run the appropriate installer - it is most likely the installer labeled
+  _Windows x86-64 executable installer_
+
+- Once Python is installed, create an isolated Python
+  [virtual environment](https://docs.python.org/3/library/venv.html) using the
+  [`py`](https://docs.python.org/3/using/windows.html#getting-started) launcher
+  installed globally into the `PATH`.
+
+  ```bash
+  $ py -m venv venv
+  $ venv\Scripts\activate
+  ```
+
+##### Linux Only
+
+To install Python 3 on Ubuntu, run the following commands:
+
+```bash
+$ sudo apt update
+$ sudo apt install python3 python3-venv
+```
+
+Create an isolated Python virtual environment
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+```
+
+##### Python Packages
+
+With an active virtual environment, install Python development requirements for this project:
+
+```bash
+(venv) $ python -m pip install --upgrade pip pip-tools
+(venv) $ pip-sync dev-requirements.txt
+```
+
+Note, you can also now perform automated code formatting of Python code:
+
+```bash
+(venv) $ tox -e fmt
+```
+
+To run all Python linting steps:
+
+```bash
+(venv) $ tox
+```
+
+To upgrade all pinned dependencies, run the following command under Python 3.6 so the 
+requirements are backwards-compatible.
+
+```bash
+(venv) $ pip-compile --upgrade dev-requirements.in
+```
+
+Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work 
+around a pinning issue with supporting Python 3.6 and 3.7+.
+
+#### Configure Docker
+
+Run the configuration script in an activated virtual environment to generate
+the necessary configuration files.
+
+```bash
+(venv) $ python scripts/docker_setup.py
+
+# To view options, run with --help
+```
+
 ### Build and Run
 
-For more information see the
-[Docker Compose docs](https://docs.docker.com/compose/).
+For information on _Docker Compose_ see the
+[Docker Compose documentation](https://docs.docker.com/compose/).
 
-Copy `.env.backend.template` to `.env.backend` and fill in the environment
-variables.
+#### Running In Docker
 
-```batch
-> docker-compose build --parallel
-> docker-compose up --detach
+1. Create the required docker files by running `docker_setup.py` from _TheCombine_'s project directory.
+
+2. The `docker_setup.py` will generate a file, `.env.backend`, that defines
+   the environment variables needed by the Backend container. If you have defined
+   them as OS variables in the [Getting Started with Development](#getting-started-with-development)
+   section above, then these variables will already be set. If not, then you will need to edit
+   `.env.backend` and provide values for the variables that are listed.
+
+3. Build the images for the Docker containers
+
+   ```bash
+   $ docker-compose build --parallel
+   ```
+
+4. Start the containers
+
+   ```bash
+   $ docker-compose up --detach
+   ```
+
+5. Browse to https://localhost.
+
+   _By default self-signed certificates are included, so you will need to accept a warning in the browser._
+
+6. To view logs:
+
+   ```bash
+   $ docker-compose logs --follow
+   ```
+
+7. To stop and remove any stored data:
+
+   ```bash
+   $ docker-compose down --volumes
+   ```
+
+### Create a New Admin User (Docker Environment)
+
+Edit `.env.backend` as follows:
+
+    * Fill in the environment variables.
+    * Add the following environment variables and assign values to them:
+        - COMBINE_ADMIN_USERNAME
+        - COMBINE_ADMIN_PASSWORD
+    * Set the file permissions so that only you have read or write access.
+
+Run the following command to install the admin user in the _CombineDatabase_:
+
+```bash
+$ docker-compose up --abort-on-container-exit
 ```
 
-Browse to https://localhost.
+This will create the user and exit. If successful, the exit code will be `0`,
+otherwise an error will be logged and the exit code will be non-`0`.
 
-> By default self-signed certificates are included, so you will need to accept
-> a warning in the browser. See [SSL Certificates](#ssl-certificates) for
-> production deployment.
+**Important**: Remove the `COMBINE_ADMIN_*` environment variables from
+`.env.backend` so that subsequent launches will start up the backend.
 
-To view logs:
+### Production
 
-```batch
-> docker-compose logs --follow
-```
-
-To stop and remove any stored data:
-
-```batch
-> docker-compose down --volumes
-```
-
-### Configuration
-
-#### SSL Certificates
-
-To update SSL certificates after images have been built and are running,
-find the `frontend` container name. By default this will be formatted as
-`<lowercase_parent_dir>_frontend_1`.
-
-```batch
-> docker-compose images
-      Container             Repository         Tag       Image Id       Size
-------------------------------------------------------------------------------
-thecombine_backend_1    thecombine_backend    latest   73cf7b867c22   292.2 MB
-thecombine_database_1   mongo                 4.2      2b2cc1f48aed   387.8 MB
-thecombine_frontend_1   thecombine_frontend   latest   7cca1c1f1a5f   32.55 MB
-```
-
-Copy new certificates from local filesystem into the container:
-
-```batch
-> docker cp new_cert.pem thecombine_frontend_1:/ssl/cert.pem
-> docker cp new_key.pem thecombine_frontend_1:/ssl/key.pem
-```
-
-Restart the Docker Compose project:
-
-```batch
-> docker-compose down
-> docker-compose up --detatch
-```
-
-#### Modifying Build Arguments
-
-Create a file `production.yml`, and override build arguments as needed.
-
-```yaml
-version: "3.8"
-services:
-  frontend:
-    build:
-      args:
-        - COMBINE_CAPTCHA_REQUIRED=false
-```
-
-Use this file when building and launching the Docker Compose project.
-
-```batch
-> docker-compose -f docker-compose.yml -f production.yml build --parallel
-> docker-compose -f docker-compose.yml -f production.yml up --detach
-```
+The process for configuring and deploying _TheCombine_ for production targets is
+described in ./docs/docker_deploy/README.md
 
 ## Learn More
 

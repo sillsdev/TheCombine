@@ -1,0 +1,17 @@
+---
+###############################
+# This file defines package versions where specific packages version are
+# specified in the playbooks.  To update a package, change the version in
+# this file and rerun the specified playbook
+###############################
+
+# Packages installed by playbook_docker.yml
+docker_compose_version: 1.26.2
+
+# Packages required for targets
+required_packages:
+  - python3
+  - python3-pip
+  - apt-transport-https
+  - aptitude
+  - software-properties-common

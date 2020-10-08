@@ -71,7 +71,7 @@ exports[`pronunciation tests displays buttons 1`] = `
     >
       <svg
         aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
+        className="MuiSvgIcon-root makeStyles-icon-5"
         focusable="false"
         viewBox="0 0 24 24"
       >
@@ -111,7 +111,7 @@ exports[`pronunciation tests displays buttons 1`] = `
     >
       <svg
         aria-hidden={true}
-        className="MuiSvgIcon-root makeStyles-icon-5 MuiSvgIcon-colorPrimary"
+        className="MuiSvgIcon-root makeStyles-icon-5"
         focusable="false"
         viewBox="0 0 24 24"
       >

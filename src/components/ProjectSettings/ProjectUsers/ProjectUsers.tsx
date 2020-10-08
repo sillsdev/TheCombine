@@ -31,7 +31,6 @@ interface UserProps {
 interface UserState {
   allUsers: User[];
   projUsers: User[];
-  modalOpen: boolean;
   openUser?: User;
   userAvatar: { [key: string]: string };
   showModal: boolean;
@@ -43,7 +42,6 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
     this.state = {
       allUsers: [],
       projUsers: [],
-      modalOpen: false,
       userAvatar: {},
       showModal: false,
     };
@@ -76,11 +74,11 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
         backend
           .getAllUsers()
           .then((returnedUsers) => {
-            this.setState({
+            this.setState((prevState) => ({
               allUsers: returnedUsers.filter(
-                (user) => !this.state.projUsers.find((u) => u.id === user.id)
+                (user) => !prevState.projUsers.find((u) => u.id === user.id)
               ),
-            });
+            }));
             returnedUsers.forEach((u: User) => {
               backend
                 .avatarSrc(u.id)

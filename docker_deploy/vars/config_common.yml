@@ -1,0 +1,12 @@
+---
+source_dir: "{{ ansible_env.HOME }}/src/combine"
+
+backend_env_file: ".env.backend.prod"
+backend_env_dir: "{{ source_dir }}/Backend"
+
+frontend_env_file: ".env.frontend.prod"
+frontend_env_dir: "{{ source_dir }}"
+
+combine_user: combine
+combine_group: app
+combine_app_dir: /opt/combine

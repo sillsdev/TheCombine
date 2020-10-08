@@ -2,7 +2,7 @@ import { Grid } from "@material-ui/core";
 import React from "react";
 
 import theme from "../../../../types/theme";
-import { SemanticDomain, Sense, Word } from "../../../../types/word";
+import { Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
@@ -10,8 +10,6 @@ import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
 import DeleteEntry from "./DeleteEntry/DeleteEntry";
 
 interface RecentEntryProps {
-  allVerns: string[];
-  allWords: Word[];
   entry: Word;
   senseIndex: number;
   updateGloss: (newGloss: string) => void;
@@ -19,7 +17,6 @@ interface RecentEntryProps {
   removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
-  semanticDomain: SemanticDomain;
   recorder: Recorder;
   focusNewEntry: () => void;
   analysisLang: string;
@@ -28,8 +25,6 @@ interface RecentEntryProps {
 interface RecentEntryState {
   vernacular: string;
   gloss: string;
-  //isDupVern: boolean;
-  //wordId?: string;
   hovering: boolean;
 }
 
@@ -44,13 +39,13 @@ export default class RecentEntry extends React.Component<
     super(props);
 
     let sense: Sense = { ...props.entry.senses[props.senseIndex] };
-    if (sense.glosses.length < 1)
+    if (sense.glosses.length < 1) {
       sense.glosses.push({ def: "", language: this.props.analysisLang });
+    }
 
     this.state = {
       vernacular: props.entry.vernacular,
       gloss: sense.glosses.length > 0 ? sense.glosses[0].def : "",
-      //isDupVern: false,
       hovering: false,
     };
   }
@@ -60,46 +55,28 @@ export default class RecentEntry extends React.Component<
   }
 
   updateVernField(newValue?: string): Word[] {
-    let vernacular: string = "";
-    let dupVernWords: Word[] = [];
-    //let isDupVern: boolean = false;
-    if (newValue) {
-      vernacular = newValue;
-      /*dupVernWords = this.props.allWords.filter(
-        (word: Word) => word.vernacular === newValue
-      );
-      isDupVern = dupVernWords.length > 0;*/
-    }
-    this.setState({
-      //isDupVern,
-      vernacular,
-    });
-    return dupVernWords;
+    const vernacular: string = newValue ? newValue : "";
+    this.setState({ vernacular });
+    return [];
   }
-
-  /*updateWordId(wordId?: string) {
-    this.setState({ wordId });
-  }*/
 
   conditionallyUpdateGloss() {
     if (
       this.props.entry.senses[this.props.senseIndex].glosses[0].def !==
       this.state.gloss
-    )
+    ) {
       this.props.updateGloss(this.state.gloss);
+    }
   }
 
   conditionallyUpdateVern() {
-    if (
-      this.props.entry.vernacular !== this.state.vernacular //||
-      //this.state.wordId !== undefined
-    )
-      this.props.updateVern(this.state.vernacular); //, this.state.wordId);
+    if (this.props.entry.vernacular !== this.state.vernacular) {
+      this.props.updateVern(this.state.vernacular);
+    }
   }
 
   focusOnNewEntry = () => {
     this.props.focusNewEntry();
-    //reference NewEntry's focus thing here
   };
 
   render() {
@@ -125,16 +102,14 @@ export default class RecentEntry extends React.Component<
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
-              updateWordId={(wordId?: string) => null} //this.updateWordId(wordId)}
-              allVerns={[]}
               onBlur={() => {
                 this.conditionallyUpdateVern();
               }}
               handleEnterAndTab={() => {
-                if (this.state.vernacular) this.focusOnNewEntry();
+                if (this.state.vernacular) {
+                  this.focusOnNewEntry();
+                }
               }}
-              setActiveGloss={() => {}}
-              analysisLang={this.props.analysisLang}
             />
           </Grid>
           <Grid
@@ -155,8 +130,11 @@ export default class RecentEntry extends React.Component<
                 this.conditionallyUpdateGloss();
               }}
               handleEnterAndTab={() => {
-                if (this.state.gloss) this.focusOnNewEntry();
+                if (this.state.gloss) {
+                  this.focusOnNewEntry();
+                }
               }}
+              analysisLang={this.props.analysisLang}
             />
           </Grid>
           <Grid

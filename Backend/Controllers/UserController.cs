@@ -37,12 +37,14 @@ namespace BackendFramework.Controllers
         [HttpPost("forgot")]
         public async Task<IActionResult> ResetPasswordRequest([FromBody] PasswordResetData data)
         {
-            var email = data.Email;
-            // create password reset
-            var resetRequest = await _passwordResetService.CreatePasswordReset(email);
+            // find user attached to email or username
+            var emailOrUsername = data.EmailOrUsername.ToLowerInvariant();
+            var user = _userService.GetAllUsers().Result.SingleOrDefault(user =>
+                user.Email.ToLowerInvariant().Equals(emailOrUsername) ||
+                user.Username.ToLowerInvariant().Equals(emailOrUsername));
 
-            // find user attached to email
-            var user = _userService.GetAllUsers().Result.Single(user => user.Email.Equals(email));
+            // create password reset
+            var resetRequest = await _passwordResetService.CreatePasswordReset(user.Email);
 
             // create email
             var message = new MimeMessage();
@@ -63,6 +65,7 @@ namespace BackendFramework.Controllers
                 return new InternalServerErrorResult();
             }
         }
+
 
         /// <summary> Resets a password using a token </summary>
         /// <remarks> POST: v1/users/reset </remarks>
@@ -172,7 +175,8 @@ namespace BackendFramework.Controllers
         [HttpPost("checkusername/{username}")]
         public async Task<IActionResult> CheckUsername(string username)
         {
-            var usernameTaken = (await _userService.GetAllUsers()).Find(x => x.Username == username) != null;
+            var usernameTaken = (await _userService.GetAllUsers()).Find(x =>
+                x.Username.ToLowerInvariant() == username.ToLowerInvariant()) != null;
             if (usernameTaken)
             {
                 return BadRequest();
@@ -188,7 +192,8 @@ namespace BackendFramework.Controllers
         [HttpPost("checkemail/{email}")]
         public async Task<IActionResult> CheckEmail(string email)
         {
-            var emailTaken = (await _userService.GetAllUsers()).Find(x => x.Email == email) != null;
+            var emailTaken = (await _userService.GetAllUsers()).Find(x =>
+                x.Email.ToLowerInvariant() == email.ToLowerInvariant()) != null;
             if (emailTaken)
             {
                 return BadRequest();
@@ -248,7 +253,7 @@ namespace BackendFramework.Controllers
 
         public class PasswordResetData
         {
-            public string Email;
+            public string EmailOrUsername;
             public string Token;
             public string NewPassword;
             public string Domain;

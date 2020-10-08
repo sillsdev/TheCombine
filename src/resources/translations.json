@@ -20,8 +20,14 @@
       "Sentido nuevo para: ",
       "Nouveau sens pour : "
     ],
+    "senseInWord": [
+      "The word already has this sense in this semantic domain",
+      "La palabra ya tiene este sentido en este dominio",
+      "Le mot a déjà ce sens dans ce domaine"
+    ],
     "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
     "domain": ["Domain", "Dominio", "Domaine"],
+    "gloss": ["Gloss", "Traducción", "Glose"],
     "glosses": ["Glosses", "Traducciones", "Gloses"],
     "pressEnter": [
       "Press enter to save word",
@@ -139,6 +145,11 @@
     ]
   },
   "passwordReset": {
+    "emailOrUsername": [
+      "Email OR Username",
+      "Correo electrónico o nombre de usuario",
+      "E-mail ou nom d'utilisateur"
+    ],
     "resetRequestTitle": [
       "Reset Password Request",
       "Restablecer solicitud de contraseña"
@@ -151,7 +162,16 @@
     ],
     "submit": ["Submit", "Enviar"],
     "resetFail": ["Password reset expired", "Error al restablecer contraseña"],
-    "emailError": ["Email doesn't exist"]
+    "notFoundError": [
+      "No match found",
+      "No se encontraron coincidencias",
+      "Pas de résultat trouvé"
+    ],
+    "backToLogin": [
+      "Back To Login",
+      "Atrás para iniciar sesión",
+      "Retour connexion"
+    ]
   },
   "userMenu": {
     "siteSettings": [
@@ -308,8 +328,7 @@
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
       "off": ["Off", "Apagado", "Éteint"],
-      "request": ["Optional", "Opcional", "En option"],
-      "always": ["Always On", "Siempre Encendido", "Toujours en marche"]
+      "on": ["On", "Encendido", "Allumé"]
     },
     "invite": {
       "inviteByEmailLabel": [
@@ -598,6 +617,11 @@
     "complete": ["Complete", "Completo", "Complète"],
     "confirm": ["Confirm", "Confirmar", "Confirmer"],
     "delete": ["Delete", "Eliminar", "Effacer"],
+    "deletePermanently": [
+      "Delete permanently?",
+      "¿Eliminar para siempre?",
+      "Effacer pour toujours ?"
+    ],
     "done": ["Done", "Hecho", "Achevé"],
     "export": ["Export", "Exportar", "Exporter"],
     "invite": ["Invite", "Invitar", "Inviter"],
@@ -623,6 +647,11 @@
       "Recording error: Could not access a microphone",
       "Error de grabación: no se pudo acceder a un micrófono",
       "Erreur d'enregistrement : Impossible d'accéder à un microphone"
+    ],
+    "deleteRecording": [
+      "Delete Recording",
+      "Eliminar grabación",
+      "Effacer enregistrement"
     ]
   }
 }
