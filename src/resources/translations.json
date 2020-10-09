@@ -436,7 +436,7 @@
       "No tenemos un domain",
       "Aucun domaine sélectionné"
     ],
-    "noNote": ["No note entered", "No hay nota entrada", "Aucune note saisie"],
+    "noNote": ["No note", "Sin nota", "Pas de note"],
     "deleteWord": [
       "This word will be permanently deleted!",
       "¡Esta palabra se eliminará permanentemente!",

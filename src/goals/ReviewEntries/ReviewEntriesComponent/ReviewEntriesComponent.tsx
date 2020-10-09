@@ -98,7 +98,8 @@ export class ReviewEntriesComponent extends React.Component<
                     oldData: ReviewEntriesWord
                   ) =>
                     new Promise(async (resolve, reject) => {
-                      // Update database + update word ID. Awaited so that the user can't edit + submit a word with a bad ID before the ID is updated
+                      // Update database and update word ID.
+                      // Awaited so user can't edit and submit word with bad ID before it's updated.
                       this.props
                         .updateFrontierWord(
                           newData,

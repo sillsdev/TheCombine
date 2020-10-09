@@ -11,9 +11,13 @@ import { Column } from "material-table";
 import PronunciationsCell from "./PronunciationsCell";
 
 enum SortStyle {
+  // vernacular, noteText: neither have a customSort defined,
+  // so there is currently no way to trigger their SortStyles.
   VERNACULAR,
   GLOSS,
   DOMAIN,
+  PRONUNCIATIONS,
+  NOTETEXT,
   NONE,
 }
 
@@ -124,11 +128,12 @@ const columns: Column<any>[] = [
       return false;
     },
     customSort: (a: any, b: any): number => {
-      let count = 0;
-      let compare: number = 0;
+      if (currentSort !== SortStyle.GLOSS) {
+        currentSort = SortStyle.GLOSS;
+      }
 
-      // IDs that we're sorting by gloss
-      if (currentSort !== SortStyle.GLOSS) currentSort = SortStyle.GLOSS;
+      let count = 0;
+      let compare = 0;
 
       while (
         count < a.senses.length &&
@@ -244,6 +249,10 @@ const columns: Column<any>[] = [
       return false;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.DOMAIN) {
+        currentSort = SortStyle.DOMAIN;
+      }
+
       let count = 0;
       let compare: number = 0;
 
@@ -252,9 +261,6 @@ const columns: Column<any>[] = [
 
       let codeA: number[];
       let codeB: number[];
-
-      // Sets that we're sorting by domain
-      if (currentSort !== SortStyle.DOMAIN) currentSort = SortStyle.DOMAIN;
 
       // Special case: no senses
       if (!a.senses.length || !b.senses.length) {
@@ -322,13 +328,16 @@ const columns: Column<any>[] = [
       return parseInt(filter) === rowData.pronunciationFiles.length;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.PRONUNCIATIONS) {
+        currentSort = SortStyle.PRONUNCIATIONS;
+      }
       return b.pronunciationFiles.length - a.pronunciationFiles.length;
     },
   },
   // Note column
   {
     title: "Note",
-    field: "note",
+    field: "noteText",
     render: (rowData: ReviewEntriesWord) =>
       noteField({ rowData, value: rowData.noteText }, false),
     editComponent: (props: any) => noteField(props, true),
