@@ -3,8 +3,8 @@ import thunk from "redux-thunk";
 
 import { getProject, getWord, updateWord } from "../../../../backend";
 import {
+  emptyWord,
   Gloss,
-  makeNote,
   SemanticDomain,
   Sense,
   State,
@@ -64,6 +64,7 @@ const sense0_local: ReviewEntriesSense = {
 
 // Old frontier word: the version of this word in the frontier
 const oldFrontierWord: Word = {
+  ...emptyWord(),
   id: "word",
   vernacular: "word",
   senses: [
@@ -72,15 +73,6 @@ const oldFrontierWord: Word = {
       semanticDomains: [domain0],
     },
   ],
-  audio: [],
-  created: "",
-  modified: "",
-  history: [],
-  partOfSpeech: "",
-  editedBy: [],
-  otherField: "",
-  plural: "",
-  note: makeNote(),
 };
 
 // oldWord: the version of this word in local memory

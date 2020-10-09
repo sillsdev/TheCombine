@@ -80,11 +80,11 @@ export function hasSenses(word: Word): boolean {
   return returnval;
 }
 
-export function simpleWord(vern: string, gloss: string): Word {
+export function emptyWord(): Word {
   return {
-    id: randomIntString(),
-    vernacular: vern,
-    senses: [makeSense(gloss)],
+    id: "",
+    vernacular: "",
+    senses: [],
     audio: [],
     created: "now",
     modified: "",
@@ -97,20 +97,21 @@ export function simpleWord(vern: string, gloss: string): Word {
   };
 }
 
+export function simpleWord(vern: string, gloss: string): Word {
+  return {
+    ...emptyWord(),
+    id: randomIntString(),
+    vernacular: vern,
+    senses: [makeSense(gloss)],
+  };
+}
+
 export function multiGlossWord(vern: string, glosses: string[]): Word {
   return {
+    ...emptyWord(),
     id: randomIntString(),
     vernacular: vern,
     senses: glosses.map((gloss) => makeSense(gloss)),
-    audio: [],
-    created: "now",
-    modified: "",
-    history: [],
-    partOfSpeech: "",
-    editedBy: [],
-    otherField: "",
-    plural: "",
-    note: makeNote(),
   };
 }
 

@@ -1,4 +1,10 @@
-import { makeNote, Sense, State, Word } from "../../../../types/word";
+import {
+  emptyWord,
+  makeNote,
+  Sense,
+  State,
+  Word,
+} from "../../../../types/word";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -41,17 +47,10 @@ export function mockCreateWord(
   language: string
 ): Word {
   return {
+    ...emptyWord(),
     id: word.id,
     vernacular: word.vernacular,
     senses: word.senses.map((sense) => createMockSense(sense, language)),
-    audio: [],
-    created: "",
-    modified: "",
-    history: [],
-    partOfSpeech: "",
-    editedBy: [],
-    otherField: "",
-    plural: "",
     note: makeNote(word.noteText),
   };
 }
