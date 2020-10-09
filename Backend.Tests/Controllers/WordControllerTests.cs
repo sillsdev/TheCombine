@@ -41,7 +41,6 @@ namespace Backend.Tests.Controllers
 
             foreach (var sense in word.Senses)
             {
-
                 sense.Accessibility = State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
