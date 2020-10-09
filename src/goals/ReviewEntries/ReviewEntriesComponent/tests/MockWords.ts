@@ -1,10 +1,4 @@
-import {
-  emptyWord,
-  makeNote,
-  Sense,
-  State,
-  Word,
-} from "../../../../types/word";
+import { makeNote, Sense, State, Word } from "../../../../types/word";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -13,9 +7,9 @@ import {
 
 export const mockWords: ReviewEntriesWord[] = [
   {
+    ...new ReviewEntriesWord(),
     id: "0",
     vernacular: "toad",
-    pronunciationFiles: [],
     senses: [
       {
         senseId: "1",
@@ -24,12 +18,11 @@ export const mockWords: ReviewEntriesWord[] = [
         deleted: false,
       },
     ],
-    noteText: "",
   },
   {
+    ...new ReviewEntriesWord(),
     id: "1",
     vernacular: "vern",
-    pronunciationFiles: [],
     senses: [
       {
         senseId: "2",
@@ -38,7 +31,6 @@ export const mockWords: ReviewEntriesWord[] = [
         deleted: false,
       },
     ],
-    noteText: "",
   },
 ];
 
@@ -47,7 +39,7 @@ export function mockCreateWord(
   language: string
 ): Word {
   return {
-    ...emptyWord(),
+    ...new Word(),
     id: word.id,
     vernacular: word.vernacular,
     senses: word.senses.map((sense) => createMockSense(sense, language)),

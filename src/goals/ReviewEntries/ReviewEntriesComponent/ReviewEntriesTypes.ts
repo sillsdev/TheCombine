@@ -6,14 +6,15 @@ export const OLD_SENSE: string = "-old";
 export const SEP_CHAR: string = ",";
 const SEPARATOR: string = SEP_CHAR + " ";
 
-export interface ReviewEntriesWord {
-  id: string;
-  vernacular: string;
-  senses: ReviewEntriesSense[];
-  pronunciationFiles: string[];
-  noteText: string;
+export class ReviewEntriesWord {
+  id: string = "";
+  vernacular: string = "";
+  senses: ReviewEntriesSense[] = [];
+  pronunciationFiles: string[] = [];
+  noteText: string = "";
   recorder?: Recorder;
 }
+
 export interface ReviewEntriesSense {
   senseId: string;
   glosses: string;

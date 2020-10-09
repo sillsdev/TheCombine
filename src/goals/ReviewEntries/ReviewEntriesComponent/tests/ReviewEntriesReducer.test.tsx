@@ -4,6 +4,7 @@ import { OLD_SENSE, ReviewEntriesWord } from "../ReviewEntriesTypes";
 import mockWords from "./MockWords";
 
 const newWord: ReviewEntriesWord = {
+  ...new ReviewEntriesWord(),
   id: mockWords[0].id,
   vernacular: "toadTOAD",
   senses: [
@@ -17,10 +18,9 @@ const newWord: ReviewEntriesWord = {
       deleted: false,
     },
   ],
-  pronunciationFiles: [],
-  noteText: "",
 };
 const result: ReviewEntriesWord = {
+  ...new ReviewEntriesWord(),
   id: "a new mock id",
   vernacular: "toadTOAD",
   senses: [
@@ -34,8 +34,6 @@ const result: ReviewEntriesWord = {
       deleted: false,
     },
   ],
-  pronunciationFiles: [],
-  noteText: "",
 };
 const mockState = {
   ...defaultState,

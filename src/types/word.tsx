@@ -39,19 +39,19 @@ export function makeNote(text?: string, lang?: string): Note {
   return { text: text ? text : "", language: lang ? lang : "" };
 }
 
-export interface Word {
-  id: string;
-  vernacular: string;
-  senses: Sense[];
-  audio: string[];
-  created: string;
-  modified: string;
-  history: string[];
-  partOfSpeech: string;
-  editedBy: string[];
-  otherField: string;
-  plural: string;
-  note: Note;
+export class Word {
+  id: string = "";
+  vernacular: string = "";
+  senses: Sense[] = [];
+  audio: string[] = [];
+  created: string = "";
+  modified: string = "";
+  history: string[] = [];
+  partOfSpeech: string = "";
+  editedBy: string[] = [];
+  otherField: string = "";
+  plural: string = "";
+  note: Note = makeNote();
 }
 
 export interface MergeWord {
@@ -80,26 +80,9 @@ export function hasSenses(word: Word): boolean {
   return returnval;
 }
 
-export function emptyWord(): Word {
-  return {
-    id: "",
-    vernacular: "",
-    senses: [],
-    audio: [],
-    created: "now",
-    modified: "",
-    history: [],
-    partOfSpeech: "",
-    editedBy: [],
-    otherField: "",
-    plural: "",
-    note: makeNote(),
-  };
-}
-
 export function simpleWord(vern: string, gloss: string): Word {
   return {
-    ...emptyWord(),
+    ...new Word(),
     id: randomIntString(),
     vernacular: vern,
     senses: [makeSense(gloss)],
@@ -108,7 +91,7 @@ export function simpleWord(vern: string, gloss: string): Word {
 
 export function multiGlossWord(vern: string, glosses: string[]): Word {
   return {
-    ...emptyWord(),
+    ...new Word(),
     id: randomIntString(),
     vernacular: vern,
     senses: glosses.map((gloss) => makeSense(gloss)),
