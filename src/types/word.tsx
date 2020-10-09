@@ -23,11 +23,20 @@ export interface Sense {
   accessibility?: State;
 }
 
-export function makeSense(val: string) {
+export function makeSense(val: string): Sense {
   return {
     glosses: [{ def: val, language: "" }],
     semanticDomains: [],
   };
+}
+
+export interface Note {
+  text: string;
+  language: string;
+}
+
+export function makeNote(text?: string, lang?: string): Note {
+  return { text: text ? text : "", language: lang ? lang : "en" };
 }
 
 export interface Word {
@@ -42,6 +51,7 @@ export interface Word {
   editedBy: string[];
   otherField: string;
   plural: string;
+  notes: Note[];
 }
 
 export interface MergeWord {
@@ -83,6 +93,7 @@ export function simpleWord(vern: string, gloss: string): Word {
     editedBy: [],
     otherField: "",
     plural: "",
+    notes: [],
   };
 }
 
@@ -99,6 +110,7 @@ export function multiGlossWord(vern: string, glosses: string[]): Word {
     editedBy: [],
     otherField: "",
     plural: "",
+    notes: [],
   };
 }
 
