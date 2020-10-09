@@ -99,7 +99,7 @@ namespace BackendFramework.Models
                 EditedBy = new List<string>(),
                 History = new List<string>(),
                 Senses = new List<Sense>(),
-                Note = new Note()
+                Note = Note.Clone()
             };
 
             foreach (var file in Audio)
@@ -181,10 +181,13 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <summary> A note compatible with FieldWorks. </summary>
+    /// <summary> A note associated with a Word, compatible with FieldWorks. </summary>
     public class Note
     {
+        /// <summary> The language used the note is written in. </summary>
         public string Language { get; set; }
+
+        /// <summary> The contents of the note. </summary>
         public string Text { get; set; }
 
         public Note()
