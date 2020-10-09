@@ -42,7 +42,7 @@ namespace Backend.Tests.Controllers
                 Plural = Util.RandString(),
                 History = new List<string>(),
                 Audio = new List<string>(),
-                EditedBy = new List<string>{Util.RandString(), Util.RandString()},
+                EditedBy = new List<string> { Util.RandString(), Util.RandString() },
                 ProjectId = _projId,
                 Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() },
                 Note = new Note { Language = Util.RandString(), Text = Util.RandString() }
