@@ -36,7 +36,7 @@ export interface Note {
 }
 
 export function makeNote(text?: string, lang?: string): Note {
-  return { text: text ? text : "", language: lang ? lang : "en" };
+  return { text: text ? text : "", language: lang ? lang : "" };
 }
 
 export interface Word {

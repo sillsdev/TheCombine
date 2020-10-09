@@ -90,7 +90,8 @@ const columns: Column<any>[] = [
     field: "vernacular",
     render: (rowData: ReviewEntriesWord) =>
       vernacularField({ rowData, value: rowData.vernacular }, false),
-    editComponent: (props: any) => vernacularField(props, true),
+    editComponent: (props: FieldParameterStandard) =>
+      vernacularField(props, true),
   },
   // Glosses column
   {
@@ -105,7 +106,7 @@ const columns: Column<any>[] = [
         sortingByGloss={currentSort === SortStyle.GLOSS}
       />
     ),
-    editComponent: (props: any) => (
+    editComponent: (props: FieldParameterStandard) => (
       <SenseCell
         value={props.value}
         rowData={props.rowData}
@@ -186,7 +187,7 @@ const columns: Column<any>[] = [
         sortingByDomains={currentSort === SortStyle.DOMAIN}
       />
     ),
-    editComponent: (props: any) => {
+    editComponent: (props: FieldParameterStandard) => {
       const editDomains = (senseId: string, domains: SemanticDomain[]) => {
         if (props.onRowDataChange)
           props.onRowDataChange({
@@ -337,7 +338,7 @@ const columns: Column<any>[] = [
     render: (rowData: ReviewEntriesWord) => (
       <Typography>{rowData.noteText}</Typography>
     ),
-    editComponent: (props: any) => noteField(props),
+    editComponent: (props: FieldParameterStandard) => noteField(props),
   },
   // Delete Entry column
   {
