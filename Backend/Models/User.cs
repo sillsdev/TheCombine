@@ -16,7 +16,7 @@ namespace BackendFramework.Models
         public string Avatar { get; set; }
 
         [BsonElement("hasAvatar")]
-        public Boolean HasAvatar { get; set; }
+        public bool HasAvatar { get; set; }
 
         [BsonElement("name")]
         public string Name { get; set; }

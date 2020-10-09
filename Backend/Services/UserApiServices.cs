@@ -175,7 +175,7 @@ namespace BackendFramework.Services
         public async Task<List<User>> GetAllUsers()
         {
             var users = await _userDatabase.Users.Find(_ => true).ToListAsync();
-            users.ForEach(c => Sanitize(c));
+            users.ForEach(Sanitize);
             return (users);
         }
 
