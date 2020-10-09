@@ -11,9 +11,15 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-
             var word = new Word { Vernacular = Vernacular };
             Assert.That(word.Equals(new Word { Vernacular = Vernacular }));
+        }
+
+        [Test]
+        public void TestEqualsNull()
+        {
+            var word = new Word { Vernacular = Vernacular };
+            Assert.IsFalse(word.Equals(null));
         }
 
         [Test]
@@ -27,14 +33,27 @@ namespace Backend.Tests.Models
         public void TestNotEqualsNote()
         {
             var word = new Word { Note = new Note { Language = Vernacular, Text = "Bad Text" } };
-            Assert.That(!word.Equals(new Word { Note = new Note { Language = Vernacular, Text = Text } }));
+            Assert.IsFalse(word.Equals(new Word { Note = new Note { Language = Vernacular, Text = Text } }));
+        }
+    }
+
+    public class NoteTests
+    {
+        private const string Language = "fr";
+        private const string Text = "Text";
+
+        [Test]
+        public void TestEquals()
+        {
+            var note = new Note { Language = Language };
+            Assert.That(note.Equals(new Note { Language = Language }));
         }
 
         [Test]
         public void TestEqualsNull()
         {
-            var word = new Word { Vernacular = Vernacular };
-            Assert.IsFalse(word.Equals(null));
+            var note = new Note { Language = Language };
+            Assert.IsFalse(note.Equals(null));
         }
     }
 
