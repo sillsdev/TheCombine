@@ -15,7 +15,7 @@ namespace BackendFramework.Controllers
     [Produces("application/json")]
     [Route("v1/projects")]
     [EnableCors("AllowAll")]
-    public class ProjectController : Controller
+    public class ProjectController :  Controller
     {
         private readonly IProjectService _projectService;
         private readonly ISemDomParser _semDomParser;
