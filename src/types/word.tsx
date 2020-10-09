@@ -51,7 +51,7 @@ export interface Word {
   editedBy: string[];
   otherField: string;
   plural: string;
-  notes: Note[];
+  note: Note;
 }
 
 export interface MergeWord {
@@ -93,7 +93,7 @@ export function simpleWord(vern: string, gloss: string): Word {
     editedBy: [],
     otherField: "",
     plural: "",
-    notes: [],
+    note: makeNote(),
   };
 }
 
@@ -110,7 +110,7 @@ export function multiGlossWord(vern: string, glosses: string[]): Word {
     editedBy: [],
     otherField: "",
     plural: "",
-    notes: [],
+    note: makeNote(),
   };
 }
 
