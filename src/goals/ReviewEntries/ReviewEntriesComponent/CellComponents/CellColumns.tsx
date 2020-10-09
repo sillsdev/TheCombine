@@ -36,7 +36,7 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
           key={`vernacular${props.rowData.id}`}
           value={props.value}
           error={props.value.length === 0}
-          placeholder={translate("reviewEntries.novernacular").toString()}
+          placeholder={translate("reviewEntries.noVernacular").toString()}
           InputProps={{
             readOnly: !editable,
             disableUnderline: !editable,
@@ -47,6 +47,33 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
             props.onRowDataChange({
               ...props.rowData,
               vernacular: event.target.value,
+            })
+          }
+        />
+      )}
+    </Translate>
+  );
+}
+
+// Creates the editable note text field
+function noteField(props: FieldParameterStandard, editable: boolean) {
+  return (
+    <Translate>
+      {({ translate }) => (
+        <TextField
+          key={`vernacular${props.rowData.id}`}
+          value={props.value}
+          placeholder={translate("reviewEntries.noNote").toString()}
+          InputProps={{
+            readOnly: !editable,
+            disableUnderline: !editable,
+          }}
+          // Handles editing word's local vernacular
+          onChange={(event) =>
+            props.onRowDataChange &&
+            props.onRowDataChange({
+              ...props.rowData,
+              noteText: event.target.value,
             })
           }
         />
@@ -297,6 +324,14 @@ const columns: Column<any>[] = [
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
       return b.pronunciationFiles.length - a.pronunciationFiles.length;
     },
+  },
+  // Note column
+  {
+    title: "Note",
+    field: "note",
+    render: (rowData: ReviewEntriesWord) =>
+      noteField({ rowData, value: rowData.noteText }, false),
+    editComponent: (props: any) => noteField(props, true),
   },
   // Delete Entry column
   {

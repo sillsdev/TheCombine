@@ -3,7 +3,7 @@ import { ThunkDispatch } from "redux-thunk";
 import * as backend from "../../../backend";
 import { getProjectId } from "../../../backend/localStorage";
 import { StoreState } from "../../../types";
-import { Sense, State, Word } from "../../../types/word";
+import { makeNote, Sense, State, Word } from "../../../types/word";
 import {
   OLD_SENSE,
   parseWord,
@@ -257,6 +257,10 @@ export function updateFrontierWord(
        because the mapping makes use of original sense indexing */
     editWord.senses = editWord.senses.filter(
       (sense) => sense.accessibility !== State.Deleted
+    );
+    editWord.note = makeNote(
+      editSource.noteText,
+      editWord.note ? editWord.note.language : undefined
     );
 
     dispatch(

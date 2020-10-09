@@ -1,5 +1,5 @@
 import Recorder from "../../../components/Pronunciations/Recorder";
-import { SemanticDomain, Sense, Word, State } from "../../../types/word";
+import { SemanticDomain, Sense, State, Word } from "../../../types/word";
 import { uuid } from "../../../utilities";
 
 export const OLD_SENSE: string = "-old";
@@ -11,6 +11,7 @@ export interface ReviewEntriesWord {
   vernacular: string;
   senses: ReviewEntriesSense[];
   pronunciationFiles: string[];
+  noteText: string;
   recorder?: Recorder;
 }
 export interface ReviewEntriesSense {
@@ -30,6 +31,7 @@ export function parseWord(
     vernacular: word.vernacular,
     senses: [],
     pronunciationFiles: word.audio,
+    noteText: word.note.text,
     recorder: commonRecorder,
   };
 

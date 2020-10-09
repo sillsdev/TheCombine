@@ -1,4 +1,4 @@
-import { Sense, State, Word } from "../../../../types/word";
+import { makeNote, Sense, State, Word } from "../../../../types/word";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -18,6 +18,7 @@ export const mockWords: ReviewEntriesWord[] = [
         deleted: false,
       },
     ],
+    noteText: "",
   },
   {
     id: "1",
@@ -31,6 +32,7 @@ export const mockWords: ReviewEntriesWord[] = [
         deleted: false,
       },
     ],
+    noteText: "",
   },
 ];
 
@@ -50,6 +52,7 @@ export function mockCreateWord(
     editedBy: [],
     otherField: "",
     plural: "",
+    note: makeNote(word.noteText),
   };
 }
 

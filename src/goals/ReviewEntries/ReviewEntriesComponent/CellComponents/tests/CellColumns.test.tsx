@@ -27,6 +27,7 @@ const WORD: ReviewEntriesWord = {
     },
   ],
   pronunciationFiles: [],
+  noteText: "",
 };
 
 // Last sort sense is the sense that should bubble to the end, first sort sense to the front
