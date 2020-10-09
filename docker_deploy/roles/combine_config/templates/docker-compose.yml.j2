@@ -15,6 +15,7 @@ services:
     env_file:
       - ./.env.backend
     restart: unless-stopped
+
   frontend:
 {% if combine_pull_images %}
     image: {{ combine_image_frontend }}
@@ -25,14 +26,30 @@ services:
       - ./.env.frontend
     volumes:
       - ./nginx/scripts:/usr/share/nginx/html/scripts:ro
-      - frontend_ssl_certs:/ssl
       - letsencrypt:/etc/letsencrypt
     ports:
       - 80:80
       - 443:443
     depends_on:
+      - certmgr
       - backend
     restart: unless-stopped
+
+  certmgr:
+{% if combine_pull_images %}
+    image: {{ combine_image_certmgr }}
+{% else %}
+    build: .
+{% endif %}
+    env_file:
+      - ./.env.certmgr
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+
   database:
     image: mongo:4.2
     volumes:
@@ -43,6 +60,5 @@ services:
 
 volumes:
   backend_data:
-  frontend_ssl_certs:
   database_data:
   letsencrypt:

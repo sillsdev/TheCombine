@@ -11,7 +11,7 @@ COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM staticfloat/nginx-certbot
+FROM nginx:1.18
 
 WORKDIR /app
 
@@ -19,8 +19,4 @@ ENV NGINX_HOST_DIR /usr/share/nginx/html
 
 COPY --from=builder /app/build ${NGINX_HOST_DIR}
 
-# Copy default self-signed certificate.
-# Overwrite this with real certificate for authentication in production.
-COPY nginx/certs /ssl
-
-COPY nginx/conf.d/thecombine.conf /etc/nginx/user.conf.d/thecombine.conf
+COPY nginx/templates/* /etc/nginx/templates

@@ -14,3 +14,4 @@ certbot_is_staging: 0
 combine_pull_images: true
 combine_image_backend: combine/backend
 combine_image_frontend: combine/frontend
+combine_image_certmgr: combine/certmgr
