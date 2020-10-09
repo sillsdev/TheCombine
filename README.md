@@ -71,7 +71,7 @@ A rapid word collection tool.
    generate and trust an SSL certificate
 4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
-   it in your `.profile` (Linux) or the _System_ app (Windows).
+   it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
 5. If you want the email services to work you will need to set the following environment variables.
    These values must be kept secret, so ask your email administrator to supply them.
 
@@ -133,7 +133,7 @@ Run all backend and frontend tests.
 
 Run all backend unit tests.
 
-To run a subset of tests, use the 
+To run a subset of tests, use the
 [`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit)
 option.
 
@@ -371,14 +371,14 @@ To run all Python linting steps:
 (venv) $ tox
 ```
 
-To upgrade all pinned dependencies, run the following command under Python 3.6 so the 
+To upgrade all pinned dependencies, run the following command under Python 3.6 so the
 requirements are backwards-compatible.
 
 ```bash
 (venv) $ pip-compile --upgrade dev-requirements.in
 ```
 
-Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work 
+Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work
 around a pinning issue with supporting Python 3.6 and 3.7+.
 
 #### Configure Docker
