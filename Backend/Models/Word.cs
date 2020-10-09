@@ -240,6 +240,13 @@ namespace BackendFramework.Models
         [BsonElement("guid")]
         public Guid? Guid { get; set; }
 
+        public Sense()
+        {
+            Accessibility = State.Active;
+            Glosses = new List<Gloss>();
+            SemanticDomains = new List<SemanticDomain>();
+        }
+
         public Sense Clone()
         {
             var clone = new Sense
