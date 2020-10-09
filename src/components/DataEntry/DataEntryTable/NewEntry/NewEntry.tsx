@@ -6,7 +6,7 @@ import DupFinder, {
   DefaultParams,
 } from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import theme from "../../../../types/theme";
-import { SemanticDomain, simpleWord, Word } from "../../../../types/word";
+import { SemanticDomain, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
