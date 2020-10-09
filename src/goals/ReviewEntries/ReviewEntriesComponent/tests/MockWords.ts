@@ -1,4 +1,4 @@
-import { makeNote, Sense, State, Word } from "../../../../types/word";
+import { Note, Sense, State, Word } from "../../../../types/word";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -43,7 +43,7 @@ export function mockCreateWord(
     id: word.id,
     vernacular: word.vernacular,
     senses: word.senses.map((sense) => createMockSense(sense, language)),
-    note: makeNote(word.noteText),
+    note: new Note(word.noteText),
   };
 }
 
