@@ -35,6 +35,12 @@ namespace Backend.Tests.Models
             var word = new Word { Note = new Note { Language = Vernacular, Text = "Bad Text" } };
             Assert.IsFalse(word.Equals(new Word { Note = new Note { Language = Vernacular, Text = Text } }));
         }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(new Word{Vernacular = "1"}.GetHashCode(), new Word{Vernacular = "2"});
+        }
     }
 
     public class NoteTests
@@ -54,6 +60,12 @@ namespace Backend.Tests.Models
         {
             var note = new Note { Language = Language };
             Assert.IsFalse(note.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(new Note{Text = "1"}.GetHashCode(), new Note{Text = "2"});
         }
     }
 
@@ -75,6 +87,12 @@ namespace Backend.Tests.Models
         {
             var gloss = new Gloss { Language = Language, Def = Def };
             Assert.IsFalse(gloss.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(new Gloss{Language = "1"}.GetHashCode(), new Gloss{Language = "2"});
         }
     }
 
