@@ -65,7 +65,7 @@ export default class NewEntry extends React.Component<
   constructor(props: NewEntryProps) {
     super(props);
     this.state = {
-      newEntry: { ...simpleWord("", ""), id: "" },
+      newEntry: new Word(),
       activeGloss: "",
       audioFileURLs: [],
       suggestedVerns: [],
@@ -140,7 +140,7 @@ export default class NewEntry extends React.Component<
 
   resetState() {
     this.setState({
-      newEntry: { ...simpleWord("", ""), id: "" },
+      newEntry: new Word(),
       activeGloss: "",
       audioFileURLs: [],
       suggestedVerns: [],
@@ -213,8 +213,8 @@ export default class NewEntry extends React.Component<
     let senseOpen = false;
     if (selectedWordId === "") {
       selectedWord = {
-        ...simpleWord(this.state.newEntry.vernacular, ""),
-        id: "",
+        ...new Word(),
+        vernacular: this.state.newEntry.vernacular,
       };
     } else if (selectedWordId) {
       selectedWord = this.state.dupVernWords.find(
