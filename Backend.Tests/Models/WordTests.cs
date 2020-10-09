@@ -6,6 +6,7 @@ namespace Backend.Tests.Models
     public class WordTests
     {
         private const string Vernacular = "fr";
+        private const string Text = "Text";
 
         [Test]
         public void TestEquals()
@@ -13,6 +14,20 @@ namespace Backend.Tests.Models
 
             var word = new Word { Vernacular = Vernacular };
             Assert.That(word.Equals(new Word { Vernacular = Vernacular }));
+        }
+
+        [Test]
+        public void TestEqualsNote()
+        {
+            var word = new Word { Note = new Note { Language = Vernacular, Text = Text } };
+            Assert.That(word.Equals(new Word { Note = new Note { Language = Vernacular, Text = Text } }));
+        }
+
+        [Test]
+        public void TestNotEqualsNote()
+        {
+            var word = new Word { Note = new Note { Language = Vernacular, Text = "Bad Text" } };
+            Assert.That(!word.Equals(new Word { Note = new Note { Language = Vernacular, Text = Text } }));
         }
 
         [Test]
