@@ -33,7 +33,11 @@ namespace Backend.Tests.Controllers
 
         private Word RandomWord()
         {
-            var word = new Word { Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() } };
+            var word = new Word
+            {
+                Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() },
+                Note = new Note { Language = Util.RandString(), Text = Util.RandString() }
+            };
 
             foreach (var sense in word.Senses)
             {
