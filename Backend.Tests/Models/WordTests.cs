@@ -39,7 +39,9 @@ namespace Backend.Tests.Models
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(new Word{Vernacular = "1"}.GetHashCode(), new Word{Vernacular = "2"});
+            Assert.AreNotEqual(
+                new Word { Vernacular = "1" }.GetHashCode(),
+                new Word { Vernacular = "2" }.GetHashCode());
         }
     }
 
@@ -65,7 +67,36 @@ namespace Backend.Tests.Models
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(new Note{Text = "1"}.GetHashCode(), new Note{Text = "2"});
+            Assert.AreNotEqual(
+                new Note { Text = "1" }.GetHashCode(),
+                new Note { Text = "2" }.GetHashCode());
+        }
+    }
+
+    public class SenseTests
+    {
+        private const State Accessibility = State.Active;
+
+        [Test]
+        public void TestEquals()
+        {
+            var sense = new Sense { Accessibility = Accessibility };
+            Assert.That(sense.Equals(new Sense { Accessibility = Accessibility }));
+        }
+
+        [Test]
+        public void TestEqualsNull()
+        {
+            var sense = new Sense { Accessibility = Accessibility };
+            Assert.IsFalse(sense.Equals(null));
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.AreNotEqual(
+                new Sense { Accessibility = State.Active }.GetHashCode(),
+                new Sense { Accessibility = State.Deleted }.GetHashCode());
         }
     }
 
@@ -77,7 +108,6 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-
             var gloss = new Gloss { Language = Language, Def = Def };
             Assert.That(gloss.Equals(new Gloss { Language = Language, Def = Def }));
         }
@@ -92,7 +122,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(new Gloss{Language = "1"}.GetHashCode(), new Gloss{Language = "2"});
+            Assert.AreNotEqual(new Gloss { Language = "1" }.GetHashCode(), new Gloss { Language = "2" });
         }
     }
 
@@ -103,7 +133,6 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-
             var domain = new SemanticDomain { Name = Name };
             Assert.That(domain.Equals(new SemanticDomain { Name = Name }));
         }
