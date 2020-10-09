@@ -23,11 +23,11 @@ combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
 # for both Let's Encrypt and Self-signed certs
 cert_type: self-signed
 cert_email: jimgrady.jg@gmail.com
-cert_is_staging: 1
+cert_is_staging: 0
 cert_domains:
   - "{{ combine_server_name }}"
 cert_clean: 0
-cert_verbose: 1
+cert_verbose: 0
 
 # setup variables for roles/aws_access
 aws_user: "{{ combine_user }}"
