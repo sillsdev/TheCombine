@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { TextField, Typography } from "@material-ui/core";
 
 import { ReviewEntriesWord, ReviewEntriesSense } from "../ReviewEntriesTypes";
 import { SemanticDomain } from "../../../../types/word";
@@ -45,7 +45,7 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
             readOnly: !editable,
             disableUnderline: !editable,
           }}
-          // Handles editing word's local vernacular
+          // Handles editing local word
           onChange={(event) =>
             props.onRowDataChange &&
             props.onRowDataChange({
@@ -60,7 +60,7 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
 }
 
 // Creates the editable note text field
-function noteField(props: FieldParameterStandard, editable: boolean) {
+function noteField(props: FieldParameterStandard) {
   return (
     <Translate>
       {({ translate }) => (
@@ -68,11 +68,7 @@ function noteField(props: FieldParameterStandard, editable: boolean) {
           key={`vernacular${props.rowData.id}`}
           value={props.value}
           placeholder={translate("reviewEntries.noNote").toString()}
-          InputProps={{
-            readOnly: !editable,
-            disableUnderline: !editable,
-          }}
-          // Handles editing word's local vernacular
+          // Handles editing local word
           onChange={(event) =>
             props.onRowDataChange &&
             props.onRowDataChange({
@@ -338,9 +334,10 @@ const columns: Column<any>[] = [
   {
     title: "Note",
     field: "noteText",
-    render: (rowData: ReviewEntriesWord) =>
-      noteField({ rowData, value: rowData.noteText }, false),
-    editComponent: (props: any) => noteField(props, true),
+    render: (rowData: ReviewEntriesWord) => (
+      <Typography>{rowData.noteText}</Typography>
+    ),
+    editComponent: (props: any) => noteField(props),
   },
   // Delete Entry column
   {
