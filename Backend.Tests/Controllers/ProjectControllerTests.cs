@@ -95,7 +95,6 @@ namespace Backend.Tests.Controllers
             _projectService.Create(RandomProject());
             _projectService.Create(RandomProject());
 
-
             var projects = (_controller.GetAllProjects().Result as ObjectResult).Value as List<Project>;
             Assert.That(projects, Has.Count.EqualTo(3));
             _projectService.GetAllProjects().Result.ForEach(project => Assert.Contains(project, projects));
