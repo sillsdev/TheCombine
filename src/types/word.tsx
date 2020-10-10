@@ -9,8 +9,8 @@ export enum State {
 }
 
 export interface Gloss {
-  language: string;
   def: string;
+  language: string; // bcp-47 code
 }
 
 export interface SemanticDomain {
@@ -29,7 +29,7 @@ export class Sense {
 
 export class Note {
   text: string;
-  language: string;
+  language: string; // bcp-47 code
 
   constructor(text?: string, lang?: string) {
     this.text = text ? text : "";

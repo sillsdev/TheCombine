@@ -184,7 +184,7 @@ namespace BackendFramework.Models
     /// <summary> A note associated with a Word, compatible with FieldWorks. </summary>
     public class Note
     {
-        /// <summary> The language used the note is written in. </summary>
+        /// <summary> The bcp-47 code for the language the note is written in. </summary>
         public string Language { get; set; }
 
         /// <summary> The contents of the note. </summary>
@@ -290,7 +290,10 @@ namespace BackendFramework.Models
 
     public class Gloss
     {
+        /// <summary> The bcp-47 code for the language the note is written in. </summary>
         public string Language { get; set; }
+
+        /// <summary> The gloss string. </summary>
         public string Def { get; set; }
 
         public Gloss Clone()
