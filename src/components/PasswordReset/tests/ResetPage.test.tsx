@@ -1,7 +1,8 @@
 import React from "react";
-import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+
 import { defaultState } from "../../App/DefaultState";
 import PasswordReset from "../ResetPage/component";
 import * as ResetActions from "../actions";
@@ -15,14 +16,14 @@ beforeEach(() => {
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <PasswordReset />
+        <PasswordReset resetState={0} passwordReset={jest.fn()} />
       </Provider>
     );
   });
 });
 
-describe("Test ResetPage", () => {
-  it("should render without errors", (done) => {
+describe("PasswordReset", () => {
+  it("renders without errors", (done) => {
     jest.clearAllMocks();
 
     // get page
@@ -64,7 +65,7 @@ describe("Test ResetPage", () => {
     );
   });
 
-  it("should render with length error", (done) => {
+  it("renders with length error", (done) => {
     jest.clearAllMocks();
 
     // get page
@@ -102,7 +103,7 @@ describe("Test ResetPage", () => {
     );
   });
 
-  it("should render with password match error", (done) => {
+  it("renders with password match error", (done) => {
     jest.clearAllMocks();
 
     // get page
@@ -140,13 +141,16 @@ describe("Test ResetPage", () => {
     );
   });
 
-  it("should render with expire error", (done) => {
+  it("renders with expire error", (done) => {
     // rerender the component with the resetFailure prop set.
     // IDK a better way to update props in the test renderer
     renderer.act(() => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
-          <PasswordReset resetState={RequestState.Fail} />
+          <PasswordReset
+            resetState={RequestState.Fail}
+            passwordReset={jest.fn()}
+          />
         </Provider>
       );
     });
@@ -170,7 +174,6 @@ describe("Test ResetPage", () => {
         isPasswordConfirmed: true,
       },
       () => {
-        var resetPage = testRenderer.root.findAllByType(PasswordReset)[0];
         // check errors showup
         var resetFailErrors = testRenderer.root.findAllByProps({
           id: "passwordReset.resetFail",
