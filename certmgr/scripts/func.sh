@@ -43,7 +43,7 @@ create_selfsigned_cert() {
   mkdir -p ${DEST_DIR}
 
   cd ${DEST_DIR}
-  openssl req -x509 -nodes -newkey rsa:1024 -days ${CERT_SELF_SIGNED_EXPIRE} -keyout privkey.pem -out fullchain.pem -subj '/CN=localhost'
+  openssl req -x509 -nodes -newkey rsa:4096 -days ${CERT_SELF_SIGNED_EXPIRE} -keyout privkey.pem -out fullchain.pem -subj '/CN=localhost'
   if [ "$CERT_VERBOSE" = "1" ] ; then
     echo "Created certificate in ${CERT_PATH} for ${cert_domains}"
     echo "Expires: "`openssl x509 -in fullchain.pem -noout -enddate`
