@@ -27,7 +27,8 @@ namespace BackendFramework.Controllers
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
-        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService, ILiftService liftService)
+        public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService,
+            ILiftService liftService)
         {
             _wordRepo = repo;
             _projectService = projServ;
@@ -131,7 +132,8 @@ namespace BackendFramework.Controllers
                 // There were 0 or more than 2 directories
                 default:
                     {
-                        return new BadRequestObjectResult("Your zip file structure has the wrong number of directories");
+                        return new BadRequestObjectResult(
+                            "Your zip file structure has the wrong number of directories");
                     }
             }
 
@@ -167,7 +169,8 @@ namespace BackendFramework.Controllers
                 // Add character set to project from ldml file
                 var proj = _projectService.GetProject(projectId).Result;
                 _liftService.LdmlImport(
-                    Path.Combine(extractedDirPath, "WritingSystems"), proj.VernacularWritingSystem.Bcp47, _projectService, proj);
+                    Path.Combine(extractedDirPath, "WritingSystems"),
+                    proj.VernacularWritingSystem.Bcp47, _projectService, proj);
 
                 return new ObjectResult(resp);
             }
