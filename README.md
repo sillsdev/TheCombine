@@ -117,9 +117,9 @@ You will also see any lint errors in the console.
 
 Runs only the front end of the app in the development mode.
 
-#### `npm run api`
+#### `npm run backend`
 
-Runs only the API.
+Runs only the backend.
 
 #### `npm run database`
 
