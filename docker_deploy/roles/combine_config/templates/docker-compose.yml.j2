@@ -39,7 +39,7 @@ services:
 {% if combine_pull_images %}
     image: {{ combine_image_certmgr }}
 {% else %}
-    build: .
+    build: ./certmgr
 {% endif %}
     env_file:
       - ./.env.certmgr
