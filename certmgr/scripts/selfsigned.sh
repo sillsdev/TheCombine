@@ -41,7 +41,7 @@ CERT_MODE="self-signed"
 # Container initialization
 init_vars
 
-if [ ${CERT_CLEAN} = "1" && -d "${CERT_PATH}/live/${CERT_NAME}" ]; then
+if [ ${CERT_CLEAN} = "1" ] && [ -d "${CERT_PATH}/live/${CERT_NAME}" ]; then
   clean_certs
 fi
 
