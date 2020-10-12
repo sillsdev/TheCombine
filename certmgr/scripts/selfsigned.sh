@@ -15,14 +15,20 @@ create_selfsigned_cert() {
 
 renew_selfsigned_cert()
 {
+  CERT_FILE="${CERT_PATH}/live/${CERT_NAME}/fullchain.pem"
   if [ "$CERT_VERBOSE" = "1" ] ; then
-    echo "Checking for renewal of ${CERT_PATH}/live/${CERT_NAME}/fullchain.pem"
+    echo "Checking for renewal of ${CERT_FILE}"
   fi
 
   CERT_MIN_SEC_TO_EXPIRE=$(( ${CERT_MIN_DAYS_TO_EXPIRE} * 3600 * 24 ))
-  openssl x509 -noout -in "${CERT_PATH}/live/${CERT_NAME}/fullchain.pem" -checkend ${CERT_MIN_SEC_TO_EXPIRE} > /dev/null
-  if [ "$?" = "1" ] ; then
-    echo "Renewing the certificate for ${cert_domains}"
+  if [ -f ${CERT_FILE} ] ; then
+    openssl x509 -noout -in "${CERT_PATH}/live/${CERT_NAME}/fullchain.pem" -checkend ${CERT_MIN_SEC_TO_EXPIRE} > /dev/null
+    if [ "$?" = "1" ] ; then
+      echo "Renewing the certificate for ${cert_domains}"
+      create_selfsigned_cert
+    fi
+  else
+    echo "Restoring the certificate for ${cert_domains}"
     create_selfsigned_cert
   fi
 }
@@ -35,13 +41,11 @@ CERT_MODE="self-signed"
 # Container initialization
 init_vars
 
-if [ ${CERT_CLEAN} = "1" ] ; then
-  if [ -d "${CERT_PATH}/live/${cert_domains}" ]; then
+if [ ${CERT_CLEAN} = "1" && -d "${CERT_PATH}/live/${CERT_NAME}" ]; then
     clean_certs
-  fi
 fi
 
-if [ -d "${CERT_PATH}/live/${cert_domains}" ]; then
+if [ ! -d "${CERT_PATH}/live/${CERT_NAME}" ]; then
   create_selfsigned_cert
 fi
 
