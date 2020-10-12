@@ -57,11 +57,16 @@ def main() -> None:
         #   instructions.
         "combine_image_frontend": "combine/frontend:latest",
         "combine_image_backend": "combine/backend:latest",
-        "certbot_email": "",
+        "combine_image_certmgr": "combine/certmgr:latest",
+        "cert_email": "",
+        "cert_type": "self-signed",
         "cert_is_staging": 0,
+        "cert_domains": ["localhost"],
+        "cert_clean": 0,
+        "cert_verbose": 1,
         "combine_server_name": "localhost",
-        "ssl_certificate": "/ssl/cert.pem",
-        "ssl_private_key": "/ssl/key.pem",
+        "ssl_certificate": "/etc/letsencrypt/live/localhost/fullchain.pem",
+        "ssl_private_key": "/etc/letsencrypt/live/localhost/privkey.pem",
         "combine_env_vars": "",
         "combine_private_env_vars": [
             {
@@ -85,6 +90,7 @@ def main() -> None:
         "docker-compose.yml.j2": project_dir / "docker-compose.yml",
         "env.frontend.j2": project_dir / ".env.frontend",
         "env.backend.j2": project_dir / ".env.backend",
+        "env.certmgr.j2": project_dir / ".env.certmgr",
         "config.js.j2": project_dir / "nginx" / "scripts" / "config.js",
     }
 
