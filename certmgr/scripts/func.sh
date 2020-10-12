@@ -21,8 +21,10 @@ init_vars() {
   fi
   # create $cert_domains as an array of domain names
   IFS=" " read -r -a cert_domains <<< "${CERT_DOMAINS}"
+  CERT_NAME=${CERT_NAME:="$cert_domains"}
   if [ "$CERT_VERBOSE" = "1" ] ; then
     echo "Certificates stored in ${CERT_PATH}"
+    echo "Certificate name: ${CERT_NAME}"
     echo "Domains: ${cert_domains[*]}"
     echo "Certificates expire in ${CERT_SELF_SIGNED_EXPIRE}"
     echo "Minimum days before renewal: ${CERT_MIN_DAYS_TO_EXPIRE}"
@@ -31,15 +33,15 @@ init_vars() {
 
 clean_certs() {
   if [ "$CERT_VERBOSE" = "1" ] ; then
-    echo "Removing certificates in ${CERT_PATH} for ${cert_domains}"
+    echo "Removing certificates in ${CERT_PATH} for ${CERT_NAME}"
   fi
-  rm -rf "${CERT_PATH}/live/${cert_domains}"
-  rm -rf "${CERT_PATH}/archive/${cert_domains}"
-  rm -f "${CERT_PATH}/renewal/${cert_domains}.conf"
+  rm -rf "${CERT_PATH}/live/${CERT_NAME}"
+  rm -rf "${CERT_PATH}/archive/${CERT_NAME}"
+  rm -f "${CERT_PATH}/renewal/${CERT_NAME}.conf"
 }
 
 create_selfsigned_cert() {
-  DEST_DIR="${CERT_PATH}/live/${cert_domains}"
+  DEST_DIR="${CERT_PATH}/live/${CERT_NAME}"
   mkdir -p ${DEST_DIR}
 
   cd ${DEST_DIR}
@@ -82,11 +84,11 @@ wait_for_webserver() {
 check_renewal()
 {
   if [ "$CERT_VERBOSE" = "1" ] ; then
-    echo "Checking for renewal of ${CERT_PATH}/live/${cert_domains}/fullchain.pem"
+    echo "Checking for renewal of ${CERT_PATH}/live/${CERT_NAME}/fullchain.pem"
   fi
 
   CERT_MIN_SEC_TO_EXPIRE=$(( ${CERT_MIN_DAYS_TO_EXPIRE} * 3600 * 24 ))
-  openssl x509 -noout -in "${CERT_PATH}/live/${cert_domains}/fullchain.pem" -checkend ${CERT_MIN_SEC_TO_EXPIRE} > /dev/null
+  openssl x509 -noout -in "${CERT_PATH}/live/${CERT_NAME}/fullchain.pem" -checkend ${CERT_MIN_SEC_TO_EXPIRE} > /dev/null
   if [ "$?" = "1" ] ; then
     echo "Renewing the certificate for ${cert_domains}"
     create_selfsigned_cert
