@@ -39,14 +39,12 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
       .then(async (projUsers) => {
         this.setState({ projUsers });
         const userAvatar = this.state.userAvatar;
-        let u: User | undefined;
-        // for loop rather than .forEach forces each await to finish
-        for (let i = 0; i < projUsers.length; i++) {
-          u = projUsers[i];
+        const promises = projUsers.map(async (u) => {
           if (u.hasAvatar) {
             userAvatar[u.id] = await avatarSrc(u.id);
           }
-        }
+        });
+        await Promise.all(promises);
         this.setState({ userAvatar });
       })
       .catch((err) => console.error(err));

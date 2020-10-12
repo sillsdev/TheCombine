@@ -80,14 +80,12 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
               ),
             }));
             const userAvatar = this.state.userAvatar;
-            let u: User | undefined;
-            // for loop rather than .forEach forces each await to finish
-            for (let i = 0; i < returnedUsers.length; i++) {
-              u = returnedUsers[i];
+            const promises = projUsers.map(async (u) => {
               if (u.hasAvatar) {
                 userAvatar[u.id] = await backend.avatarSrc(u.id);
               }
-            }
+            });
+            await Promise.all(promises);
             this.setState({ userAvatar });
           })
           .catch((err) => console.error(err));
