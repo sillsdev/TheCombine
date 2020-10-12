@@ -419,6 +419,7 @@ namespace BackendFramework.Services
             public async void FinishEntry(LiftEntry entry)
             {
                 var newWord = new Word();
+                newWord.Guid = entry.Guid;
                 var proj = _projectService.GetProject(_projectId).Result;
 
                 // Add vernacular
