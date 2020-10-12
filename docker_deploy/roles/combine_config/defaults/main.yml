@@ -9,7 +9,13 @@ config_captcha_sitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
 # for non-development deployments
 combine_env_vars:
 
-certbot_is_staging: 0
+cert_type: self-signed
+cert_email: jimgrady.jg@gmail.com
+cert_is_staging: 0
+cert_domains:
+  - "{{ combine_server_name }}"
+cert_clean: 0
+cert_verbose: 0
 
 combine_pull_images: true
 combine_image_backend: combine/backend

@@ -42,7 +42,7 @@ CERT_MODE="self-signed"
 init_vars
 
 if [ ${CERT_CLEAN} = "1" && -d "${CERT_PATH}/live/${CERT_NAME}" ]; then
-    clean_certs
+  clean_certs
 fi
 
 if [ ! -d "${CERT_PATH}/live/${CERT_NAME}" ]; then

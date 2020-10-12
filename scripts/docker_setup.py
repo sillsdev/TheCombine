@@ -58,7 +58,7 @@ def main() -> None:
         "combine_image_frontend": "combine/frontend:latest",
         "combine_image_backend": "combine/backend:latest",
         "certbot_email": "",
-        "certbot_is_staging": 0,
+        "cert_is_staging": 0,
         "combine_server_name": "localhost",
         "ssl_certificate": "/ssl/cert.pem",
         "ssl_private_key": "/ssl/key.pem",
