@@ -3,8 +3,6 @@
 # Source in util.sh so we can have our nice tools
 . $(cd $(dirname $0); pwd)/func.sh
 
-CERT_MODE="self-signed"
-
 # Container initialization
 init_vars
 
