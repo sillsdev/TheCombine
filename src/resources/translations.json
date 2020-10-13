@@ -377,14 +377,6 @@
     "progress": {
       "step": ["Step", "Paso", "Étape"],
       "of": ["of", "de", "sur"]
-    },
-    "mergeDups": {
-      "done": [
-        "Save & Continue",
-        "Ahorrar y Continuar",
-        "Enregistrer & Continuer"
-      ],
-      "skip": ["Skip", "omitir", "Sauter"]
     }
   },
   "createStrWordInv": {
@@ -583,7 +575,7 @@
         "Arrastra un nuevo sentido aquí",
         "Faites glisser un nouveau sens ici"
       ],
-      "next": [
+      "saveAndContinue": [
         "Merge all these words and load a new set of words",
         "Combina todas estas palabras y carga un nuevo conjunto de palabras",
         "Fusionner tous ces mots et charger un nouvel ensemble de mots"
@@ -629,6 +621,12 @@
     "rejected": ["Rejected", "Rechazado", "Rejeté"],
     "restore": ["Restore", "Restaurar", "Restaurer"],
     "save": ["Save", "Guardar", "Enregistrer"],
+    "saveAndContinue": [
+      "Save & Continue",
+      "Ahorrar y continuar",
+      "Enregistrer et continuer"
+    ],
+    "skip": ["Skip", "Omitir", "Sauter"],
     "undecided": ["Undecided", "Indeciso", "Incertain"],
     "upload": ["Upload", "Cargar", "Télécharger"]
   },
