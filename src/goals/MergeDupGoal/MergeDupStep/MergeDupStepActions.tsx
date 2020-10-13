@@ -46,15 +46,16 @@ interface MergeTreeSetAction {
 
 interface MergeOrderSenseAction {
   type: MergeTreeActions.ORDER_SENSE;
-  wordID: string;
-  senseID: string;
-  order: number;
+  payload: {
+    wordID: string;
+    senseID: string;
+    order: number;
+  };
 }
 
 interface MergeOrderDuplicateAction {
   type: MergeTreeActions.ORDER_DUPLICATE;
-  ref: MergeTreeReference;
-  order: number;
+  payload: { ref: MergeTreeReference; order: number };
 }
 
 interface MergeTreeWordAction {
@@ -140,9 +141,7 @@ export function orderSense(
 ): MergeOrderSenseAction {
   return {
     type: MergeTreeActions.ORDER_SENSE,
-    wordID: wordID,
-    senseID: senseID,
-    order: order,
+    payload: { wordID: wordID, senseID: senseID, order: order },
   };
 }
 
@@ -152,8 +151,7 @@ export function orderDuplicate(
 ): MergeOrderDuplicateAction {
   return {
     type: MergeTreeActions.ORDER_DUPLICATE,
-    ref,
-    order,
+    payload: { ref, order },
   };
 }
 

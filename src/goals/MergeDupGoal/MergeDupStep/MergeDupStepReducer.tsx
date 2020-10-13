@@ -1,16 +1,16 @@
-import { MergeTreeAction, MergeTreeActions } from "./MergeDupStepActions";
-import {
-  MergeTree,
-  defaultData,
-  defaultTree,
-  MergeData,
-  MergeTreeWord,
-  Hash,
-  TreeDataSense,
-} from "./MergeDupsTree";
+import { StoreAction, StoreActions } from "../../../rootActions";
 import { Word } from "../../../types/word";
 import { uuid } from "../../../utilities";
-import { StoreAction, StoreActions } from "../../../rootActions";
+import { MergeTreeAction, MergeTreeActions } from "./MergeDupStepActions";
+import {
+  defaultData,
+  defaultTree,
+  Hash,
+  MergeData,
+  MergeTree,
+  MergeTreeWord,
+  TreeDataSense,
+} from "./MergeDupsTree";
 
 export const defaultState: MergeTreeState = {
   data: defaultData,
@@ -36,15 +36,17 @@ const mergeDupStepReducer = (
       return state;
     case MergeTreeActions.ORDER_SENSE: {
       // reorder sense
-      let word = JSON.parse(JSON.stringify(state.tree.words[action.wordID]));
+      let word = JSON.parse(
+        JSON.stringify(state.tree.words[action.payload.wordID])
+      );
       let senses = Object.entries(word.senses);
-      let sense = { ...word.senses[action.senseID] };
+      let sense = { ...word.senses[action.payload.senseID] };
 
       senses.splice(
-        senses.findIndex((s) => s[0] === action.senseID),
+        senses.findIndex((s) => s[0] === action.payload.senseID),
         1
       );
-      senses.splice(action.order, 0, [action.senseID, sense]);
+      senses.splice(action.payload.order, 0, [action.payload.senseID, sense]);
 
       word.senses = {};
       for (let sense of senses) {
@@ -54,13 +56,13 @@ const mergeDupStepReducer = (
       let treeWords: Hash<MergeTreeWord> = JSON.parse(
         JSON.stringify(state.tree.words)
       );
-      treeWords[action.wordID] = word;
+      treeWords[action.payload.wordID] = word;
       state = { ...state, tree: { ...state.tree, words: treeWords } };
 
       return state;
     }
     case MergeTreeActions.ORDER_DUPLICATE: {
-      let ref = action.ref;
+      let ref = action.payload.ref;
       let dups = Object.entries(state.tree.words[ref.word].senses[ref.sense]);
       let dup = state.tree.words[ref.word].senses[ref.sense][ref.duplicate];
 
@@ -68,7 +70,7 @@ const mergeDupStepReducer = (
         dups.findIndex((s) => s[0] === ref.duplicate),
         1
       );
-      dups.splice(action.order, 0, [ref.duplicate, dup]);
+      dups.splice(action.payload.order, 0, [ref.duplicate, dup]);
 
       let newDups: Hash<string> = {};
 
