@@ -75,8 +75,11 @@ class MergeDupStep extends React.Component<
     }
   }
 
-  next() {
+  clearSideBar() {
     this.setState({ sideBar: { senses: [], wordID: "", senseID: "" } });
+  }
+  next() {
+    this.clearSideBar();
     if (this.props.advanceStep) {
       this.props.advanceStep();
     }
@@ -85,7 +88,7 @@ class MergeDupStep extends React.Component<
     }
   }
   saveContinue() {
-    this.setState({ sideBar: { senses: [], wordID: "", senseID: "" } });
+    this.clearSideBar();
     if (this.props.mergeAll) {
       this.props.mergeAll().then(() => {
         this.next();
@@ -177,13 +180,7 @@ class MergeDupStep extends React.Component<
               */
               style={{ padding: 30, paddingTop: 64 + 30 }}
             >
-              <IconButton
-                onClick={() =>
-                  this.setState({
-                    sideBar: { senses: [], senseID: "", wordID: "" },
-                  })
-                }
-              >
+              <IconButton onClick={() => this.clearSideBar()}>
                 <ArrowForwardIos />
               </IconButton>
               <Typography variant="h5">

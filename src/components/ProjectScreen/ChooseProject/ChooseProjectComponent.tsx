@@ -32,7 +32,7 @@ class ChooseProject extends React.Component<
   constructor(props: ChooseProjectProps & LocalizeContextProps) {
     super(props);
     this.state = { projectList: [] };
-    const userId: string = getUserId();
+    const userId = getUserId();
     if (userId) {
       getAllActiveProjectsByUser(userId).then((projectList) => {
         this.setState({ projectList });

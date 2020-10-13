@@ -1,2 +1,17 @@
+{% if my_default_aws_profile is defined and my_default_aws_profile %}
 [default]
-region = {{ aws_default_region }}
+{% for profile in aws_access_profiles %}
+{% if profile.name == my_default_aws_profile %}
+region = {{ profile.region }}
+{% endif %}
+{% endfor %}
+
+{% endif %}
+{% if my_aws_profiles is defined %}
+{% for profile in aws_access_profiles %}
+{% if profile.name in my_aws_profiles %}
+[profile {{ profile.name }}]
+region = {{ profile.region }}
+{% endif %}
+{% endfor %}
+{% endif %}

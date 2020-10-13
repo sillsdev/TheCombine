@@ -1,2 +1,19 @@
 ---
-aws_config_dir: "/home/{{ combine_user }}/.aws"
+aws_config_dir: "/home/{{ aws_user }}/.aws"
+
+# Define a list of profiles to be installed on the target.
+
+# my_aws_profiles is a
+# list of profile names that are defined in the aws_credential file.
+
+# my_default_aws_profile is the profile that will be the default profile to use
+# if no --profile option is specified when running aws commands.  The default
+# profile does not need to be one of the profiles listed in my_aws_profiles
+
+# my_default_aws_profile and my_aws_profile are both optional.  Each may be empty
+# or undefined if they are not needed
+
+# my_default_aws_profile: s3_read_only
+my_aws_profiles:
+  - ecr_read_only
+  - s3_read_only

@@ -27,6 +27,7 @@
     ],
     "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
     "domain": ["Domain", "Dominio", "Domaine"],
+    "gloss": ["Gloss", "Traducción", "Glose"],
     "glosses": ["Glosses", "Traducciones", "Gloses"],
     "pressEnter": [
       "Press enter to save word",

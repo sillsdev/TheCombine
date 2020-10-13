@@ -1,29 +1,25 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import renderer from "react-test-renderer";
 
-import VerticalDisplay from "../VerticalDisplay";
 import { defaultState } from "../../DefaultState";
-import { Goal } from "../../../../types/goals";
+import VerticalDisplay from "../VerticalDisplay";
 
 // Constants
-const goals: Goal[] = [...defaultState.allPossibleGoals];
+const goals = [...defaultState.allPossibleGoals];
 const HANDLE_CHANGE = jest.fn();
-const prevCompletion: Goal[] = [...defaultState.historyState.history];
-const noPrecCompletion: Goal[] = [];
 
-describe("Tests the VerticalDisplay component", () => {
-  it("Renders without crashing", () => {
-    const div = document.createElement("div");
-    ReactDOM.render(
-      <VerticalDisplay
-        data={goals.slice(1)}
-        height={100}
-        numPanes={3}
-        scrollToEnd={false}
-        handleChange={HANDLE_CHANGE}
-      />,
-      div
-    );
-    ReactDOM.unmountComponentAtNode(div);
+describe("VerticalDisplay", () => {
+  it("renders without crashing", () => {
+    renderer.act(() => {
+      renderer.create(
+        <VerticalDisplay
+          data={goals.slice(1)}
+          height={100}
+          numPanes={3}
+          scrollToEnd={false}
+          handleChange={HANDLE_CHANGE}
+        />
+      );
+    });
   });
 });

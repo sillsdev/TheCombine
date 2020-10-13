@@ -104,16 +104,18 @@ export class Register extends React.Component<
   async checkUsername(username: string) {
     const usernameTaken: boolean = await isUsernameTaken(username);
     if (usernameTaken) {
-      const error = { ...this.state.error, username: true };
-      this.setState({ error });
+      this.setState((prevState) => ({
+        error: { ...prevState.error, username: true },
+      }));
     }
   }
 
   async checkEmail(username: string) {
     const emailTaken: boolean = await isEmailTaken(username);
     if (emailTaken) {
-      const error = { ...this.state.error, email: true };
-      this.setState({ error });
+      this.setState((prevState) => ({
+        error: { ...prevState.error, email: true },
+      }));
     }
   }
 

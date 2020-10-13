@@ -1,27 +1,13 @@
 import React, { ReactElement } from "react";
-import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
-import { Provider } from "react-redux";
 
 import GoalTimelineVertical, {
   GoalTimelineVertical as GTVertical,
 } from "../GoalTimelineVertical";
 import { defaultState } from "../../DefaultState";
 import { Goal } from "../../../../types/goals";
-
-// Mock store
-const STATE = {
-  goalsState: {
-    historyState: {
-      history: [...defaultState.allPossibleGoals],
-    },
-    suggestionsState: {
-      suggestions: [...defaultState.allPossibleGoals],
-    },
-  },
-};
-const mockStore = configureMockStore([])(STATE);
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();
@@ -31,11 +17,20 @@ jest.mock("../../../AppBar/AppBarComponent", () => "div");
 const LOAD_EDITS = jest.fn();
 const CHOOSE_GOAL = jest.fn();
 const LOAD_HISTORY = jest.fn();
-const goals: Goal[] = [...defaultState.allPossibleGoals];
+const goals = [...defaultState.allPossibleGoals];
+
+// Mock store
+const STATE = {
+  goalsState: {
+    historyState: { history: [...goals] },
+    suggestionsState: { suggestions: [...goals] },
+  },
+};
+const mockStore = configureMockStore([])(STATE);
 
 // Handles
-var timeMaster: ReactTestRenderer;
-var timeHandle: GTVertical;
+let timeMaster: ReactTestRenderer;
+let timeHandle: GTVertical;
 
 beforeAll(() => {
   createTimeMaster();
@@ -46,60 +41,53 @@ beforeEach(() => {
   CHOOSE_GOAL.mockClear();
 });
 
-describe("Test GoalTimelineVertical", () => {
-  // render
-  it("Renders without crashing", () => {
-    const div = document.createElement("div");
-    ReactDOM.render(
-      <Provider store={mockStore}>{createTimeline()}</Provider>,
-      div
-    );
-    ReactDOM.unmountComponentAtNode(div);
+describe("GoalTimelineVertical", () => {
+  describe("findGoalByName", () => {
+    it("Finds a goal by name when prompted", () => {
+      expect(timeHandle.findGoalByName(goals, goals[2].name)).toEqual(goals[2]);
+    });
+
+    it("Returns undefined when prompted for a non-existant goal", () => {
+      expect(timeHandle.findGoalByName(goals.slice(1), goals[0].name)).toBe(
+        undefined
+      );
+    });
   });
 
-  // findGoalByName
-  it("Finds a goal by name when prompted", () => {
-    expect(timeHandle.findGoalByName(goals, goals[2].name)).toEqual(goals[2]);
+  describe("handleChange", () => {
+    it("Selects a goal from suggestions based on name", () => {
+      timeHandle.handleChange(goals[2].name);
+      expect(CHOOSE_GOAL).toHaveBeenCalledWith(goals[2]);
+    });
+
+    it("Doesn't select a non-existent goal by name", () => {
+      timeHandle.handleChange("The goal is a lie");
+      expect(CHOOSE_GOAL).toHaveBeenCalledTimes(0);
+    });
   });
 
-  it("Returns undefined when prompted for a non-existant goal", () => {
-    expect(timeHandle.findGoalByName(goals.slice(1), goals[0].name)).toBe(
-      undefined
-    );
-  });
+  describe("createSuggestionData", () => {
+    it("Generates proper suggestion data: no options to append", () => {
+      createTimeMaster([], goals);
+      expect(timeHandle.createSuggestionData()).toEqual(goals.slice(1));
 
-  // handleChange
-  it("Selects a goal from suggestions based on name", () => {
-    timeHandle.handleChange(goals[2].name);
-    expect(CHOOSE_GOAL).toHaveBeenCalledWith(goals[2]);
-  });
+      // Cleanup
+      createTimeMaster();
+    });
 
-  it("Doesn't select a non-existent goal by name", () => {
-    timeHandle.handleChange("The goal is a lie");
-    expect(CHOOSE_GOAL).toHaveBeenCalledTimes(0);
-  });
+    it("Generates proper suggestion data: append options", () => {
+      const tmp = [...goals.slice(3), ...goals.slice(0, 2)];
+      createTimeMaster([], goals.slice(2));
+      expect(timeHandle.createSuggestionData()).toEqual(tmp);
 
-  // createSuggestionData
-  it("Generates proper suggestion data: no options to append", () => {
-    createTimeMaster([], goals);
-    expect(timeHandle.createSuggestionData()).toEqual(goals.slice(1));
+      // Cleanup
+      createTimeMaster();
+    });
 
-    // Cleanup
-    createTimeMaster();
-  });
-
-  it("Generates proper suggestion data: append options", () => {
-    let tmp = [...goals.slice(3), ...goals.slice(0, 2)];
-    createTimeMaster([], goals.slice(2));
-    expect(timeHandle.createSuggestionData()).toEqual(tmp);
-
-    // Cleanup
-    createTimeMaster();
-  });
-
-  it("Generates proper suggestion data: empty suggestion data", () => {
-    createTimeMaster([], []);
-    expect(timeHandle.createSuggestionData()).toEqual(goals);
+    it("Generates proper suggestion data: empty suggestion data", () => {
+      createTimeMaster([], []);
+      expect(timeHandle.createSuggestionData()).toEqual(goals);
+    });
   });
 });
 

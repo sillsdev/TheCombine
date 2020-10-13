@@ -62,8 +62,8 @@ namespace BackendFramework.Models
             IsActive = true;
             AutocompleteSetting = AutocompleteSetting.On;
             VernacularWritingSystem = new WritingSystem();
-            SemanticDomains = new List<SemanticDomain>();
             AnalysisWritingSystems = new List<WritingSystem>();
+            SemanticDomains = new List<SemanticDomain>();
             ValidCharacters = new List<string>();
             RejectedCharacters = new List<string>();
             CustomFields = new List<CustomField>();
@@ -79,9 +79,10 @@ namespace BackendFramework.Models
                 Id = Id.Clone() as string,
                 Name = Name.Clone() as string,
                 IsActive = IsActive,
+                AutocompleteSetting = AutocompleteSetting,
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
-                SemanticDomains = new List<SemanticDomain>(),
                 AnalysisWritingSystems = new List<WritingSystem>(),
+                SemanticDomains = new List<SemanticDomain>(),
                 ValidCharacters = new List<string>(),
                 RejectedCharacters = new List<string>(),
                 CustomFields = new List<CustomField>(),
@@ -90,13 +91,13 @@ namespace BackendFramework.Models
                 InviteTokens = new List<EmailInvite>()
             };
 
-            foreach (var sd in SemanticDomains)
-            {
-                clone.SemanticDomains.Add(sd.Clone());
-            }
             foreach (var aw in AnalysisWritingSystems)
             {
                 clone.AnalysisWritingSystems.Add(aw.Clone());
+            }
+            foreach (var sd in SemanticDomains)
+            {
+                clone.SemanticDomains.Add(sd.Clone());
             }
             foreach (var cs in ValidCharacters)
             {
@@ -131,13 +132,14 @@ namespace BackendFramework.Models
             return
                 other.Name.Equals(Name) &&
                 other.IsActive.Equals(IsActive) &&
+                other.AutocompleteSetting.Equals(AutocompleteSetting) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
-
-                other.SemanticDomains.Count == SemanticDomains.Count &&
-                other.SemanticDomains.All(SemanticDomains.Contains) &&
 
                 other.AnalysisWritingSystems.Count == AnalysisWritingSystems.Count &&
                 other.AnalysisWritingSystems.All(AnalysisWritingSystems.Contains) &&
+
+                other.SemanticDomains.Count == SemanticDomains.Count &&
+                other.SemanticDomains.All(SemanticDomains.Contains) &&
 
                 other.ValidCharacters.Count == ValidCharacters.Count &&
                 other.ValidCharacters.All(ValidCharacters.Contains) &&
@@ -174,9 +176,10 @@ namespace BackendFramework.Models
             hash.Add(Id);
             hash.Add(Name);
             hash.Add(IsActive);
-            hash.Add(SemanticDomains);
+            hash.Add(AutocompleteSetting);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
+            hash.Add(SemanticDomains);
             hash.Add(ValidCharacters);
             hash.Add(RejectedCharacters);
             hash.Add(CustomFields);
@@ -209,13 +212,10 @@ namespace BackendFramework.Models
         public string Token { get; set; }
         public DateTime ExpireTime { get; set; }
 
-        public EmailInvite()
-        {
-
-        }
-
         private static readonly RNGCryptoServiceProvider Rng = new RNGCryptoServiceProvider();
         private const int TokenSize = 8;
+
+        public EmailInvite() { }
 
         public EmailInvite(int expireTime)
         {
@@ -310,22 +310,20 @@ namespace BackendFramework.Models
     {
         public User UpdatedUser;
 
-        public ProjectWithUser() { }
-
         public ProjectWithUser(Project baseObj)
         {
             Id = baseObj.Id;
             Name = baseObj.Name;
-            PartsOfSpeech = baseObj.PartsOfSpeech;
-            RejectedCharacters = baseObj.RejectedCharacters;
-            SemanticDomains = baseObj.SemanticDomains;
-            VernacularWritingSystem = baseObj.VernacularWritingSystem;
-            WordFields = baseObj.WordFields;
-            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
-            CustomFields = baseObj.CustomFields;
-            ValidCharacters = baseObj.ValidCharacters;
-            AutocompleteSetting = baseObj.AutocompleteSetting;
             IsActive = baseObj.IsActive;
+            AutocompleteSetting = baseObj.AutocompleteSetting;
+            VernacularWritingSystem = baseObj.VernacularWritingSystem;
+            AnalysisWritingSystems = baseObj.AnalysisWritingSystems;
+            SemanticDomains = baseObj.SemanticDomains;
+            ValidCharacters = baseObj.ValidCharacters;
+            RejectedCharacters = baseObj.RejectedCharacters;
+            CustomFields = baseObj.CustomFields;
+            WordFields = baseObj.WordFields;
+            PartsOfSpeech = baseObj.PartsOfSpeech;
             InviteTokens = baseObj.InviteTokens;
         }
     }

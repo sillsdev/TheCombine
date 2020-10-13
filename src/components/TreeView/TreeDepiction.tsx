@@ -72,7 +72,7 @@ export default class TreeDepiction extends React.Component<
     else if (tileWidth > MAX_TILE_WIDTH) tileWidth = MAX_TILE_WIDTH;
 
     if (Math.floor(this.state.tileWidth) !== Math.floor(tileWidth))
-      this.setState({ tileWidth: tileWidth });
+      this.setState({ tileWidth });
   }
 
   // Renders the subdomains + their connectors to the current domain

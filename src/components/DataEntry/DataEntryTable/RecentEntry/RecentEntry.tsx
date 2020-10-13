@@ -102,8 +102,6 @@ export default class RecentEntry extends React.Component<
               updateVernField={(newValue: string) =>
                 this.updateVernField(newValue)
               }
-              updateWordId={() => null}
-              allVerns={[]}
               onBlur={() => {
                 this.conditionallyUpdateVern();
               }}
@@ -112,8 +110,6 @@ export default class RecentEntry extends React.Component<
                   this.focusOnNewEntry();
                 }
               }}
-              setActiveGloss={() => {}}
-              analysisLang={this.props.analysisLang}
             />
           </Grid>
           <Grid

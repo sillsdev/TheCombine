@@ -74,11 +74,11 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
         backend
           .getAllUsers()
           .then((returnedUsers) => {
-            this.setState({
+            this.setState((prevState) => ({
               allUsers: returnedUsers.filter(
-                (user) => !this.state.projUsers.find((u) => u.id === user.id)
+                (user) => !prevState.projUsers.find((u) => u.id === user.id)
               ),
-            });
+            }));
             returnedUsers.forEach((u: User) => {
               backend
                 .avatarSrc(u.id)

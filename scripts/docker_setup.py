@@ -7,8 +7,8 @@ production environment as possible. The script shall be run from the
 project's root directory.
 
 Tasks:
-    1. Create the following directories:
-        ./nginx/scripts
+    1. Create the following directory:
+        ../nginx/scripts
     2. Build docker-compose.yml from
        roles/combine_config/templates/docker-compose.yml.j2
     3. Create frontend environment file
@@ -23,7 +23,7 @@ from pathlib import Path
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-project_dir = Path(__file__).resolve().parent
+project_dir = Path(__file__).resolve().parent.parent
 """Absolute path to the checked out repository."""
 
 
@@ -37,7 +37,7 @@ def parse_args() -> argparse.Namespace:
         "--pull-images",
         action="store_true",
         help="Pull pre-built Docker images from the Internet rather than rebuild them from the "
-             "current local repository checkout."
+        "current local repository checkout.",
     )
     parser.add_argument(
         "--no-captcha",
@@ -64,7 +64,10 @@ def main() -> None:
         "ssl_private_key": "/ssl/key.pem",
         "combine_env_vars": "",
         "combine_private_env_vars": [
-            {"key": "COMBINE_JWT_SECRET_KEY", "value": "JwtSecretKeyForDevelopmentUseOnly"},
+            {
+                "key": "COMBINE_JWT_SECRET_KEY",
+                "value": "JwtSecretKeyForDevelopmentUseOnly",
+            },
             {"key": "COMBINE_SMTP_SERVER", "value": ""},
             {"key": "COMBINE_SMTP_PORT", "value": "587"},
             {"key": "COMBINE_SMTP_ADDRESS", "value": ""},
@@ -98,17 +101,17 @@ def main() -> None:
     # Initialize the Jinja2 environment
     jinja_env = Environment(
         loader=PackageLoader(
-            'docker_setup',
-            str(Path(".") / "docker_deploy" / "roles" / "combine_config" / "templates")
+            "docker_setup",
+            str(Path("..") / "docker_deploy" / "roles" / "combine_config" / "templates"),
         ),
-        autoescape=select_autoescape(['html', 'xml']),
+        autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=True,
     )
     (project_dir / "nginx" / "scripts").mkdir(exist_ok=True)
 
     for templ_name, templ_path in template_map.items():
         template = jinja_env.get_template(templ_name)
-        print(f'Writing: {templ_path}')
+        print(f"Writing: {templ_path}")
         templ_path.write_text(template.render(dev_config))
 
     # Restrict permissions for the environment files
@@ -116,6 +119,5 @@ def main() -> None:
         env_file.chmod(0o600)
 
 
-# Standard boilerplate to call main().
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

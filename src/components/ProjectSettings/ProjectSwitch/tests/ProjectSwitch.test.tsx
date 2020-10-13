@@ -13,7 +13,7 @@ var switchHandle: ProjectSwitch;
 
 const createMockStore = configureMockStore([]);
 
-describe("Testing login component", () => {
+describe("ProjectSwitch", () => {
   beforeAll(() => {
     const state = {
       currentProject: { defaultProject },
@@ -31,13 +31,11 @@ describe("Testing login component", () => {
     });
     switchHandle = switchMaster.root.findByType(ProjectSwitch).instance;
   });
-  test("check if correct number of listitems generated", () => {
+
+  it("generates correct number of ListItems", () => {
     switchHandle.setState({ projectList: projects });
-    expect(switchHandle.state.projectList).toBeTruthy();
-    let count = 0;
-    switchHandle.getListItems().map((e) => {
-      if (e.type === ListItem) count++;
-    });
-    expect(count).toEqual(3);
+    expect(switchMaster.root.findAllByType(ListItem).length).toEqual(
+      projects.length
+    );
   });
 });

@@ -1,12 +1,28 @@
 # The Combine
 
+[![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
+[![Frontend Coverage][frontend-codecov-badge]][codecov]
+[![Backend Actions Status][github-actions-backend-badge]][github-actions]
+[![Backend Coverage][backend-codecov-badge]][codecov]
+[![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
+[![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
+[![Python Actions Status][github-actions-python-badge]][github-actions]
 [![GitHub release][github-version-badge]][github-version]
 ![Localization][localization-badge]
 [![GitHub][github-license-badge]][github-license]
 [![GitHub contributors][github-contribs-badge]][github-contribs]
-[![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
-[![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 
+[github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
+[frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=frontend
+[codecov]: https://codecov.io/gh/sillsdev/TheCombine
+[github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
+[backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
+[github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
+[github-actions]: https://github.com/sillsdev/TheCombine/actions
+[lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
+[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
+[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts
 [localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-version]: https://github.com/sillsdev/TheCombine/releases
@@ -14,10 +30,6 @@
 [github-license]: https://github.com/sillsdev/TheCombine/blob/master/LICENSE
 [github-contribs-badge]: https://img.shields.io/github/contributors/sillsdev/TheCombine?cacheSeconds=10000
 [github-contribs]: https://github.com/sillsdev/TheCombine/graphs/contributors
-[lgtm-js-badge]: https://img.shields.io/lgtm/grade/javascript/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
-[lgtm-js]: https://lgtm.com/projects/g/sillsdev/TheCombine/context:javascript
-[lgtm-alerts-badge]: https://img.shields.io/lgtm/alerts/g/sillsdev/TheCombine.svg?logo=lgtm&logoWidth=18
-[lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts
 
 A rapid word collection tool.
 
@@ -28,13 +40,13 @@ A rapid word collection tool.
    ```bash
    # The `--recurse-submodules` is used to fetch many of the Ansible roles used
    # by the Ansible playbooks in the deploy folder.
-   git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
+   $ git clone --recurse-submodules https://github.com/sillsdev/TheCombine.git
    ```
 
    If you've already cloned the repo without `--recurse-submodules`, run:
 
    ```bash
-   git submodule update --init --recursive
+   $ git submodule update --init --recursive
    ```
 
 2. Install:
@@ -59,7 +71,7 @@ A rapid word collection tool.
    generate and trust an SSL certificate
 4. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string
    **containing at least 16 characters**, such as _This is a secret key_. Set
-   it in your `.profile` (Linux) or the _System_ app (Windows).
+   it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
 5. If you want the email services to work you will need to set the following environment variables.
    These values must be kept secret, so ask your email administrator to supply them.
 
@@ -105,9 +117,9 @@ You will also see any lint errors in the console.
 
 Runs only the front end of the app in the development mode.
 
-#### `npm run api`
+#### `npm run backend`
 
-Runs only the API.
+Runs only the backend.
 
 #### `npm run database`
 
@@ -121,7 +133,7 @@ Run all backend and frontend tests.
 
 Run all backend unit tests.
 
-To run a subset of tests, use the 
+To run a subset of tests, use the
 [`--filter`](https://docs.microsoft.com/en-us/dotnet/core/testing/selective-unit-tests?pivots=nunit)
 option.
 
@@ -144,7 +156,7 @@ To run a subset of tests, pass in the name of a partial file path to filter:
 $ npm run test-frontend -- DataEntry
 ```
 
-#### `npm run coverage-*`
+#### `npm run test-*:coverage`
 
 Launches the test runners to calculate the test coverage of the frontend or
 backend of the app.
@@ -154,7 +166,7 @@ backend of the app.
 Run:
 
 ```bash
-$ npm run coverage-backend
+$ npm run test-frontend:coverage
 ```
 
 To view the frontend code coverage open `coverage/lcov-report/index.html`
@@ -165,7 +177,7 @@ in a browser.
 Run:
 
 ```bash
-$ npm run coverage-backend
+$ npm run test-backend:coverage
 ```
 
 Generate the HTML coverage report:
@@ -182,7 +194,7 @@ Runs Jest tests for debugging, awaiting for an attach from an IDE.
 
 For VSCode, run the **Debug Jest Tests** configuration within the Run tab on the left taskbar.
 
-### `npm run dotnet-format`
+### `npm run fmt-backend`
 
 Automatically format the C# source files in the backend.
 
@@ -190,7 +202,7 @@ Automatically format the C# source files in the backend.
 
 Runs ESLint on the codebase to detect code problems that should be fixed.
 
-### `npm run prettier`
+### `npm run fmt-frontend`
 
 Auto-format frontend code in the `src` folder.
 
@@ -214,7 +226,7 @@ more information.
 Imports Semantic Domains from the provided xml file.
 
 ```bash
-npm run import-sem-doms -- <XML_FILE_PATH>
+$ npm run import-sem-doms -- <XML_FILE_PATH>
 ```
 
 ## Database
@@ -302,7 +314,7 @@ separately. This is included by default in Docker Desktop for Windows and macOS.
 
 #### Python
 
-A Python script, `docker_setup.py` is used to configure the files needed to run
+A Python script, `scripts/docker_setup.py` is used to configure the files needed to run
 _TheCombine_ in Docker containers.
 
 ##### Windows Only
@@ -335,16 +347,39 @@ Create an isolated Python virtual environment
 
 ```bash
 $ python3 -m venv venv
-$ venv/bin/activate
+$ source venv/bin/activate
 ```
 
 ##### Python Packages
 
-With an active virtual environment, install `Jinja2`:
+With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-(venv) $ python -m pip install Jinja2
+(venv) $ python -m pip install --upgrade pip pip-tools
+(venv) $ pip-sync dev-requirements.txt
 ```
+
+Note, you can also now perform automated code formatting of Python code:
+
+```bash
+(venv) $ tox -e fmt
+```
+
+To run all Python linting steps:
+
+```bash
+(venv) $ tox
+```
+
+To upgrade all pinned dependencies, run the following command under Python 3.6 so the
+requirements are backwards-compatible.
+
+```bash
+(venv) $ pip-compile --upgrade dev-requirements.in
+```
+
+Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work
+around a pinning issue with supporting Python 3.6 and 3.7+.
 
 #### Configure Docker
 
@@ -352,7 +387,7 @@ Run the configuration script in an activated virtual environment to generate
 the necessary configuration files.
 
 ```bash
-(venv) $ python docker_setup.py
+(venv) $ python scripts/docker_setup.py
 
 # To view options, run with --help
 ```

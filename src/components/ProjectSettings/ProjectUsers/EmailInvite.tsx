@@ -58,18 +58,10 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
   ) {
-    const value = e.target.value;
-    this.setState({
-      emailAddress: value,
-    });
-    if (
-      validator.isEmail(this.state.emailAddress) &&
-      this.state.emailAddress !== "example@gmail.com"
-    ) {
-      this.setState({ isValid: true });
-    } else {
-      this.setState({ isValid: false });
-    }
+    const emailAddress = e.target.value;
+    const isValid =
+      validator.isEmail(emailAddress) && emailAddress !== "example@gmail.com";
+    this.setState({ emailAddress, isValid });
   }
 
   updateMessageField(
@@ -77,10 +69,8 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
   ) {
-    const value = e.target.value;
-    this.setState({
-      message: value,
-    });
+    const message = e.target.value;
+    this.setState({ message });
   }
 
   render() {

@@ -1,16 +1,16 @@
 import React from "react";
+import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { VernList, StyledMenuItem } from "../VernDialog";
-import { simpleWord, Word, testWordList } from "../../../../../../types/word";
-import { Provider } from "react-redux";
+import { simpleWord, Word, testWordList } from "../../../../../types/word";
 
 jest.mock(
-  "../../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell"
+  "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell"
 );
 jest.mock(
-  "../../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell"
+  "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell"
 );
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});

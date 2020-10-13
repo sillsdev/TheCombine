@@ -1,11 +1,12 @@
-import * as React from "react";
-import { Translate, LocalizeContextProps } from "react-localize-redux";
-import { RouteComponentProps } from "react-router";
-import { Typography, Card, Button, Grid, TextField } from "@material-ui/core";
+import { Button, Card, Grid, TextField, Typography } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { RequestState } from "../reducer";
-import { passwordRequirements } from "../../../utilities";
+import * as React from "react";
+import { Translate } from "react-localize-redux";
+import { RouteComponentProps } from "react-router";
+
 import history from "../../../history";
+import { passwordRequirements } from "../../../utilities";
+import { RequestState } from "../reducer";
 
 export interface MatchParams {
   token: string;
@@ -29,15 +30,13 @@ export interface PasswordResetState {
 }
 
 export default class PasswordReset extends React.Component<
-  PasswordResetProps & LocalizeContextProps & ResetDispatchProps,
+  PasswordResetProps & ResetDispatchProps,
   PasswordResetState
 > {
-  constructor(
-    props: PasswordResetProps & LocalizeContextProps & ResetDispatchProps
-  ) {
+  constructor(props: PasswordResetProps & ResetDispatchProps) {
     super(props);
     this.state = {
-      token: this.props.match && this.props.match.params.token,
+      token: props.match && props.match.params.token,
       password: "",
       passwordConfirm: "",
       sentAttempt: false,
@@ -52,22 +51,18 @@ export default class PasswordReset extends React.Component<
   };
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      sentAttempt: true,
-    }));
+    this.setState({ sentAttempt: true });
     this.props.passwordReset(this.state.token, this.state.password);
     event.preventDefault();
   };
 
   onChangePassword = (password: string, confirmPassword: string) => {
-    this.setState((prevState) => ({
-      ...prevState,
+    this.setState({
       passwordFitsRequirements: passwordRequirements(password),
       isPasswordConfirmed: password === confirmPassword,
       password: password,
       passwordConfirm: confirmPassword,
-    }));
+    });
   };
 
   render() {

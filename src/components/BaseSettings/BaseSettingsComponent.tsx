@@ -23,8 +23,9 @@ export default class BaseSettingsComponent extends React.Component<
   }
 
   toggleVisibility() {
-    const isVisible: boolean = !this.state.isVisible;
-    this.setState({ isVisible });
+    this.setState((prevState) => ({
+      isVisible: !prevState.isVisible,
+    }));
   }
 
   render() {

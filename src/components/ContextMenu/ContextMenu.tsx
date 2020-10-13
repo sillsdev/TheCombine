@@ -52,7 +52,7 @@ export class ContextMenu extends React.Component<
     }
   }
 
-  closeMenu(event?: React.MouseEvent, reason?: any): void {
+  closeMenu(event?: React.MouseEvent): void {
     this.setState({ isOpen: false });
     if (event !== undefined) event.stopPropagation();
   }
