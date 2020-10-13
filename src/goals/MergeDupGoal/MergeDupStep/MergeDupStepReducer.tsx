@@ -27,13 +27,17 @@ const mergeDupStepReducer = (
   action: StoreAction | MergeTreeAction
 ): MergeTreeState => {
   switch (action.type) {
-    case MergeTreeActions.SET_VERNACULAR:
+    case MergeTreeActions.SET_VERNACULAR: {
       state.tree.words[action.payload.wordID].vern = action.payload.data;
       state.tree.words = { ...state.tree.words };
       state.tree = { ...state.tree };
       return { ...state };
-    case MergeTreeActions.SET_PLURAL:
+    }
+
+    case MergeTreeActions.SET_PLURAL: {
       return state;
+    }
+
     case MergeTreeActions.ORDER_SENSE: {
       // reorder sense
       let word = JSON.parse(
@@ -61,6 +65,7 @@ const mergeDupStepReducer = (
 
       return state;
     }
+
     case MergeTreeActions.ORDER_DUPLICATE: {
       let ref = action.payload.ref;
       let dups = Object.entries(state.tree.words[ref.word].senses[ref.sense]);
@@ -88,9 +93,11 @@ const mergeDupStepReducer = (
       state.tree.words = { ...state.tree.words };
       state.tree = { ...state.tree };
       state = { ...state };
+
       return state;
     }
-    case MergeTreeActions.MOVE_SENSE:
+
+    case MergeTreeActions.MOVE_SENSE: {
       let treeState: MergeTree = JSON.parse(JSON.stringify(state.tree));
       for (let op in action.payload.src) {
         let src = action.payload.src[op];
@@ -140,7 +147,9 @@ const mergeDupStepReducer = (
       }
 
       return { ...state, tree: treeState };
-    case MergeTreeActions.SET_DATA:
+    }
+
+    case MergeTreeActions.SET_DATA: {
       let words: Hash<Word> = {};
       let senses: Hash<TreeDataSense> = {};
       let wordsTree: Hash<MergeTreeWord> = {};
@@ -165,12 +174,20 @@ const mergeDupStepReducer = (
         tree: { words: wordsTree },
         data: { senses, words },
       };
-    case MergeTreeActions.CLEAR_TREE:
+    }
+
+    case MergeTreeActions.CLEAR_TREE: {
       return { tree: { ...defaultTree }, data: { ...defaultData } };
-    case StoreActions.RESET:
+    }
+
+    case StoreActions.RESET: {
       return defaultState;
-    default:
+    }
+
+    default: {
       return state;
+    }
   }
 };
+
 export default mergeDupStepReducer;
