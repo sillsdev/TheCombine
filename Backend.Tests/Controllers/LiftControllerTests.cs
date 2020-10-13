@@ -167,7 +167,6 @@ namespace Backend.Tests.Controllers
             public string Language { get; set; }
             public List<string> AudioFiles { get; set; }
             public int NumOfWords { get; set; }
-            // The guid is for testing import and export of a lift file with exactly 1 word.
             public string Guid { get; set; }
 
             public RoundTripObj(string lang, List<string> audio, int words, string guid = "")
@@ -273,6 +272,7 @@ namespace Backend.Tests.Controllers
 
                     var allWords = _wordrepo.GetAllWords(proj.Id);
                     Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
+                    // We are currently only testing guids on the single-entry data sets
                     if (dataSet.Value.Guid != "" && allWords.Result.Count == 1)
                     {
                         Assert.AreEqual(allWords.Result[0].Guid.ToString(), dataSet.Value.Guid);
@@ -324,6 +324,7 @@ namespace Backend.Tests.Controllers
 
                     allWords = _wordrepo.GetAllWords(proj2.Id);
                     Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
+                    // We are currently only testing guids on the single-entry data sets
                     if (dataSet.Value.Guid != "" && allWords.Result.Count == 1)
                     {
                         Assert.AreEqual(allWords.Result[0].Guid.ToString(), dataSet.Value.Guid);
