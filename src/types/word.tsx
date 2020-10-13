@@ -9,39 +9,47 @@ export enum State {
 }
 
 export interface Gloss {
-  language: string;
   def: string;
+  language: string; // bcp-47 code
 }
 
 export interface SemanticDomain {
   name: string;
   id: string;
 }
-export interface Sense {
+export class Sense {
   glosses: Gloss[];
-  semanticDomains: SemanticDomain[];
+  semanticDomains: SemanticDomain[] = [];
   accessibility?: State;
+
+  constructor(gloss: string, language?: string) {
+    this.glosses = [{ def: gloss, language: language ? language : "" }];
+  }
 }
 
-export function makeSense(val: string) {
-  return {
-    glosses: [{ def: val, language: "" }],
-    semanticDomains: [],
-  };
+export class Note {
+  text: string;
+  language: string; // bcp-47 code
+
+  constructor(text?: string, lang?: string) {
+    this.text = text ? text : "";
+    this.language = lang ? lang : "";
+  }
 }
 
-export interface Word {
-  id: string;
-  vernacular: string;
-  senses: Sense[];
-  audio: string[];
-  created: string;
-  modified: string;
-  history: string[];
-  partOfSpeech: string;
-  editedBy: string[];
-  otherField: string;
-  plural: string;
+export class Word {
+  id: string = "";
+  vernacular: string = "";
+  senses: Sense[] = [];
+  audio: string[] = [];
+  created: string = "";
+  modified: string = "";
+  history: string[] = [];
+  partOfSpeech: string = "";
+  editedBy: string[] = [];
+  otherField: string = "";
+  plural: string = "";
+  note: Note = new Note();
 }
 
 export interface MergeWord {
@@ -72,33 +80,19 @@ export function hasSenses(word: Word): boolean {
 
 export function simpleWord(vern: string, gloss: string): Word {
   return {
+    ...new Word(),
     id: randomIntString(),
     vernacular: vern,
-    senses: [makeSense(gloss)],
-    audio: [],
-    created: "now",
-    modified: "",
-    history: [],
-    partOfSpeech: "",
-    editedBy: [],
-    otherField: "",
-    plural: "",
+    senses: [new Sense(gloss)],
   };
 }
 
 export function multiGlossWord(vern: string, glosses: string[]): Word {
   return {
+    ...new Word(),
     id: randomIntString(),
     vernacular: vern,
-    senses: glosses.map((gloss) => makeSense(gloss)),
-    audio: [],
-    created: "now",
-    modified: "",
-    history: [],
-    partOfSpeech: "",
-    editedBy: [],
-    otherField: "",
-    plural: "",
+    senses: glosses.map((gloss) => new Sense(gloss)),
   };
 }
 

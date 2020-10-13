@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { TextField, Typography } from "@material-ui/core";
 
 import { ReviewEntriesWord, ReviewEntriesSense } from "../ReviewEntriesTypes";
 import { SemanticDomain } from "../../../../types/word";
@@ -11,9 +11,13 @@ import { Column } from "material-table";
 import PronunciationsCell from "./PronunciationsCell";
 
 enum SortStyle {
+  // vernacular, noteText: neither have a customSort defined,
+  // so there is currently no way to trigger their SortStyles.
   VERNACULAR,
   GLOSS,
   DOMAIN,
+  PRONUNCIATIONS,
+  NOTETEXT,
   NONE,
 }
 
@@ -36,17 +40,40 @@ function vernacularField(props: FieldParameterStandard, editable: boolean) {
           key={`vernacular${props.rowData.id}`}
           value={props.value}
           error={props.value.length === 0}
-          placeholder={translate("reviewEntries.novernacular").toString()}
+          placeholder={translate("reviewEntries.noVernacular").toString()}
           InputProps={{
             readOnly: !editable,
             disableUnderline: !editable,
           }}
-          // Handles editing word's local vernacular
+          // Handles editing local word
           onChange={(event) =>
             props.onRowDataChange &&
             props.onRowDataChange({
               ...props.rowData,
               vernacular: event.target.value,
+            })
+          }
+        />
+      )}
+    </Translate>
+  );
+}
+
+// Creates the editable note text field
+function noteField(props: FieldParameterStandard) {
+  return (
+    <Translate>
+      {({ translate }) => (
+        <TextField
+          key={`vernacular${props.rowData.id}`}
+          value={props.value}
+          placeholder={translate("reviewEntries.noNote").toString()}
+          // Handles editing local word
+          onChange={(event) =>
+            props.onRowDataChange &&
+            props.onRowDataChange({
+              ...props.rowData,
+              noteText: event.target.value,
             })
           }
         />
@@ -63,7 +90,8 @@ const columns: Column<any>[] = [
     field: "vernacular",
     render: (rowData: ReviewEntriesWord) =>
       vernacularField({ rowData, value: rowData.vernacular }, false),
-    editComponent: (props: any) => vernacularField(props, true),
+    editComponent: (props: FieldParameterStandard) =>
+      vernacularField(props, true),
   },
   // Glosses column
   {
@@ -78,7 +106,7 @@ const columns: Column<any>[] = [
         sortingByGloss={currentSort === SortStyle.GLOSS}
       />
     ),
-    editComponent: (props: any) => (
+    editComponent: (props: FieldParameterStandard) => (
       <SenseCell
         value={props.value}
         rowData={props.rowData}
@@ -97,11 +125,12 @@ const columns: Column<any>[] = [
       return false;
     },
     customSort: (a: any, b: any): number => {
-      let count = 0;
-      let compare: number = 0;
+      if (currentSort !== SortStyle.GLOSS) {
+        currentSort = SortStyle.GLOSS;
+      }
 
-      // IDs that we're sorting by gloss
-      if (currentSort !== SortStyle.GLOSS) currentSort = SortStyle.GLOSS;
+      let count = 0;
+      let compare = 0;
 
       while (
         count < a.senses.length &&
@@ -158,7 +187,7 @@ const columns: Column<any>[] = [
         sortingByDomains={currentSort === SortStyle.DOMAIN}
       />
     ),
-    editComponent: (props: any) => {
+    editComponent: (props: FieldParameterStandard) => {
       const editDomains = (senseId: string, domains: SemanticDomain[]) => {
         if (props.onRowDataChange)
           props.onRowDataChange({
@@ -217,6 +246,10 @@ const columns: Column<any>[] = [
       return false;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.DOMAIN) {
+        currentSort = SortStyle.DOMAIN;
+      }
+
       let count = 0;
       let compare: number = 0;
 
@@ -225,9 +258,6 @@ const columns: Column<any>[] = [
 
       let codeA: number[];
       let codeB: number[];
-
-      // Sets that we're sorting by domain
-      if (currentSort !== SortStyle.DOMAIN) currentSort = SortStyle.DOMAIN;
 
       // Special case: no senses
       if (!a.senses.length || !b.senses.length) {
@@ -295,8 +325,20 @@ const columns: Column<any>[] = [
       return parseInt(filter) === rowData.pronunciationFiles.length;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.PRONUNCIATIONS) {
+        currentSort = SortStyle.PRONUNCIATIONS;
+      }
       return b.pronunciationFiles.length - a.pronunciationFiles.length;
     },
+  },
+  // Note column
+  {
+    title: "Note",
+    field: "noteText",
+    render: (rowData: ReviewEntriesWord) => (
+      <Typography>{rowData.noteText}</Typography>
+    ),
+    editComponent: (props: FieldParameterStandard) => noteField(props),
   },
   // Delete Entry column
   {
