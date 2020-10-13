@@ -400,7 +400,7 @@ export function mergeAll() {
     const hash: string = wordIDs
       .sort()
       .reduce((val, acc) => `${acc}:${val}`, "");
-    let blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
+    const blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
     blacklist[hash] = true;
     LocalStorage.setMergeDupsBlacklist(blacklist);
     // merge words
