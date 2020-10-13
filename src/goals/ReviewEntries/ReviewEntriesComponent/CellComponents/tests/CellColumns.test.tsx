@@ -10,6 +10,7 @@ const GLOSS = "hoovy";
 const DOMAIN: SemanticDomain = { name: "Person", id: "0.1" };
 const DOMAIN2: SemanticDomain = { name: "Universe", id: "1" };
 const WORD: ReviewEntriesWord = {
+  ...new ReviewEntriesWord(),
   id: "id",
   vernacular: "pootis",
   senses: [
@@ -26,7 +27,6 @@ const WORD: ReviewEntriesWord = {
       deleted: false,
     },
   ],
-  pronunciationFiles: [],
 };
 
 // Last sort sense is the sense that should bubble to the end, first sort sense to the front

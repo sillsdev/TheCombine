@@ -1,29 +1,16 @@
+import { simpleWord } from "../../../../types/word";
 import { MergeDupData } from "../../MergeDups";
-import { uuid } from "../../../../utilities";
-
-const wordMock = () => ({
-  id: uuid(),
-  vernacular: "",
-  senses: [],
-  audio: [""],
-  created: "",
-  modified: "",
-  history: [""],
-  partOfSpeech: "",
-  editedBy: [""],
-  otherField: "",
-  plural: "",
-});
 
 const wordsArrayMock = () => [
-  wordMock(),
-  wordMock(),
-  wordMock(),
-  wordMock(),
-  wordMock(),
-  wordMock(),
-  wordMock(),
-  wordMock(),
+  // Each simpleWord() has a randomly generated id
+  simpleWord("", ""),
+  simpleWord("", ""),
+  simpleWord("", ""),
+  simpleWord("", ""),
+  simpleWord("", ""),
+  simpleWord("", ""),
+  simpleWord("", ""),
+  simpleWord("", ""),
 ];
 
 export const goalDataMock: MergeDupData = {

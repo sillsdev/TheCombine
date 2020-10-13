@@ -80,6 +80,7 @@ namespace BackendFramework.Controllers
 
             // Update the user's avatar file
             gotUser.Avatar = fileUpload.FilePath;
+            gotUser.HasAvatar = true;
             _ = await _userService.Update(userId, gotUser);
 
             return new OkResult();

@@ -113,7 +113,7 @@ export default class DomainCell extends React.Component<
               ) : (
                 <Grid item xs key={`noDomain${sense.senseId}`}>
                   <Chip
-                    label={<Translate id="reviewEntries.nodomain" />}
+                    label={<Translate id="reviewEntries.noDomain" />}
                     color={
                       this.props.sortingByDomains ? "default" : "secondary"
                     }
