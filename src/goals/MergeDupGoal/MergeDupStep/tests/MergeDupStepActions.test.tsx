@@ -112,12 +112,12 @@ const treeB: { tree: MergeTree } = {
   tree: {
     words: {
       WA: {
-        senses: { ID1: { ID1: "S1", ID2: "S2" } },
+        senses: { ID1: { ID1: "S1" }, ID2: { ID1: "S2" } },
         vern: "AAA",
         plural: "AAAS",
       },
       WB: {
-        senses: { ID1: { ID1: "S3", ID2: "S4" } },
+        senses: { ID1: { ID1: "S3" }, ID2: { ID1: "S4" } },
         vern: "BBB",
         plural: "BBBS",
       },
