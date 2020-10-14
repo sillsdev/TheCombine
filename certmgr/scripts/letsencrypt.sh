@@ -5,22 +5,32 @@
 
 # Container initialization
 init_vars
-
-if [ ${CERT_CLEAN} = "1" ] ; then
-  if [ -d "${CERT_PATH}/live/${cert_domains}" ]; then
-    clean_certs
-  fi
-fi
+init_cert_store
 
 # Create the initial certificate if the certs have not already
 # been created
-if [ ! -d "${CERT_PATH}/live/${cert_domains}" ]; then
+if [ ! -d "${CERT_LIVE_DIR}" ] ; then
+  mkdir -p "${CERT_LIVE_DIR}"
   echo "Creating initial self-signed certificate"
   create_selfsigned_cert
+fi
+
+# Lookup the issuer of the certificate (either pre-existing or just created)
+CERT_ISSUER=""
+if [ -f "${CERT_LIVE_DIR}/fullchain.pem" ] ; then
+  CERT_ISSUER=`openssl x509 -in "${CERT_LIVE_DIR}/fullchain.pem" -noout -issuer | sed 's/issuer=CN *= *//'`
+  debug_log "Issuer for existing certificate is: ${CERT_ISSUER}"
+fi
+
+# If it is a self-signed cert, wait for the webserver to come up
+# and replace it with a cert from letsencrypt
+if [ "${CERT_ISSUER}" = "localhost" ] ; then
   echo "Waiting for webserver to come up"
   if ! wait_for_webserver ; then
-    exit 1
+    debug_log "Could not connect to webserver"
+    #exit 1
   fi
+
   echo "Request certificate from Let's Encrypt"
   create_certbot_cert
 fi

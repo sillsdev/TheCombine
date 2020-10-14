@@ -4,7 +4,8 @@ VOLUME /etc/letsencrypt
 
 RUN apk update && \
     apk upgrade && \
-    apk add --no-cache bash
+    apk add --no-cache bash && \
+    apk add --no-cache curl
 
 COPY scripts/*.sh /usr/bin/
 

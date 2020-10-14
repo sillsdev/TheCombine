@@ -65,13 +65,13 @@ def main() -> None:
         "cert_clean": 0,
         "cert_verbose": 1,
         "combine_server_name": "localhost",
-        "ssl_certificate": "/etc/letsencrypt/live/localhost/fullchain.pem",
-        "ssl_private_key": "/etc/letsencrypt/live/localhost/privkey.pem",
-        "combine_env_vars": "",
+        "ssl_certificate": "/etc/nginx/ssl/localhost/fullchain.pem",
+        "ssl_private_key": "/etc/nginx/ssl/localhost/privkey.pem",
+        "combine_backend_env_vars": "",
         "combine_private_env_vars": [
             {
                 "key": "COMBINE_JWT_SECRET_KEY",
-                "value": "JwtSecretKeyForDevelopmentUseOnly",
+                "value": "JwtSecretKeyForDevelopmentUseOnly"
             },
             {"key": "COMBINE_SMTP_SERVER", "value": ""},
             {"key": "COMBINE_SMTP_PORT", "value": "587"},
@@ -79,7 +79,24 @@ def main() -> None:
             {"key": "COMBINE_SMTP_USERNAME", "value": ""},
             {"key": "COMBINE_SMTP_PASSWORD", "value": ""},
             {"key": "COMBINE_SMTP_FROM", "value": ""},
-            {"key": "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "value": "15"},
+            {"key": "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "value": "15"}
+        ],
+        "combine_frontend_env_vars": [
+            {"key": "SERVER_NAME", "value": "localhost"}.
+            {"key": "SSL_CERTIFICATE", "value": "/etc/nginx/ssl/localhost/fullchain.pem"},
+            {"key": "SSL_PRIVATE_KEY", "value": "/etc/nginx/ssl/localhost/privkey.pem"}
+        ],
+        "combine_cert_env_vars": [
+            {"key": "CERT_MODE", "value": "self-signed"}.
+            {"key": "CERT_EMAIL", "value": ""}.
+            {"key": "CERT_STAGING", "value": "0"}.
+            {"key": "CERT_DOMAINS", "value": "localhost"}.
+            {"key": "CERT_VERBOSE", "value": "0"}.
+            {"key": "CERT_CREATE_ONLY", "value": "0"}.
+            {"key": "MAX_CONNECT_TRIES", "value": "10"}.
+            {"key": "SSL_CERTIFICATE", "value": "/etc/nginx/ssl/localhost/fullchain.pem"},
+            {"key": "SSL_PRIVATE_KEY", "value": "/etc/nginx/ssl/localhost/privkey.pem"},
+            {"key": "SSL_DIR", "value": "/etc/nginx/ssl/localhost"}.
         ],
         "config_captcha_required": json.dumps(not args.no_captcha),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
@@ -100,7 +117,7 @@ def main() -> None:
             env_var["value"] = os.environ[env_var["key"]]
 
     # Set backend common env_vars if they are defined for our process
-    for env_var in dev_config["combine_env_vars"]:
+    for env_var in dev_config["combine_backend_env_vars"]:
         if env_var["key"] in os.environ:
             env_var["value"] = os.environ[env_var["key"]]
 

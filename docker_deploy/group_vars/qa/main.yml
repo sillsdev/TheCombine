@@ -5,9 +5,6 @@
 # Group: qa
 #################################################
 
-ssl_certificate: "/etc/letsencrypt/live/{{ combine_server_name }}/fullchain.pem"
-ssl_private_key: "/etc/letsencrypt/live/{{ combine_server_name }}/privkey.pem"
-
 # TheCombine is installed on the QA Server by TeamCity.  It will set the
 # IMAGE_TAG environment variable to major.minor.build_no and launch
 # Docker compose
@@ -17,15 +14,9 @@ combine_image_backend: "{{ aws_ecr }}/combine/backend:{{ image_tag }}"
 combine_image_frontend: "{{ aws_ecr }}/combine/frontend:{{ image_tag }}"
 combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
 
-# SSL Certificate variables
-# for both Let's Encrypt and Self-signed certs
-cert_type: self-signed
+# SSL cert variables specific to QA targets
+cert_mode: "self-signed"
 cert_email: ""
-cert_is_staging: 0
-cert_domains:
-  - "{{ combine_server_name }}"
-cert_clean: 0
-cert_verbose: 0
 
 # setup variables for roles/aws_access
 aws_user: "{{ combine_user }}"

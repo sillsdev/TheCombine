@@ -26,7 +26,8 @@ services:
       - ./.env.frontend
     volumes:
       - ./nginx/scripts:/usr/share/nginx/html/scripts:ro
-      - letsencrypt:/etc/letsencrypt
+      - cert_store:/etc/cert_store
+      - certbot_data:/var/www/certbot
     ports:
       - 80:80
       - 443:443
@@ -44,7 +45,8 @@ services:
     env_file:
       - ./.env.certmgr
     volumes:
-      - letsencrypt:/etc/letsencrypt
+      - cert_store:/etc/cert_store
+      - certbot_data:/var/www/certbot
     restart: unless-stopped
 
   database:
@@ -58,4 +60,5 @@ services:
 volumes:
   backend_data:
   database_data:
-  letsencrypt:
+  cert_store:
+  certbot_data:

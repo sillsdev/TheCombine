@@ -6,64 +6,134 @@
 init_vars() {
   # set variables to their default values if they are not
   # specified
-  CERT_PATH=${CERT_PATH:="/etc/letsencrypt"}
-  CERT_CLEAN=${CERT_CLEAN:=0}
+  CERT_STORE=${CERT_STORE:="/etc/"}
+  # Folder for certicates as configured by the Nginx webserver
   CERT_CREATE_ONLY=${CERT_CREATE_ONLY:=0}
-  CERT_EMAIL=${CERT_EMAIL:="jimgrady.jg@gmail.com"}
-  CERT_STAGING=${CERT_STAGING:=1}
+  CERT_EMAIL=${CERT_EMAIL:=""}
+  CERT_STAGING=${CERT_STAGING:=0}
   MAX_CONNECT_TRIES=${MAX_CONNECT_TRIES:=15}
   if [ "${CERT_MODE}" = "self-signed" ] ; then
-    CERT_SELF_SIGNED_EXPIRE=3650
+    SELF_SIGNED_EXPIRE=3650
     CERT_MIN_DAYS_TO_EXPIRE=10
   else
-    CERT_SELF_SIGNED_EXPIRE=1
+    SELF_SIGNED_EXPIRE=1
     CERT_MIN_DAYS_TO_EXPIRE=1
   fi
   # create $cert_domains as an array of domain names
   IFS=" " read -r -a cert_domains <<< "${CERT_DOMAINS}"
-  CERT_NAME=${CERT_NAME:="$cert_domains"}
-  if [ "$CERT_VERBOSE" = "1" ] ; then
-    echo "Certificates stored in ${CERT_PATH}"
-    echo "Certificate name: ${CERT_NAME}"
-    echo "Domains: ${cert_domains[*]}"
-    echo "Certificates expire in ${CERT_SELF_SIGNED_EXPIRE}"
-    echo "Minimum days before renewal: ${CERT_MIN_DAYS_TO_EXPIRE}"
+  debug_log "Certificates stored in ${CERT_STORE}"
+  debug_log "Certificate name: ${SERVER_NAME}"
+  debug_log "Domains: ${cert_domains[*]}"
+  debug_log "Certificates expire in ${SELF_SIGNED_EXPIRE}"
+  debug_log "Minimum days before renewal: ${CERT_MIN_DAYS_TO_EXPIRE}"
+
+  CERTBOT_DIR="/etc/letsencrypt/live/${SERVER_NAME}"
+  # Path where the self-signed certificates are stored
+  SELF_SIGNED_PATH="${CERT_STORE}/selfsigned/${SERVER_NAME}"
+  NGINX_CERT_PATH="${CERT_STORE}/nginx/${SERVER_NAME}"
+}
+
+init_cert_store() {
+  # Create nginx, letsencrypt, and selfsigned directories
+  for subdir in  "nginx" "letsencrypt" "selfsigned" ; do
+    mkdir -p "${CERT_STORE}/${subdir}"
+  done
+
+  # link /etc/letsencrypt to /etc/cert_store/letsencrypt
+  ln -s "${CERT_STORE}/letsencrypt" "/etc/letsencrypt"
+}
+
+debug_log() {
+  if [ "${CERT_VERBOSE}" = "1" ] ; then
+    echo $*
   fi
 }
 
-clean_certs() {
-  if [ "$CERT_VERBOSE" = "1" ] ; then
-    echo "Removing certificates in ${CERT_PATH} for ${CERT_NAME}"
+update_link() {
+  src=$1
+  target=$2
+
+  debug_log "linking ${src} to ${target}"
+  if [ `readlink ${target}` != "${src}" ] ; then
+    if [ -L "${target}" ]; then
+      rm "${target}"
+      debug_log "Old link removed"
+    fi
+    ln -s ${src} ${target}
+  else
+    debug_log "${target} already points to ${src}"
   fi
-  rm -rf "${CERT_PATH}/live/${CERT_NAME}"
-  rm -rf "${CERT_PATH}/archive/${CERT_NAME}"
-  rm -f "${CERT_PATH}/renewal/${CERT_NAME}.conf"
+
+}
+
+create_selfsigned_cert() {
+  mkdir -p "${SELF_SIGNED_PATH}"
+  openssl req -x509 -nodes -newkey rsa:4096 -days ${SELF_SIGNED_EXPIRE} -keyout "${SELF_SIGNED_PATH}/privkey.pem" -out "${SELF_SIGNED_PATH}/fullchain.pem" -subj '/CN=localhost'
+  debug_log "Created certificate in ${CERT_STORE} for ${cert_domains}"
+  debug_log "Expires: "`openssl x509 -in "${SELF_SIGNED_PATH}/fullchain.pem" -noout -enddate`
+
+  # Update Nginx link
+  update_link "${SELF_SIGNED_PATH}" "${NGINX_CERT_PATH}"
+}
+
+
+renew_selfsigned_cert()
+{
+  CERT_FILE="${SELF_SIGNED_PATH}/fullchain.pem"
+  debug_log "Checking for renewal of ${CERT_FILE}"
+
+  CERT_MIN_SEC_TO_EXPIRE=$(( ${CERT_MIN_DAYS_TO_EXPIRE} * 3600 * 24 ))
+  if [ -f ${CERT_FILE} ] ; then
+    openssl x509 -noout -in "${CERT_FILE}" -checkend ${CERT_MIN_SEC_TO_EXPIRE} > /dev/null
+    if [ "$?" = "1" ] ; then
+      echo "Renewing the certificate for ${cert_domains}"
+      create_selfsigned_cert
+    fi
+  else
+    echo "Restoring the certificate for ${cert_domains}"
+    create_selfsigned_cert
+  fi
 }
 
 create_certbot_cert() {
-  if [ "$CERT_VERBOSE" = "1" ] ; then
-    echo "create certbot certificate"
+  debug_log "### Requesting Let's Encrypt certificate for ${cert_domains} ..."
+
+  # Select appropriate email arg
+  if [ -z "${CERT_EMAIL}" ] ; then
+    email_arg="--register-unsafely-without-email"
+  else
+    email_arg="--email '${CERT_EMAIL}'"
   fi
+
+  # Enable staging mode if needed
+  if [ ${CERT_STAGING} != "0" ]; then staging_arg="--staging"; fi
+
+  debug_log `pwd`
+  cert_cmd="certbot certonly --webroot -w /var/www/certbot \
+    ${staging_arg} \
+    ${email_arg} \
+    -d ${CERT_DOMAINS} \
+    --rsa-key-size 4096 \
+    --agree-tos \
+    --force-renewal"
+  debug_log "$cert_cmd"
+  $cert_cmd
+
+  update_link "${CERT_STORE}/letsencrypt/live/${SERVER_NAME}" "${NGINX_CERT_PATH}"
 }
 
 wait_for_webserver() {
-  if [ "$CERT_VERBOSE" = "1" ] ; then
-    echo "Attempting connection to ${cert_domains}"
-    echo "Max attempts = ${MAX_CONNECT_TRIES}"
-  fi
+  debug_log "Attempting connection to ${cert_domains}"
+  debug_log "Max attempts = ${MAX_CONNECT_TRIES}"
   count=0;
   while [ ${count} -lt ${MAX_CONNECT_TRIES} ] ; do
-    if [ "${CERT_VERBOSE}" = "1" ] ; then
-      echo "Connection attempt ${count}"
-    fi
+    debug_log "Connection attempt ${count}"
     if curl -I "http://${cert_domains}" 2>&1 | grep -w "200\|301" ; then
-      if [ "$CERT_VERBOSE" = "1" ] ; then
-        echo "${cert_domains} is up."
-      fi
+      debug_log "${cert_domains} is up."
       return 0;
     fi
     let "count+=1"
-    sleep 15
+    sleep 10
   done
   echo "Failed to connect to ${cert_domains}" >2
   return 1;
