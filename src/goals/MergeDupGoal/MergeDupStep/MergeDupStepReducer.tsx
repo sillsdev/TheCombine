@@ -35,7 +35,10 @@ const mergeDupStepReducer = (
     }
 
     case MergeTreeActions.SET_PLURAL: {
-      return state;
+      state.tree.words[action.payload.wordID].plural = action.payload.data;
+      state.tree.words = { ...state.tree.words };
+      state.tree = { ...state.tree };
+      return { ...state };
     }
 
     case MergeTreeActions.ORDER_SENSE: {
@@ -129,8 +132,7 @@ const mergeDupStepReducer = (
           // cleanup src
           delete treeState.words[src.word].senses[src.sense][src.duplicate];
 
-          // check if we removed last dup in a sense if so remove the sense from the word
-
+          // if we removed last dup in a sense, remove sense from word
           if (
             Object.keys(treeState.words[src.word].senses[src.sense]).length ===
             0
@@ -138,8 +140,7 @@ const mergeDupStepReducer = (
             delete treeState.words[src.word].senses[src.sense];
           }
 
-          // check if we removed last sense in a word if so remove the word from the tree
-
+          // if we removed last sense in a word, remove word from tree
           if (Object.keys(treeState.words[src.word].senses).length === 0) {
             delete treeState.words[src.word];
           }
