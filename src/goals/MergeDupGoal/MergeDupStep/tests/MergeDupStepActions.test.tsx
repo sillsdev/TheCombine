@@ -73,16 +73,15 @@ const mockMerge2a: parentWithMergeChildren = {
   children: [{ wordID: "WA", senses: [State.Sense, State.Duplicate] }],
 };
 
+const mockMerges = [mockMerge0a, mockMerge0b, mockMerge1a, mockMerge2a];
+const mergeResults = [["WA2", "WB2"], ["WB2"], ["WA3", "WB2"], ["WA4"]];
+const mergeList: Hash<string[]> = {};
+for (let i = 0; i <= mockMerges.length; i++) {
+  mergeList[JSON.stringify(mockMerges[i])] = mergeResults[i];
+}
+
 function mockMergeWords(parent: Word, children: MergeWord[]) {
-  expect([mockMerge0a, mockMerge0b, mockMerge1a, mockMerge2a]).toContainEqual({
-    parent,
-    children,
-  });
-  const mergeList: Hash<string[]> = {};
-  mergeList[JSON.stringify(mockMerge0a)] = ["WA2", "WB2"];
-  mergeList[JSON.stringify(mockMerge0b)] = ["WB2"];
-  mergeList[JSON.stringify(mockMerge1a)] = ["WA3", "WB2"];
-  mergeList[JSON.stringify(mockMerge2a)] = ["WA4"];
+  expect(mockMerges).toContainEqual({ parent, children });
   const args = JSON.stringify({ parent, children });
   return Promise.resolve(mergeList[args]);
 }
