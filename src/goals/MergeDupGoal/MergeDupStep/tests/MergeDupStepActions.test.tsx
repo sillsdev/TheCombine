@@ -29,24 +29,23 @@ const mockWordList = {
     history: ["WB"],
   },
 };
+
+const mockMerge0: { parent: Word; children: MergeWord[] } = {
+  parent: { ...mockWordList["WA2"], id: "WA", history: [] },
+  children: [
+    { wordID: "WA", senses: [State.Sense, State.Sense] },
+    { wordID: "WB", senses: [State.Duplicate, State.Separate] },
+  ],
+};
+const mockMerge1: { parent: Word; children: MergeWord[] } = {
+  parent: { ...mockWordList["WB2"], history: [], id: "WB" },
+  children: [{ wordID: "WB2", senses: [State.Sense] }],
+};
 function mockMergeWords(parent: Word, children: MergeWord[]) {
-  const { State } = jest.requireActual("../../../../types/word");
-  // Setup data needed to mock
-  const M0: { parent: Word; children: MergeWord[] } = {
-    parent: { ...mockWordList["WA2"], id: "WA", history: [] },
-    children: [
-      { wordID: "WA", senses: [State.Sense, State.Sense] },
-      { wordID: "WB", senses: [State.Duplicate, State.Separate] },
-    ],
-  };
-  const M1: { parent: Word; children: MergeWord[] } = {
-    parent: { ...mockWordList["WB2"], history: [], id: "WB" },
-    children: [{ wordID: "WB2", senses: [State.Sense] }],
-  };
-  expect([M0, M1]).toContainEqual({ parent, children });
+  expect([mockMerge0, mockMerge1]).toContainEqual({ parent, children });
   const mergeList: Hash<string[]> = {};
-  mergeList[JSON.stringify(M0)] = ["WA2", "WB2"];
-  mergeList[JSON.stringify(M1)] = ["WB2"];
+  mergeList[JSON.stringify(mockMerge0)] = ["WA2", "WB2"];
+  mergeList[JSON.stringify(mockMerge1)] = ["WB2"];
   const args = JSON.stringify({ parent, children });
   return Promise.resolve(mergeList[args]);
 }
@@ -81,8 +80,8 @@ const mockStoreState = {
 const data: { data: MergeData } = {
   data: {
     words: {
-      WA: mockWordList["WA"],
-      WB: mockWordList["WB"],
+      WA: { ...multiGlossWord("AAA", ["Sense 1", "Sense 2"]), id: "WA" },
+      WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
     },
     senses: {
       S1: { ...makeSense("Sense 1"), srcWord: "WA", order: 0 },
