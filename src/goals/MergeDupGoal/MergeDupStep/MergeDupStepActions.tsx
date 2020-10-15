@@ -335,11 +335,13 @@ export async function mergeWord(
 
     // a merge is an identity if all of its senses come from parent
     // and it has the same number of senses as parent
-    if (!children.find((val) => val.wordID !== wordID)) {
-      if (children.length === data.words[wordID].senses.length) {
-        // if the merge is an identity don't bother sending a merge
-        return mapping;
-      }
+    if (
+      children.length === 1 &&
+      children[0].wordID === wordID &&
+      children[0].senses.length == data.words[wordID].senses.length
+    ) {
+      // if the merge is an identity don't bother sending a merge
+      return mapping;
     }
 
     // send database call
