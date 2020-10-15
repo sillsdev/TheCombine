@@ -3,9 +3,9 @@ import thunk from "redux-thunk";
 
 import * as backend from "../../../../backend";
 import {
-  makeSense,
   MergeWord,
   multiGlossWord,
+  Sense,
   State,
   Word,
 } from "../../../../types/word";
@@ -84,10 +84,10 @@ const data: { data: MergeData } = {
       WB: { ...multiGlossWord("BBB", ["Sense 3", "Sense 4"]), id: "WB" },
     },
     senses: {
-      S1: { ...makeSense("Sense 1"), srcWord: "WA", order: 0 },
-      S2: { ...makeSense("Sense 2"), srcWord: "WA", order: 1 },
-      S3: { ...makeSense("Sense 3"), srcWord: "WB", order: 0 },
-      S4: { ...makeSense("Sense 4"), srcWord: "WB", order: 1 },
+      S1: { ...new Sense("Sense 1"), srcWord: "WA", order: 0 },
+      S2: { ...new Sense("Sense 2"), srcWord: "WA", order: 1 },
+      S3: { ...new Sense("Sense 3"), srcWord: "WB", order: 0 },
+      S4: { ...new Sense("Sense 4"), srcWord: "WB", order: 1 },
     },
   },
 };
