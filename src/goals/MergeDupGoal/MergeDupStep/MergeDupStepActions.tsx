@@ -333,7 +333,7 @@ export async function mergeWord(
       };
     });
 
-    // a merge is an identity if all of its senses come from parent
+    // a merge is an identity if the only child is the parent word
     // and it has the same number of senses as parent
     if (
       children.length === 1 &&
