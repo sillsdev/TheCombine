@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import SenseCell from "../SenseCell";
 import mockWords from "../../tests/MockWords";
+import SenseCell from "../SenseCell";
 
-describe("Test the AlignedList component", () => {
+describe("SenseCell", () => {
   it("Renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
@@ -12,6 +12,7 @@ describe("Test the AlignedList component", () => {
         rowData={mockWords[0]}
         value={mockWords[0].senses}
         editable={true}
+        sortingByGloss={true}
       />,
       div
     );

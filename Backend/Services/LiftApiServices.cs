@@ -146,12 +146,14 @@ namespace BackendFramework.Services
             // Write out every word with all of its information
             var allWords = wordRepo.GetAllWords(projectId).Result;
             var frontier = wordRepo.GetFrontier(projectId).Result;
-            var activeWords = frontier.Where(x => x.Senses.Any(s => s.Accessibility == State.Active)).ToList();
+            var activeWords = frontier.Where(
+                x => x.Senses.Any(s => s.Accessibility == State.Active)).ToList();
 
             // All words in the frontier with any senses are considered current. The Combine does not import senseless entries
             // and the interface is supposed to prevent creating them. So the the words found in allWords with no matching guid in activeWords
             // are exported as 'deleted'.
-            var deletedWords = allWords.Where(x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
+            var deletedWords = allWords.Where(
+                x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
             foreach (var wordEntry in activeWords)
             {
                 var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid ?? Guid.Empty);
@@ -188,7 +190,8 @@ namespace BackendFramework.Services
             var importLiftDir = "";
             if (Directory.Exists(extractedPathToImport))
             {
-                importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(Path.GetFileName).ToList().Single();
+                importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(
+                    Path.GetFileName).ToList().Single();
             }
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
@@ -311,7 +314,8 @@ namespace BackendFramework.Services
             {
                 var lexPhonetic = new LexPhonetic();
                 var projectPath = Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio");
-                var src = FileUtilities.GenerateFilePath(FileUtilities.FileType.Audio, true, audioFile, projectPath);
+                var src = FileUtilities.GenerateFilePath(
+                    FileUtilities.FileType.Audio, true, audioFile, projectPath);
                 var dest = Path.Combine(path, audioFile);
 
                 if (File.Exists(src))
@@ -364,7 +368,8 @@ namespace BackendFramework.Services
             return SecurityElement.Escape(sInput);
         }
 
-        public ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> GetLiftImporterExporter(string projectId, IProjectService projectService, IWordRepository wordRepo)
+        public ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> GetLiftImporterExporter(
+            string projectId, IProjectService projectService, IWordRepository wordRepo)
         {
             return new LiftMerger(projectId, projectService, wordRepo);
         }
@@ -614,7 +619,8 @@ namespace BackendFramework.Services
                 /*uncomment this if you want to import semantic domains from a lift-ranges file*/
                 //if (range == "semantic-domain-ddp4")
                 //{
-                //    _sdList.Add(new SemanticDomain() { Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
+                //    _sdList.Add(new SemanticDomain() {
+                //        Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
                 //}
             }
 

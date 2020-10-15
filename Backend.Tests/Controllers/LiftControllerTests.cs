@@ -167,12 +167,14 @@ namespace Backend.Tests.Controllers
             public string Language { get; set; }
             public List<string> AudioFiles { get; set; }
             public int NumOfWords { get; set; }
+            public string Guid { get; set; }
 
-            public RoundTripObj(string lang, List<string> audio, int words)
+            public RoundTripObj(string lang, List<string> audio, int words, string guid = "")
             {
                 Language = lang;
                 AudioFiles = audio;
                 NumOfWords = words;
+                Guid = guid;
             }
         }
 
@@ -234,11 +236,12 @@ namespace Backend.Tests.Controllers
             var sena = new RoundTripObj("seh", new List<string>(), 1462 /*number of words*/);
             fileMapping.Add("Sena.zip", sena);
             var singleEntryLiftWithSound = new RoundTripObj(
-                "ptn", new List<string> { "short.mp3" }, 1 /*number of words*/);
+                "ptn", new List<string> { "short.mp3" }, 1 /*number of words*/,
+                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone word*/);
             fileMapping.Add("SingleEntryLiftWithSound.zip", singleEntryLiftWithSound);
             var singleEntryLiftWithTwoSound = new RoundTripObj(
-                "ptn",
-                new List<string> { "short.mp3", "short1.mp3" }, 1 /*number of words*/);
+                "ptn", new List<string> { "short.mp3", "short1.mp3" }, 1 /*number of words*/,
+                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone word*/);
             fileMapping.Add("SingleEntryLiftWithTwoSound.zip", singleEntryLiftWithTwoSound);
 
             foreach (var dataSet in fileMapping)
@@ -269,6 +272,12 @@ namespace Backend.Tests.Controllers
 
                     var allWords = _wordrepo.GetAllWords(proj.Id);
                     Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
+                    // We are currently only testing guids on the single-entry data sets
+                    if (dataSet.Value.Guid != "" && allWords.Result.Count == 1)
+                    {
+                        Assert.AreEqual(allWords.Result[0].Guid.ToString(), dataSet.Value.Guid);
+                    }
+
                     // Export
                     var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
                     var exportedDirectory = Path.GetDirectoryName(exportedFilePath);
@@ -315,6 +324,11 @@ namespace Backend.Tests.Controllers
 
                     allWords = _wordrepo.GetAllWords(proj2.Id);
                     Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
+                    // We are currently only testing guids on the single-entry data sets
+                    if (dataSet.Value.Guid != "" && allWords.Result.Count == 1)
+                    {
+                        Assert.AreEqual(allWords.Result[0].Guid.ToString(), dataSet.Value.Guid);
+                    }
 
                     // Export
                     exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
