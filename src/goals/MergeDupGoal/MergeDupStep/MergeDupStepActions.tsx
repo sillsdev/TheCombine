@@ -338,7 +338,7 @@ export async function mergeWord(
     if (
       children.length === 1 &&
       children[0].wordID === wordID &&
-      children[0].senses.length == data.words[wordID].senses.length
+      children[0].senses.length === data.words[wordID].senses.length
     ) {
       // if the merge is an identity don't bother sending a merge
       return mapping;
