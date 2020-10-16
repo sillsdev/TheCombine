@@ -169,6 +169,7 @@ namespace BackendFramework.Services
                     entry.ModificationTime = modifiedTime;
                 }
 
+                AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, projectId, projService);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir, projectId);
@@ -180,6 +181,7 @@ namespace BackendFramework.Services
             {
                 var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid ?? Guid.Empty);
 
+                AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, projectId, projService);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir, projectId);
@@ -266,6 +268,24 @@ namespace BackendFramework.Services
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
 
             return destinationFileName;
+        }
+
+        /// <summary> Adds <see cref="Note"/> of a word to be written out to lift </summary>
+        private static void AddNote(LexEntry entry, Word wordEntry)
+        {
+            if (!wordEntry.Note.IsBlank())
+            {
+                // This application only uses "basic" notes, which have no type.
+                // To see the implementation of how notes are written to Lift XML:
+                //    https://github.com/sillsdev/libpalaso/blob/
+                //        cd94d55185bbb65adaac0e2f1b0f1afc30cc8d13/SIL.DictionaryServices/Lift/LiftWriter.cs#L218
+                var note = new LexNote();
+                var form = new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note);
+                // TODO: Add Form to note.
+                //     The following code throws an exception (other methods of adding Forms are private/protected).
+                // note.Forms[0] = form;
+                entry.Notes.Add(note);
+            }
         }
 
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
