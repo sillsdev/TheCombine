@@ -269,7 +269,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
-        private void AddVern(LexEntry entry, Word wordEntry, string projectId, IProjectService projService)
+        private static void AddVern(LexEntry entry, Word wordEntry, string projectId, IProjectService projService)
         {
             var lang = projService.GetProject(projectId).Result.VernacularWritingSystem.Bcp47;
             entry.LexicalForm.MergeIn(MultiText.Create(new LiftMultiText { { lang, wordEntry.Vernacular } }));
@@ -315,7 +315,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
-        private void AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
+        private static void AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
         {
             foreach (var audioFile in wordEntry.Audio)
             {
@@ -337,7 +337,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Exports main character set from a project to an ldml file </summary>
-        private void LdmlExport(string filePath, IProjectService projService, Project project)
+        private static void LdmlExport(string filePath, IProjectService projService, Project project)
         {
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
