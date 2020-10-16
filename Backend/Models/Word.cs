@@ -196,6 +196,12 @@ namespace BackendFramework.Models
             Text = "";
         }
 
+        public Note(string language, string text)
+        {
+            Language = language;
+            Text = text;
+        }
+
         public Note Clone()
         {
             return new Note

@@ -40,6 +40,7 @@ namespace BackendFramework.Services
                     Writer.WriteEndElement();
                     Writer.WriteEndElement();
                 }
+
                 // Make sure the writer does not write it again in the wrong format.
                 entry.Pronunciations.Clear();
             }
@@ -116,6 +117,7 @@ namespace BackendFramework.Services
             {
                 Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
             }
+
             var zipDir = Path.Combine(exportDir, "LiftExport", "Lift");
             Directory.CreateDirectory(zipDir);
 
@@ -161,16 +163,19 @@ namespace BackendFramework.Services
                 {
                     entry.CreationTime = createdTime;
                 }
+
                 if (DateTime.TryParse(wordEntry.Modified, out var modifiedTime))
                 {
                     entry.ModificationTime = modifiedTime;
                 }
+
                 AddVern(entry, wordEntry, projectId, projService);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir, projectId);
 
                 liftWriter.Add(entry);
             }
+
             foreach (var wordEntry in deletedWords)
             {
                 var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid ?? Guid.Empty);
@@ -193,6 +198,7 @@ namespace BackendFramework.Services
                 importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(
                     Path.GetFileName).ToList().Single();
             }
+
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
             // If there are no new semantic domains, and the old lift-ranges file is still around, just copy it
@@ -220,6 +226,7 @@ namespace BackendFramework.Services
                 {
                     sdList = reader.ReadToEndAsync().Result;
                 }
+
                 var sdLines = sdList.Split(Environment.NewLine);
                 foreach (var line in sdLines)
                 {
@@ -373,6 +380,7 @@ namespace BackendFramework.Services
         {
             return new LiftMerger(projectId, projectService, wordRepo);
         }
+
         private static void WriteRangeElement(
             XmlWriter liftRangesWriter, string id, string guid, string name, string description)
         {
@@ -407,9 +415,9 @@ namespace BackendFramework.Services
 
         private sealed class LiftMerger : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
         {
-            private string _projectId;
-            private IProjectService _projectService;
-            private IWordRepository _wordRepo;
+            private readonly string _projectId;
+            private readonly IProjectService _projectService;
+            private readonly IWordRepository _wordRepo;
 
             public LiftMerger(string projectId, IProjectService projectService, IWordRepository wordRepo)
             {
@@ -417,6 +425,7 @@ namespace BackendFramework.Services
                 _projectService = projectService;
                 _wordRepo = wordRepo;
             }
+
             /// <summary>
             /// The meat of lift import is done here. This reads in all necessary attributes of a word and adds
             /// it to the database.
@@ -425,6 +434,14 @@ namespace BackendFramework.Services
             {
                 var newWord = new Word { Guid = entry.Guid };
                 var proj = _projectService.GetProject(_projectId).Result;
+
+                // Add Note if one exists.
+                // Note: Currently only support for a single note is included.
+                if (entry.Notes.Count > 0)
+                {
+                    var (language, liftString) = entry.Notes[0].Content.FirstValue;
+                    newWord.Note = new Note(language, liftString.Text);
+                }
 
                 // Add vernacular
                 // TODO: currently we just add the first listed option, we may want to choose eventually
@@ -661,7 +678,15 @@ namespace BackendFramework.Services
             public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText) { }
             public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
             public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
-            public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml) { }
+
+            public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml)
+            {
+                var note = new LiftNote(
+                    contents.FirstValue.Key,
+                    new LiftMultiText(contents.FirstValue.Key, contents.FirstValue.Value.Text));
+                var entry = extensible as LiftEntry;
+                entry.Notes.Add(note);
+            }
             public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
             public void MergeInRelation(
                 LiftObject extensible, string relationTypeName, string targetId, string rawXml)
@@ -671,7 +696,6 @@ namespace BackendFramework.Services
                 LiftExample example, string type, LiftMultiText multiText, string rawXml)
             { }
             public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
-
         }
     }
 }
