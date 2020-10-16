@@ -11,7 +11,7 @@ COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:1.18
+FROM nginx:1.19
 
 RUN mkdir /etc/nginx/templates
 
