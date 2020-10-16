@@ -684,7 +684,8 @@ namespace BackendFramework.Services
                 if (extensible is LiftEntry entry)
                 {
                     var note = new LiftNote(
-                        contents.FirstValue.Key,
+                        // This application only uses "basic" notes, which have no type.
+                        null,
                         new LiftMultiText(contents.FirstValue.Key, contents.FirstValue.Value.Text));
                     entry.Notes.Add(note);
                 }
