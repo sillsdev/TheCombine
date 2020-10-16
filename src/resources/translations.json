@@ -25,10 +25,10 @@
       "La palabra ya tiene este sentido en este dominio",
       "Le mot a déjà ce sens dans ce domaine"
     ],
-    "deleteRow": ["Delete this row", "borrar esta fila", "Effacer cette ligne"],
+    "deleteRow": ["Delete this row", "Borrar esta fila", "Effacer cette ligne"],
     "domain": ["Domain", "Dominio", "Domaine"],
-    "gloss": ["Gloss", "Traducción", "Glose"],
-    "glosses": ["Glosses", "Traducciones", "Gloses"],
+    "gloss": ["Gloss", "Glosa", "Glose"],
+    "glosses": ["Glosses", "Glosas", "Gloses"],
     "pressEnter": [
       "Press enter to save word",
       "Presione enter para guardar la palabra",
@@ -60,15 +60,15 @@
       "Esto es una etiqueta.",
       "Ceci est une étiquette"
     ],
-    "makeSpanish": ["Make Spanish", "Hacer español.", "Make Spanish"],
+    "makeSpanish": ["Make Spanish", "Hacer español", "Faire de l'espagnol"],
     "wasPassedInFromStore": [
       "was passed into this test object.",
-      " fue pasado a este objeto de prueba.",
+      "fue pasado a este objeto de prueba.",
       "a été passé dans cet objet de test."
     ]
   },
   "login": {
-    "title": ["Log In", "iniciar sesión", "Ouvrir une session"],
+    "title": ["Log In", "Iniciar sesión", "Ouvrir une session"],
     "name": ["Your Name", "Tu Nombre", "Votre nom"],
     "username": ["Username", "Nombre de usuario", "Nom d'utilisateur"],
     "password": ["Password", "Contraseña", "Mot de passe"],
@@ -90,10 +90,10 @@
     ],
     "backToLogin": [
       "Back to login",
-      "Atrás para iniciar sesión",
+      "Volver al inicio de sesión",
       "Retour au login"
     ],
-    "register": ["Register", "Registro", "S'inscrire"],
+    "register": ["Register", "Registrar", "S'inscrire"],
     "registerNew": [
       "Register New User",
       "Registrar nuevo usuario",
@@ -101,12 +101,12 @@
     ],
     "registerSuccess": [
       "User Created",
-      "creado por el usuario",
+      "Usuario creado",
       "Utilisateur a été créé"
     ],
     "registerFailed": [
       "Failed to register",
-      "Error al iniciar sesión",
+      "Error al registrar",
       "N'a pas réussi à s'inscrire"
     ],
     "usernameInvalid": [
@@ -121,15 +121,15 @@
     ],
     "emailTaken": [
       "A user with this email already exists",
-      null,
+      "Este correo electrónico ya está en uso",
       "Un utilisateur avec cet email existe déjà"
     ],
     "networkError": ["Network error", "Error de red", "Erreur réseau"],
-    "loggingIn": ["Logging in...", "Iniciar sesión...", "Se connecter..."],
-    "required": ["Required", "necesario", "Requis"],
+    "loggingIn": ["Logging in...", "Iniciando sesión...", "Se connecter..."],
+    "required": ["Required", "Requerido", "Requis"],
     "confirmPassword": [
       "Confirm Password",
-      "confirmar contraseña",
+      "Confirmar contraseña",
       "Confirmer le mot de passe"
     ],
     "confirmPasswordError": [
@@ -137,10 +137,10 @@
       "Las contraseñas no coinciden",
       "Les mots de passe ne correspondent pas"
     ],
-    "email": ["Email", "dirección de correo electrónico", "Email"],
+    "email": ["Email", "Correo electrónico", "Email"],
     "emailError": [
       "Please enter a valid email",
-      "Por favor, introduce una dirección de correo electrónico válida",
+      "Por favor, ingrese un correo electrónico válido",
       "Veuillez entrer un email valide"
     ]
   },
@@ -152,16 +152,25 @@
     ],
     "resetRequestTitle": [
       "Reset Password Request",
-      "Restablecer solicitud de contraseña"
+      "Restablecer solicitud de contraseña",
+      "Réinitialiser la demande de mot de passe"
     ],
-    "resetTitle": ["Reset Password", "Restablecer la contraseña"],
-    "tokenLabel": ["Token", "simbólico"],
+    "resetTitle": [
+      "Reset Password",
+      "Restablecer la contraseña",
+      "Réinitialisez le mot de passe"
+    ],
     "resetRequestInstructions": [
       "We will send a one time reset link for your account to your email",
-      "Le enviaremos un enlace de restablecimiento único para su cuenta a su correo electrónico"
+      "Le enviaremos un enlace de restablecimiento único para su cuenta a su correo electrónico",
+      "Nous vous enverrons un lien de réinitialisation unique pour votre compte à votre email"
     ],
-    "submit": ["Submit", "Enviar"],
-    "resetFail": ["Password reset expired", "Error al restablecer contraseña"],
+    "submit": ["Submit", "Enviar", "Soumettre"],
+    "resetFail": [
+      "Password reset error",
+      "Error de restablecimiento de contraseña",
+      "Erreur de réinitialisation du mot de passe"
+    ],
     "notFoundError": [
       "No match found",
       "No se encontraron coincidencias",
@@ -176,47 +185,46 @@
   "userMenu": {
     "siteSettings": [
       "Site Settings",
-      "Configuración del Sitio",
-      "Paramètres du Site"
+      "Configuración del sitio",
+      "Paramètres du site"
     ],
     "projectSettings": [
       "Project Settings",
-      "Configuraciones del proyecto",
+      "Configuración del proyecto",
       "Paramètres du projet"
     ],
     "userSettings": [
       "User Settings",
-      "Ajustes de usuario",
+      "Configuración de usuario",
       "Réglages utilisateur"
     ],
     "logout": ["Log Out", "Cerrar sesión", "Se déconnecter"]
   },
   "createProject": {
-    "title": ["Create Project", "Crear Proyecto", "Créer un projet"],
-    "name": ["Project Name", "Nombre del Proyecto", "Nom du projet"],
+    "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
     "languageData": [
       ".zip language data file",
-      "archivo de datos de idioma .zip",
+      "Archivo de datos en formato .zip",
       "Fichier .zip de données de langue"
     ],
     "upload?": [
       "Upload .zip project file?",
-      "Subir archivo de proyecto .zip?",
+      "¿Cargar archivo de proyecto .zip?",
       "Télécharger le fichier .zip de projet ?"
     ],
-    "create": ["Create Project", "Crear Proyecto", "Créer un projet"],
+    "create": ["Create Project", "Crear un proyecto", "Créer un projet"],
     "fileSelected": [
       "File selected",
       "Archivo seleccionado",
       "Fichier sélectionné"
     ],
-    "success": ["Project Created!", "Proyecto creado!", "Projet créé !"],
+    "success": ["Project Created!", "¡Proyecto creado!", "Projet créé !"],
     "nameTaken": ["Name taken", "Nombre tomado", "Nom pris"]
   },
   "selectProject": {
     "title": [
       "Select Project",
-      "Seleccionar Proyecto",
+      "Seleccionar un proyecto",
       "Sélectionner un projet"
     ]
   },
@@ -239,11 +247,19 @@
     "deleteUser": {
       "confirm": [
         "Confirm Deleting User from The Combine Database",
-        null,
-        null
+        "Confirm Deleting User from The Combine Database",
+        "Confirm Deleting User from The Combine Database"
       ],
-      "toastSuccess": ["User successfully deleted", null, null],
-      "toastFailure": ["Failed to delete user", null, null]
+      "toastSuccess": [
+        "User successfully deleted",
+        "User successfully deleted",
+        "User successfully deleted"
+      ],
+      "toastFailure": [
+        "Failed to delete user",
+        "Failed to delete user",
+        "Failed to delete user"
+      ]
     }
   },
   "projectSettings": {
@@ -282,7 +298,7 @@
         "Les données importées seront ajoutées à ce projet. Combine n'essaiera pas de dédupliquer, d'écraser ou de synchroniser. Le fichier doit être une archive zippée en <a href='https://code.google.com/archive/p/lift-standard/'>Lexicon Interchange Format (LIFT)</a>."
       ],
       "chooseFile": ["Choose File", "Escoger Archivo", "Choisissez Fichier"],
-      "done": ["Done!", "Completado!", "Achevé!"],
+      "done": ["Done!", "¡Hecho!", "Achevé !"],
       "notAllowed": [
         "You have already imported a Lift file to this project.",
         "Ya ha importado un archivo Lift a este proyecto.",
@@ -292,11 +308,15 @@
     "user": {
       "currentUsers": [
         "Current Users",
-        "Usarios Actuales",
-        "Utilisateurs Actuels"
+        "Usarios actuales",
+        "Utilisateurs actuels"
       ],
-      "usersAndRoles": ["Users and Roles", "Usarios", "Utilisateurs et rôles"],
-      "addUser": ["Add User", "Añadir Usario", "Ajouter Utilisateur"],
+      "usersAndRoles": [
+        "Users and Roles",
+        "Usarios y roles",
+        "Utilisateurs et rôles"
+      ],
+      "addUser": ["Add User", "Añadir usario", "Ajouter utilisateur"],
       "selectUser": [
         "Choose a user",
         "Escoger un usario",
@@ -304,26 +324,22 @@
       ],
       "selectRole": [
         "Choose their role",
-        "Escoger el papel",
+        "Escoger rol",
         "Choisissez leur rôle"
       ],
       "confirmUser": [
         "Select this user",
-        "Elegir este usario",
+        "Seleccionar este usario",
         "Sélectionnez cet utilisateur"
       ],
       "roles": {
         "typist": ["Typist", "Mecanógrafo", "Dactylographe"],
         "cleaner": ["Cleaner", "Limpiador", "Nettoyant"],
-        "admin": ["Admin", "Administración", "Admin"]
+        "admin": ["Admin", "Administrador", "Admin"]
       }
     },
     "exportProject": {
-      "label": [
-        "Export Project",
-        "Proyecto de exportación",
-        "Exporter le projet"
-      ]
+      "label": ["Export Project", "Exportar el proyecto", "Exporter le projet"]
     },
     "autocomplete": {
       "label": ["Autocomplete", "Autocompletar", "Autocomplet"],
@@ -392,7 +408,7 @@
   "spellCheckGloss": {
     "title": [
       "Spell Check Glossary",
-      "Glosario de corrección ortográfica",
+      "Corregir la ortografía del glosario",
       "Vérifier l'orthographe du glossaire"
     ]
   },
@@ -411,21 +427,21 @@
     ]
   },
   "reviewEntries": {
-    "title": ["Review Entries", "Revisar final", "Examiner les entrées"],
+    "title": ["Review Entries", "Revisar entradas", "Examiner les entrées"],
     "sense": ["Sense", "Sentido", "Sens"],
     "noVernacular": [
       "No vernacular input!",
-      "No tenemos un vernáculo!",
+      "¡No tenemos un vernáculo!",
       "Pas d'entrée vernaculaire !"
     ],
     "noGloss": [
       "No glosses input",
-      "No tenemos un traduccion",
+      "No hay entrada de glosas",
       "Pas d'entrée de gloses"
     ],
     "noDomain": [
       "No domain selected",
-      "No tenemos un domain",
+      "Ningún dominio seleccionado",
       "Aucun domaine sélectionné"
     ],
     "noNote": ["No note", "Sin nota", "Pas de note"],
@@ -437,12 +453,12 @@
     "error": {
       "gloss": [
         "Glosses cannot be left blank",
-        "No guardar sentidos sin glossarios",
+        "Las glosas no pueden dejarse en blanco",
         "Les gloses ne peuvent pas être laissés vides"
       ],
       "domain": [
         "Domains cannot be left blank",
-        "No guardar sentidos sin dominios",
+        "Los dominios no pueden dejarse en blanco",
         "Les domaines ne peuvent pas être laissés vides"
       ],
       "senses": [
@@ -452,7 +468,7 @@
       ],
       "vernacular": [
         "Vernacular cannot be left blank",
-        "No guardar sentidos sin un vernáculo",
+        "El vernáculo no puede dejarse en blanco",
         "Le vernaculaire ne peut pas être laissé vide"
       ]
     }
@@ -467,11 +483,11 @@
     "examples": ["Examples", "Ejemplos", "Exemples"],
     "occurrences": ["occurrences", "ocurrencias", "occurrences"],
     "status": ["status", "estado", "statut"],
-    "sortBy": ["Sort by", "Sort by", "Trier par"],
+    "sortBy": ["Sort by", "Ordenar por", "Trier par"],
     "characterSet": {
       "title": [
         "Vernacular Character Set:",
-        "Conjunto de caracteres:",
+        "Conjunto de caracteres vernáculos:",
         "Jeu de caractères vernaculaires :"
       ],
       "help": [
@@ -482,33 +498,33 @@
       "addButton": ["Add Chars", "Añadir caracteres", "Ajouter des caractères"],
       "addButtonTitle": [
         "Add the characters in the box to the character set",
-        null,
+        "Agregar los caracteres del cuadro al conjunto de caracteres",
         "Ajouter les caractères de la boîte au jeu de caractères"
       ],
       "deleteButton": [
         "Delete Selected",
         "Eliminar seleccionados",
-        "Supprimer Sélectionné"
+        "Supprimer sélectionné"
       ],
       "deleteButtonTitle": [
         "Remove the selected characters from the character set",
-        null,
+        "Eliminar los caracteres seleccionados del conjunto de caracteres",
         "Supprimer les caractères sélectionnés du jeu de caractères"
       ],
       "acceptedCharacters": [
         "Accepted Characters",
-        "Caracteres Aceptados...",
+        "Caracteres aceptados",
         "Caractères approuvés"
       ],
       "rejectedCharacters": [
         "Rejected Characters",
-        "Caracteres Rechazados...",
+        "Caracteres rechazados",
         "Caractères rejetés"
       ],
       "noCharacters": [
         "No characters yet! Type characters into the box below to get started.",
-        "No hay caracteres todavía! Escriba los caracteres en el cuadro de abajo para comenzar.",
-        "Aucun caractère existe. Tapez les caractères dans la case ci-dessous pour commencer."
+        "¡Todavía no hay caracteres! Escriba caracteres en el cuadro de abajo para empezar.",
+        "Aucun caractère existe ! Tapez les caractères dans la case ci-dessous pour commencer."
       ],
       "required": [
         "Add characters by entering them in this box",
@@ -535,7 +551,7 @@
       ],
       "add": [
         "Add characters in this word to the set",
-        "Añadir caracteres en esta palabra al conjunto.",
+        "Agregar los caracteres de esta palabra al conjunto",
         "Ajouter les caractères dans ce mot au jeu"
       ]
     },
@@ -547,7 +563,7 @@
       ],
       "content": [
         "Discard your changes to the character set?",
-        "Descarta tus cambios en el conjunto de caracteres",
+        "¿Descartar sus cambios en el conjunto de caracteres?",
         "Supprimer les modifications apportées au jeu de caractères ?"
       ],
       "yes": ["yes", "si", "oui"],
@@ -568,7 +584,7 @@
       ],
       "dups": [
         "Drag duplicate words here",
-        "Arrastra palabras duplicadas aquí",
+        "Arrastra las palabras duplicadas aquí",
         "Faites glisser les mots en double ici"
       ],
       "sense": [
@@ -583,12 +599,12 @@
       ],
       "skip": [
         "Load a new set of words",
-        "Cargue un nuevo conjunto de palabras",
+        "Cargar un nuevo conjunto de palabras",
         "Charger un nouvel ensemble de mots"
       ],
       "list": [
         "Drag this word to the right to start merging it with other words",
-        "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras",
+        "Arrastra esta palabra hacia la derecha para comenzar a combinarla con otras palabras",
         "Faites glisser ce mot vers la droite pour commencer à le fusionner avec d'autres mots"
       ]
     }
