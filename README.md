@@ -7,7 +7,9 @@
 [![Language grade: JavaScript][lgtm-js-badge]][lgtm-js]
 [![Total alerts][lgtm-alerts-badge]][lgtm-alerts]
 [![Python Actions Status][github-actions-python-badge]][github-actions]
-[![GitHub release][github-version-badge]][github-version]
+
+[![GitHub release][github-release-badge]][github-version]
+[![GitHub version][github-version-badge]][github-version]
 ![Localization][localization-badge]
 [![GitHub][github-license-badge]][github-license]
 [![GitHub contributors][github-contribs-badge]][github-contribs]
@@ -25,6 +27,7 @@
 [lgtm-alerts]: https://lgtm.com/projects/g/sillsdev/TheCombine/alerts
 [localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
+[github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine
 [github-version]: https://github.com/sillsdev/TheCombine/releases
 [github-license-badge]: https://img.shields.io/github/license/sillsdev/TheCombine
 [github-license]: https://github.com/sillsdev/TheCombine/blob/master/LICENSE
@@ -117,9 +120,9 @@ You will also see any lint errors in the console.
 
 Runs only the front end of the app in the development mode.
 
-#### `npm run api`
+#### `npm run backend`
 
-Runs only the API.
+Runs only the backend.
 
 #### `npm run database`
 
@@ -194,7 +197,7 @@ Runs Jest tests for debugging, awaiting for an attach from an IDE.
 
 For VSCode, run the **Debug Jest Tests** configuration within the Run tab on the left taskbar.
 
-### `npm run dotnet-format`
+### `npm run fmt-backend`
 
 Automatically format the C# source files in the backend.
 
@@ -202,7 +205,7 @@ Automatically format the C# source files in the backend.
 
 Runs ESLint on the codebase to detect code problems that should be fixed.
 
-### `npm run prettier`
+### `npm run fmt-frontend`
 
 Auto-format frontend code in the `src` folder.
 

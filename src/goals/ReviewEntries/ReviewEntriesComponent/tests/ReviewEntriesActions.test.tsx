@@ -1,22 +1,22 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { updateFrontierWord, setAnalysisLang } from "../ReviewEntriesActions";
+import { getProject, getWord, updateWord } from "../../../../backend";
 import {
-  ReviewEntriesWord,
-  OLD_SENSE,
-  SEP_CHAR,
-  ReviewEntriesSense,
-} from "../ReviewEntriesTypes";
-import {
-  SemanticDomain,
-  Word,
-  State,
   Gloss,
+  SemanticDomain,
   Sense,
+  State,
+  Word,
 } from "../../../../types/word";
 import { defaultProject as mockProject } from "../../../../types/project";
-import { updateWord, getWord, getProject } from "../../../../backend";
+import { updateFrontierWord, setAnalysisLang } from "../ReviewEntriesActions";
+import {
+  OLD_SENSE,
+  ReviewEntriesSense,
+  ReviewEntriesWord,
+  SEP_CHAR,
+} from "../ReviewEntriesTypes";
 
 jest.mock("../../../../backend", () => ({
   updateWord: jest.fn(),
@@ -63,6 +63,7 @@ const sense0_local: ReviewEntriesSense = {
 
 // Old frontier word: the version of this word in the frontier
 const oldFrontierWord: Word = {
+  ...new Word(),
   id: "word",
   vernacular: "word",
   senses: [
@@ -71,18 +72,11 @@ const oldFrontierWord: Word = {
       semanticDomains: [domain0],
     },
   ],
-  audio: [],
-  created: "",
-  modified: "",
-  history: [],
-  partOfSpeech: "",
-  editedBy: [],
-  otherField: "",
-  plural: "",
 };
 
 // oldWord: the version of this word in local memory
 const oldWord: ReviewEntriesWord = {
+  ...new ReviewEntriesWord(),
   id: "word",
   vernacular: "word",
   senses: [
@@ -93,7 +87,6 @@ const oldWord: ReviewEntriesWord = {
       deleted: false,
     },
   ],
-  pronunciationFiles: [],
 };
 
 beforeEach(() => {
@@ -101,7 +94,7 @@ beforeEach(() => {
   mockStore.clearActions();
 });
 
-describe("Test ReviewEntriesActions", () => {
+describe("ReviewEntriesActions", () => {
   // Tests adding data
   it("Changes the vernacular", async () => {
     await makeDispatch({ ...oldWord, vernacular: "foo2" }, oldWord);

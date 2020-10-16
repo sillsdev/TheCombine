@@ -421,21 +421,22 @@
   "reviewEntries": {
     "title": ["Review Entries", "Revisar final", "Examiner les entrées"],
     "sense": ["Sense", "Sentido", "Sens"],
-    "novernacular": [
+    "noVernacular": [
       "No vernacular input!",
       "No tenemos un vernáculo!",
       "Pas d'entrée vernaculaire !"
     ],
-    "nogloss": [
+    "noGloss": [
       "No glosses input",
       "No tenemos un traduccion",
       "Pas d'entrée de gloses"
     ],
-    "nodomain": [
+    "noDomain": [
       "No domain selected",
       "No tenemos un domain",
       "Aucun domaine sélectionné"
     ],
+    "noNote": ["No note", "Sin nota", "Pas de note"],
     "deleteWord": [
       "This word will be permanently deleted!",
       "¡Esta palabra se eliminará permanentemente!",

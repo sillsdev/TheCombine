@@ -36,19 +36,18 @@ export default class ActiveUsers extends React.Component<UserProps, UserState> {
 
   private populateUsers() {
     getAllUsersInCurrentProject()
-      .then((projUsers) => {
+      .then(async (projUsers) => {
         this.setState({ projUsers });
-        projUsers.forEach((u: User) => {
-          avatarSrc(u.id)
-            .then((result) => {
-              let userAvatar = this.state.userAvatar;
-              userAvatar[u.id] = result;
-              this.setState({ userAvatar });
-            })
-            .catch((err) => console.log(err));
+        const userAvatar = this.state.userAvatar;
+        const promises = projUsers.map(async (u) => {
+          if (u.hasAvatar) {
+            userAvatar[u.id] = await avatarSrc(u.id);
+          }
         });
+        await Promise.all(promises);
+        this.setState({ userAvatar });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   }
 
   render() {
