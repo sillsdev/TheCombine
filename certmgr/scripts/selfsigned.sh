@@ -15,6 +15,6 @@ fi
 
 while true; do
   renew_selfsigned_cert
-  sleep 60 &
+  sleep 24h &
   wait $!
 done

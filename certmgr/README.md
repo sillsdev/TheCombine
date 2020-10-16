@@ -28,7 +28,7 @@ behavior:
 | Variable Name     | Description                                                                                                                                     |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | CERT_MODE         | May be one of `self-signed`, `letsencrypt`, `cert-server`, or `cert-client` to specify which of the certificate management personalities to use |
-| CERT_EMAIL        | Set to 1 to remove old certificates first                                                                                                       |
+| CERT_EMAIL        | Set to e-mail address for certificate expiration notices first                                                                                                       |
 | CERT_STAGING      | Primary domain for the certificate - used to specify location of certificate                                                                    |
 | CERT_DOMAINS      | A space separated list of domains for the certificate.                                                                                          |
 | CERT_VERBOSE      | Set to 1 for verbose output to aid in debugging; 0 otherwise.                                                                                   |
@@ -36,41 +36,47 @@ behavior:
 | MAX_CONNECT_TRIES | Number of times to check if the webserver is up before attempting to get a certificate from letsencrypt.                                        |
 
 ### selfsigned.sh
-`selfsigned.sh` implements the certmgr behavior when `CERT_MODE` is set to `self-signed`.
-It creates a self-signed certificate to be used by the nginx web server and enters a loop to periodically check to see if the certificate needs to be renewed/recreated.  The certificate is valid for 10 years and will be renewed when there are less than 10 days until is expires.
+`selfsigned.sh` implements the certmgr behavior when `CERT_MODE` is set to
+`self-signed`. It creates a self-signed certificate to be used by the nginx web
+server and enters a loop to periodically check to see if the certificate needs
+to be renewed/recreated.  The certificate is valid for 10 years and will be
+renewed when there are less than 10 days until is expires.
 
 ### letsencrypt.sh
-`letsencrypt.sh` implements the certmgr behavior when `CERT_MODE` is set to `letsencrypt`.
-If there is no certificate or if it was issued by `localhost`, then `letsencrypt.sh` will:
+`letsencrypt.sh` implements the certmgr behavior when `CERT_MODE` is set to
+`letsencrypt`.  If there is no certificate or if it was issued by `localhost`,
+then `letsencrypt.sh` will:
  - create a self-signed certificate
  - wait for the webserver to come up
- - use `certbot` to request a certificate from `letsencrypt` using the webroot authentication method
+ - use `certbot` to request a certificate from `letsencrypt` using the webroot
+   authentication method
  - redirect the webserver configuration to point to the new certificate
-Once there is a letsencrypt certificate, `letsencrypt.sh` enters a loop to check every 12 hours if the certificate should be renewed.
+Once there is a letsencrypt certificate, `letsencrypt.sh` enters a loop to check
+every 12 hours if the certificate should be renewed.
 
 ### certserver.sh
 *Not Implemented Yet*
 
-`certserver.sh` will implement the certmgr behavior when `CERT_MODE` is set to `cert-server`.
-It will create multiple certificates and push them to an AWS S3 bucket
+`certserver.sh` will implement the certmgr behavior when `CERT_MODE` is set to
+`cert-server`. It will create multiple certificates and push them to an AWS S3 bucket
 
 ### certclient.sh
 *Not Implemented Yet*
 
-`certclient.sh` will implement the certmgr behavior when `CERT_MODE` is set to `cert-client`.
-It will fetch an SSL certificate from the AWS S3 bucket (when an internet connection is
-available).
+`certclient.sh` will implement the certmgr behavior when `CERT_MODE` is set to
+`cert-client`.  It will fetch an SSL certificate from the AWS S3 bucket (when an
+internet connection is available).
 
 ## Installation Requirements
 
-The following scenarios list the various requirements for the Ansible playbook that
-is used to setup the various targets, `playbook_target_setup.yml` and the Python
-script that is used to setup the development environment, `docker_setup.py`.  `docker_setup.py`
-is only used for setting up a development environment that uses a self-signed
-certificate.
+The following scenarios list the various requirements for the Ansible playbook
+that is used to setup the various targets, `playbook_target_setup.yml` and the
+Python script that is used to setup the development environment,
+`docker_setup.py`.  `docker_setup.py` is only used for setting up a development
+environment that uses a self-signed certificate.
 
-When installing TheCombine for using self-signed certificates, e.g. for the QA server
-or for development use, the following steps are required:
+When installing TheCombine for using self-signed certificates, e.g. for the QA
+server or for development use, the following steps are required:
   1. Build each container:
      - frontend
      - backend
@@ -87,7 +93,10 @@ or for development use, the following steps are required:
         - run `docker-compose build`
         - run `docker-compose up --detach`
 
-Note that the machines that are configured to get their certificates from _Let's Encrypt_ need to have the frontend webserver reloaded in order to switch from the self-signed certificate to the one from _Let's Encrypt_.   To do this, run:
+Note that the machines that are configured to get their certificates from
+_Let's Encrypt_ need to have the frontend webserver reloaded in order to switch
+from the self-signed certificate to the one from _Let's Encrypt_.   To do this,
+run:
 ```
 docker-compose exec frontend nginx -s reload
 ```

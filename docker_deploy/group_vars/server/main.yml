@@ -17,7 +17,6 @@ combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
 
 # SSL cert variables specific to Server targets
 cert_mode: "letsencrypt"
-cert_email: "jimgrady.jg@gmail.com"
 
 
 aws_user: "{{ combine_user }}"
