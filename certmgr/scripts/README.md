@@ -87,7 +87,7 @@ or for development use, the following steps are required:
         - run `docker-compose build`
         - run `docker-compose up --detach`
 
-Note that the machines that are configured to get their certificates from _Let's Encrypt_ may need have the frontend webserver reloaded in order to switch from the self-signed certificate to the one from _Let's Encrypt_.   To do this, run:
+Note that the machines that are configured to get their certificates from _Let's Encrypt_ need to have the frontend webserver reloaded in order to switch from the self-signed certificate to the one from _Let's Encrypt_.   To do this, run:
 ```
 docker-compose exec frontend nginx -s reload
 ```
