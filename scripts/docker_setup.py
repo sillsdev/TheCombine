@@ -69,34 +69,31 @@ def main() -> None:
         "ssl_private_key": "/etc/nginx/ssl/localhost/privkey.pem",
         "combine_backend_env_vars": "",
         "combine_private_env_vars": [
-            {
-                "key": "COMBINE_JWT_SECRET_KEY",
-                "value": "JwtSecretKeyForDevelopmentUseOnly"
-            },
+            {"key": "COMBINE_JWT_SECRET_KEY", "value": "JwtSecretKeyForDevelopmentUseOnly"},
             {"key": "COMBINE_SMTP_SERVER", "value": ""},
             {"key": "COMBINE_SMTP_PORT", "value": "587"},
             {"key": "COMBINE_SMTP_ADDRESS", "value": ""},
             {"key": "COMBINE_SMTP_USERNAME", "value": ""},
             {"key": "COMBINE_SMTP_PASSWORD", "value": ""},
             {"key": "COMBINE_SMTP_FROM", "value": ""},
-            {"key": "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "value": "15"}
+            {"key": "COMBINE_PASSWORD_RESET_EXPIRE_TIME", "value": "15"},
         ],
         "combine_frontend_env_vars": [
-            {"key": "SERVER_NAME", "value": "localhost"}.
-            {"key": "SSL_CERTIFICATE", "value": "/etc/nginx/ssl/localhost/fullchain.pem"},
-            {"key": "SSL_PRIVATE_KEY", "value": "/etc/nginx/ssl/localhost/privkey.pem"}
-        ],
-        "combine_cert_env_vars": [
-            {"key": "CERT_MODE", "value": "self-signed"}.
-            {"key": "CERT_EMAIL", "value": ""}.
-            {"key": "CERT_STAGING", "value": "0"}.
-            {"key": "CERT_DOMAINS", "value": "localhost"}.
-            {"key": "CERT_VERBOSE", "value": "0"}.
-            {"key": "CERT_CREATE_ONLY", "value": "0"}.
-            {"key": "MAX_CONNECT_TRIES", "value": "10"}.
+            {"key": "SERVER_NAME", "value": "localhost"},
             {"key": "SSL_CERTIFICATE", "value": "/etc/nginx/ssl/localhost/fullchain.pem"},
             {"key": "SSL_PRIVATE_KEY", "value": "/etc/nginx/ssl/localhost/privkey.pem"},
-            {"key": "SSL_DIR", "value": "/etc/nginx/ssl/localhost"}.
+        ],
+        "combine_cert_env_vars": [
+            {"key": "CERT_MODE", "value": "self-signed"},
+            {"key": "CERT_EMAIL", "value": ""},
+            {"key": "CERT_STAGING", "value": "0"},
+            {"key": "CERT_DOMAINS", "value": "localhost"},
+            {"key": "CERT_VERBOSE", "value": "0"},
+            {"key": "CERT_CREATE_ONLY", "value": "0"},
+            {"key": "MAX_CONNECT_TRIES", "value": "10"},
+            {"key": "SSL_CERTIFICATE", "value": "/etc/nginx/ssl/localhost/fullchain.pem"},
+            {"key": "SSL_PRIVATE_KEY", "value": "/etc/nginx/ssl/localhost/privkey.pem"},
+            {"key": "SSL_DIR", "value": "/etc/nginx/ssl/localhost"},
         ],
         "config_captcha_required": json.dumps(not args.no_captcha),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
