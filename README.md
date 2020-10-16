@@ -410,7 +410,8 @@ For information on _Docker Compose_ see the
    section above, then these variables will already be set. If not, then you will need to edit
    `.env.backend` and provide values for the variables that are listed.
 
-3. Build the images for the Docker containers
+3. Build the images for the Docker containers (**Note**: On Linux, you will need to prepend `sudo` to
+   all of the following `docker` commands)
 
    ```bash
    $ docker-compose build --parallel
