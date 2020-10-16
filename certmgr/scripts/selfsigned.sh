@@ -9,7 +9,7 @@ CERT_MODE="self-signed"
 init_vars
 init_cert_store
 
-if [ ! f "${SELF_SIGNED_PATH}/fullchain.pem" ] ; then
+if [ ! -f "${SELF_SIGNED_PATH}/fullchain.pem" ] ; then
   echo "Creating self-signed certificate"
   create_selfsigned_cert
 fi
