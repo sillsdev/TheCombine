@@ -1,14 +1,13 @@
 #! /bin/bash
 
-# Source in util.sh so we can have our nice tools
+# Source in func.sh so we can have our nice tools
 . $(cd $(dirname $0); pwd)/func.sh
 
-CERT_MODE="self-signed"
-
-# Container initialization
+# Initialize the container
 init_vars
 init_cert_store
 
+# Check to see if the certificate already exists
 if [ ! -f "${SELF_SIGNED_PATH}/fullchain.pem" ] ; then
   echo "Creating self-signed certificate"
   create_selfsigned_cert
@@ -18,5 +17,4 @@ while true; do
   renew_selfsigned_cert
   sleep 60 &
   wait $!
-
 done

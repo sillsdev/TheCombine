@@ -1,9 +1,9 @@
 #! /bin/bash
 
-# Source in util.sh so we can have our nice tools
+# Source in func.sh so we can have our nice tools
 . $(cd $(dirname $0); pwd)/func.sh
 
-# Container initialization
+# Initialize the container
 init_vars
 init_cert_store
 
