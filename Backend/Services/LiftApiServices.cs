@@ -423,7 +423,7 @@ namespace BackendFramework.Services
             /// </summary>
             public async void FinishEntry(LiftEntry entry)
             {
-                var newWord = new Word {Guid = entry.Guid};
+                var newWord = new Word { Guid = entry.Guid };
                 var proj = _projectService.GetProject(_projectId).Result;
 
                 // Add vernacular
@@ -664,10 +664,12 @@ namespace BackendFramework.Services
             public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml) { }
             public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
             public void MergeInRelation(
-                LiftObject extensible, string relationTypeName, string targetId, string rawXml) { }
+                LiftObject extensible, string relationTypeName, string targetId, string rawXml)
+            { }
             public void MergeInSource(LiftExample example, string source) { }
             public void MergeInTranslationForm(
-                LiftExample example, string type, LiftMultiText multiText, string rawXml) { }
+                LiftExample example, string type, LiftMultiText multiText, string rawXml)
+            { }
             public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
 
         }
