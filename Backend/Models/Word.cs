@@ -59,6 +59,9 @@ namespace BackendFramework.Models
         [BsonElement("projectId")]
         public string ProjectId { get; set; }
 
+        [BsonElement("note")]
+        public Note Note { get; set; }
+
         public Word()
         {
             Id = "";
@@ -75,6 +78,7 @@ namespace BackendFramework.Models
             EditedBy = new List<string>();
             History = new List<string>();
             Senses = new List<Sense>();
+            Note = new Note();
         }
 
         public Word Clone()
@@ -94,7 +98,8 @@ namespace BackendFramework.Models
                 Audio = new List<string>(),
                 EditedBy = new List<string>(),
                 History = new List<string>(),
-                Senses = new List<Sense>()
+                Senses = new List<Sense>(),
+                Note = Note.Clone()
             };
 
             foreach (var file in Audio)
@@ -130,7 +135,9 @@ namespace BackendFramework.Models
                 other.Audio.All(Audio.Contains) &&
 
                 other.Senses.Count == Senses.Count &&
-                other.Senses.All(Senses.Contains);
+                other.Senses.All(Senses.Contains) &&
+
+                other.Note.Equals(Note);
         }
 
         public override bool Equals(object obj)
@@ -169,7 +176,48 @@ namespace BackendFramework.Models
             hash.Add(EditedBy);
             hash.Add(OtherField);
             hash.Add(ProjectId);
+            hash.Add(Note);
             return hash.ToHashCode();
+        }
+    }
+
+    /// <summary> A note associated with a Word, compatible with FieldWorks. </summary>
+    public class Note
+    {
+        /// <summary> The bcp-47 code for the language the note is written in. </summary>
+        public string Language { get; set; }
+
+        /// <summary> The contents of the note. </summary>
+        public string Text { get; set; }
+
+        public Note()
+        {
+            Language = "";
+            Text = "";
+        }
+
+        public Note Clone()
+        {
+            return new Note
+            {
+                Language = Language.Clone() as string,
+                Text = Text.Clone() as string
+            };
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Note other) || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return Language.Equals(other.Language) && Text.Equals(other.Text);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Language, Text);
         }
     }
 
@@ -191,6 +239,13 @@ namespace BackendFramework.Models
         /// <remarks>Only nullable for legacy, can be removed once all projects are updated.</remarks>
         [BsonElement("guid")]
         public Guid? Guid { get; set; }
+
+        public Sense()
+        {
+            Accessibility = State.Active;
+            Glosses = new List<Gloss>();
+            SemanticDomains = new List<SemanticDomain>();
+        }
 
         public Sense Clone()
         {
@@ -235,7 +290,10 @@ namespace BackendFramework.Models
 
     public class Gloss
     {
+        /// <summary> The bcp-47 code for the language the note is written in. </summary>
         public string Language { get; set; }
+
+        /// <summary> The gloss string. </summary>
         public string Def { get; set; }
 
         public Gloss Clone()

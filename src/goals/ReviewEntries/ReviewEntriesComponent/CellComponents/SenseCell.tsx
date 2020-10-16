@@ -92,7 +92,7 @@ export default class SenseCell extends React.Component<
               this.inputField(
                 sense,
                 index,
-                translate("reviewEntries.nogloss").toString()
+                translate("reviewEntries.noGloss").toString()
               )
             }
           </Translate>
