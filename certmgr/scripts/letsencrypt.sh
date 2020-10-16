@@ -16,8 +16,8 @@ fi
 
 # Lookup the issuer of the certificate (either pre-existing or just created)
 CERT_ISSUER=""
-if [ -f "${NGINX_LIVE_DIR}/fullchain.pem" ] ; then
-  CERT_ISSUER=`openssl x509 -in "${CERT_LIVE_DIR}/fullchain.pem" -noout -issuer | sed 's/issuer=CN *= *//'`
+if [ -f "${NGINX_CERT_PATH}/fullchain.pem" ] ; then
+  CERT_ISSUER=`openssl x509 -in "${NGINX_CERT_PATH}/fullchain.pem" -noout -issuer | sed 's/issuer=CN *= *//'`
   debug_log "Issuer for existing certificate is: ${CERT_ISSUER}"
 fi
 
