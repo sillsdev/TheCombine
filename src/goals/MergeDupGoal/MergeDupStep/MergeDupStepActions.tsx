@@ -19,79 +19,82 @@ import { MergeDups, MergeStepData } from "../MergeDups";
 import { Hash, MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
 
 export enum MergeTreeActions {
-  SET_VERNACULAR = "SET_VERNACULAR",
-  SET_PLURAL = "SET_PLURAL",
-  MOVE_SENSE = "MOVE_SENSE",
-  ORDER_SENSE = "ORDER_SENSE",
-  SET_SENSE = "SET_SENSE",
-  SET_DATA = "SET_DATA",
   CLEAR_TREE = "CLEAR_TREE",
+  MOVE_SENSE = "MOVE_SENSE",
   ORDER_DUPLICATE = "ORDER_DUPLICATE",
+  ORDER_SENSE = "ORDER_SENSE",
+  SET_DATA = "SET_DATA",
+  SET_PLURAL = "SET_PLURAL",
+  SET_SENSE = "SET_SENSE",
+  SET_VERNACULAR = "SET_VERNACULAR",
 }
 
-interface MergeDataAction {
-  type: MergeTreeActions.SET_DATA;
-  payload: Word[];
+interface ClearTreeMergeAction {
+  type: MergeTreeActions.CLEAR_TREE;
 }
 
-interface MergeTreeMoveAction {
+interface MoveSenseMergeAction {
   type: MergeTreeActions.MOVE_SENSE;
   payload: { src: MergeTreeReference[]; dest: MergeTreeReference[] };
 }
 
-interface MergeTreeSetAction {
+interface OrderDuplicateMergeAction {
+  type: MergeTreeActions.ORDER_DUPLICATE;
+  payload: { ref: MergeTreeReference; order: number };
+}
+
+interface OrderSenseMergeAction {
+  type: MergeTreeActions.ORDER_SENSE;
+  payload: {
+    wordID: string;
+    senseID: string;
+    order: number;
+  };
+}
+
+interface SetDataMergeAction {
+  type: MergeTreeActions.SET_DATA;
+  payload: Word[];
+}
+
+interface SetSenseMergeAction {
   type: MergeTreeActions.SET_SENSE;
   payload: { ref: MergeTreeReference; data: number | undefined };
 }
 
-interface MergeOrderAction {
-  type: MergeTreeActions.ORDER_SENSE;
-  wordID: string;
-  senseID: string;
-  order: number;
-}
-
-interface MergeTreeWordAction {
-  type: MergeTreeActions.SET_VERNACULAR | MergeTreeActions.SET_PLURAL;
+interface SetWordStringMergeAction {
+  type: MergeTreeActions.SET_PLURAL | MergeTreeActions.SET_VERNACULAR;
   payload: { wordID: string; data: string };
 }
 
 export type MergeTreeAction =
-  | MergeTreeWordAction
-  | MergeTreeMoveAction
-  | MergeTreeSetAction
-  | MergeDataAction
-  | MergeOrderAction
-  | {
-      type: MergeTreeActions.ORDER_DUPLICATE;
-      ref: MergeTreeReference;
-      order: number;
-    }
-  | { type: MergeTreeActions.CLEAR_TREE };
+  | ClearTreeMergeAction
+  | MoveSenseMergeAction
+  | OrderDuplicateMergeAction
+  | OrderSenseMergeAction
+  | SetDataMergeAction
+  | SetSenseMergeAction
+  | SetWordStringMergeAction;
 
 // action creators
-export function setVern(wordID: string, vern: string): MergeTreeAction {
+export function setVern(
+  wordID: string,
+  vern: string
+): SetWordStringMergeAction {
   return {
     type: MergeTreeActions.SET_VERNACULAR,
     payload: { wordID, data: vern },
   };
 }
 
-export function setPlural(wordID: string, plural: string): MergeTreeAction {
-  return {
-    type: MergeTreeActions.SET_PLURAL,
-    payload: { wordID, data: plural },
-  };
-}
-
-export function clearTree(): MergeTreeAction {
+export function clearTree(): ClearTreeMergeAction {
   return { type: MergeTreeActions.CLEAR_TREE };
 }
 
 export function moveSenses(
   src: MergeTreeReference[],
   dest: MergeTreeReference[]
-): MergeTreeAction {
+): MoveSenseMergeAction {
   return {
     type: MergeTreeActions.MOVE_SENSE,
     payload: { src, dest },
@@ -102,25 +105,25 @@ export function moveSenses(
 export function moveSense(
   src: MergeTreeReference,
   dest: MergeTreeReference
-): MergeTreeAction {
+): MoveSenseMergeAction {
   return moveSenses([src], [dest]);
 }
 
 export function setSense(
   ref: MergeTreeReference,
   data: number | undefined
-): MergeTreeAction {
+): SetSenseMergeAction {
   return {
     type: MergeTreeActions.SET_SENSE,
     payload: { ref, data },
   };
 }
 
-export function removeSense(ref: MergeTreeReference): MergeTreeAction {
+export function removeSense(ref: MergeTreeReference): SetSenseMergeAction {
   return setSense(ref, undefined);
 }
 
-export function setWordData(words: Word[]): MergeDataAction {
+export function setWordData(words: Word[]): SetDataMergeAction {
   return {
     type: MergeTreeActions.SET_DATA,
     payload: words,
@@ -131,23 +134,20 @@ export function orderSense(
   wordID: string,
   senseID: string,
   order: number
-): MergeOrderAction {
+): OrderSenseMergeAction {
   return {
     type: MergeTreeActions.ORDER_SENSE,
-    wordID: wordID,
-    senseID: senseID,
-    order: order,
+    payload: { wordID, senseID, order },
   };
 }
 
 export function orderDuplicate(
   ref: MergeTreeReference,
   order: number
-): MergeTreeAction {
+): OrderDuplicateMergeAction {
   return {
     type: MergeTreeActions.ORDER_DUPLICATE,
-    ref,
-    order,
+    payload: { ref, order },
   };
 }
 
@@ -333,13 +333,16 @@ export async function mergeWord(
       };
     });
 
-    // a merge is an identity if all of its senses come from parent
-    // and it has the same number of senses as parent
-    if (!children.find((val) => val.wordID !== wordID)) {
-      if (children.length === data.words[wordID].senses.length) {
-        // if the merge is an identity don't bother sending a merge
-        return mapping;
-      }
+    // a merge is an identity if the only child is the parent word
+    // and it has the same number of senses as parent (all with State.Sense)
+    if (
+      children.length === 1 &&
+      children[0].wordID === wordID &&
+      children[0].senses.length === data.words[wordID].senses.length &&
+      !children[0].senses.find((s) => s !== State.Sense)
+    ) {
+      // if the merge is an identity don't bother sending a merge
+      return mapping;
     }
 
     // send database call
@@ -396,7 +399,7 @@ export function mergeAll() {
     const hash: string = wordIDs
       .sort()
       .reduce((val, acc) => `${acc}:${val}`, "");
-    let blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
+    const blacklist: Hash<boolean> = LocalStorage.getMergeDupsBlacklist();
     blacklist[hash] = true;
     LocalStorage.setMergeDupsBlacklist(blacklist);
     // merge words
