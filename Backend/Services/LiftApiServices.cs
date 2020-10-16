@@ -275,7 +275,7 @@ namespace BackendFramework.Services
             entry.LexicalForm.MergeIn(MultiText.Create(new LiftMultiText { { lang, wordEntry.Vernacular } }));
         }
 
-        /// <summary> Adds each sense of a word to be written out to lift </summary>
+        /// <summary> Adds each <see cref="Sense"/> of a word to be written out to lift </summary>
         private static void AddSenses(LexEntry entry, Word wordEntry)
         {
             var activeSenses = wordEntry.Senses.Where(s => s.Accessibility == State.Active).ToList();

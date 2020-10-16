@@ -211,6 +211,11 @@ namespace BackendFramework.Models
             };
         }
 
+        public bool IsBlank()
+        {
+            return Language == "" && Text == "";
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is Note other) || GetType() != obj.GetType())
