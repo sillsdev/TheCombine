@@ -681,11 +681,13 @@ namespace BackendFramework.Services
 
             public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml)
             {
-                var note = new LiftNote(
-                    contents.FirstValue.Key,
-                    new LiftMultiText(contents.FirstValue.Key, contents.FirstValue.Value.Text));
-                var entry = extensible as LiftEntry;
-                entry.Notes.Add(note);
+                if (extensible is LiftEntry entry)
+                {
+                    var note = new LiftNote(
+                        contents.FirstValue.Key,
+                        new LiftMultiText(contents.FirstValue.Key, contents.FirstValue.Value.Text));
+                    entry.Notes.Add(note);
+                }
             }
             public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
             public void MergeInRelation(
