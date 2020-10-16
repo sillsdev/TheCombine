@@ -334,7 +334,7 @@ export async function mergeWord(
     });
 
     // a merge is an identity if the only child is the parent word
-    // and it has the same number of senses as parent
+    // and it has the same number of senses as parent (all with State.Sense)
     if (
       children.length === 1 &&
       children[0].wordID === wordID &&
