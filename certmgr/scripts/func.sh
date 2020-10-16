@@ -6,7 +6,7 @@
 init_vars() {
   # set variables to their default values if they are not
   # specified
-  CERT_STORE=${CERT_STORE:="/etc/"}
+  CERT_STORE=${CERT_STORE:="/etc/cert_store"}
   # Folder for certicates as configured by the Nginx webserver
   CERT_CREATE_ONLY=${CERT_CREATE_ONLY:=0}
   CERT_EMAIL=${CERT_EMAIL:=""}
@@ -21,7 +21,7 @@ init_vars() {
   fi
   # create $cert_domains as an array of domain names
   IFS=" " read -r -a cert_domains <<< "${CERT_DOMAINS}"
-  debug_log "Certificates stored in ${CERT_STORE}"
+  debug_log "Self-signed Certificates stored in ${CERT_STORE}"
   debug_log "Certificate name: ${SERVER_NAME}"
   debug_log "Domains: ${cert_domains[*]}"
   debug_log "Certificates expire in ${SELF_SIGNED_EXPIRE}"
@@ -34,13 +34,10 @@ init_vars() {
 }
 
 init_cert_store() {
-  # Create nginx, letsencrypt, and selfsigned directories
-  for subdir in  "nginx" "letsencrypt" "selfsigned" ; do
+  # Create nginx, and selfsigned directories
+  for subdir in  "nginx" "selfsigned" ; do
     mkdir -p "${CERT_STORE}/${subdir}"
   done
-
-  # link /etc/letsencrypt to /etc/cert_store/letsencrypt
-  ln -s "${CERT_STORE}/letsencrypt" "/etc/letsencrypt"
 }
 
 debug_log() {
@@ -54,20 +51,22 @@ update_link() {
   target=$2
 
   debug_log "linking ${src} to ${target}"
-  if [ `readlink ${target}` != "${src}" ] ; then
+  link_target=`readlink ${target}`
+  if [ "${link_target}" != "${src}" ] ; then
     if [ -L "${target}" ]; then
       rm "${target}"
-      debug_log "Old link removed"
+      debug_log "   Old link removed"
     fi
     ln -s ${src} ${target}
   else
-    debug_log "${target} already points to ${src}"
+    debug_log "   ${target} already points to ${src}"
   fi
 
 }
 
 create_selfsigned_cert() {
-  mkdir -p "${SELF_SIGNED_PATH}"
+  debug_log "Self-signed certificates are stored in ${SELF_SIGNED_PATH}"
+  mkdir -p ${SELF_SIGNED_PATH}
   openssl req -x509 -nodes -newkey rsa:4096 -days ${SELF_SIGNED_EXPIRE} -keyout "${SELF_SIGNED_PATH}/privkey.pem" -out "${SELF_SIGNED_PATH}/fullchain.pem" -subj '/CN=localhost'
   debug_log "Created certificate in ${CERT_STORE} for ${cert_domains}"
   debug_log "Expires: "`openssl x509 -in "${SELF_SIGNED_PATH}/fullchain.pem" -noout -enddate`
@@ -102,7 +101,7 @@ create_certbot_cert() {
   if [ -z "${CERT_EMAIL}" ] ; then
     email_arg="--register-unsafely-without-email"
   else
-    email_arg="--email '${CERT_EMAIL}'"
+    email_arg="--email ${CERT_EMAIL}"
   fi
 
   # Enable staging mode if needed
@@ -115,11 +114,12 @@ create_certbot_cert() {
     -d ${CERT_DOMAINS} \
     --rsa-key-size 4096 \
     --agree-tos \
+    --non-interactive \
     --force-renewal"
   debug_log "$cert_cmd"
-  $cert_cmd
-
-  update_link "${CERT_STORE}/letsencrypt/live/${SERVER_NAME}" "${NGINX_CERT_PATH}"
+  if $cert_cmd ; then
+    update_link "/etc/letsencrypt/live/${SERVER_NAME}" "${NGINX_CERT_PATH}"
+  fi
 }
 
 wait_for_webserver() {

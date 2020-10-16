@@ -2,21 +2,21 @@
 
 ## Certificate storage
 
-The certificates are stored in a docker volume.  The volume is named cert_store
+The certificates are stored in a docker volume.  The volume is named letsencrypt
 and is mounted by the `frontend` and the `certmgr` containers.  Both containers mount
-the volume at `/etc/cert_store`.
+the volume at `/etc/letsencrypt`.
 
-At the top level, there are 3 directories in `/etc/cert_store`:
+At the top level, there are 3 directories in `/etc/letsencrypt`:
  - `letsencrypt` - stores the certificates created by letsencrypt and managed by `certbot`.
-   `/etc/letsencrypt` is created as a symbolic link to `/etc/cert_store/letsencrypt`
+   `/etc/letsencrypt` is created as a symbolic link to `/etc/letsencrypt/letsencrypt`
  - `nginx` - The Nginx web server is configured to read its SSL certificates from:
-   - SSL Certificate: `/etc/cert_store/nginx/<server_name>/fullchain.pem`
-   - SSL Private Key: `/etc/cert_store/nginx/<server_name>/privkey.pem`
+   - SSL Certificate: `/etc/letsencrypt/nginx/<server_name>/fullchain.pem`
+   - SSL Private Key: `/etc/letsencrypt/nginx/<server_name>/privkey.pem`
 
-   This is implemented by setting up `/etc/cert_store/nginx/ssl/<server_name>` as a
+   This is implemented by setting up `/etc/letsencrypt/nginx/ssl/<server_name>` as a
    symbolic link to the self-signed or letsencrypt certificates.
  - `selfsigned` - stores a self-signed certificate for the server in
-   `/etc/cert_store/selfsigned/<server_name>`
+   `/etc/letsencrypt/selfsigned/<server_name>`
 
 ## Entrypoint scripts for the certbot container for TheCombine
 

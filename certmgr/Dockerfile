@@ -1,7 +1,5 @@
 FROM certbot/certbot:v1.8.0
 
-VOLUME /etc/letsencrypt
-
 RUN apk update && \
     apk upgrade && \
     apk add --no-cache bash && \
