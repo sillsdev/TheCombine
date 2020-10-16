@@ -14,13 +14,9 @@ if [ ! -f "${SELF_SIGNED_PATH}/fullchain.pem" ] ; then
   create_selfsigned_cert
 fi
 
-if [ "$CERT_CREATE_ONLY" = "0" ] ; then
-  while true; do
-    renew_selfsigned_cert
-    sleep 60 &
-    wait $!
+while true; do
+  renew_selfsigned_cert
+  sleep 60 &
+  wait $!
 
-  done
-else
-  exit 0
-fi
+done

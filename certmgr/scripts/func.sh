@@ -8,7 +8,6 @@ init_vars() {
   # specified
   CERT_STORE=${CERT_STORE:="/etc/cert_store"}
   # Folder for certicates as configured by the Nginx webserver
-  CERT_CREATE_ONLY=${CERT_CREATE_ONLY:=0}
   CERT_EMAIL=${CERT_EMAIL:=""}
   CERT_STAGING=${CERT_STAGING:=0}
   MAX_CONNECT_TRIES=${MAX_CONNECT_TRIES:=15}

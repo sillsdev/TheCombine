@@ -89,7 +89,6 @@ def main() -> None:
             {"key": "CERT_STAGING", "value": "0"},
             {"key": "CERT_DOMAINS", "value": "localhost"},
             {"key": "CERT_VERBOSE", "value": "1"},
-            {"key": "CERT_CREATE_ONLY", "value": "0"},
             {"key": "MAX_CONNECT_TRIES", "value": "10"},
             {"key": "SERVER_NAME", "value": "localhost"},
         ],
