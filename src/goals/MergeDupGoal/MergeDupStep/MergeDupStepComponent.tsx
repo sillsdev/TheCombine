@@ -296,21 +296,22 @@ class MergeDupStep extends React.Component<
           <Button
             color="primary"
             variant="contained"
-            style={{
-              float: "right",
-              marginRight: 30,
-            }}
+            style={{ float: "right", marginRight: 30 }}
             onClick={(_) => this.saveContinue()}
-            title={this.props.translate("mergeDups.helpText.next") as string}
+            title={
+              this.props.translate(
+                "mergeDups.helpText.saveAndContinue"
+              ) as string
+            }
           >
-            <Translate id="goal.mergeDups.done" />
+            <Translate id="buttons.saveAndContinue" />
           </Button>
           <Button
             style={{ float: "right", marginRight: 30 }}
             onClick={(_) => this.next()}
             title={this.props.translate("mergeDups.helpText.skip") as string}
           >
-            <Translate id="goal.mergeDups.skip" />
+            <Translate id="buttons.skip" />
           </Button>
         </Paper>
       </Box>
@@ -318,5 +319,4 @@ class MergeDupStep extends React.Component<
   }
 }
 
-//export class as default
 export default withLocalize(MergeDupStep);
