@@ -7,10 +7,17 @@ config_captcha_sitekey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
 #######################################
 # environment variable overrides
 # for non-development deployments
-combine_env_vars:
-
-certbot_is_staging: 0
+combine_backend_env_vars:
 
 combine_pull_images: true
 combine_image_backend: combine/backend
 combine_image_frontend: combine/frontend
+combine_image_certmgr: combine/certmgr
+
+#######################################
+# Environment variable defaults for the
+# certmgr
+cert_is_staging: 0
+cert_verbose: 0
+cert_create_only: 0
+cert_max_connect_tries: 15

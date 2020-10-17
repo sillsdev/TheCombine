@@ -97,7 +97,7 @@ ansible-playbook playbook_target_setup.yml --limit <target> -u <target_user> -K 
 
 Notes:
 - Do not add the `-K` option if you do not need to enter your password to
-  run `sudo` commands
+  run `sudo` commands _on the target machine_.
 - The *\<target\>* must be listed in the hosts.yml file (in
   \<COMBINE\>/docker_deploy).  If it is not, then you need to create your
   own inventory file (see [below](#creating-your-own-inventory-file)).
@@ -105,9 +105,9 @@ Notes:
 #### Running the *TheCombine* Docker Containers
 
 *TheCombine*'s docker containers are built by SIL's *TeamCity* server.  Once they
-are built successfully, they are installed on the QA or are pushed to
-Amazon's Elastic Container Registry (AWS ECR).  When the container images are
-pushed to AWS ECR, these images are then used to update the Live server.
+are built successfully, they are pushed to
+Amazon's Elastic Container Registry (AWS ECR).  The production `docker-compose.yml`
+files will pull the images from AWS_ECR.
 
 #### Creating Your Own Inventory File
 
@@ -129,9 +129,7 @@ To use your own inventory file:
 
     config_captcha_required should be "true" or "false" (including the quotes);
     if it is "false", config_captcha_sitekey can be an empty string.
-  * add any variables whose default value you want to override.  In particular,
-    `combine_source_version` specifies the branch in the git repository to be
-    checked out when the project is deployed.
+  * add any variables whose default value you want to override.
   * to use the custom inventory file, add the following option to the
     ansible-playbook commands above: `-i custom-inventory.yml` where
     `custom-inventory.yml` is the name of the inventory file that you created.
@@ -147,9 +145,11 @@ up *TheCombine*.  The following files are used to define the containers and
 their dependencies:
   * ./docker-compose.yml
   * ./Dockerfile
+  * ./.env.frontend
   * ./Backend/Dockerfile
   * ./.env.backend
-  * ./.env.frontend
+  * ./certmgr/Dockerfile
+  * ./.env.certmgr
 
 With these files, we can use `docker-compose` to startup *TheCombine* in the
 development environment (see the project top-level README.md).
@@ -184,6 +184,9 @@ once at initial setup and if ever the playbook or its roles change.
         containers, `.env.frontend` and `.env.backend`;
      3. Create the runtime configuration for the UI;
      4. Create the configuration file for the nginx web server.
+  5. Setup access to the Amazon Web Services
+     1. Install the `aws-cli` package
+     2. Create the AWS access profiles
 
 # Additional Details
 
