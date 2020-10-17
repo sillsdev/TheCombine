@@ -280,10 +280,11 @@ namespace BackendFramework.Services
                 //    https://github.com/sillsdev/libpalaso/blob/
                 //        cd94d55185bbb65adaac0e2f1b0f1afc30cc8d13/SIL.DictionaryServices/Lift/LiftWriter.cs#L218
                 var note = new LexNote();
-                var form = new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note);
-                // TODO: Add Form to note.
-                //     The following code throws an exception (other methods of adding Forms are private/protected).
-                // note.Forms[0] = form;
+                var forms = new[]
+                {
+                    new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note)
+                };
+                note.Forms = forms;
                 entry.Notes.Add(note);
             }
         }
