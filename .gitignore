@@ -14,8 +14,7 @@
 
 # Generated Docker files for development use
 docker-compose.yml
-.env.backend
-.env.frontend
+.env.*
 .env*.local
 nginx/scripts
 

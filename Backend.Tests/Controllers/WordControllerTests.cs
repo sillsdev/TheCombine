@@ -33,11 +33,23 @@ namespace Backend.Tests.Controllers
 
         private Word RandomWord()
         {
-            var word = new Word { Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() } };
+            var word = new Word
+            {
+                Created = Util.RandString(),
+                Vernacular = Util.RandString(),
+                Modified = Util.RandString(),
+                PartOfSpeech = Util.RandString(),
+                Plural = Util.RandString(),
+                History = new List<string>(),
+                Audio = new List<string>(),
+                EditedBy = new List<string> { Util.RandString(), Util.RandString() },
+                ProjectId = _projId,
+                Senses = new List<Sense>() { new Sense(), new Sense(), new Sense() },
+                Note = new Note { Language = Util.RandString(), Text = Util.RandString() }
+            };
 
             foreach (var sense in word.Senses)
             {
-
                 sense.Accessibility = State.Active;
                 sense.Glosses = new List<Gloss>() { new Gloss(), new Gloss(), new Gloss() };
 
@@ -59,15 +71,6 @@ namespace Backend.Tests.Controllers
                     semdom.Description = Util.RandString();
                 }
             }
-
-            word.Created = Util.RandString();
-            word.Vernacular = Util.RandString();
-            word.Modified = Util.RandString();
-            word.PartOfSpeech = Util.RandString();
-            word.Plural = Util.RandString();
-            word.History = new List<string>();
-            word.Audio = new List<string>();
-            word.ProjectId = _projId;
 
             return word;
         }

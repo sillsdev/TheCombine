@@ -1,9 +1,10 @@
-import { reviewEntriesReducer, defaultState } from "../ReviewEntriesReducer";
-import { OLD_SENSE } from "../ReviewEntriesTypes";
 import { ReviewEntriesActionTypes } from "../ReviewEntriesActions";
+import { defaultState, reviewEntriesReducer } from "../ReviewEntriesReducer";
+import { OLD_SENSE, ReviewEntriesWord } from "../ReviewEntriesTypes";
 import mockWords from "./MockWords";
 
-const newWord = {
+const newWord: ReviewEntriesWord = {
+  ...new ReviewEntriesWord(),
   id: mockWords[0].id,
   vernacular: "toadTOAD",
   senses: [
@@ -18,7 +19,8 @@ const newWord = {
     },
   ],
 };
-const result = {
+const result: ReviewEntriesWord = {
+  ...new ReviewEntriesWord(),
   id: "a new mock id",
   vernacular: "toadTOAD",
   senses: [
@@ -38,7 +40,7 @@ const mockState = {
   words: mockWords,
 };
 
-describe("Test ReviewEntriesReducer", () => {
+describe("ReviewEntriesReducer", () => {
   it("Returns default state when passed undefined state", () => {
     expect(reviewEntriesReducer(undefined, { type: undefined } as any)).toEqual(
       defaultState

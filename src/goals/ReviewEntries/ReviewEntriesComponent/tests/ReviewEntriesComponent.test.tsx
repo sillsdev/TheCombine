@@ -1,13 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
-import ReviewEntriesConnected from "../ReviewEntriesComponent";
 import * as utilities from "../../../../utilities";
-import mockWords from "./MockWords";
-import { mockCreateWord } from "./MockWords";
-import { Provider } from "react-redux";
+import ReviewEntriesConnected from "../ReviewEntriesComponent";
 import { OLD_SENSE } from "../ReviewEntriesTypes";
+import mockWords, { mockCreateWord } from "./MockWords";
 
 jest.mock("../../../../backend", () => {
   return {
@@ -93,8 +92,8 @@ beforeAll(() => {
   ReactDOM.unmountComponentAtNode(div);
 });
 
-describe("Tests ReviewEntriesComponent", () => {
-  it("Initialized correctly in beforeAll", () => {
+describe("ReviewEntriesComponent", () => {
+  it("Initializes correctly in beforeAll", () => {
     // Check creation
     expect(MOCK_UPDATE).toHaveBeenCalledWith(
       mockWords.map((value) => ({

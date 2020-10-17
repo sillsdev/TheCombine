@@ -1,14 +1,15 @@
 import React from "react";
-import configureMockStore from "redux-mock-store";
-import DeleteCell from "../DeleteCell";
-import mockWords from "../../tests/MockWords";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import configureMockStore from "redux-mock-store";
+
 import { defaultState } from "../../../../../components/App/DefaultState";
+import mockWords from "../../tests/MockWords";
+import DeleteCell from "../DeleteCell";
 
 const createMockStore = configureMockStore([]);
 
-describe("Tests the DomainCell", () => {
+describe("DeleteCell", () => {
   const mockStore = createMockStore(defaultState);
   it("renders without crashing", () => {
     const div = document.createElement("div");

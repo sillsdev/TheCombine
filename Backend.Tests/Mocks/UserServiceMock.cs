@@ -105,5 +105,11 @@ namespace Backend.Tests.Mocks
         {
             return Task.FromResult(ResultOfUpdate.Updated); //TODO: more sophisticated mock
         }
+        public void Sanitize(User user)
+        {
+            user.Avatar = null;
+            user.Password = null;
+            user.Token = null;
+        }
     }
 }

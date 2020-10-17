@@ -1,15 +1,16 @@
-##############################################################
-#
-# N O T E :
-#
-# This file only includes the configuration for the https
-# connections.
-# The configuration for http connections is created by the
-# base image for the container.  It will redirect requests
-# for /.well-known/acme-challenge to certbot to service
-# creation and renewal of certificates from letsencrypt.
-# All other http requests are redirected to https.
-##############################################################
+server {
+    listen 80;
+    server_name ${SERVER_NAME};
+    server_tokens off;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
 
 server {
   listen              443 ssl;

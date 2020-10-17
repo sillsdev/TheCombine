@@ -148,6 +148,7 @@ export class DataEntryTable extends React.Component<
   }
 
   async addNewWord(wordToAdd: Word, audioURLs: string[], insertIndex?: number) {
+    wordToAdd.note.language = this.state.analysisLang;
     const newWord = await Backend.createWord(wordToAdd);
     if (newWord.id === "Duplicate") {
       alert(

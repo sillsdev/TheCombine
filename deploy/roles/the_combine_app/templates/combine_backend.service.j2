@@ -4,7 +4,7 @@ Description=The Combine Backend service.
 [Service]
 User={{ combine_user }}
 WorkingDirectory={{ combine_backend_dir }}/publish
-{% for item in combine_env_vars|dict2items %}
+{% for item in combine_backend_env_vars|dict2items %}
 Environment="{{ item.key }}={{ item.value }}"
 {% endfor %}
 {% for item in combine_private_env_vars|dict2items %}

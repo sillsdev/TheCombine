@@ -183,7 +183,7 @@ export class CreateProject extends React.Component<
           <CardContent>
             {/* Title */}
             <Typography variant="h5" align="center" gutterBottom>
-              <Translate id="createProject.title" />
+              <Translate id="createProject.create" />
             </Typography>
             {/* Project name field */}
             <TextField
