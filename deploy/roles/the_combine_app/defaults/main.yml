@@ -22,6 +22,6 @@ combine_program_id: CombineBackend
 
 #############################
 # environment variables for service
-combine_env_vars:
+combine_backend_env_vars:
   ASPNETCORE_ENVIRONMENT: Production
   DOTNET_PRINT_TELEMETRY_MESSAGE: false

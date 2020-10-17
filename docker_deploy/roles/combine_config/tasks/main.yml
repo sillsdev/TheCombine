@@ -19,7 +19,6 @@
     - "{{ combine_app_dir }}"
     - "{{ combine_app_dir }}/uploads"
     - "{{ combine_app_dir }}/nginx/scripts"
-    - "{{ combine_app_dir }}/nginx/conf.d"
 
 - name: install docker-compose.yml file
   template:
@@ -31,19 +30,15 @@
 
 - name: create frontend environment file
   template:
-    src: env.frontend.j2
-    dest: "{{ combine_app_dir }}/.env.frontend"
+    src: "{{ item }}.j2"
+    dest: "{{ combine_app_dir }}/.{{ item }}"
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
     mode: 0600
-
-- name: create backend environment file
-  template:
-    src: env.backend.j2
-    dest: "{{ combine_app_dir }}/.env.backend"
-    owner: "{{ combine_user }}"
-    group: "{{ combine_group }}"
-    mode: 0600
+  with_items:
+    - env.frontend
+    - env.backend
+    - env.certmgr
 
 - name: create frontend runtime configuration file
   template:
