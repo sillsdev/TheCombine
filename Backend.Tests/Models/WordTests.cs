@@ -76,7 +76,7 @@ namespace Backend.Tests.Models
         public void TestIsBlank()
         {
             Assert.That(new Note().IsBlank());
-            Assert.IsFalse(new Note { Language = Language }.IsBlank());
+            Assert.That(new Note { Language = Language }.IsBlank());
             Assert.IsFalse(new Note { Text = Text }.IsBlank());
         }
     }

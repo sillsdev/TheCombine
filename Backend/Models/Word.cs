@@ -211,9 +211,10 @@ namespace BackendFramework.Models
             };
         }
 
+        /// <summary> Whether the Note contains any contents that can be serialized. </summary>
         public bool IsBlank()
         {
-            return Language == "" && Text == "";
+            return Text == "";
         }
 
         public override bool Equals(object obj)
