@@ -167,14 +167,16 @@ namespace Backend.Tests.Controllers
             public string Language { get; set; }
             public List<string> AudioFiles { get; set; }
             public int NumOfWords { get; set; }
-            public string Guid { get; set; }
+            public string EntryGuid { get; set; }
+            public string SenseGuid { get; set; }
 
-            public RoundTripObj(string lang, List<string> audio, int words, string guid = "")
+            public RoundTripObj(string lang, List<string> audio, int words, string entryGuid = "", string senseGuid = "")
             {
                 Language = lang;
                 AudioFiles = audio;
                 NumOfWords = words;
-                Guid = guid;
+                EntryGuid = entryGuid;
+                SenseGuid = senseGuid;
             }
         }
 
@@ -237,11 +239,13 @@ namespace Backend.Tests.Controllers
             fileMapping.Add("Sena.zip", sena);
             var singleEntryLiftWithSound = new RoundTripObj(
                 "ptn", new List<string> { "short.mp3" }, 1 /*number of words*/,
-                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone word*/);
+                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/);
             fileMapping.Add("SingleEntryLiftWithSound.zip", singleEntryLiftWithSound);
             var singleEntryLiftWithTwoSound = new RoundTripObj(
                 "ptn", new List<string> { "short.mp3", "short1.mp3" }, 1 /*number of words*/,
-                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone word*/);
+                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/);
             fileMapping.Add("SingleEntryLiftWithTwoSound.zip", singleEntryLiftWithTwoSound);
 
             foreach (var dataSet in fileMapping)
@@ -270,12 +274,16 @@ namespace Backend.Tests.Controllers
 
                     fstream.Close();
 
-                    var allWords = _wordrepo.GetAllWords(proj.Id);
-                    Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
+                    var allWords = _wordrepo.GetAllWords(proj.Id).Result;
+                    Assert.AreEqual(allWords.Count, dataSet.Value.NumOfWords);
                     // We are currently only testing guids on the single-entry data sets
-                    if (dataSet.Value.Guid != "" && allWords.Result.Count == 1)
+                    if (dataSet.Value.EntryGuid != "" && allWords.Count == 1)
                     {
-                        Assert.AreEqual(allWords.Result[0].Guid.ToString(), dataSet.Value.Guid);
+                        Assert.AreEqual(allWords[0].Guid.ToString(), dataSet.Value.EntryGuid);
+                        if (dataSet.Value.SenseGuid != "")
+                        {
+                            Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), dataSet.Value.SenseGuid);
+                        }
                     }
 
                     // Export
@@ -322,12 +330,16 @@ namespace Backend.Tests.Controllers
 
                     fstream.Close();
 
-                    allWords = _wordrepo.GetAllWords(proj2.Id);
-                    Assert.AreEqual(allWords.Result.Count, dataSet.Value.NumOfWords);
+                    allWords = _wordrepo.GetAllWords(proj2.Id).Result;
+                    Assert.AreEqual(allWords.Count, dataSet.Value.NumOfWords);
                     // We are currently only testing guids on the single-entry data sets
-                    if (dataSet.Value.Guid != "" && allWords.Result.Count == 1)
+                    if (dataSet.Value.EntryGuid != "" && allWords.Count == 1)
                     {
-                        Assert.AreEqual(allWords.Result[0].Guid.ToString(), dataSet.Value.Guid);
+                        Assert.AreEqual(allWords[0].Guid.ToString(), dataSet.Value.EntryGuid);
+                        if (dataSet.Value.SenseGuid != "")
+                        {
+                            Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), dataSet.Value.SenseGuid);
+                        }
                     }
 
                     // Export
