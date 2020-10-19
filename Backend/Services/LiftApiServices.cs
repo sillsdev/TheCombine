@@ -448,8 +448,8 @@ namespace BackendFramework.Services
             }
 
             /// <summary>
-            /// The meat of lift import is done here. This reads in all necessary attributes of a word and adds
-            /// it to the database.
+            /// The meat of lift import is done here.
+            /// This reads in all necessary attributes of a word and adds it to the database.
             /// </summary>
             public async void FinishEntry(LiftEntry entry)
             {
@@ -649,6 +649,18 @@ namespace BackendFramework.Services
                 entry.Pronunciations.Add(phonetic);
             }
 
+            /// <summary> Adds in note, if there is one to add </summary>
+            public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml)
+            {
+                if (extensible is LiftEntry entry)
+                {
+                    var note = new LiftNote(
+                        // This application only uses "basic" notes, which have no type
+                        null,
+                        new LiftMultiText(contents.FirstValue.Key, contents.FirstValue.Value.Text));
+                    entry.Notes.Add(note);
+                }
+            }
             /// <summary> Adds in each semantic domain to a list </summary>
             public void ProcessRangeElement(string range, string id, string guid, string parent,
                 LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
@@ -700,17 +712,6 @@ namespace BackendFramework.Services
             public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
             public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
 
-            public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml)
-            {
-                if (extensible is LiftEntry entry)
-                {
-                    var note = new LiftNote(
-                        // This application only uses "basic" notes, which have no type.
-                        null,
-                        new LiftMultiText(contents.FirstValue.Key, contents.FirstValue.Value.Text));
-                    entry.Notes.Add(note);
-                }
-            }
             public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
             public void MergeInRelation(
                 LiftObject extensible, string relationTypeName, string targetId, string rawXml)
