@@ -263,6 +263,7 @@ namespace BackendFramework.Models
         {
             var clone = new Sense
             {
+                Guid = Guid,
                 Glosses = new List<Gloss>(),
                 SemanticDomains = new List<SemanticDomain>()
             };
