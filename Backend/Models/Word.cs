@@ -196,6 +196,12 @@ namespace BackendFramework.Models
             Text = "";
         }
 
+        public Note(string language, string text)
+        {
+            Language = language;
+            Text = text;
+        }
+
         public Note Clone()
         {
             return new Note
@@ -203,6 +209,12 @@ namespace BackendFramework.Models
                 Language = Language.Clone() as string,
                 Text = Text.Clone() as string
             };
+        }
+
+        /// <summary> Whether the Note contains any contents that can be serialized. </summary>
+        public bool IsBlank()
+        {
+            return Text == "";
         }
 
         public override bool Equals(object obj)
@@ -251,6 +263,7 @@ namespace BackendFramework.Models
         {
             var clone = new Sense
             {
+                Guid = Guid,
                 Glosses = new List<Gloss>(),
                 SemanticDomains = new List<SemanticDomain>()
             };

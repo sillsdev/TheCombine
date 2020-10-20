@@ -71,6 +71,14 @@ namespace Backend.Tests.Models
                 new Note { Text = "1" }.GetHashCode(),
                 new Note { Text = "2" }.GetHashCode());
         }
+
+        [Test]
+        public void TestIsBlank()
+        {
+            Assert.That(new Note().IsBlank());
+            Assert.That(new Note { Language = Language }.IsBlank());
+            Assert.IsFalse(new Note { Text = Text }.IsBlank());
+        }
     }
 
     public class SenseTests
