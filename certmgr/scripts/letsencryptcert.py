@@ -1,13 +1,11 @@
 #! /usr/bin/env python3
 
 import os
-import re
-import subprocess
-import sys
 import time
+from typing import List
 
 from basecert import BaseCert
-from func import *
+from func import debug_log, lookup_env, update_link
 import requests
 from selfsignedcert import SelfSignedCert
 
@@ -32,16 +30,16 @@ class LetsEncryptCert(BaseCert):
         is_letsencrypt_cert: bool = False
         if os.path.islink(self.nginx_cert_dir):
             link_target: str = os.readlink(self.nginx_cert_dir)
-            self.debug_log(f"Web server cert is linked to {link_target}")
+            debug_log(f"Web server cert is linked to {link_target}")
             if link_target == self.cert_dir:
-                is_letstencrypt_cert = True
+                is_letsencrypt_cert = True
 
-        self.debug_log(f"Existing certificate is from Let's Encrypt: {is_letsencrypt_cert}")
+        debug_log(f"Existing certificate is from Let's Encrypt: {is_letsencrypt_cert}")
 
         if not is_letsencrypt_cert:
             print("Waiting for webserver to come up")
             if not self.wait_for_webserver():
-                self.debug_log("Could not connect to webserver")
+                debug_log("Could not connect to webserver")
                 return
 
             # Get additional variables for certbot
@@ -78,7 +76,7 @@ class LetsEncryptCert(BaseCert):
     def wait_for_webserver(self) -> bool:
         attempt_count: int = 0
         while attempt_count < self.max_connect_tries:
-            self.debug_log(f"Connection attempt: {attempt_count}")
+            debug_log(f"Connection attempt: {attempt_count}")
             try:
                 r: requests.Response = requests.get(
                     f"http://{self.server_name}", allow_redirects=False

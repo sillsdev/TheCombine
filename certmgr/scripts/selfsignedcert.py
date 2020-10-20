@@ -1,10 +1,9 @@
 #! /usr/bin/env python3
 
 import os
-import sys
 
 from basecert import BaseCert
-from func import *
+from func import debug_log, lookup_env, update_link
 
 
 class SelfSignedCert(BaseCert):
@@ -22,16 +21,28 @@ class SelfSignedCert(BaseCert):
         if force or not os.path.exists(self.cert):
             os.makedirs(self.cert_dir, 0o755, True)
             os.system(
-                f"openssl req -x509 -nodes -newkey rsa:4096 -days {self.expire} -keyout '{self.privkey}' -out '{self.cert}' -subj '/CN=localhost'"
+                f"openssl req "
+                "-x509 "
+                "-nodes "
+                "-newkey "
+                "rsa:4096 "
+                f"-days {self.expire} "
+                f"-keyout '{self.privkey}' "
+                f"-out '{self.cert}' "
+                "-subj '/CN=localhost'"
             )
             update_link(self.cert_dir, self.nginx_cert_dir)
 
     def renew(self) -> None:
-        self.debug_log(f"Checking for renewal of {self.cert}")
+        debug_log(f"Checking for renewal of {self.cert}")
         renew_before_expiry_sec = self.renew_before_expiry * 3600 * 24
         if os.path.exists(self.cert_file):
             wstat: int = os.system(
-                f"openssl x509 -noout -in {self.cert_file} -checkend {renew_before_expiry_sec} > /dev/null"
+                "openssl x509 "
+                "-noout "
+                f"-in {self.cert_file} "
+                f"-checkend {renew_before_expiry_sec} "
+                "> /dev/null"
             )
             if os.waitstatus_to_exitcode(wstat) == 1:
                 print(f"Renewing the certificates for {self.server_name}")

@@ -36,11 +36,6 @@ def debug_log(message: str) -> None:
         print(message)
 
 
-def init_cert_store(cert_store: str) -> None:
-    for subdir in ["nginx", "selfsigned"]:
-        os.makedirs(f"{cert_store}/{subdir}", 0o755, True)
-
-
 def update_link(src: str, target: str) -> None:
 
     debug_log(f"linking {src} to {target}")
