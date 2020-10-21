@@ -3,7 +3,7 @@
 import os
 
 from basecert import BaseCert
-from func import debug_log, lookup_env, update_link
+from func import lookup_env, update_link
 
 
 class SelfSignedCert(BaseCert):
@@ -34,7 +34,6 @@ class SelfSignedCert(BaseCert):
             update_link(self.cert_dir, self.nginx_cert_dir)
 
     def renew(self) -> None:
-        debug_log(f"Checking for renewal of {self.cert}")
         renew_before_expiry_sec = self.renew_before_expiry * 3600 * 24
         if os.path.exists(self.cert_file):
             wstat: int = os.system(

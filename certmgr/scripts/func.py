@@ -12,7 +12,6 @@ env_defaults: Tuple[str, Union[str, int]] = {
     "MAX_CONNECT_TRIES": 15,
     "CERT_DOMAINS": "",
     "SERVER_NAME": "",
-    "CERT_VERBOSE": 0,
 }
 
 
@@ -26,27 +25,15 @@ def lookup_env(env_var: str) -> Union[str, int]:
         sys.exit(3)
 
 
-# Define a variable 'verbose' so that we only need to look up the
-# environment variable once
-verbose: bool = False if lookup_env("CERT_VERBOSE") == "0" else True
-
-
-def debug_log(message: str) -> None:
-    if lookup_env("CERT_VERBOSE") != "0":
-        print(message)
-
-
 def update_link(src: str, target: str) -> None:
 
-    debug_log(f"linking {src} to {target}")
+    print(f"linking {src} to {target}")
     if os.path.exists(target):
         assert os.path.islink(target)
         link_target: str = os.readlink(target)
         if link_target != src:
             os.unlink(target)
-            debug_log("   Old link removed")
         else:
-            debug_log(f"   {target} already points to {src}")
+            # src already point to the target
+            return
     os.symlink(src, target)
-    if verbose:
-        os.system(f"ls -ld {target}")
