@@ -33,6 +33,20 @@ combine_cert_env_vars:
   - key: "SERVER_NAME"
     value: "{{ combine_server_name }}"
 
+# SSL Certificate variables
+# for both Let's Encrypt and Self-signed certs
+combine_cert_server_env_vars:
+  - key: "CERT_MODE"
+    value: "cert_server"
+  - key: "CERT_EMAIL"
+    value: "{{ cert_email }}"
+  - key: "CERT_STAGING"
+    value: "{{ cert_is_staging }}"
+  - key: "MAX_CONNECT_TRIES"
+    value: "{{ cert_max_connect_tries }}"
+  - key: "SERVER_LIST"
+    value: "{{ combine_cert_server_list }}"
+
 combine_frontend_env_vars:
   - key: "SERVER_NAME"
     value: "{{ combine_server_name }}"
