@@ -61,7 +61,6 @@ class LetsEncryptCert(BaseCert):
                     "--rsa-key-size 4096 "
                     "--agree-tos "
                     "--non-interactive "
-                    "--force-renewal"
                 )
                 certbot_result: int = os.system(cert_cmd)
                 if certbot_result == 0:
