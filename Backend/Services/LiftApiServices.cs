@@ -40,6 +40,7 @@ namespace BackendFramework.Services
                     Writer.WriteEndElement();
                     Writer.WriteEndElement();
                 }
+
                 // Make sure the writer does not write it again in the wrong format.
                 entry.Pronunciations.Clear();
             }
@@ -116,6 +117,7 @@ namespace BackendFramework.Services
             {
                 Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
             }
+
             var zipDir = Path.Combine(exportDir, "LiftExport", "Lift");
             Directory.CreateDirectory(zipDir);
 
@@ -149,9 +151,9 @@ namespace BackendFramework.Services
             var activeWords = frontier.Where(
                 x => x.Senses.Any(s => s.Accessibility == State.Active)).ToList();
 
-            // All words in the frontier with any senses are considered current. The Combine does not import senseless entries
-            // and the interface is supposed to prevent creating them. So the the words found in allWords with no matching guid in activeWords
-            // are exported as 'deleted'.
+            // All words in the frontier with any senses are considered current.
+            // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
+            // So the the words found in allWords with no matching guid in activeWords are exported as 'deleted'.
             var deletedWords = allWords.Where(
                 x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
             foreach (var wordEntry in activeWords)
@@ -161,20 +163,25 @@ namespace BackendFramework.Services
                 {
                     entry.CreationTime = createdTime;
                 }
+
                 if (DateTime.TryParse(wordEntry.Modified, out var modifiedTime))
                 {
                     entry.ModificationTime = modifiedTime;
                 }
+
+                AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, projectId, projService);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir, projectId);
 
                 liftWriter.Add(entry);
             }
+
             foreach (var wordEntry in deletedWords)
             {
                 var entry = new LexEntry(MakeSafeXmlAttribute(wordEntry.Vernacular), wordEntry.Guid ?? Guid.Empty);
 
+                AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, projectId, projService);
                 AddSenses(entry, wordEntry);
                 AddAudio(entry, wordEntry, audioDir, projectId);
@@ -193,6 +200,7 @@ namespace BackendFramework.Services
                 importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(
                     Path.GetFileName).ToList().Single();
             }
+
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
             // If there are no new semantic domains, and the old lift-ranges file is still around, just copy it
@@ -220,6 +228,7 @@ namespace BackendFramework.Services
                 {
                     sdList = reader.ReadToEndAsync().Result;
                 }
+
                 var sdLines = sdList.Split(Environment.NewLine);
                 foreach (var line in sdLines)
                 {
@@ -261,14 +270,33 @@ namespace BackendFramework.Services
             return destinationFileName;
         }
 
+        /// <summary> Adds <see cref="Note"/> of a word to be written out to lift </summary>
+        private static void AddNote(LexEntry entry, Word wordEntry)
+        {
+            if (!wordEntry.Note.IsBlank())
+            {
+                // This application only uses "basic" notes, which have no type.
+                // To see the implementation of how notes are written to Lift XML:
+                //    https://github.com/sillsdev/libpalaso/blob/
+                //        cd94d55185bbb65adaac0e2f1b0f1afc30cc8d13/SIL.DictionaryServices/Lift/LiftWriter.cs#L218
+                var note = new LexNote();
+                var forms = new[]
+                {
+                    new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note)
+                };
+                note.Forms = forms;
+                entry.Notes.Add(note);
+            }
+        }
+
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
-        private void AddVern(LexEntry entry, Word wordEntry, string projectId, IProjectService projService)
+        private static void AddVern(LexEntry entry, Word wordEntry, string projectId, IProjectService projService)
         {
             var lang = projService.GetProject(projectId).Result.VernacularWritingSystem.Bcp47;
             entry.LexicalForm.MergeIn(MultiText.Create(new LiftMultiText { { lang, wordEntry.Vernacular } }));
         }
 
-        /// <summary> Adds each sense of a word to be written out to lift </summary>
+        /// <summary> Adds each <see cref="Sense"/> of a word to be written out to lift </summary>
         private static void AddSenses(LexEntry entry, Word wordEntry)
         {
             var activeSenses = wordEntry.Senses.Where(s => s.Accessibility == State.Active).ToList();
@@ -308,7 +336,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
-        private void AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
+        private static void AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
         {
             foreach (var audioFile in wordEntry.Audio)
             {
@@ -330,7 +358,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Exports main character set from a project to an ldml file </summary>
-        private void LdmlExport(string filePath, IProjectService projService, Project project)
+        private static void LdmlExport(string filePath, IProjectService projService, Project project)
         {
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
@@ -373,6 +401,7 @@ namespace BackendFramework.Services
         {
             return new LiftMerger(projectId, projectService, wordRepo);
         }
+
         private static void WriteRangeElement(
             XmlWriter liftRangesWriter, string id, string guid, string name, string description)
         {
@@ -407,9 +436,9 @@ namespace BackendFramework.Services
 
         private sealed class LiftMerger : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
         {
-            private string _projectId;
-            private IProjectService _projectService;
-            private IWordRepository _wordRepo;
+            private readonly string _projectId;
+            private readonly IProjectService _projectService;
+            private readonly IWordRepository _wordRepo;
 
             public LiftMerger(string projectId, IProjectService projectService, IWordRepository wordRepo)
             {
@@ -417,15 +446,23 @@ namespace BackendFramework.Services
                 _projectService = projectService;
                 _wordRepo = wordRepo;
             }
+
             /// <summary>
-            /// The meat of lift import is done here. This reads in all necessary attributes of a word and adds
-            /// it to the database.
+            /// The meat of lift import is done here.
+            /// This reads in all necessary attributes of a word and adds it to the database.
             /// </summary>
             public async void FinishEntry(LiftEntry entry)
             {
-                var newWord = new Word();
-                newWord.Guid = entry.Guid;
+                var newWord = new Word { Guid = entry.Guid };
                 var proj = _projectService.GetProject(_projectId).Result;
+
+                // Add Note if one exists.
+                // Note: Currently only support for a single note is included.
+                if (entry.Notes.Count > 0)
+                {
+                    var (language, liftString) = entry.Notes[0].Content.FirstValue;
+                    newWord.Note = new Note(language, liftString.Text);
+                }
 
                 // Add vernacular
                 // TODO: currently we just add the first listed option, we may want to choose eventually
@@ -466,7 +503,7 @@ namespace BackendFramework.Services
                     {
                         SemanticDomains = new List<SemanticDomain>(),
                         Glosses = new List<Gloss>(),
-                        Guid = sense.Guid
+                        Guid = new Guid(sense.Id),
                     };
 
                     // Add glosses
@@ -612,6 +649,18 @@ namespace BackendFramework.Services
                 entry.Pronunciations.Add(phonetic);
             }
 
+            /// <summary> Adds in note, if there is one to add </summary>
+            public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml)
+            {
+                if (extensible is LiftEntry entry)
+                {
+                    var note = new LiftNote(
+                        // This application only uses "basic" notes, which have no type
+                        null,
+                        new LiftMultiText(contents.FirstValue.Key, contents.FirstValue.Value.Text));
+                    entry.Notes.Add(note);
+                }
+            }
             /// <summary> Adds in each semantic domain to a list </summary>
             public void ProcessRangeElement(string range, string id, string guid, string parent,
                 LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
@@ -662,13 +711,16 @@ namespace BackendFramework.Services
             public void MergeInDefinition(LiftSense sense, LiftMultiText liftMultiText) { }
             public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
             public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
-            public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml) { }
-            public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
-            public void MergeInRelation(LiftObject extensible, string relationTypeName, string targetId, string rawXml) { }
-            public void MergeInSource(LiftExample example, string source) { }
-            public void MergeInTranslationForm(LiftExample example, string type, LiftMultiText multiText, string rawXml) { }
-            public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
 
+            public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
+            public void MergeInRelation(
+                LiftObject extensible, string relationTypeName, string targetId, string rawXml)
+            { }
+            public void MergeInSource(LiftExample example, string source) { }
+            public void MergeInTranslationForm(
+                LiftExample example, string type, LiftMultiText multiText, string rawXml)
+            { }
+            public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
         }
     }
 }
