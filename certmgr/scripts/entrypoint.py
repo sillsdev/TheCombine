@@ -17,11 +17,11 @@ if __name__ == "__main__":
         "letsencrypt": LetsEncryptCert(),
     }
 
-    cert_store: str = lookup_env("CERT_STORE")
+    cert_store = lookup_env("CERT_STORE")
     for subdir in ["nginx", "selfsigned"]:
         os.makedirs(f"{cert_store}/{subdir}", 0o755, True)
 
-    cert_mode: str = lookup_env("CERT_MODE")
+    cert_mode = lookup_env("CERT_MODE")
     print(f"Running in {cert_mode} mode")
     cert_obj = mode_choices.get(cert_mode, None)
 

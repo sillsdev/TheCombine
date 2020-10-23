@@ -29,7 +29,7 @@ class LetsEncryptCert(BaseCert):
 
         is_letsencrypt_cert: bool = False
         if self.nginx_cert_dir.is_symlink():
-            link_target: str = self.nginx_cert_dir.readlink()
+            link_target = self.nginx_cert_dir.readlink()
             if link_target == self.cert_dir:
                 is_letsencrypt_cert = True
 
@@ -48,11 +48,11 @@ class LetsEncryptCert(BaseCert):
             else:
                 email_arg = "--email ${CERT_EMAIL}"
 
-            staging_arg: str = "--staging" if self.staging else ""
+            staging_arg = "--staging" if self.staging else ""
 
             if domain_list:
-                domain_args: str = "-d " + " -d ".join(domain_list)
-                cert_cmd: str = (
+                domain_args = "-d " + " -d ".join(domain_list)
+                cert_cmd = (
                     f"certbot certonly --webroot -w /var/www/certbot "
                     f"{staging_arg} "
                     f"{email_arg} "
@@ -61,7 +61,7 @@ class LetsEncryptCert(BaseCert):
                     "--agree-tos "
                     "--non-interactive "
                 )
-                certbot_result: int = os.system(cert_cmd)
+                certbot_result = os.system(cert_cmd)
                 if certbot_result == 0:
                     update_link(self.cert_dir, self.nginx_cert_dir)
 
@@ -69,7 +69,7 @@ class LetsEncryptCert(BaseCert):
         os.system("certbot renew")
 
     def wait_for_webserver(self) -> bool:
-        attempt_count: int = 0
+        attempt_count = 0
         while attempt_count < self.max_connect_tries:
             try:
                 r: requests.Response = requests.get(
