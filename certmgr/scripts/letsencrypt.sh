@@ -18,7 +18,6 @@ fi
 CERT_ISSUER=""
 if [ -f "${NGINX_CERT_PATH}/fullchain.pem" ] ; then
   CERT_ISSUER=`openssl x509 -in "${NGINX_CERT_PATH}/fullchain.pem" -noout -issuer | sed 's/issuer=CN *= *//'`
-  debug_log "Issuer for existing certificate is: ${CERT_ISSUER}"
 fi
 
 # If it is a self-signed cert, wait for the webserver to come up
@@ -26,8 +25,8 @@ fi
 if [ -z "${CERT_ISSUER}" ] || [ "${CERT_ISSUER}" = "localhost" ] ; then
   echo "Waiting for webserver to come up"
   if ! wait_for_webserver ; then
-    debug_log "Could not connect to webserver"
-    #exit 1
+    echo "Could not connect to webserver"
+    exit 1
   fi
 
   echo "Request certificate from Let's Encrypt"
