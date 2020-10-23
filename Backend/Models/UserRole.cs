@@ -31,8 +31,8 @@ namespace BackendFramework.Models
         {
             var clone = new UserRole
             {
-                Id = Id.Clone() as string,
-                ProjectId = ProjectId.Clone() as string,
+                Id = (Id.Clone() as string)!,
+                ProjectId = (ProjectId.Clone() as string)!,
                 Permissions = new List<int>()
             };
 
@@ -52,7 +52,7 @@ namespace BackendFramework.Models
                 other.Permissions.All(Permissions.Contains);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is UserRole other) || GetType() != obj.GetType())
             {
