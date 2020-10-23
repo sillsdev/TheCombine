@@ -84,17 +84,20 @@ namespace BackendFramework.Services
         /// <summary> Sorts semantic domains by string length of the number, then numerically </summary>
         private class SemDomComparer : IComparer<SemanticDomain>
         {
-            public int Compare(SemanticDomain x, SemanticDomain y)
+            public int Compare(SemanticDomain? x, SemanticDomain? y)
             {
+                if (x == null || y == null)
+                {
+                    return 0;
+                }
+
                 var lengthComparison = x.Id.Length.CompareTo(y.Id.Length);
                 if (lengthComparison == 0)
                 {
                     return x.Id.CompareTo(y.Id);
                 }
-                else
-                {
-                    return lengthComparison;
-                }
+
+                return lengthComparison;
             }
         }
     }
