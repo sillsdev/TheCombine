@@ -36,11 +36,11 @@ class SelfSignedCert(BaseCert):
 
     def renew(self) -> None:
         renew_before_expiry_sec = self.renew_before_expiry * 3600 * 24
-        if self.cert_file.exists():
+        if self.cert.exists():
             wstat = os.system(
                 "openssl x509 "
                 "-noout "
-                f"-in {self.cert_file} "
+                f"-in {self.cert} "
                 f"-checkend {renew_before_expiry_sec} "
                 "> /dev/null"
             )
