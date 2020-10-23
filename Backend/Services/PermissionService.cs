@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -102,7 +103,27 @@ namespace BackendFramework.Services
         {
             var jsonToken = GetJwt(request);
             var userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
+            if (userId == null)
+            {
+                throw new InvalidJwtTokenError();
+            }
+
             return userId;
+        }
+
+        [Serializable]
+        public class InvalidJwtTokenError : Exception
+        {
+            public InvalidJwtTokenError()
+            { }
+
+            public InvalidJwtTokenError(string message)
+                : base(message)
+            { }
+
+            public InvalidJwtTokenError(string message, Exception innerException)
+                : base(message, innerException)
+            { }
         }
     }
 }
