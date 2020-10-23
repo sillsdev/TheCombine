@@ -24,10 +24,12 @@ class LetsEncryptCert(BaseCert):
 
     def create(self, force: bool = False) -> None:
         if force or not self.cert.exists():
+            # Create a self-signed certificate so that the Nginx webserver can
+            # come up and be available for the HTTP challenges from letsencrypt
             temp_cert = SelfSignedCert(1, 0)
             temp_cert.create()
 
-        is_letsencrypt_cert: bool = False
+        is_letsencrypt_cert = False
         if self.nginx_cert_dir.is_symlink():
             link_target = self.nginx_cert_dir.readlink()
             if link_target == self.cert_dir:
@@ -72,6 +74,9 @@ class LetsEncryptCert(BaseCert):
         attempt_count = 0
         while attempt_count < self.max_connect_tries:
             try:
+                # Don't allow redirect errors since letsencrypt connects
+                # on port 80 and since we have a self-signed cert for now
+                # it will cause errors
                 r: requests.Response = requests.get(
                     f"http://{self.server_name}", allow_redirects=False
                 )
