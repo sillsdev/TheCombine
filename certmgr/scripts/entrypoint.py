@@ -15,7 +15,6 @@ if __name__ == "__main__":
     mode_choices: Tuple[str, BaseCert] = {
         "self-signed": SelfSignedCert(),
         "letsencrypt": LetsEncryptCert(),
-        "cert_server": BaseCert(),
         "cert_client": BaseCert(),
     }
 

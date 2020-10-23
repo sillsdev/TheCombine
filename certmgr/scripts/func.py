@@ -10,8 +10,10 @@ env_defaults: Tuple[str, Union[str, int]] = {
     "CERT_EMAIL": "",
     "CERT_STAGING": 0,
     "MAX_CONNECT_TRIES": 15,
-    "CERT_DOMAINS": "",
+    "CERT_ADDL_DOMAINS": "",
     "SERVER_NAME": "",
+    "CERT_PROXY_RENEWAL": 30,
+    "CERT_PROXY_DOMAINS": ""
 }
 
 

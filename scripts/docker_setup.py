@@ -86,7 +86,6 @@ def main() -> None:
             {"key": "CERT_MODE", "value": "self-signed"},
             {"key": "CERT_EMAIL", "value": ""},
             {"key": "CERT_STAGING", "value": "0"},
-            {"key": "CERT_DOMAINS", "value": "localhost"},
             {"key": "MAX_CONNECT_TRIES", "value": "10"},
             {"key": "SERVER_NAME", "value": "localhost"},
         ],

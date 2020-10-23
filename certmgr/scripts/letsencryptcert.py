@@ -2,7 +2,7 @@
 
 import os
 import time
-from typing import List
+from typing import List, Final
 
 from basecert import BaseCert
 from func import lookup_env, update_link
@@ -11,6 +11,10 @@ from selfsignedcert import SelfSignedCert
 
 
 class LetsEncryptCert(BaseCert):
+
+    default_renew_before_expiry: Final = 30
+    cert_renew_deploy_hook: Final = "/etc/letsencrypt/renewal/deploy/10_push_certs.sh"
+
     def __init__(self):
         self.cert_store: str = lookup_env("CERT_STORE")
         self.server_name: str = lookup_env("SERVER_NAME")
@@ -41,7 +45,7 @@ class LetsEncryptCert(BaseCert):
 
             # Get additional variables for certbot
             domain_list: List[str] = [self.server_name]
-            domain_list.extend(lookup_env("CERT_DOMAINS").split())
+            domain_list.extend(lookup_env("CERT_ADDL_DOMAINS").split())
 
             email_arg: str = ""
             if not self.email:
@@ -51,20 +55,10 @@ class LetsEncryptCert(BaseCert):
 
             staging_arg: str = "--staging" if self.staging else ""
 
-            if domain_list:
-                domain_args: str = "-d " + " -d ".join(domain_list)
-                cert_cmd: str = (
-                    f"certbot certonly --webroot -w /var/www/certbot "
-                    f"{staging_arg} "
-                    f"{email_arg} "
-                    f"{domain_args} "
-                    "--rsa-key-size 4096 "
-                    "--agree-tos "
-                    "--non-interactive "
-                )
-                certbot_result: int = os.system(cert_cmd)
-                if certbot_result == 0:
-                    update_link(self.cert_dir, self.nginx_cert_dir)
+            if get_cert(domain_list):
+                # update the certificate link for the Nginx web server
+                update_link(self.cert_dir, self.nginx_cert_dir)
+                get_proxy_certs()
 
     def renew() -> None:
         os.system("certbot renew")
@@ -85,3 +79,50 @@ class LetsEncryptCert(BaseCert):
                     attempt_count += 1
             time.sleep(10)
         return False
+
+    def get_cert(domain_list: List[str]) -> bool:
+        if domain_list:
+            domain_args: str = "-d " + " -d ".join(domain_list)
+            cert_cmd: str = (
+                f"certbot certonly --webroot -w /var/www/certbot "
+                f"{staging_arg} "
+                f"{email_arg} "
+                f"{domain_args} "
+                "--rsa-key-size 4096 "
+                "--agree-tos "
+                "--non-interactive "
+            )
+            return os.system(cert_cmd) == 0
+
+    def get_proxy_certs() -> None:
+        domain_list: List[str] = lookup_env("CERT_PROXY_DOMAINS").split()
+        renew_before_expiry: int = lookup_env("CERT_PROXY_RENEWAL")
+        cert_created: bool = False
+        for domain in domain_list:
+            if get_cert([ domain ]):
+                cert_created = True
+                update_renew_before_expiry(domain)
+            else:
+                print(f"Could not get certificate for {domain}")
+        if cert_created:
+            create_renew_hook()
+            push_certs_to_aws_s3()
+
+    def update_renew_before_expiry(domain: str) -> None:
+        if self.renew_before_expiry != default_renew_before_expiry:
+            print(f"Setting renew before expiry for {domain} "
+                  f"to {self.renew_before_expiry}")
+            renew_config:str = f"/etc/letsencrypt/renewal/{domain}.conf"
+            if os.path.exists(renew_config):
+                os.system(
+                    "sed -s 's/#* *renew_before_expiry = [0-9][0-9]* days/"
+                    f"renew_before_expiry = {self.renew_before_expiry} days' "
+                    f"< renew_config > '{renew_config}.tmp'"
+                    )
+                os.system(f"mv {renew_config}.tmp {renew_config}")
+
+    def create_renew_hook() -> None:
+        print "STUB: Create renew hook"
+
+    def push_certs_to_aws_s3() -> None:
+        print "STUB: Push certificates to AWS S3 bucket"

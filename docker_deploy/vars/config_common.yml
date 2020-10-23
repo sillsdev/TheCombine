@@ -26,26 +26,14 @@ combine_cert_env_vars:
     value: "{{ cert_email }}"
   - key: "CERT_STAGING"
     value: "{{ cert_is_staging }}"
-  - key: "CERT_DOMAINS"
-    value: "{{ combine_server_name }}"
   - key: "MAX_CONNECT_TRIES"
     value: "{{ cert_max_connect_tries }}"
   - key: "SERVER_NAME"
     value: "{{ combine_server_name }}"
-
-# SSL Certificate variables
-# for both Let's Encrypt and Self-signed certs
-combine_cert_server_env_vars:
-  - key: "CERT_MODE"
-    value: "cert_server"
-  - key: "CERT_EMAIL"
-    value: "{{ cert_email }}"
-  - key: "CERT_STAGING"
-    value: "{{ cert_is_staging }}"
-  - key: "MAX_CONNECT_TRIES"
-    value: "{{ cert_max_connect_tries }}"
-  - key: "SERVER_LIST"
-    value: "{{ combine_cert_server_list }}"
+  - key: "CERT_PROXY_DOMAINS"
+    value: "{{ combine_cert_proxy_list }}"
+  - key: "CERT_PROXY_RENEWAL"
+    value: 60
 
 combine_frontend_env_vars:
   - key: "SERVER_NAME"
@@ -54,3 +42,5 @@ combine_frontend_env_vars:
     value: "{{ ssl_certificate }}"
   - key: "SSL_PRIVATE_KEY"
     value: "{{ ssl_private_key }}"
+  - key: "CERT_PROXY_DOMAINS"
+    value: "{{ combine_cert_proxy_list }}"

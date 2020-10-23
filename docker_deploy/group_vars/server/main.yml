@@ -17,9 +17,9 @@ combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
 
 # SSL cert variables specific to Server targets
 cert_mode: "letsencrypt"
-cert_include_server: true
-combine_cert_server_list:
+combine_cert_proxy_list:
   - nuc2.thecombine.app
+  - nuc1.thecombine.app
 
 aws_user: "{{ combine_user }}"
 aws_group: "{{ combine_group }}"

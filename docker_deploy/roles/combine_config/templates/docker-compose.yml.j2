@@ -51,18 +51,6 @@ services:
       - certbot_data:/var/www/certbot
     restart: unless-stopped
 
-{% if include_cert_server %}
-  certserver:
-    image: {{ combine_image_certmgr }}
-    env_file:
-      - ./.env.certserver
-    volumes:
-      - letsencrypt:/etc/letsencrypt
-      - cert_store:/etc/cert_store
-      - certbot_data:/var/www/certbot
-    restart: unless-stopped
-{% endif %}
-
   database:
     image: mongo:4.2
     volumes:
