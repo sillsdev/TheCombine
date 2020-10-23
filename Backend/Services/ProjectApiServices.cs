@@ -150,8 +150,13 @@ namespace BackendFramework.Services
                 user.ProjectRoles.Add(project.Id, userRole.Id);
                 await _userService.Update(user.Id, user);
                 // Generate the JWT based on those new userRoles
-                user = await _userService.MakeJwt(user);
-                await _userService.Update(user.Id, user);
+                var updatedUser = await _userService.MakeJwt(user);
+                if (updatedUser == null)
+                {
+                    throw new Exception("Unable to generate JWT.");
+                }
+
+                await _userService.Update(updatedUser.Id, updatedUser);
 
                 // Removes token and updates user
 

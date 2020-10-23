@@ -78,7 +78,7 @@ namespace BackendFramework.Services
 
         /// <summary> Deletes word in frontier collection and adds word with deleted tag in word collection </summary>
         /// <returns> A string: id of new word </returns>
-        public async Task<string> DeleteFrontierWord(string projectId, string wordId)
+        public async Task<string?> DeleteFrontierWord(string projectId, string wordId)
         {
             var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
 
