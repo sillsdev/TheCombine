@@ -77,7 +77,7 @@ namespace Backend.Tests.Mocks
             try
             {
                 var foundUser = _users.Single(u => u.Username.ToLowerInvariant() == username.ToLowerInvariant() && u.Password == password);
-                if (foundUser == null)
+                if (foundUser is null)
                 {
                     return null;
                 }

@@ -22,7 +22,7 @@ namespace BackendFramework.Services
         {
             // Ensure project exists
             var proj = await _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 throw new Exception("Project not found");
             }
@@ -86,7 +86,7 @@ namespace BackendFramework.Services
         {
             public int Compare(SemanticDomain? x, SemanticDomain? y)
             {
-                if (x == null || y == null)
+                if (x is null || y is null)
                 {
                     return 0;
                 }

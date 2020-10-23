@@ -103,7 +103,7 @@ namespace BackendFramework.Services
         {
             var jsonToken = GetJwt(request);
             var userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
-            if (userId == null)
+            if (userId is null)
             {
                 throw new InvalidJwtTokenError();
             }

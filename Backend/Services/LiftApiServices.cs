@@ -226,7 +226,7 @@ namespace BackendFramework.Services
                 var assembly = typeof(LiftService).GetTypeInfo().Assembly;
                 const string semDomListFile = "BackendFramework.Data.sdList.txt";
                 var resource = assembly.GetManifestResourceStream(semDomListFile);
-                if (resource == null)
+                if (resource is null)
                 {
                     throw new Exception($"Unable to load semantic domain list: {semDomListFile}");
                 }

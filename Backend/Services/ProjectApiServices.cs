@@ -151,7 +151,7 @@ namespace BackendFramework.Services
                 await _userService.Update(user.Id, user);
                 // Generate the JWT based on those new userRoles
                 var updatedUser = await _userService.MakeJwt(user);
-                if (updatedUser == null)
+                if (updatedUser is null)
                 {
                     throw new Exception("Unable to generate JWT.");
                 }

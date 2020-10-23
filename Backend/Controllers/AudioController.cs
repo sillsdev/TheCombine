@@ -53,13 +53,13 @@ namespace BackendFramework.Controllers
             }
 
             var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
-            if (filePath == null)
+            if (filePath is null)
             {
                 return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
             }
 
             Stream stream = System.IO.File.OpenRead(filePath);
-            if (stream == null)
+            if (stream is null)
             {
                 return new BadRequestObjectResult("The file does not exist");
             }

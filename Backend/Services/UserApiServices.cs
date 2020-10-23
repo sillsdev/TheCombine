@@ -112,7 +112,7 @@ namespace BackendFramework.Services
             var foundUser = userList.FirstOrDefault();
 
             // Return null if user with specified username not found.
-            if (foundUser == null)
+            if (foundUser is null)
             {
                 return null;
             }

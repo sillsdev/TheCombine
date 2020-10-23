@@ -42,7 +42,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -67,7 +67,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -90,13 +90,13 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             var userEdit = await _repo.GetUserEdit(projectId, userEditId);
-            if (userEdit == null)
+            if (userEdit is null)
             {
                 return new NotFoundObjectResult(userEditId);
             }
@@ -154,14 +154,14 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Ensure userEdit exists
             var toBeMod = await _repo.GetUserEdit(projectId, userEditId);
-            if (toBeMod == null)
+            if (toBeMod is null)
             {
                 return new NotFoundObjectResult(userEditId);
             }
@@ -199,14 +199,14 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Ensure userEdit exists
             var document = await _repo.GetUserEdit(projectId, userEditId);
-            if (document == null)
+            if (document is null)
             {
                 return new NotFoundResult();
             }
@@ -234,7 +234,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }

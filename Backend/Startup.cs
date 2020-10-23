@@ -99,7 +99,7 @@ namespace BackendFramework
 
             // The JWT key size must be at least 128 bits long.
             const int minKeyLength = 128 / 8;
-            if (secretKey == null || secretKey.Length < minKeyLength)
+            if (secretKey is null || secretKey.Length < minKeyLength)
             {
                 _logger.LogError($"Must set {secretKeyEnvName} environment variable " +
                                  $"to string of length {minKeyLength} or longer.");
@@ -272,14 +272,14 @@ namespace BackendFramework
             const string createAdminPasswordEnv = "COMBINE_ADMIN_PASSWORD";
 
             var username = Configuration.GetValue<string>(createAdminUsernameArg);
-            if (username == null)
+            if (username is null)
             {
                 _logger.LogInformation("No admin user name provided, skipped admin creation");
                 return false;
             }
 
             var password = Environment.GetEnvironmentVariable(createAdminPasswordEnv);
-            if (password == null)
+            if (password is null)
             {
                 _logger.LogError($"Must set {createAdminPasswordEnv} environment variable " +
                                  $"when using {createAdminUsernameArg} command line option.");
@@ -310,7 +310,7 @@ namespace BackendFramework
             _logger.LogInformation($"Creating admin user: {username}");
             var user = new User { Username = username, Password = password, IsAdmin = true };
             var returnedUser = userService.Create(user).Result;
-            if (returnedUser == null)
+            if (returnedUser is null)
             {
                 _logger.LogError("Failed to create admin user.");
                 throw new AdminUserCreationException();

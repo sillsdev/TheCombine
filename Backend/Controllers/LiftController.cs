@@ -54,7 +54,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
-            if (project == null)
+            if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -82,7 +82,7 @@ namespace BackendFramework.Controllers
 
             // Make destination for extracted files
             var zipDest = Path.GetDirectoryName(fileUpload.FilePath);
-            if (zipDest == null)
+            if (zipDest is null)
             {
                 throw new FileSystemError($"Could not get directory name of {fileUpload.FilePath}");
             }
@@ -203,7 +203,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }

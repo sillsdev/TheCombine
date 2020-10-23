@@ -120,7 +120,7 @@ namespace BackendFramework.Controllers
             try
             {
                 var user = await _userService.Authenticate(cred.Username, cred.Password);
-                if (user == null)
+                if (user is null)
                 {
                     return new UnauthorizedResult();
                 }
@@ -144,7 +144,7 @@ namespace BackendFramework.Controllers
             }
 
             var user = await _userService.GetUser(userId);
-            if (user == null)
+            if (user is null)
             {
                 return new NotFoundResult();
             }
@@ -160,7 +160,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> Post([FromBody] User user)
         {
             var returnUser = await _userService.Create(user);
-            if (returnUser == null)
+            if (returnUser is null)
             {
                 return BadRequest();
             }
