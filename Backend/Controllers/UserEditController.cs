@@ -122,16 +122,17 @@ namespace BackendFramework.Controllers
             var currentUser = await _userService.GetUser(currentUserId);
             currentUser.WorkedProjects.Add(projectId, userEdit.Id);
             await _userService.Update(currentUserId, currentUser);
+
             // Generate the JWT based on the new userEdit
-            currentUser = await _userService.MakeJwt(currentUser);
-            if (currentUser is null)
+            var currentUpdatedUser = await _userService.MakeJwt(currentUser);
+            if (currentUpdatedUser is null)
             {
                 return new BadRequestObjectResult("Invalid JWT Token supplied.");
             }
 
-            await _userService.Update(currentUserId, currentUser);
+            await _userService.Update(currentUserId, currentUpdatedUser);
 
-            var output = new WithUser(currentUser);
+            var output = new WithUser(currentUpdatedUser);
             return new OkObjectResult(output);
         }
 
