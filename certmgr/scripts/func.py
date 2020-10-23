@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 from pathlib import Path
+import sys
 from typing import Tuple, Union
 
 env_defaults: Dict[str, Union[str, int]] = {

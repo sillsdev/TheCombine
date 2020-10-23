@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 import os
+from pathlib import Path
 import time
 from typing import List
-from pathlib import Path
 
 from basecert import BaseCert
 from func import lookup_env, update_link

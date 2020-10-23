@@ -3,7 +3,7 @@
 import os
 import sys
 import time
-from typing import Tuple
+from typing import Dict, Optional
 
 from basecert import BaseCert
 from func import lookup_env
@@ -12,7 +12,7 @@ from selfsignedcert import SelfSignedCert
 
 if __name__ == "__main__":
 
-    mode_choices: [Dict[str, Optional[BaseCert]] = {
+    mode_choices: Dict[str, Optional[BaseCert]] = {
         "self-signed": SelfSignedCert(),
         "letsencrypt": LetsEncryptCert(),
     }
