@@ -21,7 +21,6 @@ namespace BackendFramework
     public class Startup
     {
         private const string AllowedOrigins = "AllowAll";
-        private const int DefaultPasswordResetExpireTime = 15;
 
         private readonly ILogger<Startup> _logger;
 
@@ -35,33 +34,40 @@ namespace BackendFramework
 
         public class Settings
         {
+            public const int DefaultPasswordResetExpireTime = 15;
+
             public string ConnectionString { get; set; }
             public string CombineDatabase { get; set; }
-            public string SmtpServer { get; set; }
-            public int SmtpPort { get; set; }
-            public string SmtpUsername { get; set; }
-            public string SmtpPassword { get; set; }
-            public string SmtpAddress { get; set; }
-            public string SmtpFrom { get; set; }
+            public string? SmtpServer { get; set; }
+            public int? SmtpPort { get; set; }
+            public string? SmtpUsername { get; set; }
+            public string? SmtpPassword { get; set; }
+            public string? SmtpAddress { get; set; }
+            public string? SmtpFrom { get; set; }
             public int PassResetExpireTime { get; set; }
+
+            public Settings()
+            {
+                ConnectionString = "";
+                CombineDatabase = "";
+                PassResetExpireTime = DefaultPasswordResetExpireTime;
+            }
         }
 
         private class EnvironmentNotConfiguredException : Exception
         {
         }
 
-        private string CheckedEnvironmentVariable(string name, string defaultValue, string error = "")
+        private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "")
         {
             var contents = Environment.GetEnvironmentVariable(name);
             if (contents != null)
             {
                 return contents;
             }
-            else
-            {
-                _logger.LogError($"Environment variable: `{name}` is not defined. {error}");
-                return defaultValue;
-            }
+
+            _logger.LogError($"Environment variable: `{name}` is not defined. {error}");
+            return defaultValue;
         }
 
         /// <summary> Determine if executing within a container (e.g. Docker). </summary>
@@ -137,20 +143,33 @@ namespace BackendFramework
 
                     const string emailServiceFailureMessage = "Email services will not work.";
                     options.SmtpServer = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_SERVER", null, emailServiceFailureMessage);
+                        "COMBINE_SMTP_SERVER",
+                        null,
+                        emailServiceFailureMessage);
                     options.SmtpPort = int.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_PORT", IEmailContext.InvalidPort.ToString(), emailServiceFailureMessage));
+                        "COMBINE_SMTP_PORT",
+                        IEmailContext.InvalidPort.ToString(),
+                        emailServiceFailureMessage)!);
                     options.SmtpUsername = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_USERNAME", null, emailServiceFailureMessage);
+                        "COMBINE_SMTP_USERNAME",
+                        null,
+                        emailServiceFailureMessage);
                     options.SmtpPassword = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_PASSWORD", null, emailServiceFailureMessage);
+                        "COMBINE_SMTP_PASSWORD",
+                        null,
+                        emailServiceFailureMessage);
                     options.SmtpAddress = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_ADDRESS", null, emailServiceFailureMessage);
+                        "COMBINE_SMTP_ADDRESS",
+                        null,
+                        emailServiceFailureMessage);
                     options.SmtpFrom = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_FROM", null, emailServiceFailureMessage);
+                        "COMBINE_SMTP_FROM",
+                        null,
+                        emailServiceFailureMessage);
                     options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_PASSWORD_RESET_EXPIRE_TIME", DefaultPasswordResetExpireTime.ToString(),
-                        $"Using default value: {DefaultPasswordResetExpireTime}"));
+                        "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
+                        Settings.DefaultPasswordResetExpireTime.ToString(),
+                        $"Using default value: {Settings.DefaultPasswordResetExpireTime}")!);
                 });
 
             // Register concrete types for dependency injection
