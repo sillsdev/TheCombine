@@ -197,8 +197,10 @@ namespace BackendFramework.Services
             var importLiftDir = "";
             if (Directory.Exists(extractedPathToImport))
             {
+                // TODO: Should an error be raised if this returns null?
                 importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(
                     Path.GetFileName).ToList().Single();
+                importLiftDir ??= "";
             }
 
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
@@ -222,7 +224,13 @@ namespace BackendFramework.Services
 
                 // Pull from resources file with all English semantic domains
                 var assembly = typeof(LiftService).GetTypeInfo().Assembly;
-                var resource = assembly.GetManifestResourceStream("BackendFramework.Data.sdList.txt");
+                const string semDomListFile = "BackendFramework.Data.sdList.txt";
+                var resource = assembly.GetManifestResourceStream(semDomListFile);
+                if (resource == null)
+                {
+                    throw new Exception($"Unable to load semantic domain list: {semDomListFile}");
+                }
+
                 string sdList;
                 using (var reader = new StreamReader(resource, Encoding.UTF8))
                 {
