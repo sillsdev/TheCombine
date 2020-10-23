@@ -1,14 +1,12 @@
-#!/usr/bin/env python3
-
 import os
 from pathlib import Path
 import time
 from typing import List, Final
 
-from basecert import BaseCert
+from base_cert import BaseCert
 from func import lookup_env, update_link
 import requests
-from selfsignedcert import SelfSignedCert
+from self_signed_cert import SelfSignedCert
 
 
 class LetsEncryptCert(BaseCert):
@@ -27,13 +25,27 @@ class LetsEncryptCert(BaseCert):
         self.cert = Path(f"/etc/letsencrypt/live/{self.server_name}/fullchain.pem")
 
     def create(self, force: bool = False) -> None:
+        """
+        Method to create an SSL Certificate from Let's Encrypt
+
+        The method first creates a self-signed certificate and sets up a symbolic
+        link from the Nginx configured location to the self-signed certificate.
+        This allows the Nginx webserver to start.  Once Nginx is up, then the
+        certificate can be requested using the webroot authentication method.  If
+        this is successfull, then the symbolic link is moved to point to the
+        new certificate.
+        N O T E :
+        Nginx needs to be restarted/reloaded for it to use the new certificate.
+        """
         if force or not self.cert.exists():
+            # Create a self-signed certificate so that the Nginx webserver can
+            # come up and be available for the HTTP challenges from letsencrypt
             temp_cert = SelfSignedCert(1, 0)
             temp_cert.create()
 
-        is_letsencrypt_cert: bool = False
+        is_letsencrypt_cert = False
         if self.nginx_cert_dir.is_symlink():
-            link_target: str = self.nginx_cert_dir.readlink()
+            link_target = self.nginx_cert_dir.readlink()
             if link_target == self.cert_dir:
                 is_letsencrypt_cert = True
 
@@ -52,20 +64,34 @@ class LetsEncryptCert(BaseCert):
             else:
                 email_arg = "--email ${CERT_EMAIL}"
 
+            staging_arg = "--staging" if self.staging else ""
+
             staging_arg: str = "--staging" if self.staging else ""
 
             if get_cert(domain_list):
                 # update the certificate link for the Nginx web server
                 update_link(self.cert_dir, self.nginx_cert_dir)
-                get_proxy_certs()
 
-    def renew() -> None:
+    def renew(self) -> None:
+        """ Renew all letsencrypt certificates that are up for renewal """
         os.system("certbot renew")
 
     def wait_for_webserver(self) -> bool:
-        attempt_count: int = 0
+        """
+        Wait until Nginx webserver is up
+
+        wait_for_webserver will wait until the Nginx webserver has started.  This
+        is done by periodically sending an http request to our URL and waiting for
+        a response of 200 (OK) or 301 (Redirected).  We do not allow redirects nor
+        do we send an https request because the webserver is started up with a
+        self-signed certificate which will cause an error in these cases
+        """
+        attempt_count = 0
         while attempt_count < self.max_connect_tries:
             try:
+                # Don't allow redirect errors since letsencrypt connects
+                # on port 80 and since we have a self-signed cert for now
+                # it will cause errors
                 r: requests.Response = requests.get(
                     f"http://{self.server_name}", allow_redirects=False
                 )

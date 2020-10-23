@@ -5,10 +5,10 @@ import sys
 import time
 from typing import Dict, Optional
 
-from basecert import BaseCert
+from base_cert import BaseCert
 from func import lookup_env
-from letsencryptcert import LetsEncryptCert
-from selfsignedcert import SelfSignedCert
+from letsencrypt_cert import LetsEncryptCert
+from self_signed_cert import SelfSignedCert
 
 if __name__ == "__main__":
 
@@ -17,11 +17,11 @@ if __name__ == "__main__":
         "letsencrypt": LetsEncryptCert(),
     }
 
-    cert_store: str = lookup_env("CERT_STORE")
-    for subdir in ["nginx", "selfsigned"]:
+    cert_store = lookup_env("CERT_STORE")
+    for subdir in ("nginx", "selfsigned"):
         os.makedirs(f"{cert_store}/{subdir}", 0o755, True)
 
-    cert_mode: str = lookup_env("CERT_MODE")
+    cert_mode = lookup_env("CERT_MODE")
     print(f"Running in {cert_mode} mode")
     cert_obj = mode_choices.get(cert_mode, None)
 

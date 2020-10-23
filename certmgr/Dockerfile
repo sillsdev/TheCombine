@@ -1,3 +1,18 @@
+# Dockerfile to build a Certificate Manager container.  The certificate manager
+# shall generate self-signed certificates and/or it shall use certbot to get
+# certificates from letsencrypt.
+#
+# The certmgr may also be configured to push some of its certificates to an
+# Amazon Web Services S3 bucket for use by devices that need a certificate when
+# an internet connection is not always available.
+#
+# The container's entrypoint function and the modules that it calls are written
+# in Python.  The Python modules use the following modules that are not explicitly
+# installed since they are currently installed with certbot:
+#  - requests
+#  - openssl
+
+
 FROM debian:buster
 
 RUN apt-get update && \
@@ -14,6 +29,10 @@ RUN apt-get update && \
         /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
         /usr/local/aws-cli/v2/*/dist/awscli/examples
 
-COPY scripts/*.py /usr/bin/
+RUN mkdir /scripts
 
-ENTRYPOINT ["entrypoint.py"]
+WORKDIR /scripts
+
+COPY scripts/*.py .
+
+ENTRYPOINT ["./entrypoint.py"]
