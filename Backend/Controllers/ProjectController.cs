@@ -134,16 +134,15 @@ namespace BackendFramework.Controllers
             currentUser.ProjectRoles.Add(project.Id, userRole.Id);
             await _userService.Update(currentUserId, currentUser);
             // Generate the JWT based on those new userRoles
-            currentUser = await _userService.MakeJwt(currentUser);
-            if (currentUser is null)
+            var currentUpdatedUser = await _userService.MakeJwt(currentUser);
+            if (currentUpdatedUser is null)
             {
                 return new BadRequestObjectResult("Invalid JWT Token supplied.");
             }
 
-            await _userService.Update(currentUserId, currentUser);
+            await _userService.Update(currentUserId, currentUpdatedUser);
 
-            var output = new ProjectWithUser(project) { UpdatedUser = currentUser };
-
+            var output = new ProjectWithUser(project) { UpdatedUser = currentUpdatedUser };
             return new OkObjectResult(output);
         }
 
