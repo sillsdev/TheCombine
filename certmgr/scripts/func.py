@@ -35,7 +35,7 @@ def update_link(src: Path, dest: Path) -> None:
             if link_target != src:
                 dest.unlink()
             else:
-                # src already point to the dest
+                # src already points to the dest
                 return
         else:
             print(f"{dest} exists and is not a link")
