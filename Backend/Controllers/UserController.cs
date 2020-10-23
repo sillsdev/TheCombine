@@ -257,6 +257,14 @@ namespace BackendFramework.Controllers
             public string Token;
             public string NewPassword;
             public string Domain;
+
+            public PasswordResetData()
+            {
+                EmailOrUsername = "";
+                Token = "";
+                NewPassword = "";
+                Domain = "";
+            }
         }
     }
 }
