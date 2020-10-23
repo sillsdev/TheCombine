@@ -65,7 +65,7 @@ class LetsEncryptCert(BaseCert):
                 if certbot_result == 0:
                     update_link(self.cert_dir, self.nginx_cert_dir)
 
-    def renew() -> None:
+    def renew(self) -> None:
         os.system("certbot renew")
 
     def wait_for_webserver(self) -> bool:
