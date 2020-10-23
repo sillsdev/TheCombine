@@ -391,7 +391,7 @@ namespace BackendFramework.Services
         /// </summary>
         /// <param name="sInput"></param>
         /// <returns></returns>
-        public static string MakeSafeXmlAttribute(string sInput)
+        public static string? MakeSafeXmlAttribute(string sInput)
         {
             return SecurityElement.Escape(sInput);
         }
