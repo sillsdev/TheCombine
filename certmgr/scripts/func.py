@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 import sys
-from typing import Tuple, Union
+from typing import Dict, Union
 
 env_defaults: Dict[str, Union[str, int]] = {
     "CERT_MODE": "self-signed",

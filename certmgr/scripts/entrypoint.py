@@ -33,6 +33,4 @@ if __name__ == "__main__":
             cert_obj.renew()
     else:
         print(f"Cannot run {cert_mode} mode")
-
-    # Should never get here but if we do, return a big return code
-    sys.exit(99)
+        sys.exit(99)
