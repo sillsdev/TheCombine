@@ -2,9 +2,10 @@
 
 import os
 import sys
+from pathlib import Path
 from typing import Tuple, Union
 
-env_defaults: Tuple[str, Union[str, int]] = {
+env_defaults: Dict[str, Union[str, int]] = {
     "CERT_MODE": "self-signed",
     "CERT_STORE": "/etc/cert_store",
     "CERT_EMAIL": "",
@@ -25,15 +26,18 @@ def lookup_env(env_var: str) -> Union[str, int]:
         sys.exit(3)
 
 
-def update_link(src: str, target: str) -> None:
+def update_link(src: Path, dest: Path) -> None:
 
-    print(f"linking {src} to {target}")
-    if os.path.exists(target):
-        assert os.path.islink(target)
-        link_target: str = os.readlink(target)
-        if link_target != src:
-            os.unlink(target)
+    print(f"linking {src} to {dest}")
+    if dest.exists():
+        if dest.is_symlink():
+            link_target: str = dest.readlink()
+            if link_target != src:
+                dest.unlink()
+            else:
+                # src already point to the dest
+                return
         else:
-            # src already point to the target
-            return
-    os.symlink(src, target)
+            print(f"{dest} exists and is not a link")
+            dest.unlink()
+    dest.symlink_to(src)

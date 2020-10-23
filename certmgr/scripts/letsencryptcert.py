@@ -3,6 +3,7 @@
 import os
 import time
 from typing import List
+from pathlib import Path
 
 from basecert import BaseCert
 from func import lookup_env, update_link
@@ -11,25 +12,24 @@ from selfsignedcert import SelfSignedCert
 
 
 class LetsEncryptCert(BaseCert):
-    def __init__(self):
-        self.cert_store: str = lookup_env("CERT_STORE")
-        self.server_name: str = lookup_env("SERVER_NAME")
-        self.email: str = lookup_env("CERT_EMAIL")
-        self.max_connect_tries: int = int(lookup_env("MAX_CONNECT_TRIES"))
-        self.staging: bool = True if lookup_env("CERT_STAGING") == "1" else False
-        self.cert_dir: str = f"/etc/letsencrypt/live/{self.server_name}"
-        self.nginx_cert_dir: str = f"{self.cert_store}/nginx/{self.server_name}"
-        self.cert: str = f"/etc/letsencrypt/live/{self.server_name}/fullchain.pem"
-        self.privkey: str = f"{self.cert_store}/selfsigned/{self.server_name}/privkey.pem"
+    def __init__(self) -> None:
+        self.cert_store = lookup_env("CERT_STORE")
+        self.server_name = lookup_env("SERVER_NAME")
+        self.email = lookup_env("CERT_EMAIL")
+        self.max_connect_tries = int(lookup_env("MAX_CONNECT_TRIES"))
+        self.staging = True if lookup_env("CERT_STAGING") == "1" else False
+        self.cert_dir = Path(f"/etc/letsencrypt/live/{self.server_name}")
+        self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
+        self.cert = Path(f"/etc/letsencrypt/live/{self.server_name}/fullchain.pem")
 
-    def create(self, force: bool = False):
-        if force or not os.path.exists(self.cert):
+    def create(self, force: bool = False) -> None:
+        if force or not self.cert.exists():
             temp_cert = SelfSignedCert(1, 0)
             temp_cert.create()
 
         is_letsencrypt_cert: bool = False
-        if os.path.islink(self.nginx_cert_dir):
-            link_target: str = os.readlink(self.nginx_cert_dir)
+        if self.nginx_cert_dir.is_symlink():
+            link_target: str = self.nginx_cert_dir.readlink()
             if link_target == self.cert_dir:
                 is_letsencrypt_cert = True
 
@@ -43,7 +43,6 @@ class LetsEncryptCert(BaseCert):
             domain_list: List[str] = [self.server_name]
             domain_list.extend(lookup_env("CERT_DOMAINS").split())
 
-            email_arg: str = ""
             if not self.email:
                 email_arg = "--register-unsafely-without-email"
             else:
@@ -79,7 +78,7 @@ class LetsEncryptCert(BaseCert):
             except requests.ConnectionError:
                 attempt_count += 1
             else:
-                if r.status_code == 200 or r.status_code == 301:
+                if r.status_code in (200, 301):
                     return True
                 else:
                     attempt_count += 1
