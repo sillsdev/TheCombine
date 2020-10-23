@@ -12,11 +12,9 @@ from selfsignedcert import SelfSignedCert
 
 if __name__ == "__main__":
 
-    mode_choices: Tuple[str, BaseCert] = {
+    mode_choices: Optional[Tuple[str, BaseCert]] = {
         "self-signed": SelfSignedCert(),
         "letsencrypt": LetsEncryptCert(),
-        "cert_server": BaseCert(),
-        "cert_client": BaseCert(),
     }
 
     cert_store: str = lookup_env("CERT_STORE")
@@ -25,13 +23,16 @@ if __name__ == "__main__":
 
     cert_mode: str = lookup_env("CERT_MODE")
     print(f"Running in {cert_mode} mode")
-    cert_obj = mode_choices.get(cert_mode, BaseCert())
+    cert_obj = mode_choices.get(cert_mode, None)
 
-    cert_obj.create()
-    while True:
-        # sleep for 12 hours before checking for renewal
-        time.sleep(12 * 3600)
-        cert_obj.renew()
+    if cert_obj:
+        cert_obj.create()
+        while True:
+            # sleep for 12 hours before checking for renewal
+            time.sleep(12 * 3600)
+            cert_obj.renew()
+    else:
+        print(f"Cannot run {cert_mode} mode")
 
     # Should never get here but if we do, return a big return code
     sys.exit(99)

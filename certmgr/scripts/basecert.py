@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 
-class BaseCert:
-    def __init__(self) -> None:
-        self.dummy: int = 0
+class BaseCert(ABC):
+    @abstractmethod
+    def create(self, force: bool = False) -> None:
+        pass
 
-    def create(self) -> None:
-        raise NotImplementedError
-
+    @abstractmethod
     def renew(self) -> None:
-        raise NotImplementedError
+        pass
