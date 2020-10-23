@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
-import sys
-from typing import Dict, Union, Optional
+from typing import Dict, Optional, Union
 
 env_defaults: Dict[str, Union[str, int]] = {
     "CERT_MODE": "self-signed",
@@ -13,10 +12,15 @@ env_defaults: Dict[str, Union[str, int]] = {
     "SERVER_NAME": "",
 }
 
-# Look up an environment variable and return its value or its
-# default value.  It the variable is not set and is not listed
-# in the defaults, then None is returned
+
 def lookup_env(env_var: str) -> Optional[Union[str, int]]:
+    """
+    Look up environment variable
+
+    Look up an environment variable and return its value or its
+    default value.  It the variable is not set and is not listed
+    in the defaults, then None is returned
+    """
     if env_var in os.environ:
         return os.environ[env_var]
     elif env_var in env_defaults:
@@ -24,10 +28,14 @@ def lookup_env(env_var: str) -> Optional[Union[str, int]]:
     else:
         return None
 
-# Create/move a symbolic link at 'dest' to point to 'src'
-# If dest already exists and is not a link, it is deleted
-# first.
+
 def update_link(src: Path, dest: Path) -> None:
+    """
+    Create/move a symbolic link at 'dest' to point to 'src'
+
+    If dest already exists and is not a link, it is deleted
+    first.
+    """
     print(f"linking {src} to {dest}")
     if dest.exists():
         if dest.is_symlink():
