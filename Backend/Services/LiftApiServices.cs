@@ -194,15 +194,15 @@ namespace BackendFramework.Services
             // Export semantic domains to lift-ranges
             var proj = projService.GetProject(projectId).Result;
             var extractedPathToImport = Path.Combine(GetProjectDir(projectId), "Import", "ExtractedLocation");
-            var importLiftDir = "";
+            string? firstImportDir = null;
             if (Directory.Exists(extractedPathToImport))
             {
                 // TODO: Should an error be raised if this returns null?
-                importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(
+                firstImportDir= Directory.GetDirectories(extractedPathToImport).Select(
                     Path.GetFileName).ToList().Single();
-                importLiftDir ??= "";
             }
 
+            var importLiftDir = firstImportDir ?? "";
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
             // If there are no new semantic domains, and the old lift-ranges file is still around, just copy it
