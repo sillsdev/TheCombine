@@ -5,10 +5,10 @@ import sys
 import time
 from typing import Dict, Optional
 
-from basecert import BaseCert
+from base_cert import BaseCert
 from func import lookup_env
-from letsencryptcert import LetsEncryptCert
-from selfsignedcert import SelfSignedCert
+from letsencrypt_cert import LetsEncryptCert
+from self_signed_cert import SelfSignedCert
 
 if __name__ == "__main__":
 

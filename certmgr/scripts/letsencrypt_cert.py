@@ -3,10 +3,10 @@ from pathlib import Path
 import time
 from typing import List
 
-from basecert import BaseCert
+from base_cert import BaseCert
 from func import lookup_env, update_link
 import requests
-from selfsignedcert import SelfSignedCert
+from self_signed_cert import SelfSignedCert
 
 
 class LetsEncryptCert(BaseCert):

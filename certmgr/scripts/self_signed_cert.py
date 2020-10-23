@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from basecert import BaseCert
+from base_cert import BaseCert
 from func import lookup_env, update_link
 
 
