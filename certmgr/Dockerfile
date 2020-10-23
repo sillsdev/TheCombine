@@ -14,6 +14,10 @@ RUN apt-get update && \
         /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
         /usr/local/aws-cli/v2/*/dist/awscli/examples
 
-COPY scripts/*.py /usr/bin/
+RUN mkdir /scripts
 
-ENTRYPOINT ["entrypoint.py"]
+WORKDIR /scripts
+
+COPY scripts/*.py .
+
+ENTRYPOINT ["./entrypoint.py"]
