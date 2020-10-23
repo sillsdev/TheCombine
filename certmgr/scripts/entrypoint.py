@@ -12,7 +12,7 @@ from selfsignedcert import SelfSignedCert
 
 if __name__ == "__main__":
 
-    mode_choices: Optional[Tuple[str, BaseCert]] = {
+    mode_choices: Optional[Dict[str, BaseCert]] = {
         "self-signed": SelfSignedCert(),
         "letsencrypt": LetsEncryptCert(),
     }
