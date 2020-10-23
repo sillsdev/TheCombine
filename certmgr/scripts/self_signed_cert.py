@@ -16,9 +16,13 @@ class SelfSignedCert(BaseCert):
         self.cert = Path(f"{self.cert_store}/selfsigned/{self.server_name}/fullchain.pem")
         self.privkey = Path(f"{self.cert_store}/selfsigned/{self.server_name}/privkey.pem")
 
-    # Create a self-signed certificate and then link the Nginx directory for its
-    # certificate to the directory where the certs are created.
     def create(self, force: bool = False) -> None:
+        """
+        Create a self-signed certificate
+
+        Create a self-signed certificate and then link the Nginx directory for its
+        certificate to the directory where the certs are created.
+        """
         if force or not self.cert.exists():
             self.cert_dir.mkdir(0o755, True)
             os.system(
@@ -34,10 +38,14 @@ class SelfSignedCert(BaseCert):
             )
             update_link(self.cert_dir, self.nginx_cert_dir)
 
-    # Checks to see if the self-signed certificate will expire with in the
-    # "renew_before_expiry" time (in days).  If it will, a new self-signed
-    # certificate is created to replace the current certificate
     def renew(self) -> None:
+        """
+        Renew a Self-Signed certificate
+
+        Checks to see if the self-signed certificate will expire with in the
+        "renew_before_expiry" time (in days).  If it will, a new self-signed
+        certificate is created to replace the current certificate
+        """
         renew_before_expiry_sec = self.renew_before_expiry * 3600 * 24
         if self.cert.exists():
             wstat = os.system(

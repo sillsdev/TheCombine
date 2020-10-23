@@ -20,16 +20,19 @@ class LetsEncryptCert(BaseCert):
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
         self.cert = Path(f"/etc/letsencrypt/live/{self.server_name}/fullchain.pem")
 
-    # Method to create an SSL Certificate from Let's Encrypt
-    # The method first creates a self-signed certificate and sets up a symbolic
-    # link from the Nginx configured location to the self-signed certificate.
-    # This allows the Nginx webserver to start.  Once Nginx is up, then the
-    # certificate can be requested using the webroot authentication method.  If
-    # this is successfull, then the symbolic link is moved to point to the
-    # new certificate.
-    # N O T E :
-    # Nginx needs to be restarted/reloaded for it to use the new certificate.
     def create(self, force: bool = False) -> None:
+        """
+        Method to create an SSL Certificate from Let's Encrypt
+
+        The method first creates a self-signed certificate and sets up a symbolic
+        link from the Nginx configured location to the self-signed certificate.
+        This allows the Nginx webserver to start.  Once Nginx is up, then the
+        certificate can be requested using the webroot authentication method.  If
+        this is successfull, then the symbolic link is moved to point to the
+        new certificate.
+        N O T E :
+        Nginx needs to be restarted/reloaded for it to use the new certificate.
+        """
         if force or not self.cert.exists():
             # Create a self-signed certificate so that the Nginx webserver can
             # come up and be available for the HTTP challenges from letsencrypt
@@ -74,17 +77,20 @@ class LetsEncryptCert(BaseCert):
                 if certbot_result == 0:
                     update_link(self.cert_dir, self.nginx_cert_dir)
 
-    # Calls "certbot renew" to renew all letsencrypt certificates that are
-    # up for renewal.
     def renew(self) -> None:
+        """ Renew all letsencrypt certificates that are up for renewal """
         os.system("certbot renew")
 
-    # wait_for_webserver will wait until the Nginx webserver has started.  This
-    # is done by periodically sending an http request to our URL and waiting for
-    # a response of 200 (OK) or 301 (Redirected).  We do not allow redirects nor
-    # do we send an https request because the webserver is started up with a
-    # self-signed certificate which will cause an error in these cases
     def wait_for_webserver(self) -> bool:
+        """
+        Wait until Nginx webserver is up
+
+        wait_for_webserver will wait until the Nginx webserver has started.  This
+        is done by periodically sending an http request to our URL and waiting for
+        a response of 200 (OK) or 301 (Redirected).  We do not allow redirects nor
+        do we send an https request because the webserver is started up with a
+        self-signed certificate which will cause an error in these cases
+        """
         attempt_count = 0
         while attempt_count < self.max_connect_tries:
             try:
