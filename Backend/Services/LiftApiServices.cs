@@ -198,7 +198,7 @@ namespace BackendFramework.Services
             if (Directory.Exists(extractedPathToImport))
             {
                 // TODO: Should an error be raised if this returns null?
-                firstImportDir= Directory.GetDirectories(extractedPathToImport).Select(
+                firstImportDir = Directory.GetDirectories(extractedPathToImport).Select(
                     Path.GetFileName).ToList().Single();
             }
 
