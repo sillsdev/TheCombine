@@ -23,7 +23,7 @@ namespace Backend.Tests.Mocks
             return Task.CompletedTask;
         }
 
-        public Task<PasswordReset> FindByToken(string token)
+        public Task<PasswordReset?> FindByToken(string token)
         {
             return Task.FromResult(Resets.FindAll(x => x.Token == token).SingleOrDefault());
         }

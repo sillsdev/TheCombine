@@ -62,7 +62,9 @@ namespace Backend.Tests.Services
             _userService.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
-            Assert.IsFalse(_passwordResetService.ResetPassword("NotARealToken", "newPassword").Result);
+            var task = _passwordResetService.ResetPassword("NotARealToken", "newPassword");
+            var res = task.Result;
+            Assert.IsFalse(res);
         }
     }
 }
