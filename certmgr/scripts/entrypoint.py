@@ -12,7 +12,7 @@ from selfsignedcert import SelfSignedCert
 
 if __name__ == "__main__":
 
-    mode_choices: Optional[Dict[str, BaseCert]] = {
+    mode_choices: [Dict[str, Optional[BaseCert]] = {
         "self-signed": SelfSignedCert(),
         "letsencrypt": LetsEncryptCert(),
     }
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     print(f"Running in {cert_mode} mode")
     cert_obj = mode_choices.get(cert_mode, None)
 
-    if cert_obj:
+    if cert_obj is not None:
         cert_obj.create()
         while True:
             # sleep for 12 hours before checking for renewal
