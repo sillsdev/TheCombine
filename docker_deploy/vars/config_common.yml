@@ -28,8 +28,6 @@ combine_cert_env_vars:
     value: "{{ cert_is_staging }}"
   - key: "CERT_DOMAINS"
     value: "{{ combine_server_name }}"
-  - key: "CERT_VERBOSE"
-    value: "{{ cert_verbose }}"
   - key: "MAX_CONNECT_TRIES"
     value: "{{ cert_max_connect_tries }}"
   - key: "SERVER_NAME"
