@@ -45,7 +45,7 @@ class LetsEncryptCert(BaseCert):
 
         is_letsencrypt_cert = False
         if self.nginx_cert_dir.is_symlink():
-            link_target = self.nginx_cert_dir.readlink()
+            link_target = os.readlink(self.nginx_cert_dir)
             if link_target == self.cert_dir:
                 is_letsencrypt_cert = True
 

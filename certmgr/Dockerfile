@@ -33,6 +33,6 @@ RUN mkdir /scripts
 
 WORKDIR /scripts
 
-COPY scripts/*.py .
+COPY scripts/*.py ./
 
 ENTRYPOINT ["./entrypoint.py"]
