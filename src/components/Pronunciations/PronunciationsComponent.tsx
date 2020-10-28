@@ -20,7 +20,7 @@ export class Pronunciations extends React.Component<
   PronunciationProps & LocalizeContextProps
 > {
   /* Only update if wordId or list of files changes
-   * This prevents unnecessary fetching of audio files
+   * This decreases unnecessary fetching of audio files
    */
   shouldComponentUpdate(nextProps: PronunciationProps) {
     return (
