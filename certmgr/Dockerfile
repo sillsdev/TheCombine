@@ -29,9 +29,9 @@ RUN apt-get update && \
         /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
         /usr/local/aws-cli/v2/*/dist/awscli/examples
 
-RUN mkdir /scripts
+RUN mkdir -p /opt/certmgr
 
-WORKDIR /scripts
+WORKDIR /opt/certmgr
 
 COPY scripts/*.py ./
 
