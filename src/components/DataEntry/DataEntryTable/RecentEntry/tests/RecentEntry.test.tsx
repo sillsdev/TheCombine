@@ -14,7 +14,6 @@ jest.mock("../../../../../backend");
 jest.mock("../../../../Pronunciations/Recorder");
 jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");
 jest.mock("../../VernWithSuggestions/VernWithSuggestions");
-jest.mock("../DeleteEntry/DeleteEntry");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
@@ -31,6 +30,7 @@ function renderWithWord(word: Word) {
           entry={word}
           senseIndex={0}
           updateGloss={jest.fn()}
+          updateNote={jest.fn()}
           updateVern={jest.fn()}
           removeEntry={jest.fn()}
           addAudioToWord={jest.fn()}
