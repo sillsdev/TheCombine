@@ -11,7 +11,7 @@ env_defaults: Dict[str, Union[str, int]] = {
     "CERT_ADDL_DOMAINS": "",
     "SERVER_NAME": "",
     "CERT_PROXY_RENEWAL": 30,
-    "CERT_PROXY_DOMAINS": ""
+    "CERT_PROXY_DOMAINS": "",
 }
 
 
@@ -30,7 +30,15 @@ def lookup_env(env_var: str) -> Optional[Union[str, int]]:
     else:
         return None
 
-
+def lookup_default(env_var: str) -> Optional[Union[str, int]]:
+    """
+    Look up our default value for an environment variable
+    """
+    if env_var in env_defaults:
+        return env_defaults[env_var]
+    else:
+        return None
+        
 def update_link(src: Path, dest: Path) -> None:
     """
     Create/move a symbolic link at 'dest' to point to 'src'

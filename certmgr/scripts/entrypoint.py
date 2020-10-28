@@ -18,7 +18,7 @@ if __name__ == "__main__":
     }
 
     cert_store = lookup_env("CERT_STORE")
-    for subdir in ("nginx", "selfsigned"):
+    for subdir in ("nginx", "selfsigned", "s3_cache"):
         os.makedirs(f"{cert_store}/{subdir}", 0o755, True)
 
     cert_mode = lookup_env("CERT_MODE")
