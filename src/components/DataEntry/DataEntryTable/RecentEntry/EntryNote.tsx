@@ -7,7 +7,7 @@ import { Word } from "../../../../types/word";
 import EditTextDialog from "../../../Buttons/EditTextDialog";
 
 interface EntryNoteProps {
-  updateNote: () => void;
+  updateNote: (newText: string) => void;
   entry: Word;
 }
 
@@ -54,7 +54,7 @@ export default class EntryNote extends React.Component<
           text={this.props.entry.note.text}
           titleId={"addWords.addNote"}
           onClose={() => this.setState({ noteOpen: false })}
-          onConfirm={() => {}}
+          onConfirm={this.props.updateNote}
         />
       </React.Fragment>
     );

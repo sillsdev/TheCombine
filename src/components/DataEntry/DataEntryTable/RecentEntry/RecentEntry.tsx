@@ -14,6 +14,7 @@ interface RecentEntryProps {
   entry: Word;
   senseIndex: number;
   updateGloss: (newGloss: string) => void;
+  updateNote: (newText: string) => void;
   updateVern: (newVernacular: string, targetWordId?: string) => void;
   removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
@@ -87,6 +88,7 @@ export default class RecentEntry extends React.Component<
           container
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
+          alignItems="center"
         >
           <Grid
             item
@@ -169,7 +171,10 @@ export default class RecentEntry extends React.Component<
               position: "relative",
             }}
           >
-            <EntryNote entry={this.props.entry} updateNote={() => {}} />
+            <EntryNote
+              entry={this.props.entry}
+              updateNote={this.props.updateNote}
+            />
           </Grid>
           <Grid
             item
