@@ -26,6 +26,7 @@
       "Le mot a déjà ce sens dans ce domaine"
     ],
     "deleteRow": ["Delete this row", "Borrar esta fila", "Effacer cette ligne"],
+    "addNote": ["Add a note", "Add a note", "Add a note"],
     "domain": ["Domain", "Dominio", "Domaine"],
     "gloss": ["Gloss", "Glosa", "Glose"],
     "glosses": ["Glosses", "Glosas", "Gloses"],

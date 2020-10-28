@@ -7,7 +7,8 @@ import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
-import DeleteEntry from "./DeleteEntry/DeleteEntry";
+import DeleteEntry from "./DeleteEntry";
+import EntryNote from "./EntryNote";
 
 interface RecentEntryProps {
   entry: Word;
@@ -139,7 +140,7 @@ export default class RecentEntry extends React.Component<
           </Grid>
           <Grid
             item
-            xs={3}
+            xs={2}
             style={{
               paddingLeft: theme.spacing(1),
               paddingRight: theme.spacing(1),
@@ -158,6 +159,17 @@ export default class RecentEntry extends React.Component<
                 this.props.addAudioToWord(wordId, audioFile);
               }}
             />
+          </Grid>
+          <Grid
+            item
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            <EntryNote entry={this.props.entry} updateNote={() => {}} />
           </Grid>
           <Grid
             item

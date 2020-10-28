@@ -1,11 +1,7 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
 import React from "react";
-import {
-  LocalizeContextProps,
-  Translate,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 interface DeleteEntryProps {
   removeEntry: () => void;
@@ -14,9 +10,7 @@ interface DeleteEntryProps {
 /**
  * A delete button
  */
-export class DeleteEntry extends React.Component<
-  DeleteEntryProps & LocalizeContextProps
-> {
+export default class DeleteEntry extends React.Component<DeleteEntryProps> {
   render() {
     return (
       <React.Fragment>
@@ -33,5 +27,3 @@ export class DeleteEntry extends React.Component<
     );
   }
 }
-
-export default withLocalize(DeleteEntry);
