@@ -19,15 +19,15 @@ export interface PronunciationProps {
 export class Pronunciations extends React.Component<
   PronunciationProps & LocalizeContextProps
 > {
-  /* Only update if wordId or list of files changes
+  /* Only update if things that could change do change
    * This decreases unnecessary fetching of audio files
    */
   shouldComponentUpdate(nextProps: PronunciationProps) {
-    return (
-      nextProps.wordId !== this.props.wordId ||
+    const isDifferentEntry = nextProps.wordId !== this.props.wordId;
+    const hasDifferentAudio =
       JSON.stringify(nextProps.pronunciationFiles) !==
-        JSON.stringify(this.props.pronunciationFiles)
-    );
+      JSON.stringify(this.props.pronunciationFiles);
+    return isDifferentEntry || hasDifferentAudio;
   }
 
   render() {
