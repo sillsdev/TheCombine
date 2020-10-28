@@ -30,6 +30,7 @@ def lookup_env(env_var: str) -> Optional[Union[str, int]]:
     else:
         return None
 
+
 def lookup_default(env_var: str) -> Optional[Union[str, int]]:
     """
     Look up our default value for an environment variable
@@ -38,7 +39,8 @@ def lookup_default(env_var: str) -> Optional[Union[str, int]]:
         return env_defaults[env_var]
     else:
         return None
-        
+
+
 def update_link(src: Path, dest: Path) -> None:
     """
     Create/move a symbolic link at 'dest' to point to 'src'

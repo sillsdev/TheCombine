@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from base_cert import BaseCert
-from func import lookup_env, update_link
+from utils import lookup_env, update_link
 
 
 class SelfSignedCert(BaseCert):

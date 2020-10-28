@@ -6,7 +6,7 @@ import time
 from typing import Dict, Optional
 
 from base_cert import BaseCert
-from func import lookup_env
+from utils import lookup_env
 from letsencrypt_cert import LetsEncryptCert
 from self_signed_cert import SelfSignedCert
 

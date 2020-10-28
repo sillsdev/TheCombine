@@ -4,7 +4,7 @@ import time
 from typing import Final, List
 
 from base_cert import BaseCert
-from func import lookup_env, lookup_default, update_link
+from utils import lookup_default, lookup_env, update_link
 import requests
 from self_signed_cert import SelfSignedCert
 
