@@ -25,7 +25,7 @@ export default function DeleteEntry(props: DeleteEntryProps) {
       <DeleteDialog
         open={open}
         handleCancel={() => setOpen(false)}
-        handleAccept={() => props.removeEntry()}
+        handleAccept={props.removeEntry}
       />
     </React.Fragment>
   );
