@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 import time
-from typing import Final, List
+from typing import List
 
 from base_cert import BaseCert
 from utils import lookup_default, lookup_env, update_link
@@ -11,7 +11,7 @@ from self_signed_cert import SelfSignedCert
 
 class LetsEncryptCert(BaseCert):
 
-    cert_renew_deploy_hook: Final = "/etc/letsencrypt/renewal/deploy/10_push_certs.sh"
+    cert_renew_deploy_hook = Path("/etc/letsencrypt/renewal/deploy/10_push_certs.sh")
 
     def __init__(self) -> None:
         self.cert_store = lookup_env("CERT_STORE")
@@ -71,9 +71,6 @@ class LetsEncryptCert(BaseCert):
             if self.get_cert(domain_list):
                 # update the certificate link for the Nginx web server
                 update_link(self.cert_dir, self.nginx_cert_dir)
-        # Next we check to see if the LetsEcryptCert object is also acting as
-        # a proxy to create certificates for servers that are not reachable
-        cert_proxy_list = lookup_env
 
     def renew(self) -> None:
         """ Renew all letsencrypt certificates that are up for renewal """
@@ -84,9 +81,9 @@ class LetsEncryptCert(BaseCert):
         Get a certificate for all the domains in the supplied list.
 
         Get a single certificate that can be used for a list of domains.  The
-        first domain in the list is the 
+        first domain in the list is the
         """
-        if domain_list:
+        if domain_list is not None:
             domain_args: str = "-d " + " -d ".join(domain_list)
 
             if not self.email:
@@ -105,6 +102,7 @@ class LetsEncryptCert(BaseCert):
                 "--agree-tos "
                 "--non-interactive "
             )
+            print(f"Requesting Let's Encrypt Certificate:\n{cert_cmd}")
             return os.system(cert_cmd) == 0
         else:
             return False
@@ -140,9 +138,7 @@ class LetsEncryptCert(BaseCert):
 
     def update_renew_before_expiry(self, domain: str) -> None:
         if lookup_default("CERT_PROXY_RENEWAL") != self.renew_before_expiry:
-            print(
-                f"Setting renew before expiry for {domain} " f"to {self.renew_before_expiry}"
-            )
+            print(f"Setting renew before expiry for {domain} " f"to {self.renew_before_expiry}")
             renew_config: str = f"/etc/letsencrypt/renewal/{domain}.conf"
             if os.path.exists(renew_config):
                 os.system(
