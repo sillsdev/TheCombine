@@ -59,7 +59,7 @@ def main() -> None:
         "combine_image_backend": "combine/backend:latest",
         "combine_image_certmgr": "combine/certmgr:latest",
         "cert_email": "",
-        "cert_type": "self-signed",
+        "cert_mode": "self-signed",
         "cert_is_staging": 0,
         "cert_domains": ["localhost"],
         "cert_clean": 0,
