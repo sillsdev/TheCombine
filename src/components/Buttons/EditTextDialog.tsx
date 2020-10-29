@@ -15,8 +15,8 @@ interface EditTextDialogProps {
   open: boolean;
   text: string;
   titleId: string;
-  onClose: () => void;
-  onConfirm: (newText: string) => void | Promise<void>;
+  close: () => void;
+  updateText: (newText: string) => void | Promise<void>;
 }
 
 /**
@@ -29,21 +29,21 @@ export default function EditTextDialog(props: EditTextDialogProps) {
   async function onConfirm() {
     if (text !== props.text) {
       setLoading(true);
-      await props.onConfirm(text);
+      await props.updateText(text);
       setLoading(false);
     }
-    props.onClose();
+    props.close();
   }
 
   function onCancel() {
     setText(props.text);
-    props.onClose();
+    props.close();
   }
 
   return (
     <Dialog
       open={props.open}
-      onClose={props.onClose}
+      onClose={props.close}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >

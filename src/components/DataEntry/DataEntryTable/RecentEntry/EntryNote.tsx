@@ -53,8 +53,8 @@ export default class EntryNote extends React.Component<
           open={this.state.noteOpen}
           text={this.props.entry.note.text}
           titleId={"addWords.addNote"}
-          onClose={() => this.setState({ noteOpen: false })}
-          onConfirm={this.props.updateNote}
+          close={() => this.setState({ noteOpen: false })}
+          updateText={this.props.updateNote}
         />
       </React.Fragment>
     );

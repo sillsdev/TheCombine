@@ -102,7 +102,7 @@ describe("ExistingEntry", () => {
     it("updates text", () => {
       renderWithWord(mockWord);
       testHandle = testHandle.findByType(EntryNote).findByType(EditTextDialog);
-      testHandle.props.onConfirm(mockText);
+      testHandle.props.updateText(mockText);
       expect(mockUpdateNote).toBeCalledWith(mockText);
     });
   });
