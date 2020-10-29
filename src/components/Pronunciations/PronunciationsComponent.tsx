@@ -8,7 +8,6 @@ import Recorder from "./Recorder";
 
 export interface PronunciationProps {
   wordId: string;
-  senseIndex?: number;
   pronunciationFiles: string[];
   recorder?: Recorder;
   deleteAudio?: (wordId: string, fileName: string) => void;
@@ -20,6 +19,17 @@ export interface PronunciationProps {
 export class Pronunciations extends React.Component<
   PronunciationProps & LocalizeContextProps
 > {
+  /* Only update if things that could change do change
+   * This decreases unnecessary fetching of audio files
+   */
+  shouldComponentUpdate(nextProps: PronunciationProps) {
+    const isDifferentEntry = nextProps.wordId !== this.props.wordId;
+    const hasDifferentAudio =
+      JSON.stringify(nextProps.pronunciationFiles) !==
+      JSON.stringify(this.props.pronunciationFiles);
+    return isDifferentEntry || hasDifferentAudio;
+  }
+
   render() {
     let audioButtons;
     if (this.props.pronunciationFiles === null) {
@@ -44,11 +54,6 @@ export class Pronunciations extends React.Component<
     return (
       <div className="pronunciationAudio">
         <AudioRecorder
-          key={
-            this.props.senseIndex
-              ? this.props.wordId + "_" + this.props.senseIndex
-              : this.props.wordId
-          }
           wordId={this.props.wordId}
           recorder={this.props.recorder}
           uploadAudio={this.props.uploadAudio}

@@ -148,7 +148,6 @@ export default class RecentEntry extends React.Component<
           >
             <Pronunciations
               wordId={this.props.entry.id}
-              senseIndex={this.props.senseIndex}
               pronunciationFiles={this.props.entry.audio}
               recorder={this.props.recorder}
               deleteAudio={(wordId: string, fileName: string) => {
