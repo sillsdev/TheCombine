@@ -230,11 +230,6 @@
     ]
   },
   "siteSettings": {
-    "proceedWithCaution": [
-      "Proceed with Caution!",
-      "¡Proceder con precaución!",
-      "Procéder avec prudence !"
-    ],
     "archiveProjectText": [
       "This project will not be accessible to any users.",
       "Este proyecto no será accesible para ningún usuario.",
@@ -446,11 +441,6 @@
       "Aucun domaine sélectionné"
     ],
     "noNote": ["No note", "Sin nota", "Pas de note"],
-    "deleteWord": [
-      "This word will be permanently deleted!",
-      "¡Esta palabra se eliminará permanentemente!",
-      "Ce mot sera définitivement supprimé !"
-    ],
     "error": {
       "gloss": [
         "Glosses cannot be left blank",
@@ -632,9 +622,19 @@
       "¿Eliminar para siempre?",
       "Effacer pour toujours ?"
     ],
+    "deleteWarning": [
+      "This will be permanently deleted!",
+      "¡Esto se eliminará permanentemente!",
+      "Cela sera définitivement supprimé !"
+    ],
     "done": ["Done", "Hecho", "Achevé"],
     "export": ["Export", "Exportar", "Exporter"],
     "invite": ["Invite", "Invitar", "Inviter"],
+    "proceedWithCaution": [
+      "Proceed with Caution!",
+      "¡Proceder con precaución!",
+      "Procéder avec prudence !"
+    ],
     "reject": ["Reject", "Rechazar", "Rejeter"],
     "rejected": ["Rejected", "Rechazado", "Rejeté"],
     "restore": ["Restore", "Restaurar", "Restaurer"],

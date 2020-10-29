@@ -3,6 +3,8 @@ import { Delete } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
+import DeleteDialog from "../../../Buttons/DeleteDialog";
+
 interface DeleteEntryProps {
   removeEntry: () => void;
 }
@@ -10,20 +12,21 @@ interface DeleteEntryProps {
 /**
  * A delete button
  */
-export default class DeleteEntry extends React.Component<DeleteEntryProps> {
-  render() {
-    return (
-      <React.Fragment>
-        <Tooltip title={<Translate id="addWords.deleteRow" />} placement="top">
-          <IconButton
-            tabIndex={-1}
-            size="small"
-            onClick={() => this.props.removeEntry()}
-          >
-            <Delete />
-          </IconButton>
-        </Tooltip>
-      </React.Fragment>
-    );
-  }
+export default function DeleteEntry(props: DeleteEntryProps) {
+  const [open, setOpen] = React.useState<boolean>(false);
+
+  return (
+    <React.Fragment>
+      <Tooltip title={<Translate id="addWords.deleteRow" />} placement="top">
+        <IconButton tabIndex={-1} size="small" onClick={() => setOpen(true)}>
+          <Delete />
+        </IconButton>
+      </Tooltip>
+      <DeleteDialog
+        open={open}
+        handleCancel={() => setOpen(false)}
+        handleAccept={() => props.removeEntry()}
+      />
+    </React.Fragment>
+  );
 }
