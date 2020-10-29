@@ -30,7 +30,7 @@ behavior:
 | CERT_MODE         | May be one of `self-signed`, `letsencrypt`, or `cert-client` to specify which of the certificate management personalities to use |
 | CERT_EMAIL        | Set to e-mail address for certificate expiration notices first                                                                                                       |
 | CERT_STAGING      | Primary domain for the certificate - used to specify location of certificate                                                                    |
-| CERT_ADDL_DOMAINS | A space separated list of domains additional for the certificate.                     |
+| CERT_ADDL_DOMAINS | A space separated list of additional domains for the certificate.                     |
 | SERVER_NAME       | Name of the server. Also used to specify the directory where the certificates are stored.                                                           |
 | MAX_CONNECT_TRIES | Number of times to check if the webserver is up before attempting to get a certificate from letsencrypt.                                        |
 
