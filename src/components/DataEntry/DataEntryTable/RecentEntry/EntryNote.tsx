@@ -7,8 +7,8 @@ import { Word } from "../../../../types/word";
 import EditTextDialog from "../../../Buttons/EditTextDialog";
 
 interface EntryNoteProps {
-  updateNote: (newText: string) => void;
   entry: Word;
+  updateNote: (newText: string) => void;
 }
 
 interface EntryNoteState {

@@ -3,10 +3,10 @@ import renderer from "react-test-renderer";
 
 import DeleteEntry from "../DeleteEntry";
 
-describe("Tests DeleteEntry", () => {
+describe("DeleteEntry", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
-      renderer.create(<DeleteEntry removeEntry={() => null} />);
+      renderer.create(<DeleteEntry removeEntry={jest.fn()} />);
     });
   });
 });
