@@ -4,8 +4,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  InputAdornment,
   TextField,
 } from "@material-ui/core";
+import { Clear } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
@@ -46,6 +49,14 @@ export default function EditTextDialog(props: EditTextDialogProps) {
     }
   }
 
+  const endAdornment = (
+    <InputAdornment position="end">
+      <IconButton onClick={() => setText("")}>
+        <Clear />
+      </IconButton>
+    </InputAdornment>
+  );
+
   return (
     <Dialog
       open={props.open}
@@ -60,6 +71,7 @@ export default function EditTextDialog(props: EditTextDialogProps) {
         <TextField
           value={text}
           onChange={(event) => setText(event.target.value)}
+          InputProps={{ endAdornment }}
         />
       </DialogContent>
       <DialogActions>
