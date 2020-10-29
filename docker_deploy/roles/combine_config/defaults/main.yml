@@ -18,6 +18,4 @@ combine_image_certmgr: combine/certmgr
 # Environment variable defaults for the
 # certmgr
 cert_is_staging: 0
-cert_verbose: 0
-cert_create_only: 0
 cert_max_connect_tries: 15

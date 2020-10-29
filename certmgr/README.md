@@ -31,7 +31,6 @@ behavior:
 | CERT_EMAIL        | Set to e-mail address for certificate expiration notices first                                                                                                       |
 | CERT_STAGING      | Primary domain for the certificate - used to specify location of certificate                                                                    |
 | CERT_DOMAINS      | A space separated list of domains for the certificate.                                                                                          |
-| CERT_VERBOSE      | Set to 1 for verbose output to aid in debugging; 0 otherwise.                                                                                   |
 | SERVER_NAME       | Name of the server - used to specify the directory where the certificates are stored.                                                           |
 | MAX_CONNECT_TRIES | Number of times to check if the webserver is up before attempting to get a certificate from letsencrypt.                                        |
 
