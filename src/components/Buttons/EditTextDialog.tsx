@@ -40,10 +40,16 @@ export default function EditTextDialog(props: EditTextDialogProps) {
     props.close();
   }
 
+  function escapeClose(_: {}, reason: "backdropClick" | "escapeKeyDown") {
+    if (reason === "escapeKeyDown") {
+      props.close();
+    }
+  }
+
   return (
     <Dialog
       open={props.open}
-      onClose={props.close}
+      onClose={escapeClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
