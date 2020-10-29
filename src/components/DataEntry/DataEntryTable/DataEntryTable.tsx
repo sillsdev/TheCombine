@@ -182,10 +182,9 @@ export class DataEntryTable extends React.Component<
     audioURLs?: string[]
   ) {
     let updatedWord = await this.updateWordInBackend(wordToUpdate);
-    let updatedWordId = updatedWord.id;
     if (audioURLs && audioURLs.length) {
-      updatedWordId = await this.addAudiosToBackend(updatedWordId, audioURLs);
-      updatedWord = await Backend.getWord(updatedWordId);
+      const wordId = await this.addAudiosToBackend(updatedWord.id, audioURLs);
+      updatedWord = await Backend.getWord(wordId);
     }
 
     const recentlyAddedWords = [...this.state.recentlyAddedWords];
