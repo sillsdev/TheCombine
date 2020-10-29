@@ -9,12 +9,14 @@ from base_cert import BaseCert
 from utils import lookup_env
 from letsencrypt_cert import LetsEncryptCert
 from self_signed_cert import SelfSignedCert
+from cert_server_cert import CertServerCert
 
 if __name__ == "__main__":
 
     mode_choices: Dict[str, Optional[BaseCert]] = {
         "self-signed": SelfSignedCert(),
         "letsencrypt": LetsEncryptCert(),
+        "cert-server": CertServerCert(),
     }
 
     cert_store = lookup_env("CERT_STORE")
