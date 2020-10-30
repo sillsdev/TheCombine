@@ -80,13 +80,14 @@ namespace BackendFramework.Controllers
                 await file.CopyToAsync(fs);
             }
 
+            if (_projectService.CanImportLift(projectId))
+            {
+                return new BadRequestObjectResult("A Lift file has already been uploaded");
+            }
+
             // Make destination for extracted files
             var zipDest = Path.GetDirectoryName(fileUpload.FilePath);
             Directory.CreateDirectory(zipDest);
-            if (Directory.Exists(Path.Combine(zipDest, "ExtractedLocation")))
-            {
-                return new BadRequestObjectResult("A file has already been uploaded");
-            }
 
             // Extract the zip to new directory
             var extractDir = Path.Combine(zipDest, "ExtractedLocation");
