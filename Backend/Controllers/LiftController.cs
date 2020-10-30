@@ -54,7 +54,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
-            if (project == null)
+            if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -66,6 +66,10 @@ namespace BackendFramework.Controllers
             }
 
             var file = fileUpload.File;
+            if (file is null)
+            {
+                return new BadRequestObjectResult("Null file");
+            }
 
             // Ensure file is not empty
             if (file.Length == 0)
@@ -88,6 +92,11 @@ namespace BackendFramework.Controllers
 
             // Make destination for extracted files
             var zipDest = Path.GetDirectoryName(fileUpload.FilePath);
+            if (zipDest is null)
+            {
+                throw new FileSystemError($"Could not get directory name of {fileUpload.FilePath}");
+            }
+
             Directory.CreateDirectory(zipDest);
 
             // Extract the zip to new directory
@@ -205,7 +214,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -230,5 +239,20 @@ namespace BackendFramework.Controllers
             var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
             return exportedFilepath;
         }
+    }
+
+    [Serializable]
+    public class FileSystemError : Exception
+    {
+        public FileSystemError()
+        { }
+
+        public FileSystemError(string message)
+            : base(message)
+        { }
+
+        public FileSystemError(string message, Exception innerException)
+            : base(message, innerException)
+        { }
     }
 }

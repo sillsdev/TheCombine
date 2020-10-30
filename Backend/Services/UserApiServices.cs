@@ -104,7 +104,7 @@ namespace BackendFramework.Services
 
         /// <summary> Confirms login credentials are valid. </summary>
         /// <returns> User when credentials are correct, null otherwise. </returns>
-        public async Task<User> Authenticate(string username, string password)
+        public async Task<User?> Authenticate(string username, string password)
         {
             // Fetch the stored user.
             var userList = await _userDatabase.Users.FindAsync(x =>
@@ -112,7 +112,7 @@ namespace BackendFramework.Services
             var foundUser = userList.FirstOrDefault();
 
             // Return null if user with specified username not found.
-            if (foundUser == null)
+            if (foundUser is null)
             {
                 return null;
             }
@@ -124,11 +124,11 @@ namespace BackendFramework.Services
             return PasswordHash.ValidatePassword(hashedPassword, password) ? await MakeJwt(foundUser) : null;
         }
 
-        public async Task<User> MakeJwt(User user)
+        public async Task<User?> MakeJwt(User user)
         {
             const int tokenExpirationMinutes = 60 * 4;
             var tokenHandler = new JwtSecurityTokenHandler();
-            var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY");
+            var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY")!;
             var key = Encoding.ASCII.GetBytes(secretKey);
 
             // Fetch the projects Id and the roles for each Id
@@ -200,7 +200,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="User"/> with specified userId and returns avatar filepath </summary>
-        public async Task<string> GetUserAvatar(string userId)
+        public async Task<string?> GetUserAvatar(string userId)
         {
             var filterDef = new FilterDefinitionBuilder<User>();
             var filter = filterDef.Eq(x => x.Id, userId);
@@ -236,7 +236,7 @@ namespace BackendFramework.Services
 
         /// <summary> Adds a <see cref="User"/> </summary>
         /// <returns> The <see cref="User"/> created, or null if the user could not be created. </returns>
-        public async Task<User> Create(User user)
+        public async Task<User?> Create(User user)
         {
             // Check if collection is not empty
             var users = await GetAllUsers();
@@ -267,12 +267,12 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Removes avatar path, password, and token from <see cref="User"/> </summary>
-        public void Sanitize(User user)
+        private static void Sanitize(User user)
         {
             // .Avatar or .Token set to "" or null will not be updated in the database
-            user.Avatar = null;
-            user.Password = null;
-            user.Token = null;
+            user.Avatar = "";
+            user.Password = "";
+            user.Token = "";
         }
 
         /// <summary> Updates <see cref="User"/> with specified userId </summary>
