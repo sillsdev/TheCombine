@@ -11,52 +11,34 @@ interface EntryNoteProps {
   updateNote: (newText: string) => void;
 }
 
-interface EntryNoteState {
-  noteOpen: boolean;
-}
-
 /**
  * A note adding/editing button
  */
-export default class EntryNote extends React.Component<
-  EntryNoteProps,
-  EntryNoteState
-> {
-  constructor(props: EntryNoteProps) {
-    super(props);
-    this.state = { noteOpen: false };
-  }
+export default function EntryNote(props: EntryNoteProps) {
+  const [noteOpen, setNoteOpen] = React.useState<boolean>(false);
 
-  render() {
-    return (
-      <React.Fragment>
-        {this.props.entry.note.text ? (
-          <Tooltip title={this.props.entry.note.text} placement="top">
-            <IconButton
-              size="small"
-              onClick={() => this.setState({ noteOpen: true })}
-            >
-              <Comment />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title={<Translate id="addWords.addNote" />} placement="top">
-            <IconButton
-              size="small"
-              onClick={() => this.setState({ noteOpen: true })}
-            >
-              <AddComment />
-            </IconButton>
-          </Tooltip>
-        )}
-        <EditTextDialog
-          open={this.state.noteOpen}
-          text={this.props.entry.note.text}
-          titleId={"addWords.addNote"}
-          close={() => this.setState({ noteOpen: false })}
-          updateText={this.props.updateNote}
-        />
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      {props.entry.note.text ? (
+        <Tooltip title={props.entry.note.text} placement="top">
+          <IconButton size="small" onClick={() => setNoteOpen(true)}>
+            <Comment />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip title={<Translate id="addWords.addNote" />} placement="top">
+          <IconButton size="small" onClick={() => setNoteOpen(true)}>
+            <AddComment />
+          </IconButton>
+        </Tooltip>
+      )}
+      <EditTextDialog
+        open={noteOpen}
+        text={props.entry.note.text}
+        titleId={"addWords.addNote"}
+        close={() => setNoteOpen(false)}
+        updateText={props.updateNote}
+      />
+    </React.Fragment>
+  );
 }
