@@ -267,6 +267,9 @@ namespace BackendFramework.Services
                 Path.Combine($"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip"));
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
 
+            // Clean up the temporary folder structure that was compressed.
+            Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
+
             return destinationFileName;
         }
 
