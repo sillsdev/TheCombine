@@ -41,6 +41,8 @@ WORKDIR $APP_HOME
 COPY --chown=app:app launch.sh ./
 COPY --chown=app:app --from=builder /app/build ./
 
+RUN apt-get update && apt-get install -y procps
+
 # Change to the app user.
 USER app
 
