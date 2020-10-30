@@ -49,6 +49,12 @@ export default function EditTextDialog(props: EditTextDialogProps) {
     }
   }
 
+  function confirmIfEnter(event: React.KeyboardEvent<any>) {
+    if (event.key == "Enter") {
+      onConfirm();
+    }
+  }
+
   const endAdornment = (
     <InputAdornment position="end">
       <IconButton onClick={() => setText("")}>
@@ -71,6 +77,7 @@ export default function EditTextDialog(props: EditTextDialogProps) {
         <TextField
           value={text}
           onChange={(event) => setText(event.target.value)}
+          onKeyPress={confirmIfEnter}
           InputProps={{ endAdornment }}
         />
       </DialogContent>
