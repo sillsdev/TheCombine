@@ -7,12 +7,14 @@ import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
 import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
 import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
-import DeleteEntry from "./DeleteEntry/DeleteEntry";
+import DeleteEntry from "./DeleteEntry";
+import EntryNote from "./EntryNote";
 
 interface RecentEntryProps {
   entry: Word;
   senseIndex: number;
   updateGloss: (newGloss: string) => void;
+  updateNote: (newText: string) => void;
   updateVern: (newVernacular: string, targetWordId?: string) => void;
   removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
@@ -86,6 +88,7 @@ export default class RecentEntry extends React.Component<
           container
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
+          alignItems="center"
         >
           <Grid
             item
@@ -139,7 +142,7 @@ export default class RecentEntry extends React.Component<
           </Grid>
           <Grid
             item
-            xs={3}
+            xs={2}
             style={{
               paddingLeft: theme.spacing(1),
               paddingRight: theme.spacing(1),
@@ -156,6 +159,20 @@ export default class RecentEntry extends React.Component<
               uploadAudio={(wordId: string, audioFile: File) => {
                 this.props.addAudioToWord(wordId, audioFile);
               }}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            <EntryNote
+              entry={this.props.entry}
+              updateNote={this.props.updateNote}
             />
           </Grid>
           <Grid
