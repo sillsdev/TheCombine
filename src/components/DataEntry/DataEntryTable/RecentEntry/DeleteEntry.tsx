@@ -24,6 +24,7 @@ export default function DeleteEntry(props: DeleteEntryProps) {
       </Tooltip>
       <DeleteDialog
         open={open}
+        textId={"addWords.deleteRowWarning"}
         handleCancel={() => setOpen(false)}
         handleAccept={props.removeEntry}
       />

@@ -74,6 +74,7 @@ class DeleteCell extends React.Component<DeleteCellProps, DeleteCellState> {
         </IconButton>
         <DeleteDialog
           open={this.state.dialogOpen}
+          textId={"reviewEntries.deleteWordWarning"}
           handleCancel={() => this.handleClose()}
           handleAccept={() => this.deleteFrontierWord()}
         />

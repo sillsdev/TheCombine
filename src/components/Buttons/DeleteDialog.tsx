@@ -12,6 +12,7 @@ import { Translate } from "react-localize-redux";
 
 interface DeleteDialogProps {
   open: boolean;
+  textId?: string;
   handleAccept: () => void;
   handleCancel: () => void;
 }
@@ -32,7 +33,9 @@ export default function DeleteDialog(props: ButtonProps & DeleteDialogProps) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          <Translate id="buttons.deleteWarning" />
+          <Translate
+            id={props.textId ? props.textId : "buttons.deletePermanently"}
+          />
         </DialogContentText>
       </DialogContent>
       <DialogActions>
