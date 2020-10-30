@@ -382,13 +382,14 @@ namespace BackendFramework.Models
     /// <summary> Helper object that contains a file along with its name and path </summary>
     public class FileUpload
     {
-        public IFormFile File { get; set; }
+        public IFormFile? File { get; set; }
         public string Name { get; set; }
         public string FilePath { get; set; }
 
-        public FileUpload(IFormFile file)
+        /// <summary> Models by ASP.NET Core POSTs must have a constructor with zero arguments. </summary>
+        public FileUpload()
         {
-            File = file;
+            File = null;
             Name = "";
             FilePath = "";
         }

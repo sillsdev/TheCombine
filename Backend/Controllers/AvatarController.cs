@@ -54,6 +54,10 @@ namespace BackendFramework.Controllers
             }
 
             var file = fileUpload.File;
+            if (file is null)
+            {
+                return new BadRequestObjectResult("Null File");
+            }
 
             // Ensure file is not empty
             if (file.Length == 0)
