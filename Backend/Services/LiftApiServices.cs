@@ -194,13 +194,15 @@ namespace BackendFramework.Services
             // Export semantic domains to lift-ranges
             var proj = projService.GetProject(projectId).Result;
             var extractedPathToImport = Path.Combine(GetProjectDir(projectId), "Import", "ExtractedLocation");
-            var importLiftDir = "";
+            string? firstImportDir = null;
             if (Directory.Exists(extractedPathToImport))
             {
-                importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(
+                // TODO: Should an error be raised if this returns null?
+                firstImportDir = Directory.GetDirectories(extractedPathToImport).Select(
                     Path.GetFileName).ToList().Single();
             }
 
+            var importLiftDir = firstImportDir ?? "";
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
             // If there are no new semantic domains, and the old lift-ranges file is still around, just copy it
@@ -222,7 +224,13 @@ namespace BackendFramework.Services
 
                 // Pull from resources file with all English semantic domains
                 var assembly = typeof(LiftService).GetTypeInfo().Assembly;
-                var resource = assembly.GetManifestResourceStream("BackendFramework.Data.sdList.txt");
+                const string semDomListFile = "BackendFramework.Data.sdList.txt";
+                var resource = assembly.GetManifestResourceStream(semDomListFile);
+                if (resource is null)
+                {
+                    throw new Exception($"Unable to load semantic domain list: {semDomListFile}");
+                }
+
                 string sdList;
                 using (var reader = new StreamReader(resource, Encoding.UTF8))
                 {
@@ -394,7 +402,7 @@ namespace BackendFramework.Services
         /// </summary>
         /// <param name="sInput"></param>
         /// <returns></returns>
-        public static string MakeSafeXmlAttribute(string sInput)
+        public static string? MakeSafeXmlAttribute(string sInput)
         {
             return SecurityElement.Escape(sInput);
         }

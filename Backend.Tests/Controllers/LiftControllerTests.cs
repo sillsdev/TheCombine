@@ -155,10 +155,10 @@ namespace Backend.Tests.Controllers
             return word;
         }
 
-        private static FileUpload InitFile(FileStream fstream, string filename)
+        private static FileUpload InitFile(Stream fstream, string filename)
         {
             var formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
-            var fileUpload = new FileUpload { Name = "FileName", File = formFile };
+            var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             return fileUpload;
         }

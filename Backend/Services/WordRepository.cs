@@ -61,14 +61,14 @@ namespace BackendFramework.Services
 
         internal static void PopulateWordGuids(Word word)
         {
-            if (word.Guid == null || Guid.Empty.Equals(word.Guid))
+            if (word.Guid is null || Guid.Empty.Equals(word.Guid))
             {
                 word.Guid = Guid.NewGuid();
             }
 
             foreach (var sense in word.Senses)
             {
-                if (sense.Guid == null || Guid.Empty.Equals(sense.Guid))
+                if (sense.Guid is null || Guid.Empty.Equals(sense.Guid))
                 {
                     sense.Guid = Guid.NewGuid();
                 }

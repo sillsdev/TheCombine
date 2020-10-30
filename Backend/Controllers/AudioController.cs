@@ -49,13 +49,13 @@ namespace BackendFramework.Controllers
             }
 
             var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
-            if (filePath == null)
+            if (filePath is null)
             {
                 return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
             }
 
             var fileContents = await System.IO.File.ReadAllBytesAsync(filePath);
-            if (fileContents == null)
+            if (fileContents is null)
             {
                 return new BadRequestObjectResult("The file does not exist");
             }
@@ -85,6 +85,10 @@ namespace BackendFramework.Controllers
             }
 
             var file = fileUpload.File;
+            if (file is null)
+            {
+                return new BadRequestObjectResult("Null File");
+            }
 
             // Ensure file is not empty
             if (file.Length == 0)

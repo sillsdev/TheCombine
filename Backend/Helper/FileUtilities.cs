@@ -30,13 +30,13 @@ namespace BackendFramework.Helper
             var pathToHome = Environment.GetEnvironmentVariable("HOME");
 
             // Generate home on windows
-            if (pathToHome == null)
+            if (pathToHome is null)
             {
                 pathToHome = Environment.GetEnvironmentVariable("UserProfile");
             }
 
             // Something is wrong
-            if (pathToHome == null)
+            if (pathToHome is null)
             {
                 throw new DesktopNotFoundException();
             }
