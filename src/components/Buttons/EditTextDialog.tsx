@@ -50,7 +50,7 @@ export default function EditTextDialog(props: EditTextDialogProps) {
   }
 
   function confirmIfEnter(event: React.KeyboardEvent<any>) {
-    if (event.key == "Enter") {
+    if (event.key === "Enter") {
       onConfirm();
     }
   }
