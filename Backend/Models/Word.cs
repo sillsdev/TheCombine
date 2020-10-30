@@ -85,15 +85,15 @@ namespace BackendFramework.Models
         {
             var clone = new Word
             {
-                Id = (Id.Clone() as string)!,
+                Id = (string)Id.Clone(),
                 Guid = Guid,
-                Vernacular = (Vernacular.Clone() as string)!,
-                Plural = (Plural.Clone() as string)!,
-                Created = (Created.Clone() as string)!,
-                Modified = (Modified.Clone() as string)!,
-                PartOfSpeech = (PartOfSpeech.Clone() as string)!,
-                OtherField = (OtherField.Clone() as string)!,
-                ProjectId = (ProjectId.Clone() as string)!,
+                Vernacular = (string)Vernacular.Clone(),
+                Plural = (string)Plural.Clone(),
+                Created = (string)Created.Clone(),
+                Modified = (string)Modified.Clone(),
+                PartOfSpeech = (string)PartOfSpeech.Clone(),
+                OtherField = (string)OtherField.Clone(),
+                ProjectId = (string)ProjectId.Clone(),
                 Accessibility = Accessibility,
                 Audio = new List<string>(),
                 EditedBy = new List<string>(),
@@ -104,15 +104,15 @@ namespace BackendFramework.Models
 
             foreach (var file in Audio)
             {
-                clone.Audio.Add((file.Clone() as string)!);
+                clone.Audio.Add((string)file.Clone());
             }
             foreach (var id in EditedBy)
             {
-                clone.EditedBy.Add((id.Clone() as string)!);
+                clone.EditedBy.Add((string)id.Clone());
             }
             foreach (var id in History)
             {
-                clone.History.Add((id.Clone() as string)!);
+                clone.History.Add((string)id.Clone());
             }
             foreach (var sense in Senses)
             {
@@ -206,8 +206,8 @@ namespace BackendFramework.Models
         {
             return new Note
             {
-                Language = (Language.Clone() as string)!,
-                Text = (Text.Clone() as string)!
+                Language = (string)Language.Clone(),
+                Text = (string)Text.Clone()
             };
         }
 
@@ -319,8 +319,8 @@ namespace BackendFramework.Models
         {
             return new Gloss
             {
-                Language = (Language.Clone() as string)!,
-                Def = (Def.Clone() as string)!
+                Language = (string)Language.Clone(),
+                Def = (string)Def.Clone()
             };
         }
 
@@ -350,9 +350,9 @@ namespace BackendFramework.Models
         {
             return new SemanticDomain
             {
-                Name = (Name.Clone() as string)!,
-                Id = (Id.Clone() as string)!,
-                Description = (Description.Clone() as string)!
+                Name = (string)Name.Clone(),
+                Id = (string)Id.Clone(),
+                Description = (string)Description.Clone()
             };
         }
 

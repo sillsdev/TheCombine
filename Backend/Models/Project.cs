@@ -76,8 +76,8 @@ namespace BackendFramework.Models
         {
             var clone = new Project
             {
-                Id = (Id.Clone() as string)!,
-                Name = (Name.Clone() as string)!,
+                Id = (string)Id.Clone(),
+                Name = (string)Name.Clone(),
                 IsActive = IsActive,
                 AutocompleteSetting = AutocompleteSetting,
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
@@ -101,11 +101,11 @@ namespace BackendFramework.Models
             }
             foreach (var cs in ValidCharacters)
             {
-                clone.ValidCharacters.Add((cs.Clone() as string)!);
+                clone.ValidCharacters.Add((string)cs.Clone());
             }
             foreach (var cs in RejectedCharacters)
             {
-                clone.RejectedCharacters.Add((cs.Clone() as string)!);
+                clone.RejectedCharacters.Add((string)cs.Clone());
             }
             foreach (var cf in CustomFields)
             {
@@ -113,11 +113,11 @@ namespace BackendFramework.Models
             }
             foreach (var wf in WordFields)
             {
-                clone.WordFields.Add((wf.Clone() as string)!);
+                clone.WordFields.Add((string)wf.Clone());
             }
             foreach (var pos in PartsOfSpeech)
             {
-                clone.PartsOfSpeech.Add((pos.Clone() as string)!);
+                clone.PartsOfSpeech.Add((string)pos.Clone());
             }
             foreach (var it in InviteTokens)
             {
@@ -205,8 +205,8 @@ namespace BackendFramework.Models
         {
             return new CustomField
             {
-                Name = (Name.Clone() as string)!,
-                Type = (Type.Clone() as string)!
+                Name = (string)Name.Clone(),
+                Type = (string)Type.Clone()
             };
         }
     }
@@ -249,9 +249,9 @@ namespace BackendFramework.Models
         {
             return new EmailInvite
             {
-                Id = (Id.Clone() as string)!,
-                Email = (Email.Clone() as string)!,
-                Token = (Token.Clone() as string)!,
+                Id = (string)Id.Clone(),
+                Email = (string)Email.Clone(),
+                Token = (string)Token.Clone(),
                 ExpireTime = ExpireTime
             };
         }
@@ -274,9 +274,9 @@ namespace BackendFramework.Models
         {
             return new WritingSystem
             {
-                Name = (Name.Clone() as string)!,
-                Bcp47 = (Bcp47.Clone() as string)!,
-                Font = (Font.Clone() as string)!
+                Name = (string)Name.Clone(),
+                Bcp47 = (string)Bcp47.Clone(),
+                Font = (string)Font.Clone()
             };
         }
 

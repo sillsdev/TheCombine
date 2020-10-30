@@ -31,8 +31,8 @@ namespace BackendFramework.Models
         {
             var clone = new UserRole
             {
-                Id = (Id.Clone() as string)!,
-                ProjectId = (ProjectId.Clone() as string)!,
+                Id = (string)Id.Clone(),
+                ProjectId = (string)ProjectId.Clone(),
                 Permissions = new List<int>()
             };
 

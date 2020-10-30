@@ -30,8 +30,8 @@ namespace BackendFramework.Models
         {
             var clone = new UserEdit
             {
-                Id = (Id.Clone() as string)!,
-                ProjectId = (ProjectId.Clone() as string)!,
+                Id = (string)Id.Clone(),
+                ProjectId = (string)ProjectId.Clone(),
                 Edits = new List<Edit>()
             };
 
@@ -122,7 +122,7 @@ namespace BackendFramework.Models
 
             foreach (var stepData in StepData)
             {
-                clone.StepData.Add((stepData.Clone() as string)!);
+                clone.StepData.Add((string)stepData.Clone());
             }
 
             return clone;
