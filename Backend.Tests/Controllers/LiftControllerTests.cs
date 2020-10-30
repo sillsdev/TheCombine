@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -162,6 +163,18 @@ namespace Backend.Tests.Controllers
             return fileUpload;
         }
 
+        /// <summary> Extract the binary contents of a zip file to a temporary directory. </summary>
+        private static string ExtractZipFileContents(byte[] fileContents)
+        {
+            var zipFile = Path.GetTempFileName();
+            File.WriteAllBytes(zipFile, fileContents);
+            var extractionPath = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(zipFile) + "-dir");
+            Directory.CreateDirectory(extractionPath);
+            ZipFile.ExtractToDirectory(zipFile, extractionPath);
+            File.Delete(zipFile);
+            return extractionPath;
+        }
+
         private class RoundTripObj
         {
             public string Language { get; set; }
@@ -200,10 +213,12 @@ namespace Backend.Tests.Controllers
             _wordService.Update(proj.Id, wordToUpdate.Id, word);
             _wordService.DeleteFrontierWord(proj.Id, wordToDelete.Id);
 
-            var result = _liftController.ExportLiftFile(proj.Id).Result;
+            var result = _liftController.ExportLiftFile(proj.Id).Result as OkObjectResult;
+            var fileContents = Convert.FromBase64String(result.Value as string);
 
-            var combinePath = FileUtilities.GenerateFilePath(FileUtilities.FileType.Dir, true, "", "");
-            var exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport",
+            // Write LiftFile contents to a temporary directory.
+            var extractedExportDir = ExtractZipFileContents(fileContents);
+            var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);
             //TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are kept vs deleted
