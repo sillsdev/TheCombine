@@ -60,7 +60,7 @@ namespace BackendFramework.Services
                 wordWithAudioToDelete.ProjectId = projectId;
 
                 // Keep track of the old word
-                if (wordWithAudioToDelete.History == null)
+                if (wordWithAudioToDelete.History is null)
                 {
                     wordWithAudioToDelete.History = new List<string> { wordId };
                 }
@@ -78,7 +78,7 @@ namespace BackendFramework.Services
 
         /// <summary> Deletes word in frontier collection and adds word with deleted tag in word collection </summary>
         /// <returns> A string: id of new word </returns>
-        public async Task<string> DeleteFrontierWord(string projectId, string wordId)
+        public async Task<string?> DeleteFrontierWord(string projectId, string wordId)
         {
             var wordIsInFrontier = await _repo.DeleteFrontier(projectId, wordId);
 
@@ -94,7 +94,7 @@ namespace BackendFramework.Services
             word.Accessibility = State.Deleted;
 
             // Keep track of the old word
-            if (word.History == null)
+            if (word.History is null)
             {
                 word.History = new List<string> { wordId };
             }
@@ -121,7 +121,7 @@ namespace BackendFramework.Services
                 word.ProjectId = projectId;
                 word.Modified = DateTime.UtcNow.ToLongDateString();
                 // Keep track of the old word
-                if (word.History == null)
+                if (word.History is null)
                 {
                     word.History = new List<string> { wordId };
                 }

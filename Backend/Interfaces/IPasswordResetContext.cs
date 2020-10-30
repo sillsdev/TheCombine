@@ -8,6 +8,6 @@ namespace BackendFramework.Interfaces
         int ExpireTime { get; }
         public Task Insert(PasswordReset reset);
         public Task ClearAll(string email);
-        public Task<PasswordReset> FindByToken(string token);
+        public Task<PasswordReset?> FindByToken(string token);
     }
 }

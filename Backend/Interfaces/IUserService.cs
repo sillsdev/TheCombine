@@ -9,14 +9,13 @@ namespace BackendFramework.Interfaces
     {
         Task<List<User>> GetAllUsers();
         Task<User> GetUser(string userId);
-        Task<string> GetUserAvatar(string userId);
-        Task<User> Create(User user);
+        Task<string?> GetUserAvatar(string userId);
+        Task<User?> Create(User user);
         Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false);
         Task<bool> Delete(string userId);
         Task<bool> DeleteAllUsers();
-        Task<User> Authenticate(string username, string password);
-        Task<User> MakeJwt(User user);
+        Task<User?> Authenticate(string username, string password);
+        Task<User?> MakeJwt(User user);
         Task<ResultOfUpdate> ChangePassword(string userId, string password);
-        void Sanitize(User user);
     }
 }

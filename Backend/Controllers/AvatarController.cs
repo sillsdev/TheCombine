@@ -31,7 +31,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
             var avatar = await _userService.GetUserAvatar(userId);
-            if (avatar == null)
+            if (avatar is null)
             {
                 return new NotFoundObjectResult(userId);
             }
@@ -54,6 +54,10 @@ namespace BackendFramework.Controllers
             }
 
             var file = fileUpload.File;
+            if (file is null)
+            {
+                return new BadRequestObjectResult("Null File");
+            }
 
             // Ensure file is not empty
             if (file.Length == 0)
@@ -63,7 +67,7 @@ namespace BackendFramework.Controllers
 
             // Get user to apply avatar to
             var gotUser = await _userService.GetUser(userId);
-            if (gotUser == null)
+            if (gotUser is null)
             {
                 return new NotFoundObjectResult(userId);
             }
