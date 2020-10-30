@@ -46,7 +46,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            // sanitize projectId
+            // Sanitize projectId
             if (!SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
@@ -57,6 +57,12 @@ namespace BackendFramework.Controllers
             if (project == null)
             {
                 return new NotFoundObjectResult(projectId);
+            }
+
+            // Ensure Lift file has not already been imported.
+            if (!_projectService.CanImportLift(projectId))
+            {
+                return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
 
             var file = fileUpload.File;
@@ -78,11 +84,6 @@ namespace BackendFramework.Controllers
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
-            }
-
-            if (_projectService.CanImportLift(projectId))
-            {
-                return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
 
             // Make destination for extracted files
