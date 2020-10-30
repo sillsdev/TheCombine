@@ -13,6 +13,7 @@ import DomainTree from "../../../types/SemanticDomain";
 import theme from "../../../types/theme";
 import {
   Gloss,
+  Note,
   SemanticDomain,
   Sense,
   simpleWord,
@@ -178,14 +179,13 @@ export class DataEntryTable extends React.Component<
   async updateWordBackAndFront(
     wordToUpdate: Word,
     senseIndex: number,
-    audioURLs: string[]
+    audioURLs?: string[]
   ) {
     let updatedWord = await this.updateWordInBackend(wordToUpdate);
-    const updatedWordId = await this.addAudiosToBackend(
-      updatedWord.id,
-      audioURLs
-    );
-    updatedWord = await Backend.getWord(updatedWordId);
+    if (audioURLs && audioURLs.length) {
+      const wordId = await this.addAudiosToBackend(updatedWord.id, audioURLs);
+      updatedWord = await Backend.getWord(wordId);
+    }
 
     const recentlyAddedWords = [...this.state.recentlyAddedWords];
     const updatedWordAccess: WordAccess = {
@@ -198,13 +198,17 @@ export class DataEntryTable extends React.Component<
       this.replaceInDisplay(wordToUpdate.id, updatedWord);
     });
   }
+  async updateWordBackAndFrontSimple(wordToUpdate: Word) {
+    let updatedWord = await this.updateWordInBackend(wordToUpdate);
+    this.replaceInDisplay(wordToUpdate.id, updatedWord);
+  }
 
   // Checks if sense already exists with this gloss and semantic domain
   // returns false if encounters duplicate
   async updateWordWithNewGloss(
     wordId: string,
     gloss: string,
-    audioFileURLs: string[] = []
+    audioFileURLs?: string[]
   ): Promise<void> {
     const existingWord = this.state.existingWords.find(
       (word: Word) => word.id === wordId
@@ -392,7 +396,7 @@ export class DataEntryTable extends React.Component<
     const oldGloss = oldSense.glosses[0];
 
     if (oldWord.senses.length === 1 && oldSense.semanticDomains.length === 1) {
-      // The word can simply be updated as it stand
+      // The word can simply be updated as it stands
       const newSense: Sense = {
         ...oldSense,
         glosses: [{ ...oldGloss, def: newGloss }],
@@ -401,8 +405,19 @@ export class DataEntryTable extends React.Component<
     } else {
       // This is a modification that has to be retracted and replaced with a new entry
       await this.undoRecentEntry(entryIndex).then(async (wordId) => {
-        await this.updateWordWithNewGloss(wordId, newGloss, []);
+        await this.updateWordWithNewGloss(wordId, newGloss);
       });
+    }
+  }
+
+  async updateRecentEntryNote(entryIndex: number, newText: string) {
+    const oldEntry = this.state.recentlyAddedWords[entryIndex];
+    const oldWord = oldEntry.word;
+    const oldNote = oldWord.note;
+    if (newText !== oldNote.text) {
+      const newNote: Note = { ...oldNote, text: newText };
+      const newWord: Word = { ...oldWord, note: newNote };
+      this.updateWordBackAndFrontSimple(newWord);
     }
   }
 
@@ -527,6 +542,9 @@ export class DataEntryTable extends React.Component<
                   senseIndex={wordAccess.senseIndex}
                   updateGloss={(newGloss: string) =>
                     this.updateRecentEntryGloss(index, newGloss)
+                  }
+                  updateNote={(newText: string) =>
+                    this.updateRecentEntryNote(index, newText)
                   }
                   updateVern={(newVernacular: string, targetWordId?: string) =>
                     this.updateRecentEntryVern(

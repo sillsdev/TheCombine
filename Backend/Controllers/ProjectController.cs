@@ -290,7 +290,6 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-
             // sanitize user input
             if (!SanitizeId(projectId))
             {

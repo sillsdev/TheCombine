@@ -10,18 +10,17 @@ import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-interface DeleteWordDialogProps {
+interface DeleteDialogProps {
   open: boolean;
+  textId?: string;
   handleAccept: () => void;
   handleCancel: () => void;
 }
 
 /**
- * Dialog to confirm word deletion
+ * Dialog to confirm deletion
  */
-export default function DeleteWordDialog(
-  props: ButtonProps & DeleteWordDialogProps
-) {
+export default function DeleteDialog(props: ButtonProps & DeleteDialogProps) {
   return (
     <Dialog
       open={props.open}
@@ -30,11 +29,13 @@ export default function DeleteWordDialog(
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        <Translate id="siteSettings.proceedWithCaution" />
+        <Translate id="buttons.proceedWithCaution" />
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          <Translate id="reviewEntries.deleteWord" />
+          <Translate
+            id={props.textId ? props.textId : "buttons.deletePermanently"}
+          />
         </DialogContentText>
       </DialogContent>
       <DialogActions>

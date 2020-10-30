@@ -33,11 +33,7 @@ namespace BackendFramework.Controllers
         /// <returns> Audio file stream </returns>
         [AllowAnonymous]
         [HttpGet("{wordId}/download/audio/{fileName}")]
-        // Temporarily disable warning about missing await in this method.
-        // It's needed for the return type to be correct, but nothing inside the function is awaiting yet.
-#pragma warning disable 1998
         public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
-#pragma warning restore 1998
         {
             // if we require authorization and authentication for audio files, the frontend cannot just use the api
             // endpoint as the src
@@ -58,13 +54,13 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
             }
 
-            Stream stream = System.IO.File.OpenRead(filePath);
-            if (stream is null)
+            var fileContents = await System.IO.File.ReadAllBytesAsync(filePath);
+            if (fileContents is null)
             {
                 return new BadRequestObjectResult("The file does not exist");
             }
 
-            return File(stream, "video/webm");
+            return File(fileContents, "video/webm");
         }
 
         /// <summary>

@@ -26,6 +26,12 @@
       "Le mot a déjà ce sens dans ce domaine"
     ],
     "deleteRow": ["Delete this row", "Borrar esta fila", "Effacer cette ligne"],
+    "deleteRowWarning": [
+      "This row will be permanently deleted!",
+      "¡Esta fila se eliminará permanentemente!",
+      "Cette ligne sera supprimée définitivement !"
+    ],
+    "addNote": ["Add a note", "Add a note", "Add a note"],
     "domain": ["Domain", "Dominio", "Domaine"],
     "gloss": ["Gloss", "Glosa", "Glose"],
     "glosses": ["Glosses", "Glosas", "Gloses"],
@@ -229,11 +235,6 @@
     ]
   },
   "siteSettings": {
-    "proceedWithCaution": [
-      "Proceed with Caution!",
-      "¡Proceder con precaución!",
-      "Procéder avec prudence !"
-    ],
     "archiveProjectText": [
       "This project will not be accessible to any users.",
       "Este proyecto no será accesible para ningún usuario.",
@@ -445,7 +446,7 @@
       "Aucun domaine sélectionné"
     ],
     "noNote": ["No note", "Sin nota", "Pas de note"],
-    "deleteWord": [
+    "deleteWordWarning": [
       "This word will be permanently deleted!",
       "¡Esta palabra se eliminará permanentemente!",
       "Ce mot sera définitivement supprimé !"
@@ -634,6 +635,11 @@
     "done": ["Done", "Hecho", "Achevé"],
     "export": ["Export", "Exportar", "Exporter"],
     "invite": ["Invite", "Invitar", "Inviter"],
+    "proceedWithCaution": [
+      "Proceed with Caution!",
+      "¡Proceder con precaución!",
+      "Procéder avec prudence !"
+    ],
     "reject": ["Reject", "Rechazar", "Rejeter"],
     "rejected": ["Rejected", "Rechazado", "Rejeté"],
     "restore": ["Restore", "Restaurar", "Restaurer"],
