@@ -92,11 +92,16 @@ namespace BackendFramework.Controllers
 
             // Extract the zip to new directory
             var extractDir = Path.Combine(zipDest, "ExtractedLocation");
+
+            // Store directories that already exist as if a user has uploaded audio, there will already
+            // be a Lift directory.
+            var existingDirectories = Directory.GetDirectories(extractDir);
+
             Directory.CreateDirectory(extractDir);
             ZipFile.ExtractToDirectory(fileUpload.FilePath, extractDir);
 
             // Check number of directories extracted
-            var directoriesExtracted = Directory.GetDirectories(extractDir);
+            var directoriesExtracted = Directory.GetDirectories(extractDir).Except(existingDirectories).ToArray();
             var extractedDirPath = "";
 
             switch (directoriesExtracted.Length)
