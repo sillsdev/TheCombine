@@ -108,6 +108,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
+        /// <returns> Path to compressed zip file containing export. </returns>
         public string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
         {
             // Generate the zip dir.
