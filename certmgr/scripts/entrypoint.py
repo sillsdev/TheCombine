@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Invoke the configured certificate management policy."""
+
 
 import os
 import sys
@@ -6,10 +8,10 @@ import time
 from typing import Dict, Optional
 
 from base_cert import BaseCert
-from utils import lookup_env
+from cert_server_cert import CertServerCert
 from letsencrypt_cert import LetsEncryptCert
 from self_signed_cert import SelfSignedCert
-from cert_server_cert import CertServerCert
+from utils import lookup_env
 
 if __name__ == "__main__":
 

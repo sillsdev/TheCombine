@@ -1,3 +1,6 @@
+"""Collection of utility functions for managing certificates."""
+
+
 import os
 from pathlib import Path
 from typing import Dict, Optional, Union
@@ -12,12 +15,13 @@ env_defaults: Dict[str, Union[str, int]] = {
     "SERVER_NAME": "",
     "CERT_PROXY_RENEWAL": 30,
     "CERT_PROXY_DOMAINS": "",
+    "AWS_S3_CERT_BUCKET": "thecombine.app/certs",
 }
 
 
 def lookup_env(env_var: str) -> Optional[Union[str, int]]:
     """
-    Look up environment variable
+    Look up environment variable.
 
     Look up an environment variable and return its value or its
     default value.  It the variable is not set and is not listed
@@ -25,28 +29,23 @@ def lookup_env(env_var: str) -> Optional[Union[str, int]]:
     """
     if env_var in os.environ:
         return os.environ[env_var]
-    elif env_var in env_defaults:
+    if env_var in env_defaults:
         return env_defaults[env_var]
-    else:
-        return None
+    return None
 
 
 def lookup_default(env_var: str) -> Optional[Union[str, int]]:
-    """
-    Look up our default value for an environment variable
-    """
+    """Look up our default value for an environment variable."""
     if env_var in env_defaults:
         return env_defaults[env_var]
-    else:
-        return None
+    return None
 
 
 def update_link(src: Path, dest: Path) -> None:
     """
-    Create/move a symbolic link at 'dest' to point to 'src'
+    Create/move a symbolic link at 'dest' to point to 'src'.
 
-    If dest already exists and is not a link, it is deleted
-    first.
+    If dest already exists and is not a link, it is deleted first.
     """
     print(f"linking {src} to {dest}")
     if dest.exists():

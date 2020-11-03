@@ -1,24 +1,35 @@
+"""
+Manage certificates from Let's Encrypt.
+
+LetsEncryptCert will create a certificate from letsencrypt to be used by the
+associated webserver.  LetsEncryptCert uses the http challenge method and it
+assumes that there is a web server available for the challenge.  It shares a
+volume for the certbot data as well as the letsencrypt certificates.
+"""
 import os
 from pathlib import Path
 import time
 from typing import List
 
 from base_cert import BaseCert
-from utils import lookup_default, lookup_env, update_link
 import requests
 from self_signed_cert import SelfSignedCert
+from utils import lookup_default, lookup_env, update_link
 
 
 class LetsEncryptCert(BaseCert):
-
-    cert_renew_deploy_hook = Path("/etc/letsencrypt/renewal/deploy/10_push_certs.sh")
+    """SSL Certificate class to create and renew certs from Let's Encrypt."""
 
     def __init__(self) -> None:
+        """Initialize class from environment variables."""
+        # pylint: disable=too-many-instance-attributes
+        # Nine are required in this case.
+
         self.cert_store = lookup_env("CERT_STORE")
         self.server_name = lookup_env("SERVER_NAME")
         self.email = lookup_env("CERT_EMAIL")
         self.max_connect_tries = int(lookup_env("MAX_CONNECT_TRIES"))
-        self.staging = True if lookup_env("CERT_STAGING") == "1" else False
+        self.staging = lookup_env("CERT_STAGING") == "1"
         self.cert_dir = Path(f"/etc/letsencrypt/live/{self.server_name}")
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
         self.cert = Path(f"/etc/letsencrypt/live/{self.server_name}/fullchain.pem")
@@ -26,7 +37,7 @@ class LetsEncryptCert(BaseCert):
 
     def create(self, force: bool = False) -> None:
         """
-        Method to create an SSL Certificate from Let's Encrypt
+        Create an SSL Certificate from Let's Encrypt.
 
         The method first creates a self-signed certificate and sets up a symbolic
         link from the Nginx configured location to the self-signed certificate.
@@ -73,7 +84,7 @@ class LetsEncryptCert(BaseCert):
                 update_link(self.cert_dir, self.nginx_cert_dir)
 
     def renew(self) -> None:
-        """ Renew all letsencrypt certificates that are up for renewal """
+        """Renew all letsencrypt certificates that are up for renewal."""
         os.system("certbot renew")
 
     def get_cert(self, domain_list: List[str]) -> bool:
@@ -104,18 +115,17 @@ class LetsEncryptCert(BaseCert):
             )
             print(f"Requesting Let's Encrypt Certificate:\n{cert_cmd}")
             return os.system(cert_cmd) == 0
-        else:
-            return False
+        return False
 
     def wait_for_webserver(self) -> bool:
         """
-        Wait until Nginx webserver is up
+        Wait until Nginx webserver is up.
 
         wait_for_webserver will wait until the Nginx webserver has started.  This
         is done by periodically sending an http request to our URL and waiting for
         a response of 200 (OK) or 301 (Redirected).  We do not allow redirects nor
         do we send an https request because the webserver is started up with a
-        self-signed certificate which will cause an error in these cases
+        self-signed certificate which will cause an error in these cases.
         """
         attempt_count = 0
         while attempt_count < self.max_connect_tries:
@@ -123,20 +133,20 @@ class LetsEncryptCert(BaseCert):
                 # Don't allow redirect errors since letsencrypt connects
                 # on port 80 and since we have a self-signed cert for now
                 # it will cause errors
-                r: requests.Response = requests.get(
+                resp: requests.Response = requests.get(
                     f"http://{self.server_name}", allow_redirects=False
                 )
             except requests.ConnectionError:
                 attempt_count += 1
             else:
-                if r.status_code in (200, 301):
+                if resp.status_code in (200, 301):
                     return True
-                else:
-                    attempt_count += 1
+                attempt_count += 1
             time.sleep(10)
         return False
 
     def update_renew_before_expiry(self, domain: str) -> None:
+        """Update the RENEW_BEFORE_EXPIRY configuration value for 'domain'."""
         if lookup_default("CERT_PROXY_RENEWAL") != self.renew_before_expiry:
             print(f"Setting renew before expiry for {domain} " f"to {self.renew_before_expiry}")
             renew_config: str = f"/etc/letsencrypt/renewal/{domain}.conf"
@@ -149,9 +159,16 @@ class LetsEncryptCert(BaseCert):
                 os.system(f"mv {renew_config}.tmp {renew_config}")
 
     def create_renew_hook(self) -> None:
+        """
+        Create hook for certificate renewal.
+
+        Add a hook function to push new certificates to the AWS S3 bucket when
+        the proxy certificates are renewed.
+        """
         print("STUB: Create renew hook")
 
     def get_proxy_certs(self) -> None:
+        """Move to child class, CertServerCert."""
         domain_list: List[str] = lookup_env("CERT_PROXY_DOMAINS").split()
         cert_created: bool = False
         for domain in domain_list:
@@ -165,4 +182,5 @@ class LetsEncryptCert(BaseCert):
             self.push_certs_to_aws_s3()
 
     def push_certs_to_aws_s3(self) -> None:
+        """Move to child class, CertServerCert."""
         print("STUB: Push certificates to AWS S3 bucket")
