@@ -142,6 +142,20 @@ export default class RecentEntry extends React.Component<
           </Grid>
           <Grid
             item
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            <EntryNote
+              noteText={this.props.entry.note.text}
+              updateNote={this.props.updateNote}
+            />
+          </Grid>
+          <Grid
+            item
             xs={2}
             style={{
               paddingLeft: theme.spacing(1),
@@ -159,20 +173,6 @@ export default class RecentEntry extends React.Component<
               uploadAudio={(wordId: string, audioFile: File) => {
                 this.props.addAudioToWord(wordId, audioFile);
               }}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={1}
-            style={{
-              paddingLeft: theme.spacing(1),
-              paddingRight: theme.spacing(1),
-              position: "relative",
-            }}
-          >
-            <EntryNote
-              entry={this.props.entry}
-              updateNote={this.props.updateNote}
             />
           </Grid>
           <Grid

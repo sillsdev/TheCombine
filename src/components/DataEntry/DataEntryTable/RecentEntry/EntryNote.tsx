@@ -3,11 +3,10 @@ import { AddComment, Comment } from "@material-ui/icons";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { Word } from "../../../../types/word";
 import EditTextDialog from "../../../Buttons/EditTextDialog";
 
 interface EntryNoteProps {
-  entry: Word;
+  noteText: string;
   updateNote: (newText: string) => void;
 }
 
@@ -19,8 +18,8 @@ export default function EntryNote(props: EntryNoteProps) {
 
   return (
     <React.Fragment>
-      {props.entry.note.text ? (
-        <Tooltip title={props.entry.note.text} placement="top">
+      {props.noteText ? (
+        <Tooltip title={props.noteText} placement="top">
           <IconButton size="small" onClick={() => setNoteOpen(true)}>
             <Comment />
           </IconButton>
@@ -34,7 +33,7 @@ export default function EntryNote(props: EntryNoteProps) {
       )}
       <EditTextDialog
         open={noteOpen}
-        text={props.entry.note.text}
+        text={props.noteText}
         titleId={"addWords.addNote"}
         close={() => setNoteOpen(false)}
         updateText={props.updateNote}
