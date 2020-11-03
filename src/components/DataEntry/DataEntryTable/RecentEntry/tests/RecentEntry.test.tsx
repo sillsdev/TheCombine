@@ -9,9 +9,9 @@ import EditTextDialog from "../../../../Buttons/EditTextDialog";
 import AudioPlayer from "../../../../Pronunciations/AudioPlayer";
 import AudioRecorder from "../../../../Pronunciations/AudioRecorder";
 import Recorder from "../../../../Pronunciations/Recorder";
-import { GlossWithSuggestions } from "../../GlossWithSuggestions/GlossWithSuggestions";
-import { VernWithSuggestions } from "../../VernWithSuggestions/VernWithSuggestions";
-import EntryNote from "../EntryNote";
+import EntryNote from "../../EntryCellComponents/EntryNote";
+import GlossWithSuggestions from "../../EntryCellComponents/GlossWithSuggestions";
+import VernWithSuggestions from "../../EntryCellComponents/VernWithSuggestions";
 import RecentEntry from "../RecentEntry";
 
 jest.mock("../../../../../backend");

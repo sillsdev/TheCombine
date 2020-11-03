@@ -5,10 +5,10 @@ import theme from "../../../../types/theme";
 import { Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
-import DeleteEntry from "./DeleteEntry";
-import EntryNote from "./EntryNote";
+import DeleteEntry from "../EntryCellComponents/DeleteEntry";
+import EntryNote from "../EntryCellComponents/EntryNote";
+import GlossWithSuggestions from "../EntryCellComponents/GlossWithSuggestions";
+import VernWithSuggestions from "../EntryCellComponents/VernWithSuggestions";
 
 interface RecentEntryProps {
   entry: Word;
@@ -185,7 +185,11 @@ export default class RecentEntry extends React.Component<
             }}
           >
             {this.state.hovering && (
-              <DeleteEntry removeEntry={() => this.props.removeEntry()} />
+              <DeleteEntry
+                removeEntry={() => this.props.removeEntry()}
+                tooltipId={"addWords.deleteRow"}
+                confirmId={"addWords.deleteRowWarning"}
+              />
             )}
           </Grid>
         </Grid>

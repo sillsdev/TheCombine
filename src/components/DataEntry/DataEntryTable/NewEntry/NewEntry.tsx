@@ -9,9 +9,10 @@ import theme from "../../../../types/theme";
 import { SemanticDomain, Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import EntryNote from "../RecentEntry/EntryNote";
-import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
+import DeleteEntry from "../EntryCellComponents/DeleteEntry";
+import EntryNote from "../EntryCellComponents/EntryNote";
+import GlossWithSuggestions from "../EntryCellComponents/GlossWithSuggestions";
+import VernWithSuggestions from "../EntryCellComponents/VernWithSuggestions";
 import SenseDialog from "./SenseDialog";
 import VernDialog from "./VernDialog";
 
@@ -393,7 +394,7 @@ export default class NewEntry extends React.Component<
           </Grid>
           <Grid
             item
-            xs={3}
+            xs={2}
             style={{
               paddingLeft: theme.spacing(1),
               paddingRight: theme.spacing(1),
@@ -411,6 +412,20 @@ export default class NewEntry extends React.Component<
                 this.addAudio(audioFile);
               }}
               getAudioUrl={(_, fileName: string) => fileName}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            <DeleteEntry
+              removeEntry={() => this.resetState()}
+              tooltipId={"addWords.resetNewEntry"}
             />
           </Grid>
         </Grid>

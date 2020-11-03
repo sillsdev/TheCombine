@@ -25,6 +25,11 @@
       "La palabra ya tiene este sentido en este dominio",
       "Le mot a déjà ce sens dans ce domaine"
     ],
+    "resetNewEntry": [
+      "Reset this entry",
+      "Reset this entry",
+      "Reset this entry"
+    ],
     "deleteRow": ["Delete this row", "Borrar esta fila", "Effacer cette ligne"],
     "deleteRowWarning": [
       "This row will be permanently deleted!",

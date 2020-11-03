@@ -6,7 +6,7 @@ import DeleteEntry from "../DeleteEntry";
 describe("DeleteEntry", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
-      renderer.create(<DeleteEntry removeEntry={jest.fn()} />);
+      renderer.create(<DeleteEntry removeEntry={jest.fn()} tooltipId={""} />);
     });
   });
 });
