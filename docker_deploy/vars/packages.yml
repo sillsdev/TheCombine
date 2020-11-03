@@ -6,7 +6,7 @@
 ###############################
 
 # Packages installed by playbook_docker.yml
-docker_compose_version: 1.26.2
+docker_compose_version: 1.27.4
 
 # Packages required for targets
 required_packages:
