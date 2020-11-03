@@ -34,6 +34,8 @@ combine_cert_env_vars:
     value: "{{ combine_cert_proxy_list }}"
   - key: "CERT_PROXY_RENEWAL"
     value: 60
+  - key: "AWS_S3_CERT_BUCKET"
+    value: "{{ aws_s3_cert_bucket }}"
 
 combine_frontend_env_vars:
   - key: "SERVER_NAME"
@@ -44,3 +46,7 @@ combine_frontend_env_vars:
     value: "{{ ssl_private_key }}"
   - key: "CERT_PROXY_DOMAINS"
     value: "{{ combine_cert_proxy_list }}"
+
+# AWS S3 storage configuration
+aws_s3_cert_bucket: thecombine.app/certs
+aws_s3_backup_bucket: thecombine.app/backups
