@@ -8,6 +8,8 @@
 # Packages installed by playbook_docker.yml
 docker_compose_version: 1.27.4
 
+credential_helper_version: v0.6.3
+
 # Packages required for targets
 required_packages:
   - python3
