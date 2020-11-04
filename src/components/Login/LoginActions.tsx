@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
-import { ThunkAction } from "redux-thunk";
 import { AnyAction } from "redux";
+import { ThunkAction } from "redux-thunk";
 
 import * as backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
@@ -65,16 +65,14 @@ export function asyncLogin(username: string, password: string) {
       .then(async (user: User) => {
         LocalStorage.setCurrentUser(user);
         dispatch(loginSuccess(user.username));
-        try {
-          const avatar: string = await backend.avatarSrc(user.id);
-          LocalStorage.setAvatar(avatar);
-        } catch (e) {
-          LocalStorage.setAvatar("");
+        if (user.hasAvatar) {
+          backend.avatarSrc(user.id).then((avatar) => {
+            LocalStorage.setAvatar(avatar);
+          });
         }
-
         history.push("/");
       })
-      .catch((err) => {
+      .catch(() => {
         dispatch(loginFailure(username));
       });
   };
