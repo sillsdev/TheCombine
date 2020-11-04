@@ -73,7 +73,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
         this.setState({ projUsers });
         backend
           .getAllUsers()
-          .then(async (returnedUsers) => {
+          .then((returnedUsers) => {
             this.setState((prevState) => ({
               allUsers: returnedUsers.filter(
                 (user) => !prevState.projUsers.find((u) => u.id === user.id)
