@@ -85,8 +85,9 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
                 userAvatar[u.id] = await backend.avatarSrc(u.id);
               }
             });
-            await Promise.all(promises);
-            this.setState({ userAvatar });
+            Promise.all(promises).then(() => {
+              this.setState({ userAvatar });
+            });
           })
           .catch((err) => console.error(err));
       })
