@@ -41,7 +41,7 @@ export default function ExportProjectButton(
   return (
     <React.Fragment>
       <LoadingButton
-        onClick={() => getFile()}
+        onClick={getFile}
         color="primary"
         loading={loading}
         {...props}
@@ -49,7 +49,12 @@ export default function ExportProjectButton(
         <Translate id="buttons.export" />
       </LoadingButton>
       {fileUrl && (
-        <a ref={downloadLink} href={fileUrl} style={{ display: "none" }}>
+        <a
+          ref={downloadLink}
+          href={fileUrl}
+          download
+          style={{ display: "none" }}
+        >
           (This link should not be visible)
         </a>
       )}
