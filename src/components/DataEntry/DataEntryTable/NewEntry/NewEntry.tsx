@@ -207,9 +207,18 @@ export default class NewEntry extends React.Component<
     }
   }
 
+<<<<<<< HEAD
   handleEnter(e: React.KeyboardEvent, checkGloss = true) {
+=======
+  handleEnter(e: React.KeyboardEvent, checkGloss: boolean) {
+>>>>>>> master
     if (!this.state.vernOpen && e.key === "Enter") {
+      // The user can never submit a new entry without a vernacular
       if (this.state.newEntry.vernacular) {
+<<<<<<< HEAD
+=======
+        // The user can conditionally submit a new entry without a gloss
+>>>>>>> master
         if (this.state.activeGloss || !checkGloss) {
           this.addOrUpdateWord();
           this.focusVernInput();
@@ -326,7 +335,14 @@ export default class NewEntry extends React.Component<
                 }}
                 suggestedVerns={this.state.suggestedVerns}
                 handleEnterAndTab={(e: React.KeyboardEvent) =>
+<<<<<<< HEAD
                   this.handleEnter(e)
+=======
+                  // To prevent unintentional no-gloss submissions:
+                  // If enter pressed from the vern field,
+                  // check whether gloss is empty
+                  this.handleEnter(e, true)
+>>>>>>> master
                 }
               />
               <VernDialog
@@ -371,6 +387,12 @@ export default class NewEntry extends React.Component<
                 this.updateGlossField(newValue)
               }
               handleEnterAndTab={(e: React.KeyboardEvent) =>
+<<<<<<< HEAD
+=======
+                // To allow intentional no-gloss submissions:
+                // If enter pressed from the gloss field,
+                // don't check whether gloss is empty
+>>>>>>> master
                 this.handleEnter(e, false)
               }
               analysisLang={this.props.analysisLang}
