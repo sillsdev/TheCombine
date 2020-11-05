@@ -2,7 +2,8 @@ import { ButtonProps } from "@material-ui/core/Button";
 import React, { useEffect } from "react";
 import { Translate } from "react-localize-redux";
 
-import { exportLift } from "../../../backend";
+import { exportLift, getProjectName } from "../../../backend";
+import { getNowDateTimeString } from "../../../utilities";
 import LoadingButton from "../../Buttons/LoadingButton";
 
 interface ExportProjectButtonProps {
@@ -15,16 +16,16 @@ interface ExportProjectButtonProps {
 export default function ExportProjectButton(
   props: ButtonProps & ExportProjectButtonProps
 ) {
+  const [fileName, setFileName] = React.useState<null | string>(null);
   const [fileUrl, setFileUrl] = React.useState<null | string>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   let downloadLink = React.createRef<HTMLAnchorElement>();
 
   async function getFile() {
     setLoading(true);
-    let fileString: string;
-    props.projectId
-      ? (fileString = await exportLift(props.projectId))
-      : (fileString = await exportLift());
+    const projectName = await getProjectName(props.projectId);
+    setFileName(`${projectName}_${getNowDateTimeString()}`);
+    const fileString = await exportLift(props.projectId);
     const file = await fetch(fileString).then(async (res) => res.blob());
     setFileUrl(URL.createObjectURL(file));
     setLoading(false);
@@ -52,7 +53,7 @@ export default function ExportProjectButton(
         <a
           ref={downloadLink}
           href={fileUrl}
-          download
+          download={fileName}
           style={{ display: "none" }}
         >
           (This link should not be visible)
