@@ -5,10 +5,12 @@ import theme from "../../../../types/theme";
 import { Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import DeleteEntry from "../EntryCellComponents/DeleteEntry";
-import EntryNote from "../EntryCellComponents/EntryNote";
-import GlossWithSuggestions from "../EntryCellComponents/GlossWithSuggestions";
-import VernWithSuggestions from "../EntryCellComponents/VernWithSuggestions";
+import {
+  DeleteEntry,
+  EntryNote,
+  GlossWithSuggestions,
+  VernWithSuggestions,
+} from "../EntryCellComponents";
 
 interface RecentEntryProps {
   entry: Word;
