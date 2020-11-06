@@ -55,7 +55,11 @@ export default class TreeViewHeader extends React.Component<
 
   // Dispatch the search for a specified domain, and switches to it if it exists
   searchAndSelectDomain(event: React.KeyboardEvent) {
-    event.stopPropagation();
+    // stopPropagation() prevents keystrokes from reaching ReviewEntries,
+    // but requires the search function be called onKeyDown
+    if (event.stopPropagation) {
+      event.stopPropagation();
+    }
     event.bubbles = false;
 
     if (event.key === "Enter") {
