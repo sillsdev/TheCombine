@@ -55,10 +55,11 @@ export default class TreeViewHeader extends React.Component<
 
   // Dispatch the search for a specified domain, and switches to it if it exists
   searchAndSelectDomain(event: React.KeyboardEvent) {
+    event.stopPropagation();
     event.bubbles = false;
-    event.preventDefault();
 
     if (event.key === "Enter") {
+      event.preventDefault();
       // Find parent domain
       let parent: SemanticDomainWithSubdomains | undefined = this.props
         .currentDomain;
@@ -217,7 +218,7 @@ export default class TreeViewHeader extends React.Component<
               fullWidth
               id="name"
               label="Find a domain"
-              onKeyUp={this.searchAndSelectDomain}
+              onKeyDown={this.searchAndSelectDomain}
               onChange={this.handleChange}
               margin="normal"
               autoComplete="off"
