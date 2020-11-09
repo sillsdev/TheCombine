@@ -111,6 +111,7 @@ export default class ProjectLanguages extends React.Component<
             </Grid>{" "}
             <Grid item>
               <Button
+                id="submitNewLang"
                 size="large"
                 disabled={!this.isNewWritingSystem()}
                 onClick={() => this.addAnalysisWritingSystem()}
@@ -125,7 +126,7 @@ export default class ProjectLanguages extends React.Component<
             </Grid>
           </Grid>
         ) : (
-          <Button onClick={() => this.setState({ add: true })}>
+          <Button id="addNewLang" onClick={() => this.setState({ add: true })}>
             <Add />
           </Button>
         )}
