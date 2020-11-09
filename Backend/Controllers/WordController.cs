@@ -41,7 +41,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -62,7 +62,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -82,13 +82,13 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             var word = await _wordRepo.GetWord(projectId, wordId);
-            if (word == null)
+            if (word is null)
             {
                 return new NotFoundObjectResult(wordId);
             }
@@ -108,7 +108,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -141,14 +141,14 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Ensure word exists
             var document = await _wordRepo.GetWord(projectId, wordId);
-            if (document == null)
+            if (document is null)
             {
                 return new NotFoundResult();
             }
@@ -172,7 +172,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -197,13 +197,13 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Ensure MergeWords is alright
-            if (mergeWords?.Parent == null)
+            if (mergeWords?.Parent is null)
             {
                 return new BadRequestResult();
             }

@@ -268,6 +268,10 @@ export async function getProject(id?: string): Promise<Project> {
   return resp.data;
 }
 
+export async function getProjectName(id?: string): Promise<string> {
+  return (await getProject(id)).name;
+}
+
 export async function updateProject(project: Project) {
   let resp = await backendServer.put(`projects/${project.id}`, project, {
     headers: authHeader(),

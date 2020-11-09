@@ -120,7 +120,7 @@ namespace Backend.Tests.Controllers
         {
             var project = RandomProject();
             var projectUser = new ProjectWithUser(project);
-            var id = ((_controller.Post(projectUser).Result as ObjectResult).Value as ProjectWithUser).Id as string;
+            var id = ((_controller.Post(projectUser).Result as ObjectResult).Value as ProjectWithUser).Id;
             project.Id = id;
             Assert.Contains(project, _projectService.GetAllProjects().Result);
         }
