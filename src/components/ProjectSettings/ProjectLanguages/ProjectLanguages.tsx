@@ -141,37 +141,31 @@ interface ImmutableWritingSystemProps {
   iconAction?: () => void;
 }
 
-export class ImmutableWritingSystem extends React.Component<
-  ImmutableWritingSystemProps
-> {
-  render() {
-    return (
-      <Grid container spacing={1}>
-        {this.props.index !== undefined && (
-          <Grid item>{`${this.props.index + 1}. `}</Grid>
-        )}
-        <Grid item>
-          <Translate id="projectSettings.language.name" />
-          {": "}
-          {this.props.ws.name} {", "}
-        </Grid>
-        <Grid item>
-          <Translate id="projectSettings.language.bcp47" />
-          {": "}
-          {this.props.ws.bcp47}
-          {", "}
-        </Grid>
-        <Grid item>
-          <Translate id="projectSettings.language.font" />
-          {": "}
-          {this.props.ws.font}
-        </Grid>
-        {this.props.icon ? (
-          <Grid item>
-            <Button onClick={this.props.iconAction}>{this.props.icon}</Button>
-          </Grid>
-        ) : null}
+export function ImmutableWritingSystem(props: ImmutableWritingSystemProps) {
+  return (
+    <Grid container spacing={1}>
+      {props.index !== undefined && <Grid item>{`${props.index + 1}. `}</Grid>}
+      <Grid item>
+        <Translate id="projectSettings.language.name" />
+        {": "}
+        {props.ws.name} {", "}
       </Grid>
-    );
-  }
+      <Grid item>
+        <Translate id="projectSettings.language.bcp47" />
+        {": "}
+        {props.ws.bcp47}
+        {", "}
+      </Grid>
+      <Grid item>
+        <Translate id="projectSettings.language.font" />
+        {": "}
+        {props.ws.font}
+      </Grid>
+      {props.icon ? (
+        <Grid item>
+          <Button onClick={props.iconAction}>{props.icon}</Button>
+        </Grid>
+      ) : null}
+    </Grid>
+  );
 }
