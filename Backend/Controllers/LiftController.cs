@@ -54,12 +54,16 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
-            if (project == null)
+            if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             var file = fileUpload.File;
+            if (file is null)
+            {
+                return new BadRequestObjectResult("Null file");
+            }
 
             // Ensure file is not empty
             if (file.Length == 0)
@@ -82,6 +86,11 @@ namespace BackendFramework.Controllers
 
             // Make destination for extracted files
             var zipDest = Path.GetDirectoryName(fileUpload.FilePath);
+            if (zipDest is null)
+            {
+                throw new FileSystemError($"Could not get directory name of {fileUpload.FilePath}");
+            }
+
             Directory.CreateDirectory(zipDest);
             if (Directory.Exists(Path.Combine(zipDest, "ExtractedLocation")))
             {
@@ -92,6 +101,9 @@ namespace BackendFramework.Controllers
             var extractDir = Path.Combine(zipDest, "ExtractedLocation");
             Directory.CreateDirectory(extractDir);
             ZipFile.ExtractToDirectory(fileUpload.FilePath, extractDir);
+
+            // Clean up the temporary zip file
+            System.IO.File.Delete(fileUpload.FilePath);
 
             // Check number of directories extracted
             var directoriesExtracted = Directory.GetDirectories(extractDir);
@@ -198,7 +210,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -211,9 +223,14 @@ namespace BackendFramework.Controllers
             }
             // Export the data to a zip directory
             var exportedFilepath = CreateLiftExport(projectId);
-
             var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
+
+            // Clean up temporary file after reading it.
+            System.IO.File.Delete(exportedFilepath);
+            GC.Collect();
+
             var encodedFile = Convert.ToBase64String(file);
+
             return new OkObjectResult(encodedFile);
         }
 
@@ -223,5 +240,20 @@ namespace BackendFramework.Controllers
             var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
             return exportedFilepath;
         }
+    }
+
+    [Serializable]
+    public class FileSystemError : Exception
+    {
+        public FileSystemError()
+        { }
+
+        public FileSystemError(string message)
+            : base(message)
+        { }
+
+        public FileSystemError(string message, Exception innerException)
+            : base(message, innerException)
+        { }
     }
 }

@@ -58,11 +58,14 @@ namespace Backend.Tests.Services
         [Test]
         public void ResetBadToken()
         {
-            var user = new User() { Email = "user@domain.com" };
+            const string email = "user@domain.com";
+            var user = new User() { Email = email };
             _userService.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset("user@domain.com").Result;
-            Assert.IsFalse(_passwordResetService.ResetPassword("NotARealToken", "newPassword").Result);
+            Assert.That(request.Email == email);
+            var task = _passwordResetService.ResetPassword("NotARealToken", "newPassword");
+            Assert.IsFalse(task.Result);
         }
     }
 }

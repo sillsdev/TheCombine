@@ -64,7 +64,7 @@ namespace Backend.Tests.Controllers
             var fstream = File.OpenRead(filePath);
 
             var formFile = new FormFile(fstream, 0, fstream.Length, "dave", "combine.png");
-            var fileUpload = new FileUpload { Name = "FileName", File = formFile };
+            var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, fileUpload).Result;
 

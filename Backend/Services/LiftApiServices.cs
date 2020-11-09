@@ -108,6 +108,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
+        /// <returns> Path to compressed zip file containing export. </returns>
         public string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
         {
             // Generate the zip dir.
@@ -194,13 +195,15 @@ namespace BackendFramework.Services
             // Export semantic domains to lift-ranges
             var proj = projService.GetProject(projectId).Result;
             var extractedPathToImport = Path.Combine(GetProjectDir(projectId), "Import", "ExtractedLocation");
-            var importLiftDir = "";
+            string? firstImportDir = null;
             if (Directory.Exists(extractedPathToImport))
             {
-                importLiftDir = Directory.GetDirectories(extractedPathToImport).Select(
+                // TODO: Should an error be raised if this returns null?
+                firstImportDir = Directory.GetDirectories(extractedPathToImport).Select(
                     Path.GetFileName).ToList().Single();
             }
 
+            var importLiftDir = firstImportDir ?? "";
             var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
 
             // If there are no new semantic domains, and the old lift-ranges file is still around, just copy it
@@ -222,7 +225,13 @@ namespace BackendFramework.Services
 
                 // Pull from resources file with all English semantic domains
                 var assembly = typeof(LiftService).GetTypeInfo().Assembly;
-                var resource = assembly.GetManifestResourceStream("BackendFramework.Data.sdList.txt");
+                const string semDomListFile = "BackendFramework.Data.sdList.txt";
+                var resource = assembly.GetManifestResourceStream(semDomListFile);
+                if (resource is null)
+                {
+                    throw new Exception($"Unable to load semantic domain list: {semDomListFile}");
+                }
+
                 string sdList;
                 using (var reader = new StreamReader(resource, Encoding.UTF8))
                 {
@@ -266,6 +275,9 @@ namespace BackendFramework.Services
             var destinationFileName = Path.Combine(exportDir,
                 Path.Combine($"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip"));
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
+
+            // Clean up the temporary folder structure that was compressed.
+            Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
 
             return destinationFileName;
         }
@@ -391,7 +403,7 @@ namespace BackendFramework.Services
         /// </summary>
         /// <param name="sInput"></param>
         /// <returns></returns>
-        public static string MakeSafeXmlAttribute(string sInput)
+        public static string? MakeSafeXmlAttribute(string sInput)
         {
             return SecurityElement.Escape(sInput);
         }
