@@ -1,10 +1,6 @@
 import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
-import {
-  Translate,
-  LocalizeContextProps,
-  withLocalize,
-} from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 
 import { CurrentTab } from "../../types/currentTab";
 import { Goal } from "../../types/goals";
@@ -52,11 +48,11 @@ export interface GoalTimelineState {
  * choices for the next goal, and suggestions for which goals they should choose
  * to work on.
  */
-export class GoalTimeline extends React.Component<
-  GoalTimelineProps & LocalizeContextProps,
+export default class GoalTimeline extends React.Component<
+  GoalTimelineProps,
   GoalTimelineState
 > {
-  constructor(props: GoalTimelineProps & LocalizeContextProps) {
+  constructor(props: GoalTimelineProps) {
     super(props);
     this.state = {
       portrait: window.innerWidth < window.innerHeight,
@@ -243,5 +239,3 @@ export class GoalTimeline extends React.Component<
     return this.state.portrait ? this.renderPortrait() : this.renderLandscape();
   }
 }
-
-export default withLocalize(GoalTimeline);

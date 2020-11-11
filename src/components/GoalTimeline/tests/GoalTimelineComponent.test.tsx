@@ -5,9 +5,7 @@ import configureMockStore from "redux-mock-store";
 
 import { Goal } from "../../../types/goals";
 import { defaultState } from "../DefaultState";
-import GoalTimeline, {
-  GoalTimeline as GTComponent,
-} from "../GoalTimelineComponent";
+import GoalTimeline from "../GoalTimelineComponent";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();
@@ -30,7 +28,7 @@ const mockStore = configureMockStore([])(STATE);
 
 // Handles
 let timeMaster: ReactTestRenderer;
-let timeHandle: GTComponent;
+let timeHandle: GoalTimeline;
 
 beforeAll(() => {
   createTimeMaster();
@@ -99,7 +97,7 @@ function createTimeMaster(history?: Goal[], suggestions?: Goal[]): void {
       </Provider>
     );
   });
-  timeHandle = timeMaster.root.findByType(GTComponent).instance;
+  timeHandle = timeMaster.root.findByType(GoalTimeline).instance;
 }
 
 function createTimeline(history?: Goal[], suggestions?: Goal[]): ReactElement {

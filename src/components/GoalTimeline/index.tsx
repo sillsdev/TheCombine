@@ -3,7 +3,7 @@ import { ThunkDispatch } from "redux-thunk";
 
 import { StoreState } from "../../types";
 import { Goal } from "../../types/goals";
-import { GoalTimeline } from "./GoalTimelineComponent";
+import GoalTimeline from "./GoalTimelineComponent";
 import {
   asyncAddGoalToHistory,
   asyncGetUserEdits,
