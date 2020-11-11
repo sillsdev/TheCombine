@@ -90,7 +90,9 @@ namespace BackendFramework
                     builder => builder
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowAnyOrigin());
+                //.AllowAnyOrigin());
+                .WithOrigins("http://localhost:3000")
+                .AllowCredentials());
             });
 
             // Configure JWT Authentication
@@ -210,6 +212,8 @@ namespace BackendFramework
             // Password ResetTypes
             services.AddTransient<IPasswordResetContext, PasswordResetContext>();
             services.AddTransient<IPasswordResetService, PasswordResetService>();
+
+            services.AddSignalR();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -243,7 +247,12 @@ namespace BackendFramework
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
+            //app.UseStaticFiles();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapHub<ChatHub>("/queue");
+            });
 
             // If an admin user has been created via the commandline, treat that as a single action and shut the
             // server down so the calling script knows it's been completed successfully or unsuccessfully.

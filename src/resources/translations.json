@@ -53,7 +53,8 @@
       "data cleanup",
       "limpieza de datos",
       "nettoyage des données"
-    ]
+    ],
+    "downloadReady": ["Download ready", "Download ready", "Download ready"]
   },
   "temp": {
     "buttonText": [
