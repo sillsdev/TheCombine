@@ -1,7 +1,8 @@
-import React from "react";
 import { Button } from "@material-ui/core";
-import history from "../../history";
+import React from "react";
 import { Translate } from "react-localize-redux";
+
+import history, { path } from "../../history";
 import { CurrentTab, tabColor } from "../../types/currentTab";
 
 interface NavigationButtonsProps {
@@ -15,7 +16,7 @@ export default function NavigationButtons(props: NavigationButtonsProps) {
       <Button
         id="data-entry"
         onClick={() => {
-          history.push("/data-entry");
+          history.push(path.dataEntry);
         }}
         color="inherit"
         style={{
@@ -27,7 +28,7 @@ export default function NavigationButtons(props: NavigationButtonsProps) {
       <Button
         id="goals"
         onClick={() => {
-          history.push("/goals");
+          history.push(path.goals);
         }}
         color="inherit"
         style={{

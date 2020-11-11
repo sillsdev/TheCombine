@@ -1,8 +1,9 @@
-import React from "react";
 import { Button } from "@material-ui/core";
-import history from "../../history";
-import { CurrentTab, tabColor } from "../../types/currentTab";
+import React from "react";
 import { useSelector } from "react-redux";
+
+import history, { path } from "../../history";
+import { CurrentTab, tabColor } from "../../types/currentTab";
 
 interface ProjectNameButtonProps {
   currentTab: CurrentTab;
@@ -17,7 +18,7 @@ export default function ProjectNameButton(props: ProjectNameButtonProps) {
       <Button
         id="project-name"
         onClick={() => {
-          history.push("/project-settings");
+          history.push(path.projSettings);
         }}
         color="inherit"
         style={{

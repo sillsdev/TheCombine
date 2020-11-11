@@ -9,3 +9,17 @@ import { createBrowserHistory } from "history";
  */
 let history = createBrowserHistory();
 export default history;
+
+export enum path {
+  dataEntry = "/data-entry",
+  goals = "/goals",
+  login = "/login",
+  projInvite = "/invite",
+  projScreen = "/",
+  projSettings = "/project-settings",
+  pwReset = "/forgot/reset",
+  pwRequest = "/forgot/request",
+  register = "/register",
+  siteSettings = "/site-settings",
+  userSettings = "/user-settings",
+}

@@ -16,7 +16,7 @@ import {
 } from "react-localize-redux";
 
 import { isEmailTaken, isUsernameTaken } from "../../../backend";
-import history from "../../../history";
+import history, { path } from "../../../history";
 import { buttonSuccess } from "../../../types/theme";
 import { passwordRequirements, usernameRequirements } from "../../../utilities";
 
@@ -295,7 +295,7 @@ export class Register extends React.Component<
                   <Button
                     type="button"
                     onClick={() => {
-                      history.push("/login");
+                      history.push(path.login);
                     }}
                   >
                     <Translate id="login.backToLogin" />

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import authHeader from "../components/Login/AuthHeaders";
-import history from "../history";
+import history, { path } from "../history";
 import { Goal, GoalType } from "../types/goals";
 import { Project } from "../types/project";
 import { RuntimeConfig } from "../types/runtimeConfig";
@@ -28,7 +28,7 @@ backendServer.interceptors.response.use(
   },
   (err) => {
     if (err.response && err.response.status === 401) {
-      history.push("/login");
+      history.push(path.login);
     }
     return Promise.reject(err);
   }
