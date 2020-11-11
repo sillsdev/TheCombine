@@ -10,7 +10,7 @@ import {
   UpdateGoalAction,
   updateStepData,
 } from "../../../components/GoalTimeline/GoalsActions";
-import navigationHistory from "../../../history";
+import history, { path } from "../../../history";
 import { StoreState } from "../../../types";
 import { Goal, GoalHistoryState } from "../../../types/goals";
 import { User } from "../../../types/user";
@@ -203,7 +203,7 @@ export function refreshWords() {
           dispatch(setWordData(stepData.words));
         }
       } else {
-        navigationHistory.push("/goals");
+        history.push(path.goals);
       }
     });
   };
