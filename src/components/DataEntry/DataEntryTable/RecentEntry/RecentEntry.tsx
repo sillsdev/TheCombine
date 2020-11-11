@@ -189,7 +189,6 @@ export default class RecentEntry extends React.Component<
             {this.state.hovering && (
               <DeleteEntry
                 removeEntry={() => this.props.removeEntry()}
-                tooltipId={"addWords.deleteRow"}
                 confirmId={"addWords.deleteRowWarning"}
               />
             )}

@@ -7,7 +7,9 @@ import DeleteDialog from "../../../Buttons/DeleteDialog";
 
 interface DeleteEntryProps {
   removeEntry: () => void;
-  tooltipId: string;
+  // confirmId is the translation id for the text of the delete confirmation popup;
+  // if no confirmId is specified, then there is no popup
+  // and deletion will happen when the button is pressed
   confirmId?: string;
 }
 
@@ -27,7 +29,7 @@ export default function DeleteEntry(props: DeleteEntryProps) {
 
   return (
     <React.Fragment>
-      <Tooltip title={<Translate id={props.tooltipId} />} placement="top">
+      <Tooltip title={<Translate id="addWords.deleteRow" />} placement="top">
         <IconButton tabIndex={-1} size="small" onClick={handleClick}>
           <Delete />
         </IconButton>

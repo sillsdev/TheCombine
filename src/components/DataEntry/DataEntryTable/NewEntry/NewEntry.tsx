@@ -433,10 +433,7 @@ export default class NewEntry extends React.Component<
               position: "relative",
             }}
           >
-            <DeleteEntry
-              removeEntry={() => this.resetState()}
-              tooltipId={"addWords.resetNewEntry"}
-            />
+            <DeleteEntry removeEntry={() => this.resetState()} />
           </Grid>
         </Grid>
       </Grid>
