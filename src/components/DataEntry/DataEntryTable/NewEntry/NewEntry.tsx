@@ -396,6 +396,7 @@ export default class NewEntry extends React.Component<
             }}
           >
             {!this.state.selectedWord && (
+              // note is not available if user selected to modify an exiting entry
               <EntryNote
                 noteText={this.state.newEntry.note.text}
                 updateNote={(text: string) => this.updateNote(text)}
