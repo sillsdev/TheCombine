@@ -29,7 +29,7 @@ import { Project } from "../../types/project";
 import { UserRole } from "../../types/userRole";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
-import ExportProjectButton from "./ProjectExport/ExportProjectButton";
+import ExportProjectButton from "./ProjectExport";
 import ProjectImport from "./ProjectImport";
 import ProjectLanguages from "./ProjectLanguages/ProjectLanguages";
 import ProjectName from "./ProjectName";

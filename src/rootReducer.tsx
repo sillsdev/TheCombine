@@ -7,6 +7,7 @@ import { loginReducer } from "./components/Login/LoginReducer";
 import { passwordResetReducer } from "./components/PasswordReset/reducer";
 import { projectReducer } from "./components/Project/ProjectReducer";
 import { createProjectReducer } from "./components/ProjectScreen/CreateProject/CreateProjectReducer";
+import { exportProjectReducer } from "./components/ProjectSettings/ProjectExport/ExportProjectReducer";
 import { tempReducer } from "./components/Temp/TempReducer";
 import { treeViewReducer } from "./components/TreeView/TreeViewReducer";
 import { characterInventoryReducer } from "./goals/CharInventoryCreation/CharacterInventoryReducer";
@@ -25,6 +26,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //project
   createProjectState: createProjectReducer,
   currentProject: projectReducer,
+  exportProjectState: exportProjectReducer,
 
   //data entry
   treeViewState: treeViewReducer,

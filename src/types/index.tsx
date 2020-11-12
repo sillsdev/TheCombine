@@ -3,6 +3,7 @@ import { LocalizeState } from "react-localize-redux";
 import { LoginState } from "../components/Login/LoginReducer";
 import { PasswordResetState } from "../components/PasswordReset/reducer";
 import { CreateProjectState } from "../components/ProjectScreen/CreateProject/CreateProjectReducer";
+import { ExportProjectState } from "../components/ProjectSettings/ProjectExport/ExportProjectReducer";
 import { TempState } from "../components/Temp/TempReducer";
 import { TreeViewState } from "../components/TreeView/TreeViewReducer";
 import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";
@@ -23,6 +24,7 @@ export interface StoreState {
   //project
   createProjectState: CreateProjectState;
   currentProject: Project;
+  exportProjectState: ExportProjectState;
 
   //data entry
   treeViewState: TreeViewState;
@@ -41,5 +43,5 @@ export interface StoreState {
   reviewEntriesState: ReviewEntriesState;
 
   //temporary
-  tempState: TempState;
+  tempState?: TempState;
 }
