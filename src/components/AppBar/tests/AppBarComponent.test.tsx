@@ -1,34 +1,35 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../App/DefaultState";
 import { Provider } from "react-redux";
+import renderer from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+
+import { path } from "../../../history";
+import { defaultState } from "../../App/DefaultState";
 import AppBarComponent from "../AppBarComponent";
 import NavigationButtons from "../NavigationButtons";
-import { CurrentTab } from "../../../types/currentTab";
-import renderer from "react-test-renderer";
 import ProjectNameButton from "../ProjectNameButton";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 
-describe("Tests AppBarComponent", () => {
+describe("AppBarComponent", () => {
   it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <Provider store={mockStore}>
-        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
+        <AppBarComponent currentTab={path.goals} />
       </Provider>,
       div
     );
     ReactDOM.unmountComponentAtNode(div);
   });
 
-  it("Ensures only one tab is shaded", () => {
+  it("has only one tab shaded", () => {
     const NavigationButtonRender = renderer
       .create(
         <Provider store={mockStore}>
-          <NavigationButtons currentTab={CurrentTab.DataCleanup} />
+          <NavigationButtons currentTab={path.goals} />
         </Provider>
       )
       .toJSON();
@@ -37,18 +38,18 @@ describe("Tests AppBarComponent", () => {
     const ProjectButtonRender = renderer
       .create(
         <Provider store={mockStore}>
-          <ProjectNameButton currentTab={CurrentTab.DataCleanup} />
+          <ProjectNameButton currentTab={path.goals} />
         </Provider>
       )
       .toJSON();
     expect(ProjectButtonRender).toMatchSnapshot();
   });
 
-  it("Ensures ProjectName Tab is shaded when itself is called", () => {
+  it("has ProjectName tab shaded when itself is called", () => {
     const ProjectButtonRender = renderer
       .create(
         <Provider store={mockStore}>
-          <ProjectNameButton currentTab={CurrentTab.ProjectSettings} />
+          <ProjectNameButton currentTab={path.projSettings} />
         </Provider>
       )
       .toJSON();

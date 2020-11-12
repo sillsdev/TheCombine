@@ -3,8 +3,6 @@ import React from "react";
 
 import history, { path } from "../../history";
 import tractor from "../../resources/tractor.png";
-import { CurrentTab } from "../../types/currentTab";
-import AppBarComponent from "../AppBar/AppBarComponent";
 
 /**
  * A custom 404 page that should be displayed anytime the user tries to navigate
@@ -12,8 +10,7 @@ import AppBarComponent from "../AppBar/AppBarComponent";
  */
 export default function PageNotFound() {
   return (
-    <div>
-      <AppBarComponent currentTab={CurrentTab.PageNotFound} />
+    <React.Fragment>
       <Typography variant="h4" style={{ textAlign: "center" }}>
         404: Page not found
       </Typography>
@@ -28,6 +25,6 @@ export default function PageNotFound() {
       <Typography variant="h4" style={{ textAlign: "center" }}>
         Click on the combine to go back home
       </Typography>
-    </div>
+    </React.Fragment>
   );
 }

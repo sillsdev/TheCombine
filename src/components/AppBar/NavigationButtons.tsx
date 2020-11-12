@@ -3,10 +3,10 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 
 import history, { path } from "../../history";
-import { CurrentTab, tabColor } from "../../types/currentTab";
+import { tabColor } from "../../types/theme";
 
 interface NavigationButtonsProps {
-  currentTab: CurrentTab;
+  currentTab: path;
 }
 
 /** A button that redirects to the home page */
@@ -20,7 +20,7 @@ export default function NavigationButtons(props: NavigationButtonsProps) {
         }}
         color="inherit"
         style={{
-          background: tabColor(props.currentTab, CurrentTab.DataEntry),
+          background: tabColor(props.currentTab, path.dataEntry),
         }}
       >
         <Translate id="appBar.dataEntry" />
@@ -32,7 +32,7 @@ export default function NavigationButtons(props: NavigationButtonsProps) {
         }}
         color="inherit"
         style={{
-          background: tabColor(props.currentTab, CurrentTab.DataCleanup),
+          background: tabColor(props.currentTab, path.goals),
         }}
       >
         <Translate id="appBar.dataCleanup" />

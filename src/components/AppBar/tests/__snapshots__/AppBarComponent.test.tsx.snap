@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Tests AppBarComponent Ensures ProjectName Tab is shaded when itself is called 1`] = `
+exports[`AppBarComponent has ProjectName tab shaded when itself is called 1`] = `
 <button
   className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
   disabled={false}
@@ -33,7 +33,7 @@ exports[`Tests AppBarComponent Ensures ProjectName Tab is shaded when itself is 
 </button>
 `;
 
-exports[`Tests AppBarComponent Ensures only one tab is shaded 1`] = `
+exports[`AppBarComponent has only one tab shaded 1`] = `
 Array [
   <button
     className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
@@ -98,7 +98,7 @@ Array [
 ]
 `;
 
-exports[`Tests AppBarComponent Ensures only one tab is shaded 2`] = `
+exports[`AppBarComponent has only one tab shaded 2`] = `
 <button
   className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
   disabled={false}

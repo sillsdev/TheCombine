@@ -3,10 +3,10 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import history, { path } from "../../history";
-import { CurrentTab, tabColor } from "../../types/currentTab";
+import { tabColor } from "../../types/theme";
 
 interface ProjectNameButtonProps {
-  currentTab: CurrentTab;
+  currentTab: path;
 }
 
 /** A button that redirects to the project settings */
@@ -22,7 +22,7 @@ export default function ProjectNameButton(props: ProjectNameButtonProps) {
         }}
         color="inherit"
         style={{
-          background: tabColor(props.currentTab, CurrentTab.ProjectSettings),
+          background: tabColor(props.currentTab, path.projSettings),
         }}
       >
         {projectName}
