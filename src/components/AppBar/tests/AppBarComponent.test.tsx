@@ -28,32 +28,29 @@ describe("AppBarComponent", () => {
 
 describe("NavigationButtons", () => {
   it("has only one tab shaded", () => {
-    testRenderer = renderer
-      .create(
-        <Provider store={mockStore}>
-          <NavigationButtons currentTab={path.goals} />
-        </Provider>
-      );
+    testRenderer = renderer.create(
+      <Provider store={mockStore}>
+        <NavigationButtons currentTab={path.goals} />
+      </Provider>
+    );
     expect(testRenderer.toJSON()).toMatchSnapshot();
 
-    testRenderer = renderer
-      .create(
-        <Provider store={mockStore}>
-          <ProjectNameButton currentTab={path.goals} />
-        </Provider>
-      );
+    testRenderer = renderer.create(
+      <Provider store={mockStore}>
+        <ProjectNameButton currentTab={path.goals} />
+      </Provider>
+    );
     expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 });
 
 describe("ProjectNameButton", () => {
   it("has tab shaded when itself is called", () => {
-    testRenderer = renderer
-      .create(
-        <Provider store={mockStore}>
-          <ProjectNameButton currentTab={path.projSettings} />
-        </Provider>
-      );
+    testRenderer = renderer.create(
+      <Provider store={mockStore}>
+        <ProjectNameButton currentTab={path.projSettings} />
+      </Provider>
+    );
     expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 });
