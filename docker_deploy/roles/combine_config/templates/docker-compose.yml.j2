@@ -59,6 +59,20 @@ services:
       - 27017
     restart: unless-stopped
 
+  backup_agent:
+{% if combine_pull_images %}
+    image: {{ combine_image_backup_agent }}
+{% else %}
+    build: ./backup_agent
+{% endif %}
+    env_file:
+      - ./.env.backup_agent
+    volumes:
+      - backend_data:/home/app/.CombineFiles
+    depends_on:
+      - database
+      - backend
+
 volumes:
   backend_data:
   database_data:

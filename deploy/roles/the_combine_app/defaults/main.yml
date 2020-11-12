@@ -25,3 +25,6 @@ combine_program_id: CombineBackend
 combine_backend_env_vars:
   ASPNETCORE_ENVIRONMENT: Production
   DOTNET_PRINT_TELEMETRY_MESSAGE: false
+
+combine_backup_agent_env_vars:
+  MONGO_URI:  mongo://database:27017
