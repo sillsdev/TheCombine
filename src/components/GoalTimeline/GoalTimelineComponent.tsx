@@ -1,16 +1,12 @@
+import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
+import { Translate } from "react-localize-redux";
 
-import AppBarComponent from "../../AppBar/AppBarComponent";
-import { Goal } from "../../../types/goals";
-import { GridList, GridListTile, Button, Typography } from "@material-ui/core";
-import HorizontalDisplay from "./HorizontalDisplay";
-import VerticalDisplay from "./VerticalDisplay";
-import {
-  Translate,
-  LocalizeContextProps,
-  withLocalize,
-} from "react-localize-redux";
-import { CurrentTab } from "../../../types/currentTab";
+import { CurrentTab } from "../../types/currentTab";
+import { Goal } from "../../types/goals";
+import AppBarComponent from "../AppBar/AppBarComponent";
+import HorizontalDisplay from "./GoalDisplay/HorizontalDisplay";
+import VerticalDisplay from "./GoalDisplay/VerticalDisplay";
 
 const timelineStyle = {
   centerDisplays: {
@@ -33,7 +29,7 @@ const timelineStyle = {
   },
 };
 
-export interface GoalTimelineVerticalProps {
+export interface GoalTimelineProps {
   chooseGoal: (goal: Goal) => void;
   loadHistory: () => void;
 
@@ -42,7 +38,7 @@ export interface GoalTimelineVerticalProps {
   suggestions: Goal[];
 }
 
-export interface GoalTimelineVerticalState {
+export interface GoalTimelineState {
   portrait: boolean;
   reducedLandScape: boolean;
 }
@@ -52,11 +48,11 @@ export interface GoalTimelineVerticalState {
  * choices for the next goal, and suggestions for which goals they should choose
  * to work on.
  */
-export class GoalTimelineVertical extends React.Component<
-  GoalTimelineVerticalProps & LocalizeContextProps,
-  GoalTimelineVerticalState
+export default class GoalTimeline extends React.Component<
+  GoalTimelineProps,
+  GoalTimelineState
 > {
-  constructor(props: GoalTimelineVerticalProps & LocalizeContextProps) {
+  constructor(props: GoalTimelineProps) {
     super(props);
     this.state = {
       portrait: window.innerWidth < window.innerHeight,
@@ -243,5 +239,3 @@ export class GoalTimelineVertical extends React.Component<
     return this.state.portrait ? this.renderPortrait() : this.renderLandscape();
   }
 }
-
-export default withLocalize(GoalTimelineVertical);

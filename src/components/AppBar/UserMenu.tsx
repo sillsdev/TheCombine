@@ -5,7 +5,7 @@ import { Translate } from "react-localize-redux";
 
 import { getUser } from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
-import history from "../../history";
+import history, { path } from "../../history";
 import theme from "../../types/theme";
 import { User } from "../../types/user";
 
@@ -91,7 +91,7 @@ export function UserMenuList(props: UserMenuListProps) {
         <MenuItem
           onClick={() => {
             LocalStorage.setProjectId("");
-            history.push("/site-settings");
+            history.push(path.siteSettings);
           }}
         >
           <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
@@ -101,7 +101,7 @@ export function UserMenuList(props: UserMenuListProps) {
 
       <MenuItem
         onClick={() => {
-          history.push("/user-settings");
+          history.push(path.userSettings);
         }}
       >
         <Person style={{ marginRight: theme.spacing(1) }} />
@@ -110,7 +110,7 @@ export function UserMenuList(props: UserMenuListProps) {
 
       <MenuItem
         onClick={() => {
-          history.push("/login");
+          history.push(path.login);
         }}
       >
         <ExitToApp style={{ marginRight: theme.spacing(1) }} />
