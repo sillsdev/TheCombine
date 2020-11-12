@@ -13,6 +13,7 @@
     "fmt-backend-check": "dotnet-format --check",
     "fmt-frontend": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
     "fmt-frontend-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\"",
+    "fmt-project": "prettier --write \"./{.vscode,public,scripts}/**/*.{js,jsx,ts,tsx,json}\"",
     "frontend": "react-scripts start",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "import-sem-doms": "tsc scripts/importSemanticDomains.ts && node scripts/importSemanticDomains.js",
