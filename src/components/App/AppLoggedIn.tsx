@@ -16,7 +16,6 @@ export default function AppWithBar() {
   const [currentLoc, setCurrentLoc] = React.useState<path>(path.projScreen);
 
   React.useEffect(() => {
-    console.log(location);
     setCurrentLoc(getBasePath(location.pathname));
   }, [location]);
 
