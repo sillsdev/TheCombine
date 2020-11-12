@@ -1,6 +1,6 @@
 //external modules
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 
 //TC modules
 import { path } from "../../history";
@@ -21,6 +21,9 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Switch>
+          <Route exact path={path.root}>
+            <Redirect to={path.projScreen} />
+          </Route>
           <PrivateRoute path={path.projScreen} component={AppWithBar} />
           <Route path={path.login} component={Login} />
           <Route path={path.register} component={Register} />
