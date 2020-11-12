@@ -11,11 +11,8 @@ describe("Tests VernWithSuggestions", () => {
           vernacular={""}
           vernInput={React.createRef<HTMLDivElement>()}
           updateVernField={jest.fn()}
-          setActiveGloss={jest.fn()}
-          updateWordId={jest.fn()}
-          allVerns={[]}
           handleEnterAndTab={jest.fn()}
-          analysisLang={"en"}
+          onBlur={jest.fn()}
         />
       );
     });
