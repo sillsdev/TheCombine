@@ -12,7 +12,7 @@ import SiteSettings from "../SiteSettings/SiteSettingsComponent";
 import UserSettings from "../UserSettings/UserSettings";
 
 export default function AppWithBar() {
-  let location = useLocation();
+  const location = useLocation();
   const [currentLoc, setCurrentLoc] = React.useState<path>(path.projScreen);
 
   React.useEffect(() => {
