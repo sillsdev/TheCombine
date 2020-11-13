@@ -229,9 +229,7 @@ namespace BackendFramework.Controllers
             System.IO.File.Delete(exportedFilepath);
             GC.Collect();
 
-            var encodedFile = Convert.ToBase64String(file);
-
-            return new OkObjectResult(encodedFile);
+            return File(file, "application/zip");
         }
 
         // This method is extracted so that it can be unit tested
