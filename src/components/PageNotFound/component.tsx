@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
 
-import history, { path } from "../../history";
+import history, { Path } from "../../history";
 import tractor from "../../resources/tractor.png";
 
 /**
@@ -19,7 +19,7 @@ export default function PageNotFound() {
         alt="Tractor"
         style={{ width: "50%", margin: "0% 25%" }}
         onClick={() => {
-          history.push(path.goals);
+          history.push(Path.goals);
         }}
       />
       <Typography variant="h4" style={{ textAlign: "center" }}>

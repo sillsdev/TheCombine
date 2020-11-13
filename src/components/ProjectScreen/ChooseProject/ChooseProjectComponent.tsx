@@ -14,7 +14,7 @@ import {
 
 import { getAllActiveProjectsByUser } from "../../../backend";
 import { getUserId } from "../../../backend/localStorage";
-import history, { path } from "../../../history";
+import history, { Path } from "../../../history";
 import { Project } from "../../../types/project";
 
 export interface ChooseProjectProps {
@@ -42,7 +42,7 @@ class ChooseProject extends React.Component<
 
   selectProject(project: Project) {
     this.props.setCurrentProject(project);
-    history.push(path.goals);
+    history.push(Path.goals);
   }
 
   render() {

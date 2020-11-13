@@ -2,7 +2,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 
 import BaseGoalScreen from "../../goals/DefaultGoal/BaseGoalScreen";
-import { path } from "../../history";
+import { Path } from "../../history";
 import GoalTimeline from "../GoalTimeline";
 import PageNotFound from "../PageNotFound/component";
 import PrivateRoute from "../PrivateRoute";
@@ -15,8 +15,8 @@ export default function GoalRoute() {
   return (
     <div>
       <Switch>
-        <PrivateRoute exact path={path.goals} component={GoalTimeline} />
-        <PrivateRoute path={`${path.goals}/:id`} component={BaseGoalScreen} />
+        <PrivateRoute exact path={Path.goals} component={GoalTimeline} />
+        <PrivateRoute path={`${Path.goals}/:id`} component={BaseGoalScreen} />
         <Route component={PageNotFound} />
       </Switch>
     </div>

@@ -3,7 +3,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 //TC modules
-import { path } from "../../history";
+import { Path } from "../../history";
 import Login from "../Login/LoginPage";
 import Register from "../Login/RegisterPage";
 import PageNotFound from "../PageNotFound/component";
@@ -21,16 +21,16 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Switch>
-          <Route exact path={path.root}>
-            <Redirect to={path.projScreen} />
+          <Route exact path={Path.root}>
+            <Redirect to={Path.projScreen} />
           </Route>
-          <PrivateRoute path={path.projScreen} component={AppWithBar} />
-          <Route path={path.login} component={Login} />
-          <Route path={path.register} component={Register} />
-          <Route path={`${path.pwReset}/:token`} component={PasswordReset} />
-          <Route path={path.pwRequest} component={ResetRequest} />
+          <PrivateRoute path={Path.projScreen} component={AppWithBar} />
+          <Route path={Path.login} component={Login} />
+          <Route path={Path.register} component={Register} />
+          <Route path={`${Path.pwReset}/:token`} component={PasswordReset} />
+          <Route path={Path.pwRequest} component={ResetRequest} />
           <Route
-            path={`${path.projInvite}/:project/:token`}
+            path={`${Path.projInvite}/:project/:token`}
             component={ProjectInvite}
           />
           <Route component={PageNotFound} />

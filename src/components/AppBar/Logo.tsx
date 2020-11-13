@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import React from "react";
 
-import history, { path } from "../../history";
+import history, { Path } from "../../history";
 import logo from "../../resources/CombineLogoV1.png";
 import smallLogo from "../../resources/CombineSmallLogoV1.png";
 
@@ -10,7 +10,7 @@ export default function Logo() {
   return (
     <Button
       onClick={() => {
-        history.push(path.projScreen);
+        history.push(Path.projScreen);
       }}
     >
       <img

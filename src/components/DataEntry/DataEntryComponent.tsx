@@ -3,7 +3,7 @@ import React from "react";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 
 import { getFrontierWords } from "../../backend";
-import { path } from "../../history";
+import { Path } from "../../history";
 import DomainTree from "../../types/SemanticDomain";
 import theme from "../../types/theme";
 import {
@@ -200,7 +200,7 @@ export class DataEntryComponent extends React.Component<
         />
 
         <Dialog fullScreen open={this.state.displaySemanticDomain}>
-          <AppBarComponent currentTab={path.dataEntry} />
+          <AppBarComponent currentTab={Path.dataEntry} />
           <TreeViewComponent
             returnControlToCaller={() =>
               this.getWordsFromBackend().then(() => {

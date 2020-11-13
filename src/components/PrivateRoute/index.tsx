@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
 import { getCurrentUser } from "../../backend/localStorage";
-import { path } from "../../history";
+import { Path } from "../../history";
 
 /**
  * Redirects to /login if there is no `user` in localStorage
@@ -16,7 +16,7 @@ export default function PrivateRoute({ component: Component, ...rest }: any) {
           <Component {...props} />
         ) : (
           <Redirect
-            to={{ pathname: path.login, state: { from: props.location } }}
+            to={{ pathname: Path.login, state: { from: props.location } }}
           />
         )
       }

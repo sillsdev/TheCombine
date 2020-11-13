@@ -1,14 +1,14 @@
-import { getBasePath, path } from "../history";
+import { getBasePath, Path } from "../history";
 
 describe("history", () => {
   describe("getBasePath", () => {
-    it("returns path.goal for a specific numbered goal", () => {
-      expect(getBasePath(`${path.goals}/3`)).toEqual(path.goals);
+    it("returns Path.goal for a specific numbered goal", () => {
+      expect(getBasePath(`${Path.goals}/3`)).toEqual(Path.goals);
     });
 
-    it("returns path.root as the default", () => {
-      expect(getBasePath("")).toEqual(path.root);
-      expect(getBasePath("d3finitely/n0t/a/real/path/")).toEqual(path.root);
+    it("returns Path.root as the default", () => {
+      expect(getBasePath("")).toEqual(Path.root);
+      expect(getBasePath("d3finitely/n0t/a/real/path/")).toEqual(Path.root);
     });
   });
 });

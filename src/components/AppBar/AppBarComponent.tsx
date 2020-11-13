@@ -2,7 +2,7 @@ import { AppBar, Grid, Toolbar } from "@material-ui/core";
 import React from "react";
 
 import { getProjectId } from "../../backend/localStorage";
-import { path } from "../../history";
+import { Path } from "../../history";
 import theme from "../../types/theme";
 import Logo from "./Logo";
 import NavigationButtons from "./NavigationButtons";
@@ -10,7 +10,7 @@ import ProjectNameButton from "./ProjectNameButton";
 import UserMenu from "./UserMenu";
 
 export interface AppBarComponentProps {
-  currentTab: path;
+  currentTab: Path;
 }
 
 /** An app bar shown at the top of all logged in pages */

@@ -4,7 +4,7 @@ import { ThunkAction } from "redux-thunk";
 
 import * as backend from "../../backend";
 import * as LocalStorage from "../../backend/localStorage";
-import history, { path } from "../../history";
+import history, { Path } from "../../history";
 import { StoreAction, reset } from "../../rootActions";
 import { User } from "../../types/user";
 
@@ -70,7 +70,7 @@ export function asyncLogin(username: string, password: string) {
             LocalStorage.setAvatar(avatar);
           });
         }
-        history.push(path.projScreen);
+        history.push(Path.projScreen);
       })
       .catch(() => {
         dispatch(loginFailure(username));
@@ -136,7 +136,7 @@ export function asyncRegister(
         dispatch(registerSuccess(username));
         setTimeout(() => {
           dispatch(registerReset());
-          history.push(path.login);
+          history.push(Path.login);
         }, 1000);
       })
       .catch((err) => {
