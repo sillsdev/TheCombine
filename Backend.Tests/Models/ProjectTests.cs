@@ -79,8 +79,8 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            var system = new WritingSystem{Name = Name, Bcp47 = "en", Font = "calibri" };
-            var project = new Project {Name = Name, VernacularWritingSystem = system};
+            var system = new WritingSystem { Name = Name, Bcp47 = "en", Font = "calibri" };
+            var project = new Project { Name = Name, VernacularWritingSystem = system };
             var project2 = project.Clone();
             Assert.AreEqual(project, project2);
         }
@@ -124,7 +124,7 @@ namespace Backend.Tests.Models
         public void TestClone()
         {
             const string font = "calibri";
-            var system = new WritingSystem{Name = Name, Bcp47 = Bcp47, Font = font };
+            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47, Font = font };
             var clonedSystem = system.Clone();
             Assert.AreEqual(system.Name, clonedSystem.Name);
             Assert.AreEqual(system.Bcp47, clonedSystem.Bcp47);

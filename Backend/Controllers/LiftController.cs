@@ -57,13 +57,6 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
 
-            // Ensure project exists
-            var project = _projectService.GetProject(projectId).Result;
-            if (project is null)
-            {
-                return new NotFoundObjectResult(projectId);
-            }
-
             var file = fileUpload.File;
             if (file is null)
             {
@@ -173,6 +166,7 @@ namespace BackendFramework.Controllers
 
                 // Store that we have imported Lift data already for this project to signal the frontend
                 // not to attempt to import again.
+                var project = _projectService.GetProject(projectId).Result;
                 project.LiftImported = true;
                 await _projectService.Update(projectId, project);
 
