@@ -149,6 +149,24 @@ namespace BackendFramework.Helper
             return extractionDir;
         }
 
+        /// <summary>
+        /// Recursively copies one directory into another.
+        /// </summary>
+        public static void CopyDirectory(string sourceDir, string targetDir)
+        {
+            Directory.CreateDirectory(targetDir);
+
+            foreach (var file in Directory.GetFiles(sourceDir))
+            {
+                File.Copy(file, Path.Combine(targetDir, Path.GetFileName(file)));
+            }
+
+            foreach (var directory in Directory.GetDirectories(sourceDir))
+            {
+                CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
+            }
+        }
+
         public class DesktopNotFoundException : Exception
         {
         }

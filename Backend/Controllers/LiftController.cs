@@ -76,12 +76,8 @@ namespace BackendFramework.Controllers
                 await file.CopyToAsync(fs);
             }
 
-            // Make destination for extracted files
-            var extractDir = GenerateFilePath(
-                FileType.Dir,
-                true,
-                "",
-                Path.Combine(projectId, "Import", "ExtractedLocation"));
+            // Make temporary destination for extracted files
+            var extractDir = GetRandomTempDir();
 
             // Extract the zip to new created directory.
             ExtractZipFile(fileUpload.FilePath, extractDir, true);
@@ -129,22 +125,23 @@ namespace BackendFramework.Controllers
                     }
             }
 
-            // Get the directory and rename to be easier to reference elsewhere if needed
-            var correctPath = Path.Combine(extractDir, "Lift");
-            if (!extractedDirPath.Equals(correctPath))
-            {
-                Directory.Move(extractedDirPath, correctPath);
-                extractedDirPath = Path.Combine(extractDir, "Lift");
-            }
+            // Copy the extracted contents into the persistent storage location for the project.
+            var liftStoragePath = GenerateFilePath(
+                FileType.Dir,
+                true,
+                "",
+                Path.Combine(projectId, "Import", "ExtractedLocation", "Lift"));
+            CopyDirectory(extractedDirPath, liftStoragePath);
+            Directory.Delete(extractDir, true);
 
             // Search for the lift file within the extracted files
-            var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
+            var extractedLiftNameArr = Directory.GetFiles(liftStoragePath);
             var extractedLiftPath = Array.FindAll(extractedLiftNameArr, x => x.EndsWith(".lift"));
             if (extractedLiftPath.Length > 1)
             {
                 return new BadRequestObjectResult("More than one .lift file detected");
             }
-            else if (extractedLiftPath.Length == 0)
+            if (extractedLiftPath.Length == 0)
             {
                 return new BadRequestObjectResult("No lift files detected");
             }
@@ -161,7 +158,7 @@ namespace BackendFramework.Controllers
                 // Add character set to project from ldml file
                 var proj = _projectService.GetProject(projectId).Result;
                 _liftService.LdmlImport(
-                    Path.Combine(extractedDirPath, "WritingSystems"),
+                    Path.Combine(liftStoragePath, "WritingSystems"),
                     proj.VernacularWritingSystem.Bcp47, _projectService, proj);
 
                 // Store that we have imported Lift data already for this project to signal the frontend
