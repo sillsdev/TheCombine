@@ -51,6 +51,12 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
+            // Ensure Lift file has not already been imported.
+            if (!_projectService.CanImportLift(projectId))
+            {
+                return new BadRequestObjectResult("A Lift file has already been uploaded");
+            }
+
             // Ensure project exists
             var project = _projectService.GetProject(projectId).Result;
             if (project is null)
@@ -78,17 +84,11 @@ namespace BackendFramework.Controllers
             }
 
             // Make destination for extracted files
-            var importDir = GenerateFilePath(
+            var extractDir = GenerateFilePath(
                 FileType.Dir,
                 true,
                 "",
-                Path.Combine(projectId, "Import"));
-            var extractDir = Path.Combine(importDir, "ExtractedLocation");
-            if (Directory.Exists(extractDir))
-            {
-                return new BadRequestObjectResult("A file has already been uploaded");
-            }
-            Directory.CreateDirectory(extractDir);
+                Path.Combine(projectId, "Import", "ExtractedLocation"));
 
             // Extract the zip to new created directory.
             ExtractZipFile(fileUpload.FilePath, extractDir, true);
