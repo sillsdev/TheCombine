@@ -21,16 +21,16 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Switch>
-          <Route exact path={Path.root}>
-            <Redirect to={Path.projScreen} />
+          <Route exact path={Path.Root}>
+            <Redirect to={Path.ProjScreen} />
           </Route>
-          <PrivateRoute path={Path.projScreen} component={AppWithBar} />
-          <Route path={Path.login} component={Login} />
-          <Route path={Path.register} component={Register} />
-          <Route path={`${Path.pwReset}/:token`} component={PasswordReset} />
-          <Route path={Path.pwRequest} component={ResetRequest} />
+          <PrivateRoute path={Path.ProjScreen} component={AppWithBar} />
+          <Route path={Path.Login} component={Login} />
+          <Route path={Path.Register} component={Register} />
+          <Route path={`${Path.PwReset}/:token`} component={PasswordReset} />
+          <Route path={Path.PwRequest} component={ResetRequest} />
           <Route
-            path={`${Path.projInvite}/:project/:token`}
+            path={`${Path.ProjInvite}/:project/:token`}
             component={ProjectInvite}
           />
           <Route component={PageNotFound} />

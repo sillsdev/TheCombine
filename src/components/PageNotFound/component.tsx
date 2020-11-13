@@ -19,7 +19,7 @@ export default function PageNotFound() {
         alt="Tractor"
         style={{ width: "50%", margin: "0% 25%" }}
         onClick={() => {
-          history.push(Path.goals);
+          history.push(Path.Goals);
         }}
       />
       <Typography variant="h4" style={{ textAlign: "center" }}>

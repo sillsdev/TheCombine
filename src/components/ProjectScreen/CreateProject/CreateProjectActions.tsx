@@ -72,7 +72,7 @@ export function asyncCreateProject(
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {
                   dispatch(asyncGetUserEdits());
-                  history.push(Path.projSettings);
+                  history.push(Path.ProjSettings);
                 }, 1000);
               })
               .catch((err) => {
@@ -90,7 +90,7 @@ export function asyncCreateProject(
           dispatch(success(name, vernacularLanguage, analysisLanguages));
           setTimeout(() => {
             dispatch(asyncGetUserEdits());
-            history.push(Path.projSettings);
+            history.push(Path.ProjSettings);
           }, 1000);
         }
       })

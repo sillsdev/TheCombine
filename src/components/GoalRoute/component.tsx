@@ -15,8 +15,8 @@ export default function GoalRoute() {
   return (
     <div>
       <Switch>
-        <PrivateRoute exact path={Path.goals} component={GoalTimeline} />
-        <PrivateRoute path={`${Path.goals}/:id`} component={BaseGoalScreen} />
+        <PrivateRoute exact path={Path.Goals} component={GoalTimeline} />
+        <PrivateRoute path={`${Path.Goals}/:id`} component={BaseGoalScreen} />
         <Route component={PageNotFound} />
       </Switch>
     </div>

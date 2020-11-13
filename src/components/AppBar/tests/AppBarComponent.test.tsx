@@ -19,7 +19,7 @@ describe("AppBarComponent", () => {
     renderer.act(() => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
-          <AppBarComponent currentTab={Path.projScreen} />
+          <AppBarComponent currentTab={Path.ProjScreen} />
         </Provider>
       );
     });
@@ -30,14 +30,14 @@ describe("NavigationButtons", () => {
   it("has only one tab shaded", () => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <NavigationButtons currentTab={Path.goals} />
+        <NavigationButtons currentTab={Path.Goals} />
       </Provider>
     );
     expect(testRenderer.toJSON()).toMatchSnapshot();
 
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <ProjectNameButton currentTab={Path.goals} />
+        <ProjectNameButton currentTab={Path.Goals} />
       </Provider>
     );
     expect(testRenderer.toJSON()).toMatchSnapshot();
@@ -48,7 +48,7 @@ describe("ProjectNameButton", () => {
   it("has tab shaded when itself is called", () => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <ProjectNameButton currentTab={Path.projSettings} />
+        <ProjectNameButton currentTab={Path.ProjSettings} />
       </Provider>
     );
     expect(testRenderer.toJSON()).toMatchSnapshot();

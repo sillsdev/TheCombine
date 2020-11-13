@@ -47,7 +47,7 @@ export default class PasswordReset extends React.Component<
 
   backToLogin = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
-    history.push(Path.login);
+    history.push(Path.Login);
   };
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {

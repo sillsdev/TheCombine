@@ -18,11 +18,11 @@ export default function ProjectNameButton(props: ProjectNameButtonProps) {
       <Button
         id="project-name"
         onClick={() => {
-          history.push(Path.projSettings);
+          history.push(Path.ProjSettings);
         }}
         color="inherit"
         style={{
-          background: tabColor(props.currentTab, Path.projSettings),
+          background: tabColor(props.currentTab, Path.ProjSettings),
         }}
       >
         {projectName}

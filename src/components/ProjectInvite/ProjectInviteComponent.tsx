@@ -77,7 +77,7 @@ class ProjectInvite extends React.Component<
       });
     }
     if (status[0] && status[1]) {
-      history.push(Path.login);
+      history.push(Path.Login);
     }
   }
 

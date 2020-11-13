@@ -11,18 +11,18 @@ let history = createBrowserHistory();
 export default history;
 
 export enum Path {
-  dataEntry = "/app/data-entry",
-  goals = "/app/goals",
-  login = "/login",
-  projInvite = "/app/invite",
-  projScreen = "/app",
-  projSettings = "/app/project-settings",
-  pwRequest = "/forgot/request",
-  pwReset = "/forgot/reset",
-  register = "/register",
-  root = "/",
-  siteSettings = "/app/site-settings",
-  userSettings = "/app/user-settings",
+  DataEntry = "/app/data-entry",
+  Goals = "/app/goals",
+  Login = "/login",
+  ProjInvite = "/app/invite",
+  ProjScreen = "/app",
+  ProjSettings = "/app/project-settings",
+  PwRequest = "/forgot/request",
+  PwReset = "/forgot/reset",
+  Register = "/register",
+  Root = "/",
+  SiteSettings = "/app/site-settings",
+  UserSettings = "/app/user-settings",
 }
 
 // Given a path string (e.g., /app/goals/3),
@@ -34,5 +34,5 @@ export function getBasePath(pathname: string): Path {
     }
     pathname = pathname.substring(0, pathname.lastIndexOf("/"));
   }
-  return Path.root;
+  return Path.Root;
 }

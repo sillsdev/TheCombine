@@ -91,7 +91,7 @@ export function UserMenuList(props: UserMenuListProps) {
         <MenuItem
           onClick={() => {
             LocalStorage.setProjectId("");
-            history.push(Path.siteSettings);
+            history.push(Path.SiteSettings);
           }}
         >
           <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
@@ -101,7 +101,7 @@ export function UserMenuList(props: UserMenuListProps) {
 
       <MenuItem
         onClick={() => {
-          history.push(Path.userSettings);
+          history.push(Path.UserSettings);
         }}
       >
         <Person style={{ marginRight: theme.spacing(1) }} />
@@ -110,7 +110,7 @@ export function UserMenuList(props: UserMenuListProps) {
 
       <MenuItem
         onClick={() => {
-          history.push(Path.login);
+          history.push(Path.Login);
         }}
       >
         <ExitToApp style={{ marginRight: theme.spacing(1) }} />

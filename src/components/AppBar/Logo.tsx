@@ -10,7 +10,7 @@ export default function Logo() {
   return (
     <Button
       onClick={() => {
-        history.push(Path.projScreen);
+        history.push(Path.ProjScreen);
       }}
     >
       <img

@@ -107,7 +107,7 @@ export class CharacterInventory extends React.Component<
                 color="primary"
                 onClick={() => {
                   this.props.uploadInventory();
-                  history.push(Path.goals);
+                  history.push(Path.Goals);
                 }}
                 style={{ margin: theme.spacing(1) }}
               >
@@ -145,7 +145,7 @@ export class CharacterInventory extends React.Component<
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => history.push(Path.goals)}
+              onClick={() => history.push(Path.Goals)}
               variant="contained"
               color="secondary"
               autoFocus

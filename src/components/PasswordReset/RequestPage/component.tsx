@@ -43,7 +43,7 @@ export default class ResetRequest extends React.Component<
     if (emailExists || usernameExists) {
       this.props.passwordResetRequest(this.state.emailOrUsername);
       this.setState({ done: true, loading: false });
-      setTimeout(() => history.push(Path.login), 1000);
+      setTimeout(() => history.push(Path.Login), 1000);
     } else {
       this.setState({ emailOrUsernameExists: false, loading: false });
     }

@@ -42,7 +42,7 @@ class ChooseProject extends React.Component<
 
   selectProject(project: Project) {
     this.props.setCurrentProject(project);
-    history.push(Path.goals);
+    history.push(Path.Goals);
   }
 
   render() {

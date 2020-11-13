@@ -203,7 +203,7 @@ export function refreshWords() {
           dispatch(setWordData(stepData.words));
         }
       } else {
-        history.push(Path.goals);
+        history.push(Path.Goals);
       }
     });
   };

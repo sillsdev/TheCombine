@@ -70,7 +70,7 @@ export function asyncLogin(username: string, password: string) {
             LocalStorage.setAvatar(avatar);
           });
         }
-        history.push(Path.projScreen);
+        history.push(Path.ProjScreen);
       })
       .catch(() => {
         dispatch(loginFailure(username));
@@ -136,7 +136,7 @@ export function asyncRegister(
         dispatch(registerSuccess(username));
         setTimeout(() => {
           dispatch(registerReset());
-          history.push(Path.login);
+          history.push(Path.Login);
         }, 1000);
       })
       .catch((err) => {

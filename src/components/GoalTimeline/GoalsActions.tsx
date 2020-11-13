@@ -94,7 +94,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
         await Backend.addGoalToUserEdit(userEditId, goal)
           .then((resp) => {
             dispatch(addGoalToHistory(goal));
-            history.push(`${Path.goals}/${resp}`);
+            history.push(`${Path.Goals}/${resp}`);
           })
           .catch((err: string) => {
             console.log(err);

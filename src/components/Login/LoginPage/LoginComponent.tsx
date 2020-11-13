@@ -152,7 +152,7 @@ export class Login extends React.Component<
               <Typography>
                 <Link
                   href={"#"}
-                  onClick={() => history.push(Path.pwRequest)}
+                  onClick={() => history.push(Path.PwRequest)}
                   variant="subtitle2"
                 >
                   <Translate id="login.forgotPassword" />
@@ -192,7 +192,7 @@ export class Login extends React.Component<
                 <Grid item>
                   <Button
                     onClick={() => {
-                      history.push(Path.register);
+                      history.push(Path.Register);
                     }}
                   >
                     <Translate id="login.register" />

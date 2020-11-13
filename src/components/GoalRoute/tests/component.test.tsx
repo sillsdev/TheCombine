@@ -17,7 +17,7 @@ it("renders without crashing", () => {
   const div = document.createElement("div");
   ReactDOM.render(
     <Provider store={mockStore}>
-      <MemoryRouter initialEntries={[Path.goals]} initialIndex={0}>
+      <MemoryRouter initialEntries={[Path.Goals]} initialIndex={0}>
         <GoalRoute />
       </MemoryRouter>
     </Provider>,

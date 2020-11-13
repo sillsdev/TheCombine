@@ -54,7 +54,7 @@ export function asyncReset(token: string, password: string) {
     const success = await resetPassword(token, password);
     if (success) {
       dispatch(resetSuccess());
-      history.push(Path.login);
+      history.push(Path.Login);
     } else {
       dispatch(resetFail());
     }

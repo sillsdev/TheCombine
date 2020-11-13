@@ -16,11 +16,11 @@ export default function NavigationButtons(props: NavigationButtonsProps) {
       <Button
         id="data-entry"
         onClick={() => {
-          history.push(Path.dataEntry);
+          history.push(Path.DataEntry);
         }}
         color="inherit"
         style={{
-          background: tabColor(props.currentTab, Path.dataEntry),
+          background: tabColor(props.currentTab, Path.DataEntry),
         }}
       >
         <Translate id="appBar.dataEntry" />
@@ -28,11 +28,11 @@ export default function NavigationButtons(props: NavigationButtonsProps) {
       <Button
         id="goals"
         onClick={() => {
-          history.push(Path.goals);
+          history.push(Path.Goals);
         }}
         color="inherit"
         style={{
-          background: tabColor(props.currentTab, Path.goals),
+          background: tabColor(props.currentTab, Path.Goals),
         }}
       >
         <Translate id="appBar.dataCleanup" />

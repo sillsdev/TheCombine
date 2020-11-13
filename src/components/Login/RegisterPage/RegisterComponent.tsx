@@ -295,7 +295,7 @@ export class Register extends React.Component<
                   <Button
                     type="button"
                     onClick={() => {
-                      history.push(Path.login);
+                      history.push(Path.Login);
                     }}
                   >
                     <Translate id="login.backToLogin" />

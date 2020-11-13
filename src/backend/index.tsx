@@ -28,7 +28,7 @@ backendServer.interceptors.response.use(
   },
   (err) => {
     if (err.response && err.response.status === 401) {
-      history.push(Path.login);
+      history.push(Path.Login);
     }
     return Promise.reject(err);
   }

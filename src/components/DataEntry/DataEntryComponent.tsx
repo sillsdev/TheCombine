@@ -200,7 +200,7 @@ export class DataEntryComponent extends React.Component<
         />
 
         <Dialog fullScreen open={this.state.displaySemanticDomain}>
-          <AppBarComponent currentTab={Path.dataEntry} />
+          <AppBarComponent currentTab={Path.DataEntry} />
           <TreeViewComponent
             returnControlToCaller={() =>
               this.getWordsFromBackend().then(() => {
