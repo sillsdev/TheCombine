@@ -13,7 +13,7 @@ export interface AppBarComponentProps {
   currentTab: path;
 }
 
-/** An app bar shown at the top of almost every page of The Combine */
+/** An app bar shown at the top of all logged in pages */
 export default function AppBarComponent(props: AppBarComponentProps) {
   return (
     <div className="NavigationBar" style={{ marginBottom: theme.spacing(12) }}>
