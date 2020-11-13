@@ -75,6 +75,15 @@ namespace Backend.Tests.Models
             project2.InviteTokens.Add(new EmailInvite());
             Assert.IsFalse(project.Equals(project2));
         }
+
+        [Test]
+        public void TestClone()
+        {
+            var system = new WritingSystem{Name = Name, Bcp47 = "en", Font = "calibri" };
+            var project = new Project {Name = Name, VernacularWritingSystem = system};
+            var project2 = project.Clone();
+            Assert.AreEqual(project, project2);
+        }
     }
 
     public class WritingSystemTests
@@ -109,6 +118,17 @@ namespace Backend.Tests.Models
             var system = new WritingSystem { Name = Name, Bcp47 = Bcp47 };
             var systring = system.ToString();
             Assert.IsTrue(systring.Contains(Name) && systring.Contains(Bcp47));
+        }
+
+        [Test]
+        public void TestClone()
+        {
+            const string font = "calibri";
+            var system = new WritingSystem{Name = Name, Bcp47 = Bcp47, Font = font };
+            var clonedSystem = system.Clone();
+            Assert.AreEqual(system.Name, clonedSystem.Name);
+            Assert.AreEqual(system.Bcp47, clonedSystem.Bcp47);
+            Assert.AreEqual(system.Font, clonedSystem.Font);
         }
     }
 }

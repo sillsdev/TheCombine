@@ -83,6 +83,7 @@ namespace BackendFramework.Models
                 Id = (string)Id.Clone(),
                 Name = (string)Name.Clone(),
                 IsActive = IsActive,
+                LiftImported = LiftImported,
                 AutocompleteSetting = AutocompleteSetting,
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
                 AnalysisWritingSystems = new List<WritingSystem>(),
@@ -136,6 +137,7 @@ namespace BackendFramework.Models
             return
                 other.Name.Equals(Name) &&
                 other.IsActive.Equals(IsActive) &&
+                other.LiftImported.Equals(LiftImported) &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
@@ -179,6 +181,7 @@ namespace BackendFramework.Models
             var hash = new HashCode();
             hash.Add(Id);
             hash.Add(Name);
+            hash.Add(LiftImported);
             hash.Add(IsActive);
             hash.Add(AutocompleteSetting);
             hash.Add(VernacularWritingSystem);
