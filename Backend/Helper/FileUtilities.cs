@@ -110,6 +110,21 @@ namespace BackendFramework.Helper
         }
 
         /// <summary>
+        /// Get the name / create a randomly named directory in the system's temp folder.
+        /// </summary>
+        /// <param name="create"> Whether to create the directory. </param>
+        /// <returns> Path to random temporary directory. </returns>
+        public static string GetRandomTempDir(bool create = true)
+        {
+            var tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            if (create)
+            {
+                Directory.CreateDirectory(tempDir);
+            }
+            return tempDir;
+        }
+
+        /// <summary>
         /// Extract a zip file to a new path, creating a unique temporary directory if requested.
         /// </summary>
         /// <param name="zipFilePath"> Path to zip file to extract. </param>
@@ -122,7 +137,7 @@ namespace BackendFramework.Helper
         {
             if (extractionDir is null)
             {
-                extractionDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                extractionDir = GetRandomTempDir(false);
             }
 
             Directory.CreateDirectory(extractionDir);
