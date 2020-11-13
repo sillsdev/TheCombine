@@ -22,6 +22,9 @@ namespace BackendFramework.Models
         [BsonElement("isActive")]
         public bool IsActive { get; set; }
 
+        [BsonElement("liftImported")]
+        public bool LiftImported { get; set; }
+
         [BsonElement("semanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
@@ -60,6 +63,7 @@ namespace BackendFramework.Models
             Id = "";
             Name = "";
             IsActive = true;
+            LiftImported = false;
             AutocompleteSetting = AutocompleteSetting.On;
             VernacularWritingSystem = new WritingSystem();
             AnalysisWritingSystems = new List<WritingSystem>();

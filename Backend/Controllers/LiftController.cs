@@ -52,7 +52,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var project = _projectService.GetProject(projectId);
+            var project = _projectService.GetProject(projectId).Result;
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -170,6 +170,11 @@ namespace BackendFramework.Controllers
                 _liftService.LdmlImport(
                     Path.Combine(extractedDirPath, "WritingSystems"),
                     proj.VernacularWritingSystem.Bcp47, _projectService, proj);
+
+                // Store that we have imported Lift data already for this project to signal the frontend
+                // not to attempt to import again.
+                project.LiftImported = true;
+                await _projectService.Update(projectId, project);
 
                 return new ObjectResult(resp);
             }
