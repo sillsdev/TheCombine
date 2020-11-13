@@ -7,8 +7,6 @@ import { defaultState } from "../../../../App/DefaultState";
 import NewEntry from "../NewEntry";
 
 jest.mock("../../../../Pronunciations/Recorder");
-jest.mock("../../GlossWithSuggestions/GlossWithSuggestions");
-jest.mock("../../VernWithSuggestions/VernWithSuggestions");
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
@@ -21,6 +19,7 @@ describe("Tests NewEntry", () => {
           <NewEntry
             allVerns={[]}
             allWords={[]}
+            defunctWordIds={[]}
             updateWordWithNewGloss={jest.fn()}
             addNewWord={jest.fn()}
             semanticDomain={{ name: "", id: "" }}

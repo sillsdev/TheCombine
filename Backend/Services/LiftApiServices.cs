@@ -108,6 +108,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
+        /// <returns> Path to compressed zip file containing export. </returns>
         public string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
         {
             // Generate the zip dir.
@@ -274,6 +275,9 @@ namespace BackendFramework.Services
             var destinationFileName = Path.Combine(exportDir,
                 Path.Combine($"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip"));
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
+
+            // Clean up the temporary folder structure that was compressed.
+            Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
 
             return destinationFileName;
         }

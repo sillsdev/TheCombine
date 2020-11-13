@@ -11,7 +11,8 @@ describe("Tests GlossWithSuggestions", () => {
           gloss={""}
           glossInput={React.createRef<HTMLDivElement>()}
           updateGlossField={() => null}
-          handleEnter={() => null}
+          handleEnterAndTab={() => null}
+          analysisLang={""}
         />
       );
     });

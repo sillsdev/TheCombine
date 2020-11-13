@@ -6,11 +6,15 @@ import DupFinder, {
   DefaultParams,
 } from "../../../../goals/MergeDupGoal/DuplicateFinder/DuplicateFinder";
 import theme from "../../../../types/theme";
-import { SemanticDomain, Word } from "../../../../types/word";
+import { SemanticDomain, Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
+import {
+  DeleteEntry,
+  EntryNote,
+  GlossWithSuggestions,
+  VernWithSuggestions,
+} from "../EntryCellComponents";
 import SenseDialog from "./SenseDialog";
 import VernDialog from "./VernDialog";
 
@@ -99,12 +103,7 @@ export default class NewEntry extends React.Component<
     this.setState((prevState, props) => ({
       newEntry: {
         ...prevState.newEntry,
-        senses: [
-          {
-            glosses: [{ language: props.analysisLang, def: newValue }],
-            semanticDomains: [props.semanticDomain],
-          },
-        ],
+        senses: [new Sense(newValue, props.analysisLang, props.semanticDomain)],
       },
       activeGloss: newValue,
     }));
@@ -138,6 +137,15 @@ export default class NewEntry extends React.Component<
     });
   }
 
+  updateNote(text: string) {
+    this.setState((prevState, props) => ({
+      newEntry: {
+        ...prevState.newEntry,
+        note: { text, language: props.analysisLang },
+      },
+    }));
+  }
+
   resetState() {
     this.setState({
       newEntry: new Word(),
@@ -161,7 +169,15 @@ export default class NewEntry extends React.Component<
   }
 
   addNewWordAndReset() {
-    this.props.addNewWord(this.state.newEntry, this.state.audioFileURLs);
+    const newEntry: Word = this.state.newEntry.senses.length
+      ? this.state.newEntry
+      : {
+          ...this.state.newEntry,
+          senses: [
+            new Sense("", this.props.analysisLang, this.props.semanticDomain),
+          ],
+        };
+    this.props.addNewWord(newEntry, this.state.audioFileURLs);
     this.resetState();
   }
 
@@ -193,10 +209,12 @@ export default class NewEntry extends React.Component<
     }
   }
 
-  handleEnterAndTab(e: React.KeyboardEvent) {
+  handleEnter(e: React.KeyboardEvent, checkGloss: boolean) {
     if (!this.state.vernOpen && e.key === "Enter") {
+      // The user can never submit a new entry without a vernacular
       if (this.state.newEntry.vernacular) {
-        if (this.state.activeGloss) {
+        // The user can conditionally submit a new entry without a gloss
+        if (this.state.activeGloss || !checkGloss) {
           this.addOrUpdateWord();
           this.focusVernInput();
         } else {
@@ -312,7 +330,10 @@ export default class NewEntry extends React.Component<
                 }}
                 suggestedVerns={this.state.suggestedVerns}
                 handleEnterAndTab={(e: React.KeyboardEvent) =>
-                  this.handleEnterAndTab(e)
+                  // To prevent unintentional no-gloss submissions:
+                  // If enter pressed from the vern field,
+                  // check whether gloss is empty
+                  this.handleEnter(e, true)
                 }
               />
               <VernDialog
@@ -357,14 +378,34 @@ export default class NewEntry extends React.Component<
                 this.updateGlossField(newValue)
               }
               handleEnterAndTab={(e: React.KeyboardEvent) =>
-                this.handleEnterAndTab(e)
+                // To allow intentional no-gloss submissions:
+                // If enter pressed from the gloss field,
+                // don't check whether gloss is empty
+                this.handleEnter(e, false)
               }
               analysisLang={this.props.analysisLang}
             />
           </Grid>
           <Grid
             item
-            xs={3}
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            {!this.state.selectedWord && (
+              // note is not available if user selected to modify an exiting entry
+              <EntryNote
+                noteText={this.state.newEntry.note.text}
+                updateNote={(text: string) => this.updateNote(text)}
+              />
+            )}
+          </Grid>
+          <Grid
+            item
+            xs={2}
             style={{
               paddingLeft: theme.spacing(1),
               paddingRight: theme.spacing(1),
@@ -383,6 +424,17 @@ export default class NewEntry extends React.Component<
               }}
               getAudioUrl={(_, fileName: string) => fileName}
             />
+          </Grid>
+          <Grid
+            item
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            <DeleteEntry removeEntry={() => this.resetState()} />
           </Grid>
         </Grid>
       </Grid>

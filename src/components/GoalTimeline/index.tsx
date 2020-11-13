@@ -1,14 +1,14 @@
-import { Goal } from "../../../types/goals";
-import { GoalTimelineVertical } from "./GoalTimelineVertical";
-
 import { connect } from "react-redux";
-import { StoreState } from "../../../types";
+import { ThunkDispatch } from "redux-thunk";
+
+import { StoreState } from "../../types";
+import { Goal } from "../../types/goals";
+import GoalTimeline from "./GoalTimelineComponent";
 import {
   asyncAddGoalToHistory,
   asyncGetUserEdits,
   GoalAction,
-} from "../GoalsActions";
-import { ThunkDispatch } from "redux-thunk";
+} from "./GoalsActions";
 
 export function mapStateToProps(state: StoreState) {
   return {
@@ -31,7 +31,4 @@ export function mapDispatchToProps(
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(GoalTimelineVertical);
+export default connect(mapStateToProps, mapDispatchToProps)(GoalTimeline);

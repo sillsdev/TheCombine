@@ -109,6 +109,9 @@ namespace BackendFramework.Controllers
             Directory.CreateDirectory(extractDir);
             ZipFile.ExtractToDirectory(fileUpload.FilePath, extractDir);
 
+            // Clean up the temporary zip file
+            System.IO.File.Delete(fileUpload.FilePath);
+
             // Check number of directories extracted
             var directoriesExtracted = Directory.GetDirectories(extractDir).Except(existingDirectories).ToArray();
             var extractedDirPath = "";
@@ -227,9 +230,14 @@ namespace BackendFramework.Controllers
             }
             // Export the data to a zip directory
             var exportedFilepath = CreateLiftExport(projectId);
-
             var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
+
+            // Clean up temporary file after reading it.
+            System.IO.File.Delete(exportedFilepath);
+            GC.Collect();
+
             var encodedFile = Convert.ToBase64String(file);
+
             return new OkObjectResult(encodedFile);
         }
 
