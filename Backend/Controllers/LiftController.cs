@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -71,39 +70,28 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("Empty File");
             }
 
-            // Get path to where we will copy the zip file
-            fileUpload.FilePath = GenerateFilePath(
-                FileType.Zip,
-                false,
-                "Compressed-Upload-" + $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}",
-                Path.Combine(projectId, "Import"));
-
-            // Copy file data to a new local file
+            // Copy zip file data to a new temporary file
+            fileUpload.FilePath = Path.GetTempFileName();
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
             }
 
             // Make destination for extracted files
-            var zipDest = Path.GetDirectoryName(fileUpload.FilePath);
-            if (zipDest is null)
-            {
-                throw new FileSystemError($"Could not get directory name of {fileUpload.FilePath}");
-            }
-
-            Directory.CreateDirectory(zipDest);
-            if (Directory.Exists(Path.Combine(zipDest, "ExtractedLocation")))
+            var importDir = GenerateFilePath(
+                FileType.Dir,
+                true,
+                "",
+                Path.Combine(projectId, "Import"));
+            var extractDir = Path.Combine(importDir, "ExtractedLocation");
+            if (Directory.Exists(extractDir))
             {
                 return new BadRequestObjectResult("A file has already been uploaded");
             }
-
-            // Extract the zip to new directory
-            var extractDir = Path.Combine(zipDest, "ExtractedLocation");
             Directory.CreateDirectory(extractDir);
-            ZipFile.ExtractToDirectory(fileUpload.FilePath, extractDir);
 
-            // Clean up the temporary zip file
-            System.IO.File.Delete(fileUpload.FilePath);
+            // Extract the zip to new created directory.
+            ExtractZipFile(fileUpload.FilePath, extractDir, true);
 
             // Check number of directories extracted
             var directoriesExtracted = Directory.GetDirectories(extractDir);

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Backend.Tests.Mocks;
@@ -168,19 +166,7 @@ namespace Backend.Tests.Controllers
         {
             var zipFile = Path.GetTempFileName();
             File.WriteAllBytes(zipFile, fileContents);
-            var extractionPath = ExtractZipFile(zipFile, true);
-            return extractionPath;
-        }
-
-        private static string ExtractZipFile(string zipFilePath, bool deleteZipFile = false)
-        {
-            var extractionPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            Directory.CreateDirectory(extractionPath);
-            ZipFile.ExtractToDirectory(zipFilePath, extractionPath);
-            if (deleteZipFile)
-            {
-                File.Delete(zipFilePath);
-            }
+            var extractionPath = FileUtilities.ExtractZipFile(zipFile, null, true);
             return extractionPath;
         }
 
@@ -312,7 +298,8 @@ namespace Backend.Tests.Controllers
 
                     // Export
                     var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
-                    var exportedDirectory = ExtractZipFile(exportedFilePath, false);
+                    var exportedDirectory = FileUtilities.ExtractZipFile(
+                        exportedFilePath, null, false);
 
                     // Assert the file was created with desired heirarchy
                     Assert.That(Directory.Exists(exportedDirectory));
@@ -368,7 +355,7 @@ namespace Backend.Tests.Controllers
 
                     // Export
                     exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
-                    exportedDirectory = ExtractZipFile(exportedFilePath);
+                    exportedDirectory = FileUtilities.ExtractZipFile(exportedFilePath, null);
 
                     // Assert the file was created with desired hierarchy
                     Assert.That(Directory.Exists(exportedDirectory));
