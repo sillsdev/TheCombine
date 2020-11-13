@@ -2,7 +2,7 @@ import { ButtonProps } from "@material-ui/core/Button";
 import React, { useEffect } from "react";
 import { Translate } from "react-localize-redux";
 
-import { exportLift, getProjectName } from "../../../backend";
+import { getProjectName } from "../../../backend";
 import { getNowDateTimeString } from "../../../utilities";
 import LoadingButton from "../../Buttons/LoadingButton";
 import { ExportStatus } from "./ExportProjectActions";
@@ -10,6 +10,7 @@ import { ExportProjectState } from "./ExportProjectReducer";
 
 interface ExportProjectButtonProps {
   exportProject: (projectId?: string) => void;
+  downloadLift: (projectId?: string) => Promise<Blob | void>;
   exportResult: ExportProjectState;
   projectId?: string;
 }
@@ -26,11 +27,9 @@ export default function ExportProjectButton(
 
   async function getFile() {
     props.exportProject(props.projectId);
-    // ToDo: Move stuff below into action, reducer, middleware, and backend
     const projectName = await getProjectName(props.projectId);
-    setFileName(`${projectName}_${getNowDateTimeString()}`);
-    const fileString = await exportLift(props.projectId);
-    const file = await fetch(fileString).then(async (res) => res.blob());
+    setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
+    const file = await props.downloadLift(props.projectId);
     setFileUrl(URL.createObjectURL(file));
   }
 
@@ -47,7 +46,7 @@ export default function ExportProjectButton(
       <LoadingButton
         onClick={getFile}
         color="primary"
-        loading={props.exportResult.status===ExportStatus.InProgress}
+        loading={props.exportResult.status === ExportStatus.InProgress}
         {...props}
       >
         <Translate id="buttons.export" />

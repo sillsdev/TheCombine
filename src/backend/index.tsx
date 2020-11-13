@@ -326,8 +326,21 @@ export async function uploadLift(
   return parseInt(resp.toString());
 }
 
+// Tell the backend to create a LIFT file for the project
 export async function exportLift(projectId?: string) {
   let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
+  // ToDo: Once the create and download functions are split in the backend,
+  // call the create function here (fetching the project is an async placeholder)
+  let resp = await backendServer.get(`projects/${projectIdToExport}`, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+// After the backend confirms that a LIFT file is ready, download it
+export async function downloadLift(projectId?: string) {
+  let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
+  // ToDo: Once the create and download functions are split in the backend,
+  // call the download function here (for now, both are done here)
   let resp = await backendServer.get(
     `projects/${projectIdToExport}/words/download`,
     {

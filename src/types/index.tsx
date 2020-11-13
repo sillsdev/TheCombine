@@ -43,5 +43,5 @@ export interface StoreState {
   reviewEntriesState: ReviewEntriesState;
 
   //temporary
-  tempState?: TempState;
+  tempState: TempState;
 }
