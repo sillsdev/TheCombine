@@ -75,7 +75,7 @@ namespace BackendFramework.Controllers
             fileUpload.FilePath = GenerateFilePath(
                 FileType.Zip,
                 false,
-                "Compressed-Upload-" + $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}",
+                $"Compressed-Upload-{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}",
                 Path.Combine(projectId, "Import"));
 
             // Copy file data to a new local file
@@ -228,7 +228,10 @@ namespace BackendFramework.Controllers
             // Clean up temporary file after reading it.
             System.IO.File.Delete(exportedFilepath);
 
-            return File(file, "application/zip");
+            return File(
+                file,
+                "application/zip",
+                $"LiftExport-{projectId}-{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}.zip");
         }
 
         // This method is extracted so that it can be unit tested

@@ -223,15 +223,16 @@ namespace Backend.Tests.Controllers
             _wordService.Update(proj.Id, wordToUpdate.Id, word);
             _wordService.DeleteFrontierWord(proj.Id, wordToDelete.Id);
 
-            var result = _liftController.ExportLiftFile(proj.Id).Result as OkObjectResult;
-            var fileContents = Convert.FromBase64String(result.Value as string);
+            var result = _liftController.ExportLiftFile(proj.Id).Result as FileContentResult;
+            Assert.That(result.FileDownloadName, Does.Contain(".zip"));
 
             // Write LiftFile contents to a temporary directory.
-            var extractedExportDir = ExtractZipFileContents(fileContents);
+            var extractedExportDir = ExtractZipFileContents(result.FileContents);
             var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);
-            //TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are kept vs deleted
+            // TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries
+            //     are kept vs deleted
             // Make sure we exported 2 live and one dead entry
             Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
             // There is only one deleted word
