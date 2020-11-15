@@ -25,10 +25,8 @@ import {
   getCurrentUser,
   setCurrentUser,
 } from "../../backend/localStorage";
-import { CurrentTab } from "../../types/currentTab";
 import theme from "../../types/theme";
 import { User } from "../../types/user";
-import AppBarComponent from "../AppBar/AppBarComponent";
 import AvatarUpload from "./AvatarUpload";
 
 function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
@@ -137,7 +135,6 @@ class UserSettings extends React.Component<
   render() {
     return (
       <React.Fragment>
-        <AppBarComponent currentTab={CurrentTab.UserSettings} />
         <Grid container justify="center">
           <Card style={{ width: 450 }}>
             <form onSubmit={(e) => this.onSubmit(e)}>
