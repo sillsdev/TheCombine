@@ -15,7 +15,7 @@ import {
   Translate,
 } from "react-localize-redux";
 
-import history, { path } from "../../history";
+import history, { Path } from "../../history";
 import { Project } from "../../types/project";
 import theme from "../../types/theme";
 import { CharacterSetEntry } from "./CharacterInventoryReducer";
@@ -107,7 +107,7 @@ export class CharacterInventory extends React.Component<
                 color="primary"
                 onClick={() => {
                   this.props.uploadInventory();
-                  history.push(path.goals);
+                  history.push(Path.Goals);
                 }}
                 style={{ margin: theme.spacing(1) }}
               >
@@ -145,7 +145,7 @@ export class CharacterInventory extends React.Component<
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => history.push(path.goals)}
+              onClick={() => history.push(Path.Goals)}
               variant="contained"
               color="secondary"
               autoFocus

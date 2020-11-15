@@ -17,7 +17,7 @@ import { ReviewEntries } from "../../goals/ReviewEntries/ReviewEntries";
 import { SpellCheckGloss } from "../../goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "../../goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "../../goals/ValidateStrWords/ValidateStrWords";
-import history, { path } from "../../history";
+import history, { Path } from "../../history";
 import { StoreState } from "../../types";
 import { Goal, GoalType } from "../../types/goals";
 import { ActionWithPayload } from "../../types/mockAction";
@@ -94,7 +94,7 @@ export function asyncAddGoalToHistory(goal: Goal) {
         await Backend.addGoalToUserEdit(userEditId, goal)
           .then((resp) => {
             dispatch(addGoalToHistory(goal));
-            history.push(`${path.goals}/${resp}`);
+            history.push(`${Path.Goals}/${resp}`);
           })
           .catch((err: string) => {
             console.log(err);
