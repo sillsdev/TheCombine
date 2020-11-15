@@ -462,7 +462,7 @@ otherwise an error will be logged and the exit code will be non-`0`.
 ### Production
 
 The process for configuring and deploying _TheCombine_ for production targets is
-described in ./docs/docker_deploy/README.md
+described in [docs/docker_deploy/README.md](docs/docker_deploy/README.md).
 
 ## Learn More
 
