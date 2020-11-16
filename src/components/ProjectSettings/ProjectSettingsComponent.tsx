@@ -24,10 +24,8 @@ import {
 
 import * as backend from "../../backend";
 import { AutoComplete } from "../../types/AutoComplete";
-import { CurrentTab } from "../../types/currentTab";
 import { Project } from "../../types/project";
 import { UserRole } from "../../types/userRole";
-import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
 import ExportProjectButton from "./ProjectExport/ExportProjectButton";
 import ProjectImport from "./ProjectImport";
@@ -90,7 +88,6 @@ class ProjectSettingsComponent extends React.Component<
   render() {
     return (
       <React.Fragment>
-        <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
         {!this.state.loading && (
           <Grid container justify="center" spacing={6}>
             {/* Project List */}

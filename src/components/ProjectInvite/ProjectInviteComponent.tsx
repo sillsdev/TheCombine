@@ -3,7 +3,7 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { RouteComponentProps } from "react-router-dom";
 
 import * as Backend from "../../backend";
-import history, { path } from "../../history";
+import history, { Path } from "../../history";
 import Register from "../Login/RegisterPage/RegisterComponent";
 
 export interface ProjectInviteDispatchProps {
@@ -77,7 +77,7 @@ class ProjectInvite extends React.Component<
       });
     }
     if (status[0] && status[1]) {
-      history.push(path.login);
+      history.push(Path.Login);
     }
   }
 

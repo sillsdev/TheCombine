@@ -1,14 +1,12 @@
-import { GoalProps, Goal, GoalType } from "../../../types/goals";
 import React, { ReactNode } from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import DisplayProg from "./DisplayProg";
-import AppBarComponent from "../../../components/AppBar/AppBarComponent";
+
 import PageNotFound from "../../../components/PageNotFound/component";
 import EmptyGoalComponent from "../../../components/EmptyGoal/EmptyGoalComponent";
-import MergeDupStep from "../../MergeDupGoal/MergeDupStep";
+import { Goal, GoalProps, GoalType } from "../../../types/goals";
 import CharInventoryCreation from "../../CharInventoryCreation";
+import MergeDupStep from "../../MergeDupGoal/MergeDupStep";
 import ReviewEntriesComponent from "../../ReviewEntries/ReviewEntriesComponent";
-import { CurrentTab } from "../../../types/currentTab";
+import DisplayProg from "./DisplayProg";
 
 interface componentSteps {
   goal: GoalType;
@@ -51,17 +49,16 @@ const stepComponentDictionary: componentSteps[] = [
 ];
 
 /**
- * Decides which component should be rendered for a goal, based on the current
- * step in the goal
+ * Decides which component should be rendered for a goal,
+ * based on the current step in the goal
  */
-class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
+export default class BaseGoalScreen extends React.Component<GoalProps> {
   renderGoal(goal: Goal): ReactNode {
     return (
-      <div className="GoalDisplay content">
-        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
+      <React.Fragment>
         <DisplayProg />
         {this.displayComponent(goal)}
-      </div>
+      </React.Fragment>
     );
   }
 
@@ -72,14 +69,11 @@ class BaseGoalScreen extends React.Component<GoalProps & LocalizeContextProps> {
     }
     return <EmptyGoalComponent />;
   }
-
   render() {
-    return (
-      <div className={"GoalDisplay"}>
-        {this.props.goal ? this.renderGoal(this.props.goal) : <PageNotFound />}
-      </div>
+    return this.props.goal ? (
+      this.renderGoal(this.props.goal)
+    ) : (
+      <PageNotFound />
     );
   }
 }
-
-export default withLocalize(BaseGoalScreen);
