@@ -211,7 +211,6 @@ namespace BackendFramework.Controllers
 
             // Clean up temporary file after reading it.
             System.IO.File.Delete(exportedFilepath);
-            GC.Collect();
 
             var encodedFile = Convert.ToBase64String(file);
 

@@ -1,8 +1,10 @@
 import { Paper, Divider, Dialog, Grid } from "@material-ui/core";
 import React from "react";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+
 import { getFrontierWords } from "../../backend";
-import { CurrentTab } from "../../types/currentTab";
+import { Path } from "../../history";
+import DomainTree from "../../types/SemanticDomain";
 import theme from "../../types/theme";
 import {
   DomainWord,
@@ -13,7 +15,6 @@ import {
 } from "../../types/word";
 import AppBarComponent from "../AppBar/AppBarComponent";
 import TreeViewComponent from "../TreeView";
-import DomainTree from "../../types/SemanticDomain";
 import DataEntryHeader from "./DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "./DataEntryTable/DataEntryTable";
 import { ExistingDataTable } from "./ExistingDataTable/ExistingDataTable";
@@ -162,65 +163,59 @@ export class DataEntryComponent extends React.Component<
     };
 
     return (
-      <React.Fragment>
-        <AppBarComponent currentTab={CurrentTab.DataEntry} />
-
-        <Grid container justify="center" spacing={3} wrap={"nowrap"}>
-          <Grid item>
-            <Paper style={paperStyle}>
-              <DataEntryHeader
-                domain={this.props.domain}
-                questionsVisible={this.state.questionsVisible}
-                setQuestionVisibility={(visibility: boolean) =>
-                  this.setState({ questionsVisible: visibility })
-                }
-              />
-              <Divider />
-              <DataEntryTable
-                domain={this.props.domain}
-                semanticDomain={semanticDomain}
-                displaySemanticDomainView={(
-                  isGettingSemanticdomain: boolean
-                ) => {
-                  this.setState({
-                    displaySemanticDomain: isGettingSemanticdomain,
-                  });
-                }}
-                getWordsFromBackend={() => this.getWordsFromBackend()}
-                showExistingData={() => this.toggleDrawer(true)}
-                isSmallScreen={this.state.isSmallScreen}
-                hideQuestions={() => {
-                  this.setState({ questionsVisible: false });
-                }}
-              />
-            </Paper>
-          </Grid>
-          <ExistingDataTable
-            domain={this.props.domain}
-            typeDrawer={this.state.isSmallScreen}
-            domainWords={this.state.domainWords}
-            drawerOpen={this.state.drawerOpen}
-            toggleDrawer={this.toggleDrawer}
-          />
-
-          <Dialog fullScreen open={this.state.displaySemanticDomain}>
-            <AppBarComponent currentTab={CurrentTab.DataEntry} />
-            <TreeViewComponent
-              returnControlToCaller={() =>
-                this.getWordsFromBackend().then(() => {
-                  this.setState((prevState) => ({
-                    domainWords: sortDomainWordByVern(
-                      prevState.existingWords,
-                      this.props.domain
-                    ),
-                    displaySemanticDomain: false,
-                  }));
-                })
+      <Grid container justify="center" spacing={3} wrap={"nowrap"}>
+        <Grid item>
+          <Paper style={paperStyle}>
+            <DataEntryHeader
+              domain={this.props.domain}
+              questionsVisible={this.state.questionsVisible}
+              setQuestionVisibility={(visibility: boolean) =>
+                this.setState({ questionsVisible: visibility })
               }
             />
-          </Dialog>
+            <Divider />
+            <DataEntryTable
+              domain={this.props.domain}
+              semanticDomain={semanticDomain}
+              displaySemanticDomainView={(isGettingSemanticdomain: boolean) => {
+                this.setState({
+                  displaySemanticDomain: isGettingSemanticdomain,
+                });
+              }}
+              getWordsFromBackend={() => this.getWordsFromBackend()}
+              showExistingData={() => this.toggleDrawer(true)}
+              isSmallScreen={this.state.isSmallScreen}
+              hideQuestions={() => {
+                this.setState({ questionsVisible: false });
+              }}
+            />
+          </Paper>
         </Grid>
-      </React.Fragment>
+        <ExistingDataTable
+          domain={this.props.domain}
+          typeDrawer={this.state.isSmallScreen}
+          domainWords={this.state.domainWords}
+          drawerOpen={this.state.drawerOpen}
+          toggleDrawer={this.toggleDrawer}
+        />
+
+        <Dialog fullScreen open={this.state.displaySemanticDomain}>
+          <AppBarComponent currentTab={Path.DataEntry} />
+          <TreeViewComponent
+            returnControlToCaller={() =>
+              this.getWordsFromBackend().then(() => {
+                this.setState((prevState) => ({
+                  domainWords: sortDomainWordByVern(
+                    prevState.existingWords,
+                    this.props.domain
+                  ),
+                  displaySemanticDomain: false,
+                }));
+              })
+            }
+          />
+        </Dialog>
+      </Grid>
     );
   }
 }
