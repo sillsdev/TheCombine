@@ -22,7 +22,7 @@ export interface MergeTreeState {
   tree: MergeTree;
 }
 
-const mergeDupStepReducer = (
+export const mergeDupStepReducer = (
   state: MergeTreeState = defaultState, //createStore() calls each reducer with undefined state
   action: StoreAction | MergeTreeAction
 ): MergeTreeState => {
@@ -190,5 +190,3 @@ const mergeDupStepReducer = (
     }
   }
 };
-
-export default mergeDupStepReducer;
