@@ -32,6 +32,10 @@ namespace Backend.Tests.Models
             Assert.IsFalse(project.Equals(project2));
 
             project2 = project.Clone();
+            project2.LiftImported = !project.LiftImported;
+            Assert.IsFalse(project.Equals(project2));
+
+            project2 = project.Clone();
             project2.VernacularWritingSystem.Name = "different";
             Assert.IsFalse(project.Equals(project2));
 
@@ -81,6 +85,8 @@ namespace Backend.Tests.Models
         {
             var system = new WritingSystem { Name = Name, Bcp47 = "en", Font = "calibri" };
             var project = new Project { Name = Name, VernacularWritingSystem = system };
+            var domain = new SemanticDomain { Name = Name, Id = "1", Description = "text" };
+            project.SemanticDomains.Add(domain);
             var project2 = project.Clone();
             Assert.AreEqual(project, project2);
         }
@@ -90,6 +96,7 @@ namespace Backend.Tests.Models
     {
         private const string Name = "System 1";
         private const string Bcp47 = "lang-1";
+        private const string Font = "calibri";
 
         [Test]
         public void TestEquals()
@@ -123,12 +130,9 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            const string font = "calibri";
-            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47, Font = font };
+            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47, Font = Font };
             var clonedSystem = system.Clone();
-            Assert.AreEqual(system.Name, clonedSystem.Name);
-            Assert.AreEqual(system.Bcp47, clonedSystem.Bcp47);
-            Assert.AreEqual(system.Font, clonedSystem.Font);
+            Assert.AreEqual(system, clonedSystem);
         }
     }
 }
