@@ -110,7 +110,7 @@ namespace BackendFramework.Helper
         }
 
         /// <summary>
-        /// Get the name / create a randomly named directory in the system's temp folder.
+        /// Create a randomly named directory in the system's temp folder, and get its name.
         /// </summary>
         /// <param name="create"> Whether to create the directory. </param>
         /// <returns> Path to random temporary directory. </returns>

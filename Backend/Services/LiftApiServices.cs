@@ -563,7 +563,7 @@ namespace BackendFramework.Services
                     FileUtilities.FileType.Dir, false, "", Path.Combine(_projectId, "Import"));
                 var extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
 
-                // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio
+                // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/Lift/audio
                 var importListArr = Directory.GetDirectories(extractedPathToImport);
                 var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
 
@@ -574,7 +574,7 @@ namespace BackendFramework.Services
                     foreach (var pro in entry.Pronunciations)
                     {
                         // get path to audio file in lift package at
-                        // ~/{projectId}/Import/ExtractedLocation/{liftName}/audio/{audioFile}.mp3
+                        // ~/{projectId}/Import/ExtractedLocation/Lift/audio/{audioFile}.mp3
                         var audioFile = pro.Media.First().Url;
                         newWord.Audio.Add(audioFile);
                     }
