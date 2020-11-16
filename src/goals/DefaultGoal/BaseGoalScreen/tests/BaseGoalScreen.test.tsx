@@ -13,18 +13,13 @@ import BaseGoalScreen from "../BaseGoalScreen";
 const createMockStore = configureMockStore([thunk]);
 const mockStoreState = {
   mergeDuplicateGoal: {
-    mergeTreeState: {
-      data: {
-        words: {},
-        senses: {},
-      },
-      tree: {
-        senses: {},
-        words: {},
-      },
+    data: {
+      words: {},
+      senses: {},
     },
-    wordDragState: {
-      draggedWord: undefined,
+    tree: {
+      senses: {},
+      words: {},
     },
   },
   goalsState: {

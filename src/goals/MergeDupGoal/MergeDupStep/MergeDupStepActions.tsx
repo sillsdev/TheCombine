@@ -232,9 +232,9 @@ export async function mergeWord(
   mapping: Hash<{ srcWord: string; order: number }>
 ): Promise<Hash<{ srcWord: string; order: number }>> {
   // find and build MergeWord[]
-  const word = getState().mergeDuplicateGoal.mergeTreeState.tree.words[wordID];
+  const word = getState().mergeDuplicateGoal.tree.words[wordID];
   if (word) {
-    const data = getState().mergeDuplicateGoal.mergeTreeState.data;
+    const data = getState().mergeDuplicateGoal.data;
 
     // create a list of all senses and add merge type tags slit by src word
     let senses: Hash<SenseWithState[]> = {};
@@ -394,7 +394,7 @@ export function mergeAll() {
   ) => {
     // generate blacklist
     const wordIDs: string[] = Object.keys(
-      getState().mergeDuplicateGoal.mergeTreeState.data.words
+      getState().mergeDuplicateGoal.data.words
     );
     const hash: string = wordIDs
       .sort()
@@ -404,9 +404,7 @@ export function mergeAll() {
     LocalStorage.setMergeDupsBlacklist(blacklist);
     // merge words
     let mapping: Hash<{ srcWord: string; order: number }> = {};
-    const words = Object.keys(
-      getState().mergeDuplicateGoal.mergeTreeState.tree.words
-    );
+    const words = Object.keys(getState().mergeDuplicateGoal.tree.words);
     for (const wordID of words) {
       mapping = await mergeWord(wordID, getState, mapping);
     }
