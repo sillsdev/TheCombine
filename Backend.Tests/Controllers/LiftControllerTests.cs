@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
-using BackendFramework.Helper;
+using static BackendFramework.Helper.FileUtilities;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
@@ -166,7 +166,7 @@ namespace Backend.Tests.Controllers
         {
             var zipFile = Path.GetTempFileName();
             File.WriteAllBytes(zipFile, fileContents);
-            var extractionPath = FileUtilities.ExtractZipFile(zipFile, null, true);
+            var extractionPath = ExtractZipFile(zipFile, null, true);
             return extractionPath;
         }
 
@@ -302,8 +302,7 @@ namespace Backend.Tests.Controllers
 
                 // Export
                 var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
-                var exportedDirectory = FileUtilities.ExtractZipFile(
-                    exportedFilePath, null, false);
+                var exportedDirectory = ExtractZipFile(exportedFilePath, null, false);
 
                 // Assert the file was created with desired heirarchy
                 Assert.That(Directory.Exists(exportedDirectory));
@@ -359,7 +358,7 @@ namespace Backend.Tests.Controllers
 
                 // Export
                 exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
-                exportedDirectory = FileUtilities.ExtractZipFile(exportedFilePath, null);
+                exportedDirectory = ExtractZipFile(exportedFilePath, null);
 
                 // Assert the file was created with desired hierarchy
                 Assert.That(Directory.Exists(exportedDirectory));
