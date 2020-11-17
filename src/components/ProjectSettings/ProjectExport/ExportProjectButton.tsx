@@ -4,12 +4,17 @@ import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import React, { useEffect } from "react";
 import { Translate } from "react-localize-redux";
 
-import { exportLift, getProjectName } from "../../../backend";
+import { getProjectName } from "../../../backend";
 import { getUserId } from "../../../backend/localStorage";
 import { getNowDateTimeString } from "../../../utilities";
 import LoadingButton from "../../Buttons/LoadingButton";
+import { ExportStatus } from "./ExportProjectActions";
+import { ExportProjectState } from "./ExportProjectReducer";
 
 interface ExportProjectButtonProps {
+  exportProject: (projectId?: string) => void;
+  downloadLift: (projectId?: string) => Promise<Blob | void>;
+  exportResult: ExportProjectState;
   projectId?: string;
 }
 
@@ -26,7 +31,6 @@ export default function ExportProjectButton(
 
   const [fileName, setFileName] = React.useState<null | string>(null);
   const [fileUrl, setFileUrl] = React.useState<null | string>(null);
-  const [loading, setLoading] = React.useState<boolean>(false);
   let downloadLink = React.createRef<HTMLAnchorElement>();
 
   useEffect(() => {
@@ -38,14 +42,12 @@ export default function ExportProjectButton(
   }, []);
 
   async function getFile() {
-    setLoading(true);
+    props.exportProject(props.projectId);
     const projectName = await getProjectName(props.projectId);
     sendMessage(getUserId(), projectName);
-    setFileName(`${projectName}_${getNowDateTimeString()}`);
-    const fileString = await exportLift(props.projectId);
-    const file = await fetch(fileString).then(async (res) => res.blob());
+    setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
+    const file = await props.downloadLift(props.projectId);
     setFileUrl(URL.createObjectURL(file));
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -58,11 +60,11 @@ export default function ExportProjectButton(
             setReceived(`${user}: ${message}`);
           });
         })
-        .catch((e) => console.log("Connection failed: ", e));
+        .catch((e: any) => console.log("Connection failed: ", e));
     }
   }, [connection]);
 
-  async function sendMessage (user: string, message: string) {
+  async function sendMessage(user: string, message: string) {
     //const chatMessage = { user, message };
     if (connection) {
       try {
@@ -80,7 +82,7 @@ export default function ExportProjectButton(
       <LoadingButton
         onClick={getFile}
         color="primary"
-        loading={loading}
+        loading={props.exportResult.status === ExportStatus.InProgress}
         {...props}
       >
         <Translate id="buttons.export" />

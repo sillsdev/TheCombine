@@ -2,9 +2,7 @@ import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { Translate } from "react-localize-redux";
 
-import { CurrentTab } from "../../types/currentTab";
 import { Goal } from "../../types/goals";
-import AppBarComponent from "../AppBar/AppBarComponent";
 import HorizontalDisplay from "./GoalDisplay/HorizontalDisplay";
 import VerticalDisplay from "./GoalDisplay/VerticalDisplay";
 
@@ -100,7 +98,8 @@ export default class GoalTimeline extends React.Component<
     }
   }
 
-  // Creates a list of suggestions, with non-suggested goals at the end and our main suggestion absent (to be displayed on the suggestions button)
+  // Creates a list of suggestions, with non-suggested goals at the end and
+  // our main suggestion absent (to be displayed on the suggestions button)
   createSuggestionData(): Goal[] {
     let data: Goal[] = this.props.suggestions.slice(1);
     let hasGoal: boolean;
@@ -151,8 +150,7 @@ export default class GoalTimeline extends React.Component<
 
   renderPortrait() {
     return (
-      <div className="GoalView">
-        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
+      <React.Fragment>
         {/* Alternatives */}
         <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
           <HorizontalDisplay
@@ -179,59 +177,54 @@ export default class GoalTimeline extends React.Component<
             {this.goalButton()}
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 
   renderLandscape() {
     return (
-      <div className="GoalView">
-        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
-        <GridList cols={this.state.reducedLandScape ? 6 : 8} cellHeight="auto">
-          {/* Alternatives */}
-          <GridListTile cols={2}>
-            <div
-              style={{ ...timelineStyle.paneStyling, float: "right" } as any}
-            >
-              <Typography variant="h6">
-                <Translate id={"goal.selector.other"} />
-              </Typography>
-              <VerticalDisplay
-                data={this.createSuggestionData()}
-                scrollToEnd={false}
-                handleChange={this.handleChange}
-                height={35}
-                numPanes={3}
-              />
-            </div>
-          </GridListTile>
-
-          {/* Recommendation */}
-          <GridListTile cols={2} style={timelineStyle.paneStyling as any}>
-            <Typography variant="h5">
-              <Translate id={"goal.selector.present"} />
+      <GridList cols={this.state.reducedLandScape ? 6 : 8} cellHeight="auto">
+        {/* Alternatives */}
+        <GridListTile cols={2}>
+          <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
+            <Typography variant="h6">
+              <Translate id={"goal.selector.other"} />
             </Typography>
-            {this.goalButton()}
-          </GridListTile>
+            <VerticalDisplay
+              data={this.createSuggestionData()}
+              scrollToEnd={false}
+              handleChange={this.handleChange}
+              height={35}
+              numPanes={3}
+            />
+          </div>
+        </GridListTile>
 
-          {/* History */}
+        {/* Recommendation */}
+        <GridListTile cols={2} style={timelineStyle.paneStyling as any}>
+          <Typography variant="h5">
+            <Translate id={"goal.selector.present"} />
+          </Typography>
+          {this.goalButton()}
+        </GridListTile>
 
-          <GridListTile cols={2}>
-            <div style={timelineStyle.paneStyling as any}>
-              <Typography variant="h6">
-                <Translate id={"goal.selector.past"} />
-              </Typography>
-              <VerticalDisplay
-                data={this.props.history}
-                scrollToEnd={false}
-                handleChange={this.handleChange}
-                height={35}
-                numPanes={3}
-              />
-            </div>
-          </GridListTile>
-        </GridList>
-      </div>
+        {/* History */}
+
+        <GridListTile cols={2}>
+          <div style={timelineStyle.paneStyling as any}>
+            <Typography variant="h6">
+              <Translate id={"goal.selector.past"} />
+            </Typography>
+            <VerticalDisplay
+              data={this.props.history}
+              scrollToEnd={false}
+              handleChange={this.handleChange}
+              height={35}
+              numPanes={3}
+            />
+          </div>
+        </GridListTile>
+      </GridList>
     );
   }
 

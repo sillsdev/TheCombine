@@ -1,11 +1,9 @@
 //external modules
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 
 //TC modules
-import { path } from "../../history";
-import DataEntry from "../DataEntry";
-import GoalRoute from "../GoalRoute/component";
+import { Path } from "../../history";
 import Login from "../Login/LoginPage";
 import Register from "../Login/RegisterPage";
 import PageNotFound from "../PageNotFound/component";
@@ -13,10 +11,7 @@ import PasswordReset from "../PasswordReset/ResetPage";
 import ResetRequest from "../PasswordReset/RequestPage";
 import PrivateRoute from "../PrivateRoute";
 import ProjectInvite from "../ProjectInvite";
-import ProjectScreen from "../ProjectScreen/ProjectScreenComponent";
-import ProjectSettings from "../ProjectSettings";
-import SiteSettings from "../SiteSettings/SiteSettingsComponent";
-import UserSettings from "../UserSettings/UserSettings";
+import AppWithBar from "./AppLoggedIn";
 
 /**
  * The top-level component
@@ -26,34 +21,16 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Switch>
-          <PrivateRoute
-            exact
-            path={path.projScreen}
-            component={ProjectScreen}
-          />
-          <PrivateRoute exact path={path.dataEntry} component={DataEntry} />
-          <PrivateRoute
-            exact
-            path={path.projSettings}
-            component={ProjectSettings}
-          />
-          <PrivateRoute
-            exact
-            path={path.siteSettings}
-            component={SiteSettings}
-          />
-          <PrivateRoute
-            exact
-            path={path.userSettings}
-            component={UserSettings}
-          />
-          <PrivateRoute path={path.goals} component={GoalRoute} />
-          <Route path={path.login} component={Login} />
-          <Route path={path.register} component={Register} />
-          <Route path={`${path.pwReset}/:token`} component={PasswordReset} />
-          <Route path={path.pwRequest} component={ResetRequest} />
+          <Route exact path={Path.Root}>
+            <Redirect to={Path.ProjScreen} />
+          </Route>
+          <PrivateRoute path={Path.ProjScreen} component={AppWithBar} />
+          <Route path={Path.Login} component={Login} />
+          <Route path={Path.Register} component={Register} />
+          <Route path={`${Path.PwReset}/:token`} component={PasswordReset} />
+          <Route path={Path.PwRequest} component={ResetRequest} />
           <Route
-            path={`${path.projInvite}/:project/:token`}
+            path={`${Path.ProjInvite}/:project/:token`}
             component={ProjectInvite}
           />
           <Route component={PageNotFound} />

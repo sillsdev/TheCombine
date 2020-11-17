@@ -64,8 +64,9 @@ A rapid word collection tool.
    - [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) and add
      /bin to PATH Environment Variable
      - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
-   - [VS Code](https://code.visualstudio.com/download) and Prettier code
-     formatting extension
+   - [VS Code](https://code.visualstudio.com/download) and the following extensions:
+     - C# (`ms-dotnettools.csharp`)
+     - Prettier - Code formatter (`esbenp.prettier-vscode`)
    - [dotnet-format](https://github.com/dotnet/format):
      `dotnet tool update --global dotnet-format --version 4.1.131201`
    - [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
@@ -85,13 +86,10 @@ A rapid word collection tool.
    - `COMBINE_SMTP_ADDRESS`
    - `COMBINE_SMTP_FROM`
 
-6. (VS Code Users Only) Enable automatic formatting on save.
-   - **File** | **Preferences** | **Settings** | Search for **formatOnSave** and
-     check the box.
-7. Run `npm start` from the project directory to install dependencies and start
+6. Run `npm start` from the project directory to install dependencies and start
    the project.
 
-8. Consult our [C#](docs/c_sharp_style_guide.md)
+7. Consult our [C#](docs/c_sharp_style_guide.md)
    and [JavaScript/TypeScript](docs/ts_style_guide.md)
    style guides for best coding practices in this project.
 
@@ -464,7 +462,7 @@ otherwise an error will be logged and the exit code will be non-`0`.
 ### Production
 
 The process for configuring and deploying _TheCombine_ for production targets is
-described in ./docs/docker_deploy/README.md
+described in [docs/docker_deploy/README.md](docs/docker_deploy/README.md).
 
 ## Learn More
 
