@@ -3,6 +3,9 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
+
+import { LOGIN_SUCCESS } from "./components/Login/LoginActions";
+import { ExportStatus } from "./components/ProjectSettings/ProjectExport/ExportProjectActions";
 import { rootReducer } from "./rootReducer";
 
 const persistConfig = {
@@ -18,8 +21,11 @@ const createMySocketMiddleware: Middleware = (store: any) => (
   next: Dispatch
 ) => (action: any) => {
   switch (action.type) {
-    case "LOGIN_SUCCESS": {
+    case LOGIN_SUCCESS: {
       console.log("Logged in!");
+    }
+    case ExportStatus.InProgress: {
+      console.log("Start that connection!");
     }
   }
 
