@@ -251,7 +251,7 @@ namespace BackendFramework
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                endpoints.MapHub<ChatHub>("/queue");
+                endpoints.MapHub<CombineHub>("/queue");
             });
 
             // If an admin user has been created via the commandline, treat that as a single action and shut the

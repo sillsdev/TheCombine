@@ -38,15 +38,19 @@ export function DownloadButton() {
   }
 
   return (
-      <React.Fragment>
-       {received &&
-      <Tooltip title={<Translate id="appBar.downloadReady" />} placement="bottom">
-        <IconButton tabIndex={-1} onClick={download}>
-          <GetApp />
-        </IconButton>
-      </Tooltip>}
-      </React.Fragment>
-    );
-  };
+    <React.Fragment>
+      {received && (
+        <Tooltip
+          title={<Translate id="appBar.downloadReady" />}
+          placement="bottom"
+        >
+          <IconButton tabIndex={-1} onClick={download}>
+            <GetApp />
+          </IconButton>
+        </Tooltip>
+      )}
+    </React.Fragment>
+  );
+}
 
 export default React.memo<{}>(DownloadButton);

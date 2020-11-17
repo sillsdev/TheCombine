@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Services
 {
-    public class ChatHub : Hub
+    public class CombineHub : Hub
     {
         public async Task SendMessage(string user, string message)
         {
