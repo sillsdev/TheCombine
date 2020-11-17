@@ -2,22 +2,49 @@ import { IconButton, Tooltip } from "@material-ui/core";
 import { GetApp } from "@material-ui/icons";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import React, { useEffect } from "react";
-import { Translate } from "react-localize-redux";
+//import { Translate } from "react-localize-redux";
+import { useSelector } from "react-redux";
+
+import { StoreState } from "../../types";
+import { ExportStatus } from "../ProjectSettings/ProjectExport/ExportProjectActions";
 
 /** An app bar shown at the top of almost every page of The Combine */
-export function DownloadButton() {
+export default function DownloadButton() {
+  const exportState = useSelector(
+    (state: StoreState) => state.exportProjectState
+  );
   const [connection, setConnection] = React.useState<null | HubConnection>(
     null
   );
   const [received, setReceived] = React.useState<string>("");
 
   useEffect(() => {
-    const newConnection = new HubConnectionBuilder()
-      .withUrl("https://localhost:5001/queue")
-      .withAutomaticReconnect()
-      .build();
-    setConnection(newConnection);
-  }, []);
+    switch (exportState.status) {
+      case ExportStatus.InProgress: {
+        const newConnection = new HubConnectionBuilder()
+          .withUrl("https://localhost:5001/queue")
+          .withAutomaticReconnect()
+          .build();
+        setConnection(newConnection);
+        break;
+      }
+      case ExportStatus.Failure: {
+        setConnection(null);
+        setReceived("export failed");
+        break;
+      }
+      case ExportStatus.Success: {
+        setConnection(null);
+        setReceived("export succeeded");
+        break;
+      }
+      case ExportStatus.Default: {
+        setConnection(null);
+        setReceived("no active export");
+        break;
+      }
+    }
+  }, [exportState]);
 
   useEffect(() => {
     if (connection) {
@@ -41,7 +68,7 @@ export function DownloadButton() {
     <React.Fragment>
       {received && (
         <Tooltip
-          title={<Translate id="appBar.downloadReady" />}
+          title={received} //<Translate id="appBar.downloadReady" />}
           placement="bottom"
         >
           <IconButton tabIndex={-1} onClick={download}>
@@ -52,5 +79,3 @@ export function DownloadButton() {
     </React.Fragment>
   );
 }
-
-export default React.memo<{}>(DownloadButton);

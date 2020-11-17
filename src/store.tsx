@@ -1,8 +1,8 @@
-import { createStore, applyMiddleware, Middleware, Dispatch } from "redux";
-import { persistStore, persistReducer } from "redux-persist";
+import { applyMiddleware, createStore, Dispatch, Middleware } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension";
 
 import { LOGIN_SUCCESS } from "./components/Login/LoginActions";
 import { ExportStatus } from "./components/ProjectSettings/ProjectExport/ExportProjectActions";
@@ -23,9 +23,19 @@ const createMySocketMiddleware: Middleware = (store: any) => (
   switch (action.type) {
     case LOGIN_SUCCESS: {
       console.log("Logged in!");
+      break;
     }
     case ExportStatus.InProgress: {
       console.log("Start that connection!");
+      break;
+    }
+    case ExportStatus.Success: {
+      console.log("Stop that connection!");
+      break;
+    }
+    case ExportStatus.Failure: {
+      console.log("Stop that connection!");
+      break;
     }
   }
 
