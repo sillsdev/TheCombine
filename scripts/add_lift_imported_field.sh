@@ -35,7 +35,7 @@ cd ${COMBINE_HOME}/.CombineFiles
 
 #  1. use find to find all imported .zip files
 #  2. use list of files to create list of project ObjectIds
-imported_projs="[ $(find . -name "Compressed-Upload*.zip" | xargs | sed "s/\.\/\([0-9a-f]\{24\}\)[^\.]*\.zip/ObjectId\(\"\1\"\),/g" | sed "s/, *\$//") ]"
+imported_projs="[ $(find . -name "*.lift" | grep Import | xargs | sed "s/\.\/\([0-9a-f]\{24\}\)[^\.]*\.lift/ObjectId\(\"\1\"\),/g" | sed "s/, *\$//") ]"
 
 #  3. set liftImported to true for all project ids in list
 mongo_select="{ \"_id\": { \"\$in\": ${imported_projs}}}"
