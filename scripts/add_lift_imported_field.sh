@@ -6,11 +6,14 @@
 # for importing LIFT data as an indicator that LIFT data were imported previously.
 # PR #810 adds a field to documents in the ProjectsCollection, liftImported, for
 # this function.
-# This script adds this field to all current projects and sets it to true if the
-# zip file currently exists and to false otherwise.
+# This script adds this field to all current projects and sets it to true if there
+# is a .lift file which is created when the data are imported into a project, and
+# false otherwize.  The zip file that was used in an earlier design of the
+# application is not used because earlier revisions deleted the zip file so this
+# measure is not as reliable as the .lift files.
 
 # Script Strategy
-#  1. use find to find all imported .zip files
+#  1. use find to find all imported .lift files
 #  2. use list of files to create list of project ObjectIds
 #  3. set liftImported to true for all project ids in list
 #     c.f. https://docs.mongodb.com/manual/reference/operator/query/in/
@@ -33,7 +36,7 @@ update_projects() {
 COMBINE_HOME=${COMBINE_HOME:="/home/combine"}
 cd ${COMBINE_HOME}/.CombineFiles
 
-#  1. use find to find all imported .zip files
+#  1. use find to find all imported .lift files
 #  2. use list of files to create list of project ObjectIds
 imported_projs="[ $(find . -name "*.lift" | grep Import | xargs | sed "s/\.\/\([0-9a-f]\{24\}\)[^\.]*\.lift/ObjectId\(\"\1\"\),/g" | sed "s/, *\$//") ]"
 
