@@ -180,8 +180,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> POST: v1/projects/{projectId}/words/download </remarks>
-        [HttpPost("download")]
+        /// <remarks> POST: v1/projects/{projectId}/words/export </remarks>
+        [HttpPost("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             Console.WriteLine("starting export function");
@@ -227,8 +227,8 @@ namespace BackendFramework.Controllers
             Console.WriteLine("encodedFile prepared");
             var userId = _permissionService.GetUserId(HttpContext);
             Console.WriteLine("userId obtained");
-            _liftService.AddExport(userId, encodedFile);
-            Console.WriteLine("fileadded to dict");
+            /*_liftService.AddExport(userId, encodedFile);
+            Console.WriteLine("fileadded to dict");*/
 
             return new OkObjectResult(projectId);
         }
@@ -245,13 +245,14 @@ namespace BackendFramework.Controllers
 
             // Ensure export exists
             //var userId = _permissionService.GetUserId(HttpContext);
-            var encodedFile = _liftService.GetExport(userId);
+            /*var encodedFile = _liftService.GetExport(userId);
             if (encodedFile is null)
             {
                 return new NotFoundObjectResult(userId);
             }
 
-            return new OkObjectResult(encodedFile);
+            return new OkObjectResult(encodedFile);*/
+            return new OkObjectResult("");
         }
 
         // This method is extracted so that it can be unit tested

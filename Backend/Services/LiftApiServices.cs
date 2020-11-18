@@ -87,10 +87,10 @@ namespace BackendFramework.Services
                 Sldr.Initialize(true);
             }
 
-            LiftExports = new Dictionary<string, string>();
+            //LiftExports = new Dictionary<string, string>();
         }
 
-        private Dictionary<string, string> LiftExports;
+        /*private Dictionary<string, string> LiftExports;
         public void AddExport(string userId, string encodedFile)
         {
             LiftExports.Add(userId, encodedFile);
@@ -106,7 +106,7 @@ namespace BackendFramework.Services
         public void RemoveExport(string userId)
         {
             LiftExports.Remove(userId);
-        }
+        }*/
 
         /// <summary> Imports main character set for a project from an ldml file </summary>
         public void LdmlImport(string filePath, string langTag, IProjectService projService, Project project)
