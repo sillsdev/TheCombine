@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -77,6 +76,7 @@ namespace BackendFramework.Services
             var updateDef = Builders<Project>.Update
                 .Set(x => x.Name, project.Name)
                 .Set(x => x.IsActive, project.IsActive)
+                .Set(x => x.LiftImported, project.LiftImported)
                 .Set(x => x.SemanticDomains, project.SemanticDomains)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
                 .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)
@@ -186,10 +186,8 @@ namespace BackendFramework.Services
 
         public bool CanImportLift(string projectId)
         {
-            var currentPath = FileUtilities.GenerateFilePath(
-                FileUtilities.FileType.Dir, true, "", Path.Combine(projectId, "Import"));
-            var zips = new List<string>(Directory.GetFiles(currentPath, "*.zip"));
-            return zips.Count == 0;
+            var project = GetProject(projectId).Result;
+            return !project.LiftImported;
         }
     }
 }
