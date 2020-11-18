@@ -74,6 +74,10 @@ namespace BackendFramework.Services
         }
     }
 
+    /*public class LiftExports : Dictionary<string, string>
+    {
+    }*/
+
     public class LiftService : ILiftService
     {
         public LiftService()
@@ -82,6 +86,26 @@ namespace BackendFramework.Services
             {
                 Sldr.Initialize(true);
             }
+
+            LiftExports = new Dictionary<string, string>();
+        }
+
+        private Dictionary<string, string> LiftExports;
+        public void AddExport(string userId, string encodedFile)
+        {
+            LiftExports.Add(userId, encodedFile);
+        }
+        public string? GetExport(string userId)
+        {
+            if (!LiftExports.ContainsKey(userId))
+            {
+                return null;
+            }
+            return LiftExports[userId];
+        }
+        public void RemoveExport(string userId)
+        {
+            LiftExports.Remove(userId);
         }
 
         /// <summary> Imports main character set for a project from an ldml file </summary>

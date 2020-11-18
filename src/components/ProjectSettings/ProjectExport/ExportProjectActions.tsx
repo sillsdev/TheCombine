@@ -30,7 +30,7 @@ export function asyncDownloadExport(projectId?: string) {
   return async (
     dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>
   ) => {
-    return downloadLift(projectId)
+    return downloadLift()
       .then((fileString) => {
         return fetch(fileString)
           .then((file) => {

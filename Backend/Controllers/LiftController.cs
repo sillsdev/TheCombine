@@ -1,4 +1,5 @@
 ﻿using System;
+//using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace BackendFramework.Controllers
     {
         private readonly IWordRepository _wordRepo;
         private readonly ILiftService _liftService;
+        //private readonly Dictionary<string, string> _liftExports;
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
@@ -33,6 +35,7 @@ namespace BackendFramework.Controllers
             _projectService = projServ;
             _liftService = liftService;
             _permissionService = permissionService;
+            //_liftExports = new Dictionary<string, string>();
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
@@ -193,20 +196,23 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
-        [HttpGet("download")]
+        /// <remarks> POST: v1/projects/{projectId}/words/download </remarks>
+        [HttpPost("download")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
+            Console.WriteLine("starting export function");
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
+            Console.WriteLine("permission granted");
 
             // sanitize projectId
             if (!SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
             }
+            Console.WriteLine("projectId is");
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
@@ -214,6 +220,7 @@ namespace BackendFramework.Controllers
             {
                 return new NotFoundObjectResult(projectId);
             }
+            Console.WriteLine("project exists");
 
             // Ensure there are words in the project
             var words = await _wordRepo.GetAllWords(projectId);
@@ -221,14 +228,44 @@ namespace BackendFramework.Controllers
             {
                 return new BadRequestResult();
             }
+            Console.WriteLine("project has entries");
+
             // Export the data to a zip directory
             var exportedFilepath = CreateLiftExport(projectId);
+            Console.WriteLine("zip created");
             var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
+            Console.WriteLine("zip read to string");
 
             // Clean up temporary file after reading it.
             System.IO.File.Delete(exportedFilepath);
 
             var encodedFile = Convert.ToBase64String(file);
+            Console.WriteLine("encodedFile prepared");
+            var userId = _permissionService.GetUserId(HttpContext);
+            Console.WriteLine("userId obtained");
+            _liftService.AddExport(userId, encodedFile);
+            Console.WriteLine("fileadded to dict");
+
+            return new OkObjectResult(projectId);
+        }
+
+        /// <summary> Downloads project data in zip file </summary>
+        /// <remarks> GET: v1/projects/{userId}/words/download </remarks>
+        [HttpGet("download")]
+        public IActionResult DownloadLiftFile(string userId)
+        {
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return new ForbidResult();
+            }
+
+            // Ensure export exists
+            //var userId = _permissionService.GetUserId(HttpContext);
+            var encodedFile = _liftService.GetExport(userId);
+            if (encodedFile is null)
+            {
+                return new NotFoundObjectResult(userId);
+            }
 
             return new OkObjectResult(encodedFile);
         }
