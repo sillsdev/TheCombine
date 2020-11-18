@@ -74,10 +74,6 @@ namespace BackendFramework.Services
         }
     }
 
-    /*public class LiftExports : Dictionary<string, string>
-    {
-    }*/
-
     public class LiftService : ILiftService
     {
         public LiftService()

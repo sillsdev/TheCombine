@@ -32,7 +32,6 @@ namespace BackendFramework.Controllers
             _projectService = projServ;
             _liftService = liftService;
             _permissionService = permissionService;
-            //_liftExports = new Dictionary<string, string>();
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
