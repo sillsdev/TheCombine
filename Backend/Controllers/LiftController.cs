@@ -182,6 +182,12 @@ namespace BackendFramework.Controllers
         [HttpGet("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return await ExportLiftFile(projectId, userId);
+        }
+
+        public async Task<IActionResult> ExportLiftFile(string projectId, string userId)
+        {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
@@ -212,7 +218,6 @@ namespace BackendFramework.Controllers
 
             // Encode file as string and store for user to download later
             var encodedFile = Convert.ToBase64String(file);
-            var userId = _permissionService.GetUserId(HttpContext);
             _liftService.AddExport(userId, encodedFile);
 
             return new OkObjectResult(projectId);
@@ -224,13 +229,18 @@ namespace BackendFramework.Controllers
         [HttpGet("download")]
         public IActionResult DownloadLiftFile()
         {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return DownloadLiftFile(userId);
+        }
+
+        public IActionResult DownloadLiftFile(string userId)
+        {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
 
             // Ensure export exists
-            var userId = _permissionService.GetUserId(HttpContext);
             var encodedFile = _liftService.GetExport(userId);
             if (encodedFile is null)
             {
