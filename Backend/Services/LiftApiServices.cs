@@ -86,13 +86,14 @@ namespace BackendFramework.Services
             LiftExports = new Dictionary<string, string>();
         }
 
+        // A common dictionary for storing and retrieving exported projects
         private Dictionary<string, string> LiftExports;
-        public void AddExport(string userId, string encodedFile)
+        public void StoreExport(string userId, string encodedFile)
         {
             LiftExports.Remove(userId);
             LiftExports.Add(userId, encodedFile);
         }
-        public string? GetExport(string userId)
+        public string? RetrieveExport(string userId)
         {
             if (!LiftExports.ContainsKey(userId))
             {
@@ -100,7 +101,7 @@ namespace BackendFramework.Services
             }
             return LiftExports[userId];
         }
-        public void RemoveExport(string userId)
+        public void DeleteExport(string userId)
         {
             LiftExports.Remove(userId);
         }

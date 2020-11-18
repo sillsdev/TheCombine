@@ -218,7 +218,7 @@ namespace BackendFramework.Controllers
 
             // Encode file as string and store for user to download later
             var encodedFile = Convert.ToBase64String(file);
-            _liftService.AddExport(userId, encodedFile);
+            _liftService.StoreExport(userId, encodedFile);
 
             return new OkObjectResult(projectId);
         }
@@ -241,7 +241,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure export exists
-            var encodedFile = _liftService.GetExport(userId);
+            var encodedFile = _liftService.RetrieveExport(userId);
             if (encodedFile is null)
             {
                 return new NotFoundObjectResult(userId);

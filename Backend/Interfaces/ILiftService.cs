@@ -9,8 +9,10 @@ namespace BackendFramework.Interfaces
             string projectId, IProjectService projectService, IWordRepository wordRepo);
         void LdmlImport(string filePath, string langTag, IProjectService projectService, Project project);
         string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projectService);
-        void AddExport(string userId, string encodedZip);
-        string? GetExport(string userId);
-        void RemoveExport(string userId);
+
+        // Methods to store, retrieve, and delete an export string in a common dictionary
+        void StoreExport(string key, string value);
+        string? RetrieveExport(string key);
+        void DeleteExport(string key);
     }
 }
