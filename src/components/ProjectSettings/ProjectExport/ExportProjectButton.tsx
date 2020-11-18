@@ -29,8 +29,14 @@ export default function ExportProjectButton(
     props.exportProject(props.projectId);
     const projectName = await getProjectName(props.projectId);
     setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
-    const file = await props.downloadLift(props.projectId);
-    setFileUrl(URL.createObjectURL(file));
+    props
+      .downloadLift(props.projectId)
+      .then((file) => {
+        if (file) {
+          setFileUrl(URL.createObjectURL(file));
+        }
+      })
+      .catch((e) => console.error(e));
   }
 
   useEffect(() => {

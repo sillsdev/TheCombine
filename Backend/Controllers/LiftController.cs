@@ -177,42 +177,75 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
-        [HttpGet("download")]
+        /// <remarks> GET: v1/projects/{projectId}/words/export </remarks>
+        /// <returns> ProjectId, if export successful </returns>
+        [HttpGet("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return await ExportLiftFile(projectId, userId);
+        }
+
+        public async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
 
-            // sanitize projectId
+            // Sanitize projectId
             if (!SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
             }
 
-            // Ensure project exists
+            // Ensure project exists and has words
             var proj = _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
-
-            // Ensure there are words in the project
             var words = await _wordRepo.GetAllWords(projectId);
             if (words.Count == 0)
             {
                 return new BadRequestResult();
             }
-            // Export the data to a zip directory
+
+            // Export the data to a zip, read into memory, and delete zip
             var exportedFilepath = CreateLiftExport(projectId);
             var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
-
-            // Clean up temporary file after reading it.
             System.IO.File.Delete(exportedFilepath);
 
+            // Encode file as string and store for user to download later
             var encodedFile = Convert.ToBase64String(file);
+            _liftService.StoreExport(userId, encodedFile);
+
+            return new OkObjectResult(projectId);
+        }
+
+        /// <summary> Downloads project data in zip file </summary>
+        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
+        /// <returns> Lift file as base-64 string </returns>
+        [HttpGet("download")]
+        public IActionResult DownloadLiftFile()
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return DownloadLiftFile(userId);
+        }
+
+        public IActionResult DownloadLiftFile(string userId)
+        {
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return new ForbidResult();
+            }
+
+            // Ensure export exists
+            var encodedFile = _liftService.RetrieveExport(userId);
+            if (encodedFile is null)
+            {
+                return new NotFoundObjectResult(userId);
+            }
 
             return new OkObjectResult(encodedFile);
         }

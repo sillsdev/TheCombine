@@ -328,19 +328,29 @@ export async function uploadLift(
 
 // Tell the backend to create a LIFT file for the project
 export async function exportLift(projectId?: string) {
+  // ToDo: Once the backend can signal that a download is complete,
+  // replace getProject call with the commented code
+  return getProject(projectId);
+  /*
   let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
-  // ToDo: Once the create and download functions are split in the backend,
-  // call the create function here (fetching the project is an async placeholder)
-  let resp = await backendServer.get(`projects/${projectIdToExport}`, {
-    headers: authHeader(),
-  });
+  let resp = await backendServer.get(
+    `projects/${projectIdToExport}/words/export`,
+    {
+      headers: authHeader(),
+    }
+  );
   return resp.data;
+  */
 }
 // After the backend confirms that a LIFT file is ready, download it
 export async function downloadLift(projectId?: string) {
   let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
-  // ToDo: Once the create and download functions are split in the backend,
-  // call the download function here (for now, both are done here)
+  // ToDo: Once the backend can signal that a download is complete,
+  // remove the get export from here.
+  await backendServer.get(`projects/${projectIdToExport}/words/export`, {
+    headers: authHeader(),
+  });
+
   let resp = await backendServer.get(
     `projects/${projectIdToExport}/words/download`,
     {

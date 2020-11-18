@@ -82,6 +82,28 @@ namespace BackendFramework.Services
             {
                 Sldr.Initialize(true);
             }
+
+            LiftExports = new Dictionary<string, string>();
+        }
+
+        // A common dictionary for storing and retrieving exported projects
+        private Dictionary<string, string> LiftExports;
+        public void StoreExport(string userId, string encodedFile)
+        {
+            LiftExports.Remove(userId);
+            LiftExports.Add(userId, encodedFile);
+        }
+        public string? RetrieveExport(string userId)
+        {
+            if (!LiftExports.ContainsKey(userId))
+            {
+                return null;
+            }
+            return LiftExports[userId];
+        }
+        public void DeleteExport(string userId)
+        {
+            LiftExports.Remove(userId);
         }
 
         /// <summary> Imports main character set for a project from an ldml file </summary>
