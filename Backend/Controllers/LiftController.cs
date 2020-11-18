@@ -180,7 +180,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> Get: v1/projects/{projectId}/words/export </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/words/export </remarks>
         /// <returns> ProjectId, if successful </returns>
         [HttpGet("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
@@ -197,7 +197,7 @@ namespace BackendFramework.Controllers
             {
                 return new UnsupportedMediaTypeResult();
             }
-            Console.WriteLine("projectId is");
+            Console.WriteLine("projectId is valid");
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
@@ -228,8 +228,8 @@ namespace BackendFramework.Controllers
             Console.WriteLine("encodedFile prepared");
             var userId = _permissionService.GetUserId(HttpContext);
             Console.WriteLine("userId obtained");
-            /*_liftService.AddExport(userId, encodedFile);
-            Console.WriteLine("fileadded to dict");*/
+            _liftService.AddExport(userId, encodedFile);
+            Console.WriteLine("fileadded to dict");
 
             return new OkObjectResult(projectId);
         }
@@ -245,15 +245,14 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure export exists
-            //var userId = _permissionService.GetUserId(HttpContext);
-            /*var encodedFile = _liftService.GetExport(userId);
+            var userId = _permissionService.GetUserId(HttpContext);
+            var encodedFile = _liftService.GetExport(userId);
             if (encodedFile is null)
             {
                 return new NotFoundObjectResult(userId);
             }
 
-            return new OkObjectResult(encodedFile);*/
-            return new OkObjectResult("");
+            return new OkObjectResult(encodedFile);
         }
 
         // This method is extracted so that it can be unit tested
