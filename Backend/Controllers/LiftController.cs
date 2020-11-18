@@ -235,9 +235,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Downloads project data in zip file </summary>
-        /// <remarks> GET: v1/projects/{userId}/words/download </remarks>
+        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
         [HttpGet("download")]
-        public IActionResult DownloadLiftFile(string userId)
+        public IActionResult DownloadLiftFile()
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {

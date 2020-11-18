@@ -343,16 +343,17 @@ export async function exportLift(projectId?: string) {
   */
 }
 // After the backend confirms that a LIFT file is ready, download it
-export async function downloadLift(userId?: string) {
-  let userIdToExport = userId ? userId : LocalStorage.getUserId();
+export async function downloadLift(projectId?: string) {
+  let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
   // ToDo: Once the backend can signal that a download is complete,
   // remove the post from here.
-  await backendServer.get(`projects/${userIdToExport}/words/export`, {
+  console.log(projectIdToExport);
+  await backendServer.get(`projects/${projectIdToExport}/words/export`, {
     headers: authHeader(),
   });
 
   let resp = await backendServer.get(
-    `projects/${userIdToExport}/words/download`,
+    `projects/${projectIdToExport}/words/download`,
     {
       headers: { ...authHeader(), Accept: "application/zip" },
     }
