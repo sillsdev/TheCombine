@@ -346,7 +346,7 @@ export async function exportLift(projectId?: string) {
 export async function downloadLift(projectId?: string) {
   let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
   // ToDo: Once the backend can signal that a download is complete,
-  // remove the post from here.
+  // remove the get export from here.
   await backendServer.get(`projects/${projectIdToExport}/words/export`, {
     headers: authHeader(),
   });
