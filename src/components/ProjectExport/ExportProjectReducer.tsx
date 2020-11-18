@@ -1,4 +1,4 @@
-import { StoreAction, StoreActions } from "../../../rootActions";
+import { StoreAction, StoreActions } from "../../rootActions";
 import { ExportProjectAction, ExportStatus } from "./ExportProjectActions";
 
 export interface ExportProjectState {

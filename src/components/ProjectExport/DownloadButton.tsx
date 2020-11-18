@@ -1,22 +1,29 @@
 import { IconButton, Tooltip } from "@material-ui/core";
-import { GetApp } from "@material-ui/icons";
+import { Cached, Error, GetApp } from "@material-ui/icons";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import React, { useEffect } from "react";
 //import { Translate } from "react-localize-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
+import { getProjectName } from "../../backend";
 import { StoreState } from "../../types";
-import { ExportStatus } from "../ProjectSettings/ProjectExport/ExportProjectActions";
+import { getNowDateTimeString } from "../../utilities";
+import { asyncDownloadExport, ExportStatus } from "./ExportProjectActions";
 
 /** An app bar shown at the top of almost every page of The Combine */
 export default function DownloadButton() {
   const exportState = useSelector(
     (state: StoreState) => state.exportProjectState
   );
+  const dispatch = useDispatch();
+
   const [connection, setConnection] = React.useState<null | HubConnection>(
     null
   );
   const [received, setReceived] = React.useState<string>("");
+  const [fileName, setFileName] = React.useState<null | string>(null);
+  const [fileUrl, setFileUrl] = React.useState<null | string>(null);
+  let downloadLink = React.createRef<HTMLAnchorElement>();
 
   useEffect(() => {
     switch (exportState.status) {
@@ -26,6 +33,7 @@ export default function DownloadButton() {
           .withAutomaticReconnect()
           .build();
         setConnection(newConnection);
+        setReceived("export in progress");
         break;
       }
       case ExportStatus.Failure: {
@@ -60,21 +68,51 @@ export default function DownloadButton() {
     }
   }, [connection]);
 
-  function download() {
+  useEffect(() => {
+    if (downloadLink.current && fileUrl !== null) {
+      downloadLink.current.click();
+      URL.revokeObjectURL(fileUrl);
+      setFileUrl(null);
+    }
+  }, [downloadLink, fileUrl]);
+
+  async function download() {
     setReceived("");
+
+    const projectName = await getProjectName(exportState.projectId);
+    setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
+    asyncDownloadExport(exportState.projectId)(dispatch)
+      .then((file) => {
+        if (file) {
+          setFileUrl(URL.createObjectURL(file));
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   return (
     <React.Fragment>
-      {received && (
+      {exportState.status !== ExportStatus.Default && (
         <Tooltip
           title={received} //<Translate id="appBar.downloadReady" />}
           placement="bottom"
         >
           <IconButton tabIndex={-1} onClick={download}>
-            <GetApp />
+            {exportState.status === ExportStatus.InProgress && <Cached />}
+            {exportState.status === ExportStatus.Success && <GetApp />}
+            {exportState.status === ExportStatus.Failure && <Error />}
           </IconButton>
         </Tooltip>
+      )}
+      {fileUrl && (
+        <a
+          ref={downloadLink}
+          href={fileUrl}
+          download={fileName}
+          style={{ display: "none" }}
+        >
+          (This link should not be visible)
+        </a>
       )}
     </React.Fragment>
   );

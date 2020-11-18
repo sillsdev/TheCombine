@@ -5,7 +5,7 @@ import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 
 import { LOGIN_SUCCESS } from "./components/Login/LoginActions";
-import { ExportStatus } from "./components/ProjectSettings/ProjectExport/ExportProjectActions";
+import { ExportStatus } from "./components/ProjectExport/ExportProjectActions";
 import { rootReducer } from "./rootReducer";
 
 const persistConfig = {

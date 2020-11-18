@@ -4,7 +4,7 @@ import React from "react";
 import { getProjectId } from "../../backend/localStorage";
 import { Path } from "../../history";
 import theme from "../../types/theme";
-import DownloadButton from "./DownloadButton";
+import DownloadButton from "../ProjectExport/DownloadButton";
 import Logo from "./Logo";
 import NavigationButtons from "./NavigationButtons";
 import ProjectNameButton from "./ProjectNameButton";

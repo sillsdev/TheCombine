@@ -27,7 +27,7 @@ import { AutoComplete } from "../../types/AutoComplete";
 import { Project } from "../../types/project";
 import { UserRole } from "../../types/userRole";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
-import ExportProjectButton from "./ProjectExport";
+import ExportProjectButton from "../ProjectExport";
 import ProjectImport from "./ProjectImport";
 import ProjectLanguages from "./ProjectLanguages/ProjectLanguages";
 import ProjectName from "./ProjectName";

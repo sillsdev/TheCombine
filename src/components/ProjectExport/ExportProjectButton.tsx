@@ -1,25 +1,22 @@
-//import { Typography } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 //import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import React /*, { useEffect }*/ from "react";
 import { Translate } from "react-localize-redux";
 
-import { getProjectName } from "../../../backend";
-//import { getUserId } from "../../../backend/localStorage";
-import { getNowDateTimeString } from "../../../utilities";
-import LoadingButton from "../../Buttons/LoadingButton";
+import { getProjectId } from "../../backend/localStorage";
+import LoadingButton from "../Buttons/LoadingButton";
+import DownloadButton from "./DownloadButton";
 import { ExportStatus } from "./ExportProjectActions";
 import { ExportProjectState } from "./ExportProjectReducer";
 
 interface ExportProjectButtonProps {
-  exportProject: (projectId?: string) => void;
-  downloadLift: (projectId?: string) => Promise<Blob | void>;
+  exportProject: (projectId: string) => void;
   exportResult: ExportProjectState;
   projectId?: string;
 }
 
 /**
- * Button for getting lift export from backend
+ * Button for exporting project to lift file
  */
 export default function ExportProjectButton(
   props: ButtonProps & ExportProjectButtonProps
@@ -29,9 +26,12 @@ export default function ExportProjectButton(
   );
   const [received, setReceived] = React.useState<string>("");*/
 
-  const [fileName, setFileName] = React.useState<null | string>(null);
-  const [fileUrl, setFileUrl] = React.useState<null | string>(null);
-  let downloadLink = React.createRef<HTMLAnchorElement>();
+  const projId = props.projectId ?? getProjectId();
+  const sameProject = projId === props.exportResult.projectId;
+  // The export button will not be clickable if another export is underway
+  const loading = [ExportStatus.InProgress, ExportStatus.Success].includes(
+    props.exportResult.status
+  );
 
   /*useEffect(() => {
     const newConnection = new HubConnectionBuilder()
@@ -41,19 +41,8 @@ export default function ExportProjectButton(
     setConnection(newConnection);
   }, []);*/
 
-  async function getFile() {
-    props.exportProject(props.projectId);
-    const projectName = await getProjectName(props.projectId);
-    //sendMessage(getUserId(), projectName);
-    setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
-    props
-      .downloadLift(props.projectId)
-      .then((file) => {
-        if (file) {
-          setFileUrl(URL.createObjectURL(file));
-        }
-      })
-      .catch((e) => console.error(e));
+  function exportProj() {
+    props.exportProject(projId);
   }
 
   /*useEffect(() => {
@@ -86,24 +75,14 @@ export default function ExportProjectButton(
   return (
     <React.Fragment>
       <LoadingButton
-        onClick={getFile}
+        onClick={exportProj}
         color="primary"
-        loading={props.exportResult.status === ExportStatus.InProgress}
+        loading={loading}
         {...props}
       >
         <Translate id="buttons.export" />
       </LoadingButton>
-      {fileUrl && (
-        <a
-          ref={downloadLink}
-          href={fileUrl}
-          download={fileName}
-          style={{ display: "none" }}
-        >
-          (This link should not be visible)
-        </a>
-      )}
-      {/*received && <Typography>{received}</Typography>*/}
+      {sameProject && <DownloadButton />}
     </React.Fragment>
   );
 }

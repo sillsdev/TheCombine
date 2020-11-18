@@ -1,7 +1,7 @@
 import { ThunkDispatch } from "redux-thunk";
 
-import { downloadLift, exportLift } from "../../../backend";
-import { StoreState } from "../../../types";
+import { downloadLift, exportLift } from "../../backend";
+import { StoreState } from "../../types";
 
 export enum ExportStatus {
   Default = "DEFAULT",
@@ -34,7 +34,7 @@ export function asyncDownloadExport(projectId?: string) {
       .then((fileString) => {
         return fetch(fileString)
           .then((file) => {
-            dispatch(success(projectId));
+            dispatch(reset());
             return file.blob();
           })
           .catch(() => {
@@ -65,5 +65,12 @@ export function failure(projectId?: string): ExportProjectAction {
   return {
     type: ExportStatus.Failure,
     projectId,
+  };
+}
+
+export function reset(): ExportProjectAction {
+  return {
+    type: ExportStatus.Default,
+    projectId: "",
   };
 }

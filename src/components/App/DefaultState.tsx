@@ -6,8 +6,8 @@ import { defaultState as loginState } from "../Login/LoginReducer";
 import { defaultState as goalTimelineState } from "../GoalTimeline/DefaultState";
 import { defaultState as goalSelectorState } from "../GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
 import { defaultState as passwordResetState } from "../PasswordReset/reducer";
+import { defaultState as exportProjectState } from "../ProjectExport/ExportProjectReducer";
 import { defaultState as createProjectState } from "../ProjectScreen/CreateProject/CreateProjectReducer";
-import { defaultState as exportProjectState } from "../ProjectSettings/ProjectExport/ExportProjectReducer";
 import { defaultState as treeViewState } from "../TreeView/TreeViewReducer";
 
 export const defaultState = {
