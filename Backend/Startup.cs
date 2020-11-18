@@ -1,5 +1,4 @@
 using System;
-//using System.Collections.Generic;
 using System.Text;
 using BackendFramework.Contexts;
 using BackendFramework.Helper;
@@ -186,7 +185,6 @@ namespace BackendFramework
 
             // Lift Service - Singleton to avoid initializing the Sldr multiple times, also to avoid leaking LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();
-            //services.AddSingleton<Dictionary<string, string>, LiftExports>();
 
             // User edit types
             services.AddTransient<IUserEditContext, UserEditContext>();

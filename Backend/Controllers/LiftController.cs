@@ -1,5 +1,4 @@
 ﻿using System;
-//using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -23,7 +22,6 @@ namespace BackendFramework.Controllers
     {
         private readonly IWordRepository _wordRepo;
         private readonly ILiftService _liftService;
-        //private readonly Dictionary<string, string> _liftExports;
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
 
@@ -181,61 +179,49 @@ namespace BackendFramework.Controllers
 
         /// <summary> Packages project data into zip file </summary>
         /// <remarks> GET: v1/projects/{projectId}/words/export </remarks>
-        /// <returns> ProjectId, if successful </returns>
+        /// <returns> ProjectId, if export successful </returns>
         [HttpGet("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
-            Console.WriteLine("starting export function");
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
-            Console.WriteLine("permission granted");
 
-            // sanitize projectId
+            // Sanitize projectId
             if (!SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
             }
-            Console.WriteLine("projectId is valid");
 
-            // Ensure project exists
+            // Ensure project exists and has words
             var proj = _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
-            Console.WriteLine("project exists");
-
-            // Ensure there are words in the project
             var words = await _wordRepo.GetAllWords(projectId);
             if (words.Count == 0)
             {
                 return new BadRequestResult();
             }
-            Console.WriteLine("project has entries");
 
-            // Export the data to a zip directory
+            // Export the data to a zip, read into memory, and delete zip
             var exportedFilepath = CreateLiftExport(projectId);
-            Console.WriteLine("zip created");
             var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
-            Console.WriteLine("zip read to string");
-
-            // Clean up temporary file after reading it.
             System.IO.File.Delete(exportedFilepath);
 
+            // Encode file as string and store for user to download later
             var encodedFile = Convert.ToBase64String(file);
-            Console.WriteLine("encodedFile prepared");
             var userId = _permissionService.GetUserId(HttpContext);
-            Console.WriteLine("userId obtained");
             _liftService.AddExport(userId, encodedFile);
-            Console.WriteLine("fileadded to dict");
 
             return new OkObjectResult(projectId);
         }
 
         /// <summary> Downloads project data in zip file </summary>
         /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
+        /// <returns> Lift file as base-64 string </returns>
         [HttpGet("download")]
         public IActionResult DownloadLiftFile()
         {
