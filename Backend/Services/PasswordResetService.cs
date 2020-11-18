@@ -37,7 +37,7 @@ namespace BackendFramework.Services
         async Task<bool> IPasswordResetService.ResetPassword(string token, string password)
         {
             var request = await _passwordResets.FindByToken(token);
-            if (request != null && DateTime.Now < request.ExpireTime)
+            if (!(request is null) && DateTime.Now < request.ExpireTime)
             {
                 var user = (await _userService.GetAllUsers()).Single(u =>
                     u.Email.ToLowerInvariant() == request.Email.ToLowerInvariant());
@@ -45,10 +45,8 @@ namespace BackendFramework.Services
                 await ExpirePasswordReset(request.Email);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
     }
 }

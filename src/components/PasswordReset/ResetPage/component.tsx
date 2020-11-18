@@ -4,7 +4,7 @@ import * as React from "react";
 import { Translate } from "react-localize-redux";
 import { RouteComponentProps } from "react-router";
 
-import history from "../../../history";
+import history, { Path } from "../../../history";
 import { passwordRequirements } from "../../../utilities";
 import { RequestState } from "../reducer";
 
@@ -47,7 +47,7 @@ export default class PasswordReset extends React.Component<
 
   backToLogin = (event: React.FormEvent<HTMLElement>) => {
     event.preventDefault();
-    history.push("/login");
+    history.push(Path.Login);
   };
 
   onSubmit = (event: React.FormEvent<HTMLElement>) => {

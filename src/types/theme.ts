@@ -2,6 +2,8 @@ import { blue, green, grey, red, yellow } from "@material-ui/core/colors";
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
+import { Path } from "../history";
+
 // Constants which define colors later:
 const primary: string = blue[600];
 const secondary: string = grey[200];
@@ -115,6 +117,13 @@ export const recorderStatus = {
     color: red[900],
   },
 };
+
+export function tabColor(currentTab: Path, tabName: Path) {
+  const colors = ["inherit", shade];
+  if (currentTab === tabName) {
+    return colors[1];
+  } else return colors[0];
+}
 
 // Can have a number of additional options passed in; here, sticks with defaults
 export default responsiveFontSizes(baseTheme, dynamicFontParams);

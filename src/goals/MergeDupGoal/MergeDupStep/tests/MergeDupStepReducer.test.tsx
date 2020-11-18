@@ -2,8 +2,9 @@ import { StoreAction, StoreActions } from "../../../../rootActions";
 import { testWordList } from "../../../../types/word";
 import { randElement, uuid } from "../../../../utilities";
 import { clearTree, moveSense, setWordData } from "../MergeDupStepActions";
-import mergeDupStepReducer, {
+import {
   defaultState,
+  mergeDupStepReducer,
   MergeTreeState,
 } from "../MergeDupStepReducer";
 import {

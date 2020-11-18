@@ -16,7 +16,7 @@ import {
   withLocalize,
 } from "react-localize-redux";
 
-import history from "../../../history";
+import history, { Path } from "../../../history";
 import { RuntimeConfig } from "../../../types/runtimeConfig";
 
 export interface LoginDispatchProps {
@@ -152,7 +152,7 @@ export class Login extends React.Component<
               <Typography>
                 <Link
                   href={"#"}
-                  onClick={() => history.push("/forgot/request")}
+                  onClick={() => history.push(Path.PwRequest)}
                   variant="subtitle2"
                 >
                   <Translate id="login.forgotPassword" />
@@ -192,7 +192,7 @@ export class Login extends React.Component<
                 <Grid item>
                   <Button
                     onClick={() => {
-                      history.push("/register");
+                      history.push(Path.Register);
                     }}
                   >
                     <Translate id="login.register" />

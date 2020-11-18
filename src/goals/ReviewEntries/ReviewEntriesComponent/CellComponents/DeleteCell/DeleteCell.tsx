@@ -1,11 +1,11 @@
-import React from "react";
 import { IconButton } from "@material-ui/core";
 import { Delete, RestoreFromTrash } from "@material-ui/icons";
+import React from "react";
 
-import AlignedList, { SPACER } from "../AlignedList";
-import { ReviewEntriesWord } from "../../ReviewEntriesTypes";
 import * as backend from "../../../../../backend";
-import DeleteWordDialog from "../DeleteWordDialog";
+import DeleteDialog from "../../../../../components/Buttons/DeleteDialog";
+import { ReviewEntriesWord } from "../../ReviewEntriesTypes";
+import AlignedList, { SPACER } from "../AlignedList";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
@@ -72,8 +72,9 @@ class DeleteCell extends React.Component<DeleteCellProps, DeleteCellState> {
         <IconButton onClick={() => this.handleOpen()}>
           <Delete />
         </IconButton>
-        <DeleteWordDialog
+        <DeleteDialog
           open={this.state.dialogOpen}
+          textId={"reviewEntries.deleteWordWarning"}
           handleCancel={() => this.handleClose()}
           handleAccept={() => this.deleteFrontierWord()}
         />

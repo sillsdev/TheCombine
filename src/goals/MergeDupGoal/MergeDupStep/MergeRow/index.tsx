@@ -6,8 +6,8 @@ import MergeRowComponent from "./MergeRowComponent";
 
 export function mapStateToProps(state: StoreState) {
   return {
-    words: state.mergeDuplicateGoal.mergeTreeState.tree.words,
-    data: state.mergeDuplicateGoal.mergeTreeState.data,
+    words: state.mergeDuplicateGoal.tree.words,
+    data: state.mergeDuplicateGoal.data,
   };
 }
 

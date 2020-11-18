@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import authHeader from "../components/Login/AuthHeaders";
-import history from "../history";
+import history, { Path } from "../history";
 import { Goal, GoalType } from "../types/goals";
 import { Project } from "../types/project";
 import { RuntimeConfig } from "../types/runtimeConfig";
@@ -28,7 +28,7 @@ backendServer.interceptors.response.use(
   },
   (err) => {
     if (err.response && err.response.status === 401) {
-      history.push("/login");
+      history.push(Path.Login);
     }
     return Promise.reject(err);
   }
@@ -268,6 +268,10 @@ export async function getProject(id?: string): Promise<Project> {
   return resp.data;
 }
 
+export async function getProjectName(id?: string): Promise<string> {
+  return (await getProject(id)).name;
+}
+
 export async function updateProject(project: Project) {
   let resp = await backendServer.put(`projects/${project.id}`, project, {
     headers: authHeader(),
@@ -322,8 +326,21 @@ export async function uploadLift(
   return parseInt(resp.toString());
 }
 
+// Tell the backend to create a LIFT file for the project
 export async function exportLift(projectId?: string) {
   let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
+  // ToDo: Once the create and download functions are split in the backend,
+  // call the create function here (fetching the project is an async placeholder)
+  let resp = await backendServer.get(`projects/${projectIdToExport}`, {
+    headers: authHeader(),
+  });
+  return resp.data;
+}
+// After the backend confirms that a LIFT file is ready, download it
+export async function downloadLift(projectId?: string) {
+  let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
+  // ToDo: Once the create and download functions are split in the backend,
+  // call the download function here (for now, both are done here)
   let resp = await backendServer.get(
     `projects/${projectIdToExport}/words/download`,
     {

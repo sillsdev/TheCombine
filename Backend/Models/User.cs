@@ -84,30 +84,30 @@ namespace BackendFramework.Models
         {
             var clone = new User
             {
-                Id = Id.Clone() as string,
-                Avatar = Avatar.Clone() as string,
+                Id = (string)Id.Clone(),
+                Avatar = (string)Avatar.Clone(),
                 HasAvatar = HasAvatar,
-                Name = Name.Clone() as string,
-                Email = Email.Clone() as string,
-                Phone = Phone.Clone() as string,
-                OtherConnectionField = OtherConnectionField.Clone() as string,
+                Name = (string)Name.Clone(),
+                Email = (string)Email.Clone(),
+                Phone = (string)Phone.Clone(),
+                OtherConnectionField = (string)OtherConnectionField.Clone(),
                 Agreement = Agreement,
-                Password = Password.Clone() as string,
-                Username = Username.Clone() as string,
-                UILang = UILang.Clone() as string,
-                Token = Token.Clone() as string,
+                Password = (string)Password.Clone(),
+                Username = (string)Username.Clone(),
+                UILang = (string)UILang.Clone(),
+                Token = (string)Token.Clone(),
                 WorkedProjects = new Dictionary<string, string>(),
                 ProjectRoles = new Dictionary<string, string>()
             };
 
             foreach (var projId in WorkedProjects.Keys)
             {
-                clone.WorkedProjects.Add(projId.Clone() as string, WorkedProjects[projId].Clone() as string);
+                clone.WorkedProjects.Add((string)projId.Clone(), (string)WorkedProjects[projId].Clone());
             }
 
             foreach (var projId in ProjectRoles.Keys)
             {
-                clone.ProjectRoles.Add(projId.Clone() as string, ProjectRoles[projId].Clone() as string);
+                clone.ProjectRoles.Add((string)projId.Clone(), (string)ProjectRoles[projId].Clone());
             }
 
             return clone;
@@ -136,7 +136,7 @@ namespace BackendFramework.Models
                 other.ProjectRoles.All(ProjectRoles.Contains);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is User other) || GetType() != obj.GetType())
             {
@@ -172,6 +172,12 @@ namespace BackendFramework.Models
     {
         public string Username { get; set; }
         public string Password { get; set; }
+
+        public Credentials()
+        {
+            Username = "";
+            Password = "";
+        }
     }
 
     /// <summary> Contains UpdatedUser for Axios interceptor. </summary>
@@ -179,6 +185,9 @@ namespace BackendFramework.Models
     {
         public User UpdatedUser;
 
-        public WithUser() { }
+        public WithUser(User user)
+        {
+            UpdatedUser = user;
+        }
     }
 }

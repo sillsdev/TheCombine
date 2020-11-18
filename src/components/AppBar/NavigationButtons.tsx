@@ -1,11 +1,12 @@
-import React from "react";
 import { Button } from "@material-ui/core";
-import history from "../../history";
+import React from "react";
 import { Translate } from "react-localize-redux";
-import { CurrentTab, tabColor } from "../../types/currentTab";
+
+import history, { Path } from "../../history";
+import { tabColor } from "../../types/theme";
 
 interface NavigationButtonsProps {
-  currentTab: CurrentTab;
+  currentTab: Path;
 }
 
 /** A button that redirects to the home page */
@@ -15,11 +16,11 @@ export default function NavigationButtons(props: NavigationButtonsProps) {
       <Button
         id="data-entry"
         onClick={() => {
-          history.push("/data-entry");
+          history.push(Path.DataEntry);
         }}
         color="inherit"
         style={{
-          background: tabColor(props.currentTab, CurrentTab.DataEntry),
+          background: tabColor(props.currentTab, Path.DataEntry),
         }}
       >
         <Translate id="appBar.dataEntry" />
@@ -27,11 +28,11 @@ export default function NavigationButtons(props: NavigationButtonsProps) {
       <Button
         id="goals"
         onClick={() => {
-          history.push("/goals");
+          history.push(Path.Goals);
         }}
         color="inherit"
         style={{
-          background: tabColor(props.currentTab, CurrentTab.DataCleanup),
+          background: tabColor(props.currentTab, Path.Goals),
         }}
       >
         <Translate id="appBar.dataCleanup" />

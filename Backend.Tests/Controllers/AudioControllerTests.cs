@@ -58,7 +58,7 @@ namespace Backend.Tests.Controllers
 
             // Generate parameters for controller call.
             var formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
-            var fileUpload = new FileUpload { Name = "FileName", File = formFile };
+            var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             var word = _wordrepo.Create(RandomWord()).Result;
 

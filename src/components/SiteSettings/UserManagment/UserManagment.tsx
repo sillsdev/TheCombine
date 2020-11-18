@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { toast, ToastContainer } from "react-toastify";
 //styles the ToastContainer so that it appears on the upper right corner with the message.
 import "react-toastify/dist/ReactToastify.min.css";
+
 import { avatarSrc, deleteUser, getAllUsers } from "../../../backend";
 import { User } from "../../../types/user";
 import UserList from "./UserList";
@@ -66,17 +67,14 @@ class UserManagment extends React.Component<UserProps, UserState> {
     getAllUsers()
       .then((allUsers) => {
         this.setState({ allUsers });
-        allUsers.forEach((u) => {
-          avatarSrc(u.id)
-            .then((result) => {
-              const userAvatar = JSON.parse(
-                JSON.stringify(this.state.userAvatar)
-              );
-              userAvatar[u.id] = result;
-              this.setState({ userAvatar });
-              console.log(userAvatar);
-            })
-            .catch((err) => console.log(err));
+        const userAvatar = this.state.userAvatar;
+        const promises = allUsers.map(async (u) => {
+          if (u.hasAvatar) {
+            userAvatar[u.id] = await avatarSrc(u.id);
+          }
+        });
+        Promise.all(promises).then(() => {
+          this.setState({ userAvatar });
         });
       })
       .catch((err) => console.log(err));

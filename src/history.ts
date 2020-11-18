@@ -9,3 +9,30 @@ import { createBrowserHistory } from "history";
  */
 let history = createBrowserHistory();
 export default history;
+
+export enum Path {
+  DataEntry = "/app/data-entry",
+  Goals = "/app/goals",
+  Login = "/login",
+  ProjInvite = "/app/invite",
+  ProjScreen = "/app",
+  ProjSettings = "/app/project-settings",
+  PwRequest = "/forgot/request",
+  PwReset = "/forgot/reset",
+  Register = "/register",
+  Root = "/",
+  SiteSettings = "/app/site-settings",
+  UserSettings = "/app/user-settings",
+}
+
+// Given a path string (e.g., /app/goals/3),
+// this function returns the longest valid parent (e.g., /app/goals)
+export function getBasePath(pathname: string): Path {
+  while (pathname.length) {
+    if (Object.values(Path).includes(pathname as Path)) {
+      return pathname as Path;
+    }
+    pathname = pathname.substring(0, pathname.lastIndexOf("/"));
+  }
+  return Path.Root;
+}

@@ -73,7 +73,7 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
         this.setState({ projUsers });
         backend
           .getAllUsers()
-          .then(async (returnedUsers) => {
+          .then((returnedUsers) => {
             this.setState((prevState) => ({
               allUsers: returnedUsers.filter(
                 (user) => !prevState.projUsers.find((u) => u.id === user.id)
@@ -85,8 +85,9 @@ class ProjectUsers extends React.Component<UserProps, UserState> {
                 userAvatar[u.id] = await backend.avatarSrc(u.id);
               }
             });
-            await Promise.all(promises);
-            this.setState({ userAvatar });
+            Promise.all(promises).then(() => {
+              this.setState({ userAvatar });
+            });
           })
           .catch((err) => console.error(err));
       })

@@ -51,3 +51,17 @@ export function quicksort<T>(arr: T[], score: (item: T) => number): T[] {
 
   return [...quicksort(less, score), pivot, ...quicksort(greater, score)];
 }
+
+export function getNowDateTimeString() {
+  const now = new Date(Date.now());
+  const vals = [
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds(),
+  ];
+  const strs = vals.map((value) => (value < 10 ? `0${value}` : `${value}`));
+  return `${strs.slice(0, 3).join("-")}_${strs.slice(3, 6).join("-")}`;
+}

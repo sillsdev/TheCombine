@@ -42,7 +42,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -67,7 +67,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -90,13 +90,13 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             var userEdit = await _repo.GetUserEdit(projectId, userEditId);
-            if (userEdit == null)
+            if (userEdit is null)
             {
                 return new NotFoundObjectResult(userEditId);
             }
@@ -122,12 +122,17 @@ namespace BackendFramework.Controllers
             var currentUser = await _userService.GetUser(currentUserId);
             currentUser.WorkedProjects.Add(projectId, userEdit.Id);
             await _userService.Update(currentUserId, currentUser);
+
             // Generate the JWT based on the new userEdit
-            currentUser = await _userService.MakeJwt(currentUser);
-            await _userService.Update(currentUserId, currentUser);
+            var currentUpdatedUser = await _userService.MakeJwt(currentUser);
+            if (currentUpdatedUser is null)
+            {
+                return new BadRequestObjectResult("Invalid JWT Token supplied.");
+            }
 
-            var output = new WithUser() { UpdatedUser = currentUser };
+            await _userService.Update(currentUserId, currentUpdatedUser);
 
+            var output = new WithUser(currentUpdatedUser);
             return new OkObjectResult(output);
         }
 
@@ -150,14 +155,14 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Ensure userEdit exists
             var toBeMod = await _repo.GetUserEdit(projectId, userEditId);
-            if (toBeMod == null)
+            if (toBeMod is null)
             {
                 return new NotFoundObjectResult(userEditId);
             }
@@ -195,14 +200,14 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Ensure userEdit exists
             var document = await _repo.GetUserEdit(projectId, userEditId);
-            if (document == null)
+            if (document is null)
             {
                 return new NotFoundResult();
             }
@@ -230,7 +235,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
-using BackendFramework.Helper;
+using static BackendFramework.Helper.FileUtilities;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
@@ -154,12 +153,21 @@ namespace Backend.Tests.Controllers
             return word;
         }
 
-        private static FileUpload InitFile(FileStream fstream, string filename)
+        private static FileUpload InitFile(Stream fstream, string filename)
         {
             var formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
-            var fileUpload = new FileUpload { Name = "FileName", File = formFile };
+            var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             return fileUpload;
+        }
+
+        /// <summary> Extract the binary contents of a zip file to a temporary directory. </summary>
+        private static string ExtractZipFileContents(byte[] fileContents)
+        {
+            var zipFile = Path.GetTempFileName();
+            File.WriteAllBytes(zipFile, fileContents);
+            var extractionPath = ExtractZipFile(zipFile, null, true);
+            return extractionPath;
         }
 
         private class RoundTripObj
@@ -170,7 +178,8 @@ namespace Backend.Tests.Controllers
             public string EntryGuid { get; set; }
             public string SenseGuid { get; set; }
 
-            public RoundTripObj(string lang, List<string> audio, int words, string entryGuid = "", string senseGuid = "")
+            public RoundTripObj(
+                string lang, List<string> audio, int words, string entryGuid = "", string senseGuid = "")
             {
                 Language = lang;
                 AudioFiles = audio;
@@ -200,10 +209,12 @@ namespace Backend.Tests.Controllers
             _wordService.Update(proj.Id, wordToUpdate.Id, word);
             _wordService.DeleteFrontierWord(proj.Id, wordToDelete.Id);
 
-            var result = _liftController.ExportLiftFile(proj.Id).Result;
+            var result = _liftController.ExportLiftFile(proj.Id).Result as OkObjectResult;
+            var fileContents = Convert.FromBase64String(result.Value as string);
 
-            var combinePath = FileUtilities.GenerateFilePath(FileUtilities.FileType.Dir, true, "", "");
-            var exportPath = Path.Combine(combinePath, proj.Id, "Export", "LiftExport",
+            // Write LiftFile contents to a temporary directory.
+            var extractedExportDir = ExtractZipFileContents(fileContents);
+            var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);
             //TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are kept vs deleted
@@ -248,10 +259,9 @@ namespace Backend.Tests.Controllers
                 "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/);
             fileMapping.Add("SingleEntryLiftWithTwoSound.zip", singleEntryLiftWithTwoSound);
 
-            foreach (var dataSet in fileMapping)
+            foreach (var (filename, roundTripContents) in fileMapping)
             {
-                var actualFilename = dataSet.Key;
-                var pathToStartZip = Path.Combine(pathToStartZips, actualFilename);
+                var pathToStartZip = Path.Combine(pathToStartZips, filename);
 
                 // Upload the zip file
 
@@ -260,112 +270,113 @@ namespace Backend.Tests.Controllers
                 _projServ.Create(proj);
 
                 // Generate api parameter with filestream
-                if (File.Exists(pathToStartZip))
+                if (!File.Exists(pathToStartZip))
                 {
-                    var fstream = File.OpenRead(pathToStartZip);
-                    var fileUpload = InitFile(fstream, actualFilename);
+                    continue;
+                }
+
+                using (var fstream = File.OpenRead(pathToStartZip))
+                {
+                    var fileUpload = InitFile(fstream, filename);
 
                     // Make api call
                     var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
                     Assert.That(!(result is BadRequestObjectResult));
+                }
 
-                    proj = _projServ.GetProject(proj.Id).Result;
-                    Assert.AreEqual(proj.VernacularWritingSystem.Bcp47, dataSet.Value.Language);
+                proj = _projServ.GetProject(proj.Id).Result;
+                Assert.AreEqual(proj.VernacularWritingSystem.Bcp47, roundTripContents.Language);
+                Assert.That(proj.LiftImported);
 
-                    fstream.Close();
-
-                    var allWords = _wordrepo.GetAllWords(proj.Id).Result;
-                    Assert.AreEqual(allWords.Count, dataSet.Value.NumOfWords);
-                    // We are currently only testing guids on the single-entry data sets
-                    if (dataSet.Value.EntryGuid != "" && allWords.Count == 1)
+                var allWords = _wordrepo.GetAllWords(proj.Id).Result;
+                Assert.AreEqual(allWords.Count, roundTripContents.NumOfWords);
+                // We are currently only testing guids on the single-entry data sets
+                if (roundTripContents.EntryGuid != "" && allWords.Count == 1)
+                {
+                    Assert.AreEqual(allWords[0].Guid.ToString(), roundTripContents.EntryGuid);
+                    if (roundTripContents.SenseGuid != "")
                     {
-                        Assert.AreEqual(allWords[0].Guid.ToString(), dataSet.Value.EntryGuid);
-                        if (dataSet.Value.SenseGuid != "")
-                        {
-                            Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), dataSet.Value.SenseGuid);
-                        }
+                        Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), roundTripContents.SenseGuid);
                     }
+                }
 
-                    // Export
-                    var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
-                    var exportedDirectory = Path.GetDirectoryName(exportedFilePath);
+                // Export
+                var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
+                var exportedDirectory = ExtractZipFile(exportedFilePath, null, false);
 
-                    // Assert the file was created with desired heirarchy
-                    Assert.That(Directory.Exists(exportedDirectory));
-                    Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio")));
-                    foreach (var audioFile in dataSet.Value.AudioFiles)
-                    {
-                        Assert.That(File.Exists(Path.Combine(
-                            exportedDirectory, "LiftExport", "Lift", "audio", audioFile)));
-                    }
-                    Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems")));
+                // Assert the file was created with desired heirarchy
+                Assert.That(Directory.Exists(exportedDirectory));
+                Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "audio")));
+                foreach (var audioFile in roundTripContents.AudioFiles)
+                {
                     Assert.That(File.Exists(Path.Combine(
-                        exportedDirectory,
-                        "LiftExport", "Lift", "WritingSystems", dataSet.Value.Language + ".ldml")));
-                    Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "NewLiftFile.lift")));
-                    var dirList = new List<string>(
-                        Directory.GetDirectories(Path.GetDirectoryName(exportedDirectory)));
-                    dirList.Remove(exportedDirectory);
-                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedDirectory), dirList.Single())));
+                        exportedDirectory, "Lift", "audio", audioFile)));
+                }
+                Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "WritingSystems")));
+                Assert.That(File.Exists(Path.Combine(
+                    exportedDirectory,
+                    "Lift", "WritingSystems", roundTripContents.Language + ".ldml")));
+                Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
+                Directory.Delete(exportedDirectory, true);
 
-                    _wordrepo.DeleteAllWords(proj.Id);
+                _wordrepo.DeleteAllWords(proj.Id);
 
-                    // Roundtrip Part 2
+                // Roundtrip Part 2
 
-                    // Upload the exported words again
-                    // Init the project the .zip info is added to
-                    var proj2 = RandomProject();
-                    _projServ.Create(proj2);
+                // Upload the exported words again
+                // Init the project the .zip info is added to
+                var proj2 = RandomProject();
+                _projServ.Create(proj2);
 
-                    // Generate api parameter with filestream
-                    fstream = File.OpenRead(exportedFilePath);
-                    fileUpload = InitFile(fstream, actualFilename);
+                // Generate api parameter with filestream
+                using (var fstream = File.OpenRead(exportedFilePath))
+                {
+                    var fileUpload = InitFile(fstream, filename);
 
                     // Make api call
                     var result2 = _liftController.UploadLiftFile(proj2.Id, fileUpload).Result;
-                    Assert.That(!(result is BadRequestObjectResult));
-
-                    proj2 = _projServ.GetProject(proj2.Id).Result;
-                    Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, dataSet.Value.Language);
-
-                    fstream.Close();
-
-                    allWords = _wordrepo.GetAllWords(proj2.Id).Result;
-                    Assert.AreEqual(allWords.Count, dataSet.Value.NumOfWords);
-                    // We are currently only testing guids on the single-entry data sets
-                    if (dataSet.Value.EntryGuid != "" && allWords.Count == 1)
-                    {
-                        Assert.AreEqual(allWords[0].Guid.ToString(), dataSet.Value.EntryGuid);
-                        if (dataSet.Value.SenseGuid != "")
-                        {
-                            Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), dataSet.Value.SenseGuid);
-                        }
-                    }
-
-                    // Export
-                    exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
-                    exportedDirectory = Path.GetDirectoryName(exportedFilePath);
-
-                    // Assert the file was created with desired hierarchy
-                    Assert.That(Directory.Exists(exportedDirectory));
-                    Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio")));
-                    foreach (var audioFile in dataSet.Value.AudioFiles)
-                    {
-                        var path = Path.Combine(exportedDirectory, "LiftExport", "Lift", "audio", audioFile);
-                        Assert.That(File.Exists(path),
-                            "The file " + audioFile + " can not be found at this path: " + path);
-                    }
-                    Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "WritingSystems")));
-                    Assert.That(File.Exists(Path.Combine(
-                        exportedDirectory,
-                        "LiftExport", "Lift", "WritingSystems", dataSet.Value.Language + ".ldml")));
-                    Assert.That(File.Exists(Path.Combine(exportedDirectory, "LiftExport", "Lift", "NewLiftFile.lift")));
-                    dirList = new List<string>(Directory.GetDirectories(Path.GetDirectoryName(exportedDirectory)));
-                    dirList.Remove(exportedDirectory);
-                    Assert.That(Directory.Exists(Path.Combine(Path.GetDirectoryName(exportedDirectory), dirList.Single())));
-
-                    _wordrepo.DeleteAllWords(proj.Id);
+                    Assert.That(!(result2 is BadRequestObjectResult));
                 }
+
+                proj2 = _projServ.GetProject(proj2.Id).Result;
+                Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, roundTripContents.Language);
+
+                // Clean up zip file.
+                File.Delete(exportedFilePath);
+
+                allWords = _wordrepo.GetAllWords(proj2.Id).Result;
+                Assert.AreEqual(allWords.Count, roundTripContents.NumOfWords);
+                // We are currently only testing guids on the single-entry data sets
+                if (roundTripContents.EntryGuid != "" && allWords.Count == 1)
+                {
+                    Assert.AreEqual(allWords[0].Guid.ToString(), roundTripContents.EntryGuid);
+                    if (roundTripContents.SenseGuid != "")
+                    {
+                        Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), roundTripContents.SenseGuid);
+                    }
+                }
+
+                // Export
+                exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
+                exportedDirectory = ExtractZipFile(exportedFilePath, null);
+
+                // Assert the file was created with desired hierarchy
+                Assert.That(Directory.Exists(exportedDirectory));
+                Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "audio")));
+                foreach (var audioFile in roundTripContents.AudioFiles)
+                {
+                    var path = Path.Combine(exportedDirectory, "Lift", "audio", audioFile);
+                    Assert.That(File.Exists(path),
+                        $"The file {audioFile} can not be found at this path: {path}");
+                }
+                Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "WritingSystems")));
+                Assert.That(File.Exists(Path.Combine(
+                    exportedDirectory,
+                    "Lift", "WritingSystems", roundTripContents.Language + ".ldml")));
+                Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
+                Directory.Delete(exportedDirectory, true);
+
+                _wordrepo.DeleteAllWords(proj.Id);
             }
         }
     }

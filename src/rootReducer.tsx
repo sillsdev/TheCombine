@@ -1,44 +1,47 @@
+import { localizeReducer } from "react-localize-redux";
 import { combineReducers, Reducer } from "redux";
 
-import { StoreState } from "./types";
-import { tempReducer } from "./components/Temp/TempReducer";
 import { goalsReducer } from "./components/GoalTimeline/GoalsReducer";
-import { localizeReducer } from "react-localize-redux";
-import { loginReducer } from "./components/Login/LoginReducer";
-import { createProjectReducer } from "./components/ProjectScreen/CreateProject/CreateProjectReducer";
-import { characterInventoryReducer } from "./goals/CharInventoryCreation/CharacterInventoryReducer";
 import { goalSelectReducer } from "./components/GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
-import { projectReducer } from "./components/Project/ProjectReducer";
-import mergeDuplicateReducer from "./goals/MergeDupGoal/mergeDuplicateReducer";
-import { treeViewReducer } from "./components/TreeView/TreeViewReducer";
-import { reviewEntriesReducer } from "./goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { loginReducer } from "./components/Login/LoginReducer";
 import { passwordResetReducer } from "./components/PasswordReset/reducer";
+import { projectReducer } from "./components/Project/ProjectReducer";
+import { createProjectReducer } from "./components/ProjectScreen/CreateProject/CreateProjectReducer";
+import { exportProjectReducer } from "./components/ProjectSettings/ProjectExport/ExportProjectReducer";
+import { tempReducer } from "./components/Temp/TempReducer";
+import { treeViewReducer } from "./components/TreeView/TreeViewReducer";
+import { characterInventoryReducer } from "./goals/CharInventoryCreation/CharacterInventoryReducer";
+import { mergeDupStepReducer } from "./goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
+import { reviewEntriesReducer } from "./goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { StoreState } from "./types";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //handles localization through react-localize-redux utilities
   localize: localizeReducer,
 
-  //intro windows
+  //login
   loginState: loginReducer,
-  createProjectState: createProjectReducer,
-  treeViewState: treeViewReducer,
-
-  // Password Reset
   passwordResetState: passwordResetReducer,
+
+  //project
+  createProjectState: createProjectReducer,
+  currentProject: projectReducer,
+  exportProjectState: exportProjectReducer,
+
+  //data entry
+  treeViewState: treeViewReducer,
 
   //general cleanup tools
   goalSelectorState: goalSelectReducer,
   goalsState: goalsReducer,
 
   //merge duplicates goal
-  mergeDuplicateGoal: mergeDuplicateReducer,
+  mergeDuplicateGoal: mergeDupStepReducer,
 
   //character inventory goal
   characterInventoryState: characterInventoryReducer,
 
-  currentProject: projectReducer,
-
-  // View Final goal
+  //review entries goal
   reviewEntriesState: reviewEntriesReducer,
 
   //temporary

@@ -2,10 +2,16 @@ import { ButtonProps } from "@material-ui/core/Button";
 import React, { useEffect } from "react";
 import { Translate } from "react-localize-redux";
 
-import { exportLift } from "../../../backend";
+import { getProjectName } from "../../../backend";
+import { getNowDateTimeString } from "../../../utilities";
 import LoadingButton from "../../Buttons/LoadingButton";
+import { ExportStatus } from "./ExportProjectActions";
+import { ExportProjectState } from "./ExportProjectReducer";
 
 interface ExportProjectButtonProps {
+  exportProject: (projectId?: string) => void;
+  downloadLift: (projectId?: string) => Promise<Blob | void>;
+  exportResult: ExportProjectState;
   projectId?: string;
 }
 
@@ -15,19 +21,16 @@ interface ExportProjectButtonProps {
 export default function ExportProjectButton(
   props: ButtonProps & ExportProjectButtonProps
 ) {
+  const [fileName, setFileName] = React.useState<null | string>(null);
   const [fileUrl, setFileUrl] = React.useState<null | string>(null);
-  const [loading, setLoading] = React.useState<boolean>(false);
   let downloadLink = React.createRef<HTMLAnchorElement>();
 
   async function getFile() {
-    setLoading(true);
-    let fileString: string;
-    props.projectId
-      ? (fileString = await exportLift(props.projectId))
-      : (fileString = await exportLift());
-    const file = await fetch(fileString).then(async (res) => res.blob());
+    props.exportProject(props.projectId);
+    const projectName = await getProjectName(props.projectId);
+    setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
+    const file = await props.downloadLift(props.projectId);
     setFileUrl(URL.createObjectURL(file));
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -41,15 +44,20 @@ export default function ExportProjectButton(
   return (
     <React.Fragment>
       <LoadingButton
-        onClick={() => getFile()}
+        onClick={getFile}
         color="primary"
-        loading={loading}
+        loading={props.exportResult.status === ExportStatus.InProgress}
         {...props}
       >
         <Translate id="buttons.export" />
       </LoadingButton>
       {fileUrl && (
-        <a ref={downloadLink} href={fileUrl} style={{ display: "none" }}>
+        <a
+          ref={downloadLink}
+          href={fileUrl}
+          download={fileName}
+          style={{ display: "none" }}
+        >
           (This link should not be visible)
         </a>
       )}

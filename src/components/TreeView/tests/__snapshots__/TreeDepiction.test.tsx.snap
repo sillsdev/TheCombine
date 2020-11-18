@@ -98,7 +98,7 @@ Array [
             </div>
             <div
               className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyUp={[Function]}
+              onKeyDown={[Function]}
             >
               <label
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -837,7 +837,7 @@ Array [
             </div>
             <div
               className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyUp={[Function]}
+              onKeyDown={[Function]}
             >
               <label
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -1221,7 +1221,7 @@ Array [
             </div>
             <div
               className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyUp={[Function]}
+              onKeyDown={[Function]}
             >
               <label
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -2099,7 +2099,7 @@ Array [
             </div>
             <div
               className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyUp={[Function]}
+              onKeyDown={[Function]}
             >
               <label
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -2560,7 +2560,7 @@ Array [
             </div>
             <div
               className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal MuiFormControl-fullWidth"
-              onKeyUp={[Function]}
+              onKeyDown={[Function]}
             >
               <label
                 className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"

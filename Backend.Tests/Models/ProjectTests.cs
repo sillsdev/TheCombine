@@ -32,6 +32,10 @@ namespace Backend.Tests.Models
             Assert.IsFalse(project.Equals(project2));
 
             project2 = project.Clone();
+            project2.LiftImported = !project.LiftImported;
+            Assert.IsFalse(project.Equals(project2));
+
+            project2 = project.Clone();
             project2.VernacularWritingSystem.Name = "different";
             Assert.IsFalse(project.Equals(project2));
 
@@ -75,12 +79,24 @@ namespace Backend.Tests.Models
             project2.InviteTokens.Add(new EmailInvite());
             Assert.IsFalse(project.Equals(project2));
         }
+
+        [Test]
+        public void TestClone()
+        {
+            var system = new WritingSystem { Name = Name, Bcp47 = "en", Font = "calibri" };
+            var project = new Project { Name = Name, VernacularWritingSystem = system };
+            var domain = new SemanticDomain { Name = Name, Id = "1", Description = "text" };
+            project.SemanticDomains.Add(domain);
+            var project2 = project.Clone();
+            Assert.AreEqual(project, project2);
+        }
     }
 
     public class WritingSystemTests
     {
         private const string Name = "System 1";
         private const string Bcp47 = "lang-1";
+        private const string Font = "calibri";
 
         [Test]
         public void TestEquals()
@@ -109,6 +125,14 @@ namespace Backend.Tests.Models
             var system = new WritingSystem { Name = Name, Bcp47 = Bcp47 };
             var systring = system.ToString();
             Assert.IsTrue(systring.Contains(Name) && systring.Contains(Bcp47));
+        }
+
+        [Test]
+        public void TestClone()
+        {
+            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47, Font = Font };
+            var clonedSystem = system.Clone();
+            Assert.AreEqual(system, clonedSystem);
         }
     }
 }

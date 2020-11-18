@@ -22,8 +22,11 @@ export class Sense {
   semanticDomains: SemanticDomain[] = [];
   accessibility?: State;
 
-  constructor(gloss: string, language?: string) {
-    this.glosses = [{ def: gloss, language: language ? language : "" }];
+  constructor(gloss: string, language?: string, semDom?: SemanticDomain) {
+    this.glosses = [{ def: gloss, language: language ?? "" }];
+    if (semDom) {
+      this.semanticDomains.push(semDom);
+    }
   }
 }
 

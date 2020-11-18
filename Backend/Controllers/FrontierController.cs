@@ -40,7 +40,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
-            if (project == null)
+            if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -93,7 +93,7 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var project = _projectService.GetProject(projectId);
-            if (project == null)
+            if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
@@ -118,14 +118,14 @@ namespace BackendFramework.Controllers
 
             // Ensure project exists
             var proj = _projectService.GetProject(projectId);
-            if (proj == null)
+            if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
 
             // Ensure word exists in frontier
             var id = await _wordService.DeleteFrontierWord(projectId, wordId);
-            if (id == null)
+            if (id is null)
             {
                 return new NotFoundObjectResult(wordId);
             }

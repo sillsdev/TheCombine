@@ -1,7 +1,7 @@
 import { ThunkDispatch } from "redux-thunk";
 
 import * as backend from "../../../backend";
-import history from "../../../history";
+import history, { Path } from "../../../history";
 import { StoreState } from "../../../types";
 import { defaultProject, Project, WritingSystem } from "../../../types/project";
 import { asyncGetUserEdits, GoalAction } from "../../GoalTimeline/GoalsActions";
@@ -72,7 +72,7 @@ export function asyncCreateProject(
                 // we manually pause so they have a chance to see the success message
                 setTimeout(() => {
                   dispatch(asyncGetUserEdits());
-                  history.push("/project-settings");
+                  history.push(Path.ProjSettings);
                 }, 1000);
               })
               .catch((err) => {
@@ -90,7 +90,7 @@ export function asyncCreateProject(
           dispatch(success(name, vernacularLanguage, analysisLanguages));
           setTimeout(() => {
             dispatch(asyncGetUserEdits());
-            history.push("/project-settings");
+            history.push(Path.ProjSettings);
           }, 1000);
         }
       })

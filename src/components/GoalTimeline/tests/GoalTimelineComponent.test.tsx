@@ -3,15 +3,13 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import GoalTimelineVertical, {
-  GoalTimelineVertical as GTVertical,
-} from "../GoalTimelineVertical";
-import { defaultState } from "../../DefaultState";
-import { Goal } from "../../../../types/goals";
+import { Goal } from "../../../types/goals";
+import { defaultState } from "../DefaultState";
+import GoalTimeline from "../GoalTimelineComponent";
 
 // Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
 HTMLDivElement.prototype.scrollIntoView = jest.fn();
-jest.mock("../../../AppBar/AppBarComponent", () => "div");
+jest.mock("../../AppBar/AppBarComponent", () => "div");
 
 // Constants
 const LOAD_EDITS = jest.fn();
@@ -30,7 +28,7 @@ const mockStore = configureMockStore([])(STATE);
 
 // Handles
 let timeMaster: ReactTestRenderer;
-let timeHandle: GTVertical;
+let timeHandle: GoalTimeline;
 
 beforeAll(() => {
   createTimeMaster();
@@ -99,12 +97,12 @@ function createTimeMaster(history?: Goal[], suggestions?: Goal[]): void {
       </Provider>
     );
   });
-  timeHandle = timeMaster.root.findByType(GTVertical).instance;
+  timeHandle = timeMaster.root.findByType(GoalTimeline).instance;
 }
 
 function createTimeline(history?: Goal[], suggestions?: Goal[]): ReactElement {
   return (
-    <GoalTimelineVertical
+    <GoalTimeline
       chooseGoal={CHOOSE_GOAL}
       loadHistory={LOAD_HISTORY}
       allPossibleGoals={goals}

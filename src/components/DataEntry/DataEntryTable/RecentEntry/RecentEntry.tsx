@@ -5,14 +5,18 @@ import theme from "../../../../types/theme";
 import { Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
-import DeleteEntry from "./DeleteEntry/DeleteEntry";
+import {
+  DeleteEntry,
+  EntryNote,
+  GlossWithSuggestions,
+  VernWithSuggestions,
+} from "../EntryCellComponents";
 
 interface RecentEntryProps {
   entry: Word;
   senseIndex: number;
   updateGloss: (newGloss: string) => void;
+  updateNote: (newText: string) => void;
   updateVern: (newVernacular: string, targetWordId?: string) => void;
   removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
@@ -86,6 +90,7 @@ export default class RecentEntry extends React.Component<
           container
           onMouseEnter={() => this.setState({ hovering: true })}
           onMouseLeave={() => this.setState({ hovering: false })}
+          alignItems="center"
         >
           <Grid
             item
@@ -139,7 +144,21 @@ export default class RecentEntry extends React.Component<
           </Grid>
           <Grid
             item
-            xs={3}
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            <EntryNote
+              noteText={this.props.entry.note.text}
+              updateNote={this.props.updateNote}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={2}
             style={{
               paddingLeft: theme.spacing(1),
               paddingRight: theme.spacing(1),
@@ -148,7 +167,6 @@ export default class RecentEntry extends React.Component<
           >
             <Pronunciations
               wordId={this.props.entry.id}
-              senseIndex={this.props.senseIndex}
               pronunciationFiles={this.props.entry.audio}
               recorder={this.props.recorder}
               deleteAudio={(wordId: string, fileName: string) => {
@@ -169,7 +187,10 @@ export default class RecentEntry extends React.Component<
             }}
           >
             {this.state.hovering && (
-              <DeleteEntry removeEntry={() => this.props.removeEntry()} />
+              <DeleteEntry
+                removeEntry={() => this.props.removeEntry()}
+                confirmId={"addWords.deleteRowWarning"}
+              />
             )}
           </Grid>
         </Grid>

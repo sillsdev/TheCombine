@@ -47,7 +47,7 @@ export default function ProjectButtonWithConfirmation(
         textId={`siteSettings.${
           props.archive ? "archive" : "restore"
         }ProjectText`}
-        titleId="siteSettings.proceedWithCaution"
+        titleId="buttons.proceedWithCaution"
         onClose={handleClose}
         onConfirm={updateProj}
       ></ButtonConfirmation>

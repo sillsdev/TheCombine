@@ -9,7 +9,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  LocalStorage.remove(LocalStorage.localStorageKeys.user);
+  LocalStorage.remove(LocalStorage.LocalStorageKey.User);
 });
 
 afterAll(() => {

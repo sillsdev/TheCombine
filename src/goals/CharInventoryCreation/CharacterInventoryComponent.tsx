@@ -1,27 +1,28 @@
-import * as React from "react";
 import {
-  LocalizeContextProps,
-  withLocalize,
-  Translate,
-} from "react-localize-redux";
-import CharacterList from "./components/CharacterList";
-import {
-  Grid,
   Button,
   Dialog,
-  DialogTitle,
+  DialogActions,
   DialogContent,
   DialogContentText,
-  DialogActions,
+  DialogTitle,
+  Grid,
 } from "@material-ui/core";
-import { Project } from "../../types/project";
 import { Save } from "@material-ui/icons";
-import history from "../../history";
-import CharacterEntry from "./components/CharacterEntry";
-import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
-import CharacterDetail from "./components/CharacterDetail";
-import { CharacterSetEntry } from "./CharacterInventoryReducer";
+import * as React from "react";
+import {
+  withLocalize,
+  LocalizeContextProps,
+  Translate,
+} from "react-localize-redux";
+
+import history, { Path } from "../../history";
+import { Project } from "../../types/project";
 import theme from "../../types/theme";
+import { CharacterSetEntry } from "./CharacterInventoryReducer";
+import CharacterDetail from "./components/CharacterDetail";
+import CharacterEntry from "./components/CharacterEntry";
+import CharacterList from "./components/CharacterList";
+import CharacterSetHeader from "./components/CharacterList/CharacterSetHeader";
 
 export interface CharacterInventoryProps {
   setValidCharacters: (inventory: string[]) => void;
@@ -106,7 +107,7 @@ export class CharacterInventory extends React.Component<
                 color="primary"
                 onClick={() => {
                   this.props.uploadInventory();
-                  history.push("/goals");
+                  history.push(Path.Goals);
                 }}
                 style={{ margin: theme.spacing(1) }}
               >
@@ -144,7 +145,7 @@ export class CharacterInventory extends React.Component<
           </DialogContent>
           <DialogActions>
             <Button
-              onClick={() => history.push("/goals")}
+              onClick={() => history.push(Path.Goals)}
               variant="contained"
               color="secondary"
               autoFocus

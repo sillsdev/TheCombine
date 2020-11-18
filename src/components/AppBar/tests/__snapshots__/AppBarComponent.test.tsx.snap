@@ -1,39 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Tests AppBarComponent Ensures ProjectName Tab is shaded when itself is called 1`] = `
-<button
-  className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
-  disabled={false}
-  id="project-name"
-  onBlur={[Function]}
-  onClick={[Function]}
-  onDragLeave={[Function]}
-  onFocus={[Function]}
-  onKeyDown={[Function]}
-  onKeyUp={[Function]}
-  onMouseDown={[Function]}
-  onMouseLeave={[Function]}
-  onMouseUp={[Function]}
-  onTouchEnd={[Function]}
-  onTouchMove={[Function]}
-  onTouchStart={[Function]}
-  style={
-    Object {
-      "background": "#1976d2",
-    }
-  }
-  tabIndex={0}
-  type="button"
->
-  <span
-    className="MuiButton-label"
-  >
-    Project
-  </span>
-</button>
-`;
-
-exports[`Tests AppBarComponent Ensures only one tab is shaded 1`] = `
+exports[`NavigationButtons has only one tab shaded 1`] = `
 Array [
   <button
     className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
@@ -98,7 +65,7 @@ Array [
 ]
 `;
 
-exports[`Tests AppBarComponent Ensures only one tab is shaded 2`] = `
+exports[`NavigationButtons has only one tab shaded 2`] = `
 <button
   className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
   disabled={false}
@@ -131,5 +98,38 @@ exports[`Tests AppBarComponent Ensures only one tab is shaded 2`] = `
   <span
     className="MuiTouchRipple-root"
   />
+</button>
+`;
+
+exports[`ProjectNameButton has tab shaded when itself is called 1`] = `
+<button
+  className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-colorInherit"
+  disabled={false}
+  id="project-name"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onDragLeave={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchMove={[Function]}
+  onTouchStart={[Function]}
+  style={
+    Object {
+      "background": "#1976d2",
+    }
+  }
+  tabIndex={0}
+  type="button"
+>
+  <span
+    className="MuiButton-label"
+  >
+    Project
+  </span>
 </button>
 `;

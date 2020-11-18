@@ -15,7 +15,7 @@ import { MergeTreeReference } from "./MergeDupsTree";
 
 export function mapStateToProps(state: StoreState) {
   return {
-    words: state.mergeDuplicateGoal.mergeTreeState.tree.words,
+    words: state.mergeDuplicateGoal.tree.words,
   };
 }
 

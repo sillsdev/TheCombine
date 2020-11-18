@@ -106,7 +106,7 @@ const mockStoreState = {
     allPossibleGoals: [],
     suggestionsState: { suggestions: [] },
   },
-  mergeDuplicateGoal: { mergeTreeState: { data: {}, tree: {} } },
+  mergeDuplicateGoal: { data: {}, tree: {} },
 };
 
 const data: { data: MergeData } = {
@@ -148,7 +148,7 @@ const tree1: { tree: MergeTree } = {
 test("no merge", async () => {
   const mockStore = createMockStore({
     ...mockStoreState,
-    mergeDuplicateGoal: { mergeTreeState: { ...data, ...tree1 } },
+    mergeDuplicateGoal: { ...data, ...tree1 },
   });
   await mockStore.dispatch<any>(mergeAll());
 
@@ -171,7 +171,7 @@ const tree2: { tree: MergeTree } = {
 test("merge senses from different words", async () => {
   const mockStore = createMockStore({
     ...mockStoreState,
-    mergeDuplicateGoal: { mergeTreeState: { ...data, ...tree2 } },
+    mergeDuplicateGoal: { ...data, ...tree2 },
   });
   await mockStore.dispatch<any>(mergeAll());
 
@@ -206,7 +206,7 @@ const tree3: { tree: MergeTree } = {
 test("move sense between words", async () => {
   const mockStore = createMockStore({
     ...mockStoreState,
-    mergeDuplicateGoal: { mergeTreeState: { ...data, ...tree3 } },
+    mergeDuplicateGoal: { ...data, ...tree3 },
   });
   await mockStore.dispatch<any>(mergeAll());
 
@@ -241,7 +241,7 @@ const tree4: { tree: MergeTree } = {
 test("merge senses within a word", async () => {
   const mockStore = createMockStore({
     ...mockStoreState,
-    mergeDuplicateGoal: { mergeTreeState: { ...data, ...tree4 } },
+    mergeDuplicateGoal: { ...data, ...tree4 },
   });
   await mockStore.dispatch<any>(mergeAll());
 
