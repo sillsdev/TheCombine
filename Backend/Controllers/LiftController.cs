@@ -180,8 +180,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> POST: v1/projects/{projectId}/words/export </remarks>
-        [HttpPost("export")]
+        /// <remarks> Get: v1/projects/{projectId}/words/export </remarks>
+        /// <returns> ProjectId, if successful </returns>
+        [HttpGet("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             Console.WriteLine("starting export function");

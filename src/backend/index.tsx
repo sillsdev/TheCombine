@@ -333,7 +333,7 @@ export async function exportLift(projectId?: string) {
   return getProject(projectId);
   /*
   let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
-  let resp = await backendServer.post(
+  let resp = await backendServer.get(
     `projects/${projectIdToExport}/words/export`,
     {
       headers: authHeader(),
@@ -347,7 +347,7 @@ export async function downloadLift(userId?: string) {
   let userIdToExport = userId ? userId : LocalStorage.getUserId();
   // ToDo: Once the backend can signal that a download is complete,
   // remove the post from here.
-  await backendServer.post(`projects/${userIdToExport}/words/export`, {
+  await backendServer.get(`projects/${userIdToExport}/words/export`, {
     headers: authHeader(),
   });
 
