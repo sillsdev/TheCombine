@@ -1,6 +1,5 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Cached, Error, GetApp } from "@material-ui/icons";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import React, { useEffect } from "react";
 //import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,63 +9,20 @@ import { StoreState } from "../../types";
 import { getNowDateTimeString } from "../../utilities";
 import { asyncDownloadExport, ExportStatus } from "./ExportProjectActions";
 
-/** An app bar shown at the top of almost every page of The Combine */
+/** A button to show export status */
 export default function DownloadButton() {
   const exportState = useSelector(
     (state: StoreState) => state.exportProjectState
   );
   const dispatch = useDispatch();
-
-  const [connection, setConnection] = React.useState<null | HubConnection>(
-    null
-  );
   const [received, setReceived] = React.useState<string>("");
   const [fileName, setFileName] = React.useState<null | string>(null);
   const [fileUrl, setFileUrl] = React.useState<null | string>(null);
   let downloadLink = React.createRef<HTMLAnchorElement>();
 
   useEffect(() => {
-    switch (exportState.status) {
-      case ExportStatus.InProgress: {
-        const newConnection = new HubConnectionBuilder()
-          .withUrl("https://localhost:5001/queue")
-          .withAutomaticReconnect()
-          .build();
-        setConnection(newConnection);
-        setReceived("export in progress");
-        break;
-      }
-      case ExportStatus.Failure: {
-        setConnection(null);
-        setReceived("export failed");
-        break;
-      }
-      case ExportStatus.Success: {
-        setConnection(null);
-        setReceived("export succeeded");
-        break;
-      }
-      case ExportStatus.Default: {
-        setConnection(null);
-        setReceived("no active export");
-        break;
-      }
-    }
+    setReceived(`export: ${exportState.status}`);
   }, [exportState]);
-
-  useEffect(() => {
-    if (connection) {
-      connection
-        .start()
-        .then(() => {
-          console.log("Connected!");
-          connection.on("ReceiveMessage", (user: string, message: string) => {
-            setReceived(`${user}: ${message}`);
-          });
-        })
-        .catch((e) => console.log("Connection failed: ", e));
-    }
-  }, [connection]);
 
   useEffect(() => {
     if (downloadLink.current && fileUrl !== null) {
@@ -77,8 +33,6 @@ export default function DownloadButton() {
   }, [downloadLink, fileUrl]);
 
   async function download() {
-    setReceived("");
-
     const projectName = await getProjectName(exportState.projectId);
     setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
     asyncDownloadExport(exportState.projectId)(dispatch)

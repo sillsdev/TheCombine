@@ -26,6 +26,14 @@ export function asyncExportProject(projectId?: string) {
   };
 }
 
+export function downloadIsReady(projectId?: string) {
+  return async (
+    dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>
+  ) => {
+    dispatch(success(projectId));
+  };
+}
+
 export function asyncDownloadExport(projectId?: string) {
   return async (
     dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>

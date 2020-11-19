@@ -3,11 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using SIL.Lift.Parsing;
 using static BackendFramework.Helper.FileUtilities;
 
@@ -24,14 +26,16 @@ namespace BackendFramework.Controllers
         private readonly ILiftService _liftService;
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
+        private readonly IHubContext<CombineHub> _notifyService;
 
         public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService,
-            ILiftService liftService)
+            ILiftService liftService, IHubContext<CombineHub> notifyService)
         {
             _wordRepo = repo;
             _projectService = projServ;
             _liftService = liftService;
             _permissionService = permissionService;
+            _notifyService = notifyService;
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
@@ -186,7 +190,8 @@ namespace BackendFramework.Controllers
             return await ExportLiftFile(projectId, userId);
         }
 
-        public async Task<IActionResult> ExportLiftFile(string projectId, string userId)
+        // These internal methods are extracted for unit testing
+        internal async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -219,8 +224,15 @@ namespace BackendFramework.Controllers
             // Encode file as string and store for user to download later
             var encodedFile = Convert.ToBase64String(file);
             _liftService.StoreExport(userId, encodedFile);
+            await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
 
             return new OkObjectResult(projectId);
+        }
+
+        internal string CreateLiftExport(string projectId)
+        {
+            var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
+            return exportedFilepath;
         }
 
         /// <summary> Downloads project data in zip file </summary>
@@ -233,7 +245,7 @@ namespace BackendFramework.Controllers
             return DownloadLiftFile(userId);
         }
 
-        public IActionResult DownloadLiftFile(string userId)
+        internal IActionResult DownloadLiftFile(string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -248,13 +260,6 @@ namespace BackendFramework.Controllers
             }
 
             return new OkObjectResult(encodedFile);
-        }
-
-        // This method is extracted so that it can be unit tested
-        internal string CreateLiftExport(string projectId)
-        {
-            var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
-            return exportedFilepath;
         }
     }
 

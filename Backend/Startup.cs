@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -90,9 +91,8 @@ namespace BackendFramework
                     builder => builder
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                //.AllowAnyOrigin());
-                .WithOrigins("http://localhost:3000")
-                .AllowCredentials());
+                        .WithOrigins("http://localhost:3000")
+                        .AllowCredentials());
             });
 
             // Configure JWT Authentication
@@ -247,11 +247,10 @@ namespace BackendFramework
 
             app.UseAuthentication();
             app.UseAuthorization();
-            //app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                endpoints.MapHub<CombineHub>("/queue");
+                endpoints.MapHub<CombineHub>("/hub");
             });
 
             // If an admin user has been created via the commandline, treat that as a single action and shut the
