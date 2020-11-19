@@ -1,0 +1,61 @@
+#!/bin/bash
+
+######################################################
+# Backup job for docker containers running TheCombine
+######################################################
+
+set -e
+
+# 1. Setup some useful environment variables
+DATE_STR=`date +%Y-%m-%d-%T`
+COMBINE_HOST={{ ansible_hostname }}
+BACKUP_FILE="combine-backup-${DATE_STR}.tar.gz"
+AWS_FILE="s3://thecombine.app/backups/${COMBINE_HOST}-${DATE_STR}.tar.gz"
+COMBINE_HOME=${COMBINE_HOME:="{{ combine_app_dir }}"}
+BACKUP_DIR=${BACKUP_DIR:="{{ combine_backup_dir }}"}
+
+cd ${COMBINE_HOME}
+
+# 2. Create the backup directory
+if [ ! -e "${BACKUP_DIR}" ] ; then
+  mkdir -p ${BACKUP_DIR}
+fi
+
+# 3. Stop the current containers
+docker-compose down
+
+# 4. Start up just the backend and the database
+docker-compose up --detach database backend
+
+# 5. Remove old backups
+rm -rf /var/backups/dump var/backups/.CombineFiles
+
+# 6. Dump the database
+docker-compose exec database mongodump --db CombineDatabase --gzip --quiet
+DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
+docker cp ${DB_CONTAINER}:dump/ ${BACKUP_DIR}
+
+# 7. Copy the backend files (commands are run relative the 'app' user's home directory)
+BE_CONTAINER=`docker ps | grep backend | sed "s/.* \([^ ][^ ]*\)$/\1/"`
+docker cp ${BE_CONTAINER}:.CombineFiles/ ${BACKUP_DIR}
+
+# 8. create the tarball for the backup
+tar --create --file=/var/backups/${BACKUP_FILE} --gzip --verbose .CombineFiles dump
+
+# 9. Remove old backups
+cd ${BACKUP_DIR}
+ALL_BACKUPS=(`ls combine-backup*.tar.gz`)
+
+for bu in "${ALL_BACKUPS[@]}"; do
+  if [ "$bu" != "$BACKUP_FILE" ] ; then
+  	  echo "Removing $bu"
+      rm $bu
+  fi
+done
+
+# 9. if aws-cli is installed, push backup to AWS S3 storage
+#    need to specify full path because $PATH does not contain
+#    /usr/local/bin when run as a cron job
+if [ -e /usr/local/bin/aws ] ; then
+  /usr/local/bin/aws s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_backup_profile }}
+fi

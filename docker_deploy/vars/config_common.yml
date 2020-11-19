@@ -10,6 +10,7 @@ frontend_env_dir: "{{ source_dir }}"
 combine_user: combine
 combine_group: app
 combine_app_dir: /opt/combine
+combine_backup_dir: "{{ combine_app_dir }}/backups"
 
 # common configuration items that are shared between the certmgr and frontend
 # containers and across target types:
