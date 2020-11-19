@@ -1,16 +1,10 @@
+import { Button, GridList, GridListTile, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
+import { Translate } from "react-localize-redux";
 
-import AppBarComponent from "../../AppBar/AppBarComponent";
-import { Goal } from "../../../types/goals";
-import { GridList, GridListTile, Button, Typography } from "@material-ui/core";
-import HorizontalDisplay from "./HorizontalDisplay";
-import VerticalDisplay from "./VerticalDisplay";
-import {
-  Translate,
-  LocalizeContextProps,
-  withLocalize,
-} from "react-localize-redux";
-import { CurrentTab } from "../../../types/currentTab";
+import { Goal } from "../../types/goals";
+import HorizontalDisplay from "./GoalDisplay/HorizontalDisplay";
+import VerticalDisplay from "./GoalDisplay/VerticalDisplay";
 
 const timelineStyle = {
   centerDisplays: {
@@ -33,7 +27,7 @@ const timelineStyle = {
   },
 };
 
-export interface GoalTimelineVerticalProps {
+export interface GoalTimelineProps {
   chooseGoal: (goal: Goal) => void;
   loadHistory: () => void;
 
@@ -42,7 +36,7 @@ export interface GoalTimelineVerticalProps {
   suggestions: Goal[];
 }
 
-export interface GoalTimelineVerticalState {
+export interface GoalTimelineState {
   portrait: boolean;
   reducedLandScape: boolean;
 }
@@ -52,11 +46,11 @@ export interface GoalTimelineVerticalState {
  * choices for the next goal, and suggestions for which goals they should choose
  * to work on.
  */
-export class GoalTimelineVertical extends React.Component<
-  GoalTimelineVerticalProps & LocalizeContextProps,
-  GoalTimelineVerticalState
+export default class GoalTimeline extends React.Component<
+  GoalTimelineProps,
+  GoalTimelineState
 > {
-  constructor(props: GoalTimelineVerticalProps & LocalizeContextProps) {
+  constructor(props: GoalTimelineProps) {
     super(props);
     this.state = {
       portrait: window.innerWidth < window.innerHeight,
@@ -104,7 +98,8 @@ export class GoalTimelineVertical extends React.Component<
     }
   }
 
-  // Creates a list of suggestions, with non-suggested goals at the end and our main suggestion absent (to be displayed on the suggestions button)
+  // Creates a list of suggestions, with non-suggested goals at the end and
+  // our main suggestion absent (to be displayed on the suggestions button)
   createSuggestionData(): Goal[] {
     let data: Goal[] = this.props.suggestions.slice(1);
     let hasGoal: boolean;
@@ -155,8 +150,7 @@ export class GoalTimelineVertical extends React.Component<
 
   renderPortrait() {
     return (
-      <div className="GoalView">
-        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
+      <React.Fragment>
         {/* Alternatives */}
         <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
           <HorizontalDisplay
@@ -183,59 +177,54 @@ export class GoalTimelineVertical extends React.Component<
             {this.goalButton()}
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 
   renderLandscape() {
     return (
-      <div className="GoalView">
-        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
-        <GridList cols={this.state.reducedLandScape ? 6 : 8} cellHeight="auto">
-          {/* Alternatives */}
-          <GridListTile cols={2}>
-            <div
-              style={{ ...timelineStyle.paneStyling, float: "right" } as any}
-            >
-              <Typography variant="h6">
-                <Translate id={"goal.selector.other"} />
-              </Typography>
-              <VerticalDisplay
-                data={this.createSuggestionData()}
-                scrollToEnd={false}
-                handleChange={this.handleChange}
-                height={35}
-                numPanes={3}
-              />
-            </div>
-          </GridListTile>
-
-          {/* Recommendation */}
-          <GridListTile cols={2} style={timelineStyle.paneStyling as any}>
-            <Typography variant="h5">
-              <Translate id={"goal.selector.present"} />
+      <GridList cols={this.state.reducedLandScape ? 6 : 8} cellHeight="auto">
+        {/* Alternatives */}
+        <GridListTile cols={2}>
+          <div style={{ ...timelineStyle.paneStyling, float: "right" } as any}>
+            <Typography variant="h6">
+              <Translate id={"goal.selector.other"} />
             </Typography>
-            {this.goalButton()}
-          </GridListTile>
+            <VerticalDisplay
+              data={this.createSuggestionData()}
+              scrollToEnd={false}
+              handleChange={this.handleChange}
+              height={35}
+              numPanes={3}
+            />
+          </div>
+        </GridListTile>
 
-          {/* History */}
+        {/* Recommendation */}
+        <GridListTile cols={2} style={timelineStyle.paneStyling as any}>
+          <Typography variant="h5">
+            <Translate id={"goal.selector.present"} />
+          </Typography>
+          {this.goalButton()}
+        </GridListTile>
 
-          <GridListTile cols={2}>
-            <div style={timelineStyle.paneStyling as any}>
-              <Typography variant="h6">
-                <Translate id={"goal.selector.past"} />
-              </Typography>
-              <VerticalDisplay
-                data={this.props.history}
-                scrollToEnd={false}
-                handleChange={this.handleChange}
-                height={35}
-                numPanes={3}
-              />
-            </div>
-          </GridListTile>
-        </GridList>
-      </div>
+        {/* History */}
+
+        <GridListTile cols={2}>
+          <div style={timelineStyle.paneStyling as any}>
+            <Typography variant="h6">
+              <Translate id={"goal.selector.past"} />
+            </Typography>
+            <VerticalDisplay
+              data={this.props.history}
+              scrollToEnd={false}
+              handleChange={this.handleChange}
+              height={35}
+              numPanes={3}
+            />
+          </div>
+        </GridListTile>
+      </GridList>
     );
   }
 
@@ -243,5 +232,3 @@ export class GoalTimelineVertical extends React.Component<
     return this.state.portrait ? this.renderPortrait() : this.renderLandscape();
   }
 }
-
-export default withLocalize(GoalTimelineVertical);

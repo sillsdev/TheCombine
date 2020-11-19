@@ -1,6 +1,6 @@
 {
   "name": "thecombine",
-  "version": "0.5.1-alpha.0",
+  "version": "0.6.0",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -11,8 +11,8 @@
     "eject": "react-scripts eject",
     "fmt-backend": "dotnet-format",
     "fmt-backend-check": "dotnet-format --check",
-    "fmt-frontend": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
-    "fmt-frontend-check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,json}\"",
+    "fmt-frontend": "prettier --write \"./{.vscode,public,scripts,src}/**/*.{js,jsx,ts,tsx,json}\"",
+    "fmt-frontend-check": "prettier --check \"./{.vscode,public,scripts,src}/**/*.{js,jsx,ts,tsx,json}\"",
     "frontend": "react-scripts start",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "import-sem-doms": "tsc scripts/importSemanticDomains.ts && node scripts/importSemanticDomains.js",

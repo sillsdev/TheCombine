@@ -5,10 +5,12 @@ import theme from "../../../../types/theme";
 import { Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
-import DeleteEntry from "./DeleteEntry";
-import EntryNote from "./EntryNote";
+import {
+  DeleteEntry,
+  EntryNote,
+  GlossWithSuggestions,
+  VernWithSuggestions,
+} from "../EntryCellComponents";
 
 interface RecentEntryProps {
   entry: Word;
@@ -142,6 +144,20 @@ export default class RecentEntry extends React.Component<
           </Grid>
           <Grid
             item
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            <EntryNote
+              noteText={this.props.entry.note.text}
+              updateNote={this.props.updateNote}
+            />
+          </Grid>
+          <Grid
+            item
             xs={2}
             style={{
               paddingLeft: theme.spacing(1),
@@ -170,22 +186,11 @@ export default class RecentEntry extends React.Component<
               position: "relative",
             }}
           >
-            <EntryNote
-              entry={this.props.entry}
-              updateNote={this.props.updateNote}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={1}
-            style={{
-              paddingLeft: theme.spacing(1),
-              paddingRight: theme.spacing(1),
-              position: "relative",
-            }}
-          >
             {this.state.hovering && (
-              <DeleteEntry removeEntry={() => this.props.removeEntry()} />
+              <DeleteEntry
+                removeEntry={() => this.props.removeEntry()}
+                confirmId={"addWords.deleteRowWarning"}
+              />
             )}
           </Grid>
         </Grid>

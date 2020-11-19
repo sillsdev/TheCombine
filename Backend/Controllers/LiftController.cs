@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -52,11 +51,10 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            // Ensure project exists
-            var project = _projectService.GetProject(projectId);
-            if (project is null)
+            // Ensure Lift file has not already been imported.
+            if (!_projectService.CanImportLift(projectId))
             {
-                return new NotFoundObjectResult(projectId);
+                return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
 
             var file = fileUpload.File;
@@ -71,39 +69,18 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("Empty File");
             }
 
-            // Get path to where we will copy the zip file
-            fileUpload.FilePath = GenerateFilePath(
-                FileType.Zip,
-                false,
-                "Compressed-Upload-" + $"{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}",
-                Path.Combine(projectId, "Import"));
-
-            // Copy file data to a new local file
+            // Copy zip file data to a new temporary file
+            fileUpload.FilePath = Path.GetTempFileName();
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
             }
 
-            // Make destination for extracted files
-            var zipDest = Path.GetDirectoryName(fileUpload.FilePath);
-            if (zipDest is null)
-            {
-                throw new FileSystemError($"Could not get directory name of {fileUpload.FilePath}");
-            }
+            // Make temporary destination for extracted files
+            var extractDir = GetRandomTempDir();
 
-            Directory.CreateDirectory(zipDest);
-            if (Directory.Exists(Path.Combine(zipDest, "ExtractedLocation")))
-            {
-                return new BadRequestObjectResult("A file has already been uploaded");
-            }
-
-            // Extract the zip to new directory
-            var extractDir = Path.Combine(zipDest, "ExtractedLocation");
-            Directory.CreateDirectory(extractDir);
-            ZipFile.ExtractToDirectory(fileUpload.FilePath, extractDir);
-
-            // Clean up the temporary zip file
-            System.IO.File.Delete(fileUpload.FilePath);
+            // Extract the zip to new created directory.
+            ExtractZipFile(fileUpload.FilePath, extractDir, true);
 
             // Check number of directories extracted
             var directoriesExtracted = Directory.GetDirectories(extractDir);
@@ -148,22 +125,23 @@ namespace BackendFramework.Controllers
                     }
             }
 
-            // Get the directory and rename to be easier to reference elsewhere if needed
-            var correctPath = Path.Combine(extractDir, "Lift");
-            if (!extractedDirPath.Equals(correctPath))
-            {
-                Directory.Move(extractedDirPath, correctPath);
-                extractedDirPath = Path.Combine(extractDir, "Lift");
-            }
+            // Copy the extracted contents into the persistent storage location for the project.
+            var liftStoragePath = GenerateFilePath(
+                FileType.Dir,
+                true,
+                "",
+                Path.Combine(projectId, "Import", "ExtractedLocation", "Lift"));
+            CopyDirectory(extractedDirPath, liftStoragePath);
+            Directory.Delete(extractDir, true);
 
             // Search for the lift file within the extracted files
-            var extractedLiftNameArr = Directory.GetFiles(extractedDirPath);
+            var extractedLiftNameArr = Directory.GetFiles(liftStoragePath);
             var extractedLiftPath = Array.FindAll(extractedLiftNameArr, x => x.EndsWith(".lift"));
             if (extractedLiftPath.Length > 1)
             {
                 return new BadRequestObjectResult("More than one .lift file detected");
             }
-            else if (extractedLiftPath.Length == 0)
+            if (extractedLiftPath.Length == 0)
             {
                 return new BadRequestObjectResult("No lift files detected");
             }
@@ -180,8 +158,14 @@ namespace BackendFramework.Controllers
                 // Add character set to project from ldml file
                 var proj = _projectService.GetProject(projectId).Result;
                 _liftService.LdmlImport(
-                    Path.Combine(extractedDirPath, "WritingSystems"),
+                    Path.Combine(liftStoragePath, "WritingSystems"),
                     proj.VernacularWritingSystem.Bcp47, _projectService, proj);
+
+                // Store that we have imported Lift data already for this project to signal the frontend
+                // not to attempt to import again.
+                var project = _projectService.GetProject(projectId).Result;
+                project.LiftImported = true;
+                await _projectService.Update(projectId, project);
 
                 return new ObjectResult(resp);
             }
@@ -193,43 +177,75 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
-        [HttpGet("download")]
+        /// <remarks> GET: v1/projects/{projectId}/words/export </remarks>
+        /// <returns> ProjectId, if export successful </returns>
+        [HttpGet("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return await ExportLiftFile(projectId, userId);
+        }
+
+        public async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
 
-            // sanitize projectId
+            // Sanitize projectId
             if (!SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
             }
 
-            // Ensure project exists
+            // Ensure project exists and has words
             var proj = _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
-
-            // Ensure there are words in the project
             var words = await _wordRepo.GetAllWords(projectId);
             if (words.Count == 0)
             {
                 return new BadRequestResult();
             }
-            // Export the data to a zip directory
+
+            // Export the data to a zip, read into memory, and delete zip
             var exportedFilepath = CreateLiftExport(projectId);
             var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
-
-            // Clean up temporary file after reading it.
             System.IO.File.Delete(exportedFilepath);
-            GC.Collect();
 
+            // Encode file as string and store for user to download later
             var encodedFile = Convert.ToBase64String(file);
+            _liftService.StoreExport(userId, encodedFile);
+
+            return new OkObjectResult(projectId);
+        }
+
+        /// <summary> Downloads project data in zip file </summary>
+        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
+        /// <returns> Lift file as base-64 string </returns>
+        [HttpGet("download")]
+        public IActionResult DownloadLiftFile()
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return DownloadLiftFile(userId);
+        }
+
+        public IActionResult DownloadLiftFile(string userId)
+        {
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return new ForbidResult();
+            }
+
+            // Ensure export exists
+            var encodedFile = _liftService.RetrieveExport(userId);
+            if (encodedFile is null)
+            {
+                return new NotFoundObjectResult(userId);
+            }
 
             return new OkObjectResult(encodedFile);
         }
