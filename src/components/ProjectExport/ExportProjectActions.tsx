@@ -40,7 +40,6 @@ export function asyncDownloadExport(projectId?: string) {
       .then((fileString) => {
         return fetch(fileString)
           .then((file) => {
-            dispatch(reset());
             return file.blob();
           })
           .catch(() => {
@@ -55,6 +54,7 @@ export function asyncDownloadExport(projectId?: string) {
 
 export function resetExport(projectId?: string) {
   return (dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>) => {
+    console.log("RESETING!");
     dispatch(reset());
     deleteLift(projectId);
   };
@@ -82,8 +82,5 @@ export function failure(projectId?: string): ExportProjectAction {
 }
 
 export function reset(): ExportProjectAction {
-  return {
-    type: ExportStatus.Default,
-    projectId: "",
-  };
+  return { type: ExportStatus.Default };
 }

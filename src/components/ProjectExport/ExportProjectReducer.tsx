@@ -34,6 +34,8 @@ export const exportProjectReducer = (
         projectId: action.projectId ?? "",
         status: action.type,
       };
+    case ExportStatus.Default:
+      return defaultState;
     case StoreActions.RESET:
       return defaultState;
     default:

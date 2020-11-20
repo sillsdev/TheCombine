@@ -31,7 +31,6 @@ export default function DownloadButton() {
   useEffect(() => {
     if (downloadLink.current && fileUrl !== null) {
       downloadLink.current.click();
-      resetExport(exportState.projectId)(dispatch);
       URL.revokeObjectURL(fileUrl);
       setFileUrl(null);
     }
@@ -44,6 +43,7 @@ export default function DownloadButton() {
       .then((file) => {
         if (file) {
           setFileUrl(URL.createObjectURL(file));
+          resetExport(exportState.projectId)(dispatch);
         }
       })
       .catch((err) => console.error(err));
