@@ -76,8 +76,8 @@ namespace BackendFramework.Services
 
     public class LiftService : ILiftService
     {
-        /// A dictionary shared by all Projects for storing and retrieving exported projects.
-        private readonly Dictionary<string, byte[]> _liftExports;
+        /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
+        private readonly Dictionary<string, string> _liftExports;
 
         public LiftService()
         {
@@ -86,16 +86,16 @@ namespace BackendFramework.Services
                 Sldr.Initialize(true);
             }
 
-            _liftExports = new Dictionary<string, byte[]>();
+            _liftExports = new Dictionary<string, string>();
         }
 
-        public void StoreExport(string userId, byte[] file)
+        public void StoreExport(string userId, string filePath)
         {
             _liftExports.Remove(userId);
-            _liftExports.Add(userId, file);
+            _liftExports.Add(userId, filePath);
         }
 
-        public byte[]? RetrieveExport(string userId)
+        public string? RetrieveExport(string userId)
         {
             if (!_liftExports.ContainsKey(userId))
             {
@@ -105,13 +105,16 @@ namespace BackendFramework.Services
             return _liftExports[userId];
         }
 
-        /// <summary>
-        /// Delete a stored Lift export.
-        /// </summary>
+        /// <summary> Delete a stored Lift export path and its file on disk. </summary>
         /// <returns>true if the element is successfully found and removed; otherwise, false.</returns>
         public bool DeleteExport(string userId)
         {
-            return _liftExports.Remove(userId);
+            var removeSuccessful = _liftExports.Remove(userId, out var filePath);
+            if (removeSuccessful)
+            {
+                File.Delete(filePath);
+            }
+            return removeSuccessful;
         }
 
         /// <summary> Imports main character set for a project from an ldml file </summary>
