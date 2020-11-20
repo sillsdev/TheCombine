@@ -219,10 +219,6 @@ namespace Backend.Tests.Controllers
             var result = _liftController.DownloadLiftFile(proj.Id, userId).Result as FileContentResult;
             Assert.NotNull(result);
 
-            // Ensure that downloading a Lift file deletes the temporary in-memory copy.
-            var notFoundResult = _liftController.DownloadLiftFile(proj.Id, userId).Result as NotFoundObjectResult;
-            Assert.NotNull(notFoundResult);
-
             // Write LiftFile contents to a temporary directory.
             var extractedExportDir = ExtractZipFileContents(result.FileContents);
             var exportPath = Path.Combine(extractedExportDir,
@@ -233,6 +229,11 @@ namespace Backend.Tests.Controllers
             Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
             // There is only one deleted word
             Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
+
+            // Delete the export
+            _liftController.DeleteLiftFile(userId);
+            var notFoundResult = _liftController.DownloadLiftFile(proj.Id, userId).Result as NotFoundObjectResult;
+            Assert.NotNull(notFoundResult);
         }
 
         [Test]
