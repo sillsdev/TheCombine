@@ -243,10 +243,10 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(userId);
             }
 
-            // Return as Base64 string to allow embedding into HTTP OK message.
             var file = await System.IO.File.ReadAllBytesAsync(filePath);
             _liftService.DeleteExport(userId);
 
+            // Return as Base64 string to allow embedding into HTTP OK message.
             var encodedFile = Convert.ToBase64String(file);
             return new OkObjectResult(encodedFile);
         }
