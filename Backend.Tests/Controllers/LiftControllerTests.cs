@@ -209,10 +209,14 @@ namespace Backend.Tests.Controllers
             _wordService.Update(proj.Id, wordToUpdate.Id, word);
             _wordService.DeleteFrontierWord(proj.Id, wordToDelete.Id);
 
-            var userId = "testId";
+            const string userId = "testId";
             _liftController.ExportLiftFile(proj.Id, userId).Wait();
             var result = _liftController.DownloadLiftFile(userId) as OkObjectResult;
             var fileContents = Convert.FromBase64String(result.Value as string);
+
+            // Ensure that downloading a Lift file deletes the temporary in-memory copy.
+            var notFoundResult = _liftController.DownloadLiftFile(userId) as NotFoundObjectResult;
+            Assert.NotNull(notFoundResult);
 
             // Write LiftFile contents to a temporary directory.
             var extractedExportDir = ExtractZipFileContents(fileContents);

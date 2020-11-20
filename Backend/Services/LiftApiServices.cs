@@ -76,6 +76,9 @@ namespace BackendFramework.Services
 
     public class LiftService : ILiftService
     {
+        /// A dictionary shared by all Projects for storing and retrieving exported projects.
+        private readonly Dictionary<string, byte[]> _liftExports;
+
         public LiftService()
         {
             if (!Sldr.IsInitialized)
@@ -83,27 +86,32 @@ namespace BackendFramework.Services
                 Sldr.Initialize(true);
             }
 
-            LiftExports = new Dictionary<string, string>();
+            _liftExports = new Dictionary<string, byte[]>();
         }
 
-        // A common dictionary for storing and retrieving exported projects
-        private Dictionary<string, string> LiftExports;
-        public void StoreExport(string userId, string encodedFile)
+        public void StoreExport(string userId, byte[] file)
         {
-            LiftExports.Remove(userId);
-            LiftExports.Add(userId, encodedFile);
+            _liftExports.Remove(userId);
+            _liftExports.Add(userId, file);
         }
-        public string? RetrieveExport(string userId)
+
+        public byte[]? RetrieveExport(string userId)
         {
-            if (!LiftExports.ContainsKey(userId))
+            if (!_liftExports.ContainsKey(userId))
             {
                 return null;
             }
-            return LiftExports[userId];
+
+            return _liftExports[userId];
         }
-        public void DeleteExport(string userId)
+
+        /// <summary>
+        /// Delete a stored Lift export.
+        /// </summary>
+        /// <returns>true if the element is successfully found and removed; otherwise, false.</returns>
+        public bool DeleteExport(string userId)
         {
-            LiftExports.Remove(userId);
+            return _liftExports.Remove(userId);
         }
 
         /// <summary> Imports main character set for a project from an ldml file </summary>
