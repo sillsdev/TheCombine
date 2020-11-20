@@ -217,9 +217,7 @@ namespace BackendFramework.Controllers
             System.IO.File.Delete(exportedFilepath);
 
             // Encode file as string and store for user to download later
-            var encodedFile = Convert.ToBase64String(file);
-            _liftService.StoreExport(userId, encodedFile);
-
+            _liftService.StoreExport(userId, file);
             return new OkObjectResult(projectId);
         }
 
@@ -240,13 +238,16 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            // Ensure export exists
-            var encodedFile = _liftService.RetrieveExport(userId);
-            if (encodedFile is null)
+            // Ensure export exists.
+            var file = _liftService.RetrieveExport(userId);
+            if (file is null)
             {
                 return new NotFoundObjectResult(userId);
             }
+            _liftService.DeleteExport(userId);
 
+            // Return as Base64 string to allow embedding into HTTP OK message.
+            var encodedFile = Convert.ToBase64String(file);
             return new OkObjectResult(encodedFile);
         }
 
