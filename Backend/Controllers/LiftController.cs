@@ -280,7 +280,6 @@ namespace BackendFramework.Controllers
             }
 
             _liftService.DeleteExport(userId);
-
             return new OkObjectResult(userId);
         }
     }
