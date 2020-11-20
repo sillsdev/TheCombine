@@ -203,7 +203,7 @@ export class Login extends React.Component<
                     type="submit"
                     variant="contained"
                     color="primary"
-                    //disabled={!this.state.isVerified}
+                    disabled={!this.state.isVerified}
                   >
                     <Translate id="login.login" />
                   </Button>
