@@ -1,4 +1,8 @@
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  HubConnectionState,
+} from "@microsoft/signalr";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -38,7 +42,7 @@ export default function SignalRHub() {
   }, [exportState]);
 
   useEffect(() => {
-    if (connection) {
+    if (connection && connection.state === HubConnectionState.Disconnected) {
       connection
         .start()
         .then(() => {
@@ -51,7 +55,7 @@ export default function SignalRHub() {
         })
         .catch((e) => console.log("Connection failed: ", e));
     }
-  }, [connection]);
+  }, [connection, dispatch, exportState]);
 
   return <React.Fragment />;
 }
