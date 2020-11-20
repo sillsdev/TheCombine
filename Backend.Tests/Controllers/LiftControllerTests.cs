@@ -216,16 +216,15 @@ namespace Backend.Tests.Controllers
 
             const string userId = "testId";
             _liftController.ExportLiftFile(proj.Id, userId).Wait();
-            var result = _liftController.DownloadLiftFile(userId).Result as OkObjectResult;
+            var result = _liftController.DownloadLiftFile(proj.Id, userId).Result as FileContentResult;
             Assert.NotNull(result);
-            var fileContents = Convert.FromBase64String(result.Value as string);
 
             // Ensure that downloading a Lift file deletes the temporary in-memory copy.
-            var notFoundResult = _liftController.DownloadLiftFile(userId).Result as NotFoundObjectResult;
+            var notFoundResult = _liftController.DownloadLiftFile(proj.Id, userId).Result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
 
             // Write LiftFile contents to a temporary directory.
-            var extractedExportDir = ExtractZipFileContents(fileContents);
+            var extractedExportDir = ExtractZipFileContents(result.FileContents);
             var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);

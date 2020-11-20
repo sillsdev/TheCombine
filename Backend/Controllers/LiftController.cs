@@ -233,15 +233,15 @@ namespace BackendFramework.Controllers
 
         /// <summary> Downloads project data in zip file </summary>
         /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
-        /// <returns> Lift file as base-64 string </returns>
+        /// <returns> Binary Lift file </returns>
         [HttpGet("download")]
-        public async Task<IActionResult> DownloadLiftFile()
+        public async Task<IActionResult> DownloadLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return await DownloadLiftFile(userId);
+            return await DownloadLiftFile(projectId, userId);
         }
 
-        internal async Task<IActionResult> DownloadLiftFile(string userId)
+        internal async Task<IActionResult> DownloadLiftFile(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -257,10 +257,10 @@ namespace BackendFramework.Controllers
 
             var file = await System.IO.File.ReadAllBytesAsync(filePath);
             _liftService.DeleteExport(userId);
-
-            // Return as Base64 string to allow embedding into HTTP OK message.
-            var encodedFile = Convert.ToBase64String(file);
-            return new OkObjectResult(encodedFile);
+            return File(
+                file,
+                "application/zip",
+                $"LiftExport-{projectId}-{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}.zip");
         }
 
         /// <summary> Delete prepared export </summary>
