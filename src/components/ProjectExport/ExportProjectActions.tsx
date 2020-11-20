@@ -15,7 +15,7 @@ export interface ExportProjectAction {
   projectId?: string;
 }
 
-export function asyncExportProject(projectId?: string) {
+export function asyncExportProject(projectId: string) {
   return async (
     dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>
   ) => {
@@ -26,13 +26,13 @@ export function asyncExportProject(projectId?: string) {
   };
 }
 
-export function downloadIsReady(projectId?: string) {
+export function downloadIsReady(projectId: string) {
   return (dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>) => {
     dispatch(success(projectId));
   };
 }
 
-export function asyncDownloadExport(projectId?: string) {
+export function asyncDownloadExport(projectId: string) {
   return async (
     dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>
   ) => {
@@ -54,27 +54,26 @@ export function asyncDownloadExport(projectId?: string) {
 
 export function resetExport(projectId?: string) {
   return (dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>) => {
-    console.log("RESETING!");
     dispatch(reset());
     deleteLift(projectId);
   };
 }
 
-export function inProgress(projectId?: string): ExportProjectAction {
+export function inProgress(projectId: string): ExportProjectAction {
   return {
     type: ExportStatus.InProgress,
     projectId,
   };
 }
 
-export function success(projectId?: string): ExportProjectAction {
+export function success(projectId: string): ExportProjectAction {
   return {
     type: ExportStatus.Success,
     projectId,
   };
 }
 
-export function failure(projectId?: string): ExportProjectAction {
+export function failure(projectId: string): ExportProjectAction {
   return {
     type: ExportStatus.Failure,
     projectId,

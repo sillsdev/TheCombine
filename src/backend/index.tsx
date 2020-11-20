@@ -327,34 +327,28 @@ export async function uploadLift(
 }
 
 // Tell the backend to create a LIFT file for the project
-export async function exportLift(projectId?: string) {
-  let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
-  let resp = await backendServer.get(
-    `projects/${projectIdToExport}/words/export`,
-    { headers: authHeader() }
-  );
+export async function exportLift(projectId: string) {
+  let resp = await backendServer.get(`projects/${projectId}/words/export`, {
+    headers: authHeader(),
+  });
   return resp.data;
 }
 // After the backend confirms that a LIFT file is ready, download it
-export async function downloadLift(projectId?: string): Promise<string> {
-  let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
+export async function downloadLift(projectId: string): Promise<string> {
   // For details on how to download binary files with axios, see:
   //    https://github.com/axios/axios/issues/1392#issuecomment-447263985
-  let resp = await backendServer.get(
-    `projects/${projectIdToExport}/words/download`,
-    {
-      headers: { ...authHeader(), Accept: "application/zip" },
-      responseType: "blob",
-    }
-  );
+  let resp = await backendServer.get(`projects/${projectId}/words/download`, {
+    headers: { ...authHeader(), Accept: "application/zip" },
+    responseType: "blob",
+  });
   return window.URL.createObjectURL(
     new Blob([resp.request.response], { type: "application/zip" })
   );
 }
 // After downloading a LIFT file, clear it from the backend
 export async function deleteLift(projectId?: string) {
-  let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
-  await backendServer.get(`projects/${projectIdToExport}/words/deleteexport`, {
+  let projectIdToDelete = projectId ? projectId : LocalStorage.getProjectId();
+  await backendServer.get(`projects/${projectIdToDelete}/words/deleteexport`, {
     headers: authHeader(),
   });
 }

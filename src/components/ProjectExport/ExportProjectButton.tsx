@@ -2,7 +2,6 @@ import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
-import { getProjectId } from "../../backend/localStorage";
 import LoadingButton from "../Buttons/LoadingButton";
 import DownloadButton from "./DownloadButton";
 import { ExportStatus } from "./ExportProjectActions";
@@ -11,7 +10,7 @@ import { ExportProjectState } from "./ExportProjectReducer";
 interface ExportProjectButtonProps {
   exportProject: (projectId: string) => void;
   exportResult: ExportProjectState;
-  projectId?: string;
+  projectId: string;
 }
 
 /**
@@ -20,15 +19,14 @@ interface ExportProjectButtonProps {
 export default function ExportProjectButton(
   props: ButtonProps & ExportProjectButtonProps
 ) {
-  const projId = props.projectId ?? getProjectId();
-  const sameProject = projId === props.exportResult.projectId;
+  const sameProject = props.projectId === props.exportResult.projectId;
   // The export button will not be clickable if another export is underway
   const loading = [ExportStatus.InProgress, ExportStatus.Success].includes(
     props.exportResult.status
   );
 
   function exportProj() {
-    props.exportProject(projId);
+    props.exportProject(props.projectId);
   }
 
   return (
