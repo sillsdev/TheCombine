@@ -5,12 +5,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using static BackendFramework.Helper.FileUtilities;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -22,6 +24,7 @@ namespace Backend.Tests.Controllers
         private IProjectService _projServ;
         private ILiftService _liftService;
         private LiftController _liftController;
+        private IHubContext<CombineHub> _notifyService;
         private IPermissionService _permissionService;
 
         [SetUp]
@@ -31,7 +34,9 @@ namespace Backend.Tests.Controllers
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
             _liftService = new LiftService();
-            _liftController = new LiftController(_wordrepo, _projServ, _permissionService, _liftService);
+            _notifyService = new HubContextMock();
+            _liftController = new LiftController(
+                _wordrepo, _projServ, _permissionService, _liftService, _notifyService);
             _wordService = new WordService(_wordrepo);
         }
 
