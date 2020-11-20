@@ -184,7 +184,8 @@ namespace BackendFramework
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IUserService, UserService>();
 
-            // Lift Service - Singleton to avoid initializing the Sldr multiple times, also to avoid leaking LanguageTag data
+            // Lift Service - Singleton to avoid initializing the Sldr multiple times, also to avoid leaking
+            // LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();
 
             // User edit types
