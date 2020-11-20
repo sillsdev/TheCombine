@@ -341,7 +341,7 @@ export async function downloadLift(projectId: string): Promise<string> {
     headers: { ...authHeader(), Accept: "application/zip" },
     responseType: "blob",
   });
-  return window.URL.createObjectURL(
+  return URL.createObjectURL(
     new Blob([resp.request.response], { type: "application/zip" })
   );
 }

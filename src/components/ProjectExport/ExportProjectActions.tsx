@@ -36,19 +36,9 @@ export function asyncDownloadExport(projectId: string) {
   return async (
     dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>
   ) => {
-    return downloadLift(projectId)
-      .then((fileString) => {
-        return fetch(fileString)
-          .then((file) => {
-            return file.blob();
-          })
-          .catch(() => {
-            dispatch(failure(projectId));
-          });
-      })
-      .catch(() => {
-        dispatch(failure(projectId));
-      });
+    return await downloadLift(projectId).catch(() => {
+      dispatch(failure(projectId));
+    });
   };
 }
 

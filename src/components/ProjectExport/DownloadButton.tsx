@@ -35,9 +35,9 @@ export default function DownloadButton() {
     const projectName = await getProjectName(exportState.projectId);
     setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
     asyncDownloadExport(exportState.projectId)(dispatch)
-      .then((file) => {
-        if (file) {
-          setFileUrl(URL.createObjectURL(file));
+      .then((fileUrl) => {
+        if (fileUrl) {
+          setFileUrl(fileUrl);
           reset();
         }
       })
