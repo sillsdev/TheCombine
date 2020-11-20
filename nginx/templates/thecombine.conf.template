@@ -41,7 +41,7 @@ server {
     # Set cache expiration so that if the server's frontend implementation is updated,
     # clients will automatically pull in a fresh version at the beginning of the next day.
     expires    12h;
-    add_header Cache-Control "public, no-transform"
+    add_header Cache-Control "public, no-transform";
   }
 
   error_page   500 502 503 504  /50x.html;
