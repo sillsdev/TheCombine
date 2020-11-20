@@ -256,7 +256,6 @@ namespace BackendFramework.Controllers
             }
 
             var file = await System.IO.File.ReadAllBytesAsync(filePath);
-            _liftService.DeleteExport(userId);
             return File(
                 file,
                 "application/zip",

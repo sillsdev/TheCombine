@@ -338,12 +338,6 @@ export async function exportLift(projectId?: string) {
 // After the backend confirms that a LIFT file is ready, download it
 export async function downloadLift(projectId?: string): Promise<string> {
   let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
-  // ToDo: Once the backend can signal that a download is complete,
-  // remove the get export from here.
-  await backendServer.get(`projects/${projectIdToExport}/words/export`, {
-    headers: authHeader(),
-  });
-
   // For details on how to download binary files with axios, see:
   //    https://github.com/axios/axios/issues/1392#issuecomment-447263985
   let resp = await backendServer.get(
