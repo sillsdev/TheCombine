@@ -46,14 +46,13 @@ export default function SignalRHub() {
       connection
         .start()
         .then(() => {
-          console.log("Connected!");
           connection.on("DownloadReady", (userId: string) => {
             if (userId === getUserId()) {
               downloadIsReady(exportState.projectId)(dispatch);
             }
           });
         })
-        .catch((e) => console.log("Connection failed: ", e));
+        .catch((err) => console.error("Connection failed: ", err));
     }
   }, [connection, dispatch, exportState]);
 
