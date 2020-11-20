@@ -84,13 +84,16 @@ namespace BackendFramework
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
+            // TODO: When moving to NGINX deployment, can remove this configure. CORS is not needed when a reverse
+            //    proxy proxies all frontend and backend traffic.
+            var corsOrigin = Environment.GetEnvironmentVariable("COMBINE_CORS_ORIGIN") ?? "http://localhost:3000";
             services.AddCors(options =>
             {
                 options.AddPolicy(AllowedOrigins,
                     builder => builder
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .WithOrigins("http://localhost:3000")
+                        .WithOrigins(corsOrigin)
                         .AllowCredentials());
             });
 
