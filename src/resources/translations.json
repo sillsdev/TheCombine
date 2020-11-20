@@ -54,7 +54,13 @@
       "limpieza de datos",
       "nettoyage des données"
     ],
-    "downloadReady": ["Download ready", "Download ready", "Download ready"]
+    "downloadReady": ["Download ready", "Download ready", "Download ready"],
+    "exportFailed": ["Export failed", "Export failed", "Export failed"],
+    "exportInProgress": [
+      "Export in progress",
+      "Export in progress",
+      "Export in progress"
+    ]
   },
   "temp": {
     "buttonText": [

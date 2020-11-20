@@ -1,7 +1,7 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Cached, Error, GetApp } from "@material-ui/icons";
 import React, { useEffect } from "react";
-//import { Translate } from "react-localize-redux";
+import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getProjectName } from "../../backend";
@@ -19,14 +19,9 @@ export default function DownloadButton() {
     (state: StoreState) => state.exportProjectState
   );
   const dispatch = useDispatch();
-  const [received, setReceived] = React.useState<string>("");
   const [fileName, setFileName] = React.useState<null | string>(null);
   const [fileUrl, setFileUrl] = React.useState<null | string>(null);
   let downloadLink = React.createRef<HTMLAnchorElement>();
-
-  useEffect(() => {
-    setReceived(`export: ${exportState.status}`);
-  }, [exportState]);
 
   useEffect(() => {
     if (downloadLink.current && fileUrl !== null) {
@@ -43,23 +38,46 @@ export default function DownloadButton() {
       .then((file) => {
         if (file) {
           setFileUrl(URL.createObjectURL(file));
-          resetExport(exportState.projectId)(dispatch);
+          reset();
         }
       })
       .catch((err) => console.error(err));
   }
 
+  function reset() {
+    resetExport(exportState.projectId)(dispatch);
+  }
+
   return (
     <React.Fragment>
-      {exportState.status !== ExportStatus.Default && (
+      {/* Nothing shows if exportState.status === ExportStatus.Default. */}
+      {exportState.status === ExportStatus.Success && (
         <Tooltip
-          title={received} //<Translate id="appBar.downloadReady" />}
+          title={<Translate id="appBar.downloadReady" />}
           placement="bottom"
         >
           <IconButton tabIndex={-1} onClick={download}>
-            {exportState.status === ExportStatus.InProgress && <Cached />}
-            {exportState.status === ExportStatus.Success && <GetApp />}
-            {exportState.status === ExportStatus.Failure && <Error />}
+            <GetApp />
+          </IconButton>
+        </Tooltip>
+      )}
+      {exportState.status === ExportStatus.InProgress && (
+        <Tooltip
+          title={<Translate id="appBar.exportInProgress" />}
+          placement="bottom"
+        >
+          <IconButton tabIndex={-1}>
+            <Cached />
+          </IconButton>
+        </Tooltip>
+      )}
+      {exportState.status === ExportStatus.Failure && (
+        <Tooltip
+          title={<Translate id="appBar.exportFailed" />}
+          placement="bottom"
+        >
+          <IconButton tabIndex={-1} onClick={reset}>
+            <Error />
           </IconButton>
         </Tooltip>
       )}
