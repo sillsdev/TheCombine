@@ -1,6 +1,6 @@
 import { randomIntString } from "../utilities";
 import { AutoComplete } from "./AutoComplete";
-import { SemanticDomain, testWordList, Word } from "./word";
+import { SemanticDomain } from "./word";
 
 export interface CustomField {
   name: string;
@@ -15,6 +15,7 @@ export interface Project {
   id: string;
   name: string;
   isActive: boolean;
+  liftImported: boolean;
   semanticDomains: SemanticDomain[];
   userRoles: string;
   vernacularWritingSystem: WritingSystem;
@@ -23,7 +24,6 @@ export interface Project {
   rejectedCharacters: string[];
   wordFields: string[];
   partsOfSpeech: string[];
-  words: Word[];
   customFields: CustomField[];
   autocompleteSetting: AutoComplete;
 }
@@ -32,6 +32,7 @@ export const defaultProject = {
   id: "",
   name: "",
   isActive: true,
+  liftImported: false,
   semanticDomains: [],
   userRoles: "",
   vernacularWritingSystem: { name: "", bcp47: "", font: "" },
@@ -41,7 +42,6 @@ export const defaultProject = {
   customFields: [],
   wordFields: [],
   partsOfSpeech: [],
-  words: [],
   autocompleteSetting: AutoComplete.On,
 } as Project;
 
@@ -51,6 +51,5 @@ export function randomProject(): Project {
   project.id = randomIntString();
   project.name = randomIntString();
   project.isActive = Math.random() < 0.5;
-  project.words = testWordList();
   return project;
 }

@@ -82,6 +82,28 @@ namespace BackendFramework.Services
             {
                 Sldr.Initialize(true);
             }
+
+            LiftExports = new Dictionary<string, string>();
+        }
+
+        // A common dictionary for storing and retrieving exported projects
+        private Dictionary<string, string> LiftExports;
+        public void StoreExport(string userId, string encodedFile)
+        {
+            LiftExports.Remove(userId);
+            LiftExports.Add(userId, encodedFile);
+        }
+        public string? RetrieveExport(string userId)
+        {
+            if (!LiftExports.ContainsKey(userId))
+            {
+                return null;
+            }
+            return LiftExports[userId];
+        }
+        public void DeleteExport(string userId)
+        {
+            LiftExports.Remove(userId);
         }
 
         /// <summary> Imports main character set for a project from an ldml file </summary>
@@ -563,7 +585,7 @@ namespace BackendFramework.Services
                     FileUtilities.FileType.Dir, false, "", Path.Combine(_projectId, "Import"));
                 var extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
 
-                // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio
+                // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/Lift/audio
                 var importListArr = Directory.GetDirectories(extractedPathToImport);
                 var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
 
@@ -574,7 +596,7 @@ namespace BackendFramework.Services
                     foreach (var pro in entry.Pronunciations)
                     {
                         // get path to audio file in lift package at
-                        // ~/{projectId}/Import/ExtractedLocation/{liftName}/audio/{audioFile}.mp3
+                        // ~/{projectId}/Import/ExtractedLocation/Lift/audio/{audioFile}.mp3
                         var audioFile = pro.Media.First().Url;
                         newWord.Audio.Add(audioFile);
                     }

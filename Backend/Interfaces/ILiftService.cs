@@ -7,7 +7,12 @@ namespace BackendFramework.Interfaces
     {
         ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample> GetLiftImporterExporter(
             string projectId, IProjectService projectService, IWordRepository wordRepo);
-        string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projectService);
         void LdmlImport(string filePath, string langTag, IProjectService projectService, Project project);
+        string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projectService);
+
+        // Methods to store, retrieve, and delete an export string in a common dictionary
+        void StoreExport(string key, string value);
+        string? RetrieveExport(string key);
+        void DeleteExport(string key);
     }
 }
