@@ -42,7 +42,7 @@ export class RuntimeConfig {
       return window.runtimeConfig.baseUrl;
     }
 
-    let baseUrl = "";
+    let baseUrl: string;
     if (window.runtimeConfig.hasOwnProperty("useConnectionBaseUrlForApi")) {
       baseUrl = `${window.location.protocol}//${window.location.host}`;
     } else {
