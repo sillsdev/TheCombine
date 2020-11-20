@@ -42,17 +42,32 @@ export default function SignalRHub() {
   }, [exportState]);
 
   useEffect(() => {
-    if (connection && connection.state === HubConnectionState.Disconnected) {
-      connection
-        .start()
-        .then(() => {
-          connection.on("DownloadReady", (userId: string) => {
-            if (userId === getUserId()) {
-              downloadIsReady(exportState.projectId)(dispatch);
-            }
-          });
-        })
-        .catch((err) => console.error("Connection failed: ", err));
+    if (connection) {
+      const methodName = "DownloadReady";
+      const method = (userId: string) => {
+        if (userId === getUserId()) {
+          downloadIsReady(exportState.projectId)(dispatch);
+          methodOff();
+        }
+      };
+      const methodOn = () => connection.on(methodName, method);
+      const methodOff = () => connection.off(methodName);
+      const start = () => {
+        connection
+          .start()
+          .then(methodOn)
+          .catch((err) => console.error(err));
+      };
+      if (connection.state === HubConnectionState.Disconnected) {
+        start();
+      } else if (connection.state === HubConnectionState.Disconnecting) {
+        connection.onclose(start);
+      } else if (connection.state === HubConnectionState.Reconnecting) {
+        connection.onreconnected(start);
+      } else {
+        methodOff();
+        methodOn();
+      }
     }
   }, [connection, dispatch, exportState]);
 
