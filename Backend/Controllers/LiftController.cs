@@ -263,6 +263,28 @@ namespace BackendFramework.Controllers
             var encodedFile = Convert.ToBase64String(file);
             return new OkObjectResult(encodedFile);
         }
+
+        /// <summary> Delete prepared export </summary>
+        /// <remarks> GET: v1/projects/{projectId}/words/deleteexport </remarks>
+        /// <returns> UserId, if successful </returns>
+        [HttpGet("deleteexport")]
+        public IActionResult DeleteLiftFile()
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return DeleteLiftFile(userId);
+        }
+
+        internal IActionResult DeleteLiftFile(string userId)
+        {
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return new ForbidResult();
+            }
+
+            _liftService.DeleteExport(userId);
+
+            return new OkObjectResult(userId);
+        }
     }
 
     [Serializable]

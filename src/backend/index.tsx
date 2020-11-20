@@ -331,9 +331,7 @@ export async function exportLift(projectId?: string) {
   let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
   let resp = await backendServer.get(
     `projects/${projectIdToExport}/words/export`,
-    {
-      headers: authHeader(),
-    }
+    { headers: authHeader() }
   );
   return resp.data;
 }
@@ -347,6 +345,13 @@ export async function downloadLift(projectId?: string) {
     }
   );
   return `data:application/zip;base64,${resp.data}`;
+}
+// After downloading a LIFT file, clear it from the backend
+export async function deleteLift(projectId?: string) {
+  let projectIdToExport = projectId ? projectId : LocalStorage.getProjectId();
+  await backendServer.get(`projects/${projectIdToExport}/words/deleteexport`, {
+    headers: authHeader(),
+  });
 }
 
 export async function uploadAudio(

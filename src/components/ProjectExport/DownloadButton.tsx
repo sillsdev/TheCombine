@@ -7,7 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProjectName } from "../../backend";
 import { StoreState } from "../../types";
 import { getNowDateTimeString } from "../../utilities";
-import { asyncDownloadExport, ExportStatus } from "./ExportProjectActions";
+import {
+  asyncDownloadExport,
+  ExportStatus,
+  resetExport,
+} from "./ExportProjectActions";
 
 /** A button to show export status */
 export default function DownloadButton() {
@@ -27,6 +31,7 @@ export default function DownloadButton() {
   useEffect(() => {
     if (downloadLink.current && fileUrl !== null) {
       downloadLink.current.click();
+      resetExport(exportState.projectId)(dispatch);
       URL.revokeObjectURL(fileUrl);
       setFileUrl(null);
     }
