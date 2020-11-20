@@ -1,8 +1,4 @@
-import {
-  HubConnection,
-  HubConnectionBuilder,
-  HubConnectionState,
-} from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -43,31 +39,16 @@ export default function SignalRHub() {
 
   useEffect(() => {
     if (connection) {
-      const methodName = "DownloadReady";
       const method = (userId: string) => {
         if (userId === getUserId()) {
           downloadIsReady(exportState.projectId)(dispatch);
-          methodOff();
+          connection.stop();
         }
       };
-      const methodOn = () => connection.on(methodName, method);
-      const methodOff = () => connection.off(methodName);
-      const start = () => {
-        connection
-          .start()
-          .then(methodOn)
-          .catch((err) => console.error(err));
-      };
-      if (connection.state === HubConnectionState.Disconnected) {
-        start();
-      } else if (connection.state === HubConnectionState.Disconnecting) {
-        connection.onclose(start);
-      } else if (connection.state === HubConnectionState.Reconnecting) {
-        connection.onreconnected(start);
-      } else {
-        methodOff();
-        methodOn();
-      }
+      connection
+        .start()
+        .then(() => connection.on("DownloadReady", method))
+        .catch((err) => console.error(err));
     }
   }, [connection, dispatch, exportState]);
 
