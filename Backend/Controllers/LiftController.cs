@@ -213,11 +213,9 @@ namespace BackendFramework.Controllers
 
             // Export the data to a zip, read into memory, and delete zip
             var exportedFilepath = CreateLiftExport(projectId);
-            var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
-            System.IO.File.Delete(exportedFilepath);
 
-            // Encode file as string and store for user to download later
-            _liftService.StoreExport(userId, file);
+            // Store the temporary path to the exported file for user to download later.
+            _liftService.StoreExport(userId, exportedFilepath);
             return new OkObjectResult(projectId);
         }
 
@@ -225,13 +223,13 @@ namespace BackendFramework.Controllers
         /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
         /// <returns> Binary Lift file </returns>
         [HttpGet("download")]
-        public IActionResult DownloadLiftFile(string projectId)
+        public async Task<IActionResult> DownloadLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return DownloadLiftFile(projectId, userId);
+            return await DownloadLiftFile(projectId, userId);
         }
 
-        public IActionResult DownloadLiftFile(string projectId, string userId)
+        public async Task<IActionResult> DownloadLiftFile(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -239,11 +237,13 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure export exists.
-            var file = _liftService.RetrieveExport(userId);
-            if (file is null)
+            var filePath = _liftService.RetrieveExport(userId);
+            if (filePath is null)
             {
                 return new NotFoundObjectResult(userId);
             }
+
+            var file = await System.IO.File.ReadAllBytesAsync(filePath);
             _liftService.DeleteExport(userId);
             return File(
                 file,
