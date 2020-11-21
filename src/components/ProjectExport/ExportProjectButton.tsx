@@ -13,14 +13,12 @@ interface ExportProjectButtonProps {
   projectId: string;
 }
 
-/**
- * Button for exporting project to lift file
- */
+/** A utton for exporting project to Lift file */
 export default function ExportProjectButton(
   props: ButtonProps & ExportProjectButtonProps
 ) {
   const sameProject = props.projectId === props.exportResult.projectId;
-  // The export button will not be clickable if another export is underway
+  // The export button will not be clickable if another export is underway.
   const loading = [ExportStatus.InProgress, ExportStatus.Success].includes(
     props.exportResult.status
   );

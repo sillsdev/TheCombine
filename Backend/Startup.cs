@@ -84,8 +84,8 @@ namespace BackendFramework
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            // TODO: When moving to NGINX deployment, can remove this configure. CORS is not needed when a reverse
-            //    proxy proxies all frontend and backend traffic.
+            // TODO: When moving to NGINX deployment, can remove this configure.
+            //    CORS isn't needed when a reverse proxy proxies all frontend and backend traffic.
             var corsOrigin = Environment.GetEnvironmentVariable("COMBINE_CORS_ORIGIN") ?? "http://localhost:3000";
             services.AddCors(options =>
             {
@@ -138,6 +138,8 @@ namespace BackendFramework
                 //    no longer automatically tries to coerce these values.
                 .AddNewtonsoftJson();
 
+            services.AddSignalR();
+
             services.Configure<Settings>(
                 options =>
                 {
@@ -177,6 +179,7 @@ namespace BackendFramework
                 });
 
             // Register concrete types for dependency injection
+
             // Word Types
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordService, WordService>();
@@ -187,8 +190,8 @@ namespace BackendFramework
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IUserService, UserService>();
 
-            // Lift Service - Singleton to avoid initializing the Sldr multiple times, also to avoid leaking
-            // LanguageTag data
+            // Lift Service - Singleton to avoid initializing the Sldr multiple times,
+            // also to avoid leaking LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();
 
             // User edit types
@@ -215,8 +218,6 @@ namespace BackendFramework
             // Password ResetTypes
             services.AddTransient<IPasswordResetContext, PasswordResetContext>();
             services.AddTransient<IPasswordResetService, PasswordResetService>();
-
-            services.AddSignalR();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

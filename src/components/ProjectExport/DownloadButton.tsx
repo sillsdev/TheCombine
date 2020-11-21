@@ -53,7 +53,7 @@ export default function DownloadButton() {
       {/* Nothing shows if exportState.status === ExportStatus.Default. */}
       {exportState.status === ExportStatus.Success && (
         <Tooltip
-          title={<Translate id="appBar.downloadReady" />}
+          title={<Translate id="projectExport.downloadReady" />}
           placement="bottom"
         >
           <IconButton tabIndex={-1} onClick={download}>
@@ -63,7 +63,7 @@ export default function DownloadButton() {
       )}
       {exportState.status === ExportStatus.InProgress && (
         <Tooltip
-          title={<Translate id="appBar.exportInProgress" />}
+          title={<Translate id="projectExport.exportInProgress" />}
           placement="bottom"
         >
           <IconButton tabIndex={-1}>
@@ -73,7 +73,7 @@ export default function DownloadButton() {
       )}
       {exportState.status === ExportStatus.Failure && (
         <Tooltip
-          title={<Translate id="appBar.exportFailed" />}
+          title={<Translate id="projectExport.exportFailed" />}
           placement="bottom"
         >
           <IconButton tabIndex={-1} onClick={reset}>

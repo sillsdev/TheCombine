@@ -40,15 +40,22 @@ export default function SignalRHub() {
 
   useEffect(() => {
     if (connection) {
+      // The methodName must match what is used by the Backend in, e.g.,
+      // `_notifyService.Clients.All.SendAsync("DownloadReady", userId);`.
+      const methodName = "DownloadReady";
+      // The method is what the frontend does upon message receipt.
       const method = (userId: string) => {
         if (userId === getUserId()) {
           downloadIsReady(exportState.projectId)(dispatch);
+          // After dispatch, stop the connection completely.
+          // We don't need it active unless a new export is started,
+          // and that might be with a different projectId.
           connection.stop();
         }
       };
       connection
         .start()
-        .then(() => connection.on("DownloadReady", method))
+        .then(() => connection.on(methodName, method))
         .catch((err) => console.error(err));
     }
   }, [connection, dispatch, exportState]);
