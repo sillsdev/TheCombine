@@ -1,12 +1,13 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Cached, Error, GetApp } from "@material-ui/icons";
-import React, { useEffect } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getProjectName } from "../../backend";
 import { StoreState } from "../../types";
 import { getNowDateTimeString } from "../../utilities";
+import DeleteDialog from "../Buttons/DeleteDialog";
 import {
   asyncDownloadExport,
   ExportStatus,
@@ -19,9 +20,10 @@ export default function DownloadButton() {
     (state: StoreState) => state.exportProjectState
   );
   const dispatch = useDispatch();
-  const [fileName, setFileName] = React.useState<null | string>(null);
-  const [fileUrl, setFileUrl] = React.useState<null | string>(null);
-  let downloadLink = React.createRef<HTMLAnchorElement>();
+  const [fileName, setFileName] = useState<null | string>(null);
+  const [fileUrl, setFileUrl] = useState<null | string>(null);
+  const [dialog, setDialog] = useState<boolean>(false);
+  let downloadLink = createRef<HTMLAnchorElement>();
 
   useEffect(() => {
     if (downloadLink.current && fileUrl !== null) {
@@ -46,6 +48,7 @@ export default function DownloadButton() {
 
   function reset() {
     resetExport(exportState.projectId)(dispatch);
+    setDialog(false);
   }
 
   return (
@@ -62,14 +65,22 @@ export default function DownloadButton() {
         </Tooltip>
       )}
       {exportState.status === ExportStatus.InProgress && (
-        <Tooltip
-          title={<Translate id="projectExport.exportInProgress" />}
-          placement="bottom"
-        >
-          <IconButton tabIndex={-1}>
-            <Cached />
-          </IconButton>
-        </Tooltip>
+        <React.Fragment>
+          <Tooltip
+            title={<Translate id="projectExport.exportInProgress" />}
+            placement="bottom"
+          >
+            <IconButton tabIndex={-1} onClick={() => setDialog(true)}>
+              <Cached />
+            </IconButton>
+          </Tooltip>
+          <DeleteDialog
+            open={dialog}
+            textId={"projectExport.cancelWarning"}
+            handleAccept={reset}
+            handleCancel={() => setDialog(false)}
+          />
+        </React.Fragment>
       )}
       {exportState.status === ExportStatus.Failure && (
         <Tooltip
