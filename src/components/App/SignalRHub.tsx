@@ -1,5 +1,5 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { baseURL } from "../../backend";
@@ -16,26 +16,22 @@ export default function SignalRHub() {
     (state: StoreState) => state.exportProjectState
   );
   const dispatch = useDispatch();
-
-  const [connection, setConnection] = React.useState<null | HubConnection>(
-    null
-  );
+  const [connection, setConnection] = useState<null | HubConnection>(null);
 
   useEffect(() => {
-    switch (exportState.status) {
-      case ExportStatus.InProgress: {
-        const newConnection = new HubConnectionBuilder()
-          .withUrl(`${baseURL}/hub`)
-          .withAutomaticReconnect()
-          .build();
-        setConnection(newConnection);
-        break;
-      }
-      default: {
-        setConnection(null);
-        break;
-      }
+    if (connection) {
+      connection.stop();
     }
+    setConnection(null);
+    if (exportState.status === ExportStatus.InProgress) {
+      const newConnection = new HubConnectionBuilder()
+        .withUrl(`${baseURL}/hub`)
+        .withAutomaticReconnect()
+        .build();
+      setConnection(newConnection);
+    }
+    // We reference connection, but don't want it in the dependency list.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportState]);
 
   useEffect(() => {
@@ -58,7 +54,9 @@ export default function SignalRHub() {
         .then(() => connection.on(methodName, method))
         .catch((err) => console.error(err));
     }
-  }, [connection, dispatch, exportState]);
+    // We reference dispatch and exportState, but they're not dependencies.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connection]);
 
   return <React.Fragment />;
 }
