@@ -2,7 +2,7 @@ import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RuntimeConfig } from "../../types/runtimeConfig";
+import { baseURL } from "../../backend";
 import { getUserId } from "../../backend/localStorage";
 import { StoreState } from "../../types";
 import {
@@ -24,9 +24,8 @@ export default function SignalRHub() {
   useEffect(() => {
     switch (exportState.status) {
       case ExportStatus.InProgress: {
-        const baseUrl = RuntimeConfig.getInstance().baseUrl();
         const newConnection = new HubConnectionBuilder()
-          .withUrl(`${baseUrl}/hub`)
+          .withUrl(`${baseURL}/hub`)
           .withAutomaticReconnect()
           .build();
         setConnection(newConnection);

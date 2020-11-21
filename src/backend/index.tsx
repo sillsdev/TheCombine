@@ -12,10 +12,11 @@ import { UserRole } from "../types/userRole";
 import { MergeWord, Word } from "../types/word";
 import * as LocalStorage from "./localStorage";
 
-const baseURL = `${RuntimeConfig.getInstance().baseUrl()}/v1`;
+export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
+const apiBaseURL = `${baseURL}/v1`;
 
 const backendServer = axios.create({
-  baseURL,
+  baseURL: apiBaseURL,
 });
 
 backendServer.interceptors.response.use(
@@ -381,7 +382,7 @@ export async function deleteAudio(
 }
 
 export function getAudioUrl(wordId: string, fileName: string): string {
-  return `${baseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/download/audio/${fileName}`;
+  return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/download/audio/${fileName}`;
 }
 
 export async function uploadAvatar(userId: string, img: File): Promise<string> {
