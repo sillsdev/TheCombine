@@ -30,7 +30,7 @@
 - name: schedule regular backups
   cron:
     name: combine daily backup
-    job: combine-backup
+    job: "{{ combine_app_dir }}/bin/combine-backup"
     user: "{{ combine_user }}"
     hour: "{{ backup_hour }}"
     minute: "{{ backup_minute }}"
