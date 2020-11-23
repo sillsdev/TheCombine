@@ -22,10 +22,6 @@ cert_email: ""
 aws_user: "{{ combine_user }}"
 aws_group: "{{ combine_group }}"
 
-# my_default_aws_profile: ecr_read_only
-# my_aws_profiles:
-#   - ecr_read_write
-#   - s3_read_write
 aws_backup_profile: s3_read_write
 aws_ecr_profile: ecr_read_write
 
