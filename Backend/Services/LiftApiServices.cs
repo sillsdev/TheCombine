@@ -89,6 +89,27 @@ namespace BackendFramework.Services
             _liftExports = new Dictionary<string, string>();
         }
 
+        private readonly string inProgress = "IN_PROGRESS";
+
+        /// <summary> Store status that a user's export is in-progress. </summary>
+        public void SetExportInProgress(string userId, bool isInProgress = true)
+        {
+            _liftExports.Remove(userId);
+            if (isInProgress)
+            {
+                _liftExports.Add(userId, inProgress);
+            }
+        }
+
+        /// <summary> Query whether user has an in-progress export. </summary>
+        public bool IsExportInProgress(string userId)
+        {
+            if (!_liftExports.ContainsKey(userId))
+            {
+                return false;
+            }
+            return _liftExports[userId] == inProgress;
+        }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
         public void StoreExport(string userId, string filePath)
@@ -101,7 +122,7 @@ namespace BackendFramework.Services
         /// <returns> Path to the Lift file on disk. </returns>
         public string? RetrieveExport(string userId)
         {
-            if (!_liftExports.ContainsKey(userId))
+            if (!_liftExports.ContainsKey(userId) || _liftExports[userId] == inProgress)
             {
                 return null;
             }

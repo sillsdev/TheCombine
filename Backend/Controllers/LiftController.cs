@@ -204,25 +204,45 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            // Ensure project exists and has words
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
-            var words = await _wordRepo.GetAllWords(projectId);
-            if (words.Count == 0)
+
+            // Check if another export started
+            if (_liftService.IsExportInProgress(userId))
             {
-                return new BadRequestResult();
+                return new ConflictResult();
             }
 
-            // Export the data to a zip, read into memory, and delete zip
-            var exportedFilepath = CreateLiftExport(projectId);
+            // Store in-progress status for the export
+            _liftService.SetExportInProgress(userId, true);
 
-            // Store the temporary path to the exported file for user to download later.
-            _liftService.StoreExport(userId, exportedFilepath);
-            await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
-            return new OkObjectResult(projectId);
+            try
+            {
+                // Ensure project has words
+                var words = await _wordRepo.GetAllWords(projectId);
+                if (words.Count == 0)
+                {
+                    _liftService.SetExportInProgress(userId, false);
+                    return new BadRequestResult();
+                }
+
+                // Export the data to a zip, read into memory, and delete zip
+                var exportedFilepath = CreateLiftExport(projectId);
+
+                // Store the temporary path to the exported file for user to download later.
+                _liftService.StoreExport(userId, exportedFilepath);
+                await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
+                return new OkObjectResult(projectId);
+            }
+            catch (Exception error)
+            {
+                _liftService.SetExportInProgress(userId, false);
+                throw error;
+            }
         }
 
         internal string CreateLiftExport(string projectId)
