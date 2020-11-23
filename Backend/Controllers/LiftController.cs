@@ -238,10 +238,10 @@ namespace BackendFramework.Controllers
                 await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
                 return new OkObjectResult(projectId);
             }
-            catch (Exception error)
+            catch
             {
                 _liftService.SetExportInProgress(userId, false);
-                throw error;
+                throw;
             }
         }
 
