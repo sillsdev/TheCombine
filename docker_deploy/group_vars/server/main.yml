@@ -34,3 +34,7 @@ aws_ecr_profile: ecr_read_only
 my_aws_profiles:
     - "{{ aws_backup_profile }}"
     - "{{ aws_ecr_profile }}"
+
+# Define backup times (UTC)
+backup_hour:    "3"
+backup_minute:  "15"
