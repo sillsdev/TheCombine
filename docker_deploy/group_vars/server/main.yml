@@ -29,7 +29,7 @@ aws_group: "{{ combine_group }}"
 # ECR:
 #   - install container images
 aws_backup_profile: s3_read_write
-aws_ecr_profile: ecr_read_write
+aws_ecr_profile: ecr_read_only
 
 my_aws_profiles:
     - "{{ aws_backup_profile }}"
