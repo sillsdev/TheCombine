@@ -67,6 +67,8 @@ RESTORE_FILE="combine-backup.tar.gz"
 AWS_BACKUPS="s3://{{ aws_s3_backup_loc }}"
 COMBINE_APP_DIR=${COMBINE_APP_DIR:="{{ combine_app_dir }}"}
 RESTORE_DIR=${RESTORE_DIR:="{{ combine_restore_dir }}"}
+BACKEND_FILES_SUBDIR="{{ backend_files_subdir }}"
+DB_FILES_SUBDIR="{{ mongo_files_subdir }}"
 
 cd ${COMBINE_APP_DIR}
 
@@ -74,7 +76,7 @@ echo_verbose "2. Prepare the restore directory"
 if [ ! -e "${RESTORE_DIR}" ] ; then
   mkdir -p ${RESTORE_DIR}
 else
-  for item in ${RESTORE_DIR}/dump ${RESTORE_DIR}/.CombineFiles ${RESTORE_DIR}/${RESTORE_FILE}
+  for item in ${RESTORE_DIR}/${DB_FILES_SUBDIR} ${RESTORE_DIR}/${BACKEND_FILES_SUBDIR} ${RESTORE_DIR}/${RESTORE_FILE}
   do
     if [ -e "${item}" ] ; then
       rm -rf ${item}
@@ -145,24 +147,24 @@ docker-compose up --detach database backend
 
 echo_verbose "7. Restore the database"
 DB_CONTAINER=`docker ps | grep database | sed "s/.* \([^ ][^ ]*\)$/\1/"`
-docker cp ${RESTORE_DIR}/dump/ ${DB_CONTAINER}:dump
+docker cp ${RESTORE_DIR}/${DB_FILES_SUBDIR}/ ${DB_CONTAINER}:${DB_FILES_SUBDIR}
 docker-compose exec database mongorestore --drop --gzip --quiet
-docker-compose exec database rm -rf dump
+docker-compose exec database rm -rf ${DB_FILES_SUBDIR}
 
 echo_verbose "8. Copy the backend files"
 # if CLEAN is set, delete the existing files
 if [ "$CLEAN" == "1" ] ; then
   # we run the rm command inside a bash shell so that the shell will do wildcard
   # expansion
-  docker-compose exec --user root --workdir /home/app/.CombineFiles backend /bin/bash -c "rm -rf *"
+  docker-compose exec --user root --workdir /home/app/${BACKEND_FILES_SUBDIR} backend /bin/bash -c "rm -rf *"
 fi
 BE_CONTAINER=`docker ps | grep backend | sed "s/.* \([^ ][^ ]*\)$/\1/"`
-docker cp ${RESTORE_DIR}/.CombineFiles/ ${BE_CONTAINER}:/home/app
+docker cp ${RESTORE_DIR}/${BACKEND_FILES_SUBDIR}/ ${BE_CONTAINER}:/home/app
 # change permissions for the copied files.  Since the tarball is created outside
 # of the container, the app user will not be the owner (the backend process is
 # running as "app").  In addition, it is possible that the backup is from a
 # different host with different UIDs.
-docker-compose exec --user root backend find /home/app/.CombineFiles -exec chown app:app {} \;
+docker-compose exec --user root backend find /home/app/${BACKEND_FILES_SUBDIR} -exec chown app:app {} \;
 
 echo_verbose "9. Cleanup Restore files"
 rm -rf ${RESTORE_DIR}
