@@ -13,7 +13,7 @@ interface ExportProjectButtonProps {
   projectId: string;
 }
 
-/** A utton for exporting project to Lift file */
+/** A button for exporting project to Lift file */
 export default function ExportProjectButton(
   props: ButtonProps & ExportProjectButtonProps
 ) {
