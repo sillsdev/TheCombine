@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProjectName } from "../../backend";
 import { StoreState } from "../../types";
 import { getNowDateTimeString } from "../../utilities";
-import DeleteDialog from "../Buttons/DeleteDialog";
 import {
   asyncDownloadExport,
   ExportStatus,
@@ -22,7 +21,6 @@ export default function DownloadButton() {
   const dispatch = useDispatch();
   const [fileName, setFileName] = useState<null | string>(null);
   const [fileUrl, setFileUrl] = useState<null | string>(null);
-  const [dialog, setDialog] = useState<boolean>(false);
   let downloadLink = createRef<HTMLAnchorElement>();
 
   useEffect(() => {
@@ -48,7 +46,6 @@ export default function DownloadButton() {
 
   function reset() {
     resetExport(exportState.projectId)(dispatch);
-    setDialog(false);
   }
 
   return (
@@ -65,22 +62,14 @@ export default function DownloadButton() {
         </Tooltip>
       )}
       {exportState.status === ExportStatus.InProgress && (
-        <React.Fragment>
-          <Tooltip
-            title={<Translate id="projectExport.exportInProgress" />}
-            placement="bottom"
-          >
-            <IconButton tabIndex={-1} onClick={() => setDialog(true)}>
-              <Cached />
-            </IconButton>
-          </Tooltip>
-          <DeleteDialog
-            open={dialog}
-            textId={"projectExport.cancelWarning"}
-            handleAccept={reset}
-            handleCancel={() => setDialog(false)}
-          />
-        </React.Fragment>
+        <Tooltip
+          title={<Translate id="projectExport.exportInProgress" />}
+          placement="bottom"
+        >
+          <IconButton tabIndex={-1}>
+            <Cached />
+          </IconButton>
+        </Tooltip>
       )}
       {exportState.status === ExportStatus.Failure && (
         <Tooltip
