@@ -16,13 +16,16 @@
     - "{{ combine_backup_dir }}"
     - "{{ combine_app_dir }}/bin"
 
-- name: install backup script
+- name: install backup/restore scripts
   template:
-    src: combine-backup.j2
-    dest: "{{ combine_app_dir }}/bin/combine-backup"
+    src: "{{ item }}.j2"
+    dest: "{{ combine_app_dir }}/bin/{{ item }}"
     owner: "{{ combine_user }}"
     group: "{{ combine_group }}"
     mode: 0755
+  with_items:
+    - combine-backup
+    - combine-restore
 
 - name: schedule regular backups
   cron:
