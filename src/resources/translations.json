@@ -264,11 +264,6 @@
     }
   },
   "projectExport": {
-    "cancelWarning": [
-      "Are you sure you want to cancel your in-progress project export?",
-      "Are you sure you want to cancel your in-progress project export?",
-      "Are you sure you want to cancel your in-progress project export?"
-    ],
     "downloadReady": ["Download ready", "Download ready", "Download ready"],
     "exportFailed": ["Export failed", "Export failed", "Export failed"],
     "exportInProgress": [
