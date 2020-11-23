@@ -78,6 +78,7 @@ namespace BackendFramework.Services
     {
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
+        private const string inProgress = "IN_PROGRESS";
 
         public LiftService()
         {
@@ -88,8 +89,6 @@ namespace BackendFramework.Services
 
             _liftExports = new Dictionary<string, string>();
         }
-
-        private readonly string inProgress = "IN_PROGRESS";
 
         /// <summary> Store status that a user's export is in-progress. </summary>
         public void SetExportInProgress(string userId, bool isInProgress = true)
