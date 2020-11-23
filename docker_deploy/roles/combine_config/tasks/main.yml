@@ -28,7 +28,7 @@
     group: "{{ combine_group }}"
     mode: 0644
 
-- name: create frontend environment file
+- name: create container environment files
   template:
     src: "{{ item }}.j2"
     dest: "{{ combine_app_dir }}/.{{ item }}"
