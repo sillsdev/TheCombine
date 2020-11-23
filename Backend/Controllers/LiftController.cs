@@ -213,41 +213,42 @@ namespace BackendFramework.Controllers
 
             // Export the data to a zip, read into memory, and delete zip
             var exportedFilepath = CreateLiftExport(projectId);
-            var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
-            System.IO.File.Delete(exportedFilepath);
 
-            // Encode file as string and store for user to download later
-            var encodedFile = Convert.ToBase64String(file);
-            _liftService.StoreExport(userId, encodedFile);
-
+            // Store the temporary path to the exported file for user to download later.
+            _liftService.StoreExport(userId, exportedFilepath);
             return new OkObjectResult(projectId);
         }
 
         /// <summary> Downloads project data in zip file </summary>
         /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
-        /// <returns> Lift file as base-64 string </returns>
+        /// <returns> Binary Lift file </returns>
         [HttpGet("download")]
-        public IActionResult DownloadLiftFile()
+        public async Task<IActionResult> DownloadLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return DownloadLiftFile(userId);
+            return await DownloadLiftFile(projectId, userId);
         }
 
-        public IActionResult DownloadLiftFile(string userId)
+        public async Task<IActionResult> DownloadLiftFile(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
 
-            // Ensure export exists
-            var encodedFile = _liftService.RetrieveExport(userId);
-            if (encodedFile is null)
+            // Ensure export exists.
+            var filePath = _liftService.RetrieveExport(userId);
+            if (filePath is null)
             {
                 return new NotFoundObjectResult(userId);
             }
 
-            return new OkObjectResult(encodedFile);
+            var file = await System.IO.File.ReadAllBytesAsync(filePath);
+            _liftService.DeleteExport(userId);
+            return File(
+                file,
+                "application/zip",
+                $"LiftExport-{projectId}-{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}.zip");
         }
 
         // This method is extracted so that it can be unit tested

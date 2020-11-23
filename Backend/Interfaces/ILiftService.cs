@@ -11,8 +11,8 @@ namespace BackendFramework.Interfaces
         string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projectService);
 
         // Methods to store, retrieve, and delete an export string in a common dictionary
-        void StoreExport(string key, string value);
+        void StoreExport(string key, string filePath);
         string? RetrieveExport(string key);
-        void DeleteExport(string key);
+        bool DeleteExport(string key);
     }
 }
