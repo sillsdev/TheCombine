@@ -5,6 +5,9 @@
 # this file and rerun the specified playbook
 ###############################
 
+# MongoDB version
+mongodb_version: 4.4
+
 # Packages installed by playbook_docker.yml
 docker_compose_version: 1.27.4
 

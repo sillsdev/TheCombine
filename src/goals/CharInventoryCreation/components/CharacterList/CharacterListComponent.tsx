@@ -21,17 +21,17 @@ export interface CharacterListProps {
 }
 
 interface CharacterListState {
-  sortOrder: sortOrder;
+  sortOrder: SortOrder;
   fontHeight: number;
   cardWidth: number;
 }
 
-enum sortOrder {
-  characterAscending,
-  characterDescending,
-  occurrencesAscending,
-  occurrencesDescending,
-  status,
+enum SortOrder {
+  CharacterAscending,
+  CharacterDescending,
+  OccurrencesAscending,
+  OccurrencesDescending,
+  Status,
 }
 
 export class CharacterList extends React.Component<
@@ -41,7 +41,7 @@ export class CharacterList extends React.Component<
   constructor(props: CharacterListProps & LocalizeContextProps) {
     super(props);
     this.state = {
-      sortOrder: sortOrder.characterAscending,
+      sortOrder: SortOrder.CharacterAscending,
       fontHeight: 65,
       cardWidth: 150,
     };
@@ -63,25 +63,25 @@ export class CharacterList extends React.Component<
             <Select
               value={this.state.sortOrder}
               onChange={(e) =>
-                this.setState({ sortOrder: e.target.value as sortOrder })
+                this.setState({ sortOrder: e.target.value as SortOrder })
               }
               inputProps={{
                 id: "sort-order",
               }}
             >
-              <MenuItem value={sortOrder.characterAscending}>
+              <MenuItem value={SortOrder.CharacterAscending}>
                 {this.props.translate("charInventory.characters")} 🡡
               </MenuItem>
-              <MenuItem value={sortOrder.characterDescending}>
+              <MenuItem value={SortOrder.CharacterDescending}>
                 {this.props.translate("charInventory.characters")} 🡣
               </MenuItem>
-              <MenuItem value={sortOrder.occurrencesAscending}>
+              <MenuItem value={SortOrder.OccurrencesAscending}>
                 {this.props.translate("charInventory.occurrences")} 🡡
               </MenuItem>
-              <MenuItem value={sortOrder.occurrencesDescending}>
+              <MenuItem value={SortOrder.OccurrencesDescending}>
                 {this.props.translate("charInventory.occurrences")} 🡣
               </MenuItem>
-              <MenuItem value={sortOrder.status}>
+              <MenuItem value={SortOrder.Status}>
                 {this.props.translate("charInventory.status")}
               </MenuItem>
             </Select>
@@ -110,17 +110,17 @@ export class CharacterList extends React.Component<
   }
 }
 
-function sortBy(characterSet: CharacterSetEntry[], sort: sortOrder) {
+function sortBy(characterSet: CharacterSetEntry[], sort: SortOrder) {
   switch (sort) {
-    case sortOrder.characterAscending:
+    case SortOrder.CharacterAscending:
       return characterSet.sort(sortFunction("character"));
-    case sortOrder.characterDescending:
+    case SortOrder.CharacterDescending:
       return characterSet.sort(sortFunction("character")).reverse();
-    case sortOrder.occurrencesAscending:
+    case SortOrder.OccurrencesAscending:
       return characterSet.sort(sortFunction("occurrences"));
-    case sortOrder.occurrencesDescending:
+    case SortOrder.OccurrencesDescending:
       return characterSet.sort(sortFunction("occurrences")).reverse();
-    case sortOrder.status:
+    case SortOrder.Status:
       return characterSet.sort(sortFunction("status"));
     default:
       return characterSet;

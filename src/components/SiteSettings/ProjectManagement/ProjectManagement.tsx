@@ -5,7 +5,7 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import { getAllProjects } from "../../../backend";
 import { Project } from "../../../types/project";
 import theme from "../../../types/theme";
-import ExportProjectButton from "../../ProjectSettings/ProjectExport/ExportProjectButton";
+import ExportProjectButton from "../../ProjectExport";
 import ProjectButtonWithConfirmation from "./ProjectButtonWithConfirmation";
 
 interface ProjectManagementState {

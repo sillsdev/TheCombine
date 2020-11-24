@@ -1,54 +1,62 @@
-import { simpleWord, Word } from "../../types/word";
+import { defaultState as characterInventoryState } from "../../goals/CharInventoryCreation/CharacterInventoryReducer";
+import { defaultState as mergeDuplicateGoal } from "../../goals/MergeDupGoal/MergeDupStep/MergeDupStepReducer";
+import { defaultState as reviewEntriesState } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { defaultProject } from "../../types/project";
+import { defaultState as loginState } from "../Login/LoginReducer";
 import { defaultState as goalTimelineState } from "../GoalTimeline/DefaultState";
-import { defaultState as createProjectState } from "../ProjectScreen/CreateProject/CreateProjectReducer";
 import { defaultState as goalSelectorState } from "../GoalTimeline/GoalSwitcher/GoalSelectorScroll/GoalSelectorReducer";
 import { defaultState as passwordResetState } from "../PasswordReset/reducer";
-import { defaultState as reviewEntriesState } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
+import { defaultState as exportProjectState } from "../ProjectExport/ExportProjectReducer";
+import { defaultState as createProjectState } from "../ProjectScreen/CreateProject/CreateProjectReducer";
 import { defaultState as treeViewState } from "../TreeView/TreeViewReducer";
-import { defaultProject } from "../../types/project";
 
 export const defaultState = {
-  draggedWordState: {
-    draggedWord: simpleWord("Ye", "You"),
+  //login
+  loginState: {
+    ...loginState,
   },
-  mergeDupStepProps: {
-    parentWords: [
-      {
-        id: 1,
-        senses: [
-          {
-            id: 2,
-            dups: [simpleWord("Thee", "You"), simpleWord("Yes", "No")],
-          },
-        ],
-      },
-    ],
-    addParent: (word: Word) => word,
-    dropWord: () => null,
-    clearMerges: () => null,
-    draggedWord: simpleWord("Thou", "You"),
+  passwordResetState: {
+    ...passwordResetState,
   },
-  treeViewState: {
-    ...treeViewState,
-  },
-  goalsState: {
-    ...goalTimelineState,
-  },
+
+  //project
   createProjectState: {
     ...createProjectState,
     name: "Test",
     success: true,
   },
-  goalSelectorState: {
-    ...goalSelectorState,
-  },
-  passwordResetState: {
-    ...passwordResetState,
-  },
   currentProject: {
     ...defaultProject,
     name: "Project",
   },
+  exportProjectState: {
+    ...exportProjectState,
+  },
+
+  //data entry
+  treeViewState: {
+    ...treeViewState,
+  },
+
+  //general cleanup tools
+  goalSelectorState: {
+    ...goalSelectorState,
+  },
+  goalsState: {
+    ...goalTimelineState,
+  },
+
+  //merge duplicates goal
+  mergeDuplicateGoal: {
+    ...mergeDuplicateGoal,
+  },
+
+  //character inventory goal
+  characterInventoryState: {
+    ...characterInventoryState,
+  },
+
+  //review entries goal
   reviewEntriesState: {
     ...reviewEntriesState,
   },

@@ -9,8 +9,12 @@ import theme from "../../../../types/theme";
 import { SemanticDomain, Sense, Word } from "../../../../types/word";
 import Pronunciations from "../../../Pronunciations/PronunciationsComponent";
 import Recorder from "../../../Pronunciations/Recorder";
-import GlossWithSuggestions from "../GlossWithSuggestions/GlossWithSuggestions";
-import VernWithSuggestions from "../VernWithSuggestions/VernWithSuggestions";
+import {
+  DeleteEntry,
+  EntryNote,
+  GlossWithSuggestions,
+  VernWithSuggestions,
+} from "../EntryCellComponents";
 import SenseDialog from "./SenseDialog";
 import VernDialog from "./VernDialog";
 
@@ -131,6 +135,15 @@ export default class NewEntry extends React.Component<
         this.setState({ vernOpen: true });
       }
     });
+  }
+
+  updateNote(text: string) {
+    this.setState((prevState, props) => ({
+      newEntry: {
+        ...prevState.newEntry,
+        note: { text, language: props.analysisLang },
+      },
+    }));
   }
 
   resetState() {
@@ -375,7 +388,24 @@ export default class NewEntry extends React.Component<
           </Grid>
           <Grid
             item
-            xs={3}
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            {!this.state.selectedWord && (
+              // note is not available if user selected to modify an exiting entry
+              <EntryNote
+                noteText={this.state.newEntry.note.text}
+                updateNote={(text: string) => this.updateNote(text)}
+              />
+            )}
+          </Grid>
+          <Grid
+            item
+            xs={2}
             style={{
               paddingLeft: theme.spacing(1),
               paddingRight: theme.spacing(1),
@@ -394,6 +424,17 @@ export default class NewEntry extends React.Component<
               }}
               getAudioUrl={(_, fileName: string) => fileName}
             />
+          </Grid>
+          <Grid
+            item
+            xs={1}
+            style={{
+              paddingLeft: theme.spacing(1),
+              paddingRight: theme.spacing(1),
+              position: "relative",
+            }}
+          >
+            <DeleteEntry removeEntry={() => this.resetState()} />
           </Grid>
         </Grid>
       </Grid>

@@ -1,9 +1,10 @@
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
-import * as Backend from "../../backend";
-import Register from "../Login/RegisterPage/RegisterComponent";
 import { LocalizeContextProps, withLocalize } from "react-localize-redux";
-import history from "../../history";
+import { RouteComponentProps } from "react-router-dom";
+
+import * as Backend from "../../backend";
+import history, { Path } from "../../history";
+import Register from "../Login/RegisterPage/RegisterComponent";
 
 export interface ProjectInviteDispatchProps {
   register?: (
@@ -76,7 +77,7 @@ class ProjectInvite extends React.Component<
       });
     }
     if (status[0] && status[1]) {
-      history.push("/login");
+      history.push(Path.Login);
     }
   }
 

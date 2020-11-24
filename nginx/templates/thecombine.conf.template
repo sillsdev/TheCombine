@@ -13,17 +13,17 @@ server {
 }
 
 server {
-  listen              443 ssl;
-  server_name         ${SERVER_NAME};
-  ssl_certificate     ${SSL_CERTIFICATE};
-  ssl_certificate_key ${SSL_PRIVATE_KEY};
-  ssl_protocols       TLSv1.2 TLSv1.3;
-  charset             utf-8;
+    listen              443 ssl;
+    server_name         ${SERVER_NAME};
+    ssl_certificate     ${SSL_CERTIFICATE};
+    ssl_certificate_key ${SSL_PRIVATE_KEY};
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    charset             utf-8;
 
-  # Allow clients to import large projects.
-  client_max_body_size  250m;
+    # Allow clients to import large projects.
+    client_max_body_size  250m;
 
-  location /v1 {
+    location /v1 {
         proxy_pass         http://backend:5000;
         proxy_http_version 1.1;
         proxy_set_header   Upgrade $http_upgrade;
@@ -32,17 +32,30 @@ server {
         proxy_cache_bypass $http_upgrade;
         proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header   X-Forwarded-Proto $scheme;
-  }
+    }
 
-  location / {
-    root      /usr/share/nginx/html;
-    index     index.html index.htm;
-    try_files $uri $uri/ /index.html;
-  }
+    # Websocket proxy.
+    # https://nginx.org/en/docs/http/websocket.html
+    location /hub {
+        proxy_pass http://backend:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
 
-  error_page   500 502 503 504  /50x.html;
+    location / {
+        root       /usr/share/nginx/html;
+        index      index.html index.htm;
+        try_files  $uri $uri/ /index.html;
+        # Set cache expiration so that if the server's frontend implementation is updated,
+        # clients will automatically pull in a fresh version at the beginning of the next day.
+        expires    12h;
+        add_header Cache-Control "public, no-transform";
+    }
 
-  location = /50x.html {
-    root   /usr/share/nginx/html;
-  }
+    error_page   500 502 503 504  /50x.html;
+
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
 }

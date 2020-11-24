@@ -24,12 +24,10 @@ import {
 
 import * as backend from "../../backend";
 import { AutoComplete } from "../../types/AutoComplete";
-import { CurrentTab } from "../../types/currentTab";
 import { Project } from "../../types/project";
 import { UserRole } from "../../types/userRole";
-import AppBarComponent from "../AppBar/AppBarComponent";
 import BaseSettingsComponent from "../BaseSettings/BaseSettingsComponent";
-import ExportProjectButton from "./ProjectExport/ExportProjectButton";
+import ExportProjectButton from "../ProjectExport";
 import ProjectImport from "./ProjectImport";
 import ProjectLanguages from "./ProjectLanguages/ProjectLanguages";
 import ProjectName from "./ProjectName";
@@ -90,7 +88,6 @@ class ProjectSettingsComponent extends React.Component<
   render() {
     return (
       <React.Fragment>
-        <AppBarComponent currentTab={CurrentTab.ProjectSettings} />
         {!this.state.loading && (
           <Grid container justify="center" spacing={6}>
             {/* Project List */}
@@ -139,7 +136,7 @@ class ProjectSettingsComponent extends React.Component<
             <BaseSettingsComponent
               icon={<GetApp />}
               title={<Translate id="projectSettings.exportProject.label" />}
-              body={<ExportProjectButton />}
+              body={<ExportProjectButton projectId={this.props.project.id} />}
             />
 
             {/* Autocomplete setting */}
