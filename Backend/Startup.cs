@@ -84,13 +84,17 @@ namespace BackendFramework
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
+            // TODO: When moving to NGINX deployment, can remove this configure.
+            //    CORS isn't needed when a reverse proxy proxies all frontend and backend traffic.
+            var corsOrigin = Environment.GetEnvironmentVariable("COMBINE_CORS_ORIGIN") ?? "http://localhost:3000";
             services.AddCors(options =>
             {
                 options.AddPolicy(AllowedOrigins,
                     builder => builder
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowAnyOrigin());
+                        .WithOrigins(corsOrigin)
+                        .AllowCredentials());
             });
 
             // Configure JWT Authentication
@@ -134,6 +138,8 @@ namespace BackendFramework
                 //    no longer automatically tries to coerce these values.
                 .AddNewtonsoftJson();
 
+            services.AddSignalR();
+
             services.Configure<Settings>(
                 options =>
                 {
@@ -173,6 +179,7 @@ namespace BackendFramework
                 });
 
             // Register concrete types for dependency injection
+
             // Word Types
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordService, WordService>();
@@ -183,7 +190,8 @@ namespace BackendFramework
             services.AddScoped<IUserService, UserService>();
             services.AddTransient<IUserService, UserService>();
 
-            // Lift Service - Singleton to avoid initializing the Sldr multiple times, also to avoid leaking LanguageTag data
+            // Lift Service - Singleton to avoid initializing the Sldr multiple times,
+            // also to avoid leaking LanguageTag data
             services.AddSingleton<ILiftService, LiftService>();
 
             // User edit types
@@ -243,7 +251,11 @@ namespace BackendFramework
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapHub<CombineHub>("/hub");
+            });
 
             // If an admin user has been created via the commandline, treat that as a single action and shut the
             // server down so the calling script knows it's been completed successfully or unsuccessfully.

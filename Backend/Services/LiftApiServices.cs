@@ -48,8 +48,8 @@ namespace BackendFramework.Services
 
         public override void Dispose()
         {
-            // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation has been
-            //    fixed properly to avoid needing to override its Dispose method.
+            // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation
+            //    has been fixed properly to avoid needing to override its Dispose method.
             //    https://github.com/sillsdev/libpalaso/blob/master/SIL.DictionaryServices/Lift/LiftWriter.cs
             Dispose(true);
         }
@@ -69,8 +69,8 @@ namespace BackendFramework.Services
 
             Disposed = true;
 
-            // Generally, the base class Dispose method would be called here, but it accesses
-            // _writer, and we are disposing of that ourselves in the child class to fix a memory leak.
+            // Generally, the base class Dispose method would be called here, but it accesses _writer,
+            // and we are disposing of that ourselves in the child class to fix a memory leak.
         }
     }
 
@@ -78,6 +78,7 @@ namespace BackendFramework.Services
     {
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
+        private const string inProgress = "IN_PROGRESS";
 
         public LiftService()
         {
@@ -89,15 +90,38 @@ namespace BackendFramework.Services
             _liftExports = new Dictionary<string, string>();
         }
 
+        /// <summary> Store status that a user's export is in-progress. </summary>
+        public void SetExportInProgress(string userId, bool isInProgress = true)
+        {
+            _liftExports.Remove(userId);
+            if (isInProgress)
+            {
+                _liftExports.Add(userId, inProgress);
+            }
+        }
+
+        /// <summary> Query whether user has an in-progress export. </summary>
+        public bool IsExportInProgress(string userId)
+        {
+            if (!_liftExports.ContainsKey(userId))
+            {
+                return false;
+            }
+            return _liftExports[userId] == inProgress;
+        }
+
+        /// <summary> Store filePath for a user's Lift export. </summary>
         public void StoreExport(string userId, string filePath)
         {
             _liftExports.Remove(userId);
             _liftExports.Add(userId, filePath);
         }
 
+        /// <summary> Retrieve a stored filePath for the user's Lift export. </summary>
+        /// <returns> Path to the Lift file on disk. </returns>
         public string? RetrieveExport(string userId)
         {
-            if (!_liftExports.ContainsKey(userId))
+            if (!_liftExports.ContainsKey(userId) || _liftExports[userId] == inProgress)
             {
                 return null;
             }
@@ -106,7 +130,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Delete a stored Lift export path and its file on disk. </summary>
-        /// <returns>true if the element is successfully found and removed; otherwise, false.</returns>
+        /// <returns> If the element is successfully found and removed, true; otherwise, false. </returns>
         public bool DeleteExport(string userId)
         {
             var removeSuccessful = _liftExports.Remove(userId, out var filePath);
