@@ -1,0 +1,8 @@
+---
+# backup_hour:  7
+# backup_minute: 15
+
+aws_s3_backup_loc: thecombine.app/backups
+
+backend_files_subdir: ".CombineFiles"
+mongo_files_subdir: "dump"
