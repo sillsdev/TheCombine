@@ -52,7 +52,7 @@ services:
     restart: unless-stopped
 
   database:
-    image: mongo:4.2
+    image: mongo:{{ mongodb_version }}
     volumes:
       - database_data:/data/db
     expose:
