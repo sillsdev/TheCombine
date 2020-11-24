@@ -35,9 +35,13 @@ server {
   }
 
   location / {
-    root      /usr/share/nginx/html;
-    index     index.html index.htm;
-    try_files $uri $uri/ /index.html;
+    root       /usr/share/nginx/html;
+    index      index.html index.htm;
+    try_files  $uri $uri/ /index.html;
+    # Set cache expiration so that if the server's frontend implementation is updated,
+    # clients will automatically pull in a fresh version at the beginning of the next day.
+    expires    12h;
+    add_header Cache-Control "public, no-transform";
   }
 
   error_page   500 502 503 504  /50x.html;

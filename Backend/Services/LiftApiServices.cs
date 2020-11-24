@@ -76,12 +76,45 @@ namespace BackendFramework.Services
 
     public class LiftService : ILiftService
     {
+        /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
+        private readonly Dictionary<string, string> _liftExports;
+
         public LiftService()
         {
             if (!Sldr.IsInitialized)
             {
                 Sldr.Initialize(true);
             }
+
+            _liftExports = new Dictionary<string, string>();
+        }
+
+        public void StoreExport(string userId, string filePath)
+        {
+            _liftExports.Remove(userId);
+            _liftExports.Add(userId, filePath);
+        }
+
+        public string? RetrieveExport(string userId)
+        {
+            if (!_liftExports.ContainsKey(userId))
+            {
+                return null;
+            }
+
+            return _liftExports[userId];
+        }
+
+        /// <summary> Delete a stored Lift export path and its file on disk. </summary>
+        /// <returns>true if the element is successfully found and removed; otherwise, false.</returns>
+        public bool DeleteExport(string userId)
+        {
+            var removeSuccessful = _liftExports.Remove(userId, out var filePath);
+            if (removeSuccessful)
+            {
+                File.Delete(filePath);
+            }
+            return removeSuccessful;
         }
 
         /// <summary> Imports main character set for a project from an ldml file </summary>
@@ -563,7 +596,7 @@ namespace BackendFramework.Services
                     FileUtilities.FileType.Dir, false, "", Path.Combine(_projectId, "Import"));
                 var extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
 
-                // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/{liftName}/audio
+                // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/Lift/audio
                 var importListArr = Directory.GetDirectories(extractedPathToImport);
                 var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
 
@@ -574,7 +607,7 @@ namespace BackendFramework.Services
                     foreach (var pro in entry.Pronunciations)
                     {
                         // get path to audio file in lift package at
-                        // ~/{projectId}/Import/ExtractedLocation/{liftName}/audio/{audioFile}.mp3
+                        // ~/{projectId}/Import/ExtractedLocation/Lift/audio/{audioFile}.mp3
                         var audioFile = pro.Media.First().Url;
                         newWord.Audio.Add(audioFile);
                     }

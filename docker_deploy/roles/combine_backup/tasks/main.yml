@@ -1,0 +1,39 @@
+---
+
+#######################################################
+#
+# Install and configure the backup script for the docker
+# containers
+
+- name: create folders for backups
+  file:
+    name: "{{ item }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0755
+    state: directory
+  with_items:
+    - "{{ combine_backup_dir }}"
+    - "{{ combine_app_dir }}/bin"
+
+- name: install backup/restore scripts
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ combine_app_dir }}/bin/{{ item }}"
+    owner: "{{ combine_user }}"
+    group: "{{ combine_group }}"
+    mode: 0755
+  with_items:
+    - combine-backup
+    - combine-restore
+
+- name: schedule regular backups
+  cron:
+    name: combine daily backup
+    job: "{{ combine_app_dir }}/bin/combine-backup"
+    user: "{{ combine_user }}"
+    hour: "{{ backup_hour }}"
+    minute: "{{ backup_minute }}"
+  when:
+    - backup_hour is defined
+    - backup_minute is defined

@@ -1,57 +1,56 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../App/DefaultState";
 import { Provider } from "react-redux";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+
+import { Path } from "../../../history";
+import { defaultState } from "../../App/DefaultState";
 import AppBarComponent from "../AppBarComponent";
 import NavigationButtons from "../NavigationButtons";
-import { CurrentTab } from "../../../types/currentTab";
-import renderer from "react-test-renderer";
 import ProjectNameButton from "../ProjectNameButton";
 
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore(defaultState);
 
-describe("Tests AppBarComponent", () => {
+let testRenderer: ReactTestRenderer;
+
+describe("AppBarComponent", () => {
   it("renders without crashing", () => {
-    const div = document.createElement("div");
-    ReactDOM.render(
+    renderer.act(() => {
+      testRenderer = renderer.create(
+        <Provider store={mockStore}>
+          <AppBarComponent currentTab={Path.ProjScreen} />
+        </Provider>
+      );
+    });
+  });
+});
+
+describe("NavigationButtons", () => {
+  it("has only one tab shaded", () => {
+    testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <AppBarComponent currentTab={CurrentTab.DataCleanup} />
-      </Provider>,
-      div
+        <NavigationButtons currentTab={Path.Goals} />
+      </Provider>
     );
-    ReactDOM.unmountComponentAtNode(div);
+    expect(testRenderer.toJSON()).toMatchSnapshot();
+
+    testRenderer = renderer.create(
+      <Provider store={mockStore}>
+        <ProjectNameButton currentTab={Path.Goals} />
+      </Provider>
+    );
+    expect(testRenderer.toJSON()).toMatchSnapshot();
   });
+});
 
-  it("Ensures only one tab is shaded", () => {
-    const NavigationButtonRender = renderer
-      .create(
-        <Provider store={mockStore}>
-          <NavigationButtons currentTab={CurrentTab.DataCleanup} />
-        </Provider>
-      )
-      .toJSON();
-    expect(NavigationButtonRender).toMatchSnapshot();
-
-    const ProjectButtonRender = renderer
-      .create(
-        <Provider store={mockStore}>
-          <ProjectNameButton currentTab={CurrentTab.DataCleanup} />
-        </Provider>
-      )
-      .toJSON();
-    expect(ProjectButtonRender).toMatchSnapshot();
-  });
-
-  it("Ensures ProjectName Tab is shaded when itself is called", () => {
-    const ProjectButtonRender = renderer
-      .create(
-        <Provider store={mockStore}>
-          <ProjectNameButton currentTab={CurrentTab.ProjectSettings} />
-        </Provider>
-      )
-      .toJSON();
-    expect(ProjectButtonRender).toMatchSnapshot();
+describe("ProjectNameButton", () => {
+  it("has tab shaded when itself is called", () => {
+    testRenderer = renderer.create(
+      <Provider store={mockStore}>
+        <ProjectNameButton currentTab={Path.ProjSettings} />
+      </Provider>
+    );
+    expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 });
