@@ -31,6 +31,15 @@ This document describes how to install the framework that is needed to deploy
       2. [Windows Host](#windows-host)
    2. [Installing and Running *TheCombine*](#installing-and-running-thecombine)
       1. [Creating Your Own Inventory File](#creating-your-own-inventory-file)
+2. [Backups](#backups)
+   1. [Automated Backups](#automated-backups)
+   2. [Running a Backup Manually](#running-a-backup-manually)
+   3. [Restoring Database and Backend From a Previous Backup](#restoring-database-and-backend-from-a-previous-backup)
+3. [Design](#design)
+4. [Additional Details](#additional-details)
+   1. [Install Ubuntu Bionic Server](#install-ubuntu-bionic-server)
+   2. [Vault Password](#vault-password)
+   3. [Updating Packages](#updating-packages)
 
 ## Step-by-step Instructions
 This section gives you step-by-step instructions for installing *The Combine*
@@ -138,6 +147,45 @@ To use your own inventory file:
   [Build Your Inventory](https://docs.ansible.com/ansible/latest/network/getting_started/first_inventory.html)
   for more information on inventory files.
 
+# Backups
+
+# Automated Backups
+
+If the ansible variables `backup_hours` and `backup_minutes` are defined for a
+target, then `cron` will be setup to create a backup of _TheCombine_ database and
+backend files every day at the specified times.  The hours/minutes can be set to
+any string that is recognized by `cron`.  The backups are stored in an Amazon S3
+bucket.
+
+## Running a Backup Manually
+
+A backup can be initiated on demand whether or not an automatic backup has been
+setup.  To run a backup, perform the following steps:
+ 1. `ssh` to the target using your account.
+ 2. Switch user to `combine`, e.g. `sudo su -l combine`.  Make sure you use the
+    `-l` option.
+ 3. `cd /opt/combine`
+ 4. `bin/combine-backup`
+
+`bin/combine-backup -h` will print the usage information.
+
+## Restoring Database and Backend From a Previous Backup
+
+_TheCombine_ database and backend files can be restored from a previous backup by
+performing the following steps:
+1. `ssh` to the target using your account.
+2. Switch user to `combine`, e.g. `sudo su -l combine`.  Make sure you use the
+   `-l` option.
+3. `cd /opt/combine`
+4. `bin/combine-restore`
+
+You may provide the backup to restore as an argument to `bin/combine-restore`; if
+no backup is specified, `combine-restore` will list the backups that are available
+in the AWS S3 bucket and allow you to select one.
+
+`bin/combine-restore -h` will print the usage information.
+
+
 # Design
 *TheCombine* is deployed to target systems using Ansible.  When deploying in
 Docker containers, `docker-compose` is used to manage the containers that make
@@ -175,18 +223,22 @@ once at initial setup and if ever the playbook or its roles change.
         1. primary group is the group created above
         2. `combine` user is also added to the `docker` group
         3. ssh key is generated
-     3. current user, that is, the host user running the playbook, is added as
-        an authorized user for `combine`.
   4. Install TheCombine configuration files
-     1. Install the `docker-compose.yml` that defines the containers and their
+     1. Create folders for the docker installation:
+        - combine app dir (`/opt/combine`)
+        - Nginx script dir (`/opt/combine/nginx/scripts`)
+     2. Install the `docker-compose.yml` that defines the containers and their
         environment;
-     2. Create the environment variable files for the frontend and backend
-        containers, `.env.frontend` and `.env.backend`;
+     3. Create the environment variable files for the frontend and backend
+        containers, `.env.frontend`, `.env.backend`, and `.env.certmgr`;
      3. Create the runtime configuration for the UI;
-     4. Create the configuration file for the nginx web server.
   5. Setup access to the Amazon Web Services
      1. Install the `aws-cli` package
      2. Create the AWS access profiles
+  6. Setup container backups
+     1. Create folders for the backups and for the scripts
+     2. Install the backup and the restore script
+     3. Schedule daily backups if configured
 
 # Additional Details
 
