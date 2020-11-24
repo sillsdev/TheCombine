@@ -3,11 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using SIL.Lift.Parsing;
 using static BackendFramework.Helper.FileUtilities;
 
@@ -24,14 +26,16 @@ namespace BackendFramework.Controllers
         private readonly ILiftService _liftService;
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
+        private readonly IHubContext<CombineHub> _notifyService;
 
         public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService,
-            ILiftService liftService)
+            ILiftService liftService, IHubContext<CombineHub> notifyService)
         {
             _wordRepo = repo;
             _projectService = projServ;
             _liftService = liftService;
             _permissionService = permissionService;
+            _notifyService = notifyService;
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
@@ -186,7 +190,8 @@ namespace BackendFramework.Controllers
             return await ExportLiftFile(projectId, userId);
         }
 
-        public async Task<IActionResult> ExportLiftFile(string projectId, string userId)
+        // These internal methods are extracted for unit testing
+        internal async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -199,24 +204,51 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            // Ensure project exists and has words
+            // Ensure project exists
             var proj = _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
             }
-            var words = await _wordRepo.GetAllWords(projectId);
-            if (words.Count == 0)
+
+            // Check if another export started
+            if (_liftService.IsExportInProgress(userId))
             {
-                return new BadRequestResult();
+                return new ConflictResult();
             }
 
-            // Export the data to a zip, read into memory, and delete zip
-            var exportedFilepath = CreateLiftExport(projectId);
+            // Store in-progress status for the export
+            _liftService.SetExportInProgress(userId, true);
 
-            // Store the temporary path to the exported file for user to download later.
-            _liftService.StoreExport(userId, exportedFilepath);
-            return new OkObjectResult(projectId);
+            try
+            {
+                // Ensure project has words
+                var words = await _wordRepo.GetAllWords(projectId);
+                if (words.Count == 0)
+                {
+                    _liftService.SetExportInProgress(userId, false);
+                    return new BadRequestResult();
+                }
+
+                // Export the data to a zip, read into memory, and delete zip
+                var exportedFilepath = CreateLiftExport(projectId);
+
+                // Store the temporary path to the exported file for user to download later.
+                _liftService.StoreExport(userId, exportedFilepath);
+                await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
+                return new OkObjectResult(projectId);
+            }
+            catch
+            {
+                _liftService.SetExportInProgress(userId, false);
+                throw;
+            }
+        }
+
+        internal string CreateLiftExport(string projectId)
+        {
+            var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
+            return exportedFilepath;
         }
 
         /// <summary> Downloads project data in zip file </summary>
@@ -229,7 +261,7 @@ namespace BackendFramework.Controllers
             return await DownloadLiftFile(projectId, userId);
         }
 
-        public async Task<IActionResult> DownloadLiftFile(string projectId, string userId)
+        internal async Task<IActionResult> DownloadLiftFile(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
@@ -244,18 +276,31 @@ namespace BackendFramework.Controllers
             }
 
             var file = await System.IO.File.ReadAllBytesAsync(filePath);
-            _liftService.DeleteExport(userId);
             return File(
                 file,
                 "application/zip",
                 $"LiftExport-{projectId}-{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}.zip");
         }
 
-        // This method is extracted so that it can be unit tested
-        internal string CreateLiftExport(string projectId)
+        /// <summary> Delete prepared export </summary>
+        /// <remarks> GET: v1/projects/{projectId}/words/deleteexport </remarks>
+        /// <returns> UserId, if successful </returns>
+        [HttpGet("deleteexport")]
+        public IActionResult DeleteLiftFile()
         {
-            var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
-            return exportedFilepath;
+            var userId = _permissionService.GetUserId(HttpContext);
+            return DeleteLiftFile(userId);
+        }
+
+        internal IActionResult DeleteLiftFile(string userId)
+        {
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return new ForbidResult();
+            }
+
+            _liftService.DeleteExport(userId);
+            return new OkObjectResult(userId);
         }
     }
 
