@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Tooltip, Typography } from "@material-ui/core";
 import { Add, ArrowUpward, Clear, Done } from "@material-ui/icons";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
 import React from "react";
@@ -90,7 +90,7 @@ export default class ProjectLanguages extends React.Component<
                 key={index}
                 ws={writingSystem}
                 index={index}
-                icon={index && <ArrowUpward fontSize="inherit" />}
+                icon={index && <MakeDefaultButton />}
                 iconAction={() => this.setNewAnalysisDefault(index)}
               />
             )
@@ -126,13 +126,36 @@ export default class ProjectLanguages extends React.Component<
             </Grid>
           </Grid>
         ) : (
-          <Button id="addNewLang" onClick={() => this.setState({ add: true })}>
-            <Add />
-          </Button>
+          <Tooltip
+            title={
+              <Translate id="projectSettings.language.addAnalysisLanguage" />
+            }
+            placement="right"
+          >
+            <Button
+              id="addNewLang"
+              onClick={() => this.setState({ add: true })}
+            >
+              <Add />
+            </Button>
+          </Tooltip>
         )}
       </React.Fragment>
     );
   }
+}
+
+function MakeDefaultButton() {
+  return (
+    <Tooltip
+      title={
+        <Translate id="projectSettings.language.makeDefaultAnalysisLanguage" />
+      }
+      placement="right"
+    >
+      <ArrowUpward fontSize="inherit" />
+    </Tooltip>
+  );
 }
 
 interface ImmutableWritingSystemProps {
