@@ -70,12 +70,16 @@
     mode: 0777
 
   - name: check docker credential helper version
-    command: aws --version
-    register: aws_version
+    command: docker-credential-pass version
+    register: cred_version
     changed_when: false
     failed_when: false
+    when: install_credential_helper
 
  - name: Install Docker credential helper
    get_url:
      url:  "https://github.com/docker/docker-credential-helpers/releases/download/{{ credential_helper_version }}/docker-credential-pass-{{ credential_helper_version }}-amd64.tar.gz"
-     dest: /tmp/
+     dest: "/tmp/docker-credential-pass-{{ credential_helper_version }}-amd64.tar.gz"
+   when:
+     - install_credential_helper
+     - cred_version.rc !- 0
