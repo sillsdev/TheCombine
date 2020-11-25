@@ -6,7 +6,7 @@ import configureMockStore from "redux-mock-store";
 
 import { randomProject } from "../../../../types/project";
 import { defaultState } from "../../../App/DefaultState";
-import ExportProjectButton from "../../../ProjectSettings/ProjectExport/ExportProjectButton";
+import ExportProjectButton from "../../../ProjectExport/ExportProjectButton";
 import ProjectButtonWithConfirmation from "../ProjectButtonWithConfirmation";
 import ProjectManagement from "../ProjectManagement";
 

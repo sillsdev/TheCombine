@@ -10,6 +10,7 @@ import ProjectSettings from "../ProjectSettings";
 import ProjectScreen from "../ProjectScreen/ProjectScreenComponent";
 import SiteSettings from "../SiteSettings/SiteSettingsComponent";
 import UserSettings from "../UserSettings/UserSettings";
+import SignalRHub from "./SignalRHub";
 
 export default function AppWithBar() {
   const location = useLocation();
@@ -21,6 +22,7 @@ export default function AppWithBar() {
 
   return (
     <React.Fragment>
+      <SignalRHub />
       <AppBar currentTab={currentLoc} />
       <Switch>
         <Route exact path={Path.ProjScreen} component={ProjectScreen} />

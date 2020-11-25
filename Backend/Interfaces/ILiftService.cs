@@ -14,5 +14,7 @@ namespace BackendFramework.Interfaces
         void StoreExport(string key, string filePath);
         string? RetrieveExport(string key);
         bool DeleteExport(string key);
+        void SetExportInProgress(string key, bool isInProgress);
+        bool IsExportInProgress(string key);
     }
 }

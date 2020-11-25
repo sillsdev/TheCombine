@@ -263,6 +263,15 @@
       ]
     }
   },
+  "projectExport": {
+    "downloadReady": ["Download ready", "Download ready", "Download ready"],
+    "exportFailed": ["Export failed", "Export failed", "Export failed"],
+    "exportInProgress": [
+      "Export in progress",
+      "Export in progress",
+      "Export in progress"
+    ]
+  },
   "projectSettings": {
     "language": {
       "header": ["Language", "Lenguaje", "Langue"],
