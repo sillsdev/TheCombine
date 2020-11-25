@@ -149,7 +149,7 @@ To use your own inventory file:
 
 # Backups
 
-# Automated Backups
+## Automated Backups
 
 If the ansible variables `backup_hours` and `backup_minutes` are defined for a
 target, then `cron` will be setup to create a backup of _TheCombine_ database and
