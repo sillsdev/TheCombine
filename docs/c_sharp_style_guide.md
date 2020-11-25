@@ -29,7 +29,7 @@ if (isEmpty) {
 # No:
 if (isEmpty)
   callFun();
-``` 
+```
 
-> Reason: Avoiding braces can cause developers to miss bugs, such as Apple's infamous 
-> [goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)  
+> Reason: Avoiding braces can cause developers to miss bugs, such as Apple's infamous
+> [goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)
