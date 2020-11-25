@@ -138,7 +138,7 @@ The Ansible playbooks require that some of the variable files are encrypted. Whe
 
 1. entering the password when prompted. Add the <tt>--ask-vault-pass</tt> option for <tt>ansible-playbook</tt> to be prompted for the password when it is required. This is the default for <tt>./setup-nuc.sh</tt>
 2. specify a file that has the password. Add the <tt>--vault-password-file</tt> option for <tt>ansible-playbook</tt> followed by the path of a file that holds the vault password.
-3. set the environment variable <tt>ANSIBLE_VAULT_PASSWORD_FILE</tt> to the path of a file that holds the vault password. This prevents you from needing to provide the vault password whenever you run an ansible playbook, either directly or from within a script such as <tt>setup-nuc.sh</tt>. _Make sure that you are the only one with read permission for the password file!_
+3. set the environment variable <tt>ANSIBLE*VAULT_PASSWORD_FILE</tt> to the path of a file that holds the vault password. This prevents you from needing to provide the vault password whenever you run an ansible playbook, either directly or from within a script such as <tt>setup-nuc.sh</tt>. \_Make sure that you are the only one with read permission for the password file!*
 
 If you use a file to hold the vault password, then:
 
@@ -176,5 +176,5 @@ In order to setup the Demo Server,
   ansible-playbook playbook_publish.yml -K --limit thecombine --ask-vault-pass
   ```
   Notes:
-  - <tt>playbook_server.yml</tt> only needs to be run once. In order to update to a newer version of _TheCombine_, only the <tt>playbook_publish.yml</tt> needs to be run.
+  - <tt>playbook*server.yml</tt> only needs to be run once. In order to update to a newer version of \_TheCombine*, only the <tt>playbook_publish.yml</tt> needs to be run.
   - <tt>playbook_server.yml</tt> currently uses the geerlingguy.certbot role to create the letsencrypt SSL certificate. This role only supports the <tt>standalone</tt> challenge method. Run the specified <tt>certbot</tt> command to convert the renewal to use webroot. The <tt>standalone</tt> certificate requires shutting down the Apache web server to renew the certificate and then restarting it.
