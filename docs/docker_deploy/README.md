@@ -41,14 +41,14 @@ This document describes how to install the framework that is needed to deploy
    2. [Vault Password](#vault-password)
    3. [Updating Packages](#updating-packages)
 
-## Step-by-step Instructions
+# Step-by-step Instructions
 This section gives you step-by-step instructions for installing *The Combine*
 on a new NUC/PC with links to more detailed information.  The instructions
 assume that the target system already has Ubuntu Server 18.04 installed and
 is accessible via `ssh`.
 
-### Prepare your host system
-#### Linux Host
+## Prepare your host system
+### Linux Host
 
 Install the following components:
  * Ubuntu 18.04 (Desktop or Server), 64-bit
@@ -67,7 +67,7 @@ Install the following components:
    ssh-copy-id <target_user>@<target>
    ```
 
-#### Windows host
+### Windows host
 The scripts for installing TheCombine use *Ansible* to manage an installation of
 *TheCombine*.  *Ansible* is not available for Windows but will run in the
 Windows Subsystem for Linux (WSL).  Microsoft has instructions for installing
@@ -79,7 +79,7 @@ including Ubuntu 18.04.
 Once Ubuntu is installed, run the Ubuntu subsystem and follow the instructions
 for the [Linux Host](#linux-host)
 
-### Installing and Running *TheCombine*
+## Installing and Running *TheCombine*
 
 To install and start up *TheCombine* you will need to run the following Ansible
 playbooks.  Each time you will be prompted for passwords:
@@ -88,14 +88,14 @@ playbooks.  Each time you will be prompted for passwords:
  * `Vault password` - some of the Ansible variable files are encrypted in
    Ansible vaults.  See the current owner (above) for the Vault password.
 
-#### Minimum System Requirements
+### Minimum System Requirements
 
 The minimum system requirements for installing *TheCombine* on a target are:
 - Ubuntu 18.04 Server operating system (see [Install Ubuntu Bionic Server](#install-ubuntu-bionic-server))
 - 2 GB RAM
 - 15 GB Storage
 
-#### Install Combine Pre-requisites
+### Install Combine Pre-requisites
 
 Run the first playbook to install all the packages that are needed by *TheCombine*
 and to setup the Docker configuration files:
@@ -111,14 +111,14 @@ Notes:
   \<COMBINE\>/docker_deploy).  If it is not, then you need to create your
   own inventory file (see [below](#creating-your-own-inventory-file)).
 
-#### Running the *TheCombine* Docker Containers
+### Running the *TheCombine* Docker Containers
 
 *TheCombine*'s docker containers are built by SIL's *TeamCity* server.  Once they
 are built successfully, they are pushed to
 Amazon's Elastic Container Registry (AWS ECR).  The production `docker-compose.yml`
 files will pull the images from AWS_ECR.
 
-#### Creating Your Own Inventory File
+### Creating Your Own Inventory File
 
 You can create your own inventory file to enable Ansible to install the combine
 on a target that is not listed in the hosts.yml inventory file or if you want
