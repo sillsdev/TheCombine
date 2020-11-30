@@ -1,5 +1,4 @@
 import React from "react";
-import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 
 import * as Backend from "../../backend";
 import AudioPlayer from "./AudioPlayer";
@@ -16,52 +15,44 @@ export interface PronunciationProps {
 }
 
 /** Audio recording/playing component */
-export class Pronunciations extends React.Component<
-  PronunciationProps & LocalizeContextProps
-> {
-  /* Only update if things that could change do change
-   * This decreases unnecessary fetching of audio files
-   */
-  shouldComponentUpdate(nextProps: PronunciationProps) {
-    const isDifferentEntry = nextProps.wordId !== this.props.wordId;
-    const hasDifferentAudio =
-      JSON.stringify(nextProps.pronunciationFiles) !==
-      JSON.stringify(this.props.pronunciationFiles);
-    return isDifferentEntry || hasDifferentAudio;
-  }
-
-  render() {
-    let audioButtons;
-    if (this.props.pronunciationFiles === null) {
-      audioButtons = null;
-    } else {
-      audioButtons = this.props.pronunciationFiles.map((fileName) => {
-        return (
-          <AudioPlayer
-            key={fileName}
-            wordId={this.props.wordId}
-            fileName={fileName}
-            pronunciationUrl={
-              this.props.getAudioUrl
-                ? this.props.getAudioUrl(this.props.wordId, fileName)
-                : Backend.getAudioUrl(this.props.wordId, fileName)
-            }
-            deleteAudio={this.props.deleteAudio}
-          />
-        );
-      });
-    }
-    return (
-      <div className="pronunciationAudio">
-        <AudioRecorder
-          wordId={this.props.wordId}
-          recorder={this.props.recorder}
-          uploadAudio={this.props.uploadAudio}
+export function Pronunciations(props: PronunciationProps) {
+  let audioButtons = null;
+  if (props.pronunciationFiles !== null) {
+    audioButtons = props.pronunciationFiles.map((fileName) => {
+      return (
+        <AudioPlayer
+          key={fileName}
+          wordId={props.wordId}
+          fileName={fileName}
+          pronunciationUrl={
+            props.getAudioUrl
+              ? props.getAudioUrl(props.wordId, fileName)
+              : Backend.getAudioUrl(props.wordId, fileName)
+          }
+          deleteAudio={props.deleteAudio}
         />
-        {audioButtons}
-      </div>
-    );
+      );
+    });
   }
+  return (
+    <React.Fragment>
+      <AudioRecorder
+        wordId={props.wordId}
+        recorder={props.recorder}
+        uploadAudio={props.uploadAudio}
+      />
+      {audioButtons}
+    </React.Fragment>
+  );
 }
 
-export default withLocalize(Pronunciations);
+export default React.memo(Pronunciations, (props, nextProps) => {
+  /* Don't update if things that could change haven't changed.
+   * This decreases unnecessary fetching of audio files.
+   */
+  const isSameEntry = nextProps.wordId === props.wordId;
+  const hasSameAudio =
+    JSON.stringify(nextProps.pronunciationFiles) ===
+    JSON.stringify(props.pronunciationFiles);
+  return isSameEntry && hasSameAudio;
+});
