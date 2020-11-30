@@ -24,11 +24,11 @@ export function setAvatar(src: string) {
 }
 
 export function getCurrentUser(): User | null {
-  const userString: string | null = localStorage.getItem(LocalStorageKey.User);
+  const userString = localStorage.getItem(LocalStorageKey.User);
   return userString ? JSON.parse(userString) : null;
 }
 export function setCurrentUser(user: User) {
-  const userString: string = JSON.stringify(user);
+  const userString = JSON.stringify(user);
   localStorage.setItem(LocalStorageKey.User, userString);
 }
 
@@ -49,7 +49,7 @@ export function setProjectId(id: string) {
 }
 
 export function getUserId(): string {
-  const user: User | null = getCurrentUser();
+  const user = getCurrentUser();
   return user ? user.id : "";
 }
 
@@ -59,8 +59,8 @@ export function remove(localStorageKey: LocalStorageKey) {
 
 // Update user in LocalStorage from backend.
 export async function updateUser(userId?: string) {
-  const currentUserId: string = userId ? userId : getUserId();
+  const currentUserId = userId ? userId : getUserId();
   if (currentUserId) {
-    await getUser(currentUserId).then((user: User) => setCurrentUser(user));
+    await getUser(currentUserId).then((user) => setCurrentUser(user));
   }
 }

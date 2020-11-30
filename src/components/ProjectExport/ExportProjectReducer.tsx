@@ -1,4 +1,4 @@
-import { StoreAction, StoreActions } from "../../../rootActions";
+import { StoreAction, StoreActions } from "../../rootActions";
 import { ExportProjectAction, ExportStatus } from "./ExportProjectActions";
 
 export interface ExportProjectState {
@@ -34,6 +34,8 @@ export const exportProjectReducer = (
         projectId: action.projectId ?? "",
         status: action.type,
       };
+    case ExportStatus.Default:
+      return defaultState;
     case StoreActions.RESET:
       return defaultState;
     default:

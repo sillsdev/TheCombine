@@ -1,9 +1,8 @@
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import { StoreState } from "../../../types";
+import { StoreState } from "../../types";
 import {
-  asyncDownloadExport,
   asyncExportProject,
   ExportProjectAction,
 } from "./ExportProjectActions";
@@ -19,11 +18,8 @@ function mapDispatchToProps(
   dispatch: ThunkDispatch<StoreState, any, ExportProjectAction>
 ) {
   return {
-    exportProject: (projectId?: string) => {
+    exportProject: (projectId: string) => {
       dispatch(asyncExportProject(projectId));
-    },
-    downloadLift: (projectId?: string) => {
-      return dispatch(asyncDownloadExport(projectId));
     },
   };
 }

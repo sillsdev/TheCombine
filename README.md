@@ -320,10 +320,10 @@ _TheCombine_ in Docker containers.
 
 ##### Windows Only
 
-- Navigate to the [Python 3.8.5 Downloads](https://www.python.org/downloads/release/python-385/) page.
+- Navigate to the [Python Downloads](https://www.python.org/downloads/) page.
 
-- Download and run the appropriate installer - it is most likely the installer labeled
-  _Windows x86-64 executable installer_
+- Select the "Download Python" button at the top of the page. This will download the latest
+  appropriate x86-64 executable installer.
 
 - Once Python is installed, create an isolated Python
   [virtual environment](https://docs.python.org/3/library/venv.html) using the

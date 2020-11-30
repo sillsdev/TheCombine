@@ -5,12 +5,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using static BackendFramework.Helper.FileUtilities;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -22,6 +24,7 @@ namespace Backend.Tests.Controllers
         private IProjectService _projServ;
         private ILiftService _liftService;
         private LiftController _liftController;
+        private IHubContext<CombineHub> _notifyService;
         private IPermissionService _permissionService;
 
         [SetUp]
@@ -31,7 +34,9 @@ namespace Backend.Tests.Controllers
             _projServ = new ProjectServiceMock();
             _wordrepo = new WordRepositoryMock();
             _liftService = new LiftService();
-            _liftController = new LiftController(_wordrepo, _projServ, _permissionService, _liftService);
+            _notifyService = new HubContextMock();
+            _liftController = new LiftController(
+                _wordrepo, _projServ, _permissionService, _liftService, _notifyService);
             _wordService = new WordService(_wordrepo);
         }
 
@@ -209,11 +214,13 @@ namespace Backend.Tests.Controllers
             _wordService.Update(proj.Id, wordToUpdate.Id, word);
             _wordService.DeleteFrontierWord(proj.Id, wordToDelete.Id);
 
-            var result = _liftController.ExportLiftFile(proj.Id).Result as OkObjectResult;
-            var fileContents = Convert.FromBase64String(result.Value as string);
+            const string userId = "testId";
+            _liftController.ExportLiftFile(proj.Id, userId).Wait();
+            var result = _liftController.DownloadLiftFile(proj.Id, userId).Result as FileContentResult;
+            Assert.NotNull(result);
 
             // Write LiftFile contents to a temporary directory.
-            var extractedExportDir = ExtractZipFileContents(fileContents);
+            var extractedExportDir = ExtractZipFileContents(result.FileContents);
             var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);
@@ -222,6 +229,11 @@ namespace Backend.Tests.Controllers
             Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
             // There is only one deleted word
             Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
+
+            // Delete the export
+            _liftController.DeleteLiftFile(userId);
+            var notFoundResult = _liftController.DownloadLiftFile(proj.Id, userId).Result as NotFoundObjectResult;
+            Assert.NotNull(notFoundResult);
         }
 
         [Test]

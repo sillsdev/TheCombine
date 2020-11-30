@@ -3,11 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using SIL.Lift.Parsing;
 using static BackendFramework.Helper.FileUtilities;
 
@@ -24,14 +26,16 @@ namespace BackendFramework.Controllers
         private readonly ILiftService _liftService;
         private readonly IProjectService _projectService;
         private readonly IPermissionService _permissionService;
+        private readonly IHubContext<CombineHub> _notifyService;
 
         public LiftController(IWordRepository repo, IProjectService projServ, IPermissionService permissionService,
-            ILiftService liftService)
+            ILiftService liftService, IHubContext<CombineHub> notifyService)
         {
             _wordRepo = repo;
             _projectService = projServ;
             _liftService = liftService;
             _permissionService = permissionService;
+            _notifyService = notifyService;
         }
 
         /// <summary> Adds data from a zipped directory containing a lift file </summary>
@@ -177,16 +181,24 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Packages project data into zip file </summary>
-        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
-        [HttpGet("download")]
+        /// <remarks> GET: v1/projects/{projectId}/words/export </remarks>
+        /// <returns> ProjectId, if export successful </returns>
+        [HttpGet("export")]
         public async Task<IActionResult> ExportLiftFile(string projectId)
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return await ExportLiftFile(projectId, userId);
+        }
+
+        // These internal methods are extracted for unit testing
+        internal async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
             if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
 
-            // sanitize projectId
+            // Sanitize projectId
             if (!SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
@@ -199,29 +211,96 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(projectId);
             }
 
-            // Ensure there are words in the project
-            var words = await _wordRepo.GetAllWords(projectId);
-            if (words.Count == 0)
+            // Check if another export started
+            if (_liftService.IsExportInProgress(userId))
             {
-                return new BadRequestResult();
+                return new ConflictResult();
             }
-            // Export the data to a zip directory
-            var exportedFilepath = CreateLiftExport(projectId);
-            var file = await System.IO.File.ReadAllBytesAsync(exportedFilepath);
 
-            // Clean up temporary file after reading it.
-            System.IO.File.Delete(exportedFilepath);
+            // Store in-progress status for the export
+            _liftService.SetExportInProgress(userId, true);
 
-            var encodedFile = Convert.ToBase64String(file);
+            try
+            {
+                // Ensure project has words
+                var words = await _wordRepo.GetAllWords(projectId);
+                if (words.Count == 0)
+                {
+                    _liftService.SetExportInProgress(userId, false);
+                    return new BadRequestResult();
+                }
 
-            return new OkObjectResult(encodedFile);
+                // Export the data to a zip, read into memory, and delete zip
+                var exportedFilepath = CreateLiftExport(projectId);
+
+                // Store the temporary path to the exported file for user to download later.
+                _liftService.StoreExport(userId, exportedFilepath);
+                await _notifyService.Clients.All.SendAsync("DownloadReady", userId);
+                return new OkObjectResult(projectId);
+            }
+            catch
+            {
+                _liftService.SetExportInProgress(userId, false);
+                throw;
+            }
         }
 
-        // This method is extracted so that it can be unit tested
         internal string CreateLiftExport(string projectId)
         {
             var exportedFilepath = _liftService.LiftExport(projectId, _wordRepo, _projectService);
             return exportedFilepath;
+        }
+
+        /// <summary> Downloads project data in zip file </summary>
+        /// <remarks> GET: v1/projects/{projectId}/words/download </remarks>
+        /// <returns> Binary Lift file </returns>
+        [HttpGet("download")]
+        public async Task<IActionResult> DownloadLiftFile(string projectId)
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return await DownloadLiftFile(projectId, userId);
+        }
+
+        internal async Task<IActionResult> DownloadLiftFile(string projectId, string userId)
+        {
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return new ForbidResult();
+            }
+
+            // Ensure export exists.
+            var filePath = _liftService.RetrieveExport(userId);
+            if (filePath is null)
+            {
+                return new NotFoundObjectResult(userId);
+            }
+
+            var file = await System.IO.File.ReadAllBytesAsync(filePath);
+            return File(
+                file,
+                "application/zip",
+                $"LiftExport-{projectId}-{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}.zip");
+        }
+
+        /// <summary> Delete prepared export </summary>
+        /// <remarks> GET: v1/projects/{projectId}/words/deleteexport </remarks>
+        /// <returns> UserId, if successful </returns>
+        [HttpGet("deleteexport")]
+        public IActionResult DeleteLiftFile()
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return DeleteLiftFile(userId);
+        }
+
+        internal IActionResult DeleteLiftFile(string userId)
+        {
+            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return new ForbidResult();
+            }
+
+            _liftService.DeleteExport(userId);
+            return new OkObjectResult(userId);
         }
     }
 

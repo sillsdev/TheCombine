@@ -2,8 +2,8 @@ import { LocalizeState } from "react-localize-redux";
 
 import { LoginState } from "../components/Login/LoginReducer";
 import { PasswordResetState } from "../components/PasswordReset/reducer";
+import { ExportProjectState } from "../components/ProjectExport/ExportProjectReducer";
 import { CreateProjectState } from "../components/ProjectScreen/CreateProject/CreateProjectReducer";
-import { ExportProjectState } from "../components/ProjectSettings/ProjectExport/ExportProjectReducer";
 import { TempState } from "../components/Temp/TempReducer";
 import { TreeViewState } from "../components/TreeView/TreeViewReducer";
 import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";

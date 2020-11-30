@@ -6,8 +6,8 @@ import { goalSelectReducer } from "./components/GoalTimeline/GoalSwitcher/GoalSe
 import { loginReducer } from "./components/Login/LoginReducer";
 import { passwordResetReducer } from "./components/PasswordReset/reducer";
 import { projectReducer } from "./components/Project/ProjectReducer";
+import { exportProjectReducer } from "./components/ProjectExport/ExportProjectReducer";
 import { createProjectReducer } from "./components/ProjectScreen/CreateProject/CreateProjectReducer";
-import { exportProjectReducer } from "./components/ProjectSettings/ProjectExport/ExportProjectReducer";
 import { tempReducer } from "./components/Temp/TempReducer";
 import { treeViewReducer } from "./components/TreeView/TreeViewReducer";
 import { characterInventoryReducer } from "./goals/CharInventoryCreation/CharacterInventoryReducer";
