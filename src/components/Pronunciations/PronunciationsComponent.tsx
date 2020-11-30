@@ -46,13 +46,16 @@ export function Pronunciations(props: PronunciationProps) {
   );
 }
 
-export default React.memo(Pronunciations, (props, nextProps) => {
-  /* Don't update if things that could change haven't changed.
-   * This decreases unnecessary fetching of audio files.
-   */
+// Memoize to decrease unnecessary fetching of audio files.
+// https://dmitripavlutin.com/use-react-memo-wisely/#11-custom-equality-check-of-props
+function pronunciationPropsAreEqual(
+  props: PronunciationProps,
+  nextProps: PronunciationProps
+) {
   const isSameEntry = nextProps.wordId === props.wordId;
   const hasSameAudio =
     JSON.stringify(nextProps.pronunciationFiles) ===
     JSON.stringify(props.pronunciationFiles);
   return isSameEntry && hasSameAudio;
-});
+}
+export default React.memo(Pronunciations, pronunciationPropsAreEqual);
