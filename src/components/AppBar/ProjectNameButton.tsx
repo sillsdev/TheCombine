@@ -14,19 +14,17 @@ export default function ProjectNameButton(props: ProjectNameButtonProps) {
   const projectName = useSelector((state: any) => state.currentProject.name);
 
   return (
-    <React.Fragment>
-      <Button
-        id="project-name"
-        onClick={() => {
-          history.push(Path.ProjSettings);
-        }}
-        color="inherit"
-        style={{
-          background: tabColor(props.currentTab, Path.ProjSettings),
-        }}
-      >
-        {projectName}
-      </Button>
-    </React.Fragment>
+    <Button
+      id="project-name"
+      onClick={() => {
+        history.push(Path.ProjSettings);
+      }}
+      color="inherit"
+      style={{
+        background: tabColor(props.currentTab, Path.ProjSettings),
+      }}
+    >
+      {projectName}
+    </Button>
   );
 }

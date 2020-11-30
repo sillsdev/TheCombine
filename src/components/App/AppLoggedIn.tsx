@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 
 import { getBasePath, Path } from "../../history";
@@ -6,19 +6,17 @@ import AppBar from "../AppBar/AppBarComponent";
 import DataEntry from "../DataEntry";
 import GoalRoute from "../GoalRoute/component";
 import PageNotFound from "../PageNotFound/component";
-import ProjectSettings from "../ProjectSettings";
 import ProjectScreen from "../ProjectScreen/ProjectScreenComponent";
+import ProjectSettings from "../ProjectSettings";
 import SiteSettings from "../SiteSettings/SiteSettingsComponent";
 import UserSettings from "../UserSettings/UserSettings";
 import SignalRHub from "./SignalRHub";
 
 export default function AppWithBar() {
   const location = useLocation();
-  const [currentLoc, setCurrentLoc] = React.useState<Path>(Path.ProjScreen);
+  const [currentLoc, setCurrentLoc] = useState<Path>(Path.ProjScreen);
 
-  React.useEffect(() => {
-    setCurrentLoc(getBasePath(location.pathname));
-  }, [location]);
+  useEffect(() => setCurrentLoc(getBasePath(location.pathname)), [location]);
 
   return (
     <React.Fragment>

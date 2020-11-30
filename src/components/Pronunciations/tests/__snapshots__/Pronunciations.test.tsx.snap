@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`pronunciation tests displays buttons 1`] = `
-<div
-  className="pronunciationAudio"
->
+Array [
   <button
     aria-label="record"
     className="MuiButtonBase-root MuiIconButton-root makeStyles-button-6"
@@ -43,7 +41,7 @@ exports[`pronunciation tests displays buttons 1`] = `
     <span
       className="MuiTouchRipple-root"
     />
-  </button>
+  </button>,
   <button
     aria-describedby={null}
     aria-label="play"
@@ -83,7 +81,7 @@ exports[`pronunciation tests displays buttons 1`] = `
     <span
       className="MuiTouchRipple-root"
     />
-  </button>
+  </button>,
   <button
     aria-describedby={null}
     aria-label="play"
@@ -123,6 +121,6 @@ exports[`pronunciation tests displays buttons 1`] = `
     <span
       className="MuiTouchRipple-root"
     />
-  </button>
-</div>
+  </button>,
+]
 `;
