@@ -20,7 +20,7 @@ FormData()
 
 **Code** : `200 OK`
 
-**Data content** : `string` - file path 
+**Data content** : `string` - file path
 
 ## Error response
 
