@@ -16,24 +16,21 @@ export interface PronunciationProps {
 
 /** Audio recording/playing component */
 export function Pronunciations(props: PronunciationProps) {
-  let audioButtons = null;
-  if (props.pronunciationFiles !== null) {
-    audioButtons = props.pronunciationFiles.map((fileName) => {
-      return (
-        <AudioPlayer
-          key={fileName}
-          wordId={props.wordId}
-          fileName={fileName}
-          pronunciationUrl={
-            props.getAudioUrl
-              ? props.getAudioUrl(props.wordId, fileName)
-              : Backend.getAudioUrl(props.wordId, fileName)
-          }
-          deleteAudio={props.deleteAudio}
-        />
-      );
-    });
-  }
+  const audioButtons = props.pronunciationFiles.map((fileName) => {
+    return (
+      <AudioPlayer
+        key={fileName}
+        wordId={props.wordId}
+        fileName={fileName}
+        pronunciationUrl={
+          props.getAudioUrl
+            ? props.getAudioUrl(props.wordId, fileName)
+            : Backend.getAudioUrl(props.wordId, fileName)
+        }
+        deleteAudio={props.deleteAudio}
+      />
+    );
+  });
   return (
     <React.Fragment>
       <AudioRecorder
