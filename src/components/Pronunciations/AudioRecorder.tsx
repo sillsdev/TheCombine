@@ -21,7 +21,7 @@ export function getFileNameForWord(wordId: string): string {
 }
 
 export default function AudioRecorder(props: RecorderProps) {
-  const recorder = props.recorder ? props.recorder : new Recorder();
+  const recorder = props.recorder ?? new Recorder();
 
   function startRecording() {
     recorder.startRecording();
