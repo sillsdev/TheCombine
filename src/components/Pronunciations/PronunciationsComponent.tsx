@@ -49,10 +49,12 @@ function pronunciationPropsAreEqual(
   props: PronunciationProps,
   nextProps: PronunciationProps
 ) {
-  const isSameEntry = nextProps.wordId === props.wordId;
-  const hasSameAudio =
-    JSON.stringify(nextProps.pronunciationFiles) ===
-    JSON.stringify(props.pronunciationFiles);
-  return isSameEntry && hasSameAudio;
+  if (nextProps.wordId === props.wordId) {
+    const hasSameAudio =
+      JSON.stringify(nextProps.pronunciationFiles) ===
+      JSON.stringify(props.pronunciationFiles);
+    return hasSameAudio;
+  }
+  return false;
 }
 export default React.memo(Pronunciations, pronunciationPropsAreEqual);
