@@ -1,0 +1,74 @@
+#!/bin/bash
+
+######################################################
+# Script to delete old backups from the AWS S3 bucket
+######################################################
+
+set -e
+
+usage() {
+  cat <<USAGE
+  Usage: $0 [-n N] [--host HOSTNAME]
+     Creates a backup of the combine database and backend containers
+  Options:
+     -h, --help:
+           print this message
+
+     --host HOSTNAME:
+           set the name of the host whose backups are to be cleaned up
+           Alternately, you may export the environment variable COMBINE_HOST to
+           specify the hostname.  N.B. any '.' characters must be replaced with '-'
+           characters,
+
+     -n, -num_backups NUMBER:
+           number of backups to keep for the host being cleaned up
+           Alternately, you may also export the environment variable MAX_BACKUPS
+           to specify the number of backups to keep.
+USAGE
+}
+
+while [[ $# -gt 0 ]] ; do
+  arg="$1"
+  shift
+
+  case ${arg} in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --host)
+      COMBINE_HOST=$(echo "$1"| sed "s/\./-/g")
+      shift
+      ;;
+    -n|--num-backups)
+      MAX_BACKUPS=$1
+      shift
+      ;;
+    -?)
+      echo "Invalid option: ${arg}."
+      usage
+      exit 2
+      ;;
+    *)
+      echo "Unrecognized argument: ${arg}"
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+DATE_STR=`date +%Y-%m-%d-%H-%M-%S`
+COMBINE_HOST=${COMBINE_HOST:="{{ combine_server_name | replace('.', '-') }}"}
+AWS_BUCKET="s3://{{ aws_s3_backup_loc }}"
+MAX_BACKUPS=${MAX_BACKUPS:={{ num_backups }}}
+
+AWS_BACKUPS=($(aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write|grep ${COMBINE_HOST}|sed "s/[^\/]*\/\(.*\)/\1/"|sort))
+NUM_BACKUPS=${{ '{#' }}AWS_BACKUPS[@]}
+
+if [[ ${NUM_BACKUPS} -gt ${MAX_BACKUPS} ]] ; then
+  loop_limit=$(( ${NUM_BACKUPS} - ${MAX_BACKUPS} ))
+
+  for (( bu=0; bu < $loop_limit; bu++ )) ; do
+    aws s3 rm ${AWS_BUCKET}/${AWS_BACKUPS[${bu}]} --profile s3_read_write
+  done
+fi
