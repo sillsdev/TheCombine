@@ -18,7 +18,7 @@ interface DomainCellProps {
 }
 
 export default function DomainCell(props: DomainCellProps) {
-  const [addingDomains, setAddingSomains] = useState<boolean>(false);
+  const [addingDomains, setAddingDomains] = useState<boolean>(false);
   const [senseToChange, setSenseToChange] = useState<ReviewEntriesSense | null>(
     null
   );
@@ -27,12 +27,12 @@ export default function DomainCell(props: DomainCellProps) {
   );
 
   function prepAddDomain(sense: ReviewEntriesSense) {
-    setAddingSomains(true);
+    setAddingDomains(true);
     setSenseToChange(sense);
   }
 
   function addDomain() {
-    setAddingSomains(false);
+    setAddingDomains(false);
     if (props.editDomains && senseToChange) {
       if (!selectedDomain)
         throw new Error(
