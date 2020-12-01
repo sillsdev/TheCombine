@@ -1,8 +1,8 @@
 # Edit
 
-**goalType** : 
+**goalType** :
 
-**stepData** : 
+**stepData** :
 
 ## Raw Type
 

@@ -2,7 +2,7 @@
 
 Takes the sematic domains of your project and returns a JSON object in the structure needed by the Tree View component.
 The app currently has copies of the semantic domains in English, Spanish, and French. This tool can be used to localize the Tree View component to other languages.
-This function is not currently operating, so the source code must be changed. 
+This function is not currently operating, so the source code must be changed.
 
 1. In the file [~/TheCombine/Backend/Services/LiftApiServices.cs](../../../Backend/Services/LiftApiServices.cs), uncomment the code in the method `ProcessRangeElement()`.
 

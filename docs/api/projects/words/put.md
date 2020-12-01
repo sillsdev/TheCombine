@@ -30,4 +30,3 @@ Merge words into a parent
 **Condition** : If any id is not found or if there are duplicates among the parent and children
 
 **Code** : `404 NOT FOUND`
-
