@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 
-import Pronunciations from "../../../../components/Pronunciations";
+import Pronunciations from "../../../../components/Pronunciations/PronunciationsComponent";
 import Recorder from "../../../../components/Pronunciations/Recorder";
 import { StoreState } from "../../../../types";
 import {

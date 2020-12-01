@@ -17,7 +17,6 @@
     state: directory
   with_items:
     - "{{ combine_app_dir }}"
-    - "{{ combine_app_dir }}/uploads"
     - "{{ combine_app_dir }}/nginx/scripts"
 
 - name: install docker-compose.yml file
