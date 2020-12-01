@@ -8,25 +8,39 @@ set -e
 
 usage() {
   cat <<USAGE
-  Usage: $0 [-n N] [--host HOSTNAME]
+  Usage: $0 [options]
      Creates a backup of the combine database and backend containers
   Options:
      -h, --help:
            print this message
 
-     --host HOSTNAME:
-           set the name of the host whose backups are to be cleaned up
-           Alternately, you may export the environment variable COMBINE_HOST to
-           specify the hostname.  N.B. any '.' characters must be replaced with '-'
-           characters,
+     -f, --filter FILTER_STRING:
+           set FILTER_STRING that is used to select the backups to be deleted.
+           By default, the filter is set to the name of the current host machine
+           with '.' replaced by '-' characters.
+           Alternately, you may export the environment variable BACKUP_FILTER to
+           specify the selection string.
+
+     -l, --list:
+           list all backups that are in the S3 bucket;
+           no backups are deleted.
 
      -n, -num_backups NUMBER:
            number of backups to keep for the host being cleaned up
            Alternately, you may also export the environment variable MAX_BACKUPS
            to specify the number of backups to keep.
+  Caveats:
+    This script assumes that the backups have been created by the combine-backup
+    script; specifically, that:
+      1. The name of the backup is of the form:
+          hostname-date.tar.gz
+      2. Periods in the hostname are converted to dashes
+      3. When the backups are sorted by name, they are in chronological order
+         with the oldest backup first.
 USAGE
 }
 
+LIST_ONLY="0"
 while [[ $# -gt 0 ]] ; do
   arg="$1"
   shift
@@ -36,9 +50,12 @@ while [[ $# -gt 0 ]] ; do
       usage
       exit 0
       ;;
-    --host)
-      COMBINE_HOST=$(echo "$1"| sed "s/\./-/g")
+    -f, --filter)
+      BACKUP_FILTER=$(echo "$1"| sed "s/\./-/g")
       shift
+      ;;
+    -l|--list)
+      LIST_ONLY="1"
       ;;
     -n|--num-backups)
       MAX_BACKUPS=$1
@@ -58,11 +75,16 @@ while [[ $# -gt 0 ]] ; do
 done
 
 DATE_STR=`date +%Y-%m-%d-%H-%M-%S`
-COMBINE_HOST=${COMBINE_HOST:="{{ combine_server_name | replace('.', '-') }}"}
+BACKUP_FILTER=${BACKUP_FILTER:="{{ combine_server_name | replace('.', '-') }}"}
 AWS_BUCKET="s3://{{ aws_s3_backup_loc }}"
 MAX_BACKUPS=${MAX_BACKUPS:={{ num_backups }}}
 
-AWS_BACKUPS=($(aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write|grep ${COMBINE_HOST}|sed "s/[^\/]*\/\(.*\)/\1/"|sort))
+if [ "${LIST_ONLY}" = "1" ] ; then
+  aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write
+  exit 0
+fi
+
+AWS_BACKUPS=($(aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write|grep --fixed-strings "${BACKUP_FILTER}"|sed "s/[^\/]*\/\(.*\)/\1/"|sort))
 NUM_BACKUPS=${{ '{#' }}AWS_BACKUPS[@]}
 
 if [[ ${NUM_BACKUPS} -gt ${MAX_BACKUPS} ]] ; then
