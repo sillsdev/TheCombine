@@ -15,11 +15,11 @@ export default function RecorderIcon(props: RecorderIconProps) {
   // This component was constructed for ReviewEntries,
   // but is also used with DataEntry, so we now have to check
   // if state.reviewEntriesState exists (or DataEntry tests fail)
-  const isRecording = useSelector((state: any) =>
-    state.reviewEntriesState ? state.reviewEntriesState.isRecording : null
+  const isRecording = useSelector(
+    (state: any) => state.reviewEntriesState?.isRecording
   );
-  const wordBeingRecorded = useSelector((state: any) =>
-    state.reviewEntriesState ? state.reviewEntriesState.wordBeingRecorded : null
+  const wordBeingRecorded = useSelector(
+    (state: any) => state.reviewEntriesState?.wordBeingRecorded
   );
 
   const dispatch = useDispatch();

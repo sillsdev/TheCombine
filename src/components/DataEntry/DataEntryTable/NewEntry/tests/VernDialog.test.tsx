@@ -6,9 +6,6 @@ import configureMockStore from "redux-mock-store";
 import { simpleWord, testWordList, Word } from "../../../../../types/word";
 import { StyledMenuItem, VernList } from "../VernDialog";
 
-jest.mock(
-  "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell"
-);
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 
@@ -16,11 +13,13 @@ describe("VernList ", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <VernList
-          vernacularWords={[simpleWord("", "")]}
-          closeDialog={jest.fn()}
-          analysisLang={"en"}
-        />
+        <Provider store={mockStore}>
+          <VernList
+            vernacularWords={[simpleWord("", "")]}
+            closeDialog={jest.fn()}
+            analysisLang={"en"}
+          />
+        </Provider>
       );
     });
   });
