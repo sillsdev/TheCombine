@@ -14,7 +14,7 @@ import {
 } from "../../resources/tree";
 import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
-import TreeViewHeader from "./TreeViewHeader";
+import { TreeViewHeader } from "./TreeViewHeader";
 
 export const MAX_TILE_WIDTH = 150;
 export const MIN_TILE_WIDTH = 75;

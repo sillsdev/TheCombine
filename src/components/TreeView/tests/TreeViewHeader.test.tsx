@@ -1,159 +1,273 @@
 import React from "react";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
-
-import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
-import TreeViewHeader from "../TreeViewHeader";
+import { renderHook, act } from "@testing-library/react-hooks";
+import { TreeHeaderProps, useTreeViewNavigation } from "../TreeViewHeader";
 import MockDomain from "./MockSemanticDomain";
-
-// Variable event
-var event = {
-  bubbles: false,
-  key: "Enter",
-  preventDefault: jest.fn(),
-  target: {
-    value: "",
-  },
-};
+import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 
 // Handles
-var treeMaster: ReactTestRenderer;
-var treeHandle: TreeViewHeader;
 const MOCK_ANIMATE = jest.fn();
 const MOCK_BOUNCE = jest.fn();
+const testProps: TreeHeaderProps = {
+  animate: MOCK_ANIMATE,
+  currentDomain: MockDomain,
+  bounceState: 0,
+  bounce: MOCK_BOUNCE,
+};
+// These props have a currentDomain with a parent and two brothers
+const upOneWithBrothersProps: TreeHeaderProps = {
+  animate: MOCK_ANIMATE,
+  currentDomain: MockDomain.subdomains[1],
+  bounceState: 0,
+  bounce: MOCK_BOUNCE,
+};
 
 beforeEach(() => {
-  setTree(MockDomain.subdomains[1]);
   MOCK_ANIMATE.mockClear();
+  MOCK_BOUNCE.mockClear();
 });
 
 describe("Tests TreeViewHeader", () => {
-  it("Renders correctly", () => {
-    // Default snapshot test
-    snapTest("default view");
-  });
-
   // onKeyDown
   it("Search & select domain switches semantic domain if given number found", () => {
-    treeHandle.setState({ input: MockDomain.id });
-    event.target.value = "not empty";
-    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+    const { result } = renderHook(() => useTreeViewNavigation(testProps));
 
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
+    // Simulate the user typing 1.1
+    const simulatedInput = { target: { value: "1.0" } } as React.ChangeEvent<
+      HTMLTextAreaElement
+    >;
+
+    const MOCK_STOP_PROP = jest.fn();
+    const keyboardTarget = new EventTarget();
+    // Simulate the user typing the enter key
+    const simulatedEnterKey: Partial<React.KeyboardEvent> = {
+      bubbles: true,
+      key: "Enter",
+      preventDefault: jest.fn(),
+      target: keyboardTarget,
+      stopPropagation: MOCK_STOP_PROP,
+    };
+    // When testing hooks any call that results in a state change needs to be wrapped in
+    // an act call to avoid warnings and make sure the state change is complete before we test
+    // for the results
+    act(() => result.current.handleChange(simulatedInput));
+    act(() =>
+      result.current.searchAndSelectDomain(
+        simulatedEnterKey as React.KeyboardEvent
+      )
+    );
+
+    expect(MOCK_STOP_PROP).toHaveBeenCalled();
     expect(MOCK_BOUNCE).toHaveBeenCalled();
-    expect(treeHandle.state.input).toEqual("");
-    expect(event.target.value).toEqual("");
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
   });
 
   it("Search & select domain does not switch semantic domain if given number not found", () => {
     const TEST: string = "10";
-    treeHandle.setState({ input: TEST });
-    event.target.value = TEST;
-    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    const { result } = renderHook(() => useTreeViewNavigation(testProps));
+
+    // Simulate the user typing 10
+    const simulatedInput = { target: { value: TEST } } as React.ChangeEvent<
+      HTMLTextAreaElement
+    >;
+
+    const MOCK_STOP_PROP = jest.fn();
+    const keyboardTarget = new EventTarget();
+    // Simulate the user typing the enter key
+    const simulatedEnterKey: Partial<React.KeyboardEvent> = {
+      bubbles: true,
+      key: "Enter",
+      preventDefault: jest.fn(),
+      target: keyboardTarget,
+      stopPropagation: MOCK_STOP_PROP,
+    };
+    // When testing hooks any call that results in a state change needs to be wrapped in
+    // an act call to avoid warnings and make sure the state change is complete before we test
+    // for the results
+    act(() => result.current.handleChange(simulatedInput));
+    act(() =>
+      result.current.searchAndSelectDomain(
+        simulatedEnterKey as React.KeyboardEvent
+      )
+    );
 
     expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
-    expect(treeHandle.state.input).toEqual(TEST);
-    expect(event.target.value).toEqual(TEST);
+  });
+
+  it("Search & select domain does not switch semantic domain on realistic but non-existent subdomain", () => {
+    const TEST: string = "1.2.1.1.1.1";
+
+    const { result } = renderHook(() => useTreeViewNavigation(testProps));
+
+    // Simulate the user typing 10
+    const simulatedInput = { target: { value: TEST } } as React.ChangeEvent<
+      HTMLTextAreaElement
+    >;
+
+    const MOCK_STOP_PROP = jest.fn();
+    const keyboardTarget = new EventTarget();
+    // Simulate the user typing the enter key
+    const simulatedEnterKey: Partial<React.KeyboardEvent> = {
+      bubbles: true,
+      key: "Enter",
+      preventDefault: jest.fn(),
+      target: keyboardTarget,
+      stopPropagation: MOCK_STOP_PROP,
+    };
+    // When testing hooks any call that results in a state change needs to be wrapped in
+    // an act call to avoid warnings and make sure the state change is complete before we test
+    // for the results
+    act(() => result.current.handleChange(simulatedInput));
+    act(() =>
+      result.current.searchAndSelectDomain(
+        simulatedEnterKey as React.KeyboardEvent
+      )
+    );
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
   });
 
   it("Search & select domain switches on a length 5 number", () => {
     const leafNode: SemanticDomainWithSubdomains =
       MockDomain.subdomains[2].subdomains[0].subdomains[0].subdomains[0];
-    treeHandle.setState({
-      input: leafNode.id,
-    });
-    event.target.value = leafNode.id;
-    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+
+    const { result } = renderHook(() => useTreeViewNavigation(testProps));
+
+    // Simulate the user typing 10
+    const simulatedInput = {
+      target: { value: leafNode.id },
+    } as React.ChangeEvent<HTMLTextAreaElement>;
+
+    const MOCK_STOP_PROP = jest.fn();
+    const keyboardTarget = new EventTarget();
+    // Simulate the user typing the enter key
+    const simulatedEnterKey: Partial<React.KeyboardEvent> = {
+      bubbles: true,
+      key: "Enter",
+      preventDefault: jest.fn(),
+      target: keyboardTarget,
+      stopPropagation: MOCK_STOP_PROP,
+    };
+    // When testing hooks any call that results in a state change needs to be wrapped in
+    // an act call to avoid warnings and make sure the state change is complete before we test
+    // for the results
+    act(() => result.current.handleChange(simulatedInput));
+    act(() =>
+      result.current.searchAndSelectDomain(
+        simulatedEnterKey as React.KeyboardEvent
+      )
+    );
 
     expect(MOCK_ANIMATE).toHaveBeenCalledWith(leafNode);
-    expect(treeHandle.state.input).toEqual("");
-    expect(event.target.value).toEqual("");
-  });
-
-  it("Search & select domain does not switch semantic domain on a number of length past a leaf node", () => {
-    const TEST: string =
-      MockDomain.subdomains[2].subdomains[0].subdomains[0].subdomains[0].id +
-      ".1";
-    treeHandle.setState({ input: TEST });
-    event.target.value = TEST;
-    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
-
-    expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
-    expect(treeHandle.state.input).toEqual(TEST);
-    expect(event.target.value).toEqual(TEST);
   });
 
   it("Search & select domain switches semantic domain if given name found", () => {
-    treeHandle.setState({ input: MockDomain.subdomains[2].name });
-    event.target.value = "not empty";
-    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+    const { result } = renderHook(() => useTreeViewNavigation(testProps));
 
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
-    expect(treeHandle.state.input).toEqual("");
-    expect(event.target.value).toEqual("");
+    // Simulate the user typing 10
+    const simulatedInput = {
+      target: { value: MockDomain.subdomains[0].name },
+    } as React.ChangeEvent<HTMLTextAreaElement>;
+
+    const MOCK_STOP_PROP = jest.fn();
+    const keyboardTarget = new EventTarget();
+    // Simulate the user typing the enter key
+    const simulatedEnterKey: Partial<React.KeyboardEvent> = {
+      bubbles: true,
+      key: "Enter",
+      preventDefault: jest.fn(),
+      target: keyboardTarget,
+      stopPropagation: MOCK_STOP_PROP,
+    };
+    // When testing hooks any call that results in a state change needs to be wrapped in
+    // an act call to avoid warnings and make sure the state change is complete before we test
+    // for the results
+    act(() => result.current.handleChange(simulatedInput));
+    act(() =>
+      result.current.searchAndSelectDomain(
+        simulatedEnterKey as React.KeyboardEvent
+      )
+    );
+
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
   });
 
   it("Search & select domain does not switch semantic domain if given name not found", () => {
     const TEST: string = "itsatrap";
-    treeHandle.setState({ input: TEST });
-    event.target.value = TEST;
-    treeHandle.searchAndSelectDomain((event as any) as React.KeyboardEvent);
+    const { result } = renderHook(() => useTreeViewNavigation(testProps));
+
+    // Simulate the user typing 10
+    const simulatedInput = {
+      target: { value: TEST },
+    } as React.ChangeEvent<HTMLTextAreaElement>;
+
+    const MOCK_STOP_PROP = jest.fn();
+    const keyboardTarget = new EventTarget();
+    // Simulate the user typing the enter key
+    const simulatedEnterKey: Partial<React.KeyboardEvent> = {
+      bubbles: true,
+      key: "Enter",
+      preventDefault: jest.fn(),
+      target: keyboardTarget,
+      stopPropagation: MOCK_STOP_PROP,
+    };
+    // When testing hooks any call that results in a state change needs to be wrapped in
+    // an act call to avoid warnings and make sure the state change is complete before we test
+    // for the results
+    act(() => result.current.handleChange(simulatedInput));
+    act(() =>
+      result.current.searchAndSelectDomain(
+        simulatedEnterKey as React.KeyboardEvent
+      )
+    );
 
     expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
-    expect(treeHandle.state.input).toEqual(TEST);
-    expect(event.target.value).toEqual(TEST);
   });
 
   // getBrotherDomain
-  it("provides the proper brother domains", () => {
-    // Standard navigation
-    expect(treeHandle.getBrotherDomain(-1)).toEqual(MockDomain.subdomains[0]);
-    expect(treeHandle.getBrotherDomain(1)).toEqual(MockDomain.subdomains[2]);
+  it("GetLeftBrother and GetRightBrother return undefined when there are no brothers", () => {
+    const { result } = renderHook(() => useTreeViewNavigation(testProps));
 
-    // Check with indices out-of-bounds
-    expect(treeHandle.getBrotherDomain(-2)).toEqual(undefined);
-    expect(treeHandle.getBrotherDomain(2)).toEqual(undefined);
-
-    // Check that a domain w/ no parentDomain has no brotherDomains
-    setTree(MockDomain);
-    expect(treeHandle.getBrotherDomain(-1)).toEqual(undefined);
+    // The top domain (used in testProps) has no brother on either side
+    expect(result.current.getLeftBrother(testProps)).toEqual(undefined);
+    expect(result.current.getRightBrother(testProps)).toEqual(undefined);
   });
 
-  // navigateKeys
-  it("navigateKeys w/ Arrow Down switches to parent domain", () => {
-    event.key = "ArrowDown";
-    treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
-  });
+  // getBrotherDomain
+  it("GetLeftBrother and GetRightBrother return the expected brothers", () => {
+    const { result } = renderHook(() =>
+      useTreeViewNavigation(upOneWithBrothersProps)
+    );
 
-  it("navigateKeys w/ Arrow Left switches to left brother domain", () => {
-    event.key = "ArrowLeft";
-    treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
-  });
-
-  it("navigateKeys w/ Arrow Right switches to right brother domain", () => {
-    event.key = "ArrowRight";
-    treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
-  });
-});
-
-// Creates the tree
-function setTree(domain: SemanticDomainWithSubdomains) {
-  renderer.act(() => {
-    treeMaster = renderer.create(
-      <TreeViewHeader
-        currentDomain={domain}
-        animate={MOCK_ANIMATE}
-        bounceState={Math.random()}
-        bounce={MOCK_BOUNCE}
-      />
+    // The top domain (used in testProps) has no brother on either side
+    expect(result.current.getLeftBrother(upOneWithBrothersProps)).toEqual(
+      MockDomain.subdomains[0]
+    );
+    expect(result.current.getRightBrother(upOneWithBrothersProps)).toEqual(
+      MockDomain.subdomains[2]
     );
   });
-  treeHandle = treeMaster.root.findByType(TreeViewHeader).instance;
-}
 
-// Perform a snapshot test
-function snapTest(name: string) {
-  expect(treeMaster.toJSON()).toMatchSnapshot();
-}
+  // // navigateKeys
+  // it("navigateKeys w/ Arrow Down switches to parent domain", () => {
+  //   const { result } = renderHook(() =>
+  //   useTreeViewNavigation(upOneWithBrothersProps)
+  // );
+
+  //   event.key = "ArrowDown";
+  //   result.current.((event as any) as KeyboardEvent);
+  //   expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
+  // });
+
+  // it("navigateKeys w/ Arrow Left switches to left brother domain", () => {
+  //   event.key = "ArrowLeft";
+  //   treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
+  //   expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
+  // });
+
+  // it("navigateKeys w/ Arrow Right switches to right brother domain", () => {
+  //   event.key = "ArrowRight";
+  //   treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
+  //   expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
+  // });
+});
