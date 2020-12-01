@@ -105,7 +105,7 @@ fi
 
 if [ -z "${BACKUP}" ] ; then
   aws_backup_list=( $(/usr/local/bin/aws s3 ls ${AWS_BACKUPS} --recursive --profile {{ aws_backup_profile }} | sed "s/.* backups\///") )
-  aws_backups_available=${{ '{#' }}aws_backup_list[@]}
+  aws_backups_available={{ '${#aws_backup_list[@]}' }}
   if [[ $aws_backups_available -eq 0 ]] ; then
     echo "No backups available from ${AWS_BACKUPS}"
     exit 0

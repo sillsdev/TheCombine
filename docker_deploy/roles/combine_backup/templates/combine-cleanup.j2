@@ -86,7 +86,7 @@ if [ "${LIST_ONLY}" = "1" ] ; then
 fi
 
 AWS_BACKUPS=($(aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write|grep --fixed-strings "${BACKUP_FILTER}"|sed "s/[^\/]*\/\(.*\)/\1/"|sort))
-NUM_BACKUPS=${{ '{#' }}AWS_BACKUPS[@]}
+NUM_BACKUPS={{ '${#AWS_BACKUPS[@]}' }}
 
 if [[ ${NUM_BACKUPS} -gt ${MAX_BACKUPS} ]] ; then
   loop_limit=$(( ${NUM_BACKUPS} - ${MAX_BACKUPS} ))
