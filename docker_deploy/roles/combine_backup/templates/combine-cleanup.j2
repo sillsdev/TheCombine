@@ -50,7 +50,7 @@ while [[ $# -gt 0 ]] ; do
       usage
       exit 0
       ;;
-    -f, --filter)
+    -f|--filter)
       BACKUP_FILTER=$(echo "$1"| sed "s/\./-/g")
       shift
       ;;
@@ -80,6 +80,7 @@ AWS_BUCKET="s3://{{ aws_s3_backup_loc }}"
 MAX_BACKUPS=${MAX_BACKUPS:={{ num_backups }}}
 
 if [ "${LIST_ONLY}" = "1" ] ; then
+  echo "Listing backups for s3://{{ aws_s3_backup_loc }}"
   aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write
   exit 0
 fi
