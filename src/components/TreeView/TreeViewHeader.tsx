@@ -68,6 +68,9 @@ export function TreeViewHeader(props: TreeHeaderProps) {
             onChange={handleChange}
             margin="normal"
             autoComplete="off"
+            inputProps={{
+              "data-testid": "testSearch",
+            }}
           />
         </Card>
       </GridListTile>
