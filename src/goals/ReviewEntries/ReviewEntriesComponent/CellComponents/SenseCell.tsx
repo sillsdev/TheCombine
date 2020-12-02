@@ -14,10 +14,10 @@ interface SenseCellProps {
   sortingByGloss: boolean;
 }
 
-export default class SenseCell extends React.Component<
-  FieldParameterStandard & SenseCellProps
-> {
-  private inputField(
+export default function SenseCell(
+  props: FieldParameterStandard & SenseCellProps
+) {
+  function inputField(
     sense: ReviewEntriesSense,
     index: number,
     noGloss: string
@@ -25,30 +25,30 @@ export default class SenseCell extends React.Component<
     return (
       <TextField
         fullWidth
-        key={`glosses${this.props.rowData.id}`}
-        value={this.props.value[index].glosses}
+        key={`glosses${props.rowData.id}`}
+        value={props.value[index].glosses}
         error={sense.glosses.length === 0}
         placeholder={noGloss}
         disabled={sense.deleted}
         InputProps={{
-          readOnly: !this.props.editable,
-          disableUnderline: !this.props.editable,
+          readOnly: !props.editable,
+          disableUnderline: !props.editable,
           style:
-            this.props.sortingByGloss && index === 0
+            props.sortingByGloss && index === 0
               ? { backgroundColor: highlight }
               : {},
         }}
         // Handles editing sense's local glosses
         onChange={(event) =>
-          this.props.onRowDataChange &&
-          this.props.onRowDataChange({
-            ...this.props.rowData,
+          props.onRowDataChange &&
+          props.onRowDataChange({
+            ...props.rowData,
             senses: [
-              ...this.props.rowData.senses.slice(0, index),
+              ...props.rowData.senses.slice(0, index),
               { ...sense, glosses: event.target.value },
-              ...this.props.rowData.senses.slice(
+              ...props.rowData.senses.slice(
                 index + 1,
-                this.props.rowData.senses.length
+                props.rowData.senses.length
               ),
             ],
           })
@@ -57,17 +57,17 @@ export default class SenseCell extends React.Component<
     );
   }
 
-  private addSense(): ReactNode {
+  function addSense(): ReactNode {
     return (
       <Chip
         label={<Add />}
         // Handles adding a new local sense
         onClick={() =>
-          this.props.onRowDataChange &&
-          this.props.onRowDataChange({
-            ...this.props.rowData,
+          props.onRowDataChange &&
+          props.onRowDataChange({
+            ...props.rowData,
             senses: [
-              ...this.props.rowData.senses,
+              ...props.rowData.senses,
               {
                 deleted: false,
                 glosses: "",
@@ -82,23 +82,21 @@ export default class SenseCell extends React.Component<
   }
 
   // Create the sense edit fields
-  render() {
-    return (
-      <AlignedList
-        listId={`senses${this.props.rowData.id}`}
-        contents={this.props.rowData.senses.map((sense, index) => (
-          <Translate>
-            {({ translate }) =>
-              this.inputField(
-                sense,
-                index,
-                translate("reviewEntries.noGloss").toString()
-              )
-            }
-          </Translate>
-        ))}
-        bottomCell={this.props.editable ? this.addSense() : null}
-      />
-    );
-  }
+  return (
+    <AlignedList
+      listId={`senses${props.rowData.id}`}
+      contents={props.rowData.senses.map((sense, index) => (
+        <Translate>
+          {({ translate }) =>
+            inputField(
+              sense,
+              index,
+              translate("reviewEntries.noGloss").toString()
+            )
+          }
+        </Translate>
+      ))}
+      bottomCell={props.editable ? addSense() : null}
+    />
+  );
 }

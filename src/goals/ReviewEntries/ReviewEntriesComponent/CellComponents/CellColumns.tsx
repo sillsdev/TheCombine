@@ -1,14 +1,14 @@
-import React from "react";
 import { TextField, Typography } from "@material-ui/core";
-
-import { ReviewEntriesWord, ReviewEntriesSense } from "../ReviewEntriesTypes";
-import { SemanticDomain } from "../../../../types/word";
-import DomainCell from "./DomainCell";
-import DeleteCell from "./DeleteCell/index";
-import { Translate } from "react-localize-redux";
-import SenseCell from "./SenseCell";
 import { Column } from "material-table";
+import React from "react";
+import { Translate } from "react-localize-redux";
+
+import { SemanticDomain } from "../../../../types/word";
+import { ReviewEntriesSense, ReviewEntriesWord } from "../ReviewEntriesTypes";
+import DeleteCell from "./DeleteCell";
+import DomainCell from "./DomainCell";
 import PronunciationsCell from "./PronunciationsCell";
+import SenseCell from "./SenseCell";
 
 enum SortStyle {
   // vernacular, noteText: neither have a customSort defined,
