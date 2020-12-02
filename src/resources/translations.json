@@ -679,14 +679,14 @@
       "Maintenez le bouton enfoncée pour enregistrer."
     ],
     "playTooltip": [
-      "Press to play, shift click to delete",
-      "Presiona para jugar, presiona shift para eliminar",
-      "Appuyez sur pour lire, Maj + clic pour effacer"
+      "Press to play, shift click to delete.",
+      "Presiona para jugar, presiona shift para eliminar.",
+      "Appuyez sur pour lire, Maj + clic pour effacer."
     ],
     "noMicAccess": [
-      "Recording error: Could not access a microphone",
-      "Error de grabación: no se pudo acceder a un micrófono",
-      "Erreur d'enregistrement : Impossible d'accéder à un microphone"
+      "Recording error: Could not access a microphone.",
+      "Error de grabación: no se pudo acceder a un micrófono.",
+      "Erreur d'enregistrement : Impossible d'accéder à un microphone."
     ],
     "deleteRecording": [
       "Delete Recording",

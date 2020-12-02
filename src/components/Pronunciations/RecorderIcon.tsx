@@ -1,7 +1,9 @@
+import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
+import { FiberManualRecord } from "@material-ui/icons";
 import React from "react";
-import FiberManualRecord from "@material-ui/icons/FiberManualRecord";
-import { makeStyles, IconButton } from "@material-ui/core";
-import { useSelector, useDispatch } from "react-redux";
+import { Translate } from "react-localize-redux";
+import { useDispatch, useSelector } from "react-redux";
+
 import { updateRecordingStatus } from "../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesActions";
 import { recorderStatus } from "../../types/theme";
 
@@ -67,24 +69,26 @@ export default function RecorderIcon(props: RecorderIconProps) {
   }
 
   return (
-    <IconButton
-      tabIndex={-1}
-      onMouseDown={toggleIsRecordingToTrue}
-      onTouchStart={handleTouchStart}
-      onMouseUp={toggleIsRecordingToFalse}
-      onTouchEnd={handleTouchEnd}
-      className={classes.button}
-      aria-label="record"
-      id="recordingButton"
-    >
-      <FiberManualRecord
-        className={
-          isRecording && props.wordId === wordBeingRecorded
-            ? classes.iconPress
-            : classes.iconRelease
-        }
-        id="icon"
-      />
-    </IconButton>
+    <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
+      <IconButton
+        tabIndex={-1}
+        onMouseDown={toggleIsRecordingToTrue}
+        onTouchStart={handleTouchStart}
+        onMouseUp={toggleIsRecordingToFalse}
+        onTouchEnd={handleTouchEnd}
+        className={classes.button}
+        aria-label="record"
+        id="recordingButton"
+      >
+        <FiberManualRecord
+          className={
+            isRecording && props.wordId === wordBeingRecorded
+              ? classes.iconPress
+              : classes.iconRelease
+          }
+          id="icon"
+        />
+      </IconButton>
+    </Tooltip>
   );
 }
