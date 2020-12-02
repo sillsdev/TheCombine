@@ -38,3 +38,4 @@ my_aws_profiles:
 # Define backup times (UTC)
 backup_hour:    "3"
 backup_minute:  "15"
+num_backups:    "3"
