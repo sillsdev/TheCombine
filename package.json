@@ -87,6 +87,7 @@
     "@sillsdev/react-localize-crowdin": "^1.0.0",
     "@testing-library/react": "^11.2.2",
     "@testing-library/react-hooks": "^3.4.2",
+    "@testing-library/user-event": "^12.3.0",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.5",
     "@types/nspell": "^2.1.0",

@@ -1,8 +1,14 @@
 import React from "react";
+import { render, screen } from "@testing-library/react";
 import { renderHook, act } from "@testing-library/react-hooks";
-import { TreeHeaderProps, useTreeViewNavigation } from "../TreeViewHeader";
+import userEvent from "@testing-library/user-event";
 import MockDomain from "./MockSemanticDomain";
 import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
+import {
+  TreeViewHeader,
+  TreeHeaderProps,
+  useTreeViewNavigation,
+} from "../TreeViewHeader";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
@@ -248,26 +254,32 @@ describe("Tests TreeViewHeader", () => {
     );
   });
 
-  // // navigateKeys
-  // it("navigateKeys w/ Arrow Down switches to parent domain", () => {
-  //   const { result } = renderHook(() =>
-  //   useTreeViewNavigation(upOneWithBrothersProps)
-  // );
+  // Integration tests, verify the component uses the hooks to achieve the desired UX
+  it("typing non-matching domain search data does not clear input, or attempt to navigate", () => {
+    render(<TreeViewHeader {...upOneWithBrothersProps} />);
+    expect(
+      (screen.getByTestId("testSearch") as HTMLInputElement).value
+    ).toEqual("");
+    userEvent.type(screen.getByTestId("testSearch"), "flibbertigibbet{enter}");
+    expect(
+      (screen.getByTestId("testSearch") as HTMLInputElement).value
+    ).toEqual("flibbertigibbet");
+    // verify that no attempt to switch domains happened
+    expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+  });
 
-  //   event.key = "ArrowDown";
-  //   result.current.((event as any) as KeyboardEvent);
-  //   expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
-  // });
-
-  // it("navigateKeys w/ Arrow Left switches to left brother domain", () => {
-  //   event.key = "ArrowLeft";
-  //   treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-  //   expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
-  // });
-
-  // it("navigateKeys w/ Arrow Right switches to right brother domain", () => {
-  //   event.key = "ArrowRight";
-  //   treeHandle.navigateDomainArrowKeys((event as any) as KeyboardEvent);
-  //   expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
-  // });
+  it("typing valid domain number navigates and clears input", () => {
+    render(<TreeViewHeader {...upOneWithBrothersProps} />);
+    expect(
+      (screen.getByTestId("testSearch") as HTMLInputElement).value
+    ).toEqual("");
+    userEvent.type(screen.getByTestId("testSearch"), "1.2{enter}");
+    expect(
+      (screen.getByTestId("testSearch") as HTMLInputElement).value
+    ).toEqual("");
+    // verify that we're testing with the matching domain
+    expect(MockDomain.subdomains[2].id).toEqual("1.2");
+    // verify that we would switch to the domain requested
+    expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
+  });
 });

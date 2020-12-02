@@ -123,6 +123,7 @@ exports[`Tests AddWords Constructs correctly 1`] = `
                     autoComplete="off"
                     autoFocus={false}
                     className="MuiInputBase-input MuiInput-input"
+                    data-testid="testSearch"
                     disabled={false}
                     id="name"
                     onAnimationStart={[Function]}
