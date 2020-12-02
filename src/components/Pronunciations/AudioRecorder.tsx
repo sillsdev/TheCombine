@@ -48,9 +48,19 @@ export default function AudioRecorder(props: RecorderProps) {
       });
   }
 
+  // Tooltip cannot be used around a functional component,
+  // because it tries to pass its ref to its children.
+  // This wrapper handles the associated warnings.
+  // https://material-ui.com/guides/composition/#caveat-with-refs
+  const WrappedRecorderIcon = React.forwardRef(
+    (props: React.ComponentProps<typeof RecorderIcon>, _) => (
+      <RecorderIcon {...props} />
+    )
+  );
+
   return (
     <Tooltip title={<Translate id="pronunciations.recordTooltip" />}>
-      <RecorderIcon
+      <WrappedRecorderIcon
         wordId={props.wordId}
         startRecording={startRecording}
         stopRecording={stopRecording}
