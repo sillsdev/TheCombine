@@ -121,14 +121,6 @@ export async function updateWord(word: Word): Promise<Word> {
   return { ...word, id: resp.data };
 }
 
-export async function deleteWord(word: Word): Promise<Word> {
-  let resp = await backendServer.delete(
-    `projects/${LocalStorage.getProjectId()}/words/${word.id}`,
-    { headers: authHeader() }
-  );
-  return { ...word, id: resp.data };
-}
-
 export async function deleteWordById(id: string): Promise<string> {
   let resp = await backendServer.delete(
     `projects/${LocalStorage.getProjectId()}/words/${id}`,
