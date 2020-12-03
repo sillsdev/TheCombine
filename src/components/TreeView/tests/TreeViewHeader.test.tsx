@@ -256,10 +256,7 @@ describe("Tests TreeViewHeader", () => {
     const simulatedArrowKey: Partial<KeyboardEvent> = {
       key: "ArrowRight",
     };
-    keyDownHandler!.call(
-      simulatedArrowKey as Event,
-      simulatedArrowKey as Event
-    );
+    keyDownHandler!.call(null, simulatedArrowKey as Event);
     // verify that we would switch to the domain requested
     expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[2]);
   });
@@ -271,10 +268,7 @@ describe("Tests TreeViewHeader", () => {
     const simulatedArrowKey: Partial<KeyboardEvent> = {
       key: "ArrowLeft",
     };
-    keyDownHandler!.call(
-      simulatedArrowKey as Event,
-      simulatedArrowKey as Event
-    );
+    keyDownHandler!.call(null, simulatedArrowKey as Event);
     // verify that we would switch to the domain requested
     expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain.subdomains[0]);
   });
@@ -286,10 +280,7 @@ describe("Tests TreeViewHeader", () => {
     const simulatedArrowKey: Partial<KeyboardEvent> = {
       key: "ArrowUp",
     };
-    keyDownHandler!.call(
-      simulatedArrowKey as Event,
-      simulatedArrowKey as Event
-    );
+    keyDownHandler!.call(null, simulatedArrowKey as Event);
     // verify that we would switch to the domain requested
     expect(MOCK_ANIMATE).toHaveBeenCalledWith(MockDomain);
   });
