@@ -136,7 +136,7 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
         const domain = getBrotherDomain(1, props);
         if (domain && domain.id !== props.currentDomain.id)
           props.animate(domain);
-      } else if (event.key === "ArrowDown") {
+      } else if (event.key === "ArrowUp") {
         if (props.currentDomain.parentDomain)
           props.animate(props.currentDomain.parentDomain);
       }
@@ -189,7 +189,9 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
       // Find parent domain
       let parent: SemanticDomainWithSubdomains | undefined =
         props.currentDomain;
-      while (parent.parentDomain !== undefined) parent = parent.parentDomain;
+      while (parent.parentDomain !== undefined) {
+        parent = parent.parentDomain;
+      }
 
       // Search for domain
       if (!isNaN(parseInt(input))) {
