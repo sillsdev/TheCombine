@@ -4,12 +4,13 @@ import { LocalizeContextProps, withLocalize } from "react-localize-redux";
 import TreeProps from "./TreeProps";
 import TreeDepiction from "./TreeDepiction";
 import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
-import { createDomains } from "./TreeViewReducer";
+import { createDomains, idToDomainMap } from "./TreeViewReducer";
 
 // Domain data
 import en from "../../resources/semantic-domains/en.json";
 import es from "../../resources/semantic-domains/es.json";
 import fr from "../../resources/semantic-domains/fr.json";
+import { TreeContext } from "./TreeViewContext";
 
 interface TreeViewProps extends TreeProps {
   returnControlToCaller: () => void;
@@ -93,10 +94,12 @@ export class TreeView extends React.Component<
             justify="center"
             alignItems="center"
           >
-            <TreeDepiction
-              currentDomain={this.props.currentDomain}
-              animate={this.animate}
-            />
+            <TreeContext.Provider value={{ idToDomainMap: idToDomainMap }}>
+              <TreeDepiction
+                currentDomain={this.props.currentDomain}
+                animate={this.animate}
+              />
+            </TreeContext.Provider>
           </Grid>
         </Zoom>
       </React.Fragment>

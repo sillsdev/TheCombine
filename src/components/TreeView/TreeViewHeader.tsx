@@ -6,10 +6,11 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import Bounce from "react-reveal/Bounce";
 
 import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
+import { TreeContext } from "./TreeViewContext";
 import DomainTile, { Direction } from "./DomainTile";
 
 export interface TreeHeaderProps {
@@ -92,6 +93,9 @@ export function TreeViewHeader(props: TreeHeaderProps) {
 
 // exported for unit testing only
 export function useTreeViewNavigation(props: TreeHeaderProps) {
+  const { idToDomainMap } = useContext(TreeContext);
+  console.log("Called useTreeViewNavigation with: ");
+  console.log(idToDomainMap);
   const [input, setInput] = useState(props.currentDomain.id);
   // Gets the domain 'navigationAmount' away from the currentDomain (negative to the left, positive to the right)
   function getBrotherDomain(
@@ -99,7 +103,9 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
     props: TreeHeaderProps
   ): SemanticDomainWithSubdomains | undefined {
     if (props.currentDomain.parentDomain) {
-      const brotherDomains = props.currentDomain.parentDomain.subdomains;
+      const brotherDomains = idToDomainMap.get(
+        props.currentDomain?.parentDomain
+      )!.subdomains;
       let index = brotherDomains.findIndex(
         (domain) => props.currentDomain.id === domain.id
       );
@@ -129,19 +135,19 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
   const navigateDomainArrowKeys = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === "ArrowLeft") {
-        const domain = getBrotherDomain(-1, props);
+        const domain = getLeftBrother(props);
         if (domain && domain.id !== props.currentDomain.id)
           props.animate(domain);
       } else if (event.key === "ArrowRight") {
-        const domain = getBrotherDomain(1, props);
+        const domain = getRightBrother(props);
         if (domain && domain.id !== props.currentDomain.id)
           props.animate(domain);
       } else if (event.key === "ArrowUp") {
         if (props.currentDomain.parentDomain)
-          props.animate(props.currentDomain.parentDomain);
+          props.animate(idToDomainMap.get(props.currentDomain.parentDomain)!);
       }
     },
-    [props]
+    [props, idToDomainMap, getLeftBrother, getRightBrother]
   );
 
   // Search for a semantic domain by number
@@ -186,12 +192,13 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
 
     if (event.key === "Enter") {
       event.preventDefault();
-      // Find parent domain
-      let parent: SemanticDomainWithSubdomains | undefined =
-        props.currentDomain;
-      while (parent.parentDomain !== undefined) {
-        parent = parent.parentDomain;
+      // Find parent domain id
+      let parentId: string | undefined = props.currentDomain.id;
+      while (parentId && idToDomainMap.get(parentId) !== undefined) {
+        parentId = idToDomainMap.get(parentId)!.parentDomain;
       }
+      let parent =
+        parentId !== undefined ? idToDomainMap.get(parentId) : undefined;
 
       // Search for domain
       if (!isNaN(parseInt(input))) {
@@ -210,7 +217,7 @@ export function useTreeViewNavigation(props: TreeHeaderProps) {
           i++;
         }
       } else {
-        parent = searchDomainByName(parent, input);
+        parent = parent ? searchDomainByName(parent, input) : undefined;
         if (parent) {
           props.animate(parent);
           props.bounce();

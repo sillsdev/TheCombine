@@ -6,7 +6,7 @@ export default interface SemanticDomainWithSubdomains {
   questions: string[];
 
   // Data about tangential domains
-  parentDomain?: SemanticDomainWithSubdomains;
+  parentDomain?: string;
   subdomains: SemanticDomainWithSubdomains[];
 }
 

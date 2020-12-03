@@ -14,6 +14,7 @@ import {
 } from "../../resources/tree";
 import DomainTile, { Direction } from "./DomainTile";
 import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
+import { TreeContext } from "./TreeViewContext";
 import { TreeViewHeader } from "./TreeViewHeader";
 
 export const MAX_TILE_WIDTH = 150;
@@ -212,26 +213,35 @@ export default class TreeDepiction extends React.Component<
       <React.Fragment>
         {/* Label parent domain, if available */}
         <Grid item>
-          {this.props.currentDomain.parentDomain && (
-            <GridList
-              cols={1}
-              spacing={0}
-              style={{ width: this.state.tileWidth }}
-              cellHeight="auto"
-            >
-              <GridListTile>
-                <DomainTile
-                  domain={this.props.currentDomain.parentDomain}
-                  onClick={(e) => {
-                    this.props.animate(e);
-                    this.setState({ bounce: Math.random() });
-                  }}
-                  direction={Direction.Up}
-                />
-              </GridListTile>
-              {this.treeTile(parent)}
-            </GridList>
-          )}
+          <TreeContext.Consumer>
+            {({ idToDomainMap }) =>
+              this.props.currentDomain.parentDomain &&
+              idToDomainMap.get(this.props.currentDomain.parentDomain) && (
+                <GridList
+                  cols={1}
+                  spacing={0}
+                  style={{ width: this.state.tileWidth }}
+                  cellHeight="auto"
+                >
+                  <GridListTile>
+                    <DomainTile
+                      domain={
+                        idToDomainMap.get(
+                          this.props.currentDomain.parentDomain
+                        )!
+                      }
+                      onClick={(e) => {
+                        this.props.animate(e);
+                        this.setState({ bounce: Math.random() });
+                      }}
+                      direction={Direction.Up}
+                    />
+                  </GridListTile>
+                  {this.treeTile(parent)}
+                </GridList>
+              )
+            }
+          </TreeContext.Consumer>
         </Grid>
 
         {/* Label current domain */}

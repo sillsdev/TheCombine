@@ -46,7 +46,7 @@ describe("Test the TreeViewReducer", () => {
         subdomains: [
           {
             ...parent,
-            parentDomain: {},
+            parentDomain: "",
             subdomains: [...subdomains],
           },
         ],
@@ -59,7 +59,8 @@ describe("Test the TreeViewReducer", () => {
         parentDomains: expected.currentDomain.subdomains[0],
       };
     });
-    expected.currentDomain.subdomains[0].parentDomain = expected.currentDomain;
+    expected.currentDomain.subdomains[0].parentDomain =
+      expected.currentDomain.id;
     expect(createDomains(initialJson)).toEqual(expected);
   });
 
@@ -88,7 +89,7 @@ describe("Test the TreeViewReducer", () => {
 
   it("Returns state with a new SemanticDomain when requested to change this value", () => {
     let payload: SemanticDomainWithSubdomains = defaultState.currentDomain
-      .parentDomain as SemanticDomainWithSubdomains;
+      .subdomains[0] as SemanticDomainWithSubdomains;
     expect(
       treeViewReducer(defaultState, {
         type: TreeActionType.TRAVERSE_TREE,

@@ -1,4 +1,10 @@
 import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
+import { addParentDomains } from "../TreeViewReducer";
+
+export const idToDomainMap: Map<string, SemanticDomainWithSubdomains> = new Map<
+  string,
+  SemanticDomainWithSubdomains
+>();
 
 // Parent
 const PAR: SemanticDomainWithSubdomains = {
@@ -14,7 +20,6 @@ for (let i: number = 0; i < 3; i++)
   PAR.subdomains.push({
     name: "kid" + i,
     id: "1." + i,
-    parentDomain: PAR,
     subdomains: [],
     description: `kid ${i}`,
     questions: [],
@@ -25,7 +30,6 @@ for (let i: number = 0; i < 4; i++)
   PAR.subdomains[0].subdomains.push({
     name: "evenData" + i,
     id: PAR.subdomains[0].id + "." + i,
-    parentDomain: PAR.subdomains[0],
     subdomains: [],
     description: `evens ${i}`,
     questions: [],
@@ -36,7 +40,6 @@ for (let i: number = 0; i < 3; i++)
   PAR.subdomains[1].subdomains.push({
     name: "oddData" + i,
     id: PAR.subdomains[1].id + "." + i,
-    parentDomain: PAR.subdomains[1],
     subdomains: [],
     description: `odds ${i}`,
     questions: [],
@@ -46,7 +49,6 @@ for (let i: number = 0; i < 3; i++)
 PAR.subdomains[2].subdomains.push({
   name: "soloData",
   id: PAR.subdomains[2].id + ".1",
-  parentDomain: PAR.subdomains[2],
   subdomains: [],
   description: "so lonely...",
   questions: [],
@@ -57,7 +59,6 @@ PAR.subdomains[2].subdomains.push({
 PAR.subdomains[2].subdomains[0].subdomains.push({
   name: "depth=4",
   id: PAR.subdomains[2].subdomains[0].id + ".1",
-  parentDomain: PAR.subdomains[2].subdomains[0],
   subdomains: [],
   description: "almost at the bottom...",
   questions: [],
@@ -66,10 +67,11 @@ PAR.subdomains[2].subdomains[0].subdomains.push({
 PAR.subdomains[2].subdomains[0].subdomains[0].subdomains.push({
   name: "depth=5",
   id: PAR.subdomains[2].subdomains[0].subdomains[0].id + ".1",
-  parentDomain: PAR.subdomains[2].subdomains[0].subdomains[0],
   subdomains: [],
   description: "ROCK BOTTOM",
   questions: [],
 });
+
+addParentDomains(PAR, idToDomainMap);
 
 export default PAR;

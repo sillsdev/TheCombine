@@ -1,8 +1,9 @@
 import React from "react";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import TreeDepiction from "../TreeDepiction";
-import MockDomain from "./MockSemanticDomain";
+import MockDomain, { idToDomainMap } from "./MockSemanticDomain";
 import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
+import { TreeContext } from "../TreeViewContext";
 
 var treeMaster: ReactTestRenderer;
 describe("Tests AddWords", () => {
@@ -36,7 +37,9 @@ function testFromNode(message: string, node: SemanticDomainWithSubdomains) {
 function createTree(domain: SemanticDomainWithSubdomains) {
   renderer.act(() => {
     treeMaster = renderer.create(
-      <TreeDepiction currentDomain={domain} animate={jest.fn()} />
+      <TreeContext.Provider value={{ idToDomainMap: idToDomainMap }}>
+        <TreeDepiction currentDomain={domain} animate={jest.fn()} />
+      </TreeContext.Provider>
     );
   });
 }

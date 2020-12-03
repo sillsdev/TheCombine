@@ -1,14 +1,19 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { renderHook, act } from "@testing-library/react-hooks";
+import {
+  renderHook,
+  act,
+  RenderHookOptions,
+} from "@testing-library/react-hooks";
 import userEvent from "@testing-library/user-event";
-import MockDomain from "./MockSemanticDomain";
+import MockDomain, { idToDomainMap } from "./MockSemanticDomain";
 import SemanticDomainWithSubdomains from "../../../types/SemanticDomain";
 import {
   TreeViewHeader,
   TreeHeaderProps,
   useTreeViewNavigation,
 } from "../TreeViewHeader";
+import { TreeContext } from "../TreeViewContext";
 
 // Handles
 const MOCK_ANIMATE = jest.fn();
@@ -62,8 +67,19 @@ describe("Tests TreeViewHeader", () => {
       return { simulatedInput, simulatedEnterKey };
     }
 
+    // Context provider wrapper to use when testing the custom hook
+    const wrapper: React.ComponentType<any> = ({ children }) => {
+      return (
+        <TreeContext.Provider value={{ idToDomainMap }}>
+          {children}
+        </TreeContext.Provider>
+      );
+    };
+
     it("switches semantic domain if given number found", () => {
-      const { result } = renderHook(() => useTreeViewNavigation(testProps));
+      const { result } = renderHook(() => useTreeViewNavigation(testProps), {
+        wrapper: wrapper,
+      });
 
       // Simulate the user typing 1.0
       const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
@@ -88,7 +104,9 @@ describe("Tests TreeViewHeader", () => {
     it("does not switch semantic domain if given number not found", () => {
       const TEST: string = "10";
 
-      const { result } = renderHook(() => useTreeViewNavigation(testProps));
+      const { result } = renderHook(() => useTreeViewNavigation(testProps), {
+        wrapper: wrapper,
+      });
 
       // Simulate the user typing 10
       const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
@@ -111,7 +129,9 @@ describe("Tests TreeViewHeader", () => {
     it("does not switch semantic domain on realistic but non-existent subdomain", () => {
       const TEST: string = "1.2.1.1.1.1";
 
-      const { result } = renderHook(() => useTreeViewNavigation(testProps));
+      const { result } = renderHook(() => useTreeViewNavigation(testProps), {
+        wrapper: wrapper,
+      });
 
       // Simulate the user typing
       const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
@@ -156,7 +176,9 @@ describe("Tests TreeViewHeader", () => {
     });
 
     it("switches semantic domain if given name found", () => {
-      const { result } = renderHook(() => useTreeViewNavigation(testProps));
+      const { result } = renderHook(() => useTreeViewNavigation(testProps), {
+        wrapper: wrapper,
+      });
 
       const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
         MockDomain.subdomains[0].name
@@ -177,7 +199,9 @@ describe("Tests TreeViewHeader", () => {
 
     it("does not switch semantic domain if given name not found", () => {
       const TEST: string = "itsatrap";
-      const { result } = renderHook(() => useTreeViewNavigation(testProps));
+      const { result } = renderHook(() => useTreeViewNavigation(testProps), {
+        wrapper: wrapper,
+      });
       const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
         TEST
       );
@@ -222,7 +246,11 @@ describe("Tests TreeViewHeader", () => {
 
   // Integration tests, verify the component uses the hooks to achieve the desired UX
   it("typing non-matching domain search data does not clear input, or attempt to navigate", () => {
-    render(<TreeViewHeader {...upOneWithBrothersProps} />);
+    render(
+      <TreeContext.Provider value={{ idToDomainMap: idToDomainMap }}>
+        <TreeViewHeader {...upOneWithBrothersProps} />
+      </TreeContext.Provider>
+    );
     expect(
       (screen.getByTestId("testSearch") as HTMLInputElement).value
     ).toEqual("");
@@ -235,7 +263,11 @@ describe("Tests TreeViewHeader", () => {
   });
 
   it("typing valid domain number navigates and clears input", () => {
-    render(<TreeViewHeader {...upOneWithBrothersProps} />);
+    render(
+      <TreeContext.Provider value={{ idToDomainMap: idToDomainMap }}>
+        <TreeViewHeader {...upOneWithBrothersProps} />
+      </TreeContext.Provider>
+    );
     expect(
       (screen.getByTestId("testSearch") as HTMLInputElement).value
     ).toEqual("");
@@ -250,7 +282,11 @@ describe("Tests TreeViewHeader", () => {
   });
 
   it("typing right arrow key moves to right sibling", () => {
-    render(<TreeViewHeader {...upOneWithBrothersProps} />);
+    render(
+      <TreeContext.Provider value={{ idToDomainMap: idToDomainMap }}>
+        <TreeViewHeader {...upOneWithBrothersProps} />
+      </TreeContext.Provider>
+    );
     const keyDownHandler = eventListeners.get("keydown");
     expect(keyDownHandler).not.toBeUndefined();
     const simulatedArrowKey: Partial<KeyboardEvent> = {
@@ -262,7 +298,11 @@ describe("Tests TreeViewHeader", () => {
   });
 
   it("typing left arrow key moves to left sibling", () => {
-    render(<TreeViewHeader {...upOneWithBrothersProps} />);
+    render(
+      <TreeContext.Provider value={{ idToDomainMap: idToDomainMap }}>
+        <TreeViewHeader {...upOneWithBrothersProps} />
+      </TreeContext.Provider>
+    );
     const keyDownHandler = eventListeners.get("keydown");
     expect(keyDownHandler).not.toBeUndefined();
     const simulatedArrowKey: Partial<KeyboardEvent> = {
@@ -274,7 +314,11 @@ describe("Tests TreeViewHeader", () => {
   });
 
   it("typing up arrow key moves to parent domain", () => {
-    render(<TreeViewHeader {...upOneWithBrothersProps} />);
+    render(
+      <TreeContext.Provider value={{ idToDomainMap: idToDomainMap }}>
+        <TreeViewHeader {...upOneWithBrothersProps} />
+      </TreeContext.Provider>
+    );
     const keyDownHandler = eventListeners.get("keydown");
     expect(keyDownHandler).not.toBeUndefined();
     const simulatedArrowKey: Partial<KeyboardEvent> = {

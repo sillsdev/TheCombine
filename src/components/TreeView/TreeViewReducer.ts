@@ -8,6 +8,8 @@ export interface TreeViewState {
   currentDomain: SemanticDomainWithSubdomains;
 }
 
+export const idToDomainMap = new Map<string, SemanticDomainWithSubdomains>();
+
 // Parses a list of semantic domains (to be received from backend)
 export function createDomains(
   data: SemanticDomainWithSubdomains[]
@@ -18,20 +20,21 @@ export function createDomains(
       subdomains: data,
     },
   };
-  addParentDomains(state.currentDomain);
-  // while (state.currentDomain.subDomains.length > 0)
-  //   state.currentDomain = state.currentDomain.subDomains[0];
+  addParentDomains(state.currentDomain, idToDomainMap);
   return state;
 }
 
 // Adds the parent domains to the information sent by the backend
-function addParentDomains(parent: SemanticDomainWithSubdomains) {
+export function addParentDomains(
+  parent: SemanticDomainWithSubdomains,
+  idToDomainMap: Map<string, SemanticDomainWithSubdomains>
+) {
+  idToDomainMap.set(parent.id, parent);
   if (parent.subdomains)
     for (let domain of parent.subdomains) {
-      domain.parentDomain = parent;
-      addParentDomains(domain);
+      domain.parentDomain = parent.id;
+      addParentDomains(domain, idToDomainMap);
     }
-  //else parent.subDomains = [];
 }
 
 // Creates a dummy default state
