@@ -1,6 +1,6 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { AddComment, Comment } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
 import EditTextDialog from "../../../Buttons/EditTextDialog";
@@ -14,7 +14,7 @@ interface EntryNoteProps {
  * A note adding/editing button
  */
 export default function EntryNote(props: EntryNoteProps) {
-  const [noteOpen, setNoteOpen] = React.useState<boolean>(false);
+  const [noteOpen, setNoteOpen] = useState<boolean>(false);
 
   return (
     <React.Fragment>

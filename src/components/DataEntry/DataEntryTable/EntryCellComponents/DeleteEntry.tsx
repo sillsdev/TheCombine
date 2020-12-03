@@ -1,6 +1,6 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
 import DeleteDialog from "../../../Buttons/DeleteDialog";
@@ -17,7 +17,7 @@ interface DeleteEntryProps {
  * A delete button
  */
 export default function DeleteEntry(props: DeleteEntryProps) {
-  const [open, setOpen] = React.useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   function handleClick() {
     if (props.confirmId) {

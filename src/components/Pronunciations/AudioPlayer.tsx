@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
 import { Delete, PlayArrow, Stop } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
 import ButtonConfirmation from "../Buttons/ButtonConfirmation";
@@ -35,12 +35,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function AudioPlayer(props: PlayerProps) {
-  const [playing, setPlaying] = React.useState<boolean>(false);
-  const [audio] = React.useState<HTMLAudioElement>(
-    new Audio(props.pronunciationUrl)
-  );
-  const [anchor, setAnchor] = React.useState<HTMLElement | null>(null);
-  const [deleteConf, setDeleteConf] = React.useState<boolean>(false);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [deleteConf, setDeleteConf] = useState<boolean>(false);
   const classes = useStyles();
 
   function deleteAudio() {

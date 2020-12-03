@@ -3,27 +3,23 @@ import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { VernList, StyledMenuItem } from "../VernDialog";
-import { simpleWord, Word, testWordList } from "../../../../../types/word";
+import { simpleWord, testWordList, Word } from "../../../../../types/word";
+import { StyledMenuItem, VernList } from "../VernDialog";
 
-jest.mock(
-  "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell"
-);
-jest.mock(
-  "../../../../../goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell"
-);
 const createMockStore = configureMockStore([]);
 const mockStore = createMockStore({});
 
-describe("Tests VernList ", () => {
+describe("VernList ", () => {
   it("renders without crashing", () => {
     renderer.act(() => {
       renderer.create(
-        <VernList
-          vernacularWords={[simpleWord("", "")]}
-          closeDialog={jest.fn()}
-          analysisLang={"en"}
-        />
+        <Provider store={mockStore}>
+          <VernList
+            vernacularWords={[simpleWord("", "")]}
+            closeDialog={jest.fn()}
+            analysisLang={"en"}
+          />
+        </Provider>
       );
     });
   });
@@ -38,7 +34,7 @@ describe("Tests VernList ", () => {
     expect(closeDialogMockCallback).toHaveBeenCalledTimes(1);
   });
 
-  it("has the correct amout of menu items", () => {
+  it("has the correct number of menu items", () => {
     let words = testWordList();
     const instance = createVernListInstance(words, jest.fn());
     let menuItemsCount = instance.findAllByType(StyledMenuItem).length;

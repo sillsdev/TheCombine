@@ -247,9 +247,8 @@ export default class NewEntry extends React.Component<
     if (senseIndex === undefined) {
       this.setState({ selectedWord: undefined, vernOpen: true });
     } else if (senseIndex >= 0) {
-      this.setState((prevState) => ({
-        activeGloss: prevState.selectedWord!.senses[senseIndex].glosses[0].def,
-      }));
+      const gloss = this.state.selectedWord!.senses[senseIndex].glosses[0].def;
+      this.updateGlossField(gloss);
     } // Otherwise, senseIndex===-1, which indicates new sense for the selectedWord
     this.setState({ senseOpen: false });
   }

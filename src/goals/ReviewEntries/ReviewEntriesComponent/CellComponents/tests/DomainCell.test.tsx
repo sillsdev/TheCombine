@@ -15,11 +15,7 @@ describe("DomainCell", () => {
     const div = document.createElement("div");
     ReactDOM.render(
       <Provider store={mockStore}>
-        <DomainCell
-          rowData={mockWords[0]}
-          selectedDomain={mockWords[0].senses[0].domains[0]}
-          sortingByDomains={true}
-        />
+        <DomainCell rowData={mockWords[0]} sortingByDomains={true} />
       </Provider>,
       div
     );

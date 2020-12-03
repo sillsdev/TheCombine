@@ -1,6 +1,6 @@
 import { Button } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
-import React from "react";
+import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
 import { archiveProject, restoreProject } from "../../../backend";
@@ -18,7 +18,7 @@ interface ProjectButtonWithConfirmationProps {
 export default function ProjectButtonWithConfirmation(
   props: ButtonProps & ProjectButtonWithConfirmationProps
 ) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   async function updateProj() {
     if (props.archive) {
@@ -30,12 +30,12 @@ export default function ProjectButtonWithConfirmation(
     handleClose();
   }
 
-  const handleOpen = () => {
+  function handleOpen() {
     setOpen(true);
-  };
-  const handleClose = () => {
+  }
+  function handleClose() {
     setOpen(false);
-  };
+  }
 
   return (
     <React.Fragment>
