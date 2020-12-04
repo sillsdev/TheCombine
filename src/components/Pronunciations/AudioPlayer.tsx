@@ -44,7 +44,7 @@ export default function AudioPlayer(props: PlayerProps) {
   );
   const dispatch = useDispatch();
   const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [anchor, setAnchor] = useState<HTMLElement | undefined>();
   const [deleteConf, setDeleteConf] = useState<boolean>(false);
   const classes = useStyles();
 
@@ -104,7 +104,7 @@ export default function AudioPlayer(props: PlayerProps) {
   }
 
   function handleClose() {
-    setAnchor(null);
+    setAnchor(undefined);
     enableContextMenu();
   }
 
