@@ -1,28 +1,31 @@
+import "jest-canvas-mock";
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./component";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "./DefaultState";
 import { Provider } from "react-redux";
-import thunk from "redux-thunk";
 import { MemoryRouter } from "react-router-dom";
+import renderer from "react-test-renderer";
+import thunk from "redux-thunk";
+
+import App from "./component";
+import { defaultState } from "./DefaultState";
+
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha'ed</div>
 ));
 
 const createMockStore = configureMockStore([thunk]);
+const mockStore = createMockStore(defaultState);
 
-it("renders without crashing", () => {
-  const mockStore = createMockStore(defaultState);
-  const div = document.createElement("div");
-
-  ReactDOM.render(
-    <Provider store={mockStore}>
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    </Provider>,
-    div
-  );
-  ReactDOM.unmountComponentAtNode(div);
+describe("App", () => {
+  it("renders without crashing", () => {
+    renderer.act(() => {
+      renderer.create(
+        <Provider store={mockStore}>
+          <MemoryRouter>
+            <App />
+          </MemoryRouter>
+        </Provider>
+      );
+    });
+  });
 });
