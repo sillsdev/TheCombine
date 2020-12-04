@@ -1,22 +1,25 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import configureMockStore from "redux-mock-store";
-import { defaultState } from "../../App/DefaultState";
 import { Provider } from "react-redux";
+import renderer, { ReactTestRenderer } from "react-test-renderer";
+
+import { defaultState } from "../../App/DefaultState";
 import AvatarUpload from "../AvatarUpload";
 
 const createMockStore = configureMockStore([]);
+const mockStore = createMockStore(defaultState);
 
-it("renders without crashing", () => {
-  const mockStore = createMockStore({
-    ...defaultState,
+let testRenderer: ReactTestRenderer;
+
+describe("AvatarUpload", () => {
+  it("renders without crashing", () => {
+    renderer.act(() => {
+      testRenderer = renderer.create(
+        <Provider store={mockStore}>
+          <AvatarUpload />
+        </Provider>
+      );
+    });
+    expect(testRenderer.root.findAllByType(AvatarUpload).length).toBe(1);
   });
-  const div = document.createElement("div");
-  ReactDOM.render(
-    <Provider store={mockStore}>
-      <AvatarUpload />
-    </Provider>,
-    div
-  );
-  ReactDOM.unmountComponentAtNode(div);
 });
