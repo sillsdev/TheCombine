@@ -279,11 +279,5 @@ namespace BackendFramework.Services
             }
             return isUniqueWord;
         }
-
-        public string GetAudioFilePath(string projectId, string wordId, string fileName)
-        {
-            // TODO: Migrate this to a new FileService service.
-            return FileStorage.GenerateAudioFilePath(projectId, fileName);
-        }
     }
 }

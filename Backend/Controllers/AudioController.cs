@@ -48,7 +48,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
+            var filePath = FileStorage.GenerateAudioFilePath(projectId, fileName);
             if (filePath is null)
             {
                 return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
