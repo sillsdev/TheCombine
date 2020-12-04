@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -53,6 +54,13 @@ namespace Backend.Tests.Mocks
         {
             var foundProject = _projects.Single(project => project.Id == id);
             var success = _projects.Remove(foundProject);
+
+            // Clean up any files stored on disk for this project.
+            var projectFilePath = FileStorage.GetProjectDir(id);
+            if (Directory.Exists(projectFilePath))
+            {
+                Directory.Delete(projectFilePath, true);
+            }
             return Task.FromResult(success);
         }
 

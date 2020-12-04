@@ -32,26 +32,10 @@ namespace Backend.Tests.Controllers
 
             // User controller
             _userController.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
-
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userService.Create(_jwtAuthenticatedUser);
             _jwtAuthenticatedUser = _userService.Authenticate(
                 _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
-        }
-
-        private static string RandomString(int length = 0)
-        {
-            if (length == 0)
-            {
-                return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-            }
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, length);
-        }
-
-        private User RandomUser()
-        {
-            var user = new User { Username = RandomString(4), Password = RandomString(4) };
-            return user;
         }
 
         [Test]

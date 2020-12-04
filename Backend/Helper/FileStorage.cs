@@ -87,6 +87,14 @@ namespace BackendFramework.Helper
             return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
         }
 
+        /// <summary>
+        /// Get the top-level path to where all files are stored for the project.
+        /// </summary>
+        public static string GetProjectDir(string projectId)
+        {
+            return GenerateProjectDirPath(projectId, "", false);
+        }
+
         /// <summary> Get the path to the home directory of the current user. </summary>
         private static string GetHomePath()
         {
