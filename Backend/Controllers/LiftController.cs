@@ -130,11 +130,7 @@ namespace BackendFramework.Controllers
             }
 
             // Copy the extracted contents into the persistent storage location for the project.
-            var liftStoragePath = GenerateDirPath(
-                FileType.Dir,
-                true,
-                "",
-                Path.Combine(projectId, "Import", "ExtractedLocation", "Lift"));
+            var liftStoragePath = GenerateLiftImportDirPath(projectId);
             CopyDirectory(extractedDirPath, liftStoragePath);
             Directory.Delete(extractDir, true);
 

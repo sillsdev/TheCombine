@@ -156,24 +156,19 @@ namespace BackendFramework.Services
             }
         }
 
-        private static string GetProjectDir(string projectId)
-        {
-            return Path.Combine(FileUtilities.GetBackendFileStoragePath(), projectId);
-        }
-
         /// <summary> Exports information from a project to a lift package zip </summary>
         /// <returns> Path to compressed zip file containing export. </returns>
         public string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
         {
             // Generate the zip dir.
-            var exportDir = FileUtilities.GenerateDirPath(FileUtilities.FileType.Dir, true, "",
-                Path.Combine(projectId, "Export"));
-            if (Directory.Exists(Path.Combine(exportDir, "LiftExport")))
+            var exportDir = FileUtilities.GenerateLiftExportDirPath(projectId);
+            var liftExportDir = Path.Combine(exportDir, "LiftExport");
+            if (Directory.Exists(liftExportDir))
             {
-                Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
+                Directory.Delete(liftExportDir, true);
             }
 
-            var zipDir = Path.Combine(exportDir, "LiftExport", "Lift");
+            var zipDir = Path.Combine(liftExportDir, "Lift");
             Directory.CreateDirectory(zipDir);
 
             // Add audio dir inside zip dir.
@@ -248,7 +243,7 @@ namespace BackendFramework.Services
 
             // Export semantic domains to lift-ranges
             var proj = projService.GetProject(projectId).Result;
-            var extractedPathToImport = Path.Combine(GetProjectDir(projectId), "Import", "ExtractedLocation");
+            var extractedPathToImport = FileUtilities.GenerateImportExtractedLocationDirPath(projectId, false);
             string? firstImportDir = null;
             if (Directory.Exists(extractedPathToImport))
             {
@@ -331,7 +326,7 @@ namespace BackendFramework.Services
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
 
             // Clean up the temporary folder structure that was compressed.
-            Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
+            Directory.Delete(liftExportDir, true);
 
             return destinationFileName;
         }
@@ -610,14 +605,8 @@ namespace BackendFramework.Services
                     }
                 }
 
-                // Get path to dir containing local lift package ~/{projectId}/Import/ExtractedLocation
-                var importDir = FileUtilities.GenerateDirPath(
-                    FileUtilities.FileType.Dir, false, "", Path.Combine(_projectId, "Import"));
-                var extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
-
                 // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/Lift/audio
-                var importListArr = Directory.GetDirectories(extractedPathToImport);
-                var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
+                var extractedAudioDir = FileUtilities.GenerateAudioFileDirPath(_projectId);
 
                 // Only add audio if the files exist
                 if (Directory.Exists(extractedAudioDir))

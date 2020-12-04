@@ -7,15 +7,14 @@ namespace BackendFramework.Helper
 {
     public static class FileUtilities
     {
-        private static readonly string AudioPathSuffix = Path.Combine("Import", "ExtractedLocation", "Lift", "audio");
+        private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
+        private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
+        private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
 
-        public enum FileType
+        private enum FileType
         {
             Audio,
-            Avatar,
-            Lift,
-            Zip,
-            Dir
+            Avatar
         }
 
         public static bool SanitizeId(string id)
@@ -40,7 +39,7 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Returns the path where project files are stored on disk. </summary>
-        public static string GetBackendFileStoragePath()
+        private static string GetBackendFileStoragePath()
         {
             return Path.Combine(GetHomePath(), ".CombineFiles");
         }
@@ -55,28 +54,46 @@ namespace BackendFramework.Helper
             return GenerateProjectFilePath(projectId, AudioPathSuffix, fileName);
         }
 
+        public static string GenerateAudioFileDirPath(string projectId, bool createDir = true)
+        {
+            return GenerateProjectDirPath(projectId, AudioPathSuffix, createDir);
+        }
+
+        public static string GenerateImportExtractedLocationDirPath(string projectId, bool createDir = true)
+        {
+            return GenerateProjectDirPath(projectId, ImportExtractedLocation, createDir);
+        }
+
+        public static string GenerateLiftImportDirPath(string projectId, bool createDir = true)
+        {
+            return GenerateProjectDirPath(projectId, LiftImportSuffix, createDir);
+        }
+
+        public static string GenerateLiftExportDirPath(string projectId, bool createDir = true)
+        {
+            return GenerateProjectDirPath(projectId, "Export", createDir);
+        }
+
         public static string GenerateAvatarFilePath(string userId)
         {
             return GenerateFilePath("Avatars", userId, FileType.Avatar);
         }
 
-        // TODO: Refactor into more directory-specific function.
-        public static string GenerateDirPath(FileType type, bool isDirectory, string customFileName = "",
-            string customDirPath = "")
+        private static string GenerateDirPath(string suffixPath, bool createDir)
         {
-            // Path to the base data folder
-            var returnFilepath = Path.Combine(GetBackendFileStoragePath(), customDirPath);
+            var dirPath = Path.Combine(GetBackendFileStoragePath(), suffixPath);
+            // Creates the directory if it doesn't already exist.
+            if (createDir)
+            {
+                Directory.CreateDirectory(dirPath);
+            }
 
-            // Establish path to the typed file in the base folder
+            return dirPath;
+        }
 
-            // Creates the directory if it doesn't exist
-            Directory.CreateDirectory(returnFilepath);
-
-            // If the path being generated is to a dir and not a file then don't add an extension
-            returnFilepath = Path.Combine(
-                returnFilepath, customFileName + (isDirectory ? "" : FileTypeExtension(type)));
-
-            return returnFilepath;
+        private static string GenerateProjectDirPath(string projectId, string suffixPath, bool createDir)
+        {
+            return GenerateDirPath(Path.Combine(projectId, suffixPath), createDir);
         }
 
         private static string GenerateProjectFilePath(string projectId, string suffixPath, string fileName)
@@ -92,10 +109,8 @@ namespace BackendFramework.Helper
 
         private static string GenerateFilePath(string suffixPath, string fileName)
         {
-            var returnFilepath = Path.Combine(GetBackendFileStoragePath(), suffixPath);
-            // Creates the directory if it doesn't exist
-            Directory.CreateDirectory(returnFilepath);
-            return Path.Combine(returnFilepath, fileName);
+            var dirPath = GenerateDirPath(suffixPath, true);
+            return Path.Combine(dirPath, fileName);
         }
 
         private static string GenerateFilePath(string suffixPath, string fileName, FileType type)
@@ -114,9 +129,7 @@ namespace BackendFramework.Helper
             {
                 FileType.Audio => ".webm",
                 FileType.Avatar => ".jpg",
-                FileType.Lift => ".lift",
-                FileType.Zip => ".zip",
-                _ => ""
+                _ => throw new NotImplementedException()
             };
         }
 
