@@ -8,6 +8,7 @@ import { defaultState as goalSelectorState } from "../GoalTimeline/GoalSwitcher/
 import { defaultState as passwordResetState } from "../PasswordReset/reducer";
 import { defaultState as exportProjectState } from "../ProjectExport/ExportProjectReducer";
 import { defaultState as createProjectState } from "../ProjectScreen/CreateProject/CreateProjectReducer";
+import { defaultState as pronunciationsState } from "../Pronunciations/PronunciationsReducer";
 import { defaultState as treeViewState } from "../TreeView/TreeViewReducer";
 
 export const defaultState = {
@@ -33,9 +34,15 @@ export const defaultState = {
     ...exportProjectState,
   },
 
-  //data entry
+  //data entry and review entries
   treeViewState: {
     ...treeViewState,
+  },
+  reviewEntriesState: {
+    ...reviewEntriesState,
+  },
+  pronunciationsState: {
+    ...pronunciationsState,
   },
 
   //general cleanup tools
@@ -54,10 +61,5 @@ export const defaultState = {
   //character inventory goal
   characterInventoryState: {
     ...characterInventoryState,
-  },
-
-  //review entries goal
-  reviewEntriesState: {
-    ...reviewEntriesState,
   },
 };

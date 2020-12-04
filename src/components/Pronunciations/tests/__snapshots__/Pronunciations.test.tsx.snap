@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`pronunciation tests displays buttons 1`] = `
+exports[`Pronunciations displays buttons 1`] = `
 Array [
   <button
     aria-describedby={null}
