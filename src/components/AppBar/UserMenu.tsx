@@ -1,6 +1,6 @@
 import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
 import { ExitToApp, Person, SettingsApplications } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
 import { getUser } from "../../backend";
@@ -25,11 +25,9 @@ export async function getIsAdmin(): Promise<boolean> {
  * Avatar in appbar with dropdown UserMenu
  */
 export default function UserMenu() {
-  const [anchorElement, setAnchorElement] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
   const avatar = LocalStorage.getAvatar();
-  const [isAdmin, setIsAdmin] = React.useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorElement(event.currentTarget);

@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
 import LoadingButton from "./LoadingButton";
@@ -26,8 +26,8 @@ interface EditTextDialogProps {
  * Dialog for editing text and confirm or cancel the edit
  */
 export default function EditTextDialog(props: EditTextDialogProps) {
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [text, setText] = React.useState<string>(props.text);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [text, setText] = useState<string>(props.text);
 
   async function onConfirm() {
     if (text !== props.text) {
