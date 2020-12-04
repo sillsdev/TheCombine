@@ -3,10 +3,10 @@ import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 
-import { defaultState as reviewEntriesState } from "../../../goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesReducer";
 import { defaultState } from "../../App/DefaultState";
 import AudioPlayer from "../AudioPlayer";
 import AudioRecorder from "../AudioRecorder";
+import { PronunciationsStatus } from "../PronunciationsActions";
 import Pronunciations from "../PronunciationsComponent";
 import RecorderIcon from "../RecorderIcon";
 
@@ -17,13 +17,16 @@ jest.mock("../Recorder");
 var testRenderer: ReactTestRenderer;
 
 const createMockStore = configureMockStore([]);
-const mockStore = createMockStore({
-  ...defaultState,
-  reviewEntriesState: {
-    ...reviewEntriesState,
-    wordBeingRecorded: "1",
-  },
-});
+const mockStore = createMockStore(defaultState);
+function mockRecordingState(wordId: string) {
+  return {
+    ...defaultState,
+    pronunciationsState: {
+      type: PronunciationsStatus.Recording,
+      payload: wordId,
+    },
+  };
+}
 
 beforeAll(() => {
   renderer.act(() => {
@@ -34,7 +37,7 @@ beforeAll(() => {
     );
   });
 });
-describe("pronunciation tests", () => {
+describe("Pronunciations", () => {
   it("renders one record button and one play button for each pronunciation file", () => {
     expect(testRenderer.root.findAllByType(AudioRecorder).length).toBe(1);
     expect(testRenderer.root.findAllByType(AudioPlayer).length).toBe(2);
@@ -81,19 +84,13 @@ describe("pronunciation tests", () => {
     expect(iconRelease).toBeTruthy();
   });
 
-  it("style depends on isRecording state", () => {
-    const mockStore2 = createMockStore({
-      ...defaultState,
-      reviewEntriesState: {
-        ...reviewEntriesState,
-        wordBeingRecorded: "1",
-        isRecording: true,
-      },
-    });
+  it("style depends on pronunciationsAtate", () => {
+    const wordId = "1";
+    const mockStore2 = createMockStore(mockRecordingState(wordId));
     renderer.act(() => {
       testRenderer.update(
         <Provider store={mockStore2}>
-          <Pronunciations wordId="1" pronunciationFiles={["a.wav"]} />
+          <Pronunciations wordId={wordId} pronunciationFiles={["a.wav"]} />
         </Provider>
       );
     });

@@ -10,10 +10,13 @@ import {
 } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
 import { Delete, PlayArrow, Stop } from "@material-ui/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Translate } from "react-localize-redux";
+import { useDispatch, useSelector } from "react-redux";
 
+import { StoreState } from "../../types";
 import ButtonConfirmation from "../Buttons/ButtonConfirmation";
+import { playing, PronunciationsStatus, reset } from "./PronunciationsActions";
 
 export interface PlayerProps {
   pronunciationUrl: string;
@@ -35,11 +38,30 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function AudioPlayer(props: PlayerProps) {
-  const [playing, setPlaying] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const pronunciationsState = useSelector(
+    (state: StoreState) => state.pronunciationsState
+  );
+  const dispatch = useDispatch();
   const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [anchor, setAnchor] = useState<HTMLElement | undefined>();
   const [deleteConf, setDeleteConf] = useState<boolean>(false);
   const classes = useStyles();
+
+  useEffect(() => {
+    if (
+      pronunciationsState.type !== PronunciationsStatus.Playing ||
+      pronunciationsState.payload !== props.fileName
+    ) {
+      if (isPlaying) {
+        stop();
+      }
+    } else {
+      play();
+    }
+    // We want pronunciationsState alone on the dependency list.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pronunciationsState]);
 
   function deleteAudio() {
     if (props.deleteAudio) {
@@ -47,15 +69,29 @@ export default function AudioPlayer(props: PlayerProps) {
     }
   }
 
+  function stop() {
+    setIsPlaying(false);
+    audio.pause();
+    audio.currentTime = 0;
+  }
+
+  function play() {
+    audio.addEventListener("ended", () => dispatch(reset()));
+    audio
+      .play()
+      .then(() => {
+        setIsPlaying(true);
+      })
+      .catch(() => {
+        dispatch(reset());
+      });
+  }
+
   function togglePlay() {
-    if (!playing) {
-      audio.play();
-      setPlaying(true);
-      audio.addEventListener("ended", () => setPlaying(false));
+    if (!isPlaying) {
+      dispatch(playing(props.fileName));
     } else {
-      audio.pause();
-      setPlaying(false);
-      audio.currentTime = 0;
+      dispatch(reset());
     }
   }
 
@@ -68,7 +104,7 @@ export default function AudioPlayer(props: PlayerProps) {
   }
 
   function handleClose() {
-    setAnchor(null);
+    setAnchor(undefined);
     enableContextMenu();
   }
 
@@ -98,7 +134,7 @@ export default function AudioPlayer(props: PlayerProps) {
           className={classes.button}
           aria-label="play"
         >
-          {playing ? (
+          {isPlaying ? (
             <Stop className={classes.icon} />
           ) : (
             <PlayArrow className={classes.icon} />
@@ -127,7 +163,7 @@ export default function AudioPlayer(props: PlayerProps) {
             handleClose();
           }}
         >
-          {playing ? (
+          {isPlaying ? (
             <Stop className={classes.icon} />
           ) : (
             <PlayArrow className={classes.icon} />
@@ -148,7 +184,7 @@ export default function AudioPlayer(props: PlayerProps) {
         titleId="pronunciations.deleteRecording"
         onClose={() => setDeleteConf(false)}
         onConfirm={deleteAudio}
-      ></ButtonConfirmation>
+      />
     </React.Fragment>
   );
 }

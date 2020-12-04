@@ -4,6 +4,7 @@ import { LoginState } from "../components/Login/LoginReducer";
 import { PasswordResetState } from "../components/PasswordReset/reducer";
 import { ExportProjectState } from "../components/ProjectExport/ExportProjectReducer";
 import { CreateProjectState } from "../components/ProjectScreen/CreateProject/CreateProjectReducer";
+import { PronunciationsState } from "../components/Pronunciations/PronunciationsReducer";
 import { TempState } from "../components/Temp/TempReducer";
 import { TreeViewState } from "../components/TreeView/TreeViewReducer";
 import { CharacterInventoryState } from "../goals/CharInventoryCreation/CharacterInventoryReducer";
@@ -26,8 +27,10 @@ export interface StoreState {
   currentProject: Project;
   exportProjectState: ExportProjectState;
 
-  //data entry
+  //data entry and review entries
   treeViewState: TreeViewState;
+  reviewEntriesState: ReviewEntriesState;
+  pronunciationsState: PronunciationsState;
 
   //general cleanup tools
   goalSelectorState: GoalSelectorState;
@@ -38,9 +41,6 @@ export interface StoreState {
 
   //character inventory goal
   characterInventoryState: CharacterInventoryState;
-
-  //review entries goal
-  reviewEntriesState: ReviewEntriesState;
 
   //temporary
   tempState: TempState;
