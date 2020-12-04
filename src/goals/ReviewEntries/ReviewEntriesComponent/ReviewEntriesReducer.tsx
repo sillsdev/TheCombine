@@ -56,14 +56,6 @@ export const reviewEntriesReducer = (
         }),
       };
 
-    case ReviewEntriesActionTypes.UpdateRecordingStatus:
-      // Update recording status
-      return {
-        ...state,
-        isRecording: action.recordingStatus,
-        wordBeingRecorded: action.wordId,
-      };
-
     case ReviewEntriesActionTypes.ClearReviewEntriesState:
       return {
         ...defaultState,
