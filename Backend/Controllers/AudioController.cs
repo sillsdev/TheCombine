@@ -5,7 +5,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using static BackendFramework.Helper.FileUtilities;
+using BackendFramework.Helper;
 
 namespace BackendFramework.Controllers
 {
@@ -43,7 +43,7 @@ namespace BackendFramework.Controllers
             //}
 
             // sanitize user input
-            if (!SanitizeId(projectId) || !SanitizeId(wordId))
+            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -79,7 +79,7 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if (!SanitizeId(projectId) || !SanitizeId(wordId))
+            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -98,7 +98,7 @@ namespace BackendFramework.Controllers
 
             // This path should be unique even though it is only based on the Word ID because currently, a new
             // Word is created each time an audio file is uploaded.
-            fileUpload.FilePath = GenerateAudioFilePathForWord(projectId, wordId);
+            fileUpload.FilePath = FileUtilities.GenerateAudioFilePathForWord(projectId, wordId);
 
             // Copy the file data to a new local file
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
@@ -127,7 +127,7 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if (!SanitizeId(projectId) || !SanitizeId(wordId))
+            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
             }

@@ -17,11 +17,6 @@ namespace BackendFramework.Helper
             Avatar
         }
 
-        public static bool SanitizeId(string id)
-        {
-            return id.All(x => char.IsLetterOrDigit(x) | x == '-');
-        }
-
         /// <summary> Get the path to the home directory of the current user. </summary>
         private static string GetHomePath()
         {

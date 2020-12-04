@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -6,8 +7,6 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
 {
@@ -291,7 +290,7 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if (!SanitizeId(projectId))
+            if (!Sanitization.SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
             }
