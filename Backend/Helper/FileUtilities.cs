@@ -62,18 +62,6 @@ namespace BackendFramework.Helper
             return returnFilepath;
         }
 
-        private static string FileTypeFolder(FileType type)
-        {
-            return type switch
-            {
-                FileType.Audio => "Audios",
-                FileType.Avatar => "Avatars",
-                FileType.Lift => "lifts",
-                FileType.Zip => "zips",
-                _ => ""
-            };
-        }
-
         private static string FileTypeExtension(FileType type)
         {
             return type switch
