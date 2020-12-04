@@ -34,6 +34,12 @@ namespace Backend.Tests.Controllers
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _projectService.Delete(_projId);
+        }
+
         private static string RandomString(int length = 16)
         {
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, length);

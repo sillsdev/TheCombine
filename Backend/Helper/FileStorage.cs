@@ -11,6 +11,9 @@ namespace BackendFramework.Helper
     /// </summary>
     public static class FileStorage
     {
+        private const string CombineFilesDir = ".CombineFiles";
+        private const string AvatarsDir = "Avatars";
+        private const string ExportDir = "Export";
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -73,7 +76,7 @@ namespace BackendFramework.Helper
         /// <remarks> This function may be removed in the future and replaced by temporary directory use. </remarks>
         public static string GenerateLiftExportDirPath(string projectId, bool createDir = true)
         {
-            return GenerateProjectDirPath(projectId, "Export", createDir);
+            return GenerateProjectDirPath(projectId, ExportDir, createDir);
         }
 
         /// <summary>
@@ -81,7 +84,7 @@ namespace BackendFramework.Helper
         /// </summary>
         public static string GenerateAvatarFilePath(string userId)
         {
-            return GenerateFilePath("Avatars", userId, FileType.Avatar);
+            return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
         }
 
         /// <summary> Get the path to the home directory of the current user. </summary>
@@ -103,7 +106,7 @@ namespace BackendFramework.Helper
         /// <summary> Returns the path where project files are stored on disk. </summary>
         private static string GetBackendFileStoragePath()
         {
-            return Path.Combine(GetHomePath(), ".CombineFiles");
+            return Path.Combine(GetHomePath(), CombineFilesDir);
         }
 
         private static string GenerateDirPath(string suffixPath, bool createDir)
