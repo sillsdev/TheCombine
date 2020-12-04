@@ -41,10 +41,10 @@ beforeEach(() => {
   eventListeners.clear();
 });
 
-describe("Tests TreeViewHeader", () => {
+describe("TreeViewHeader", () => {
   describe("searchAndSelectDomain", () => {
     function setupSimulatedInputTest(input: string) {
-      // Simulate the user typing 10
+      // Simulate the user typing a string
       const simulatedInput = {
         target: { value: input },
       } as React.ChangeEvent<HTMLTextAreaElement>;
@@ -63,11 +63,13 @@ describe("Tests TreeViewHeader", () => {
     }
 
     it("switches semantic domain if given number found", () => {
+      const TEST: string = "1.0";
+
       const { result } = renderHook(() => useTreeViewNavigation(testProps));
 
-      // Simulate the user typing 1.0
+      // Simulate the user typing
       const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
-        "1.0"
+        TEST
       );
 
       // When testing hooks any call that results in a state change needs to be wrapped in
@@ -90,7 +92,7 @@ describe("Tests TreeViewHeader", () => {
 
       const { result } = renderHook(() => useTreeViewNavigation(testProps));
 
-      // Simulate the user typing 10
+      // Simulate the user typing
       const { simulatedInput, simulatedEnterKey } = setupSimulatedInputTest(
         TEST
       );
