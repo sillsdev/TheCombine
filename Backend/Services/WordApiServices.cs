@@ -279,16 +279,5 @@ namespace BackendFramework.Services
             }
             return isUniqueWord;
         }
-
-        public string GetAudioFilePath(string projectId, string wordId, string fileName)
-        {
-            // Generate path to home on Linux or Windows
-            var pathToHome = FileUtilities.GeneratePathToHome();
-
-            var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId,
-                "Import", "ExtractedLocation", "Lift", "audio", fileName);
-            Console.WriteLine($"filePath: {filepath}");
-            return filepath;
-        }
     }
 }
