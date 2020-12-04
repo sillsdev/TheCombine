@@ -80,10 +80,10 @@ namespace BackendFramework.Controllers
             }
 
             // Make temporary destination for extracted files
-            var extractDir = FileUtilities.GetRandomTempDir();
+            var extractDir = FileOperations.GetRandomTempDir();
 
             // Extract the zip to new created directory.
-            FileUtilities.ExtractZipFile(fileUpload.FilePath, extractDir, true);
+            FileOperations.ExtractZipFile(fileUpload.FilePath, extractDir, true);
 
             // Check number of directories extracted
             var directoriesExtracted = Directory.GetDirectories(extractDir);
@@ -129,8 +129,8 @@ namespace BackendFramework.Controllers
             }
 
             // Copy the extracted contents into the persistent storage location for the project.
-            var liftStoragePath = FileUtilities.GenerateLiftImportDirPath(projectId);
-            FileUtilities.CopyDirectory(extractedDirPath, liftStoragePath);
+            var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
+            FileOperations.CopyDirectory(extractedDirPath, liftStoragePath);
             Directory.Delete(extractDir, true);
 
             // Search for the lift file within the extracted files

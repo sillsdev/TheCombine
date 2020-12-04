@@ -161,7 +161,7 @@ namespace BackendFramework.Services
         public string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
         {
             // Generate the zip dir.
-            var exportDir = FileUtilities.GenerateLiftExportDirPath(projectId);
+            var exportDir = FileStorage.GenerateLiftExportDirPath(projectId);
             var liftExportDir = Path.Combine(exportDir, "LiftExport");
             if (Directory.Exists(liftExportDir))
             {
@@ -243,7 +243,7 @@ namespace BackendFramework.Services
 
             // Export semantic domains to lift-ranges
             var proj = projService.GetProject(projectId).Result;
-            var extractedPathToImport = FileUtilities.GenerateImportExtractedLocationDirPath(projectId, false);
+            var extractedPathToImport = FileStorage.GenerateImportExtractedLocationDirPath(projectId, false);
             string? firstImportDir = null;
             if (Directory.Exists(extractedPathToImport))
             {
@@ -402,7 +402,7 @@ namespace BackendFramework.Services
             foreach (var audioFile in wordEntry.Audio)
             {
                 var lexPhonetic = new LexPhonetic();
-                var src = FileUtilities.GenerateAudioFilePath(projectId, audioFile);
+                var src = FileStorage.GenerateAudioFilePath(projectId, audioFile);
                 var dest = Path.Combine(path, audioFile);
 
                 if (File.Exists(src))
@@ -606,7 +606,7 @@ namespace BackendFramework.Services
                 }
 
                 // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/Lift/audio
-                var extractedAudioDir = FileUtilities.GenerateAudioFileDirPath(_projectId);
+                var extractedAudioDir = FileStorage.GenerateAudioFileDirPath(_projectId);
 
                 // Only add audio if the files exist
                 if (Directory.Exists(extractedAudioDir))

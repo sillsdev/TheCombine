@@ -283,7 +283,7 @@ namespace BackendFramework.Services
         public string GetAudioFilePath(string projectId, string wordId, string fileName)
         {
             // TODO: Migrate this to a new FileService service.
-            return FileUtilities.GenerateAudioFilePath(projectId, fileName);
+            return FileStorage.GenerateAudioFilePath(projectId, fileName);
         }
     }
 }

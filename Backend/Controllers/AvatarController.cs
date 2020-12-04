@@ -73,7 +73,7 @@ namespace BackendFramework.Controllers
             }
 
             // Generate path to store avatar file.
-            fileUpload.FilePath = FileUtilities.GenerateAvatarFilePath(userId);
+            fileUpload.FilePath = FileStorage.GenerateAvatarFilePath(userId);
 
             // Copy file data to a new local file
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))

@@ -5,7 +5,11 @@ using System.Linq;
 
 namespace BackendFramework.Helper
 {
-    public static class FileUtilities
+    /// <summary>
+    /// An abstraction around where backend files are stored.
+    /// All paths related to persistent files stored on disks should be processed here.
+    /// </summary>
+    public static class FileStorage
     {
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
@@ -15,6 +19,69 @@ namespace BackendFramework.Helper
         {
             Audio,
             Avatar
+        }
+
+        /// <summary> Indicates that an error occured locating the current user's home directory. </summary>
+        public class HomeFolderNotFoundException : Exception
+        {
+        }
+
+        /// <summary>
+        /// Generate a path to the file name of an audio file for the Project based on the Word ID.
+        /// </summary>
+        public static string GenerateAudioFilePathForWord(string projectId, string wordId)
+        {
+            return GenerateProjectFilePath(projectId, AudioPathSuffix, wordId, FileType.Audio);
+        }
+
+        /// <summary>
+        /// Generate a path to the file name of an audio file for the Project.
+        /// </summary>
+        public static string GenerateAudioFilePath(string projectId, string fileName)
+        {
+            return GenerateProjectFilePath(projectId, AudioPathSuffix, fileName);
+        }
+
+        /// <summary>
+        /// Generate a path to the directory where audio files are stored for the Project.
+        /// </summary>
+        public static string GenerateAudioFileDirPath(string projectId, bool createDir = true)
+        {
+            return GenerateProjectDirPath(projectId, AudioPathSuffix, createDir);
+        }
+
+        /// <summary>
+        /// Generate a path to the parent directory where Lift exports are stored.
+        /// </summary>
+        /// <remarks> This function is not expected to be used often. </remarks>
+        public static string GenerateImportExtractedLocationDirPath(string projectId, bool createDir = true)
+        {
+            return GenerateProjectDirPath(projectId, ImportExtractedLocation, createDir);
+        }
+
+        /// <summary>
+        /// Generate a path to the Lift import folder. This also stores audio files within it.
+        /// </summary>
+        public static string GenerateLiftImportDirPath(string projectId, bool createDir = true)
+        {
+            return GenerateProjectDirPath(projectId, LiftImportSuffix, createDir);
+        }
+
+        /// <summary>
+        /// Generate a path to the temporary Lift Export folder used during export.
+        /// </summary>
+        /// <remarks> This function may be removed in the future and replaced by temporary directory use. </remarks>
+        public static string GenerateLiftExportDirPath(string projectId, bool createDir = true)
+        {
+            return GenerateProjectDirPath(projectId, "Export", createDir);
+        }
+
+        /// <summary>
+        /// Generate the path to where Avatar images are stored.
+        /// </summary>
+        public static string GenerateAvatarFilePath(string userId)
+        {
+            return GenerateFilePath("Avatars", userId, FileType.Avatar);
         }
 
         /// <summary> Get the path to the home directory of the current user. </summary>
@@ -37,41 +104,6 @@ namespace BackendFramework.Helper
         private static string GetBackendFileStoragePath()
         {
             return Path.Combine(GetHomePath(), ".CombineFiles");
-        }
-
-        public static string GenerateAudioFilePathForWord(string projectId, string wordId)
-        {
-            return GenerateProjectFilePath(projectId, AudioPathSuffix, wordId, FileType.Audio);
-        }
-
-        public static string GenerateAudioFilePath(string projectId, string fileName)
-        {
-            return GenerateProjectFilePath(projectId, AudioPathSuffix, fileName);
-        }
-
-        public static string GenerateAudioFileDirPath(string projectId, bool createDir = true)
-        {
-            return GenerateProjectDirPath(projectId, AudioPathSuffix, createDir);
-        }
-
-        public static string GenerateImportExtractedLocationDirPath(string projectId, bool createDir = true)
-        {
-            return GenerateProjectDirPath(projectId, ImportExtractedLocation, createDir);
-        }
-
-        public static string GenerateLiftImportDirPath(string projectId, bool createDir = true)
-        {
-            return GenerateProjectDirPath(projectId, LiftImportSuffix, createDir);
-        }
-
-        public static string GenerateLiftExportDirPath(string projectId, bool createDir = true)
-        {
-            return GenerateProjectDirPath(projectId, "Export", createDir);
-        }
-
-        public static string GenerateAvatarFilePath(string userId)
-        {
-            return GenerateFilePath("Avatars", userId, FileType.Avatar);
         }
 
         private static string GenerateDirPath(string suffixPath, bool createDir)
@@ -108,16 +140,20 @@ namespace BackendFramework.Helper
             return Path.Combine(dirPath, fileName);
         }
 
-        private static string GenerateFilePath(string suffixPath, string fileName, FileType type)
+        private static string GenerateFilePath(string suffixPath, string fileNameSuffix, FileType type)
         {
-            return GenerateFilePath(suffixPath, GenerateFileName(fileName, type));
+            return GenerateFilePath(suffixPath, GenerateFileName(fileNameSuffix, type));
         }
 
+        /// <summary>
+        /// Append an appropriate file extension to a file name based on the file's type.
+        /// </summary>
         private static string GenerateFileName(string fileNameStem, FileType type)
         {
             return $"{fileNameStem}{FileTypeExtension(type)}";
         }
 
+        /// <summary> Generate an appropriate file extension for a given type. </summary>
         private static string FileTypeExtension(FileType type)
         {
             return type switch
@@ -126,68 +162,6 @@ namespace BackendFramework.Helper
                 FileType.Avatar => ".jpg",
                 _ => throw new NotImplementedException()
             };
-        }
-
-        /// <summary>
-        /// Create a randomly named directory in the system's temp folder, and get its name.
-        /// </summary>
-        /// <param name="create"> Whether to create the directory. </param>
-        /// <returns> Path to random temporary directory. </returns>
-        public static string GetRandomTempDir(bool create = true)
-        {
-            var tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            if (create)
-            {
-                Directory.CreateDirectory(tempDir);
-            }
-            return tempDir;
-        }
-
-        /// <summary>
-        /// Extract a zip file to a new path, creating a unique temporary directory if requested.
-        /// </summary>
-        /// <param name="zipFilePath"> Path to zip file to extract. </param>
-        /// <param name="extractionDir">
-        /// Directory path to create and extract zip file contents too. If null, a temporary directory is created.
-        /// </param>
-        /// <param name="deleteZipFile"> Whether to delete the zip file after extracting it. </param>
-        /// <returns> The path to the extracted contents. </returns>
-        public static string ExtractZipFile(string zipFilePath, string? extractionDir, bool deleteZipFile = false)
-        {
-            if (extractionDir is null)
-            {
-                extractionDir = GetRandomTempDir(false);
-            }
-
-            Directory.CreateDirectory(extractionDir);
-            ZipFile.ExtractToDirectory(zipFilePath, extractionDir);
-            if (deleteZipFile)
-            {
-                File.Delete(zipFilePath);
-            }
-            return extractionDir;
-        }
-
-        /// <summary>
-        /// Recursively copies one directory into another.
-        /// </summary>
-        public static void CopyDirectory(string sourceDir, string targetDir)
-        {
-            Directory.CreateDirectory(targetDir);
-
-            foreach (var file in Directory.GetFiles(sourceDir))
-            {
-                File.Copy(file, Path.Combine(targetDir, Path.GetFileName(file)));
-            }
-
-            foreach (var directory in Directory.GetDirectories(sourceDir))
-            {
-                CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
-            }
-        }
-
-        public class HomeFolderNotFoundException : Exception
-        {
         }
     }
 }

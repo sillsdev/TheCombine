@@ -98,7 +98,7 @@ namespace BackendFramework.Controllers
 
             // This path should be unique even though it is only based on the Word ID because currently, a new
             // Word is created each time an audio file is uploaded.
-            fileUpload.FilePath = FileUtilities.GenerateAudioFilePathForWord(projectId, wordId);
+            fileUpload.FilePath = FileStorage.GenerateAudioFilePathForWord(projectId, wordId);
 
             // Copy the file data to a new local file
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
