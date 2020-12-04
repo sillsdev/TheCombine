@@ -7,6 +7,8 @@ namespace BackendFramework.Helper
 {
     public static class FileUtilities
     {
+        private static readonly string AudioPathSuffix = Path.Combine("Import", "ExtractedLocation", "Lift", "audio");
+
         public enum FileType
         {
             Audio,
@@ -38,17 +40,32 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Returns the path where project files are stored on disk. </summary>
-        public static string GetProjectFileStoragePath()
+        public static string GetBackendFileStoragePath()
         {
             return Path.Combine(GetHomePath(), ".CombineFiles");
         }
 
-        // TODO: split this function in two that generate directories or files
-        public static string GenerateFilePath(FileType type, bool isDirectory, string customFileName = "",
+        private static string GetProjectFileStoragePath(string projectId)
+        {
+            return Path.Combine(GetBackendFileStoragePath(), projectId);
+        }
+
+        public static string GenerateAudioFilePathForWord(string projectId, string wordId)
+        {
+            return GenerateFilePath(projectId, AudioPathSuffix, wordId, FileType.Audio);
+        }
+
+        public static string GenerateAudioFilePath(string projectId, string fileName)
+        {
+            return GenerateFilePath(projectId, AudioPathSuffix, fileName);
+        }
+
+        // TODO: Refactor into more directory-specific function.
+        public static string GenerateDirPath(FileType type, bool isDirectory, string customFileName = "",
             string customDirPath = "")
         {
             // Path to the base data folder
-            var returnFilepath = Path.Combine(GetProjectFileStoragePath(), customDirPath);
+            var returnFilepath = Path.Combine(GetBackendFileStoragePath(), customDirPath);
 
             // Establish path to the typed file in the base folder
 
@@ -60,6 +77,25 @@ namespace BackendFramework.Helper
                 returnFilepath, customFileName + (isDirectory ? "" : FileTypeExtension(type)));
 
             return returnFilepath;
+        }
+
+        private static string GenerateFilePath(string projectId, string customSuffixPath, string fileName)
+        {
+            var returnFilepath = Path.Combine(GetProjectFileStoragePath(projectId), customSuffixPath);
+            // Creates the directory if it doesn't exist
+            Directory.CreateDirectory(returnFilepath);
+            return Path.Combine(returnFilepath, fileName);
+        }
+
+        private static string GenerateFilePath(
+            string projectId, string customSuffixPath, string fileName, FileType type)
+        {
+            return GenerateFilePath(projectId, customSuffixPath, GenerateFileName(fileName, type));
+        }
+
+        private static string GenerateFileName(string fileNameStem, FileType type)
+        {
+            return $"{fileNameStem}{type}";
         }
 
         private static string FileTypeExtension(FileType type)

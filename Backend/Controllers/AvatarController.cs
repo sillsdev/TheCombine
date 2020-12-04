@@ -73,7 +73,7 @@ namespace BackendFramework.Controllers
             }
 
             // Get path to home
-            fileUpload.FilePath = FileUtilities.GenerateFilePath(
+            fileUpload.FilePath = FileUtilities.GenerateDirPath(
                 FileUtilities.FileType.Avatar, false, userId, "Avatars");
 
             // Copy file data to a new local file

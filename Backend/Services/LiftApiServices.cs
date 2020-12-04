@@ -158,7 +158,7 @@ namespace BackendFramework.Services
 
         private static string GetProjectDir(string projectId)
         {
-            return Path.Combine(FileUtilities.GetProjectFileStoragePath(), projectId);
+            return Path.Combine(FileUtilities.GetBackendFileStoragePath(), projectId);
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
@@ -166,7 +166,7 @@ namespace BackendFramework.Services
         public string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
         {
             // Generate the zip dir.
-            var exportDir = FileUtilities.GenerateFilePath(FileUtilities.FileType.Dir, true, "",
+            var exportDir = FileUtilities.GenerateDirPath(FileUtilities.FileType.Dir, true, "",
                 Path.Combine(projectId, "Export"));
             if (Directory.Exists(Path.Combine(exportDir, "LiftExport")))
             {
@@ -407,9 +407,7 @@ namespace BackendFramework.Services
             foreach (var audioFile in wordEntry.Audio)
             {
                 var lexPhonetic = new LexPhonetic();
-                var projectPath = Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio");
-                var src = FileUtilities.GenerateFilePath(
-                    FileUtilities.FileType.Audio, true, audioFile, projectPath);
+                var src = FileUtilities.GenerateAudioFilePath(projectId, audioFile);
                 var dest = Path.Combine(path, audioFile);
 
                 if (File.Exists(src))
@@ -613,7 +611,7 @@ namespace BackendFramework.Services
                 }
 
                 // Get path to dir containing local lift package ~/{projectId}/Import/ExtractedLocation
-                var importDir = FileUtilities.GenerateFilePath(
+                var importDir = FileUtilities.GenerateDirPath(
                     FileUtilities.FileType.Dir, false, "", Path.Combine(_projectId, "Import"));
                 var extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
 

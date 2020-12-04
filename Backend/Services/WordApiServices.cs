@@ -282,9 +282,8 @@ namespace BackendFramework.Services
 
         public string GetAudioFilePath(string projectId, string wordId, string fileName)
         {
-            var filepath = Path.Combine(FileUtilities.GetProjectFileStoragePath(), projectId,
-                "Import", "ExtractedLocation", "Lift", "audio", fileName);
-            return filepath;
+            // TODO: Migrate this to a new FileService service.
+            return FileUtilities.GenerateAudioFilePath(projectId, fileName);
         }
     }
 }

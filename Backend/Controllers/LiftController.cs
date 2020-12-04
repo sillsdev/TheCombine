@@ -130,7 +130,7 @@ namespace BackendFramework.Controllers
             }
 
             // Copy the extracted contents into the persistent storage location for the project.
-            var liftStoragePath = GenerateFilePath(
+            var liftStoragePath = GenerateDirPath(
                 FileType.Dir,
                 true,
                 "",
