@@ -77,8 +77,8 @@ export default function AudioPlayer(props: PlayerProps) {
 
   function play() {
     setIsPlaying(true);
-    audio.play();
     audio.addEventListener("ended", () => dispatch(reset()));
+    audio.play();
   }
 
   function togglePlay() {
