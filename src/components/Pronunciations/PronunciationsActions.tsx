@@ -1,7 +1,3 @@
-import { ThunkDispatch } from "redux-thunk";
-
-import { StoreState } from "../../types";
-
 export enum PronunciationsStatus {
   Default = "DEFAULT",
   Playing = "PLAYING",
@@ -11,18 +7,6 @@ export enum PronunciationsStatus {
 export interface PronunciationsAction {
   type: PronunciationsStatus;
   payload?: string;
-}
-
-export function audioPlaying(fileName: string) {
-  return (dispatch: ThunkDispatch<StoreState, any, PronunciationsAction>) => {
-    dispatch(playing(fileName));
-  };
-}
-
-export function audioRecording(wordId: string) {
-  return (dispatch: ThunkDispatch<StoreState, any, PronunciationsAction>) => {
-    dispatch(recording(wordId));
-  };
 }
 
 export function playing(payload: string): PronunciationsAction {
