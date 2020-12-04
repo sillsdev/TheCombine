@@ -18,42 +18,37 @@ namespace BackendFramework.Helper
 
         public static bool SanitizeId(string id)
         {
-            if (id.All(x => char.IsLetterOrDigit(x) | x == '-'))
-            {
-                return true;
-            }
-            return false;
+            return id.All(x => char.IsLetterOrDigit(x) | x == '-');
         }
 
-        public static string GeneratePathToHome()
+        /// <summary> Get the path to the home directory of the current user.  </summary>
+        private static string GetHomePath()
         {
-            // Generate path to home on linux
-            var pathToHome = Environment.GetEnvironmentVariable("HOME");
+            // Generate path to home on Linux or Windows.
+            var homePath =
+                Environment.GetEnvironmentVariable("HOME") ?? Environment.GetEnvironmentVariable("UserProfile");
 
-            // Generate home on windows
-            if (pathToHome is null)
+            // Ensure home directory is found correctly.
+            if (homePath is null)
             {
-                pathToHome = Environment.GetEnvironmentVariable("UserProfile");
+                throw new HomeFolderNotFoundException();
             }
 
-            // Something is wrong
-            if (pathToHome is null)
-            {
-                throw new DesktopNotFoundException();
-            }
+            return homePath;
+        }
 
-            return pathToHome;
+        /// <summary> Returns the path where project files are stored on disk. </summary>
+        public static string GetProjectFileStoragePath()
+        {
+            return Path.Combine(GetHomePath(), ".CombineFiles");
         }
 
         // TODO: split this function in two that generate directories or files
         public static string GenerateFilePath(FileType type, bool isDirectory, string customFileName = "",
             string customDirPath = "")
         {
-            // Generate path to home on Linux or Windows
-            var pathToHome = GeneratePathToHome();
-
             // Path to the base data folder
-            var returnFilepath = Path.Combine(pathToHome, ".CombineFiles", customDirPath);
+            var returnFilepath = Path.Combine(GetProjectFileStoragePath(), customDirPath);
 
             // Establish path to the typed file in the base folder
 
@@ -69,44 +64,26 @@ namespace BackendFramework.Helper
 
         private static string FileTypeFolder(FileType type)
         {
-            switch (type)
+            return type switch
             {
-                case FileType.Audio:
-                    return "Audios";
-
-                case FileType.Avatar:
-                    return "Avatars";
-
-                case FileType.Lift:
-                    return "lifts";
-
-                case FileType.Zip:
-                    return "zips";
-
-                default:
-                    return "";
-            }
+                FileType.Audio => "Audios",
+                FileType.Avatar => "Avatars",
+                FileType.Lift => "lifts",
+                FileType.Zip => "zips",
+                _ => ""
+            };
         }
 
         private static string FileTypeExtension(FileType type)
         {
-            switch (type)
+            return type switch
             {
-                case FileType.Audio:
-                    return ".webm";
-
-                case FileType.Avatar:
-                    return ".jpg";
-
-                case FileType.Lift:
-                    return ".lift";
-
-                case FileType.Zip:
-                    return ".zip";
-
-                default:
-                    return "";
-            }
+                FileType.Audio => ".webm",
+                FileType.Avatar => ".jpg",
+                FileType.Lift => ".lift",
+                FileType.Zip => ".zip",
+                _ => ""
+            };
         }
 
         /// <summary>
@@ -167,7 +144,7 @@ namespace BackendFramework.Helper
             }
         }
 
-        public class DesktopNotFoundException : Exception
+        public class HomeFolderNotFoundException : Exception
         {
         }
     }

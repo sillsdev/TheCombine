@@ -13,7 +13,7 @@ namespace Backend.Tests.Controllers
 {
     public class AudioControllerTests
     {
-        private IWordRepository _wordrepo;
+        private IWordRepository _wordRepo;
         private WordService _wordService;
         private WordController _wordController;
         private AudioController _audioController;
@@ -25,13 +25,13 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
-            _wordrepo = new WordRepositoryMock();
-            _wordService = new WordService(_wordrepo);
+            _wordRepo = new WordRepositoryMock();
+            _wordService = new WordService(_wordRepo);
             _projectService = new ProjectServiceMock();
             _projId = _projectService.Create(new Project()).Result.Id;
             _permissionService = new PermissionServiceMock();
-            _wordController = new WordController(_wordrepo, _wordService, _projectService, _permissionService);
-            _audioController = new AudioController(_wordrepo, _wordService, _permissionService);
+            _wordController = new WordController(_wordRepo, _wordService, _projectService, _permissionService);
+            _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
         }
 
         private static string RandomString(int length = 16)
@@ -54,13 +54,11 @@ namespace Backend.Tests.Controllers
                 "Assets", "sound.mp3");
 
             // Open the file to read to controller.
-            var fstream = File.OpenRead(filePath);
-
-            // Generate parameters for controller call.
+            using var fstream = File.OpenRead(filePath);
             var formFile = new FormFile(fstream, 0, fstream.Length, "name", "sound.mp3");
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
-            var word = _wordrepo.Create(RandomWord()).Result;
+            var word = _wordRepo.Create(RandomWord()).Result;
 
             // `fileUpload` contains the file stream and the name of the file.
             _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
@@ -69,15 +67,13 @@ namespace Backend.Tests.Controllers
 
             var foundWord = (action as ObjectResult).Value as Word;
             Assert.IsNotNull(foundWord.Audio);
-
-            fstream.Close();
         }
 
         [Test]
         public void DeleteAudio()
         {
             // Fill test database
-            var origWord = _wordrepo.Create(RandomWord()).Result;
+            var origWord = _wordRepo.Create(RandomWord()).Result;
 
             // Add audio file to word
             origWord.Audio.Add("a.wav");
@@ -86,16 +82,16 @@ namespace Backend.Tests.Controllers
             var action = _audioController.Delete(_projId, origWord.Id, "a.wav").Result;
 
             // Original word persists
-            Assert.IsTrue(_wordrepo.GetAllWords(_projId).Result.Count == 2);
+            Assert.IsTrue(_wordRepo.GetAllWords(_projId).Result.Count == 2);
 
             // Get the new word from the database
-            var frontier = _wordrepo.GetFrontier(_projId).Result;
+            var frontier = _wordRepo.GetFrontier(_projId).Result;
 
             // Ensure the new word has no audio files
             Assert.IsTrue(frontier[0].Audio.Count == 0);
 
             // Test the frontier
-            Assert.That(_wordrepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
+            Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
 
             // Ensure the word with deleted audio is in the frontier
             Assert.IsTrue(frontier.Count == 1);

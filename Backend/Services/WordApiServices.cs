@@ -282,12 +282,8 @@ namespace BackendFramework.Services
 
         public string GetAudioFilePath(string projectId, string wordId, string fileName)
         {
-            // Generate path to home on Linux or Windows
-            var pathToHome = FileUtilities.GeneratePathToHome();
-
-            var filepath = Path.Combine(pathToHome, ".CombineFiles", projectId,
+            var filepath = Path.Combine(FileUtilities.GetProjectFileStoragePath(), projectId,
                 "Import", "ExtractedLocation", "Lift", "audio", fileName);
-            Console.WriteLine($"filePath: {filepath}");
             return filepath;
         }
     }

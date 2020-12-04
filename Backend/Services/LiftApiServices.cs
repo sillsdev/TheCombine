@@ -78,7 +78,7 @@ namespace BackendFramework.Services
     {
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
-        private const string inProgress = "IN_PROGRESS";
+        private const string InProgress = "IN_PROGRESS";
 
         public LiftService()
         {
@@ -96,7 +96,7 @@ namespace BackendFramework.Services
             _liftExports.Remove(userId);
             if (isInProgress)
             {
-                _liftExports.Add(userId, inProgress);
+                _liftExports.Add(userId, InProgress);
             }
         }
 
@@ -107,7 +107,7 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            return _liftExports[userId] == inProgress;
+            return _liftExports[userId] == InProgress;
         }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
@@ -121,7 +121,7 @@ namespace BackendFramework.Services
         /// <returns> Path to the Lift file on disk. </returns>
         public string? RetrieveExport(string userId)
         {
-            if (!_liftExports.ContainsKey(userId) || _liftExports[userId] == inProgress)
+            if (!_liftExports.ContainsKey(userId) || _liftExports[userId] == InProgress)
             {
                 return null;
             }
@@ -148,7 +148,7 @@ namespace BackendFramework.Services
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
             wsf.Create(langTag, out var wsDef);
 
-            //if there is a main character set, import it to the project
+            // If there is a main character set, import it to the project
             if (wsDef.CharacterSets.Contains("main"))
             {
                 project.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
@@ -158,10 +158,7 @@ namespace BackendFramework.Services
 
         private static string GetProjectDir(string projectId)
         {
-            // Generate path to home on Linux or Windows
-            var pathToHome = FileUtilities.GeneratePathToHome();
-
-            return Path.Combine(pathToHome, ".CombineFiles", projectId);
+            return Path.Combine(FileUtilities.GetProjectFileStoragePath(), projectId);
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
