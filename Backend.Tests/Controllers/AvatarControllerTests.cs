@@ -57,11 +57,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestAvatarImport()
         {
-            var filePath = Path.Combine(Directory.GetParent(
-                Directory.GetParent(Directory.GetParent(
-                    Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets", "combine.png");
-
-            var fstream = File.OpenRead(filePath);
+            var filePath = Path.Combine(Util.AssetsDir, "combine.png");
+            using var fstream = File.OpenRead(filePath);
 
             var formFile = new FormFile(fstream, 0, fstream.Length, "dave", "combine.png");
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };

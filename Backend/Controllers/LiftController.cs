@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using SIL.Lift.Parsing;
-using static BackendFramework.Helper.FileUtilities;
 
 [assembly: InternalsVisibleTo("Backend.Tests")]
 namespace BackendFramework.Controllers
@@ -50,7 +49,7 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize projectId
-            if (!SanitizeId(projectId))
+            if (!Sanitization.SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -81,10 +80,10 @@ namespace BackendFramework.Controllers
             }
 
             // Make temporary destination for extracted files
-            var extractDir = GetRandomTempDir();
+            var extractDir = FileOperations.GetRandomTempDir();
 
             // Extract the zip to new created directory.
-            ExtractZipFile(fileUpload.FilePath, extractDir, true);
+            FileOperations.ExtractZipFile(fileUpload.FilePath, extractDir, true);
 
             // Check number of directories extracted
             var directoriesExtracted = Directory.GetDirectories(extractDir);
@@ -130,12 +129,8 @@ namespace BackendFramework.Controllers
             }
 
             // Copy the extracted contents into the persistent storage location for the project.
-            var liftStoragePath = GenerateFilePath(
-                FileType.Dir,
-                true,
-                "",
-                Path.Combine(projectId, "Import", "ExtractedLocation", "Lift"));
-            CopyDirectory(extractedDirPath, liftStoragePath);
+            var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
+            FileOperations.CopyDirectory(extractedDirPath, liftStoragePath);
             Directory.Delete(extractDir, true);
 
             // Search for the lift file within the extracted files
@@ -199,7 +194,7 @@ namespace BackendFramework.Controllers
             }
 
             // Sanitize projectId
-            if (!SanitizeId(projectId))
+            if (!Sanitization.SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
             }
