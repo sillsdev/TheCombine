@@ -48,10 +48,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestAudioImport()
         {
-            // Get path to sound in Assets folder, from debugging folder.
-            var filePath = Path.Combine(Directory.GetParent(Directory.GetParent(
-                Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(),
-                "Assets", "sound.mp3");
+            var filePath = Path.Combine(Util.AssetsDir, "sound.mp3");
 
             // Open the file to read to controller.
             using var fstream = File.OpenRead(filePath);

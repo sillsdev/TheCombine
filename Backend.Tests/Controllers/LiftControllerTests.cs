@@ -239,11 +239,6 @@ namespace Backend.Tests.Controllers
         public void TestRoundtrip()
         {
             // This test assumes you have the starting .zip included in your project files.
-
-            // Get path to the starting dir
-            var pathToStartZips = Path.Combine(Directory.GetParent(Directory.GetParent(
-                Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets");
-
             var fileMapping = new Dictionary<string, RoundTripObj>();
 
             // Add new .zip file information here
@@ -272,7 +267,7 @@ namespace Backend.Tests.Controllers
 
             foreach (var (filename, roundTripContents) in fileMapping)
             {
-                var pathToStartZip = Path.Combine(pathToStartZips, filename);
+                var pathToStartZip = Path.Combine(Util.AssetsDir, filename);
 
                 // Upload the zip file
 
