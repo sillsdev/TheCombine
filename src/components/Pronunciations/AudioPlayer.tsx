@@ -76,9 +76,15 @@ export default function AudioPlayer(props: PlayerProps) {
   }
 
   function play() {
-    setIsPlaying(true);
     audio.addEventListener("ended", () => dispatch(reset()));
-    audio.play();
+    audio
+      .play()
+      .then(() => {
+        setIsPlaying(true);
+      })
+      .catch(() => {
+        dispatch(reset());
+      });
   }
 
   function togglePlay() {
@@ -178,7 +184,7 @@ export default function AudioPlayer(props: PlayerProps) {
         titleId="pronunciations.deleteRecording"
         onClose={() => setDeleteConf(false)}
         onConfirm={deleteAudio}
-      ></ButtonConfirmation>
+      />
     </React.Fragment>
   );
 }
