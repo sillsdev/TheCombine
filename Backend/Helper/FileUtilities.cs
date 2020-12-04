@@ -23,7 +23,7 @@ namespace BackendFramework.Helper
             return id.All(x => char.IsLetterOrDigit(x) | x == '-');
         }
 
-        /// <summary> Get the path to the home directory of the current user.  </summary>
+        /// <summary> Get the path to the home directory of the current user. </summary>
         private static string GetHomePath()
         {
             // Generate path to home on Linux or Windows.
@@ -45,19 +45,19 @@ namespace BackendFramework.Helper
             return Path.Combine(GetHomePath(), ".CombineFiles");
         }
 
-        private static string GetProjectFileStoragePath(string projectId)
-        {
-            return Path.Combine(GetBackendFileStoragePath(), projectId);
-        }
-
         public static string GenerateAudioFilePathForWord(string projectId, string wordId)
         {
-            return GenerateFilePath(projectId, AudioPathSuffix, wordId, FileType.Audio);
+            return GenerateProjectFilePath(projectId, AudioPathSuffix, wordId, FileType.Audio);
         }
 
         public static string GenerateAudioFilePath(string projectId, string fileName)
         {
-            return GenerateFilePath(projectId, AudioPathSuffix, fileName);
+            return GenerateProjectFilePath(projectId, AudioPathSuffix, fileName);
+        }
+
+        public static string GenerateAvatarFilePath(string userId)
+        {
+            return GenerateFilePath("Avatars", userId, FileType.Avatar);
         }
 
         // TODO: Refactor into more directory-specific function.
@@ -79,23 +79,33 @@ namespace BackendFramework.Helper
             return returnFilepath;
         }
 
-        private static string GenerateFilePath(string projectId, string customSuffixPath, string fileName)
+        private static string GenerateProjectFilePath(string projectId, string suffixPath, string fileName)
         {
-            var returnFilepath = Path.Combine(GetProjectFileStoragePath(projectId), customSuffixPath);
+            return GenerateFilePath(Path.Combine(projectId, suffixPath), fileName);
+        }
+
+        private static string GenerateProjectFilePath(
+            string projectId, string suffixPath, string fileName, FileType type)
+        {
+            return GenerateProjectFilePath(projectId, suffixPath, GenerateFileName(fileName, type));
+        }
+
+        private static string GenerateFilePath(string suffixPath, string fileName)
+        {
+            var returnFilepath = Path.Combine(GetBackendFileStoragePath(), suffixPath);
             // Creates the directory if it doesn't exist
             Directory.CreateDirectory(returnFilepath);
             return Path.Combine(returnFilepath, fileName);
         }
 
-        private static string GenerateFilePath(
-            string projectId, string customSuffixPath, string fileName, FileType type)
+        private static string GenerateFilePath(string suffixPath, string fileName, FileType type)
         {
-            return GenerateFilePath(projectId, customSuffixPath, GenerateFileName(fileName, type));
+            return GenerateFilePath(suffixPath, GenerateFileName(fileName, type));
         }
 
         private static string GenerateFileName(string fileNameStem, FileType type)
         {
-            return $"{fileNameStem}{type}";
+            return $"{fileNameStem}{FileTypeExtension(type)}";
         }
 
         private static string FileTypeExtension(FileType type)
