@@ -55,6 +55,12 @@ namespace Backend.Tests.Mocks
         /// </summary>
         public Task<bool> Delete(string id)
         {
+            // Sanitization check needed for LGTM rule: https://lgtm.com/rules/1506099046731/
+            if (!Sanitization.SanitizeId(id))
+            {
+                return Task.FromResult(false);
+            }
+
             var foundProject = _projects.Single(project => project.Id == id);
             var success = _projects.Remove(foundProject);
 
