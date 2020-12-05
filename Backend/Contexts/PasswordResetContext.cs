@@ -19,7 +19,8 @@ namespace BackendFramework.Contexts
             ExpireTime = options.Value.PassResetExpireTime;
         }
 
-        private IMongoCollection<PasswordReset> PasswordResets => _db.GetCollection<PasswordReset>("PasswordResetCollection");
+        private IMongoCollection<PasswordReset> PasswordResets => _db.GetCollection<PasswordReset>(
+            "PasswordResetCollection");
 
         public Task ClearAll(string email)
         {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Backend.Tests.Mocks
 {
-    class PermissionServiceMock : IPermissionService
+    internal class PermissionServiceMock : IPermissionService
     {
         private const string UnauthorizedHeader = "UNAUTHORIZED";
 

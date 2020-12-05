@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +38,19 @@ namespace Backend.Tests.Controllers
                 _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result;
         }
 
+        /// <summary>
+        /// Delete the image file stored on disk for a particular user.
+        /// </summary>
+        /// <remarks>
+        /// Note, this somewhat breaks the encapsulation of the AvatarController. If support is added for deleting
+        /// Avatars in the future, that should be used and this function removed.
+        /// </remarks>
+        private static void DeleteAvatarFile(string userId)
+        {
+            var path = FileStorage.GenerateAvatarFilePath(userId);
+            File.Delete(path);
+        }
+
         [Test]
         public void TestAvatarImport()
         {
@@ -53,6 +66,9 @@ namespace Backend.Tests.Controllers
 
             var foundUser = (action as ObjectResult).Value as User;
             Assert.IsNotNull(foundUser.Avatar);
+
+            // Clean up.
+            DeleteAvatarFile(_jwtAuthenticatedUser.Id);
         }
     }
 }

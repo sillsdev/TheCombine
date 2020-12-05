@@ -24,7 +24,7 @@ namespace Backend.Tests.Mocks
 
         public Task<UserEdit> GetUserEdit(string projectId, string userEditId)
         {
-            var foundUserEdit = _userEdits.Where(ue => ue.Id == userEditId).Single();
+            var foundUserEdit = _userEdits.Single(ue => ue.Id == userEditId);
             return Task.FromResult(foundUserEdit.Clone());
         }
 

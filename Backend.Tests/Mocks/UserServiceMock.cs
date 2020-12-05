@@ -76,7 +76,8 @@ namespace Backend.Tests.Mocks
         {
             try
             {
-                var foundUser = _users.Single(u => u.Username.ToLowerInvariant() == username.ToLowerInvariant() && u.Password == password);
+                var foundUser = _users.Single(
+                    u => u.Username.ToLowerInvariant() == username.ToLowerInvariant() && u.Password == password);
                 if (foundUser is null)
                 {
                     return null;
@@ -105,6 +106,7 @@ namespace Backend.Tests.Mocks
         {
             return Task.FromResult(ResultOfUpdate.Updated); //TODO: more sophisticated mock
         }
+
         public void Sanitize(User user)
         {
             user.Avatar = null;

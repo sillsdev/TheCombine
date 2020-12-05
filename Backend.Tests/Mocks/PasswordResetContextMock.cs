@@ -8,39 +8,39 @@ namespace Backend.Tests.Mocks
 {
     public class PasswordResetContextMock : IPasswordResetContext
     {
-        private List<PasswordReset> Resets;
+        private List<PasswordReset> _resets;
 
         public int ExpireTime => 15;
 
         public PasswordResetContextMock()
         {
-            Resets = new List<PasswordReset>();
+            _resets = new List<PasswordReset>();
         }
 
         public Task ClearAll(string email)
         {
-            Resets.RemoveAll(x => x.Email == email);
+            _resets.RemoveAll(x => x.Email == email);
             return Task.CompletedTask;
         }
 
         public Task<PasswordReset> FindByToken(string token)
         {
-            return Task.FromResult(Resets.FindAll(x => x.Token == token).SingleOrDefault());
+            return Task.FromResult(_resets.FindAll(x => x.Token == token).SingleOrDefault());
         }
 
         public List<PasswordReset> GetResets()
         {
-            return Resets;
+            return _resets;
         }
 
         public void SetResets(List<PasswordReset> resets)
         {
-            Resets = resets;
+            _resets = resets;
         }
 
         public Task Insert(PasswordReset reset)
         {
-            Resets.Add(reset);
+            _resets.Add(reset);
             return Task.CompletedTask;
         }
     }

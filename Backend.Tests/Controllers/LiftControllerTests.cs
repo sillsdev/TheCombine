@@ -390,7 +390,7 @@ namespace Backend.Tests.Controllers
 
                 // Clean up.
                 _wordRepo.DeleteAllWords(proj2.Id);
-                foreach(var project in new List<Project>{proj, proj2})
+                foreach (var project in new List<Project> { proj, proj2 })
                 {
                     _projServ.Delete(project.Id);
                 }
