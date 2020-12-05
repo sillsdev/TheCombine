@@ -199,6 +199,12 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
+            // Sanitize user input.
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
             if (await _projectService.Delete(projectId))
             {
                 return new OkResult();
@@ -289,7 +295,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            // sanitize user input
+            // Sanitize user input
             if (!Sanitization.SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
