@@ -26,17 +26,26 @@ namespace Backend.Tests.Controllers
         private IHubContext<CombineHub> _notifyService;
         private IPermissionService _permissionService;
 
+        private Project _proj;
+
         [SetUp]
         public void Setup()
         {
             _permissionService = new PermissionServiceMock();
             _projServ = new ProjectServiceMock();
+            _proj = _projServ.Create(RandomProject()).Result;
             _wordRepo = new WordRepositoryMock();
             _liftService = new LiftService();
             _notifyService = new HubContextMock();
             _liftController = new LiftController(
                 _wordRepo, _projServ, _permissionService, _liftService, _notifyService);
             _wordService = new WordService(_wordRepo);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _projServ.Delete(_proj.Id);
         }
 
         private static Project RandomProject()
@@ -196,12 +205,9 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestExportDeleted()
         {
-            var proj = RandomProject();
-            _projServ.Create(proj);
-
-            var word = RandomWord(proj.Id);
-            var secondWord = RandomWord(proj.Id);
-            var wordToDelete = RandomWord(proj.Id);
+            var word = RandomWord(_proj.Id);
+            var secondWord = RandomWord(_proj.Id);
+            var wordToDelete = RandomWord(_proj.Id);
 
             var wordToUpdate = _wordRepo.Create(word).Result;
             wordToDelete = _wordRepo.Create(wordToDelete).Result;
@@ -210,12 +216,12 @@ namespace Backend.Tests.Controllers
             word.Id = "";
             word.Vernacular = "updated";
 
-            _wordService.Update(proj.Id, wordToUpdate.Id, word);
-            _wordService.DeleteFrontierWord(proj.Id, wordToDelete.Id);
+            _wordService.Update(_proj.Id, wordToUpdate.Id, word);
+            _wordService.DeleteFrontierWord(_proj.Id, wordToDelete.Id);
 
             const string userId = "testId";
-            _liftController.ExportLiftFile(proj.Id, userId).Wait();
-            var result = _liftController.DownloadLiftFile(proj.Id, userId).Result as FileContentResult;
+            _liftController.ExportLiftFile(_proj.Id, userId).Wait();
+            var result = _liftController.DownloadLiftFile(_proj.Id, userId).Result as FileContentResult;
             Assert.NotNull(result);
 
             // Write LiftFile contents to a temporary directory.
@@ -231,7 +237,7 @@ namespace Backend.Tests.Controllers
 
             // Delete the export
             _liftController.DeleteLiftFile(userId);
-            var notFoundResult = _liftController.DownloadLiftFile(proj.Id, userId).Result as NotFoundObjectResult;
+            var notFoundResult = _liftController.DownloadLiftFile(_proj.Id, userId).Result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
         }
 
@@ -325,14 +331,14 @@ namespace Backend.Tests.Controllers
                 Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
                 Directory.Delete(exportedDirectory, true);
 
+                // Clean up.
                 _wordRepo.DeleteAllWords(proj.Id);
 
                 // Roundtrip Part 2
 
                 // Upload the exported words again
                 // Init the project the .zip info is added to
-                var proj2 = RandomProject();
-                _projServ.Create(proj2);
+                var proj2 = _projServ.Create(RandomProject()).Result;
 
                 // Generate api parameter with filestream
                 using (var fstream = File.OpenRead(exportedFilePath))
@@ -382,7 +388,12 @@ namespace Backend.Tests.Controllers
                 Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
                 Directory.Delete(exportedDirectory, true);
 
-                _wordRepo.DeleteAllWords(proj.Id);
+                // Clean up.
+                _wordRepo.DeleteAllWords(proj2.Id);
+                foreach(var project in new List<Project>{proj, proj2})
+                {
+                    _projServ.Delete(project.Id);
+                }
             }
         }
     }

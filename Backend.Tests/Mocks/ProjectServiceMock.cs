@@ -50,6 +50,9 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(true);
         }
 
+        /// <summary>
+        /// Delete a project and any associated files stored on disk.
+        /// </summary>
         public Task<bool> Delete(string id)
         {
             var foundProject = _projects.Single(project => project.Id == id);
