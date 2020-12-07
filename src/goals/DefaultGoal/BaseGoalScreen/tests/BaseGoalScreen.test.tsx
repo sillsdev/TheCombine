@@ -1,6 +1,7 @@
+//import "jest-canvas-mock";
 import React from "react";
-import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -9,6 +10,9 @@ import { User } from "../../../../types/user";
 import { MergeDups } from "../../../MergeDupGoal/MergeDups";
 import { ValidateChars } from "../../../ValidateChars/ValidateChars";
 import BaseGoalScreen from "../BaseGoalScreen";
+
+//jest.mock("../../../MergeDupGoal/MergeDups");
+//jest.mock("../../../ValidateChars/ValidateChars");
 
 const createMockStore = configureMockStore([thunk]);
 const mockStoreState = {
@@ -29,43 +33,40 @@ const mockStoreState = {
   },
 };
 const mockUser: User = new User("TestUser", "TestUsername", "TestPass");
+const mockStore = createMockStore(mockStoreState);
 
-it("renders without crashing", () => {
-  const mockStore = createMockStore(mockStoreState);
-  const div = document.createElement("div");
-  const goal: Goal = new MergeDups();
-  goal.user = mockUser;
-  ReactDOM.render(
-    <Provider store={mockStore}>
-      <BaseGoalScreen goal={goal} />
-    </Provider>,
-    div
-  );
-  ReactDOM.unmountComponentAtNode(div);
-});
+describe("BaseGoalScreen", () => {
+  it("Renders with MergeDups goal without crashing", () => {
+    const goal: Goal = new MergeDups();
+    goal.user = mockUser;
+    renderer.act(() => {
+      renderer.create(
+        <Provider store={mockStore}>
+          <BaseGoalScreen goal={goal} />
+        </Provider>
+      );
+    });
+  });
 
-it("renders without crashing when given goal with non-existent steps", () => {
-  const mockStore = createMockStore(mockStoreState);
-  const div = document.createElement("div");
-  const goal: Goal = new ValidateChars();
-  goal.user = mockUser;
-  ReactDOM.render(
-    <Provider store={mockStore}>
-      <BaseGoalScreen goal={goal} />
-    </Provider>,
-    div
-  );
-  ReactDOM.unmountComponentAtNode(div);
-});
+  it("Renders with ValidateChars goal without crashing", () => {
+    const goal: Goal = new ValidateChars();
+    goal.user = mockUser;
+    renderer.act(() => {
+      renderer.create(
+        <Provider store={mockStore}>
+          <BaseGoalScreen goal={goal} />
+        </Provider>
+      );
+    });
+  });
 
-it("renders without crashing when given undefined goal", () => {
-  const mockStore = createMockStore(mockStoreState);
-  const div = document.createElement("div");
-  ReactDOM.render(
-    <Provider store={mockStore}>
-      <BaseGoalScreen />
-    </Provider>,
-    div
-  );
-  ReactDOM.unmountComponentAtNode(div);
+  it("Renders with no goal without crashing", () => {
+    renderer.act(() => {
+      renderer.create(
+        <Provider store={mockStore}>
+          <BaseGoalScreen />
+        </Provider>
+      );
+    });
+  });
 });
