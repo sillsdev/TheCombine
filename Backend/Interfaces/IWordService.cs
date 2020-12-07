@@ -12,6 +12,5 @@ namespace BackendFramework.Interfaces
         Task<bool> WordIsUnique(Word word);
         Task<Word> Delete(string projectId, string wordId, string fileName);
         Task<string?> DeleteFrontierWord(string projectId, string wordId);
-        string GetAudioFilePath(string projectId, string wordId, string fileName);
     }
 }

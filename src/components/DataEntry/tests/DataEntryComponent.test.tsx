@@ -14,6 +14,7 @@ import {
   State,
   Word,
 } from "../../../types/word";
+import { defaultState } from "../../App/DefaultState";
 import DataEntryComponent, {
   filterWords,
   filterWordsByDomain,
@@ -41,7 +42,7 @@ jest.mock("../../Pronunciations/Recorder");
 jest.mock("../../TreeView");
 
 const createMockStore = configureMockStore([]);
-const mockStore = createMockStore({});
+const mockStore = createMockStore(defaultState);
 const mockWord: Word = simpleWord("", "");
 const mockDomainWord: DomainWord = {
   word: mockWord,

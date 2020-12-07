@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Helper;
-using static BackendFramework.Helper.FileUtilities;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
@@ -19,7 +18,7 @@ namespace Backend.Tests.Controllers
 {
     public class LiftControllerTests
     {
-        private IWordRepository _wordrepo;
+        private IWordRepository _wordRepo;
         private IWordService _wordService;
         private IProjectService _projServ;
         private ILiftService _liftService;
@@ -27,20 +26,29 @@ namespace Backend.Tests.Controllers
         private IHubContext<CombineHub> _notifyService;
         private IPermissionService _permissionService;
 
+        private Project _proj;
+
         [SetUp]
         public void Setup()
         {
             _permissionService = new PermissionServiceMock();
             _projServ = new ProjectServiceMock();
-            _wordrepo = new WordRepositoryMock();
+            _proj = _projServ.Create(RandomProject()).Result;
+            _wordRepo = new WordRepositoryMock();
             _liftService = new LiftService();
             _notifyService = new HubContextMock();
             _liftController = new LiftController(
-                _wordrepo, _projServ, _permissionService, _liftService, _notifyService);
-            _wordService = new WordService(_wordrepo);
+                _wordRepo, _projServ, _permissionService, _liftService, _notifyService);
+            _wordService = new WordService(_wordRepo);
         }
 
-        static Project RandomProject()
+        [TearDown]
+        public void TearDown()
+        {
+            _projServ.Delete(_proj.Id);
+        }
+
+        private static Project RandomProject()
         {
             var project = new Project
             {
@@ -171,7 +179,7 @@ namespace Backend.Tests.Controllers
         {
             var zipFile = Path.GetTempFileName();
             File.WriteAllBytes(zipFile, fileContents);
-            var extractionPath = ExtractZipFile(zipFile, null, true);
+            var extractionPath = FileOperations.ExtractZipFile(zipFile, null, true);
             return extractionPath;
         }
 
@@ -197,26 +205,23 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestExportDeleted()
         {
-            var proj = RandomProject();
-            _projServ.Create(proj);
+            var word = RandomWord(_proj.Id);
+            var secondWord = RandomWord(_proj.Id);
+            var wordToDelete = RandomWord(_proj.Id);
 
-            var word = RandomWord(proj.Id);
-            var secondWord = RandomWord(proj.Id);
-            var wordToDelete = RandomWord(proj.Id);
-
-            var wordToUpdate = _wordrepo.Create(word).Result;
-            wordToDelete = _wordrepo.Create(wordToDelete).Result;
-            var untouchedWord = _wordrepo.Create(secondWord).Result;
+            var wordToUpdate = _wordRepo.Create(word).Result;
+            wordToDelete = _wordRepo.Create(wordToDelete).Result;
+            var untouchedWord = _wordRepo.Create(secondWord).Result;
 
             word.Id = "";
             word.Vernacular = "updated";
 
-            _wordService.Update(proj.Id, wordToUpdate.Id, word);
-            _wordService.DeleteFrontierWord(proj.Id, wordToDelete.Id);
+            _wordService.Update(_proj.Id, wordToUpdate.Id, word);
+            _wordService.DeleteFrontierWord(_proj.Id, wordToDelete.Id);
 
             const string userId = "testId";
-            _liftController.ExportLiftFile(proj.Id, userId).Wait();
-            var result = _liftController.DownloadLiftFile(proj.Id, userId).Result as FileContentResult;
+            _liftController.ExportLiftFile(_proj.Id, userId).Wait();
+            var result = _liftController.DownloadLiftFile(_proj.Id, userId).Result as FileContentResult;
             Assert.NotNull(result);
 
             // Write LiftFile contents to a temporary directory.
@@ -232,7 +237,7 @@ namespace Backend.Tests.Controllers
 
             // Delete the export
             _liftController.DeleteLiftFile(userId);
-            var notFoundResult = _liftController.DownloadLiftFile(proj.Id, userId).Result as NotFoundObjectResult;
+            var notFoundResult = _liftController.DownloadLiftFile(_proj.Id, userId).Result as NotFoundObjectResult;
             Assert.NotNull(notFoundResult);
         }
 
@@ -240,11 +245,6 @@ namespace Backend.Tests.Controllers
         public void TestRoundtrip()
         {
             // This test assumes you have the starting .zip included in your project files.
-
-            // Get path to the starting dir
-            var pathToStartZips = Path.Combine(Directory.GetParent(Directory.GetParent(
-                Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), "Assets");
-
             var fileMapping = new Dictionary<string, RoundTripObj>();
 
             // Add new .zip file information here
@@ -273,13 +273,12 @@ namespace Backend.Tests.Controllers
 
             foreach (var (filename, roundTripContents) in fileMapping)
             {
-                var pathToStartZip = Path.Combine(pathToStartZips, filename);
+                var pathToStartZip = Path.Combine(Util.AssetsDir, filename);
 
                 // Upload the zip file
 
                 // Init the project the .zip info is added to
-                var proj = RandomProject();
-                _projServ.Create(proj);
+                var proj1 = _projServ.Create(RandomProject()).Result;
 
                 // Generate api parameter with filestream
                 if (!File.Exists(pathToStartZip))
@@ -292,15 +291,15 @@ namespace Backend.Tests.Controllers
                     var fileUpload = InitFile(fstream, filename);
 
                     // Make api call
-                    var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
+                    var result = _liftController.UploadLiftFile(proj1.Id, fileUpload).Result;
                     Assert.That(!(result is BadRequestObjectResult));
                 }
 
-                proj = _projServ.GetProject(proj.Id).Result;
-                Assert.AreEqual(proj.VernacularWritingSystem.Bcp47, roundTripContents.Language);
-                Assert.That(proj.LiftImported);
+                proj1 = _projServ.GetProject(proj1.Id).Result;
+                Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripContents.Language);
+                Assert.That(proj1.LiftImported);
 
-                var allWords = _wordrepo.GetAllWords(proj.Id).Result;
+                var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
                 Assert.AreEqual(allWords.Count, roundTripContents.NumOfWords);
                 // We are currently only testing guids on the single-entry data sets
                 if (roundTripContents.EntryGuid != "" && allWords.Count == 1)
@@ -313,8 +312,8 @@ namespace Backend.Tests.Controllers
                 }
 
                 // Export
-                var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
-                var exportedDirectory = ExtractZipFile(exportedFilePath, null, false);
+                var exportedFilePath = _liftController.CreateLiftExport(proj1.Id);
+                var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null, false);
 
                 // Assert the file was created with desired heirarchy
                 Assert.That(Directory.Exists(exportedDirectory));
@@ -331,14 +330,14 @@ namespace Backend.Tests.Controllers
                 Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
                 Directory.Delete(exportedDirectory, true);
 
-                _wordrepo.DeleteAllWords(proj.Id);
+                // Clean up.
+                _wordRepo.DeleteAllWords(proj1.Id);
 
                 // Roundtrip Part 2
 
                 // Upload the exported words again
                 // Init the project the .zip info is added to
-                var proj2 = RandomProject();
-                _projServ.Create(proj2);
+                var proj2 = _projServ.Create(RandomProject()).Result;
 
                 // Generate api parameter with filestream
                 using (var fstream = File.OpenRead(exportedFilePath))
@@ -356,7 +355,7 @@ namespace Backend.Tests.Controllers
                 // Clean up zip file.
                 File.Delete(exportedFilePath);
 
-                allWords = _wordrepo.GetAllWords(proj2.Id).Result;
+                allWords = _wordRepo.GetAllWords(proj2.Id).Result;
                 Assert.AreEqual(allWords.Count, roundTripContents.NumOfWords);
                 // We are currently only testing guids on the single-entry data sets
                 if (roundTripContents.EntryGuid != "" && allWords.Count == 1)
@@ -370,7 +369,7 @@ namespace Backend.Tests.Controllers
 
                 // Export
                 exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
-                exportedDirectory = ExtractZipFile(exportedFilePath, null);
+                exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null);
 
                 // Assert the file was created with desired hierarchy
                 Assert.That(Directory.Exists(exportedDirectory));
@@ -388,7 +387,12 @@ namespace Backend.Tests.Controllers
                 Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
                 Directory.Delete(exportedDirectory, true);
 
-                _wordrepo.DeleteAllWords(proj.Id);
+                // Clean up.
+                _wordRepo.DeleteAllWords(proj2.Id);
+                foreach (var project in new List<Project> { proj1, proj2 })
+                {
+                    _projServ.Delete(project.Id);
+                }
             }
         }
     }
