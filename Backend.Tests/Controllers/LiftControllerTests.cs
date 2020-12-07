@@ -183,6 +183,28 @@ namespace Backend.Tests.Controllers
             return extractionPath;
         }
 
+        public class RoundTripObj
+        {
+            public string Filename { get; set; }
+            public string Language { get; set; }
+            public List<string> AudioFiles { get; set; }
+            public int NumOfWords { get; set; }
+            public string EntryGuid { get; set; }
+            public string SenseGuid { get; set; }
+
+            public RoundTripObj(
+                string filename, string language, List<string> audio,
+                int numOfWords, string entryGuid = "", string senseGuid = "")
+            {
+                Filename = filename;
+                Language = language;
+                AudioFiles = audio;
+                NumOfWords = numOfWords;
+                EntryGuid = entryGuid;
+                SenseGuid = senseGuid;
+            }
+        }
+
         [Test]
         public void TestExportDeleted()
         {
@@ -222,36 +244,35 @@ namespace Backend.Tests.Controllers
             Assert.NotNull(notFoundResult);
         }
 
-        private static object[] RoundTripCases =
+        private static RoundTripObj[] RoundTripCases =
         {
-            /* { filename, language, audioFiles, numOfWords, entryGuid, senseGuid } */
-            new object[] { "Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string> {}, 8045, "", "" },
-            new object[] { "Lotud.zip", "dtr", new List<string> {}, 5400, "", "" },
-            new object[] { "Natqgu.zip", "qaa-x-stc-natqgu", new List<string> {}, 11570, "", "" },
-            new object[] { "Resembli.zip", "ags", new List<string> {}, 255, "", "" },
-            new object[] { "RWC.zip", "es", new List<string> {}, 132, "", "" },
-            new object[] { "Sena.zip", "seh", new List<string> {}, 1462, "", "" },
-            new object[] { "SingleEntryLiftWithSound.zip", "ptn", new List<string> { "short.mp3" },
-                1, "50398a34-276a-415c-b29e-3186b0f08d8b", "e44420dd-a867-4d71-a43f-e472fd3a8f82" },
-            new object[] { "SingleEntryLiftWithTwoSound.zip", "ptn", new List<string> { "short.mp3", "short1.mp3" },
-                1, "50398a34-276a-415c-b29e-3186b0f08d8b", "e44420dd-a867-4d71-a43f-e472fd3a8f82" }
+            new RoundTripObj("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
+            new RoundTripObj("Lotud.zip", "dtr", new List<string>(), 5400),
+            new RoundTripObj("Natqgu.zip", "qaa-x-stc-natqgu", new List<string>(), 11570),
+            new RoundTripObj("Resembli.zip", "ags", new List<string>(), 255),
+            new RoundTripObj("RWC.zip", "es", new List<string>(), 132),
+            new RoundTripObj("Sena.zip", "seh", new List<string>(), 1462),
+            new RoundTripObj(
+                "SingleEntryLiftWithSound.zip", "ptn", new List<string> { "short.mp3" }, 1,
+                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/),
+            new RoundTripObj(
+                "SingleEntryLiftWithTwoSound.zip", "ptn", new List<string> { "short.mp3", "short1.mp3" }, 1,
+                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/)
         };
 
         [TestCaseSource(nameof(RoundTripCases))]
-        public void TestRoundtrip(
-            string filename, string language, List<string> audioFiles,
-            int numOfWords, string entryGuid, string senseGuid)
+        public void TestRoundtrip(RoundTripObj roundTripObj)
         {
-            // This test assumes you have the starting .zip (filename) included in your project files.
-            // If numOfWords==1, entryGuid is guid of the lone entry and senseGuid the id of its first sense.
-
-            // Roundtrip Part 1
-
-            var pathToStartZip = Path.Combine(Util.AssetsDir, filename);
+            // This test assumes you have the starting .zip (Filename) included in your project files.
+            var pathToStartZip = Path.Combine(Util.AssetsDir, roundTripObj.Filename);
             if (!File.Exists(pathToStartZip))
             {
                 Assert.Fail();
             }
+
+            // Roundtrip Part 1
 
             // Init the project the .zip info is added to.
             var proj1 = _projServ.Create(RandomProject()).Result;
@@ -260,7 +281,7 @@ namespace Backend.Tests.Controllers
             // Generate api parameter with filestream.
             using (var fstream = File.OpenRead(pathToStartZip))
             {
-                var fileUpload = InitFile(fstream, filename);
+                var fileUpload = InitFile(fstream, roundTripObj.Filename);
 
                 // Make api call.
                 var result = _liftController.UploadLiftFile(proj1.Id, fileUpload).Result;
@@ -268,19 +289,19 @@ namespace Backend.Tests.Controllers
             }
 
             proj1 = _projServ.GetProject(proj1.Id).Result;
-            Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, language);
+            Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripObj.Language);
             Assert.That(proj1.LiftImported);
 
             var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
-            Assert.AreEqual(allWords.Count, numOfWords);
+            Assert.AreEqual(allWords.Count, roundTripObj.NumOfWords);
 
             // We are currently only testing guids on the single-entry data sets.
-            if (entryGuid != "" && allWords.Count == 1)
+            if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
             {
-                Assert.AreEqual(allWords[0].Guid.ToString(), entryGuid);
-                if (senseGuid != "")
+                Assert.AreEqual(allWords[0].Guid.ToString(), roundTripObj.EntryGuid);
+                if (roundTripObj.SenseGuid != "")
                 {
-                    Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), senseGuid);
+                    Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), roundTripObj.SenseGuid);
                 }
             }
 
@@ -291,7 +312,7 @@ namespace Backend.Tests.Controllers
             // Assert the file was created with desired heirarchy.
             Assert.That(Directory.Exists(exportedDirectory));
             Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "audio")));
-            foreach (var audioFile in audioFiles)
+            foreach (var audioFile in roundTripObj.AudioFiles)
             {
                 Assert.That(File.Exists(Path.Combine(
                     exportedDirectory, "Lift", "audio", audioFile)));
@@ -299,7 +320,7 @@ namespace Backend.Tests.Controllers
             Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "WritingSystems")));
             Assert.That(File.Exists(Path.Combine(
                 exportedDirectory,
-                "Lift", "WritingSystems", language + ".ldml")));
+                "Lift", "WritingSystems", roundTripObj.Language + ".ldml")));
             Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
             Directory.Delete(exportedDirectory, true);
 
@@ -315,7 +336,7 @@ namespace Backend.Tests.Controllers
             // Generate api parameter with filestream.
             using (var fstream = File.OpenRead(exportedFilePath))
             {
-                var fileUpload = InitFile(fstream, filename);
+                var fileUpload = InitFile(fstream, roundTripObj.Filename);
 
                 // Make api call.
                 var result2 = _liftController.UploadLiftFile(proj2.Id, fileUpload).Result;
@@ -323,20 +344,20 @@ namespace Backend.Tests.Controllers
             }
 
             proj2 = _projServ.GetProject(proj2.Id).Result;
-            Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, language);
+            Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, roundTripObj.Language);
 
             // Clean up zip file.
             File.Delete(exportedFilePath);
 
             allWords = _wordRepo.GetAllWords(proj2.Id).Result;
-            Assert.AreEqual(allWords.Count, numOfWords);
+            Assert.AreEqual(allWords.Count, roundTripObj.NumOfWords);
             // We are currently only testing guids on the single-entry data sets.
-            if (entryGuid != "" && allWords.Count == 1)
+            if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
             {
-                Assert.AreEqual(allWords[0].Guid.ToString(), entryGuid);
-                if (senseGuid != "")
+                Assert.AreEqual(allWords[0].Guid.ToString(), roundTripObj.EntryGuid);
+                if (roundTripObj.SenseGuid != "")
                 {
-                    Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), senseGuid);
+                    Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), roundTripObj.SenseGuid);
                 }
             }
 
@@ -347,7 +368,7 @@ namespace Backend.Tests.Controllers
             // Assert the file was created with desired hierarchy.
             Assert.That(Directory.Exists(exportedDirectory));
             Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "audio")));
-            foreach (var audioFile in audioFiles)
+            foreach (var audioFile in roundTripObj.AudioFiles)
             {
                 var path = Path.Combine(exportedDirectory, "Lift", "audio", audioFile);
                 Assert.That(File.Exists(path),
@@ -356,7 +377,7 @@ namespace Backend.Tests.Controllers
             Assert.That(Directory.Exists(Path.Combine(exportedDirectory, "Lift", "WritingSystems")));
             Assert.That(File.Exists(Path.Combine(
                 exportedDirectory,
-                "Lift", "WritingSystems", language + ".ldml")));
+                "Lift", "WritingSystems", roundTripObj.Language + ".ldml")));
             Assert.That(File.Exists(Path.Combine(exportedDirectory, "Lift", "NewLiftFile.lift")));
             Directory.Delete(exportedDirectory, true);
 
