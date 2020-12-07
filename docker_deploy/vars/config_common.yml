@@ -21,6 +21,14 @@ ssl_private_key: "{{ ssl_dir }}/privkey.pem"
 
 # SSL Certificate variables
 # for both Let's Encrypt and Self-signed certs
+#
+# The following variables must be defined in the group_vars or host_vars files
+# for your target:
+#   AWS S3 storage configuration
+#     - aws_s3_loc
+#     - aws_s3_backup_loc
+#     - aws_s3_cert_loc
+
 combine_cert_env_vars:
   - key: "CERT_MODE"
     value: "{{ cert_mode }}"
@@ -36,8 +44,12 @@ combine_cert_env_vars:
     value: "{{ combine_cert_proxy_list }}"
   - key: "CERT_PROXY_RENEWAL"
     value: 60
-  - key: "AWS_S3_CERT_BUCKET"
-    value: "{{ aws_s3_cert_bucket }}"
+  - key: "SELF_PROXY_RENEWAL"
+    value: 30
+  - key: "AWS_S3_CERT_LOC"
+    value: "{{ aws_s3_cert_loc }}"
+  - key: "AWS_S3_PROFILE"
+    value: "{{ aws_s3_profile }}"
 
 combine_frontend_env_vars:
   - key: "SERVER_NAME"
@@ -48,7 +60,3 @@ combine_frontend_env_vars:
     value: "{{ ssl_private_key }}"
   - key: "CERT_PROXY_DOMAINS"
     value: "{{ combine_cert_proxy_list }}"
-
-# AWS S3 storage configuration
-aws_s3_cert_bucket: thecombine.app/certs
-aws_s3_backup_bucket: thecombine.app/backups

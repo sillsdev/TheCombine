@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import Dict, Optional, Union
 
-env_defaults: Dict[str, Union[str, int]] = {
+env_defaults: Dict[str, Union[str, int, bool]] = {
     "CERT_MODE": "self-signed",
     "CERT_STORE": "/etc/cert_store",
     "CERT_EMAIL": "",
@@ -13,13 +13,14 @@ env_defaults: Dict[str, Union[str, int]] = {
     "MAX_CONNECT_TRIES": 15,
     "CERT_ADDL_DOMAINS": "",
     "SERVER_NAME": "",
-    "CERT_PROXY_RENEWAL": 30,
-    "CERT_PROXY_DOMAINS": "",
-    "AWS_S3_CERT_BUCKET": "thecombine.app/certs",
+    "SELF_CERT_RENEWAL": 30,  # days before expriy
+    "PROXY_CERT_RENEWAL": 60,  # days before expiry
+    "PROXY_CERT_DOMAINS": "",
+    "AWS_S3_CERT_LOC": "thecombine.app/certs",
 }
 
 
-def lookup_env(env_var: str) -> Optional[Union[str, int]]:
+def get_setting(env_var: str) -> Optional[Union[str, int, bool]]:
     """
     Look up environment variable.
 
@@ -29,13 +30,6 @@ def lookup_env(env_var: str) -> Optional[Union[str, int]]:
     """
     if env_var in os.environ:
         return os.environ[env_var]
-    if env_var in env_defaults:
-        return env_defaults[env_var]
-    return None
-
-
-def lookup_default(env_var: str) -> Optional[Union[str, int]]:
-    """Look up our default value for an environment variable."""
     if env_var in env_defaults:
         return env_defaults[env_var]
     return None
@@ -60,3 +54,16 @@ def update_link(src: Path, dest: Path) -> None:
             print(f"{dest} exists and is not a link")
             dest.unlink()
     dest.symlink_to(src)
+
+
+def update_renew_before_expiry(domain: str, renew_before_expiry_period: int) -> None:
+    """Update the RENEW_BEFORE_EXPIRY configuration value for 'domain'."""
+    renew_before_expiry = str(renew_before_expiry_period)
+    print(f"Setting renew before expiry for {domain} " f"to {renew_before_expiry}")
+    renew_config = f"/etc/letsencrypt/renewal/{domain}.conf"
+    if os.path.exists(renew_config):
+        os.system(
+            "sed -i 's/#* *renew_before_expiry = [0-9][0-9]* days/"
+            f"renew_before_expiry = {renew_before_expiry} days/' "
+            f" {renew_config}"
+        )

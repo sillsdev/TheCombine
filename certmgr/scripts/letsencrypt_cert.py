@@ -10,11 +10,11 @@ import os
 from pathlib import Path
 import time
 from typing import List
+import requests
 
 from base_cert import BaseCert
-import requests
 from self_signed_cert import SelfSignedCert
-from utils import lookup_default, lookup_env, update_link
+from utils import get_setting, update_link, update_renew_before_expiry
 
 
 class LetsEncryptCert(BaseCert):
@@ -25,17 +25,17 @@ class LetsEncryptCert(BaseCert):
         # pylint: disable=too-many-instance-attributes
         # Nine are required in this case.
 
-        self.cert_store = lookup_env("CERT_STORE")
-        self.server_name = lookup_env("SERVER_NAME")
-        self.email = lookup_env("CERT_EMAIL")
-        self.max_connect_tries = int(lookup_env("MAX_CONNECT_TRIES"))
-        self.staging = lookup_env("CERT_STAGING") == "1"
+        self.cert_store = get_setting("CERT_STORE")
+        self.server_name = get_setting("SERVER_NAME")
+        self.email = get_setting("CERT_EMAIL")
+        self.max_connect_tries = int(get_setting("MAX_CONNECT_TRIES"))
+        self.staging = get_setting("CERT_STAGING") == "1"
         self.cert_dir = Path(f"/etc/letsencrypt/live/{self.server_name}")
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
         self.cert = Path(f"/etc/letsencrypt/live/{self.server_name}/fullchain.pem")
-        self.renew_before_expiry: int = lookup_env("CERT_PROXY_RENEWAL")
+        self.renew_before_expiry: int = get_setting("SELF_CERT_RENEWAL")
 
-    def create(self, force: bool = False) -> None:
+    def create(self) -> None:
         """
         Create an SSL Certificate from Let's Encrypt.
 
@@ -48,7 +48,7 @@ class LetsEncryptCert(BaseCert):
         N O T E :
         Nginx needs to be restarted/reloaded for it to use the new certificate.
         """
-        if force or not self.cert.exists():
+        if not self.cert.exists():
             # Create a self-signed certificate so that the Nginx webserver can
             # come up and be available for the HTTP challenges from letsencrypt
             temp_cert = SelfSignedCert(1, 0)
@@ -77,11 +77,12 @@ class LetsEncryptCert(BaseCert):
 
             # Get additional variables for certbot
             domain_list: List[str] = [self.server_name]
-            domain_list.extend(lookup_env("CERT_ADDL_DOMAINS").split())
+            domain_list.extend(get_setting("CERT_ADDL_DOMAINS").split())
 
             if self.get_cert(domain_list):
                 # update the certificate link for the Nginx web server
                 update_link(self.cert_dir, self.nginx_cert_dir)
+            update_renew_before_expiry(self.server_name, self.renew_before_expiry)
 
     def renew(self) -> None:
         """Renew all letsencrypt certificates that are up for renewal."""
@@ -144,43 +145,3 @@ class LetsEncryptCert(BaseCert):
                 attempt_count += 1
             time.sleep(10)
         return False
-
-    def update_renew_before_expiry(self, domain: str) -> None:
-        """Update the RENEW_BEFORE_EXPIRY configuration value for 'domain'."""
-        if lookup_default("CERT_PROXY_RENEWAL") != self.renew_before_expiry:
-            print(f"Setting renew before expiry for {domain} " f"to {self.renew_before_expiry}")
-            renew_config: str = f"/etc/letsencrypt/renewal/{domain}.conf"
-            if os.path.exists(renew_config):
-                os.system(
-                    "sed -s 's/#* *renew_before_expiry = [0-9][0-9]* days/"
-                    f"renew_before_expiry = {self.renew_before_expiry} days' "
-                    f" < renew_config > '{renew_config}.tmp'"
-                )
-                os.system(f"mv {renew_config}.tmp {renew_config}")
-
-    def create_renew_hook(self) -> None:
-        """
-        Create hook for certificate renewal.
-
-        Add a hook function to push new certificates to the AWS S3 bucket when
-        the proxy certificates are renewed.
-        """
-        print("STUB: Create renew hook")
-
-    def get_proxy_certs(self) -> None:
-        """Move to child class, CertServerCert."""
-        domain_list: List[str] = lookup_env("CERT_PROXY_DOMAINS").split()
-        cert_created: bool = False
-        for domain in domain_list:
-            if self.get_cert([domain]):
-                cert_created = True
-                self.update_renew_before_expiry(domain)
-            else:
-                print(f"Could not get certificate for {domain}")
-        if cert_created:
-            self.create_renew_hook()
-            self.push_certs_to_aws_s3()
-
-    def push_certs_to_aws_s3(self) -> None:
-        """Move to child class, CertServerCert."""
-        print("STUB: Push certificates to AWS S3 bucket")
