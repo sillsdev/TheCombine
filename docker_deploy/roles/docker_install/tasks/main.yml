@@ -49,7 +49,7 @@
     dest: /etc/docker/daemon.json
     owner: root
     group: root
-    mode:  0600
+    mode: 0600
   notify: restart docker
 
 - name: Install Docker Compose
@@ -69,17 +69,17 @@
     group: root
     mode: 0777
 
-  - name: check docker credential helper version
-    command: docker-credential-pass version
-    register: cred_version
-    changed_when: false
-    failed_when: false
-    when: install_credential_helper
+- name: check docker credential helper version
+  command: docker-credential-pass version
+  register: cred_version
+  changed_when: false
+  failed_when: false
+  when: install_credential_helper
 
- - name: Install Docker credential helper
-   get_url:
-     url:  "https://github.com/docker/docker-credential-helpers/releases/download/{{ credential_helper_version }}/docker-credential-pass-{{ credential_helper_version }}-amd64.tar.gz"
-     dest: "/tmp/docker-credential-pass-{{ credential_helper_version }}-amd64.tar.gz"
-   when:
-     - install_credential_helper
-     - cred_version.rc !- 0
+- name: Install Docker credential helper
+  get_url:
+    url: "https://github.com/docker/docker-credential-helpers/releases/download/{{ credential_helper_version }}/docker-credential-pass-{{ credential_helper_version }}-amd64.tar.gz"
+    dest: "/tmp/docker-credential-pass-{{ credential_helper_version }}-amd64.tar.gz"
+  when:
+    - install_credential_helper
+    - cred_version.rc !- 0
