@@ -109,7 +109,7 @@ done
 echo_verbose "9. Push backup to AWS S3 storage."
 #    need to specify full path because $PATH does not contain
 #    /usr/local/bin when run as a cron job
-/usr/local/bin/aws s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_backup_profile }}
+/usr/local/bin/aws s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
 
 echo_verbose "10. Restart the containers."
 cd ${COMBINE_APP_DIR}
