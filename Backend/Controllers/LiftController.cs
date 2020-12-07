@@ -48,7 +48,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            // sanitize projectId
+            // Sanitize projectId
             if (!Sanitization.SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();

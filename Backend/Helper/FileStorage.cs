@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 
 namespace BackendFramework.Helper
 {
@@ -85,6 +83,14 @@ namespace BackendFramework.Helper
         public static string GenerateAvatarFilePath(string userId)
         {
             return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
+        }
+
+        /// <summary>
+        /// Get the top-level path to where all files are stored for the project.
+        /// </summary>
+        public static string GetProjectDir(string projectId)
+        {
+            return GenerateProjectDirPath(projectId, "", false);
         }
 
         /// <summary> Get the path to the home directory of the current user. </summary>
