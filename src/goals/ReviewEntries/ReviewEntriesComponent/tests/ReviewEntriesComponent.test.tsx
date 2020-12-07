@@ -1,6 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import * as utilities from "../../../../utilities";
@@ -74,22 +74,20 @@ beforeAll(() => {
       MOCK_UUID.mockImplementationOnce(() => sense.senseId);
   }
 
-  // Create + mount + unmount
-  const div = document.createElement("div");
-  ReactDOM.render(
-    <Provider store={mockStore}>
-      <ReviewEntriesConnected
-        words={mockWords}
-        language="en"
-        setAnalysisLanguage={jest.fn()}
-        clearState={jest.fn()}
-        updateAllWords={MOCK_UPDATE}
-        updateFrontierWord={jest.fn()}
-      />
-    </Provider>,
-    div
-  );
-  ReactDOM.unmountComponentAtNode(div);
+  renderer.act(() => {
+    renderer.create(
+      <Provider store={mockStore}>
+        <ReviewEntriesConnected
+          words={mockWords}
+          language="en"
+          setAnalysisLanguage={jest.fn()}
+          clearState={jest.fn()}
+          updateAllWords={MOCK_UPDATE}
+          updateFrontierWord={jest.fn()}
+        />
+      </Provider>
+    );
+  });
 });
 
 describe("ReviewEntriesComponent", () => {
