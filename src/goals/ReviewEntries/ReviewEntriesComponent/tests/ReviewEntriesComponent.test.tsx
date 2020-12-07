@@ -52,12 +52,12 @@ jest.mock("../../../../utilities", () => {
 });
 const MOCK_UUID = (utilities as jest.Mocked<typeof utilities>).uuid;
 
-// This was a last resort to deal with the table not wanting to behave in testing. Approved by project head
+// This is a last resort to deal with the table not wanting to behave in testing.
+const mockMaterialTable = React.Fragment;
 jest.mock("material-table", () => {
-  const material = jest.requireActual("@material-ui/core");
   return {
     __esModule: true,
-    default: material.Container,
+    default: () => mockMaterialTable,
   };
 });
 
