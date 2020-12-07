@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 """
+Create docker files needed to run TheCombine in containers in development.
+
 This script sets up your development environment to be able to run
 TheCombine in Docker containers in an environment as similar to the
 production environment as possible. The script shall be run from the
@@ -47,17 +49,28 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> None:
-    args = parse_args()
+def get_image_tag() -> str:
+    """
+    Read the docker image tag.
 
+    Read the docker image tag from the IMAGE_TAG environment variable and return
+    its value.  If IMAGE_TAG is not defined, return "latest".
+    """
+    if "IMAGE_TAG" in os.environ:
+        return os.environ["IMAGE_TAGE"]
+    return "latest"
+
+
+def main() -> None:
+    """Create docker-compose.yml for development use."""
+    args = parse_args()
+    image_tag = get_image_tag()
     # Define the configuration for the development environment
     dev_config = {
         "combine_pull_images": args.pull_images,
-        # TODO: Update these images to point to hosted images and provide authentication
-        #   instructions.
-        "combine_image_frontend": "combine/frontend:latest",
-        "combine_image_backend": "combine/backend:latest",
-        "combine_image_certmgr": "combine/certmgr:latest",
+        "combine_image_frontend": f"combine/frontend:{image_tag}",
+        "combine_image_backend": f"combine/backend:{image_tag}",
+        "combine_image_certmgr": f"combine/certmgr:{image_tag}",
         "cert_email": "",
         "cert_mode": "self-signed",
         "cert_is_staging": 0,
