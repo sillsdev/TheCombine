@@ -278,8 +278,7 @@ namespace Backend.Tests.Controllers
                 // Upload the zip file
 
                 // Init the project the .zip info is added to
-                var proj = RandomProject();
-                _projServ.Create(proj);
+                var proj1 = _projServ.Create(RandomProject()).Result;
 
                 // Generate api parameter with filestream
                 if (!File.Exists(pathToStartZip))
@@ -292,15 +291,15 @@ namespace Backend.Tests.Controllers
                     var fileUpload = InitFile(fstream, filename);
 
                     // Make api call
-                    var result = _liftController.UploadLiftFile(proj.Id, fileUpload).Result;
+                    var result = _liftController.UploadLiftFile(proj1.Id, fileUpload).Result;
                     Assert.That(!(result is BadRequestObjectResult));
                 }
 
-                proj = _projServ.GetProject(proj.Id).Result;
-                Assert.AreEqual(proj.VernacularWritingSystem.Bcp47, roundTripContents.Language);
-                Assert.That(proj.LiftImported);
+                proj1 = _projServ.GetProject(proj1.Id).Result;
+                Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripContents.Language);
+                Assert.That(proj1.LiftImported);
 
-                var allWords = _wordRepo.GetAllWords(proj.Id).Result;
+                var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
                 Assert.AreEqual(allWords.Count, roundTripContents.NumOfWords);
                 // We are currently only testing guids on the single-entry data sets
                 if (roundTripContents.EntryGuid != "" && allWords.Count == 1)
@@ -313,7 +312,7 @@ namespace Backend.Tests.Controllers
                 }
 
                 // Export
-                var exportedFilePath = _liftController.CreateLiftExport(proj.Id);
+                var exportedFilePath = _liftController.CreateLiftExport(proj1.Id);
                 var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null, false);
 
                 // Assert the file was created with desired heirarchy
@@ -332,7 +331,7 @@ namespace Backend.Tests.Controllers
                 Directory.Delete(exportedDirectory, true);
 
                 // Clean up.
-                _wordRepo.DeleteAllWords(proj.Id);
+                _wordRepo.DeleteAllWords(proj1.Id);
 
                 // Roundtrip Part 2
 
@@ -390,7 +389,7 @@ namespace Backend.Tests.Controllers
 
                 // Clean up.
                 _wordRepo.DeleteAllWords(proj2.Id);
-                foreach (var project in new List<Project> { proj, proj2 })
+                foreach (var project in new List<Project> { proj1, proj2 })
                 {
                     _projServ.Delete(project.Id);
                 }
