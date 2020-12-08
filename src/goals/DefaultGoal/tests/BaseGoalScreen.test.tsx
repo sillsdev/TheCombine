@@ -5,12 +5,7 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import {
-  generateGuid,
-  GoalOption,
-  GoalType,
-  Tools,
-} from "../../../types/goals";
+import { generateGuid, GoalOption, GoalType } from "../../../types/goals";
 import { User } from "../../../types/user";
 import { BaseGoalScreen } from "../BaseGoalScreen";
 
@@ -32,7 +27,6 @@ const mockGoal = {
   numSteps: 0,
   currentStep: 0,
   data: {},
-  tool: Tools.TempTool,
   completed: false,
   result: GoalOption.Current,
   hash: generateGuid(),
