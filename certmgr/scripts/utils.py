@@ -13,9 +13,9 @@ env_defaults: Dict[str, Union[str, int, bool]] = {
     "MAX_CONNECT_TRIES": 15,
     "CERT_ADDL_DOMAINS": "",
     "SERVER_NAME": "",
-    "SELF_CERT_RENEWAL": 30,  # days before expriy
+    "CERT_SELF_RENEWAL": 30,  # days before expriy
     "PROXY_CERT_RENEWAL": 60,  # days before expiry
-    "PROXY_CERT_DOMAINS": "",
+    "CERT_PROXY_DOMAINS": "",
     "AWS_S3_CERT_LOC": "thecombine.app/certs",
 }
 

@@ -50,7 +50,7 @@ class CertProxyServer(LetsEncryptCert):
         """
         Get certificates for all proxy domains.
 
-        For each domain listed in the PROXY_CERT_DOMAINS environment variable:
+        For each domain listed in the CERT_PROXY_DOMAINS environment variable:
          - generate an SSL certificate from Let's Encrypt
          - configure the "renew before expiry" period to be the time specified
            in the PROXY_CERT_RENEWAL environment variable. (Note that all proxy
@@ -63,7 +63,7 @@ class CertProxyServer(LetsEncryptCert):
              * ${AWS_S3_CERT_LOC}/{domain}/privkey.pem
            where ${AWS_S3_CERT_LOC} is the environment variable that specifies
            the S3 bucket to use; {domain} is the individual domain from the
-           PROXY_CERT_DOMAINS variable.
+           CERT_PROXY_DOMAINS variable.
         """
         domain_list: List[str] = get_setting("CERT_PROXY_DOMAINS").split()
         cert_created: bool = False

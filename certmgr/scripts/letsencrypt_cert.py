@@ -29,11 +29,11 @@ class LetsEncryptCert(BaseCert):
         self.server_name = get_setting("SERVER_NAME")
         self.email = get_setting("CERT_EMAIL")
         self.max_connect_tries = int(get_setting("MAX_CONNECT_TRIES"))
-        self.staging = get_setting("CERT_STAGING") == "1"
+        self.staging = get_setting("CERT_STAGING") != "0"
         self.cert_dir = Path(f"/etc/letsencrypt/live/{self.server_name}")
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
         self.cert = Path(f"/etc/letsencrypt/live/{self.server_name}/fullchain.pem")
-        self.renew_before_expiry: int = get_setting("SELF_CERT_RENEWAL")
+        self.renew_before_expiry: int = get_setting("CERT_SELF_RENEWAL")
 
     def create(self) -> None:
         """
