@@ -72,9 +72,8 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(userId);
             }
 
-            // Get path to home
-            fileUpload.FilePath = FileUtilities.GenerateFilePath(
-                FileUtilities.FileType.Avatar, false, userId, "Avatars");
+            // Generate path to store avatar file.
+            fileUpload.FilePath = FileStorage.GenerateAvatarFilePath(userId);
 
             // Copy file data to a new local file
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))

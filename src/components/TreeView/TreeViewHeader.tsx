@@ -6,163 +6,102 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Bounce from "react-reveal/Bounce";
 
 import SemanticDomainWithSubdomains from "../../types/SemanticDomain";
 import DomainTile, { Direction } from "./DomainTile";
 
-interface TreeHeaderProps {
+export interface TreeHeaderProps {
   currentDomain: SemanticDomainWithSubdomains;
   animate: (domain: SemanticDomainWithSubdomains) => Promise<void>;
   bounceState: number;
   bounce: () => void;
 }
 
-interface TreeHeaderState {
-  input: string;
+export function TreeViewHeader(props: TreeHeaderProps) {
+  const {
+    getLeftBrother,
+    getRightBrother,
+    searchAndSelectDomain,
+    handleChange,
+  } = useTreeViewNavigation(props);
+
+  return (
+    <GridList cols={9} spacing={20} cellHeight={"auto"}>
+      <GridListTile cols={2}>
+        {getLeftBrother(props) ? (
+          <DomainTile
+            domain={getLeftBrother(props)!}
+            onClick={(e) => {
+              props.animate(e);
+              props.bounce();
+            }}
+            direction={Direction.Left}
+          />
+        ) : null}
+      </GridListTile>
+      <GridListTile cols={5}>
+        <Card>
+          <Bounce spy={props.bounceState} duration={2000}>
+            <Button
+              fullWidth
+              size="large"
+              color="primary"
+              variant="contained"
+              disabled={!props.currentDomain.parentDomain}
+              onClick={() => props.animate(props.currentDomain)}
+            >
+              <div style={{ textTransform: "capitalize" }}>
+                <Typography variant="overline">
+                  {props.currentDomain.id}
+                </Typography>
+                <Typography variant="h6">{props.currentDomain.name}</Typography>
+              </div>
+            </Button>
+          </Bounce>
+          <TextField
+            fullWidth
+            id="name"
+            label="Find a domain"
+            onKeyDown={searchAndSelectDomain}
+            onChange={handleChange}
+            margin="normal"
+            autoComplete="off"
+            inputProps={{
+              "data-testid": "testSearch",
+            }}
+          />
+        </Card>
+      </GridListTile>
+      <GridListTile cols={2}>
+        {getRightBrother(props) ? (
+          <DomainTile
+            domain={getRightBrother(props)!}
+            onClick={(e) => {
+              props.animate(e);
+              props.bounce();
+            }}
+            direction={Direction.Right}
+          />
+        ) : null}
+      </GridListTile>
+    </GridList>
+  );
 }
 
-export default class TreeViewHeader extends React.Component<
-  TreeHeaderProps,
-  TreeHeaderState
-> {
-  animating: boolean;
-
-  constructor(props: TreeHeaderProps) {
-    super(props);
-    this.state = { input: props.currentDomain.id };
-    this.animating = false;
-
-    this.searchAndSelectDomain = this.searchAndSelectDomain.bind(this);
-    this.navigateDomainArrowKeys = this.navigateDomainArrowKeys.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.updateDomain = this.updateDomain.bind(this);
-  }
-
-  componentDidMount() {
-    window.addEventListener("keydown", this.navigateDomainArrowKeys);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("keydown", this.navigateDomainArrowKeys);
-  }
-
-  // Change the input on typing
-  handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    this.setState({ input: event.target.value });
-  }
-
-  // Dispatch the search for a specified domain, and switches to it if it exists
-  searchAndSelectDomain(event: React.KeyboardEvent) {
-    // stopPropagation() prevents keystrokes from reaching ReviewEntries,
-    // but requires the search function be called onKeyDown
-    if (event.stopPropagation) {
-      event.stopPropagation();
-    }
-    event.bubbles = false;
-
-    if (event.key === "Enter") {
-      event.preventDefault();
-      // Find parent domain
-      let parent: SemanticDomainWithSubdomains | undefined = this.props
-        .currentDomain;
-      while (parent.parentDomain !== undefined) parent = parent.parentDomain;
-
-      // Search for domain
-      if (!isNaN(parseInt(this.state.input))) {
-        let i: number = 0;
-        while (parent) {
-          parent = this.searchDomainByNumber(
-            parent,
-            this.state.input.slice(0, i * 2 + 1)
-          );
-          if (parent && parent.id === this.state.input) {
-            this.props.animate(parent);
-            this.props.bounce();
-            this.setState({ input: "" });
-            (event.target as any).value = "";
-            break;
-          } else if (parent && parent.subdomains.length === 0) {
-            break;
-          }
-          i++;
-        }
-      } else {
-        parent = this.searchDomainByName(parent, this.state.input);
-        if (parent) {
-          this.props.animate(parent);
-          this.props.bounce();
-          this.setState({ input: "" });
-          (event.target as any).value = "";
-        }
-      }
-    }
-  }
-
-  // Navigate tree via arrow keys
-  navigateDomainArrowKeys(event: KeyboardEvent) {
-    if (event.key === "ArrowLeft") {
-      const domain = this.getBrotherDomain(-1);
-      if (domain && domain.id !== this.props.currentDomain.id)
-        this.props.animate(domain);
-    } else if (event.key === "ArrowRight") {
-      const domain = this.getBrotherDomain(1);
-      if (domain && domain.id !== this.props.currentDomain.id)
-        this.props.animate(domain);
-    } else if (event.key === "ArrowDown") {
-      if (this.props.currentDomain.parentDomain)
-        this.props.animate(this.props.currentDomain.parentDomain);
-    }
-  }
-
-  // Search for a semantic domain by number
-  searchDomainByNumber(
-    parent: SemanticDomainWithSubdomains,
-    number: string
-  ): SemanticDomainWithSubdomains | undefined {
-    for (let domain of parent.subdomains)
-      if (domain.id === number) return domain;
-
-    if (parent.id === number) return parent;
-    else return undefined;
-  }
-
-  // Searches for a semantic domain by name
-  searchDomainByName(
-    domain: SemanticDomainWithSubdomains,
-    target: string
-  ): SemanticDomainWithSubdomains | undefined {
-    let check = (checkAgainst: SemanticDomainWithSubdomains | undefined) =>
-      checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
-    if (check(domain)) return domain;
-
-    // If there are subdomains
-    if (domain.subdomains.length > 0) {
-      let tempDomain: SemanticDomainWithSubdomains | undefined;
-      for (const sub of domain.subdomains) {
-        tempDomain = this.searchDomainByName(sub, target);
-        if (check(tempDomain)) return tempDomain;
-      }
-    }
-  }
-
-  // Switches currentDomain to the domain navigationAmount off from this domain, assuming that domain exists
-  navigateDomain(navigationAmount: number) {
-    if (this.props.currentDomain.parentDomain) {
-      const brotherDomain = this.getBrotherDomain(navigationAmount);
-      if (brotherDomain) this.props.animate(brotherDomain);
-    }
-  }
-
+// exported for unit testing only
+export function useTreeViewNavigation(props: TreeHeaderProps) {
+  const [input, setInput] = useState(props.currentDomain.id);
   // Gets the domain 'navigationAmount' away from the currentDomain (negative to the left, positive to the right)
-  getBrotherDomain(
-    navigationAmount: number
+  function getBrotherDomain(
+    navigationAmount: number,
+    props: TreeHeaderProps
   ): SemanticDomainWithSubdomains | undefined {
-    if (this.props.currentDomain.parentDomain) {
-      const brotherDomains = this.props.currentDomain.parentDomain.subdomains;
+    if (props.currentDomain.parentDomain) {
+      const brotherDomains = props.currentDomain.parentDomain.subdomains;
       let index = brotherDomains.findIndex(
-        (domain) => this.props.currentDomain.id === domain.id
+        (domain) => props.currentDomain.id === domain.id
       );
 
       index += navigationAmount;
@@ -174,74 +113,131 @@ export default class TreeViewHeader extends React.Component<
     return undefined;
   }
 
-  // Switches current semantic domain + updates search bar
-  updateDomain() {
-    this.setState((_, props) => ({ input: props.currentDomain.id }));
+  function getRightBrother(
+    props: TreeHeaderProps
+  ): SemanticDomainWithSubdomains | undefined {
+    return getBrotherDomain(1, props);
   }
 
-  // Creates the L/R button + select button + search bar
-  render() {
-    const domainL = this.getBrotherDomain(-1);
-    const domainR = this.getBrotherDomain(1);
-    return (
-      <GridList cols={9} spacing={20} cellHeight={"auto"}>
-        <GridListTile cols={2}>
-          {domainL ? (
-            <DomainTile
-              domain={domainL}
-              onClick={(e) => {
-                this.props.animate(e);
-                this.props.bounce();
-              }}
-              direction={Direction.Left}
-            />
-          ) : null}
-        </GridListTile>
-        <GridListTile cols={5}>
-          <Card>
-            <Bounce spy={this.props.bounceState} duration={2000}>
-              <Button
-                fullWidth
-                size="large"
-                color="primary"
-                variant="contained"
-                disabled={!this.props.currentDomain.parentDomain}
-                onClick={() => this.props.animate(this.props.currentDomain)}
-              >
-                <div style={{ textTransform: "capitalize" }}>
-                  <Typography variant="overline">
-                    {this.props.currentDomain.id}
-                  </Typography>
-                  <Typography variant="h6">
-                    {this.props.currentDomain.name}
-                  </Typography>
-                </div>
-              </Button>
-            </Bounce>
-            <TextField
-              fullWidth
-              id="name"
-              label="Find a domain"
-              onKeyDown={this.searchAndSelectDomain}
-              onChange={this.handleChange}
-              margin="normal"
-              autoComplete="off"
-            />
-          </Card>
-        </GridListTile>
-        <GridListTile cols={2}>
-          {domainR ? (
-            <DomainTile
-              domain={domainR}
-              onClick={(e) => {
-                this.props.animate(e);
-                this.props.bounce();
-              }}
-              direction={Direction.Right}
-            />
-          ) : null}
-        </GridListTile>
-      </GridList>
-    );
+  function getLeftBrother(
+    props: TreeHeaderProps
+  ): SemanticDomainWithSubdomains | undefined {
+    return getBrotherDomain(-1, props);
   }
+
+  // Navigate tree via arrow keys
+  const navigateDomainArrowKeys = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        const domain = getBrotherDomain(-1, props);
+        if (domain && domain.id !== props.currentDomain.id)
+          props.animate(domain);
+      } else if (event.key === "ArrowRight") {
+        const domain = getBrotherDomain(1, props);
+        if (domain && domain.id !== props.currentDomain.id)
+          props.animate(domain);
+      } else if (event.key === "ArrowUp") {
+        if (props.currentDomain.parentDomain)
+          props.animate(props.currentDomain.parentDomain);
+      }
+    },
+    [props]
+  );
+
+  // Search for a semantic domain by number
+  function searchDomainByNumber(
+    parent: SemanticDomainWithSubdomains,
+    number: string
+  ): SemanticDomainWithSubdomains | undefined {
+    for (let domain of parent.subdomains)
+      if (domain.id === number) return domain;
+
+    if (parent.id === number) return parent;
+    else return undefined;
+  }
+
+  // Searches for a semantic domain by name
+  function searchDomainByName(
+    domain: SemanticDomainWithSubdomains,
+    target: string
+  ): SemanticDomainWithSubdomains | undefined {
+    let check = (checkAgainst: SemanticDomainWithSubdomains | undefined) =>
+      checkAgainst && target.toLowerCase() === checkAgainst.name.toLowerCase();
+    if (check(domain)) return domain;
+
+    // If there are subdomains
+    if (domain.subdomains.length > 0) {
+      let tempDomain: SemanticDomainWithSubdomains | undefined;
+      for (const sub of domain.subdomains) {
+        tempDomain = searchDomainByName(sub, target);
+        if (check(tempDomain)) return tempDomain;
+      }
+    }
+  }
+
+  // Dispatch the search for a specified domain, and switches to it if it exists
+  function searchAndSelectDomain(event: React.KeyboardEvent) {
+    // stopPropagation() prevents keystrokes from reaching ReviewEntries,
+    // but requires the search function be called onKeyDown
+    if (event.stopPropagation) {
+      event.stopPropagation();
+    }
+    event.bubbles = false;
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      // Find parent domain
+      let parent: SemanticDomainWithSubdomains | undefined =
+        props.currentDomain;
+      while (parent.parentDomain !== undefined) {
+        parent = parent.parentDomain;
+      }
+
+      // Search for domain
+      if (!isNaN(parseInt(input))) {
+        let i: number = 0;
+        while (parent) {
+          parent = searchDomainByNumber(parent, input.slice(0, i * 2 + 1));
+          if (parent && parent.id === input) {
+            props.animate(parent);
+            props.bounce();
+            setInput("");
+            (event.target as any).value = "";
+            break;
+          } else if (parent && parent.subdomains.length === 0) {
+            break;
+          }
+          i++;
+        }
+      } else {
+        parent = searchDomainByName(parent, input);
+        if (parent) {
+          props.animate(parent);
+          props.bounce();
+          setInput("");
+          (event.target as any).value = "";
+        }
+      }
+    }
+  }
+
+  // Change the input on typing
+  function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setInput(event.target.value);
+  }
+  // Add event listeners
+  useEffect(() => {
+    window.addEventListener("keydown", navigateDomainArrowKeys);
+    // Remove event listeners on cleanup
+    return () => {
+      window.removeEventListener("keydown", navigateDomainArrowKeys);
+    };
+  }, [navigateDomainArrowKeys]);
+
+  return {
+    getRightBrother,
+    getLeftBrother,
+    searchAndSelectDomain,
+    handleChange,
+  };
 }

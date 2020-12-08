@@ -8,6 +8,7 @@ import { passwordResetReducer } from "./components/PasswordReset/reducer";
 import { projectReducer } from "./components/Project/ProjectReducer";
 import { exportProjectReducer } from "./components/ProjectExport/ExportProjectReducer";
 import { createProjectReducer } from "./components/ProjectScreen/CreateProject/CreateProjectReducer";
+import { pronunciationsReducer } from "./components/Pronunciations/PronunciationsReducer";
 import { tempReducer } from "./components/Temp/TempReducer";
 import { treeViewReducer } from "./components/TreeView/TreeViewReducer";
 import { characterInventoryReducer } from "./goals/CharInventoryCreation/CharacterInventoryReducer";
@@ -28,8 +29,10 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   currentProject: projectReducer,
   exportProjectState: exportProjectReducer,
 
-  //data entry
+  //data entry and review entries
   treeViewState: treeViewReducer,
+  reviewEntriesState: reviewEntriesReducer,
+  pronunciationsState: pronunciationsReducer,
 
   //general cleanup tools
   goalSelectorState: goalSelectReducer,
@@ -40,9 +43,6 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
 
   //character inventory goal
   characterInventoryState: characterInventoryReducer,
-
-  //review entries goal
-  reviewEntriesState: reviewEntriesReducer,
 
   //temporary
   tempState: tempReducer,

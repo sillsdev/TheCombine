@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -6,8 +7,6 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using static BackendFramework.Helper.FileUtilities;
 
 namespace BackendFramework.Controllers
 {
@@ -200,6 +199,12 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
+            // Sanitize user input.
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
             if (await _projectService.Delete(projectId))
             {
                 return new OkResult();
@@ -290,8 +295,8 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            // sanitize user input
-            if (!SanitizeId(projectId))
+            // Sanitize user input
+            if (!Sanitization.SanitizeId(projectId))
             {
                 return new UnsupportedMediaTypeResult();
             }

@@ -78,7 +78,7 @@ namespace BackendFramework.Services
     {
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
-        private const string inProgress = "IN_PROGRESS";
+        private const string InProgress = "IN_PROGRESS";
 
         public LiftService()
         {
@@ -96,7 +96,7 @@ namespace BackendFramework.Services
             _liftExports.Remove(userId);
             if (isInProgress)
             {
-                _liftExports.Add(userId, inProgress);
+                _liftExports.Add(userId, InProgress);
             }
         }
 
@@ -107,7 +107,7 @@ namespace BackendFramework.Services
             {
                 return false;
             }
-            return _liftExports[userId] == inProgress;
+            return _liftExports[userId] == InProgress;
         }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
@@ -121,7 +121,7 @@ namespace BackendFramework.Services
         /// <returns> Path to the Lift file on disk. </returns>
         public string? RetrieveExport(string userId)
         {
-            if (!_liftExports.ContainsKey(userId) || _liftExports[userId] == inProgress)
+            if (!_liftExports.ContainsKey(userId) || _liftExports[userId] == InProgress)
             {
                 return null;
             }
@@ -148,7 +148,7 @@ namespace BackendFramework.Services
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
             wsf.Create(langTag, out var wsDef);
 
-            //if there is a main character set, import it to the project
+            // If there is a main character set, import it to the project
             if (wsDef.CharacterSets.Contains("main"))
             {
                 project.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
@@ -156,27 +156,19 @@ namespace BackendFramework.Services
             }
         }
 
-        private static string GetProjectDir(string projectId)
-        {
-            // Generate path to home on Linux or Windows
-            var pathToHome = FileUtilities.GeneratePathToHome();
-
-            return Path.Combine(pathToHome, ".CombineFiles", projectId);
-        }
-
         /// <summary> Exports information from a project to a lift package zip </summary>
         /// <returns> Path to compressed zip file containing export. </returns>
         public string LiftExport(string projectId, IWordRepository wordRepo, IProjectService projService)
         {
             // Generate the zip dir.
-            var exportDir = FileUtilities.GenerateFilePath(FileUtilities.FileType.Dir, true, "",
-                Path.Combine(projectId, "Export"));
-            if (Directory.Exists(Path.Combine(exportDir, "LiftExport")))
+            var exportDir = FileStorage.GenerateLiftExportDirPath(projectId);
+            var liftExportDir = Path.Combine(exportDir, "LiftExport");
+            if (Directory.Exists(liftExportDir))
             {
-                Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
+                Directory.Delete(liftExportDir, true);
             }
 
-            var zipDir = Path.Combine(exportDir, "LiftExport", "Lift");
+            var zipDir = Path.Combine(liftExportDir, "Lift");
             Directory.CreateDirectory(zipDir);
 
             // Add audio dir inside zip dir.
@@ -251,7 +243,7 @@ namespace BackendFramework.Services
 
             // Export semantic domains to lift-ranges
             var proj = projService.GetProject(projectId).Result;
-            var extractedPathToImport = Path.Combine(GetProjectDir(projectId), "Import", "ExtractedLocation");
+            var extractedPathToImport = FileStorage.GenerateImportExtractedLocationDirPath(projectId, false);
             string? firstImportDir = null;
             if (Directory.Exists(extractedPathToImport))
             {
@@ -334,7 +326,7 @@ namespace BackendFramework.Services
             ZipFile.CreateFromDirectory(Path.GetDirectoryName(zipDir), destinationFileName);
 
             // Clean up the temporary folder structure that was compressed.
-            Directory.Delete(Path.Combine(exportDir, "LiftExport"), true);
+            Directory.Delete(liftExportDir, true);
 
             return destinationFileName;
         }
@@ -410,9 +402,7 @@ namespace BackendFramework.Services
             foreach (var audioFile in wordEntry.Audio)
             {
                 var lexPhonetic = new LexPhonetic();
-                var projectPath = Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio");
-                var src = FileUtilities.GenerateFilePath(
-                    FileUtilities.FileType.Audio, true, audioFile, projectPath);
+                var src = FileStorage.GenerateAudioFilePath(projectId, audioFile);
                 var dest = Path.Combine(path, audioFile);
 
                 if (File.Exists(src))
@@ -615,14 +605,8 @@ namespace BackendFramework.Services
                     }
                 }
 
-                // Get path to dir containing local lift package ~/{projectId}/Import/ExtractedLocation
-                var importDir = FileUtilities.GenerateFilePath(
-                    FileUtilities.FileType.Dir, false, "", Path.Combine(_projectId, "Import"));
-                var extractedPathToImport = Path.Combine(importDir, "ExtractedLocation");
-
                 // Get path to directory with audio files ~/{projectId}/Import/ExtractedLocation/Lift/audio
-                var importListArr = Directory.GetDirectories(extractedPathToImport);
-                var extractedAudioDir = Path.Combine(importListArr.Single(), "audio");
+                var extractedAudioDir = FileStorage.GenerateAudioFileDirPath(_projectId);
 
                 // Only add audio if the files exist
                 if (Directory.Exists(extractedAudioDir))

@@ -12,13 +12,15 @@
     <EmbeddedResource Include="Data\sdList.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.WebApiCompatShim" Version="2.2.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.8.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.5" />
+    <PackageReference Include="MailKit" Version="2.10.0" />
     <PackageReference Include="icu.net" Version="2.6.0" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.1.4-beta" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
     <PackageReference Include="SIL.Core" Version="7.0.0-alpha0822" />
     <PackageReference Include="SIL.Core.Desktop" Version="7.0.0-alpha0822">
       <NoWarn>NU1701</NoWarn>
@@ -30,7 +32,5 @@
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
     <PackageReference Include="SIL.WritingSystems" Version="7.0.0-alpha0822" />
-    <PackageReference Include="MailKit" Version="2.7.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.WebApiCompatShim" Version="2.2.0" />
   </ItemGroup>
 </Project>

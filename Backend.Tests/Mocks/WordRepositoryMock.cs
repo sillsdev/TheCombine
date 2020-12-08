@@ -26,7 +26,7 @@ namespace Backend.Tests.Mocks
 
         public Task<Word> GetWord(string projectId, string wordId)
         {
-            var foundWord = _words.Where(word => word.Id == wordId).Single();
+            var foundWord = _words.Single(word => word.Id == wordId);
             return Task.FromResult(foundWord.Clone());
         }
 

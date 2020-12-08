@@ -5,7 +5,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using static BackendFramework.Helper.FileUtilities;
+using BackendFramework.Helper;
 
 namespace BackendFramework.Controllers
 {
@@ -43,12 +43,12 @@ namespace BackendFramework.Controllers
             //}
 
             // sanitize user input
-            if (!SanitizeId(projectId) || !SanitizeId(wordId))
+            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
             }
 
-            var filePath = _wordService.GetAudioFilePath(projectId, wordId, fileName);
+            var filePath = FileStorage.GenerateAudioFilePath(projectId, fileName);
             if (filePath is null)
             {
                 return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
@@ -79,7 +79,7 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if (!SanitizeId(projectId) || !SanitizeId(wordId))
+            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -96,10 +96,9 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("Empty File");
             }
 
-            // Get path to home
-            fileUpload.FilePath = GenerateFilePath(
-                FileType.Audio, false, wordId,
-                Path.Combine(projectId, "Import", "ExtractedLocation", "Lift", "audio"));
+            // This path should be unique even though it is only based on the Word ID because currently, a new
+            // Word is created each time an audio file is uploaded.
+            fileUpload.FilePath = FileStorage.GenerateAudioFilePathForWord(projectId, wordId);
 
             // Copy the file data to a new local file
             await using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
@@ -128,7 +127,7 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if (!SanitizeId(projectId) || !SanitizeId(wordId))
+            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
             }
