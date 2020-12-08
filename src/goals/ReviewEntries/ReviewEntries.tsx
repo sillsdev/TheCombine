@@ -1,11 +1,10 @@
 import {
+  generateGuid,
   Goal,
   GoalData,
-  Tools,
   GoalOption,
-  GoalType,
   GoalStep,
-  generateGuid,
+  GoalType,
 } from "../../types/goals";
 import { User } from "../../types/user";
 
@@ -17,7 +16,6 @@ export class ReviewEntries implements Goal {
   numSteps: number;
   currentStep: number;
   data: GoalData;
-  tool: Tools;
   completed: boolean;
   result: GoalOption;
   hash: string;
@@ -30,7 +28,6 @@ export class ReviewEntries implements Goal {
     this.numSteps = 1;
     this.currentStep = 0;
     this.data = {};
-    this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;
     this.hash = generateGuid();

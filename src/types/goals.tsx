@@ -1,21 +1,14 @@
-import { User } from "./user";
-import { MergeStepData, MergeDupData } from "../goals/MergeDupGoal/MergeDups";
 import {
   CreateCharInvData,
   CreateCharInvStepData,
 } from "../goals/CreateCharInv/CreateCharInv";
+import { MergeDupData, MergeStepData } from "../goals/MergeDupGoal/MergeDups";
+import { User } from "./user";
 
 export enum GoalOption {
   Complete,
   Abandon,
   Current,
-}
-
-export enum Tools {
-  TempTool, // To be removed once testing is finished
-  FixDups,
-  CharInv,
-  CharCreate,
 }
 
 export type GoalData = MergeDupData | CreateCharInvData | {}; // | OtherTypes
@@ -62,13 +55,10 @@ export interface Goal {
   goalType: GoalType;
   name: string;
   user: User;
-
   steps: GoalStep[];
   numSteps: number;
   currentStep: number;
   data: GoalData; // The data required to load/reload this exact goal
-
-  tool: Tools;
   completed: boolean;
   result: GoalOption;
   hash: string;
