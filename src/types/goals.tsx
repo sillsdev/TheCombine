@@ -22,7 +22,7 @@ export type GoalData = MergeDupData | CreateCharInvData | {}; // | OtherTypes
 
 export type MockGoalStepType = {};
 
-export type GoalStep = MergeStepData | CreateCharInvStepData; // | OtherTypes
+export type GoalStep = MergeStepData | CreateCharInvStepData | {}; // | OtherTypes
 
 export interface GoalProps {
   goal?: Goal;
