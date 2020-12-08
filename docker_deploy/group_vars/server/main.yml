@@ -5,7 +5,6 @@
 # Group: server
 #################################################
 
-
 # TheCombine is installed on the Live Server by TeamCity.  It will set the
 # IMAGE_TAG environment variable to major.minor.build_no and launch
 # Docker compose
@@ -17,7 +16,6 @@ combine_image_certmgr: "{{ aws_ecr }}/combine/certmgr:{{ image_tag }}"
 
 # SSL cert variables specific to Server targets
 cert_mode: "letsencrypt"
-
 
 aws_user: "{{ combine_user }}"
 aws_group: "{{ combine_group }}"
@@ -32,10 +30,10 @@ aws_backup_profile: s3_read_write
 aws_ecr_profile: ecr_read_only
 
 my_aws_profiles:
-    - "{{ aws_backup_profile }}"
-    - "{{ aws_ecr_profile }}"
+  - "{{ aws_backup_profile }}"
+  - "{{ aws_ecr_profile }}"
 
 # Define backup times (UTC)
-backup_hour:    "3"
-backup_minute:  "15"
-num_backups:    "3"
+backup_hour: "3"
+backup_minute: "15"
+num_backups: "3"
