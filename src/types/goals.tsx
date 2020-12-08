@@ -13,9 +13,7 @@ export enum GoalOption {
 
 export type GoalData = MergeDupData | CreateCharInvData | {}; // | OtherTypes
 
-export type MockGoalStepType = {};
-
-export type GoalStep = MergeStepData | CreateCharInvStepData | {}; // | OtherTypes
+export type GoalStep = MergeStepData | CreateCharInvStepData; // | OtherTypes
 
 export interface GoalProps {
   goal?: Goal;
@@ -78,3 +76,17 @@ export enum GoalType {
 export function generateGuid(): string {
   return Math.floor(Math.random() * 9999999).toString();
 }
+
+const mockUser = new User("MockUser", "MockUsername", "MockPass");
+export const mockGoal = {
+  goalType: GoalType.HandleFlags,
+  name: "MockGoal",
+  user: mockUser,
+  steps: [],
+  numSteps: 0,
+  currentStep: 0,
+  data: {},
+  completed: false,
+  result: GoalOption.Current,
+  hash: generateGuid(),
+};
