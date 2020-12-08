@@ -10,9 +10,9 @@ import os
 from pathlib import Path
 import time
 from typing import List
-import requests
 
 from base_cert import BaseCert
+import requests
 from self_signed_cert import SelfSignedCert
 from utils import get_setting, update_link, update_renew_before_expiry
 
