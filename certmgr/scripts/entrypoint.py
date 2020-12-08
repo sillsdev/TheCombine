@@ -22,7 +22,7 @@ if __name__ == "__main__":
     }
 
     cert_store = get_setting("CERT_STORE")
-    for subdir in ("nginx", "selfsigned", "s3_cache"):
+    for subdir in ("nginx", "selfsigned"):
         os.makedirs(f"{cert_store}/{subdir}", 0o755, True)
 
     cert_mode = get_setting("CERT_MODE")
