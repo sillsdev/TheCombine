@@ -1,14 +1,15 @@
+import "jest-canvas-mock";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { Goal } from "../../../../types/goals";
-import { User } from "../../../../types/user";
-import { MergeDups } from "../../../MergeDupGoal/MergeDups";
-import { ValidateChars } from "../../../ValidateChars/ValidateChars";
-import BaseGoalScreen from "../BaseGoalScreen";
+import { Goal } from "../../../types/goals";
+import { User } from "../../../types/user";
+import { MergeDups } from "../../MergeDupGoal/MergeDups";
+import { ValidateChars } from "../../ValidateChars/ValidateChars";
+import { BaseGoalScreen } from "../BaseGoalScreen";
 
 const createMockStore = configureMockStore([thunk]);
 const mockStoreState = {
