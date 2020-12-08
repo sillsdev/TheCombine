@@ -19,7 +19,7 @@ const mockStoreState = {
 const mockStore = createMockStore(mockStoreState);
 
 describe("BaseGoalScreen", () => {
-  it("Renders with goal without crashing", () => {
+  it("Renders with 0-step goal without crashing", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
