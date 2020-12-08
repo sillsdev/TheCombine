@@ -1,5 +1,4 @@
 ---
-
 # create the group for the combine user
 - name: create group for combine app
   group:
