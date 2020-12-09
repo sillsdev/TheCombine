@@ -49,6 +49,31 @@ export interface GoalSelectorState {
   lastIndex: number;
 }
 
+export enum GoalType {
+  Default,
+  CreateCharInv,
+  ValidateChars,
+  CreateStrWordInv,
+  ValidateStrWords,
+  MergeDups,
+  SpellcheckGloss,
+  ReviewEntries,
+  HandleFlags,
+}
+
+// This string must match what is in src/resources/translations.json.
+export enum GoalName {
+  Default = "default",
+  CreateCharInv = "charInventory",
+  ValidateChars = "validateChars",
+  CreateStrWordInv = "createStrWordInv",
+  ValidateStrWords = "validateStrWords",
+  MergeDups = "mergeDups",
+  SpellcheckGloss = "spellcheckGloss",
+  ReviewEntries = "reviewEntries",
+  HandleFlags = "handleFlags",
+}
+
 export class Goal {
   goalType: GoalType;
   name: string;
@@ -78,30 +103,6 @@ export class Goal {
     this.result = GoalOption.Current;
     this.hash = generateGuid();
   }
-}
-
-export enum GoalType {
-  Default,
-  CreateCharInv,
-  ValidateChars,
-  CreateStrWordInv,
-  ValidateStrWords,
-  MergeDups,
-  SpellcheckGloss,
-  ReviewEntries,
-  HandleFlags,
-}
-
-export enum GoalName {
-  Default = "default",
-  CreateCharInv = "createCharInv",
-  ValidateChars = "validateChars",
-  CreateStrWordInv = "createStrWordInv",
-  ValidateStrWords = "validateStrWords",
-  MergeDups = "mergeDups",
-  SpellcheckGloss = "spellcheckGloss",
-  ReviewEntries = "reviewEntries",
-  HandleFlags = "handleFlags",
 }
 
 export function generateGuid(): string {

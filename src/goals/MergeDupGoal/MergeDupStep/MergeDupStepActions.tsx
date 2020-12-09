@@ -196,9 +196,9 @@ export function refreshWords() {
       historyState = getState().goalsState.historyState;
       goal = historyState.history[historyState.history.length - 1];
       if (goal.currentStep < goal.numSteps) {
-        let stepData: MergeStepData = (goal as MergeDups).steps[
+        const stepData = (goal as MergeDups).steps[
           goal.currentStep
-        ];
+        ] as MergeStepData;
         if (stepData) {
           dispatch(setWordData(stepData.words));
         }
