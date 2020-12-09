@@ -160,12 +160,12 @@ export function mergeSense() {
   };
 }
 
-async function addStepToGoal(goal: Goal, indexInHistory: number) {
-  const user: User | null = LocalStorage.getCurrentUser();
+async function addStepToGoal(goal: Goal, goalIndex: number) {
+  const user = LocalStorage.getCurrentUser();
   if (user) {
-    let userEditId: string | undefined = getUserEditId(user);
+    const userEditId: string | undefined = getUserEditId(user);
     if (userEditId !== undefined) {
-      await backend.addStepToGoal(userEditId, indexInHistory, goal);
+      await backend.addStepToGoal(userEditId, goalIndex, goal);
     }
   }
 }
@@ -215,11 +215,11 @@ function updateStep(
   goal: Goal,
   state: GoalHistoryState
 ): Promise<void> {
-  return new Promise((resolve, reject) => {
-    let updatedGoal = updateStepData(goal);
+  return new Promise((resolve) => {
+    const updatedGoal = updateStepData(goal);
     dispatch(updateGoal(updatedGoal));
-    let indexInHistory: number = getIndexInHistory(state.history, goal);
-    addStepToGoal(state.history[indexInHistory], indexInHistory);
+    const goalIndex = getIndexInHistory(state.history, goal);
+    addStepToGoal(state.history[goalIndex], goalIndex);
     resolve();
   });
 }
