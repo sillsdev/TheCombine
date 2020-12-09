@@ -13,7 +13,6 @@ import {
 import history, { Path } from "../../../history";
 import { StoreState } from "../../../types";
 import { Goal, GoalHistoryState } from "../../../types/goals";
-import { User } from "../../../types/user";
 import { State, Word } from "../../../types/word";
 import { MergeDups, MergeStepData } from "../MergeDups";
 import { Hash, MergeTreeReference, TreeDataSense } from "./MergeDupsTree";
