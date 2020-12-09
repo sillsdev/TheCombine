@@ -405,13 +405,13 @@ export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
 ): Promise<Goal> {
-  let stepData: string = JSON.stringify(goal.steps);
-  let userEditTuple = {
+  const stepData = JSON.stringify(goal.steps);
+  const userEditTuple = {
     goalType: goal.goalType.toString(),
     stepData: [stepData],
   };
-  let projectId: string = LocalStorage.getProjectId();
-  let resp = await backendServer.post(
+  const projectId = LocalStorage.getProjectId();
+  const resp = await backendServer.post(
     `projects/${projectId}/useredits/${userEditId}`,
     userEditTuple,
     {
