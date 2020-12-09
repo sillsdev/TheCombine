@@ -13,39 +13,26 @@ interface componentSteps {
   steps: ReactNode[];
 }
 
+// WARNING: The order here must match the GoalType index.
 const stepComponentDictionary: componentSteps[] = [
+  { goal: GoalType.Default, steps: [] },
   {
     goal: GoalType.CreateCharInv,
     steps: [<CharInventoryCreation />],
   },
-  {
-    goal: GoalType.ValidateChars,
-    steps: [],
-  },
-  {
-    goal: GoalType.CreateStrWordInv,
-    steps: [],
-  },
-  {
-    goal: GoalType.ValidateStrWords,
-    steps: [],
-  },
+  { goal: GoalType.CreateStrWordInv, steps: [] },
+  { goal: GoalType.HandleFlags, steps: [] },
   {
     goal: GoalType.MergeDups,
     steps: [<MergeDupStep />],
   },
   {
-    goal: GoalType.SpellcheckGloss,
-    steps: [],
-  },
-  {
     goal: GoalType.ReviewEntries,
     steps: [<ReviewEntriesComponent />],
   },
-  {
-    goal: GoalType.HandleFlags,
-    steps: [],
-  },
+  { goal: GoalType.SpellcheckGloss, steps: [] },
+  { goal: GoalType.ValidateChars, steps: [] },
+  { goal: GoalType.ValidateStrWords, steps: [] },
 ];
 
 /**
@@ -53,7 +40,20 @@ const stepComponentDictionary: componentSteps[] = [
  * based on the current step in the goal
  */
 export default class BaseGoalScreen extends React.Component<GoalProps> {
-  renderGoal(goal: Goal): ReactNode {
+  displayComponent(goal: Goal) {
+    const stepComponent = stepComponentDictionary[goal.goalType];
+    if (stepComponent.goal !== goal.goalType) {
+      throw Error(
+        "The stepComponentDictionary is out of sync with the GoalType indices."
+      );
+    }
+    if (stepComponent.steps.length) {
+      return stepComponent.steps[0];
+    }
+    return <EmptyGoalComponent />;
+  }
+
+  renderGoal(goal: Goal) {
     return (
       <React.Fragment>
         <DisplayProg />
@@ -62,13 +62,6 @@ export default class BaseGoalScreen extends React.Component<GoalProps> {
     );
   }
 
-  displayComponent(goal: Goal): ReactNode {
-    let steps: ReactNode[] = stepComponentDictionary[goal.goalType].steps;
-    if (steps.length > 0) {
-      return stepComponentDictionary[goal.goalType].steps[0];
-    }
-    return <EmptyGoalComponent />;
-  }
   render() {
     return this.props.goal ? (
       this.renderGoal(this.props.goal)

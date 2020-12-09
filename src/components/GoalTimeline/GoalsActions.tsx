@@ -152,8 +152,6 @@ export function loadGoalData(goal: Goal) {
         await dispatch(refreshWords());
 
         break;
-      case GoalType.CreateCharInv:
-        break;
       default:
         break;
     }
@@ -196,37 +194,35 @@ export function getIndexInHistory(history: Goal[], currentGoal: Goal): number {
   return -1;
 }
 
-function convertEditsToArrayOfGoals(edits: Edit[]): Goal[] {
-  let history: Goal[] = [];
-  for (var edit of edits) {
-    let nextGoal: Goal | undefined = goalTypeToGoal(edit.goalType);
-    if (nextGoal) {
-      history.push(nextGoal);
-    }
+function convertEditsToArrayOfGoals(edits: Edit[]) {
+  const history: Goal[] = [];
+  for (const edit of edits) {
+    const nextGoal = goalTypeToGoal(edit.goalType);
+    history.push(nextGoal);
   }
   return history;
 }
 
-function goalTypeToGoal(type: number): Goal | undefined {
+function goalTypeToGoal(type: GoalType) {
   switch (type) {
     case GoalType.CreateCharInv:
       return new CreateCharInv();
-    case GoalType.ValidateChars:
-      return new ValidateChars();
     case GoalType.CreateStrWordInv:
       return new CreateStrWordInv();
-    case GoalType.ValidateStrWords:
-      return new ValidateStrWords();
-    case GoalType.MergeDups:
-      return new MergeDups();
-    case GoalType.SpellcheckGloss:
-      return new SpellCheckGloss();
-    case GoalType.ReviewEntries:
-      return new ReviewEntries();
     case GoalType.HandleFlags:
       return new HandleFlags();
+    case GoalType.MergeDups:
+      return new MergeDups();
+    case GoalType.ReviewEntries:
+      return new ReviewEntries();
+    case GoalType.SpellcheckGloss:
+      return new SpellCheckGloss();
+    case GoalType.ValidateChars:
+      return new ValidateChars();
+    case GoalType.ValidateStrWords:
+      return new ValidateStrWords();
     default:
-      return undefined;
+      return new Goal();
   }
 }
 

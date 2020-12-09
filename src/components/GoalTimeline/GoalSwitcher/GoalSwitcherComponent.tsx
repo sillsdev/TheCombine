@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Goal } from "../../../types/goals";
+import { Goal, GoalName } from "../../../types/goals";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import GoalSelectorScroll from "./GoalSelectorScroll";
 
@@ -23,7 +23,7 @@ export class GoalSwitcher extends React.Component<
 
   // Given a change event, find which goal the user selected, and choose it
   // as the next goal to work on.
-  handleChange(name: string) {
+  handleChange(name: GoalName) {
     let goal: Goal | undefined = this.props.goals.find((g) => g.name === name);
     if (goal) {
       this.props.chooseGoal(goal);
@@ -31,11 +31,7 @@ export class GoalSwitcher extends React.Component<
   }
 
   render() {
-    return (
-      <div className="GoalSwitcher2">
-        <GoalSelectorScroll handleChange={this.handleChange} />
-      </div>
-    );
+    return <GoalSelectorScroll handleChange={this.handleChange} />;
   }
 }
 

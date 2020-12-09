@@ -11,9 +11,9 @@ export enum GoalOption {
   Current,
 }
 
-export type GoalData = MergeDupData | CreateCharInvData | {}; // | OtherTypes
+export type GoalData = CreateCharInvData | MergeDupData | {}; // | OtherTypes
 
-export type GoalStep = MergeStepData | CreateCharInvStepData; // | OtherTypes
+export type GoalStep = CreateCharInvStepData | MergeStepData; // | OtherTypes
 
 export interface GoalProps {
   goal?: Goal;
@@ -49,34 +49,35 @@ export interface GoalSelectorState {
   lastIndex: number;
 }
 
+// The order here must match that of the stepComponentDictionary.
 export enum GoalType {
   Default,
   CreateCharInv,
-  ValidateChars,
   CreateStrWordInv,
-  ValidateStrWords,
-  MergeDups,
-  SpellcheckGloss,
-  ReviewEntries,
   HandleFlags,
+  MergeDups,
+  ReviewEntries,
+  SpellcheckGloss,
+  ValidateChars,
+  ValidateStrWords,
 }
 
-// This string must match what is in src/resources/translations.json.
+// These strings must match what is in src/resources/translations.json.
 export enum GoalName {
   Default = "default",
   CreateCharInv = "charInventory",
-  ValidateChars = "validateChars",
   CreateStrWordInv = "createStrWordInv",
-  ValidateStrWords = "validateStrWords",
-  MergeDups = "mergeDups",
-  SpellcheckGloss = "spellcheckGloss",
-  ReviewEntries = "reviewEntries",
   HandleFlags = "handleFlags",
+  MergeDups = "mergeDups",
+  ReviewEntries = "reviewEntries",
+  SpellcheckGloss = "spellcheckGloss",
+  ValidateChars = "validateChars",
+  ValidateStrWords = "validateStrWords",
 }
 
 export class Goal {
   goalType: GoalType;
-  name: string;
+  name: GoalName;
   user: User;
   steps: GoalStep[];
   numSteps: number;
@@ -87,8 +88,8 @@ export class Goal {
   hash: string;
 
   constructor(
-    type: GoalType = GoalType.Default,
-    name: string = GoalName.Default,
+    type = GoalType.Default,
+    name = GoalName.Default,
     steps: GoalStep[] = [],
     data: GoalData = {}
   ) {
