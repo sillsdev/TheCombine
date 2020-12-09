@@ -1,10 +1,4 @@
-import {
-  Goal,
-  Tools,
-  GoalOption,
-  GoalType,
-  generateGuid,
-} from "../../types/goals";
+import { generateGuid, Goal, GoalOption, GoalType } from "../../types/goals";
 import { User } from "../../types/user";
 
 export interface CreateCharInvData {
@@ -23,7 +17,6 @@ export class CreateCharInv implements Goal {
   numSteps: number;
   currentStep: number;
   data: CreateCharInvData;
-  tool: Tools;
   completed: boolean;
   result: GoalOption;
   hash: string;
@@ -36,7 +29,6 @@ export class CreateCharInv implements Goal {
     this.numSteps = 1;
     this.currentStep = 0;
     this.data = { inventory: [[]] };
-    this.tool = Tools.TempTool;
     this.completed = false;
     this.result = GoalOption.Current;
     this.hash = generateGuid();

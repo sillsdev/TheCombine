@@ -1,5 +1,4 @@
 ---
-
 aws_user: teamcity
 aws_group: teamcity
 
