@@ -22,8 +22,8 @@ export class Sense {
   semanticDomains: SemanticDomain[] = [];
   accessibility?: State;
 
-  constructor(gloss: string, language?: string, semDom?: SemanticDomain) {
-    this.glosses = [{ def: gloss, language: language ?? "" }];
+  constructor(gloss: string, lang: string = "", semDom?: SemanticDomain) {
+    this.glosses = [{ def: gloss, language: lang }];
     if (semDom) {
       this.semanticDomains.push(semDom);
     }
@@ -34,9 +34,9 @@ export class Note {
   text: string;
   language: string; // bcp-47 code
 
-  constructor(text?: string, lang?: string) {
-    this.text = text ? text : "";
-    this.language = lang ? lang : "";
+  constructor(text: string = "", lang: string = "") {
+    this.text = text;
+    this.language = lang;
   }
 }
 

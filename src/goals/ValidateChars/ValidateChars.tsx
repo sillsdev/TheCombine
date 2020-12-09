@@ -1,35 +1,7 @@
-import {
-  generateGuid,
-  Goal,
-  GoalData,
-  GoalOption,
-  GoalStep,
-  GoalType,
-} from "../../types/goals";
-import { User } from "../../types/user";
+import { Goal, GoalName, GoalType } from "../../types/goals";
 
-export class ValidateChars implements Goal {
-  goalType: GoalType;
-  name: string;
-  user: User;
-  steps: GoalStep[];
-  numSteps: number;
-  currentStep: number;
-  data: GoalData;
-  completed: boolean;
-  result: GoalOption;
-  hash: string;
-
-  constructor(steps: GoalStep[] = [], numSteps: number = 8) {
-    this.goalType = GoalType.ValidateChars;
-    this.name = "validateChars";
-    this.user = new User("", "", "");
-    this.steps = steps;
-    this.numSteps = numSteps;
-    this.currentStep = 0;
-    this.data = {};
-    this.completed = false;
-    this.result = GoalOption.Current;
-    this.hash = generateGuid();
+export class ValidateChars extends Goal {
+  constructor() {
+    super(GoalType.ValidateChars, GoalName.ValidateChars);
   }
 }

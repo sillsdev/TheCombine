@@ -13,8 +13,6 @@ export enum GoalOption {
 
 export type GoalData = MergeDupData | CreateCharInvData | {}; // | OtherTypes
 
-export type MockGoalStepType = {};
-
 export type GoalStep = MergeStepData | CreateCharInvStepData; // | OtherTypes
 
 export interface GoalProps {
@@ -51,20 +49,39 @@ export interface GoalSelectorState {
   lastIndex: number;
 }
 
-export interface Goal {
+export class Goal {
   goalType: GoalType;
   name: string;
   user: User;
   steps: GoalStep[];
   numSteps: number;
   currentStep: number;
-  data: GoalData; // The data required to load/reload this exact goal
+  data: GoalData;
   completed: boolean;
   result: GoalOption;
   hash: string;
+
+  constructor(
+    type: GoalType = GoalType.Default,
+    name: string = GoalName.Default,
+    steps: GoalStep[] = [],
+    data: GoalData = {}
+  ) {
+    this.goalType = type;
+    this.name = name;
+    this.user = new User("", "", "");
+    this.steps = steps;
+    this.numSteps = 1;
+    this.currentStep = 0;
+    this.data = data;
+    this.completed = false;
+    this.result = GoalOption.Current;
+    this.hash = generateGuid();
+  }
 }
 
 export enum GoalType {
+  Default,
   CreateCharInv,
   ValidateChars,
   CreateStrWordInv,
@@ -73,6 +90,18 @@ export enum GoalType {
   SpellcheckGloss,
   ReviewEntries,
   HandleFlags,
+}
+
+export enum GoalName {
+  Default = "default",
+  CreateCharInv = "createCharInv",
+  ValidateChars = "validateChars",
+  CreateStrWordInv = "createStrWordInv",
+  ValidateStrWords = "validateStrWords",
+  MergeDups = "mergeDups",
+  SpellcheckGloss = "spellcheckGloss",
+  ReviewEntries = "reviewEntries",
+  HandleFlags = "handleFlags",
 }
 
 export function generateGuid(): string {
