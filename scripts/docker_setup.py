@@ -104,7 +104,7 @@ def main() -> None:
         ],
         "config_captcha_required": json.dumps(not args.no_captcha),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
-        "mongodb_version": "4.4"
+        "mongodb_version": "4.4",
     }
 
     # Templated file map
