@@ -134,6 +134,7 @@ def main() -> None:
         ),
         autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=True,
+        lstrip_blocks=True,
     )
     (project_dir / "nginx" / "scripts").mkdir(exist_ok=True)
 
