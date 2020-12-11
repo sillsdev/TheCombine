@@ -68,21 +68,24 @@ class CertProxyServer(LetsEncryptCert):
         for domain in domain_list:
             if self.get_cert([domain]):
                 cert_created = True
-                super().update_renew_before_expiry(domain, self.renew_before_expiry)
+                LetsEncryptCert.update_renew_before_expiry(domain, self.renew_before_expiry)
             else:
                 print(f"Could not get certificate for {domain}")
         if cert_created:
-            self.create_renew_hook()
+            CertProxyServer.create_renew_hook()
             aws_push_certs()
 
-    def create_renew_hook(self) -> None:
+    @staticmethod
+    def create_renew_hook() -> None:
         """
         Create hook for certificate renewal.
 
         Add a hook function to push new certificates to the AWS S3 bucket when
         the proxy certificates are renewed.
         """
-        renew_hook = Path(f"{super().get_le_dir()}/renewal-hooks/deploy/01_hook_push_certs_to_aws")
+        renew_hook = Path(
+            f"{LetsEncryptCert.LETSENCRYPT_DIR}/renewal-hooks/deploy/01_hook_push_certs_to_aws"
+        )
         hook_target = "/opt/certmgr/cert_renewal_hook.py"
         if renew_hook.is_symlink():
             link_target = os.readlink(renew_hook)

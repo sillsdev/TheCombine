@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess
 from typing import Tuple, cast
 
+from letsencrypt_cert import LetsEncryptCert
 from utils import get_setting
 
 
@@ -63,6 +64,6 @@ def aws_push_certs() -> None:
     cert_file_list = ("cert.pem", "chain.pem", "fullchain.pem", "privkey.pem")
     domain_list = cast(str, get_setting("CERT_PROXY_DOMAINS")).split()
     for domain in domain_list:
-        cert_dir = Path(f"/etc/letsencrypt/live/{domain}")
+        cert_dir = Path(f"{LetsEncryptCert.LETSENCRYPT_DIR}/live/{domain}")
         for cert_file in cert_file_list:
             aws_s3_put(Path(f"{cert_dir}/{cert_file}"), f"{domain}/{cert_file}")

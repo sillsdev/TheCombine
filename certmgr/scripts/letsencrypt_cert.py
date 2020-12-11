@@ -20,20 +20,35 @@ from utils import get_setting, update_link
 class LetsEncryptCert(BaseCert):
     """SSL Certificate class to create and renew certs from Let's Encrypt."""
 
+    LETSENCRYPT_DIR = Path("/etc/letsencrypt")
+
     def __init__(self) -> None:
         """Initialize class from environment variables."""
         # pylint: disable=too-many-instance-attributes
         # Ten are required in this case.
-        self.cert_store = cast(str, get_setting("CERT_STORE"))
-        self.server_name = cast(str, get_setting("SERVER_NAME"))
-        self.email = cast(str, get_setting("CERT_EMAIL"))
-        self.max_connect_tries = cast(int, get_setting("MAX_CONNECT_TRIES"))
+        self.cert_store: str = get_setting("CERT_STORE")
+        self.server_name: str = get_setting("SERVER_NAME")
+        self.email: str = get_setting("CERT_EMAIL")
+        self.max_connect_tries: int = int(get_setting("MAX_CONNECT_TRIES"))
         self.staging = get_setting("CERT_STAGING") != "0"
-        self.le_dir = Path("/etc/letsencrypt")
-        self.cert_dir = Path(f"{self.le_dir}/live/{self.server_name}")
+        self.cert_dir = Path(f"{LetsEncryptCert.LETSENCRYPT_DIR}/live/{self.server_name}")
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
         self.cert = Path(f"{self.cert_dir}/fullchain.pem")
         self.renew_before_expiry = cast(int, get_setting("CERT_SELF_RENEWAL"))
+        self.renew_before_expiry: int = int(get_setting("CERT_SELF_RENEWAL"))
+
+    @staticmethod
+    def update_renew_before_expiry(domain: str, renew_before_expiry_period: int) -> None:
+        """Update the RENEW_BEFORE_EXPIRY configuration value for 'domain'."""
+        renew_before_expiry = str(renew_before_expiry_period)
+        print(f"Setting renew before expiry for {domain} " f"to {renew_before_expiry}")
+        renew_config = f"{LetsEncryptCert.LETSENCRYPT_DIR}/renewal/{domain}.conf"
+        if os.path.exists(renew_config):
+            os.system(
+                "sed -i 's/#* *renew_before_expiry = [0-9][0-9]* days/"
+                f"renew_before_expiry = {renew_before_expiry} days/' "
+                f" {renew_config}"
+            )
 
     def create(self) -> None:
         """
@@ -81,15 +96,11 @@ class LetsEncryptCert(BaseCert):
             if self.get_cert(domain_list):
                 # update the certificate link for the Nginx web server
                 update_link(self.cert_dir, self.nginx_cert_dir)
-            self.update_renew_before_expiry(self.server_name, self.renew_before_expiry)
+            LetsEncryptCert.update_renew_before_expiry(self.server_name, self.renew_before_expiry)
 
     def renew(self) -> None:
         """Renew all letsencrypt certificates that are up for renewal."""
         os.system("certbot renew")
-
-    def get_le_dir(self) -> Path:
-        """Get the directory where Let's Encrypt stores certificate info."""
-        return self.le_dir
 
     def get_cert(self, domain_list: List[str]) -> bool:
         """
@@ -148,15 +159,3 @@ class LetsEncryptCert(BaseCert):
                 attempt_count += 1
             time.sleep(10)
         return False
-
-    def update_renew_before_expiry(self, domain: str, renew_before_expiry_period: int) -> None:
-        """Update the RENEW_BEFORE_EXPIRY configuration value for 'domain'."""
-        renew_before_expiry = str(renew_before_expiry_period)
-        print(f"Setting renew before expiry for {domain} " f"to {renew_before_expiry}")
-        renew_config = f"{self.le_dir}/renewal/{domain}.conf"
-        if os.path.exists(renew_config):
-            os.system(
-                "sed -i 's/#* *renew_before_expiry = [0-9][0-9]* days/"
-                f"renew_before_expiry = {renew_before_expiry} days/' "
-                f" {renew_config}"
-            )
