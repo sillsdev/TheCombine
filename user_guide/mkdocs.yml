@@ -1,1 +1,13 @@
-site_name: The Combine User Guide
+site_name: The Combine
+theme:
+  name: material
+  palette:
+    primary: blue
+  icon:
+    logo: material/tractor
+    repo: fontawesome/brands/github
+repo_url: https://github.com/sillsdev/TheCombine
+repo_name: sillsdev/TheCombine
+nav:
+  - The Combine: index.md
+  - Page 2: page2.md
