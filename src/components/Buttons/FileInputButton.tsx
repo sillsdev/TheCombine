@@ -5,8 +5,8 @@ import { ButtonProps } from "@material-ui/core/Button";
 export interface BrowseProps {
   updateFile: (file: File) => void;
   accept?: string;
-  children: React.ReactNode;
-  buttonProps: ButtonProps;
+  children?: React.ReactNode;
+  buttonProps?: ButtonProps;
 }
 
 // This button links to a set of functions

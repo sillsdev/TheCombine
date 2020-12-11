@@ -136,12 +136,7 @@ class ProjectSettingsComponent extends React.Component<
             <BaseSettingsComponent
               icon={<GetApp />}
               title={<Translate id="projectSettings.exportProject.label" />}
-              body={
-                <ExportProjectButton
-                  projectId={this.props.project.id}
-                  buttonProps={{}}
-                />
-              }
+              body={<ExportProjectButton projectId={this.props.project.id} />}
             />
 
             {/* Autocomplete setting */}

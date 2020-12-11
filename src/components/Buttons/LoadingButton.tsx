@@ -6,8 +6,8 @@ import { buttonSuccess } from "../../types/theme";
 
 interface LoadingProps {
   loading: boolean;
-  children: React.ReactNode;
-  buttonProps: ButtonProps;
+  children?: React.ReactNode;
+  buttonProps?: ButtonProps;
 }
 
 /**

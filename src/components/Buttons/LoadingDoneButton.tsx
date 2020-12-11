@@ -11,8 +11,8 @@ interface LoadingDoneProps {
   done: boolean;
   doneText?: React.ReactNode | string;
   disabled?: boolean;
-  children: React.ReactNode;
-  buttonProps: ButtonProps;
+  children?: React.ReactNode;
+  buttonProps?: ButtonProps;
 }
 
 /**
@@ -28,7 +28,7 @@ export default function LoadingDoneButton(props: LoadingDoneProps) {
       style={{
         backgroundColor: props.done ? buttonSuccess : undefined,
         color: props.done ? "white" : undefined,
-        ...props.buttonProps.style,
+        ...props.buttonProps?.style,
       }}
     >
       {props.done ? (

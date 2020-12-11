@@ -59,7 +59,6 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
           <FileInputButton
             updateFile={(file) => updateFile(file)}
             accept=".jpg"
-            buttonProps={{}}
           >
             <Translate id="buttons.browse" />
           </FileInputButton>

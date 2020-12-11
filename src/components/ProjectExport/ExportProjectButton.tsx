@@ -11,7 +11,7 @@ interface ExportProjectProps {
   exportProject: (projectId: string) => void;
   exportResult: ExportProjectState;
   projectId: string;
-  buttonProps: ButtonProps;
+  buttonProps?: ButtonProps;
 }
 
 /** A button for exporting project to Lift file */
