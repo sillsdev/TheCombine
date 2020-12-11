@@ -11,14 +11,11 @@ interface ExportProjectProps {
   exportProject: (projectId: string) => void;
   exportResult: ExportProjectState;
   projectId: string;
+  buttonProps: ButtonProps;
 }
 
 /** A button for exporting project to Lift file */
-export default function ExportProjectButton(
-  props: ButtonProps & ExportProjectProps
-) {
-  // Use Destructuring to define buttonProps without our ExportProjectProps.
-  const { exportProject, exportResult, projectId, ...buttonProps } = props;
+export default function ExportProjectButton(props: ExportProjectProps) {
   const sameProject = props.projectId === props.exportResult.projectId;
   // The export button will not be clickable if another export is underway.
   const loading = [ExportStatus.InProgress, ExportStatus.Success].includes(
@@ -32,10 +29,12 @@ export default function ExportProjectButton(
   return (
     <React.Fragment>
       <LoadingButton
-        onClick={exportProj}
-        color="primary"
         loading={loading}
-        {...buttonProps}
+        buttonProps={{
+          ...props.buttonProps,
+          onClick: exportProj,
+          color: "primary",
+        }}
       >
         <Translate id="buttons.export" />
       </LoadingButton>

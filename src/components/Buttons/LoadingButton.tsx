@@ -6,17 +6,16 @@ import { buttonSuccess } from "../../types/theme";
 
 interface LoadingProps {
   loading: boolean;
+  children: React.ReactNode;
+  buttonProps: ButtonProps;
 }
 
 /**
  * A button that shows a spinning wheel when loading=true
  */
-export default function LoadingButton(props: LoadingProps & ButtonProps) {
-  // Use Destructuring to define buttonProps without our LoadingProps.
-  const { loading, ...buttonProps } = props;
-
+export default function LoadingButton(props: LoadingProps) {
   return (
-    <Button variant="contained" disabled={props.loading} {...buttonProps}>
+    <Button variant="contained" disabled={props.loading} {...props.buttonProps}>
       {props.children}
       {props.loading && (
         <CircularProgress
