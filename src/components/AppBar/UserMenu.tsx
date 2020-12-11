@@ -45,6 +45,7 @@ export default function UserMenu() {
         aria-controls="user-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        color="secondary"
       >
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} />
