@@ -7,12 +7,10 @@ theme:
   icon:
     logo: material/tractor
     repo: fontawesome/brands/github
+  favicon: images/favicon.ico
 repo_url: https://github.com/sillsdev/TheCombine
 repo_name: sillsdev/TheCombine
-nav:
-  - The Combine: index.md
-  - Page 2: page2.md
-copyright: 2020 SIL International
+copyright: © 2020 SIL International
 extra:
   social:
     - icon: fontawesome/solid/globe
@@ -27,3 +25,6 @@ extra:
       link: https://www.youtube.com/channel/UC6ojqR9jOPHuPN7XP92Zj9Q
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/sil-international
+nav:
+  - The Combine: index.md
+  - Page 2: page2.md
