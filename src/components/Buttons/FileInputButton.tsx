@@ -5,13 +5,12 @@ import { ButtonProps } from "@material-ui/core/Button";
 export interface BrowseProps {
   updateFile: (file: File) => void;
   accept?: string;
+  children: React.ReactNode;
+  buttonProps: ButtonProps;
 }
 
 // This button links to a set of functions
-export default function FileInputButton(props: BrowseProps & ButtonProps) {
-  // Use Destructuring to define buttonProps without our BrowseProps.
-  const { updateFile, accept, ...buttonProps } = props;
-
+export default function FileInputButton(props: BrowseProps) {
   function updateFirstFile(files: FileList) {
     const file = files[0];
     if (file) {
@@ -33,7 +32,7 @@ export default function FileInputButton(props: BrowseProps & ButtonProps) {
 
       {/* ... and this button is tied to it with the htmlFor property */}
       <label htmlFor="file-input">
-        <Button variant="contained" component="span" {...buttonProps}>
+        <Button variant="contained" component="span" {...props.buttonProps}>
           {props.children}
         </Button>
       </label>

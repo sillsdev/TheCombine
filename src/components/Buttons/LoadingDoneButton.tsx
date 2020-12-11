@@ -11,27 +11,24 @@ interface LoadingDoneProps {
   done: boolean;
   doneText?: React.ReactNode | string;
   disabled?: boolean;
+  children: React.ReactNode;
+  buttonProps: ButtonProps;
 }
 
 /**
  * A button that shows a spinning wheel when loading and "done" when done
  */
-export default function LoadingDoneButton(
-  props: LoadingDoneProps & ButtonProps
-) {
-  // Use Destructuring to define buttonProps without our LoadingDoneProps.
-  const { loading, done, doneText, disabled, ...buttonProps } = props;
-
+export default function LoadingDoneButton(props: LoadingDoneProps) {
   return (
     <Button
       type="submit"
       variant="contained"
-      {...buttonProps}
+      {...props.buttonProps}
       disabled={props.disabled ? props.disabled : props.loading}
       style={{
         backgroundColor: props.done ? buttonSuccess : undefined,
         color: props.done ? "white" : undefined,
-        ...props.style,
+        ...props.buttonProps.style,
       }}
     >
       {props.done ? (

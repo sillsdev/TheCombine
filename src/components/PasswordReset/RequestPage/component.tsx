@@ -85,12 +85,14 @@ export default class ResetRequest extends React.Component<
               </Grid>
               <Grid item>
                 <LoadingDoneButton
-                  variant="contained"
-                  color="primary"
-                  onClick={() => this.onSubmit}
                   disabled={!this.state.emailOrUsername}
                   loading={this.state.loading}
                   done={this.state.done}
+                  buttonProps={{
+                    onClick: () => this.onSubmit,
+                    variant: "contained",
+                    color: "primary",
+                  }}
                 >
                   <Translate id="passwordReset.submit" />
                 </LoadingDoneButton>
