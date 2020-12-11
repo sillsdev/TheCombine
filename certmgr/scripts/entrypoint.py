@@ -14,7 +14,6 @@ from self_signed_cert import SelfSignedCert
 from utils import get_setting
 
 if __name__ == "__main__":
-
     mode_choices: Dict[str, Optional[BaseCert]] = {
         "self-signed": SelfSignedCert(),
         "letsencrypt": LetsEncryptCert(),
@@ -37,4 +36,4 @@ if __name__ == "__main__":
             cert_obj.renew()
     else:
         print(f"Cannot run {cert_mode} mode")
-        sys.exit(99)
+        sys.exit(1)

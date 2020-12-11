@@ -3,9 +3,9 @@
 
 import os
 from pathlib import Path
-from typing import Dict, Optional, Union
+from typing import Dict, Union
 
-env_defaults: Dict[str, Union[str, int, bool]] = {
+env_defaults: Dict[str, Union[str, int]] = {
     "CERT_MODE": "self-signed",
     "CERT_STORE": "/etc/cert_store",
     "CERT_EMAIL": "",
@@ -13,14 +13,20 @@ env_defaults: Dict[str, Union[str, int, bool]] = {
     "MAX_CONNECT_TRIES": 15,
     "CERT_ADDL_DOMAINS": "",
     "SERVER_NAME": "",
-    "CERT_SELF_RENEWAL": 30,  # days before expriy
-    "PROXY_CERT_RENEWAL": 60,  # days before expiry
+    "CERT_SELF_RENEWAL": 30,  # days before expiry
+    "CERT_PROXY_RENEWAL": 60,  # days before expiry
     "CERT_PROXY_DOMAINS": "",
     "AWS_S3_CERT_LOC": "thecombine.app/certs",
 }
 
 
-def get_setting(env_var: str) -> Optional[Union[str, int, bool]]:
+class MissingEnvironmentVariableError(Exception):
+    """Exception to raise when an environment variable's value cannot be found."""
+
+    pass
+
+
+def get_setting(env_var: str) -> Union[str, int, bool]:
     """
     Look up environment variable.
 
@@ -32,7 +38,9 @@ def get_setting(env_var: str) -> Optional[Union[str, int, bool]]:
         return os.environ[env_var]
     if env_var in env_defaults:
         return env_defaults[env_var]
-    return None
+    raise MissingEnvironmentVariableError(
+        f"{env_var} is not defined and does not have a default value"
+    )
 
 
 def update_link(src: Path, dest: Path) -> None:
@@ -41,29 +49,14 @@ def update_link(src: Path, dest: Path) -> None:
 
     If dest already exists and is not a link, it is deleted first.
     """
-    print(f"linking {src} to {dest}")
     if dest.exists():
         if dest.is_symlink():
-            link_target: str = os.readlink(dest)
+            link_target = os.readlink(dest)
             if link_target != src:
                 dest.unlink()
             else:
                 # src already points to the dest
                 return
         else:
-            print(f"{dest} exists and is not a link")
             dest.unlink()
     dest.symlink_to(src)
-
-
-def update_renew_before_expiry(domain: str, renew_before_expiry_period: int) -> None:
-    """Update the RENEW_BEFORE_EXPIRY configuration value for 'domain'."""
-    renew_before_expiry = str(renew_before_expiry_period)
-    print(f"Setting renew before expiry for {domain} " f"to {renew_before_expiry}")
-    renew_config = f"/etc/letsencrypt/renewal/{domain}.conf"
-    if os.path.exists(renew_config):
-        os.system(
-            "sed -i 's/#* *renew_before_expiry = [0-9][0-9]* days/"
-            f"renew_before_expiry = {renew_before_expiry} days/' "
-            f" {renew_config}"
-        )

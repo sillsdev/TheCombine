@@ -62,7 +62,6 @@ done
 
 echo_verbose "1. Prepare for the restore."
 
-COMBINE_HOST={{ ansible_hostname }}
 RESTORE_FILE="combine-backup.tar.gz"
 AWS_BACKUPS="s3://{{ aws_s3_backup_loc }}"
 COMBINE_APP_DIR=${COMBINE_APP_DIR:="{{ combine_app_dir }}"}

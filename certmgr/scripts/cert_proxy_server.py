@@ -3,18 +3,17 @@ CertServer certificate module.
 
 The CertProxyServer derives from LetsEncryptCert.  In addition to performing the
 role of LetsEncryptCert, it also acts as a proxy for the roaming servers, e.g.
-the NUCs, by fetching their certificates pushing them to an AWS S3 Bucket.
+the NUCs, by fetching their certificates and pushing them to an AWS S3 Bucket.
 """
 
 
 import os
 from pathlib import Path
 from sys import stderr
-from typing import List
 
 from aws import aws_push_certs
 from letsencrypt_cert import LetsEncryptCert
-from utils import get_setting, update_renew_before_expiry
+from utils import get_setting
 
 
 class CertProxyServer(LetsEncryptCert):
@@ -28,11 +27,10 @@ class CertProxyServer(LetsEncryptCert):
     bucket.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize CertProxyServer instance."""
         super().__init__()
-        self.cert_renew_deploy_hook = Path("/etc/letsencrypt/renewal/deploy/10_push_certs.sh")
-        self.renew_before_expiry: int = get_setting("PROXY_CERT_RENEWAL")
+        self.renew_before_expiry: int = get_setting("CERT_PROXY_RENEWAL")
 
     def create(self) -> None:
         """
@@ -43,7 +41,6 @@ class CertProxyServer(LetsEncryptCert):
         certificates are then pushed to the AWS S3 certificate bucket.
         """
         super().create()
-        print("Called CertProxyServer.create()")
         self.get_proxy_certs()
 
     def get_proxy_certs(self) -> None:
@@ -53,7 +50,7 @@ class CertProxyServer(LetsEncryptCert):
         For each domain listed in the CERT_PROXY_DOMAINS environment variable:
          - generate an SSL certificate from Let's Encrypt
          - configure the "renew before expiry" period to be the time specified
-           in the PROXY_CERT_RENEWAL environment variable. (Note that all proxy
+           in the CERT_PROXY_RENEWAL environment variable. (Note that all proxy
            certificates have the same renewal period).
          - copy the certificate files to the AWS S3 service.  The following
            objects are saved in the S3 bucket:
@@ -65,12 +62,12 @@ class CertProxyServer(LetsEncryptCert):
            the S3 bucket to use; {domain} is the individual domain from the
            CERT_PROXY_DOMAINS variable.
         """
-        domain_list: List[str] = get_setting("CERT_PROXY_DOMAINS").split()
-        cert_created: bool = False
+        domain_list = get_setting("CERT_PROXY_DOMAINS").split()
+        cert_created = False
         for domain in domain_list:
             if self.get_cert([domain]):
                 cert_created = True
-                update_renew_before_expiry(domain, self.renew_before_expiry)
+                super().update_renew_before_expiry(domain, self.renew_before_expiry)
             else:
                 print(f"Could not get certificate for {domain}")
         if cert_created:
@@ -84,7 +81,7 @@ class CertProxyServer(LetsEncryptCert):
         Add a hook function to push new certificates to the AWS S3 bucket when
         the proxy certificates are renewed.
         """
-        renew_hook = Path("/etc/letsencrypt/renewal-hooks/deploy/01_hook_push_certs_to_aws")
+        renew_hook = Path(f"{super().get_le_dir()}/renewal-hooks/deploy/01_hook_push_certs_to_aws")
         hook_target = "/opt/certmgr/cert_renewal_hook.py"
         if renew_hook.is_symlink():
             link_target = os.readlink(renew_hook)

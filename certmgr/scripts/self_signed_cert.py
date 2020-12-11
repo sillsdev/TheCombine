@@ -8,7 +8,7 @@ from utils import get_setting, update_link
 class SelfSignedCert(BaseCert):
     """Class for a Self-Signed SSL certificate."""
 
-    def __init__(self, expire: int = 365, renew_before_expiry: int = 10) -> None:
+    def __init__(self, *, expire: int = 365, renew_before_expiry: int = 10) -> None:
         """Construct a Self-Signed Certificate object."""
         # pylint: disable=too-many-instance-attributes
         # Eight are required in this case.

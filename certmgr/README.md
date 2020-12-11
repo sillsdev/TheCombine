@@ -33,12 +33,12 @@ behavior:
 | CERT_MODE          | May be one of `self-signed`, `letsencrypt`, or `cert-server` to specify which of the certificate management personalities to use.                                                                                                                                                                                                                                                                        |
 | CERT_EMAIL         | Set to e-mail address for certificate expiration notices first                                                                                                                                                                                                                                                                                                                                           |
 | CERT_STAGING       | If `CERT_STAGING` is set to a value other than `"0"` then letsencrypt will generate a test certificate instead of a production certificate. Web browsers will not accept it as a valid certificate but test certificates do not count towards the rate limits for certificates generated for a domain.                                                                                                   |
-| CERT_ADDL_DOMAINS  | A space separated list of additional domains for the certificate. Note that these are additional domain names that may be used for the server, e.g. www.thecombine.app, www1.thecombine.app. They are not the domain names for other devices for which the server requests a certificate (see CERT_PROXY_DOMAINS below.)                                                                                 |
+| CERT_ADDL_DOMAINS  | A space-separated list of additional domains for the certificate. Note that these are additional domain names that may be used for the server, e.g. www.thecombine.app, www1.thecombine.app. They are not the domain names for other devices for which the server requests a certificate (see CERT_PROXY_DOMAINS below.)                                                                                 |
 | SERVER_NAME        | Name of the server. Also used to specify the directory where the certificates are stored.                                                                                                                                                                                                                                                                                                                |
 | MAX_CONNECT_TRIES  | Number of times to check if the webserver is up before attempting to get a certificate from letsencrypt.                                                                                                                                                                                                                                                                                                 |
 | CERT_STORE         | Location where certificates are stored. (Default: `/etc/cert_store`)                                                                                                                                                                                                                                                                                                                                     |
 | CERT_SELF_RENEWAL  | Specifies when to renew the server's certificate, expressed as the number of days before the certificate expires. (Default: 30)                                                                                                                                                                                                                                                                          |
-| PROXY_CERT_RENEWAL | When the server is requesting certificates as a proxy for other devices, PROXY_CERT_RENEWAL specifies when to renew the proxied certificates, expressed as the number of days before the certificate expires. This number may be different for the proxied devices since they will typically be used in remote areas and may need a longer guaranteed time before the certificate expires. (Default: 60) |
+| CERT_PROXY_RENEWAL | When the server is requesting certificates as a proxy for other devices, CERT_PROXY_RENEWAL specifies when to renew the proxied certificates, expressed as the number of days before the certificate expires. This number may be different for the proxied devices since they will typically be used in remote areas and may need a longer guaranteed time before the certificate expires. (Default: 60) |
 | CERT_PROXY_DOMAINS | A space separated list of domains for which the server is to request certificates. There must be a DNS entry to direct traffic for these domains to the server that is acting as a proxy. All proxy certificates that are created are then uploaded to an AWS S3 bucket for retrieval by the devices for which they were generated.                                                                      |
 | AWS_S3_CERT_LOC    | The location of the AWS S3 bucket. (Default: `s3://thecombine.app`)                                                                                                                                                                                                                                                                                                                                      |
 
@@ -101,24 +101,18 @@ then `letsencrypt_cert.py` will:
 to obtain its own certificate. It then creates certificates for each specified
 proxy and uploads the certificates to an AWS S3 bucket
 
-#### certclient.sh
+#### cert_client.py
 
 _Not Implemented Yet_
 
-`certclient.sh` will implement the certmgr behavior when `CERT_MODE` is set to
+`cert_client.py` will implement the certmgr behavior when `CERT_MODE` is set to
 `cert-client`. It will fetch an SSL certificate from the AWS S3 bucket (when an
 internet connection is available).
 
 #### aws.py
 
 `aws.py` is a collection of utility routines for uploading certificates to an S3 bucket
-or downloading objects from the bucket:
-
-- `aws_s3_put(src, dest)`: Uploads the source file to the destination object. _The
-  destination is relative to the cert folder in the AWS bucket._
-- `aws_s3_get(src, dest)`: Downloads the source object to the destination file. _The
-  source is relative to the cert folder in the AWS bucket._
-- `aws_push_certs()`: Pushes all proxy certificates to the AWS S3 bucket.
+or downloading objects from the bucket.
 
 #### cert_renewal_hook.py
 
@@ -128,15 +122,7 @@ certs to the S3 bucket.
 
 #### utils.py
 
-`utils.py` is a collection of utility functions:
-
-- `get_setting` looks up an environment variable and returns its value. If the
-  environment variable does not exist, then a default value is returned instead.
-  If the environment variable is not found in the list of defaults, `None` is
-  returned.
-- `update_link` creates/moves a symbolic link.
-- `update_renew_before_expiry` updates the `RENEW_BEFORE_EXPIRY` configuration
-  value for a specified domain.
+`utils.py` is a collection of utility functions used by the different certmgr modes.
 
 ## Installation Requirements
 

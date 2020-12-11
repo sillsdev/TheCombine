@@ -14,7 +14,7 @@ from typing import List
 from base_cert import BaseCert
 import requests
 from self_signed_cert import SelfSignedCert
-from utils import get_setting, update_link, update_renew_before_expiry
+from utils import get_setting, update_link
 
 
 class LetsEncryptCert(BaseCert):
@@ -23,16 +23,16 @@ class LetsEncryptCert(BaseCert):
     def __init__(self) -> None:
         """Initialize class from environment variables."""
         # pylint: disable=too-many-instance-attributes
-        # Nine are required in this case.
-
-        self.cert_store = get_setting("CERT_STORE")
-        self.server_name = get_setting("SERVER_NAME")
-        self.email = get_setting("CERT_EMAIL")
-        self.max_connect_tries = int(get_setting("MAX_CONNECT_TRIES"))
+        # Ten are required in this case.
+        self.cert_store: str = get_setting("CERT_STORE")
+        self.server_name: str = get_setting("SERVER_NAME")
+        self.email: str = get_setting("CERT_EMAIL")
+        self.max_connect_tries: int = get_setting("MAX_CONNECT_TRIES")
         self.staging = get_setting("CERT_STAGING") != "0"
-        self.cert_dir = Path(f"/etc/letsencrypt/live/{self.server_name}")
+        self.le_dir = Path("/etc/letsencrypt")
+        self.cert_dir = Path(f"{self.le_dir}/live/{self.server_name}")
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
-        self.cert = Path(f"/etc/letsencrypt/live/{self.server_name}/fullchain.pem")
+        self.cert = Path(f"{self.cert_dir}/fullchain.pem")
         self.renew_before_expiry: int = get_setting("CERT_SELF_RENEWAL")
 
     def create(self) -> None:
@@ -43,15 +43,15 @@ class LetsEncryptCert(BaseCert):
         link from the Nginx configured location to the self-signed certificate.
         This allows the Nginx webserver to start.  Once Nginx is up, then the
         certificate can be requested using the webroot authentication method.  If
-        this is successfull, then the symbolic link is moved to point to the
+        this is successful, then the symbolic link is moved to point to the
         new certificate.
-        N O T E :
+        NOTE:
         Nginx needs to be restarted/reloaded for it to use the new certificate.
         """
         if not self.cert.exists():
             # Create a self-signed certificate so that the Nginx webserver can
             # come up and be available for the HTTP challenges from letsencrypt
-            temp_cert = SelfSignedCert(1, 0)
+            temp_cert = SelfSignedCert(expire=1, renew_before_expiry=0)
             temp_cert.create()
 
         # Check to see if we have a certificate from Let's Encrypt by seeing
@@ -70,7 +70,6 @@ class LetsEncryptCert(BaseCert):
         #  2. request a certificate from Let's Encrypt using certbot
         #  3. update the Nginx configuration to use the new certificate.
         if not is_letsencrypt_cert:
-            print("Waiting for webserver to come up")
             if not self.wait_for_webserver():
                 print("Could not connect to webserver")
                 return
@@ -82,11 +81,15 @@ class LetsEncryptCert(BaseCert):
             if self.get_cert(domain_list):
                 # update the certificate link for the Nginx web server
                 update_link(self.cert_dir, self.nginx_cert_dir)
-            update_renew_before_expiry(self.server_name, self.renew_before_expiry)
+            self.update_renew_before_expiry(self.server_name, self.renew_before_expiry)
 
     def renew(self) -> None:
         """Renew all letsencrypt certificates that are up for renewal."""
         os.system("certbot renew")
+
+    def get_le_dir(self) -> Path:
+        """Get the directory where Let's Encrypt stores certificate info."""
+        return self.le_dir
 
     def get_cert(self, domain_list: List[str]) -> bool:
         """
@@ -96,7 +99,7 @@ class LetsEncryptCert(BaseCert):
         first domain in the list is the
         """
         if domain_list is not None:
-            domain_args: str = "-d " + " -d ".join(domain_list)
+            domain_args = f"-d {' -d '.join(domain_list)}"
 
             if not self.email:
                 email_arg = "--register-unsafely-without-email"
@@ -105,7 +108,7 @@ class LetsEncryptCert(BaseCert):
 
             staging_arg = "--staging" if self.staging else ""
 
-            cert_cmd: str = (
+            cert_cmd = (
                 f"certbot certonly --webroot -w /var/www/certbot "
                 f"{staging_arg} "
                 f"{email_arg} "
@@ -145,3 +148,15 @@ class LetsEncryptCert(BaseCert):
                 attempt_count += 1
             time.sleep(10)
         return False
+
+    def update_renew_before_expiry(self, domain: str, renew_before_expiry_period: int) -> None:
+        """Update the RENEW_BEFORE_EXPIRY configuration value for 'domain'."""
+        renew_before_expiry = str(renew_before_expiry_period)
+        print(f"Setting renew before expiry for {domain} " f"to {renew_before_expiry}")
+        renew_config = f"{self.le_dir}/renewal/{domain}.conf"
+        if os.path.exists(renew_config):
+            os.system(
+                "sed -i 's/#* *renew_before_expiry = [0-9][0-9]* days/"
+                f"renew_before_expiry = {renew_before_expiry} days/' "
+                f" {renew_config}"
+            )

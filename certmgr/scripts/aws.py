@@ -1,9 +1,20 @@
 """Collection of functions for managing Amazon Web Services."""
-import os
 from pathlib import Path
-from typing import List
+import subprocess
+from typing import Tuple
 
 from utils import get_setting
+
+
+def _get_aws_uri_(obj: str) -> Tuple[str, str]:
+    """
+    Lookup the URI for an AWS S3 object and the profile for accessing it.
+
+    Lookup the AWS S3 URI and the profile for accessing it.  Returns the
+    values as a Tuple (aws_s3_uri, aws_profile)
+    """
+    aws_bucket = get_setting("AWS_S3_CERT_LOC")
+    return get_setting("AWS_S3_PROFILE"), f"s3://{aws_bucket}/{obj}"
 
 
 def aws_s3_put(src: Path, dest: str) -> bool:
@@ -14,11 +25,16 @@ def aws_s3_put(src: Path, dest: str) -> bool:
     that is configured for the container.  aws_s3_put will add the bucket
     information.
     """
-    aws_s3_bucket = get_setting("AWS_S3_CERT_LOC")
-    aws_s3_profile = get_setting("AWS_S3_PROFILE")
-    aws_s3_uri = f"s3://{aws_s3_bucket}/{dest}"
+    aws_s3_uri, aws_s3_profile = _get_aws_uri_(dest)
     print(f"AWS S3 put {src} to {dest}")
-    return os.system(f"aws s3 cp --profile {aws_s3_profile} {src} {aws_s3_uri}") == 0
+    return (
+        subprocess.run(
+            ["aws", "s3", "cp", "--profile", aws_s3_profile, src, aws_s3_uri],
+            shell=True,
+            check=True,
+        ).returncode
+        == 0
+    )
 
 
 def aws_s3_get(src: str, dest: Path) -> bool:
@@ -29,17 +45,22 @@ def aws_s3_get(src: str, dest: Path) -> bool:
     that is configured for the container.  aws_s3_get will add the bucket
     information.
     """
-    aws_s3_bucket = get_setting("AWS_S3_CERT_LOC")
-    aws_s3_profile = get_setting("AWS_S3_PROFILE")
-    aws_s3_uri = f"s3://{aws_s3_bucket}/{src}"
+    aws_s3_uri, aws_s3_profile = _get_aws_uri_(src)
     print(f"AWS S3 get {dest} from {src}")
-    return os.system(f"aws s3 cp --profile {aws_s3_profile} {aws_s3_uri} {dest}") == 0
+    return (
+        subprocess.run(
+            ["aws", "s3", "cp", "--profile", aws_s3_profile, aws_s3_uri, dest],
+            shell=True,
+            check=True,
+        ).returncode
+        == 0
+    )
 
 
 def aws_push_certs() -> None:
     """Push all proxy certificates to AWS S3."""
     cert_file_list = ("cert.pem", "chain.pem", "fullchain.pem", "privkey.pem")
-    domain_list: List[str] = get_setting("CERT_PROXY_DOMAINS").split()
+    domain_list = get_setting("CERT_PROXY_DOMAINS").split()
     for domain in domain_list:
         cert_dir = Path(f"/etc/letsencrypt/live/{domain}")
         for cert_file in cert_file_list:
