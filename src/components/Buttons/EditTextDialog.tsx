@@ -90,7 +90,6 @@ export default function EditTextDialog(props: EditTextDialogProps) {
           color="primary"
           variant="contained"
           loading={loading}
-          {...props}
         >
           <Translate id="buttons.confirm" />
         </LoadingButton>

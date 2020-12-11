@@ -9,7 +9,10 @@ export interface BrowseProps {
 
 // This button links to a set of functions
 export default function FileInputButton(props: BrowseProps & ButtonProps) {
-  function updateFile(files: FileList) {
+  // Use Destructuring to define buttonProps without our BrowseProps.
+  const { updateFile, accept, ...buttonProps } = props;
+
+  function updateFirstFile(files: FileList) {
     const file = files[0];
     if (file) {
       props.updateFile(file);
@@ -24,13 +27,13 @@ export default function FileInputButton(props: BrowseProps & ButtonProps) {
         type="file"
         name="name"
         accept={props.accept}
-        onChange={(e) => updateFile(e.target.files as FileList)}
+        onChange={(e) => updateFirstFile(e.target.files as FileList)}
         style={{ display: "none" }}
       />
 
       {/* ... and this button is tied to it with the htmlFor property */}
       <label htmlFor="file-input">
-        <Button variant="contained" component="span" {...props}>
+        <Button variant="contained" component="span" {...buttonProps}>
           {props.children}
         </Button>
       </label>
