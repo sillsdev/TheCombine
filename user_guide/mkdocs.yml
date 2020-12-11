@@ -5,7 +5,7 @@ theme:
   palette:
     primary: blue
   icon:
-    logo: material/tractor
+    logo: material/barley
     repo: fontawesome/brands/github
   favicon: images/favicon.ico
 repo_url: https://github.com/sillsdev/TheCombine
