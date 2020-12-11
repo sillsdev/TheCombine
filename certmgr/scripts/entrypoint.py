@@ -5,7 +5,7 @@
 import os
 import sys
 import time
-from typing import Dict, Optional, cast
+from typing import Dict, cast
 
 from base_cert import BaseCert
 from cert_proxy_server import CertProxyServer
