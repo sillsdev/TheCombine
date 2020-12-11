@@ -5,6 +5,12 @@
 !nginx
 !public
 !src
+!user_guide
+!.env
+!dev-requirements.txt
 !package*.json
 !tsconfig.json
-!.env
+!tox.ini
+
+# Ignore user guide build directory.
+user_guide/site
