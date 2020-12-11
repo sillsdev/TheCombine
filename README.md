@@ -382,6 +382,20 @@ requirements are backwards-compatible.
 Then manually remove `dataclasses==` line from `dev-requirements.txt`. This is to work
 around a pinning issue with supporting Python 3.6 and 3.7+.
 
+##### User Guide
+
+To build the user guide and serve it dynamically (automatically reloading on change):
+
+```bash
+(venv) $ tox -e user-guide-serve
+```
+
+To build the user guide statically into `user-guide/site`:
+
+```bash
+(venv) $ tox -e user-guide
+```
+
 #### Configure Docker
 
 Run the configuration script in an activated virtual environment to generate
