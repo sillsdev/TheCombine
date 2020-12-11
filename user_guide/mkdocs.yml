@@ -1,4 +1,5 @@
 site_name: The Combine
+strict: true
 theme:
   name: material
   palette:
