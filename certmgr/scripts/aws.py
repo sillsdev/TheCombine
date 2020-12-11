@@ -1,7 +1,7 @@
 """Collection of functions for managing Amazon Web Services."""
 from pathlib import Path
 import subprocess
-from typing import Tuple
+from typing import Tuple, cast
 
 from utils import get_setting
 
@@ -14,7 +14,8 @@ def _get_aws_uri_(obj: str) -> Tuple[str, str]:
     values as a Tuple (aws_s3_uri, aws_profile)
     """
     aws_bucket = get_setting("AWS_S3_CERT_LOC")
-    return get_setting("AWS_S3_PROFILE"), f"s3://{aws_bucket}/{obj}"
+    aws_profile = cast(str, get_setting("AWS_S3_PROFILE"))
+    return f"s3://{aws_bucket}/{obj}", aws_profile
 
 
 def aws_s3_put(src: Path, dest: str) -> bool:
@@ -60,7 +61,7 @@ def aws_s3_get(src: str, dest: Path) -> bool:
 def aws_push_certs() -> None:
     """Push all proxy certificates to AWS S3."""
     cert_file_list = ("cert.pem", "chain.pem", "fullchain.pem", "privkey.pem")
-    domain_list = get_setting("CERT_PROXY_DOMAINS").split()
+    domain_list = cast(str, get_setting("CERT_PROXY_DOMAINS")).split()
     for domain in domain_list:
         cert_dir = Path(f"/etc/letsencrypt/live/{domain}")
         for cert_file in cert_file_list:

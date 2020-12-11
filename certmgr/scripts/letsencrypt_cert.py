@@ -9,7 +9,7 @@ volume for the certbot data as well as the letsencrypt certificates.
 import os
 from pathlib import Path
 import time
-from typing import List
+from typing import List, cast
 
 from base_cert import BaseCert
 import requests
@@ -24,16 +24,16 @@ class LetsEncryptCert(BaseCert):
         """Initialize class from environment variables."""
         # pylint: disable=too-many-instance-attributes
         # Ten are required in this case.
-        self.cert_store: str = get_setting("CERT_STORE")
-        self.server_name: str = get_setting("SERVER_NAME")
-        self.email: str = get_setting("CERT_EMAIL")
-        self.max_connect_tries: int = get_setting("MAX_CONNECT_TRIES")
+        self.cert_store = cast(str, get_setting("CERT_STORE"))
+        self.server_name = cast(str, get_setting("SERVER_NAME"))
+        self.email = cast(str, get_setting("CERT_EMAIL"))
+        self.max_connect_tries = cast(int, get_setting("MAX_CONNECT_TRIES"))
         self.staging = get_setting("CERT_STAGING") != "0"
         self.le_dir = Path("/etc/letsencrypt")
         self.cert_dir = Path(f"{self.le_dir}/live/{self.server_name}")
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
         self.cert = Path(f"{self.cert_dir}/fullchain.pem")
-        self.renew_before_expiry: int = get_setting("CERT_SELF_RENEWAL")
+        self.renew_before_expiry = cast(int, get_setting("CERT_SELF_RENEWAL"))
 
     def create(self) -> None:
         """
@@ -76,7 +76,7 @@ class LetsEncryptCert(BaseCert):
 
             # Get additional variables for certbot
             domain_list: List[str] = [self.server_name]
-            domain_list.extend(get_setting("CERT_ADDL_DOMAINS").split())
+            domain_list.extend(cast(str, get_setting("CERT_ADDL_DOMAINS")).split())
 
             if self.get_cert(domain_list):
                 # update the certificate link for the Nginx web server

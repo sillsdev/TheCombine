@@ -5,7 +5,7 @@
 import os
 import sys
 import time
-from typing import Dict, Optional
+from typing import Dict, Optional, cast
 
 from base_cert import BaseCert
 from cert_proxy_server import CertProxyServer
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     for subdir in ("nginx", "selfsigned"):
         os.makedirs(f"{cert_store}/{subdir}", 0o755, True)
 
-    cert_mode = get_setting("CERT_MODE")
+    cert_mode = cast(str, get_setting("CERT_MODE"))
     print(f"Running in {cert_mode} mode")
     cert_obj = mode_choices.get(cert_mode, None)
 
