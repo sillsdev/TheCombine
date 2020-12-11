@@ -52,7 +52,7 @@
     dest: /etc/docker/daemon.json
     owner: root
     group: root
-    mode:  0600
+    mode: 0600
   notify: restart docker
 
 - name: Install Docker Compose
