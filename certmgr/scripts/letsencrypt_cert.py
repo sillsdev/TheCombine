@@ -26,16 +26,15 @@ class LetsEncryptCert(BaseCert):
         """Initialize class from environment variables."""
         # pylint: disable=too-many-instance-attributes
         # Ten are required in this case.
-        self.cert_store: str = get_setting("CERT_STORE")
-        self.server_name: str = get_setting("SERVER_NAME")
-        self.email: str = get_setting("CERT_EMAIL")
+        self.cert_store = cast(str, get_setting("CERT_STORE"))
+        self.server_name = cast(str, get_setting("SERVER_NAME"))
+        self.email = cast(str, get_setting("CERT_EMAIL"))
         self.max_connect_tries: int = int(get_setting("MAX_CONNECT_TRIES"))
         self.staging = get_setting("CERT_STAGING") != "0"
         self.cert_dir = Path(f"{LetsEncryptCert.LETSENCRYPT_DIR}/live/{self.server_name}")
         self.nginx_cert_dir = Path(f"{self.cert_store}/nginx/{self.server_name}")
         self.cert = Path(f"{self.cert_dir}/fullchain.pem")
         self.renew_before_expiry = cast(int, get_setting("CERT_SELF_RENEWAL"))
-        self.renew_before_expiry: int = int(get_setting("CERT_SELF_RENEWAL"))
 
     @staticmethod
     def update_renew_before_expiry(domain: str, renew_before_expiry_period: int) -> None:
