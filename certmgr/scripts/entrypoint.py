@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     cert_mode = cast(str, get_setting("CERT_MODE"))
     print(f"Running in {cert_mode} mode")
-    cert_obj: Optional = mode_choices.get(cert_mode, None)
+    cert_obj = mode_choices.get(cert_mode, None)
 
     if cert_obj is not None:
         cert_obj.create()
