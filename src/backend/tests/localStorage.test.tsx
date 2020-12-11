@@ -36,16 +36,20 @@ afterAll(() => {
   LocalStorage.setProjectId(oldProjectId);
 });
 
-describe("Test localStorage", () => {
+function expectAllEmpty() {
+  expect(LocalStorage.getAvatar()).toEqual("");
+  expect(LocalStorage.getCurrentUser()).toEqual(null);
+  expect(LocalStorage.getMergeDupsBlacklist()).toEqual({});
+  expect(LocalStorage.getProjectId()).toEqual("");
+  expect(LocalStorage.getUserId()).toEqual("");
+}
+
+describe("LocalStorage", () => {
   it("should return empty elements when nothing has been stored", () => {
-    expect(LocalStorage.getAvatar()).toEqual("");
-    expect(LocalStorage.getCurrentUser()).toEqual(null);
-    expect(LocalStorage.getMergeDupsBlacklist()).toEqual({});
-    expect(LocalStorage.getProjectId()).toEqual("");
-    expect(LocalStorage.getUserId()).toEqual("");
+    expectAllEmpty();
   });
 
-  it("should return the set value", () => {
+  it("should return the set value, then clear on reset", () => {
     LocalStorage.setAvatar(mockAvatar);
     expect(LocalStorage.getAvatar()).toEqual(mockAvatar);
     LocalStorage.setCurrentUser(mockUser);
@@ -55,5 +59,8 @@ describe("Test localStorage", () => {
     expect(LocalStorage.getMergeDupsBlacklist()).toEqual(mockBlacklist);
     LocalStorage.setProjectId(mockProjectId);
     expect(LocalStorage.getProjectId()).toEqual(mockProjectId);
+
+    LocalStorage.clearLocalStorage();
+    expectAllEmpty();
   });
 });
