@@ -62,7 +62,6 @@ done
 
 echo_verbose "1. Prepare for the restore."
 
-COMBINE_HOST={{ ansible_hostname }}
 RESTORE_FILE="combine-backup.tar.gz"
 AWS_BACKUPS="s3://{{ aws_s3_backup_loc }}"
 COMBINE_APP_DIR=${COMBINE_APP_DIR:="{{ combine_app_dir }}"}
@@ -104,8 +103,8 @@ else
 fi
 
 if [ -z "${BACKUP}" ] ; then
-  aws_backup_list=( $(/usr/local/bin/aws s3 ls ${AWS_BACKUPS} --recursive --profile {{ aws_backup_profile }} | sed "s/.* backups\///") )
-  aws_backups_available=${{ '{#' }}aws_backup_list[@]}
+  aws_backup_list=( $(/usr/local/bin/aws s3 ls ${AWS_BACKUPS} --recursive --profile {{ aws_s3_profile }} | sed "s/.* backups\///") )
+  aws_backups_available={{ '${#aws_backup_list[@]}' }}
   if [[ $aws_backups_available -eq 0 ]] ; then
     echo "No backups available from ${AWS_BACKUPS}"
     exit 0
@@ -132,7 +131,7 @@ echo "BACKUP == '${BACKUP}'"
 
 echo_verbose "3. Fetch the selected backup, ${BACKUP}."
 AWS_FILE="${AWS_BACKUPS}/${BACKUP}"
-/usr/local/bin/aws s3 cp ${AWS_FILE} ${RESTORE_DIR}/${RESTORE_FILE} --profile {{ aws_backup_profile }}
+/usr/local/bin/aws s3 cp ${AWS_FILE} ${RESTORE_DIR}/${RESTORE_FILE} --profile {{ aws_s3_profile }}
 
 echo_verbose "4. Unpack the backup."
 tar xzvf ${RESTORE_DIR}/${RESTORE_FILE} -C ${RESTORE_DIR}

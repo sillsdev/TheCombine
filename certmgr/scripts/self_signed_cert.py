@@ -2,13 +2,19 @@ import os
 from pathlib import Path
 
 from base_cert import BaseCert
-from func import lookup_env, update_link
+from utils import get_setting, update_link
 
 
 class SelfSignedCert(BaseCert):
-    def __init__(self, expire: int = 365, renew_before_expiry: int = 10) -> None:
-        self.cert_store = lookup_env("CERT_STORE")
-        self.server_name = lookup_env("SERVER_NAME")
+    """Class for a Self-Signed SSL certificate."""
+
+    def __init__(self, *, expire: int = 365, renew_before_expiry: int = 10) -> None:
+        """Construct a Self-Signed Certificate object."""
+        # pylint: disable=too-many-instance-attributes
+        # Eight are required in this case.
+
+        self.cert_store = get_setting("CERT_STORE")
+        self.server_name = get_setting("SERVER_NAME")
         self.expire = expire  # days
         self.renew_before_expiry = renew_before_expiry  # days
         self.cert_dir = Path(f"{self.cert_store}/selfsigned/{self.server_name}")
@@ -16,14 +22,14 @@ class SelfSignedCert(BaseCert):
         self.cert = Path(f"{self.cert_store}/selfsigned/{self.server_name}/fullchain.pem")
         self.privkey = Path(f"{self.cert_store}/selfsigned/{self.server_name}/privkey.pem")
 
-    def create(self, force: bool = False) -> None:
+    def create(self) -> None:
         """
-        Create a self-signed certificate
+        Create a self-signed certificate.
 
         Create a self-signed certificate and then link the Nginx directory for its
         certificate to the directory where the certs are created.
         """
-        if force or not self.cert.exists():
+        if not self.cert.exists():
             self.cert_dir.mkdir(0o755, True)
             os.system(
                 f"openssl req "
@@ -40,7 +46,7 @@ class SelfSignedCert(BaseCert):
 
     def renew(self) -> None:
         """
-        Renew a Self-Signed certificate
+        Renew a Self-Signed certificate.
 
         Checks to see if the self-signed certificate will expire with in the
         "renew_before_expiry" time (in days).  If it will, a new self-signed
@@ -48,15 +54,15 @@ class SelfSignedCert(BaseCert):
         """
         renew_before_expiry_sec = self.renew_before_expiry * 3600 * 24
         if self.cert.exists():
-            wstat = os.system(
+            ret_code = os.system(
                 "openssl x509 "
                 "-noout "
                 f"-in {self.cert} "
                 f"-checkend {renew_before_expiry_sec} "
                 "> /dev/null"
             )
-            if os.waitstatus_to_exitcode(wstat) == 1:
+            if ret_code == 1:
                 print(f"Renewing the certificates for {self.server_name}")
-                self.create(True)
+                self.create()
         else:
             print(f"Restoring the certificate for {self.server_name}")
