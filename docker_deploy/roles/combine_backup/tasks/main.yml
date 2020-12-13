@@ -33,7 +33,7 @@
     env: yes
     user: "{{ combine_user }}"
     name: MAX_BACKUPS
-    value: "{{ num_backups }}"
+    value: "{{ max_backups }}"
   when:
     - backup_hour is defined
     - backup_minute is defined

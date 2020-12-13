@@ -3,7 +3,7 @@
 DATE_STR=`date +%Y-%m-%d-%T`
 COMBINE_HOST={{ ansible_hostname }}
 BACKUP_FILE="combine-backup-${DATE_STR}.tar.gz"
-AWS_FILE="s3://thecombine.app/backups/${COMBINE_HOST}-${DATE_STR}.tar.gz"
+AWS_FILE="s3://{{ aws_s3_backup_loc }}/${COMBINE_HOST}-${DATE_STR}.tar.gz"
 COMBINE_HOME=${COMBINE_HOME:="/home/combine"}
 BACKUP_DIR="${COMBINE_HOME}/backups"
 
@@ -38,5 +38,5 @@ done
 # need to specify full path because $PATH does not contain
 # /usr/local/bin when run as a cron job
 if [ -e /usr/local/bin/aws ] ; then
-  /usr/local/bin/aws s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_backup_profile }}
+  /usr/local/bin/aws s3 cp ${BACKUP_FILE} ${AWS_FILE} --profile {{ aws_s3_profile }}
 fi
