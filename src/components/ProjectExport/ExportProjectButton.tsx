@@ -7,16 +7,15 @@ import DownloadButton from "./DownloadButton";
 import { ExportStatus } from "./ExportProjectActions";
 import { ExportProjectState } from "./ExportProjectReducer";
 
-interface ExportProjectButtonProps {
+interface ExportProjectProps {
   exportProject: (projectId: string) => void;
   exportResult: ExportProjectState;
   projectId: string;
+  buttonProps?: ButtonProps;
 }
 
 /** A button for exporting project to Lift file */
-export default function ExportProjectButton(
-  props: ButtonProps & ExportProjectButtonProps
-) {
+export default function ExportProjectButton(props: ExportProjectProps) {
   const sameProject = props.projectId === props.exportResult.projectId;
   // The export button will not be clickable if another export is underway.
   const loading = [ExportStatus.InProgress, ExportStatus.Success].includes(
@@ -30,10 +29,12 @@ export default function ExportProjectButton(
   return (
     <React.Fragment>
       <LoadingButton
-        onClick={exportProj}
-        color="primary"
         loading={loading}
-        {...props}
+        buttonProps={{
+          ...props.buttonProps,
+          onClick: exportProj,
+          color: "primary",
+        }}
       >
         <Translate id="buttons.export" />
       </LoadingButton>
