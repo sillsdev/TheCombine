@@ -25,7 +25,7 @@ usage() {
            list all backups that are in the S3 bucket;
            no backups are deleted.
 
-     -n, -num_backups NUMBER:
+     -n, -max_backups NUMBER:
            number of backups to keep for the host being cleaned up
            Alternately, you may also export the environment variable MAX_BACKUPS
            to specify the number of backups to keep.
@@ -77,7 +77,7 @@ done
 DATE_STR=`date +%Y-%m-%d-%H-%M-%S`
 BACKUP_FILTER=${BACKUP_FILTER:="{{ combine_server_name | replace('.', '-') }}"}
 AWS_BUCKET="s3://{{ aws_s3_backup_loc }}"
-MAX_BACKUPS=${MAX_BACKUPS:={{ num_backups }}}
+MAX_BACKUPS=${MAX_BACKUPS:={{ max_backups }}}
 
 if [ "${LIST_ONLY}" = "1" ] ; then
   echo "Listing backups for s3://{{ aws_s3_backup_loc }}"
@@ -86,7 +86,7 @@ if [ "${LIST_ONLY}" = "1" ] ; then
 fi
 
 AWS_BACKUPS=($(aws s3 ls ${AWS_BUCKET} --recursive --profile s3_read_write|grep --fixed-strings "${BACKUP_FILTER}"|sed "s/[^\/]*\/\(.*\)/\1/"|sort))
-NUM_BACKUPS=${{ '{#' }}AWS_BACKUPS[@]}
+NUM_BACKUPS={{ '${#AWS_BACKUPS[@]}' }}
 
 if [[ ${NUM_BACKUPS} -gt ${MAX_BACKUPS} ]] ; then
   loop_limit=$(( ${NUM_BACKUPS} - ${MAX_BACKUPS} ))
