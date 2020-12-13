@@ -2,7 +2,7 @@ import { Button } from "@material-ui/core";
 import React from "react";
 
 import history, { Path } from "../../history";
-import logo from "../../resources/CombineLogoV1.png";
+import logo from "../../resources/CombineLogoV1White.png";
 import smallLogo from "../../resources/CombineSmallLogoV1.png";
 
 /** A button that redirects to the home page */

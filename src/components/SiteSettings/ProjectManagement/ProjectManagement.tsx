@@ -49,7 +49,7 @@ export class ProjectManagement extends React.Component<
           {/* Export Lift file */}
           <ExportProjectButton
             projectId={project.id}
-            style={{ marginRight: theme.spacing(1) }}
+            buttonProps={{ style: { marginRight: theme.spacing(1) } }}
           />
           {/* Archive active project or restore archived project. */}
           <ProjectButtonWithConfirmation
