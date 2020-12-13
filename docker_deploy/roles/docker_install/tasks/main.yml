@@ -40,10 +40,7 @@
 
 - name: Install Docker Engine
   apt:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
+    name: "{{ docker_packages }}"
   notify: reboot target
 
 - name: Configure Docker Image

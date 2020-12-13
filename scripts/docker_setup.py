@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 """
+Create docker files needed to run TheCombine in containers in development.
+
 This script sets up your development environment to be able to run
 TheCombine in Docker containers in an environment as similar to the
 production environment as possible. The script shall be run from the
@@ -47,19 +49,30 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> None:
-    args = parse_args()
+def get_image_tag() -> str:
+    """
+    Read the docker image tag.
 
+    Read the docker image tag from the IMAGE_TAG environment variable and return
+    its value.  If IMAGE_TAG is not defined, return "latest".
+    """
+    if "IMAGE_TAG" in os.environ:
+        return os.environ["IMAGE_TAGE"]
+    return "latest"
+
+
+def main() -> None:
+    """Create docker-compose.yml for development use."""
+    args = parse_args()
+    image_tag = get_image_tag()
     # Define the configuration for the development environment
     dev_config = {
         "combine_pull_images": args.pull_images,
-        # TODO: Update these images to point to hosted images and provide authentication
-        #   instructions.
-        "combine_image_frontend": "combine/frontend:latest",
-        "combine_image_backend": "combine/backend:latest",
-        "combine_image_certmgr": "combine/certmgr:latest",
+        "combine_image_frontend": f"combine/frontend:{image_tag}",
+        "combine_image_backend": f"combine/backend:{image_tag}",
+        "combine_image_certmgr": f"combine/certmgr:{image_tag}",
         "cert_email": "",
-        "cert_type": "self-signed",
+        "cert_mode": "self-signed",
         "cert_is_staging": 0,
         "cert_domains": ["localhost"],
         "cert_clean": 0,
@@ -86,12 +99,12 @@ def main() -> None:
             {"key": "CERT_MODE", "value": "self-signed"},
             {"key": "CERT_EMAIL", "value": ""},
             {"key": "CERT_STAGING", "value": "0"},
-            {"key": "CERT_DOMAINS", "value": "localhost"},
             {"key": "MAX_CONNECT_TRIES", "value": "10"},
             {"key": "SERVER_NAME", "value": "localhost"},
         ],
         "config_captcha_required": json.dumps(not args.no_captcha),
         "config_captcha_sitekey": "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
+        "mongodb_version": "4.4",
     }
 
     # Templated file map
@@ -121,6 +134,7 @@ def main() -> None:
         ),
         autoescape=select_autoescape(["html", "xml"]),
         trim_blocks=True,
+        lstrip_blocks=True,
     )
     (project_dir / "nginx" / "scripts").mkdir(exist_ok=True)
 

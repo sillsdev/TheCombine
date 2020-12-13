@@ -30,14 +30,21 @@ RUN npm run build
 # Production environment.
 FROM nginx:1.19
 
-RUN mkdir /etc/nginx/templates
-
 WORKDIR /app
 
 ENV USER_GUIDE_HOST_DIR /usr/share/nginx/user_guide
 ENV FRONTEND_HOST_DIR /usr/share/nginx/html
 
+RUN mkdir /etc/nginx/templates
+RUN mkdir ${FRONTEND_HOST_DIR}/nuc
+
+# Setup web content
 COPY --from=user_guide_builder /app/user_guide/site ${USER_GUIDE_HOST_DIR}
 COPY --from=frontend_builder /app/build ${FRONTEND_HOST_DIR}
+COPY nginx/pages/nuc_home.html ${FRONTEND_HOST_DIR}/nuc/index.html
 
+# Setup nginx configuration templates
 COPY nginx/templates/* /etc/nginx/templates/
+
+# Copy additional configuration scripts
+COPY nginx/*.sh /docker-entrypoint.d
