@@ -414,7 +414,7 @@ For information on _Docker Compose_ see the
 
 #### Running In Docker
 
-1. Create the required docker files by running `scripts/docker_setup.py` from _TheCombine_'s directory.
+1. Create the required docker files by running `scripts/docker_setup.py` from _TheCombine_'s project directory.
 
 2. The `docker_setup.py` will generate a file, `.env.backend`, that defines
    the environment variables needed by the Backend container. If you have defined
