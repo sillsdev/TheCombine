@@ -64,8 +64,12 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
           </FileInputButton>
         </Grid>
         <Grid item>
-          <LoadingDoneButton loading={loading} done={done} type="submit">
-            Save
+          <LoadingDoneButton
+            loading={loading}
+            done={done}
+            buttonProps={{ type: "submit" }}
+          >
+            <Translate id="buttons.Save" />
           </LoadingDoneButton>
         </Grid>
       </Grid>

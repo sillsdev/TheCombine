@@ -19,6 +19,14 @@ WORKDIR /app
 
 ENV NGINX_HOST_DIR /usr/share/nginx/html
 
-COPY --from=builder /app/build ${NGINX_HOST_DIR}
+RUN mkdir ${NGINX_HOST_DIR}/nuc
 
+# Setup web content
+COPY --from=builder /app/build ${NGINX_HOST_DIR}
+COPY nginx/pages/nuc_home.html ${NGINX_HOST_DIR}/nuc/index.html
+
+# Setup nginx configuration templates
 COPY nginx/templates/* /etc/nginx/templates/
+
+# Copy additional configuration scripts
+COPY nginx/*.sh /docker-entrypoint.d
