@@ -1,18 +1,21 @@
-import React from "react";
 import { Button, CircularProgress } from "@material-ui/core";
-import { buttonSuccess } from "../../types/theme";
 import { ButtonProps } from "@material-ui/core/Button";
+import React from "react";
 
-interface Props {
+import { buttonSuccess } from "../../types/theme";
+
+interface LoadingProps {
   loading: boolean;
+  children?: React.ReactNode;
+  buttonProps?: ButtonProps;
 }
 
 /**
  * A button that shows a spinning wheel when loading=true
  */
-export default function LoadingButton(props: Props & ButtonProps) {
+export default function LoadingButton(props: LoadingProps) {
   return (
-    <Button variant="contained" disabled={props.loading} {...props}>
+    <Button variant="contained" disabled={props.loading} {...props.buttonProps}>
       {props.children}
       {props.loading && (
         <CircularProgress

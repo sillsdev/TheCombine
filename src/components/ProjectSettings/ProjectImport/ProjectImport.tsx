@@ -70,8 +70,10 @@ export class ProjectImport extends React.Component<
             {/* Choose file button */}
             <FileInputButton
               updateFile={this.updateLiftFile}
-              disabled={this.state.uploadState === UploadState.Done}
               accept=".zip"
+              buttonProps={{
+                disabled: this.state.uploadState === UploadState.Done,
+              }}
             >
               <Translate id="projectSettings.import.chooseFile" />
             </FileInputButton>

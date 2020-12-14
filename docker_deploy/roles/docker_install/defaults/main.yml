@@ -1,0 +1,8 @@
+---
+install_credential_helper: false
+credential_helper_version: v0.6.3
+
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
