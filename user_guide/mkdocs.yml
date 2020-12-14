@@ -26,5 +26,9 @@ extra:
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/sil-international
 nav:
-  - The Combine: index.md
-  - Page 2: page2.md
+  - Home: index.md
+  - Account: account.md
+  - Projects: project.md
+  - Data Entry: dataEntry.md
+  - Data Cleanup: goals.md
+  - Admin: admin.md
