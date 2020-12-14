@@ -204,7 +204,8 @@
       "Configuración de usuario",
       "Réglages utilisateur"
     ],
-    "logout": ["Log Out", "Cerrar sesión", "Se déconnecter"]
+    "logout": ["Log Out", "Cerrar sesión", "Se déconnecter"],
+    "userGuide": ["User Guide", "User Guide", "User Guide"]
   },
   "createProject": {
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
