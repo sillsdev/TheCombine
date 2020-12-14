@@ -26,7 +26,7 @@ extra:
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/sil-international
 nav:
-  - Home: index.md
+  - Overview: index.md
   - Account: account.md
   - Projects: project.md
   - Data Entry: dataEntry.md
