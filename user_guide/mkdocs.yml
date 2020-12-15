@@ -8,6 +8,7 @@ theme:
     logo: material/barley
     repo: fontawesome/brands/github
   favicon: images/favicon.ico
+  language: en
 repo_url: https://github.com/sillsdev/TheCombine
 repo_name: sillsdev/TheCombine
 copyright: © 2020 SIL International
