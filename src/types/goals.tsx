@@ -49,17 +49,17 @@ export interface GoalSelectorState {
   lastIndex: number;
 }
 
-// The order here must match that of the stepComponentDictionary.
+// The enum value is a permanent id for UserEdits and should not be changed.
 export enum GoalType {
-  Default,
-  CreateCharInv,
-  CreateStrWordInv,
-  HandleFlags,
-  MergeDups,
-  ReviewEntries,
-  SpellcheckGloss,
-  ValidateChars,
-  ValidateStrWords,
+  Default = -1,
+  CreateCharInv = 0,
+  CreateStrWordInv = 2,
+  HandleFlags = 7,
+  MergeDups = 4,
+  ReviewEntries = 6,
+  SpellcheckGloss = 5,
+  ValidateChars = 1,
+  ValidateStrWords = 3,
 }
 
 // These strings must match what is in src/resources/translations.json.
