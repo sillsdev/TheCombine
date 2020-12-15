@@ -8,32 +8,18 @@ import MergeDupStep from "../../MergeDupGoal/MergeDupStep";
 import ReviewEntriesComponent from "../../ReviewEntries/ReviewEntriesComponent";
 import DisplayProg from "./DisplayProg";
 
-interface componentSteps {
-  goal: GoalType;
-  steps: ReactNode[];
+function stepComponent(goalType: GoalType): ReactNode[] {
+  switch (goalType) {
+    case GoalType.CreateCharInv:
+      return [<CharInventoryCreation />];
+    case GoalType.MergeDups:
+      return [<MergeDupStep />];
+    case GoalType.ReviewEntries:
+      return [<ReviewEntriesComponent />];
+    default:
+      return [];
+  }
 }
-
-// WARNING: The order here must match the GoalType index.
-const stepComponentDictionary: componentSteps[] = [
-  { goal: GoalType.Default, steps: [] },
-  {
-    goal: GoalType.CreateCharInv,
-    steps: [<CharInventoryCreation />],
-  },
-  { goal: GoalType.CreateStrWordInv, steps: [] },
-  { goal: GoalType.HandleFlags, steps: [] },
-  {
-    goal: GoalType.MergeDups,
-    steps: [<MergeDupStep />],
-  },
-  {
-    goal: GoalType.ReviewEntries,
-    steps: [<ReviewEntriesComponent />],
-  },
-  { goal: GoalType.SpellcheckGloss, steps: [] },
-  { goal: GoalType.ValidateChars, steps: [] },
-  { goal: GoalType.ValidateStrWords, steps: [] },
-];
 
 /**
  * Decides which component should be rendered for a goal,
@@ -41,14 +27,9 @@ const stepComponentDictionary: componentSteps[] = [
  */
 export default class BaseGoalScreen extends React.Component<GoalProps> {
   displayComponent(goal: Goal) {
-    const stepComponent = stepComponentDictionary[goal.goalType];
-    if (stepComponent.goal !== goal.goalType) {
-      throw Error(
-        "The stepComponentDictionary is out of sync with the GoalType indices."
-      );
-    }
-    if (stepComponent.steps.length) {
-      return stepComponent.steps[0];
+    const steps = stepComponent(goal.goalType);
+    if (steps.length) {
+      return steps[0];
     }
     return <EmptyGoalComponent />;
   }
