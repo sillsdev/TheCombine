@@ -30,7 +30,8 @@ const mockUpdateProject = jest.fn((proj: Project) => {
 });
 
 let projectMaster: ReactTestRenderer;
-let projectHandle: ReactTestInstance;
+let pickerHandle: ReactTestInstance;
+let buttonHandle: ReactTestInstance;
 
 function mockProject(systems?: WritingSystem[]) {
   return { ...defaultProject, analysisWritingSystems: systems ?? [] };
@@ -46,19 +47,23 @@ function renderProjLangs(proj: Project) {
   });
 }
 
+function renderAndClickAdd() {
+  renderProjLangs(mockProject([...mockAnalysisWritingSystems]));
+  expect(projectMaster.root.findAllByType(LanguagePicker).length).toEqual(0);
+  projectMaster.root.findByProps({ id: "addNewLang" }).props.onClick();
+  expect(projectMaster.root.findAllByType(LanguagePicker).length).toEqual(1);
+}
+
 describe("ProjectLanguages", () => {
   it("renders without crashing", () => {
     renderProjLangs(mockProject([...mockAnalysisWritingSystems]));
   });
 
   it("can add language to project", () => {
-    renderProjLangs(mockProject([...mockAnalysisWritingSystems]));
-    expect(projectMaster.root.findAllByType(LanguagePicker).length).toEqual(0);
-    projectMaster.root.findByProps({ id: "addNewLang" }).props.onClick();
-    expect(projectMaster.root.findAllByType(LanguagePicker).length).toEqual(1);
-    projectHandle = projectMaster.root.findByType(LanguagePicker);
-    projectHandle.props.setCode("z");
-    projectHandle.props.setName("z");
+    renderAndClickAdd();
+    pickerHandle = projectMaster.root.findByType(LanguagePicker);
+    pickerHandle.props.setCode("z");
+    pickerHandle.props.setName("z");
     projectMaster.root.findByProps({ id: "submitNewLang" }).props.onClick();
     expect(mockUpdateProject).toBeCalledWith(
       mockProject([
@@ -66,5 +71,16 @@ describe("ProjectLanguages", () => {
         { name: "z", bcp47: "z", font: "" },
       ])
     );
+  });
+
+  it("can only submit when new language selected", () => {
+    renderAndClickAdd();
+    pickerHandle = projectMaster.root.findByType(LanguagePicker);
+    buttonHandle = projectMaster.root.findByProps({ id: "submitNewLang" });
+    expect(buttonHandle.props.disabled).toBe(true);
+    pickerHandle.props.setCode(mockAnalysisWritingSystems[0].bcp47);
+    expect(buttonHandle.props.disabled).toBe(true);
+    pickerHandle.props.setCode("z");
+    expect(buttonHandle.props.disabled).toBe(false);
   });
 });
