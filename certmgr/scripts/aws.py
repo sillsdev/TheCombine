@@ -29,14 +29,16 @@ def aws_s3_put(src: Path, dest: str) -> bool:
     """
     aws_s3_uri, aws_s3_profile = _get_aws_uri_(dest)
     print(f"AWS S3 put {src} to {dest}")
-    return (
-        subprocess.run(
-            ["aws", "s3", "cp", "--profile", aws_s3_profile, src, aws_s3_uri],
-            shell=True,
-            check=True,
-        ).returncode
-        == 0
+    results = subprocess.run(
+        ["aws", "s3", "cp", "--profile", aws_s3_profile, src, aws_s3_uri],
+        shell=True,
+        check=True,
+        capture_output=True,
     )
+    if results.returncode != 0:
+        print(f"STDOUT:\n{results.stdout}")
+        print(f"\nSTDERR:\n{results.stderr}")
+    return results.returncode == 0
 
 
 def aws_s3_get(src: str, dest: Path) -> bool:
@@ -49,14 +51,16 @@ def aws_s3_get(src: str, dest: Path) -> bool:
     """
     aws_s3_uri, aws_s3_profile = _get_aws_uri_(src)
     print(f"AWS S3 get {dest} from {src}")
-    return (
-        subprocess.run(
-            ["aws", "s3", "cp", "--profile", aws_s3_profile, aws_s3_uri, dest],
-            shell=True,
-            check=True,
-        ).returncode
-        == 0
+    results = subprocess.run(
+        ["aws", "s3", "cp", "--profile", aws_s3_profile, aws_s3_uri, dest],
+        shell=True,
+        check=True,
+        capture_output=True,
     )
+    if results.returncode != 0:
+        print(f"STDOUT:\n{results.stdout}")
+        print(f"\nSTDERR:\n{results.stderr}")
+    return results.returncode == 0
 
 
 def aws_push_certs() -> None:
