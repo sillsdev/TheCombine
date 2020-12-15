@@ -43,6 +43,14 @@ server {
         proxy_set_header Connection "upgrade";
     }
 
+    # User Guide static files.
+    location /docs {
+        alias       /usr/share/nginx/user_guide;
+        index      index.html index.htm;
+        expires     12h;
+        add_header Cache-Control "public, no-transform";
+    }
+
     location / {
         root       /usr/share/nginx/html;
         index      index.html index.htm;

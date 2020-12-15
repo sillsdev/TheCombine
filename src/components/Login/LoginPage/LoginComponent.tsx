@@ -8,6 +8,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
+import { Help } from "@material-ui/icons";
 import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import * as React from "react";
 import {
@@ -187,9 +188,21 @@ export class Login extends React.Component<
                   />
                 </div>
               )}
+
               {/* Register and Login buttons */}
               <Grid container justify="flex-end" spacing={2}>
-                <Grid item>
+                <Grid item justify="flex-start" xs={4} sm={6}>
+                  <Button
+                    onClick={() => {
+                      // This link does not work in development, but should in production.
+                      window.open(`docs`);
+                    }}
+                  >
+                    <Help />
+                  </Button>
+                </Grid>
+
+                <Grid item xs={4} sm={3}>
                   <Button
                     onClick={() => {
                       history.push(Path.Register);
@@ -198,7 +211,8 @@ export class Login extends React.Component<
                     <Translate id="login.register" />
                   </Button>
                 </Grid>
-                <Grid item>
+
+                <Grid item xs={4} sm={3}>
                   <Button
                     type="submit"
                     variant="contained"
@@ -208,6 +222,7 @@ export class Login extends React.Component<
                     <Translate id="login.login" />
                   </Button>
                 </Grid>
+
                 <br />
                 {this.props.loginAttempt && <CircularProgress size={30} />}
               </Grid>
