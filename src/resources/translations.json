@@ -295,7 +295,17 @@
       ],
       "bcp47": ["BCP 47 Code", "BCP 47", "BCP 47"],
       "name": ["Name", "Nombre", "Nom"],
-      "font": ["Font", "Font", "Font"]
+      "font": ["Font", "Font", "Font"],
+      "addAnalysisLanguage": [
+        "Add an alternate analysis language.",
+        "Add an alternate analysis language.",
+        "Add an alternate analysis language."
+      ],
+      "makeDefaultAnalysisLanguage": [
+        "Make this the default analysis language.",
+        "Make this the default analysis language.",
+        "Make this the default analysis language."
+      ]
     },
     "name": ["Project Name", "Nombre del proyecto", "Nom du projet"],
     "projectList": ["Projects", "Proyectos", "Projets"],
