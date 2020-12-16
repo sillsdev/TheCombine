@@ -52,11 +52,12 @@ export default function ButtonConfirmation(props: ButtonConfirmationProps) {
           <Translate id="buttons.cancel" />
         </Button>
         <LoadingButton
-          onClick={onConfirm}
-          color="primary"
-          variant="contained"
           loading={loading}
-          {...props}
+          buttonProps={{
+            onClick: onConfirm,
+            color: "primary",
+            variant: "contained",
+          }}
         >
           <Translate id="buttons.confirm" />
         </LoadingButton>

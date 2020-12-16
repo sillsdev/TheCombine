@@ -240,7 +240,7 @@ export class CreateProject extends React.Component<
             <FileInputButton
               updateFile={(file: File) => this.updateLanguageData(file)}
               accept=".zip"
-              style={{ marginTop: theme.spacing(2) }}
+              buttonProps={{ style: { marginTop: theme.spacing(2) } }}
             >
               <Translate id="buttons.browse" />
             </FileInputButton>
@@ -260,11 +260,13 @@ export class CreateProject extends React.Component<
               <LoadingDoneButton
                 loading={this.props.inProgress}
                 done={this.props.success}
-                color="primary"
-                style={{
-                  marginTop: theme.spacing(1),
-                }}
                 doneText={<Translate id="createProject.success" />}
+                buttonProps={{
+                  color: "primary",
+                  style: {
+                    marginTop: theme.spacing(1),
+                  },
+                }}
               >
                 <Translate id="createProject.create" />
               </LoadingDoneButton>

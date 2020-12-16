@@ -1,4 +1,4 @@
 ---
 aws_config_dir: "/home/{{ combine_user }}/.aws"
-aws_backup_profile: upload
+aws_s3_profile: upload
 aws_download_profile: download

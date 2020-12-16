@@ -53,6 +53,9 @@ Backend.Tests/bin/Audio/*.mp3
 Backend.Tests/bin/Avatars/*
 mongo_database
 
+# User Guide
+user_guide/site
+
 # Vagrant instances
 .vagrant/
 

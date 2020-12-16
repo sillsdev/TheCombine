@@ -1,5 +1,10 @@
 import { Avatar, Button, Menu, MenuItem } from "@material-ui/core";
-import { ExitToApp, Person, SettingsApplications } from "@material-ui/icons";
+import {
+  ExitToApp,
+  Help,
+  Person,
+  SettingsApplications,
+} from "@material-ui/icons";
 import React, { useState } from "react";
 import { Translate } from "react-localize-redux";
 
@@ -45,6 +50,7 @@ export default function UserMenu() {
         aria-controls="user-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        color="secondary"
       >
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} />
@@ -108,12 +114,23 @@ export function UserMenuList(props: UserMenuListProps) {
 
       <MenuItem
         onClick={() => {
+          // This link does not work in development, but should in production.
+          window.open(`docs`);
+        }}
+      >
+        <Help style={{ marginRight: theme.spacing(1) }} />
+        <Translate id="userMenu.userGuide" />
+      </MenuItem>
+
+      <MenuItem
+        onClick={() => {
           history.push(Path.Login);
         }}
       >
         <ExitToApp style={{ marginRight: theme.spacing(1) }} />
         <Translate id="userMenu.logout" />
       </MenuItem>
+
       <MenuItem disabled style={{ justifyContent: "center" }}>
         v{REACT_APP_VERSION}
       </MenuItem>

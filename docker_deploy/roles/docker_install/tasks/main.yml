@@ -40,10 +40,7 @@
 
 - name: Install Docker Engine
   apt:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
+    name: "{{ docker_packages }}"
   notify: reboot target
 
 - name: Configure Docker Image
@@ -52,7 +49,7 @@
     dest: /etc/docker/daemon.json
     owner: root
     group: root
-    mode:  0600
+    mode: 0600
   notify: restart docker
 
 - name: Install Docker Compose

@@ -6,7 +6,6 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
-import { ButtonProps } from "@material-ui/core/Button";
 import React from "react";
 import { Translate } from "react-localize-redux";
 
@@ -20,7 +19,7 @@ interface DeleteDialogProps {
 /**
  * Dialog to confirm deletion
  */
-export default function DeleteDialog(props: ButtonProps & DeleteDialogProps) {
+export default function DeleteDialog(props: DeleteDialogProps) {
   return (
     <Dialog
       open={props.open}

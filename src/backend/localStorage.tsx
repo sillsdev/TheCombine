@@ -11,8 +11,9 @@ export enum LocalStorageKey {
 
 // This function should only be used on Logout.
 export function clearLocalStorage() {
-  for (const key in LocalStorageKey) {
-    remove(key as LocalStorageKey);
+  for (const keyString in LocalStorageKey) {
+    const key = keyString as keyof typeof LocalStorageKey;
+    remove(LocalStorageKey[key]);
   }
 }
 

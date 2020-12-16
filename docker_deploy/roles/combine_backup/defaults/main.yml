@@ -1,8 +1,10 @@
 ---
 # backup_hour:  7
 # backup_minute: 15
+max_backups: 3
 
-aws_s3_backup_loc: thecombine.app/backups
+aws_s3_loc: thecombine.app
+aws_s3_backup_loc: "{{ aws_s3_loc }}/backups"
 
 backend_files_subdir: ".CombineFiles"
 mongo_files_subdir: "dump"

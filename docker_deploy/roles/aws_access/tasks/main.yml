@@ -1,5 +1,4 @@
 ---
-
 - name: check for aws version
   command: aws --version
   register: aws_version

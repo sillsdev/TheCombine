@@ -102,12 +102,14 @@ class EmailInvite extends React.Component<InviteProps, InviteState> {
               <Grid container justify="flex-end" spacing={2}>
                 <Grid item>
                   <LoadingDoneButton
-                    variant="contained"
-                    color="primary"
-                    onClick={() => this.onSubmit()}
                     disabled={!this.state.isValid}
                     loading={this.state.loading}
                     done={this.state.done}
+                    buttonProps={{
+                      onClick: () => this.onSubmit(),
+                      variant: "contained",
+                      color: "primary",
+                    }}
                   >
                     <Translate id="buttons.invite" />
                   </LoadingDoneButton>
