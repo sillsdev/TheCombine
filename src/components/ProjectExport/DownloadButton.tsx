@@ -19,19 +19,21 @@ export default function DownloadButton() {
     (state: StoreState) => state.exportProjectState
   );
   const dispatch = useDispatch();
-  const [fileName, setFileName] = useState<null | string>(null);
-  const [fileUrl, setFileUrl] = useState<null | string>(null);
+  const [fileName, setFileName] = useState<string | undefined>();
+  const [fileUrl, setFileUrl] = useState<string | undefined>();
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
   let downloadLink = createRef<HTMLAnchorElement>();
 
   useEffect(() => {
-    if (downloadLink.current && fileUrl !== null) {
+    if (downloadLink.current && fileUrl) {
       downloadLink.current.click();
       URL.revokeObjectURL(fileUrl);
-      setFileUrl(null);
+      setFileUrl(undefined);
     }
   }, [downloadLink, fileUrl]);
 
   async function download() {
+    setIsDownloading(true);
     const projectName = await getProjectName(exportState.projectId);
     setFileName(`${projectName}_${getNowDateTimeString()}.zip`);
     asyncDownloadExport(exportState.projectId)(dispatch)
@@ -41,44 +43,57 @@ export default function DownloadButton() {
           reset();
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setIsDownloading(false);
+      });
   }
 
   function reset() {
     resetExport(exportState.projectId)(dispatch);
+    setIsDownloading(false);
+  }
+
+  function icon() {
+    if (exportState.status === ExportStatus.Success && !isDownloading) {
+      return (
+        <IconButton tabIndex={-1} onClick={download}>
+          <GetApp />
+        </IconButton>
+      );
+    }
+    if (exportState.status === ExportStatus.Failure) {
+      return (
+        <IconButton tabIndex={-1} onClick={reset}>
+          <Error />
+        </IconButton>
+      );
+    }
+    return (
+      <IconButton tabIndex={-1}>
+        <Cached />
+      </IconButton>
+    );
+  }
+
+  function textId() {
+    switch (exportState.status) {
+      case ExportStatus.Success:
+        return `projectExport.download${
+          isDownloading ? "InProgress" : "Ready"
+        }`;
+      case ExportStatus.Failure:
+        return "projectExport.exportFailed";
+      case ExportStatus.InProgress:
+        return "projectExport.exportInProgress";
+    }
   }
 
   return (
     <React.Fragment>
-      {/* Nothing shows if exportState.status === ExportStatus.Default. */}
-      {exportState.status === ExportStatus.Success && (
-        <Tooltip
-          title={<Translate id="projectExport.downloadReady" />}
-          placement="bottom"
-        >
-          <IconButton tabIndex={-1} onClick={download}>
-            <GetApp />
-          </IconButton>
-        </Tooltip>
-      )}
-      {exportState.status === ExportStatus.InProgress && (
-        <Tooltip
-          title={<Translate id="projectExport.exportInProgress" />}
-          placement="bottom"
-        >
-          <IconButton tabIndex={-1}>
-            <Cached />
-          </IconButton>
-        </Tooltip>
-      )}
-      {exportState.status === ExportStatus.Failure && (
-        <Tooltip
-          title={<Translate id="projectExport.exportFailed" />}
-          placement="bottom"
-        >
-          <IconButton tabIndex={-1} onClick={reset}>
-            <Error />
-          </IconButton>
+      {exportState.status !== ExportStatus.Default && (
+        <Tooltip title={<Translate id={textId()} />} placement="bottom">
+          {icon()}
         </Tooltip>
       )}
       {fileUrl && (
