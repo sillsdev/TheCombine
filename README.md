@@ -353,6 +353,7 @@ $ source venv/bin/activate
 
 ##### Python Packages
 
+(If the following commands don't work, try with `python3` instead of `python`.)
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
@@ -422,8 +423,9 @@ For information on _Docker Compose_ see the
    section above, then these variables will already be set. If not, then you will need to edit
    `.env.backend` and provide values for the variables that are listed.
 
-3. Build the images for the Docker containers (**Note**: On Linux, you will need to prepend `sudo` to
-   all of the following `docker` commands)
+3. Build the images for the Docker containers (On Linux, you will need to prepend `sudo` to all of
+   the following `docker` commands. On Mac, you will need Docker Desktop running for the following
+   commands to work, and make sure the Memory is at least 4GB in Preferences > Resources.)
 
    ```bash
    $ docker-compose build --parallel
