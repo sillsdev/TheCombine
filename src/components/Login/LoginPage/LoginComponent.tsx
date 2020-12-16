@@ -191,7 +191,7 @@ export class Login extends React.Component<
 
               {/* Register and Login buttons */}
               <Grid container justify="flex-end" spacing={2}>
-                <Grid item justify="flex-start" xs={4} sm={6}>
+                <Grid item xs={4} sm={6}>
                   <Button
                     onClick={() => {
                       // This link does not work in development, but should in production.
