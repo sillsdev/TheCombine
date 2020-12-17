@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 
 import Card from "@material-ui/core/Card";
 import { Button, CardContent, Typography } from "@material-ui/core";
-import { Goal } from "../../../../types/goals";
+import { Goal, GoalName } from "../../../../types/goals";
 import {
   LocalizeContextProps,
   withLocalize,
@@ -48,7 +48,7 @@ export interface GoalSelectorScrollProps {
   lastIndex: number;
   swapSelectedIndex: (ndx: number) => void;
   swapMouseX: (iX: number) => void;
-  handleChange: (value: string) => void;
+  handleChange: (value: GoalName) => void;
 }
 
 export class GoalSelectorScroll extends React.Component<
@@ -289,7 +289,6 @@ export class GoalSelectorScroll extends React.Component<
         id={SCROLL_CARD + index}
         key={index}
         style={this.chooseStyle(index)}
-        //elevation={this.props.selectedIndex === index ? 7 : 1}
         // Menu
         onClick={(event: React.MouseEvent) => {
           this.cardHandleClick(event, index);
@@ -422,6 +421,4 @@ export function percentToPixels(scaleValue: number) {
   return (scaleValue / 100) * window.innerWidth;
 }
 
-// const styled = withStyles(rootStyle)(GoalSelectorScroll);
-// export default withLocalize(styled);
 export default withLocalize(GoalSelectorScroll);
