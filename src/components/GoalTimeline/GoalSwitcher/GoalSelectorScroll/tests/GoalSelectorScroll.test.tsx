@@ -7,8 +7,7 @@ import renderer, {
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { BaseGoal } from "../../../../../types/baseGoal";
-import { Goal, GoalSelectorState, GoalType } from "../../../../../types/goals";
+import { Goal, GoalName, GoalSelectorState } from "../../../../../types/goals";
 import { User } from "../../../../../types/user";
 import GoalSelectorScroll from "../";
 import {
@@ -23,7 +22,11 @@ import {
   WRAP_AROUND_THRESHHOLD,
 } from "../GoalSelectorScroll";
 
-const labels: string[] = ["handleDuplicates", "handleFlags", "grammarCheck"];
+const labels = [
+  GoalName.CreateStrWordInv,
+  GoalName.HandleFlags,
+  GoalName.SpellcheckGloss,
+];
 
 // Create the mock store
 const gsState: GoalSelectorState = createTempState();
@@ -215,7 +218,7 @@ function createTempState(): GoalSelectorState {
   let goals: Goal[] = [];
 
   for (let i: number = 0; i < labels.length; i++)
-    goals[i] = createBGoal(labels[i], tempUser);
+    goals[i] = createGoal(labels[i], tempUser);
 
   return {
     selectedIndex: 0,
@@ -225,10 +228,9 @@ function createTempState(): GoalSelectorState {
   };
 }
 
-// Creates a BaseGoal with the specified attributes
-function createBGoal(name: string, user: User): Goal {
-  let goal: Goal = new BaseGoal();
-  goal.goalType = GoalType.CreateCharInv;
+// Creates a Goal with the specified attributes
+function createGoal(name: GoalName, user: User): Goal {
+  const goal: Goal = new Goal();
   goal.name = name;
   goal.user = user;
   return goal;

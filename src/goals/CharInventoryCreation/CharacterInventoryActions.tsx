@@ -219,11 +219,10 @@ async function saveChangesToGoal(
   if (user) {
     const userEditId: string | undefined = getUserEditId(user);
     if (userEditId !== undefined) {
-      let indexInHistory: number = getIndexInHistory(history, updatedGoal);
-
+      const goalIndex = getIndexInHistory(history, updatedGoal);
       dispatch(updateGoal(updatedGoal));
       await backend
-        .addStepToGoal(userEditId, indexInHistory, updatedGoal)
+        .addStepToGoal(userEditId, goalIndex, updatedGoal)
         .catch((err: string) => console.log(err));
     }
   }
