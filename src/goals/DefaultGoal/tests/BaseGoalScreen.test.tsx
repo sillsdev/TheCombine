@@ -6,7 +6,7 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import { Goal } from "../../../types/goals";
-import BaseGoalScreen from "../BaseGoalScreen";
+import { BaseGoalScreen } from "../BaseGoalScreen";
 
 const createMockStore = configureMockStore([thunk]);
 const mockStoreState = {
