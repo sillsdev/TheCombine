@@ -25,16 +25,8 @@ namespace Backend.Tests.Mocks
 
         public Task<Project> GetProject(string id)
         {
-            try
-            {
-                var foundProjects = _projects.Single(project => project.Id == id);
-                return Task.FromResult(foundProjects.Clone());
-            }
-            catch (InvalidOperationException)
-            {
-                // When a Project is missing, the real ProjectController returns null.
-                return null;
-            }
+            var foundProjects = _projects.Single(project => project.Id == id);
+            return Task.FromResult(foundProjects.Clone());
         }
 
         public Task<Project> Create(Project project)

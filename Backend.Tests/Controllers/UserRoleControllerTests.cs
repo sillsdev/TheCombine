@@ -10,12 +10,12 @@ namespace Backend.Tests.Controllers
 {
     public class UserRoleControllerTests
     {
-        private IUserRoleService _userRoleService;
-        private UserRoleController _userRoleController;
+        private IUserRoleService _userRoleService = null!;
+        private UserRoleController _userRoleController = null!;
 
-        private IProjectService _projectService;
-        private string _projId;
-        private IPermissionService _permissionService;
+        private IProjectService _projectService = null!;
+        private string _projId = null!;
+        private IPermissionService _permissionService = null!;
 
         private const string InvalidProjectId = "INVALID_PROJECT_ID";
 
@@ -55,7 +55,7 @@ namespace Backend.Tests.Controllers
 
             Assert.IsInstanceOf<ObjectResult>(getResult);
 
-            var roles = (getResult as ObjectResult).Value as List<UserRole>;
+            var roles = ((ObjectResult)getResult).Value as List<UserRole>;
             Assert.That(roles, Has.Count.EqualTo(3));
             _userRoleService.GetAllUserRoles(_projId).Result.ForEach(role => Assert.Contains(role, roles));
         }
@@ -87,7 +87,7 @@ namespace Backend.Tests.Controllers
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
-            var foundUserRole = (action as ObjectResult).Value as UserRole;
+            var foundUserRole = ((ObjectResult)action).Value as UserRole;
             Assert.AreEqual(userRole, foundUserRole);
         }
 
@@ -112,7 +112,7 @@ namespace Backend.Tests.Controllers
         public void TestCreateUserRole()
         {
             var userRole = RandomUserRole();
-            var id = (_userRoleController.Post(_projId, userRole).Result as ObjectResult).Value as string;
+            var id = (string)((ObjectResult)_userRoleController.Post(_projId, userRole).Result).Value;
             userRole.Id = id;
             Assert.Contains(userRole, _userRoleService.GetAllUserRoles(_projId).Result);
         }

@@ -13,14 +13,14 @@ namespace Backend.Tests.Controllers
 {
     public class AudioControllerTests
     {
-        private IWordRepository _wordRepo;
-        private WordService _wordService;
-        private WordController _wordController;
-        private AudioController _audioController;
+        private IWordRepository _wordRepo = null!;
+        private WordService _wordService = null!;
+        private WordController _wordController = null!;
+        private AudioController _audioController = null!;
 
-        private IProjectService _projectService;
-        private string _projId;
-        private PermissionServiceMock _permissionService;
+        private IProjectService _projectService = null!;
+        private string _projId = null!;
+        private PermissionServiceMock _permissionService = null!;
 
         [SetUp]
         public void Setup()
@@ -68,7 +68,7 @@ namespace Backend.Tests.Controllers
 
             var action = _wordController.Get(_projId, word.Id).Result;
 
-            var foundWord = (action as ObjectResult).Value as Word;
+            var foundWord = (Word)((ObjectResult)action).Value;
             Assert.IsNotNull(foundWord.Audio);
         }
 

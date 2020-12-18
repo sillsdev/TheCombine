@@ -18,15 +18,15 @@ namespace Backend.Tests.Controllers
 {
     public class LiftControllerTests
     {
-        private IWordRepository _wordRepo;
-        private IWordService _wordService;
-        private IProjectService _projServ;
-        private ILiftService _liftService;
-        private LiftController _liftController;
-        private IHubContext<CombineHub> _notifyService;
-        private IPermissionService _permissionService;
+        private IWordRepository _wordRepo = null!;
+        private IWordService _wordService = null!;
+        private IProjectService _projServ = null!;
+        private ILiftService _liftService = null!;
+        private LiftController _liftController = null!;
+        private IHubContext<CombineHub> _notifyService = null!;
+        private IPermissionService _permissionService = null!;
 
-        private Project _proj;
+        private Project _proj = null!;
 
         [SetUp]
         public void Setup()
@@ -224,7 +224,7 @@ namespace Backend.Tests.Controllers
 
             const string userId = "testId";
             _liftController.ExportLiftFile(_proj.Id, userId).Wait();
-            var result = _liftController.DownloadLiftFile(_proj.Id, userId).Result as FileContentResult;
+            var result = (FileContentResult)_liftController.DownloadLiftFile(_proj.Id, userId).Result;
             Assert.NotNull(result);
 
             // Write LiftFile contents to a temporary directory.

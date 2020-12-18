@@ -12,12 +12,12 @@ namespace Backend.Tests.Controllers
 {
     public class WordControllerTests
     {
-        private IWordRepository _repo;
-        private IWordService _wordService;
-        private WordController _wordController;
-        private IProjectService _projectService;
-        private string _projId;
-        private IPermissionService _permissionService;
+        private IWordRepository _repo = null!;
+        private IWordService _wordService = null!;
+        private WordController _wordController = null!;
+        private IProjectService _projectService = null!;
+        private string _projId = null!;
+        private IPermissionService _permissionService = null!;
 
         [SetUp]
         public void Setup()
@@ -82,7 +82,7 @@ namespace Backend.Tests.Controllers
             _repo.Create(RandomWord());
             _repo.Create(RandomWord());
 
-            var words = (_wordController.Get(_projId).Result as ObjectResult).Value as List<Word>;
+            var words = ((ObjectResult)_wordController.Get(_projId).Result).Value as List<Word>;
             Assert.That(words, Has.Count.EqualTo(3));
             _repo.GetAllWords(_projId).Result.ForEach(word => Assert.Contains(word, words));
         }
@@ -99,7 +99,7 @@ namespace Backend.Tests.Controllers
 
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
-            var foundWord = (action as ObjectResult).Value as Word;
+            var foundWord = ((ObjectResult)action).Value as Word;
             Assert.AreEqual(word, foundWord);
         }
 
@@ -108,7 +108,7 @@ namespace Backend.Tests.Controllers
         {
             var word = RandomWord();
 
-            var id = (_wordController.Post(_projId, word).Result as ObjectResult).Value as string;
+            var id = (string)((ObjectResult)_wordController.Post(_projId, word).Result).Value;
             word.Id = id;
 
             Assert.AreEqual(word, _repo.GetAllWords(_projId).Result[0]);
@@ -118,15 +118,15 @@ namespace Backend.Tests.Controllers
             var newDuplicate = oldDuplicate.Clone();
 
             _ = _wordController.Post(_projId, oldDuplicate).Result;
-            var result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            var result = ((ObjectResult)_wordController.Post(_projId, newDuplicate).Result).Value as string;
             Assert.AreEqual(result, "Duplicate");
 
             newDuplicate.Senses.RemoveAt(2);
-            result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            result = ((ObjectResult)_wordController.Post(_projId, newDuplicate).Result).Value as string;
             Assert.AreEqual(result, "Duplicate");
 
             newDuplicate.Senses = new List<Sense>();
-            result = (_wordController.Post(_projId, newDuplicate).Result as ObjectResult).Value as string;
+            result = ((ObjectResult)_wordController.Post(_projId, newDuplicate).Result).Value as string;
             Assert.AreNotEqual(result, "Duplicate");
         }
 
@@ -138,7 +138,7 @@ namespace Backend.Tests.Controllers
             var modWord = origWord.Clone();
             modWord.Vernacular = "Yoink";
 
-            var id = (_wordController.Put(_projId, modWord.Id, modWord).Result as ObjectResult).Value as string;
+            var id = (string)((ObjectResult)_wordController.Put(_projId, modWord.Id, modWord).Result).Value;
 
             var finalWord = modWord.Clone();
             finalWord.Id = id;
