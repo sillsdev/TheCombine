@@ -25,7 +25,13 @@ and associated with new data entries.
 
 ### Import and Export
 
-Currently, only one LIFT file can be imported per project.
+!!! note
+
+    Currently, the maximum Lift files supported for import is 250MB.
+
+!!! note
+
+    Currently, only one LIFT file can be imported per project.
 
 After clicking the Export button, you can navigate to other parts of the website. A notification will appear in the App
 Bar when the export is ready for download. A project that has reached hundreds of MB is size may take tens of minutes to

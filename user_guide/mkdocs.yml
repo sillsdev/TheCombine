@@ -33,3 +33,5 @@ nav:
   - Data Entry: dataEntry.md
   - Data Cleanup: goals.md
   - Admin: admin.md
+markdown_extensions:
+  - admonition
