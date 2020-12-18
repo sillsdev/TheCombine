@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Http;
@@ -51,10 +52,10 @@ namespace BackendFramework.Services
             return permissionsObj;
         }
 
-        public bool HasProjectPermission(HttpContext request, Permission permission)
+        public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
         {
             var userId = GetUserId(request);
-            var user = _userService.GetUser(userId).Result;
+            var user = await _userService.GetUser(userId);
 
             // Database administrators implicitly possess all permissions.
             if (user.IsAdmin)

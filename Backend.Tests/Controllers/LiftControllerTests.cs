@@ -205,6 +205,13 @@ namespace Backend.Tests.Controllers
             }
         }
 
+        private static byte[] ReadAllBytes(Stream stream)
+        {
+            using var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            return ms.ToArray();
+        }
+
         [Test]
         public void TestExportDeleted()
         {
@@ -224,11 +231,18 @@ namespace Backend.Tests.Controllers
 
             const string userId = "testId";
             _liftController.ExportLiftFile(_proj.Id, userId).Wait();
-            var result = _liftController.DownloadLiftFile(_proj.Id, userId).Result as FileContentResult;
+            var result = _liftController.DownloadLiftFile(_proj.Id, userId).Result as FileStreamResult;
             Assert.NotNull(result);
 
+            // Read contents.
+            byte[] contents;
+            using (var fileStream = result.FileStream)
+            {
+                contents = ReadAllBytes(fileStream);
+            }
+
             // Write LiftFile contents to a temporary directory.
-            var extractedExportDir = ExtractZipFileContents(result.FileContents);
+            var extractedExportDir = ExtractZipFileContents(contents);
             var exportPath = Path.Combine(extractedExportDir,
                 Path.Combine("Lift", "NewLiftFile.lift"));
             var text = File.ReadAllText(exportPath, Encoding.UTF8);

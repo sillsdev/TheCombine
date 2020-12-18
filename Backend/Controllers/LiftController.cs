@@ -47,7 +47,7 @@ namespace BackendFramework.Controllers
         [RequestSizeLimit(250_000_000)]  // 250MB.
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
@@ -192,7 +192,7 @@ namespace BackendFramework.Controllers
         // These internal methods are extracted for unit testing
         internal async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
@@ -262,7 +262,7 @@ namespace BackendFramework.Controllers
 
         internal async Task<IActionResult> DownloadLiftFile(string projectId, string userId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }
@@ -274,10 +274,10 @@ namespace BackendFramework.Controllers
                 return new NotFoundObjectResult(userId);
             }
 
-            var file = await System.IO.File.ReadAllBytesAsync(filePath);
+            var file = System.IO.File.OpenRead(filePath);
             return File(
                 file,
-                "application/zip",
+                "application/octet-stream",
                 $"LiftExport-{projectId}-{DateTime.Now:yyyy-MM-dd_hh-mm-ss-fff}.zip");
         }
 
@@ -285,15 +285,15 @@ namespace BackendFramework.Controllers
         /// <remarks> GET: v1/projects/{projectId}/words/deleteexport </remarks>
         /// <returns> UserId, if successful </returns>
         [HttpGet("deleteexport")]
-        public IActionResult DeleteLiftFile()
+        public async Task<IActionResult> DeleteLiftFile()
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return DeleteLiftFile(userId);
+            return await DeleteLiftFile(userId);
         }
 
-        internal IActionResult DeleteLiftFile(string userId)
+        internal async Task<IActionResult> DeleteLiftFile(string userId)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
             {
                 return new ForbidResult();
             }

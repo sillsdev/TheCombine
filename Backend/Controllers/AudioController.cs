@@ -33,7 +33,7 @@ namespace BackendFramework.Controllers
         /// <returns> Audio file stream </returns>
         [AllowAnonymous]
         [HttpGet("{wordId}/download/audio/{fileName}")]
-        public async Task<IActionResult> DownloadAudioFile(string projectId, string wordId, string fileName)
+        public IActionResult DownloadAudioFile(string projectId, string wordId, string fileName)
         {
             // if we require authorization and authentication for audio files, the frontend cannot just use the api
             // endpoint as the src
@@ -42,7 +42,7 @@ namespace BackendFramework.Controllers
             //    return new ForbidResult();
             //}
 
-            // sanitize user input
+            // Sanitize user input
             if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
             {
                 return new UnsupportedMediaTypeResult();
@@ -54,13 +54,13 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("There was more than one subDir of the extracted zip");
             }
 
-            var fileContents = await System.IO.File.ReadAllBytesAsync(filePath);
-            if (fileContents is null)
+            var file = System.IO.File.OpenRead(filePath);
+            if (file is null)
             {
                 return new BadRequestObjectResult("The file does not exist");
             }
 
-            return File(fileContents, "video/webm");
+            return File(file, "application/octet-stream");
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
             [FromForm] FileUpload fileUpload)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
@@ -121,7 +121,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{wordId}/audio/delete/{fileName}")]
         public async Task<IActionResult> Delete(string projectId, string wordId, string fileName)
         {
-            if (!_permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
                 return new ForbidResult();
             }
