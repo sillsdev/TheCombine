@@ -55,7 +55,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure Lift file has not already been imported.
-            if (!_projectService.CanImportLift(projectId))
+            if (!await _projectService.CanImportLift(projectId))
             {
                 return new BadRequestObjectResult("A Lift file has already been uploaded");
             }
