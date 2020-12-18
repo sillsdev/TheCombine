@@ -1,7 +1,6 @@
 # Sense
 
-A word may have multiple senses, like the word bank,
-meaning a place where money is stored or land by a river.
+A word may have multiple senses, like the word bank, meaning a place where money is stored or land by a river.
 
 ## Raw Type
 

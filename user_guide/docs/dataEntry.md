@@ -18,4 +18,5 @@ There is only one note per entry, even if the entry has multiple senses, glosses
 
 ### Recording
 
-You can add multiple recordings to an entry (e.g., a male voice and a female voice), but as with the [Note](#note), they are associated with the entry and not its senses.
+You can add multiple recordings to an entry (e.g., a male voice and a female voice), but as with the [Note](#note), they
+are associated with the entry and not its senses.
