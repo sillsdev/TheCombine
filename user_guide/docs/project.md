@@ -27,7 +27,7 @@ and associated with new data entries.
 
 !!! note
 
-    Currently, the maximum Lift files supported for import is 250MB.
+    Currently, the maximum size of Lift files supported for import is 250MB.
 
 !!! note
 
