@@ -205,6 +205,7 @@ namespace Backend.Tests.Controllers
             }
         }
 
+        /// <summary>  Read all of the bytes from a Stream into byte array. </summary>
         private static byte[] ReadAllBytes(Stream stream)
         {
             using var ms = new MemoryStream();
