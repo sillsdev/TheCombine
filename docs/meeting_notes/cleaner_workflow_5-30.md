@@ -10,8 +10,7 @@ Questions:
 
 The following cards are discrete actions we came up with. Included are some crazy-8s sketches we did.
 
-![Card Types 1](./5-30_images/cards1.jpg)
-![Card Types 2](./5-30_images/cards2.jpg)
+![Card Types 1](./5-30_images/cards1.jpg) ![Card Types 2](./5-30_images/cards2.jpg)
 
 We have broken cards into a hierarchy which helps facilitate workflow:
 
@@ -25,7 +24,9 @@ We have broken cards into a hierarchy which helps facilitate workflow:
 
 Our basic consensus for card ordering was this:
 
-We break the workflow into distinct `tasks` that the cleaner may want to use the app to accomplish. At any point the user can break out of the current task and switch into a new one, but we orient the UI to suggest they follow our ordering and finish each task before moving on to the next.
+We break the workflow into distinct `tasks` that the cleaner may want to use the app to accomplish. At any point the
+user can break out of the current task and switch into a new one, but we orient the UI to suggest they follow our
+ordering and finish each task before moving on to the next.
 
 Each `task` is broken down into `units`. The units are ordered within a task as such:
 
@@ -36,14 +37,14 @@ Each `task` is broken down into `units`. The units are ordered within a task as 
 
 Within each `unit` are one or more `exercises` which break up the `unit` into manageably sized chunks of work.
 
-The ordering within this structure will be simple to begin. If we have enough time, we can devote time to making more complex orders based on:
+The ordering within this structure will be simple to begin. If we have enough time, we can devote time to making more
+complex orders based on:
 
 - Better Workflow
 - Qualitative Productivity
 - Quantitative Productivity
 
-Here is a collection of sketches that we took to get to that point.
-![Sketches](./5-30_images/sketches.jpg)
+Here is a collection of sketches that we took to get to that point. ![Sketches](./5-30_images/sketches.jpg)
 
 ## Get More from Each Card
 
@@ -51,10 +52,10 @@ Here is a collection of sketches that we took to get to that point.
 
 ## Show Progress
 
-Below are the results of brainstorming for ways of showing progress to the user. These eventually led to the UI sketches shown above.
+Below are the results of brainstorming for ways of showing progress to the user. These eventually led to the UI sketches
+shown above.
 
-![progress1](./5-30_images/progress1.jpg)
-![progress2](./5-30_images/progress2.jpg)
+![progress1](./5-30_images/progress1.jpg) ![progress2](./5-30_images/progress2.jpg)
 
 ## When to Stop
 

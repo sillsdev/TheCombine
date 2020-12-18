@@ -1,7 +1,7 @@
 # The Combine Frontend Docs
 
-The Combine is a web-based tool used to clean up the data collected after a Rapid Word Collection workshop. We use the following technologies on the
-frontend:
+The Combine is a web-based tool used to clean up the data collected after a Rapid Word Collection workshop. We use the
+following technologies on the frontend:
 
 - [React](https://reactjs.org/)
 - [Redux](https://redux.js.org/)

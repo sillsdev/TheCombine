@@ -40,7 +40,8 @@
 
 - Modified
 
-- History - We are storing the history of a word in a linked tree. Each word will point to the previous word(s) in its history.
+- History - We are storing the history of a word in a linked tree. Each word will point to the previous word(s) in its
+  history.
 
 - Part of Speech
 
