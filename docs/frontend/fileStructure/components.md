@@ -9,14 +9,12 @@ Each directory should contain at least:
 
 Sometimes, there will also be these files/folders:
 
-- index.tsx - a component that injects props into the component. These props are
-  retrieved from the Redux store
+- index.tsx - a component that injects props into the component. These props are retrieved from the Redux store
 - a file containing Redux actions
 - a file containing a Redux reducer
 
-Components can be nested. Nested components should be stored in
-subdirectories of their parent, unless there are other components that use
-them.
+Components can be nested. Nested components should be stored in subdirectories of their parent, unless there are other
+components that use them.
 
 Here is an example of what a directory in components should look like:
 

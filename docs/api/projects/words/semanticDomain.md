@@ -1,7 +1,6 @@
 # Semantic Domain
 
-A semantic domain refers to a category of words.
-These words are nested by their number.
+A semantic domain refers to a category of words. These words are nested by their number.
 
 ```
 1. Universe, Creation
