@@ -313,6 +313,10 @@ Install [Docker](https://docs.docker.com/get-docker/).
 (Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/)
 separately. This is included by default in Docker Desktop for Windows and macOS.
 
+(macOS / Windows Only) If you are on macOS or Windows without 
+[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you
+must ensure that Docker Desktop is allocated at least 4GB of Memory in Preferences | Resources.
+
 #### Python
 
 A Python script, `scripts/docker_setup.py` is used to configure the files needed to run
