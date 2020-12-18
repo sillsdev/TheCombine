@@ -357,12 +357,15 @@ $ source venv/bin/activate
 
 ##### macOS Only
 
-- Navigate to the [Python Downloads](https://www.python.org/downloads/) page.
+Install [Homebrew](https://brew.sh/).
 
-- Select the "Download Python" button at the top of the page. This will download the latest
-  appropriate executable installer.
+Install Python 3 using Homebrew:
 
-Once Python is installed, create an isolated Python virtual environment
+```bash
+$ brew install python
+```
+
+Once Python is installed, create an isolated Python virtual environment:
 
 ```bash
 $ python3 -m venv venv
