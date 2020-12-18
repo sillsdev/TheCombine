@@ -351,7 +351,25 @@ $ python3 -m venv venv
 $ source venv/bin/activate
 ```
 
+##### macOS Only
+
+- Navigate to the [Python Downloads](https://www.python.org/downloads/) page.
+
+- Select the "Download Python" button at the top of the page. This will download the latest
+  appropriate executable installer.
+
+Once Python is installed, create an isolated Python virtual environment
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+```
+
 ##### Python Packages
+
+**Important**: All Python commands and scripts should be executed within a terminal using an
+activated Python virtual environment. This will be denoted with the `(venv)` prefix on the
+prompt.
 
 With an active virtual environment, install Python development requirements for this project:
 
@@ -423,7 +441,7 @@ For information on _Docker Compose_ see the
    `.env.backend` and provide values for the variables that are listed.
 
 3. Build the images for the Docker containers (**Note**: On Linux, you will need to prepend `sudo` to
-   all of the following `docker` commands)
+   all of the following `docker` commands). On Windows and macOS, Docker Desktop must be running.
 
    ```bash
    $ docker-compose build --parallel
