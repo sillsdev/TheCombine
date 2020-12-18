@@ -313,6 +313,10 @@ Install [Docker](https://docs.docker.com/get-docker/).
 (Linux Only) Install [Docker Compose](https://docs.docker.com/compose/install/)
 separately. This is included by default in Docker Desktop for Windows and macOS.
 
+(macOS / Windows Only) If you are on macOS or Windows without 
+[WSL2 installed](https://docs.microsoft.com/en-us/windows/wsl/install-win10) you
+must ensure that Docker Desktop is allocated at least 4GB of Memory in Preferences | Resources.
+
 #### Python
 
 A Python script, `scripts/docker_setup.py` is used to configure the files needed to run
@@ -351,7 +355,28 @@ $ python3 -m venv venv
 $ source venv/bin/activate
 ```
 
+##### macOS Only
+
+Install [Homebrew](https://brew.sh/).
+
+Install Python 3 using Homebrew:
+
+```bash
+$ brew install python
+```
+
+Once Python is installed, create an isolated Python virtual environment:
+
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+```
+
 ##### Python Packages
+
+**Important**: All Python commands and scripts should be executed within a terminal using an
+activated Python virtual environment. This will be denoted with the `(venv)` prefix on the
+prompt.
 
 With an active virtual environment, install Python development requirements for this project:
 
@@ -423,7 +448,7 @@ For information on _Docker Compose_ see the
    `.env.backend` and provide values for the variables that are listed.
 
 3. Build the images for the Docker containers (**Note**: On Linux, you will need to prepend `sudo` to
-   all of the following `docker` commands)
+   all of the following `docker` commands). On Windows and macOS, Docker Desktop must be running.
 
    ```bash
    $ docker-compose build --parallel
