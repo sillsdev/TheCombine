@@ -289,6 +289,12 @@ namespace Backend.Tests.Controllers
             }
 
             proj1 = _projServ.GetProject(proj1.Id).Result;
+            if (proj1 is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
             Assert.AreEqual(proj1.VernacularWritingSystem.Bcp47, roundTripObj.Language);
             Assert.That(proj1.LiftImported);
 
@@ -306,7 +312,7 @@ namespace Backend.Tests.Controllers
             }
 
             // Export.
-            var exportedFilePath = _liftController.CreateLiftExport(proj1.Id);
+            var exportedFilePath = _liftController.CreateLiftExport(proj1.Id).Result;
             var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null, false);
 
             // Assert the file was created with desired heirarchy.
@@ -331,6 +337,11 @@ namespace Backend.Tests.Controllers
 
             // Init the project the .zip info is added to.
             var proj2 = _projServ.Create(RandomProject()).Result;
+            if (proj2 is null)
+            {
+                Assert.Fail();
+                return;
+            }
 
             // Upload the exported words again.
             // Generate api parameter with filestream.
@@ -344,6 +355,12 @@ namespace Backend.Tests.Controllers
             }
 
             proj2 = _projServ.GetProject(proj2.Id).Result;
+            if (proj2 is null)
+            {
+                Assert.Fail();
+                return;
+            }
+
             Assert.AreEqual(proj2.VernacularWritingSystem.Bcp47, roundTripObj.Language);
 
             // Clean up zip file.
@@ -362,7 +379,7 @@ namespace Backend.Tests.Controllers
             }
 
             // Export.
-            exportedFilePath = _liftController.CreateLiftExport(proj2.Id);
+            exportedFilePath = _liftController.CreateLiftExport(proj2.Id).Result;
             exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null);
 
             // Assert the file was created with desired hierarchy.

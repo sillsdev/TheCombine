@@ -23,10 +23,18 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_projects.Select(project => project.Clone()).ToList());
         }
 
-        public Task<Project> GetProject(string id)
+        public Task<Project?> GetProject(string id)
         {
-            var foundProjects = _projects.Single(project => project.Id == id);
-            return Task.FromResult(foundProjects.Clone());
+            try
+            {
+                var foundProjects = _projects.Single(project => project.Id == id);
+                return Task.FromResult<Project?>(foundProjects.Clone());
+            }
+            catch (InvalidOperationException)
+            {
+                // If a Project is missing, the real service returns null.
+                return Task.FromResult<Project?>(null);
+            }
         }
 
         public Task<Project> Create(Project project)
