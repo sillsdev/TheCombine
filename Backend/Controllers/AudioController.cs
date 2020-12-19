@@ -30,7 +30,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Returns the audio file in the form of a stream from disk</summary>
         /// <remarks> GET: v1/projects/{projectId}/words/{wordId}/download/audio </remarks>
-        /// <returns> Audio file stream </returns>
+        /// <returns> Audio file stream. </returns>
         [AllowAnonymous]
         [HttpGet("{wordId}/download/audio/{fileName}")]
         public IActionResult DownloadAudioFile(string projectId, string wordId, string fileName)
