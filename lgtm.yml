@@ -1,0 +1,5 @@
+﻿extraction:
+  csharp:
+    index:
+      dotnet:
+        version: 3.1.404
