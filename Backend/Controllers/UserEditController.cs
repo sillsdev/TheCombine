@@ -198,7 +198,7 @@ namespace BackendFramework.Controllers
                 return new BadRequestObjectResult("You can not edit another users UserEdit");
             }
 
-            // Ensure project exists
+            // Ensure project exists.
             var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
