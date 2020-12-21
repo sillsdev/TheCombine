@@ -47,7 +47,14 @@ namespace BackendFramework.Services
             var filter = filterDef.Eq(x => x.Id, projectId);
 
             var projectList = await _projectDatabase.Projects.FindAsync(filter);
-            return await projectList.FirstAsync();
+            try
+            {
+                return await projectList.FirstAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary> Adds a <see cref="Project"/> </summary>
