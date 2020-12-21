@@ -40,14 +40,21 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Finds <see cref="Project"/> with specified projectId </summary>
-        public async Task<Project> GetProject(string projectId)
+        /// <returns> Project or null if the Project does not exist. </returns>
+        public async Task<Project?> GetProject(string projectId)
         {
             var filterDef = new FilterDefinitionBuilder<Project>();
             var filter = filterDef.Eq(x => x.Id, projectId);
 
             var projectList = await _projectDatabase.Projects.FindAsync(filter);
-
-            return projectList.FirstOrDefault();
+            try
+            {
+                return await projectList.FirstAsync();
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
         /// <summary> Adds a <see cref="Project"/> </summary>
@@ -187,6 +194,11 @@ namespace BackendFramework.Services
         public async Task<bool> CanImportLift(string projectId)
         {
             var project = await GetProject(projectId);
+            if (project is null)
+            {
+                return false;
+            }
+
             return !project.LiftImported;
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -10,9 +11,9 @@ namespace Backend.Tests.Controllers
 {
     public class UserControllerTests
     {
-        private IUserService _userService;
-        private UserController _controller;
-        private IPermissionService _permissionService;
+        private IUserService _userService = null!;
+        private UserController _controller = null!;
+        private IPermissionService _permissionService = null!;
 
         [SetUp]
         public void Setup()
@@ -46,7 +47,7 @@ namespace Backend.Tests.Controllers
             _userService.Create(RandomUser());
             _userService.Create(RandomUser());
 
-            var users = (_controller.GetAllUsers().Result as ObjectResult).Value as List<User>;
+            var users = ((ObjectResult)_controller.GetAllUsers().Result).Value as List<User>;
             Assert.That(users, Has.Count.EqualTo(3));
             _userService.GetAllUsers().Result.ForEach(user => Assert.Contains(user, users));
         }
@@ -54,7 +55,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetUser()
         {
-            var user = _userService.Create(RandomUser()).Result;
+            var user = _userService.Create(RandomUser()).Result ?? throw new Exception();
 
             _userService.Create(RandomUser());
             _userService.Create(RandomUser());
@@ -62,7 +63,7 @@ namespace Backend.Tests.Controllers
             var action = _controller.Get(user.Id).Result;
             Assert.That(action, Is.InstanceOf<ObjectResult>());
 
-            var foundUser = (action as ObjectResult).Value as User;
+            var foundUser = ((ObjectResult)action).Value as User;
             Assert.AreEqual(user, foundUser);
         }
 
@@ -70,7 +71,7 @@ namespace Backend.Tests.Controllers
         public void TestCreateUser()
         {
             var user = RandomUser();
-            var id = (_controller.Post(user).Result as ObjectResult).Value as string;
+            var id = (string)((ObjectResult)_controller.Post(user).Result).Value;
             user.Id = id;
             Assert.Contains(user, _userService.GetAllUsers().Result);
         }
@@ -78,7 +79,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateUser()
         {
-            var origUser = _userService.Create(RandomUser()).Result;
+            var origUser = _userService.Create(RandomUser()).Result ?? throw new Exception();
             var modUser = origUser.Clone();
             modUser.Username = "Mark";
 
@@ -92,8 +93,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateUserCantUpdateIsAdmin()
         {
-            var origUser = _userService.Create(RandomUser()).Result;
-            var modUser = origUser.Clone();
+            var origUser = _userService.Create(RandomUser()).Result ?? throw new Exception();
+            var modUser = origUser.Clone() ?? throw new Exception();
             modUser.IsAdmin = true;
 
             _ = _controller.Put(modUser.Id, modUser);
@@ -106,7 +107,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteUser()
         {
-            var origUser = _userService.Create(RandomUser()).Result;
+            var origUser = _userService.Create(RandomUser()).Result ?? throw new Exception();
             Assert.That(_userService.GetAllUsers().Result, Has.Count.EqualTo(1));
 
             _ = _controller.Delete(origUser.Id).Result;
@@ -136,16 +137,16 @@ namespace Backend.Tests.Controllers
             _userService.Create(user1);
             _userService.Create(user2);
 
-            var result1 = (_controller.CheckUsername(username1.ToLowerInvariant())).Result as StatusCodeResult;
+            var result1 = (StatusCodeResult)_controller.CheckUsername(username1.ToLowerInvariant()).Result;
             Assert.AreEqual(result1.StatusCode, 400);
 
-            var result2 = (_controller.CheckUsername(username2.ToUpperInvariant())).Result as StatusCodeResult;
+            var result2 = (StatusCodeResult)_controller.CheckUsername(username2.ToUpperInvariant()).Result;
             Assert.AreEqual(result2.StatusCode, 400);
 
-            var result3 = (_controller.CheckUsername(username1)).Result as StatusCodeResult;
+            var result3 = (StatusCodeResult)_controller.CheckUsername(username1).Result;
             Assert.AreEqual(result3.StatusCode, 400);
 
-            var result4 = (_controller.CheckUsername("NewUsername")).Result as StatusCodeResult;
+            var result4 = (StatusCodeResult)_controller.CheckUsername("NewUsername").Result;
             Assert.AreEqual(result4.StatusCode, 200);
         }
 
@@ -160,16 +161,16 @@ namespace Backend.Tests.Controllers
             _userService.Create(user1);
             _userService.Create(user2);
 
-            var result1 = (_controller.CheckEmail(email1.ToLowerInvariant())).Result as StatusCodeResult;
+            var result1 = (StatusCodeResult)_controller.CheckEmail(email1.ToLowerInvariant()).Result;
             Assert.AreEqual(result1.StatusCode, 400);
 
-            var result2 = (_controller.CheckEmail(email2.ToUpperInvariant())).Result as StatusCodeResult;
+            var result2 = (StatusCodeResult)_controller.CheckEmail(email2.ToUpperInvariant()).Result;
             Assert.AreEqual(result2.StatusCode, 400);
 
-            var result3 = (_controller.CheckEmail(email1)).Result as StatusCodeResult;
+            var result3 = (StatusCodeResult)_controller.CheckEmail(email1).Result;
             Assert.AreEqual(result3.StatusCode, 400);
 
-            var result4 = (_controller.CheckEmail("NewEmail")).Result as StatusCodeResult;
+            var result4 = (StatusCodeResult)_controller.CheckEmail("NewEmail").Result;
             Assert.AreEqual(result4.StatusCode, 200);
         }
     }

@@ -182,6 +182,11 @@ namespace BackendFramework.Controllers
             }
 
             var currentProj = await _projectService.GetProject(projectId);
+            if (currentProj is null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             currentProj.ValidCharacters = project.ValidCharacters;
             currentProj.RejectedCharacters = project.RejectedCharacters;
             await _projectService.Update(projectId, currentProj);
@@ -240,7 +245,7 @@ namespace BackendFramework.Controllers
                 return new ForbidResult();
             }
 
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -305,7 +310,13 @@ namespace BackendFramework.Controllers
         [HttpPut("invite")]
         public async Task<IActionResult> EmailInviteToProject([FromBody] EmailInviteData data)
         {
-            var project = await _projectService.GetProject(data.ProjectId);
+            var projectId = data.ProjectId;
+            var project = await _projectService.GetProject(projectId);
+            if (project is null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var linkWithIdentifier = await _projectService.CreateLinkWithToken(project, data.EmailAddress);
 
             await _projectService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
@@ -321,6 +332,11 @@ namespace BackendFramework.Controllers
         {
 
             var project = await _projectService.GetProject(projectId);
+            if (project is null)
+            {
+                return new NotFoundObjectResult(projectId);
+            }
+
             var users = await _userService.GetAllUsers();
             var status = new bool[2];
             var activeTokenExists = false;

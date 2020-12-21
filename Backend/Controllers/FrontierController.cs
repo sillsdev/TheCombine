@@ -39,7 +39,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var project = _projectService.GetProject(projectId);
+            var project = await _projectService.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -92,7 +92,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var project = _projectService.GetProject(projectId);
+            var project = await _projectService.GetProject(projectId);
             if (project is null)
             {
                 return new NotFoundObjectResult(projectId);
@@ -117,7 +117,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = _projectService.GetProject(projectId);
+            var proj = await _projectService.GetProject(projectId);
             if (proj is null)
             {
                 return new NotFoundObjectResult(projectId);
