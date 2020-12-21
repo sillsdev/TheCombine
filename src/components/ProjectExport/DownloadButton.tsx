@@ -48,37 +48,34 @@ export default function DownloadButton() {
     resetExport(exportState.projectId)(dispatch);
   }
 
-  function icon() {
-    switch (exportState.status) {
-      case ExportStatus.Success:
-        return (
-          <IconButton tabIndex={-1} onClick={download}>
-            <GetApp />
-          </IconButton>
-        );
-      case ExportStatus.Failure:
-        return (
-          <IconButton tabIndex={-1} onClick={reset}>
-            <Error />
-          </IconButton>
-        );
-      default:
-        return (
-          <IconButton tabIndex={-1}>
-            <Cached />
-          </IconButton>
-        );
-    }
-  }
-
   function textId() {
     switch (exportState.status) {
+      case ExportStatus.InProgress:
+        return "projectExport.exportInProgress";
       case ExportStatus.Success:
         return "projectExport.downloadInProgress";
       case ExportStatus.Failure:
         return "projectExport.exportFailed";
+    }
+  }
+
+  function icon() {
+    switch (exportState.status) {
       case ExportStatus.InProgress:
-        return "projectExport.exportInProgress";
+        return <Cached />;
+      case ExportStatus.Success:
+        return <GetApp />;
+      case ExportStatus.Failure:
+        return <Error />;
+    }
+  }
+
+  function iconFunction() {
+    switch (exportState.status) {
+      case ExportStatus.Success:
+        return download;
+      case ExportStatus.Failure:
+        return reset;
     }
   }
 
@@ -86,7 +83,9 @@ export default function DownloadButton() {
     <React.Fragment>
       {exportState.status !== ExportStatus.Default && (
         <Tooltip title={<Translate id={textId()} />} placement="bottom">
-          {icon()}
+          <IconButton tabIndex={-1} onClick={iconFunction()}>
+            {icon()}
+          </IconButton>
         </Tooltip>
       )}
       {fileUrl && (
